@@ -20,12 +20,12 @@ SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS    ON)
 ########################################################################
 MESSAGE(STATUS "Platform: ${CMAKE_SYSTEM_NAME}")
 
-STRING(COMPARE EQUAL "Darwin"  ${CMAKE_SYSTEM_NAME} UPSYLON_DARWIN)
-STRING(COMPARE EQUAL "FreeBSD" ${CMAKE_SYSTEM_NAME} UPSYLON_FREEBSD)
-STRING(COMPARE EQUAL "Linux"   ${CMAKE_SYSTEM_NAME} UPSYLON_LINUX)
-STRING(COMPARE EQUAL "SunOS"   ${CMAKE_SYSTEM_NAME} UPSYLON_SUNOS)
-STRING(COMPARE EQUAL "OpenBSD" ${CMAKE_SYSTEM_NAME} UPSYLON_OPENBSD)
-STRING(COMPARE EQUAL "Windows" ${CMAKE_SYSTEM_NAME} UPSYLON_WINDOWS)
+STRING(COMPARE EQUAL "Darwin"  ${CMAKE_SYSTEM_NAME} Y_DARWIN)
+STRING(COMPARE EQUAL "FreeBSD" ${CMAKE_SYSTEM_NAME} Y_FREEBSD)
+STRING(COMPARE EQUAL "Linux"   ${CMAKE_SYSTEM_NAME} Y_LINUX)
+STRING(COMPARE EQUAL "SunOS"   ${CMAKE_SYSTEM_NAME} Y_SUNOS)
+STRING(COMPARE EQUAL "OpenBSD" ${CMAKE_SYSTEM_NAME} Y_OPENBSD)
+STRING(COMPARE EQUAL "Windows" ${CMAKE_SYSTEM_NAME} Y_WINDOWS)
 
 ########################################################################
 ##
@@ -34,23 +34,61 @@ STRING(COMPARE EQUAL "Windows" ${CMAKE_SYSTEM_NAME} UPSYLON_WINDOWS)
 ##
 ##
 ########################################################################
-SET(UPSYLON32 OFF)
-SET(UPSYLON64 OFF)
+SET(Y32 OFF)
+SET(Y64 OFF)
 INCLUDE(CheckTypeSize)
-CHECK_TYPE_SIZE("void *" UPSYLON_POINTER_SIZE BUILTIN_TYPES_ONLY LANGUAGE C)
-IF(NOT HAVE_UPSYLON_POINTER_SIZE)
+CHECK_TYPE_SIZE("void *" Y_POINTER_SIZE BUILTIN_TYPES_ONLY LANGUAGE C)
+IF(NOT HAVE_Y_POINTER_SIZE)
 	MESSAGE( FATAL_ERROR "unable to detect sizeof(void*)" )
 ENDIF()
 
-IF("${UPSYLON_POINTER_SIZE}" STREQUAL "4")
-	SET(UPSYLON32 ON)
+IF("${Y_POINTER_SIZE}" STREQUAL "4")
+	SET(Y32 ON)
 	MESSAGE(STATUS "Assuming: 32 bits")
 ENDIF()
 
-IF("${UPSYLON_POINTER_SIZE}" STREQUAL "8")
-	SET(UPSYLON64 ON)
+IF("${Y_POINTER_SIZE}" STREQUAL "8")
+	SET(Y64 ON)
 	MESSAGE(STATUS "Assuming: 64 bits")
 ENDIF()
+
+
+########################################################################
+##
+##
+## Guess 32/64 pits
+##
+##
+########################################################################
+SET(Y_COMPILER_VERSION "")
+SET(Y_COMPILER_MAJOR   "")
+SET(Y_COMPILER_MINOR   "")
+SET(Y_COMPILER_PATCH   "")
+
+# function will be call for gnu/clang/intel...
+# TODO: change for MACRO ?
+FUNCTION(Y_FIND_COMPILER_VERSION)
+	# call cc --version
+	EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} --version
+					OUTPUT_VARIABLE Y_RAW_COMPILER_VERSION
+					RESULT_VARIABLE Y_FIND_COMPILER_VERSION_SUCCESS
+					ERROR_QUIET
+					)
+	IF( NOT ("0" STREQUAL "${Y_FIND_COMPILER_VERSION_SUCCESS}") )
+		MESSAGE( FATAL_ERROR "Couldn't find compiler version")
+	ENDIF()
+	# get version pattern
+	STRING( REGEX MATCH    "[0-9]+\\.[0-9]+\\.[0-9]+"         YC_VERSION "${Y_RAW_COMPILER_VERSION}" )
+	STRING( REGEX REPLACE  "([0-9]+)\\.[0-9]+\\.[0-9]+" "\\1" YC_MAJOR "${YC_VERSION}")
+	STRING( REGEX REPLACE  "[0-9]+\\.([0-9]+)\\.[0-9]+" "\\1" YC_MINOR "${YC_VERSION}")
+	STRING( REGEX REPLACE  "[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" YC_PATCH "${YC_VERSION}")
+	MESSAGE( STATUS "${CMAKE_C_COMPILER} is <${YC_VERSION}>: major=${YC_MAJOR}, minor=${YC_MINOR}, patchlevel=${YC_PATCH}" )
+	SET(Y_COMPILER_VERSION ${YC_VERSION} PARENT_SCOPE)
+	SET(Y_COMPILER_MAJOR   ${YC_MAJOR}   PARENT_SCOPE)
+	SET(Y_COMPILER_MINOR   ${YC_MINOR}   PARENT_SCOPE)
+	SET(Y_COMPILER_PATCH   ${YC_PATCH}   PARENT_SCOPE)
+ENDFUNCTION(Y_FIND_COMPILER_VERSION)
+
 
 ########################################################################
 ##
@@ -59,9 +97,9 @@ ENDIF()
 ##
 ##
 ########################################################################
-GET_FILENAME_COMPONENT(UPSYLON_CC ${CMAKE_C_COMPILER} NAME )
-MESSAGE(STATUS "C Compiler Name: ${UPSYLON_CC}")
-SET(UPSYLON_KNOWN_COMPILER OFF)
+GET_FILENAME_COMPONENT(Y_CC ${CMAKE_C_COMPILER} NAME )
+MESSAGE(STATUS "C Compiler Name: ${Y_CC}")
+SET(Y_KNOWN_COMPILER OFF)
 
 
 
@@ -70,9 +108,11 @@ SET(UPSYLON_KNOWN_COMPILER OFF)
 ## gnu
 ##
 ########################################################################
-IF( "${UPSYLON_CC}" MATCHES "^gcc.*" )
-	SET(UPSYLON_KNOWN_COMPILER ON)
-	SET(UPSYLON_GNU            ON)
+IF( "${Y_CC}" MATCHES "^gcc.*" )
+	SET(Y_KNOWN_COMPILER ON)
+	SET(Y_GNU            ON)
+	Y_FIND_COMPILER_VERSION()
+	
 	SET(COMMON_C_FLAGS        "-Wall -Wextra -pipe" )
 	SET(CMAKE_C_FLAGS_DEBUG   "${COMMON_C_FLAGS} -g -O0" )
 	SET(CMAKE_C_FLAGS_RELEASE "${COMMON_C_FLAGS} -O2 -DNDEBUG=1 -D_FORTIFY_SOURCE=2")
@@ -87,10 +127,11 @@ ENDIF()
 ## clang
 ##
 ########################################################################
-IF( "${UPSYLON_CC}" MATCHES "^clang.*" )
-	SET(UPSYLON_KNOWN_COMPILER ON)
-	SET(UPSYLON_CLANG          ON)
-	
+IF( "${Y_CC}" MATCHES "^clang.*" )
+	SET(Y_KNOWN_COMPILER ON)
+	SET(Y_CLANG          ON)
+	Y_FIND_COMPILER_VERSION()
+
 	SET(COMMON_C_FLAGS        "-Wall -Wextra -pipe" )
 	SET(CMAKE_C_FLAGS_DEBUG   "${COMMON_C_FLAGS} -g -O0" )
 	SET(CMAKE_C_FLAGS_RELEASE "${COMMON_C_FLAGS} -O2 -DNDEBUG=1 -D_FORTIFY_SOURCE=2")
@@ -106,9 +147,10 @@ ENDIF()
 ## 'intel'
 ##
 ########################################################################
-IF( "${UPSYLON_CC}" MATCHES "^icc.*" )
-	SET(UPSYLON_INTEL          ON)
-	SET(UPSYLON_KNOWN_COMPILER ON)
+IF( "${Y_CC}" MATCHES "^icc.*" )
+	SET(Y_INTEL          ON)
+	SET(Y_KNOWN_COMPILER ON)
+	Y_FIND_COMPILER_VERSION()
 
 	SET(COMMON_C_FLAGS        "-Wall -pipe -wd981 ${PIC_FLAGS}" )
 	SET(CMAKE_C_FLAGS_DEBUG   "${COMMON_C_FLAGS} -g" )
@@ -125,9 +167,9 @@ ENDIF()
 ## 'microsoft'
 ##
 ########################################################################
-IF( "${UPSYLON_CC}" STREQUAL "cl.exe" )
-	SET(UPSYLON_MICROSOFT      ON)
-	SET(UPSYLON_KNOWN_COMPILER ON)
+IF( "${Y_CC}" STREQUAL "cl.exe" )
+	SET(Y_MICROSOFT      ON)
+	SET(Y_KNOWN_COMPILER ON)
 	
 	SET(COMMON_C_FLAGS        "-nologo -D_CRT_SECURE_NO_WARNINGS -wd4996" )
 	SET(CMAKE_C_FLAGS_DEBUG   "${COMMON_C_FLAGS}" )
@@ -139,7 +181,7 @@ IF( "${UPSYLON_CC}" STREQUAL "cl.exe" )
 
 ENDIF()
 
-IF(NOT UPSYLON_KNOWN_COMPILER)
-	MESSAGE( FATAL_ERROR "Unhandled compiler [${UPSYLON_CC}]")
+IF(NOT Y_KNOWN_COMPILER)
+	MESSAGE( FATAL_ERROR "Unhandled compiler [${Y_CC}]")
 ENDIF()
 
