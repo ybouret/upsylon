@@ -57,7 +57,7 @@
 //
 // integer types
 //______________________________________________________________________________
-#ifdef defined(Y_STDINT)
+#if defined(Y_STDINT)
 # undef Y_STDINT
 #endif
 
@@ -91,7 +91,8 @@ typedef __int64 int64_t;
 
 #endif // _MSC_VER
 
-
+#include <cstddef>
+#include <cassert>
 
 namespace upsylon
 {
@@ -123,8 +124,10 @@ namespace upsylon
     extern const as_capacity_t  as_capacity;   //!< for constructors
 
     //! default type selector.
-    template <const bool flag, typename T, typename U>
-    struct select
+    template <const bool flag, typename T, typename U> struct select;
+
+    template <typename T, typename U>
+    struct select<true,T,U>
     {
         typedef T result; //!< flag is true
     };
@@ -138,7 +141,7 @@ namespace upsylon
 
 
     template <typename T>
-    inline void destruct( T *item ) throw()
+    inline void __dtor( T *item ) throw()
     {
         assert(item);
         item->~T();
