@@ -10,6 +10,7 @@ int upsylon_test_##NAME(int argc, char *argv[]) {\
 #define Y_UTEST_DONE() return 0; }
 
 #define Y_CHECK(CODE) do {\
+std::cerr << "CHECK: " #CODE << std::endl;\
 if(!(CODE)) throw upsylon::exception("FAILED " #CODE);\
 } while(false)
 
