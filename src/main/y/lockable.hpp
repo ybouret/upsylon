@@ -1,4 +1,4 @@
-// \file lockable
+//! \file 
 #ifndef Y_LOCKABLE_INCLUDED
 #define Y_LOCKABLE_INCLUDED 1
 
@@ -30,12 +30,15 @@ namespace upsylon
         Y_DISABLE_COPY_AND_ASSIGN(lockable);
     };
     
+    //! local locking mechanism
     class scoped_lock
     {
     public:
+        //! lock host
         inline explicit scoped_lock( lockable &host ) throw() : host_(host)
         {  host_.lock(); }
         
+        //! unlock host
         inline ~scoped_lock() throw() { host_.unlock(); }
         
     private:
@@ -43,8 +46,13 @@ namespace upsylon
         Y_DISABLE_COPY_AND_ASSIGN(scoped_lock);
     };
     
+    //! create the guard name
 #define Y_LOCK__(X,Y) X##Y
+    
+    //! instantiace the guard name
 #define Y_LOCK_(HOST,ID) upsylon::scoped_lock  Y_LOCK__(__guard,ID)(HOST)
+    
+    //! use a local scoped_lock to lock HOST
 #define Y_LOCK(HOST) Y_LOCK_(HOST,__LINE__)
     
 }

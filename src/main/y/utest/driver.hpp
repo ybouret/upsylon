@@ -1,4 +1,4 @@
-// \file
+//! \file
 #ifndef Y_UTEST_DRIVER_INCLUDED
 #define Y_UTEST_DRIVER_INCLUDED 1
 
@@ -142,15 +142,18 @@ namespace upsylon
     };
 }
 
+//! driver prolog
 #define Y_UTEST_INIT(N)             \
 /*    */    int main( int argc, char *argv[] )  \
 /*    */    {    upsylon::utest::suite<N> tests;   
 
+//! register a new test
 #define Y_UTEST(NAME) do{                                \
 /*    */        extern void upsylon_test_##NAME(int argc, char **argv); \
 /*    */        tests( upsylon_test_##NAME, #NAME );                   \
 /*    */    } while(0)
 
+//! driver epilog
 #define Y_UTEST_EXEC()     \
 /*    */    return tests(argc,argv);   \
 /*    */    }
