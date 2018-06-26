@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_EXCEPTION_INCLUDED
 #define Y_EXCEPTION_INCLUDED 1
 
@@ -11,23 +12,34 @@ namespace upsylon
     class exception : public std::exception
     {
     public:
+        //! aligned internal space
         static const size_t max_length = 256-sizeof(std::exception);
 
+        //! default destructor
         virtual ~exception() throw();
+        
+        //! copy constructor
         exception( const exception &other ) throw();
 
         virtual const char *what() const throw(); //!< overrides std::exception::what()
         const char *when() const throw();         //!< exception context
 
-        explicit exception( const char *fmt,...) throw() Y_PRINTF_CHECK(2,3); //!< format when
-        void     cat( const char *fmt,...)       throw() Y_PRINTF_CHECK(2,3); //!< append to when
-        void     set( const char *fmt,...)       throw() Y_PRINTF_CHECK(2,3); //!< reset when
-        void     hdr( const char *fmt,...)       throw() Y_PRINTF_CHECK(2,3); //!< prepend to when
+        //! format when using printf syntax
+        explicit exception( const char *fmt,...) throw() Y_PRINTF_CHECK(2,3);
+        
+        //! append to when using printf syntax
+        void     cat( const char *fmt,...)       throw() Y_PRINTF_CHECK(2,3);
+        
+        //! reset when using printf syntax
+        void     set( const char *fmt,...)       throw() Y_PRINTF_CHECK(2,3);
+        
+        //! prepend to when using printf syntax
+        void     hdr( const char *fmt,...)       throw() Y_PRINTF_CHECK(2,3);
 
     protected:
-        explicit exception() throw();
-        void     format( const char *fmt, void *va_list_ptr) throw();
-        char     when_[ max_length ];
+        explicit exception() throw(); //!< ""
+        void     format( const char *fmt, void *va_list_ptr) throw(); //!< common formatting
+        char     when_[ max_length ]; //!< user's formatted string
 
     private:
         Y_DISABLE_ASSIGN(exception);

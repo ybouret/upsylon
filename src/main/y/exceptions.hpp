@@ -1,5 +1,4 @@
-//! \file exceptions.hpp
-
+//! \file
 #ifndef Y_EXCEPTIONS_INCLUDED
 #define Y_EXCEPTIONS_INCLUDED 1
 
@@ -15,12 +14,13 @@ namespace upsylon
 		class exception : public upsylon::exception
 		{
 		public:
+            //! store the code and store printf style information
 			explicit exception( int err, const char *fmt, ... ) throw() Y_PRINTF_CHECK(3,4);
-			virtual ~exception() throw();
-			exception( const exception & ) throw();
+			virtual ~exception() throw(); //!< default destructor
+			exception( const exception & ) throw(); //!< copy constructor
 
-			virtual const char *what() const throw();
-			int                 code() const throw();
+			virtual const char *what() const throw(); //!< internal what_
+			int                 code() const throw(); //!< internal code_
 
 		private:
 			Y_DISABLE_ASSIGN(exception);
@@ -36,12 +36,13 @@ namespace upsylon
 		class exception : public upsylon::exception
 		{
 		public:
+            //! store the code and store printf style information
 			explicit exception( uint32_t err, const char *fmt, ... ) throw() Y_PRINTF_CHECK(3,4);
-			virtual ~exception() throw();
-			exception( const exception & ) throw();
+			virtual ~exception() throw(); //!< default destructor
+			exception( const exception & ) throw(); //!< copy constructor
 
-			virtual const char *what() const throw();
-			uint32_t            code() const throw();
+			virtual const char *what() const throw(); //!< internal what_
+			uint32_t            code() const throw(); //!< internal code_
 
 		private:
 			Y_DISABLE_ASSIGN(exception);
@@ -55,7 +56,7 @@ namespace upsylon
 #endif
 	
 #if defined(Y_BSD)
-	typedef libc::exception    os_exception;
+	typedef libc::exception  os_exception;
 #endif
 	
 	namespace imported {
@@ -64,13 +65,14 @@ namespace upsylon
 		class exception : public upsylon::exception
 		{
 		public:
-			virtual ~exception() throw();
+			virtual ~exception() throw(); //!< default destructor
+            //! store reason in what, and printf format when
 			explicit exception( const char *reason /*->what*/, const char *fmt /*->when*/,...) throw() Y_PRINTF_CHECK(3,4);
-			exception( const exception &other ) throw();
-			exception & operator=( const upsylon::exception &other ) throw();
-			exception & operator=( const exception &other ) throw();
-			
-			virtual const char *what() const throw();
+			exception( const exception &other ) throw(); //!< copy constructor
+			exception & operator=( const exception &other ) throw(); //!< default assign operator
+            exception & operator=( const upsylon::exception &other ) throw(); //!< assign from base class
+            
+			virtual const char *what() const throw(); //!< intenal what_
 			
 		private:
 			char      what_[128];

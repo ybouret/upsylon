@@ -20,6 +20,7 @@ namespace upsylon
 
     exception:: ~exception() throw()
     {
+        memset( when_, 0, sizeof(when_) );
     }
 
     void exception:: format( const char *fmt, void *va_list_ptr ) throw()

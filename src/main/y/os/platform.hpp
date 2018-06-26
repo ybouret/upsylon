@@ -1,9 +1,12 @@
+//! \file
 #ifndef Y_PLATFORM_INCLUDED
 #define Y_PLATFORM_INCLUDED 1
 
 //______________________________________________________________________________
 //
+//
 // Platform definition
+//
 //______________________________________________________________________________
 #if defined(Y_PLATFORM)
 # undef Y_PLATFORM
@@ -55,20 +58,36 @@
 
 //______________________________________________________________________________
 //
+//
 // integer types
+//
 //______________________________________________________________________________
 #if defined(Y_STDINT)
 # undef Y_STDINT
 #endif
 
+//______________________________________________________________________________
+//
+// <GNUC>
+//______________________________________________________________________________
 #if defined(__GNUC__)
 #define Y_STDINT 1
 #include <stdint.h>
 #    define    Y_U64(X) X##ULL
 #    define    Y_I64(X) X##LL
-#endif // __GNUC__
+#endif
+//______________________________________________________________________________
+//
+// <GNUC/>
+//______________________________________________________________________________
 
+
+//______________________________________________________________________________
+//
+// <Microsoft>
+//______________________________________________________________________________
 #if defined(_MSC_VER)
+
 
 #if _MSC_VER >= 1900
 #include <stdint.h>
@@ -89,21 +108,36 @@ typedef __int64 int64_t;
 #        define    Y_U64(X) X##ui64
 #        define    Y_I64(X) X##i64
 
-#endif // _MSC_VER
+#endif
+//______________________________________________________________________________
+//
+// <Microsoft/>
+//______________________________________________________________________________
+
+#if !defined(Y_STDINT)
+#    error "no STDINT"
+#endif
 
 #include <cstddef>
 #include <cassert>
 
 namespace upsylon
 {
+    //! dummy platform function
     inline const char *platform() throw()
     {
         return Y_PLATFORM;
     }
 
+    //! disable the copy constructor
 #define Y_DISABLE_COPY(CLASS)            private: CLASS( const CLASS &)
+    
+    //! disable the assign operator
 #define Y_DISABLE_ASSIGN(CLASS)          private: CLASS & operator=(const CLASS &)
+    
+    //! disable both copy constructor and assign operator
 #define Y_DISABLE_COPY_AND_ASSIGN(CLASS) Y_DISABLE_COPY(CLASS); Y_DISABLE_ASSIGN(CLASS)
+    
     //! integer to type mapping.
     template <int v>
     struct int2type {
@@ -126,20 +160,21 @@ namespace upsylon
     //! default type selector.
     template <const bool flag, typename T, typename U> struct select;
 
+    //! type selector when true => T
     template <typename T, typename U>
     struct select<true,T,U>
     {
         typedef T result; //!< flag is true
     };
 
-    //! specialized type selector.
+    //! type selector when false => U
     template <typename T, typename U>
     struct select<false,T,U>
     {
         typedef U result; //!< flag is false
     };
 
-
+    //! destructor disambiguation
     template <typename T>
     inline void __dtor( T *item ) throw()
     {
@@ -147,8 +182,10 @@ namespace upsylon
         item->~T();
     }
 
+    //! for verbose assert
     inline bool die( const char *) throw() { return false; }
 
+    //! the signed system size
     typedef ptrdiff_t unit_t;
 }
 

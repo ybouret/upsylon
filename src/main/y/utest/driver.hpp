@@ -1,3 +1,4 @@
+// \file
 #ifndef Y_UTEST_DRIVER_INCLUDED
 #define Y_UTEST_DRIVER_INCLUDED 1
 
@@ -8,18 +9,32 @@
 
 namespace upsylon
 {
+    //! class to handle unit tests
     struct utest
     {
-        typedef int (*func_type)( int argc, char *argv[] );
+        //! external function to call
+        typedef void (*func_type)( int argc, char *argv[] );
+        
+        //! named function
         class proc_type
         {
         public:
-            func_type   func;
-            const char *name;
-            inline  proc_type() : func(NULL), name(NULL) {}
-            inline ~proc_type() throw() {}
+            func_type   func; //!< the function address
+            const char *name; //!< the function's name by user
+            
+            //! default constructor, set to empty
+            inline  proc_type() : func(0), name(0) {}
+            
+            //! default destructor
+            inline ~proc_type() throw() { func=0; name=0; }
+            
+            //! direct constructor
             inline  proc_type( func_type f, const char *n) throw() : func(f), name(n) {}
+            
+            //! copy constructor
             inline  proc_type( const proc_type &other ) throw() : func(other.func), name(other.name) {}
+            
+            //! assignment
             inline  proc_type & operator=( const proc_type &other ) throw()
             {
                 func = other.func;
@@ -27,6 +42,7 @@ namespace upsylon
                 return *this;
             }
 
+            //! libc style compare by name
             static int compare( const void *lhs, const void *rhs ) throw()
             {
                 const proc_type *L = (const proc_type *)lhs;
@@ -37,6 +53,7 @@ namespace upsylon
             }
         };
 
+        //! a suite of possible tests
         template <size_t N>
         class suite
         {
@@ -44,10 +61,11 @@ namespace upsylon
             inline  suite() throw() : reg_(), num_(0) {}
             inline ~suite() throw() {}
 
+            //! append a new test, then sort by name
             inline void operator()( func_type func, const char *name ) throw()
             {
-                assert( NULL != func );
-                assert( NULL != name );
+                assert( 0 != func );
+                assert( 0 != name );
                 if( num_ >= N )
                 {
                     std::cerr << "Already got " << N << " tests!" << std::endl;
@@ -65,6 +83,7 @@ namespace upsylon
                 qsort(reg_,num_,sizeof(proc_type),proc_type::compare);
             }
 
+            //! called from main, execute a given test
             inline int operator()(int argc, char *argv[])
             {
                 if( argc <= 1)
@@ -87,7 +106,7 @@ namespace upsylon
                     }
                     try
                     {
-                        return proc->func(--argc,++argv);
+                        proc->func(--argc,++argv);
                     }
                     catch( upsylon::exception &e )
                     {
@@ -128,7 +147,7 @@ namespace upsylon
 /*    */    {    upsylon::utest::suite<N> tests;   
 
 #define Y_UTEST(NAME) do{                                \
-/*    */        extern int upsylon_test_##NAME(int argc, char **argv); \
+/*    */        extern void upsylon_test_##NAME(int argc, char **argv); \
 /*    */        tests( upsylon_test_##NAME, #NAME );                   \
 /*    */    } while(0)
 
