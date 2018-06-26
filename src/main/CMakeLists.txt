@@ -19,7 +19,18 @@ SET(utest_srcs ${utest_decl} ${utest_code})
 SOURCE_GROUP( utest FILES ${utest_srcs} )
 INSTALL( FILES ${utest_decl} DESTINATION include/y/utest )
 
-ADD_LIBRARY(y STATIC ${main_srcs} ${os_srcs} ${utest_srcs})
+FILE(GLOB type_decl y/type/*.hpp)
+FILE(GLOB type_code y/type/*.cpp)
+SET(type_srcs ${type_decl} ${type_code})
+SOURCE_GROUP( type FILES ${type_srcs} )
+INSTALL( FILES ${type_decl} DESTINATION include/y/type )
+
+ADD_LIBRARY(y STATIC 
+${main_srcs} 
+${os_srcs}
+${utest_srcs} 
+${type_srcs})
+ 
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
