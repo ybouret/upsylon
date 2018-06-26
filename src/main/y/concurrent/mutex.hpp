@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_CONCURRENT_MUTEX_INCLUDED
 #define Y_CONCURRENT_MUTEX_INCLUDED 1
 
@@ -20,23 +21,29 @@ namespace upsylon
  
     namespace concurrent
     {
-        
+        //! system recursive mutex
         class mutex : public lockable
         {
         public:
-            explicit mutex(const char * = 0) throw();
-            virtual ~mutex() throw();
+            explicit mutex() throw(); //!< initialize
+            virtual ~mutex() throw(); //!< release all
+            
+            virtual void lock() throw();     //!< lock mutex
+            virtual void unlock() throw();   //!< unlock mutex
+            virtual bool try_lock() throw(); //!< try lock mutex
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(mutex);
 #if defined(Y_BSD)
-            pthread_mutex_t impl_;
+            typedef pthread_mutex_t mutex_type;
 #endif
             
 #if defined(Y_WIN)
-            CRITICAL_SECTION impl_;
+            typedef CRITICAL_SECTION mutex_type;
 #endif
-            
+            mutex_type impl_;
+            void clear() throw();
         };
         
     }
