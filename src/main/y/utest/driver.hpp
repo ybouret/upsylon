@@ -1,7 +1,7 @@
 #ifndef Y_UTEST_DRIVER_INCLUDED
 #define Y_UTEST_DRIVER_INCLUDED 1
 
-#include "y/utest/test.hpp"
+#include "y/exception.hpp"
 #include <cstring>
 #include <cstdlib>
 #include <iostream>

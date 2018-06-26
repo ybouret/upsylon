@@ -1,7 +1,8 @@
 #ifndef Y_UTEST_RUN_INCLUDED
 #define Y_UTEST_RUN_INCLUDED 1
 
-#include "y/utest/test.hpp"
+#include "y/exception.hpp"
+#include <iostream>
 
 #define Y_UTEST(NAME) \
 int upsylon_test_##NAME(int argc, char *argv[]) {\
