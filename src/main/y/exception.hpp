@@ -11,7 +11,7 @@ namespace upsylon
     class exception : public std::exception
     {
     public:
-        static const size_t max_length = 120;
+        static const size_t max_length = 256-sizeof(std::exception);
 
         virtual ~exception() throw();
         exception( const exception &other ) throw();

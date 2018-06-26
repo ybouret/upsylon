@@ -185,3 +185,40 @@ IF(NOT Y_KNOWN_COMPILER)
 	MESSAGE( FATAL_ERROR "Unhandled compiler [${Y_CC}]")
 ENDIF()
 
+
+########################################################################
+##
+##
+## Specific linking
+##
+##
+########################################################################
+MACRO(TARGET_LINK_Y tgt)
+
+	SET(ylibs "")
+	# populate with dependendcy
+	FOREACH( extra ${ARGN} )
+	
+	ENDFOREACH()
+	
+	#finalize
+	LIST(APPEND ylibs y)
+	
+	#specific libraries
+	LIST(REMOVE_DUPLICATES ylibs)
+	MESSAGE(STATUS "[${tgt}] <${ylibs}>")
+	TARGET_LINK_LIBRARIES(${tgt} ${ylibs})
+	
+	#specific flags
+	IF( YOCTO_GNU AND WIN32)
+		IF("${YOCTO_COMPILER_VERSION}" VERSION_GREATER "4.5.0" )
+		TARGET_LINK_LIBRARIES( ${tgt} -static-libgcc -static-libstdc++ )
+		ENDIF()
+	ENDIF()
+	
+	IF("${CMAKE_GENERATOR}" STREQUAL "Xcode")
+		TARGET_LINK_LIBRARIES(${tgt} -w )
+	ENDIF()
+	
+ENDMACRO(TARGET_LINK_Y)
+

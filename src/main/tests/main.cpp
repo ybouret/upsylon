@@ -2,6 +2,7 @@
 
 Y_UTEST_INIT(4)
 {
+    Y_UTEST(platform);
 }
 Y_UTEST_EXEC()
 

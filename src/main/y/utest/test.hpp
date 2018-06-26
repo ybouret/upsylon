@@ -6,9 +6,9 @@
 
 struct upsylon_test
 {
-    typedef int (*proc)(int argc, char **argv);
-    proc        p;
-    const char *n;
+    typedef int (*proc_type)(int argc, char **argv);
+    proc_type   proc;
+    const char *name;
 };
 #endif
 
