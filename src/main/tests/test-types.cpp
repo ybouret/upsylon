@@ -1,4 +1,6 @@
 #include "y/type/select.hpp"
+#include "y/type/limits.hpp"
+
 #include "y/utest/run.hpp"
 #include <typeinfo>
 
