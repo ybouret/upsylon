@@ -1,5 +1,6 @@
 #include "y/utest/run.hpp"
 #include "y/exceptions.hpp"
+#include "y/os/error.hpp"
 
 using namespace upsylon;
 
@@ -27,7 +28,7 @@ Y_UTEST(platform)
     }
 
     {
-        const os_exception e( 1, "OS Error 1");
+        const os_exception e( error_invalid_data, "OS Invalid Data");
         std::cerr << "O/S  Error " << e.code() << " = " << e.what() << ", " << e.when() << std::endl;
 
     }

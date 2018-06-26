@@ -5,7 +5,7 @@
 #include <iostream>
 
 #define Y_UTEST(NAME) \
-int upsylon_test_##NAME(int argc, char *argv[]) {\
+int upsylon_test_##NAME(int argc, char **argv) {\
 (void)argc; (void)argv;
 
 #define Y_UTEST_DONE() return 0; }

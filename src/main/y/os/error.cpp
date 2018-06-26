@@ -73,13 +73,13 @@ namespace upsylon
             if( buffer )
             {
                 memset(buffer,0,length);
-#if defined(YOCTO_WIN)
+#if defined(Y_WIN)
                 FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM,
                               NULL,
                               err,
                               MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
                               buffer,
-                              length-1,
+                              DWORD(length)-1,
                               NULL );
                 clear_buffer(buffer);
 #endif
@@ -130,7 +130,7 @@ namespace upsylon
             const error_type error_invalid_data = EINVAL;
 #endif
 
-#if defined(YOCTO_WIN)
+#if defined(Y_WIN)
             const error_type error_invalid_data = ERROR_INVALID_DATA;
 #endif
             }
