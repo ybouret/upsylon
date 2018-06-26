@@ -1,5 +1,7 @@
 PROJECT(y C CXX)
 
+INCLUDE_DIRECTORIES(.)
+
 FILE(GLOB main_decl y/*.hpp)
 FILE(GLOB main_code y/*.cpp)
 SET(main_srcs ${main_decl} ${main_code})
@@ -13,3 +15,6 @@ INSTALL( FILES ${os_decl} DESTINATION include/y/os )
 
 ADD_LIBRARY(y STATIC ${main_srcs} ${os_srcs})
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
+
+ADD_SUBDIRECTORY(tests)
+
