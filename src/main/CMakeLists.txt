@@ -25,11 +25,19 @@ SET(type_srcs ${type_decl} ${type_code})
 SOURCE_GROUP( type FILES ${type_srcs} )
 INSTALL( FILES ${type_decl} DESTINATION include/y/type )
 
+FILE(GLOB concurrent_decl y/concurrent/*.hpp)
+FILE(GLOB concurrent_code y/concurrent/*.cpp)
+SET(concurrent_srcs ${concurrent_decl} ${concurrent_code})
+SOURCE_GROUP( concurrent FILES ${concurrent_srcs} )
+INSTALL( FILES ${concurrent_decl} DESTINATION include/y/concurrent )
+
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
 ${os_srcs}
 ${utest_srcs} 
-${type_srcs})
+${type_srcs}
+${concurrent_srcs}
+)
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
 
