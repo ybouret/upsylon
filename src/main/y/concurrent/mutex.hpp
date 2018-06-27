@@ -21,29 +21,49 @@ namespace upsylon
  
     namespace concurrent
     {
+
+        namespace nucleus
+        {
+            //! system mutex operation
+            struct mutex
+            {
+                //! system mutex type
+#if defined(Y_BSD)
+                typedef pthread_mutex_t type;
+#endif
+
+#if defined(Y_WIN)
+                typedef CRITICAL_SECTION type;
+#endif
+                static void init( type *m )   throw(); //!< initialize as recursive
+                static void quit(type *m)     throw(); //!< release all data
+                static void lock(type *m)     throw(); //!< lock
+                static void unlock(type *m)   throw(); //!< unlock
+                static bool try_lock(type *m) throw(); //!< try lock
+            };
+        }
+
         //! system recursive mutex
         class mutex : public lockable
         {
         public:
-            explicit mutex() throw(); //!< initialize
-            virtual ~mutex() throw(); //!< release all
-            
-            virtual void lock() throw();     //!< lock mutex
-            virtual void unlock() throw();   //!< unlock mutex
-            virtual bool try_lock() throw(); //!< try lock mutex
+            //! create the system mutex
+            explicit mutex() throw() : m()  { nucleus::mutex::init(&m); }
+
+            //! release all
+            inline virtual ~mutex() throw() { nucleus::mutex::quit(&m); }
+
+            //! lock mutex
+            inline virtual void lock()     throw() { nucleus::mutex::lock(&m);            }
+            //! unlock mutex
+            inline virtual void unlock()   throw() { nucleus::mutex::unlock(&m);          }
+            //! try lock mutex
+            inline virtual bool try_lock() throw() { return nucleus::mutex::try_lock(&m); }
             
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(mutex);
-#if defined(Y_BSD)
-            typedef pthread_mutex_t mutex_type;
-#endif
-            
-#if defined(Y_WIN)
-            typedef CRITICAL_SECTION mutex_type;
-#endif
-            mutex_type impl_;
-            void clear() throw();
+            nucleus::mutex::type m;
         };
         
     }

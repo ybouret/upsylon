@@ -5,101 +5,114 @@
 #include <cstring>
 #include <iostream>
 
+
+
 namespace upsylon
 {
     namespace concurrent
     {
-        
-        mutex:: ~mutex() throw()
+
+        namespace nucleus
         {
-#if defined(Y_WIN)
-            ::DeleteCriticalSection( & impl_ );
-#endif
-            
-#if defined(Y_BSD)
+
+            void mutex:: init(type *m) throw()
             {
-                const int res = pthread_mutex_destroy( &impl_ );
-                if( res != 0 )
-                    libc::critical_error( res, "pthread_mutex_destroy" );
+                //______________________________________________________________
+                //
+                // prepare
+                //______________________________________________________________
+                assert(m!=0);
+                memset(m,0,sizeof(type));
+
+                //______________________________________________________________
+                //
+                // setup
+                //______________________________________________________________
+#if defined(Y_WIN)
+                ::InitializeCriticalSection(m);
+#endif
+                
+#if defined(Y_BSD)
+                    pthread_mutexattr_t attr;
+
+                    int  res = pthread_mutexattr_init( &attr );
+                    if (res != 0)
+                        libc::critical_error(res, "pthread_mutexattr_init");
+
+                    res = pthread_mutexattr_settype( &attr, PTHREAD_MUTEX_RECURSIVE);
+                    if (res != 0)
+                    {
+                        pthread_mutexattr_destroy( &attr );
+                        libc::critical_error(res, "pthread_mutexattr_settype(RECURSIVE)");
+                    }
+
+                    res = pthread_mutex_init(m,&attr);
+                    (void) pthread_mutexattr_destroy( &attr );
+                    if( res != 0 )
+                        libc::critical_error(res,"pthread_mutex_init");
+#endif
+
             }
-#endif
-            clear();
-        }
-        
-        mutex:: mutex() throw():
-        impl_()
-        {
-            clear();
-#if defined(Y_WIN)
-            ::InitializeCriticalSection( & mutex_ );
-#endif
-            
-#if defined(Y_BSD)
+
+            void mutex:: quit(type *m) throw()
             {
-                pthread_mutexattr_t attr;
-                
-                int  res = pthread_mutexattr_init( &attr );
-                if (res != 0)
-                    libc::critical_error(res, "pthread_mutexattr_init");
-                
-                res = pthread_mutexattr_settype( &attr, PTHREAD_MUTEX_RECURSIVE);
-                if (res != 0)
+                assert(m);
+#if defined(Y_WIN)
+                ::DeleteCriticalSection( m );
+#endif
+
+#if defined(Y_BSD)
                 {
-                    pthread_mutexattr_destroy( &attr );
-                    libc::critical_error(res, "pthread_mutexattr_settype(RECURSIVE)");
+                    const int res = pthread_mutex_destroy( m );
+                    if( res != 0 )
+                        libc::critical_error( res, "pthread_mutex_destroy" );
                 }
-                
-                res = pthread_mutex_init( & impl_ , &attr );
-                (void) pthread_mutexattr_destroy( &attr );
-                if( res != 0 )
-                    libc::critical_error(res,"pthread_mutex_init");
+#endif
+                memset(m,0,sizeof(type));
             }
-#endif
-            
-        }
-        
-        void mutex:: clear() throw()
-        {
-            memset( &impl_, 0, sizeof(impl_) );
-        }
-        
-        void mutex:: lock() throw()
-        {
+
+            void mutex:: lock(type *m) throw()
+            {
+                assert(m);
 #if defined(Y_WIN)
-            ::EnterCriticalSection(  & impl_  );
+                ::EnterCriticalSection(m);
 #endif
-            
+
 #if defined(Y_BSD)
-            const int res = pthread_mutex_lock( &impl_ );
-            if( res != 0 )
-                libc::critical_error( res,  "pthread_mutex_lock" );
+                const int res = pthread_mutex_lock(m);
+                if( res != 0 )
+                    libc::critical_error( res,  "pthread_mutex_lock" );
 #endif
-        }
-        
-        void mutex:: unlock() throw()
-        {
+            }
+
+            void mutex:: unlock(type *m) throw()
+            {
+                assert(m);
 #if defined(Y_WIN)
-            ::LeaveCriticalSection( &impl_  );
+                ::LeaveCriticalSection(m);
 #endif
-            
+
 #if defined(Y_BSD)
-            const int res = pthread_mutex_unlock( & impl_ );
-            if( res != 0 )
-                libc::critical_error( res,  "pthread_mutex_lock" );
+                const int res = pthread_mutex_unlock(m);
+                if( res != 0 )
+                    libc::critical_error( res,  "pthread_mutex_lock" );
 #endif
-        }
-        
-        bool mutex:: try_lock() throw()
-        {
+            }
+
+            bool mutex:: try_lock(type *m) throw()
+            {
+                assert(m);
 #if defined(Y_WIN)
-            return TryEnterCriticalSection( &impl_ ) == TRUE;
+                return TryEnterCriticalSection(m) == TRUE;
 #endif
-            
+
 #if defined(Y_BSD)
-            return pthread_mutex_trylock( &impl_ ) == 0;
+                return pthread_mutex_trylock(m) == 0;
 #endif
-            
+            }
         }
+
+
         
     }
 }
