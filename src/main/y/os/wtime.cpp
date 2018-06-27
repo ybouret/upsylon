@@ -12,7 +12,7 @@ namespace upsylon
     {
     }
 
-    void wtime:: reset()
+    void wtime:: start()
     {
         calibrate();
         mark = ticks();

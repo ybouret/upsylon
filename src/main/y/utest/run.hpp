@@ -10,7 +10,7 @@
 int upsylon_test_##NAME(int argc, char **argv) {\
 (void)argc; (void)argv;
 
-//! test eilog
+//! test epilog
 #define Y_UTEST_DONE() return 0; }
 
 //! display and check

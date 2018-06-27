@@ -11,7 +11,7 @@ namespace upsylon
         explicit wtime(); //!< set initial mark
         virtual ~wtime() throw(); //!< destructor
 
-        void     reset();
+        void     start();
         uint64_t count() const;
         double   query() const;
 

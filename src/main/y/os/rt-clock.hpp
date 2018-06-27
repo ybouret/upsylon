@@ -17,7 +17,7 @@ namespace upsylon
 #else
         typedef uint64_t freq_type;
 #endif
-        explicit rt_clock(); //!< calibrate
+        explicit rt_clock();         //!< calibrate during constructor
         virtual ~rt_clock() throw(); //!< destructor
 
         static uint64_t  ticks();     //!< system ticks
