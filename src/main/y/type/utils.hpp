@@ -41,22 +41,24 @@ namespace upsylon
         return a*a;
     }
 
-#if 0
-    inline size_t length_of(const char *s) throw()
+    template <typename T>
+    inline bool is_a_power_of_two( T v ) throw()
     {
-        if(!s)
-        {
-            return 0;
-        }
-        else
-        {
-            const char *i = s;
-            while( *(i++) )
-                ;
-            return static_cast<size_t>(i-s);
-        }
+        static const T one(1);
+        return (v != 0) && !( v & (v - one) );
     }
-#endif
+
+    template <typename T>
+    inline T next_power_of_two( T v ) throw()
+    {
+        assert(v>0);
+        --v;
+        for( size_t shift = 1; shift <= (sizeof(T)<<2); shift <<= 1 )
+        {
+            v |= ( v >> shift );
+        }
+        return ++v;
+    }
     
 }
 

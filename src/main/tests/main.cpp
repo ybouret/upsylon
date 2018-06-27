@@ -9,7 +9,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(at_exit);
     Y_UTEST(sys);
     Y_UTEST(code);
-    Y_UTEST(kChunk);
+    Y_UTEST(chunk);
 
 }
 Y_UTEST_EXEC()
