@@ -22,7 +22,26 @@ namespace upsylon
     {
         return (a<T(0)) ? -a : a;
     }
-    
+
+    template <typename T>
+    inline int sign_of( T a )
+    {
+        return (a<0) ? -1 : (  (0<a) ? 1 : 0 );
+    }
+
+    template <typename T>
+    inline T clamp( T amin, T a, T amax )
+    {
+        return (a<amin) ? amin : ( (amax<a) ? amax : a );
+    }
+
+    template <typename T>
+    inline T square_of( T a )
+    {
+        return a*a;
+    }
+
+#if 0
     inline size_t length_of(const char *s) throw()
     {
         if(!s)
@@ -37,6 +56,8 @@ namespace upsylon
             return static_cast<size_t>(i-s);
         }
     }
+#endif
+    
 }
 
 #endif

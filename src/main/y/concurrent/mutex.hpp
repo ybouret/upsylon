@@ -42,6 +42,7 @@ namespace upsylon
                 static bool try_lock(type *m) throw(); //!< try lock
             };
         }
+        class condition; //!< forward declaration
 
         //! system recursive mutex
         class mutex : public lockable
@@ -61,7 +62,8 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(mutex);
             nucleus::mutex::type m;
-
+            friend class condition;
+            
         public:
             static mutex giant; //!< a giant mutex for global locking
         };
