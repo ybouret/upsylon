@@ -145,7 +145,7 @@ namespace upsylon
 //! driver prolog
 #define Y_UTEST_INIT(N)             \
 /*    */    int main( int argc, char **argv )  \
-/*    */    {    upsylon::utest::suite<N> tests;   
+/*    */    {    upsylon::utest::suite<N> tests;  srand( time(NULL) );
 
 //! register a new test
 #define Y_UTEST(NAME) do{                                \

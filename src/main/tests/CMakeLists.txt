@@ -11,6 +11,7 @@ ADD_TEST(Swap     test-main swap)
 ADD_TEST(AtExit   test-main at_exit)
 ADD_TEST(Sys      test-main sys)
 ADD_TEST(Code     test-main code)
+ADD_TEST(Bits     test-main bits)
 ADD_TEST(Chunk    test-main chunk)
 
 ADD_CUSTOM_TARGET(utest-main

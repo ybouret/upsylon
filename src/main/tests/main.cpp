@@ -8,8 +8,9 @@ Y_UTEST_INIT(16)
     Y_UTEST(swap);
     Y_UTEST(at_exit);
     Y_UTEST(sys);
-    Y_UTEST(code);
+    Y_UTEST(bits);
     Y_UTEST(chunk);
+    Y_UTEST(code);
 
 }
 Y_UTEST_EXEC()

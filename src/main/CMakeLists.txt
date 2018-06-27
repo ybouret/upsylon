@@ -31,9 +31,15 @@ SET(code_srcs ${code_decl} ${code_code})
 SOURCE_GROUP( code FILES ${code_srcs} )
 INSTALL( FILES ${code_decl} DESTINATION include/y/code )
 
+FILE(GLOB random_decl y/random/*.hpp)
+FILE(GLOB random_code y/random/*.cpp)
+SET(random_srcs ${random_decl} ${random_code})
+SOURCE_GROUP( random FILES ${random_srcs} )
+INSTALL( FILES ${random_decl} DESTINATION include/y/random )
+
 FILE(GLOB memory_decl   y/memory/*.hpp)
-FILE(GLOB memory_memory y/memory/*.cpp)
-SET(memory_srcs ${memory_decl} ${memory_memory})
+FILE(GLOB memory_code y/memory/*.cpp)
+SET(memory_srcs ${memory_decl} ${memory_code})
 SOURCE_GROUP( memory FILES ${memory_srcs} )
 INSTALL( FILES ${memory_decl} DESTINATION include/y/memory )
 
@@ -49,6 +55,7 @@ ${os_srcs}
 ${utest_srcs} 
 ${type_srcs}
 ${code_srcs}
+${random_srcs}
 ${memory_srcs}
 ${concurrent_srcs}
 )

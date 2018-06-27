@@ -1,6 +1,7 @@
 #include "y/memory/chunk.hpp"
 #include "y/utest/run.hpp"
 #include "y/exceptions.hpp"
+#include "y/random/bits.hpp"
 
 using namespace upsylon;
 
@@ -14,19 +15,50 @@ namespace
     };
 
     template <typename CHUNK>
-    static inline void do_test_chunk( CHUNK &ch )
+    static inline void do_test_chunk( CHUNK &ch , const size_t block_size )
     {
+        random::cstdbits ran;
         const size_t nblock = ch.provided_number;
-        std::cerr << "nblock=" << nblock << std::endl;
+        std::cerr << "nblock=" << nblock << "/block_size=" << block_size << std::endl;
         block_t *blk = (block_t *)calloc(nblock,sizeof(block_t));
         if(!blk) throw libc::exception(errno,"calloc");
 
-        for(size_t i=0;i<nblock;++i)
+        for(size_t iter=0;iter<128;++iter)
         {
-            blk[i].addr = ch.acquire();
+            for(size_t i=0;i<nblock;++i)
+            {
+                blk[i].addr = ch.acquire();
+            }
+            ran.shuffle(blk,nblock);
+            for(size_t i=0;i<nblock;++i)
+            {
+                memset( blk[i].addr, ran.full<uint8_t>(), block_size);
+                ch.release( blk[i].addr );
+            }
+
+            for(size_t i=0;i<nblock;++i)
+            {
+                blk[i].addr = ch.acquire();
+            }
+            ran.shuffle(blk,nblock);
+            const size_t hblock=nblock/2;
+            for(size_t i=hblock;i<nblock;++i)
+            {
+                memset( blk[i].addr, ran.full<uint8_t>(), block_size);
+                ch.release( blk[i].addr );
+            }
+            for(size_t i=hblock;i<nblock;++i)
+            {
+                blk[i].addr = ch.acquire();
+            }
+            ran.shuffle(blk,nblock);
+            for(size_t i=0;i<nblock;++i)
+            {
+                memset( blk[i].addr, ran.full<uint8_t>(), block_size);
+                ch.release( blk[i].addr );
+            }
+
         }
-
-
         free(blk);
     }
 }
@@ -34,21 +66,21 @@ namespace
 
 Y_UTEST(chunk)
 {
-
+    
     char data[1024];
     for(size_t block_size=1;block_size<=8;++block_size)
     {
         std::cerr << "block_size=" << block_size << std::endl;
         memory::chunk<uint8_t>  chunk1(block_size,data,sizeof(data));
-        do_test_chunk(chunk1);
+        do_test_chunk(chunk1,block_size);
         memory::chunk<uint16_t> chunk2(block_size,data,sizeof(data));
-        do_test_chunk(chunk2);
+        do_test_chunk(chunk2,block_size);
 
         memory::chunk<uint32_t> chunk4(block_size,data,sizeof(data));
-        do_test_chunk(chunk4);
+        do_test_chunk(chunk4,block_size);
 
         memory::chunk<uint64_t> chunk8(block_size,data,sizeof(data));
-        do_test_chunk(chunk8);
+        do_test_chunk(chunk8,block_size);
 
     }
     __SHOW(memory::chunk<uint8_t>);

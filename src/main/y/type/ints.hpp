@@ -101,7 +101,37 @@ namespace upsylon
         static const typename __integer::type maximum = __integer::maximum; //!< associated max
     };
 
-    
+    //! bytes for an unsigned type
+    template <typename U>
+    inline size_t bytes_for(const U n) throw()
+    {
+        static const size_t max_bytes = sizeof(U);
+        U mask = static_cast<U>(0xff) << ( (max_bytes-1) * 8 );
+        for( size_t i=max_bytes;i>0;--i)
+        {
+            if( (n & mask) )
+                return i;
+            mask >>= 8;
+        }
+        return 0;
+    }
+
+    //! bits for an unsigned type
+    template <typename U>
+    inline size_t bits_for(const U n) throw()
+    {
+        const size_t max_bits = sizeof(U) * 8;
+        U mask = static_cast<U>(0x01) << ( max_bits-1 );
+        for( int i=max_bits;i>0;--i)
+        {
+            if( n & mask )
+                return i;
+            mask >>= 1;
+        }
+        return 0;
+    }
+
+
 }
 
 #endif
