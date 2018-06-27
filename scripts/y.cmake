@@ -209,12 +209,17 @@ MACRO(TARGET_LINK_Y tgt)
 	MESSAGE(STATUS "[${tgt}] <${ylibs}>")
 	TARGET_LINK_LIBRARIES(${tgt} ${ylibs})
 	
+	IF(Y_LINUX)
+		TARGET_LINK_LIBRARIES(${tgt} pthread)
+	ENDIF()
+	
 	#specific flags
 	IF( YOCTO_GNU AND WIN32)
 		IF("${YOCTO_COMPILER_VERSION}" VERSION_GREATER "4.5.0" )
 		TARGET_LINK_LIBRARIES( ${tgt} -static-libgcc -static-libstdc++ )
 		ENDIF()
 	ENDIF()
+	
 	
 	IF("${CMAKE_GENERATOR}" STREQUAL "Xcode")
 		TARGET_LINK_LIBRARIES(${tgt} -w )
