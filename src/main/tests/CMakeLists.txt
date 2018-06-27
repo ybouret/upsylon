@@ -9,6 +9,7 @@ ADD_TEST(Types    test-main types)
 ADD_TEST(Lockable test-main lockable)
 ADD_TEST(Swap     test-main swap)
 ADD_TEST(AtExit   test-main at_exit)
+ADD_TEST(Sys      test-main sys)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V

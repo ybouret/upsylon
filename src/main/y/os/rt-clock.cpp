@@ -50,11 +50,11 @@ namespace upsylon
 
 #if defined(Y_USE_CLOCK_GETTIME)
 
-    static const uint64_t __giga64 = YOCTO_U64(0x3B9ACA00);
+    static const uint64_t __giga64 = Y_U64(0x3B9ACA00);
 
     void rt_clock:: calibrate()
     {
-        YOCTO_GIANT_LOCK();
+        Y_GIANT_LOCK();
         struct timespec tp  = { 0, 0 };
         const int       err = clock_getres( CLOCK_REALTIME, &tp );
         if(err!=0)
@@ -65,7 +65,7 @@ namespace upsylon
 
     uint64_t rt_clock:: ticks()
     {
-        YOCTO_GIANT_LOCK();
+        Y_GIANT_LOCK();
         struct timespec tp  = { 0, 0 };
         const int       err = clock_gettime( CLOCK_REALTIME, &tp );
         if(err!=0)
