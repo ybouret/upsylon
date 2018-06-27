@@ -2,6 +2,8 @@
 #include "y/utest/run.hpp"
 #include "y/exceptions.hpp"
 #include "y/random/bits.hpp"
+#include <cstring>
+#include <cerrno>
 
 using namespace upsylon;
 
@@ -79,8 +81,8 @@ Y_UTEST(chunk)
         memory::chunk<uint32_t> chunk4(block_size,data,sizeof(data));
         do_test_chunk(chunk4,block_size);
 
-        memory::chunk<uint64_t> chunk8(block_size,data,sizeof(data));
-        do_test_chunk(chunk8,block_size);
+        //memory::chunk<uint64_t> chunk8(block_size,data,sizeof(data));
+        //do_test_chunk(chunk8,block_size);
 
     }
     __SHOW(memory::chunk<uint8_t>);
