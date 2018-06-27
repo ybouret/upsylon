@@ -161,7 +161,7 @@ namespace upsylon
 
     //! destructor disambiguation
     template <typename T>
-    inline void __dtor( T *item ) throw()
+    inline void destruct( T *item ) throw()
     {
         assert(item);
         item->~T();
@@ -172,6 +172,10 @@ namespace upsylon
 
     //! the signed system size
     typedef ptrdiff_t unit_t;
+
+    //! built-int CRC32
+    uint32_t crc32(const void *buffer,const size_t buflen) throw();
+
 }
 
 #endif
