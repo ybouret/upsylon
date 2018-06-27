@@ -16,33 +16,41 @@ namespace upsylon
                 std::cerr << "[memory] allocated=" << allocated << std::endl;
             }
         }
-
+        
         allocator:: allocator() throw() : allocated(0)
         {
         }
-
+        
         void * allocator:: acquire(size_t &n)
         {
             if(n>0)
             {
-                void *p = __acquire(n);
-                if(!p)
+                try
                 {
-                    throw libc::exception(ENOMEM,"internal memory failure");
+                    void *p = __acquire(n);
+                    if(!p)
+                    {
+                        throw libc::exception(ENOMEM,"internal memory failure");
+                    }
+                    if(n<=0)
+                    {
+                        throw libc::exception(EINVAL,"valid address with zero length!");
+                    }
+                    (int64_t &)allocated += n;
+                    return p;
                 }
-                if(n<=0)
+                catch(...)
                 {
-                    throw libc::exception(EINVAL,"valid address with zero length!");
+                    n = 0;
+                    throw;
                 }
-                (int64_t &)allocated += n;
-                return p;
             }
             else
             {
                 return 0;
             }
         }
-
+        
         void allocator:: release(void *&p, size_t &n) throw()
         {
             if(p)
@@ -57,6 +65,6 @@ namespace upsylon
             }
         }
     }
-
+    
 }
 

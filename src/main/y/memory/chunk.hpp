@@ -3,7 +3,7 @@
 
 #include "y/code/round.hpp"
 #include "y/type/ints.hpp"
-#include <iostream>
+#include "y/memory/io.hpp"
 
 namespace upsylon
 {
@@ -18,11 +18,12 @@ namespace upsylon
             //! maximum number of blocks that can be indexed
             static const size_t max_blocks = limit_of<word_type>::maximum;
 
-            word_type      *data;            //!< data as array of word_type
-            const size_t    words_increment; //!< one block_size per data[block_increment];
-            word_type       first_available; //!< bookeeping
-            word_type       still_available; //!< bookeeping
-            const word_type provided_number; //!< initial count
+            word_type       *data;            //!< data as array of word_type
+            const word_type *last;
+            const size_t     words_increment; //!< one block_size per data[block_increment];
+            word_type        first_available; //!< bookeeping
+            word_type        still_available; //!< bookeeping
+            const word_type  provided_number; //!< initial count
 
             inline ~chunk() throw() {}
 
@@ -35,7 +36,8 @@ namespace upsylon
             inline  chunk(const size_t block_size,
                           void        *chunk_data,
                           const size_t chunk_size) throw() :
-            data( static_cast<word_type *>(chunk_data) ),
+            data( io::cast<word_type>(chunk_data,0) ),
+            last( io::cast<word_type>(chunk_data,chunk_size) ),
             words_increment(0),
             first_available(0),
             still_available(0),
