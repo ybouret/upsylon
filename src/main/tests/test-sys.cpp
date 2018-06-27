@@ -1,6 +1,7 @@
 
 #include "y/os/hw.hpp"
 #include "y/os/wtime.hpp"
+#include "y/os/pid.hpp"
 #include "y/utest/timings.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/timings.hpp"
@@ -13,6 +14,8 @@ Y_UTEST(sys)
     std::cerr << "-- #logical processors=" << np << std::endl;
     Y_CHECK(hardware::nprocs()>0);
 
+    std::cerr << "-- PID: " << process_id::get() << std::endl;
+
     std::cerr << "-- wall time" << std::endl;
     wtime chrono;
     for(size_t i=0;i<10;++i)
@@ -23,7 +26,7 @@ Y_UTEST(sys)
     }
 
     std::cerr << "-- timings" << std::endl;
-    char   buffer[1000];
+    char   buffer[1024] = {};
     double tmx=0;
     Y_TIMINGS(tmx,1.0,crc32(buffer,sizeof(buffer)));
     std::cerr << "tmx=" << tmx << "/s" << std::endl;
