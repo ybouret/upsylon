@@ -23,7 +23,8 @@ namespace upsylon
         static uint64_t  ticks();     //!< system ticks
         void             calibrate(); //!< called during constructor, needed to transforms ticks to seconds.
         double           operator()(uint64_t num_ticks) const throw(); //!< ticks to seconds conversion
-        
+        void             sleep( const double nsec ) const; //!< loop for nsec
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(rt_clock);
         freq_type freq;

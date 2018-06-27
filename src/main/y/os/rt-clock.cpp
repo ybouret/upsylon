@@ -121,5 +121,12 @@ namespace upsylon
     {
 
     }
+
+    void rt_clock:: sleep(const double nsec) const
+    {
+        const uint64_t start = ticks();
+        while( (*this)(ticks()-start) < nsec )
+            ;
+    }
 }
 
