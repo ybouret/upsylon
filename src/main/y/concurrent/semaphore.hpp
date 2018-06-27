@@ -14,10 +14,16 @@ namespace upsylon {
 		class semaphore
         {
 		public:
+            //! construct semaphore with initialPermits
 			explicit semaphore( const uint32_t initialPermits ) throw();
+
+            //! destructor
 			virtual ~semaphore() throw();
-			
+
+            //! wait for a permit
 			void wait() throw();
+
+            //! permit is available
 			void post() throw();
 			
 		private:

@@ -77,7 +77,7 @@ namespace upsylon
             {
                 assert(still_available>0);
                 assert(still_available<=provided_number);
-                word_type     *p = &data[first_available*words_increment];
+                word_type     *p = &data[ size_t(first_available)*words_increment];
                 first_available  = *p;
 
                 --still_available;

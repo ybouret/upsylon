@@ -11,17 +11,18 @@ namespace upsylon
 
     namespace random
     {
+        //! interface to bits generation
         class bits
         {
         public:
-            virtual ~bits() throw();
+            virtual ~bits() throw(); //!< destructor
             const uint32_t span; //!< next32 in 0..span
             const size_t   nbit; //!< bits_for(span)
             const uint32_t half; //!< span/2
             const double   denD; //!< 1.0+double(span)
             const double   denF; //!< 1.0f+float(span)
 
-            virtual uint32_t next32() throw() = 0;
+            virtual uint32_t next32() throw() = 0; //!< next 32-bits value in 0..span
 
             template <typename T> T to() throw(); //!< in 0:1 exclusive [float|double]
 
@@ -94,12 +95,14 @@ namespace upsylon
             }
 
         protected:
+            //! sets span and auxiliary values
             explicit bits(const uint32_t maxValue) throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bits);
         };
 
+        //! fast demo based on rand()
         class cstdbits : public bits
         {
         public:

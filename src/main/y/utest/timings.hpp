@@ -7,6 +7,7 @@
 namespace upsylon
 {
 
+    //! compute the SPEED of CODE during DURATION
 #define Y_TIMINGS(SPEED,DURATION,CODE)      \
 do {                                        \
 upsylon::rt_clock __timing;                 \

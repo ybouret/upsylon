@@ -10,8 +10,10 @@
 
 namespace upsylon
 {
+    //! get the process id
     struct process_id
     {
+        //! system dependent type
 #if defined(Y_BSD)
         typedef pid_t   type;
 #endif
@@ -20,8 +22,8 @@ namespace upsylon
         typedef uint32_t type;
 #endif
 
-        static type     get();
-        static uint32_t h32();
+        static type     get(); //!< get the PID
+        static uint32_t h32(); //!< get the crc32 of it
     };
 
 

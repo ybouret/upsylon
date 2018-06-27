@@ -19,11 +19,11 @@ namespace
     {
         random::cstdbits ran;
         const size_t nblock = ch.provided_number;
-        std::cerr << "nblock=" << nblock << "/block_size=" << block_size << std::endl;
+        std::cerr << "nblock=" << nblock << "/block_size=" << block_size << ", words_increment=" << ch.words_increment << std::endl;
         block_t *blk = (block_t *)calloc(nblock,sizeof(block_t));
         if(!blk) throw libc::exception(errno,"calloc");
 
-        for(size_t iter=0;iter<128;++iter)
+        for(size_t iter=0;iter<16;++iter)
         {
             for(size_t i=0;i<nblock;++i)
             {
@@ -67,8 +67,8 @@ namespace
 Y_UTEST(chunk)
 {
     
-    char data[1024];
-    for(size_t block_size=1;block_size<=8;++block_size)
+    char data[4096];
+    for(size_t block_size=1;block_size<=512;++block_size)
     {
         std::cerr << "block_size=" << block_size << std::endl;
         memory::chunk<uint8_t>  chunk1(block_size,data,sizeof(data));

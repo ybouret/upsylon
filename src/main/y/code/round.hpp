@@ -4,9 +4,13 @@
 
 #include "y/code/ilog2.hpp"
 
+//! get rounding byte
 #define Y_ROUND_BYTE( ROUND_LN2 ) ( (size_t)( 1 << (ROUND_LN2) ) )
+//! get rounding mask
 #define Y_ROUND_MASK( ROUND_LN2 ) ( (size_t)(Y_ROUND_BYTE( ROUND_LN2 )-0x1) )
+//! get rounding mask 2-complement
 #define Y_ROUND_NOT2( ROUND_LN2 ) ( (size_t)(~Y_ROUND_MASK( ROUND_LN2 ) )   )
+//! get the rounded value
 #define Y_ROUND(ROUND_LN2,N)      ( ( (size_t)(N) + Y_ROUND_MASK(ROUND_LN2) ) & Y_ROUND_NOT2( ROUND_LN2 ) )
 
 //! 1 byte  | 8 bits
@@ -39,12 +43,19 @@
 //! internal memory alignment
 #define Y_MEMALIGN(N)  Y_ROUND16(N)
 
+//! number of uint64_t to hold N
 #define Y_U64_FOR_SIZE(N) ( Y_ROUND8(N) >> 3 )
+
+//! number of uint64_t to hold T
 #define Y_U64_FOR_ITEM(T) Y_U64_FOR_SIZE(sizeof(T))
 
+//! number of uin32_t to hold N
 #define Y_U32_FOR_SIZE(N) ( Y_ROUND4(N) >> 2 )
+
+//! number of uint32_t to hold T
 #define Y_U32_FOR_ITEM(T) Y_U32_FOR_SIZE(sizeof(T))
 
+//! number of bytes to describe some bits
 #define Y_BYTES_FOR(BITS) ( (size_t)(Y_ROUND(3,BITS)) >>3 )
 
 //! align on a power of two BYTES
@@ -57,6 +68,7 @@ namespace upsylon
 {
     namespace memory
     {
+        //! function for memory alignment
         inline size_t align( size_t n ) throw() { return Y_MEMALIGN(n); }
     }
 }
