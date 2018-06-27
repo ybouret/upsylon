@@ -13,7 +13,6 @@ namespace upsylon
         struct __at_exit
         {
             at_exit::procedure  proc;
-            void               *args;
             at_exit::longevity  when;
 
             static __at_exit tasks[at_exit::stack_size];
@@ -25,7 +24,7 @@ namespace upsylon
                 {
                     __at_exit &cb = tasks[i];
                     assert(cb.proc);
-                    try{cb.proc(cb.args);} catch(...) {}
+                    try{cb.proc();} catch(...) {}
                     memset(&cb,0,sizeof(__at_exit));
                 }
             }
@@ -57,7 +56,7 @@ namespace upsylon
 
     }
 
-    void at_exit:: perform(procedure proc, void *args, const longevity when) throw()
+    void at_exit:: perform(procedure proc, const longevity when) throw()
     {
         static bool registerd = false;
 
@@ -89,7 +88,6 @@ namespace upsylon
         // create a task at last position
         __at_exit &cb = __at_exit::tasks[ __at_exit::count++ ];
         cb.proc = proc;
-        cb.args = args;
         cb.when = when;
 
         // put it into place

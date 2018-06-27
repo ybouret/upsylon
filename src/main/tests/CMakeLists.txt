@@ -13,6 +13,7 @@ ADD_TEST(Sys      test-main sys)
 ADD_TEST(Code     test-main code)
 ADD_TEST(Bits     test-main bits)
 ADD_TEST(Chunk    test-main chunk)
+ADD_TEST(Alloc    test-main alloc)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V
