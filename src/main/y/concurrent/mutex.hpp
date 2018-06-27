@@ -48,18 +48,15 @@ namespace upsylon
         {
         public:
             //! create the system mutex
-            explicit mutex() throw() : m()  { nucleus::mutex::init(&m); }
-
+            inline explicit mutex() throw() : m()  { nucleus::mutex::init(&m);            }
             //! release all
-            inline virtual ~mutex() throw() { nucleus::mutex::quit(&m); }
-
+            inline virtual ~mutex() throw()        { nucleus::mutex::quit(&m);            }
             //! lock mutex
             inline virtual void lock()     throw() { nucleus::mutex::lock(&m);            }
             //! unlock mutex
             inline virtual void unlock()   throw() { nucleus::mutex::unlock(&m);          }
             //! try lock mutex
             inline virtual bool try_lock() throw() { return nucleus::mutex::try_lock(&m); }
-            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(mutex);
