@@ -63,9 +63,10 @@ namespace upsylon
             nucleus::mutex::type m;
 
         public:
-            static mutex giant;
+            static mutex giant; //!< a giant mutex for global locking
         };
 
+        //! put a scoped lock on the giant mutex
 #define Y_GIANT_LOCK() Y_LOCK(concurrent::mutex::giant)
     }
     

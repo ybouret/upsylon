@@ -35,7 +35,7 @@ namespace upsylon
                 __at_exit *prev = curr-1;
                 --curr;
                 --prev;
-                while(curr>tasks && prev->when>curr->when)
+                while(curr>tasks && prev->when>=curr->when)
                 {
                     bswap(*prev,*curr);
                     --prev;
