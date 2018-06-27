@@ -7,9 +7,10 @@
 namespace upsylon
 {
 
+    //! gather hardware information
     struct hardware
     {
-        static size_t nprocs();
+        static size_t nprocs(); //!< number of logical processors
     };
 
 }
