@@ -4,6 +4,7 @@
 #include "y/type/bswap.hpp"
 #include <cerrno>
 #include <cstring>
+#include <cstdlib>
 
 namespace upsylon
 {

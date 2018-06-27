@@ -1,5 +1,6 @@
 #include "y/type/bswap.hpp"
 #include "y/utest/run.hpp"
+#include <cstring>
 
 using namespace upsylon;
 namespace
@@ -17,7 +18,7 @@ namespace
 #define __SWAP(Q) do {\
 std::cerr << "__bswap<" #Q ">" << std::endl;\
 init(); core::__bswap<Q>(arr,brr);\
-for(size_t i=0;i<Q;++i) {\
+for(int i=0;i<Q;++i) {\
 std::cerr << "\t@" << i << ":"; Y_CHECK(arr[i]==1&&brr[i]==0);\
 }\
 } while(false)
@@ -25,7 +26,7 @@ std::cerr << "\t@" << i << ":"; Y_CHECK(arr[i]==1&&brr[i]==0);\
 #define _SWAP(Q) do {\
 std::cerr << "_bswap<" #Q ">" << std::endl;\
 init(); core::_bswap<Q>(arr,brr);\
-for(size_t i=0;i<Q;++i) {\
+for(int i=0;i<Q;++i) {\
 std::cerr << "\t@" << i << ":"; Y_CHECK(arr[i]==1&&brr[i]==0);\
 }\
 } while(false)
