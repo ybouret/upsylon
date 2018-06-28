@@ -94,6 +94,13 @@ namespace upsylon
                 }
             }
 
+            inline bool choice() throw()
+            {
+                return (next32() <= half);
+            }
+
+
+
         protected:
             //! sets span and auxiliary values
             explicit bits(const uint32_t maxValue) throw();

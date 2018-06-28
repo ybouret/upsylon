@@ -1,13 +1,18 @@
-#ifndef YOCTO_CORE_LIST_INCLUDED
-#define YOCTO_CORE_LIST_INCLUDED 1
+#ifndef Y_CORE_LIST_INCLUDED
+#define Y_CORE_LIST_INCLUDED 1
 
-#include "yocto/code/bswap.hpp"
+#include "y/type/bswap.hpp"
 
-namespace yocto
+namespace upsylon
 {
 	
 	namespace core
     {
+#define Y_CORE_CHECK_LIST_NODE(node) \
+assert((node)!=NULL);\
+assert((node)->next==NULL);\
+assert((node)->prev==NULL)
+
 		//! list of nodes
 		template <typename NODE>
 		class list_of
@@ -30,10 +35,7 @@ namespace yocto
 						
 			inline void push_back( NODE *node ) throw()
 			{
-				assert(NULL!=node);
-                assert(NULL==node->next);
-                assert(NULL==node->prev);
-                //assert( !owns(node));
+                Y_CORE_CHECK_LIST_NODE(node);
 				if( size <= 0 )
 				{
 					push_first(node);
@@ -50,10 +52,7 @@ namespace yocto
 			
 			inline void push_front( NODE *node ) throw()
 			{
-				assert(NULL!=node);
-                assert(NULL==node->next);
-                assert(NULL==node->prev);
-                //assert( !owns(node));
+                Y_CORE_CHECK_LIST_NODE(node);
 				if( size <= 0 )
 				{
 					push_first(node);
@@ -75,7 +74,9 @@ namespace yocto
                 assert(head!=NULL);
                 assert(tail!=NULL);
 				if( size <= 1 )
+                {
 					return pop_last();
+                }
 				else
 				{
 					NODE *node = tail;
@@ -94,7 +95,9 @@ namespace yocto
                 assert(head!=NULL);
                 assert(tail!=NULL);
 				if( size <= 1 )
+                {
 					return pop_last();
+                }
 				else
 				{
 					NODE *node = head;
@@ -118,7 +121,7 @@ namespace yocto
 				while( other.size ) push_front( other.pop_back() );
 			}
 			
-			
+			//! mostly to debug
 			inline bool owns( const NODE *node ) const throw()
 			{
 				for( const NODE *scan = head; scan != NULL; scan = scan->next)
@@ -127,70 +130,11 @@ namespace yocto
 				}
 				return false;
 			}
-			
+
+            //! hard reset
 			inline void reset() throw() { head = tail = NULL; size=0; }
 
-            //! assuming C++ node
-            inline void auto_delete() throw()
-            {
-                NODE *node = tail;
-				while( node!=NULL )
-				{
-					NODE *prev = node->prev;
-					node->next = NULL;
-					node->prev = NULL;
-					delete node;
-					node = prev;
-				}
-				reset();
-            }
-            
-			inline void delete_with( void (*proc)( NODE * ) ) throw()
-			{
-				assert(proc);
-				NODE *node = tail;
-				while( node )
-				{
-					NODE *prev = node->prev;
-					node->next = NULL;
-					node->prev = NULL;
-					proc(node);
-					node = prev;
-				}
-				reset();
-			}
-			
-			template <typename ARGS>
-			inline void delete_with( void (*proc)( NODE *, ARGS), ARGS args ) throw()
-			{
-				assert(proc);
-				NODE *node = tail;
-				while( node )
-				{
-					NODE *prev = node->prev;
-					node->next = NULL;
-					node->prev = NULL;
-					proc(node,args);
-					node = prev;
-				}
-				reset();
-			}
-			
-			template <typename ARGS1,typename ARGS2>
-			inline void delete_with( void (*proc)( NODE *, ARGS1, ARGS2 ), ARGS1 args1, ARGS2 args2 ) throw()
-			{
-				assert(proc);
-				NODE *node = tail;
-				while( node )
-				{
-					NODE *prev = node->prev;
-					node->next = NULL;
-					node->prev = NULL;
-					proc(node,args1,args2);
-					node = prev;
-				}
-				reset();
-			}
+
 			
 			inline NODE * unlink( NODE *node ) throw()
 			{
@@ -241,7 +185,8 @@ namespace yocto
 					return node;
 				}
 			}
-			
+
+            //! fetch in 0..size-1
             inline const NODE *fetch( size_t index ) const throw()
             {
                 assert( index < size );
@@ -271,8 +216,7 @@ namespace yocto
             inline NODE* replace( NODE *mine, NODE *yours ) throw()
             {
                 assert( owns(mine) );
-                assert( NULL == yours->prev );
-                assert( NULL == yours->next );
+                Y_CORE_CHECK_LIST_NODE(yours);
                 if( head == mine )
                 {
                     NODE *node = pop_front();
@@ -302,7 +246,8 @@ namespace yocto
                     }
                 }
             }
-            
+
+            //! todo: check
             inline size_t index_of( const NODE *node ) const throw()
             {
                 assert( owns(node) );
@@ -312,7 +257,7 @@ namespace yocto
                 return ans;
             }
             
-            
+            //! reverser list order
             inline void reverse() throw()
             {
                 list_of tmp;
@@ -320,6 +265,7 @@ namespace yocto
                 swap_with(tmp);
             }
 
+            //! reverse only a part
             inline void reverse_last(size_t n) throw()
             {
                 assert(n<=size);
@@ -371,7 +317,7 @@ namespace yocto
                 }
             }
 
-
+            // move toward tail
             inline void towards_tail(NODE *node) throw()
             {
                 assert(owns(node));
@@ -381,6 +327,7 @@ namespace yocto
                 insert_after(next,unlink(node));
             }
 
+            // move towards head
             inline void towards_head(NODE *node) throw()
             {
                 assert(owns(node));
@@ -391,7 +338,7 @@ namespace yocto
             }
 
         private:
-			YOCTO_DISABLE_COPY_AND_ASSIGN(list_of);
+			Y_DISABLE_COPY_AND_ASSIGN(list_of);
 			inline void push_first( NODE *node ) throw()
 			{
 				assert(NULL==head); assert(NULL==tail); assert(0==size);
@@ -409,35 +356,32 @@ namespace yocto
 				return node;
 			}
 		};
-		
+    }
+
+}
+
+namespace upsylon
+{
+    namespace core
+    {
+        //! a node is a C++ object
         template <typename NODE>
         class list_of_cpp : public list_of<NODE>
         {
         public:
             explicit list_of_cpp() throw() : list_of<NODE>() {}
-            
+
+            //! delete content
             inline void clear() throw()
             {
-                this->auto_delete();
-            }
-            
-            virtual ~list_of_cpp() throw()
-            {
-                clear();
+                while(this->size) delete this->pop_back();
             }
 
-            inline void merge_back_copy( const list_of_cpp &other )
-            {
-                list_of_cpp tmp;
-                for(const NODE *node=other.head;node;node=node->next)
-                {
-                    tmp.push_back( new NODE( *node ) );
-                }
-                this->merge_back(tmp);
-            }
-            
+            //! clear on destructor
+            virtual ~list_of_cpp() throw() { clear(); }
+
             //! valid only if a copy ctor is defined for NODE
-            list_of_cpp( const list_of_cpp &other ) : list_of<NODE> ()
+            inline list_of_cpp( const list_of_cpp &other ) : list_of<NODE> ()
             {
                 try
                 {
@@ -453,32 +397,52 @@ namespace yocto
                 }
             }
 
-            inline void delete_back()  throw() { assert(this->tail); delete this->pop_back();  }
-            inline void delete_front() throw() { assert(this->head); delete this->pop_front(); }
+            //! copy and merge_back
+            inline void merge_back_copy( const list_of_cpp &other)
+            {
+                list_of_cpp tmp(other);
+                this->merge_back(other);
+            }
+
+            //! copy and merge front
+            inline void merge_front_copy( const list_of_cpp &other)
+            {
+                list_of_cpp tmp(other);
+                this->merge_front(other);
+            }
+
 
         private:
-            YOCTO_DISABLE_ASSIGN(list_of_cpp);
-            
+            Y_DISABLE_ASSIGN(list_of_cpp);
         };
 
+
+	}
+	
+}
+
+namespace upsylon
+{
+    namespace core
+    {
+        //! a node is a cloneable C++ object
         template <typename NODE>
         class list_of_cloneable : public list_of<NODE>
         {
         public:
             explicit list_of_cloneable() throw() : list_of<NODE>() {}
 
+            //! delete content
             inline void clear() throw()
             {
-                this->auto_delete();
-            }
+                while(this->size) delete this->pop_back();
+                    }
 
-            virtual ~list_of_cloneable() throw()
-            {
-                clear();
-            }
+            //! clear on destructor
+            virtual ~list_of_cloneable() throw() { clear(); }
 
             //! valid only if a copy ctor is defined for NODE
-            list_of_cloneable( const list_of_cloneable &other ) : list_of<NODE> ()
+            inline list_of_cloneable( const list_of_cloneable &other ) : list_of<NODE> ()
             {
                 try
                 {
@@ -494,14 +458,27 @@ namespace yocto
                 }
             }
 
+            //! copy and merge_back
+            inline void merge_back_copy( const list_of_cloneable &other)
+            {
+                list_of_cloneable tmp(other);
+                this->merge_back(other);
+            }
+
+            //! copy and merge front
+            inline void merge_front_copy( const list_of_cloneable &other)
+            {
+                list_of_cloneable tmp(other);
+                this->merge_front(other);
+            }
+
+
         private:
-            YOCTO_DISABLE_ASSIGN(list_of_cloneable);
-
+            Y_DISABLE_ASSIGN(list_of_cloneable);
         };
-        
+    }
 
-	}
-	
 }
+
 
 #endif

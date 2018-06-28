@@ -12,7 +12,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(chunk);
     Y_UTEST(code);
     Y_UTEST(alloc);
-
+    Y_UTEST(core);
 }
 Y_UTEST_EXEC()
 

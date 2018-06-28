@@ -33,6 +33,7 @@ namespace upsylon
             word_type        still_available; //!< bookeeping
             const word_type  provided_number; //!< initial count
 
+            //! destructor
             inline ~chunk() throw() {}
             inline static size_t core_sizeof() { return 2*sizeof(chunk*)+sizeof(word_type *)*2+sizeof(size_t)+3*sizeof(word_type); }
 
