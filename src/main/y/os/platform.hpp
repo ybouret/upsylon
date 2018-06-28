@@ -173,8 +173,11 @@ namespace upsylon
     //! the signed system size
     typedef ptrdiff_t unit_t;
 
-    //! built-int CRC32
+    //! built-in CRC32
     uint32_t crc32(const void *buffer,const size_t buflen) throw();
+
+    //! built-in integer hash
+    uint32_t ih32(uint32_t a) throw();
 
 }
 

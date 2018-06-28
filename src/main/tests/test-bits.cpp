@@ -1,4 +1,4 @@
-#include "y/random/bits.hpp"
+#include "y/random/marsaglia.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -19,6 +19,8 @@ Y_UTEST(bits)
     srand(time(NULL));
     random::cstdbits ran;
     check_bits(ran);
+
+    random::Marsaglia::test();
 }
 Y_UTEST_DONE()
 
