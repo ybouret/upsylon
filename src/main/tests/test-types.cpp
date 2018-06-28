@@ -28,7 +28,6 @@ static inline void test_ints()
 
 Y_UTEST(types)
 {
-	//select_type<true,double,float>::result x=0;
     test_select<double,int>();
     test_ints<short>();
     test_ints<unsigned short>();

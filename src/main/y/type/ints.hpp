@@ -84,7 +84,7 @@ namespace upsylon
     //! compute if an integral type is signed
     template <typename T>
     struct is_signed {
-        static const bool value = (T(-1) < T(0)) ? true : false; //!< compile time detection
+        static const bool value = (T(-1) < T(0)); //!< compile time detection
     };
     
     //! compute the limits on an integral type
