@@ -15,6 +15,13 @@ namespace upsylon
         class chunk
         {
         public:
+            enum ownership
+            {
+                owned_by_prev,
+                owned_by_this,
+                owned_by_next
+            };
+
             //! maximum number of blocks that can be indexed
             static const size_t max_blocks = limit_of<word_type>::maximum;
 
@@ -74,6 +81,26 @@ namespace upsylon
             {
                 const word_type *p = (const word_type *)addr;
                 return (p >= data) && (p<last);
+            }
+
+            inline ownership owned_by(const void *addr) const throw()
+            {
+                const word_type *p = (const word_type *)addr;
+                if(p<data)
+                {
+                    return owned_by_prev;
+                }
+                else
+                {
+                    if(p>=last)
+                    {
+                        return owned_by_next;
+                    }
+                    else
+                    {
+                        return owned_by_this;
+                    }
+                }
             }
 
             //! acquire a zeroed block
