@@ -1,7 +1,6 @@
 #include "y/memory/chunk.hpp"
 #include "y/utest/run.hpp"
 #include "y/exceptions.hpp"
-#include "y/random/bits.hpp"
 #include <cstring>
 #include <cerrno>
 
@@ -19,7 +18,6 @@ namespace
     template <typename CHUNK>
     static inline void do_test_chunk( CHUNK &ch , const size_t block_size )
     {
-        random::cstdbits ran;
         const size_t nblock = ch.provided_number;
         std::cerr << "nblock=" << nblock << "/block_size=" << block_size << ", words_increment=" << ch.words_increment << std::endl;
         block_t *blk = (block_t *)calloc(nblock,sizeof(block_t));
@@ -31,10 +29,10 @@ namespace
             {
                 blk[i].addr = ch.acquire();
             }
-            ran.shuffle(blk,nblock);
+            alea.shuffle(blk,nblock);
             for(size_t i=0;i<nblock;++i)
             {
-                memset( blk[i].addr, ran.full<uint8_t>(), block_size);
+                memset( blk[i].addr, alea.full<uint8_t>(), block_size);
                 ch.release( blk[i].addr );
             }
 
@@ -42,21 +40,21 @@ namespace
             {
                 blk[i].addr = ch.acquire();
             }
-            ran.shuffle(blk,nblock);
+            alea.shuffle(blk,nblock);
             const size_t hblock=nblock/2;
             for(size_t i=hblock;i<nblock;++i)
             {
-                memset( blk[i].addr, ran.full<uint8_t>(), block_size);
+                memset( blk[i].addr, alea.full<uint8_t>(), block_size);
                 ch.release( blk[i].addr );
             }
             for(size_t i=hblock;i<nblock;++i)
             {
                 blk[i].addr = ch.acquire();
             }
-            ran.shuffle(blk,nblock);
+            alea.shuffle(blk,nblock);
             for(size_t i=0;i<nblock;++i)
             {
-                memset( blk[i].addr, ran.full<uint8_t>(), block_size);
+                memset( blk[i].addr, alea.full<uint8_t>(), block_size);
                 ch.release( blk[i].addr );
             }
 
@@ -80,9 +78,7 @@ Y_UTEST(chunk)
 
         memory::chunk<uint32_t> chunk4(block_size,data,sizeof(data));
         do_test_chunk(chunk4,block_size);
-
-        //memory::chunk<uint64_t> chunk8(block_size,data,sizeof(data));
-        //do_test_chunk(chunk8,block_size);
+        
 
     }
     __SHOW(memory::chunk<uint8_t>);

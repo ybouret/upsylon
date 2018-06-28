@@ -1,6 +1,5 @@
 #include "y/memory/global.hpp"
 #include "y/utest/run.hpp"
-#include "y/random/bits.hpp"
 #include "y/memory/io.hpp"
 
 using namespace upsylon;
@@ -16,7 +15,6 @@ namespace
 
 Y_UTEST(alloc)
 {
-    random::cstdbits ran;
     memory::allocator &a = memory::global::instance();
     {
         static const size_t N = 100;
@@ -25,10 +23,10 @@ Y_UTEST(alloc)
         {
             for(size_t i=0;i<N;++i)
             {
-                blk[i].size = ran.leq(100);
+                blk[i].size = alea.leq(100);
                 blk[i].addr = a.acquire(blk[i].size);
             }
-            ran.shuffle(blk,N);
+            alea.shuffle(blk,N);
             for(size_t i=0;i<N;++i)
             {
                 a.release( blk[i].addr, blk[i].size );

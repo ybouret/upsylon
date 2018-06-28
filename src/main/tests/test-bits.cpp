@@ -19,7 +19,8 @@ Y_UTEST(bits)
     srand(time(NULL));
     random::cstdbits ran;
     check_bits(ran);
-
+    check_bits(alea);
+    
     random::Marsaglia::test();
 }
 Y_UTEST_DONE()

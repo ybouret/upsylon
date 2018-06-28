@@ -3,6 +3,7 @@
 #define Y_UTEST_RUN_INCLUDED 1
 
 #include "y/exception.hpp"
+#include "y/alea.hpp"
 #include <iostream>
 
 //! test prolog

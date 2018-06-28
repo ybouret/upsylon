@@ -3,6 +3,7 @@
 #define Y_UTEST_DRIVER_INCLUDED 1
 
 #include "y/exception.hpp"
+#include "y/alea.hpp"
 #include <cstring>
 #include <cstdlib>
 #include <iostream>
@@ -145,7 +146,7 @@ namespace upsylon
 //! driver prolog
 #define Y_UTEST_INIT(N)             \
 /*    */    int main( int argc, char **argv )  \
-/*    */    {    upsylon::utest::suite<N> tests;  srand( time(NULL) );
+/*    */    {    upsylon::utest::suite<N> tests;  srand( time(NULL) ); upsylon::alea_init();
 
 //! register a new test
 #define Y_UTEST(NAME) do{                                \

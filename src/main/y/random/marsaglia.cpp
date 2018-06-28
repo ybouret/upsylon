@@ -1,5 +1,5 @@
 #include "y/random/marsaglia.hpp"
-#include <cstdio>
+
 namespace upsylon
 {
     namespace random
@@ -17,29 +17,8 @@ namespace upsylon
 #define VNI   ((long) KISS)*4.656613e-10
 #define UC    (uint8_t)  /*a cast operation*/
 
-        void Marsaglia::test(void)
-        {
-            fflush(stdout);
-            Marsaglia r;
-            r.settable(12345,65435,34221,12345,9983651,95746118);
-            uint32_t k;
-            int      i;
-            printf("==> Marsaglia tests\n");
-            for(i=1;i<1000001;i++){k=r.lfib4();} printf("%u\n", k-1064612766U);
-            for(i=1;i<1000001;i++){k=r.swb()  ;} printf("%u\n", k- 627749721U);
-            for(i=1;i<1000001;i++){k=r.kiss() ;} printf("%u\n", k-1372460312U);
-            for(i=1;i<1000001;i++){k=r.cong() ;} printf("%u\n", k-1529210297U);
-            for(i=1;i<1000001;i++){k=r.shr3() ;} printf("%u\n", k-2642725982U);
-            for(i=1;i<1000001;i++){k=r.mwc()  ;} printf("%u\n", k- 904977562U);
-            for(i=1;i<1000001;i++){k=r.fib()  ;} printf("%u\n", k-3519793928U);
-            printf("==> done\n");
-        }
 
 
-#if defined(_MSC_VER)
-        // init of t
-#pragma warning ( disable : 4351 )
-#endif
         Marsaglia:: Marsaglia() throw() :
         z(362436069),
         w(521288629),
@@ -129,3 +108,53 @@ namespace upsylon
     }
 
 }
+
+#include "y/os/pid.hpp"
+#include "y/os/rt-clock.hpp"
+#include "y/hashing/hash64.hpp"
+
+namespace upsylon
+{
+    namespace random
+    {
+        void Marsaglia::initialize() throw()
+        {
+            uint32_t rw = uint32_t( hashing::hash64::mix64(rt_clock::ticks(),hashing::hash64::NR) );
+            uint32_t lw = process_id::h32();
+            uint32_t iv[6];
+            hashing::hash64::NR(&lw,&rw); iv[0] = lw; iv[1] = rw;
+            hashing::hash64::NR(&lw,&rw); iv[2] = lw; iv[3] = rw;
+            hashing::hash64::NR(&lw,&rw); iv[4] = lw; iv[5] = rw;
+            settable(iv[0], iv[1], iv[2], iv[3], iv[4], iv[5]);
+        }
+
+    }
+}
+
+#include <cstdio>
+namespace upsylon
+{
+    namespace random
+    {
+        void Marsaglia::test(void)
+        {
+            fflush(stdout);
+            Marsaglia r;
+            r.settable(12345,65435,34221,12345,9983651,95746118);
+            uint32_t k;
+            int      i;
+            printf("==> Marsaglia tests\n");
+            for(i=1;i<1000001;i++){k=r.lfib4();} printf("%u\n", k-1064612766U);
+            for(i=1;i<1000001;i++){k=r.swb()  ;} printf("%u\n", k- 627749721U);
+            for(i=1;i<1000001;i++){k=r.kiss() ;} printf("%u\n", k-1372460312U);
+            for(i=1;i<1000001;i++){k=r.cong() ;} printf("%u\n", k-1529210297U);
+            for(i=1;i<1000001;i++){k=r.shr3() ;} printf("%u\n", k-2642725982U);
+            for(i=1;i<1000001;i++){k=r.mwc()  ;} printf("%u\n", k- 904977562U);
+            for(i=1;i<1000001;i++){k=r.fib()  ;} printf("%u\n", k-3519793928U);
+            printf("==> done\n");
+        }
+
+    }
+}
+
+
