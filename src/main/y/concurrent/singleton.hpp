@@ -5,21 +5,22 @@
 #include "y/concurrent/mutex.hpp"
 #include "y/concurrent/at-exit.hpp"
 #include "y/code/round.hpp"
+#include "y/memory/io.hpp"
 
 namespace upsylon
 {
     //! singleton of T
     /**
-     T must define:
-     - a static at_exit::longevity life_time
+     T must define a static at_exit::longevity life_time
      */
     template <typename T>
     class singleton
     {
     public:
+        //! a mutex for thread safe handling
         static concurrent::mutex access;
 
-        //! create of recall instance
+        //! create or recall instance
         static T & instance()
         {
             static volatile bool     register_ = true;
@@ -45,16 +46,13 @@ namespace upsylon
                     //----------------------------------------------------------
                     // access protected static memory
                     //----------------------------------------------------------
-                    void     *instance_addr = (void *) &location_[0];
-                    instance_ = static_cast<volatile T *>( instance_addr );
-                    try
-                    {
-                        new ( instance_addr ) T();
-                    }
+                    void *addr = (void *) &location_[0];
+                    instance_  = static_cast<volatile T *>( addr );
+                    try{ new ( addr ) T(); }
                     catch(...)
                     {
                         instance_ = NULL;
-                        __clear( (void*)location_ );
+                        __clear( addr );
                         throw;
                     }
                 }
@@ -82,11 +80,12 @@ namespace upsylon
     private:
         Y_DISABLE_COPY_AND_ASSIGN(singleton);
 
-        static volatile T *instance_;       //!< not NULL if created
+        static volatile T *instance_; //!< not NULL if created
 
+        //! register in at_exit
         static void __release() throw()
         {
-            if (instance_ != NULL)
+            if (instance_)
             {
                 instance_->~T();
                 __clear((void*)instance_);
@@ -94,15 +93,16 @@ namespace upsylon
             }
         }
 
+        //! just cleaning up
         static void __clear(void *addr) throw()
         {
-            assert(addr!=NULL);
+            assert(addr);
             uint64_t *q = static_cast<uint64_t *>(addr);
-            for(size_t i=Y_U64_FOR_ITEM(T);i>0;--i) q[i] = 0;
+            for(size_t i=0;i<Y_U64_FOR_ITEM(T);++i) q[i] = 0;
         }
     };
 
-    template <typename T> volatile T *      singleton<T>::instance_ = NULL;
+    template <typename T> volatile T *      singleton<T>::instance_ = 0;
     template <typename T> concurrent::mutex singleton<T>::access;
 }
 

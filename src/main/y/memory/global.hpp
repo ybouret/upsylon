@@ -11,6 +11,7 @@ namespace upsylon
 
     namespace  memory
     {
+        //! global calloc/free allocator
         class global : public singleton<global>, public allocator
         {
         public:
@@ -27,6 +28,7 @@ namespace upsylon
            
 
         public:
+            //! the longest life_time
             static const at_exit::longevity life_time = limit_of<at_exit::longevity>::maximum;
         };
     }

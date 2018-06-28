@@ -19,7 +19,7 @@ namespace upsylon
             static const size_t max_blocks = limit_of<word_type>::maximum;
 
             word_type       *data;            //!< data as array of word_type
-            const word_type *last;
+            const word_type *last;            //!< keep track of chunk size
             const size_t     words_increment; //!< one block_size per data[block_increment];
             word_type        first_available; //!< bookeeping
             word_type        still_available; //!< bookeeping
@@ -44,6 +44,7 @@ namespace upsylon
             provided_number(0)
             {
                 assert(block_size>0);
+                assert( chunk_size == size_t(memory::io::delta(data,last)) );
                 //______________________________________________________________
                 //
                 // use data to compute parameters
