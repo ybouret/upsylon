@@ -24,6 +24,9 @@ namespace upsylon
         }
 
         template <>
+        inline void bswap<0>(void *,void*) throw() {}
+        
+        template <>
         inline void bswap<1>(void *a, void *b) throw()
         {
             uint8_t &p = *(uint8_t *)a;
