@@ -26,6 +26,9 @@ namespace upsylon
             //! acquire one block of block_size
             void *acquire();
 
+            //! release a previously allocated block
+            void  release(void *p) throw();
+
         private:
             //! memory block for chunks: mapped on a block of chunk_size bytes
             struct mblock
@@ -34,6 +37,7 @@ namespace upsylon
             };
 
             mchunk               *acquiring; //!< cache to acquire
+            mchunk               *releasing; //!< cache to release
             size_t                available; //!< total available blocks
             core::list_of<mchunk> chunks;    //!< allocated chunks
             core::pool_of<mchunk> cached;    //!< not allocated chunks

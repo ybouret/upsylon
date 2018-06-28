@@ -40,6 +40,7 @@ namespace upsylon
             assert(n>0);
             free(p);
             n=0;
+            p=0;
         }
 
         void *global:: __calloc(const size_t count, const size_t size)

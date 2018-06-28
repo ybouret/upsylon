@@ -58,6 +58,8 @@ namespace upsylon
                 assert(n>0);
                 (int64_t&)allocated -= n;
                 __release(p,n);
+                assert(0==p);
+                assert(0==n);
             }
             else
             {

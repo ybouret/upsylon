@@ -42,6 +42,8 @@ namespace upsylon {
                       const size_t the_chunk_size) throw() :
         block_size(the_block_size),
         chunk_size( max_of(the_chunk_size,min_chunk_size) ),
+        acquiring(0),
+        releasing(0),
         available(0),
         chunks(),
         cached(),
@@ -70,37 +72,60 @@ namespace upsylon {
             {
                 cached.store( ch+i );
             }
-            std::cerr << "#cached=" << cached.size << std::endl;
+            std::cerr << "now using #mblock=" << mstore.size << std::endl;
         }
 
         void arena:: load_new_chunk(mchunk *node) throw()
         {
             Y_CORE_CHECK_LIST_NODE(node);
-#if !defined(NDEBUG)
-            for(const mchunk *scan=chunks.head;scan;scan=scan->next)
-            {
-                assert(!scan->owns(node->data));
-            }
-#endif
+
+
             if(chunks.size<=0)
             {
-                std::cerr << "first chunk" << std::endl;
-                chunks.push_front(node);
-            }
-            else if(node->data<chunks.head->data)
-            {
-                std::cerr << "chunk@front" << std::endl;
-                chunks.push_front(node);
-            }
-            else if(node->data>chunks.tail->data)
-            {
-                std::cerr << "chunk@back" << std::endl;
+                std::cerr << "+chunk@first" << std::endl;
                 chunks.push_back(node);
+                return;
             }
-            else
+
+            assert(chunks.size>0);
+
+            if(node->data>chunks.tail->data)
             {
-                fatal_error("[memory] data chunk overlap!");
+                std::cerr << "+chunk>last" << std::endl;
+                chunks.push_back(node);
+                return;
             }
+
+            if(node->data<chunks.head->data)
+            {
+                std::cerr << "+chunk<head" << std::endl;
+                chunks.push_front(node);
+                return;
+            }
+            assert(node->data>chunks.head->data);
+            assert(node->data<chunks.tail->data);
+            assert(chunks.size>=2);
+
+            mchunk *next = chunks.tail;
+            mchunk *prev = next->prev;
+
+            while(prev)
+            {
+                if(prev->data<node->data&&node->data<next->data)
+                {
+                    prev->next = node;
+                    next->prev = node;
+                    node->next = next;
+                    node->prev = prev;
+                    ++(chunks.size);
+                    return;
+                }
+                next=prev;
+                prev=prev->prev;
+            }
+
+            // never get here!
+            fatal_error("invalid system memory mapping in arena");
         }
 
         mchunk * arena:: new_mchunk()
@@ -125,8 +150,15 @@ namespace upsylon {
 
                 // update bookeeping
                 available += ch->provided_number;
-
+                std::cerr << "available=" << available << std::endl;
                 load_new_chunk(ch);
+#if !defined(NDEBUG)
+                for(const mchunk *node=chunks.head;node->next;node=node->next)
+                {
+                    assert(node->data<node->next->data);
+                }
+#endif
+
             }
             catch(...)
             {
@@ -208,6 +240,7 @@ namespace upsylon {
             else
             {
                 acquiring = new_mchunk();
+                if(!releasing) releasing = acquiring;
             }
 
         ACQUIRE:
@@ -222,3 +255,42 @@ namespace upsylon {
 
 }
 
+namespace upsylon {
+
+    namespace memory
+    {
+        void arena:: release(void *p) throw()
+        {
+            assert(p);
+            assert(releasing);
+            switch(releasing->owned_by(p))
+            {
+                case mchunk::owned_by_this:
+                    break;
+
+                case mchunk::owned_by_next:
+                    // look up next
+                    for(releasing=releasing->next;releasing;releasing=releasing->next)
+                    {
+                        if(releasing->owns(p)) break;
+                    }
+                    break;
+
+                case mchunk::owned_by_prev:
+                    // look up prev
+                    for(releasing=releasing->prev;releasing;releasing=releasing->prev)
+                    {
+                        if(releasing->owns(p)) break;
+                    }
+                    break;
+            }
+            assert(releasing||die("invalid address for arena"));
+            releasing->release(p);
+            ++available;
+            if(releasing->is_empty())
+            {
+            }
+        }
+    }
+
+}
