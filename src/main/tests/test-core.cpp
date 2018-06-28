@@ -1,4 +1,5 @@
 #include "y/core/list.hpp"
+#include "y/core/pool.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -44,8 +45,15 @@ namespace
         }
         std::cerr << std::endl;
         Y_CHECK(l.size==n);
-        LIST l_copy(l);
-        Y_CHECK(l.size==l_copy.size);
+        {
+            LIST l_copy(l);
+            Y_CHECK(l.size==l_copy.size);
+            l.merge_back(l_copy);
+        }
+
+        core::pool_of_cpp<aNode> p;
+        while( l.size ) p.store( l.pop_back() );
+        
     }
 
 }

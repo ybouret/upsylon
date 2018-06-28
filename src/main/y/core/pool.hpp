@@ -1,10 +1,10 @@
-#ifndef YOCTO_CORE_POOL_INCLUDED
-#define YOCTO_CORE_POOL_INCLUDED 1
+#ifndef Y_CORE_POOL_INCLUDED
+#define Y_CORE_POOL_INCLUDED 1
 
 
-#include "yocto/code/bswap.hpp"
+#include "y/type/bswap.hpp"
 
-namespace yocto
+namespace upsylon
 {
     namespace core
     {
@@ -57,32 +57,17 @@ namespace yocto
             }
 
 
-            inline void delete_with( void (*proc)(NODE *) ) throw()
-            {
-                assert( proc );
-                while(size>0)
-                {
-                    proc( query() );
-                }
-            }
-
-
-            template <typename ARGS>
-            inline void delete_with( void (*proc)( NODE *, ARGS), ARGS args ) throw()
-            {
-                assert(proc);
-                while(size>0) { proc( query(), args ); }
-            }
-
-
+            //! hard reset
             inline void reset() throw() { top = NULL; size = 0; }
 
+            //! no-throw swap
             inline void swap_with( pool_of<NODE> &other ) throw()
             {
                 cswap(size,other.size);
                 cswap(top, other.top);
             }
 
+            //! reverse order
             inline void reverse() throw()
             {
                 pool_of<NODE> tmp;
@@ -93,7 +78,7 @@ namespace yocto
 
 
         private:
-            YOCTO_DISABLE_COPY_AND_ASSIGN(pool_of);
+            Y_DISABLE_COPY_AND_ASSIGN(pool_of);
         };
 
 
@@ -121,7 +106,7 @@ namespace yocto
             
 
         private:
-            YOCTO_DISABLE_COPY_AND_ASSIGN(pool_of_cpp);
+            Y_DISABLE_COPY_AND_ASSIGN(pool_of_cpp);
         };
         
     }
