@@ -43,7 +43,7 @@ namespace upsylon
             inline void release( T * &p, size_t &count, size_t &bytes) throw()
             {
                 void *q = static_cast<void *>(p);
-                release(p,bytes); assert(0==p); assert(0==bytes);
+                release(q,bytes); assert(0==q); assert(0==bytes);
                 count = 0;
                 p     = 0;
             }
