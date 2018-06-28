@@ -24,7 +24,8 @@ namespace upsylon
 
             //! maximum number of blocks that can be indexed
             static const size_t max_blocks = limit_of<word_type>::maximum;
-
+            chunk           *next;            //!< for list
+            chunk           *prev;            //!< for list
             word_type       *data;            //!< data as array of word_type
             const word_type *last;            //!< keep track of chunk size
             const size_t     words_increment; //!< one block_size per data[block_increment];
@@ -33,7 +34,7 @@ namespace upsylon
             const word_type  provided_number; //!< initial count
 
             inline ~chunk() throw() {}
-            inline static size_t core_sizeof() { return sizeof(word_type *)*2+sizeof(size_t)+3*sizeof(word_type); }
+            inline static size_t core_sizeof() { return 2*sizeof(chunk*)+sizeof(word_type *)*2+sizeof(size_t)+3*sizeof(word_type); }
 
             //! compute parameters and format data
             /**
@@ -44,6 +45,8 @@ namespace upsylon
             inline  chunk(const size_t block_size,
                           void        *chunk_data,
                           const size_t chunk_size) throw() :
+            next(0),
+            prev(0),
             data( io::cast<word_type>(chunk_data,0) ),
             last( io::cast<word_type>(chunk_data,chunk_size) ),
             words_increment(0),
