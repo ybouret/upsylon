@@ -6,7 +6,7 @@
 
 using namespace upsylon;
 
-#define __SHOW(X) std::cerr << "sizeof(" #X ")=" << sizeof(X) << std::endl
+#define __SHOW(X) std::cerr << "sizeof(" #X ")=" << sizeof(X) << "/core_size=" << X::core_sizeof() << std::endl
 
 namespace
 {

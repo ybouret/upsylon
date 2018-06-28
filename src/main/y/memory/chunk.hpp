@@ -26,6 +26,7 @@ namespace upsylon
             const word_type  provided_number; //!< initial count
 
             inline ~chunk() throw() {}
+            inline static size_t core_sizeof() { return sizeof(word_type *)*2+sizeof(size_t)+3*sizeof(word_type); }
 
             //! compute parameters and format data
             /**
