@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/utest/timings.hpp"
 #include <cstring>
+#include <cstdio>
 
 using namespace upsylon;
 namespace
