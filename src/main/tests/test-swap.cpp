@@ -15,17 +15,19 @@ namespace
         memset(brr,1,N);
     }
 
+#if 0
 #define __SWAP(Q) do {\
 std::cerr << "__bswap<" #Q ">" << std::endl;\
-init(); core::__bswap<Q>(arr,brr);\
+init(); core::bswap<Q>(arr,brr);\
 for(int i=0;i<Q;++i) {\
 std::cerr << "\t@" << i << ":"; Y_CHECK(arr[i]==1&&brr[i]==0);\
 }\
 } while(false)
+#endif
 
 #define _SWAP(Q) do {\
-std::cerr << "_bswap<" #Q ">" << std::endl;\
-init(); core::_bswap<Q>(arr,brr);\
+std::cerr << "bswap<" #Q ">" << std::endl;\
+init(); core::bswap<Q>(arr,brr);\
 for(int i=0;i<Q;++i) {\
 std::cerr << "\t@" << i << ":"; Y_CHECK(arr[i]==1&&brr[i]==0);\
 }\
@@ -33,6 +35,7 @@ std::cerr << "\t@" << i << ":"; Y_CHECK(arr[i]==1&&brr[i]==0);\
 
     static void do_test()
     {
+#if 0
         __SWAP(0);
         __SWAP(1);
         __SWAP(2);
@@ -41,7 +44,7 @@ std::cerr << "\t@" << i << ":"; Y_CHECK(arr[i]==1&&brr[i]==0);\
         __SWAP(5);
         __SWAP(6);
         __SWAP(7);
-
+#endif
 
         _SWAP(0); _SWAP(1); _SWAP(2); _SWAP(3); _SWAP(4); _SWAP(5); _SWAP(6);  _SWAP(7); _SWAP(8); _SWAP(9);
         _SWAP(10); _SWAP(11); _SWAP(12); _SWAP(13); _SWAP(14); _SWAP(15); _SWAP(16);  _SWAP(17); _SWAP(18); _SWAP(19);
