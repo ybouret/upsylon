@@ -93,8 +93,7 @@ namespace upsylon
     {
         enum { size_of = sizeof(T) }; //!< alias
         typedef typename select_type<
-        (T(-1) < T(0)),
-        //is_signed<T>::value,
+        is_signed<T>::value,
         signed_int<size_of>,
         unsigned_int<size_of>
         >::result __integer; //!< the matching integral struct
