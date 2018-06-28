@@ -6,6 +6,7 @@
 #include "y/concurrent/at-exit.hpp"
 #include "y/code/round.hpp"
 #include "y/memory/io.hpp"
+#include <new>
 
 namespace upsylon
 {
@@ -61,10 +62,10 @@ namespace upsylon
         }
 
         //! assuming exists
-        static inline  T *location() throw()
+        static inline  T &location() throw()
         {
             assert( singleton::exists() );
-            return (T *)instance_;
+            return *(T *)instance_;
         }
 
         //! test if allocated

@@ -57,6 +57,8 @@ namespace upsylon
             {
                 assert(block_size>0);
                 assert( chunk_size == size_t(memory::io::delta(data,last)) );
+                assert( chunk_size >= sizeof(word_type) );
+                
                 //______________________________________________________________
                 //
                 // use data to compute parameters
@@ -78,7 +80,10 @@ namespace upsylon
             }
 
             //! test if is empty
-            inline bool is_empty() const throw() { return (still_available>=provided_number); }
+            inline bool   is_empty()  const throw() { return (still_available>=provided_number); }
+
+            //! for info
+            inline size_t allocated() const throw() { return provided_number-still_available;    }
 
             //! test if address is owned by this chunk
             inline bool owns(const void *addr) const throw()
@@ -147,7 +152,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(chunk);
         };
 
-
+        
 
     }
 }

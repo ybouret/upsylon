@@ -15,7 +15,11 @@ namespace upsylon
         class global : public singleton<global>, public allocator
         {
         public:
+            //! legacy calloc, with monitoring
+            void *__calloc(const size_t count, const size_t size);
 
+            //! legacy free, with monitoring
+            void  __free(void *p,const size_t bytes) throw();
 
         private:
             explicit global() throw();
