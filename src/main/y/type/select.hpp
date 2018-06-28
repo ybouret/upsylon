@@ -7,18 +7,18 @@
 namespace upsylon
 {
     //! default type selector.
-    template <const bool flag, typename T, typename U> struct select;
+    template <const bool flag, typename T, typename U> struct select_type;
     
     //! type selector when true => T
     template <typename T, typename U>
-    struct select<true,T,U>
+    struct select_type<true,T,U>
     {
         typedef T result; //!< flag is true
     };
     
     //! type selector when false => U
     template <typename T, typename U>
-    struct select<false,T,U>
+    struct select_type<false,T,U>
     {
         typedef U result; //!< flag is false
     };

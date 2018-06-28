@@ -10,8 +10,10 @@ static inline void test_select()
 {
     const std::type_info &a = typeid(A);
     const std::type_info &b = typeid(B);
-    Y_CHECK(typeid(typename select<true, A,B>::result)==a);
-    Y_CHECK(typeid(typename select<false,A,B>::result)==b);
+    typedef typename select_type<true, A,B>::result sa_type;
+    typedef typename select_type<false,A,B>::result sb_type;
+    Y_CHECK(typeid(sa_type)==a);
+    Y_CHECK(typeid(sb_type)==b);
 
 }
 
@@ -26,6 +28,7 @@ static inline void test_ints()
 
 Y_UTEST(types)
 {
+	//select_type<true,double,float>::result x=0;
     test_select<double,int>();
     test_ints<short>();
     test_ints<unsigned short>();

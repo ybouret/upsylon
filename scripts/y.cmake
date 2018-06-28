@@ -210,7 +210,7 @@ MACRO(TARGET_LINK_Y tgt)
 	TARGET_LINK_LIBRARIES(${tgt} ${ylibs})
 	
 	IF(Y_LINUX)
-		TARGET_LINK_LIBRARIES(${tgt} pthread)
+		TARGET_LINK_LIBRARIES(${tgt} pthread rt)
 	ENDIF()
 	
 	#specific flags

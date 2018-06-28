@@ -92,7 +92,7 @@ namespace upsylon
     struct limit_of
     {
         enum { size_of = sizeof(T) }; //!< alias
-        typedef typename select< is_signed<T>::value,
+        typedef typename select_type< is_signed<T>::value,
         signed_int<size_of>,
         unsigned_int<size_of>
         >::result __integer; //!< the matching integral struct
