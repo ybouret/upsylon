@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_SINGLETON_INCLUDED
 #define Y_SINGLETON_INCLUDED 1
 

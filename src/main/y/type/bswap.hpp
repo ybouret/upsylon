@@ -1,5 +1,4 @@
-
-// \file
+//! \file
 #ifndef Y_TYPE_BSWAP_INCLUDED
 #define Y_TYPE_BSWAP_INCLUDED 1
 
@@ -9,6 +8,7 @@ namespace upsylon
 {
     namespace core
     {
+        //! generic bytes swap
         template <size_t N>
         inline void bswap(void *a, void *b) throw()
         {
@@ -23,9 +23,11 @@ namespace upsylon
             }
         }
 
+        //! no byte swap
         template <>
         inline void bswap<0>(void *,void*) throw() {}
-        
+
+        //! 1 byte swap
         template <>
         inline void bswap<1>(void *a, void *b) throw()
         {
@@ -36,6 +38,7 @@ namespace upsylon
             q=tmp;
         }
 
+        //! 2 bytes swap
         template <>
         inline void bswap<2>(void *a, void *b) throw()
         {
@@ -46,6 +49,7 @@ namespace upsylon
             q=tmp;
         }
 
+        //! 4 bytes swap
         template <>
         inline void bswap<4>(void *a, void *b) throw()
         {
@@ -56,6 +60,7 @@ namespace upsylon
             q=tmp;
         }
 
+        //! 8 bytes swap
         template <>
         inline void bswap<8>(void *a, void *b) throw()
         {
@@ -66,8 +71,10 @@ namespace upsylon
             q=tmp;
         }
 
+        //! local uint64_t swap
 #define Y_BSWAP64(IDX) const uint64_t tmp = p[IDX]; p[IDX]=q[IDX]; q[IDX]=tmp
 
+        //! 16 bytes swap
         template <>
         inline void bswap<16>(void *a, void *b) throw()
         {
@@ -77,6 +84,7 @@ namespace upsylon
             { Y_BSWAP64(1); }
         }
 
+        //! 24 bytes swap
         template <>
         inline void bswap<24>(void *a, void *b) throw()
         {
@@ -87,6 +95,7 @@ namespace upsylon
             { Y_BSWAP64(2); }
         }
 
+        //! 32 bytes swap
         template <>
         inline void bswap<32>(void *a, void *b) throw()
         {
@@ -101,6 +110,7 @@ namespace upsylon
 
     }
 
+    //! bytes swapping for any type
     template <typename T>
     inline void bswap( T &a, T &b ) throw()
     {

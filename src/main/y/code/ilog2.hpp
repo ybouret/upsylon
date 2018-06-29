@@ -1,4 +1,4 @@
-// \file
+//! \file
 #ifndef Y_CODE_ILOG2_INCLUDED
 #define Y_CODE_ILOG2_INCLUDED 1
 

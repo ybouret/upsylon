@@ -1,4 +1,4 @@
-// \file
+//! \file
 #ifndef Y_OS_HW_INCLUDED
 #define Y_OS_HW_INCLUDED 1
 

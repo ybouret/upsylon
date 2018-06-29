@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_OS_WTIME_INCLUDED
 #define Y_OS_WTIME_INCLUDED 1
 
@@ -15,9 +16,7 @@ namespace upsylon
         void     start();       //!< start again, time to zero
         uint64_t count() const; //!< ellapsed ticks
         double   query() const; //!< ellapsed time in seconds
-
-
-
+        
     private:
         uint64_t mark;
         Y_DISABLE_COPY_AND_ASSIGN(wtime);

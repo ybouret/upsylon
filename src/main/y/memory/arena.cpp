@@ -21,7 +21,7 @@ namespace upsylon {
                     hmem.__free(mstore.query(),chunk_size);
                 }
                 cached.reset();
-                for(const mchunk *node=chunks.head;node;node=node->next)
+                for(const chunk *node=chunks.head;node;node=node->next)
                 {
                     if( !node->is_empty() )
                     {
@@ -48,11 +48,11 @@ namespace upsylon {
         chunks(),
         cached(),
         mstore(),
-        chunks_per_mblock(chunk_size/sizeof(mchunk)-1)
+        chunks_per_mblock(chunk_size/sizeof(chunk)-1)
         {
             std::cerr << "[memory.arena] block_size        = " << block_size << std::endl;
             std::cerr << "[memory.arena] chunk_size        = " << chunk_size << std::endl;
-            std::cerr << "[memory.arena] sizeof(mchunk)    = " << sizeof(mchunk) << std::endl;
+            std::cerr << "[memory.arena] sizeof(chunk)     = " << sizeof(chunk) << std::endl;
             std::cerr << "[memory.arena] chunks_per_mblock = " << chunks_per_mblock << std::endl;
             assert(block_size>0);
             assert(chunks_per_mblock>0);
@@ -65,7 +65,7 @@ namespace upsylon {
             void   *addr = hmem.__calloc(1,chunk_size);         //!< get chunk_size
             mblock *blk  = static_cast<mblock *>(addr);         //!< convert into mblock
             mstore.store(blk);                                  //!< kept into blocks
-            mchunk *ch = io::cast<mchunk>(addr,sizeof(mchunk)); //!< get first mchunk
+            chunk *ch = io::cast<chunk>(addr,sizeof(chunk));    //!< get first mchunk
 
             // store all memory in cached
             for(size_t i=0;i<chunks_per_mblock;++i)
@@ -75,7 +75,7 @@ namespace upsylon {
             std::cerr << "now using #mblock=" << mstore.size << std::endl;
         }
 
-        void arena:: load_new_chunk(mchunk *node) throw()
+        void arena:: load_new_chunk(chunk *node) throw()
         {
             Y_CORE_CHECK_LIST_NODE(node);
 
@@ -106,13 +106,14 @@ namespace upsylon {
             assert(node->data<chunks.tail->data);
             assert(chunks.size>=2);
 
-            mchunk *next = chunks.tail;
-            mchunk *prev = next->prev;
+            chunk *next = chunks.tail;
+            chunk *prev = next->prev;
 
             while(prev)
             {
                 if(prev->data<node->data&&node->data<next->data)
                 {
+                    // insertion
                     prev->next = node;
                     next->prev = node;
                     node->next = next;
@@ -128,7 +129,7 @@ namespace upsylon {
             fatal_error("invalid system memory mapping in arena");
         }
 
-        mchunk * arena:: new_mchunk()
+        chunk * arena:: new_chunk()
         {
             // ensure cached mchunk
             if(cached.size<=0)
@@ -137,8 +138,8 @@ namespace upsylon {
             }
             assert(cached.size>0);
 
-            // get a cached mchunk, with no memory
-            mchunk *ch = cached.query();
+            // get a cached chunk, with no memory
+            chunk *ch = cached.query();
             try
             {
                 // get memory
@@ -146,14 +147,14 @@ namespace upsylon {
                 void   *data = hmem.__calloc(1,chunk_size);
 
                 //format the chunk
-                new (ch) mchunk(block_size,data,chunk_size);
+                new (ch) chunk(block_size,data,chunk_size);
 
                 // update bookeeping
                 available += ch->provided_number;
                 std::cerr << "available=" << available << std::endl;
                 load_new_chunk(ch);
 #if !defined(NDEBUG)
-                for(const mchunk *node=chunks.head;node->next;node=node->next)
+                for(const chunk *node=chunks.head;node->next;node=node->next)
                 {
                     assert(node->data<node->next->data);
                 }
@@ -190,8 +191,8 @@ namespace upsylon {
                 assert(acquiring); // always valid after first acquire
                 if(acquiring->still_available<=0)
                 {
-                    mchunk *lo = acquiring->prev;
-                    mchunk *up = acquiring->next;
+                    chunk *lo = acquiring->prev;
+                    chunk *up = acquiring->next;
 
                     // scan both direction
                     while(up&&lo)
@@ -239,7 +240,7 @@ namespace upsylon {
             }
             else
             {
-                acquiring = new_mchunk();
+                acquiring = new_chunk();
                 if(!releasing) releasing = acquiring;
             }
 
@@ -263,12 +264,12 @@ namespace upsylon {
         {
             assert(p);
             assert(releasing);
-            switch(releasing->owned_by(p))
+            switch(releasing->whose(p))
             {
-                case mchunk::owned_by_this:
+                case chunk::owned_by_this:
                     break;
 
-                case mchunk::owned_by_next:
+                case chunk::owned_by_next:
                     // look up next
                     for(releasing=releasing->next;releasing;releasing=releasing->next)
                     {
@@ -276,7 +277,7 @@ namespace upsylon {
                     }
                     break;
 
-                case mchunk::owned_by_prev:
+                case chunk::owned_by_prev:
                     // look up prev
                     for(releasing=releasing->prev;releasing;releasing=releasing->prev)
                     {

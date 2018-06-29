@@ -6,7 +6,7 @@
 
 using namespace upsylon;
 
-#define __SHOW(X) std::cerr << "sizeof(" #X ")=" << sizeof(X) << "/core_size=" << X::core_sizeof() << std::endl
+#define __SHOW(X) std::cerr << "sizeof(" #X ")=" << sizeof(X) << std::endl
 
 namespace
 {
@@ -71,21 +71,21 @@ Y_UTEST(chunk)
     for(size_t block_size=1;block_size<=512;++block_size)
     {
         std::cerr << "block_size=" << block_size << std::endl;
-        memory::chunk<uint8_t>  chunk1(block_size,data,sizeof(data));
+        memory::__chunk<uint8_t>  chunk1(block_size,data,sizeof(data));
         do_test_chunk(chunk1,block_size);
-        memory::chunk<uint16_t> chunk2(block_size,data,sizeof(data));
+        memory::__chunk<uint16_t> chunk2(block_size,data,sizeof(data));
         do_test_chunk(chunk2,block_size);
 
-        memory::chunk<uint32_t> chunk4(block_size,data,sizeof(data));
+        memory::__chunk<uint32_t> chunk4(block_size,data,sizeof(data));
         do_test_chunk(chunk4,block_size);
         
 
     }
-    __SHOW(memory::chunk<uint8_t>);
-    __SHOW(memory::chunk<uint16_t>);
-    __SHOW(memory::chunk<uint32_t>);
-    __SHOW(memory::chunk<uint64_t>);
-    __SHOW(memory::chunk<size_t>);
+    __SHOW(memory::__chunk<uint8_t>);
+    __SHOW(memory::__chunk<uint16_t>);
+    __SHOW(memory::__chunk<uint32_t>);
+    __SHOW(memory::__chunk<uint64_t>);
+    __SHOW(memory::__chunk<size_t>);
 
 }
 Y_UTEST_DONE()

@@ -119,7 +119,7 @@ namespace upsylon
     {
         void Marsaglia::initialize() throw()
         {
-            uint32_t rw = uint32_t( hashing::hash64::mix64(rt_clock::ticks(),hashing::hash64::NR) );
+            uint32_t rw = uint32_t( hashing::hash64::mix(rt_clock::ticks(),hashing::hash64::NR) );
             uint32_t lw = process_id::h32();
             uint32_t iv[6];
             hashing::hash64::NR(&lw,&rw); iv[0] = lw; iv[1] = rw;

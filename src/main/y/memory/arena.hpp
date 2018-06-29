@@ -1,6 +1,6 @@
+//! \file
 #ifndef Y_MEMORY_ARENA_INCLUDED
 #define Y_MEMORY_ARENA_INCLUDED 1
-
 #include "y/memory/chunk.hpp"
 #include "y/core/list.hpp"
 #include "y/core/pool.hpp"
@@ -9,19 +9,25 @@ namespace upsylon
 {
     namespace memory
     {
-        typedef chunk<uint16_t> mchunk;
+        //! default chunk to optimize CHUNK_SIZE up to 128k
+        typedef __chunk<uint16_t> chunk;
 
+        //! an arena of chunk
         class arena
         {
         public:
-            explicit arena(const size_t the_block_size,
-                           const size_t the_chunk_size) throw();
-            virtual ~arena() throw();
+            //! initialize arena
+            arena(const size_t the_block_size,
+                  const size_t the_chunk_size) throw();
 
-            const size_t block_size;
-            const size_t chunk_size;
+            //! release all memory
+            ~arena() throw();
 
-            static const size_t min_chunk_size = 2 * sizeof(mchunk);
+            const size_t block_size; //!< the same block_size for everyone
+            const size_t chunk_size; //!< global memory chunk_size for any allocation
+
+            //! minimal chunk size, to have at least one chunk per memory block!
+            static const size_t min_chunk_size = 2 * sizeof(chunk);
 
             //! acquire one block of block_size
             void *acquire();
@@ -36,20 +42,20 @@ namespace upsylon
                 mblock *next;
             };
 
-            mchunk               *acquiring; //!< cache to acquire
-            mchunk               *releasing; //!< cache to release
+            chunk                *acquiring; //!< cache to acquire
+            chunk                *releasing; //!< cache to release
             size_t                available; //!< total available blocks
-            core::list_of<mchunk> chunks;    //!< allocated chunks
-            core::pool_of<mchunk> cached;    //!< not allocated chunks
+            core::list_of<chunk> chunks;    //!< allocated chunks
+            core::pool_of<chunk> cached;    //!< not allocated chunks
             core::pool_of<mblock> mstore;    //!< ever growing memory store
 
             Y_DISABLE_COPY_AND_ASSIGN(arena);
-            void load_new_chunk( mchunk *node ) throw();
+            void    load_new_chunk( chunk *node ) throw();
             void    new_mblock();
-            mchunk *new_mchunk();
+            chunk  *new_chunk();
             
         public:
-            const size_t          chunks_per_mblock;
+            const size_t          chunks_per_mblock; //!< number of chunks per memory block
 
         };
 

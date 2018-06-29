@@ -64,6 +64,7 @@ const uint32_t ib = (il*il) + ~(ih*ih);\
     }
 }
 
+#if 0
 namespace upsylon
 {
     namespace hashing
@@ -96,5 +97,5 @@ namespace upsylon
     }
 
 }
-
+#endif
 

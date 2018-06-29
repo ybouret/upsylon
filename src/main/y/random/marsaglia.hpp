@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_RANDOM_MARSAGLIA_INCLUDED
 #define Y_RANDOM_MARSAGLIA_INCLUDED 1
 
@@ -8,19 +9,26 @@ namespace upsylon
     namespace random
     {
 
-        //! 32 bits marsaglia generator
+        //! 32 bits Marsaglia's generators
         class Marsaglia
         {
         public:
-            uint32_t z,w,jsr,jcong,a,b;
-            uint32_t x,y,bro;
-            uint8_t  c;
-            uint32_t t[256];
+            uint32_t z;      //!< internal space
+            uint32_t w;      //!< internal space
+            uint32_t jsr;    //!< internal space
+            uint32_t jcong;  //!< internal space
+            uint32_t a;      //!< internal space
+            uint32_t b;      //!< internal space
+            uint32_t x;      //!< internal space
+            uint32_t y;      //!< internal space
+            uint32_t bro;    //!< internal space
+            uint8_t  c;      //!< internal space
+            uint32_t t[256]; //!< internal space
 
-            explicit Marsaglia() throw();
-            virtual ~Marsaglia() throw();
+            explicit Marsaglia() throw(); //!< default initialisation
+            virtual ~Marsaglia() throw(); //!< destructor
 
-            typedef uint32_t (Marsaglia::*Generator)();
+            typedef uint32_t (Marsaglia::*Generator)(); //!< generator method prototype
             uint32_t mwc()   throw(); //!< MWC
             uint32_t shr3()  throw(); //!< SHR3
             uint32_t cong()  throw(); //!< CONG
@@ -44,19 +52,23 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Marsaglia);
         };
 
+        //! create bits from Marsaglia's implementation
         template< Marsaglia::Generator G >
         class MarsagliaBits : public bits, public Marsaglia
         {
         public:
+            //! full range spanning bits
             inline explicit MarsagliaBits() : bits( 0xffffffff ), Marsaglia() {}
+            //! destructor
             inline virtual ~MarsagliaBits() throw() {}
+            //! use selected generator
             inline virtual uint32_t next32() throw() { return (*this.*G)(); }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MarsagliaBits);
         };
 
-        typedef MarsagliaBits<& Marsaglia::kiss > Kiss32;
+        typedef MarsagliaBits<& Marsaglia::kiss > Kiss32; //!< Keep it Simple Stupid 32 bits
 
 
     }

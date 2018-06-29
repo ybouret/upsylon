@@ -1,3 +1,4 @@
+//! \file
 #ifndef YOCTO_MEMORY_CHUNK_INCLUDED
 #define YOCTO_MEMORY_CHUNK_INCLUDED 1
 
@@ -12,20 +13,21 @@ namespace upsylon
 
         //! a chunk of data to hold small memory blocks
         template <typename word_type>
-        class chunk
+        class __chunk
         {
         public:
+            //! detect address ownership
             enum ownership
             {
-                owned_by_prev,
-                owned_by_this,
-                owned_by_next
+                owned_by_prev, //!< in a chunk with lower memory range
+                owned_by_this, //!< this chunk!
+                owned_by_next  //!< in a chunk with higher memory range
             };
 
             //! maximum number of blocks that can be indexed
             static const size_t max_blocks = limit_of<word_type>::maximum;
-            chunk           *next;            //!< for list
-            chunk           *prev;            //!< for list
+            __chunk         *next;            //!< for list
+            __chunk         *prev;            //!< for list
             word_type       *data;            //!< data as array of word_type
             const word_type *last;            //!< keep track of chunk size
             const size_t     words_increment; //!< one block_size per data[block_increment];
@@ -34,18 +36,17 @@ namespace upsylon
             const word_type  provided_number; //!< initial count
 
             //! destructor
-            inline ~chunk() throw() {}
-            inline static size_t core_sizeof() { return 2*sizeof(chunk*)+sizeof(word_type *)*2+sizeof(size_t)+3*sizeof(word_type); }
-
+            inline __chunk() throw() {}
+            
             //! compute parameters and format data
             /**
              \param block_size the desired block_size
              \param chunk_data user's provided memory data space
              \param chunk_size user's provided memory data length
              */
-            inline  chunk(const size_t block_size,
-                          void        *chunk_data,
-                          const size_t chunk_size) throw() :
+            inline  __chunk(const size_t block_size,
+                            void        *chunk_data,
+                            const size_t chunk_size) throw() :
             next(0),
             prev(0),
             data( io::cast<word_type>(chunk_data,0) ),
@@ -73,7 +74,7 @@ namespace upsylon
                 // format the chunk
                 //______________________________________________________________
                 word_type  *q = data;
-                for(size_t  i = 0; i != still_available; q += words_increment )
+                for(size_t  i = 0; i != provided_number; q += words_increment )
                 {
                     *q = word_type(++i);
                 }
@@ -92,7 +93,8 @@ namespace upsylon
                 return (p >= data) && (p<last);
             }
 
-            inline ownership owned_by(const void *addr) const throw()
+            //! get ownership for look up
+            inline ownership whose(const void *addr) const throw()
             {
                 const word_type *p = (const word_type *)addr;
                 if(p<data)
@@ -117,12 +119,14 @@ namespace upsylon
             {
                 assert(still_available>0);
                 assert(still_available<=provided_number);
+
+                // update status
                 word_type     *p = &data[ size_t(first_available)*words_increment];
                 first_available  = *p;
-
                 --still_available;
 
-                word_type *q = p;
+                // zero the block
+                word_type     *q = p;
                 for(size_t i=words_increment;i>0;--i)
                 {
                     *(q++) = 0;
@@ -149,7 +153,7 @@ namespace upsylon
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(chunk);
+            Y_DISABLE_COPY_AND_ASSIGN(__chunk);
         };
 
         

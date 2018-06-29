@@ -1,4 +1,4 @@
-// \file
+//! \file
 #ifndef Y_RANDOM_BITS_INCLUDED
 #define Y_RANDOM_BITS_INCLUDED 1
 
@@ -94,6 +94,7 @@ namespace upsylon
                 }
             }
 
+            //! a random boolean
             inline bool choice() throw()
             {
                 return (next32() <= half);

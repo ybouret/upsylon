@@ -1,4 +1,4 @@
-// \file
+//! \file
 #ifndef Y_AT_EXIT_INCLUDED
 #define Y_AT_EXIT_INCLUDED 1
 

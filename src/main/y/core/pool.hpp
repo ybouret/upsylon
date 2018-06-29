@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_CORE_POOL_INCLUDED
 #define Y_CORE_POOL_INCLUDED 1
 
@@ -82,13 +83,18 @@ namespace upsylon
         };
 
 
+        //! pool of C++ NODEs
         template <typename NODE>
         class pool_of_cpp : public pool_of<NODE>
         {
         public:
+            //! constructor
             explicit pool_of_cpp() throw() : pool_of<NODE>() {}
+
+            //! destructor, delete NODEs
             virtual ~pool_of_cpp() throw() { clear(); }
 
+            //! proper NODEs deleting
             inline void clear() throw()
             {
                 while(this->size>0)
@@ -97,6 +103,7 @@ namespace upsylon
                 }
             }
 
+            //! delete one NODE
             inline void pop() throw()
             {
                 assert(this->top);

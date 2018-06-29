@@ -1,4 +1,4 @@
-// \file
+//! \file
 #ifndef Y_MEMORY_IO_INCLUDED
 #define Y_MEMORY_IO_INCLUDED 1
 
@@ -21,7 +21,7 @@ namespace upsylon
                 return static_cast<T*>(q);
             }
 
-            //! casting with shift
+            //! casting with shift, CONST version
             template <typename T>
             static const T *cast( const void *addr, const ptrdiff_t shift=0) throw()
             {
