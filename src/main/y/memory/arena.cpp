@@ -21,12 +21,18 @@ namespace upsylon {
             if(cstore.size)
             {
                 assert(global::exists());
-                global &hmem = global::location();
 
+                //______________________________________________________________
+                //
                 // hard reset cached, for these are only memory locations
+                //______________________________________________________________
                 cached.reset();
 
+                //______________________________________________________________
+                //
                 // clean allocated chunks
+                //______________________________________________________________
+                global &hmem = global::location();
                 for(const chunk *node=chunks.head;node;node=node->next)
                 {
                     if( !node->is_empty() )
@@ -38,12 +44,15 @@ namespace upsylon {
                 // then hard reset
                 chunks.reset();
 
+                //______________________________________________________________
+                //
                 // remove effective storage
+                //______________________________________________________________
                 while(cstore.size)
                 {
                     hmem.__free(cstore.query(),chunk_size);
                 }
-                
+
             }
             else
             {
@@ -65,13 +74,8 @@ namespace upsylon {
         cstore(),
         chunks_per_block(chunk_size/sizeof(chunk)-1)
         {
-            //std::cerr << "[memory.arena] block_size       = " << block_size << std::endl;
-            //std::cerr << "[memory.arena] chunk_size       = " << chunk_size << std::endl;
-            //std::cerr << "[memory.arena] sizeof(chunk)    = " << sizeof(chunk) << std::endl;
-            //std::cerr << "[memory.arena] chunks_per_block = " << chunks_per_block << std::endl;
             assert(block_size>0);
             assert(chunks_per_block>0);
-
         }
 
         void arena:: new_block()
@@ -80,9 +84,9 @@ namespace upsylon {
             void   *addr = hmem.__calloc(1,chunk_size);         //!< get chunk_size
             block  *blk  = static_cast<block *>(addr);          //!< convert into block
             cstore.store(blk);                                  //!< kept into blocks
-            chunk *ch = io::cast<chunk>(addr,sizeof(chunk));    //!< get first mchunk
+            chunk *ch = io::cast<chunk>(addr,sizeof(chunk));    //!< get first chunk address
 
-            // store all memory in cached
+            // store all memory in cached list
             for(size_t i=0;i<chunks_per_block;++i)
             {
                 cached.store( ch+i );
@@ -92,7 +96,6 @@ namespace upsylon {
         void arena:: load_new_chunk(chunk *node) throw()
         {
             Y_CORE_CHECK_LIST_NODE(node);
-
 
             if(chunks.size<=0)
             {
