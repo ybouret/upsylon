@@ -22,10 +22,7 @@ namespace upsylon
             //! cleanup
             ~blocks() throw();
 
-            static const size_t bytes_for_htable = 2*sizeof(arena_list); //!< at least two arena_lists for the htable
-            static const size_t bytes_for_arenas = 2*sizeof(arena);      //!< at least one arena in a blocks::page
-            //! minimal chunk_size for working blocks
-            static const size_t min_chunk_size   = (bytes_for_htable>bytes_for_arenas) ? bytes_for_htable : bytes_for_arenas;
+            static size_t compute_chunk_size( const size_t the_chunk_size ) throw();
 
             const size_t chunk_size;   //!< the common chunk_size
             const size_t htable_size;  //!< the htable size, a prime number
