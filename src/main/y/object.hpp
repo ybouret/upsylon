@@ -14,14 +14,7 @@
 
 namespace upsylon
 {
-    class object : public memory::small_object<Y_LIMIT_SIZE,Y_CHUNK_SIZE>
-    {
-    public:
-        explicit object() throw();
-        virtual ~object() throw();
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(object);
-    };
+    typedef memory::small_object<Y_LIMIT_SIZE,Y_CHUNK_SIZE> object;
 }
 
 #endif

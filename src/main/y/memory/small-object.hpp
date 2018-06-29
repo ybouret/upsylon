@@ -74,6 +74,19 @@ namespace upsylon
             //! placement delete
             static inline void  operator delete( void *, void *) throw() {}
 
+            template <typename T>
+            static inline T *acquire1()
+            {
+                return operator new(sizeof(T));
+            }
+
+            template <typename T>
+            static inline void release1( T * &p ) throw()
+            {
+                operator delete(p,sizeof(T));
+                p = 0;
+            }
+
         private:
             class provider : public singleton<provider>
             {
