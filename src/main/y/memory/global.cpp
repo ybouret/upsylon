@@ -1,7 +1,8 @@
 #include "y/memory/global.hpp"
-#include <cstdlib>
 #include "y/exceptions.hpp"
+#include <cstdlib>
 #include <cerrno>
+#include <iostream>
 
 namespace upsylon
 {
@@ -11,36 +12,54 @@ namespace upsylon
 
         global:: ~global() throw()
         {
-
-        }
-
-        global:: global() throw()
-        {
-        }
-
-
-        void * global:: __acquire(size_t &n)
-        {
-            Y_LOCK(access);
-            assert(n>0);
-            void *p = calloc(1,n);
-            if(!p)
+            if(allocated!=0)
             {
-                const unsigned nn = n;
-                n=0;
-                throw libc::exception(ENOMEM,"calloc(%u)",nn);
+                std::cerr << "[memory.global] allocated=" << allocated << std::endl;
             }
-            return p;
         }
 
-        void global:: __release(void *&p, size_t &n) throw()
+
+        global:: global() throw() : allocated(0)
+        {
+        }
+
+
+        void * global:: acquire(size_t &n)
         {
             Y_LOCK(access);
-            assert(p);
-            assert(n>0);
-            free(p);
-            n=0;
-            p=0;
+            if(n>0)
+            {
+                void *p = calloc(1,n);
+                if(!p)
+                {
+                    const unsigned long desired = n;
+                    n = 0;
+                    throw libc::exception(ENOMEM,"memory.global.acquire(%lu)",desired);
+                }
+                allocated += n;
+                return p;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        void global:: release(void *&p, size_t &n) throw()
+        {
+            Y_LOCK(access);
+            if(p)
+            {
+                assert(n>0);
+                free(p);
+                allocated -= int64_t(n);
+                n = 0;
+                p = NULL;
+            }
+            else
+            {
+                assert(0==n);
+            }
         }
 
         void *global:: __calloc(const size_t count, const size_t size)
@@ -51,7 +70,7 @@ namespace upsylon
             {
                 void *p = calloc(count,size);
                 if(!p) throw libc::exception(ENOMEM,"calloc(%u,%u)",unsigned(count),unsigned(size));
-                (int64_t &)allocated += (count*size);
+                allocated += int64_t(count*size);
                 return p;
             }
             else
@@ -67,7 +86,7 @@ namespace upsylon
             {
                 assert(p);
                 free(p);
-                (int64_t &)allocated -= bytes;
+                allocated -= int64_t(bytes);
             }
             else
             {

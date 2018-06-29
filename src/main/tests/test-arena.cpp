@@ -18,7 +18,7 @@ Y_UTEST(arena)
 
     size_t blk_count = 1000;
     size_t blk_bytes = 0;
-    block *blk = hmem.acquire<block>(blk_count,blk_bytes);
+    block *blk = hmem.acquire_as<block>(blk_count,blk_bytes);
     std::cerr << "#blk_count=" << blk_count << std::endl;
     std::cerr << "#blk_bytes=" << blk_bytes << std::endl;
 
@@ -47,7 +47,7 @@ Y_UTEST(arena)
         }
     }
 
-    hmem.release(blk,blk_count,blk_bytes);
+    hmem.release_as<block>(blk,blk_count,blk_bytes);
     
 }
 Y_UTEST_DONE()

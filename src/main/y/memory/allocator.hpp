@@ -12,19 +12,18 @@ namespace upsylon
         class allocator
         {
         public:
-            const int64_t allocated; //!< bookeeping of bytes
-
             //! desctructor
             virtual ~allocator() throw();
 
             //! proxy for __acquire
-            void  *acquire( size_t &n );
+            virtual void  *acquire( size_t &n ) = 0;
+
             //! proxy for __release
-            void   release( void * &p, size_t &n) throw();
+            virtual void   release( void * &p, size_t &n) throw() = 0;
 
             //! acquire>=count objects, bytes is computed
             template <typename T>
-            T *acquire(size_t &count, size_t &bytes)
+            T *acquire_as(size_t &count, size_t &bytes)
             {
                 bytes = count * sizeof(T);
                 try
@@ -44,7 +43,7 @@ namespace upsylon
 
             //! release previously allocated objects
             template <typename T>
-            inline void release( T * &p, size_t &count, size_t &bytes) throw()
+            inline void release_as( T * &p, size_t &count, size_t &bytes) throw()
             {
                 void *q = static_cast<void *>(p);
                 release(q,bytes); assert(0==q); assert(0==bytes);
@@ -56,13 +55,7 @@ namespace upsylon
         protected:
             //! constructor, set allocated=0
             explicit allocator() throw();
-
-            //! virtual acquire for n>0
-            virtual  void * __acquire(size_t &n) = 0;
-
-            //! virtual release for n>0, p!=0
-            virtual  void   __release(void * &p, size_t &n) throw() = 0;
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(allocator);
         };
