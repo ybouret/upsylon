@@ -2,7 +2,6 @@
 #include "y/type/utils.hpp"
 #include "y/memory/global.hpp"
 #include "y/os/error.hpp"
-#include "y/hashing/hash64.hpp"
 #include <iostream>
 
 namespace upsylon {
@@ -64,7 +63,7 @@ namespace upsylon {
         arena:: arena(const size_t the_block_size,
                       const size_t the_chunk_size) throw() :
         block_size(the_block_size),
-        chunk_size( max_of(the_chunk_size,min_chunk_size) ),
+        chunk_size( max_of(the_chunk_size,min_chunk_size,the_block_size) ),
         acquiring(0),
         releasing(0),
         available(0),
@@ -74,7 +73,6 @@ namespace upsylon {
         cstore(),
         next(0),
         prev(0),
-        hkey(0),
         chunks_per_block(chunk_size/sizeof(chunk)-1)
         {
             assert(block_size>0);

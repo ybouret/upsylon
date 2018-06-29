@@ -12,6 +12,10 @@ namespace upsylon
     //! default maximum
     template <typename T> inline T max_of( const T a, const T b ) { return (b<a) ? a:b; }
 
+    template <typename T> inline T max_of( const T a, const T b, const T c )
+    { return max_of(a,max_of(b,c)); }
+
+
     //! default absolute value
     template <typename T> inline T abs_of(const T a) { return (a<T(0)) ? -a : a; }
 

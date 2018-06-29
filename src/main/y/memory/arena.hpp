@@ -60,10 +60,9 @@ namespace upsylon
             chunk  *new_chunk();
             
         public:
-            arena       *next;
-            arena       *prev;
-            const size_t hkey;
-            const size_t          chunks_per_block; //!< number of chunks per internal memory block
+            arena       *next; //!< for list
+            arena       *prev; //!< for list
+            const size_t chunks_per_block; //!< number of chunks per internal memory block
 
         };
 
