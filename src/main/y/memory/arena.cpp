@@ -22,11 +22,11 @@ namespace upsylon {
             {
                 assert(global::exists());
                 global &hmem = global::location();
-                while(cstore.size)
-                {
-                    hmem.__free(cstore.query(),chunk_size);
-                }
+
+                // hard reset cached, for these are only memory locations
                 cached.reset();
+
+                // clean allocated chunks
                 for(const chunk *node=chunks.head;node;node=node->next)
                 {
                     if( !node->is_empty() )
@@ -35,7 +35,15 @@ namespace upsylon {
                     }
                     hmem.__free(node->data,io::delta(node->data,node->last));
                 }
+                // then hard reset
                 chunks.reset();
+
+                // remove effective storage
+                while(cstore.size)
+                {
+                    hmem.__free(cstore.query(),chunk_size);
+                }
+                
             }
             else
             {
