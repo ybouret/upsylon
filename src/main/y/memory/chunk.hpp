@@ -16,6 +16,8 @@ namespace upsylon
         class __chunk
         {
         public:
+            static const size_t word_size = sizeof(word_type);
+            
             //! detect address ownership
             enum ownership
             {
@@ -58,7 +60,8 @@ namespace upsylon
             {
                 assert(block_size>0);
                 assert( chunk_size == size_t(memory::io::delta(data,last)) );
-                assert( chunk_size >= sizeof(word_type) );
+                assert( chunk_size >= sizeof(word_type)  );
+                assert( chunk_size >= sizeof(block_size) );
                 
                 //______________________________________________________________
                 //

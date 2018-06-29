@@ -33,6 +33,10 @@ namespace upsylon
             //! minimal chunk size, to have at least one chunk per memory block!
             static const size_t min_chunk_size = 2 * sizeof(chunk);
 
+            static size_t compute_chunk_size(const size_t the_block_size,
+                                             const size_t the_chunk_size) throw();
+
+
             //! acquire one block of block_size
             void *acquire();
 
@@ -40,10 +44,10 @@ namespace upsylon
             void  release(void *p) throw();
 
         private:
-            //! memory block for chunks: mapped on a block of chunk_size bytes
-            struct block
+            //! memory page for chunks mapping
+            struct page
             {
-                block *next;
+                page *next;
             };
 
             chunk                *acquiring; //!< cache to acquire
@@ -52,7 +56,7 @@ namespace upsylon
             chunk                *empty;     //!< existent empty
             core::list_of<chunk>  chunks;    //!< live chunks
             core::pool_of<chunk>  cached;    //!< dead chunks
-            core::pool_of<block>  cstore;    //!< ever growing memory to store dead chunks
+            core::pool_of<page>   pages;     //!< ever growing memory to store initial dead chunks
 
             Y_DISABLE_COPY_AND_ASSIGN(arena);
             void    load_new_chunk( chunk *node ) throw();
@@ -62,8 +66,7 @@ namespace upsylon
         public:
             arena       *next; //!< for list
             arena       *prev; //!< for list
-            const size_t chunks_per_block; //!< number of dead chunks per internal memory block
-
+            const size_t chunks_per_page; //!< number of initial dead chunks per memory page
         };
 
     }

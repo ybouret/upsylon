@@ -17,7 +17,7 @@ namespace upsylon {
 
         arena:: ~arena() throw()
         {
-            if(cstore.size)
+            if(pages.size)
             {
                 assert(global::exists());
 
@@ -47,9 +47,9 @@ namespace upsylon {
                 //
                 // remove effective storage
                 //______________________________________________________________
-                while(cstore.size)
+                while(pages.size)
                 {
-                    hmem.__free(cstore.query(),chunk_size);
+                    hmem.__free(pages.query(),chunk_size);
                 }
 
             }
@@ -60,35 +60,50 @@ namespace upsylon {
             }
         }
 
+        size_t arena::compute_chunk_size(const size_t the_block_size,
+                                         const size_t the_chunk_size) throw()
+        {
+            assert(the_block_size>0);
+            // chunk size must be bigger than the_block_size and the chunk::word_size
+            size_t cs = max_of(the_block_size,the_chunk_size,chunk::word_size);
+
+            // we also need to have at least one sizeof(chunk) in memory block
+            const size_t min_page_size = sizeof(void*)+sizeof(chunk);
+            cs = max_of(cs,min_page_size);
+
+            return next_power_of_two(cs);
+        }
+
+
         arena:: arena(const size_t the_block_size,
                       const size_t the_chunk_size) throw() :
         block_size(the_block_size),
-        chunk_size( max_of(the_chunk_size,min_chunk_size,the_block_size) ),
+        chunk_size( compute_chunk_size(block_size,the_chunk_size) ),
         acquiring(0),
         releasing(0),
         available(0),
         empty(0),
         chunks(),
         cached(),
-        cstore(),
+        pages(),
         next(0),
         prev(0),
-        chunks_per_block(chunk_size/sizeof(chunk)-1)
+        chunks_per_page( (chunk_size-sizeof(void*))/sizeof(chunk) )
         {
             assert(block_size>0);
-            assert(chunks_per_block>0);
+            assert(chunks_per_page>0);
         }
 
         void arena:: new_block()
         {
-            global &hmem = global::instance();                  //!< global allocator
-            void   *addr = hmem.__calloc(1,chunk_size);         //!< get chunk_size
-            block  *blk  = static_cast<block *>(addr);          //!< convert into block
-            cstore.store(blk);                                  //!< kept into blocks
-            chunk *ch = io::cast<chunk>(addr,sizeof(chunk));    //!< get first chunk address
+            global &hmem = global::instance();               //!< global allocator
+            void   *addr = hmem.__calloc(1,chunk_size);      //!< get chunk_size
+            page   *p    = static_cast<page *>(addr);        //!< convert into block
+            pages.store(p);                                  //!< kept into blocks
+            chunk *ch = io::cast<chunk>(addr,sizeof(void*)); //!< get first chunk address
 
             // store all memory in cached list
-            for(size_t i=0;i<chunks_per_block;++i)
+            for(size_t i=0;i<chunks_per_page;++i)
             {
                 cached.store( ch+i );
             }
