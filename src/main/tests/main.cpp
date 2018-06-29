@@ -16,6 +16,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(arena);
     Y_UTEST(blocks);
     Y_UTEST(primality);
+    Y_UTEST(object);
 
 }
 Y_UTEST_EXEC()
