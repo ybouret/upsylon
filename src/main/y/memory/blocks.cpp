@@ -15,7 +15,6 @@ namespace upsylon
                 while(slot.size)
                 {
                     arena *a = slot.pop_back();
-                    std::cerr << "remove arena.block_size=" << a->block_size << std::endl;
                     destruct(a);
                 }
                 slot.reset();
@@ -57,47 +56,84 @@ namespace upsylon
         void *blocks:: acquire(const size_t block_size)
         {
             assert(block_size>0);
-            if(acquiring && (acquiring->block_size==block_size) )
+            arena_list &slot = htable[ block_size & htable_mask ];
+            if( !acquiring || (block_size!=acquiring->block_size) )
             {
-                // cached!
-                return acquiring->acquire();
-            }
-            else
-            {
-                // locate where arena should be
-                arena_list *slot = & htable[ block_size & htable_mask ];
-
-                // look up
-                for(arena *a=slot->head;a;a=a->next)
+                //______________________________________________________________
+                //
+                // need to look up
+                //______________________________________________________________
+                for(arena *a=slot.head;a;a=a->next)
                 {
                     if(block_size==a->block_size)
                     {
-                        // found
                         acquiring = a;
-                        return a->acquire();
+                        slot.move_to_front(a);
+                        goto ACQUIRE;
                     }
                 }
 
-                // need a new arena!
+                //______________________________________________________________
+                //
+                // need to take from cached
+                //______________________________________________________________
                 if(cached.size<=0)
                 {
                     // need new empty arenas
-                    page *p = static_cast<page *>( global::instance().__calloc(1,chunk_size) );
-                    pages.store(p);
+                    page  *p = pages.store( static_cast<page *>( global::instance().__calloc(1,chunk_size) ));
                     arena *a = io::cast<arena>(p,sizeof(arena));
                     for(size_t i=0;i<arenas_per_page;++i)
                     {
                         cached.store(a+i);
                     }
                 }
+
                 assert(cached.size>0);
                 arena *a = cached.query();
                 try { new (a) arena(block_size,chunk_size); }
                 catch(...){ cached.store(a); throw;}
-                slot->push_front(a);
+                slot.push_front(a);
                 acquiring = a;
-                return a->acquire();
             }
+
+        ACQUIRE:
+            assert(acquiring);
+            assert(block_size==acquiring->block_size);
+            return acquiring->acquire();
+        }
+    }
+
+}
+
+#include "y/os/error.hpp"
+
+namespace upsylon
+{
+    namespace memory
+    {
+        void blocks:: release(void *p, const size_t block_size ) throw()
+        {
+            assert(p);
+            assert(block_size>0);
+            arena_list &slot = htable[ block_size & htable_mask ];
+            if(!releasing||(block_size!=releasing->block_size))
+            {
+                // look up
+                for(arena *a=slot.head;a;a=a->next)
+                {
+                    if(block_size==a->block_size)
+                    {
+                        releasing = a;
+                        goto RELEASE;
+                    }
+                }
+                fatal_error("invalid address/block_size in blocks.release");
+            }
+        RELEASE:
+            assert(releasing);
+            assert(block_size==releasing->block_size);
+            slot.move_to_front(releasing);
+            releasing->release(p);
         }
     }
 

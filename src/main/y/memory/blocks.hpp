@@ -27,7 +27,8 @@ namespace upsylon
             const size_t htable_mask;
             
             void * acquire(const size_t n);
-
+            void   release(void *p, const size_t block_size ) throw();
+            
         private:
             struct page
             {

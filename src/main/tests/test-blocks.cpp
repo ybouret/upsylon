@@ -34,6 +34,13 @@ Y_UTEST(blocks)
         blk.data[i].addr = B.acquire(blk.data[i].size);
     }
 
+    alea.shuffle(blk.data,n);
+    for(size_t i=0;i<n;++i)
+    {
+        B.release(blk.data[i].addr,blk.data[i].size);
+    }
+
+
 }
 Y_UTEST_DONE()
 

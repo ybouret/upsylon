@@ -25,7 +25,7 @@ namespace upsylon
 
 
             //! push a valid node
-            inline void store( NODE *node ) throw()
+            NODE *store( NODE *node ) throw()
             {
                 assert( NULL != node       );
                 assert( NULL == node->next );
@@ -33,6 +33,7 @@ namespace upsylon
                 node->next = top;
                 top        = node;
                 ++size;
+                return node;
             }
 
             //! query is size>0
