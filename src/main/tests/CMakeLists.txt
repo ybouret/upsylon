@@ -14,7 +14,9 @@ ADD_TEST(Code     test-main code)
 ADD_TEST(Bits     test-main bits)
 ADD_TEST(Chunk    test-main chunk)
 ADD_TEST(Alloc    test-main alloc)
-ADD_TEST(Alloc    test-main core)
+ADD_TEST(Core     test-main core)
+ADD_TEST(Arena    test-main arena)
+ADD_TEST(Blocks   test-main blocks)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V

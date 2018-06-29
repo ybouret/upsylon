@@ -14,8 +14,8 @@ namespace upsylon
             //! mix two 32 bits
             typedef void (*proc)( uint32_t *lword, uint32_t *rword );
 
-            static void BJ( uint32_t *lword, uint32_t *rword ) throw(); //!< Bob Jenkin's
-            static void NR( uint32_t *lword, uint32_t *rword ) throw(); //!< NR's
+            static void IBJ( uint32_t *lword, uint32_t *rword ) throw(); //!< based on Bob Jenkins's integer hash
+            static void DES( uint32_t *lword, uint32_t *rword ) throw(); //!< based on DES code
 
             //! mixing any integral type
             template <typename T> static inline
@@ -33,6 +33,13 @@ namespace upsylon
                 return q.t;
             }
 
+            //! wrapper
+            template <typename T> static inline
+            T mixIBJ(const T x) throw() { return mix<T>(x,IBJ); }
+
+            //! wrapper
+            template <typename T> static inline
+            T mixDES(const T x) throw() { return mix<T>(x,DES); }
         };
     }
 

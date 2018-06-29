@@ -15,7 +15,7 @@ namespace upsylon
             return a;
         }
 
-        void hash64:: BJ( uint32_t *lword, uint32_t *rword ) throw()
+        void hash64:: IBJ( uint32_t *lword, uint32_t *rword ) throw()
         {
             for(size_t iter=0;iter<4;++iter)
             {
@@ -43,7 +43,7 @@ const uint32_t ib = (il*il) + ~(ih*ih);\
 (*lword) = it;\
 }
 
-        void hash64:: NR( uint32_t *lword, uint32_t *rword ) throw()
+        void hash64:: DES( uint32_t *lword, uint32_t *rword ) throw()
         {
 
             static const uint32_t X0 = 0xbaa96887L;
@@ -63,39 +63,4 @@ const uint32_t ib = (il*il) + ~(ih*ih);\
 
     }
 }
-
-#if 0
-namespace upsylon
-{
-    namespace hashing
-    {
-        size_t hash64::of( size_t i, hash64::proc h) throw()
-        {
-            union {
-                uint32_t dw[2];
-                size_t   sz;
-            } wksp = { {0,0} } ;
-
-            assert( sizeof(size_t) <= sizeof( uint32_t[2] ) );
-            assert( h != NULL );
-
-            wksp.sz = i;
-            h( & wksp.dw[0], & wksp.dw[1] );
-            return wksp.sz;
-        }
-
-        uint64_t hash64::mix64(const uint64_t x, hash64::proc h) throw()
-        {
-            union  {
-                uint64_t qw;
-                uint32_t dw[2];
-            } wksp = { x };
-            assert( h != NULL );
-            h( & wksp.dw[0], & wksp.dw[1] );
-            return wksp.qw;
-        }
-    }
-
-}
-#endif
 

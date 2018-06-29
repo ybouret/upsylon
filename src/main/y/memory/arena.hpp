@@ -13,6 +13,10 @@ namespace upsylon
         typedef __chunk<uint16_t> chunk;
 
         //! an arena of chunk
+        /**
+         delivers blocks of same size (block_size), using allocations
+         of only chunk_size data for everything that is needed
+         */
         class arena
         {
         public:
@@ -56,6 +60,9 @@ namespace upsylon
             chunk  *new_chunk();
             
         public:
+            arena       *next;
+            arena       *prev;
+            const size_t hkey;
             const size_t          chunks_per_block; //!< number of chunks per internal memory block
 
         };

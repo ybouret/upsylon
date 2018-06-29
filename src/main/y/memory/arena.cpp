@@ -2,7 +2,7 @@
 #include "y/type/utils.hpp"
 #include "y/memory/global.hpp"
 #include "y/os/error.hpp"
-
+#include "y/hashing/hash64.hpp"
 #include <iostream>
 
 namespace upsylon {
@@ -72,6 +72,9 @@ namespace upsylon {
         chunks(),
         cached(),
         cstore(),
+        next(0),
+        prev(0),
+        hkey(0),
         chunks_per_block(chunk_size/sizeof(chunk)-1)
         {
             assert(block_size>0);
@@ -322,7 +325,7 @@ namespace upsylon {
                 {
                     //__________________________________________________________
                     //
-                    //std::cerr << "two empty chunks!" << std::endl;
+                    // std::cerr << "two empty chunks!" << std::endl;
                     // check highest memory
                     //__________________________________________________________
                     if(empty->data<releasing->data)

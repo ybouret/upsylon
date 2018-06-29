@@ -43,6 +43,19 @@ namespace upsylon
         }
         return ++v;
     }
+
+    //! is prev_power_of_two if v>0
+    template <typename T>
+    inline T most_significant_bit_mask(const T v) throw()
+    {
+        T mask = T(0x1) << (sizeof(T)*8-1);
+        while(mask)
+        {
+            if(0!=(v&mask)) return mask;
+            mask >>= 1;
+        }
+        return 0;
+    }
     
 }
 
