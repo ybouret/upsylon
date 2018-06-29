@@ -77,7 +77,7 @@ namespace upsylon
             template <typename T>
             static inline T *acquire1()
             {
-                return operator new(sizeof(T));
+                return static_cast<T*>(operator new(sizeof(T)));
             }
 
             template <typename T>
