@@ -92,7 +92,7 @@ namespace upsylon
 		
 #if defined(Y_WIN)
 		condition:: condition() throw() :
-		cv_lock(NULL),
+		cv_lock(),
 		cv_waiting(0),
 		cv_signals(0),
 		cv_wait_sem(),

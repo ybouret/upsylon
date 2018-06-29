@@ -85,7 +85,7 @@ namespace upsylon
     void rt_clock:: calibrate()
     {
         static const long double l_one = 1;
-        YOCTO_GIANT_LOCK();
+        Y_GIANT_LOCK();
         LARGE_INTEGER F;
         if( ! :: QueryPerformanceFrequency( &F ) )
         {
@@ -96,7 +96,7 @@ namespace upsylon
 
     uint64_t rt_clock:: ticks()
     {
-        YOCTO_GIANT_LOCK();
+        Y_GIANT_LOCK();
         int64_t Q = 0;
         if( ! ::QueryPerformanceCounter( (LARGE_INTEGER *)&Q)  )
         {
@@ -105,7 +105,7 @@ namespace upsylon
         return uint64_t(Q);
     }
 
-    double rt_clock:: operator()( uint64_t num_clicks ) const
+    double rt_clock:: operator()( uint64_t num_clicks ) const throw()
     {
         return freq * double(num_clicks);
     }

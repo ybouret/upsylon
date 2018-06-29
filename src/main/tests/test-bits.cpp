@@ -16,7 +16,6 @@ namespace
 
 Y_UTEST(bits)
 {
-    srand(time(NULL));
     random::cstdbits ran;
     check_bits(ran);
     check_bits(alea);

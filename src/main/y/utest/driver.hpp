@@ -6,6 +6,7 @@
 #include "y/alea.hpp"
 #include <cstring>
 #include <cstdlib>
+#include <ctime>
 #include <iostream>
 
 namespace upsylon
@@ -146,7 +147,7 @@ namespace upsylon
 //! driver prolog
 #define Y_UTEST_INIT(N)             \
 /*    */    int main( int argc, char **argv )  \
-/*    */    {    upsylon::utest::suite<N> tests;  srand( time(NULL) ); upsylon::alea_init();
+/*    */    {    upsylon::utest::suite<N> tests;  srand( int(time(NULL)) ); upsylon::alea_init();
 
 //! register a new test
 #define Y_UTEST(NAME) do{                                \

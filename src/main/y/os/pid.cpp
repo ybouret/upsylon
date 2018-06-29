@@ -1,5 +1,10 @@
 #include "y/os/pid.hpp"
 
+#if defined(Y_WIN)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+
 namespace upsylon
 {
     process_id::type process_id::get()

@@ -32,9 +32,9 @@ namespace upsylon
                 void *p = calloc(1,n);
                 if(!p)
                 {
-                    const unsigned long desired = n;
+                    const unsigned long long desired = n;
                     n = 0;
-                    throw libc::exception(ENOMEM,"memory.global.acquire(%lu)",desired);
+                    throw libc::exception(ENOMEM,"memory.global.acquire(%llu)",desired);
                 }
                 allocated += n;
                 return p;

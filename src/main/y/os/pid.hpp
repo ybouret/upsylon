@@ -18,7 +18,7 @@ namespace upsylon
         typedef pid_t   type;
 #endif
 
-#if defined(YOCTO_WIN)
+#if defined(Y_WIN)
         typedef uint32_t type;
 #endif
 

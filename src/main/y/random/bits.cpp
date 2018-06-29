@@ -1,4 +1,3 @@
-
 #include "y/random/bits.hpp"
 
 namespace upsylon

@@ -1,6 +1,7 @@
 #include "y/memory/cblock.hpp"
 #include "y/utest/run.hpp"
 #include "y/memory/io.hpp"
+#include <typeinfo>
 
 using namespace upsylon;
 

@@ -20,7 +20,7 @@ namespace upsylon
             const size_t   nbit; //!< bits_for(span)
             const uint32_t half; //!< span/2
             const double   denD; //!< 1.0+double(span)
-            const double   denF; //!< 1.0f+float(span)
+            const float    denF; //!< 1.0f+float(span)
 
             virtual uint32_t next32() throw() = 0; //!< next 32-bits value in 0..span
 
