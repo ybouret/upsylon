@@ -10,15 +10,21 @@ namespace upsylon {
     namespace memory
     {
 
+        ////////////////////////////////////////////////////////////////////////
+        //
+        // arena setup
+        //
+        ////////////////////////////////////////////////////////////////////////
+
         arena:: ~arena() throw()
         {
-            if(mstore.size)
+            if(cstore.size)
             {
                 assert(global::exists());
                 global &hmem = global::location();
-                while(mstore.size)
+                while(cstore.size)
                 {
-                    hmem.__free(mstore.query(),chunk_size);
+                    hmem.__free(cstore.query(),chunk_size);
                 }
                 cached.reset();
                 for(const chunk *node=chunks.head;node;node=node->next)
@@ -45,34 +51,34 @@ namespace upsylon {
         acquiring(0),
         releasing(0),
         available(0),
+        empty(0),
         chunks(),
         cached(),
-        mstore(),
-        chunks_per_mblock(chunk_size/sizeof(chunk)-1)
+        cstore(),
+        chunks_per_block(chunk_size/sizeof(chunk)-1)
         {
-            std::cerr << "[memory.arena] block_size        = " << block_size << std::endl;
-            std::cerr << "[memory.arena] chunk_size        = " << chunk_size << std::endl;
-            std::cerr << "[memory.arena] sizeof(chunk)     = " << sizeof(chunk) << std::endl;
-            std::cerr << "[memory.arena] chunks_per_mblock = " << chunks_per_mblock << std::endl;
+            //std::cerr << "[memory.arena] block_size       = " << block_size << std::endl;
+            //std::cerr << "[memory.arena] chunk_size       = " << chunk_size << std::endl;
+            //std::cerr << "[memory.arena] sizeof(chunk)    = " << sizeof(chunk) << std::endl;
+            //std::cerr << "[memory.arena] chunks_per_block = " << chunks_per_block << std::endl;
             assert(block_size>0);
-            assert(chunks_per_mblock>0);
+            assert(chunks_per_block>0);
 
         }
 
-        void arena:: new_mblock()
+        void arena:: new_block()
         {
             global &hmem = global::instance();                  //!< global allocator
             void   *addr = hmem.__calloc(1,chunk_size);         //!< get chunk_size
-            mblock *blk  = static_cast<mblock *>(addr);         //!< convert into mblock
-            mstore.store(blk);                                  //!< kept into blocks
+            block  *blk  = static_cast<block *>(addr);          //!< convert into block
+            cstore.store(blk);                                  //!< kept into blocks
             chunk *ch = io::cast<chunk>(addr,sizeof(chunk));    //!< get first mchunk
 
             // store all memory in cached
-            for(size_t i=0;i<chunks_per_mblock;++i)
+            for(size_t i=0;i<chunks_per_block;++i)
             {
                 cached.store( ch+i );
             }
-            std::cerr << "now using #mblock=" << mstore.size << std::endl;
         }
 
         void arena:: load_new_chunk(chunk *node) throw()
@@ -82,7 +88,6 @@ namespace upsylon {
 
             if(chunks.size<=0)
             {
-                std::cerr << "+chunk@first" << std::endl;
                 chunks.push_back(node);
                 return;
             }
@@ -91,14 +96,12 @@ namespace upsylon {
 
             if(node->data>chunks.tail->data)
             {
-                std::cerr << "+chunk>last" << std::endl;
                 chunks.push_back(node);
                 return;
             }
 
             if(node->data<chunks.head->data)
             {
-                std::cerr << "+chunk<head" << std::endl;
                 chunks.push_front(node);
                 return;
             }
@@ -134,7 +137,7 @@ namespace upsylon {
             // ensure cached mchunk
             if(cached.size<=0)
             {
-                new_mblock();
+                new_block();
             }
             assert(cached.size>0);
 
@@ -151,7 +154,6 @@ namespace upsylon {
 
                 // update bookeeping
                 available += ch->provided_number;
-                std::cerr << "available=" << available << std::endl;
                 load_new_chunk(ch);
 #if !defined(NDEBUG)
                 for(const chunk *node=chunks.head;node->next;node=node->next)
@@ -180,6 +182,11 @@ namespace upsylon {
 
     namespace memory
     {
+        ////////////////////////////////////////////////////////////////////////
+        //
+        // arena acquire
+        //
+        ////////////////////////////////////////////////////////////////////////
         void * arena:: acquire()
         {
             if(available>0)
@@ -248,7 +255,10 @@ namespace upsylon {
             // at this point, everything is OK
             assert(acquiring&&acquiring->still_available);
             assert(available>0);
+
+            // bookeeping
             --available;
+            if(empty==acquiring) empty=0;
             return acquiring->acquire();
         }
 
@@ -260,10 +270,16 @@ namespace upsylon {
 
     namespace memory
     {
+        ////////////////////////////////////////////////////////////////////////
+        //
+        // arena release
+        //
+        ////////////////////////////////////////////////////////////////////////
         void arena:: release(void *p) throw()
         {
             assert(p);
             assert(releasing);
+            assert(acquiring);
             switch(releasing->whose(p))
             {
                 case chunk::owned_by_this:
@@ -285,11 +301,38 @@ namespace upsylon {
                     }
                     break;
             }
-            assert(releasing||die("invalid address for arena"));
+            assert((0!=releasing)    ||die("invalid address for arena"));
+            assert((empty!=releasing)||die("invalid bookeeping")       );
             releasing->release(p);
             ++available;
             if(releasing->is_empty())
             {
+                if(empty)
+                {
+                    //__________________________________________________________
+                    //
+                    //std::cerr << "two empty chunks!" << std::endl;
+                    // check highest memory
+                    //__________________________________________________________
+                    if(empty->data<releasing->data)
+                    {
+                        cswap(releasing,empty);
+                    }
+
+                    //__________________________________________________________
+                    //
+                    // remove empty, reinitialize acquiring if necessary
+                    //__________________________________________________________
+                    if(acquiring==empty)
+                    {
+                        acquiring = releasing;
+                    }
+                    available -= empty->provided_number;   // bookeeping
+                    cached.store( chunks.unlink(empty) );  // clear chunk
+                    global::location().__free(empty->data,io::delta(empty->data,empty->last));
+                }
+
+                empty = releasing;
             }
         }
     }

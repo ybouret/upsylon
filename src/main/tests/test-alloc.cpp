@@ -1,4 +1,4 @@
-#include "y/memory/global.hpp"
+#include "y/memory/cblock.hpp"
 #include "y/utest/run.hpp"
 #include "y/memory/io.hpp"
 
@@ -11,7 +11,21 @@ namespace
         void  *addr;
         size_t size;
     };
+
+    template <typename T>
+    static void do_cblock()
+    {
+        const size_t desired = alea.leq(1000);
+        memory::cblock_of<T> b(desired);
+        std::cerr << "cblock_of<" << typeid(T).name() << ">" << std::endl;
+        std::cerr << "desired: " << desired << std::endl;
+        std::cerr << "size:    " << b.size  << std::endl;
+        std::cerr << "bytes:   " << b.bytes << std::endl;
+
+    }
+
 }
+
 
 Y_UTEST(alloc)
 {
@@ -49,7 +63,11 @@ Y_UTEST(alloc)
         double *b = (double *)&buff[1];
         std::cerr << "delta=" << memory::io::delta(a,b) << std::endl;
     }
-    
+
+    do_cblock<uint8_t>();
+    do_cblock<uint32_t>();
+    do_cblock<int64_t>();
+
     
 }
 Y_UTEST_DONE()

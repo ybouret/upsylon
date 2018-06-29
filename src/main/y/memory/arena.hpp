@@ -37,25 +37,26 @@ namespace upsylon
 
         private:
             //! memory block for chunks: mapped on a block of chunk_size bytes
-            struct mblock
+            struct block
             {
-                mblock *next;
+                block *next;
             };
 
             chunk                *acquiring; //!< cache to acquire
             chunk                *releasing; //!< cache to release
             size_t                available; //!< total available blocks
-            core::list_of<chunk> chunks;    //!< allocated chunks
-            core::pool_of<chunk> cached;    //!< not allocated chunks
-            core::pool_of<mblock> mstore;    //!< ever growing memory store
+            chunk                *empty;     //!< existent empty
+            core::list_of<chunk>  chunks;    //!< allocated chunks
+            core::pool_of<chunk>  cached;    //!< not allocated chunks
+            core::pool_of<block>  cstore;    //!< ever growing memory store
 
             Y_DISABLE_COPY_AND_ASSIGN(arena);
             void    load_new_chunk( chunk *node ) throw();
-            void    new_mblock();
+            void    new_block();
             chunk  *new_chunk();
             
         public:
-            const size_t          chunks_per_mblock; //!< number of chunks per memory block
+            const size_t          chunks_per_block; //!< number of chunks per internal memory block
 
         };
 

@@ -1,6 +1,6 @@
 #include "y/memory/arena.hpp"
 #include "y/utest/run.hpp"
-#include "y/memory/global.hpp"
+#include "y/memory/cblock.hpp"
 
 using namespace upsylon;
 namespace
@@ -13,42 +13,45 @@ namespace
 
 Y_UTEST(arena)
 {
-    memory::global &hmem = memory::global::instance();
-    memory::arena A(1,1024);
 
-    size_t blk_count = 1000;
-    size_t blk_bytes = 0;
-    block *blk = hmem.acquire_as<block>(blk_count,blk_bytes);
-    std::cerr << "#blk_count=" << blk_count << std::endl;
-    std::cerr << "#blk_bytes=" << blk_bytes << std::endl;
+    const size_t nb = 10000;
 
+    memory::cblock_of<block> blocks(nb);
+    const size_t n   = blocks.size;
+    const size_t h   = n/2;
+    block       *blk = blocks.data;
 
-    const size_t hblk = blk_count/2;
-    for(size_t iter=0;iter<16;++iter)
+    for(size_t block_size=1;block_size<=8;++block_size)
     {
-        for(size_t i=0;i<blk_count;++i)
+        std::cerr << "block_size=" << block_size << std::endl;
+        for(size_t chunk_size=1;chunk_size<=4096;chunk_size*=2)
         {
-            blk[i].addr = A.acquire();
-        }
+            std::cerr << "\tchunk_size=" << chunk_size << std::endl;
+            memory::arena A(block_size,chunk_size);
 
-        alea.shuffle(blk,blk_count);
-        for(size_t i=0;i<hblk;++i)
-        {
-            A.release(blk[i].addr);
-        }
-        for(size_t i=0;i<hblk;++i)
-        {
-            blk[i].addr = A.acquire();
-        }
-        alea.shuffle(blk,blk_count);
-        for(size_t i=0;i<blk_count;++i)
-        {
-            A.release(blk[i].addr);
+            for(size_t i=0;i<n;++i)
+            {
+                blk[i].addr = A.acquire();
+            }
+            alea.shuffle(blk,n);
+            for(size_t i=0;i<h;++i)
+            {
+                A.release(blk[i].addr);
+            }
+            for(size_t i=0;i<h;++i)
+            {
+                blk[i].addr = A.acquire();
+            }
+            alea.shuffle(blk,n);
+            for(size_t i=0;i<n;++i)
+            {
+                A.release(blk[i].addr);
+            }
         }
     }
 
-    hmem.release_as<block>(blk,blk_count,blk_bytes);
-    
+    std::cerr << "sizeof(arena)=" << sizeof(memory::arena) << std::endl;
+
 }
 Y_UTEST_DONE()
 
