@@ -12,6 +12,7 @@ namespace upsylon
     //! default maximum
     template <typename T> inline T max_of( const T a, const T b ) { return (b<a) ? a:b; }
 
+    //! nested maxium of three items
     template <typename T> inline T max_of( const T a, const T b, const T c )
     { return max_of(a,max_of(b,c)); }
 

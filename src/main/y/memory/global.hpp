@@ -15,7 +15,7 @@ namespace upsylon
         class global : public singleton<global>, public allocator
         {
         public:
-            int64_t allocated;
+            int64_t allocated; //!< bookeeping
             
             //! legacy calloc, with monitoring
             void *__calloc(const size_t count, const size_t size);

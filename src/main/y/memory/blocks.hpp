@@ -22,8 +22,9 @@ namespace upsylon
             //! cleanup
             ~blocks() throw();
 
-            static const size_t bytes_for_htable = 2*sizeof(arena_list); //! at least two arena_lists for the htable
-            static const size_t bytes_for_arenas = 2*sizeof(arena);      //! at least one arena in a blocks::page
+            static const size_t bytes_for_htable = 2*sizeof(arena_list); //!< at least two arena_lists for the htable
+            static const size_t bytes_for_arenas = 2*sizeof(arena);      //!< at least one arena in a blocks::page
+            //! minimal chunk_size for working blocks
             static const size_t min_chunk_size   = (bytes_for_htable>bytes_for_arenas) ? bytes_for_htable : bytes_for_arenas;
 
             const size_t chunk_size;   //!< the common chunk_size
@@ -45,8 +46,12 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(blocks);
 
         public:
-            const size_t arenas_per_page;
+            const size_t arenas_per_page; //!< how many dead arenas are cached from one page of length chunk_size
+
+            //! how many pages are in memory
             inline size_t num_pages()  const throw() { return pages.size; }
+
+            //! how many arenas (a.k.a different block_size) are held
             inline size_t num_arenas() const throw() { size_t ans = 0; for(size_t i=0;i<htable_size;++i) { ans += htable[i].size; } return ans; }
         };
 
