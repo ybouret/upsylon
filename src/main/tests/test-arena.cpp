@@ -14,7 +14,7 @@ namespace
 Y_UTEST(arena)
 {
 
-    const size_t nb = 16384;
+    const size_t nb = 4000;
 
     memory::cblock_of<block> blocks(nb);
     const size_t n   = blocks.size;

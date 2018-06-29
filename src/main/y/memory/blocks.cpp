@@ -35,6 +35,7 @@ namespace upsylon
         acquiring(0),
         releasing(0),
         htable( static_cast<arena_list *>(global::instance().__calloc(1, chunk_size)) ),
+        cached(),
         pages(),
         arenas_per_page(chunk_size/sizeof(arena)-1)
         {
