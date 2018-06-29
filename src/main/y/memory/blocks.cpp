@@ -52,7 +52,7 @@ namespace upsylon
         pages(),
         arenas_per_page( (chunk_size-sizeof(void*))/sizeof(arena) )
         {
-            std::cerr << "chunk_size      =" << chunk_size  << std::endl;
+            std::cerr << "chunk_size      =" << chunk_size  << "/" << the_chunk_size << std::endl;
             std::cerr << "htable_maxi     =" << chunk_size/sizeof(arena_list) << std::endl;
             std::cerr << "htable_size     =" << htable_size << std::endl;
             std::cerr << "arenas_per_page =" << arenas_per_page << std::endl;
