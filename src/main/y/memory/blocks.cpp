@@ -1,6 +1,8 @@
 #include "y/memory/blocks.hpp"
-#include "y/type/utils.hpp"
 #include "y/memory/global.hpp"
+#include "y/type/utils.hpp"
+#include "y/code/primality.hpp"
+
 #include <iostream>
 
 namespace upsylon
@@ -29,8 +31,7 @@ namespace upsylon
 
         blocks:: blocks(const size_t the_chunk_size) :
         chunk_size( max_of(the_chunk_size,min_chunk_size) ),
-        htable_size( most_significant_bit_mask(chunk_size/sizeof(arena_list)) ),
-        htable_mask(htable_size-1),
+        htable_size( primality::prev(chunk_size/sizeof(arena_list)) ),
         acquiring(0),
         releasing(0),
         htable( static_cast<arena_list *>(global::instance().__calloc(1, chunk_size)) ),
@@ -40,7 +41,6 @@ namespace upsylon
             std::cerr << "chunk_size      =" << chunk_size  << std::endl;
             std::cerr << "htable_maxi     =" << chunk_size/sizeof(arena_list) << std::endl;
             std::cerr << "htable_size     =" << htable_size << std::endl;
-            std::cerr << "htable_mask     =" << htable_mask << std::endl;
             std::cerr << "arenas_per_page =" << arenas_per_page << std::endl;
         }
 
@@ -56,7 +56,7 @@ namespace upsylon
         void *blocks:: acquire(const size_t block_size)
         {
             assert(block_size>0);
-            arena_list &slot = htable[ block_size & htable_mask ];
+            arena_list &slot = htable[ block_size % htable_size ];
             if( !acquiring || (block_size!=acquiring->block_size) )
             {
                 //______________________________________________________________
@@ -115,7 +115,7 @@ namespace upsylon
         {
             assert(p);
             assert(block_size>0);
-            arena_list &slot = htable[ block_size & htable_mask ];
+            arena_list &slot = htable[ block_size % htable_size ];
             if(!releasing||(block_size!=releasing->block_size))
             {
                 // look up

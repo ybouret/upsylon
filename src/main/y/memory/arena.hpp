@@ -50,9 +50,9 @@ namespace upsylon
             chunk                *releasing; //!< cache to release
             size_t                available; //!< total available blocks
             chunk                *empty;     //!< existent empty
-            core::list_of<chunk>  chunks;    //!< allocated chunks
-            core::pool_of<chunk>  cached;    //!< not allocated chunks
-            core::pool_of<block>  cstore;    //!< ever growing memory store
+            core::list_of<chunk>  chunks;    //!< live chunks
+            core::pool_of<chunk>  cached;    //!< dead chunks
+            core::pool_of<block>  cstore;    //!< ever growing memory to store dead chunks
 
             Y_DISABLE_COPY_AND_ASSIGN(arena);
             void    load_new_chunk( chunk *node ) throw();
@@ -62,7 +62,7 @@ namespace upsylon
         public:
             arena       *next; //!< for list
             arena       *prev; //!< for list
-            const size_t chunks_per_block; //!< number of chunks per internal memory block
+            const size_t chunks_per_block; //!< number of dead chunks per internal memory block
 
         };
 

@@ -16,28 +16,44 @@ namespace  {
 Y_UTEST(blocks)
 {
 
-    size_t chunk_size = 256;
-    if(argc>1)
-    {
-        chunk_size = atol(argv[1]);
-    }
-    std::cerr << "sizeof(arena_list)=" << sizeof(memory::blocks::arena_list) << std::endl;
-    std::cerr << "sizeof(arena)     =" << sizeof(memory::arena) << std::endl;
-    memory::blocks B(chunk_size);
 
-    
-    const size_t n = 100;
-    memory::cblock_of<block> blk(n);
-    for(size_t i=0;i<n;++i)
+    for(size_t chunk_size=1;chunk_size<=4096;chunk_size*=2)
     {
-        blk.data[i].size = 1+alea.leq(100);
-        blk.data[i].addr = B.acquire(blk.data[i].size);
-    }
+        memory::blocks B(chunk_size);
 
-    alea.shuffle(blk.data,n);
-    for(size_t i=0;i<n;++i)
-    {
-        B.release(blk.data[i].addr,blk.data[i].size);
+
+        const size_t n = 1000;
+        const size_t h = n/2;
+        memory::cblock_of<block> wksp(n);
+        block *blk = wksp.data;
+        std::cerr << "#pages,arenas:";
+        for(size_t iter=0;iter<16;++iter)
+        {
+            for(size_t i=0;i<n;++i)
+            {
+                blk[i].size = 1+alea.leq(100);
+                blk[i].addr = B.acquire(blk[i].size);
+            }
+
+            alea.shuffle(blk,n);
+            for(size_t i=0;i<h;++i)
+            {
+                B.release(blk[i].addr,blk[i].size);
+            }
+
+            for(size_t i=0;i<h;++i)
+            {
+                blk[i].size = 1+alea.leq(100);
+                blk[i].addr = B.acquire(blk[i].size);
+            }
+            alea.shuffle(blk,n);
+            for(size_t i=0;i<n;++i)
+            {
+                B.release(blk[i].addr,blk[i].size);
+            }
+            std::cerr << B.num_pages() << "," << B.num_arenas() << "/";
+        }
+        std::cerr << std::endl;
     }
 
 
