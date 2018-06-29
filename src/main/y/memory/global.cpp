@@ -32,9 +32,9 @@ namespace upsylon
                 void *p = calloc(1,n);
                 if(!p)
                 {
-                    const unsigned long long desired = n;
+                    const unsigned long desired = (unsigned long)n;
                     n = 0;
-                    throw libc::exception(ENOMEM,"memory.global.acquire(%llu)",desired);
+                    throw libc::exception(ENOMEM,"memory.global.acquire(%lu)",desired);
                 }
                 allocated += n;
                 return p;
@@ -56,10 +56,12 @@ namespace upsylon
                 n = 0;
                 p = NULL;
             }
+#if !defined(NDEBUG)
             else
             {
                 assert(0==n);
             }
+#endif
         }
 
         void *global:: __calloc(const size_t count, const size_t size)
@@ -88,10 +90,12 @@ namespace upsylon
                 free(p);
                 allocated -= int64_t(bytes);
             }
+#if !defined(NDEBUG)
             else
             {
                 assert(0==p);
             }
+#endif
         }
 
     }

@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_MEMORY_SMALL_OBJECT
 #define Y_MEMORY_SMALL_OBJECT 1
 
@@ -10,6 +11,7 @@ namespace upsylon
     namespace memory
     {
 
+        //! small object prototype
         template <size_t LIMIT_SIZE,size_t CHUNK_SIZE>
         class small_object
         {
