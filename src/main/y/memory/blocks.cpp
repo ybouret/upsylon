@@ -11,7 +11,7 @@ namespace upsylon
     {
         blocks:: ~blocks() throw()
         {
-            for(size_t i=0;i<htable_size;++i)
+            for(size_t i=0;i<table_size;++i)
             {
                 arena_list &slot = htable[i];
                 while(slot.size)
@@ -45,7 +45,7 @@ namespace upsylon
 
         blocks:: blocks(const size_t the_chunk_size) :
         chunk_size( compute_chunk_size(the_chunk_size) ),
-        htable_size( primality::prev(chunk_size/sizeof(arena_list)) ),
+        table_size( primality::prev(chunk_size/sizeof(arena_list)) ),
         acquiring(0),
         releasing(0),
         htable( static_cast<arena_list *>(global::instance().__calloc(1, chunk_size)) ),
@@ -54,8 +54,8 @@ namespace upsylon
         arenas_per_page( (chunk_size-sizeof(void*))/sizeof(arena) )
         {
             std::cerr << "chunk_size      =" << chunk_size  << "/" << the_chunk_size << std::endl;
-            std::cerr << "htable_maxi     =" << chunk_size/sizeof(arena_list) << std::endl;
-            std::cerr << "htable_size     =" << htable_size << std::endl;
+            std::cerr << "table_maxi      =" << chunk_size/sizeof(arena_list) << std::endl;
+            std::cerr << "table_size      =" << table_size << std::endl;
             std::cerr << "arenas_per_page =" << arenas_per_page << std::endl;
         }
 
@@ -71,7 +71,7 @@ namespace upsylon
         void *blocks:: acquire(const size_t block_size)
         {
             assert(block_size>0);
-            arena_list &slot = htable[ block_size % htable_size ];
+            arena_list &slot = htable[ block_size % table_size ];
             if( !acquiring || (block_size!=acquiring->block_size) )
             {
                 //______________________________________________________________
@@ -130,7 +130,7 @@ namespace upsylon
         {
             assert(p);
             assert(block_size>0);
-            arena_list &slot = htable[ block_size % htable_size ];
+            arena_list &slot = htable[ block_size % table_size ];
             if(!releasing||(block_size!=releasing->block_size))
             {
                 // look up

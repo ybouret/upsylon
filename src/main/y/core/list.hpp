@@ -15,6 +15,10 @@ assert((node)->next==NULL);\
 assert((node)->prev==NULL)
 
         //! list of nodes
+        /**
+         using pointers and size_t, with virtual interface, should be
+         a power of 2 in size
+         */
         template <typename NODE>
         class list_of
         {
@@ -32,20 +36,24 @@ assert((node)->prev==NULL)
             size_t size; //!< number of NODEs
 
             //! no-throw swap with another list
-            void swap_with( list_of &other ) throw()
+            inline void swap_with( list_of &other ) throw()
             {
                 cswap( head, other.head );
                 cswap( tail, other.tail );
                 cswap( size, other.size );
             }
 
+#define Y_CORE_LIST_PUSH_FIRST(node)         \
+assert(!head); assert(!tail); assert(!size); \
+head = tail = node; size = 1
             //! append a NODE
             inline void push_back( NODE *node ) throw()
             {
                 Y_CORE_CHECK_LIST_NODE(node);
                 if( size <= 0 )
                 {
-                    push_first(node);
+                    //push_first(node);
+                    Y_CORE_LIST_PUSH_FIRST(node);
                 }
                 else
                 {
@@ -63,7 +71,8 @@ assert((node)->prev==NULL)
                 Y_CORE_CHECK_LIST_NODE(node);
                 if( size <= 0 )
                 {
-                    push_first(node);
+                    //push_first(node);
+                    Y_CORE_LIST_PUSH_FIRST(node);
                 }
                 else
                 {
@@ -75,6 +84,7 @@ assert((node)->prev==NULL)
                 }
 
             }
+#undef Y_CORE_LIST_PUSH_FIRST
 
             //! remove last NODE
             inline NODE *pop_back() throw()
@@ -243,8 +253,10 @@ assert((node)->prev==NULL)
                         assert(size>=3);
                         assert(node->prev);
                         assert(node->next);
-                        node->prev->next = node->next;
-                        node->next->prev = node->prev;
+                        NODE *prev = node->prev;
+                        NODE *next = node->next;
+                        prev->next = next;
+                        next->prev = prev;
                     }
                     node->prev = NULL;
                     node->next = head;
@@ -302,10 +314,13 @@ assert((node)->prev==NULL)
             inline void reverse() throw()
             {
                 list_of tmp;
-                while( size ) tmp.push_back( pop_back() );
-                    swap_with(tmp);
-                    }
-
+                while( size )
+                {
+                    tmp.push_back( pop_back() );
+                }
+                swap_with(tmp);
+            }
+            
             //! reverse only a part
             inline void reverse_last(size_t n) throw()
             {
@@ -382,13 +397,6 @@ assert((node)->prev==NULL)
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(list_of);
-            inline void push_first( NODE *node ) throw()
-            {
-                assert(NULL==head); assert(NULL==tail); assert(0==size);
-                head = tail = node;
-                size = 1;
-            }
-
             inline NODE *pop_last() throw()
             {
                 assert(NULL!=head); assert(NULL!=tail); assert(1==size); assert(head==tail);
@@ -418,8 +426,11 @@ namespace upsylon
             //! delete content
             inline void clear() throw()
             {
-                while(this->size) delete this->pop_back();
-                    }
+                while(this->size)
+                {
+                    delete this->pop_back();
+                }
+            }
 
             //! clear on destructor
             virtual ~list_of_cpp() throw() { clear(); }

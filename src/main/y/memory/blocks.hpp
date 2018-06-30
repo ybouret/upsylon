@@ -24,8 +24,8 @@ namespace upsylon
 
             static size_t compute_chunk_size( const size_t the_chunk_size ) throw();
 
-            const size_t chunk_size;   //!< the common chunk_size
-            const size_t htable_size;  //!< the htable size
+            const size_t chunk_size;  //!< the common chunk_size
+            const size_t table_size;  //!< the htable size
             
             void * acquire(const size_t block_size); //!< aquire n>0 byte
             void   release(void *p, const size_t block_size ) throw(); //!< release a previously allocated bloc_size
@@ -49,7 +49,7 @@ namespace upsylon
             inline size_t num_pages()  const throw() { return pages.size; }
 
             //! how many arenas (a.k.a different block_size) are held
-            inline size_t num_arenas() const throw() { size_t ans = 0; for(size_t i=0;i<htable_size;++i) { ans += htable[i].size; } return ans; }
+            inline size_t num_arenas() const throw() { size_t ans = 0; for(size_t i=0;i<table_size;++i) { ans += htable[i].size; } return ans; }
         };
 
     }
