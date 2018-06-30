@@ -43,6 +43,7 @@ assert((node)->prev==NULL)
                 cswap( size, other.size );
             }
 
+            //! initialize with first node
 #define Y_CORE_LIST_PUSH_FIRST(node)         \
 assert(!head); assert(!tail); assert(!size); \
 head = tail = node; size = 1

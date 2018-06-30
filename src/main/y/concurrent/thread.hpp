@@ -11,7 +11,7 @@ namespace upsylon
     namespace concurrent
     {
 
-
+        //! one thread
         class thread : public object
         {
         public:

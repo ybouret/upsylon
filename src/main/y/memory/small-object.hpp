@@ -16,7 +16,10 @@ namespace upsylon
         class small_object
         {
         public:
+            //! do nothing constructir
             inline explicit small_object() throw() {}
+
+            //! do nothing destructor
             inline virtual ~small_object() throw() {}
 
             //! operator new
@@ -74,12 +77,14 @@ namespace upsylon
             //! placement delete
             static inline void  operator delete( void *, void *) throw() {}
 
+            //! acquire memory for exactly one object
             template <typename T>
             static inline T *acquire1()
             {
                 return static_cast<T*>(operator new(sizeof(T)));
             }
 
+            //! release memory for exactly one prvisouly acquired object
             template <typename T>
             static inline void release1( T * &p ) throw()
             {

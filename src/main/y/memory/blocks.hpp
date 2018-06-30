@@ -23,6 +23,7 @@ namespace upsylon
             //! cleanup
             ~blocks() throw();
 
+            //! compute chunk size big enough to run those blocks
             static size_t compute_chunk_size( const size_t the_chunk_size ) throw();
 
             const size_t chunk_size;  //!< the common chunk_size

@@ -30,9 +30,8 @@ namespace upsylon
             const size_t block_size; //!< the same block_size for everyone
             const size_t chunk_size; //!< global memory chunk_size for any allocation
 
-            //! minimal chunk size, to have at least one chunk per memory block!
-            static const size_t min_chunk_size = 2 * sizeof(chunk);
 
+            //! compute required chunk_size to run this arena
             static size_t compute_chunk_size(const size_t the_block_size,
                                              const size_t the_chunk_size) throw();
 

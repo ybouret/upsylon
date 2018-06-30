@@ -16,6 +16,7 @@ namespace upsylon
         class __chunk
         {
         public:
+            //! word size for internal computations
             static const size_t word_size = sizeof(word_type);
             
             //! detect address ownership

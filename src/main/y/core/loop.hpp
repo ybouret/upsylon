@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_CORE_LOOP_INCLUDED
 #define Y_CORE_LOOP_INCLUDED 1
 
