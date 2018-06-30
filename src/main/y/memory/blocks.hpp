@@ -17,7 +17,8 @@ namespace upsylon
             typedef core::pool_of<arena> arena_pool; //!< to store dead arenas
 
             //! intialize the htable
-            blocks(const size_t the_chunk_size);
+            blocks(const size_t the_chunk_size,
+                   const size_t initial_arenas=0);
 
             //! cleanup
             ~blocks() throw();
@@ -42,6 +43,8 @@ namespace upsylon
             core::pool_of<page> pages;     //!< ever growing memory of chunk_size to hold dead arenas
             Y_DISABLE_COPY_AND_ASSIGN(blocks);
 
+            void __release_pages_and_table() throw();
+
         public:
             const size_t arenas_per_page; //!< how many dead arenas are cached from one page of length chunk_size
 
@@ -50,6 +53,7 @@ namespace upsylon
 
             //! how many arenas (a.k.a different block_size) are held
             inline size_t num_arenas() const throw() { size_t ans = 0; for(size_t i=0;i<=table_mask;++i) { ans += htable[i].size; } return ans; }
+            
         };
 
     }

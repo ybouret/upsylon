@@ -1,5 +1,6 @@
 #include "y/core/list.hpp"
 #include "y/core/pool.hpp"
+#include "y/core/loop.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -74,13 +75,39 @@ namespace
     }
 
 
+    static inline
+    void do_loop_test()
+    {
+        int a[256];
 
+        for(size_t iter=0;iter<10;++iter)
+        {
+            const size_t n = 1+alea.leq(1000);
+            std::cerr << "...loop " << n << std::endl;
+            size_t count=0;
+            Y_LOOP(0,++count);
+            Y_LOOP(n,++count);
+            Y_CHECK(n==count);
+            count=0;
+            Y_LOOP_(n,++count);
+            Y_CHECK(n==count);
+#define THE_CODE(IDX) a[IDX] = alea.full<int>()
+            Y_LOOP_FUNC( sizeof(a)/sizeof(a[0]),THE_CODE,0);
+            Y_LOOP_FUNC_(sizeof(a)/sizeof(a[0]),THE_CODE,0);
+            Y_LOOP_FUNC( sizeof(a)/sizeof(a[0])-1,THE_CODE,1);
+            Y_LOOP_FUNC_(sizeof(a)/sizeof(a[0])-1,THE_CODE,1);
+        }
+    }
 }
 
 
 
 Y_UTEST(core)
 {
+    std::cerr << "---- Test Loop ----" << std::endl;
+    do_loop_test();
+
+    std::cerr << "---- Test List ----" << std::endl;
     std::cerr << "sizeof(core::list_of)=" << sizeof(core::list_of<aNode>) << std::endl;
     core::list_of_cpp<aNode> aList;
     do_list_test(aList);

@@ -8,6 +8,15 @@ namespace upsylon
 {
     namespace memory
     {
+        void blocks:: __release_pages_and_table() throw()
+        {
+            while(pages.size)
+            {
+                global::location().__free( pages.query(), chunk_size );
+            }
+            global::location().__free(htable,chunk_size);
+        }
+
         blocks:: ~blocks() throw()
         {
             for(size_t i=0;i<=table_mask;++i)
@@ -21,11 +30,7 @@ namespace upsylon
                 slot.reset();
             }
             cached.reset();
-            while(pages.size)
-            {
-                global::location().__free( pages.query(), chunk_size );
-            }
-            global::location().__free(htable,chunk_size);
+            __release_pages_and_table();
         }
 
         size_t blocks:: compute_chunk_size(const size_t the_chunk_size) throw()
@@ -42,7 +47,8 @@ namespace upsylon
             return next_power_of_two(cs);
         }
 
-        blocks:: blocks(const size_t the_chunk_size) :
+        blocks:: blocks(const size_t the_chunk_size,
+                        const size_t initial_arenas) :
         chunk_size( compute_chunk_size(the_chunk_size) ),
         table_mask( most_significant_bit_mask(chunk_size/sizeof(arena_list))-1 ),
         acquiring(0),
@@ -56,6 +62,18 @@ namespace upsylon
             std::cerr << "table_maxi      =" << chunk_size/sizeof(arena_list) << std::endl;
             std::cerr << "table_size      =" << table_mask+1 << std::endl;
             std::cerr << "arenas_per_page =" << arenas_per_page << std::endl;
+            try
+            {
+                while(cached.size<initial_arenas)
+                {
+                    
+                }
+            }
+            catch(...)
+            {
+                __release_pages_and_table();
+                throw;
+            }
         }
 
         
