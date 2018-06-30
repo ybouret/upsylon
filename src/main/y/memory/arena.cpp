@@ -96,13 +96,8 @@ namespace upsylon {
 
         void arena:: new_block()
         {
-            global &hmem = global::instance();               //!< global allocator
-            void   *addr = hmem.__calloc(1,chunk_size);      //!< get chunk_size
-            page   *p    = static_cast<page *>(addr);        //!< convert into block
-            pages.store(p);                                  //!< kept into blocks
-            chunk *ch = io::cast<chunk>(addr,sizeof(void*)); //!< get first chunk address
-
-            // store all memory in cached list
+            static global &hmem = global::instance();
+            chunk         *ch   = io::cast<chunk>(pages.store(static_cast<page *>(hmem.__calloc(1,chunk_size))),sizeof(void*));
             for(size_t i=0;i<chunks_per_page;++i)
             {
                 cached.store( ch+i );
@@ -173,7 +168,7 @@ namespace upsylon {
             try
             {
                 // get memory
-                global &hmem = global::instance();
+                static global &hmem = global::instance();
                 void   *data = hmem.__calloc(1,chunk_size);
 
                 //format the chunk

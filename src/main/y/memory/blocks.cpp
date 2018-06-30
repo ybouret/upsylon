@@ -47,6 +47,11 @@ namespace upsylon
             return next_power_of_two(cs);
         }
 
+#define Y_BLOCKS_NEW_ARENA()              \
+static global &hmem = global::location(); \
+arena *a = io::cast<arena>(pages.store( static_cast<page *>( hmem.__calloc(1,chunk_size) )),sizeof(void*));\
+for(size_t i=0;i<arenas_per_page;++i) cached.store(a+i)
+
         blocks:: blocks(const size_t the_chunk_size,
                         const size_t initial_arenas) :
         chunk_size( compute_chunk_size(the_chunk_size) ),
@@ -66,7 +71,7 @@ namespace upsylon
             {
                 while(cached.size<initial_arenas)
                 {
-                    
+                    Y_BLOCKS_NEW_ARENA();
                 }
             }
             catch(...)
@@ -111,13 +116,7 @@ namespace upsylon
                 //______________________________________________________________
                 if(cached.size<=0)
                 {
-                    // need new empty arenas
-                    page  *p = pages.store( static_cast<page *>( global::instance().__calloc(1,chunk_size) ));
-                    arena *a = io::cast<arena>(p,sizeof(void*));
-                    for(size_t i=0;i<arenas_per_page;++i)
-                    {
-                        cached.store(a+i);
-                    }
+                    Y_BLOCKS_NEW_ARENA();
                 }
 
                 assert(cached.size>0);
