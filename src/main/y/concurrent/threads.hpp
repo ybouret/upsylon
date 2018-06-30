@@ -9,7 +9,8 @@ namespace upsylon {
     namespace concurrent
     {
 
-        class threads : public core::list_of_cpp<thread>
+        //! lowe level threads
+        class threads: public core::list_of_cpp<thread>
         {
         public:
             mutex access;
@@ -19,9 +20,11 @@ namespace upsylon {
 
             inline void launch( thread::procedure proc, void *data)
             {
-                push_back( new thread(proc,data,access) );
+                assert(proc);
+                push_back( new thread(proc,data,size+1) );
             }
 
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(threads);

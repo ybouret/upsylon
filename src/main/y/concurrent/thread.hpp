@@ -11,56 +11,48 @@ namespace upsylon
     namespace concurrent
     {
 
-        //! one thread
+
+        //! one low level thread wrapper
         class thread : public object
         {
         public:
-            typedef void (*procedure)(void*);
-
 #if defined(Y_BSD)
             //! pthread
             typedef pthread_t handle_t;
             typedef pthread_t id_t;
+#define Y_THREAD_DECL(BODY) void * BODY entry( void *args ) throw()
 #endif
 
 #if defined(Y_WIN)
             //! win32
             typedef HANDLE handle_t;
             typedef DWORD  id_t;
+#define Y_THREAD_DECL(BODY) DWORD WINAPI BODY entry( LPVOID args ) throw()
 #endif
+            typedef size_t tag_t;
+            typedef void (*procedure)(void*);
 
-            thread   *next;   //!< for threads
-            thread   *prev;   //!< for threads
-            mutex    &access; //!< shared access from threads
-            handle_t  handle; //!< system level thread handle
-            id_t      id;     //!< system level thread identifier
 
-#if 0
-            static thread * launch(procedure user_proc,
-                                   void     *user_data,
-                                   mutex    &access_ref);
 
-            static void     finish( thread * &thr) throw();
-#endif
-            
-            explicit thread(procedure user_proc,
-                            void     *user_data,
-                            mutex    &access_ref);
+            thread     *next;   //!< for threads
+            thread     *prev;   //!< for threads
+            handle_t    handle; //!< system level thread handle
+            id_t        id;     //!< system level thread identifier
+            const tag_t tag;    //!< application thread tag
+
+            explicit thread(procedure proc,
+                            void     *data,
+                            const size_t user_tag);
             virtual ~thread() throw();
+
+            static handle_t get_current_handle();;
+            static id_t     get_current_id();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(thread);
-            procedure proc;
-            void     *data;
-
-#if defined(Y_BSD)
-            static void * entry( void * ) throw();
-#endif
-
-#if defined(Y_WIN)
-            static DWORD WINAPI entry( LPVOID ) throw();
-#endif
-
+            static Y_THREAD_DECL();
+            procedure proc_;
+            void     *data_;
         };
 
     }

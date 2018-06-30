@@ -4,6 +4,7 @@
 #include "y/exceptions.hpp"
 #include "y/os/error.hpp"
 #include <cstring>
+#include <iostream>
 
 namespace upsylon
 {
@@ -11,17 +12,18 @@ namespace upsylon
     namespace concurrent
     {
 
-        thread:: thread(procedure user_proc,
-                        void     *user_data,
-                        mutex    &access_ref):
+        thread:: thread(procedure proc,
+                        void     *data,
+                        const size_t user_tag):
         next(0),
         prev(0),
-        access(access_ref),
         handle(),
         id(),
-        proc(user_proc),
-        data(user_data)
+        tag(user_tag),
+        proc_(proc),
+        data_(data)
         {
+            std::cerr << "creating thread@tag=" << tag << std::endl;
             memset(&handle,0,sizeof(handle));
             memset(&id,0,sizeof(id));
 
@@ -29,7 +31,7 @@ namespace upsylon
             //------------------------------------------------------------------
             // <pthread>
             //------------------------------------------------------------------
-            const int res = pthread_create( &handle, NULL, thread::entry, this);
+            const int res = pthread_create( &handle, NULL, thread::entry,this);
             if( res != 0 )
             {
                 throw libc::exception( res, "pthread_create" );
@@ -63,30 +65,21 @@ namespace upsylon
         }
         
 
-#if defined(Y_BSD)
-        void * thread::entry(void *args) throw()
+        Y_THREAD_DECL(thread::)
         {
-            thread *thr= static_cast<thread *>(args);
-            assert( thr );
-            thr->proc( thr->data );
+            assert(args);
+            thread &thr = *static_cast<thread *>(args);
+            assert(thr.proc_);
+            thr.proc_(thr.data_);
             return 0;
         }
-#endif
-
-#if defined(Y_WIN)
-        DWORD WINAPI thread::entry( LPVOID args ) throw()
-        {
-            thread *thr = static_cast<thread *>(args);
-            assert( thr );
-            thr->proc( thr->data );
-            return 0;
-        }
-
-#endif
-
+        
 
         thread:: ~thread() throw()
         {
+            std::cerr << "waiting for thread@tag=" << tag << std::endl;
+            assert(!next);
+            assert(!prev);
 #if defined(Y_BSD)
             const int res = pthread_join( handle, 0 );
             if( res != 0 )

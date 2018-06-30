@@ -1,6 +1,6 @@
 #include "y/utest/driver.hpp"
 
-Y_UTEST_INIT(16)
+Y_UTEST_INIT(32)
 {
     Y_UTEST(platform);
     Y_UTEST(types);
@@ -18,6 +18,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(primality);
     Y_UTEST(object0);
     Y_UTEST(objectY);
+    Y_UTEST(threads);
 
 }
 Y_UTEST_EXEC()
