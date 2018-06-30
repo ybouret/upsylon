@@ -25,7 +25,7 @@ namespace upsylon
             static size_t compute_chunk_size( const size_t the_chunk_size ) throw();
 
             const size_t chunk_size;   //!< the common chunk_size
-            const size_t htable_size;  //!< the htable size, a prime number
+            const size_t htable_size;  //!< the htable size
             
             void * acquire(const size_t block_size); //!< aquire n>0 byte
             void   release(void *p, const size_t block_size ) throw(); //!< release a previously allocated bloc_size

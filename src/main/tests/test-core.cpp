@@ -81,6 +81,7 @@ namespace
 
 Y_UTEST(core)
 {
+    std::cerr << "sizeof(core::list_of)=" << sizeof(core::list_of<aNode>) << std::endl;
     core::list_of_cpp<aNode> aList;
     do_list_test(aList);
     core::list_of_cloneable<aNode> bList;
