@@ -17,15 +17,7 @@ namespace
         memset(brr,1,N);
     }
 
-#if 0
-#define __SWAP(Q) do {\
-std::cerr << "__bswap<" #Q ">" << std::endl;\
-init(); core::bswap<Q>(arr,brr);\
-for(int i=0;i<Q;++i) {\
-std::cerr << "\t@" << i << ":"; Y_CHECK(arr[i]==1&&brr[i]==0);\
-}\
-} while(false)
-#endif
+
 
 #define _SWAP(Q) do {\
 std::cerr << "bswap<" #Q ">" << std::endl;\
@@ -34,13 +26,13 @@ for(int i=0;i<Q;++i) {\
 std::cerr << "\t@" << i << ":"; Y_CHECK(arr[i]==1&&brr[i]==0);\
 }\
 double speed=0;\
-Y_TIMINGS(speed,0.1,core::bswap<Q>(arr,brr));\
+Y_TIMINGS(speed,D,core::bswap<Q>(arr,brr));\
 speed /= 1e6;\
 std::cerr << "speed" #Q "=" << speed << std::endl;\
 if(fp) fprintf(fp,#Q " %.15g\n",speed);\
 } while(false)
 
-    static void do_test()
+    static void do_test(const double D)
     {
 #if 0
         __SWAP(0);
@@ -66,7 +58,9 @@ if(fp) fprintf(fp,#Q " %.15g\n",speed);\
 
 Y_UTEST(swap)
 {
-    do_test();
+    double D = 0.05;
+    if(argc>1) D=atof(argv[1]);
+    do_test(D);
 }
 Y_UTEST_DONE()
 

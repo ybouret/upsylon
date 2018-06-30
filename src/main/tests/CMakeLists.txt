@@ -18,6 +18,8 @@ ADD_TEST(Core      test-main core)
 ADD_TEST(Arena     test-main arena)
 ADD_TEST(Blocks    test-main blocks)
 ADD_TEST(Primality test-main blocks)
+ADD_TEST(Object0   test-main object0)
+ADD_TEST(ObjectY   test-main objectY)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V
