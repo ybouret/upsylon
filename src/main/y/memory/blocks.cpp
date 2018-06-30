@@ -39,6 +39,7 @@ namespace upsylon
             static const size_t min_page_size = sizeof(void*) + sizeof(arena);
             cs = max_of(cs,min_page_size);
 
+            //! and get the chunk size
             return next_power_of_two(cs);
         }
 

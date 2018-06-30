@@ -3,7 +3,6 @@
 #define Y_CORE_LIST_INCLUDED 1
 
 #include "y/type/bswap.hpp"
-
 namespace upsylon
 {
 
@@ -123,15 +122,21 @@ assert((node)->prev==NULL)
             inline void merge_back( list_of &other ) throw()
             {
                 assert( this != &other );
-                while( other.size ) push_back( other.pop_front() );
-                    }
+                while( other.size )
+                {
+                    push_back( other.pop_front() );
+                }
+            }
 
             //! prepend another list content
             inline void merge_front( list_of &other ) throw()
             {
                 assert( this != &other );
-                while( other.size ) push_front( other.pop_back() );
-                    }
+                while( other.size )
+                {
+                    push_front( other.pop_back() );
+                }
+            }
 
             //! mostly to debug
             inline bool owns( const NODE *node ) const throw()
@@ -221,7 +226,31 @@ assert((node)->prev==NULL)
             inline void move_to_front( NODE *node ) throw()
             {
                 assert( owns( node ) );
-                push_front( unlink(node) );
+                if(node==head)
+                {
+                    return; //...
+                }
+                else
+                {
+                    if(node==tail)
+                    {
+                        assert(size>=2);
+                        tail = tail->prev;
+                        tail->next = NULL;
+                    }
+                    else
+                    {
+                        assert(size>=3);
+                        assert(node->prev);
+                        assert(node->next);
+                        node->prev->next = node->next;
+                        node->next->prev = node->prev;
+                    }
+                    node->prev = NULL;
+                    node->next = head;
+                    head->prev = node;
+                    head = node;
+                }
             }
 
             //! replace and return mine
@@ -259,11 +288,11 @@ assert((node)->prev==NULL)
                 }
             }
 
-            //! \todo: check
+            //! index in 0..size-1
             inline size_t index_of( const NODE *node ) const throw()
             {
                 assert( owns(node) );
-                size_t ans = 1;
+                size_t ans = 0;
                 for( const NODE *scan = head; scan!=node; scan=scan->next,++ans)
                     ;
                 return ans;

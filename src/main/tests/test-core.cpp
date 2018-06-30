@@ -51,10 +51,29 @@ namespace
             l.merge_back(l_copy);
         }
 
+
+
         core::pool_of_cpp<aNode> p;
         while( l.size ) p.store( l.pop_back() );
-        
+
+        std::cerr << "MoveToFront 1->" << n << std::endl;
+        for(size_t i=0;i<n;++i)
+        {
+            l.push_back( new aNode() );
+            for(size_t j=0;j<l.size;++j)
+            {
+                aNode *node = l.fetch(j);
+                if(l.index_of(node)!=j)
+                {
+                    throw exception("invalid fetch/index");
+                }
+                l.move_to_front( l.fetch(j) );
+            }
+        }
+
     }
+
+
 
 }
 
