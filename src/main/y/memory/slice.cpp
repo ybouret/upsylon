@@ -120,7 +120,6 @@ namespace upsylon
 #endif
                     if(remaining_bytes>=small_size)
                     {
-                        //std::cerr << "\t\t...split" << std::endl;
                         //______________________________________________________
                         //
                         // insert new block
@@ -172,19 +171,13 @@ namespace upsylon
     {
         void slice:: release(void *&p, size_t &n) throw()
         {
-            if(p)
-            {
-                assert(n>0);
-                block *curr = static_cast<block *>(p)-1; assert(n==curr->size||die("slice block sizes mismatch"));
-                slice *from = curr->from;                assert(from||die("unable to find slice"));
-                from->__release(curr);
-                p = 0;
-                n = 0;
-            }
-            else
-            {
-                assert(n<=0);
-            }
+            assert(p);
+            assert(n>0);
+            block *curr = static_cast<block *>(p)-1; assert(n==curr->size||die("slice block sizes mismatch"));
+            slice *from = curr->from;                assert(from||die("unable to find slice"));
+            from->__release(curr);
+            p = 0;
+            n = 0;
         }
 
 
@@ -194,6 +187,7 @@ namespace upsylon
             assert(curr>=entry);
             assert(curr<guard);
             assert(this==curr->from);
+
             static const int reset_block_only = 0x00;
             static const int fusion_with_prev = 0x01;
             static const int fusion_with_next = 0x02;
