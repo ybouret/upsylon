@@ -16,6 +16,9 @@ namespace upsylon
         class small_object
         {
         public:
+            static const size_t limit_size = LIMIT_SIZE;
+            static const size_t chunk_size = CHUNK_SIZE;
+            
             //! do nothing constructir
             inline explicit small_object() throw() {}
 

@@ -18,6 +18,7 @@ Y_UTEST_INIT(32)
     Y_UTEST(primality);
     Y_UTEST(object0);
     Y_UTEST(objectY);
+    Y_UTEST(slice);
     Y_UTEST(threads);
 
 }
