@@ -34,6 +34,7 @@ namespace upsylon {
             core::pool_of<slice> cached;    //! pool of dead slices
             core::pool_of<page>  pages;     //! ever growing memory to store slices
 
+            Y_DISABLE_COPY_AND_ASSIGN(carver);
         public:
             const size_t bytes; //!< total bytes
             const size_t slices_per_page; //!< number of allocatable slices per page
