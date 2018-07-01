@@ -26,7 +26,10 @@ namespace upsylon
 
         slice::~slice() throw()
         {
-
+            if(entry->next!=guard && entry->from!=NULL)
+            {
+                std::cerr << "[memory.slice] not empty" << std::endl;
+            }
         }
 
         bool slice:: __check() const
@@ -96,6 +99,8 @@ namespace upsylon
     {
         void * slice:: acquire(size_t &n) throw()
         {
+            assert(n>0);
+            if(!count) return 0;
             for(block *curr=entry;curr!=guard;curr=curr->next)
             {
                 if(!(curr->from) && curr->size>=n)
@@ -107,14 +112,15 @@ namespace upsylon
                     const size_t available_bytes = curr->size;                      assert(available_bytes>0); assert(0==available_bytes%block_size);
                     const size_t preferred_bytes = Y_ALIGN_FOR_ITEM(block,n);       assert(preferred_bytes<=available_bytes);
                     const size_t remaining_bytes = available_bytes-preferred_bytes; assert(0==remaining_bytes%block_size);
+#if 0
                     std::cerr << "required: " << n << std::endl;
                     std::cerr << "\tavailable_bytes : " << available_bytes << std::endl;
                     std::cerr << "\tpreferred_bytes : " << preferred_bytes << std::endl;
                     std::cerr << "\tremaining_bytes : " << remaining_bytes << std::endl;
-
+#endif
                     if(remaining_bytes>=small_size)
                     {
-                        std::cerr << "\t\t...split" << std::endl;
+                        //std::cerr << "\t\t...split" << std::endl;
                         //______________________________________________________
                         //
                         // insert new block
@@ -204,6 +210,7 @@ namespace upsylon
                     next->prev = prev;
                     Y_SLICE_SET_SIZE(prev);
                     // no new block
+                    assert(__check()||die("fusion_with_prev"));
                 } break;
 
                 case fusion_with_next: {
@@ -214,6 +221,8 @@ namespace upsylon
                     }
                     Y_SLICE_SET_SIZE(curr);
                     // no new block
+                    curr->from=0;
+                    assert(__check()||die("fusion_with_next"));
                 } break;
 
                 case fusion_with_both: {
@@ -225,12 +234,15 @@ namespace upsylon
                     Y_SLICE_SET_SIZE(prev);
                     assert(count>=2);
                     --count;
+                    assert(__check()||die("fusion_with_both"));
                 } break;
 
                 default:
                     assert(reset_block_only==action);
                     curr->from = 0;
                     ++count; //!< another available block!
+                    assert(__check()||die("reset_block_only"));
+
             }
 
         }

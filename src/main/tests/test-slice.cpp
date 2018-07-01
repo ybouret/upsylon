@@ -1,4 +1,5 @@
 #include "y/memory/slice.hpp"
+#include "y/memory/cblock.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -22,48 +23,55 @@ namespace
     private:
         Y_DISABLE_COPY_AND_ASSIGN(block);
     };
+
+    static inline void fill( core::list_of<block> &blocks, memory::slice &s )
+    {
+        while(true)
+        {
+            block *b = new block();
+            b->size  = 1+alea.leq(100);
+            b->addr  = s.acquire(b->size);
+            if(!b->addr)
+            {
+                delete b;
+                break;
+            }
+            blocks.push_back(b);
+        }
+    }
 }
 
 Y_UTEST(slice)
 {
     std::cerr << "sizeof(slice::block)=" << sizeof(memory::slice::block) << std::endl;
 
-    char buffer[4000];
-    memory::slice s(buffer,sizeof(buffer));
+    memory::cblock_of<char> buffer(4000);
+
+    memory::slice s(buffer.data,buffer.bytes);
     s.display();
 
     core::list_of_cpp<block> blocks;
 
-    while(true)
+    for(size_t iter=0;iter<16;++iter)
     {
-        block *b = new block();
-        b->size  = 1;
-        const size_t nreq = b->size;
-        b->addr  = s.acquire(b->size);
-        if(!b->addr)
+        fill(blocks,s);
+        const size_t nhalf = blocks.size/2;
+        alea.shuffle(blocks);
+        while( blocks.size>nhalf )
         {
+            block *b = blocks.pop_back();
+            memory::slice::release(b->addr,b->size);
             delete b;
-            break;
         }
-        blocks.push_back(b);
-        std::cerr  << nreq << "->" << b->size << std::endl;
+        fill(blocks,s);
+        alea.shuffle(blocks);
+        while(blocks.size>0)
+        {
+            block *b = blocks.pop_back();
+            memory::slice::release(b->addr,b->size);
+            delete b;
+        }
     }
-    s.display();
-
-    return 0;
-    
-    std::cerr << "shuffle #blocks=" << blocks.size << std::endl;
-    const size_t nhalf = blocks.size/2;
-    alea.shuffle(blocks);
-    while( blocks.size )
-    {
-        block *b = blocks.pop_back();
-        std::cerr << "releasing block.size=" << b->size << std::endl;
-        memory::slice::release(b->addr,b->size);
-        delete b;
-    }
-    s.display();
-
 
 }
 Y_UTEST_DONE()
