@@ -44,34 +44,36 @@ namespace
 Y_UTEST(slice)
 {
     std::cerr << "sizeof(slice::block)=" << sizeof(memory::slice::block) << std::endl;
-
-    memory::cblock_of<char> buffer(4000);
-
-    memory::slice s(buffer.data,buffer.bytes);
-    s.display();
-
     core::list_of_cpp<block> blocks;
 
-    for(size_t iter=0;iter<16;++iter)
+    for(size_t bs=100;bs<=10000;bs += 100 + alea.leq(100))
     {
-        fill(blocks,s);
-        const size_t nhalf = blocks.size/2;
-        alea.shuffle(blocks);
-        while( blocks.size>nhalf )
-        {
-            block *b = blocks.pop_back();
-            memory::slice::release(b->addr,b->size);
-            delete b;
-        }
-        fill(blocks,s);
-        alea.shuffle(blocks);
-        while(blocks.size>0)
-        {
-            block *b = blocks.pop_back();
-            memory::slice::release(b->addr,b->size);
-            delete b;
-        }
-    }
 
+        memory::cblock_of<char> buffer(Y_ALIGN_FOR_ITEM(size_t,bs));
+        std::cerr << "#bytes=" << buffer.bytes << std::endl;
+        memory::slice s(buffer.data,buffer.bytes);
+
+        for(size_t iter=0;iter<32;++iter)
+        {
+            fill(blocks,s);
+            const size_t nhalf = blocks.size/2;
+            alea.shuffle(blocks);
+            while( blocks.size>nhalf )
+            {
+                block *b = blocks.pop_back();
+                memory::slice::release(b->addr,b->size);
+                delete b;
+            }
+            fill(blocks,s);
+            alea.shuffle(blocks);
+            while(blocks.size>0)
+            {
+                block *b = blocks.pop_back();
+                memory::slice::release(b->addr,b->size);
+                delete b;
+            }
+        }
+
+    }
 }
 Y_UTEST_DONE()
