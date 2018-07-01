@@ -30,10 +30,15 @@ namespace upsylon
 
         slice::~slice() throw()
         {
-            if(entry->next!=guard  || entry->from!=NULL)
+            if(!is_empty())
             {
                 std::cerr << "[memory.slice] not empty, bytes=" << io::delta(entry,guard) << std::endl;
             }
+        }
+
+        bool slice::is_empty() const throw()
+        {
+            return (NULL==entry->from && guard==entry->next);
         }
 
         size_t slice::bytes_to_hold( const size_t data_size ) throw()
@@ -180,7 +185,7 @@ namespace upsylon
 {
     namespace memory
     {
-        void slice:: release(void *&p, size_t &n) throw()
+        slice *slice:: release(void *&p, size_t &n) throw()
         {
             assert(p);
             assert(n>0);
@@ -189,6 +194,7 @@ namespace upsylon
             from->__release(curr);
             p = 0;
             n = 0;
+            return from;
         }
 
 

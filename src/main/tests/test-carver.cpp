@@ -1,4 +1,4 @@
-#include "y/memory/carver.hpp"
+#include "y/memory/pooled.hpp"
 #include "y/memory/cblock.hpp"
 #include "y/utest/run.hpp"
 
@@ -28,7 +28,7 @@ namespace
                             memory::carver       &C,
                             const size_t nmax)
     {
-        for(size_t i=0;i<nmax;++i)
+        while(blocks.size<=nmax)
         {
             block *b = new block();
             try
@@ -50,13 +50,69 @@ namespace
 
 Y_UTEST(carver)
 {
-    memory::carver C(0);
 
     core::list_of_cpp<block> blocks;
 
-    fill(blocks,C,10);
-
+    for(size_t bs=32;bs<=4096;bs*=2)
+    {
+        memory::carver C(bs);
+        for(size_t iter=0;iter<8;++iter)
+        {
+            fill(blocks,C,2048);
+            const size_t nhalf = blocks.size/2;
+            alea.shuffle(blocks);
+            while( blocks.size>nhalf )
+            {
+                block *b = blocks.pop_back();
+                C.release(b->addr,b->size);
+                delete b;
+            }
+            fill(blocks,C,2048);
+            alea.shuffle(blocks);
+            while(blocks.size>0)
+            {
+                block *b = blocks.pop_back();
+                C.release(b->addr,b->size);
+                delete b;
+            }
+        }
+        assert(0==blocks.size);
+        std::cerr << "carver.bytes=" << C.bytes << std::endl;
+    }
 
 }
 Y_UTEST_DONE()
 
+Y_UTEST(pooled)
+{
+    memory::pooled &P  = memory::pooled::instance();
+    core::list_of_cpp<block> blocks;
+
+    if(P.exists())
+    {
+        std::cerr << "pooled memory is ok" << std::endl;
+        for(size_t iter=0;iter<8;++iter)
+        {
+            fill(blocks,P,2048);
+            const size_t nhalf = blocks.size/2;
+            alea.shuffle(blocks);
+            while( blocks.size>nhalf )
+            {
+                block *b = blocks.pop_back();
+                P.release(b->addr,b->size);
+                delete b;
+            }
+            fill(blocks,P,2048);
+            alea.shuffle(blocks);
+            while(blocks.size>0)
+            {
+                block *b = blocks.pop_back();
+                P.release(b->addr,b->size);
+                delete b;
+            }
+        }
+        assert(0==blocks.size);
+        std::cerr << "pooled.bytes=" << P.bytes << std::endl;
+    }
+}
+Y_UTEST_DONE()

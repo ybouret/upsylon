@@ -95,7 +95,6 @@ namespace upsylon
                 p = 0;
             }
 
-        private:
             class provider : public singleton<provider>
             {
             public:

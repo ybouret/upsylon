@@ -63,7 +63,7 @@ namespace upsylon
         {
             static global &hmem = global::instance();
 
-            if(n<=0) n=1;
+            if(n<=0) return NULL;
 
             if( acquiring )
             {
@@ -73,7 +73,6 @@ namespace upsylon
                 if(p)
                 {
                     // fully cached!
-                    std::cerr << "cached" << std::endl;
                     return p;
                 }
                 else
@@ -122,7 +121,6 @@ namespace upsylon
                     (void)cached.store(s+i);
                 }
                 (size_t&)bytes += chunk_size;
-                std::cerr << "+page: bytes up to " << bytes << std::endl;
             }
 
             // create data
@@ -130,8 +128,7 @@ namespace upsylon
             const size_t buflen = max_of(slice::bytes_to_hold(n),chunk_size);
             void        *buffer = hmem.__calloc(1,buflen); assert(buffer);
             (size_t&)bytes += buflen;
-            std::cerr << "+slice of " << buflen << " bytes to hold " << n << ", bytes up to " << bytes << std::endl;
-
+            
             // create slice
             slice  *s = new ( cached.query() ) slice(buffer,buflen); slices.push_back(s);
             acquiring = s;
@@ -142,3 +139,32 @@ namespace upsylon
 
     }
 }
+
+namespace upsylon
+{
+    namespace memory
+    {
+        void carver:: release(void * &p, size_t &n) throw()
+        {
+            if(p)
+            {
+                assert(n>0);
+                slice *s = slice::release(p,n);
+                assert(slices.owns(s));
+                if(s->is_empty())
+                {
+
+                }
+            }
+            else
+            {
+                assert(n<=0);
+            }
+
+        }
+
+    }
+
+}
+
+

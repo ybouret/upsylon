@@ -9,7 +9,7 @@ namespace upsylon {
     namespace memory
     {
 
-        class carver
+        class carver : public allocator
         {
         public:
             const size_t chunk_size;
@@ -19,8 +19,9 @@ namespace upsylon {
             explicit carver(const size_t user_chunk_size) throw();
             virtual ~carver() throw();
 
-            void *acquire(size_t &n);
-
+            virtual void *acquire(size_t &n);
+            virtual void  release(void * &p, size_t &n) throw();
+            
         private:
             //! memory for slices mapping
             struct page

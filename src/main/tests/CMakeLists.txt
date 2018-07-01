@@ -22,6 +22,7 @@ ADD_TEST(Object0   test-main object0)
 ADD_TEST(ObjectY   test-main objectY)
 ADD_TEST(Slice     test-main slice)
 ADD_TEST(Carver    test-main carver)
+ADD_TEST(Pooled    test-main pooled)
 ADD_TEST(Threads   test-main threads)
 
 ADD_CUSTOM_TARGET(utest-main

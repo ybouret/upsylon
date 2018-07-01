@@ -50,7 +50,10 @@ namespace upsylon
             void *      acquire(size_t &n) throw();
 
             //! release the memory
-            static void release(void * &p, size_t &n) throw();
+            static slice *release(void * &p, size_t &n) throw();
+
+            //! check status
+            bool is_empty() const throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(slice);

@@ -63,10 +63,12 @@ for(size_t i=0;i<arenas_per_page;++i) cached.store(a+i)
         pages(),
         arenas_per_page( (chunk_size-sizeof(void*))/sizeof(arena) )
         {
+#if 0
             std::cerr << "chunk_size      =" << chunk_size  << "/" << the_chunk_size << std::endl;
             std::cerr << "table_maxi      =" << chunk_size/sizeof(arena_list) << std::endl;
             std::cerr << "table_size      =" << table_mask+1 << std::endl;
             std::cerr << "arenas_per_page =" << arenas_per_page << std::endl;
+#endif
             try
             {
                 while(cached.size<initial_arenas)
