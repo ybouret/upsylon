@@ -49,7 +49,7 @@ Y_UTEST(slice)
     for(size_t bs=100;bs<=10000;bs += 100 + alea.leq(100))
     {
 
-        memory::cblock_of<char> buffer(Y_ALIGN_FOR_ITEM(size_t,bs));
+        memory::cblock_of<char> buffer(Y_ALIGN_FOR_ITEM(memory::slice::block,bs));
         std::cerr << "#bytes=" << buffer.bytes << std::endl;
         memory::slice s(buffer.data,buffer.bytes);
 

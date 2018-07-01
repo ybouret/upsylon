@@ -1,5 +1,5 @@
-
 #include "y/memory/slice.hpp"
+#include "y/type/utils.hpp"
 #include <iostream>
 #include <cstring>
 
@@ -13,11 +13,14 @@ namespace upsylon
                       const size_t buflen) throw() :
         entry( static_cast<block*>(buffer) ),
         guard( entry + (buflen/block_size) ),
-        count(1)
+        count(1),
+        next(0),
+        prev(0)
         {
             assert(buflen>=2*sizeof(block_size));
             assert(guard>entry+1);
-
+            assert(buflen%block_size==0);
+            assert(io::delta(entry,guard)==ptrdiff_t(buflen));
             entry->prev = 0;
             entry->from = 0; //!< aka 'free'
             entry->next = guard;
@@ -27,11 +30,18 @@ namespace upsylon
 
         slice::~slice() throw()
         {
-            if(entry->next!=guard && entry->from!=NULL)
+            if(entry->next!=guard  || entry->from!=NULL)
             {
-                std::cerr << "[memory.slice] not empty" << std::endl;
+                std::cerr << "[memory.slice] not empty, bytes=" << io::delta(entry,guard) << std::endl;
             }
         }
+
+        size_t slice::bytes_to_hold( const size_t data_size ) throw()
+        {
+            return Y_ALIGN_FOR_ITEM(block,max_of(block_size+data_size,small_size));
+        }
+
+
 
         bool slice:: __check() const
         {

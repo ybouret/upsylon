@@ -10,6 +10,8 @@ namespace upsylon
     namespace memory
     {
 
+        class carver;
+
         //! format and use user's memory area
         class slice
         {
@@ -27,10 +29,12 @@ namespace upsylon
 
             //! format the buffer with buflen
             /**
-             buflen >= small_size
+             \param buflen >= small_siz and is a multiple of block_size
              */
             slice(void        *buffer,
                   const size_t buflen) throw();
+
+            static size_t bytes_to_hold( const size_t data_size ) throw();
 
             //! do nothing but display warning if not empty
             ~slice() throw();
@@ -55,6 +59,11 @@ namespace upsylon
             size_t count; //!< count of available blocks
             void __release(block *curr) throw();
             bool __check() const;
+            friend class carver;
+            
+        public:
+            slice *next;
+            slice *prev;
         };
 
     }
