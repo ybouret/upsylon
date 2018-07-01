@@ -38,13 +38,15 @@ namespace upsylon
             /**
              if no block is available or big enough, return NULL.
              */
-            void * acquire(size_t &n) throw();
+            void *      acquire(size_t &n) throw();
+            static void release(void * &p, size_t &n) throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(slice);
             block *entry; //!< first item
             block *guard; //!< out of block address
             size_t count; //!< count of available blocks
+            void __release(block *curr) throw();
         };
 
     }

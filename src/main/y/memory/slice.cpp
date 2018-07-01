@@ -38,6 +38,7 @@ namespace upsylon
         void * slice:: acquire(size_t &n) throw()
         {
             assert(n>0);
+
             for(block *b=entry;b!=guard;b=b->next)
             {
                 if(!(b->from) && b->size>=n)
@@ -56,12 +57,29 @@ namespace upsylon
 
                     if(remaining_bytes>=small_size)
                     {
-                        std::cerr << "\t\tsplit!" << std::endl;
+                        std::cerr << "\t\t...split" << std::endl;
+                        //______________________________________________________
+                        //
+                        // insert new block
+                        //______________________________________________________
+                        block *t = &b[1+preferred_bytes/block_size];
+                        t->prev = b;
+                        t->next = b->next; assert(t->next>t+1);
+                        t->size = static_cast<size_t>( t->next-(t+1) ) * block_size;
+                        t->from = NULL;
+
+                        //______________________________________________________
+                        //
+                        // update status
+                        //______________________________________________________
+                        b->next = t;
+                        b->size = preferred_bytes;
+                        ++count;
                     }
 
                     //__________________________________________________________
                     //
-                    // update status
+                    // prepare allocated
                     //__________________________________________________________
                     n       = b->size;
                     b->from = this;
@@ -81,14 +99,59 @@ namespace upsylon
 {
     namespace memory
     {
+        void slice:: release(void *&p, size_t &n) throw()
+        {
+            if(p)
+            {
+                assert(n>0);
+                block *curr = static_cast<block *>(p)-1; assert(n==curr->size||die("slice block sizes mismatch"));
+                slice *from = curr->from;                assert(from||die("unable to find slice"));
+                from->__release(curr);
+                p = 0;
+                n = 0;
+            }
+            else
+            {
+                assert(n<=0);
+            }
+        }
+
+        void slice:: __release(block *curr) throw()
+        {
+            assert(curr);
+            assert(this==curr->from);
+            
+        }
+
+    }
+
+}
+
+
+namespace upsylon
+{
+    namespace memory
+    {
         void slice:: display() const
         {
             std::cerr << "<slice count='" << count << "'>" << std::endl;
+            size_t nfree = 0;
+            size_t nused = 0;
             for(const block *b = entry; b!=guard; b=b->next)
             {
                 const char *status = (b->from) ? "USED" : "FREE";
+                if(b->from)
+                {
+                    nused += b->size;
+                }
+                else
+                {
+                    nfree += b->size;
+                }
                 std::cerr << "\t" << status << " +" << b->size << std::endl;
             }
+            std::cerr << "#used=" << nused << std::endl;
+            std::cerr << "#free=" << nfree << std::endl;
             std::cerr << "<slice/>" << std::endl;
         }
 

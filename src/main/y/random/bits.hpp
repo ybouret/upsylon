@@ -100,6 +100,24 @@ namespace upsylon
                 return (next32() <= half);
             }
 
+            //! shuffle LIST type
+            template <typename LIST>
+            inline void shuffle( LIST &l ) throw()
+            {
+                LIST tmp;
+                while(l.size)
+                {
+                    if(choice())
+                    {
+                        tmp.push_back( l.pop_back() );
+                    }
+                    else
+                    {
+                        tmp.push_front( l.pop_back() );
+                    }
+                }
+                l.swap_with(tmp);
+            }
 
 
         protected:
