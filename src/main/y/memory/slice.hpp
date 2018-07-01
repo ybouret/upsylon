@@ -1,4 +1,4 @@
-
+//! \file
 #ifndef Y_MEMORY_SLICE_INCLUDED
 #define Y_MEMORY_SLICE_INCLUDED 1
 
