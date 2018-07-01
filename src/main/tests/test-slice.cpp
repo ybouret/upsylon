@@ -28,7 +28,7 @@ Y_UTEST(slice)
 {
     std::cerr << "sizeof(slice::block)=" << sizeof(memory::slice::block) << std::endl;
 
-    char buffer[1000];
+    char buffer[4000];
     memory::slice s(buffer,sizeof(buffer));
     s.display();
 
@@ -38,6 +38,7 @@ Y_UTEST(slice)
     {
         block *b = new block();
         b->size  = 1;
+        const size_t nreq = b->size;
         b->addr  = s.acquire(b->size);
         if(!b->addr)
         {
@@ -45,15 +46,19 @@ Y_UTEST(slice)
             break;
         }
         blocks.push_back(b);
+        std::cerr  << nreq << "->" << b->size << std::endl;
     }
     s.display();
 
+    return 0;
+    
     std::cerr << "shuffle #blocks=" << blocks.size << std::endl;
     const size_t nhalf = blocks.size/2;
     alea.shuffle(blocks);
-    while( blocks.size > nhalf )
+    while( blocks.size )
     {
         block *b = blocks.pop_back();
+        std::cerr << "releasing block.size=" << b->size << std::endl;
         memory::slice::release(b->addr,b->size);
         delete b;
     }

@@ -47,6 +47,7 @@ namespace upsylon
             block *guard; //!< out of block address
             size_t count; //!< count of available blocks
             void __release(block *curr) throw();
+            bool __check() const;
         };
 
     }

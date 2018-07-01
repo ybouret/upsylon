@@ -6,6 +6,8 @@ namespace upsylon
 {
     namespace memory
     {
+#define Y_SLICE_SET_SIZE(S) (S)->size = ( static_cast<size_t>( (S)->next - ( (S)+1 ) ) * block_size )
+
         slice:: slice(void        *buffer,
                       const size_t buflen) throw() :
         entry( static_cast<block*>(buffer) ),
@@ -18,12 +20,69 @@ namespace upsylon
             entry->prev = 0;
             entry->from = 0; //!< aka 'free'
             entry->next = guard;
-            entry->size = static_cast<size_t>( guard-(entry+1) ) * block_size;
+            Y_SLICE_SET_SIZE(entry);
+            assert(__check());
         }
 
         slice::~slice() throw()
         {
 
+        }
+
+        bool slice:: __check() const
+        {
+            assert(entry);
+            assert(guard);
+            assert(entry->prev==NULL);
+            assert(guard>entry+1);
+
+            size_t fBlock = 0;
+            size_t uBlock = 0;
+            size_t iBlock = 0;
+            for(const block *blk = entry; blk != guard; blk=blk->next )
+            {
+                ++iBlock;
+                // check linking
+                if(blk!=entry)
+                {
+                    if(blk->prev==NULL)
+                    {
+                        std::cerr << "invalid blk->prev for block #" << iBlock << std::endl;
+                        return false;
+                    }
+                }
+                if(blk->next==NULL)
+                {
+                    std::cerr << "invalid blk->next for block #" << iBlock << std::endl;
+                    return false;
+                }
+                // check size
+                const size_t length = static_cast<size_t>(blk->next-(blk+1)) * block_size;
+                if(length!=blk->size)
+                {
+                    std::cerr << "invalid blk->size for block #" << iBlock << std::endl;
+                }
+                if(blk->from!=NULL)
+                {
+                    ++uBlock;
+                }
+                else
+                {
+                    ++fBlock;
+                }
+            }
+            if(uBlock+fBlock!=iBlock)
+            {
+                std::cerr << "invalid checksum" << std::endl;
+                return false;
+            }
+            if(fBlock!=count)
+            {
+                std::cerr << "invalid count of free blocks: " << fBlock << "/" << count <<  std::endl;
+                return false;
+            }
+
+            return true;
         }
 
     }
@@ -37,19 +96,17 @@ namespace upsylon
     {
         void * slice:: acquire(size_t &n) throw()
         {
-            assert(n>0);
-
-            for(block *b=entry;b!=guard;b=b->next)
+            for(block *curr=entry;curr!=guard;curr=curr->next)
             {
-                if(!(b->from) && b->size>=n)
+                if(!(curr->from) && curr->size>=n)
                 {
                     //__________________________________________________________
                     //
                     // found an available block
                     //__________________________________________________________
-                    const size_t available_bytes = b->size;
-                    const size_t preferred_bytes = Y_ALIGN_FOR_ITEM(block,n); assert(preferred_bytes<=available_bytes);
-                    const size_t remaining_bytes = available_bytes-preferred_bytes;
+                    const size_t available_bytes = curr->size;                      assert(available_bytes>0); assert(0==available_bytes%block_size);
+                    const size_t preferred_bytes = Y_ALIGN_FOR_ITEM(block,n);       assert(preferred_bytes<=available_bytes);
+                    const size_t remaining_bytes = available_bytes-preferred_bytes; assert(0==remaining_bytes%block_size);
                     std::cerr << "required: " << n << std::endl;
                     std::cerr << "\tavailable_bytes : " << available_bytes << std::endl;
                     std::cerr << "\tpreferred_bytes : " << preferred_bytes << std::endl;
@@ -62,30 +119,38 @@ namespace upsylon
                         //
                         // insert new block
                         //______________________________________________________
-                        block *t = &b[1+preferred_bytes/block_size];
-                        t->prev = b;
-                        t->next = b->next; assert(t->next>t+1);
-                        t->size = static_cast<size_t>( t->next-(t+1) ) * block_size;
-                        t->from = NULL;
+                        block *temp  = &curr[1+preferred_bytes/block_size];
+                        block *after = curr->next;
+
+                        temp->next = after; assert(temp->next>temp+1);
+                        if(after!=guard)
+                        {
+                            after->prev = temp;
+                        }
+                        temp->prev = curr;
+                        Y_SLICE_SET_SIZE(temp);
+                        temp->from = NULL;
 
                         //______________________________________________________
                         //
-                        // update status
+                        // update current
                         //______________________________________________________
-                        b->next = t;
-                        b->size = preferred_bytes;
+                        curr->next = temp;
+                        Y_SLICE_SET_SIZE(curr); assert(preferred_bytes==curr->size);
                         ++count;
+                        assert(__check());
                     }
 
                     //__________________________________________________________
                     //
                     // prepare allocated
                     //__________________________________________________________
-                    n       = b->size;
-                    b->from = this;
-                    void *addr = &b[1];
+                    n          = curr->size;
+                    curr->from = this;
+                    void *addr = &curr[1];
                     memset(addr,0,n);
                     --count;
+                    assert(__check());
                     return addr;
                 }
             }
@@ -116,11 +181,58 @@ namespace upsylon
             }
         }
 
+
         void slice:: __release(block *curr) throw()
         {
             assert(curr);
+            assert(curr>=entry);
+            assert(curr<guard);
             assert(this==curr->from);
-            
+            static const int reset_block_only = 0x00;
+            static const int fusion_with_prev = 0x01;
+            static const int fusion_with_next = 0x02;
+            static const int fusion_with_both = fusion_with_prev | fusion_with_next;
+
+            int    action = reset_block_only;
+            block *prev   = curr->prev; if(prev!=NULL  && !(prev->from) ) action |= fusion_with_prev;
+            block *next   = curr->next; if(guard!=next && !(next->from) ) action |= fusion_with_next;
+
+            switch(action)
+            {
+                case fusion_with_prev: {
+                    prev->next = next;
+                    next->prev = prev;
+                    Y_SLICE_SET_SIZE(prev);
+                    // no new block
+                } break;
+
+                case fusion_with_next: {
+                    block *after = next->next;
+                    curr->next = after;
+                    if(after!=guard) {
+                        after->prev = curr;
+                    }
+                    Y_SLICE_SET_SIZE(curr);
+                    // no new block
+                } break;
+
+                case fusion_with_both: {
+                    block *after = next->next;
+                    prev->next = after;
+                    if(after!=guard) {
+                        after->prev = prev;
+                    }
+                    Y_SLICE_SET_SIZE(prev);
+                    assert(count>=2);
+                    --count;
+                } break;
+
+                default:
+                    assert(reset_block_only==action);
+                    curr->from = 0;
+                    ++count; //!< another available block!
+            }
+
         }
 
     }

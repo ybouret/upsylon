@@ -105,7 +105,7 @@ namespace upsylon
             inline void shuffle( LIST &l ) throw()
             {
                 LIST tmp;
-                while(l.size)
+                while(l.size>0)
                 {
                     if(choice())
                     {
