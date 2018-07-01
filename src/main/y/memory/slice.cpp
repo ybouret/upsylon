@@ -1,6 +1,7 @@
 
 #include "y/memory/slice.hpp"
 #include <iostream>
+#include <cstring>
 
 namespace upsylon
 {
@@ -201,7 +202,7 @@ namespace upsylon
             {
                 case fusion_with_prev: {
                     prev->next = next;
-                    next->prev = prev;
+                    if(guard!=next) next->prev = prev;
                     Y_SLICE_SET_SIZE(prev);
                     // no new block
                     assert(__check()||die("fusion_with_prev"));
