@@ -95,6 +95,7 @@ namespace upsylon
                 p = 0;
             }
 
+        private:
             class provider : public singleton<provider>
             {
             public:
@@ -140,6 +141,9 @@ namespace upsylon
             public:
                 static const at_exit::longevity life_time = global::life_time - 1;
             };
+
+        public:
+            static const at_exit::longevity life_time = provider::life_time; //!< library wide life time
 
         };
 
