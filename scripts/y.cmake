@@ -209,6 +209,10 @@ MACRO(TARGET_LINK_Y tgt)
 	MESSAGE(STATUS "[${tgt}] <${ylibs}>")
 	TARGET_LINK_LIBRARIES(${tgt} ${ylibs})
 	
+	IF(Y_FREEBSD)
+		TARGET_LINK_LIBRARIES(${tgt} pthread)
+	ENDIF()
+
 	IF(Y_LINUX)
 		TARGET_LINK_LIBRARIES(${tgt} pthread rt)
 	ENDIF()
