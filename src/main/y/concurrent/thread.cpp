@@ -12,13 +12,15 @@ namespace upsylon
     namespace concurrent
     {
 
-        thread:: thread( setup &todo ):
+        thread:: thread(procedure proc, void *data):
         next(0),
         prev(0),
         handle(),
         id(),
-        ini( &todo )
+        proc_(proc),
+        data_(data)
         {
+            assert(proc||die("need a thread procedure"));
             memset(&handle,0,sizeof(handle));
             memset(&id,0,sizeof(id));
 
@@ -64,10 +66,8 @@ namespace upsylon
         {
             assert(args);
             thread &thr = *static_cast<thread *>(args);
-            assert(thr.ini);
-            assert(thr.ini->proc);
-            thr.ini->proc( thr.ini->data );
-            thr.ini->start.wait(thr.ini->access);
+            assert(thr.proc_);
+            thr.proc_( thr.data_ );
             return 0;
         }
         

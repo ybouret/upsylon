@@ -2,6 +2,7 @@
 #define Y_CONCURRENT_THREADS_INCLUDED 1
 
 #include "y/concurrent/thread.hpp"
+#include "y/concurrent/condition.hpp"
 #include "y/core/list.hpp"
 
 namespace upsylon {
@@ -10,12 +11,11 @@ namespace upsylon {
     {
 
         //! lowe level threads
-        class threads:
-        public thread::setup,
-        public core::list_of_cpp<thread>
+        class threads : public core::list_of_cpp<thread>
         {
         public:
-            mutex access;
+            mutex     access;
+            condition sync;
 
             explicit threads() throw();
             virtual ~threads() throw();
@@ -23,10 +23,7 @@ namespace upsylon {
             inline void launch( thread::procedure user_proc, void *user_data)
             {
                 assert(user_proc);
-                proc=user_proc;
-                data=user_data;
-                access.lock();
-                push_back( new thread(*this) );
+                push_back( new thread(user_proc,user_data) );
             }
 
             
