@@ -5,6 +5,7 @@
 
 #include <cerrno>
 #include <cstdarg>
+#include <cstdio>
 
 namespace upsylon
 {

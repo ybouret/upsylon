@@ -295,7 +295,7 @@ inline friend bool operator OP ( const char *lhs, const string &rhs ) throw()\
 inline friend bool operator OP ( const string &lhs, const T rhs ) throw()\
 { return string::compare_blocks(lhs.addr_,lhs.size_,&rhs,1) OP 0;}\
 inline friend bool operator OP ( const T lhs, const string &rhs ) throw()\
-{ return string::compare_blocks(&lhs,1,rhs.addr_,rhs._size) OP 0;}
+{ return string::compare_blocks(&lhs,1,rhs.addr_,rhs.size_) OP 0;}
 
             Y_CORE_STRING_CMP(==)
             Y_CORE_STRING_CMP(!=)
