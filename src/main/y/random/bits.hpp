@@ -5,6 +5,7 @@
 #include "y/type/ints.hpp"
 #include "y/type/bswap.hpp"
 #include <cstdlib>
+#include <cmath>
 
 namespace upsylon
 {
@@ -49,6 +50,13 @@ namespace upsylon
             T __lt(const T X) throw()
             {
                 return ( (X<=0) ? T(0) : ( full<T>() % X ) );
+            }
+
+            template <typename T> inline
+            T range(const T a, const T b) throw()
+            {
+                const double r = floor( 0.5 + (to<double>() * (double(b)-double(a))) );
+                return a + T(r);
             }
 
             //! 0..n-1

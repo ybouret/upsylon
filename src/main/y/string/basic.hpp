@@ -25,13 +25,22 @@ namespace upsylon
         }
     }
 
+    //! sanity check of a core string
 #define Y_CORE_STRING_CHECK(S)         \
 assert( (S).addr_ );                    \
 assert( (S).items>0 );                   \
 assert( (S).bytes>=(S).items*sizeof(T) ); \
 assert( (S).items-1==(S).maxi_ );          \
-assert( (S).size_<=(S).maxi_ )
+assert( (S).size_<=(S).maxi_ );             \
+assert( 0 == (S).addr_[ (S).size_ ] )
 
+    //! default fields initialisation
+#define Y_CORE_STRING_CTOR0()      memory::rw_buffer(), dynamic(), addr_(0)
+
+    //! string constructor to hold SIZE
+#define Y_CORE_STRING_CTOR(SIZE)   Y_CORE_STRING_CTOR0(), size_(SIZE), maxi_(0), items(size_+1), bytes(0)
+
+    //! string memory allocation and setup
 #define Y_CORE_STRING_ALLOC()                                \
 static memory::allocator &hmem = memory::pooled::instance(); \
 addr_ = hmem.acquire_as<T>(items,bytes);                     \
@@ -39,6 +48,7 @@ maxi_ = items-1
 
     namespace core
     {
+        //! string on a base class
         template <typename T>
         class string : public memory::rw_buffer, public dynamic
         {
@@ -65,21 +75,25 @@ maxi_ = items-1
             inline void clear() throw() { addr_[(size_=0)]=0; }
 
             //! default constructor
-            inline string() : addr_(0), size_(0), maxi_(0), items(1), bytes(0)
+            inline string() : Y_CORE_STRING_CTOR(0)
             {
                 Y_CORE_STRING_ALLOC();
+                Y_CORE_STRING_CHECK(*this);
             }
 
             //! copy constructor
-            inline string(const string &other) : addr_(0), size_(other.size_), maxi_(0), items(size_+1), bytes(0)
+            inline string(const string &other) :  Y_CORE_STRING_CTOR(other.size_)
             {
+                Y_CORE_STRING_CHECK(other);
                 Y_CORE_STRING_ALLOC();
                 memcpy(addr_,other.addr_, size_*sizeof(T) );
+                Y_CORE_STRING_CHECK(*this);
             }
 
             //! assignement of another string
             inline string & operator=(const string &other)
             {
+                Y_CORE_STRING_CHECK(other);
                 if(this!=&other)
                 {
                     if(other.size_>maxi_)
@@ -91,6 +105,7 @@ maxi_ = items-1
                     {
                         memcpy(addr_,other.addr_,(size_=other.size_)*sizeof(T));
                         addr_[size_] = 0;
+                        Y_CORE_STRING_CHECK(*this);
                     }
                 }
                 return *this;
@@ -108,6 +123,7 @@ maxi_ = items-1
                         addr_[i] = s[i];
                     }
                     addr_[size_]=0;
+                    Y_CORE_STRING_CHECK(*this);
                 }
                 else
                 {
@@ -134,31 +150,33 @@ maxi_ = items-1
             inline const T * operator *() const throw() { return addr_; }
 
             //! C-style constructor
-            inline string( const T *s ) : addr_(0), size_( length_of(s) ), maxi_(0), items( size_+1 ), bytes(0)
+            inline string( const T *s ) :  Y_CORE_STRING_CTOR(length_of(s))
             {
                 Y_CORE_STRING_ALLOC();
                 memcpy(addr_,s,size_*sizeof(T));
             }
 
             //! C-style with forced length buffer constructor
-            inline string( const T *s, const size_t n ) : addr_(0), size_( n ), maxi_(0), items( size_+1 ), bytes(0)
+            inline string( const T *s, const size_t n ) : Y_CORE_STRING_CTOR(n)
             {
                 Y_CORE_STRING_ALLOC();
                 memcpy(addr_,s,size_*sizeof(T));
+                Y_CORE_STRING_CHECK(*this);
             }
 
             //! memory reserve
             inline string( const size_t n, const as_capacity_t &) :
-            addr_(0), size_(0), maxi_(0), items(n+1), bytes(0)
+            Y_CORE_STRING_CTOR0(), size_(0), maxi_(0), items(n+1), bytes(0)
             {
                 Y_CORE_STRING_ALLOC();
             }
 
             //! construct with a single char
-            inline string( const T C ) : addr_(0), size_( 1 ), maxi_(0), items( 2 ), bytes(0)
+            inline string( const T C ) : Y_CORE_STRING_CTOR(1)
             {
                 Y_CORE_STRING_ALLOC();
                 addr_[0] = C;
+                Y_CORE_STRING_CHECK(*this);
             }
 
             //! standard display
@@ -198,32 +216,67 @@ maxi_ = items-1
                 return *this;
             }
 
+            //! addition
             inline friend string operator+( const string &lhs, const string &rhs )
             {
                 return string(lhs.addr_,lhs.size_,rhs.addr_,rhs.size_);
             }
 
+            //! addition
             inline friend string operator+(const string &lhs, const T *rhs )
             {
                 return string(lhs.addr_,lhs.size_,rhs,length_of(rhs));
             }
 
+            //! addition
             inline friend string operator+(const T *lhs, const string &rhs)
             {
                 return string(lhs,length_of(lhs),rhs.addr_,rhs.size_);
             }
 
+            //! addition
             inline friend string operator+( const string &lhs, const T C )
             {
                 return string(lhs.addr_,lhs.size_,&C,1);
             }
 
+            //! addition
             inline friend string operator+(const T C,const string &rhs)
             {
                 return string(&C,1,rhs.addr_,rhs.size_);
             }
 
+            static inline
+            int compare_blocks( const T *sa, const size_t na, const T *sb, const size_t nb) throw()
+            {
+                return (na<=nb) ? compare_blocks_(sa,na,sb,nb) : -compare_blocks_(sb,nb,sa,na);
+            }
 
+            static inline
+            int compare(const string &lhs, const string &rhs) throw()
+            {
+                return compare_blocks(lhs.addr_,lhs.size_,rhs.addr_,rhs.size_);
+            }
+
+#define Y_CORE_STRING_CMP(OP) \
+inline friend bool operator OP ( const string &lhs, const string &rhs ) throw()\
+{ return string::compare_blocks(lhs.addr_,lhs.size_,rhs.addr_,rhs._size) OP 0;}\
+inline friend bool operator OP ( const string &lhs, const char *rhs ) throw()\
+{ return string::compare_blocks(lhs.addr_,lhs.size_,rhs,length_of(rhs)) OP 0;}\
+inline friend bool operator OP ( const char *lhs, const string &rhs ) throw()\
+{ return string::compare_blocks(lhs,length_of(lhs),rhs.addr_,rhs._size) OP 0;}\
+inline friend bool operator OP ( const string &lhs, const T rhs ) throw()\
+{ return string::compare_blocks(lhs.addr_,lhs.size_,&rhs,1) OP 0;}\
+inline friend bool operator OP ( const T lhs, const string &rhs ) throw()\
+{ return string::compare_blocks(&lhs,1,rhs.addr_,rhs._size) OP 0;}
+
+            Y_CORE_STRING_CMP(==)
+            Y_CORE_STRING_CMP(!=)
+            Y_CORE_STRING_CMP(<=)
+            Y_CORE_STRING_CMP(<)
+            Y_CORE_STRING_CMP(>=)
+            Y_CORE_STRING_CMP(>)
+            
         private:
             T     *addr_;
             size_t size_;
@@ -273,6 +326,29 @@ maxi_ = items-1
                     swap_with(tmp);
                 }
                 Y_CORE_STRING_CHECK(*this);
+            }
+
+            static inline int compare_blocks_(const T     *small_data,
+                                              const size_t small_size,
+                                              const T     *large_data,
+                                              const size_t large_size) throw()
+            {
+                assert(small_size<=large_size);
+                for(size_t i=0; i<small_size;++i)
+                {
+                    const T s = small_data[i];
+                    const T l = large_data[i];
+                    if(s<l)
+                    {
+                        return -1;
+                    }
+                    else if(l<s)
+                    {
+                        return 1;
+                    }
+                    // else continue
+                }
+                return (small_size<large_size) ? 1 : 0;
             }
 
         };

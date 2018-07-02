@@ -1,6 +1,6 @@
 FILE(GLOB srcs test-*.cpp)
 
-ADD_EXECUTABLE(test-main main.cpp ${srcs})
+ADD_EXECUTABLE(test-main main.cpp ${srcs} support.hpp)
 TARGET_LINK_Y(test-main)
 
 ENABLE_TESTING()

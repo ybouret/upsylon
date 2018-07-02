@@ -1,4 +1,4 @@
-#include "y/string.hpp"
+#include "support.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -30,6 +30,17 @@ Y_UTEST(string)
     string s9  = s3      + "world"; __DISP(s9);
     string s10 = 'H'     + s4;      __DISP(s10);
     string s11 = s3      + 'H';     __DISP(s11);
+
+    for(size_t i=0;i<10;++i)
+    {
+        const string lhs = support::get<string>();
+        const string rhs = support::get<string>();
+        const int    cmp = string::compare(lhs,rhs);
+        std::cerr << "compare(" << lhs << "," << rhs <<")=" << cmp << std::endl;
+        Y_CHECK(string::compare(lhs,lhs)==0);
+
+    }
+
 }
 Y_UTEST_DONE()
 
