@@ -8,6 +8,7 @@ namespace upsylon
 {
     namespace memory
     {
+        //! pooled memory allocator
         class pooled : public singleton<pooled>, public carver
         {
         public:

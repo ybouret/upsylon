@@ -29,11 +29,13 @@ namespace upsylon
 
             //! format the buffer with buflen
             /**
-             \param buflen >= small_siz and is a multiple of block_size
+             \param buffer memory buffer
+             \param buflen >= small_size and is a multiple of block_size
              */
             slice(void        *buffer,
                   const size_t buflen) throw();
 
+            //! bytes to provide to constructor to hold data_size
             static size_t bytes_to_hold( const size_t data_size ) throw();
 
             //! do nothing but display warning if not empty
@@ -65,8 +67,8 @@ namespace upsylon
             friend class carver;
             
         public:
-            slice *next;
-            slice *prev;
+            slice *next; //!< for list
+            slice *prev; //!< for list
         };
 
     }
