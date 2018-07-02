@@ -287,7 +287,7 @@ maxi_ = items-1
             //! implement multiple semantic comparisons
 #define Y_CORE_STRING_CMP(OP) \
 inline friend bool operator OP ( const string &lhs, const string &rhs ) throw()\
-{ return string::compare_blocks(lhs.addr_,lhs.size_,rhs.addr_,rhs._size) OP 0;}\
+{ return string::compare_blocks(lhs.addr_,lhs.size_,rhs.addr_,rhs.size_) OP 0;}\
 inline friend bool operator OP ( const string &lhs, const char *rhs ) throw()\
 { return string::compare_blocks(lhs.addr_,lhs.size_,rhs,length_of(rhs)) OP 0;}\
 inline friend bool operator OP ( const char *lhs, const string &rhs ) throw()\
