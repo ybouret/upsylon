@@ -49,6 +49,12 @@ SET(memory_srcs ${memory_decl} ${memory_code})
 SOURCE_GROUP( memory FILES ${memory_srcs} )
 INSTALL( FILES ${memory_decl} DESTINATION include/y/memory )
 
+FILE(GLOB string_decl   y/string/*.hpp)
+FILE(GLOB string_code y/string/*.cpp)
+SET(string_srcs ${string_decl} ${string_code})
+SOURCE_GROUP( string FILES ${string_srcs} )
+INSTALL( FILES ${string_decl} DESTINATION include/y/string )
+
 FILE(GLOB hashing_decl   y/hashing/*.hpp)
 FILE(GLOB hashing_code y/hashing/*.cpp)
 SET(hashing_srcs ${hashing_decl} ${hashing_code})
@@ -71,6 +77,7 @@ ${code_srcs}
 ${random_srcs}
 ${hashing_srcs}
 ${memory_srcs}
+${string_srcs}
 ${concurrent_srcs}
 )
  

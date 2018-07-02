@@ -21,6 +21,7 @@ Y_UTEST_INIT(32)
     Y_UTEST(slice);
     Y_UTEST(carver);
     Y_UTEST(pooled);
+    Y_UTEST(string);
     Y_UTEST(threads);
 
 }
