@@ -6,16 +6,21 @@
 
 namespace upsylon
 {
-    //! dynamic class interface
+    //! common functions for dynamic containers
     class dynamic
     {
     public:
+        //! destructor
         virtual ~dynamic() throw();
 
+        //! currently available objects
         virtual size_t size()     const throw() = 0;
+
+        //! maximum available objects
         virtual size_t capacity() const throw() = 0;
 
     protected:
+        //! constructor
         explicit dynamic() throw();
 
     private:

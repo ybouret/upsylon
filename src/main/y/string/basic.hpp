@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_STRING_BASIC_INCLUDED
 #define Y_STRING_BASIC_INCLUDED 1
 
@@ -10,6 +11,7 @@
 
 namespace upsylon
 {
+    //! secured string length
     template <typename T>
     size_t length_of( const T *s ) throw()
     {
@@ -268,18 +270,21 @@ maxi_ = items-1
                 return string(&C,1,rhs.addr_,rhs.size_);
             }
 
+            //! lexicographic compare with size management
             static inline
             int compare_blocks( const T *sa, const size_t na, const T *sb, const size_t nb) throw()
             {
                 return (na<=nb) ? compare_blocks_(sa,na,sb,nb) : -compare_blocks_(sb,nb,sa,na);
             }
 
+            //! lexicographic compare
             static inline
             int compare(const string &lhs, const string &rhs) throw()
             {
                 return compare_blocks(lhs.addr_,lhs.size_,rhs.addr_,rhs.size_);
             }
 
+            //! implement multiple semantic comparisons
 #define Y_CORE_STRING_CMP(OP) \
 inline friend bool operator OP ( const string &lhs, const string &rhs ) throw()\
 { return string::compare_blocks(lhs.addr_,lhs.size_,rhs.addr_,rhs._size) OP 0;}\

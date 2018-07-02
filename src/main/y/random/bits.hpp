@@ -52,6 +52,7 @@ namespace upsylon
                 return ( (X<=0) ? T(0) : ( full<T>() % X ) );
             }
 
+            //! random value in integral range
             template <typename T> inline
             T range(const T a, const T b) throw()
             {
@@ -127,7 +128,6 @@ namespace upsylon
                 l.swap_with(tmp);
             }
 
-
         protected:
             //! sets span and auxiliary values
             explicit bits(const uint32_t maxValue) throw();
@@ -140,8 +140,13 @@ namespace upsylon
         class cstdbits : public bits
         {
         public:
+            //! constructor with RAND_MAX
             inline explicit cstdbits() throw() : bits(RAND_MAX) {}
+
+            //!desctructor
             inline virtual ~cstdbits() throw() {}
+
+            //! call rand
             inline virtual uint32_t next32() throw() { return rand(); }
             
         private:
