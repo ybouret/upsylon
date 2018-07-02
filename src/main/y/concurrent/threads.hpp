@@ -10,7 +10,9 @@ namespace upsylon {
     {
 
         //! lowe level threads
-        class threads: public core::list_of_cpp<thread>
+        class threads:
+        public thread::setup,
+        public core::list_of_cpp<thread>
         {
         public:
             mutex access;
@@ -18,10 +20,13 @@ namespace upsylon {
             explicit threads() throw();
             virtual ~threads() throw();
 
-            inline void launch( thread::procedure proc, void *data)
+            inline void launch( thread::procedure user_proc, void *user_data)
             {
-                assert(proc);
-                push_back( new thread(proc,data,size+1) );
+                assert(user_proc);
+                proc=user_proc;
+                data=user_data;
+                access.lock();
+                push_back( new thread(*this) );
             }
 
             

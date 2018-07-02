@@ -42,7 +42,7 @@ namespace upsylon
 			//! allow one blocked thread to wake up
 			void     signal()    throw();
 			
-			//! allow to blocked thread to wake up
+			//! allow the blocked threads to wake up
 			void     broadcast() throw();
 			
 		private:

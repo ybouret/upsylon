@@ -12,18 +12,13 @@ namespace upsylon
     namespace concurrent
     {
 
-        thread:: thread(procedure proc,
-                        void     *data,
-                        const size_t user_tag):
+        thread:: thread( setup &todo ):
         next(0),
         prev(0),
         handle(),
         id(),
-        tag(user_tag),
-        proc_(proc),
-        data_(data)
+        ini( &todo )
         {
-            std::cerr << "creating thread@tag=" << tag << std::endl;
             memset(&handle,0,sizeof(handle));
             memset(&id,0,sizeof(id));
 
@@ -69,15 +64,16 @@ namespace upsylon
         {
             assert(args);
             thread &thr = *static_cast<thread *>(args);
-            assert(thr.proc_);
-            thr.proc_(thr.data_);
+            assert(thr.ini);
+            assert(thr.ini->proc);
+            thr.ini->proc( thr.ini->data );
+            thr.ini->start.wait(thr.ini->access);
             return 0;
         }
         
 
         thread:: ~thread() throw()
         {
-            std::cerr << "waiting for thread@tag=" << tag << std::endl;
             assert(!next);
             assert(!prev);
 #if defined(Y_BSD)
