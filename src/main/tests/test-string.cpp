@@ -14,8 +14,8 @@ Y_UTEST(string)
     // constructor
     string s1; Y_CHECK(s1.size()==0);__DISP(s1);
     string s2(12,as_capacity);Y_CHECK(s2.size()==0);Y_CHECK(s2.capacity()>=12);
-    string s3( "Hello" ); Y_CHECK(s3.size()==5); __DISP(s3);
-    string s4 = "World";  Y_CHECK(s4.size()==5); __DISP(s4);
+    string s3( "Hello" );  Y_CHECK(s3.size()==5); __DISP(s3);
+    string s4 = "World";   Y_CHECK(s4.size()==5); __DISP(s4);
     string s5 = (char *)0; Y_CHECK(s5.size()==0);
     string s6 = 'a';       Y_CHECK(s6.size()==1); __DISP(s6);
 
@@ -38,8 +38,9 @@ Y_UTEST(string)
         const int    cmp = string::compare(lhs,rhs);
         std::cerr << "compare(" << lhs << "," << rhs <<")=" << cmp << std::endl;
         Y_CHECK(string::compare(lhs,lhs)==0);
-
     }
+
+
 
 }
 Y_UTEST_DONE()

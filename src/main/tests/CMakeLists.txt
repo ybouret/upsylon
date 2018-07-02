@@ -23,7 +23,9 @@ ADD_TEST(ObjectY   test-main objectY)
 ADD_TEST(Slice     test-main slice)
 ADD_TEST(Carver    test-main carver)
 ADD_TEST(Pooled    test-main pooled)
-ADD_TEST(Threads   test-main threads)
+ADD_TEST(Buffers   test-main buffers)
+ADD_TEST(String    test-main string)
+#ADD_TEST(Threads   test-main threads)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V

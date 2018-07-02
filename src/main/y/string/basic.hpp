@@ -216,6 +216,28 @@ maxi_ = items-1
                 return *this;
             }
 
+            //! in place addition
+            inline string & operator<<(const string &rhs)
+            {
+                add(rhs.addr_,rhs.size_);
+                return *this;
+            }
+
+            //! in place addition
+            inline string & operator<<( const T *rhs )
+            {
+                add(rhs,length_of(rhs));
+                return *this;
+            }
+
+            //! in place addition
+            inline string & operator<<( const T C )
+            {
+                add(&C,1);
+                return *this;
+            }
+
+
             //! addition
             inline friend string operator+( const string &lhs, const string &rhs )
             {
