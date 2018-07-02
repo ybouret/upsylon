@@ -4,6 +4,7 @@
 #include "y/memory/pooled.hpp"
 #include "y/memory/buffer.hpp"
 #include "y/type/cswap.hpp"
+#include "y/dynamic.hpp"
 #include <cstring>
 #include <iosfwd>
 
@@ -39,7 +40,7 @@ maxi_ = items-1
     namespace core
     {
         template <typename T>
-        class string : public memory::rw_buffer
+        class string : public memory::rw_buffer, public dynamic
         {
         public:
             //! buffer interface
@@ -49,8 +50,8 @@ maxi_ = items-1
             inline virtual size_t      length() const throw() { return size_*sizeof(T); }
 
             //! the size method...
-            inline  size_t size()     const throw() { return size_; }
-            inline  size_t capacity() const throw() { return maxi_; }
+            inline  virtual size_t size()     const throw() { return size_; }
+            inline  virtual size_t capacity() const throw() { return maxi_; }
             
             //! destroy memory
             inline virtual ~string() throw()
@@ -153,19 +154,75 @@ maxi_ = items-1
                 Y_CORE_STRING_ALLOC();
             }
 
-            inline string( char C ) : addr_(0), size_( 1 ), maxi_(0), items( 2 ), bytes(0)
+            //! construct with a single char
+            inline string( const T C ) : addr_(0), size_( 1 ), maxi_(0), items( 2 ), bytes(0)
             {
                 Y_CORE_STRING_ALLOC();
                 addr_[0] = C;
             }
 
+            //! standard display
             void std_display(std::ostream &) const;
 
+            //! display operator
             inline friend std::ostream & operator<<( std::ostream &os, const string &s )
             {
                 s.std_display(os);
                 return os;
             }
+
+            //! access operator
+            inline T       & operator[](const size_t indx) throw()       { assert(indx<size_);  return addr_[indx]; }
+
+            //! access operator, CONST, allow to read the final 0
+            inline const T & operator[](const size_t indx) const throw() { assert(indx<=size_); return addr_[indx]; }
+
+            //! in place addition
+            inline string & operator+=( const string &rhs )
+            {
+                add(rhs.addr_,rhs.size_);
+                return *this;
+            }
+
+            //! in place addition
+            inline string & operator+=( const T *rhs )
+            {
+                add(rhs,length_of(rhs));
+                return *this;
+            }
+
+            //! in place addition
+            inline string & operator+=( const T C )
+            {
+                add(&C,1);
+                return *this;
+            }
+
+            inline friend string operator+( const string &lhs, const string &rhs )
+            {
+                return string(lhs.addr_,lhs.size_,rhs.addr_,rhs.size_);
+            }
+
+            inline friend string operator+(const string &lhs, const T *rhs )
+            {
+                return string(lhs.addr_,lhs.size_,rhs,length_of(rhs));
+            }
+
+            inline friend string operator+(const T *lhs, const string &rhs)
+            {
+                return string(lhs,length_of(lhs),rhs.addr_,rhs.size_);
+            }
+
+            inline friend string operator+( const string &lhs, const T C )
+            {
+                return string(lhs.addr_,lhs.size_,&C,1);
+            }
+
+            inline friend string operator+(const T C,const string &rhs)
+            {
+                return string(&C,1,rhs.addr_,rhs.size_);
+            }
+
 
         private:
             T     *addr_;
@@ -194,7 +251,30 @@ maxi_ = items-1
                         p[i] = sb[i];
                     }
                 }
+                Y_CORE_STRING_CHECK(*this);
             }
+
+            //! add a buffer
+            inline void add(const T *s, const size_t n)
+            {
+                const size_t new_size = size_ + n;
+                if(new_size<=maxi_)
+                {
+                    T       *p = &addr_[size_];
+                    for(size_t i=0;i<n;++i)
+                    {
+                        p[i] = s[i];
+                    }
+                    size_ = new_size;
+                }
+                else
+                {
+                    string tmp(addr_,size_,s,n);
+                    swap_with(tmp);
+                }
+                Y_CORE_STRING_CHECK(*this);
+            }
+
         };
     }
 }
