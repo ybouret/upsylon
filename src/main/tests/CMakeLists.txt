@@ -27,6 +27,7 @@ ADD_TEST(Carver    test-main carver)
 ADD_TEST(Pooled    test-main pooled)
 ADD_TEST(Buffers   test-main buffers)
 ADD_TEST(String    test-main string)
+ADD_TEST(Ptr       test-main ptr)
 ADD_TEST(Threads   test-main threads)
 
 ADD_CUSTOM_TARGET(utest-main

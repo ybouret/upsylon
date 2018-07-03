@@ -55,6 +55,12 @@ SET(string_srcs ${string_decl} ${string_code})
 SOURCE_GROUP( string FILES ${string_srcs} )
 INSTALL( FILES ${string_decl} DESTINATION include/y/string )
 
+FILE(GLOB ptr_decl   y/ptr/*.hpp)
+FILE(GLOB ptr_code y/ptr/*.cpp)
+SET(ptr_srcs ${ptr_decl} ${ptr_code})
+SOURCE_GROUP( ptr FILES ${ptr_srcs} )
+INSTALL( FILES ${ptr_decl} DESTINATION include/y/ptr )
+
 FILE(GLOB hashing_decl   y/hashing/*.hpp)
 FILE(GLOB hashing_code y/hashing/*.cpp)
 SET(hashing_srcs ${hashing_decl} ${hashing_code})
@@ -78,6 +84,7 @@ ${randomized_srcs}
 ${hashing_srcs}
 ${memory_srcs}
 ${string_srcs}
+${ptr_srcs}
 ${concurrent_srcs}
 )
  

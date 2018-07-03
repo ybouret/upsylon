@@ -36,7 +36,9 @@ namespace upsylon {
                 {
                     if( !node->is_empty() )
                     {
-                        std::cerr << "[memory.chunk] still #allocated=" << node->allocated() << std::endl;
+                        const size_t nalloc = node->allocated();
+                        const size_t bs     = node->words_increment * node->word_size;
+                        std::cerr << "[memory.chunk] still #allocated=" << nalloc << ", block_size<=" << bs << std::endl;
                     }
                     hmem.__free(node->data,io::delta(node->data,node->last));
                 }
