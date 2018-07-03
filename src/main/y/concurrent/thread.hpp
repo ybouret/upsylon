@@ -3,17 +3,47 @@
 #define Y_CONCURRENT_THREAD_INCLUDED 1
 
 #include "y/concurrent/mutex.hpp"
-#include "y/object.hpp"
 
 namespace upsylon
 {
 
     namespace concurrent
     {
+        typedef void (*thread_proc)(void*);
 
+        namespace nucleus
+        {
+            //! wraps low-level system calls
+            struct thread
+            {
+#if defined(Y_BSD)
+                typedef pthread_t handle;
+                typedef pthread_t ID;
+#define         Y_THREAD_LAUNCHER_RETURN void *
+#define         Y_THREAD_LAUNCHER_PARAMS void *
+#endif
+
+#if defined(Y_WIN)
+                typedef HANDLE handle;
+                typedef DWORD  ID;
+#define         Y_THREAD_LAUNCHER_RETURN DWORD WINAPI
+#define         Y_THREAD_LAUNCHER_PARAMS LPVOID
+#endif
+                struct  context
+                {
+                    thread_proc proc;
+                    void       *data;
+                };
+                static handle launch(context &ctx, ID &tid );
+                static void   finish(handle &h) throw();
+                static handle get_current_handle();
+                static ID     get_current_id();
+                static bool   equal( const ID &lhs, const ID &rhs );
+            };
+        }
 
         //! one low level thread wrapper
-        class thread : public object
+        class thread
         {
         public:
 

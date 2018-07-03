@@ -1,9 +1,9 @@
 
 #include "y/concurrent/thread.hpp"
-#include "y/object.hpp"
 #include "y/exceptions.hpp"
 #include "y/os/error.hpp"
-#include <cstring>
+#include "y/type/bzset.hpp"
+
 #include <iostream>
 
 namespace upsylon
@@ -11,6 +11,93 @@ namespace upsylon
 
     namespace concurrent
     {
+
+        namespace  nucleus
+        {
+            Y_THREAD_LAUNCHER_RETURN thread_launcher( Y_THREAD_LAUNCHER_PARAMS args ) throw()
+            {
+                assert(args);
+
+                return 0;
+            }
+
+
+
+            thread::handle thread::launch( context &ctx, ID &tid)
+            {
+                assert(ctx.proc);
+                bzset(tid);
+#if    defined(Y_BSD)
+                const int res = pthread_create( &tid, NULL, thread_launcher, &ctx);
+                if( res != 0 )
+                {
+                    throw libc::exception( res, "pthread_create" );
+                }
+                return tid;
+#endif
+
+#if defined(Y_WIN)
+                Y_GIANT_LOCK();
+                handle h = ::CreateThread(0 ,
+                                          0 ,
+                                          thread_launcher,
+                                          &ctx,
+                                          0,
+                                          &tid );
+                if( NULL == handle )
+                {
+                    const DWORD res = ::GetLastError();
+                    throw win32::exception( res, "::CreateThread" );
+                }
+                return h;
+#endif
+            }
+
+            void thread::finish(handle &h) throw()
+            {
+#if defined(Y_BSD)
+                const int res = pthread_join( h, 0 );
+                if( res != 0 )
+                {
+                    libc::critical_error( res, "pthread_join" );
+                }
+
+#endif
+
+#if defined(Y_WIN)
+                Y_GIANT_LOCK();
+                if( ::WaitForSingleObject( h , INFINITE ) != WAIT_OBJECT_0 )
+                {
+                    win32::critical_error( ::GetLastError(), "WaitForSingleObject" );
+                }
+                ::CloseHandle( h );
+#endif
+            }
+
+            thread::handle thread::get_current_handle()
+            {
+#if (Y_BSD)
+                return pthread_self();
+#endif
+
+#if (Y_WIN)
+                return ::GetCurrentThread();
+#endif
+            }
+
+            thread::ID thread::get_current_id()
+            {
+#if (Y_BSD)
+                return pthread_self();
+#endif
+
+#if (Y_WIN)
+                return ::GetCurrentThreadID();
+#endif
+            }
+
+
+        }
 
         thread:: thread(procedure proc, void *data):
         next(0),
