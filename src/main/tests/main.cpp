@@ -23,6 +23,7 @@ Y_UTEST_INIT(32)
     Y_UTEST(pooled);
     Y_UTEST(buffers);
     Y_UTEST(string);
+    Y_UTEST(traits);
     Y_UTEST(threads);
 
 }
