@@ -10,6 +10,7 @@ namespace upsylon {
     namespace concurrent
     {
 
+#if 0
         //! lowe level threads
         class threads : public core::list_of_cpp<thread>
         {
@@ -31,6 +32,7 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(threads);
         };
+#endif
     }
 
 }

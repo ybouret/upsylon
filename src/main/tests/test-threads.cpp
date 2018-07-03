@@ -5,6 +5,7 @@ using namespace upsylon;
 
 namespace
 {
+#if 0
     static const int count = 8;
     static int       ready = 0;
 
@@ -22,10 +23,13 @@ namespace
             crew.access.unlock();
         }
     }
+#endif
 }
 
 Y_UTEST(threads)
 {
+    std::cerr << "sizeof(thread)=" << sizeof(concurrent::thread) << std::endl;
+#if 0
     concurrent::threads crew;
     std::cerr << "Starting..." << std::endl;
     for(int i=0;i<count;++i)
@@ -67,6 +71,6 @@ Y_UTEST(threads)
             }
         }
     }
-
+#endif
 }
 Y_UTEST_DONE()

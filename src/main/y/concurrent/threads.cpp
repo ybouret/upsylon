@@ -5,6 +5,7 @@ namespace upsylon
 {
     namespace concurrent
     {
+#if 0
         threads:: ~threads() throw()
         {
         }
@@ -12,7 +13,7 @@ namespace upsylon
         threads:: threads() throw()
         {
         }
-
+#endif
 
     }
 }

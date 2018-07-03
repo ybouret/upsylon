@@ -23,12 +23,12 @@ namespace upsylon
 
 
 
-            thread::handle thread::launch( context &ctx, ID &tid)
+            thread::handle thread::launch( void *args, ID &tid)
             {
-                assert(ctx.proc);
+                assert(args);
                 bzset(tid);
 #if    defined(Y_BSD)
-                const int res = pthread_create( &tid, NULL, thread_launcher, &ctx);
+                const int res = pthread_create( &tid, NULL, thread_launcher,args);
                 if( res != 0 )
                 {
                     throw libc::exception( res, "pthread_create" );
@@ -41,7 +41,7 @@ namespace upsylon
                 handle h = ::CreateThread(0 ,
                                           0 ,
                                           thread_launcher,
-                                          &ctx,
+                                          args,
                                           0,
                                           &tid );
                 if( NULL == h )
@@ -72,9 +72,10 @@ namespace upsylon
                 }
                 ::CloseHandle( h );
 #endif
+                bzset(h);
             }
 
-            thread::handle thread::get_current_handle()
+            thread::handle thread::get_current_handle() throw()
             {
 #if defined(Y_BSD)
                 return pthread_self();
@@ -85,7 +86,7 @@ namespace upsylon
 #endif
             }
 
-            thread::ID thread::get_current_id()
+            thread::ID thread::get_current_id() throw()
             {
 #if defined(Y_BSD)
                 return pthread_self();
@@ -108,92 +109,30 @@ namespace upsylon
 
         }
 
-        thread:: thread(procedure proc, void *data):
-        next(0),
-        prev(0),
-        handle(),
-        id(),
-        proc_(proc),
-        data_(data)
-        {
-            assert(proc||die("need a thread procedure"));
-            memset(&handle,0,sizeof(handle));
-            memset(&id,0,sizeof(id));
-
-#if    defined(Y_BSD)
-            //------------------------------------------------------------------
-            // <pthread>
-            //------------------------------------------------------------------
-            const int res = pthread_create( &handle, NULL, thread::entry,this);
-            if( res != 0 )
-            {
-                throw libc::exception( res, "pthread_create" );
-            }
-            id=handle;
-            //------------------------------------------------------------------
-            // <pthread/>
-            //------------------------------------------------------------------
-#endif
-
-#if defined(Y_WIN)
-            //------------------------------------------------------------------
-            // <win32>
-            //------------------------------------------------------------------
-            Y_GIANT_LOCK();
-            handle = ::CreateThread(0 ,
-                                    0 ,
-                                    thread::entry,
-                                    this,
-                                    0,
-                                   &id );
-            if( NULL == handle )
-            {
-                const DWORD res = ::GetLastError();
-                throw win32::exception( res, "::CreateThread" );
-            }
-            //------------------------------------------------------------------
-            // <win32/>
-            //------------------------------------------------------------------
-#endif
-        }
-        
-
-        Y_THREAD_DECL(thread::)
-        {
-            assert(args);
-            thread &thr = *static_cast<thread *>(args);
-            assert(thr.proc_);
-            thr.proc_( thr.data_ );
-            return 0;
-        }
-        
-
-        thread:: ~thread() throw()
-        {
-            assert(!next);
-            assert(!prev);
-#if defined(Y_BSD)
-            const int res = pthread_join( handle, 0 );
-            if( res != 0 )
-            {
-                libc::critical_error( res, "pthread_join" );
-            }
-
-#endif
-
-#if defined(Y_WIN)
-            Y_GIANT_LOCK();
-            if( ::WaitForSingleObject( handle , INFINITE ) != WAIT_OBJECT_0 )
-            {
-                win32::critical_error( ::GetLastError(), "WaitForSingleObject" );
-            }
-            ::CloseHandle( handle );
-#endif
-
-        }
-
 
     }
 
 }
+
+namespace upsylon
+{
+
+    namespace concurrent
+    {
+        thread:: thread( thread_proc user_proc, void *user_data) :
+        proc(user_proc),
+        data(user_data),
+        id(),
+        handle( nucleus::thread::launch(this,(nucleus::thread::ID &)id) )
+        {
+        }
+
+        thread:: ~thread() throw()
+        {
+            nucleus::thread::finish((nucleus::thread::handle&)handle);
+            bzset( (nucleus::thread::ID &)id );
+        }
+    }
+}
+
 
