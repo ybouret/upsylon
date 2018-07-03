@@ -76,26 +76,35 @@ namespace upsylon
 
             thread::handle thread::get_current_handle()
             {
-#if (Y_BSD)
+#if defined(Y_BSD)
                 return pthread_self();
 #endif
 
-#if (Y_WIN)
+#if defined(Y_WIN)
                 return ::GetCurrentThread();
 #endif
             }
 
             thread::ID thread::get_current_id()
             {
-#if (Y_BSD)
+#if defined(Y_BSD)
                 return pthread_self();
 #endif
 
-#if (Y_WIN)
+#if defined(Y_WIN)
                 return ::GetCurrentThreadID();
 #endif
             }
 
+            bool thread::equal( const ID &lhs, const ID &rhs ) throw()
+            {
+#if defined(Y_BSD)
+                return pthread_equal(lhs,rhs)!=0;
+#endif
+#if defined(Y_WIN)
+                return lhs==rhs;
+#endif
+            }
 
         }
 

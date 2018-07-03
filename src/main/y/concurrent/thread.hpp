@@ -38,7 +38,7 @@ namespace upsylon
                 static void   finish(handle &h) throw();
                 static handle get_current_handle();
                 static ID     get_current_id();
-                static bool   equal( const ID &lhs, const ID &rhs );
+                static bool   equal( const ID &lhs, const ID &rhs ) throw();
             };
         }
 
