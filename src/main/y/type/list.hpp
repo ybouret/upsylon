@@ -24,12 +24,13 @@ namespace upsylon
         typedef U tail;
     };
 
-#define TL1(T1)                type_list< T1, null_type>
-#define TL2(T1,T2)             type_list< T1, TL1(T2) >
-#define TL3(T1,T2,T3)          type_list< T1, TL2(T2,T3) >
-#define TL4(T1,T2,T3,T4)       type_list< T1, TL3(T2,T3,T4) >
-#define TL5(T1,T2,T3,T4,T5)    type_list< T1, TL4(T2,T3,T4,T5) >
-#define TL6(T1,T2,T3,T4,T5,T6) type_list< T1, TL5(T2,T3,T4,T5,T6) >
+
+#define TL1(T1)                type_list< T1, null_type>            //!< TL1
+#define TL2(T1,T2)             type_list< T1, TL1(T2) >             //!< TL2
+#define TL3(T1,T2,T3)          type_list< T1, TL2(T2,T3) >          //!< TL3
+#define TL4(T1,T2,T3,T4)       type_list< T1, TL3(T2,T3,T4) >       //!< TL4
+#define TL5(T1,T2,T3,T4,T5)    type_list< T1, TL4(T2,T3,T4,T5) >    //!< TL5
+#define TL6(T1,T2,T3,T4,T5,T6) type_list< T1, TL5(T2,T3,T4,T5,T6) > //!< TL6
 
 
     namespace tl {
