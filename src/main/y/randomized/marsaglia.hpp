@@ -2,11 +2,11 @@
 #ifndef Y_RANDOM_MARSAGLIA_INCLUDED
 #define Y_RANDOM_MARSAGLIA_INCLUDED 1
 
-#include "y/random/bits.hpp"
+#include "y/randomized/bits.hpp"
 
 namespace upsylon
 {
-    namespace random
+    namespace randomized
     {
 
         //! 32 bits Marsaglia's generators
@@ -47,7 +47,7 @@ namespace upsylon
             void initialize() throw();
 
             //! perform sanity check
-            static void test();
+            static bool test();
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Marsaglia);
         };

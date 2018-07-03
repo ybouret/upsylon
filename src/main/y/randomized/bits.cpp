@@ -1,9 +1,9 @@
-#include "y/random/bits.hpp"
+#include "y/randomized/bits.hpp"
 
 namespace upsylon
 {
 
-    namespace random
+    namespace randomized
     {
         bits:: ~bits() throw()
         {

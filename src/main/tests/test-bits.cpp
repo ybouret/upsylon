@@ -1,11 +1,11 @@
-#include "y/random/marsaglia.hpp"
+#include "y/randomized/marsaglia.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
 
 namespace
 {
-    static inline void check_bits( random::bits &ran )
+    static inline void check_bits( randomized::bits &ran )
     {
         for(size_t i=0;i<10;++i)
         {
@@ -16,11 +16,11 @@ namespace
 
 Y_UTEST(bits)
 {
-    random::cstdbits ran;
+    randomized::cstdbits ran;
     check_bits(ran);
     check_bits(alea);
     
-    random::Marsaglia::test();
+    Y_CHECK(randomized::Marsaglia::test());
 }
 Y_UTEST_DONE()
 

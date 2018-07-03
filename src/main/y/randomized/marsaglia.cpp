@@ -1,8 +1,8 @@
-#include "y/random/marsaglia.hpp"
+#include "y/randomized/marsaglia.hpp"
 
 namespace upsylon
 {
-    namespace random
+    namespace randomized
     {
 #define znew   (z=36969*(z&65535)+(z>>16))
 #define wnew   (w=18000*(w&65535)+(w>>16))
@@ -115,7 +115,7 @@ namespace upsylon
 
 namespace upsylon
 {
-    namespace random
+    namespace randomized
     {
         void Marsaglia::initialize() throw()
         {
@@ -134,9 +134,9 @@ namespace upsylon
 #include <cstdio>
 namespace upsylon
 {
-    namespace random
+    namespace randomized
     {
-        void Marsaglia::test(void)
+        bool Marsaglia::test(void)
         {
             fflush(stdout);
             Marsaglia r;
@@ -152,6 +152,7 @@ namespace upsylon
             for(i=1;i<1000001;i++){k=r.mwc()  ;} printf("%u\n", k- 904977562U);
             for(i=1;i<1000001;i++){k=r.fib()  ;} printf("%u\n", k-3519793928U);
             printf("==> done\n");
+            return true;
         }
 
     }

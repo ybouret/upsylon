@@ -37,11 +37,11 @@ SET(core_srcs ${core_decl} ${core_code})
 SOURCE_GROUP( core FILES ${core_srcs} )
 INSTALL( FILES ${core_decl} DESTINATION include/y/core )
 
-FILE(GLOB random_decl y/random/*.hpp)
-FILE(GLOB random_code y/random/*.cpp)
-SET(random_srcs ${random_decl} ${random_code})
-SOURCE_GROUP( random FILES ${random_srcs} )
-INSTALL( FILES ${random_decl} DESTINATION include/y/random )
+FILE(GLOB randomized_decl y/randomized/*.hpp)
+FILE(GLOB randomized_code y/randomized/*.cpp)
+SET(randomized_srcs ${randomized_decl} ${randomized_code})
+SOURCE_GROUP( randomized FILES ${randomized_srcs} )
+INSTALL( FILES ${randomized_decl} DESTINATION include/y/randomized )
 
 FILE(GLOB memory_decl   y/memory/*.hpp)
 FILE(GLOB memory_code y/memory/*.cpp)
@@ -74,7 +74,7 @@ ${utest_srcs}
 ${type_srcs}
 ${core_srcs}
 ${code_srcs}
-${random_srcs}
+${randomized_srcs}
 ${hashing_srcs}
 ${memory_srcs}
 ${string_srcs}

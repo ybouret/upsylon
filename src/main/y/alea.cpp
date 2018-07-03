@@ -1,11 +1,11 @@
 #include "y/alea.hpp"
-#include "y/random/marsaglia.hpp"
+#include "y/randomized/marsaglia.hpp"
 
 namespace upsylon
 {
 
-    static random::Kiss32 __alea;
-    random::bits &alea = __alea;
+    static randomized::Kiss32 __alea;
+    randomized::bits &alea = __alea;
     void alea_init() throw()
     {
         __alea.initialize();

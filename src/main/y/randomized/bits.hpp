@@ -10,7 +10,7 @@
 namespace upsylon
 {
 
-    namespace random
+    namespace randomized
     {
         //! interface to bits generation
         class bits
