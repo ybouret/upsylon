@@ -1,6 +1,7 @@
 #include "y/type/bzset.hpp"
 #include "y/os/rt-clock.hpp"
 #include "y/utest/run.hpp"
+#include <cstdio>
 
 using namespace upsylon;
 
