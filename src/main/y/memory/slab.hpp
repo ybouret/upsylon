@@ -5,6 +5,7 @@
 #include "y/memory/chunk.hpp"
 #include "y/os/static-check.hpp"
 #include "y/dynamic.hpp"
+#include <iostream>
 
 namespace upsylon
 {
@@ -33,7 +34,13 @@ namespace upsylon
 
             }
 
-            inline virtual ~slab() throw() {}
+            inline virtual ~slab() throw()
+            {
+                if(!chunk.is_empty())
+                {
+                    std::cerr << "[memory.slab] still #allocated=" << chunk.allocated() << std::endl;
+                }
+            }
 
             //! number of available memory object
             inline virtual size_t size() const throw()

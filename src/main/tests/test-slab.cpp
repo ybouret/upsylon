@@ -35,7 +35,7 @@ namespace
         std::cerr << "\tblock_size=" << memory::slab<T>::block_size << std::endl;
         core::list_of_cpp< Node<T> > nodes;
 
-        for(size_t count=1;count<1024;++count)
+        for(size_t count=1;count<=1024;++count)
         {
             const size_t bytes = memory::slab<T>::bytes_for(count);
             memory::buffer_of<char,memory::global> buff(bytes);
@@ -52,6 +52,13 @@ namespace
                     S.release(addr);
                     throw;
                 }
+            }
+            alea.shuffle(nodes);
+            while( nodes.size )
+            {
+                Node<T> *node = nodes.pop_back();
+                S.release(node->addr);
+                delete node;
             }
         }
     }
