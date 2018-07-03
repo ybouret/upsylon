@@ -44,7 +44,7 @@ namespace upsylon
                                           &ctx,
                                           0,
                                           &tid );
-                if( NULL == handle )
+                if( NULL == h )
                 {
                     const DWORD res = ::GetLastError();
                     throw win32::exception( res, "::CreateThread" );
@@ -92,7 +92,7 @@ namespace upsylon
 #endif
 
 #if defined(Y_WIN)
-                return ::GetCurrentThreadID();
+                return ::GetCurrentThreadId();
 #endif
             }
 
