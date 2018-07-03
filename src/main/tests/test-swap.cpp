@@ -27,23 +27,14 @@ std::cerr << "\t@" << i << ":"; Y_CHECK(arr[i]==1&&brr[i]==0);\
 }\
 double speed=0;\
 Y_TIMINGS(speed,D,core::bswap<Q>(arr,brr));\
-speed /= 1e6;\
+speed /= (1e6);\
 std::cerr << "speed" #Q "=" << speed << std::endl;\
 if(fp) fprintf(fp,#Q " %.15g\n",speed);\
 } while(false)
 
     static void do_test(const double D)
     {
-#if 0
-        __SWAP(0);
-        __SWAP(1);
-        __SWAP(2);
-        __SWAP(3);
-        __SWAP(4);
-        __SWAP(5);
-        __SWAP(6);
-        __SWAP(7);
-#endif
+
         FILE *fp = fopen("bswap.dat","wb");
 
         _SWAP(0);  _SWAP(1);  _SWAP(2);  _SWAP(3); _SWAP(4); _SWAP(5); _SWAP(6);  _SWAP(7); _SWAP(8); _SWAP(9);
