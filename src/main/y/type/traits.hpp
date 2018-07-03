@@ -11,14 +11,14 @@ namespace upsylon
     template <class T,class U>
     struct is_same_type
     {
-        enum { value = false };
+        enum { value = false }; //!< in general
     };
 
     //! specialized is_same_type
     template <class T>
     struct is_same_type<T,T>
     {
-        enum { value = true };
+        enum { value = true }; //!< in particular
     };
 
     namespace tl
@@ -105,7 +105,7 @@ namespace upsylon
         typedef typename unconst<T>::result    mutable_type; //!< non const 'T'
         enum { is_const = unconst<T>::value /*!< true if T is const */ };
 
-        typedef T                   item_type;
+        typedef T                   item_type; //!< raw type
 
 
         typedef typename unvolatile<T>::result non_volatile_type; //!< non volatile 'T'

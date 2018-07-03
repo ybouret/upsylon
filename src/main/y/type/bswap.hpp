@@ -38,6 +38,7 @@ namespace upsylon
             q=tmp;
         }
 
+        //! swapping 16 bits
 #define Y_BSWAP16(P,Q) \
 uint16_t      &p16   = *(uint16_t *)(P);\
 uint16_t      &q16   = *(uint16_t *)(Q);\
@@ -50,6 +51,7 @@ const uint16_t tmp16 = p16; p16=q16; q16=tmp16
             Y_BSWAP16(a,b);
         }
 
+        //! swapping 32 bits
 #define Y_BSWAP32(P,Q) \
 uint32_t      &p32   = *(uint32_t *)(P);\
 uint32_t      &q32   = *(uint32_t *)(Q);\
@@ -89,6 +91,7 @@ const uint32_t tmp32 = p32; p32=q32; q32=tmp32
         //! local uint64_t swap
 #define Y_BSWAP64(IDX) const uint64_t tmp = p[IDX]; p[IDX]=q[IDX]; q[IDX]=tmp
 
+        //! 10 bytes swap
         template <>
         inline void bswap<10>(void *a, void *b) throw()
         {
@@ -97,7 +100,7 @@ const uint32_t tmp32 = p32; p32=q32; q32=tmp32
             { Y_BSWAP64(0); }
             { Y_BSWAP16(p+1,q+1); }
         }
-        
+
 
         //! 16 bytes swap
         template <>

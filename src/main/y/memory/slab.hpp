@@ -16,10 +16,10 @@ namespace upsylon
         class slab : public dynamic
         {
         public:
-            static const size_t block_size   = Y_ALIGN_FOR_ITEM(size_t,sizeof(T));
+            static const size_t     block_size   = Y_ALIGN_FOR_ITEM(size_t,sizeof(T)); //!< aligned block size
+            typedef __chunk<size_t> chunk_type; //!< inherent chunk
 
-            typedef __chunk<size_t> chunk_type;
-
+            //! compute bytes to provide to hold num_objects
             static inline
             size_t bytes_for( const size_t num_objects ) throw()
             {
@@ -27,6 +27,7 @@ namespace upsylon
                 return block_size * num_objects;
             }
 
+            //! format unerlying chunk
             inline slab(void        *chunk_data,
                         const size_t chunk_size) throw() :
             chunk(block_size,chunk_data,chunk_size)
@@ -34,11 +35,12 @@ namespace upsylon
 
             }
 
+            //! destructor
             inline virtual ~slab() throw()
             {
                 if(!chunk.is_empty())
                 {
-                    std::cerr << "[memory.slab] still #allocated=" << chunk.allocated() << std::endl;
+                    //std::cerr << "[memory.slab] still #allocated=" << chunk.allocated() << std::endl;
                 }
             }
 
@@ -61,6 +63,7 @@ namespace upsylon
                 return static_cast<T*>(chunk.acquire());
             }
 
+            //! release a previously allocated block
             inline void release(T *addr) throw()
             {
                 chunk.release(static_cast<void*>(addr));

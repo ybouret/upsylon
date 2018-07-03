@@ -20,8 +20,8 @@ namespace upsylon
     //! basic type_list.
     template <class T, class U>
     struct type_list {
-        typedef T head;
-        typedef U tail;
+        typedef T head; //!< head type
+        typedef U tail; //!< recursive tail type of null_type to stop
     };
 
 
@@ -60,12 +60,12 @@ namespace upsylon
 
         //! specialized type_at algorithm.
         template <class head, class tail> struct type_at< type_list<head,tail>, 0> {
-            typedef head result;
+            typedef head result; //!< initial case
         };
 
         //! recursive type_at algorithm.
         template <class head, class tail, size_t i> struct type_at< type_list<head,tail>,i > {
-            typedef typename type_at<tail,i-1>::result result;
+            typedef typename type_at<tail,i-1>::result result; //!< recursive call
         };
 
 
@@ -77,20 +77,20 @@ namespace upsylon
         typename default_type = null_type>
         struct safe_type_at
         {
-            typedef default_type result;
+            typedef default_type result; //!< when bad index
         };
 
         //! specialized safe_type_at algorithm.
         template <class head, class tail, typename default_type>
         struct safe_type_at< type_list<head,tail>, 0, default_type> {
-            typedef head result;
+            typedef head result; //!< initial case
         };
 
         //! recursive safe_type_at algorithm.
         template <class head, class tail, size_t i, typename default_type>
         struct safe_type_at< type_list<head, tail>, i, default_type> {
             typedef typename
-            safe_type_at< tail, i-1, default_type>::result result;
+            safe_type_at< tail, i-1, default_type>::result result; //!< recursive case
         };
 
         //======================================================================
@@ -128,24 +128,29 @@ namespace upsylon
         //======================================================================
         // append_to
         //======================================================================
+        //! default append_to
         template <class TList,class T> struct append_to;
 
+        //! special null_type to null_type
         template <> struct append_to<null_type,null_type> {
-            typedef null_type result;
+            typedef null_type result; //!< is null_type
         };
 
+        //! special append T to null_type
         template <class T> struct append_to<null_type,T> {
-            typedef TL1(T) result;
+            typedef TL1(T) result; //!< same list
         };
 
+        //! special append type_list to null_type
         template <class head,class tail> struct append_to<null_type, type_list<head,tail> >
         {
-            typedef type_list<head,tail> result;
+            typedef type_list<head,tail> result; //!< compound list
         };
 
+        //! generic valid case
         template <class head,class tail,class T> struct append_to< type_list<head,tail>, T>
         {
-            typedef type_list< head, typename append_to<tail,T>::result> result;
+            typedef type_list< head, typename append_to<tail,T>::result> result; //!< compound list
         };
 
     } // tl
