@@ -160,7 +160,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(__chunk);
         };
 
-        
+        template <typename T> const size_t __chunk<T>::max_blocks;
 
     }
 }
