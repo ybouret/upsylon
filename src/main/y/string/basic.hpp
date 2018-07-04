@@ -305,6 +305,7 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
             Y_CORE_STRING_CMP(>=)
             Y_CORE_STRING_CMP(>)
             
+
         private:
             T     *addr_;
             size_t size_;

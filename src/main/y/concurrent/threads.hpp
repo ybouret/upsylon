@@ -4,22 +4,25 @@
 #include "y/concurrent/thread.hpp"
 #include "y/concurrent/condition.hpp"
 #include "y/sequence/slots.hpp"
+#include "y/concurrent/layout.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon {
 
     namespace concurrent
     {
+        typedef auto_ptr<const layout>       __dispatcher;
         typedef slots<thread,memory::global> __threads; //!< memory for threads
 
         //! base class to handle threads creation/destruction
-        class threads : public __threads
+        class threads : public __dispatcher, public __threads
         {
         public:
-            mutex     access;      //!< for threads synchronisation
-            condition synchronize; //!< for threads create/deleta
+            mutex                  access;      //!< for threads synchronisation
+            condition              synchronize; //!< for threads create/deleta
 
             //! construct threads
-            explicit threads(size_t n, const bool v=false);
+            explicit threads(const bool v=false);
             virtual ~threads() throw(); //!< quit threads
 
         private:

@@ -43,8 +43,9 @@ namespace upsylon
 
         }
 
-        threads:: threads(const size_t n,const bool v) :
-        __threads( max_of<size_t>(n,1) ),
+        threads:: threads(const bool v) :
+        __dispatcher( layout::create() ),
+        __threads( (*static_cast<__dispatcher *>(this))->cores ),
         access(),
         synchronize(),
         ready(0),
@@ -85,12 +86,14 @@ namespace upsylon
             if(verbose) { std::cerr << "[threads.init] are built " << count << " thread" << plural_s(count)  << std::endl; }
 
             // threads setup
+            __dispatcher &self = *this;
             for(size_t i=0;i<count;++i)
             {
                 thread &thr = (*this)[i];
                 (size_t&)(thr.rank) = i;
                 (size_t&)(thr.size) = count;
-                
+                const size_t icpu = self->core_index_of(i);
+                std::cerr << "thread #" << i << " on cpu #" << icpu << std::endl;
             }
 
 
