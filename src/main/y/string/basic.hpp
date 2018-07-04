@@ -113,10 +113,9 @@ maxi_ = items-1
                 return *this;
             }
 
-            //! assignement of a C-string
-            inline string & operator=(const char *s)
+            //! assignement
+            inline void assign(const char *s, const size_t n)
             {
-                const size_t n = length_of(s);
                 if(n<=maxi_)
                 {
                     size_ = n;
@@ -132,8 +131,15 @@ maxi_ = items-1
                     string tmp(s,n);
                     swap_with(tmp);
                 }
+            }
+
+            //! assignement of a C-string
+            inline string & operator=(const char *s)
+            {
+                assign(s,length_of(s));
                 return *this;
             }
+            
 
             //! no-throw swap
             inline void swap_with(string &other) throw()
