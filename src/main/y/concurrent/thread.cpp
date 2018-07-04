@@ -17,7 +17,9 @@ namespace upsylon
             Y_THREAD_LAUNCHER_RETURN thread_launcher( Y_THREAD_LAUNCHER_PARAMS args ) throw()
             {
                 assert(args);
-
+                concurrent::thread & thr = *static_cast<concurrent::thread*>(args);
+                assert(thr.proc);
+                thr.proc(thr.data);
                 return 0;
             }
 
