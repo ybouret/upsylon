@@ -28,6 +28,8 @@ Y_UTEST_INIT(32)
     Y_UTEST(traits);
     Y_UTEST(ptr);
     Y_UTEST(slots);
+    Y_UTEST(env);
+    Y_UTEST(sequence);
     Y_UTEST(threads);
 
 }

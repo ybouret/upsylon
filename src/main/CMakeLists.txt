@@ -61,6 +61,12 @@ SET(ptr_srcs ${ptr_decl} ${ptr_code})
 SOURCE_GROUP( ptr FILES ${ptr_srcs} )
 INSTALL( FILES ${ptr_decl} DESTINATION include/y/ptr )
 
+FILE(GLOB container_decl   y/container/*.hpp)
+FILE(GLOB container_code y/container/*.cpp)
+SET(container_srcs ${container_decl} ${container_code})
+SOURCE_GROUP( container FILES ${container_srcs} )
+INSTALL( FILES ${container_decl} DESTINATION include/y/container )
+
 FILE(GLOB sequence_decl   y/sequence/*.hpp)
 FILE(GLOB sequence_code y/sequence/*.cpp)
 SET(sequence_srcs ${sequence_decl} ${sequence_code})
@@ -91,6 +97,7 @@ ${hashing_srcs}
 ${memory_srcs}
 ${string_srcs}
 ${ptr_srcs}
+${container_srcs}
 ${sequence_srcs}
 ${concurrent_srcs}
 )

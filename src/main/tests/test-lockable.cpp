@@ -25,11 +25,7 @@ Y_UTEST(lockable)
 
     std::cerr << "sizeof(nucleus::mutex::type) = " << sizeof(concurrent::nucleus::mutex::type) << std::endl;
     std::cerr << "sizeof(mutex)                = " << sizeof(concurrent::mutex) << std::endl;
-    std::cerr << "mutex.mutex_base_size        = " << concurrent::mutex::mutex_base_size << std::endl;
-    std::cerr << "mutex.mutex_name_mini        = " << concurrent::mutex::mutex_name_mini << std::endl;
-    std::cerr << "mutex.mutex_temp_size        = " << concurrent::mutex::mutex_temp_size << std::endl;
-    std::cerr << "mutex.mutex_full_size        = " << concurrent::mutex::mutex_full_size << std::endl;
-    std::cerr << "mutex.mutex_name_size        = " << concurrent::mutex::mutex_name_size << std::endl;
+    
 
 
     {

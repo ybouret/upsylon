@@ -9,26 +9,28 @@ namespace upsylon {
 
     namespace concurrent
     {
-        typedef slots<thread,memory::global> __threads;
+        typedef slots<thread,memory::global> __threads; //!< memory for threads
 
+        //! base class to handle threads creation/destruction
         class threads : public __threads
         {
         public:
-            mutex     access;
-            condition synchronize;
-            
+            mutex     access;      //!< for threads synchronisation
+            condition synchronize; //!< for threads create/deleta
+
+            //! construct threads
             explicit threads(size_t n, const bool v=false);
-            virtual ~threads() throw();
+            virtual ~threads() throw(); //!< quit threads
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(threads);
             static void start(void*) throw();
             size_t      ready;   //!< to synchronize at ctor and dtor
             bool        dying;   //!< to break out of the loop when woke up
-            void loop() throw();
+            void loop() throw(); //!< entry point method
 
         public:
-            bool verbose;
+            bool verbose; //!< verbose flag, mostly to debug
 
         };
 

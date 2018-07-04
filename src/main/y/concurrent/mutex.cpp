@@ -115,21 +115,7 @@ namespace upsylon
         }
 
         mutex mutex::giant;
-        void mutex:: __format(const char *id) throw()
-        {
-            char *target = (char *)name;
-            memset(target,0,sizeof(name));
-
-            if(id)
-            {
-                memcpy( target,id, min_of<size_t>(strlen(id),mutex_name_size-1) );
-            }
-            else
-            {
-                const char  *buf = hexadecimal::address(this);
-                strncpy(target,buf,mutex_name_size-1);
-            }
-        }
+        
 
     }
 

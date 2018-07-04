@@ -50,8 +50,7 @@ namespace upsylon
         {
         public:
             //! create the system mutex
-            inline explicit mutex(const char *id=0) throw() :
-            m(), name() { __format(id); nucleus::mutex::init(&m);}
+            inline explicit mutex() throw() : m()  { nucleus::mutex::init(&m);            }
             //! release all
             inline virtual ~mutex() throw()        { nucleus::mutex::quit(&m);            }
             //! lock mutex
@@ -65,17 +64,9 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(mutex);
             nucleus::mutex::type m;
             friend class condition;
-            void __format(const char *id) throw();
 
         public:
             static mutex giant; //!< a giant mutex for global locking
-            static const size_t mutex_base_size = sizeof(void*)+sizeof(nucleus::mutex::type);
-            static const size_t mutex_name_mini = 2*sizeof(void*)+1; //!< two hexadecimal bytes per byte of address, plus final '\0'
-            static const size_t mutex_temp_size = mutex_base_size + mutex_name_mini;
-            static const size_t mutex_full_size = Y_ROUND64(mutex_temp_size);
-            static const size_t mutex_name_size = mutex_full_size - mutex_base_size;
-
-            const char name[mutex_name_size];
         };
 
         //! put a scoped lock on the giant mutex

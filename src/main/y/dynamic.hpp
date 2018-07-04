@@ -19,6 +19,8 @@ namespace upsylon
         //! maximum available objects
         virtual size_t capacity() const throw() = 0;
 
+        inline  size_t available() const throw() { assert(size()<=capacity()); return capacity() - size(); }
+        
         //! helper
         inline bool is_filled() const throw()  { return size()>=capacity(); }
 

@@ -53,12 +53,15 @@ namespace upsylon
                    void       *user_data);
             //! wait for thread to return and release resources
             ~thread() throw();
+
+            const size_t                  rank;   //!< rank in threads
+            const size_t                  size;   //!< among num threads=size
             thread_proc                   proc;   //!< the procedure
             void                         *data;   //!< its data
             const nucleus::thread::ID     id;     //!< thread ID
             const nucleus::thread::handle handle; //!< thread handle
 
-            bool is_current() const throw();      //!< checking against get_current...
+            bool is_current() const throw();      //!< checking against get_current_...
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(thread);

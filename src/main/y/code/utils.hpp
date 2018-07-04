@@ -13,13 +13,15 @@ namespace upsylon
         return (count<=1) ? "" : "s";
     }
 
+    //! hexadecimal helpes
     struct hexadecimal
     {
-        static const char *lowercase_word[16];
-        static const char *uppercase_word[16];
-        static const char *lowercase[256];
-        static const char *uppercase[256];
+        static const char *lowercase_word[16]; //!< "0".."f"
+        static const char *uppercase_word[16]; //!< "0".."F"
+        static const char *lowercase[256];     //!< "00".."ff"
+        static const char *uppercase[256];     //!< "00".."FF"
 
+        //! internal formatting of an address to a C-string
         static const char *address( const void *addr ) throw();
 
     };

@@ -19,6 +19,10 @@ namespace upsylon
                 std::cerr << "[threads.quit] halting " << count << " thread" << plural_s(count) << std::endl;
             }
 
+            access.lock();
+            dying = true;
+            access.unlock();
+
             synchronize.broadcast();
 
             while(true)
@@ -48,6 +52,8 @@ namespace upsylon
         verbose(v)
         {
             if(verbose) { std::cerr << "[threads.init] building " << count << " thread" << plural_s(count) << std::endl; }
+
+            // threads init
             try
             {
                 for(size_t i=0;i<count;++i)
@@ -77,6 +83,17 @@ namespace upsylon
                 throw;
             }
             if(verbose) { std::cerr << "[threads.init] are built " << count << " thread" << plural_s(count)  << std::endl; }
+
+            // threads setup
+            for(size_t i=0;i<count;++i)
+            {
+                thread &thr = (*this)[i];
+                (size_t&)(thr.rank) = i;
+                (size_t&)(thr.size) = count;
+                
+            }
+
+
         }
 
 

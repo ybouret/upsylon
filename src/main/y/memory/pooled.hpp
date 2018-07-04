@@ -19,6 +19,7 @@ namespace upsylon
             inline virtual ~pooled() throw()
             {}
             friend class singleton<pooled>;
+        public:
             static const at_exit::longevity life_time = object::life_time - 1;
         };
     }
