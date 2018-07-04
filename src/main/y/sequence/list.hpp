@@ -5,7 +5,7 @@
 #include "y/container/sequence.hpp"
 #include "y/core/list.hpp"
 #include "y/core/pool.hpp"
-#include "y/iterator/linked.hpp"
+#include "y/iterate/linked.hpp"
 
 namespace upsylon
 {
@@ -64,6 +64,24 @@ namespace upsylon
             nodes.push_front( query(args) );
         }
 
+        typedef iterate::linked<type,node_type,iterate::forward>             iterator;        //!< forward iterator
+        typedef iterate::linked<const_type,const node_type,iterate::forward> const_iterator;  //!< forward const iterator
+
+        iterator begin() throw() { return iterator( nodes.head ); }
+        iterator end()   throw() { return iterator(0);            }
+
+        const_iterator begin() const throw()   { return const_iterator( nodes.head ); }
+        const_iterator end()   const throw()   { return const_iterator(0);            }
+
+        typedef iterate::linked<type,node_type,iterate::reverse>             reverse_iterator;        //!< reverse iterator
+        typedef iterate::linked<const_type,const node_type,iterate::reverse> const_reverse_iterator;  //!< reverse const iterator
+
+        reverse_iterator rbegin() throw() { return reverse_iterator( nodes.tail ); }
+        reverse_iterator rend()   throw() { return reverse_iterator(0);            }
+
+        const_reverse_iterator rbegin() const throw() { return const_reverse_iterator( nodes.tail ); }
+        const_reverse_iterator rend()   const throw() { return const_reverse_iterator(0);            }
+        
     private:
         core::list_of<node_type> nodes;
         core::pool_of<node_type> cache;

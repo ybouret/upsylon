@@ -44,7 +44,17 @@ namespace
 Y_UTEST(env)
 {
     list<envPair> envList;
+    environment::set("UPSYLON", "Library");
     environment::get(callBack,&envList);
+    for( list<envPair>::iterator i=envList.begin();i!=envList.end();++i)
+    {
+        const envPair &p = *i;
+        string         value;
+        std::cerr << p.name << ": '" << p.value << "'" << std::endl;
+        std::cerr << "\t|_"; Y_CHECK(environment::get(value,p.name) );
+        std::cerr << "\t|_"; Y_CHECK(value==p.value);
+    }
+
 }
 Y_UTEST_DONE()
 
