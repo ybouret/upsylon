@@ -14,6 +14,7 @@ namespace
 Y_UTEST(ptr)
 {
     {
+        std::cerr << "-- ARC" << std::endl;
         typedef arc_ptr<counted> ARC;
         ARC p( new counted_object() );
         Y_CHECK(p.is_valid());
@@ -27,8 +28,9 @@ Y_UTEST(ptr)
     }
     
     {
+        std::cerr << "-- SHARED" << std::endl;
         typedef shared_ptr<counted> SHP;
-        SHP p( new counted_object() );
+        SHP p = new counted_object();
         Y_CHECK( p.is_valid() );
         Y_CHECK( 1==p.refcount() );
         SHP q = p;
@@ -38,7 +40,25 @@ Y_UTEST(ptr)
         r = p;
         Y_CHECK( 3==r.refcount() );
     }
-    
+
+    {
+        std::cerr << "-- AUTO" << std::endl;
+        typedef auto_ptr<counted> AP;
+        AP p = new counted_object();
+        Y_CHECK(p.is_valid());
+
+        AP q = p;
+        Y_CHECK(q.is_valid());
+        Y_CHECK(!p.is_valid());
+        q = NULL;
+        Y_CHECK(!q.is_valid());
+        p = new counted_object();
+        Y_CHECK(p.is_valid());
+        q = p;
+        Y_CHECK(!p.is_valid());
+        Y_CHECK(q.is_valid());
+        
+    }
     
     
 }
