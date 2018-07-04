@@ -18,7 +18,7 @@ namespace upsylon
         class linked
         {
         public:
-            Y_DECL_ARGS(T,type);
+            Y_DECL_ARGS(T,type); //!< aliases
             //! ctor
             inline  linked(NODE *n) throw() : node(n) {}
             //! dtor

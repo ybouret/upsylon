@@ -9,20 +9,25 @@
 
 namespace upsylon
 {
+    //! linked list of nodes containing objects
     template <typename T>
     class list : public sequence<T>
     {
     public:
-        Y_DECL_ARGS(T,type);
+        Y_DECL_ARGS(T,type); //!<! aliases
+        
+        //! internal node type
         class node_type
         {
         public:
+            //! build data by copy constructor
             inline  node_type(param_type args) : next(0), prev(0), data(args) {}
+            //! destructor
             inline ~node_type() throw() {}
 
-            node_type *next; //! for list/pool
-            node_type *prev; //! for list
-            T          data; //! holds effective data
+            node_type *next; //!< for list/pool
+            node_type *prev; //!< for list
+            T          data; //!< holds effective data
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(node_type);
@@ -34,6 +39,7 @@ namespace upsylon
         //! desructor
         inline virtual ~list() throw() { __release(); }
 
+        //! with direction reservation of memory
         inline explicit list(const size_t n, const as_capacity_t &) :
         nodes(), cache()
         {
@@ -63,24 +69,24 @@ namespace upsylon
         {
             nodes.push_front( query(args) );
         }
-
+        
         typedef iterate::linked<type,node_type,iterate::forward>             iterator;        //!< forward iterator
         typedef iterate::linked<const_type,const node_type,iterate::forward> const_iterator;  //!< forward const iterator
 
-        iterator begin() throw() { return iterator( nodes.head ); }
-        iterator end()   throw() { return iterator(0);            }
+        iterator begin() throw() { return iterator( nodes.head ); } //!< begin forward
+        iterator end()   throw() { return iterator(0);            } //!< end forward
 
-        const_iterator begin() const throw()   { return const_iterator( nodes.head ); }
-        const_iterator end()   const throw()   { return const_iterator(0);            }
+        const_iterator begin() const throw()   { return const_iterator( nodes.head ); } //!< begin forward const
+        const_iterator end()   const throw()   { return const_iterator(0);            } //!< end forward const
 
         typedef iterate::linked<type,node_type,iterate::reverse>             reverse_iterator;        //!< reverse iterator
         typedef iterate::linked<const_type,const node_type,iterate::reverse> const_reverse_iterator;  //!< reverse const iterator
 
-        reverse_iterator rbegin() throw() { return reverse_iterator( nodes.tail ); }
-        reverse_iterator rend()   throw() { return reverse_iterator(0);            }
+        reverse_iterator rbegin() throw() { return reverse_iterator( nodes.tail ); } //!< begin reverse
+        reverse_iterator rend()   throw() { return reverse_iterator(0);            } //!< end reverse
 
-        const_reverse_iterator rbegin() const throw() { return const_reverse_iterator( nodes.tail ); }
-        const_reverse_iterator rend()   const throw() { return const_reverse_iterator(0);            }
+        const_reverse_iterator rbegin() const throw() { return const_reverse_iterator( nodes.tail ); } //!< begin reverse const
+        const_reverse_iterator rend()   const throw() { return const_reverse_iterator(0);            } //!< end reverse const
         
     private:
         core::list_of<node_type> nodes;

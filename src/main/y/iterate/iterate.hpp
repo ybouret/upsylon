@@ -8,10 +8,11 @@ namespace upsylon
 {
     namespace iterate
     {
+        //! iterator direction
         enum direction
         {
-            forward,
-            reverse
+            forward, //!< begin/end
+            reverse  //!< rbegin/rend
         };
     };
 }

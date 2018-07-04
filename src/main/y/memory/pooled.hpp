@@ -13,13 +13,14 @@ namespace upsylon
         {
         public:
 
-
         private:
             inline explicit pooled() throw() : carver(Y_CHUNK_SIZE) {}
             inline virtual ~pooled() throw()
             {}
             friend class singleton<pooled>;
+            
         public:
+            //! come right before object::life_time
             static const at_exit::longevity life_time = object::life_time - 1;
         };
     }
