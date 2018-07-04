@@ -19,6 +19,13 @@ namespace upsylon
         //! maximum available objects
         virtual size_t capacity() const throw() = 0;
 
+        //! helper
+        inline bool is_filled() const throw()  { return size()>=capacity(); }
+
+        //! helper
+        inline bool has_space() const throw()  { return size()<capacity();  }
+
+        //! helper
     protected:
         //! constructor
         explicit dynamic() throw();

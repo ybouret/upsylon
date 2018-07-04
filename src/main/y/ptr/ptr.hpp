@@ -12,7 +12,7 @@ namespace upsylon
     class ptr
     {
     public:
-        Y_DECL_ARGS(T);                     //!< type traits helper
+        Y_DECL_ARGS(T,type);                //!< type traits helper
         typedef mutable_type *pointee_type; //!< for internal handling
 
         //! just clean up

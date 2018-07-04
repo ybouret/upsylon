@@ -11,16 +11,16 @@ namespace upsylon
      * streams, containers,..., can't contain references,
      * so these are the aliases used for in/out parameters passing
      */
-#define    Y_DECL_ARGS(T)                                                   \
-typedef T                                        type;                      \
-typedef typename type_traits<T>::mutable_type    mutable_type;              \
-typedef const mutable_type                       const_type;                \
+#define    Y_DECL_ARGS(T,NAME)                                              \
+typedef T                                        NAME;                      \
+typedef typename type_traits<T>::mutable_type    mutable_##NAME;            \
+typedef const mutable_type                       const_##NAME;                \
 typedef typename                                                            \
 upsylon::select_type<                                                       \
-type_traits<mutable_type>::is_primitive, /* no references in containers */  \
-const_type  , /* pass primitive mutable types by const value            */  \
-const_type &  /* pass non primitive mutable types by const reference    */  \
->::result param_type
+type_traits<mutable_##NAME>::is_primitive, /* no references in containers */  \
+const_##NAME  , /* pass primitive mutable types by const value            */  \
+const_##NAME &  /* pass non primitive mutable types by const reference    */  \
+>::result param_##NAME
 
 
 }

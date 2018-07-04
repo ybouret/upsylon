@@ -27,6 +27,7 @@ Y_UTEST_INIT(32)
     Y_UTEST(string);
     Y_UTEST(traits);
     Y_UTEST(ptr);
+    Y_UTEST(slots);
     Y_UTEST(threads);
 
 }

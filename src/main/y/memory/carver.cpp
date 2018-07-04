@@ -24,9 +24,7 @@ namespace upsylon
         bytes(0),
         slices_per_page( (chunk_size - sizeof(void*))/sizeof(slice) )
         {
-            std::cerr << "chunk_size      = " << chunk_size << "/" << user_chunk_size << std::endl;
-            std::cerr << "sizeof(slice)   = " << sizeof(slice)  << std::endl;
-            std::cerr << "slices_per_page = " << slices_per_page << std::endl;
+            
         }
 
         carver:: ~carver() throw()
