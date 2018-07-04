@@ -9,6 +9,7 @@ namespace upsylon
 
     namespace concurrent
     {
+        //! user low-level concurrent procedure
         typedef void (*thread_proc)(void*);
 
         namespace nucleus
@@ -30,10 +31,15 @@ namespace upsylon
 #define         Y_THREAD_LAUNCHER_PARAMS LPVOID
 #endif
 
+                //! low level launch, info points at a concurrent::thread
                 static handle launch(void *info, ID &tid );
+                //! low level finish
                 static void   finish(handle &h) throw();
+                //! query system current thread handle
                 static handle get_current_handle() throw();
+                //! query system current thread ID
                 static ID     get_current_id() throw();
+                //! test two system thread IDs
                 static bool   equal( const ID &lhs, const ID &rhs ) throw();
             };
         }
@@ -42,15 +48,17 @@ namespace upsylon
         class thread
         {
         public:
+            //! launch a thread
             thread(thread_proc user_proc,
                    void       *user_data);
+            //! wait for thread to return and release resources
             ~thread() throw();
-            thread_proc                   proc;
-            void                         *data;
-            const nucleus::thread::ID     id;
-            const nucleus::thread::handle handle;
+            thread_proc                   proc;   //!< the procedure
+            void                         *data;   //!< its data
+            const nucleus::thread::ID     id;     //!< thread ID
+            const nucleus::thread::handle handle; //!< thread handle
 
-            bool is_current() const throw();
+            bool is_current() const throw();      //!< checking against get_current...
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(thread);

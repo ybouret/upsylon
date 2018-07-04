@@ -17,26 +17,29 @@ namespace upsylon
     class arc_ptr : public ptr<T>
     {
     public:
-        Y_DECL_ARGS(T);
+        //! attache and withhold address
         inline arc_ptr(T *addr) throw() : ptr<T>(addr)
         {
             assert(this->pointee||die("not accepting null address"));
             this->pointee->withhold();
         }
-        
+
+        //! copy by withholding
         inline arc_ptr(const arc_ptr &other) throw() :
         ptr<T>(other)
         {
             this->pointee->withhold();
         }
-        
+
+        //! assign another pointer
         inline arc_ptr & operator=(const arc_ptr &other) throw()
         {
             arc_ptr tmp(other);
             this->swap_with(tmp);
             return *this;
         }
-        
+
+        //! delete resource if necessary
         inline virtual ~arc_ptr() throw()
         {
             if(this->pointee->liberate())
