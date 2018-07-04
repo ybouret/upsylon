@@ -3,36 +3,32 @@
 
 #include "y/concurrent/thread.hpp"
 #include "y/concurrent/condition.hpp"
-#include "y/core/list.hpp"
+#include "y/sequence/slots.hpp"
 
 namespace upsylon {
 
     namespace concurrent
     {
+        typedef slots<thread,memory::global> __threads;
 
-#if 0
-        //! lowe level threads
-        class threads : public core::list_of_cpp<thread>
+        class threads : public __threads
         {
         public:
             mutex     access;
-            condition sync;
-
-            explicit threads() throw();
-            virtual ~threads() throw();
-
-            inline void launch( thread::procedure user_proc, void *user_data)
-            {
-                assert(user_proc);
-                push_back( new thread(user_proc,user_data) );
-            }
-
+            condition synchronize;
             
+            explicit threads(size_t n);
+            virtual ~threads() throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(threads);
+            static void start(void*) throw();
+            size_t      ready; //!< to synchronize at ctor and dtor
+            void loop() throw();
+            
         };
-#endif
+
+        
     }
 
 }

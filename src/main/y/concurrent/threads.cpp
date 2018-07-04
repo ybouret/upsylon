@@ -5,15 +5,40 @@ namespace upsylon
 {
     namespace concurrent
     {
-#if 0
         threads:: ~threads() throw()
         {
         }
 
-        threads:: threads() throw()
+        threads:: threads(const size_t n) :
+        __threads(n),
+        access(),
+        synchronize(),
+        ready(0)
         {
+            for(size_t i=0;i<count;++i)
+            {
+                build<thread_proc,void*>(start,this);
+            }
         }
-#endif
+
+
+        void threads:: start( void *args ) throw()
+        {
+            assert(args);
+            static_cast<threads *>(args)->loop();
+        }
 
     }
+}
+
+namespace upsylon
+{
+    namespace concurrent
+    {
+        void threads:: loop() throw()
+        {
+            
+        }
+    }
+
 }

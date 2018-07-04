@@ -30,7 +30,7 @@ namespace upsylon {
             release();
         }
 
-        //! initial count
+        //! initial and constant count
         inline virtual size_t capacity() const throw() { return count; }
 
         //! current built slots
@@ -80,7 +80,9 @@ namespace upsylon {
     private:
         Y_DISABLE_COPY_AND_ASSIGN(slots);
         size_t        size_;
-        const size_t  count;
+    public:
+        const size_t  count; //!< constant capacity
+    private:
         size_t        bytes;
         mutable_type *addr;
         inline void release() throw()
