@@ -57,6 +57,7 @@ namespace upsylon
             void mutex:: quit(type *m) throw()
             {
                 assert(m);
+                //std::cerr << "quit mutex" << std::endl;
 #if defined(Y_WIN)
                 ::DeleteCriticalSection( m );
 #endif
@@ -113,8 +114,25 @@ namespace upsylon
         }
 
         mutex mutex::giant;
+        void mutex:: __format(const char *id) throw()
+        {
+            char *target = (char *)name;
+            memset(target,0,sizeof(name));
 
-        
+            if(id)
+            {
+                memcpy( target,id, min_of<size_t>(strlen(id),mutex_name_size-1) );
+            }
+            else
+            {
+                const void *self = this;
+                const char *addr = (const char *)self;
+                ptrdiff_t   p    = static_cast<ptrdiff_t>(addr-(char*)0);
+                
+            }
+        }
+
     }
+
 }
 

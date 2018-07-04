@@ -30,7 +30,7 @@ Y_UTEST(threads)
 {
     std::cerr << "sizeof(thread)=" << sizeof(concurrent::thread) << std::endl;
 
-    concurrent::threads threads(2);
+    concurrent::threads threads(2,true);
 
 #if 0
     concurrent::threads crew;

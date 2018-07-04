@@ -1,6 +1,7 @@
 #include "y/code/round.hpp"
 #include "y/hashing/hash64.hpp"
 #include "y/utest/run.hpp"
+#include <cstdio>
 
 using namespace upsylon;
 
@@ -26,6 +27,7 @@ namespace  {
 
 Y_UTEST(code)
 {
+    std::cerr << "-- rounding" << std::endl;
     for(size_t i=0;i<=100;i+=3)
     {
         std::cerr << i
@@ -41,6 +43,7 @@ Y_UTEST(code)
         << std::endl;
     }
 
+    std::cerr << "-- hash64" << std::endl;
     do_hash64<uint8_t>();
     do_hash64<uint16_t>();
     do_hash64<uint32_t>();
@@ -66,7 +69,20 @@ Y_UTEST(code)
     hashing::hash64::DES(&lw,&rw);
     Y_CHECK(lw==0xD7F376F0);
     Y_CHECK(rw==0x59BA89EB);
-    
+
+    std::cerr << "-- gen hexa" << std::endl;
+    std::cerr.flush();
+    for(unsigned i=0;i<256;++i)
+    {
+        fprintf(stderr," \"%02x\",",i);
+    }
+    fprintf(stderr,"\n");
+    for(unsigned i=0;i<256;++i)
+    {
+        fprintf(stderr," \"%02X\",",i);
+    }
+    fprintf(stderr,"\n");
+    fflush(stderr);
 }
 Y_UTEST_DONE()
 
