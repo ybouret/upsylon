@@ -29,8 +29,12 @@ namespace
 Y_UTEST(threads)
 {
     std::cerr << "sizeof(thread)=" << sizeof(concurrent::thread) << std::endl;
-
-    concurrent::threads threads(2,true);
+    size_t n = 2;
+    if(argc>1)
+    {
+        n = atol(argv[1]);
+    }
+    concurrent::threads threads(n,true);
 
 #if 0
     concurrent::threads crew;

@@ -1,6 +1,7 @@
 #include "y/concurrent/mutex.hpp"
 #include "y/os/error.hpp"
 #include "y/type/utils.hpp"
+#include "y/code/utils.hpp"
 
 #include <cstring>
 #include <iostream>
@@ -125,10 +126,8 @@ namespace upsylon
             }
             else
             {
-                const void *self = this;
-                const char *addr = (const char *)self;
-                ptrdiff_t   p    = static_cast<ptrdiff_t>(addr-(char*)0);
-                
+                const char  *buf = hexadecimal::address(this);
+                strncpy(target,buf,mutex_name_size-1);
             }
         }
 

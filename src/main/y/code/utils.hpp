@@ -20,7 +20,11 @@ namespace upsylon
         static const char *lowercase[256];
         static const char *uppercase[256];
 
+        static const char *address( const void *addr ) throw();
+
     };
+
+
 }
 
 #endif

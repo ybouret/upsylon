@@ -19,7 +19,23 @@ namespace upsylon
                 std::cerr << "[threads.quit] halting " << count << " thread" << plural_s(count) << std::endl;
             }
 
-           clk.sleep(1);
+            synchronize.broadcast();
+
+            while(true)
+            {
+                if(access.try_lock())
+                {
+                    if(ready<=0)
+                    {
+                        access.unlock();
+                        break;
+                    }
+                    else
+                    {
+                        access.unlock();
+                    }
+                }
+            }
 
         }
 
@@ -100,6 +116,8 @@ namespace upsylon
             if(dying)
             {
                 if(verbose) { std::cerr << "[threads.loop] \thalting" << std::endl; }
+                assert(ready>0);
+                --ready;
                 access.unlock();
                 return;
             }
