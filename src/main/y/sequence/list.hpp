@@ -5,6 +5,7 @@
 #include "y/container/sequence.hpp"
 #include "y/core/list.hpp"
 #include "y/core/pool.hpp"
+#include "y/iterator/linked.hpp"
 
 namespace upsylon
 {

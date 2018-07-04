@@ -61,6 +61,12 @@ SET(ptr_srcs ${ptr_decl} ${ptr_code})
 SOURCE_GROUP( ptr FILES ${ptr_srcs} )
 INSTALL( FILES ${ptr_decl} DESTINATION include/y/ptr )
 
+FILE(GLOB iterator_decl   y/iterator/*.hpp)
+FILE(GLOB iterator_code y/iterator/*.cpp)
+SET(iterator_srcs ${iterator_decl} ${iterator_code})
+SOURCE_GROUP( iterator FILES ${iterator_srcs} )
+INSTALL( FILES ${iterator_decl} DESTINATION include/y/iterator )
+
 FILE(GLOB container_decl   y/container/*.hpp)
 FILE(GLOB container_code y/container/*.cpp)
 SET(container_srcs ${container_decl} ${container_code})
@@ -97,6 +103,7 @@ ${hashing_srcs}
 ${memory_srcs}
 ${string_srcs}
 ${ptr_srcs}
+${iterator_srcs}
 ${container_srcs}
 ${sequence_srcs}
 ${concurrent_srcs}
