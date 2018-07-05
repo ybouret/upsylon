@@ -14,7 +14,7 @@ namespace upsylon {
     }
 
 
-    size_t container:: estimate_next_capacity(const size_t n)
+    size_t container:: next_capacity(const size_t n)
     {
         size_t m = max_of<size_t>(n,8);
         m += (n>>1);

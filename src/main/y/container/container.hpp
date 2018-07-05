@@ -39,15 +39,9 @@ namespace upsylon
                 reserve(max_items-capacity());
             }
         }
-
-        //! automatic memory reservation
-        inline void next_capacity()
-        {
-            reserve( estimate_next_capacity(capacity())-capacity() );
-        }
         
         //! estimate next capacity
-        static size_t estimate_next_capacity(const size_t n);
+        static size_t next_capacity(const size_t n);
 
     protected:
         //! constructor

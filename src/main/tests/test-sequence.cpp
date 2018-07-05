@@ -80,7 +80,7 @@ namespace
         std::cerr << n;
         do
         {
-            n = container::estimate_next_capacity(n);
+            n = container::next_capacity(n);
             std::cerr << "/" << n ;
         } while(n<16000000);
         std::cerr << std::endl;
@@ -105,7 +105,12 @@ Y_UTEST(sequence)
         vector<uint16_t,memory::global> cvg(1,as_capacity); std::cerr << "cvg.capacity=" << cvg.capacity() << std::endl;
         vector<uint16_t,memory::pooled> cvp(1,as_capacity); std::cerr << "cvp.capacity=" << cvp.capacity() << std::endl;
         vector<string> vs1(10,as_capacity);
-        vector<string> vs2(12);
+        vector<string,memory::pooled> vs2(12);
+        cvg.reserve(10);
+        cvp.reserve(10);
+        vs1.reserve(10);
+        vs2.reserve(10);
+
     }
 
 }

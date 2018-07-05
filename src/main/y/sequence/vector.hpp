@@ -3,6 +3,7 @@
 
 #include "y/container/sequence.hpp"
 #include "y/sequence/array.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -65,14 +66,45 @@ sequence<T>(), array<T>(), maxi_(n), bytes(0), hmem_( ALLOCATOR::instance() ),ad
         }
 
         //! container interface: reserve
-        virtual void reserve(const size_t)
+        virtual void reserve(const size_t n)
         {
-
+            if(n>0)
+            {
+                vector tmp(maxi_+n,as_capacity);
+                memcpy((void*)(tmp.addr_),(void*)addr_,(tmp.size_=this->size_)*sizeof(T));
+                this->size_ = 0;
+                swap_with(tmp);
+            }
         }
 
         //! sequence interface : push_back
-        virtual void push_back( param_type )
+        virtual void push_back( param_type args )
         {
+            if(this->is_filled())
+            {
+                vector tmp( container::next_capacity(maxi_), as_capacity );
+                // will keep memory in any case
+                memcpy( (void*)(tmp.addr_), (void*)addr_,this->size_*sizeof(T));
+                try
+                {
+                    new (tmp.addr_+this->size_) T(args); // put into position
+                    tmp.size_ = this->size_ + 1;         // success
+                    this->size_ = 0;
+                    swap_with(tmp);
+                }
+                catch(...)
+                {
+                    tmp.size_   = this->size_; // failure
+                    this->size_ = 0;
+                    swap_with(tmp);
+                    throw;
+                }
+            }
+            else
+            {
+                new (addr_+this->size_) T(args);
+                ++(this->size_);
+            }
         }
 
         //! sequence interface : pop_front
