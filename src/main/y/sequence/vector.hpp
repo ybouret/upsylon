@@ -12,11 +12,24 @@ namespace upsylon
     public:
         Y_DECL_ARGS(T,type); //!< aliases
 
-        inline vector() : sequence<T>(), array<T>(), addr_(0), maxi_(0), bytes(0), hmem_( ALLOCATOR::instance() ) {}
+        inline vector() : sequence<T>(), array<T>(), maxi_(0), bytes(0), hmem_( ALLOCATOR::instance() ),addr_(0) {}
         inline virtual ~vector() throw()
         {
             __release();
         }
+
+        inline vector(const size_t n, const as_capacity_t &) :
+        sequence<T>(),
+        array<T>(),
+        maxi_(n),
+        bytes(0),
+        hmem_( ALLOCATOR::instance() ),
+        addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
+        {
+            this->item_ = addr_-1;
+        }
+
+
 
         //! dynamic interface: capacity
         inline virtual size_t capacity() const throw() { return maxi_; }
@@ -47,12 +60,20 @@ namespace upsylon
         {
         }
 
+        inline void swap_with( vector &other ) throw()
+        {
+            cswap(this->item_,other.item_);
+            cswap(this->size_,other.size_);
+            cswap(this->addr_,other.addr_);
+            cswap(this->maxi_,other.maxi_);
+            cswap(this->bytes,other.bytes);
+        }
 
     private:
-        mutable_type      *addr_;
         size_t             maxi_;
         size_t             bytes;
         memory::allocator &hmem_;
+        mutable_type      *addr_;
 
         inline void __release() throw()
         {

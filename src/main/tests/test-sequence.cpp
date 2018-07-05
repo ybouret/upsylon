@@ -101,7 +101,12 @@ Y_UTEST(sequence)
     do_test< list<uint16_t> >();
     do_test< list<string> >();
 
-    vector<int> iv;
+    {
+        vector<uint16_t,memory::global> cvg(1,as_capacity); std::cerr << "cvg.capacity=" << cvg.capacity() << std::endl;
+        vector<uint16_t,memory::pooled> cvp(1,as_capacity); std::cerr << "cvp.capacity=" << cvp.capacity() << std::endl;
+
+    }
+
 }
 Y_UTEST_DONE()
 
