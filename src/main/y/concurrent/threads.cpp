@@ -69,6 +69,7 @@ namespace upsylon
                             }
                             else
                             {
+                                dying = false;   //!< ready for processing
                                 access.unlock();
                                 break;
                             }
