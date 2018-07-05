@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_VECTOR_INCLUDED
 #define Y_VECTOR_INCLUDED 1
 
@@ -51,6 +52,36 @@ sequence<T>(), array<T>(), maxi_(n), bytes(0), hmem_( ALLOCATOR::instance() ),ad
             }
         }
 
+        //! copy constructor
+        vector(const vector &other) : Y_VECTOR_CTOR(other.size_)
+        {
+            this->item_ = addr_-1;
+            try
+            {
+                while(this->size_<other.size_)
+                {
+                    new (addr_+this->size_) T( other.addr[this->size_] );
+                    ++(this->size_);
+                }
+            }
+            catch(...)
+            {
+                __release();
+                throw;
+            }
+        }
+
+        //! assign another vector
+        vector & operator=( const vector &other )
+        {
+            if(this != &other)
+            {
+                vector tmp(other);
+                swap_with(tmp);
+            }
+            return *this;
+        }
+
         //! dynamic interface: capacity
         inline virtual size_t capacity() const throw() { return maxi_; }
 
@@ -78,6 +109,15 @@ sequence<T>(), array<T>(), maxi_(n), bytes(0), hmem_( ALLOCATOR::instance() ),ad
             }
         }
 
+        //! push back with enough memory
+        inline void push_back_(param_type args)
+        {
+            assert(this->has_space());
+            // try to build in place
+            new (addr_+this->size_) T(args);
+            ++(this->size_);
+        }
+
         //! sequence interface : push_back
         virtual void push_back( param_type args )
         {
@@ -103,17 +143,53 @@ sequence<T>(), array<T>(), maxi_(n), bytes(0), hmem_( ALLOCATOR::instance() ),ad
             }
             else
             {
-                // try to build in place
-                new (addr_+this->size_) T(args);
-                ++(this->size_);
+                push_back_(args);
             }
         }
 
         //! sequence interface : pop_front
-        virtual void push_front( param_type )
+        virtual void push_front( param_type args)
         {
+            const size_t len = this->size_ * sizeof(T);
+            if(this->is_filled())
+            {
+                vector tmp( container::next_capacity(maxi_), as_capacity );
+                try
+                {
+                    new(tmp.addr_) T(args);
+                    memcpy( (void*)(tmp.addr_+1), (void*)addr_,len);
+                    tmp.size_   = this->size_ + 1;
+                    this->size_ = 0;
+                    swap_with(tmp);
+                }
+                catch(...)
+                {
+                    // keep memory
+                    memcpy( (void*) tmp.addr_, (void *)addr_, len );
+                    tmp.size_   = this->size_;
+                    this->size_ = 0;
+                    swap_with(tmp);
+                    throw;
+                }
+            }
+            else
+            {
+                memmove((void*)(addr_+1), (void*)(addr_), len);
+                try
+                {
+                    new (addr_) T(args);
+                }
+                catch(...)
+                {
+                    memmove((void*)addr_,(void *)(addr_+1),len);
+                    throw;
+                }
+                ++(this->size_);
+            }
+
         }
 
+        //! swap all descriptive data, array included
         inline void swap_with( vector &other ) throw()
         {
             cswap(this->item_,other.item_);

@@ -120,12 +120,14 @@ namespace upsylon
                 return tmp -= n;
             }
 
+            //! access
             inline type & operator*() throw()
             {
                 assert(addr);
                 return *addr;
             }
 
+            //! access, const
             inline const_type & operator*() const throw()
             {
                 assert(addr);

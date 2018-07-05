@@ -41,6 +41,7 @@ namespace upsylon
                 static ID     get_current_id() throw();
                 //! test two system thread IDs
                 static bool   equal( const ID &lhs, const ID &rhs ) throw();
+                //! try to bind handle to a given cpu
                 static void   assign( handle h, const size_t cpu );
             };
         }
