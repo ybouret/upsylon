@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_CONCURRENT_THREADS_INCLUDED
 #define Y_CONCURRENT_THREADS_INCLUDED 1
 
@@ -11,11 +12,11 @@ namespace upsylon {
 
     namespace concurrent
     {
-        typedef auto_ptr<const layout>       __dispatcher;
-        typedef slots<thread,memory::global> __threads; //!< memory for threads
+        typedef auto_ptr<const layout>       __topology;  //!< topology for threads
+        typedef slots<thread,memory::global> __threads;   //!< memory for threads
 
         //! base class to handle threads creation/destruction
-        class threads : public __dispatcher, public __threads
+        class threads : public __topology, public __threads
         {
         public:
             mutex                  access;      //!< for threads synchronisation

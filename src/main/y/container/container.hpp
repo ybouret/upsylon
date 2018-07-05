@@ -8,6 +8,7 @@
 namespace upsylon
 {
 
+    //! base class for containers
     class container : public virtual dynamic, public virtual object
     {
     public:
@@ -49,6 +50,7 @@ namespace upsylon
         static size_t estimate_next_capacity(const size_t n);
 
     protected:
+        //! constructor
         explicit container() throw();
 
     private:
