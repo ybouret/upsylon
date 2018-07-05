@@ -49,11 +49,18 @@ namespace upsylon
             }
 #endif
 
-#if defined(Y_OPENBSD)
+#if 0 
 #   define Y_THREAD_AFFINITY 1
-#   include <sys/proc.h>
 #   include <pthread_np.h>
-
+#   include <sched.h>
+extern "C"
+{
+	struct cpuset * cpuset_create();
+	void cpuset_zero(struct cpuset *);
+	void cpuset_set(int,struct cpuset *);
+	void cpuset_destroy(struct cpuset*);
+	size_t cpuset_size(struct cpuset*);
+}
             void thread:: assign( handle h, const size_t j )
             {
                 std::cerr << "\t\t" Y_PLATFORM "@" << j << std::endl;
