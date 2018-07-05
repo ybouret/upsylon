@@ -87,13 +87,22 @@ namespace upsylon
 
             // threads setup
             __dispatcher &self = *this;
+            if(verbose)
+            {
+                std::cerr << "\t|_leading  @cpu" << self->core_index_of(0) << std::endl;
+            }
+            nucleus::thread::assign(nucleus::thread::get_current_handle(),self->core_index_of(0));
             for(size_t i=0;i<count;++i)
             {
                 thread &thr = (*this)[i];
                 (size_t&)(thr.rank) = i;
                 (size_t&)(thr.size) = count;
                 const size_t icpu = self->core_index_of(i);
-                std::cerr << "thread #" << i << " on cpu #" << icpu << std::endl;
+                if(verbose)
+                {
+                    std::cerr << "\t|_thread #" << i << "@cpu" << icpu << std::endl;
+                }
+                nucleus::thread::assign(thr.handle,icpu);
             }
 
 
