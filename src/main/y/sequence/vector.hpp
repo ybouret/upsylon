@@ -3,6 +3,7 @@
 
 #include "y/container/sequence.hpp"
 #include "y/sequence/array.hpp"
+#include "y/iterate/linear.hpp"
 #include <cstring>
 
 namespace upsylon
@@ -102,6 +103,7 @@ sequence<T>(), array<T>(), maxi_(n), bytes(0), hmem_( ALLOCATOR::instance() ),ad
             }
             else
             {
+                // try to build in place
                 new (addr_+this->size_) T(args);
                 ++(this->size_);
             }
@@ -121,6 +123,24 @@ sequence<T>(), array<T>(), maxi_(n), bytes(0), hmem_( ALLOCATOR::instance() ),ad
             cswap(this->bytes,other.bytes);
         }
 
+        typedef iterate::linear<type,iterate::forward>        iterator;        //!< forward iterator
+        typedef iterate::linear<const_type,iterate::forward>  const_iterator;  //!< forward iterator, const
+
+        inline iterator begin() throw() { return iterator(addr_);             } //!< begin forward
+        inline iterator end()   throw() { return iterator(addr_+this->size_); } //!< end forward
+
+        inline const_iterator begin() const throw() { return const_iterator(addr_);             } //!< begin forward const
+        inline const_iterator end()   const throw() { return const_iterator(addr_+this->size_); } //!< end forward const
+
+        typedef iterate::linear<type,iterate::reverse>        reverse_iterator;        //!< reverse iterator
+        typedef iterate::linear<const_type,iterate::reverse>  const_reverse_iterator;  //!< reverse iterator, const
+
+        inline reverse_iterator rbegin() throw() { return reverse_iterator(this->item_+this->size_); } //!< begin reverse
+        inline reverse_iterator rend()   throw() { return reverse_iterator(this->item_);             } //!< end reverse
+
+        inline const_reverse_iterator rbegin() const throw() { return const_reverse_iterator(this->item_+this->size_); } //!< begin reverse const
+        inline const_reverse_iterator rend()   const throw() { return const_reverse_iterator(this->item_);             } //!< end reverse const
+        
     private:
         size_t             maxi_;
         size_t             bytes;

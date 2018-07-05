@@ -110,8 +110,12 @@ Y_UTEST(sequence)
         cvp.reserve(10);
         vs1.reserve(10);
         vs2.reserve(10);
-
     }
+
+    do_test< vector<uint16_t> >();
+    do_test< vector<string>   >();
+    do_test< vector<uint16_t,memory::pooled> >();
+    do_test< vector<string,memory::pooled>   >();
 
 }
 Y_UTEST_DONE()

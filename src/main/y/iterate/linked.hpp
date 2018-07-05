@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_ITERATOR_FORWARD
-#define Y_ITERATOR_FORWARD 1
+#ifndef Y_ITERATOR_LINKED
+#define Y_ITERATOR_LINKED 1
 
 #include "y/iterate/iterate.hpp"
 #include "y/type/args.hpp"
@@ -103,14 +103,14 @@ namespace upsylon
             }
 
             //! +
-            inline linked operator+(const ptrdiff_t n) throw()
+            inline linked operator+(const ptrdiff_t n) const throw()
             {
                 linked tmp(*this);
                 return tmp += n;
             }
 
             //! -
-            inline linked operator-(const ptrdiff_t n) throw()
+            inline linked operator-(const ptrdiff_t n) const throw()
             {
                 linked tmp(*this);
                 return tmp -= n;
