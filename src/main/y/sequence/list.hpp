@@ -46,6 +46,38 @@ namespace upsylon
             try { __reserve(n); } catch(...) { __release(); throw; }
         }
 
+        //! copy constructor
+        list( const list &other ) : nodes(), cache()
+        {
+            try
+            {
+                for(const node_type *node = other.head; node; node=node->next )
+                {
+                    nodes.push_back( query(node->data) );
+                }
+            }
+            catch(...)
+            {
+                release();
+            }
+        }
+
+        //! assign
+        list & operator=( const list &other )
+        {
+            if(this!=&other)
+            {
+                core::list_of<node_type> tmp;
+                for(const node_type *node = other.head; node; node=node->next )
+                {
+                    tmp.push_back( query(node->data) );
+                }
+                this->free();
+                tmp.swap_with(nodes);
+            }
+            return *this;
+        }
+
         //! dynamic interface: size()
         inline virtual size_t size()     const throw() { return nodes.size; }
         //! dynamic inteface: capacity()
