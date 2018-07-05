@@ -104,7 +104,8 @@ Y_UTEST(sequence)
     {
         vector<uint16_t,memory::global> cvg(1,as_capacity); std::cerr << "cvg.capacity=" << cvg.capacity() << std::endl;
         vector<uint16_t,memory::pooled> cvp(1,as_capacity); std::cerr << "cvp.capacity=" << cvp.capacity() << std::endl;
-
+        vector<string> vs1(10,as_capacity);
+        vector<string> vs2(12);
     }
 
 }

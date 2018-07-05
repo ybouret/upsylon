@@ -3,6 +3,7 @@
 
 #include "y/dynamic.hpp"
 #include "y/type/args.hpp"
+#include <iostream>
 
 namespace upsylon
 {
@@ -24,6 +25,17 @@ namespace upsylon
 
         //! inline const access
         inline const_type & operator[](const size_t i) const throw() { assert(i>0);assert(i<=size()); assert(item_); return item_[i]; }
+
+        inline friend std::ostream & operator<<( std::ostream &os, const array &arr )
+        {
+            os << '[';
+            for(size_t i=1;i<=arr.size();++i)
+            {
+                os << arr[i]; if(i<arr.size()) os << ' ';
+            }
+            os << ']';
+            return os;
+        }
 
     protected:
         mutable_type *item_; //!< item_[1..size()]
