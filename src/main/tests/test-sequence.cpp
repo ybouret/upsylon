@@ -1,4 +1,5 @@
 #include "y/sequence/list.hpp"
+#include "y/sequence/vector.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include <typeinfo>
@@ -99,6 +100,8 @@ Y_UTEST(sequence)
 
     do_test< list<uint16_t> >();
     do_test< list<string> >();
+
+    vector<int> iv;
 }
 Y_UTEST_DONE()
 
