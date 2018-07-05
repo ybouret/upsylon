@@ -2,7 +2,6 @@
 #include "y/concurrent/threads.hpp"
 #include "y/type/utils.hpp"
 #include "y/code/utils.hpp"
-#include "y/os/rt-clock.hpp"
 
 #include <iostream>
 
@@ -13,7 +12,6 @@ namespace upsylon
         threads:: ~threads() throw()
         {
 
-            rt_clock clk;
             if(verbose)
             {
                 std::cerr << "[threads.quit] halting " << count << " thread" << plural_s(count) << std::endl;
