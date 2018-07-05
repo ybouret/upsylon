@@ -1,5 +1,6 @@
 
 #include "y/concurrent/thread.hpp"
+#include "y/exceptions.hpp"
 
 #if 0
 #if defined(_WIN32)
@@ -77,7 +78,7 @@ namespace upsylon
                 Y_CPU_SET cpu_set;
                 CPU_ZERO(  &cpu_set );
                 CPU_SET(j, &cpu_set );
-                const int err = pthread_setaffinity_np( h, sizeof(YOCTO_CPU_SET), &cpu_set );
+                const int err = pthread_setaffinity_np( h, sizeof(Y_CPU_SET), &cpu_set );
                 if( err != 0 )
                     throw libc::exception( err, "pthread_setaffinity_np" );
             }
