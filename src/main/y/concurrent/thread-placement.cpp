@@ -7,10 +7,16 @@
 #       define Y_THREAD_AFFINITY 1
 #endif
 
-#if defined(Y_LINUX) || defined(Y_OPENBSD) || defined(Y_SUNOS)
+#if defined(Y_LINUX) || defined(Y_SUNOS)
 #       define Y_CPU_SET_PTHREAD 1
 #       define Y_CPU_SET         cpu_set_t
 #       define Y_THREAD_AFFINITY 1
+#endif
+#if defined(Y_OPENBSD)
+#       include <pthread_np.h>
+#       include <sys/proc.h>
+#       define Y_CPU_SET_PTHREAD 1
+#       define Y_CPU_SET struct cpuset
 #endif
 
 #if defined(Y_FREEBSD)
@@ -55,10 +61,10 @@ namespace upsylon
             static  void __assign(  thread::handle &h, const size_t j )
             {
                 std::cerr << "\t\t" << Y_PLATFORM << "@" << j << std::endl;
-                Y_CPU_SET cpu_set;
-                CPU_ZERO(  &cpu_set );
-                CPU_SET(j, &cpu_set );
-                const int err = pthread_setaffinity_np( h, sizeof(Y_CPU_SET), &cpu_set );
+                Y_CPU_SET the_cpu_set;
+                CPU_ZERO(  &the_cpu_set );
+                CPU_SET(j, &the_cpu_set );
+                const int err = pthread_setaffinity_np( h, sizeof(Y_CPU_SET), &the_cpu_set );
                 if( err != 0 )
                     throw libc::exception( err, "pthread_setaffinity_np" );
             }
