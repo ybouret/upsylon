@@ -18,7 +18,6 @@ namespace upsylon
             virtual ~simd() throw();
 
 
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simd);
             procedure proc;
