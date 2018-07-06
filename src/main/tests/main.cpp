@@ -30,6 +30,7 @@ Y_UTEST_INIT(32)
     Y_UTEST(slots);
     Y_UTEST(env);
     Y_UTEST(sequence);
+    Y_UTEST(parallel);
     Y_UTEST(threads);
     Y_UTEST(simd);
 

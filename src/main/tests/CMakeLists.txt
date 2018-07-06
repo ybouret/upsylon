@@ -29,9 +29,11 @@ ADD_TEST(Buffers   test-main buffers)
 ADD_TEST(String    test-main string)
 ADD_TEST(Ptr       test-main ptr)
 ADD_TEST(Slots     test-main slots)
-ADD_TEST(Threads   test-main threads)
 ADD_TEST(Sequence  test-main sequence)
 ADD_TEST(Env       test-main env)
+ADD_TEST(Parallel  test-main parallel)
+ADD_TEST(Threads   test-main threads)
+ADD_TEST(SIMD      test-main simd)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V
