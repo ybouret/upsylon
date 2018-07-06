@@ -58,7 +58,7 @@ namespace upsylon
                 for(size_t i=0;i<count;++i)
                 {
                     const size_t target = i+1;
-                    build<thread_proc,void*>(start,this);
+                    build<thread_proc,void*,size_t,size_t>(start,this,count,i);
                     while(true)
                     {
                         if( access.try_lock() )

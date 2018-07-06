@@ -76,6 +76,16 @@ namespace upsylon {
             assert(this->has_space()); new (addr+size_) T(argU,argV,argW); ++size_;
         }
 
+        //! build with 4 args
+        template <typename U,typename V,typename W,typename X>
+        inline void build(typename type_traits<U>::parameter_type argU,
+                          typename type_traits<V>::parameter_type argV,
+                          typename type_traits<W>::parameter_type argW,
+                          typename type_traits<X>::parameter_type argX)
+        {
+            assert(this->has_space()); new (addr+size_) T(argU,argV,argW,argX); ++size_;
+        }
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(slots);

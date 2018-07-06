@@ -121,9 +121,11 @@ namespace upsylon
 
     namespace concurrent
     {
-        thread:: thread( thread_proc user_proc, void *user_data) :
-        rank(0),
-        size(1),
+        thread:: thread(thread_proc  user_proc,
+                        void        *user_data,
+                        const size_t user_size,
+                        const size_t user_rank) :
+        parallel(user_size,user_rank),
         proc(user_proc),
         data(user_data),
         id(),

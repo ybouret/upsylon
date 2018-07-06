@@ -3,6 +3,7 @@
 #define Y_CONCURRENT_THREAD_INCLUDED 1
 
 #include "y/concurrent/mutex.hpp"
+#include "y/parallel.hpp"
 
 namespace upsylon
 {
@@ -47,17 +48,17 @@ namespace upsylon
         }
 
         //! thread wrapper
-        class thread
+        class thread : public parallel
         {
         public:
             //! launch a thread
-            thread(thread_proc user_proc,
-                   void       *user_data);
+            thread(thread_proc  user_proc,
+                   void        *user_data,
+                   const size_t user_size,
+                   const size_t user_rank);
             //! wait for thread to return and release resources
-            ~thread() throw();
+            virtual ~thread() throw();
 
-            const size_t                  rank;   //!< rank in threads
-            const size_t                  size;   //!< among num threads=size
             thread_proc                   proc;   //!< the procedure
             void                         *data;   //!< its data
             const nucleus::thread::ID     id;     //!< thread ID
