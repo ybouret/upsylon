@@ -20,7 +20,7 @@ namespace upsylon {
         {
         public:
             mutex                  access;      //!< for threads synchronisation
-            condition              synchronize; //!< for threads create/delete
+            condition              synchronize; //!< for threads create/delete \todo PROTECT
             const size_t           running;     //!< running threads
 
             //! construct threads
@@ -28,9 +28,9 @@ namespace upsylon {
             //! quit threads
             virtual ~threads() throw();
             //! what to do in loop, upon signal or broadcast
-            virtual void run(parallel &ctx);
+            virtual void run(parallel &ctx) throw();
             //! wait for all threads to go back to waiting state
-            void flush() throw();
+            void wait() throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(threads);

@@ -11,7 +11,6 @@ namespace upsylon
     class parallel
     {
     public:
-        typedef void (*procedure)( parallel & );
         
         //! destructor
         inline virtual ~parallel() throw() {}
@@ -28,10 +27,10 @@ namespace upsylon
 
 
 
-        const size_t size; //!< the family size
-        const size_t rank; //!<  0..size-1
-        const size_t indx; //!<  1..size
-        void        *priv; //!< private data
+        const size_t size;   //!< the family size
+        const size_t rank;   //!<  0..size-1
+        const size_t indx;   //!<  1..size
+        void        *priv;   //!< private data
 
         //! get the work portion according to rank/size
         template <typename T>

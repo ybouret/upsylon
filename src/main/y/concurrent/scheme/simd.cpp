@@ -7,7 +7,7 @@ namespace upsylon
 
         simd:: simd(const bool v) :
         threads(v),
-        proc(0),
+        code(0),
         data(0)
         {
             // at this points, threads are creating and
@@ -18,5 +18,28 @@ namespace upsylon
         {
             
         }
+
+        void simd:: ld( kernel user_code, void *user_data )
+        {
+
+            //! assuming flushed
+            {
+#if !defined(NDEBUG)
+                Y_LOCK(access);
+                assert(running<=0);
+#endif
+            }
+            code=user_code;
+            data=user_data;
+            synchronize.broadcast();
+        }
+
+        void simd:: run( parallel &context ) throw()
+        {
+            assert(code);
+            code(data,context,access);
+        }
+
+
     }
 }

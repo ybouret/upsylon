@@ -28,7 +28,7 @@ namespace upsylon
             //
             // wait for running threads to complete
             //__________________________________________________________________
-            flush();
+            wait();
 
             //__________________________________________________________________
             //
@@ -147,19 +147,19 @@ namespace upsylon
     namespace concurrent
     {
 
-        void threads:: run(parallel &ctx)
+        void threads:: run(parallel &ctx) throw()
         {
             Y_LOCK(access);
             std::cerr << "\trun context " << ctx.size << "." << ctx.rank << std::endl;
         }
 
 
-        void threads:: flush() throw()
+        void threads:: wait() throw()
         {
             if(verbose)
             {
                 Y_LOCK(access);
-                std::cerr << "[threads] flushing" << std::endl;
+                std::cerr << "[threads.wait] ..." << std::endl;
             }
 
             while( true )
