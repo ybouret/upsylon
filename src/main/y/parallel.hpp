@@ -21,7 +21,7 @@ namespace upsylon
 
         //! parallel
         inline explicit parallel(const size_t sz, const size_t rk) throw() :
-        size(sz),rank(rk),indx(rk+1)
+        size(sz),rank(rk),indx(rk+1),priv(0)
         {
             assert(size>0); assert(rank<size);
         }
