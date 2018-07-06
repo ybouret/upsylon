@@ -1,4 +1,3 @@
-
 #include "y/concurrent/thread.hpp"
 #include "y/exceptions.hpp"
 #include <iostream>
@@ -15,7 +14,7 @@ namespace upsylon
         namespace nucleus
         {
 
-#if defined(Y_LINUX) || defined(Y_SUNOS) || defined(Y_FREEBSD)
+#if defined(Y_LINUX)|| defined(Y_FREEBSD)
 #   define Y_THREAD_AFFINITY 1
 #   if defined(Y_FREEBSD)
 #      include <pthread_np.h>
@@ -94,11 +93,26 @@ extern "C"
             }
 #endif
 
+#if defined(Y_SUNOS)
+#include <sys/types.h>
+#include <sys/processor.h>
+#include <sys/procset.h>
+#define Y_THREAD_AFFINITY 1
+	void thread::assign(handle h, const size_t j)
+        {
+                std::cerr << "\t\t" Y_PLATFORM "@" << j << std::endl;
+		const int res = processor_bind(P_LWPID,idtype_t(h),j,NULL); 
+		if(0!=res)
+			throw exception("processor_bind failure");
+	}
+
+#endif
+
 #if !defined(Y_THREAD_AFFINITY)
             // fallback
             void   thread:: assign(handle,const size_t)
             {
-                std::cerr << "(not implemented on "  Y_PLATFORM   ")" << std::endl;
+                std::cerr << "\t\t(not implemented on "  Y_PLATFORM   ")" << std::endl;
             }
 #endif
 

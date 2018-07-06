@@ -4,6 +4,7 @@
 #include "y/os/hw.hpp"
 #include "y/string/env.hpp"
 #include <iostream>
+#include <cstdlib>
 
 namespace upsylon
 {
