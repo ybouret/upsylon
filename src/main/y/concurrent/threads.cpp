@@ -18,13 +18,31 @@ namespace upsylon
                 std::cerr << "[threads.quit] halting " << count << " thread" << plural_s(count) << std::endl;
             }
 
+            //__________________________________________________________________
+            //
+            // set status to dying
+            //__________________________________________________________________
+
             access.lock();
             dying = true;
             access.unlock();
 
+            //__________________________________________________________________
+            //
+            // wait for running threads to complete
+            //__________________________________________________________________
             flush();
+
+            //__________________________________________________________________
+            //
+            // then wake up everyone on dying status
+            //__________________________________________________________________
             synchronize.broadcast();
 
+            //__________________________________________________________________
+            //
+            // and probe for all done...
+            //__________________________________________________________________
             while(true)
             {
                 if(access.try_lock())
@@ -155,7 +173,6 @@ namespace upsylon
                         return;
                     }
                 }
-
             }
         }
 
@@ -168,7 +185,6 @@ namespace upsylon
             access.lock();
             parallel &context = static_cast<__threads&>(*this)[ready];
             ++ready; //!< for constructor
-            //const nucleus::thread::ID id = nucleus::thread::get_current_id();
             if(verbose) { std::cerr << "[threads.loop] \tready=" << ready << "/" << count << std::endl; }
         LOOP:
             //__________________________________________________________________
@@ -183,14 +199,17 @@ namespace upsylon
             //__________________________________________________________________
             if(dying)
             {
-                if(verbose) { std::cerr << "[threads.loop] \thalting" << std::endl; }
+                if(verbose) { std::cerr << "[threads.loop] \thalting " << context.size << "/" << context.rank << std::endl; }
                 assert(ready>0);
                 --ready;
                 access.unlock();
                 return;
             }
 
+            //__________________________________________________________________
+            //
             // do something...
+            //__________________________________________________________________
             try
             {
                 ++((size_t&)running);
