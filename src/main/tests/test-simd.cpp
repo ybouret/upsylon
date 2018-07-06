@@ -1,5 +1,6 @@
 #include "y/concurrent/scheme/simd.hpp"
 #include "y/utest/run.hpp"
+#include "y/randomized/marsaglia.hpp"
 
 using namespace upsylon;
 
@@ -16,6 +17,7 @@ namespace
                      parallel &context,
                      lockable &)
     {
+        randomized::Kiss32 ran;
         info &I = *(info *)data;
         double *d = I.number;
         size_t  n = I.count;
