@@ -12,12 +12,17 @@ namespace upsylon
         class simd : public threads
         {
         public:
+            typedef void (*procedure)( void *, parallel & );
+
             explicit simd(const bool v=false);
             virtual ~simd() throw();
 
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simd);
-            bool quit;
+            procedure proc;
+            void     *data;
         };
     }
 }

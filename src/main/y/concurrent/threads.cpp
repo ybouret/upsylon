@@ -12,21 +12,18 @@ namespace upsylon
         threads:: ~threads() throw()
         {
 
-            if(verbose)
-            {
-                Y_LOCK(access);
-                std::cerr << "[threads.quit] halting " << count << " thread" << plural_s(count) << std::endl;
-            }
-
             //__________________________________________________________________
             //
             // set status to dying
             //__________________________________________________________________
-
-            access.lock();
-            dying = true;
-            access.unlock();
-
+            {
+                Y_LOCK(access);
+                dying = true;
+                if(verbose)
+                {
+                    std::cerr << "[threads.quit] halting " << count << " thread" << plural_s(count) << std::endl;
+                }
+            }
             //__________________________________________________________________
             //
             // wait for running threads to complete
@@ -71,9 +68,12 @@ namespace upsylon
         dying(true),
         verbose(v)
         {
-            if(verbose) { std::cerr << "[threads.init] building " << count << " thread" << plural_s(count) << std::endl; }
-
+            //__________________________________________________________________
+            //
             // threads init
+            //__________________________________________________________________
+            if(verbose) { std::cerr << "[threads.init] build " << count << " thread" << plural_s(count) << "..." << std::endl; }
+
             try
             {
                 for(size_t i=0;i<count;++i)
@@ -103,28 +103,32 @@ namespace upsylon
                 synchronize.broadcast();
                 throw;
             }
-            if(verbose) { std::cerr << "[threads.init] are built " << count << " thread" << plural_s(count)  << std::endl; }
+            if(verbose) { std::cerr << "[threads.init] built " << count << " thread" << plural_s(count)  << "!!!" << std::endl; }
 
+            //__________________________________________________________________
+            //
             // threads setup
-            __topology &self = *this;
+            //__________________________________________________________________
+            // place leading threads
+            __topology &topo = *this;
             if(verbose)
             {
-                std::cerr << "\t|_leading  @cpu" << self->core_index_of(0) << std::endl;
+                std::cerr << "[threads.init.affinity] main@cpu" << topo->core_index_of(0) << std::endl;
             }
-            nucleus::thread::assign(nucleus::thread::get_current_handle(),self->core_index_of(0));
+            nucleus::thread::assign(nucleus::thread::get_current_handle(),topo->core_index_of(0));
+
+            // place other threads
+            __threads &thr = *this;
             for(size_t i=0;i<count;++i)
             {
-                thread &thr = (*this)[i];
-                (size_t&)(thr.rank) = i;
-                (size_t&)(thr.size) = count;
-                const size_t icpu = self->core_index_of(i);
+                const size_t icpu = topo->core_index_of(i);
                 if(verbose)
                 {
-                    std::cerr << "\t|_thread #" << i << "@cpu" << icpu << std::endl;
+                    std::cerr << "[threads.init.affinity]   #" << i << "@cpu" << icpu << std::endl;
                 }
-                nucleus::thread::assign(thr.handle,icpu);
+                nucleus::thread::assign(thr[i].handle,icpu);
             }
-
+            if(verbose) { std::cerr << "[threads.init] ready to work..." << std::endl; }
 
         }
 
@@ -155,7 +159,7 @@ namespace upsylon
             if(verbose)
             {
                 Y_LOCK(access);
-                std::cerr << "[threads] flusing" << std::endl;
+                std::cerr << "[threads] flushing" << std::endl;
             }
 
             while( true )
@@ -184,8 +188,8 @@ namespace upsylon
             //__________________________________________________________________
             access.lock();
             parallel &context = static_cast<__threads&>(*this)[ready];
+            if(verbose) { std::cerr << "[threads.init.call] (+) " << count << '.' << ready << std::endl; }
             ++ready; //!< for constructor
-            if(verbose) { std::cerr << "[threads.loop] \tready=" << ready << "/" << count << std::endl; }
         LOOP:
             //__________________________________________________________________
             //
@@ -199,7 +203,7 @@ namespace upsylon
             //__________________________________________________________________
             if(dying)
             {
-                if(verbose) { std::cerr << "[threads.loop] \thalting " << context.size << "/" << context.rank << std::endl; }
+                if(verbose) { std::cerr << "[threads.loop.halt] (-) " << context.size << '.' << context.rank << std::endl; }
                 assert(ready>0);
                 --ready;
                 access.unlock();

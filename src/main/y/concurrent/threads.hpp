@@ -29,9 +29,8 @@ namespace upsylon {
             //! quit threads
             virtual ~threads() throw();
 
-            //! what to do in loop, upon signal or broadcast
-            virtual void run(parallel &ctx);
 
+            //! wait for all threads to go back to waiting state
             void flush() throw();
 
         private:
@@ -40,6 +39,9 @@ namespace upsylon {
             size_t      ready;   //!< to synchronize at ctor and dtor
             bool        dying;   //!< to break out of the loop when woke up
             void loop() throw(); //!< entry point method
+
+            //! what to do in loop, upon signal or broadcast
+            virtual void run(parallel &ctx);
 
         public:
             bool verbose; //!< verbose flag, mostly to debug
