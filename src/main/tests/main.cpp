@@ -31,6 +31,7 @@ Y_UTEST_INIT(32)
     Y_UTEST(env);
     Y_UTEST(sequence);
     Y_UTEST(threads);
+    Y_UTEST(simd);
 
 }
 Y_UTEST_EXEC()

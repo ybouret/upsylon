@@ -79,7 +79,7 @@ SET(sequence_srcs ${sequence_decl} ${sequence_code})
 SOURCE_GROUP( sequence FILES ${sequence_srcs} )
 INSTALL( FILES ${sequence_decl} DESTINATION include/y/sequence )
 
-FILE(GLOB hashing_decl   y/hashing/*.hpp)
+FILE(GLOB hashing_decl y/hashing/*.hpp)
 FILE(GLOB hashing_code y/hashing/*.cpp)
 SET(hashing_srcs ${hashing_decl} ${hashing_code})
 SOURCE_GROUP( hashing FILES ${hashing_srcs} )
@@ -90,6 +90,12 @@ FILE(GLOB concurrent_code y/concurrent/*.cpp)
 SET(concurrent_srcs ${concurrent_decl} ${concurrent_code})
 SOURCE_GROUP( concurrent FILES ${concurrent_srcs} )
 INSTALL( FILES ${concurrent_decl} DESTINATION include/y/concurrent )
+
+FILE(GLOB concurrent_scheme_decl y/concurrent/scheme/*.hpp)
+FILE(GLOB concurrent_scheme_code y/concurrent/scheme/*.cpp)
+SET(concurrent_scheme_srcs ${concurrent_scheme_decl} ${concurrent_scheme_code})
+SOURCE_GROUP( concurrent/scheme FILES ${concurrent_scheme_srcs} )
+INSTALL( FILES ${concurrent_scheme_decl} DESTINATION include/y/concurrent/scheme )
 
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
@@ -107,6 +113,7 @@ ${iterate_srcs}
 ${container_srcs}
 ${sequence_srcs}
 ${concurrent_srcs}
+${concurrent_scheme_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )

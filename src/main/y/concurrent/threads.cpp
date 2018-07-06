@@ -14,6 +14,7 @@ namespace upsylon
 
             if(verbose)
             {
+                Y_LOCK(access);
                 std::cerr << "[threads.quit] halting " << count << " thread" << plural_s(count) << std::endl;
             }
 
@@ -21,6 +22,7 @@ namespace upsylon
             dying = true;
             access.unlock();
 
+            flush();
             synchronize.broadcast();
 
             while(true)
@@ -46,6 +48,7 @@ namespace upsylon
         __threads( (*static_cast<__topology *>(this))->cores ),
         access(),
         synchronize(),
+        running(0),
         ready(0),
         dying(true),
         verbose(v)
@@ -121,6 +124,41 @@ namespace upsylon
 {
     namespace concurrent
     {
+
+        void threads:: run(parallel &ctx)
+        {
+            Y_LOCK(access);
+            std::cerr << "\trun context " << ctx.size << "." << ctx.rank << std::endl;
+        }
+
+
+        void threads:: flush() throw()
+        {
+            if(verbose)
+            {
+                Y_LOCK(access);
+                std::cerr << "[threads] flusing" << std::endl;
+            }
+
+            while( true )
+            {
+                if( access.try_lock() )
+                {
+                    if(running>0)
+                    {
+                        access.unlock();
+                        continue;
+                    }
+                    else
+                    {
+                        access.unlock();
+                        return;
+                    }
+                }
+
+            }
+        }
+
         void threads:: loop() throw()
         {
             //__________________________________________________________________
@@ -128,7 +166,9 @@ namespace upsylon
             // entering thread
             //__________________________________________________________________
             access.lock();
+            parallel &context = static_cast<__threads&>(*this)[ready];
             ++ready; //!< for constructor
+            //const nucleus::thread::ID id = nucleus::thread::get_current_id();
             if(verbose) { std::cerr << "[threads.loop] \tready=" << ready << "/" << count << std::endl; }
         LOOP:
             //__________________________________________________________________
@@ -139,7 +179,7 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // woke on with the LOCKED mutex
+            // wake up on with the LOCKED mutex
             //__________________________________________________________________
             if(dying)
             {
@@ -151,7 +191,19 @@ namespace upsylon
             }
 
             // do something...
+            try
+            {
+                ++((size_t&)running);
+                access.unlock();
+                run(context);
+            }
+            catch(...)
+            {
+                // todo, something went wrong
+            }
 
+            access.lock();
+            --((size_t&)running);
             goto LOOP;
             
         }

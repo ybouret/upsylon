@@ -25,7 +25,6 @@ namespace upsylon
 
             void   thread:: assign(handle h,const size_t j)
             {
-                std::cerr << "\t\t" Y_PLATFORM "@" << j << std::endl;
                 Y_CPU_SET the_cpu_set;
                 CPU_ZERO(  &the_cpu_set );
                 CPU_SET(j, &the_cpu_set );
@@ -38,7 +37,6 @@ namespace upsylon
 #if defined(Y_WIN)
             void thread:: assign( handle h, const size_t j )
             {
-                std::cerr << "\t\t" Y_PLATFORM "@" << j << std::endl;
                 const DWORD_PTR mask = DWORD_PTR(1) << j;
                 if( ! ::SetThreadAffinityMask( h, mask ) )
                 {
@@ -52,14 +50,14 @@ namespace upsylon
 #   define Y_THREAD_AFFINITY 1
 #   include <pthread_np.h>
 #   include <sched.h>
-extern "C"
-{
-	struct cpuset * cpuset_create();
-	void cpuset_zero(struct cpuset *);
-	void cpuset_set(int,struct cpuset *);
-	void cpuset_destroy(struct cpuset*);
-	size_t cpuset_size(struct cpuset*);
-}
+            extern "C"
+            {
+                struct cpuset * cpuset_create();
+                void cpuset_zero(struct cpuset *);
+                void cpuset_set(int,struct cpuset *);
+                void cpuset_destroy(struct cpuset*);
+                size_t cpuset_size(struct cpuset*);
+            }
             void thread:: assign( handle h, const size_t j )
             {
                 std::cerr << "\t\t" Y_PLATFORM "@" << j << std::endl;
@@ -83,7 +81,6 @@ extern "C"
 #include <mach/thread_act.h>
             void thread::assign(handle h, const size_t j)
             {
-                std::cerr << "\t\t" Y_PLATFORM "@" << j << std::endl;
                 thread_affinity_policy_data_t policy_data = { j };
                 mach_port_t                   mach_thread = pthread_mach_thread_np(h);
                 if( KERN_SUCCESS != thread_policy_set(mach_thread, THREAD_AFFINITY_POLICY, (thread_policy_t)&policy_data, THREAD_AFFINITY_POLICY_COUNT))
@@ -98,13 +95,12 @@ extern "C"
 #include <sys/processor.h>
 #include <sys/procset.h>
 #define Y_THREAD_AFFINITY 1
-	void thread::assign(handle h, const size_t j)
-        {
-                std::cerr << "\t\t" Y_PLATFORM "@" << j << std::endl;
-		const int res = processor_bind(P_LWPID,idtype_t(h),j,NULL); 
-		if(0!=res)
-			throw exception("processor_bind failure");
-	}
+            void thread::assign(handle h, const size_t j)
+            {
+                const int res = processor_bind(P_LWPID,idtype_t(h),j,NULL);
+                if(0!=res)
+                    throw exception("processor_bind failure");
+            }
 
 #endif
 
@@ -112,7 +108,6 @@ extern "C"
             // fallback
             void   thread:: assign(handle,const size_t)
             {
-                std::cerr << "\t\t(not implemented on "  Y_PLATFORM   ")" << std::endl;
             }
 #endif
 
@@ -121,95 +116,4 @@ extern "C"
     }
 
 }
-
-#if 0
-#if defined(Y_WIN)
-#       define Y_THREAD_AFFINITY 1
-#endif
-
-#if defined(Y_LINUX) || defined(Y_SUNOS)
-#       define Y_CPU_SET_PTHREAD 1
-#       define Y_CPU_SET         cpu_set_t
-#       define Y_THREAD_AFFINITY 1
-#endif
-#if defined(Y_OPENBSD)
-#       include <pthread_np.h>
-#       include <sys/proc.h>
-#       define Y_CPU_SET_PTHREAD 1
-#       define Y_CPU_SET struct cpuset
-#endif
-
-#if defined(Y_FREEBSD)
-#       include <pthread_np.h>
-#       define Y_CPU_SET_PTHREAD 1
-#       define Y_CPU_SET         cpuset_t
-#       define Y_THREAD_AFFINITY 1
-#endif
-
-
-
-namespace upsylon
-{
-
-    namespace concurrent
-    {
-        namespace nucleus
-        {
-#if defined(Y_WIN)
-            static inline void __assign( thread::handle &h, const size_t j )
-            {
-                std::cerr << "\t\t" << Y_PLATFORM << "@" << j << std::endl;
-                const DWORD_PTR mask = DWORD_PTR(1) << j;
-                if( ! ::SetThreadAffinityMask( h, mask ) )
-                {
-                    const DWORD err = ::GetLastError();
-                    throw win32::exception( err, "::SetThreadAffinityMask" );
-                }
-            }
-#endif
-
-#if defined(Y_CPU_SET_PTHREAD)
-            static  void __assign(  thread::handle &h, const size_t j )
-            {
-                std::cerr << "\t\t" << Y_PLATFORM << "@" << j << std::endl;
-                Y_CPU_SET the_cpu_set;
-                CPU_ZERO(  &the_cpu_set );
-                CPU_SET(j, &the_cpu_set );
-                const int err = pthread_setaffinity_np( h, sizeof(Y_CPU_SET), &the_cpu_set );
-                if( err != 0 )
-                    throw libc::exception( err, "pthread_setaffinity_np" );
-            }
-#endif
-
-            /*
-#if defined(Y_APPLE)
-            static void __assign( thread::handle &h, const size_t j)
-            {
-                int core = int(j);
-                thread_affinity_policy_data_t policy = { core };
-                thread_port_t mach_thread = pthread_mach_thread_np(h);
-                thread_policy_set(mach_thread, THREAD_AFFINITY_POLICY,
-                                  (thread_policy_t)&policy, 1);
-            }
-
-#endif
-             */
-
-#if !defined(Y_THREAD_AFFINITY)
-            static void __assign( thread::handle &, const size_t ) throw()
-            {
-            }
-#endif
-
-            void   thread:: assign( handle h, const size_t cpu )
-            {
-                __assign(h,cpu);
-            }
-
-
-        }
-    }
-
-}
-#endif
 

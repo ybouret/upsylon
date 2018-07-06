@@ -9,6 +9,8 @@ Y_UTEST(threads)
     std::cerr << "sizeof(thread)=" << sizeof(concurrent::thread) << std::endl;
     concurrent::threads threads(true);
 
+    threads.synchronize.broadcast();
+    
 
 }
 Y_UTEST_DONE()

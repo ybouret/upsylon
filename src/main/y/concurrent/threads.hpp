@@ -20,11 +20,19 @@ namespace upsylon {
         {
         public:
             mutex                  access;      //!< for threads synchronisation
-            condition              synchronize; //!< for threads create/deleta
+            condition              synchronize; //!< for threads create/delete
+            const size_t           running;     //!< running threads
 
             //! construct threads
             explicit threads(const bool v=false);
-            virtual ~threads() throw(); //!< quit threads
+
+            //! quit threads
+            virtual ~threads() throw();
+
+            //! what to do in loop, upon signal or broadcast
+            virtual void run(parallel &ctx);
+
+            void flush() throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(threads);

@@ -11,11 +11,13 @@ namespace upsylon
     class parallel
     {
     public:
+        typedef void (*procedure)( parallel & );
+        
         //! destructor
         inline virtual ~parallel() throw() {}
 
         //! sequential
-        inline explicit parallel() throw() : size(1),rank(0),indx(1) {}
+        inline explicit parallel() throw() : size(1),rank(0),indx(1),priv(0) {}
 
         //! parallel
         inline explicit parallel(const size_t sz, const size_t rk) throw() :
@@ -24,18 +26,12 @@ namespace upsylon
             assert(size>0); assert(rank<size);
         }
 
-        //! just copy
-        inline parallel(const parallel &other) throw() :
-        size( other.size ),
-        rank( other.rank ),
-        indx( other.indx )
-        {
-        }
 
 
         const size_t size; //!< the family size
         const size_t rank; //!<  0..size-1
         const size_t indx; //!<  1..size
+        void        *priv; //!< private data
 
         //! get the work portion according to rank/size
         template <typename T>
@@ -65,7 +61,7 @@ namespace upsylon
         }
 
     private:
-        Y_DISABLE_ASSIGN(parallel);
+        Y_DISABLE_COPY_AND_ASSIGN(parallel);
     };
 }
 
