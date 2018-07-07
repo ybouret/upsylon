@@ -228,6 +228,7 @@ namespace upsylon
                 // todo, something went wrong
             }
 
+            
             access.lock();
             --((size_t&)running);
             if(verbose) { std::cerr << "(-)running: " << running << "/" << context.size << std::endl; }

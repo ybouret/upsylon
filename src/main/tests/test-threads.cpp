@@ -8,7 +8,9 @@ namespace
     class some_threads : public concurrent:: threads
     {
     public:
-        explicit some_threads() : concurrent::threads(true)
+        concurrent::condition done;
+
+        explicit some_threads() : concurrent::threads(true), done()
         {
         }
 
@@ -16,9 +18,26 @@ namespace
         {
         }
 
-        inline void call() throw()
+        void call()
         {
             synchronize.broadcast();
+        }
+
+        virtual void run(parallel &ctx) throw()
+        {
+
+            access.lock();
+            std::cerr << "some_threads run " << ctx.label << std::endl;
+            std::cerr << "\trunning=" << running << "/" << size() << std::endl;
+            if(running<size())
+            {
+                done.wait(access);
+            }
+            else
+            {
+                done.broadcast();
+            }
+            access.unlock();
         }
 
     private:
