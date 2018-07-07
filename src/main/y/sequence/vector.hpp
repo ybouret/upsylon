@@ -11,7 +11,7 @@ namespace upsylon
 {
     //! vector of memory movable objects...
     template <typename T, typename ALLOCATOR = memory::global >
-    class vector : public sequence<T>, public array<T>
+    class vector :  public sequence<T>, public array<T>
     {
     public:
         Y_DECL_ARGS(T,type); //!< aliases

@@ -35,6 +35,7 @@ namespace upsylon
 #endif
 
 #if defined(Y_WIN)
+#define Y_THREAD_AFFINITY 1
             void thread:: assign( handle h, const size_t j )
             {
                 const DWORD_PTR mask = DWORD_PTR(1) << j;
