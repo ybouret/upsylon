@@ -14,32 +14,15 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // set status to dying
+            // in any case, place the halting flag to true
             //__________________________________________________________________
             {
                 Y_LOCK(access);
-                dying = true;
-                if(verbose)
-                {
-                    std::cerr << "[threads.quit] halting " << count << " thread" << plural_s(count) << std::endl;
-                }
+                halting = true;
+                if(verbose) { std::cerr << "[threads.quit]" << std::endl; }
             }
-            //__________________________________________________________________
-            //
-            // wait for running threads to complete
-            //__________________________________________________________________
-            wait();
 
-            //__________________________________________________________________
-            //
-            // then wake up everyone on dying status
-            //__________________________________________________________________
-            synchronize.broadcast();
-
-            //__________________________________________________________________
-            //
-            // and probe for all done...
-            //__________________________________________________________________
+            // no choice but to signal until ready<=0
             while(true)
             {
                 if(access.try_lock())
@@ -51,21 +34,22 @@ namespace upsylon
                     }
                     else
                     {
+                        start.signal();
                         access.unlock();
                     }
                 }
             }
+
 
         }
 
         threads:: threads(const bool v) :
         __topology( layout::create() ),
         __threads( (*static_cast<__topology *>(this))->cores ),
-        running(0),
         access(),
-        synchronize(),
+        halting(true),
         ready(0),
-        dying(true),
+        start(),
         verbose(v)
         {
             //__________________________________________________________________
@@ -76,10 +60,11 @@ namespace upsylon
 
             try
             {
+                // construct with halting=true;
                 for(size_t i=0;i<count;++i)
                 {
-                    const size_t target = i+1;
-                    build<thread_proc,void*,size_t,size_t>(start,this,count,i);
+                    const size_t target = i+1; //! desired new number of threads
+                    build<thread_proc,void*,size_t,size_t>(entry,this,count,i);
                     while(true)
                     {
                         if( access.try_lock() )
@@ -90,17 +75,21 @@ namespace upsylon
                             }
                             else
                             {
-                                dying = false;   //!< ready for processing
                                 access.unlock();
                                 break;
                             }
                         }
                     }
                 }
+
+                access.lock();
+                access.unlock();
+
+
             }
             catch(...)
             {
-                synchronize.broadcast();
+                start.broadcast();
                 throw;
             }
             if(verbose) { std::cerr << "[threads.init] built " << count << " thread" << plural_s(count)  << "!!!" << std::endl; }
@@ -133,10 +122,53 @@ namespace upsylon
         }
 
 
-        void threads:: start( void *args ) throw()
+        void threads:: entry( void *args ) throw()
         {
             assert(args);
-            static_cast<threads *>(args)->loop();
+            static_cast<threads *>(args)->start_thread();
+        }
+
+        void threads:: start_thread() throw()
+        {
+            //__________________________________________________________________
+            //
+            // entering thread
+            //__________________________________________________________________
+            access.lock();
+            parallel &context = static_cast<__threads&>(*this)[ready];
+            if(verbose) { std::cerr << "[threads.init.call] (+) " << context.label << std::endl; }
+            ++ready; //!< for constructor
+            //__________________________________________________________________
+            //
+            // ready to work!
+            //__________________________________________________________________
+            start.wait(access);
+
+
+            //__________________________________________________________________
+            //
+            // first wake up on the LOCKED access
+            //__________________________________________________________________
+            if(halting)
+            {
+                if(verbose) { std::cerr << "[threads.quit.nope] (-) " << context.label << std::endl; }
+                --ready;
+                access.unlock();
+                return;
+            }
+            access.unlock();
+
+
+
+            std::cerr << "do stuff...@" << context.label << std::endl;
+
+            access.lock();
+            if(verbose)
+            --ready;
+            if(verbose) { std::cerr << "[threads.quit.done] (-) " << context.label << std::endl; }
+            access.unlock();
+            return;
+
         }
 
     }
@@ -147,13 +179,16 @@ namespace upsylon
     namespace concurrent
     {
 
+#if 0
         void threads:: run(parallel &ctx) throw()
         {
             Y_LOCK(access);
             std::cerr << "\trun context " << ctx.label << std::endl;
         }
+#endif
 
 
+#if 0
         void threads:: wait() throw()
         {
 
@@ -181,7 +216,9 @@ namespace upsylon
                 }
             }
         }
+#endif
 
+#if 0
         void threads:: loop() throw()
         {
             //__________________________________________________________________
@@ -203,7 +240,7 @@ namespace upsylon
             //
             // wake up on with the LOCKED mutex
             //__________________________________________________________________
-            if(dying)
+            if(running<=0&&dying)
             {
                 if(verbose) { std::cerr << "[threads.loop.halt] (-) " << context.label << std::endl; }
                 assert(ready>0);
@@ -230,11 +267,27 @@ namespace upsylon
 
             
             access.lock();
-            --((size_t&)running);
-            if(verbose) { std::cerr << "(-)running: " << running << "/" << context.size << std::endl; }
+            if(running>=size())
+            {
+                ( (size_t&) running ) = 0;
+                if(dying)
+                {
+                    access.unlock();
+                    return;
+                }
+            }
+            else
+            {
+                // running < size
+                std::cerr << context.label << " waiting on finalize..." << std::endl;
+                finalize.wait(access);
+            }
+            //--((size_t&)running);
+            //if(verbose) { std::cerr << "(-)running: " << running << "/" << context.size << std::endl; }
             goto LOOP;
             
         }
+#endif
     }
 
 }

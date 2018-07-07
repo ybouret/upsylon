@@ -41,6 +41,7 @@ namespace
 
 Y_UTEST(simd)
 {
+#if 0
     double   duration = 3;
     size_t   n        = 16384;
     memory::cblock_of<double> blk(n);
@@ -86,7 +87,7 @@ Y_UTEST(simd)
     std::cerr << "\tSpeed Up  : " << speed_up << std::endl;
     std::cerr << "\tEfficiency: " << par[0].efficiency(speed_up) << "%" << std::endl;
     std::cerr << std::endl;
-
+#endif
 
 }
 Y_UTEST_DONE()

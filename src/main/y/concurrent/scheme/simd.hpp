@@ -9,7 +9,7 @@ namespace upsylon
 {
     namespace concurrent
     {
-
+#if 0
         //! Single Instruction Multiple Data
         class simd :  public for_each, public threads
         {
@@ -40,6 +40,7 @@ namespace upsylon
             void        *data;
             virtual void run(parallel &) throw();
         };
+#endif
     }
 }
 

@@ -1,6 +1,7 @@
 #include "y/concurrent/scheme/simd.hpp"
 #include <iostream>
 
+#if 0
 namespace upsylon
 {
     namespace concurrent
@@ -94,3 +95,5 @@ namespace upsylon
 
     }
 }
+#endif
+

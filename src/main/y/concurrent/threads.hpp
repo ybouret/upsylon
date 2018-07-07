@@ -19,27 +19,23 @@ namespace upsylon {
         class threads : public __topology, public __threads
         {
         public:
-            const size_t           running;     //!< running threads
-            mutex                  access;      //!< for threads synchronisation
+            mutex access;      //!< for threads synchronisation
 
-            //! construct threads
-            explicit threads(const bool v=false);
             //! quit threads
             virtual ~threads() throw();
-            //! what to do in loop, upon signal or broadcast
-            virtual void run(parallel &ctx) throw();
-            //! wait for all threads to go back to waiting state
-            void wait() throw();
-            
+
         protected:
-            condition              synchronize; //!< for threads create/delete
+            //! construct threads
+            explicit threads(const bool v=false);
+            bool     halting;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(threads);
-            static void start(void*) throw();
-            size_t      ready;   //!< to synchronize at ctor and dtor
-            bool        dying;   //!< to break out of the loop when woke up
-            void loop() throw(); //!< entry point method
-
+            static  void entry(void*) throw();
+            size_t     ready;
+            condition  start;
+            
+            void start_thread() throw();
 
 
         public:
