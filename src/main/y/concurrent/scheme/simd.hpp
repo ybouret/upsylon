@@ -11,17 +11,25 @@ namespace upsylon
     {
 
         //! Single Instruction Multiple Data
-        class simd :  public threads
+        class simd :  public for_each, public threads
         {
         public:
-            typedef void (*kernel)( void *, parallel &, lockable & ); //!< the kernel prototype
-
+            //! construct threads with(out) verbosity flag
             explicit simd(const bool v=false);
+            //! destructor
             virtual ~simd() throw();
 
-            //! execute multiple copy of the kernel
+            //! for_each interface: execute multiple copy of the kernel
             virtual void start( kernel user_code, void *user_data );
+
+            //! for_each interface: use internal barrier and wait
             virtual void finish() throw();
+
+            //! for_each interface: extract parallel context from thread
+            inline virtual parallel       &operator[](const size_t i) throw()       { threads       &self = *this; return self[i]; }
+
+            //! for_each interface: extract parallel context from thread
+            inline virtual const parallel &operator[](const size_t i) const throw() { const threads &self = *this; return self[i]; }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simd);

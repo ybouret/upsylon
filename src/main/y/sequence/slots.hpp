@@ -10,7 +10,7 @@ namespace upsylon {
 
     //! C-style slots of [0..size()-1] C++ objects
     template <typename T, typename ALLOCATOR=memory::global>
-    class slots : public dynamic
+    class slots : public virtual dynamic
     {
     public:
         Y_DECL_ARGS(T,type); //!< type aliases
@@ -37,10 +37,10 @@ namespace upsylon {
         inline virtual size_t size()     const throw() { return size_; }
 
         //! access
-        inline virtual type       & operator[](size_t indx) throw()       { assert(indx<size_); assert(addr); return addr[indx]; }
+        inline type       & operator[](size_t indx) throw()       { assert(indx<size_); assert(addr); return addr[indx]; }
 
         //! access, CONST
-        inline virtual const_type & operator[](size_t indx) const throw() { assert(indx<size_); assert(addr); return addr[indx]; }
+        inline const_type & operator[](size_t indx) const throw() { assert(indx<size_); assert(addr); return addr[indx]; }
 
         //! push a new object using copy ctor
         inline void push( param_type args )

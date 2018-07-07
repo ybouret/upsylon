@@ -39,27 +39,6 @@ namespace upsylon
 
 }
 
-#include "y/type/args.hpp"
-namespace upsylon
-{
-    template <typename T>
-    class dynamic_container_of : public dynamic
-    {
-    public:
-        Y_DECL_ARGS(T,type); //!< aliases
-
-        inline virtual ~dynamic_container_of() throw() {}
-
-        inline virtual type       & operator[](const size_t)  throw()       = 0;
-        inline virtual const_type & operator[](const size_t ) const throw() = 0;
-
-    protected:
-        inline explicit dynamic_container_of() throw() {}
-
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(dynamic_container_of);
-    };
-}
 
 #endif
 

@@ -41,7 +41,7 @@ namespace
 
 Y_UTEST(simd)
 {
-    double   duration = 5;
+    double   duration = 3;
     size_t   n = 10000;
     memory::cblock_of<double> blk(n);
     info   I =
@@ -49,18 +49,43 @@ Y_UTEST(simd)
         blk.data, n
     };
 
-
-
-    concurrent::simd engine(true);
-    wtime  chrono;
-    size_t cycles=0;
-    for(cycles=0;chrono.query()<=duration;)
+    double par_speed = 0;
+    concurrent::simd par(true);
     {
-        ++cycles;
-        engine.start(simd_kernel,&I);
-        engine.finish();
+        wtime  chrono;
+        size_t cycles=0;
+        double ellapsed=0;
+        for(cycles=0;(ellapsed=chrono.query())<=duration;)
+        {
+            ++cycles;
+            par.start(simd_kernel,&I);
+            par.finish();
+        }
+        par_speed = cycles/ellapsed;
     }
-    
+    std::cerr << "par_speed=" << par_speed << std::endl;
+
+    double seq_speed = 0;
+    {
+        concurrent::sequential_for engine;
+        wtime  chrono;
+        size_t cycles=0;
+        double ellapsed=0;
+        for(cycles=0;(ellapsed=chrono.query())<=duration;)
+        {
+            ++cycles;
+            engine.start(simd_kernel,&I);
+            engine.finish();
+        }
+        seq_speed = cycles/ellapsed;
+    }
+    std::cerr << "seq_speed=" << seq_speed << std::endl;
+
+    const double speed_up = par_speed/seq_speed;
+    std::cerr << std::endl;
+    std::cerr << "\tSpeed Up  : " << speed_up << std::endl;
+    std::cerr << "\tEfficiency: " << par[0].efficiency(speed_up) << "%" << std::endl;
+    std::cerr << std::endl;
 
 
 }
