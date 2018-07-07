@@ -161,7 +161,6 @@ namespace upsylon
                 std::cerr << "[threads.loop] call@" << context.label << std::endl;
             }
 
-            call(context);
             
             if(verbose)
             {
@@ -177,17 +176,6 @@ namespace upsylon
 
         }
 
-
-        void threads:: loop( parallel &context ) throw()
-        {
-            Y_LOCK(access);
-            std::cerr << "[thread.loop] default loop for " << context.label << std::endl;
-        }
-
-        void threads:: call( parallel &context ) throw()
-        {
-            this->loop(context);
-        }
 
 
         void threads:: run()
