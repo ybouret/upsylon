@@ -30,17 +30,17 @@ namespace upsylon {
             release();
         }
 
-        //! initial and constant count
+        //! dynamic interface: initial and constant count
         inline virtual size_t capacity() const throw() { return count; }
 
-        //! current built slots
+        //! dynamic interface: current built slots
         inline virtual size_t size()     const throw() { return size_; }
 
         //! access
-        inline type       & operator[](size_t indx) throw()       { assert(indx<size_); assert(addr); return addr[indx]; }
+        inline virtual type       & operator[](size_t indx) throw()       { assert(indx<size_); assert(addr); return addr[indx]; }
 
         //! access, CONST
-        inline const_type & operator[](size_t indx) const throw() { assert(indx<size_); assert(addr); return addr[indx]; }
+        inline virtual const_type & operator[](size_t indx) const throw() { assert(indx<size_); assert(addr); return addr[indx]; }
 
         //! push a new object using copy ctor
         inline void push( param_type args )

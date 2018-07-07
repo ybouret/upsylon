@@ -9,7 +9,7 @@ namespace upsylon
 {
     //! array of contiguous objects
     template <typename T>
-    class array : virtual public dynamic
+    class array : public dynamic_container_of<T>
     {
     public:
         Y_DECL_ARGS(T,type); //!< aliases
@@ -18,13 +18,13 @@ namespace upsylon
         inline virtual ~array() throw() {}
 
         //! dynamic interface: size()
-        inline virtual size_t size() const throw() { return size_; }
+        virtual size_t size() const throw() { return size_; }
 
         //! inline access
-        inline type       & operator[](const size_t i) throw() { assert(i>0);assert(i<=size()); assert(item_); return item_[i]; }
+        inline virtual type       & operator[](const size_t i) throw() { assert(i>0);assert(i<=size()); assert(item_); return item_[i]; }
 
         //! inline const access
-        inline const_type & operator[](const size_t i) const throw() { assert(i>0);assert(i<=size()); assert(item_); return item_[i]; }
+        inline virtual const_type & operator[](const size_t i) const throw() { assert(i>0);assert(i<=size()); assert(item_); return item_[i]; }
 
         //! output octave/julia style
         inline friend std::ostream & operator<<( std::ostream &os, const array &arr )

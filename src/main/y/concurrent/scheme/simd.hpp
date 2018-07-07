@@ -3,6 +3,7 @@
 #define Y_CONCURRENT_SIMD_INCLUDED 1
 
 #include "y/concurrent/threads.hpp"
+#include "y/concurrent/scheme/for-each.hpp"
 
 namespace upsylon
 {
@@ -10,7 +11,7 @@ namespace upsylon
     {
 
         //! Single Instruction Multiple Data
-        class simd : public threads
+        class simd :  public threads
         {
         public:
             typedef void (*kernel)( void *, parallel &, lockable & ); //!< the kernel prototype
@@ -19,8 +20,8 @@ namespace upsylon
             virtual ~simd() throw();
 
             //! execute multiple copy of the kernel
-            void start( kernel user_code, void *user_data );
-            void finish() throw();
+            virtual void start( kernel user_code, void *user_data );
+            virtual void finish() throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simd);
