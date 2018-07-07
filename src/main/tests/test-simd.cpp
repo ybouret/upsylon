@@ -29,6 +29,7 @@ namespace
         {
             for(size_t k=1024;k>0;--k)
             {
+		    assert(p<I.count);
                 d[p] += ran.to<double>();
             }
         }
