@@ -85,6 +85,10 @@ sequence<T>(), array<T>(), maxi_(n), bytes(0), hmem_( ALLOCATOR::instance() ),ad
         //! dynamic interface: capacity
         inline virtual size_t capacity() const throw() { return maxi_; }
 
+        //! dynamic interface: size
+        virtual size_t size() const throw() { return this->size_; }
+
+
         //! container interface: free
         virtual void free() throw()
         {

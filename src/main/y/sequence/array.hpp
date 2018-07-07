@@ -16,10 +16,7 @@ namespace upsylon
 
         //! destructor
         inline virtual ~array() throw() {}
-
-        //! dynamic interface: size()
-        virtual size_t size() const throw() { return size_; }
-
+        
         //! inline access
         inline  type       & operator[](const size_t i) throw() { assert(i>0);assert(i<=size()); assert(item_); return item_[i]; }
 
