@@ -61,9 +61,9 @@ namespace upsylon
         threads:: threads(const bool v) :
         __topology( layout::create() ),
         __threads( (*static_cast<__topology *>(this))->cores ),
+        running(0),
         access(),
         synchronize(),
-        running(0),
         ready(0),
         dying(true),
         verbose(v)

@@ -19,9 +19,8 @@ namespace upsylon {
         class threads : public __topology, public __threads
         {
         public:
-            mutex                  access;      //!< for threads synchronisation
-            condition              synchronize; //!< for threads create/delete \todo PROTECT
             const size_t           running;     //!< running threads
+            mutex                  access;      //!< for threads synchronisation
 
             //! construct threads
             explicit threads(const bool v=false);
@@ -31,7 +30,9 @@ namespace upsylon {
             virtual void run(parallel &ctx) throw();
             //! wait for all threads to go back to waiting state
             void wait() throw();
-
+            
+        protected:
+            condition              synchronize; //!< for threads create/delete
         private:
             Y_DISABLE_COPY_AND_ASSIGN(threads);
             static void start(void*) throw();
