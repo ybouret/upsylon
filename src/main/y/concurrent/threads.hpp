@@ -38,8 +38,8 @@ namespace upsylon {
             size_t     ready;
             condition  start;
             void start_thread() throw();
-            virtual void loop( parallel & ) throw() = 0;
-
+            virtual void loop( parallel & ) throw();
+            void call( parallel & ) throw();
 
         public:
             bool verbose; //!< verbose flag, mostly to debug

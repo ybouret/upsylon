@@ -13,14 +13,10 @@ namespace upsylon
         threads:: ~threads() throw()
         {
 
-            //__________________________________________________________________
-            //
-            // in any case, place the halting flag to true
-            //__________________________________________________________________
+
             {
                 Y_LOCK(access);
-                //halting = true;
-                if(verbose) { std::cerr << "[threads.quit]" << std::endl; }
+                if(verbose) { std::cerr << "[threads.quit] " << ready << "/" << count << std::endl; }
             }
 
             // no choice but to signal until ready<=0
@@ -157,13 +153,21 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // first wake up on the LOCKED access
+            // unlock call
             //__________________________________________________________________
+            if(verbose)
             {
                 Y_LOCK(access);
                 std::cerr << "[threads.loop] call@" << context.label << std::endl;
             }
 
+            call(context);
+            
+            if(verbose)
+            {
+                Y_LOCK(access);
+                std::cerr << "[threads.loop] back@" << context.label << std::endl;
+            }
             access.lock();
             if(verbose)
             --ready;
@@ -172,6 +176,19 @@ namespace upsylon
             return;
 
         }
+
+
+        void threads:: loop( parallel &context ) throw()
+        {
+            Y_LOCK(access);
+            std::cerr << "[thread.loop] default loop for " << context.label << std::endl;
+        }
+
+        void threads:: call( parallel &context ) throw()
+        {
+            this->loop(context);
+        }
+
 
         void threads:: run()
         {

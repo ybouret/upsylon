@@ -18,7 +18,7 @@ namespace
         {
         }
 
-        virtual void loop( parallel &context) throw()
+        virtual void loop(parallel &context) throw()
         {
             Y_LOCK(access);
             std::cerr << "some_threads loop in " << context.label << std::endl;
