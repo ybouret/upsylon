@@ -42,7 +42,7 @@ namespace
 Y_UTEST(simd)
 {
     double   duration = 3;
-    size_t   n = 10000;
+    size_t   n        = 16384;
     memory::cblock_of<double> blk(n);
     info   I =
     {

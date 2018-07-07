@@ -22,12 +22,18 @@ namespace upsylon
         public:
             typedef void (*kernel)( void *, parallel &, lockable & ); //!< the kernel prototype
 
-            //! destrcutor
+            //! destructor
             virtual ~for_each() throw();
 
-            virtual void   start( kernel , void * ) = 0; //!< launch kernel(s)
-            virtual void   finish() throw()         = 0; //!< wait for all kernels to return
+            //! launch kernel(s)
+            virtual void   start( kernel , void * ) = 0;
+            //! wait for all kernels to return
+            virtual void   finish() throw()         = 0;
+            //! access to context
             virtual parallel & operator[](const size_t) throw() = 0;
+            //! access to context
+            virtual const parallel & operator[](const size_t) const throw() = 0;
+
         protected:
             //! constructor
             explicit for_each() throw();
