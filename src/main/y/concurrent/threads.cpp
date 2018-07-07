@@ -214,14 +214,14 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // do something...
+            // do something, still starting with a LOCKED mutex
             //__________________________________________________________________
             try
             {
                 ++((size_t&)running);
                 if(verbose) { std::cerr << "(+)running: " << running << "/" << context.size << std::endl; }
                 access.unlock();
-                run(context);
+                run(context); // virtual call
             }
             catch(...)
             {

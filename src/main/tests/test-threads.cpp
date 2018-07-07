@@ -25,7 +25,6 @@ namespace
 
         virtual void run(parallel &ctx) throw()
         {
-
             access.lock();
             std::cerr << "some_threads run " << ctx.label << std::endl;
             std::cerr << "\trunning=" << running << "/" << size() << std::endl;
