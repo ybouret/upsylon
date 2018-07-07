@@ -8,7 +8,7 @@ namespace upsylon
 
         simd:: simd(const bool v) :
         threads(v),
-        threshold( size() + 1 ),
+        threshold( size()+1 ),
         counter(0),
         cycle(),
         code(0),
@@ -48,14 +48,47 @@ namespace upsylon
             assert(code);
             code(data,context,access);
 
+            //__________________________________________________________________
+            //
+            // internal thread barrier
+            //__________________________________________________________________
             access.lock();
             assert(counter>0);
-            std::cerr << "counter=" << counter << "@thread" << std::endl;
+            //std::cerr << "counter=" << counter << "@thread " << context.label << std::endl;
             if(--counter>0)
             {
                 cycle.wait(access);
             }
+            else
+            {
+                cycle.broadcast();
+            }
             access.unlock();
+        }
+
+        void simd:: finish() throw()
+        {
+            //__________________________________________________________________
+            //
+            // internal thread barrier
+            //__________________________________________________________________
+            access.lock();
+            //std::cerr << "counter=" << counter << "@main" << std::endl;
+            if(--counter>0)
+            {
+                cycle.wait(access);
+            }
+            else
+            {
+                cycle.broadcast();
+            }
+            access.unlock();
+
+            //__________________________________________________________________
+            //
+            // let threads go back to synchronize
+            //__________________________________________________________________
+            wait();
         }
 
 

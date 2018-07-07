@@ -156,12 +156,14 @@ namespace upsylon
 
         void threads:: wait() throw()
         {
+
+#if 0
             if(verbose)
             {
                 Y_LOCK(access);
                 std::cerr << "[threads.wait] ..." << std::endl;
             }
-
+#endif
             while( true )
             {
                 if( access.try_lock() )

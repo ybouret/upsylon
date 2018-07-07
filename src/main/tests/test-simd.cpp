@@ -27,16 +27,21 @@ namespace
 
         for(size_t i=n;i>0;--i,++p)
         {
-            d[i] = ran.to<double>();
+            for(size_t k=1024;k>0;--k)
+            {
+                d[i] += ran.to<double>();
+            }
         }
     }
 }
 
 #include "y/memory/cblock.hpp"
+#include "y/os/wtime.hpp"
 
 Y_UTEST(simd)
 {
-    size_t n = 1000;
+    double   duration = 5;
+    size_t   n = 10000;
     memory::cblock_of<double> blk(n);
     info   I =
     {
@@ -44,12 +49,15 @@ Y_UTEST(simd)
     };
 
 
-    concurrent::simd engine(true);
 
-    for(size_t i=0;i<128;++i)
+    concurrent::simd engine(true);
+    wtime  chrono;
+    size_t cycles=0;
+    for(cycles=0;chrono.query()<=duration;)
     {
+        ++cycles;
         engine.start(simd_kernel,&I);
-        engine.wait();
+        engine.finish();
     }
     
 
