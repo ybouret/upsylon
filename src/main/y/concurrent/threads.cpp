@@ -219,6 +219,7 @@ namespace upsylon
             try
             {
                 ++((size_t&)running);
+                if(verbose) { std::cerr << "(+)running: " << running << "/" << context.size << std::endl; }
                 access.unlock();
                 run(context);
             }
@@ -229,6 +230,7 @@ namespace upsylon
 
             access.lock();
             --((size_t&)running);
+            if(verbose) { std::cerr << "(-)running: " << running << "/" << context.size << std::endl; }
             goto LOOP;
             
         }
