@@ -16,21 +16,23 @@ namespace upsylon
         inline virtual ~parallel() throw() {}
 
         //! sequential
-        inline explicit parallel() throw() : size(1),rank(0),indx(1),priv(0) {}
+        inline explicit parallel() throw() : size(1),rank(0),indx(1),priv(0),label() { __format(); }
 
         //! parallel
         inline explicit parallel(const size_t sz, const size_t rk) throw() :
-        size(sz),rank(rk),indx(rk+1),priv(0)
+        size(sz),rank(rk),indx(rk+1),priv(0),label()
         {
             assert(size>0); assert(rank<size);
+            __format();
         }
 
 
 
-        const size_t size;   //!< the family size
-        const size_t rank;   //!<  0..size-1
-        const size_t indx;   //!<  1..size
-        void        *priv;   //!< private data
+        const size_t size;     //!< the family size
+        const size_t rank;     //!<  0..size-1
+        const size_t indx;     //!<  1..size
+        void        *priv;     //!< private data
+        const char   label[8]; //!< size.rank
 
         //! get the work portion according to rank/size
         template <typename T>
@@ -61,6 +63,7 @@ namespace upsylon
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(parallel);
+        void __format() throw();
     };
 }
 

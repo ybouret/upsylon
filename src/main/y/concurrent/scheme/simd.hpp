@@ -19,13 +19,16 @@ namespace upsylon
             virtual ~simd() throw();
 
             //! execute multiple copy of the kernel
-            void ld( kernel user_code, void *user_data );
-
+            void start( kernel user_code, void *user_data );
+            void finish() throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simd);
-            kernel    code;
-            void     *data;
+            const size_t threshold; //!< threads.size() + 1
+            size_t       counter;   //!< for cycle control
+            condition    cycle;     //!< to wait...
+            kernel       code;
+            void        *data;
             virtual void run(parallel &) throw();
         };
     }

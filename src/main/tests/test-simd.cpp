@@ -18,7 +18,8 @@ namespace
                      lockable &)
     {
         randomized::Kiss32 ran;
-        info &I = *(info *)data;
+        ran.reset( context.rank );
+        info   &I = *(info *)data;
         double *d = I.number;
         size_t  n = I.count;
         size_t  p = 0;
@@ -26,7 +27,7 @@ namespace
 
         for(size_t i=n;i>0;--i,++p)
         {
-            d[i] = 0;
+            d[i] = ran.to<double>();
         }
     }
 }
@@ -47,7 +48,7 @@ Y_UTEST(simd)
 
     for(size_t i=0;i<128;++i)
     {
-        engine.ld(simd_kernel,&I);
+        engine.start(simd_kernel,&I);
         engine.wait();
     }
     

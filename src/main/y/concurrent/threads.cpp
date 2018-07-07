@@ -150,7 +150,7 @@ namespace upsylon
         void threads:: run(parallel &ctx) throw()
         {
             Y_LOCK(access);
-            std::cerr << "\trun context " << ctx.size << "." << ctx.rank << std::endl;
+            std::cerr << "\trun context " << ctx.label << std::endl;
         }
 
 
@@ -188,7 +188,7 @@ namespace upsylon
             //__________________________________________________________________
             access.lock();
             parallel &context = static_cast<__threads&>(*this)[ready];
-            if(verbose) { std::cerr << "[threads.init.call] (+) " << count << '.' << ready << std::endl; }
+            if(verbose) { std::cerr << "[threads.init.call] (+) " << context.label << std::endl; }
             ++ready; //!< for constructor
         LOOP:
             //__________________________________________________________________
@@ -203,7 +203,7 @@ namespace upsylon
             //__________________________________________________________________
             if(dying)
             {
-                if(verbose) { std::cerr << "[threads.loop.halt] (-) " << context.size << '.' << context.rank << std::endl; }
+                if(verbose) { std::cerr << "[threads.loop.halt] (-) " << context.label << std::endl; }
                 assert(ready>0);
                 --ready;
                 access.unlock();
