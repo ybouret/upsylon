@@ -2,6 +2,7 @@
 #include "y/concurrent/threads.hpp"
 #include "y/type/utils.hpp"
 #include "y/code/utils.hpp"
+#include "y/exceptions.hpp"
 
 #include <iostream>
 
@@ -18,7 +19,7 @@ namespace upsylon
             //__________________________________________________________________
             {
                 Y_LOCK(access);
-                halting = true;
+                //halting = true;
                 if(verbose) { std::cerr << "[threads.quit]" << std::endl; }
             }
 
@@ -81,10 +82,6 @@ namespace upsylon
                         }
                     }
                 }
-
-                access.lock();
-                access.unlock();
-
 
             }
             catch(...)
@@ -158,9 +155,14 @@ namespace upsylon
             }
             access.unlock();
 
-
-
-            std::cerr << "do stuff...@" << context.label << std::endl;
+            //__________________________________________________________________
+            //
+            // first wake up on the LOCKED access
+            //__________________________________________________________________
+            {
+                Y_LOCK(access);
+                std::cerr << "[threads.loop] call@" << context.label << std::endl;
+            }
 
             access.lock();
             if(verbose)
@@ -171,123 +173,18 @@ namespace upsylon
 
         }
 
-    }
-}
-
-namespace upsylon
-{
-    namespace concurrent
-    {
-
-#if 0
-        void threads:: run(parallel &ctx) throw()
+        void threads:: run()
         {
+            static const char fn[] = "[threads.run!]";
             Y_LOCK(access);
-            std::cerr << "\trun context " << ctx.label << std::endl;
+            if(verbose) { std::cerr << fn << std::endl; }
+            if(ready<size()) throw exception("%s unexpected unfinished setup",fn);
+            if(!halting) throw exception("%s already setup run",fn);
+            halting = false;
+            start.broadcast();
         }
-#endif
 
-
-#if 0
-        void threads:: wait() throw()
-        {
-
-#if 0
-            if(verbose)
-            {
-                Y_LOCK(access);
-                std::cerr << "[threads.wait] ..." << std::endl;
-            }
-#endif
-            while( true )
-            {
-                if( access.try_lock() )
-                {
-                    if(running>0)
-                    {
-                        access.unlock();
-                        continue;
-                    }
-                    else
-                    {
-                        access.unlock();
-                        return;
-                    }
-                }
-            }
-        }
-#endif
-
-#if 0
-        void threads:: loop() throw()
-        {
-            //__________________________________________________________________
-            //
-            // entering thread
-            //__________________________________________________________________
-            access.lock();
-            parallel &context = static_cast<__threads&>(*this)[ready];
-            if(verbose) { std::cerr << "[threads.init.call] (+) " << context.label << std::endl; }
-            ++ready; //!< for constructor
-        LOOP:
-            //__________________________________________________________________
-            //
-            // wait on the LOCKED mutex
-            //__________________________________________________________________
-            synchronize.wait(access);
-
-            //__________________________________________________________________
-            //
-            // wake up on with the LOCKED mutex
-            //__________________________________________________________________
-            if(running<=0&&dying)
-            {
-                if(verbose) { std::cerr << "[threads.loop.halt] (-) " << context.label << std::endl; }
-                assert(ready>0);
-                --ready;
-                access.unlock();
-                return;
-            }
-
-            //__________________________________________________________________
-            //
-            // do something, still starting with a LOCKED mutex
-            //__________________________________________________________________
-            try
-            {
-                ++((size_t&)running);
-                if(verbose) { std::cerr << "(+)running: " << running << "/" << context.size << std::endl; }
-                access.unlock();
-                run(context); // virtual call
-            }
-            catch(...)
-            {
-                // todo, something went wrong
-            }
-
-            
-            access.lock();
-            if(running>=size())
-            {
-                ( (size_t&) running ) = 0;
-                if(dying)
-                {
-                    access.unlock();
-                    return;
-                }
-            }
-            else
-            {
-                // running < size
-                std::cerr << context.label << " waiting on finalize..." << std::endl;
-                finalize.wait(access);
-            }
-            //--((size_t&)running);
-            //if(verbose) { std::cerr << "(-)running: " << running << "/" << context.size << std::endl; }
-            goto LOOP;
-            
-        }
-#endif
     }
-
 }
+
+

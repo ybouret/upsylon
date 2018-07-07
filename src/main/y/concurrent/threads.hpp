@@ -24,6 +24,9 @@ namespace upsylon {
             //! quit threads
             virtual ~threads() throw();
 
+            //! unleashed threads and call virtual loop()
+            void run();
+
         protected:
             //! construct threads
             explicit threads(const bool v=false);
@@ -34,8 +37,8 @@ namespace upsylon {
             static  void entry(void*) throw();
             size_t     ready;
             condition  start;
-            
             void start_thread() throw();
+            virtual void loop( parallel & ) throw() = 0;
 
 
         public:
