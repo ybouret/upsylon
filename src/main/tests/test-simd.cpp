@@ -29,7 +29,7 @@ namespace
         {
             for(size_t k=1024;k>0;--k)
             {
-                d[i] += ran.to<double>();
+                d[p] += ran.to<double>();
             }
         }
     }
