@@ -64,21 +64,7 @@ namespace upsylon
                 {
                     const size_t target = i+1; //! desired new number of threads
                     build<thread_proc,void*,size_t,size_t>(system_entry,this,count,i);
-                    while(true)
-                    {
-                        if( access.try_lock() )
-                        {
-                            if(ready<target)
-                            {
-                                access.unlock();
-                            }
-                            else
-                            {
-                                access.unlock();
-                                break;
-                            }
-                        }
-                    }
+                    Y_MUTEX_PROBE(access,ready>=target);
                 }
 
             }
