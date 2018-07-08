@@ -62,7 +62,10 @@ namespace upsylon
 
             // then say bye to synchonized
             // no choice but to signal until ready<=0
-            while(true)
+            synchronized.broadcast();
+            Y_MUTEX_PROBE(access,ready<=0);
+
+            while(false)
             {
                 if(access.try_lock())
                 {
