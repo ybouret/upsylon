@@ -14,6 +14,7 @@ namespace upsylon {
     {
         typedef auto_ptr<const layout>       __topology;  //!< topology for threads
         typedef slots<thread,memory::global> __threads;   //!< memory for threads
+        typedef void (*kernel)(void *, parallel &, lockable &);
 
         //! base class to handle threads creation/destruction
         class threads : public __topology, public __threads
@@ -23,21 +24,24 @@ namespace upsylon {
 
             //! quit threads
             virtual ~threads() throw();
-
-            //! unleashed threads and call virtual loop()
-            void run();
-
-        protected:
             //! construct threads
             explicit threads(const bool v=false);
+
+            //! unleashed threads
+            void run(kernel code, void *data);
+
+        protected:
             bool     halting;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(threads);
-            static  void entry(void*) throw();
+            static  void system_entry(void*) throw(); //!< for system call, call this->thread_entry()
+            void         thread_entry()      throw(); //!< parallel entry point
+
             size_t     ready;
             condition  start;
-            void start_thread() throw();
+            kernel     kproc;
+            void      *kdata;
             
         public:
             bool verbose; //!< verbose flag, mostly to debug

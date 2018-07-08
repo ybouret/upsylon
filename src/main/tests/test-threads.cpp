@@ -5,27 +5,35 @@ using namespace upsylon;
 
 namespace
 {
-    class some_threads : public concurrent:: threads
+    class protocol
     {
     public:
 
-        explicit some_threads() : concurrent::threads(true)
+        explicit protocol()
         {
             
         }
 
-        virtual ~some_threads() throw()
+        virtual ~protocol() throw()
         {
         }
 
-        virtual void loop(parallel &context) throw()
+        static void call( void *data, parallel &context, lockable &access )
         {
-            Y_LOCK(access);
-            std::cerr << "some_threads loop in " << context.label << std::endl;
+            assert(data);
+            static_cast<protocol *>(data)->run(context,access);
+        }
+
+        void run(parallel &context, lockable &access)
+        {
+            {
+                Y_LOCK(access);
+                std::cerr << "protocol in " << context.label << std::endl;
+            }
         }
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(some_threads);
+        Y_DISABLE_COPY_AND_ASSIGN(protocol);
     };
 }
             
@@ -40,11 +48,12 @@ Y_UTEST(threads)
     {
         run = false;
     }
-    some_threads threads;
+    concurrent::threads engine(true);
 
     if(run)
     {
-        threads.run();
+        protocol proto;
+        engine.run( protocol::call, &proto );
     }
 
 }

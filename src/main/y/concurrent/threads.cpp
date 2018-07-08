@@ -47,6 +47,8 @@ namespace upsylon
         halting(true),
         ready(0),
         start(),
+        kproc(0),
+        kdata(0),
         verbose(v)
         {
             //__________________________________________________________________
@@ -61,7 +63,7 @@ namespace upsylon
                 for(size_t i=0;i<count;++i)
                 {
                     const size_t target = i+1; //! desired new number of threads
-                    build<thread_proc,void*,size_t,size_t>(entry,this,count,i);
+                    build<thread_proc,void*,size_t,size_t>(system_entry,this,count,i);
                     while(true)
                     {
                         if( access.try_lock() )
@@ -115,13 +117,13 @@ namespace upsylon
         }
 
 
-        void threads:: entry( void *args ) throw()
+        void threads:: system_entry( void *args ) throw()
         {
             assert(args);
-            static_cast<threads *>(args)->start_thread();
+            static_cast<threads *>(args)->thread_entry();
         }
 
-        void threads:: start_thread() throw()
+        void threads:: thread_entry() throw()
         {
             //__________________________________________________________________
             //
@@ -161,6 +163,9 @@ namespace upsylon
                 std::cerr << "[threads.loop] call@" << context.label << std::endl;
             }
 
+            assert(kproc);
+            kproc(kdata,context,access);
+
             
             if(verbose)
             {
@@ -178,14 +183,17 @@ namespace upsylon
 
 
 
-        void threads:: run()
+        void threads:: run(kernel code, void *data)
         {
             static const char fn[] = "[threads.run!]";
+            assert(code);
             Y_LOCK(access);
             if(verbose) { std::cerr << fn << std::endl; }
-            if(ready<size()) throw exception("%s unexpected unfinished setup",fn);
-            if(!halting) throw exception("%s already setup run",fn);
+            if(ready<size()) { throw exception("%s unexpected unfinished setup",fn); }
+            if(!halting)    { throw exception("%s already setup run",fn);}
             halting = false;
+            kproc   = code;
+            kdata   = data;
             start.broadcast();
         }
 
