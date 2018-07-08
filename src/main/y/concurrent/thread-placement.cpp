@@ -18,7 +18,7 @@ namespace upsylon
 #   define Y_THREAD_AFFINITY 1
 #   if defined(Y_FREEBSD)
 #      include <pthread_np.h>
-#      define Y_CPU_SET cpuset_
+#      define Y_CPU_SET cpuset_t
 #   else
 #      define Y_CPU_SET cpu_set_t
 #endif
