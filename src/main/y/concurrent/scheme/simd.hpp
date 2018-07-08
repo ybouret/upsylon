@@ -29,18 +29,13 @@ namespace upsylon
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simd);
-            threads workers;
-            //! workers.run(call);
             static  void call( void *, parallel &, lockable &) throw();
             void loop(parallel &context) throw();
-
+            threads      workers;
+            mutex       &access;
             bool         done;
-            mutex        guard;
             condition    synchronized;  //!< waiting to start cycle
             size_t       ready;         //!< count who is ready
-            condition    cycle;         //!< wait for cycle to complete
-            const size_t threshold;  //!< workers.size() + 1
-            size_t       countdown;  //!< how many waiting on cycle, threads+main
             
             kernel kproc;
             void  *kdata;
