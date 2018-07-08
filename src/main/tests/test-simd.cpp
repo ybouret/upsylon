@@ -52,7 +52,7 @@ Y_UTEST(simd)
     concurrent::simd par(true);
     std::cerr << "-- in main --" << std::endl;
     par.start(simd_kernel,&I);
-    //par.finish();
+    par.finish();
 
     rt_clock clk;
     clk.sleep(1);

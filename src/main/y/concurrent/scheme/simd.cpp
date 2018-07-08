@@ -131,14 +131,16 @@ namespace upsylon
             else
             {
                 // still on a LOCKED muteex
+                countdown = threshold;
             }
-            return;
+            goto LOOP;
 
         }
 
         void simd:: finish() throw()
         {
-
+            guard.lock();
+            
         }
 
     }
