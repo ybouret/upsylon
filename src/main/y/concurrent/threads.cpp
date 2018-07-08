@@ -173,13 +173,15 @@ namespace upsylon
         {
             static const char fn[] = "[threads.run!]";
             assert(code);
-            Y_LOCK(access);
-            if(verbose) { std::cerr << fn << std::endl; }
-            if(ready<size()) { throw exception("%s unexpected unfinished setup",fn); }
-            if(!halting)    { throw exception("%s already setup run",fn);}
-            halting = false;
-            kproc   = code;
-            kdata   = data;
+            {
+                Y_LOCK(access);
+                if(verbose) { std::cerr << fn << std::endl; }
+                if(ready<size()) { throw exception("%s unexpected unfinished setup",fn); }
+                if(!halting)    { throw exception("%s already setup run",fn);}
+                halting = false;
+                kproc   = code;
+                kdata   = data;
+            }
             start.broadcast();
         }
 

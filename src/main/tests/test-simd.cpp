@@ -29,7 +29,7 @@ namespace
         {
             for(size_t k=1024;k>0;--k)
             {
-		    assert(p<I.count);
+                assert(p<I.count);
                 d[p] += ran.to<double>();
             }
         }
@@ -41,17 +41,23 @@ namespace
 
 Y_UTEST(simd)
 {
-
-    concurrent::simd par(true);
-    
-#if 0
-    double   duration = 3;
+    //double   duration = 3;
     size_t   n        = 16384;
     memory::cblock_of<double> blk(n);
     info   I =
     {
         blk.data, n
     };
+
+    concurrent::simd par(true);
+    std::cerr << "-- in main --" << std::endl;
+    par.start(simd_kernel,&I);
+    //par.finish();
+
+    rt_clock clk;
+    clk.sleep(1);
+
+#if 0
 
     double par_speed = 0;
     concurrent::simd par(true);

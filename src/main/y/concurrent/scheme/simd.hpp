@@ -34,10 +34,14 @@ namespace upsylon
             static  void call( void *, parallel &, lockable &) throw();
             void loop(parallel &context) throw();
 
-            bool      done;
-            condition synchronized;  //!< waiting for new cycle
-            size_t    ready;         //!< waiting to be ready
-
+            bool         done;
+            mutex        guard;
+            condition    synchronized;  //!< waiting to start cycle
+            size_t       ready;         //!< count who is ready
+            condition    cycle;         //!< wait for cycle to complete
+            const size_t threshold;  //!< workers.size() + 1
+            size_t       countdown;  //!< how many waiting on cycle, threads+main
+            
             kernel kproc;
             void  *kdata;
         };

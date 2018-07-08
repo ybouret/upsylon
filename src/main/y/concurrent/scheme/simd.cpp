@@ -13,20 +13,24 @@ namespace upsylon
         for_each(),
         workers(v),
         done(false),
+        guard(),
         synchronized(),
         ready(0),
+        cycle(),
+        threshold( workers.size() + 1),
+        countdown( threshold ),
         kproc(0),
         kdata(0)
         {
             workers.run(call,this);
-            Y_MUTEX_PROBE(workers.access,ready>=workers.size());
+            Y_MUTEX_PROBE(guard,ready>=workers.size());
         }
 
-        void simd:: call( void *data, parallel &context, lockable &access) throw()
+        void simd:: call( void *data, parallel &context, lockable &sync) throw()
         {
             assert(data);
             {
-                Y_LOCK(access);
+                Y_LOCK(sync);
                 std::cerr << "[threads.simd.call] @" << context.label << std::endl;
             }
             static_cast<simd *>(data)->loop(context);
@@ -38,139 +42,108 @@ namespace upsylon
             return workers;
         }
 
-        void simd:: finish() throw()
-        {
-        }
+
 
         void simd:: start(kernel code, void *data)
         {
             assert(code);
+            assert(workers.size()==ready);
 
             kproc = code;
             kdata = data;
+            synchronized.broadcast();
+            Y_MUTEX_PROBE(guard,ready<=0);
         }
 
 
         void simd:: loop(parallel &context) throw()
         {
-            const bool verbose = workers.verbose;
-            mutex     &access  = workers.access;
+            //__________________________________________________________________
+            //
+            // first initialization
+            //__________________________________________________________________
+            const bool   verbose = workers.verbose;
+            const size_t count   = workers.size();
+            guard.lock();
 
-            const size_t count = workers.size();
-            access.lock();
             if(verbose)
             {
+                Y_LOCK(workers.access);
                 std::cerr << "[threads.simd.loop] @" << context.label << std::endl;
             }
             assert(ready<count);
             ++ready;
             if(verbose&&ready>=count)
             {
-                std::cerr << "[threads.simd] synchronized" << std::endl;
+                Y_LOCK(workers.access);
+                std::cerr << "[threads.simd.loop] synchronized" << std::endl;
             }
-        //LOOP:
-            // wait on the locked mutex...
-            synchronized.wait(access);
+        LOOP:
+            assert(threshold==countdown);
+            //__________________________________________________________________
+            //
+            // wait on the LOCKED mutex...
+            //__________________________________________________________________
+            synchronized.wait(guard);
+            --ready;
 
-        }
-
-    }
-}
-
-
-#if 0
-namespace upsylon
-{
-    namespace concurrent
-    {
-
-        simd:: simd(const bool v) :
-        threads(v),
-        threshold( size()+1 ),
-        counter(0),
-        cycle(),
-        code(0),
-        data(0)
-        {
-            // at this points, threads are creating and
-            // waiting on the synchronize conditionx
-        }
-
-        simd:: ~simd() throw()
-        {
-            
-        }
-
-        void simd:: start( kernel user_code, void *user_data )
-        {
 
             //__________________________________________________________________
             //
-            // assuming at a good starting point
+            // wake up on the LOCKED mutex
             //__________________________________________________________________
+            if(done)
             {
-#if !defined(NDEBUG)
-                Y_LOCK(access);
-                assert(running<=0);
-#endif
+                if(verbose)
+                {
+                    Y_LOCK(workers.access);
+                    std::cerr << "[threads.simd.done] @" << context.label << std::endl;
+                }
+                guard.unlock();
+                return;
             }
-            code    = user_code; //!< will be call multiple times
-            data    = user_data; //!< on those data
-            counter = threshold; //!< for cycle
-            synchronize.broadcast();
-
-        }
-
-        void simd:: run( parallel &context ) throw()
-        {
-            assert(code);
-            code(data,context,access);
 
             //__________________________________________________________________
             //
-            // internal thread barrier
+            // perform UNLOCKED code
             //__________________________________________________________________
-            access.lock();
-            assert(counter>0);
-            //std::cerr << "counter=" << counter << "@thread " << context.label << std::endl;
-            if(--counter>0)
+            if(verbose)
             {
-                cycle.wait(access);
+                Y_LOCK(workers.access);
+                std::cerr << "[threads.simd.code] @" << context.label << ", ready=" << ready << std::endl;
+            }
+            guard.unlock();
+            assert(kproc);
+            kproc(kdata,context,guard);
+
+            guard.lock();
+            assert(countdown>0);
+            if(--countdown>0)
+            {
+                if(verbose)
+                {
+                    Y_LOCK(workers.access);
+                    std::cerr << "[threads.simd.loop] @" << context.label << ", countdown=" << countdown << "/" << threshold << std::endl;
+                }
+                cycle.wait(guard);
+                // comme back on a LOCKED mutex
             }
             else
             {
-                cycle.broadcast();
+                // still on a LOCKED muteex
             }
-            access.unlock();
+            return;
+
         }
 
         void simd:: finish() throw()
         {
-            //__________________________________________________________________
-            //
-            // internal thread barrier
-            //__________________________________________________________________
-            access.lock();
-            //std::cerr << "counter=" << counter << "@main" << std::endl;
-            if(--counter>0)
-            {
-                cycle.wait(access);
-            }
-            else
-            {
-                cycle.broadcast();
-            }
-            access.unlock();
 
-            //__________________________________________________________________
-            //
-            // let threads go back to synchronize
-            //__________________________________________________________________
-            wait();
         }
-
 
     }
 }
-#endif
+
+
+
 
