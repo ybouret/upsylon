@@ -29,18 +29,22 @@ namespace upsylon
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simd);
-            static  void call( void *, parallel &, lockable &) throw();
-            void loop(parallel &context) throw();
+            static  void call( void *, parallel &, lockable &) throw(); //! kernel for thread
+            void loop(parallel &context) throw(); //! the SIMD loop, called
             threads      workers;
+        public:
             mutex       &access;
+        private:
             bool         done;
             condition    synchronized;  //!< waiting to start cycle
             size_t       ready;         //!< count who is ready
             condition    cycle;
             const size_t threshold; //!< threads+1
             size_t       countdown; 
-            kernel kproc;
-            void  *kdata;
+            kernel       kproc;
+            void        *kdata;
+        public:
+            bool         &verbose;
         };
 
     }

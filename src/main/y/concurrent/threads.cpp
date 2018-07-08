@@ -12,31 +12,13 @@ namespace upsylon
     {
         threads:: ~threads() throw()
         {
-
-
             {
                 Y_LOCK(access);
                 if(verbose) { std::cerr << "[threads.quit] " << ready << "/" << count << std::endl; }
             }
-
-            // no choice but to signal until ready<=0
-            while(true)
-            {
-                if(access.try_lock())
-                {
-                    if(ready<=0)
-                    {
-                        access.unlock();
-                        break;
-                    }
-                    else
-                    {
-                        start.signal();
-                        access.unlock();
-                    }
-                }
-            }
-
+            
+            start.broadcast();
+            Y_MUTEX_PROBE(access,ready<=0);
 
         }
 
@@ -159,7 +141,6 @@ namespace upsylon
                 std::cerr << "[threads.loop] back@" << context.label << std::endl;
             }
             access.lock();
-            if(verbose)
             --ready;
             if(verbose) { std::cerr << "[threads.quit.done] (-) " << context.label << std::endl; }
             access.unlock();
