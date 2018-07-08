@@ -36,7 +36,9 @@ namespace upsylon
             bool         done;
             condition    synchronized;  //!< waiting to start cycle
             size_t       ready;         //!< count who is ready
-            
+            condition    cycle;
+            const size_t threshold; //!< threads+1
+            size_t       countdown; 
             kernel kproc;
             void  *kdata;
         };

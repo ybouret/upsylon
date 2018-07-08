@@ -13,6 +13,9 @@ namespace upsylon
         done(false),
         synchronized(),
         ready(0),
+        cycle(),
+        threshold( workers.count + 1),
+        countdown( threshold ),
         kproc(0),
         kdata(0)
         {
@@ -42,7 +45,7 @@ namespace upsylon
         {
             assert(code);
             assert(workers.count==ready);
-
+            assert(threshold==countdown);
             kproc = code;
             kdata = data;
             synchronized.broadcast();
@@ -61,27 +64,8 @@ namespace upsylon
             // wait for current kernels to finish
 
             // then say bye to synchonized
-            // no choice but to signal until ready<=0
             synchronized.broadcast();
             Y_MUTEX_PROBE(access,ready<=0);
-
-            while(false)
-            {
-                if(access.try_lock())
-                {
-                    if(ready<=0)
-                    {
-                        access.unlock();
-                        break;
-                    }
-                    else
-                    {
-                        synchronized.signal();
-                        access.unlock();
-                    }
-                }
-            }
-            
         }
 
         void simd:: loop(parallel &context) throw()
@@ -113,11 +97,13 @@ namespace upsylon
             // LOOP:
             //
             //__________________________________________________________________
-
+        LOOP:
+            //__________________________________________________________________
             // wait on a LOCKED mutex
             synchronized.wait(access);
             --ready;
 
+            //__________________________________________________________________
             // waking up on a LOCKED mutex
             if(done)
             {
@@ -134,16 +120,60 @@ namespace upsylon
             {
                 std::cerr << "[threads.simd.code] @" << context.label << std::endl;
             }
+
+            //__________________________________________________________________
+            // UNLOCKED kernel run
             access.unlock();
             kproc(kdata,context,access);
-            
-            return;
 
+            //__________________________________________________________________
+            // cycle barrier
+            access.lock();
+            assert(countdown>0);
+            if(verbose) { std::cerr << "[threads.simd.barrier] countdown=" << countdown << "/" << threshold << std::endl; };
+            if(--countdown>0)
+            {
+                // not finished: wait on a LOCKED mutes
+                std::cerr << context.label << " is waiting..." << std::endl;
+                cycle.wait(access);
+
+                // wake up on a locked mutex
+            }
+            else
+            {
+                // the countdown is reached!
+                assert(ready<=0);
+                std::cerr << context.label << " has finished" << std::endl;
+                if(verbose) { std::cerr << "[threads.simd.barrier] cycled!" << std::endl; }
+                countdown = threshold;
+                cycle.broadcast();
+            }
+
+            // DEBUGGING
+            ++ready;
+            std::cerr << "ready=" << ready << " from " << context.label << std::endl;
+            goto LOOP;
         }
 
         void simd:: finish() throw()
         {
-
+            access.lock();
+            assert(countdown>0);
+            if(workers.verbose) { std::cerr << "[threads.simd.barrier] main countdown=" << countdown << "/ " << threshold << std::endl; };
+            if(--countdown>0)
+            {
+                cycle.wait(access);
+            }
+            else
+            {
+                // the countdown is reached!
+                assert(ready<=0);
+                countdown = threshold;
+            }
+            std::cerr << "-- waiting for sync..." << std::endl;
+            access.unlock();
+            cycle.broadcast();
+            Y_MUTEX_PROBE(access,ready>=workers.size());
         }
 
     }
