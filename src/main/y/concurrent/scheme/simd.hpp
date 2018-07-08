@@ -19,7 +19,7 @@ namespace upsylon
             virtual ~simd() throw();
 
             //! for_each interface: execute multiple copy of the kernel
-            virtual void start( kernel user_code, void *user_data );
+            virtual void start( kernel code, void *data );
 
             //! for_each interface: use internal barrier and wait
             virtual void finish() throw();
@@ -30,6 +30,12 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simd);
             threads workers;
+            //! workers.run(call);
+            static  void call( void *, parallel &, lockable &) throw();
+            void loop(parallel &context, lockable &access) throw();
+
+            kernel kproc;
+            void  *kdata;
         };
 
     }

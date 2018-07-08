@@ -40,5 +40,7 @@ namespace upsylon
             assert(proc);
             engine_.run(proc,data);
         }
+
+        executor & sequential_for:: engine() throw() { return engine_; }
     }
 }

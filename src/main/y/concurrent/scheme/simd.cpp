@@ -13,9 +13,42 @@ namespace upsylon
         for_each(),
         workers(v)
         {
+            workers.run(call,this);
         }
 
-        
+        void simd:: call( void *data, parallel &context, lockable &access) throw()
+        {
+            assert(data);
+            {
+                Y_LOCK(access);
+                std::cerr << "\tcall simd@" << context.label << std::endl;
+            }
+            static_cast<simd *>(data)->loop(context,access);
+        }
+
+
+        executor & simd:: engine() throw()
+        {
+            return workers;
+        }
+
+        void simd:: finish() throw()
+        {
+        }
+
+        void simd:: start(kernel code, void *data)
+        {
+            assert(code);
+        }
+
+
+        void simd:: loop(parallel &context, lockable &access) throw()
+        {
+            {
+                Y_LOCK(access);
+                std::cerr << "\tloop simd@" << context.label << std::endl;
+            }
+        }
 
     }
 }

@@ -46,9 +46,7 @@ namespace upsylon
         public:
             virtual ~sequential_for() throw(); //!< destructor
             explicit sequential_for() throw(); //!< destructor
-
-
-
+            
             //! call the kernel on data
             virtual void start( kernel , void * );
 

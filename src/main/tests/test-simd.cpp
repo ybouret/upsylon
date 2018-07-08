@@ -41,6 +41,9 @@ namespace
 
 Y_UTEST(simd)
 {
+
+    concurrent::simd par(true);
+    
 #if 0
     double   duration = 3;
     size_t   n        = 16384;
