@@ -121,12 +121,23 @@ namespace upsylon
             // waking up on a LOCKED mutex
             if(done)
             {
-                std::cerr << "[threads.simd.loop] leave " << context.label << std::endl;
+                if(verbose)
+                {
+                    std::cerr << "[threads.simd.loop] leave " << context.label << std::endl;
+                }
                 access.unlock();
                 return;
             }
 
-
+            assert(kproc);
+            if(verbose)
+            {
+                std::cerr << "[threads.simd.code] @" << context.label << std::endl;
+            }
+            access.unlock();
+            kproc(kdata,context,access);
+            
+            return;
 
         }
 
