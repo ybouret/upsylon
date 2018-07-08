@@ -2,16 +2,15 @@
 #ifndef Y_CONCURRENT_SIMD_INCLUDED
 #define Y_CONCURRENT_SIMD_INCLUDED 1
 
-#include "y/concurrent/threads.hpp"
 #include "y/concurrent/scheme/for-each.hpp"
+#include "y/concurrent/threads.hpp"
 
 namespace upsylon
 {
     namespace concurrent
     {
-#if 0
         //! Single Instruction Multiple Data
-        class simd :  public for_each, public threads
+        class simd :  public for_each
         {
         public:
             //! construct threads with(out) verbosity flag
@@ -25,22 +24,14 @@ namespace upsylon
             //! for_each interface: use internal barrier and wait
             virtual void finish() throw();
 
-            //! for_each interface: extract parallel context from thread
-            inline virtual parallel       &operator[](const size_t i) throw()       { threads       &self = *this; return self[i]; }
-
-            //! for_each interface: extract parallel context from thread
-            inline virtual const parallel &operator[](const size_t i) const throw() { const threads &self = *this; return self[i]; }
-
+            //! the underlying threads
+            virtual executor & engine() throw();
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simd);
-            const size_t threshold; //!< threads.size() + 1
-            size_t       counter;   //!< for cycle control
-            condition    cycle;     //!< to wait...
-            kernel       code;
-            void        *data;
-            virtual void run(parallel &) throw();
+            threads workers;
         };
-#endif
+
     }
 }
 

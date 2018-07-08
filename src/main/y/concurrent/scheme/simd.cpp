@@ -1,6 +1,26 @@
 #include "y/concurrent/scheme/simd.hpp"
 #include <iostream>
 
+namespace upsylon
+{
+    namespace concurrent
+    {
+        simd:: ~simd() throw()
+        {
+        }
+
+        simd:: simd(const bool v) :
+        for_each(),
+        workers(v)
+        {
+        }
+
+        
+
+    }
+}
+
+
 #if 0
 namespace upsylon
 {

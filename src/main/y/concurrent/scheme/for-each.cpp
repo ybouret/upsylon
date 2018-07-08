@@ -26,8 +26,7 @@ namespace upsylon
 
         sequential_for:: sequential_for() throw() :
         for_each(),
-        context(),
-        my_lock()
+        engine_()
         {
         }
 
@@ -39,7 +38,7 @@ namespace upsylon
         void sequential_for:: start(kernel proc, void *data)
         {
             assert(proc);
-            proc(data,context,my_lock);
+            engine_.run(proc,data);
         }
     }
 }
