@@ -32,7 +32,11 @@ namespace upsylon
             threads workers;
             //! workers.run(call);
             static  void call( void *, parallel &, lockable &) throw();
-            void loop(parallel &context, lockable &access) throw();
+            void loop(parallel &context) throw();
+
+            bool      done;
+            condition synchronized;  //!< waiting for new cycle
+            size_t    ready;         //!< waiting to be ready
 
             kernel kproc;
             void  *kdata;

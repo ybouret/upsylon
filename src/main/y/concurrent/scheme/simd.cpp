@@ -11,9 +11,15 @@ namespace upsylon
 
         simd:: simd(const bool v) :
         for_each(),
-        workers(v)
+        workers(v),
+        done(false),
+        synchronized(),
+        ready(0),
+        kproc(0),
+        kdata(0)
         {
             workers.run(call,this);
+            Y_MUTEX_PROBE(workers.access,ready>=workers.size());
         }
 
         void simd:: call( void *data, parallel &context, lockable &access) throw()
@@ -21,9 +27,9 @@ namespace upsylon
             assert(data);
             {
                 Y_LOCK(access);
-                std::cerr << "\tcall simd@" << context.label << std::endl;
+                std::cerr << "[threads.simd.call] @" << context.label << std::endl;
             }
-            static_cast<simd *>(data)->loop(context,access);
+            static_cast<simd *>(data)->loop(context);
         }
 
 
@@ -39,15 +45,33 @@ namespace upsylon
         void simd:: start(kernel code, void *data)
         {
             assert(code);
+
+            kproc = code;
+            kdata = data;
         }
 
 
-        void simd:: loop(parallel &context, lockable &access) throw()
+        void simd:: loop(parallel &context) throw()
         {
+            const bool verbose = workers.verbose;
+            mutex     &access  = workers.access;
+
+            const size_t count = workers.size();
+            access.lock();
+            if(verbose)
             {
-                Y_LOCK(access);
-                std::cerr << "\tloop simd@" << context.label << std::endl;
+                std::cerr << "[threads.simd.loop] @" << context.label << std::endl;
             }
+            assert(ready<count);
+            ++ready;
+            if(verbose&&ready>=count)
+            {
+                std::cerr << "[threads.simd] synchronized" << std::endl;
+            }
+        //LOOP:
+            // wait on the locked mutex...
+            synchronized.wait(access);
+
         }
 
     }
