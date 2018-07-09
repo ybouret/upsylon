@@ -306,10 +306,10 @@ namespace upsylon {
             assert(acquiring);
             switch(releasing->whose(p))
             {
-                case chunk::owned_by_this:
+                case owned_by_this:
                     break;
 
-                case chunk::owned_by_next:
+                case owned_by_next:
                     // look up next
                     for(releasing=releasing->next;releasing;releasing=releasing->next)
                     {
@@ -317,7 +317,7 @@ namespace upsylon {
                     }
                     break;
 
-                case chunk::owned_by_prev:
+                case owned_by_prev:
                     // look up prev
                     for(releasing=releasing->prev;releasing;releasing=releasing->prev)
                     {

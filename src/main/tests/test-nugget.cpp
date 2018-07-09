@@ -49,6 +49,7 @@ do_test<BLOCK_BITS>()
 
 Y_UTEST(nugget)
 {
+    
     __NUGGET(3);
     __NUGGET(4);
     __NUGGET(5);
@@ -66,15 +67,23 @@ namespace
     static inline void do_test_all()
     {
         memory::nuggets<BLOCK_BITS> Nuggets;
-        const size_t                num_max = 200;
+        const size_t                num_max = 4096;
         memory::cblock_of<block>    blk(num_max);
         block *b = blk.data;
 
-        for(size_t i=0;i<num_max;++i)
+        for(size_t iter=0;iter<128;++iter)
         {
-            b[i].addr = Nuggets.acquire();
-        }
+            for(size_t i=0;i<num_max;++i)
+            {
+                b[i].addr = Nuggets.acquire();
+            }
 
+            alea.shuffle(b, num_max);
+            for(size_t i=0;i<num_max;++i)
+            {
+                Nuggets.release(b[i].addr);
+            }
+        }
     }
 
 }
@@ -82,6 +91,12 @@ namespace
 Y_UTEST(nuggets)
 {
     do_test_all<3>();
+    do_test_all<4>();
+    do_test_all<5>();
+    do_test_all<6>();
+    do_test_all<7>();
+    do_test_all<8>();
+
 }
 Y_UTEST_DONE()
 

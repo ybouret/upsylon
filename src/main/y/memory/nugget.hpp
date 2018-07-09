@@ -5,6 +5,7 @@
 
 #include "y/type/utils.hpp"
 #include "y/os/static-check.hpp"
+#include "y/memory/ownership.hpp"
 #include <cstring>
 
 namespace upsylon
@@ -23,11 +24,11 @@ namespace upsylon
             const size_t   provided_number;  //!<
             size_t         still_available;  //!< for bookeeping
             size_t         first_available;  //!< for bookeeping
-            uint8_t       *data;
-            const uint8_t *last;
-            nugget        *next;
-            nugget        *prev;
-            const size_t   bytes;
+            uint8_t       *data;             //!< effective data
+            const uint8_t *last;             //!< boundary
+            nugget        *next;             //!< for list
+            nugget        *prev;             //!< for list
+            const size_t   bytes;            //!< for memory
 
             inline nugget(const size_t chunk_size,
                           void        *user_entry) throw() :
@@ -76,6 +77,31 @@ namespace upsylon
                 ++still_available;
             }
 
+            inline bool owns(const void *p) const throw()
+            {
+                const uint8_t *addr = (const uint8_t *)p;
+                return (addr>=data&&addr<last);
+            }
+
+            inline ownership whose(const void *p) const throw()
+            {
+                const uint8_t *addr = (const uint8_t *)p;
+                if(addr<data)
+                {
+                    return owned_by_prev;
+                }
+                else
+                {
+                    if(addr>=last)
+                    {
+                        return owned_by_next;
+                    }
+                    else
+                    {
+                        return owned_by_this;
+                    }
+                }
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(nugget);

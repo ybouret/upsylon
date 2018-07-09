@@ -5,6 +5,7 @@
 #include "y/code/round.hpp"
 #include "y/type/ints.hpp"
 #include "y/memory/io.hpp"
+#include "y/memory/ownership.hpp"
 
 namespace upsylon
 {
@@ -19,13 +20,7 @@ namespace upsylon
             //! word size for internal computations
             static const size_t word_size = sizeof(word_type);
             
-            //! detect address ownership
-            enum ownership
-            {
-                owned_by_prev, //!< in a chunk with lower memory range
-                owned_by_this, //!< this chunk!
-                owned_by_next  //!< in a chunk with higher memory range
-            };
+           
 
             //! maximum number of blocks that can be indexed
             static const size_t max_blocks = limit_of<word_type>::maximum;

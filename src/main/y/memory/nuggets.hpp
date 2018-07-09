@@ -18,6 +18,8 @@ namespace upsylon
             static  const size_t       nuggets_per_page = (Y_CHUNK_SIZE - sizeof(void*))/sizeof(nugget_type);
 
             inline explicit nuggets() :
+            acquiring(0),
+            releasing(0),
             available(0),
             content(),
             cached(),
@@ -47,7 +49,6 @@ namespace upsylon
 
             void *acquire()
             {
-                std::cerr << "entry: available=" << available << std::endl;
                 if(!available)
                 {
                     acquiring = create_nugget();
@@ -105,15 +106,55 @@ namespace upsylon
                 assert(available);
                 assert(acquiring->still_available);
                 --available;
-                std::cerr << "leave: available=" << available << std::endl;
                 return acquiring->acquire();
             }
+
+            //! release a previously allocated block of memory
+            void release(void *p) throw()
+            {
+                assert(p);
+                assert(acquiring||die("no previous acquire"));
+                if(!releasing)
+                {
+                    releasing = acquiring;
+                }
+
+                switch( releasing->whose(p) )
+                {
+                    case owned_by_this: //std::cerr << "cached!" << std::endl;
+                        goto RELEASE; // cached
+
+                    case owned_by_prev: //std::cerr << "scan prev" << std::endl;
+                        while(0!=(releasing=releasing->prev))
+                        {
+                            if(releasing->owns(p)) goto RELEASE;
+                        }
+                        break;
+
+                    case owned_by_next: //std::cerr << "scan next" << std::endl;
+                        while(0!=(releasing=releasing->next))
+                        {
+                            if(releasing->owns(p)) goto RELEASE;
+                        }
+                        break;
+                }
+
+                assert( die("release: invalid bookeeping") );
+
+            RELEASE:
+                assert(releasing);
+                assert(releasing->owns(p));
+                releasing->release(p);
+                ++available;
+            }
+
         private:
             struct page
             {
                 page *next;
             };
             nugget_type               *acquiring;
+            nugget_type               *releasing;
             size_t                     available;
             core::list_of<nugget_type> content;
             core::pool_of<nugget_type> cached;
@@ -134,11 +175,10 @@ namespace upsylon
             nugget_type *create_nugget()
             {
                 if(cached.size<=0) create_nuggets();
-                void *data = memory::global::instance().__calloc(1,chunk_size);
+                void        *data = memory::global::instance().__calloc(1,chunk_size);
                 nugget_type *node = new ( cached.query() ) nugget_type(chunk_size,data);
                 assert(num_blocks==node->still_available);
                 available += num_blocks;
-                std::cerr << "create: available=" << available << std::endl;
                 content.push_back(node);
                 return node;
             }
