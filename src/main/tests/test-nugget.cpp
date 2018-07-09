@@ -72,7 +72,7 @@ namespace
         memory::cblock_of<block>    blk(num_max);
         block *b = blk.data;
 
-        for(size_t iter=0;iter<128;++iter)
+        for(size_t iter=0;iter<32;++iter)
         {
             for(size_t i=0;i<num_max;++i)
             {

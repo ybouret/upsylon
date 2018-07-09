@@ -199,13 +199,62 @@ namespace upsylon
                 }
             }
 
-            inline void check_memory_order()
+            inline bool memory_is_ordered() const throw()
             {
-                assert(content.size>0);
-                for(const nugget_type *node=content.head;node->next;node=node->next)
+                if( content.size > 0 )
                 {
-                    assert(node->data<node->next->data);
+                    for(const nugget_type *scan = content.head; scan->next; scan=scan->next )
+                    {
+                        if(scan->data>=scan->next->data)
+                            return false;
+                    }
                 }
+                return true;
+            }
+
+            inline nugget_type *insert( nugget_type *node ) throw()
+            {
+                assert( memory_is_ordered() );
+                if(content.size<=0)
+                {
+                    content.push_back(node);
+                    return node;
+                }
+                else
+                {
+                    if(node->data<content.head->data)
+                    {
+                        content.push_front(node);
+                        return node;
+                    }
+                    else
+                    {
+                        if(node->data>content.tail->data)
+                        {
+                            content.push_back(node);
+                            return node;
+                        }
+                        else
+                        {
+                            // generic case
+                            assert(content.size>=2);
+                            for( nugget_type *scan = content.head; scan->next; scan=scan->next )
+                            {
+                                assert(scan->data<scan->next->data);
+                                if( (scan->data<node->data) && (node->data<scan->next->data) )
+                                {
+                                    content.insert_after(scan,node);
+                                    assert( memory_is_ordered() );
+                                    return node;
+                                }
+                            }
+                            assert( die("nugget insertion failure") );
+                            return 0;
+                        }
+                    }
+                }
+
+
             }
 
             inline nugget_type *create_nugget()
@@ -219,9 +268,7 @@ namespace upsylon
                 nugget_type *node = new ( cached.query() ) nugget_type(chunk_size,data);
                 assert(num_blocks==node->still_available);
                 available += num_blocks;
-                content.push_back(node);
-                check_memory_order();
-                return node;
+                return insert(node);
             }
         };
     }

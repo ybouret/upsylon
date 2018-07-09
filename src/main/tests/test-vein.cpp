@@ -71,7 +71,7 @@ Y_UTEST(vein)
 
 
     core::list_of_cpp<block> blocks;
-    for(size_t iter=0;iter<800;++iter)
+    for(size_t iter=0;iter<10000;++iter)
     {
         add_block(blocks,v,0);
         for(size_t i=0;i<=v.max_bits;++i)
