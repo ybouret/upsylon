@@ -121,17 +121,17 @@ namespace upsylon
 
                 switch( releasing->whose(p) )
                 {
-                    case owned_by_this: //std::cerr << "cached!" << std::endl;
+                    case owned_by_this:
                         goto RELEASE; // cached
 
-                    case owned_by_prev: //std::cerr << "scan prev" << std::endl;
+                    case owned_by_prev:
                         while(0!=(releasing=releasing->prev))
                         {
                             if(releasing->owns(p)) goto RELEASE;
                         }
                         break;
 
-                    case owned_by_next: //std::cerr << "scan next" << std::endl;
+                    case owned_by_next:
                         while(0!=(releasing=releasing->next))
                         {
                             if(releasing->owns(p)) goto RELEASE;

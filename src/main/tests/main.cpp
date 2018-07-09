@@ -27,6 +27,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(string);
     Y_UTEST(nugget);
     Y_UTEST(nuggets);
+    Y_UTEST(vein);
     Y_UTEST(traits);
     Y_UTEST(ptr);
     Y_UTEST(slots);
