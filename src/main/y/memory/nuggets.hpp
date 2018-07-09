@@ -18,11 +18,18 @@ namespace upsylon
             //! destructor
             inline virtual ~__nuggets() throw() {}
 
+            //! common acquire method
             virtual void *acquire() = 0;
+            //! common release method
             virtual void  release(void *p) throw() = 0;
+
+            //! the total number of blocks
             virtual size_t get_num_blocks() const throw() = 0;
+            //! the bits per block
             virtual size_t get_block_bits() const throw() = 0;
+            //! the bytes per block
             virtual size_t get_block_size() const throw() = 0;
+            //! the big chunk size
             virtual size_t get_chunk_size() const throw() = 0;
 
         protected:

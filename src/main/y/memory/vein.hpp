@@ -9,24 +9,27 @@ namespace upsylon
 {
     namespace memory
     {
+        //! an allocator of power of two aligned blocks
         class vein : public allocator
         {
         public:
-            static const size_t       min_bits = ilog2<sizeof(size_t)>::value;
-            static const size_t       max_bits = 11;//sizeof(uint32_t)*8-2;
-            static const size_t       count    = (1+max_bits)-min_bits;
-            static const size_t       min_size = 1 << min_bits;
-            static const size_t       max_size = 1 << max_bits;
-            typedef nuggets<min_bits> proto;
-            static const size_t       psize = sizeof(proto);
+            static const size_t       min_bits = ilog2<sizeof(size_t)>::value; //!< minimal bits per block
+            static const size_t       max_bits = 11;                           //!< maximal bits per block
+            static const size_t       count    = (1+max_bits)-min_bits;        //!< number of different blocks
+            static const size_t       min_size = 1 << min_bits;                //!< minimal bytes per block
+            static const size_t       max_size = 1 << max_bits;                //!< maximal bytes per block
+            typedef nuggets<min_bits> proto;                                   //!< nuggets prototype for memory requirements
+            static const size_t       psize = sizeof(proto);                   //!< prototype size for memory requirements
 
-            static size_t       bytes_for( const size_t length, size_t &ibit );
+            static size_t       bytes_for( const size_t length, size_t &ibit ); //!< computation or power of two size and corresponding most significant bit
 
 
-            explicit vein() throw();
-            virtual ~vein() throw();
+            explicit vein() throw(); //!< construct nuggets, by metaprogramming
+            virtual ~vein() throw(); //!< destruct nuggets, by metaprogramming
 
-            void *acquire(size_t &n);
+            //! allocator interface : acquire
+            virtual void *acquire(size_t &n);
+            //! allocator interface : release
             void  release(void * &p, size_t &n) throw();
 
         private:
