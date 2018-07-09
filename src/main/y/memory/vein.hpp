@@ -23,7 +23,7 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(vein);
             nuggets_proto *entry;
-            char  workspace[count*sizeof(nuggets_proto)];
+            char  workspace[count][sizeof(nuggets_proto)];
         };
     }
 }

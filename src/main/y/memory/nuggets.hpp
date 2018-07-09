@@ -27,6 +27,7 @@ namespace upsylon
             num_blocks( next_power_of_two<size_t>(Y_CHUNK_SIZE/nugget_type::block_size) ),
             chunk_size( num_blocks * nugget_type::block_size )
             {
+                std::cerr << "New Nuggets(BLOCK_BITS=" << BLOCK_BITS <<")" << std::endl;
             }
 
             inline size_t block_bits() const throw() { return BLOCK_BITS; }

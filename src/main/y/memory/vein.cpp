@@ -14,7 +14,7 @@ namespace upsylon
             static inline void build( char *base ) throw()
             {
                 std::cerr << "build N=" << N << std::endl;
-                new (base+N*sizeof(nuggets<N>)) nuggets<N>();
+                new (base) nuggets<N>();
             }
         };
 
@@ -24,7 +24,7 @@ namespace upsylon
             {
                 nuggets_ops<NMIN,N-1>::build(base);
                 std::cerr << "build N=" << N << "/NMIN=" << NMIN << std::endl;
-                new (base+N*sizeof(nuggets<N>)) nuggets<N>();
+                new (base+(N-NMIN)*sizeof(nuggets<N>)) nuggets<N>();
             }
         };
 
@@ -35,18 +35,19 @@ namespace upsylon
         {
             std::cerr << "sizeof(workspace)=" << sizeof(workspace) << std::endl;
             std::cerr << "count=" << count << std::endl;
-            //char toto[16384];
-            nuggets_ops<min_bits,max_bits>::build(workspace);
 
-            //entry = (nuggets_proto *)(addr-delta);
+            char *addr = &workspace[0][0];
+            nuggets_ops<min_bits,max_bits>::build(addr);
+
             const ptrdiff_t delta = min_bits * sizeof(nuggets_proto);
+            entry = (nuggets_proto *)(addr-delta);
 
-            if(false)
+            if(true)
             {
                 for(size_t i=min_bits;i<=max_bits;++i)
                 {
-                    //nuggets_proto *p = entry+i;
-                    //std::cerr << p->block_bits() << std::endl;
+                    nuggets_proto *p = entry+i;
+                    std::cerr << p->block_bits() << std::endl;
                 }
             }
         }
