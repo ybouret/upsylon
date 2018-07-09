@@ -30,8 +30,9 @@ namespace upsylon
                 std::cerr << "New Nuggets(BLOCK_BITS=" << BLOCK_BITS <<")" << std::endl;
             }
 
-            inline size_t block_bits() const throw() { return BLOCK_BITS; }
-            
+            inline size_t get_block_bits() const throw() { return BLOCK_BITS; }
+            inline size_t get_num_blocks() const throw() { return num_blocks; }
+
 
             inline virtual ~nuggets() throw()
             {

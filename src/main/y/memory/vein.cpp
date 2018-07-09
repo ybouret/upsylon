@@ -47,7 +47,7 @@ namespace upsylon
                 for(size_t i=min_bits;i<=max_bits;++i)
                 {
                     nuggets_proto *p = entry+i;
-                    std::cerr << p->block_bits() << std::endl;
+                    std::cerr << p->get_num_blocks() << std::endl;
                 }
             }
         }
