@@ -20,7 +20,7 @@ namespace upsylon
             typedef nuggets<min_bits> proto;
             static const size_t       psize = sizeof(proto);
 
-            static size_t       bytes_for( const size_t length, size_t &bits );
+            static size_t       bytes_for( const size_t length, size_t &ibit );
 
 
             explicit vein() throw();

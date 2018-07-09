@@ -19,6 +19,7 @@ namespace upsylon
             virtual void  release(void *p) throw() = 0;
             virtual size_t get_num_blocks() const throw() = 0;
             virtual size_t get_block_bits() const throw() = 0;
+            virtual size_t get_block_size() const throw() = 0;
             virtual size_t get_chunk_size() const throw() = 0;
         protected:
             inline explicit nuggets_manager() throw() {}
@@ -48,7 +49,8 @@ namespace upsylon
                 std::cerr << "nuggets(BLOCK_BITS=" << BLOCK_BITS <<",BLOCK_BYTES=" << nugget_type::block_size << ")" << std::endl;
             }
 
-            inline virtual size_t get_block_bits() const throw() { return BLOCK_BITS; }
+            inline virtual size_t get_block_bits() const throw() { return nugget_type::block_bits; }
+            inline virtual size_t get_block_size() const throw() { return nugget_type::block_size; }
             inline virtual size_t get_num_blocks() const throw() { return num_blocks; }
             inline virtual size_t get_chunk_size() const throw() { return num_blocks; }
 
@@ -163,7 +165,6 @@ namespace upsylon
                         break;
                 }
 
-                std::cerr << "@nugget block_bits=" << nugget_type::block_bits << ", block_size=" << nugget_type::block_size << std::endl;
                 assert( die("release: invalid bookeeping") );
 
             RELEASE:
@@ -198,7 +199,16 @@ namespace upsylon
                 }
             }
 
-            nugget_type *create_nugget()
+            inline void check_memory_order()
+            {
+                assert(content.size>0);
+                for(const nugget_type *node=content.head;node->next;node=node->next)
+                {
+                    assert(node->data<node->next->data);
+                }
+            }
+
+            inline nugget_type *create_nugget()
             {
                 if(cached.size<=0)
                 {
@@ -210,6 +220,7 @@ namespace upsylon
                 assert(num_blocks==node->still_available);
                 available += num_blocks;
                 content.push_back(node);
+                check_memory_order();
                 return node;
             }
         };

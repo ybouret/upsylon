@@ -15,7 +15,6 @@ namespace upsylon
         {
             static inline void build( char *base ) throw()
             {
-                //std::cerr << "build N=" << N << std::endl;
                 new (base) nuggets<N>();
             }
         };
@@ -25,7 +24,6 @@ namespace upsylon
             static inline void build(char *base) throw()
             {
                 nuggets_ops<NMIN,N-1>::build(base);
-                //std::cerr << "build N=" << N << "/NMIN=" << NMIN << std::endl;
                 new (base+(N-NMIN)*sizeof(nuggets<N>)) nuggets<N>();
             }
         };
@@ -36,13 +34,13 @@ namespace upsylon
         workspace()
         {
             std::cerr << "sizeof(workspace)=" << sizeof(workspace) << std::endl;
-            std::cerr << "count=" << count << std::endl;
+            std::cerr << "count=" << count << ": " << min_bits << " -> " << max_bits << std::endl;
 
             char *addr = &workspace[0][0];
             nuggets_ops<min_bits,max_bits>::build(addr);
 
-            const ptrdiff_t delta = min_bits * psize;
-            entry = (proto *)(addr-delta);
+            entry  = (proto *)addr;
+            entry -= min_bits;
 
             if(true)
             {
@@ -50,6 +48,7 @@ namespace upsylon
                 {
                     nuggets_manager *p = (nuggets_manager *) &entry[i];
                     std::cerr << p->get_block_bits() << std::endl;
+                    assert(p->get_block_bits()==i);
                 }
             }
         }
@@ -58,24 +57,28 @@ namespace upsylon
         {
         }
 
-        size_t      vein:: bytes_for( const size_t length, size_t &bits )
+
+
+        size_t      vein:: bytes_for(const size_t length,
+                                     size_t      &ibit )
         {
             if(length<=min_size)
             {
-                bits = min_bits;
+                ibit = min_bits;
                 return min_size;
             }
             else
             {
                 if(length>max_size)
                 {
+                    ibit = 0;
                     throw libc::exception(EDOM,"vein.bytes_for(length=%lu>%lu)", (unsigned long)length, (unsigned long)(max_size) );
                 }
                 else
                 {
-                    for(bits=min_bits;bits<=max_bits;++bits)
+                    for(ibit=min_bits;ibit<=max_bits;++ibit)
                     {
-                        const size_t szp2 = (1<<bits);
+                        const size_t szp2 = (1<<ibit);
                         if( length<=szp2 )
                         {
                             return szp2;
@@ -91,11 +94,12 @@ namespace upsylon
         {
             try
             {
-                size_t bits = 0;
-                n           = bytes_for(n,bits);
-                assert(bits>=min_bits);
-                assert(bits<=max_bits);
-                nuggets_manager *mgr = (nuggets_manager *)(entry+bits);
+                size_t ibit = 0;
+                n           = bytes_for(n,ibit);
+                assert(ibit>=min_bits);
+                assert(ibit<=max_bits);
+                nuggets_manager *mgr = (nuggets_manager *)&entry[ibit];
+                assert(mgr->get_block_bits()==ibit);
                 return mgr->acquire();
             }
             catch(...)
@@ -124,6 +128,7 @@ namespace upsylon
                     }
                     nuggets_manager *mgr = (nuggets_manager *)(entry+ibit);
                     assert(mgr->get_block_bits()==ibit);
+                    assert(mgr->get_block_size()==n);
                     mgr->release(p);
                     p = 0;
                     n = 0;

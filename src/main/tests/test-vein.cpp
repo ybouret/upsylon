@@ -17,7 +17,41 @@ namespace
     private:
         Y_DISABLE_COPY_AND_ASSIGN(block);
     };
+
+    static inline
+    void add_block(core::list_of<block> &blocks,
+                   memory::vein         &v,
+                   const size_t          nreq)
+    {
+        size_t n = nreq;
+        void  *p = v.acquire(n);
+        assert(p);
+        assert(n>0);
+        assert(is_a_power_of_two(n));
+        block *b = new block();
+        b->addr = p;
+        b->size = n;
+        blocks.push_back(b);
+        std::cerr << "(+) " << nreq << " -> " << n << std::endl;
+    }
+
+    static inline
+    void clear_blocks(core::list_of<block> &blocks,
+                      memory::vein         &v)
+    {
+        while(blocks.size)
+        {
+            block *b = blocks.pop_back();
+            assert(b->addr);
+            assert(is_a_power_of_two(b->size));
+            //std::cerr << "(-) " << b->size << std::endl;
+            v.release(b->addr,b->size);
+            delete b;
+        }
+    }
+
 }
+
 
 Y_UTEST(vein)
 {
@@ -27,30 +61,29 @@ Y_UTEST(vein)
     std::cerr << "-- Checking sizes..." << std::endl;
     for(size_t i=0;i<=v.max_size;++i)
     {
-        size_t       bits = 0;
-        const size_t len = memory::vein::bytes_for(i,bits);
-        if(len<i) throw exception("invalid length for input=%lu", (unsigned long)i);
+        size_t       ibit = 0;
+        const size_t alen = memory::vein::bytes_for(i,ibit);
+        if(!is_a_power_of_two(alen)) throw exception("invalid aligned length");
+        if(alen<i) throw exception("invalid length for input=%lu", (unsigned long)i);
     }
+
+    
 
 
     core::list_of_cpp<block> blocks;
-    for(size_t i=0;i<=3*v.min_size;++i)
+    for(size_t iter=0;iter<800;++iter)
     {
-        size_t n = i;
-        void  *p = v.acquire(n);
-        block *b = new block();
-        b->addr = p;
-        b->size = n;
-        blocks.push_back(b);
+        add_block(blocks,v,0);
+        for(size_t i=0;i<=v.max_bits;++i)
+        {
+            add_block(blocks,v,1<<i);
+        }
+        std::cerr << "#blocks=" << blocks.size << std::endl;
     }
-    std::cerr << "#blocks=" << blocks.size << std::endl;
     alea.shuffle(blocks);
-    while(blocks.size)
-    {
-        block *b = blocks.pop_back();
-        v.release(b->addr,b->size);
-        delete b;
-    }
+    clear_blocks(blocks,v);
+
+    return 0;
 
     for(size_t iter=0;iter<128;++iter)
     {
