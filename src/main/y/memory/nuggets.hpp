@@ -29,6 +29,9 @@ namespace upsylon
             {
             }
 
+            inline size_t block_bits() const throw() { return BLOCK_BITS; }
+            
+
             inline virtual ~nuggets() throw()
             {
                 if(pages.size)
