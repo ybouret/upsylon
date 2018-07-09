@@ -68,7 +68,7 @@ namespace
     {
         std::cerr << "sizeof(memory::nuggets<" << BLOCK_BITS << ">)=" << sizeof(memory::nuggets<BLOCK_BITS>) << std::endl;
         memory::nuggets<BLOCK_BITS> Nuggets;
-        const size_t                num_max = 4096;
+        const size_t                num_max = 5000;
         memory::cblock_of<block>    blk(num_max);
         block *b = blk.data;
 
@@ -78,7 +78,6 @@ namespace
             {
                 b[i].addr = Nuggets.acquire();
             }
-
             alea.shuffle(b, num_max);
             for(size_t i=0;i<num_max;++i)
             {

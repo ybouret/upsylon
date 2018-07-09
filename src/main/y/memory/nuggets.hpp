@@ -27,6 +27,7 @@ namespace upsylon
             num_blocks( next_power_of_two<size_t>(Y_CHUNK_SIZE/nugget_type::block_size) ),
             chunk_size( num_blocks * nugget_type::block_size )
             {
+                //assert(chunk_size/nugget_type::block_size==num_blocks);
                 std::cerr << "New Nuggets(BLOCK_BITS=" << BLOCK_BITS <<")" << std::endl;
             }
 
@@ -170,6 +171,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(nuggets);
             inline void create_nuggets()
             {
+                assert(cached.size<=0);
                 nugget_type *node = io::cast<nugget_type>(pages.store(static_cast<page *>(global::instance().__calloc(1,Y_CHUNK_SIZE))),sizeof(void*));
                 for(size_t i=0;i<nuggets_per_page;++i)
                 {
@@ -179,7 +181,11 @@ namespace upsylon
 
             nugget_type *create_nugget()
             {
-                if(cached.size<=0) create_nuggets();
+                if(cached.size<=0)
+                {
+                    create_nuggets();
+                }
+                assert(cached.size>0);
                 void        *data = memory::global::instance().__calloc(1,chunk_size);
                 nugget_type *node = new ( cached.query() ) nugget_type(chunk_size,data);
                 assert(num_blocks==node->still_available);
