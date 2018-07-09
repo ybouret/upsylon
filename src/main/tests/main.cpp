@@ -25,6 +25,7 @@ Y_UTEST_INIT(32)
     Y_UTEST(pooled);
     Y_UTEST(buffers);
     Y_UTEST(string);
+    Y_UTEST(nugget);
     Y_UTEST(traits);
     Y_UTEST(ptr);
     Y_UTEST(slots);
