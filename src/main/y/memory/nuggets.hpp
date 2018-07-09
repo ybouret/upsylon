@@ -5,15 +5,18 @@
 #include "y/memory/nugget.hpp"
 #include "y/object.hpp"
 #include <iostream>
+#include "y/os/error.hpp"
 
 namespace upsylon
 {
     namespace memory
     {
-        class nuggets_manager
+        //! base class for common interface
+        class __nuggets
         {
         public:
-            inline virtual ~nuggets_manager() throw() {}
+            //! destructor
+            inline virtual ~__nuggets() throw() {}
 
             virtual void *acquire() = 0;
             virtual void  release(void *p) throw() = 0;
@@ -21,20 +24,23 @@ namespace upsylon
             virtual size_t get_block_bits() const throw() = 0;
             virtual size_t get_block_size() const throw() = 0;
             virtual size_t get_chunk_size() const throw() = 0;
+
         protected:
-            inline explicit nuggets_manager() throw() {}
+            inline explicit __nuggets() throw() {}
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(nuggets_manager);
+            Y_DISABLE_COPY_AND_ASSIGN(__nuggets);
         };
 
+        //! multiple nuggets of same block_size
         template <const size_t BLOCK_BITS>
-        class nuggets : public nuggets_manager
+        class nuggets : public __nuggets
         {
         public:
-            typedef nugget<BLOCK_BITS> nugget_type;
-            static  const size_t       nuggets_per_page = (Y_CHUNK_SIZE - sizeof(void*))/sizeof(nugget_type);
+            typedef nugget<BLOCK_BITS> nugget_type; //!< the one nugget
+            static  const size_t       nuggets_per_page = (Y_CHUNK_SIZE - sizeof(void*))/sizeof(nugget_type); //!< ever growing pages
 
+            //! compute memory characteristics \todo work on that
             inline explicit nuggets() :
             acquiring(0),
             releasing(0),
@@ -45,8 +51,7 @@ namespace upsylon
             num_blocks( next_power_of_two<size_t>(Y_CHUNK_SIZE/nugget_type::block_size) ),
             chunk_size( num_blocks * nugget_type::block_size )
             {
-                //assert(chunk_size/nugget_type::block_size==num_blocks);
-                std::cerr << "nuggets(BLOCK_BITS=" << BLOCK_BITS <<",BLOCK_BYTES=" << nugget_type::block_size << ")" << std::endl;
+                
             }
 
             inline virtual size_t get_block_bits() const throw() { return nugget_type::block_bits; }
@@ -55,6 +60,7 @@ namespace upsylon
             inline virtual size_t get_chunk_size() const throw() { return num_blocks; }
 
 
+            //! release all memory
             inline virtual ~nuggets() throw()
             {
                 if(pages.size)
@@ -73,6 +79,7 @@ namespace upsylon
                 }
             }
 
+            //! acquire one block of block_size bytes
             inline virtual void *acquire()
             {
                 if(!available)
@@ -124,7 +131,7 @@ namespace upsylon
                         }
 
                         // never get here
-                        assert( die("invalid bookeeping" ) );
+                        fatal_error("[nuggets.acquire] invalid memory");
                     }
                 }
             ACQUIRE:
@@ -165,7 +172,7 @@ namespace upsylon
                         break;
                 }
 
-                assert( die("release: invalid bookeeping") );
+                fatal_error("[nuggets.release] invalid memory");
 
             RELEASE:
                 assert(releasing);
@@ -199,6 +206,7 @@ namespace upsylon
                 }
             }
 
+            //! debug only
             inline bool memory_is_ordered() const throw()
             {
                 if( content.size > 0 )
@@ -212,6 +220,7 @@ namespace upsylon
                 return true;
             }
 
+            //! insert a node at its place
             inline nugget_type *insert( nugget_type *node ) throw()
             {
                 assert( memory_is_ordered() );
@@ -248,7 +257,10 @@ namespace upsylon
                                     return node;
                                 }
                             }
-                            assert( die("nugget insertion failure") );
+
+                            // should never get here
+                            delete node;
+                            fatal_error("[nuggets.insert] invalid memory");
                             return 0;
                         }
                     }
@@ -257,6 +269,7 @@ namespace upsylon
 
             }
 
+            //! create a new nugget with full memory handling
             inline nugget_type *create_nugget()
             {
                 if(cached.size<=0)

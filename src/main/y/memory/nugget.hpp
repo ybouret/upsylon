@@ -21,7 +21,7 @@ namespace upsylon
             static const size_t block_bits = BLOCK_BITS;
             static const size_t block_size = 1 << BLOCK_BITS;
 
-            const size_t   provided_number;  //!<
+            const size_t   provided_number;  //!< initial count
             size_t         still_available;  //!< for bookeeping
             size_t         first_available;  //!< for bookeeping
             uint8_t       *data;             //!< effective data

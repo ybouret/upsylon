@@ -32,7 +32,7 @@ namespace
         b->addr = p;
         b->size = n;
         blocks.push_back(b);
-        std::cerr << "(+) " << nreq << " -> " << n << std::endl;
+        //std::cerr << "(+) " << nreq << " -> " << n << std::endl;
     }
 
     static inline
@@ -69,7 +69,7 @@ Y_UTEST(vein)
 
     
 
-
+    std::cerr << "-- Allocating specific sizes" << std::endl;
     core::list_of_cpp<block> blocks;
     for(size_t iter=0;iter<10000;++iter)
     {
@@ -78,32 +78,22 @@ Y_UTEST(vein)
         {
             add_block(blocks,v,1<<i);
         }
-        std::cerr << "#blocks=" << blocks.size << std::endl;
     }
     alea.shuffle(blocks);
     clear_blocks(blocks,v);
 
-    return 0;
 
+    std::cerr << "-- Allocating randoms sizes" << std::endl;
     for(size_t iter=0;iter<128;++iter)
     {
         assert(0==blocks.size);
         for(size_t i=0;i<16000;++i)
         {
-            size_t n = alea.leq( memory::vein::max_size );
-            void  *p = v.acquire(n);
-            block *b = new block();
-            b->addr = p;
-            b->size = n;
-            blocks.push_back(b);
+            add_block(blocks,v,alea.leq( memory::vein::max_size ));
+
         }
         alea.shuffle(blocks);
-        while(blocks.size)
-        {
-            block *b = blocks.pop_back();
-            v.release(b->addr,b->size);
-            delete b;
-        }
+        clear_blocks(blocks,v);
     }
 
 }
