@@ -10,8 +10,25 @@ namespace upsylon
 {
     namespace memory
     {
+        class nuggets_manager
+        {
+        public:
+            inline virtual ~nuggets_manager() throw() {}
+
+            virtual void *acquire() = 0;
+            virtual void  release(void *p) throw() = 0;
+            virtual size_t get_num_blocks() const throw() = 0;
+            virtual size_t get_block_bits() const throw() = 0;
+            virtual size_t get_chunk_size() const throw() = 0;
+        protected:
+            inline explicit nuggets_manager() throw() {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(nuggets_manager);
+        };
+
         template <const size_t BLOCK_BITS>
-        class nuggets
+        class nuggets : public nuggets_manager
         {
         public:
             typedef nugget<BLOCK_BITS> nugget_type;
@@ -28,11 +45,12 @@ namespace upsylon
             chunk_size( num_blocks * nugget_type::block_size )
             {
                 //assert(chunk_size/nugget_type::block_size==num_blocks);
-                std::cerr << "New Nuggets(BLOCK_BITS=" << BLOCK_BITS <<")" << std::endl;
+                std::cerr << "nuggets(BLOCK_BITS=" << BLOCK_BITS <<",BLOCK_BYTES=" << nugget_type::block_size << ")" << std::endl;
             }
 
-            inline size_t get_block_bits() const throw() { return BLOCK_BITS; }
-            inline size_t get_num_blocks() const throw() { return num_blocks; }
+            inline virtual size_t get_block_bits() const throw() { return BLOCK_BITS; }
+            inline virtual size_t get_num_blocks() const throw() { return num_blocks; }
+            inline virtual size_t get_chunk_size() const throw() { return num_blocks; }
 
 
             inline virtual ~nuggets() throw()
@@ -53,7 +71,7 @@ namespace upsylon
                 }
             }
 
-            void *acquire()
+            inline virtual void *acquire()
             {
                 if(!available)
                 {
@@ -116,7 +134,7 @@ namespace upsylon
             }
 
             //! release a previously allocated block of memory
-            void release(void *p) throw()
+            inline virtual void release(void *p) throw()
             {
                 assert(p);
                 assert(acquiring||die("no previous acquire"));
@@ -145,6 +163,7 @@ namespace upsylon
                         break;
                 }
 
+                std::cerr << "@nugget block_bits=" << nugget_type::block_bits << ", block_size=" << nugget_type::block_size << std::endl;
                 assert( die("release: invalid bookeeping") );
 
             RELEASE:

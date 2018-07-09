@@ -41,15 +41,15 @@ namespace upsylon
             char *addr = &workspace[0][0];
             nuggets_ops<min_bits,max_bits>::build(addr);
 
-            const ptrdiff_t delta = min_bits * sizeof(nuggets_proto);
-            entry = (nuggets_proto *)(addr-delta);
+            const ptrdiff_t delta = min_bits * psize;
+            entry = (proto *)(addr-delta);
 
             if(true)
             {
                 for(size_t i=min_bits;i<=max_bits;++i)
                 {
-                    nuggets_proto *p = entry+i;
-                    std::cerr << p->get_num_blocks() << std::endl;
+                    nuggets_manager *p = (nuggets_manager *) &entry[i];
+                    std::cerr << p->get_block_bits() << std::endl;
                 }
             }
         }
@@ -95,8 +95,8 @@ namespace upsylon
                 n           = bytes_for(n,bits);
                 assert(bits>=min_bits);
                 assert(bits<=max_bits);
-                std::cerr << "acquire@bits=" << bits << std::endl;
-                return entry[bits].acquire();
+                nuggets_manager *mgr = (nuggets_manager *)(entry+bits);
+                return mgr->acquire();
             }
             catch(...)
             {
@@ -104,6 +104,37 @@ namespace upsylon
                 throw;
             }
         }
+
+        void  vein:: release(void * &p, size_t &n) throw()
+        {
+            assert(p);
+            assert(is_a_power_of_two(n));
+            assert(n>=min_size);
+            assert(n<=max_size);
+            for(size_t ibit=max_bits;ibit>0;--ibit)
+            {
+                if( 0 != ( (1<<ibit) & n ) )
+                {
+                    std::cerr << "n=" << n << " -> " << ibit << std::endl;
+                    {
+                        size_t bits  = 0;
+                        const size_t m = bytes_for(n,bits);
+                        assert(m==n);
+                        assert(bits==ibit);
+                    }
+                    nuggets_manager *mgr = (nuggets_manager *)(entry+ibit);
+                    assert(mgr->get_block_bits()==ibit);
+                    mgr->release(p);
+                    p = 0;
+                    n = 0;
+                    return;
+                }
+
+            }
+            // critical error ?
+            assert(die("vein.release failure"));
+        }
+
 
     }
 }

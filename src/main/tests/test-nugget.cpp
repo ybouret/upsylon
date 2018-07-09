@@ -68,7 +68,7 @@ namespace
     {
         std::cerr << "sizeof(memory::nuggets<" << BLOCK_BITS << ">)=" << sizeof(memory::nuggets<BLOCK_BITS>) << std::endl;
         memory::nuggets<BLOCK_BITS> Nuggets;
-        const size_t                num_max = 5000;
+        const size_t                num_max = 12000;
         memory::cblock_of<block>    blk(num_max);
         block *b = blk.data;
 
@@ -96,6 +96,8 @@ Y_UTEST(nuggets)
     do_test_all<6>();
     do_test_all<7>();
     do_test_all<8>();
+    do_test_all<9>();
+    do_test_all<10>();
 
 }
 Y_UTEST_DONE()
