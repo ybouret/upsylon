@@ -59,10 +59,29 @@ Y_UTEST(nugget)
 }
 Y_UTEST_DONE()
 
+
+namespace
+{
+    template <const size_t BLOCK_BITS>
+    static inline void do_test_all()
+    {
+        memory::nuggets<BLOCK_BITS> Nuggets;
+        const size_t                num_max = 200;
+        memory::cblock_of<block>    blk(num_max);
+        block *b = blk.data;
+
+        for(size_t i=0;i<num_max;++i)
+        {
+            b[i].addr = Nuggets.acquire();
+        }
+
+    }
+
+}
+
 Y_UTEST(nuggets)
 {
-    memory::nuggets<3> Nugs;
-    Nugs.acquire();
+    do_test_all<3>();
 }
 Y_UTEST_DONE()
 

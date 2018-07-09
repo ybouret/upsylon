@@ -4,6 +4,7 @@
 
 #include "y/memory/nugget.hpp"
 #include "y/object.hpp"
+#include <iostream>
 
 namespace upsylon
 {
@@ -46,17 +47,65 @@ namespace upsylon
 
             void *acquire()
             {
-
+                std::cerr << "entry: available=" << available << std::endl;
                 if(!available)
                 {
                     acquiring = create_nugget();
                 }
                 else
                 {
-                    assert(acquiring);
+                    if(acquiring->still_available<=0)
+                    {
+                        // there is some place block somewhere
+                        nugget_type *lo = acquiring->prev;
+                        nugget_type *up = acquiring->next;
+                        while(lo&&up)
+                        {
+                            if(lo->still_available)
+                            {
+                                acquiring = lo;
+                                goto ACQUIRE;
+                            }
+
+                            if(up->still_available)
+                            {
+                                acquiring = up;
+                                goto ACQUIRE;
+                            }
+                            lo = lo->prev;
+                            up = up->next;
+                        }
+
+                        while(lo)
+                        {
+                            if(lo->still_available)
+                            {
+                                acquiring = lo;
+                                goto ACQUIRE;
+                            }
+                            lo=lo->prev;
+                        }
+
+                        while(up)
+                        {
+                            if(up->still_available)
+                            {
+                                acquiring = up;
+                                goto ACQUIRE;
+                            }
+                            up = up->next;
+                        }
+
+                        // never get here
+                        assert( die("invalid bookeeping" ) );
+                    }
                 }
+            ACQUIRE:
                 assert(acquiring);
+                assert(available);
                 assert(acquiring->still_available);
+                --available;
+                std::cerr << "leave: available=" << available << std::endl;
                 return acquiring->acquire();
             }
         private:
@@ -89,6 +138,7 @@ namespace upsylon
                 nugget_type *node = new ( cached.query() ) nugget_type(chunk_size,data);
                 assert(num_blocks==node->still_available);
                 available += num_blocks;
+                std::cerr << "create: available=" << available << std::endl;
                 content.push_back(node);
                 return node;
             }
