@@ -55,7 +55,7 @@ namespace upsylon
                     (ans <<= 1);
                     if(choice())
                     {
-                        //ans |= 1;
+                        ans |= 1;
                     }
                 }
                 return ans;

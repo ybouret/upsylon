@@ -64,6 +64,18 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
                 cswap(item,other.item);
             }
 
+            //! Least Significant Word
+            inline word_type LSW() const throw()
+            {
+                word_type    w = 0;
+                const size_t n = min_of(bytes,sizeof(word_type));
+                for(size_t i=n;i>0;--i)
+                {
+                    (w <<= 8) |= item[i];
+                }
+                return w;
+            }
+            
             //! buffer interface : ro
             inline virtual void  *ro() const throw()     { return byte;   }
 

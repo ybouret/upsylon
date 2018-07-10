@@ -8,7 +8,7 @@ Y_UTEST(mpn)
     mpn a;
     mpn b(a);
     mpn c(10);
-
+    std::cerr << std::hex;
     std::cerr << "-- I/O with words" << std::endl;
     for(size_t iter=0;iter<10000;++iter)
     {
@@ -34,21 +34,36 @@ Y_UTEST(mpn)
             std::cerr << x <<"->" << tmp << std::endl;
             throw exception("invalid mpn::prepare level-2");
         }
+        
+        mpn y = x;
+        const mpn::word_type z = y.LSW();
+        if(z!=x)
+        {
+            std::cerr << "x=" << x << ", LSW=" << z << std::endl;
+            throw exception("LSW mismatch");
+        }
     }
 
     std::cerr << "-- comparison with words" << std::endl;
     for(size_t iter=0;iter<10000;++iter)
     {
-        const uint64_t l = alea.partial<mpn::word_type>();
-        const uint64_t r = alea.partial<mpn::word_type>();
+        const uint64_t l = alea.partial<mpn::word_type>(10);
+        const uint64_t r = alea.partial<mpn::word_type>(10);
         const mpn      L = l;
         const mpn      R = r;
-
+        
+        assert(L.LSW()==l);
+        assert(R.LSW()==r);
+        
         const int cmp = comparison::increasing(l,r);
         const int CMP = mpn::compare(L,R);
         if(cmp!=CMP)
         {
-            throw exception("comparison mismatch");
+            std::cerr << "l=" << l << ", r=" << r << std::endl;
+            std::cerr << "cmp=" << cmp << std::endl;
+            std::cerr << "CMP=" << CMP << std::endl;
+
+            throw exception("comparison mismatch level-1");
         }
         if(0!=mpn::compare(L,L))
         {
@@ -59,6 +74,14 @@ Y_UTEST(mpn)
         {
             throw exception("comparison mismatch level-2");
         }
+    }
+    
+    std::cerr << "-- additions" << std::endl;
+    for(size_t iter=0;iter<10;++iter)
+    {
+        const uint64_t l = alea.partial<mpn::word_type>(60);
+        const uint64_t r = alea.partial<mpn::word_type>(60);
+        std::cerr << "l=" << l << ", r=" << r << std::endl;
     }
 
 

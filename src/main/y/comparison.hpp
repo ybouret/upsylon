@@ -3,7 +3,7 @@
 #define Y_COMPARISON_INCLUDED 1
 
 #include "y/os/platform.hpp"
-
+#include <iostream>
 namespace upsylon
 {
 
@@ -13,6 +13,7 @@ namespace upsylon
         template <typename T> static inline
         int lexicographic(const T *sa, const size_t na, const T *sb, const size_t nb) throw()
         {
+            std::cerr << "[lex na=" << na << ", nb=" << nb << "]" << std::endl;
             return ( (na<=nb) ? __lexicographic<T>(sa,na,sb,nb) : - __lexicographic<T>(sb,nb,sa,na) );
         }
 
@@ -23,7 +24,7 @@ namespace upsylon
             {
                 return -1;
             }
-            else if(rhs<rhs)
+            else if(rhs<lhs)
             {
                 return 1;
             }
@@ -45,6 +46,7 @@ namespace upsylon
             {
                 const T s = small_data[i];
                 const T l = large_data[i];
+                std::cerr << "\t@" << i << ": " << int(s) << "," << int(l) << std::endl;
                 if(s<l)
                 {
                     return -1;
@@ -55,7 +57,7 @@ namespace upsylon
                 }
                 // else continue
             }
-            return (small_size<large_size) ? 1 : 0;
+            return (small_size<large_size) ? -1 : 0;
         }
     };
 
