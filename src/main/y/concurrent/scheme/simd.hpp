@@ -19,10 +19,7 @@ namespace upsylon
             virtual ~simd() throw();
 
             //! for_each interface: execute multiple copy of the kernel
-            virtual void start( kernel code, void *data );
-
-            //! for_each interface: use internal barrier and wait
-            virtual void finish() throw();
+            virtual void run( kernel code, void *data );
 
             //! the underlying threads
             virtual executor & engine() throw();
@@ -33,14 +30,13 @@ namespace upsylon
             void loop(parallel &context) throw(); //! the SIMD loop, called
             threads      workers;
         public:
-            mutex       &access;
+            mutex       &access; //!< shared access
         private:
             bool         done;
-            condition    synchronized;  //!< waiting to start cycle
             size_t       ready;         //!< count who is ready
+            condition    synchronized;  //!< waiting to start cycle
             condition    cycle;
-            const size_t threshold; //!< threads+1
-            size_t       countdown; 
+
             kernel       kproc;
             void        *kdata;
         public:

@@ -30,12 +30,8 @@ namespace upsylon
         {
         }
 
-        void sequential_for:: finish() throw()
-        {
-            // do nothing
-        }
 
-        void sequential_for:: start(kernel proc, void *data)
+        void sequential_for:: run(kernel proc, void *data)
         {
             assert(proc);
             engine_.run(proc,data);

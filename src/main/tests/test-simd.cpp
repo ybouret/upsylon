@@ -56,6 +56,7 @@ Y_UTEST(simd)
         concurrent::simd par0(true);
     }
 
+#if 0
     {
         std::cerr << "-- testing ops with delay" << std::endl;
         concurrent::simd par1(true);
@@ -112,7 +113,8 @@ Y_UTEST(simd)
     std::cerr << std::endl;
 
     std::cerr << "-- end program -- " << std::endl;
-
+#endif
+    
 }
 Y_UTEST_DONE()
 

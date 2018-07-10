@@ -22,11 +22,9 @@ namespace upsylon
             //! destructor
             virtual ~for_each() throw();
 
-            //! launch kernel(s)
-            virtual void   start( kernel , void * ) = 0;
+            //! run kernel(s)
+            virtual void   run( kernel , void * ) = 0;
 
-            //! wait for all kernels to return
-            virtual void   finish() throw()         = 0;
 
             //! get underlying engine
             virtual executor & engine() throw()    = 0;
@@ -48,10 +46,8 @@ namespace upsylon
             explicit sequential_for() throw(); //!< destructor
             
             //! call the kernel on data
-            virtual void start( kernel , void * );
+            virtual void run( kernel , void * );
 
-            //! here, do nothing..
-            virtual void finish() throw();
 
             //! return the engine
             virtual executor & engine() throw();
