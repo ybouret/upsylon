@@ -4,7 +4,6 @@
 
 #include "y/memory/nugget.hpp"
 #include "y/object.hpp"
-#include <iostream>
 #include "y/os/error.hpp"
 
 namespace upsylon
@@ -15,6 +14,11 @@ namespace upsylon
         class __nuggets
         {
         public:
+            static const size_t KB    = 1024;
+            static const size_t MB    = KB*KB;
+            static const size_t small_chunk_size = 4*KB;
+            static const size_t large_chunk_size = 4*MB;
+
             //! destructor
             inline virtual ~__nuggets() throw() {}
 
@@ -34,7 +38,10 @@ namespace upsylon
 
         protected:
             inline explicit __nuggets() throw() {}
-
+            struct page
+            {
+                page *next;
+            };
         private:
             Y_DISABLE_COPY_AND_ASSIGN(__nuggets);
         };
@@ -45,17 +52,18 @@ namespace upsylon
         {
         public:
             typedef nugget<BLOCK_BITS> nugget_type; //!< the one nugget
-            static  const size_t       nuggets_per_page = (Y_CHUNK_SIZE - sizeof(void*))/sizeof(nugget_type); //!< ever growing pages
+            static  const size_t       nuggets_per_page = (small_chunk_size - sizeof(void*))/sizeof(nugget_type); //!< ever growing pages
 
             //! compute memory characteristics \todo work on that
             inline explicit nuggets() :
+            __nuggets(),
             acquiring(0),
             releasing(0),
             available(0),
             content(),
             cached(),
             pages(),
-            num_blocks( next_power_of_two<size_t>(Y_CHUNK_SIZE/nugget_type::block_size) ),
+            num_blocks( next_power_of_two<size_t>(small_chunk_size/nugget_type::block_size) ),
             chunk_size( num_blocks * nugget_type::block_size )
             {
                 
@@ -81,7 +89,7 @@ namespace upsylon
                     cached.reset();
                     while(pages.size)
                     {
-                        hmem.__free(pages.query(),Y_CHUNK_SIZE);
+                        hmem.__free(pages.query(),small_chunk_size);
                     }
                 }
             }
@@ -189,10 +197,6 @@ namespace upsylon
             }
 
         private:
-            struct page
-            {
-                page *next;
-            };
             nugget_type               *acquiring;
             nugget_type               *releasing;
             size_t                     available;
@@ -206,7 +210,7 @@ namespace upsylon
             inline void create_nuggets()
             {
                 assert(cached.size<=0);
-                nugget_type *node = io::cast<nugget_type>(pages.store(static_cast<page *>(global::instance().__calloc(1,Y_CHUNK_SIZE))),sizeof(void*));
+                nugget_type *node = io::cast<nugget_type>(pages.store(static_cast<page *>(global::instance().__calloc(1,small_chunk_size))),sizeof(void*));
                 for(size_t i=0;i<nuggets_per_page;++i)
                 {
                     (void)cached.store( node+i );
