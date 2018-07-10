@@ -110,8 +110,10 @@ namespace upsylon
         U mask = static_cast<U>(0xff) << ( (max_bytes-1) * 8 );
         for( size_t i=max_bytes;i>0;--i)
         {
-            if( (n & mask) )
+            if( (n&mask) != 0 )
+            {
                 return i;
+            }
             mask >>= 8;
         }
         return 0;

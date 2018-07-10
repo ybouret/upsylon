@@ -40,6 +40,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(simd);
     Y_UTEST(complex);
     Y_UTEST(xbitrev);
+    Y_UTEST(mpn);
 
 }
 Y_UTEST_EXEC()

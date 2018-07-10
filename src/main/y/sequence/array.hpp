@@ -3,6 +3,7 @@
 #define Y_SEQUENCE_ARRAY_INCLUDED 1
 
 #include "y/dynamic.hpp"
+#include "y/type/args.hpp"
 #include <iostream>
 
 namespace upsylon

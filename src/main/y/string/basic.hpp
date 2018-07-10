@@ -357,6 +357,7 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
                 Y_CORE_STRING_CHECK(*this);
             }
 
+        public:
             static inline int compare_blocks_(const T     *small_data,
                                               const size_t small_size,
                                               const T     *large_data,
