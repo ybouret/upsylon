@@ -54,6 +54,11 @@ Y_UTEST(mpn)
         {
             throw exception("comparison error");
         }
+
+        if(cmp!=comparison::increasing(L,R))
+        {
+            throw exception("comparison mismatch level-2");
+        }
     }
 
 
