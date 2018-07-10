@@ -97,6 +97,19 @@ SET(concurrent_scheme_srcs ${concurrent_scheme_decl} ${concurrent_scheme_code})
 SOURCE_GROUP( concurrent/scheme FILES ${concurrent_scheme_srcs} )
 INSTALL( FILES ${concurrent_scheme_decl} DESTINATION include/y/concurrent/scheme )
 
+FILE(GLOB mpl_decl y/mpl/*.hpp)
+FILE(GLOB mpl_code y/mpl/*.cpp)
+SET(mpl_srcs ${mpl_decl} ${mpl_code})
+SOURCE_GROUP( mpl FILES ${mpl_srcs} )
+INSTALL( FILES ${mpl_decl} DESTINATION include/y/mpl )
+
+
+FILE(GLOB mpl_natural_decl y/mpl/natural/*.hpp)
+FILE(GLOB mpl_natural_code y/mpl/natural/*.cpp)
+SET(mpl_natural_srcs ${mpl_natural_decl} ${mpl_natural_code})
+SOURCE_GROUP( mpl/natural FILES ${mpl_natural_srcs} )
+INSTALL( FILES ${mpl_natural_decl} DESTINATION include/y/mpl/natural )
+
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
 ${os_srcs}
@@ -114,6 +127,8 @@ ${container_srcs}
 ${sequence_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
+${mpl_srcs}
+${mpl_natural_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )

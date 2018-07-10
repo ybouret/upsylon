@@ -26,15 +26,17 @@ namespace upsylon
         inline ~complex() throw() {}                //!< default destructor
         inline  complex(const complex &c) throw() : re(c.re), im(c.im) {} //!< just copy
         inline  complex & operator=( const complex c ) throw() { re=c.re; im=c.im; return *this; return *this; } //!< just assign
-        inline  complex(const real_type x) throw() : re(x), im(0) {}
-        inline  complex(const real_type x, const real_type y) throw() : re(x), im(y) {}
-        inline  complex & operator=( const real_type x ) throw() { re=x; im=0; return *this; }
+        inline  complex(const real_type x) throw() : re(x), im(0) {} //!< build with real part
+        inline  complex(const real_type x, const real_type y) throw() : re(x), im(y) {} //!< build with both parts
+        inline  complex & operator=( const real_type x ) throw() { re=x; im=0; return *this; } //!< assign real part
 
+        //! output
         inline friend std::ostream & operator<<( std::ostream &os, const complex c)
         {
             return (os << '(' << c.re << ',' << c.im << ')');
         }
 
+        //! produce conjugate
         inline complex conj() const throw()
         {
             return complex(re,-im);
@@ -168,6 +170,7 @@ namespace upsylon
         //
         // division
         //______________________________________________________________________
+        //! squared modulus
         inline real_type mod2() const throw() { return re*re+im*im; }
 
         //! in place div
@@ -196,12 +199,13 @@ namespace upsylon
             return complex(num.re/den,num.im/den);
         }
 
-        //! binary div
+        //! binary div, scalar
         inline friend complex operator/(const complex lhs, const real_type x) throw()
         {
             return complex(lhs.re/x,lhs.im/x);
         }
 
+        //! binary div, scalar
         inline friend complex operator/(const real_type x, const complex rhs) throw()
         {
             const complex lhs(x);

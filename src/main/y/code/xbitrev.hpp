@@ -7,6 +7,7 @@
 
 namespace upsylon
 {
+    //! extended bit reversal algorithm
     struct xbitrev
     {
         //! reordering arr[1..size*2]
