@@ -97,20 +97,36 @@ namespace upsylon
 
         void * vein:: acquire(size_t &n)
         {
-            try
+            if(n>max_size)
             {
-                size_t ibit = 0;
-                n           = bytes_for(n,ibit);
-                assert(ibit>=min_bits);
-                assert(ibit<=max_bits);
-                __nuggets *mgr = (__nuggets *)&entry[ibit];
-                assert(mgr->get_block_bits()==ibit);
-                return mgr->acquire();
+                try
+                {
+                    n = next_power_of_two(n);
+                    return memory::global::instance().acquire(n);
+                }
+                catch(...)
+                {
+                    n=0;
+                    throw;
+                }
             }
-            catch(...)
+            else
             {
-                n=0;
-                throw;
+                try
+                {
+                    size_t ibit = 0;
+                    n           = bytes_for(n,ibit);
+                    assert(ibit>=min_bits);
+                    assert(ibit<=max_bits);
+                    __nuggets *mgr = (__nuggets *)&entry[ibit];
+                    assert(mgr->get_block_bits()==ibit);
+                    return mgr->acquire();
+                }
+                catch(...)
+                {
+                    n=0;
+                    throw;
+                }
             }
         }
 
@@ -119,23 +135,29 @@ namespace upsylon
             assert(p);
             assert(is_a_power_of_two(n));
             assert(n>=min_size);
-            assert(n<=max_size);
-            for(size_t i=max_bits;i>0;--i)
+            if(n<=max_size)
             {
-                if( 0 != ( (1<<i) & n ) )
+                for(size_t i=max_bits;i>0;--i)
                 {
-                    __nuggets *mgr = (__nuggets *)(entry+i);
-                    assert(mgr->get_block_bits()==i);
-                    assert(mgr->get_block_size()==n);
-                    mgr->release(p);
-                    p = 0;
-                    n = 0;
-                    return;
-                }
+                    if( 0 != ( (1<<i) & n ) )
+                    {
+                        __nuggets *mgr = (__nuggets *)(entry+i);
+                        assert(mgr->get_block_bits()==i);
+                        assert(mgr->get_block_size()==n);
+                        mgr->release(p);
+                        p = 0;
+                        n = 0;
+                        return;
+                    }
 
+                }
+                // never get here
+                fatal_error("[vein.release] unexpected no matching nugget");
             }
-            // never get here
-            fatal_error("[vein.release] unexpected no matching nugget");
+            else
+            {
+                memory::global::location().release(p,n);
+            }
         }
 
 

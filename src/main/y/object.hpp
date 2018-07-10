@@ -9,7 +9,7 @@
 #define Y_LIMIT_SIZE 256
 #endif
 
-//! default chunk size for small object
+//! default chunk size for small object, should be a power of two
 #ifndef Y_CHUNK_SIZE
 #define Y_CHUNK_SIZE 4096
 #endif

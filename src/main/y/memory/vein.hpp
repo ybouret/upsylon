@@ -14,7 +14,7 @@ namespace upsylon
         {
         public:
             static const size_t       min_bits = ilog2<sizeof(size_t)>::value; //!< minimal bits per block
-            static const size_t       max_bits = 11;                           //!< maximal bits per block
+            static const size_t       max_bits = 12;                           //!< maximal bits per block
             static const size_t       count    = (1+max_bits)-min_bits;        //!< number of different blocks
             static const size_t       min_size = 1 << min_bits;                //!< minimal bytes per block
             static const size_t       max_size = 1 << max_bits;                //!< maximal bytes per block

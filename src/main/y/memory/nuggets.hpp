@@ -5,6 +5,7 @@
 #include "y/memory/nugget.hpp"
 #include "y/object.hpp"
 #include "y/os/error.hpp"
+#include <iostream>
 
 namespace upsylon
 {
@@ -14,10 +15,8 @@ namespace upsylon
         class __nuggets
         {
         public:
-            static const size_t KB    = 1024;
-            static const size_t MB    = KB*KB;
-            static const size_t small_chunk_size = 4*KB;
-            static const size_t large_chunk_size = 4*MB;
+            static const size_t small_chunk_size = Y_CHUNK_SIZE;
+            static const size_t min_num_blocks   = 1<<3;
 
             //! destructor
             inline virtual ~__nuggets() throw() {}
@@ -36,8 +35,13 @@ namespace upsylon
             //! the big chunk size
             virtual size_t get_chunk_size() const throw() = 0;
 
+
+
         protected:
-            inline explicit __nuggets() throw() {}
+            inline explicit __nuggets() throw()
+            {
+                assert(is_a_power_of_two(small_chunk_size));
+            }
             struct page
             {
                 page *next;
@@ -53,6 +57,35 @@ namespace upsylon
         public:
             typedef nugget<BLOCK_BITS> nugget_type; //!< the one nugget
             static  const size_t       nuggets_per_page = (small_chunk_size - sizeof(void*))/sizeof(nugget_type); //!< ever growing pages
+            static  const size_t       block_size = nugget_type::block_size;
+
+            static inline
+            size_t compute_num_blocks()
+            {
+                assert(is_a_power_of_two(small_chunk_size));
+                assert(is_a_power_of_two(block_size));
+                const size_t min_chunk_size = block_size * min_num_blocks;
+                if(min_chunk_size<=small_chunk_size)
+                {
+                    const size_t nb = small_chunk_size/block_size;
+                    assert(is_a_power_of_two(nb));
+                    return nb;
+                }
+                else
+                {
+                    size_t chunk_size = small_chunk_size;
+                    while(chunk_size<min_chunk_size)
+                    {
+                        const size_t next_chunk_size = chunk_size << 1;
+                        // todo: check
+                        chunk_size = next_chunk_size;
+                    }
+                    assert(is_a_power_of_two(chunk_size));
+                    const size_t nb = chunk_size/block_size;
+                    assert(is_a_power_of_two(nb));
+                    return nb;
+                }
+            }
 
             //! compute memory characteristics \todo work on that
             inline explicit nuggets() :
@@ -63,10 +96,10 @@ namespace upsylon
             content(),
             cached(),
             pages(),
-            num_blocks( next_power_of_two<size_t>(small_chunk_size/nugget_type::block_size) ),
-            chunk_size( num_blocks * nugget_type::block_size )
+            num_blocks( compute_num_blocks()    ),
+            chunk_size( num_blocks * block_size )
             {
-                
+                std::cerr << "nuggets<2^" << BLOCK_BITS << "=" << block_size << ">: #blocks=" << num_blocks << ", chunk_size=" << chunk_size << std::endl;
             }
 
             inline virtual size_t get_block_bits() const throw() { return nugget_type::block_bits; }

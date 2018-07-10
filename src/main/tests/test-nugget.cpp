@@ -98,6 +98,8 @@ Y_UTEST(nuggets)
     do_test_all<8>();
     do_test_all<9>();
     do_test_all<10>();
+    do_test_all<11>();
+    do_test_all<12>();
 
 }
 Y_UTEST_DONE()
