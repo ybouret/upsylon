@@ -34,6 +34,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(env);
     Y_UTEST(sequence);
     Y_UTEST(dyadic);
+    Y_UTEST(endian);
     Y_UTEST(parallel);
     Y_UTEST(threads);
     Y_UTEST(simd);
