@@ -98,7 +98,7 @@ namespace upsylon
             }
 
             assert(kproc);
-            assert(ready<=0); //! ready was set by run() to zero
+            assert(ready<count);
             if(verbose) { std::cerr << "[threads.simd.loop.code] @" << context.label << std::endl; }
 
             //__________________________________________________________________
