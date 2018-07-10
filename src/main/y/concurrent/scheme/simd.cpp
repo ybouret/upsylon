@@ -13,6 +13,7 @@ namespace upsylon
         done(false),
         ready(0),
         cycle(),
+        synch(),
         kproc(0),
         kdata(0),
         verbose( workers.verbose )
