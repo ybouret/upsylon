@@ -83,7 +83,7 @@ namespace upsylon
                 {
                     for(ibit=min_bits;ibit<=max_bits;++ibit)
                     {
-                        const size_t szp2 = (1<<ibit);
+                        const size_t szp2 = (size_t(1)<<ibit);
                         if( length<=szp2 )
                         {
                             return szp2;
@@ -139,7 +139,7 @@ namespace upsylon
             {
                 for(size_t i=max_bits;i>0;--i)
                 {
-                    if( 0 != ( (1<<i) & n ) )
+                    if( 0 != ( (size_t(1)<<i) & n ) )
                     {
                         __nuggets *mgr = (__nuggets *)(entry+i);
                         assert(mgr->get_block_bits()==i);

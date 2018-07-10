@@ -18,7 +18,7 @@ namespace
                      lockable &)
     {
         randomized::Kiss32 ran;
-        ran.reset( context.rank );
+        ran.reset( uint32_t(context.rank) );
         info   &I = *(info *)data;
         double *d = I.number;
         size_t  n = I.count;
