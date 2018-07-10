@@ -26,7 +26,7 @@ namespace upsylon
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simd);
-            static  void call( void *, parallel &, lockable &) throw(); //! kernel for thread
+            static  void call( void *, parallel &, lockable &) throw(); //! kernel for threads
             void loop(parallel &context) throw(); //! the SIMD loop, called
             threads      workers;
         public:
@@ -39,7 +39,7 @@ namespace upsylon
             kernel       kproc;
             void        *kdata;
         public:
-            bool         &verbose;
+            bool         &verbose; //!< for threads verbosity indicator
         };
 
     }
