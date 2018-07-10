@@ -94,27 +94,14 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
                 return comparison::lexicographic<uint8_t>(l,nl,r,nr);
             }
 
-            static inline
-            int compare( const natural &lhs, const natural &rhs ) throw()
-            {
-                return compare_blocks(lhs.byte,lhs.bytes,rhs.byte,rhs.bytes);
-            }
+#define Y_MPN_PREPARE(W) size_t nw = 0; const uint8_t *pw = prepare(W,nw)
+#define Y_MPN_DEFINE_NOTHROW(RET,BODY,CALL) \
+static inline RET BODY(const natural &lhs, const natural &rhs) throw() { return CALL(lhs.byte,lhs.bytes,rhs.byte,rhs.bytes);      }\
+static inline RET BODY(const natural &lhs, word_type      w  ) throw() { Y_MPN_PREPARE(w); return CALL(lhs.byte,lhs.bytes,pw,nw); }\
+static inline RET BODY(word_type      w,   const natural &rhs) throw() { Y_MPN_PREPARE(w); return CALL(pw,nw,rhs.byte,rhs.bytes); }
 
-            static inline
-            int compare( const natural &lhs, word_type w ) throw()
-            {
-                size_t         nw = 0;
-                const uint8_t *pw = prepare(w,nw);
-                return compare_blocks(lhs.byte,lhs.bytes,pw,nw);
-            }
+            Y_MPN_DEFINE_NOTHROW(int,compare,compare_blocks)
 
-            static inline
-            int compare( word_type w, const natural &rhs ) throw()
-            {
-                size_t         nw = 0;
-                const uint8_t *pw = prepare(w,nw);
-                return compare_blocks(pw,nw,rhs.byte,rhs.bytes);
-            }
 
 #define Y_MPN_CMP(OP) \
 inline friend bool operator OP ( const natural  &lhs, const natural  &rhs ) throw() { return compare(lhs,rhs) OP 0; } \
@@ -127,6 +114,32 @@ inline friend bool operator OP ( const word_type lhs, const natural  &rhs ) thro
             Y_MPN_CMP(<)
             Y_MPN_CMP(>=)
             Y_MPN_CMP(>)
+
+#define Y_MPN_DEFINE(RET,BODY) \
+static inline RET BODY(const natural &lhs, const natural &rhs) { return BODY(lhs.byte,lhs.bytes,rhs.byte,rhs.bytes);      }\
+static inline RET BODY(const natural &lhs, word_type      w  ) { Y_MPN_PREPARE(w); return BODY(lhs.byte,lhs.bytes,pw,nw); }\
+static inline RET BODY(word_type      w,   const natural &rhs) { Y_MPN_PREPARE(w); return BODY(pw,nw,rhs.byte,rhs.bytes); }
+
+#define Y_MPN_IMPL(OP,CALL) \
+natural & operator OP##=(const natural  &rhs) { natural ans = CALL(*this,rhs); swap_with(ans); return *this; }\
+natural & operator OP##=(const word_type rhs) { natural ans = CALL(*this,rhs); swap_with(ans); return *this; }\
+inline friend natural operator OP ( const natural  &lhs, const natural  &rhs ) { return CALL(lhs,rhs); }      \
+inline friend natural operator OP ( const natural  &lhs, const word_type rhs ) { return CALL(lhs,rhs); }      \
+inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) { return CALL(lhs,rhs); }
+            //__________________________________________________________________
+            //
+            // ADD
+            //__________________________________________________________________
+            Y_MPN_DEFINE(natural,__add)
+            natural operator+() { return *this; }
+            Y_MPN_IMPL(+,__add)
+
+            //__________________________________________________________________
+            //
+            // sub
+            //__________________________________________________________________
+            Y_MPN_DEFINE(natural,__sub)
+            Y_MPN_IMPL(-,__sub)
 
         private:
             size_t   bytes;     //!< active bytes
@@ -151,29 +164,16 @@ inline friend bool operator OP ( const word_type lhs, const natural  &rhs ) thro
                 return static_cast<uint8_t*>( hmem.acquire(n) );
             }
 
-            static inline int compare_blocks_(const uint8_t *small_data,
-                                              const size_t   small_size,
-                                              const uint8_t *large_data,
-                                              const size_t   large_size) throw()
-            {
-                assert(small_size<=large_size);
-                for(size_t i=0; i<small_size;++i)
-                {
-                    const uint8_t s = small_data[i];
-                    const uint8_t l = large_data[i];
-                    if(s<l)
-                    {
-                        return -1;
-                    }
-                    else if(l<s)
-                    {
-                        return 1;
-                    }
-                    // else continue
-                }
-                return (small_size<large_size) ? 1 : 0;
-            }
 
+            static natural __add(const uint8_t *l,
+                                 const size_t   nl,
+                                 const uint8_t *r,
+                                 const size_t   nr);
+
+            static natural __sub(const uint8_t *l,
+                                 const size_t   nl,
+                                 const uint8_t *r,
+                                 const size_t   nr);
 
         };
     }
