@@ -39,6 +39,7 @@ ADD_TEST(Env       test-main env)
 ADD_TEST(Parallel  test-main parallel)
 ADD_TEST(Threads   test-main threads)
 ADD_TEST(SIMD      test-main simd)
+ADD_TEST(Complex   test-main complex)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V

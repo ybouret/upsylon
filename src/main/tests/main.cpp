@@ -38,7 +38,8 @@ Y_UTEST_INIT(64)
     Y_UTEST(parallel);
     Y_UTEST(threads);
     Y_UTEST(simd);
-
+    Y_UTEST(complex);
+    
 }
 Y_UTEST_EXEC()
 
