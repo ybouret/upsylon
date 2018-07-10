@@ -5,6 +5,7 @@
 #include "y/memory/dyadic.hpp"
 #include "y/memory/buffer.hpp"
 #include "y/os/endian.hpp"
+#include "y/comparison.hpp"
 
 namespace upsylon
 {
@@ -90,7 +91,7 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
                                const size_t   nr) throw()
             {
                 assert(l);assert(r);
-                return (nl<=nr) ? compare_blocks_(l, nl, r, nr) : -compare_blocks_(r, nr, l, nl);
+                return comparison::lexicographic<uint8_t>(l,nl,r,nr);
             }
 
             static inline
@@ -177,7 +178,7 @@ inline friend bool operator OP ( const word_type lhs, const natural  &rhs ) thro
         };
     }
 
-    typedef mpl::natural mpn;
+    typedef mpl::natural   mpn;
 }
 #endif
 

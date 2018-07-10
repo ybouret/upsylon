@@ -6,6 +6,7 @@
 #include "y/memory/buffer.hpp"
 #include "y/type/cswap.hpp"
 #include "y/dynamic.hpp"
+#include "y/comparison.hpp"
 #include <cstring>
 #include <iosfwd>
 
@@ -280,7 +281,7 @@ maxi_ = items-1
             static inline
             int compare_blocks( const T *sa, const size_t na, const T *sb, const size_t nb) throw()
             {
-                return (na<=nb) ? compare_blocks_(sa,na,sb,nb) : -compare_blocks_(sb,nb,sa,na);
+                return comparison::lexicographic<T>(sa,na,sb,nb);
             }
 
             //! lexicographic compare
@@ -357,29 +358,6 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
                 Y_CORE_STRING_CHECK(*this);
             }
 
-        public:
-            static inline int compare_blocks_(const T     *small_data,
-                                              const size_t small_size,
-                                              const T     *large_data,
-                                              const size_t large_size) throw()
-            {
-                assert(small_size<=large_size);
-                for(size_t i=0; i<small_size;++i)
-                {
-                    const T s = small_data[i];
-                    const T l = large_data[i];
-                    if(s<l)
-                    {
-                        return -1;
-                    }
-                    else if(l<s)
-                    {
-                        return 1;
-                    }
-                    // else continue
-                }
-                return (small_size<large_size) ? 1 : 0;
-            }
 
         };
     }

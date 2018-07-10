@@ -45,7 +45,28 @@ namespace upsylon
                 return ans;
             }
 
+            //! random full integral type
+            template <typename T> inline
+            T partial(size_t nbits) throw()
+            {
+                T ans(0);
+                while(nbits-->0)
+                {
+                    (ans <<= 1);
+                    if(choice())
+                    {
+                        //ans |= 1;
+                    }
+                }
+                return ans;
+            }
 
+            //! slow partial type
+            template <typename T> inline
+            T partial() throw()
+            {
+                return partial<T>( 8*sizeof(T) );
+            }
 
 
             //! random unsigned integral in 0..X-1
@@ -139,7 +160,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(bits);
         };
 
-        
+
 
         //! fast demo based on rand()
         class cstdbits : public bits
@@ -153,7 +174,7 @@ namespace upsylon
 
             //! call rand
             inline virtual uint32_t next32() throw() { return rand(); }
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(cstdbits);
         };
