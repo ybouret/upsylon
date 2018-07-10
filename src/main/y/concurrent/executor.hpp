@@ -1,4 +1,3 @@
-
 //! \file
 #ifndef Y_CONCURRENT_EXECUTOR_INCLUDED
 #define Y_CONCURRENT_EXECUTOR_INCLUDED 1
@@ -10,20 +9,25 @@ namespace upsylon
 {
     namespace concurrent
     {
+        //! a function that may be run in parallel
         typedef void (*kernel)(void *, parallel &, lockable &);
 
         //! interface to run kernels
         class executor
         {
         public:
+            //! destructor
             virtual  ~executor() throw();
 
-
+            //! run a kernel with data, presenting a context and a shared access
             virtual void       run( kernel, void * ) = 0;
+            //! number of underlying threads
             virtual size_t     num_threads()   const throw() = 0;
+            //! access to individual context
             virtual parallel & operator[](const size_t) throw() = 0;
 
         protected:
+            //! constructor
             explicit  executor() throw();
 
         private:

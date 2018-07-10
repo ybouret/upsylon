@@ -15,8 +15,8 @@ namespace upsylon
         class __nuggets
         {
         public:
-            static const size_t small_chunk_size = Y_CHUNK_SIZE;
-            static const size_t min_num_blocks   = 1<<3;
+            static const size_t small_chunk_size = Y_CHUNK_SIZE; //!< base size for allocation
+            static const size_t min_num_blocks   = 1<<3;         //!< minimum number of blocks per nugget
 
             //! destructor
             inline virtual ~__nuggets() throw() {}
@@ -36,15 +36,17 @@ namespace upsylon
             virtual size_t get_chunk_size() const throw() = 0;
 
 
-
         protected:
+            //! constructor
             inline explicit __nuggets() throw()
             {
                 assert(is_a_power_of_two(small_chunk_size));
             }
+
+            //! page to store individual nugget memory
             struct page
             {
-                page *next;
+                page *next; //!< for pool
             };
         private:
             Y_DISABLE_COPY_AND_ASSIGN(__nuggets);
@@ -57,8 +59,9 @@ namespace upsylon
         public:
             typedef nugget<BLOCK_BITS> nugget_type; //!< the one nugget
             static  const size_t       nuggets_per_page = (small_chunk_size - sizeof(void*))/sizeof(nugget_type); //!< ever growing pages
-            static  const size_t       block_size = nugget_type::block_size;
+            static  const size_t       block_size = nugget_type::block_size; //!< the nugget block size
 
+            //! number of blocks per nugget, simple heuristic
             static inline
             size_t compute_num_blocks()
             {

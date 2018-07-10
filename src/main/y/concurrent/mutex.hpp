@@ -72,6 +72,7 @@ namespace upsylon
         //! put a scoped lock on the giant mutex
 #define Y_GIANT_LOCK() Y_LOCK(concurrent::mutex::giant)
 
+        //! probing mutex until valid condition is reached
 #define Y_MUTEX_PROBE(M,VALID_CONDITION) do {     \
 if( !(M).try_lock()   ) continue;                 \
 if( (VALID_CONDITION) ) { (M).unlock(); break; }  \
