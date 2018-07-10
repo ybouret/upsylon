@@ -102,7 +102,7 @@ namespace upsylon
             num_blocks( compute_num_blocks()    ),
             chunk_size( num_blocks * block_size )
             {
-                std::cerr << "nuggets<2^" << BLOCK_BITS << "=" << block_size << ">: #blocks=" << num_blocks << ", chunk_size=" << chunk_size << std::endl;
+                //std::cerr << "nuggets<2^" << BLOCK_BITS << "=" << block_size << ">: #blocks=" << num_blocks << ", chunk_size=" << chunk_size << std::endl;
             }
 
             inline virtual size_t get_block_bits() const throw() { return nugget_type::block_bits; }
