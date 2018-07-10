@@ -45,6 +45,9 @@ namespace upsylon
                 return ans;
             }
 
+
+
+
             //! random unsigned integral in 0..X-1
             template <typename T> inline
             T __lt(const T X) throw()
@@ -135,6 +138,8 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bits);
         };
+
+        
 
         //! fast demo based on rand()
         class cstdbits : public bits

@@ -13,8 +13,8 @@ namespace
         {
             const T x = alea.full<T>();
             {
-                const T y = swap_le(x);
-                const T z = swap_le(y);
+                const T y = swap_le_as(x);
+                const T z = swap_le_as(y);
                 if(z!=x)
                 {
                     std::cerr << "LE: bytes=" << sizeof(T) << ": " << uint64_t(x) << " -> " << uint64_t(y) << " -> " << uint64_t(z) << std::endl;
@@ -23,8 +23,8 @@ namespace
             }
 
             {
-                const T y = swap_be(x);
-                const T z = swap_be(y);
+                const T y = swap_be_as(x);
+                const T z = swap_be_as(y);
                 if(z!=x)
                 {
                     std::cerr << "BE: bytes=" << sizeof(T) << ": " << uint64_t(x) << " -> " << uint64_t(y) << " -> " << uint64_t(z) << std::endl;
@@ -43,6 +43,10 @@ Y_UTEST(endian)
     Y_CHECK(test_endian<uint16_t>());
     Y_CHECK(test_endian<uint32_t>());
     Y_CHECK(test_endian<uint64_t>());
+    Y_CHECK(test_endian<int>());
+    Y_CHECK(test_endian<short>());
+
+    //Y_CHECK(test_endian<float>());
 
 }
 Y_UTEST_DONE()
