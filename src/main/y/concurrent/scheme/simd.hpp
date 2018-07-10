@@ -33,10 +33,9 @@ namespace upsylon
             mutex       &access; //!< shared access
         private:
             bool         done;
-            size_t       ready;         //!< count who is ready
-            condition    synchronized;  //!< waiting to start cycle
-            condition    cycle;
-
+            size_t       ready;  //!< count who is ready
+            condition    cycle;  //!< waiting to start cycle
+            condition    synch;  //!< wait for end of cycle sync
             kernel       kproc;
             void        *kdata;
         public:

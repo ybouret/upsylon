@@ -11,7 +11,13 @@ namespace
         double *number;
         size_t  count;
     };
-    
+
+    static inline
+    void simd_kernel0(void *,parallel &,lockable &)
+    {
+
+    }
+
     static inline
     void simd_kernel(void     *data,
                      parallel &context,
@@ -56,23 +62,18 @@ Y_UTEST(simd)
         concurrent::simd par0(true);
     }
 
-#if 0
     {
-        std::cerr << "-- testing ops with delay" << std::endl;
+        std::cerr << "-- testing ops" << std::endl;
         concurrent::simd par1(true);
         for(size_t iter=0;iter<8;++iter)
         {
-            par1.start(simd_kernel,&I);
-            const double nsec = 0.001*iter*alea.to<double>();
-            {
-                Y_LOCK(par1.access);
-                std::cerr << "\t\tdelay=" << nsec << std::endl;
-            }
-            clk.sleep(nsec);
-            par1.finish();
+            std::cerr << "\t-- loop " << iter << std::endl;
+            par1.run(simd_kernel0,0);
         }
     }
 
+    
+#if 1
     double par_speed = 0;
     concurrent::simd par(false);
     {
@@ -82,14 +83,12 @@ Y_UTEST(simd)
         for(cycles=0;(ellapsed=chrono.query())<=duration; )
         {
             ++cycles;
-            par.start(simd_kernel,&I);
-            par.finish();
-            //if(cycles>=1) break;
+            par.run(simd_kernel,&I);
         }
         par_speed = cycles/ellapsed;
         std::cerr << "par_speed=" << par_speed << " [#cycles=" << cycles << "]" << std::endl;
     }
-
+    
     double seq_speed = 0;
     {
         concurrent::sequential_for engine;
@@ -99,8 +98,7 @@ Y_UTEST(simd)
         for(cycles=0;(ellapsed=chrono.query())<=duration;)
         {
             ++cycles;
-            engine.start(simd_kernel,&I);
-            engine.finish();
+            engine.run(simd_kernel,&I);
         }
         seq_speed = cycles/ellapsed;
         std::cerr << "seq_speed=" << seq_speed << " [#cycles=" << cycles << "]" << std::endl;

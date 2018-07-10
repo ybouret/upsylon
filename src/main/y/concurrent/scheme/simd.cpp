@@ -12,7 +12,6 @@ namespace upsylon
         access( workers.access ),
         done(false),
         ready(0),
-        synchronized(),
         cycle(),
         kproc(0),
         kdata(0),
@@ -51,7 +50,7 @@ namespace upsylon
 
 
             // then say bye to synchonized
-            synchronized.broadcast();
+            cycle.broadcast();
         }
 
         void simd:: loop(parallel &context) throw()
@@ -84,7 +83,7 @@ namespace upsylon
             //
             // wait on a LOCKED mutex
             //__________________________________________________________________
-            synchronized.wait(access);
+            cycle.wait(access);
 
             //__________________________________________________________________
             //
@@ -113,9 +112,9 @@ namespace upsylon
             // cycle barrier
             //__________________________________________________________________
             access.lock();
-            if(++ready<=count)
+            if(++ready>=count)
             {
-                
+                synch.broadcast();
             }
 
             //std::cerr << "ready=" << ready << " from " << context.label << std::endl;
@@ -129,7 +128,12 @@ namespace upsylon
             assert(workers.count==ready);
             kproc = code;
             kdata = data;
-            synchronized.broadcast();
+            ready = 0;
+            cycle.broadcast();
+            synch.wait(access);
+            assert(ready>=workers.count);
+            access.unlock();
+
         }
 
     }
