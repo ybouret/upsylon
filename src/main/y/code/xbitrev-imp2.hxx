@@ -1,0 +1,14 @@
+case 0:break;
+case 1:break;
+case 2:break;
+case 4: for(size_t i=0;i<1;++i) Y_XBITREV_SWAP2(indx4[i],jndx4[i]) break;
+case 8: for(size_t i=0;i<2;++i) Y_XBITREV_SWAP2(indx8[i],jndx8[i]) break;
+case 16: for(size_t i=0;i<6;++i) Y_XBITREV_SWAP2(indx16[i],jndx16[i]) break;
+case 32: for(size_t i=0;i<12;++i) Y_XBITREV_SWAP2(indx32[i],jndx32[i]) break;
+case 64: for(size_t i=0;i<28;++i) Y_XBITREV_SWAP2(indx64[i],jndx64[i]) break;
+case 128: for(size_t i=0;i<56;++i) Y_XBITREV_SWAP2(indx128[i],jndx128[i]) break;
+case 256: for(size_t i=0;i<120;++i) Y_XBITREV_SWAP2(indx256[i],jndx256[i]) break;
+case 512: for(size_t i=0;i<240;++i) Y_XBITREV_SWAP2(indx512[i],jndx512[i]) break;
+case 1024: for(size_t i=0;i<496;++i) Y_XBITREV_SWAP2(indx1024[i],jndx1024[i]) break;
+case 2048: for(size_t i=0;i<992;++i) Y_XBITREV_SWAP2(indx2048[i],jndx2048[i]) break;
+case 4096: for(size_t i=0;i<2016;++i) Y_XBITREV_SWAP2(indx4096[i],jndx4096[i]) break;

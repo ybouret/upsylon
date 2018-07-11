@@ -2,7 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/memory/dyadic.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/ios/cfile.hpp"
+#include "y/ios/ocstream.hpp"
 #include "y/hashing/sha1.hpp"
 #include "y/utest/timings.hpp"
 
@@ -57,20 +57,21 @@ namespace
         }
     }
 
-    static inline void save_indices(ios::cfile &src, const array<size_t> &indices)
+    static inline void save_indices(ios::ostream &src, const array<size_t> &indices)
     {
         for(size_t i=1;i<=indices.size();++i)
         {
-            fprintf(*src,"%u",(unsigned)indices[i]);
-            if(i<indices.size()) fprintf(*src,",");
+            src("%u",(unsigned)indices[i]);
+            if(i<indices.size()) src << ',';
         }
-        fprintf(*src,"\n");
+        src << '\n';
     }
 
-    static inline void generate(const size_t  size,
-                                ios::cfile   &hdr,
-                                ios::cfile   &imp,
-                                ios::cfile   &src)
+    static inline void generate(const size_t   size,
+                                ios::ostream   &hdr,
+                                ios::ostream   &imp,
+                                ios::ostream   &src,
+                                ios::ostream   &im2)
     {
 
         {
@@ -100,24 +101,28 @@ namespace
             const size_t nx = idx.size();
             assert(jdx.size()==idx.size());
             std::cerr << "\tnx=" << nx << std::endl;
-            fprintf(*imp,"case %u:", (unsigned)size);
+            imp("case %u:", (unsigned)size);
+            im2("case %u:", (unsigned)size);
             if(nx>0)
             {
-                fprintf(*hdr,"static const size_t indx%u[%u];//!< first  index\n",(unsigned)size,unsigned(nx));
-                fprintf(*hdr,"static const size_t jndx%u[%u];//!< second index\n",(unsigned)size,unsigned(nx));
-                fprintf(*hdr,"\n");
+                hdr("static const size_t indx%u[%u];//!< first  index\n",(unsigned)size,unsigned(nx));
+                hdr("static const size_t jndx%u[%u];//!< second index\n",(unsigned)size,unsigned(nx));
+                hdr("\n");
 
-                fprintf(*src,"const size_t xbitrev::indx%u[%u] ={\n",(unsigned)size,unsigned(nx));
+                src("const size_t xbitrev::indx%u[%u] ={\n",(unsigned)size,unsigned(nx));
                 save_indices(src,idx);
-                fprintf(*src, "};\n");
+                src("};\n");
 
-                fprintf(*src,"const size_t xbitrev::jndx%u[%u] ={\n",(unsigned)size,unsigned(nx));
+                src("const size_t xbitrev::jndx%u[%u] ={\n",(unsigned)size,unsigned(nx));
                 save_indices(src,jdx);
-                fprintf(*src, "};\n\n");
+                src("};\n\n");
 
-                fprintf(*imp," for(size_t i=0;i<%u;++i) Y_XBITREV_SWAP(indx%u[i],jndx%u[i]); ", unsigned(nx), unsigned(size), unsigned(size) );
+                imp(" for(size_t i=0;i<%u;++i) Y_XBITREV_SWAP(indx%u[i],jndx%u[i]); ", unsigned(nx), unsigned(size), unsigned(size) );
+                im2(" for(size_t i=0;i<%u;++i) Y_XBITREV_SWAP2(indx%u[i],jndx%u[i]) ", unsigned(nx), unsigned(size), unsigned(size) );
+
             }
-            fprintf(*imp,"break;\n");
+            imp("break;\n");
+            im2("break;\n");
         }
     }
 }
@@ -131,14 +136,15 @@ Y_UTEST(xbitrev)
 
     if(argc>2&& 0==strcmp(argv[2],"true"))
     {
-        ios::cfile hdr("xbitrev-decl.hxx",ios::cfile::open_write);
-        ios::cfile imp("xbitrev-impl.hxx",ios::cfile::open_write);
-        ios::cfile src("xbitrev-data.cxx",ios::cfile::open_write);
+        ios::ocstream hdr("xbitrev-decl.hxx");
+        ios::ocstream imp("xbitrev-impl.hxx");
+        ios::ocstream im2("xbitrev-imp2.hxx");
+        ios::ocstream src("xbitrev-data.cxx");
 
-        generate(0,hdr,imp,src);
+        generate(0,hdr,imp,src,im2);
         for(size_t size=1;size<=4096;size*=2)
         {
-            generate(size,hdr,imp,src);
+            generate(size,hdr,imp,src,im2);
         }
     }
 
