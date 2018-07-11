@@ -41,6 +41,8 @@ Y_UTEST_INIT(64)
     Y_UTEST(complex);
     Y_UTEST(xbitrev);
     Y_UTEST(mpn);
+    Y_UTEST(hashing);
+    Y_UTEST(ostreams);
 
 }
 Y_UTEST_EXEC()

@@ -40,6 +40,9 @@ ADD_TEST(Parallel  test-main parallel)
 ADD_TEST(Threads   test-main threads)
 ADD_TEST(SIMD      test-main simd)
 ADD_TEST(Complex   test-main complex)
+ADD_TEST(MPN       test-main mpn)
+ADD_TEST(hashing   test-main hashing)
+ADD_TEST(ostreams  test-main ostreams)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V
