@@ -3,7 +3,7 @@
 
 namespace upsylon
 {
-
+#include "xbitrev-data.cxx"
 }
 
 

@@ -10,6 +10,8 @@ namespace upsylon
     //! extended bit reversal algorithm
     struct xbitrev
     {
+#define Y_XBITREV_SWAP(I,J) core::bswap<2*sizeof(T)>( &arr[I], &arr[J] );
+#include "xbitrev-decl.hxx"
         //! reordering arr[1..size*2]
         template <typename T> static inline
         void run_safe( T arr[], const size_t size) throw()
@@ -20,7 +22,7 @@ namespace upsylon
             {
                 if(j>i)
                 {
-                    core::bswap<2*sizeof(T)>( &arr[i], &arr[j] );
+                    Y_XBITREV_SWAP(i,j);
                 }
                 size_t m = size;
                 while( (m>=2) && (j>m) )
@@ -29,6 +31,18 @@ namespace upsylon
                     m >>= 1;
                 }
                 j += m;
+            }
+        }
+
+        template <typename T> static inline
+        void run( T arr[], const size_t size) throw()
+        {
+            switch(size)
+            {
+#include "xbitrev-impl.hxx"
+
+                default:
+                    run_safe(arr,size);
             }
         }
     };

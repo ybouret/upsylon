@@ -97,6 +97,12 @@ SET(concurrent_scheme_srcs ${concurrent_scheme_decl} ${concurrent_scheme_code})
 SOURCE_GROUP( concurrent/scheme FILES ${concurrent_scheme_srcs} )
 INSTALL( FILES ${concurrent_scheme_decl} DESTINATION include/y/concurrent/scheme )
 
+FILE(GLOB ios_decl y/ios/*.hpp)
+FILE(GLOB ios_code y/ios/*.cpp)
+SET(ios_srcs ${ios_decl} ${ios_code})
+SOURCE_GROUP( ios FILES ${ios_srcs} )
+INSTALL( FILES ${ios_decl} DESTINATION include/y/ios )
+
 FILE(GLOB mpl_decl y/mpl/*.hpp)
 FILE(GLOB mpl_code y/mpl/*.cpp)
 SET(mpl_srcs ${mpl_decl} ${mpl_code})
@@ -127,6 +133,7 @@ ${container_srcs}
 ${sequence_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
+${ios_srcs}
 ${mpl_srcs}
 ${mpl_natural_srcs}
 )

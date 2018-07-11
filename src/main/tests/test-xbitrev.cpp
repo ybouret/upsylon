@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/memory/dyadic.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/ios/cfile.hpp"
 
 using namespace upsylon;
 
@@ -18,7 +19,20 @@ namespace
         }
     }
 
-    static inline void generate(const size_t size)
+    static inline void save_indices(ios::cfile &src, const array<size_t> &indices)
+    {
+        for(size_t i=1;i<=indices.size();++i)
+        {
+            fprintf(*src,"%u",(unsigned)indices[i]);
+            if(i<indices.size()) fprintf(*src,",");
+        }
+        fprintf(*src,"\n");
+    }
+
+    static inline void generate(const size_t  size,
+                                ios::cfile   &hdr,
+                                ios::cfile   &imp,
+                                ios::cfile   &src)
     {
 
         {
@@ -48,6 +62,24 @@ namespace
             const size_t nx = idx.size();
             assert(jdx.size()==idx.size());
             std::cerr << "\tnx=" << nx << std::endl;
+            fprintf(*imp,"case %u:", (unsigned)size);
+            if(nx>0)
+            {
+                fprintf(*hdr,"static const size_t indx%u[%u];\n",(unsigned)size,unsigned(nx));
+                fprintf(*hdr,"static const size_t jndx%u[%u];\n",(unsigned)size,unsigned(nx));
+                fprintf(*hdr,"\n");
+
+                fprintf(*src,"const size_t xbitrev::indx%u[%u] ={\n",(unsigned)size,unsigned(nx));
+                save_indices(src,idx);
+                fprintf(*src, "};\n");
+
+                fprintf(*src,"const size_t xbitrev::jndx%u[%u] ={\n",(unsigned)size,unsigned(nx));
+                save_indices(src,jdx);
+                fprintf(*src, "};\n\n");
+
+                fprintf(*imp," for(size_t i=0;i<%u;++i) Y_XBITREV_SWAP(indx%u[i],jndx%u[i]); ", unsigned(nx), unsigned(size), unsigned(size) );
+            }
+            fprintf(*imp,"break;\n");
         }
     }
 }
@@ -57,10 +89,17 @@ Y_UTEST(xbitrev)
     do_test<float>();
     do_test<double>();
 
-    generate(0);
-    for(size_t size=1;size<=4096;size*=2)
+    if(argc>1&& 0==strcmp(argv[1],"true"))
     {
-        generate(size);
+        ios::cfile hdr("xbitrev-decl.hxx",ios::cfile::open_write);
+        ios::cfile imp("xbitrev-impl.hxx",ios::cfile::open_write);
+        ios::cfile src("xbitrev-data.cxx",ios::cfile::open_write);
+
+        generate(0,hdr,imp,src);
+        for(size_t size=1;size<=4096;size*=2)
+        {
+            generate(size,hdr,imp,src);
+        }
     }
 
 }
