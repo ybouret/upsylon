@@ -89,6 +89,32 @@ Y_UTEST(mpn)
         i.to_hex(std::cerr) << "/";
     }
     std::cerr << std::endl;
+
+    std::cerr << "-- subtraction" << std::endl;
+    for(size_t iter=0;iter<ITERS;++iter)
+    {
+        uint64_t l = alea.partial<mpn::word_type>();
+        uint64_t r = alea.partial<mpn::word_type>();
+        if(l<r) cswap(l,r);
+        assert(l>=r);
+        const uint64_t d = l-r;
+        const mpn L = l;
+        const mpn R = r;
+        const mpn D = L-R;
+        Y_ASSERT(D.lsw()==d);
+    }
+    std::cerr << "--loop" << std::endl;
+    for( mpn i=30;i>0;--i)
+    {
+        i.to_hex(std::cerr) << "/";
+    }
+    std::cerr << std::endl;
+    std::cerr << "loop--" << std::endl;
+    for( mpn i=30;i>0;i--)
+    {
+        i.to_hex(std::cerr) << "/";
+    }
+    std::cerr << std::endl;
 }
 Y_UTEST_DONE()
 

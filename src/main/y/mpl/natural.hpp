@@ -202,6 +202,7 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
                 swap_with(tmp);
                 return tmp;
             }
+
             //__________________________________________________________________
             //
             // sub
@@ -209,6 +210,28 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             Y_MPN_DEFINE(natural,__sub)
             Y_MPN_IMPL(-,__sub)
 
+            //! decrease by 1
+            inline natural __dec() const
+            {
+                static const uint8_t __one = 0x01;
+                return __sub(byte,bytes,&__one,1);
+            }
+
+            //! decrease operator
+            inline natural & operator--()
+            {
+                natural tmp = __dec();
+                swap_with(tmp);
+                return *this;
+            }
+
+            //! decrease operator
+            natural operator--(int)
+            {
+                natural tmp = __dec();
+                swap_with(tmp);
+                return tmp;
+            }
         private:
             size_t   bytes;     //!< active bytes
             size_t   allocated; //!< allocated bytes
