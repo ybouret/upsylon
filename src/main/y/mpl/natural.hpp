@@ -110,6 +110,19 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
                 return os;
             }
 
+            inline bool is_zero() const throw() { return (bytes<=0); }
+            inline bool is_byte(const uint8_t x) const throw()
+            {
+                if(x<=0)
+                {
+                    return (bytes<=0);
+                }
+                else
+                {
+                    return (1==bytes) && (x==byte[0]);
+                }
+            }
+
             //! comparison
             static inline
             int compare_blocks(const uint8_t *l,
