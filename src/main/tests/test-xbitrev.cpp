@@ -12,7 +12,7 @@ namespace
     static inline void do_test()
     {
         typedef complex<T> cplx;
-        for(size_t n=1;n<=4096;n*=2)
+        for(size_t n=1;n<=16384;n*=2)
         {
             vector<cplx,memory::dyadic> v(n);
             xbitrev::run_safe( &v[1].re-1,v.size());

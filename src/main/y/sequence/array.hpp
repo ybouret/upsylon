@@ -4,13 +4,14 @@
 
 #include "y/dynamic.hpp"
 #include "y/type/args.hpp"
+#include "y/memory/buffer.hpp"
 #include <iostream>
 
 namespace upsylon
 {
     //! array of contiguous objects
     template <typename T>
-    class array : public virtual dynamic
+    class array : public virtual dynamic, public memory::ro_buffer
     {
     public:
         Y_DECL_ARGS(T,type); //!< aliases
@@ -36,7 +37,12 @@ namespace upsylon
             return os;
         }
 
-       
+        //! buffer interface: read only access
+        inline virtual void *ro() const throw() { return (size_>0) ? &item_[1] : 0; }
+
+        //! buffer interface : length in bytes
+        inline size_t length() const throw() { return size_ * sizeof(T); }
+        
     protected:
         mutable_type *item_; //!< item_[1..size()]
         size_t        size_; //!< size()
