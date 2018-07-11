@@ -18,7 +18,7 @@ namespace upsylon
             size_t n = 32;
         TRY:
             {
-                memory::buffer_of<char,memory::global> databuf( n );
+                memory::buffer_of<char,memory::pooled> databuf( n );
                 char  *buffer  = databuf();
                 int    length  = int( databuf.length() );
                 if( length < 0 )
