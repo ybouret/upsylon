@@ -124,11 +124,12 @@ namespace
 
 Y_UTEST(xbitrev)
 {
-    double D = 0.5;
-    do_test<float>(D);
+    double D = 0.1;
+    if(argc>1) D = atof(argv[1]);
+    do_test<float >(D);
     do_test<double>(D);
 
-    if(argc>1&& 0==strcmp(argv[1],"true"))
+    if(argc>2&& 0==strcmp(argv[2],"true"))
     {
         ios::cfile hdr("xbitrev-decl.hxx",ios::cfile::open_write);
         ios::cfile imp("xbitrev-impl.hxx",ios::cfile::open_write);
