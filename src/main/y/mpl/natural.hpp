@@ -6,6 +6,8 @@
 #include "y/memory/buffer.hpp"
 #include "y/os/endian.hpp"
 #include "y/comparison.hpp"
+#include "y/code/utils.hpp"
+#include <iostream>
 
 namespace upsylon
 {
@@ -65,7 +67,7 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             }
 
             //! Least Significant Word
-            inline word_type LSW() const throw()
+            inline word_type lsw() const throw()
             {
                 word_type    w = 0;
                 const size_t n = min_of(bytes,sizeof(word_type));
@@ -82,7 +84,7 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             //! buffer interface : length
             inline virtual size_t length() const throw() { return bytes;  }
 
-            //! comparison
+            //! prepare a scalar type
             static inline const uint8_t * prepare( word_type &w, size_t &wb ) throw()
             {
                 w = swap_le(w);
@@ -96,6 +98,19 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
                 return p;
             }
 
+            //! display hex
+            inline std::ostream & to_hex( std::ostream &os ) const
+            {
+                os << '0' << 'x';
+                if(bytes<=0) os << hexadecimal::lowercase[0];
+                else
+                {
+                    for(size_t i=bytes;i>0;--i) os << hexadecimal::lowercase[ item[i] ];
+                }
+                return os;
+            }
+
+            //! comparison
             static inline
             int compare_blocks(const uint8_t *l,
                                const size_t   nl,
@@ -103,7 +118,26 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
                                const size_t   nr) throw()
             {
                 assert(l);assert(r);
-                return comparison::lexicographic<uint8_t>(l,nl,r,nr);
+                if(nl<nr)
+                {
+                    return -1;
+                }
+                else if(nr<nl)
+                {
+                    return 1;
+                }
+                else
+                {
+                    assert(nr==nl);
+                    size_t i=nl;
+                    while(i-->0)
+                    {
+                        const uint8_t L = l[i];
+                        const uint8_t R = r[i];
+                        if(L<R) return -1; else if(R<L) return 1; // else continue
+                    }
+                    return 0;
+                }
             }
 
 #define Y_MPN_PREPARE(W) size_t nw = 0; const uint8_t *pw = prepare(W,nw)
@@ -146,6 +180,28 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             natural operator+() { return *this; }
             Y_MPN_IMPL(+,__add)
 
+            //! increase by 1
+            inline natural __inc() const
+            {
+                static const uint8_t __one = 0x01;
+                return __add(byte,bytes,&__one,1);
+            }
+
+            //! increase operator
+            inline natural & operator++()
+            {
+                natural tmp = __inc();
+                swap_with(tmp);
+                return *this;
+            }
+
+            //! increase operator
+            natural operator++(int)
+            {
+                natural tmp = __inc();
+                swap_with(tmp);
+                return tmp;
+            }
             //__________________________________________________________________
             //
             // sub

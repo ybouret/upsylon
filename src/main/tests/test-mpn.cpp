@@ -3,6 +3,7 @@
 
 using namespace upsylon;
 
+#define ITERS 16384
 Y_UTEST(mpn)
 {
     mpn a;
@@ -10,7 +11,7 @@ Y_UTEST(mpn)
     mpn c(10);
     std::cerr << std::hex;
     std::cerr << "-- I/O with words" << std::endl;
-    for(size_t iter=0;iter<10000;++iter)
+    for(size_t iter=0;iter<ITERS;++iter)
     {
         const mpn::word_type x  = alea.partial<mpn::word_type>();
         mpn::word_type       w  = x;
@@ -22,38 +23,25 @@ Y_UTEST(mpn)
             tmp <<= 8;
             tmp |= p[(wb-i)-1];
         }
-        if(bytes_for(x)!=wb)
-        {
-            std::cerr << x <<"->" << tmp << std::endl;
-            std::cerr << "bytes: " << bytes_for(x) << "/" << wb << std::endl;
-            throw exception("invalid mpn::prepare level-1");
-        }
+        Y_ASSERT(bytes_for(x)==wb);
+        Y_ASSERT(x==tmp);
 
-        if(x!=tmp)
-        {
-            std::cerr << x <<"->" << tmp << std::endl;
-            throw exception("invalid mpn::prepare level-2");
-        }
         
         mpn y = x;
-        const mpn::word_type z = y.LSW();
-        if(z!=x)
-        {
-            std::cerr << "x=" << x << ", LSW=" << z << std::endl;
-            throw exception("LSW mismatch");
-        }
+        const mpn::word_type z = y.lsw();
+        Y_ASSERT(z==x);
     }
 
     std::cerr << "-- comparison with words" << std::endl;
-    for(size_t iter=0;iter<10000;++iter)
+    for(size_t iter=0;iter<ITERS;++iter)
     {
-        const uint64_t l = alea.partial<mpn::word_type>(10);
-        const uint64_t r = alea.partial<mpn::word_type>(10);
+        const uint64_t l = alea.partial<mpn::word_type>();
+        const uint64_t r = alea.partial<mpn::word_type>();
         const mpn      L = l;
         const mpn      R = r;
         
-        assert(L.LSW()==l);
-        assert(R.LSW()==r);
+        Y_ASSERT(L.lsw()==l);
+        Y_ASSERT(R.lsw()==r);
         
         const int cmp = comparison::increasing(l,r);
         const int CMP = mpn::compare(L,R);
@@ -77,14 +65,30 @@ Y_UTEST(mpn)
     }
     
     std::cerr << "-- additions" << std::endl;
-    for(size_t iter=0;iter<10;++iter)
+    for(size_t iter=0;iter<ITERS;++iter)
     {
         const uint64_t l = alea.partial<mpn::word_type>(60);
         const uint64_t r = alea.partial<mpn::word_type>(60);
-        std::cerr << "l=" << l << ", r=" << r << std::endl;
+        const uint64_t s = l+r;
+        if(s<l||s<r) continue;
+        //std::cerr << "l=" << l << ", r=" << r << std::endl;
+        const mpn L = l;
+        const mpn R = r;
+        const mpn S = L+R;
+        Y_ASSERT(S.lsw()==s);
     }
-
-
+    std::cerr << "++loop" << std::endl;
+    for( mpn i=0;i<30;++i)
+    {
+        i.to_hex(std::cerr) << "/";
+    }
+    std::cerr << std::endl;
+    std::cerr << "loop++" << std::endl;
+    for( mpn i=0;i<30;i++)
+    {
+        i.to_hex(std::cerr) << "/";
+    }
+    std::cerr << std::endl;
 }
 Y_UTEST_DONE()
 
