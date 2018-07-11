@@ -21,13 +21,13 @@ namespace upsylon
 		class function : public counted_object
 		{
 		public:
-            typedef arc_ptr<function> pointer;
-			virtual ~function() throw();
+            typedef arc_ptr<function> pointer; //!< pointer type
+			virtual ~function() throw();       //!< destructor
 			
 			const size_t length; //!< output generation
 			const size_t window; //!< internal window size
 			
-			virtual const char *name()   const throw() = 0;
+			virtual const char *name()   const throw() = 0; //!< get a name
 			virtual void        set() throw() = 0; //!< initialize
 			virtual void        run( const void *buffer, size_t buflen ) throw() = 0; //!< process bytes
 			virtual void        get( void *output, size_t outlen ) throw() = 0;       //!< finalize/fill array
@@ -35,13 +35,15 @@ namespace upsylon
 			void operator()( const void *buffer, size_t buflen ) throw(); //!< this->run(buffer,buflen);
 			void operator()( const memory::ro_buffer &buf )      throw(); //!< this->run(buf.ro(),buf.length());
 			void operator()( const char *buf )                   throw(); //!< this->run(buf,strlen(buf));
-			
+
+            //! run on integral type
             template <typename T>
             void run_type( const T &x ) throw() { run(&x,sizeof(T)); }
             
             //! usually used by the virtual 'get' method.
 			static void fill( void *output, size_t outlen, const void *input, size_t inlen ) throw();
-			
+
+            //! get an integral key after a run
 			template <typename T>
 			inline T key() throw() { T k(0); get( &k, sizeof(k) ); return k; }
 			
@@ -59,6 +61,7 @@ namespace upsylon
             
             
 		protected:
+            //! initialize function length and window
 			explicit function( size_t L, size_t W) throw();
 			
 		private:

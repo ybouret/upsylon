@@ -8,10 +8,12 @@ namespace upsylon
 {
 	namespace hashing
 	{
-		
+
+        //! PJW
 		class pjw : public function
 		{
 		public:
+            //! prototype
 			Y_HASHING_FUNCTION_DECL(pjw,4,4);
 			
 		private:

@@ -10,6 +10,7 @@ namespace upsylon
     //! extended bit reversal algorithm
     struct xbitrev
     {
+        //! swap pair of items
 #define Y_XBITREV_SWAP(I,J) core::bswap<2*sizeof(T)>( &arr[I], &arr[J] );
 #include "xbitrev-decl.hxx"
         //! reordering arr[1..size*2]
@@ -34,6 +35,7 @@ namespace upsylon
             }
         }
 
+        //! with generate swap tables
         template <typename T> static inline
         void run( T arr[], const size_t size) throw()
         {

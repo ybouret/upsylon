@@ -8,10 +8,12 @@ namespace upsylon
 {
 	namespace hashing
 	{
-		
+
+        //! FNV
 		class fnv : public function
 		{
 		public:
+            //! prototype
 			Y_HASHING_FUNCTION_DECL(fnv,4,4);
 			
 		private:

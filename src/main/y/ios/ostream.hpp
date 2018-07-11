@@ -33,6 +33,7 @@ namespace upsylon
                 for(size_t i=0;i<buflen;++i) write(buffer[i]);
             }
 
+            //! flux for one char
             inline ostream & operator<<( const char C )
             {
                 write(C);

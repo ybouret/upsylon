@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_HASHING_CRC32_INCLUDED
 #define Y_HASHING_CRC32_INCLUDED 1
 
@@ -7,9 +8,11 @@ namespace upsylon
 {
 	namespace hashing
 	{
+        //! crc32
 		class crc32 : public function
 		{
 		public:
+            //! prototype
 			Y_HASHING_FUNCTION_DECL(crc32,4,4);
 			
 		private:

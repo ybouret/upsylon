@@ -8,10 +8,12 @@ namespace upsylon
 {
 	namespace hashing
 	{
-		
+
+        //! Bob Jenkin's
 		class bjh32 : public function
 		{
 		public:
+            //! prototype
 			Y_HASHING_FUNCTION_DECL(bjh32,4,4);
 			
 		private:

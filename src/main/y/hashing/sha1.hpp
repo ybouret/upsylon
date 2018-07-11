@@ -10,6 +10,7 @@ namespace upsylon
 		
 		namespace RFC3174
 		{
+            //! implementation
 			struct SHA1_CTX
 			{
 				uint32_t total[2];   /*!< number of bytes processed  */
@@ -17,10 +18,12 @@ namespace upsylon
 				uint8_t  buffer[64]; /*!< data block being processed */
 			};
 		}
-		
+
+        //! SHA1
 		class sha1 : public function
 		{
 		public:
+            //! prototype
 			Y_HASHING_FUNCTION_DECL(sha1,20,64);
 			
 		private:

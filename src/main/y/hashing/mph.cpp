@@ -22,7 +22,6 @@ namespace upsylon
         {
         }
 
-#if 0
         void mperf::node_type:: viz( ios::ostream &fp ) const
         {
             fp.viz(this);
@@ -54,7 +53,8 @@ namespace upsylon
                 fp << ";\n";
             }
         }
-
+        
+#if 0
         static inline int __compare_mph_nodes(const mperf::node_type *lhs,
                                               const mperf::node_type *rhs,
                                               void *) throw()
@@ -257,15 +257,14 @@ namespace upsylon
     }
 }
 
-//#include "yocto/ios/ocstream.hpp"
+#include "y/ios/ocstream.hpp"
 
 namespace upsylon
 {
     namespace hashing
     {
 
-#if 0
-        void mperf:: graphviz( const string &filename ) const
+        void mperf:: GraphViz( const string &filename ) const
         {
             {
                 ios::ocstream fp(filename,false);
@@ -275,7 +274,7 @@ namespace upsylon
             }
 
         }
-#endif
+
         static inline
         string def2cpp( const string &def )
         {
@@ -298,7 +297,6 @@ namespace upsylon
             return ans;
         }
 
-#if 0
         void mperf::emit_defines(ios::ostream        &fp,
                                  const array<string> &keywords,
                                  const string        &prefix,
@@ -326,7 +324,6 @@ namespace upsylon
             }
 
         }
-#endif
 
     }
 

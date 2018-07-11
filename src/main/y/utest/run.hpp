@@ -20,6 +20,7 @@ std::cerr << "CHECK: " #CODE << std::endl;            \
 if(!(CODE)) throw upsylon::exception("FAILED " #CODE); \
 } while(false)
 
+//! just assert
 #define Y_ASSERT(CODE) do {                             \
 if(!(CODE)) throw upsylon::exception("FAILED " #CODE);   \
 } while(false)

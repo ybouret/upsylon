@@ -1,33 +1,38 @@
+//! \file
 #ifndef Y_HASHING_MPH_INCLUDED
 #define Y_HASHING_MPH_INCLUDED 1
 
 #include "y/core/list.hpp"
 #include "y/string.hpp"
-//#include "y/ios/ostream.hpp"
+#include "y/ios/ostream.hpp"
 #include "y/sequence/array.hpp"
 
 namespace upsylon
 {
     namespace hashing
     {
+        //! minimal perfect hashing
         class mperf
         {
         public:
+            //! internal node
             class node_type : public object
             {
             public:
-                typedef core::list_of_cpp<node_type> list_type;
+                typedef core::list_of_cpp<node_type> list_type; //!< internal list
                 node_type      *next; //!< for list
                 node_type      *prev; //!< for list
                 const int       hash; //!< in-order hash code
                 const uint8_t   code; //!< associated byte
                 list_type       chld; //!< child(ren) nodes
                 unsigned        freq; //!< frequency
-                
-                ~node_type() throw();
-                node_type(const uint8_t C) throw();
 
-                //void viz( ios::ostream &fp ) const; //!< output graphviz
+                //! destructor
+                virtual ~node_type() throw();
+                //! constructor
+                explicit node_type(const uint8_t C) throw();
+
+                void viz( ios::ostream &fp ) const; //!< output graphviz
                 void optimize() throw(); //!< order by decreasing frequency
 
 
@@ -43,7 +48,6 @@ namespace upsylon
             //! construct using a litteral of net_string
             explicit mperf(const char *nsdb);
 
-            //!
             virtual ~mperf() throw();  //!< delete root
 
             //! insert a new data in tree, h>=0
@@ -78,14 +82,14 @@ namespace upsylon
                 return find(buf.ro(),buf.length());
             }
 
+            //! release all
             void release() throw();
 
-#if 0
+            //! hash and emit keywords+codes
             static void emit_defines(ios::ostream        &fp,
                                      const array<string> &keywords,
                                      const string        &prefix,
                                      const size_t         offset=0);
-#endif
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(mperf);
@@ -98,11 +102,12 @@ namespace upsylon
             int find(const void *data) const throw();
 
         public:
-            const size_t nodes;
-            void graphviz( const string &filename ) const;
+            const size_t nodes; //!< nodes in use
+            void GraphViz( const string &filename ) const; //!< output GraphViz code
         };
     }
-    
+
+    //! to use litterals
 #define YOCTO_MPERF_FOR(WORDS) WORDS,sizeof(WORDS)/sizeof(WORDS[0])
 
 }

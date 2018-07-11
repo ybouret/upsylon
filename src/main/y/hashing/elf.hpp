@@ -9,10 +9,11 @@ namespace upsylon
 	namespace hashing
 	{
 
-        //! ELF hashing alforithm
+        //! ELF
 		class elf : public function
 		{
 		public:
+            //! prototype
 			Y_HASHING_FUNCTION_DECL(elf,4,4);
 			
 		private:

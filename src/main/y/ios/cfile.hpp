@@ -10,20 +10,24 @@ namespace upsylon
     namespace ios
     {
 
-        typedef int2type<0> cstdin_t;  extern const cstdin_t  cstdin;
-        typedef int2type<1> cstdout_t; extern const cstdout_t cstdout;
-        typedef int2type<2> cstderr_t; extern const cstderr_t cstderr;
+        typedef int2type<0>    cstdin_t;  //!< named type for stdin
+        typedef int2type<1>    cstdout_t; //!< named type for stdout
+        typedef int2type<2>    cstderr_t; //!< named type for stderr
 
+        extern const cstdin_t  cstdin;   //!< for type selection
+        extern const cstdout_t cstdout;  //!< for type selection
+        extern const cstderr_t cstderr;  //!< for type selection
 
         //! wrapper for FILE *
         class cfile : public virtual object
         {
         public:
+            //! how to open it
             enum open_mode
             {
-                open_read,
-                open_write,
-                open_append
+                open_read,    //!< "rb"
+                open_write,   //!< "wb"
+                open_append   //!< "ab"
             };
 
             //! close
@@ -35,19 +39,17 @@ namespace upsylon
             cfile( const char   *filename, const open_mode m);
             //! open stdin
             cfile( const cstdin_t  & );
+            //! open stderr
             cfile( const cstderr_t & );
+            //! open stdout
             cfile( const cstdout_t & );
 
             //! content operator
             FILE * operator*() throw();
 
-
-
-        protected:
+        private:
             FILE       *fp;
             const bool  persistent;
-
-        private:
             Y_DISABLE_COPY_AND_ASSIGN(cfile);
         };
     }

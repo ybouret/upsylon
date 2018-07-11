@@ -8,10 +8,12 @@ namespace upsylon
 {
 	namespace hashing
 	{
-		
+
+        //! Super Fast Hash
 		class sfh : public function
 		{
 		public:
+            //! prototype
 			Y_HASHING_FUNCTION_DECL(sfh,4,4);
 			
 		private:

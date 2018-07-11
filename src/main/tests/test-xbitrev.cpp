@@ -65,8 +65,8 @@ namespace
             fprintf(*imp,"case %u:", (unsigned)size);
             if(nx>0)
             {
-                fprintf(*hdr,"static const size_t indx%u[%u];\n",(unsigned)size,unsigned(nx));
-                fprintf(*hdr,"static const size_t jndx%u[%u];\n",(unsigned)size,unsigned(nx));
+                fprintf(*hdr,"static const size_t indx%u[%u];//!< first  index\n",(unsigned)size,unsigned(nx));
+                fprintf(*hdr,"static const size_t jndx%u[%u];//!< second index\n",(unsigned)size,unsigned(nx));
                 fprintf(*hdr,"\n");
 
                 fprintf(*src,"const size_t xbitrev::indx%u[%u] ={\n",(unsigned)size,unsigned(nx));

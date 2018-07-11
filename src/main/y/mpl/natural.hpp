@@ -14,18 +14,21 @@ namespace upsylon
     namespace mpl
     {
 
+        //! check natural sanity
 #define Y_MPN_CHECK(PTR)                       \
 assert( is_a_power_of_two((PTR)->allocated) ); \
 assert( (PTR)->bytes<=(PTR)->allocated );      \
 assert( (PTR)->byte-1==(PTR)->item );          \
 assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
 
+        //! in place constructor
 #define Y_MPN_CTOR(SZ,MX) bytes(SZ), allocated(MX), byte( __acquire(allocated) ), item(byte-1)
 
+        //! big natural number
         class natural : public memory::ro_buffer
         {
         public:
-            typedef uint64_t word_type;
+            typedef uint64_t word_type; //!< integral type for drop in replacement
 
             //! a zero natural
             inline natural() : Y_MPN_CTOR(0,0) { Y_MPN_CHECK(this); }
@@ -110,7 +113,10 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
                 return os;
             }
 
+            //! fast checking against 0
             inline bool is_zero() const throw() { return (bytes<=0); }
+
+            //! fast checking against a byte
             inline bool is_byte(const uint8_t x) const throw()
             {
                 if(x<=0)
@@ -122,6 +128,12 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
                     return (1==bytes) && (x==byte[0]);
                 }
             }
+
+            //! fast==1
+            inline bool is_one() const throw() { return (1==bytes) && (1==byte[0]);}
+            //! fast==2
+            inline bool is_two() const throw() { return (1==bytes) && (2==byte[0]);}
+
 
             //! comparison
             static inline
@@ -153,7 +165,9 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
                 }
             }
 
+            //! inline preparation of a word
 #define Y_MPN_PREPARE(W) size_t nw = 0; const uint8_t *pw = prepare(W,nw)
+            //! multiple overloaded prototypes, no throw
 #define Y_MPN_DEFINE_NOTHROW(RET,BODY,CALL) \
 static inline RET BODY(const natural &lhs, const natural &rhs) throw() { return CALL(lhs.byte,lhs.bytes,rhs.byte,rhs.bytes);      }\
 static inline RET BODY(const natural &lhs, word_type      w  ) throw() { Y_MPN_PREPARE(w); return CALL(lhs.byte,lhs.bytes,pw,nw); }\
@@ -161,7 +175,7 @@ static inline RET BODY(word_type      w,   const natural &rhs) throw() { Y_MPN_P
 
             Y_MPN_DEFINE_NOTHROW(int,compare,compare_blocks)
 
-
+            //! comparison operator declarations
 #define Y_MPN_CMP(OP) \
 inline friend bool operator OP ( const natural  &lhs, const natural  &rhs ) throw() { return compare(lhs,rhs) OP 0; } \
 inline friend bool operator OP ( const natural  &lhs, const word_type rhs ) throw() { return compare(lhs,rhs) OP 0; } \
@@ -174,11 +188,13 @@ inline friend bool operator OP ( const word_type lhs, const natural  &rhs ) thro
             Y_MPN_CMP(>=)
             Y_MPN_CMP(>)
 
+            //! multiple overloaded prototypes
 #define Y_MPN_DEFINE(RET,BODY) \
 static inline RET BODY(const natural &lhs, const natural &rhs) { return BODY(lhs.byte,lhs.bytes,rhs.byte,rhs.bytes);      }\
 static inline RET BODY(const natural &lhs, word_type      w  ) { Y_MPN_PREPARE(w); return BODY(lhs.byte,lhs.bytes,pw,nw); }\
 static inline RET BODY(word_type      w,   const natural &rhs) { Y_MPN_PREPARE(w); return BODY(pw,nw,rhs.byte,rhs.bytes); }
 
+            //! multiple prototype for operators
 #define Y_MPN_IMPL(OP,CALL) \
 natural & operator OP##=(const natural  &rhs) { natural ans = CALL(*this,rhs); swap_with(ans); return *this; }\
 natural & operator OP##=(const word_type rhs) { natural ans = CALL(*this,rhs); swap_with(ans); return *this; }\
@@ -190,8 +206,10 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             // ADD
             //__________________________________________________________________
             Y_MPN_DEFINE(natural,__add)
-            natural operator+() { return *this; }
             Y_MPN_IMPL(+,__add)
+
+            //! unary plus
+            natural operator+() { return *this; }
 
             //! increase by 1
             inline natural __inc() const
@@ -245,6 +263,7 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
                 swap_with(tmp);
                 return tmp;
             }
+
         private:
             size_t   bytes;     //!< active bytes
             size_t   allocated; //!< allocated bytes
@@ -282,7 +301,7 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
         };
     }
 
-    typedef mpl::natural   mpn;
+    typedef mpl::natural   mpn; //!< alias
 }
 #endif
 

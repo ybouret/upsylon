@@ -7,20 +7,24 @@
 namespace upsylon
 {
 
+    //! handle some comparison function
     class comparison
     {
     public:
+        //! lexicographic comparison
         template <typename T> static inline
         int lexicographic(const T *sa, const size_t na, const T *sb, const size_t nb) throw()
         {
             return ( (na<=nb) ? __lexicographic<T>(sa,na,sb,nb) : - __lexicographic<T>(sb,nb,sa,na) );
         }
 
+        //! convert signed value
         static int normalize( const int ans ) throw()
         {
             return (ans < 0) ? -1 : ( (0<ans) ? 1 : 0 );
         }
 
+        //! check same comparison signed
         static int are_same_results( const int a, const int b ) throw()
         {
             switch( normalize(a) )
@@ -31,9 +35,10 @@ namespace upsylon
                     break;
             }
             assert(0==normalize(a));
-            return (0 == normalize(b));
+            return (0==normalize(b));
         }
 
+        //! compare by increasing value
         template <typename T> static inline
         int increasing( const T &lhs, const T &rhs ) throw()
         {
