@@ -22,7 +22,7 @@ assert( (PTR)->byte-1==(PTR)->item );          \
 assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
 
         //! in place constructor
-#define Y_MPN_CTOR(SZ,MX) bytes(SZ), allocated(MX), byte( __acquire(allocated) ), item(byte-1)
+#define Y_MPN_CTOR(SZ,MX) memory::ro_buffer(), bytes(SZ), allocated(MX), byte( __acquire(allocated) ), item(byte-1)
 
         //! big natural number
         class natural : public memory::ro_buffer
@@ -60,6 +60,22 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
                 update();
             }
 
+            //! assign
+            natural & operator=( const natural &other )
+            {
+                natural tmp(other);
+                swap_with(tmp);
+                return *this;
+            }
+
+            //! assign from word_type
+            natural & operator=( word_type w )
+            {
+                natural tmp(w);
+                swap_with(tmp);
+                return *this;
+            }
+
             //! no throw swap
             inline void swap_with( natural &other ) throw()
             {
@@ -82,7 +98,7 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             }
             
             //! buffer interface : ro
-            inline virtual void  *ro() const throw()     { return byte;   }
+            inline virtual const void  *ro() const throw()     { return byte;   }
 
             //! buffer interface : length
             inline virtual size_t length() const throw() { return bytes;  }

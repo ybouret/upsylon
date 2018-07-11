@@ -3,19 +3,57 @@
 #include "y/memory/dyadic.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ios/cfile.hpp"
+#include "y/hashing/sha1.hpp"
+#include "y/utest/timings.hpp"
 
 using namespace upsylon;
 
 namespace
 {
     template <typename T>
-    static inline void do_test()
+    static inline void do_test(double D)
     {
+        std::cerr << "sizeof(real)=" << sizeof(T) << std::endl;
         typedef complex<T> cplx;
-        for(size_t n=1;n<=16384;n*=2)
+        hashing::sha1 H;
+        for(size_t n=1;n<=8192;n*=2)
         {
+            std::cerr << "n=" << n << std::endl;
+            vector<cplx,memory::dyadic> v0(n);
             vector<cplx,memory::dyadic> v(n);
-            xbitrev::run_safe( &v[1].re-1,v.size());
+            for(size_t iter=0;iter<10;++iter)
+            {
+                for(size_t i=1;i<=n;++i)
+                {
+                    v0[i].re = alea.to<T>();
+                    v0[i].im = alea.to<T>();
+                }
+                for(size_t i=1;i<=n;++i)
+                {
+                    v[i] = v0[i];
+                }
+                xbitrev::run_safe( &v[1].re-1,v.size());
+                H.set();
+                H(v);
+                const uint64_t k1 = H.key<uint64_t>();
+                for(size_t i=1;i<=n;++i)
+                {
+                    v[i] = v0[i];
+                }
+                xbitrev::run( &v[1].re-1,v.size());
+                H.set();
+                H(v);
+                const uint64_t k2 = H.key<uint64_t>();
+                Y_ASSERT(k1==k2);
+            }
+            double speed1 = 0;
+            Y_TIMINGS(speed1,D, xbitrev::run_safe( &v[1].re-1,v.size()));
+            //std::cerr << "\tspeed1 = " << speed1 << std::endl;
+            double speed2 = 0;
+            Y_TIMINGS(speed2,D, xbitrev::run( &v[1].re-1,v.size()));
+            //std::cerr << "\tspeed2 = " << speed2 << std::endl;
+            std::cerr << "\t\tspeedup: " << speed2/speed1 << std::endl;
+
         }
     }
 
@@ -86,8 +124,9 @@ namespace
 
 Y_UTEST(xbitrev)
 {
-    do_test<float>();
-    do_test<double>();
+    double D = 0.5;
+    do_test<float>(D);
+    do_test<double>(D);
 
     if(argc>1&& 0==strcmp(argv[1],"true"))
     {

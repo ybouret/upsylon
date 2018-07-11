@@ -38,7 +38,7 @@ namespace upsylon
         }
 
         //! buffer interface: read only access
-        inline virtual void *ro() const throw() { return (size_>0) ? &item_[1] : 0; }
+        inline virtual const void *ro() const throw() { return (size_>0) ? &item_[1] : 0; }
 
         //! buffer interface : length in bytes
         inline size_t length() const throw() { return size_ * sizeof(T); }
