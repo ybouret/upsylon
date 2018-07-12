@@ -31,6 +31,7 @@ namespace upsylon
                 case cfile::open_write: return "wb";
                 case cfile::open_append: return "ab";
             }
+            return 0;
         }
 
         static inline

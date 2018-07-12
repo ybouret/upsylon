@@ -2,6 +2,8 @@
 #include "y/memory/buffers.hpp"
 #include "y/exceptions.hpp"
 #include <cerrno>
+#include <cstdarg>
+#include <cstdio>
 #include "y/code/utils.hpp"
 
 namespace upsylon
