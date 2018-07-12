@@ -166,6 +166,14 @@ namespace upsylon
             return complex(x*rhs.re,x*rhs.im);
         }
 
+        //! in splace square
+        inline void __square() throw()
+        {
+            const real_type i_half = re*im;
+            const real_type r_full = re*re - im*im;
+            im = i_half+i_half;
+            re = r_full;
+        }
         //______________________________________________________________________
         //
         // division

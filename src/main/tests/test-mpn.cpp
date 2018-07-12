@@ -127,6 +127,10 @@ Y_UTEST(mpn)
         const mpn R = r;
         const mpn P = L*R;
         Y_ASSERT(P.lsw()==p);
+        const uint64_t l2 = l*l;
+        const mpn L2 = mpn::square_of(L);
+        Y_ASSERT(L2.lsw()==l2);
+
     }
 
 }

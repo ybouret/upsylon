@@ -287,6 +287,7 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             Y_MPN_DEFINE(natural,__mul)
             Y_MPN_IMPL(*,__mul)
 
+            static natural square_of( const natural &n );
 
         private:
             size_t   bytes;     //!< active bytes

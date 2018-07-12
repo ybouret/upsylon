@@ -145,6 +145,69 @@ namespace upsylon
             }
         }
 
+        natural natural:: square_of( const natural &lhs )
+        {
+            const size_t nl = lhs.bytes;
+            if( nl > 0  )
+            {
+                static memory::allocator &hmem = memory::dyadic::instance();
+
+                const size_t np = nl << 1;             //-- product size
+                natural       P( np, as_capacity );    //-- product value
+                //--------------------------------------------------------------
+                //-- compute power of two
+                //--------------------------------------------------------------
+                const size_t nn = next_power_of_two(np);
+
+                //--------------------------------------------------------------
+                //- compute wokspace size and create it
+                //--------------------------------------------------------------
+                //array_of<cplx_t> L( nn );
+                size_t         workspace = 0;
+                size_t         nreq      = nn;
+                cplx_t        *L  = hmem.acquire_as<cplx_t>(nreq,workspace);
+                const uint8_t *l = lhs.byte;
+                for(size_t i=0;i<nl;++i)
+                {
+                    L[i].re = l[i];
+                }
+                //--------------------------------------------------------------
+                //-- forward
+                //--------------------------------------------------------------
+                real_t *data = &L[0].re-1;
+                fft<real_t>::forward( data,  nn  );
+
+                //--------------------------------------------------------------
+                //-- multiply in place, in L
+                //--------------------------------------------------------------
+                for(size_t i=0;i<nn;++i)
+                {
+                    L[i].__square();
+                }
+                //--------------------------------------------------------------
+                //-- reverse
+                //--------------------------------------------------------------
+                fft<real_t>::reverse( data, nn );
+                const real_t fac   = 1.0/nn;
+                real_t       carry = 0.0;
+                uint8_t     *prod  = P.byte;
+                const size_t top   = np - 1;
+                for(size_t i=0;i<top;++i)
+                {
+                    const real_t q = floor( (carry += (L[i].re*fac + 0.5) ) * 0.00390625 );
+                    const real_t r = carry - (256.0 * q);
+                    prod[i]        = uint8_t(r);
+                    carry          = q;
+                }
+                prod[top] = uint8_t(carry);
+                P.bytes = np;
+                P.update();
+                return P;
+            }
+            else
+                return natural();
+        }
+
     }
 }
 

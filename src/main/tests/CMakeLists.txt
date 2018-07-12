@@ -43,6 +43,7 @@ ADD_TEST(Complex   test-main complex)
 ADD_TEST(MPN       test-main mpn)
 ADD_TEST(hashing   test-main hashing)
 ADD_TEST(ostreams  test-main ostreams)
+ADD_TEST(xbitrev   test-main xbitrev 0.0)
 ADD_TEST(fft       test-main fft)
 
 ADD_CUSTOM_TARGET(utest-main
