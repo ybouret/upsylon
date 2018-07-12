@@ -155,7 +155,6 @@ Y_UTEST(mpn)
     }
 
     std::cerr << "-- right bit shifting" << std::endl;
-    std::cerr << std::dec;
     for(size_t iter=0;iter<ITERS;++iter)
     {
         const uint64_t l = alea.full<uint64_t>();
@@ -169,6 +168,15 @@ Y_UTEST(mpn)
         }
     }
 
+    std::cerr << "-- power of two" << std::endl;
+    for(size_t j=0;j<100;++j)
+    {
+        const mpn L = mpn::exp2(j);
+        if(j<64)
+        {
+            Y_ASSERT( L.lsw() == (uint64_t(1)<<j));
+        }
+    }
 }
 Y_UTEST_DONE()
 

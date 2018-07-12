@@ -399,6 +399,17 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
                 return ans;
             }
 
+            //! 2^j
+            static inline natural exp2( const size_t j )
+            {
+                const size_t num_bits  = j+1;
+                const size_t new_bytes = Y_BYTES_FOR(num_bits);
+                natural ans(new_bytes,as_capacity);
+                ans.byte[ j>>3 ] = bits_table::value[j&7];
+                ans.bytes = new_bytes;
+                assert(ans.item[new_bytes]>0);
+                return ans;
+            }
 
         private:
             size_t   bytes;     //!< active bytes
