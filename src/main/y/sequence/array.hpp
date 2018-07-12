@@ -37,6 +37,12 @@ namespace upsylon
             return os;
         }
 
+        //! content
+        inline type * operator*() throw() { return (size_>0) ? &item_[1] : 0; }
+
+        //! const content
+        inline const_type * operator*() const throw() { return (size_>0) ? &item_[1] : 0; }
+
         //! buffer interface: read only access
         inline virtual const void *ro() const throw() { return (size_>0) ? &item_[1] : 0; }
 
