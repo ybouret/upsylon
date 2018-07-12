@@ -306,6 +306,12 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
             Y_CORE_STRING_CMP(>=)
             Y_CORE_STRING_CMP(>)
             
+            inline string & trim(const size_t n) throw()
+            {
+                addr_[ (size_ = (n>=size_) ? 0 : size_-n) ]=0;
+                Y_CORE_STRING_CHECK(*this);
+                return *this;
+            }
 
         private:
             T     *addr_;
@@ -348,7 +354,7 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
                     {
                         p[i] = s[i];
                     }
-                    size_ = new_size;
+                    addr_[ (size_ = new_size) ] = 0;
                 }
                 else
                 {

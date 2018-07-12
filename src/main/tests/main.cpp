@@ -43,6 +43,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(mpn);
     Y_UTEST(hashing);
     Y_UTEST(ostreams);
+    Y_UTEST(istreams);
     Y_UTEST(fft);
 
 }

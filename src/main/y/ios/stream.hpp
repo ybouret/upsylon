@@ -2,14 +2,15 @@
 #ifndef Y_IOS_STREAM_INCLUDED
 #define Y_IOS_STREAM_INCLUDED 1
 
-#include "y/object.hpp"
+#include "y/ptr/counted.hpp"
+#include "y/os/endian.hpp"
 
 namespace upsylon
 {
     namespace ios
     {
         //! base class for streams
-        class stream : public virtual object
+        class stream : public counted_object
         {
         public:
             //! destructor
