@@ -127,13 +127,18 @@ namespace upsylon
         U mask = static_cast<U>(0x01) << ( max_bits-1 );
         for( int i=max_bits;i>0;--i)
         {
-            if( n & mask )
+            if( (n & mask) )
                 return i;
             mask >>= 1;
         }
         return 0;
     }
 
+    //! bits table
+    struct bits_table
+    {
+        static const size_t count_for_byte[256]; //!< count of bits for bytes[0..255]
+    };
 
 }
 

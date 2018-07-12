@@ -83,6 +83,16 @@ Y_UTEST(code)
     }
     fprintf(stderr,"\n");
     fflush(stderr);
+
+    std::cerr << "-- gen bits" << std::endl;
+    for(size_t i=0;i<256;++i)
+    {
+        std::cerr << bits_for(i);
+        if(i<255) std::cerr << ',';
+        if( !((i+1)&15) ) std::cerr << std::endl;
+    }
+    std::cerr << std::endl;
+    
 }
 Y_UTEST_DONE()
 

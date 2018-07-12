@@ -33,6 +33,14 @@ Y_UTEST(mpn)
         Y_ASSERT(z==x);
     }
 
+    std::cerr << "-- bits with words" << std::endl;
+    for(size_t iter=0;iter<ITERS;++iter)
+    {
+        const mpn::word_type x  = alea.partial<mpn::word_type>();
+        const mpn X = x;
+        Y_ASSERT(X.bits()==bits_for(x));
+    }
+
     std::cerr << "-- comparison with words" << std::endl;
     for(size_t iter=0;iter<ITERS;++iter)
     {

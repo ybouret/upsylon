@@ -150,6 +150,11 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             //! fast==2
             inline bool is_two() const throw() { return (1==bytes) && (2==byte[0]);}
 
+            //! get number of bits
+            inline size_t bits() const throw()
+            {
+                return (bytes<=0) ? 0 : ( (bytes-1) << 3 ) + bits_table::count_for_byte[ item[bytes] ];
+            }
 
             //! comparison
             static inline
