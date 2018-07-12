@@ -18,7 +18,7 @@ namespace
         hashing::sha1 H;
         for(size_t n=1;n<=8192;n*=2)
         {
-            std::cerr << "n=" << n << std::endl;
+            std::cerr << "n=" << n << " : "; std::cerr.flush();
             vector<cplx,memory::dyadic> v0(n);
             vector<cplx,memory::dyadic> v(n);
             for(size_t iter=0;iter<10;++iter)
@@ -52,7 +52,7 @@ namespace
             double speed2 = 0;
             Y_TIMINGS(speed2,D, xbitrev::run( &v[1].re-1,v.size()));
             //std::cerr << "\tspeed2 = " << speed2 << std::endl;
-            std::cerr << "\t\tspeedup: " << speed2/speed1 << std::endl;
+            std::cerr << "speedup: " << speed2/speed1 << std::endl;
 
         }
     }

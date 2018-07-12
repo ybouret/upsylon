@@ -52,6 +52,46 @@ sequence<T>(), array<T>(), maxi_(n), bytes(0), hmem_( ALLOCATOR::instance() ),ad
             }
         }
 
+        //! vector with construction of each item with args
+        inline vector(const size_t n, param_type args) : Y_VECTOR_CTOR(n)
+        {
+            this->item_ = addr_-1;
+            try
+            {
+                while(this->size_<n)
+                {
+                    new (addr_+this->size_) T(args);
+                    ++(this->size_);
+                }
+            }
+            catch(...)
+            {
+                __release();
+                throw;
+            }
+        }
+
+        //! vector with construction of each item with func(1...n)
+        template <typename FUNC>
+        inline vector(const size_t n, FUNC &func) : Y_VECTOR_CTOR(n)
+        {
+            this->item_ = addr_-1;
+            try
+            {
+                while(this->size_<n)
+                {
+                    const size_t i = (this->size_)+1;
+                    new (addr_+this->size_) T( func(i) );
+                    this->size_ = i;
+                }
+            }
+            catch(...)
+            {
+                __release();
+                throw;
+            }
+        }
+
         //! copy constructor
         vector(const vector &other) : Y_VECTOR_CTOR(other.size_)
         {
@@ -60,7 +100,7 @@ sequence<T>(), array<T>(), maxi_(n), bytes(0), hmem_( ALLOCATOR::instance() ),ad
             {
                 while(this->size_<other.size_)
                 {
-                    new (addr_+this->size_) T( other.addr[this->size_] );
+                    new (addr_+this->size_) T( other.addr_[this->size_] );
                     ++(this->size_);
                 }
             }

@@ -34,6 +34,8 @@ namespace upsylon
                 j += m;
             }
         }
+
+        //! swap two pairs of items
 #define Y_XBITREV_SWAP2(I,J) { \
 const size_t __I = (I); \
 const size_t __J = (J); \
@@ -62,7 +64,7 @@ core::bswap<2*sizeof(T)>( &brr[__I], &brr[__J] ); }
             }
         }
 
-        //! with generated swap tables
+        //! reordering arr[1..size*2] with generated swap tables
         template <typename T> static inline
         void run( T arr[], const size_t size) throw()
         {
@@ -74,7 +76,7 @@ core::bswap<2*sizeof(T)>( &brr[__I], &brr[__J] ); }
             }
         }
 
-        //! with generated swap tables
+        //! reordering arr[1..size*2] and brr[1..size*2] with generated swap tables
         template <typename T> static inline
         void run( T arr[], T brr[], const size_t size) throw()
         {

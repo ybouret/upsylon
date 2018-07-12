@@ -82,7 +82,7 @@ namespace upsylon
 #include <mach/thread_act.h>
             void thread::assign(handle h, const size_t j)
             {
-                thread_affinity_policy_data_t policy_data = { j };
+                thread_affinity_policy_data_t policy_data = { int(j) };
                 mach_port_t                   mach_thread = pthread_mach_thread_np(h);
                 if( KERN_SUCCESS != thread_policy_set(mach_thread, THREAD_AFFINITY_POLICY, (thread_policy_t)&policy_data, THREAD_AFFINITY_POLICY_COUNT))
                 {
