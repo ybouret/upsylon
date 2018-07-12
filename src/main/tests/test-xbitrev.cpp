@@ -1,4 +1,4 @@
-#include "y/code/xbitrev.hpp"
+#include "y/fft/xbitrev.hpp"
 #include "y/utest/run.hpp"
 #include "y/memory/dyadic.hpp"
 #include "y/sequence/vector.hpp"

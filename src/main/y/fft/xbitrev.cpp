@@ -1,5 +1,5 @@
 
-#include "y/code/xbitrev.hpp"
+#include "y/fft/xbitrev.hpp"
 
 namespace upsylon
 {
