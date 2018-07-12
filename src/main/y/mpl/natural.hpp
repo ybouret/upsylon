@@ -64,7 +64,7 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             natural & operator=( const natural &other )
             {
                 natural tmp(other);
-                swap_with(tmp);
+                xch(tmp);
                 return *this;
             }
 
@@ -72,12 +72,12 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             natural & operator=( word_type w )
             {
                 natural tmp(w);
-                swap_with(tmp);
+                xch(tmp);
                 return *this;
             }
 
             //! no throw swap
-            inline void swap_with( natural &other ) throw()
+            inline void xch( natural &other ) throw()
             {
                 cswap(bytes,other.bytes);
                 cswap(allocated,other.allocated);
@@ -217,10 +217,10 @@ static inline RET BODY(word_type      w,   const natural &rhs) { Y_MPN_PREPARE(w
 
             //! multiple prototype for operators
 #define Y_MPN_IMPL(OP,CALL) \
-natural & operator OP##=(const natural  &rhs) { natural ans = CALL(*this,rhs); swap_with(ans); return *this; }\
-natural & operator OP##=(const word_type rhs) { natural ans = CALL(*this,rhs); swap_with(ans); return *this; }\
-inline friend natural operator OP ( const natural  &lhs, const natural  &rhs ) { return CALL(lhs,rhs); }      \
-inline friend natural operator OP ( const natural  &lhs, const word_type rhs ) { return CALL(lhs,rhs); }      \
+natural & operator OP##=(const natural  &rhs) { natural ans = CALL(*this,rhs); xch(ans); return *this; } \
+natural & operator OP##=(const word_type rhs) { natural ans = CALL(*this,rhs); xch(ans); return *this; } \
+inline friend natural operator OP ( const natural  &lhs, const natural  &rhs ) { return CALL(lhs,rhs); } \
+inline friend natural operator OP ( const natural  &lhs, const word_type rhs ) { return CALL(lhs,rhs); } \
 inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) { return CALL(lhs,rhs); }
             //__________________________________________________________________
             //
@@ -243,7 +243,7 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             inline natural & operator++()
             {
                 natural tmp = __inc();
-                swap_with(tmp);
+                xch(tmp);
                 return *this;
             }
 
@@ -251,7 +251,7 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             natural operator++(int)
             {
                 natural tmp = __inc();
-                swap_with(tmp);
+                xch(tmp);
                 return tmp;
             }
 
@@ -273,7 +273,7 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             inline natural & operator--()
             {
                 natural tmp = __dec();
-                swap_with(tmp);
+                xch(tmp);
                 return *this;
             }
 
@@ -281,7 +281,7 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             natural operator--(int)
             {
                 natural tmp = __dec();
-                swap_with(tmp);
+                xch(tmp);
                 return tmp;
             }
 
