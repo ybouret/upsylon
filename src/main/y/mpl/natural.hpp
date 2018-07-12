@@ -280,6 +280,14 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
                 return tmp;
             }
 
+            //__________________________________________________________________
+            //
+            // mul
+            //__________________________________________________________________
+            Y_MPN_DEFINE(natural,__mul)
+            Y_MPN_IMPL(*,__mul)
+
+
         private:
             size_t   bytes;     //!< active bytes
             size_t   allocated; //!< allocated bytes
@@ -314,6 +322,8 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
                                  const uint8_t *r,
                                  const size_t   nr);
 
+            static natural __mul(const uint8_t *l, const size_t nl,
+                                 const uint8_t *r, const size_t nr);
         };
     }
 

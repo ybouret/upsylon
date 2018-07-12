@@ -3,7 +3,8 @@
 
 using namespace upsylon;
 
-#define ITERS 16384
+#define ITERS (1<<14)
+
 Y_UTEST(mpn)
 {
     mpn a;
@@ -115,6 +116,19 @@ Y_UTEST(mpn)
         i.to_hex(std::cerr) << "/";
     }
     std::cerr << std::endl;
+
+    std::cerr << "-- multiplication" << std::endl;
+    for(size_t iter=0;iter<ITERS;++iter)
+    {
+        const uint64_t l = alea.full<uint32_t>();
+        const uint64_t r = alea.full<uint32_t>();
+        const uint64_t p = l*r;
+        const mpn L = l;
+        const mpn R = r;
+        const mpn P = L*R;
+        Y_ASSERT(P.lsw()==p);
+    }
+
 }
 Y_UTEST_DONE()
 

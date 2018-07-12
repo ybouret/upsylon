@@ -146,7 +146,7 @@ Y_FFT_SIN(30), Y_FFT_SIN(31)
 
     //! instance for table of double
     template <>
-    const double fft<double>:: sin_table[32] =
+    inline const double fft<double>:: sin_table[32] =
     {
         Y_FFT_TABLE()
     };
@@ -157,7 +157,7 @@ Y_FFT_SIN(30), Y_FFT_SIN(31)
 
     //! instance for  table of float
     template <>
-    const float fft<float>:: sin_table[32] =
+    inline const float fft<float>:: sin_table[32] =
     {
         Y_FFT_TABLE()
     };
