@@ -305,7 +305,8 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
             Y_CORE_STRING_CMP(<)
             Y_CORE_STRING_CMP(>=)
             Y_CORE_STRING_CMP(>)
-            
+
+            //! trim n last chars
             inline string & trim(const size_t n) throw()
             {
                 addr_[ (size_ = (n>=size_) ? 0 : size_-n) ]=0;

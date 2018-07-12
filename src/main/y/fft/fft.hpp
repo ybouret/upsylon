@@ -13,7 +13,8 @@ namespace upsylon
     template <typename real_t>
     struct fft
     {
-        static const real_t sin_table[];
+        static const real_t sin_table[]; //!< table of precomputed sine fractions
+
         //______________________________________________________________________
         //
         //! single FFT of data[1..2*size]
@@ -131,8 +132,9 @@ namespace upsylon
 
 
 
-
+//! compute a fraction of size, double version
 #define Y_FFT_SIN(LN2) sin(6.28318530717958623199592693708837032318115234375/(size_t(1)<<(LN2)))
+    //! generate a table of sine fractions
 #define Y_FFT_TABLE()                                                     \
 Y_FFT_SIN(0),  Y_FFT_SIN(1),  Y_FFT_SIN(2),  Y_FFT_SIN(3),  Y_FFT_SIN(4), \
 Y_FFT_SIN(5),  Y_FFT_SIN(6),  Y_FFT_SIN(7),  Y_FFT_SIN(8),  Y_FFT_SIN(9), \
@@ -142,6 +144,7 @@ Y_FFT_SIN(20), Y_FFT_SIN(21), Y_FFT_SIN(22), Y_FFT_SIN(23), Y_FFT_SIN(24),\
 Y_FFT_SIN(25), Y_FFT_SIN(26), Y_FFT_SIN(27), Y_FFT_SIN(28), Y_FFT_SIN(29),\
 Y_FFT_SIN(30), Y_FFT_SIN(31)
 
+    //! instance for table of double
     template <>
     const double fft<double>:: sin_table[32] =
     {
@@ -149,8 +152,10 @@ Y_FFT_SIN(30), Y_FFT_SIN(31)
     };
 
 #undef  Y_FFT_SIN
+    //! compute a fraction of sine, float version
 #define Y_FFT_SIN(LN2) sinf(6.28318530717958623199592693708837032318115234375f/(size_t(1)<<(LN2)))
 
+    //! instance for  table of float
     template <>
     const float fft<float>:: sin_table[32] =
     {

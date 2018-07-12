@@ -26,6 +26,7 @@ namespace upsylon
             //! test at least one more char, default query/store
             virtual bool is_active();
 
+            //! get a new line
             bool gets( string &line );
 
             
@@ -37,6 +38,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(istream);
         };
 
+        //! read line algorithm
         struct read_line
         {
 
@@ -49,7 +51,7 @@ namespace upsylon
             static const int found_crlf   =  2; //!< a CRLF is detected => remove CRLF and line is ready
             static const int found_cr     =  3; //!< a CR + char is detected => remove CR, unread char and line is ready
 
-            static int scan( istream &in, string &line );
+            static int scan( istream &in, string &line ); //!< scan input, grow current line
 
         };
     }

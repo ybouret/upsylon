@@ -33,7 +33,9 @@ namespace upsylon
                 ALLOCATOR::location().template release_as<T>(data,(size_t&)size,(size_t&)bytes);
             }
 
+            //! access [0..size-1]
             inline type       & operator[](size_t indx) throw()       { assert(indx<size); return data[indx]; }
+            //! const access[0..size-1]
             inline const type & operator[](size_t indx) const throw() { assert(indx<size); return data[indx]; }
 
 

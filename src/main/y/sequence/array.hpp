@@ -54,10 +54,12 @@ namespace upsylon
         size_t        size_; //!< size()
 
         //! default initialisation
-        inline array() throw() : item_(0), size_(0) {}
+        inline array() throw() : dynamic(), memory::ro_buffer(), item_(0), size_(0) {}
 
         //! intialize from precomputed data
         inline array(T *user_item,const size_t user_size) throw() :
+        dynamic(),
+        memory::ro_buffer(),
         item_(user_item),
         size_(user_size)
         {

@@ -17,8 +17,13 @@ namespace upsylon
         Y_DECL_ARGS(T,type); //!< aliases
         
         //! initialize fields
-#define Y_VECTOR_CTOR(n) \
-sequence<T>(), array<T>(), maxi_(n), bytes(0), hmem_( ALLOCATOR::instance() ),addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
+#define Y_VECTOR_CTOR(n)   \
+sequence<T>(),              \
+array<T>(),                  \
+maxi_(n),                     \
+bytes(0),                      \
+hmem_( ALLOCATOR::instance() ), \
+addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
 
         inline vector() : Y_VECTOR_CTOR(0) {}
 
@@ -93,7 +98,7 @@ sequence<T>(), array<T>(), maxi_(n), bytes(0), hmem_( ALLOCATOR::instance() ),ad
         }
 
         //! copy constructor
-        vector(const vector &other) : Y_VECTOR_CTOR(other.size_)
+        inline vector(const vector &other) : Y_VECTOR_CTOR(other.size_)
         {
             this->item_ = addr_-1;
             try
@@ -112,7 +117,7 @@ sequence<T>(), array<T>(), maxi_(n), bytes(0), hmem_( ALLOCATOR::instance() ),ad
         }
 
         //! assign another vector
-        vector & operator=( const vector &other )
+        inline vector & operator=( const vector &other )
         {
             if(this != &other)
             {
