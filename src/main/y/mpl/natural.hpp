@@ -292,7 +292,17 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             Y_MPN_DEFINE(natural,__mul)
             Y_MPN_IMPL(*,__mul)
 
+            //! fast square
             static natural square_of( const natural &n );
+
+            //__________________________________________________________________
+            //
+            // bits shifting
+            //__________________________________________________________________
+            natural shl(size_t shift) const
+            {
+                return *this;
+            }
 
         private:
             size_t   bytes;     //!< active bytes
