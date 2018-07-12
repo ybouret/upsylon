@@ -295,14 +295,110 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             //! fast square
             static natural square_of( const natural &n );
 
-            //__________________________________________________________________
-            //
-            // bits shifting
-            //__________________________________________________________________
-            natural shl(size_t shift) const
+            //! ready any byte
+            uint8_t operator[](size_t indx) const throw()
             {
+                if(indx>=bytes) return 0;
+                else return byte[indx];
+            }
+
+            //! ready valid bit to 0 or 1
+            inline uint8_t get_bit(const size_t ibit) const throw()
+            {
+                assert(ibit<=bits());
+                return bits_table::_true[ byte[ibit>>3] & bits_table::value[ibit&7] ];
+            }
+
+            //! test a valid bit
+            inline bool has_bit(const size_t ibit) const throw()
+            {
+                return 0!=(byte[ibit>>3] & bits_table::value[ibit&7]);
+            }
+
+            //! left shift
+            natural shl(const size_t shift) const
+            {
+                if(shift>0&&bytes>0)
+                {
+                    const size_t old_bits  = bits();
+                    const size_t new_bits  = old_bits + shift;
+                    const size_t new_bytes = Y_BYTES_FOR(new_bits);
+                    natural ans(new_bytes,as_capacity);
+                    ans.bytes = new_bytes;
+
+                    for(size_t i=0,j=shift;i<old_bits;++i,++j)
+                    {
+                        if(has_bit(i))
+                        {
+                            ans.byte[j>>3] |= bits_table::value[j&7];
+                        }
+                    }
+                    assert(ans.item[new_bytes]>0);
+                    return ans;
+                }
+                else
+                {
+                    return *this;
+                }
+            }
+
+            //! in place left shift operator
+            inline natural & operator<<=(const size_t shift)
+            {
+                natural ans = shl(shift);
+                xch(ans);
                 return *this;
             }
+
+            //! left shift operator
+            inline friend natural operator<<(const natural &n,const size_t shift)
+            {
+                const natural ans = n.shl(shift);
+                return ans;
+            }
+
+            //! right shift
+            inline natural shr(const size_t shift) const
+            {
+                const size_t old_bits = bits();
+                if(shift>=old_bits)
+                {
+                    return natural();
+                }
+                else
+                {
+                    const size_t new_bits  = old_bits - shift;
+                    const size_t new_bytes = Y_BYTES_FOR(new_bits);
+                    natural ans(new_bytes,as_capacity);
+                    ans.bytes = new_bytes;
+
+                    for(size_t i=shift,j=0;i<old_bits;++i,++j)
+                    {
+                        if(has_bit(i))
+                        {
+                            ans.byte[j>>3] |= bits_table::value[j&7];
+                        }
+                    }
+                    assert(ans.item[new_bytes]>0);
+                    return ans;
+                }
+            }
+
+            //! in place right shift operator
+            inline natural & operator>>=(const size_t shift)
+            {
+                natural ans = shr(shift);
+                xch(ans);
+                return *this;
+            }
+
+            //! left shift operator
+            inline friend natural operator>>(const natural &n, const size_t shift)
+            {
+                const natural ans = n.shr(shift);
+                return ans;
+            }
+
 
         private:
             size_t   bytes;     //!< active bytes

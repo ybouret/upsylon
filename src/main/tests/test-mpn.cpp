@@ -138,7 +138,35 @@ Y_UTEST(mpn)
         const uint64_t l2 = l*l;
         const mpn L2 = mpn::square_of(L);
         Y_ASSERT(L2.lsw()==l2);
+    }
 
+    std::cerr << "-- left bit shifting" << std::endl;
+    for(size_t iter=0;iter<ITERS;++iter)
+    {
+        const uint64_t l = alea.full<uint32_t>();
+        const mpn      L = l;
+        Y_ASSERT(bits_for(l)==L.bits());
+        for(size_t shift=0;shift<32;++shift)
+        {
+            const uint64_t ls = l << shift;
+            const mpn      LS = L << shift;
+            Y_ASSERT(LS.lsw()==ls);
+        }
+    }
+
+    std::cerr << "-- right bit shifting" << std::endl;
+    std::cerr << std::dec;
+    for(size_t iter=0;iter<ITERS;++iter)
+    {
+        const uint64_t l = alea.full<uint64_t>();
+        const mpn      L = l;
+        Y_ASSERT(bits_for(l)==L.bits());
+        for(size_t shift=0;shift<64;++shift)
+        {
+            const uint64_t ls = l >> shift;
+            const mpn      LS = L >> shift;
+            Y_ASSERT(LS.lsw()==ls);
+        }
     }
 
 }

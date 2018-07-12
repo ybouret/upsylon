@@ -137,7 +137,9 @@ namespace upsylon
     //! bits table
     struct bits_table
     {
-        static const size_t count_for_byte[256]; //!< count of bits for bytes[0..255]
+        static const uint8_t  count_for_byte[256]; //!< count of bits for bytes[0..255]
+        static const uint8_t  value[8];            //! [2^0...2^7]
+        static const uint8_t  _true[256];          //! [0,1,1,1,1,1,1...1,1,1]
     };
 
 }
