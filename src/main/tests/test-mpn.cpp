@@ -263,6 +263,7 @@ Y_UTEST(mpn)
             i = mpn::next_prime(i+1);
             P.push_back(i);
         }
+        std::cerr << "P=" << P << std::endl;
     }
 
 }
