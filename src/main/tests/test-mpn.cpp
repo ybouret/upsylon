@@ -177,6 +177,19 @@ Y_UTEST(mpn)
             Y_ASSERT( L.lsw() == (uint64_t(1)<<j));
         }
     }
+
+    std::cerr << "-- divisions" << std::endl;
+    for(size_t iter=0;iter<ITERS;++iter)
+    {
+        const uint64_t num = alea.partial<uint64_t>();
+        const uint64_t den = 1+alea.partial<uint64_t>(60);
+        const uint64_t q   = num/den;
+        const mpn Num = num;
+        const mpn Den = den;
+        const mpn Q   = Num/Den;
+        Y_ASSERT(Q.lsw()==q);
+    }
+
 }
 Y_UTEST_DONE()
 
