@@ -314,6 +314,27 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
                 return *this;
             }
 
+            inline string &trim( bool (*is_bad)(const char C) ) throw()
+            {
+                if(is_bad)
+                {
+                    while(size_>0)
+                    {
+                        const size_t i = size_-1;
+                        if(!is_bad(addr_[i]))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            addr_[i] = 0;
+                            size_ = i;
+                        }
+                    }
+                }
+                return *this;
+            }
+
         private:
             T     *addr_;
             size_t size_;

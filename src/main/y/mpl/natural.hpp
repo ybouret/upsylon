@@ -7,6 +7,7 @@
 #include "y/os/endian.hpp"
 #include "y/comparison.hpp"
 #include "y/code/utils.hpp"
+#include "y/concurrent/singleton.hpp"
 #include <iostream>
 
 namespace upsylon
@@ -15,6 +16,33 @@ namespace upsylon
     {
 
         typedef uint64_t word_t; //!< integral type for drop in replacement
+
+        //! dedicated memory manager
+        class manager : public singleton<manager>
+        {
+        public:
+            inline uint8_t * acquire(size_t &n)
+            {
+                Y_LOCK(access);
+                return static_cast<uint8_t*>(IO.acquire(n));
+            }
+
+            inline void release(uint8_t * &p,size_t &n) throw()
+            {
+                Y_LOCK(access);
+                IO.release((void * &)p,n);
+            }
+
+
+        private:
+            explicit manager();
+            virtual ~manager() throw();
+            friend class singleton<manager>;
+            memory::vein IO;
+
+        public:
+            static const at_exit::longevity life_time = object::life_time - 1;
+        };
 
         //! check natural sanity
 #define Y_MPN_CHECK(PTR)                                        \
@@ -48,9 +76,9 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             //! release memory
             inline virtual ~natural() throw()
             {
-                static memory::allocator &hmem = memory::dyadic::location();
+                static manager &mgr = manager::location();
                 Y_MPN_CHECK(this);
-                hmem.release((void * &)byte,allocated);
+                mgr.release(byte,allocated);
             }
 
             //! copy
@@ -62,9 +90,10 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             }
 
             //! copy from a word_type
-            inline natural(word_t w) : Y_MPN_CTOR(sizeof(word_t),bytes)
+            inline natural(word_t w) : Y_MPN_CTOR(0,bytes)
             {
                 memcpy(byte,prepare(w,bytes),sizeof(word_t));
+                Y_MPN_CHECK(this);
             }
 
             //! assign
@@ -130,10 +159,16 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
                 return (bytes<=0) ? 0 : ( (bytes-1) << 3 ) + bits_table::count_for_byte[ item[bytes] ];
             }
 
+            inline void clr() throw()
+            {
+                bytes = 0;
+                memset(byte,0,allocated);
+            }
+
             //__________________________________________________________________
             //
             //
-            // output
+            // I/O
             //
             //__________________________________________________________________
 
@@ -146,6 +181,14 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
                 {
                     for(size_t i=bytes;i>0;--i) os << hexadecimal::lowercase[ item[i] ];
                 }
+                return os;
+            }
+
+            void display( std::ostream &) const;
+
+            inline friend std::ostream & operator<<( std::ostream &os, const natural &n)
+            {
+                n.display(os);
                 return os;
             }
 
@@ -510,8 +553,9 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //__________________________________________________________________
             static natural mod_inv( const natural &b, const natural &n );                     //!< modular inverse
             static natural mod_exp( const natural &b, const natural &e, const natural &n );   //!< modular exponentiation (b^e)[n]
-            static bool is_prime(const natural &);
-            
+            static bool    is_prime(const natural &);
+            static natural next_prime(const natural &);
+
         private:
             size_t   bytes;     //!< active bytes
             size_t   allocated; //!< allocated bytes
@@ -531,8 +575,8 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
 
             static inline uint8_t * __acquire(size_t &n)
             {
-                static memory::allocator &hmem = memory::dyadic::instance();
-                return static_cast<uint8_t*>( hmem.acquire(n) );
+                static manager &mgr = manager::instance();
+                return mgr.acquire(n);
             }
 
             inline natural __shl(const size_t shift) const
@@ -585,6 +629,30 @@ static inline natural __##CALL(const uint8_t *l, const size_t nl, const uint8_t 
             Y_MPN_BOOL(or,|)
             Y_MPN_BOOL(xor,^)
 
+        };
+
+        //! precompiled naturals
+        class MPN : public singleton<MPN>
+        {
+        public:
+            const natural _0;
+            const natural _1;
+            const natural _2;
+            const natural _3;
+            const natural _4;
+            const natural _5;
+            const natural _6;
+            const natural _10;
+
+        private:
+            inline explicit MPN() :
+            _0(0), _1(1), _2(2), _3(3), _4(4), _5(5), _6(6), _10(10)
+            {}
+            inline virtual ~MPN() throw() {}
+            friend class singleton<MPN>;
+
+        public:
+            static const at_exit::longevity life_time = manager::life_time - 1;
         };
     }
 

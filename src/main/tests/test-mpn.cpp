@@ -234,6 +234,16 @@ Y_UTEST(mpn)
         Y_ASSERT(R.lsw()==r);
     }
 
+    std::cerr << "-- I/O" << std::endl;
+    {
+        for(size_t i=0;i<1000;i+=1+alea.leq(30))
+        {
+            const mpn I = i;
+            std::cerr << std::hex << "hex: i=" << i << " => " << I << std::endl;
+            std::cerr << std::dec << "dec: i=" << i << " => " << I << std::endl;
+        }
+    }
+
     std::cerr << "-- primality" << std::endl;
     vector<uint64_t> p;
     {
@@ -244,6 +254,15 @@ Y_UTEST(mpn)
             p.push_back(i);
         }
         std::cerr << "p=" << p << std::endl;
+    }
+    vector<mpn> P;
+    {
+        mpn i=0;
+        while(P.size()<=100)
+        {
+            i = mpn::next_prime(i+1);
+            P.push_back(i);
+        }
     }
 
 }

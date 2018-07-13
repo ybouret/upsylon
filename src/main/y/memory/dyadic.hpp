@@ -12,6 +12,17 @@ namespace upsylon
         class dyadic : public singleton<dyadic>, public vein
         {
         public:
+            inline virtual void *acquire(size_t &n)
+            {
+                Y_LOCK(access);
+                return vein::acquire(n);
+            }
+
+            inline virtual void release(void * &p, size_t &n) throw()
+            {
+                Y_LOCK(access);
+                vein::release(p,n);
+            }
 
         private:
             explicit dyadic() throw();

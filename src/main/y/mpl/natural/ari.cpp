@@ -94,28 +94,46 @@ namespace upsylon
 
         bool natural:: is_prime( const natural &n )
         {
-            if(n<=1)
+            static const MPN &_ = MPN::instance();
+
+            if(n<=_._1)
                 return false; //!< for 0 and 1
-            else if(n<=3)
+            else if(n<=_._3)
                 return true;  //!< for 2 and 3
             else if( n.is_divisible_by_byte(2) || n.is_divisible_by_byte(3) ) //! for 2,4,6,8,9...
                 return false;
             else
             {
-                assert(n>=5);
-                natural i = 5;
+                assert(n>=_._5);
+                natural i = _._5;
                 for(;;)
                 {
                     const natural isq = natural::square_of(i);
                     if(isq>n) break;
                     if( n.is_divisible_by(i) ) return false;
-                    const natural j=i+2;
+                    const natural j=i+_._2;
                     if( n.is_divisible_by(j) )  return false;
-                    i += 6;
+                    i += _._6;
                 }
                 return true;
             }
         }
+
+        natural natural:: next_prime(const natural &n)
+        {
+            static const MPN &_ = MPN::instance();
+            if(n<=_._2)
+            {
+                return _._2;
+            }
+            else
+            {
+                natural p = n|_._1;
+                while( !is_prime(p) ) p+= _._2;
+                return p;
+            }
+        }
+        
 
     }
 

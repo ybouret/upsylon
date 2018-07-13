@@ -12,7 +12,18 @@ namespace upsylon
         class pooled : public singleton<pooled>, public carver
         {
         public:
+            inline void *acquire( size_t &n )
+            {
+                Y_LOCK(access);
+                return carver::acquire(n);
+            }
 
+            inline virtual void release(void * &p, size_t &n) throw()
+            {
+                Y_LOCK(access);
+                carver::release(p,n);
+            }
+            
         private:
             inline explicit pooled() throw() : carver(Y_CHUNK_SIZE) {}
             inline virtual ~pooled() throw()
