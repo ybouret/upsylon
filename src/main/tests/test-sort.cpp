@@ -1,9 +1,11 @@
-#include "y/sort/merge.hpp"
 #include "y/core/node.hpp"
 #include "y/core/list.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/comparison.hpp"
+#include "y/sort/merge.hpp"
+#include "y/sort/heap.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace upsylon;
 
@@ -27,17 +29,37 @@ namespace
             const T args = support::get<T>();
             L.push_back( new Node(args) );
         }
+        std::cerr << "L1=";
         for(const Node *node=L.head;node;node=node->next)
         {
             std::cerr << node->data << " ";
         }
         std::cerr << std::endl;
         merging<Node>::sort(L,compare_node<Node>,NULL);
+        std::cerr << "L2=" ;
         for(const Node *node=L.head;node;node=node->next)
         {
             std::cerr << node->data << " ";
         }
         std::cerr << std::endl;
+
+        vector<T> V;
+        while(L.size)
+        {
+            if( alea.choice() )
+            {
+                V.push_back(L.head->data);
+                delete L.pop_front();
+            }
+            else
+            {
+                V.push_back(L.tail->data);
+                delete L.pop_back();
+            }
+        }
+        std::cerr << "V1=" << V << std::endl;
+        hsort(V, comparison::increasing<T> );
+        std::cerr << "V2=" << V << std::endl;
     }
 
 }
