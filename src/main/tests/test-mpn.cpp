@@ -193,6 +193,26 @@ Y_UTEST(mpn)
         Y_ASSERT(R.lsw()==r);
     }
 
+    std::cerr << "-- boolean" << std::endl;
+    for(size_t iter=0;iter<ITERS;++iter)
+    {
+        const uint64_t l = alea.partial<uint64_t>();
+        const uint64_t r = alea.partial<uint64_t>();
+        const uint64_t a = l&r;
+        const uint64_t o = l|r;
+        const uint64_t x = l^r;
+
+        const mpn L = l;
+        const mpn R = r;
+        const mpn A = L&R;
+        const mpn O = L|R;
+        const mpn X = L^R;
+        Y_ASSERT(A.lsw()==a);
+        Y_ASSERT(O.lsw()==o);
+        Y_ASSERT(X.lsw()==x);
+
+    }
+
 }
 Y_UTEST_DONE()
 

@@ -247,14 +247,15 @@ inline friend natural operator OP ( const natural  &lhs, const natural  &rhs ) {
 inline friend natural operator OP ( const natural  &lhs, const word_type rhs ) { return CALL(lhs,rhs); } \
 inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) { return CALL(lhs,rhs); }
 
+#define Y_MPN_WRAP(OP,CALL) Y_MPN_DEFINE(natural,CALL) Y_MPN_IMPL(OP,CALL)
+
             //__________________________________________________________________
             //
             //
             // ADD
             //
             //__________________________________________________________________
-            Y_MPN_DEFINE(natural,__add)
-            Y_MPN_IMPL(+,__add)
+            Y_MPN_WRAP(+,__add)
 
             //! unary plus
             natural operator+() { return *this; }
@@ -288,8 +289,7 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             // SUB
             //
             //__________________________________________________________________
-            Y_MPN_DEFINE(natural,__sub)
-            Y_MPN_IMPL(-,__sub)
+            Y_MPN_WRAP(-,__sub)
 
             //! decrease by 1
             inline natural __dec() const
@@ -320,8 +320,7 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             // MUL
             //
             //__________________________________________________________________
-            Y_MPN_DEFINE(natural,__mul)
-            Y_MPN_IMPL(*,__mul)
+            Y_MPN_WRAP(*,__mul)
 
             //! fast square
             static natural square_of( const natural &n );
@@ -460,8 +459,7 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             // DIV
             //
             //__________________________________________________________________
-            Y_MPN_DEFINE(natural,__div)
-            Y_MPN_IMPL(/,__div)
+            Y_MPN_WRAP(/,__div)
             static inline void split( natural &q, natural &r, const natural &num, const natural &den )
             {
                 r = num - ( (q=num/den) * den );
@@ -473,8 +471,7 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             // MOD
             //
             //__________________________________________________________________
-            Y_MPN_DEFINE(natural,__mod)
-            Y_MPN_IMPL(%,__mod)
+            Y_MPN_WRAP(%,__mod)
 
             //__________________________________________________________________
             //
@@ -483,7 +480,9 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             //
             //__________________________________________________________________
             typedef uint8_t (*booleanOp)(const uint8_t lhs, const uint8_t rhs);
-
+            Y_MPN_WRAP(&,__and)
+            Y_MPN_WRAP(|,__or)
+            Y_MPN_WRAP(^,__xor)
 
         private:
             size_t   bytes;     //!< active bytes
@@ -551,7 +550,13 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             static natural __bool(const uint8_t *l, const size_t nl,
                                   const uint8_t *r, const size_t nr,
                                   booleanOp  proc);
-            
+#define Y_MPN_BOOL(CALL,OP) \
+static inline uint8_t __##CALL##__(const uint8_t a, const uint8_t b ) throw() { return (a OP b); }\
+static inline natural __##CALL(const uint8_t *l, const size_t nl, const uint8_t *r, const size_t nr) { return __bool(l,nl,r,nr,__##CALL##__); }
+            Y_MPN_BOOL(and,&)
+            Y_MPN_BOOL(or,|)
+            Y_MPN_BOOL(xor,^)
+
         };
     }
 
