@@ -31,11 +31,17 @@ SET(code_srcs ${code_decl} ${code_code})
 SOURCE_GROUP( code FILES ${code_srcs} )
 INSTALL( FILES ${code_decl} DESTINATION include/y/code )
 
-FILE(GLOB core_decl   y/core/*.hpp)
+FILE(GLOB core_decl y/core/*.hpp)
 FILE(GLOB core_code y/core/*.cpp)
 SET(core_srcs ${core_decl} ${core_code})
 SOURCE_GROUP( core FILES ${core_srcs} )
 INSTALL( FILES ${core_decl} DESTINATION include/y/core )
+
+FILE(GLOB sort_decl y/sort/*.hpp)
+FILE(GLOB sort_code y/sort/*.cpp)
+SET(sort_srcs ${sort_decl} ${sort_code})
+SOURCE_GROUP( sort FILES ${sort_srcs} )
+INSTALL( FILES ${sort_decl} DESTINATION include/y/sort )
 
 FILE(GLOB randomized_decl y/randomized/*.hpp)
 FILE(GLOB randomized_code y/randomized/*.cpp)
@@ -131,6 +137,7 @@ ${utest_srcs}
 ${type_srcs}
 ${core_srcs}
 ${code_srcs}
+${sort_srcs}
 ${randomized_srcs}
 ${hashing_srcs}
 ${memory_srcs}
