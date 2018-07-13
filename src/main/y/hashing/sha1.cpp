@@ -199,7 +199,7 @@ e += S(a,5) + F(b,c,d) + K + x; b = S(b,30);        \
 			static void  sha1_run( SHA1_CTX *ctx, const void *buf, const size_t buflen )
 			{
 				const uint8_t *input = (const uint8_t *)buf;
-				size_t    ilen = buflen;
+				uint32_t ilen = (uint32_t)buflen;
 				uint32_t fill;
 				uint32_t left;
 				

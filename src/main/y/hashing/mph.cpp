@@ -111,7 +111,7 @@ namespace upsylon
             for(size_t i=0;i<count;++i)
             {
                 const char *word = words[i];
-                insert(word,i);
+                insert( word,(const int)i);
             }
             optimize();
         }
@@ -315,7 +315,7 @@ namespace upsylon
             {
                 const string &kw = keywords[i];
                 const size_t  j  = i+offset;
-                H.insert(kw,j);
+                H.insert(kw,(const int)j);
                 const string def = prefix+kw;
                 const string ans = def2cpp(def);
                 fp << "#define " << ans;

@@ -68,7 +68,6 @@ Y_UTEST(vein)
     }
 
     
-
     std::cerr << "-- Allocating specific sizes" << std::endl;
     core::list_of_cpp<block> blocks;
     for(size_t iter=0;iter<10000;++iter)
@@ -76,7 +75,7 @@ Y_UTEST(vein)
         add_block(blocks,v,0);
         for(size_t i=0;i<=v.max_bits;++i)
         {
-            add_block(blocks,v,1<<i);
+            add_block(blocks,v,size_t(1)<<i);
         }
     }
     alea.shuffle(blocks);

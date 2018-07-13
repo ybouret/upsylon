@@ -29,7 +29,7 @@ namespace
             fft<T>::forward(&(V[1].re)-1,V.size());
             //std::cerr << "V=" << V << std::endl;
             fft<T>::reverse(&(V[1].re)-1,V.size());
-            for(size_t i=n;i>0;--i) V[i]/=n;
+            for(size_t i=n;i>0;--i) V[i]/=T(n);
             //std::cerr << "W=" << V << std::endl;
             double rms = 0;
             for(size_t i=n;i>0;--i)

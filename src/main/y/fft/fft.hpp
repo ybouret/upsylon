@@ -130,8 +130,8 @@ namespace upsylon
         }
     };
 
-    template <> const double fft<double>::sin_table[];
-    template <> const float  fft<float>::sin_table[];
+    //template <> const double fft<double>::sin_table[];
+    //template <> const float  fft<float>::sin_table[];
 
 
 
