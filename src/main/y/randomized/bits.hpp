@@ -152,6 +152,9 @@ namespace upsylon
                 l.swap_with(tmp);
             }
 
+            static bits & simple();
+            static bits & crypto();
+
         protected:
             //! sets span and auxiliary values
             explicit bits(const uint32_t maxValue) throw();

@@ -105,7 +105,7 @@ namespace upsylon
 
             if(nl>0&&nr>0)
             {
-                static memory::allocator &hmem = memory::dyadic::instance();
+                static memory::allocator &hmem = manager::instance();
 
                 const size_t np = nl+nr;             //-- product size
                 natural      P(np, as_capacity );    //-- product value
@@ -151,7 +151,7 @@ namespace upsylon
             const size_t nl = lhs.bytes;
             if( nl > 0  )
             {
-                static memory::allocator &hmem = memory::dyadic::instance();
+                static memory::allocator &hmem = manager::instance();
 
                 const size_t np = nl << 1;             //-- product size
                 natural       P( np, as_capacity );    //-- product value

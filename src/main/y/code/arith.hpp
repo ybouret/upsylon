@@ -47,6 +47,9 @@ namespace upsylon
         {
             return ( x * y ) / gcd( x, y );
         }
+
+    private:
+        
     };
 }
 

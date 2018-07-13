@@ -2,12 +2,14 @@
 #ifndef Y_MP_NATURAL_INCLUDED
 #define Y_MP_NATURAL_INCLUDED 1
 
-#include "y/memory/dyadic.hpp"
 #include "y/memory/buffer.hpp"
+#include "y/memory/vein.hpp"
+#include "y/type/utils.hpp"
 #include "y/os/endian.hpp"
 #include "y/comparison.hpp"
 #include "y/code/utils.hpp"
 #include "y/concurrent/singleton.hpp"
+#include "y/randomized/bits.hpp"
 #include <iostream>
 
 namespace upsylon
@@ -18,16 +20,29 @@ namespace upsylon
         typedef uint64_t word_t; //!< integral type for drop in replacement
 
         //! dedicated memory manager
-        class manager : public singleton<manager>
+        class manager : public singleton<manager>, public memory::allocator
         {
         public:
-            inline uint8_t * acquire(size_t &n)
+            virtual void *acquire( size_t &n )
+            {
+                Y_LOCK(access);
+                return IO.acquire(n);
+            }
+
+            virtual void release(void * &p, size_t &n ) throw()
+            {
+                Y_LOCK(access);
+                IO.release(p,n);
+            }
+
+
+            inline uint8_t * __acquire(size_t &n)
             {
                 Y_LOCK(access);
                 return static_cast<uint8_t*>(IO.acquire(n));
             }
 
-            inline void release(uint8_t * &p,size_t &n) throw()
+            inline void __release(uint8_t * &p,size_t &n) throw()
             {
                 Y_LOCK(access);
                 IO.release((void * &)p,n);
@@ -78,7 +93,7 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             {
                 static manager &mgr = manager::location();
                 Y_MPN_CHECK(this);
-                mgr.release(byte,allocated);
+                mgr.__release(byte,allocated);
             }
 
             //! copy
@@ -165,25 +180,31 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
                 memset(byte,0,allocated);
             }
 
+            inline natural(const size_t nbit, randomized::bits &gen ) : Y_MPN_CTOR(0,0)
+            {
+                if(nbit)
+                {
+                    const natural one(1);
+                    natural tmp = one;
+                    for(size_t i=nbit;i>1;--i)
+                    {
+                        tmp <<= 1;
+                        if(gen.choice())
+                        {
+                            tmp |= one;
+                        }
+                    }
+                    xch(tmp);
+                }
+            }
+
             //__________________________________________________________________
             //
             //
             // I/O
             //
             //__________________________________________________________________
-
-            //! display hex
-            inline std::ostream & to_hex( std::ostream &os ) const
-            {
-                os << '0' << 'x';
-                if(bytes<=0) os << hexadecimal::lowercase[0];
-                else
-                {
-                    for(size_t i=bytes;i>0;--i) os << hexadecimal::lowercase[ item[i] ];
-                }
-                return os;
-            }
-
+            //! formatted display
             void display( std::ostream &) const;
 
             inline friend std::ostream & operator<<( std::ostream &os, const natural &n)
@@ -191,6 +212,9 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
                 n.display(os);
                 return os;
             }
+
+            double to_real() const;
+            static double ratio_of(const natural &num,const natural &den);
 
             //__________________________________________________________________
             //
@@ -214,13 +238,6 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
                     return (1==bytes) && (x==byte[0]);
                 }
             }
-
-            //! fast==1
-            inline bool is_one() const throw() { return (1==bytes) && (1==byte[0]);}
-            //! fast==2
-            inline bool is_two() const throw() { return (1==bytes) && (2==byte[0]);}
-
-
 
             //! comparison
             static inline
@@ -555,7 +572,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             static natural mod_exp( const natural &b, const natural &e, const natural &n );   //!< modular exponentiation (b^e)[n]
             static bool    is_prime(const natural &);
             static natural next_prime(const natural &);
-
+            static bool    are_coprimes(const natural &, const natural &);
         private:
             size_t   bytes;     //!< active bytes
             size_t   allocated; //!< allocated bytes
@@ -576,7 +593,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             static inline uint8_t * __acquire(size_t &n)
             {
                 static manager &mgr = manager::instance();
-                return mgr.acquire(n);
+                return mgr.__acquire(n);
             }
 
             inline natural __shl(const size_t shift) const

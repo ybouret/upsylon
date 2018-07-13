@@ -2,6 +2,7 @@
 #include "y/mpl/natural.hpp"
 #include "y/exceptions.hpp"
 #include <cerrno>
+#include "y/code/arith.hpp"
 
 namespace upsylon
 {
@@ -133,7 +134,20 @@ namespace upsylon
                 return p;
             }
         }
-        
+
+        bool natural:: are_coprimes(const natural &a, const natural &b)
+        {
+            if(a.bytes>0&&b.bytes>0)
+            {
+                const natural g = arithmetic::gcd(a,b);
+                return g.is_byte(1);
+            }
+            else
+            {
+                return false;
+            }
+
+        }
 
     }
 

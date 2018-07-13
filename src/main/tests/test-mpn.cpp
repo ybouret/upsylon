@@ -6,8 +6,8 @@
 
 using namespace upsylon;
 
-#define ITERS (1<<14)
-#define ITERS_SMALL (1<<10)
+#define ITERS       (1<<11)
+#define ITERS_SMALL (1<<8)
 Y_UTEST(mpn)
 {
     mpn a;
@@ -83,22 +83,22 @@ Y_UTEST(mpn)
         const uint64_t r = alea.partial<uint64_t>(60);
         const uint64_t s = l+r;
         if(s<l||s<r) continue;
-        //std::cerr << "l=" << l << ", r=" << r << std::endl;
         const mpn L = l;
         const mpn R = r;
         const mpn S = L+R;
         Y_ASSERT(S.lsw()==s);
     }
+    std::cerr << std::dec;
     std::cerr << "++loop" << std::endl;
     for( mpn i=0;i<30;++i)
     {
-        i.to_hex(std::cerr) << "/";
+        std::cerr << i << "/";
     }
     std::cerr << std::endl;
     std::cerr << "loop++" << std::endl;
     for( mpn i=0;i<30;i++)
     {
-        i.to_hex(std::cerr) << "/";
+        std::cerr << i << "/";
     }
     std::cerr << std::endl;
 
@@ -118,13 +118,13 @@ Y_UTEST(mpn)
     std::cerr << "--loop" << std::endl;
     for( mpn i=30;i>0;--i)
     {
-        i.to_hex(std::cerr) << "/";
+        std::cerr << i << "/";
     }
     std::cerr << std::endl;
     std::cerr << "loop--" << std::endl;
     for( mpn i=30;i>0;i--)
     {
-        i.to_hex(std::cerr) << "/";
+        std::cerr << i << "/";
     }
     std::cerr << std::endl;
 
@@ -241,7 +241,9 @@ Y_UTEST(mpn)
             const mpn I = i;
             std::cerr << std::hex << "hex: i=" << i << " => " << I << std::endl;
             std::cerr << std::dec << "dec: i=" << i << " => " << I << std::endl;
+            std::cerr << "\treal: " << I.to_real() << std::endl;
         }
+        
     }
 
     std::cerr << "-- primality" << std::endl;
@@ -265,6 +267,40 @@ Y_UTEST(mpn)
         }
         std::cerr << "P=" << P << std::endl;
     }
+
+    std::cerr << "-- rsa" << std::endl;
+    std::cerr << std::hex;
+    for(size_t iter=0;iter<4;++iter)
+    {
+        std::cerr << "generating p..." << std::endl;
+        mpn p( 5+alea.leq(25), randomized::bits::crypto() );
+        p = mpn::next_prime(p);
+        std::cerr << "p=" << p << std::endl;
+        std::cerr << "generating q..." << std::endl;
+        mpn q( 5+alea.leq(25), randomized::bits::crypto() );
+        q = mpn::next_prime(q);
+        std::cerr << "q=" << q << std::endl;
+        const mpn n = p*q;
+        std::cerr << "n=" << p*q << std::endl;
+        const mpn phi = (p-1)*(q-1);
+        std::cerr << "phi=" << phi << std::endl;
+        mpn  e( phi.bits()/2, randomized::bits::crypto() );
+        e = mpn::next_prime(e);
+        std::cerr << "e=" << e << std::endl;
+        const mpn d = mpn::mod_inv(e,phi);
+        std::cerr << "d=" << d << std::endl;
+
+        for(size_t i=0;i<4;++i)
+        {
+            const mpn M(alea.lt(n.bits()),randomized::bits::simple());
+            const mpn C = mpn::mod_exp(M,e,n);
+            const mpn D = mpn::mod_exp(C,d,n);
+            std::cerr << "M=" << M << "->" << C << "->" << D << std::endl;
+            Y_ASSERT(D==M);
+        }
+
+    }
+
 
 }
 Y_UTEST_DONE()

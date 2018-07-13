@@ -86,6 +86,37 @@ namespace upsylon
             }
         }
 
+        double natural:: to_real() const
+        {
+            double ans = 0;
+            for(size_t i=bytes;i>0;--i)
+            {
+                ans *= 256;
+                ans += item[i];
+            }
+            return ans;
+        }
+
+        double natural:: ratio_of(const natural &num,const natural &den)
+        {
+            static const MPN &_ = MPN::instance();
+            natural q,r;
+            natural::split(q, r, num, den);
+            double ans = q.to_real();
+
+            const size_t nd  = den.bits();
+            double       fac = 1;
+            for(size_t i=1;i<=nd;++i)
+            {
+                const natural n = r*_._10;
+                natural::split(q,r,n,den);
+                fac *= 0.1;
+                const double x = q.to_real();
+                ans += fac*x;
+            }
+            return ans;
+        }
+
     }
 
 }
