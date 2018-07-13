@@ -15,11 +15,11 @@ Y_UTEST(mpn)
     std::cerr << "-- I/O with words" << std::endl;
     for(size_t iter=0;iter<ITERS;++iter)
     {
-        const mpn::word_type x  = alea.partial<mpn::word_type>();
-        mpn::word_type       w  = x;
-        size_t               wb = 0;
-        const uint8_t       *p  = mpn::prepare(w,wb);
-        mpn::word_type       tmp = 0;
+        const uint64_t   x  = alea.partial<uint64_t>();
+        uint64_t         w  = x;
+        size_t           wb = 0;
+        const uint8_t   *p  = mpn::prepare(w,wb);
+        uint64_t         tmp = 0;
         for(size_t i=0;i<wb;++i)
         {
             tmp <<= 8;
@@ -30,14 +30,14 @@ Y_UTEST(mpn)
 
         
         mpn y = x;
-        const mpn::word_type z = y.lsw();
+        const uint64_t z = y.lsw();
         Y_ASSERT(z==x);
     }
 
     std::cerr << "-- bits with words" << std::endl;
     for(size_t iter=0;iter<ITERS;++iter)
     {
-        const mpn::word_type x  = alea.partial<mpn::word_type>();
+        const uint64_t x  = alea.partial<uint64_t>();
         const mpn X = x;
         Y_ASSERT(X.bits()==bits_for(x));
     }
@@ -45,8 +45,8 @@ Y_UTEST(mpn)
     std::cerr << "-- comparison with words" << std::endl;
     for(size_t iter=0;iter<ITERS;++iter)
     {
-        const uint64_t l = alea.partial<mpn::word_type>();
-        const uint64_t r = alea.partial<mpn::word_type>();
+        const uint64_t l = alea.partial<uint64_t>();
+        const uint64_t r = alea.partial<uint64_t>();
         const mpn      L = l;
         const mpn      R = r;
         
@@ -77,8 +77,8 @@ Y_UTEST(mpn)
     std::cerr << "-- additions" << std::endl;
     for(size_t iter=0;iter<ITERS;++iter)
     {
-        const uint64_t l = alea.partial<mpn::word_type>(60);
-        const uint64_t r = alea.partial<mpn::word_type>(60);
+        const uint64_t l = alea.partial<uint64_t>(60);
+        const uint64_t r = alea.partial<uint64_t>(60);
         const uint64_t s = l+r;
         if(s<l||s<r) continue;
         //std::cerr << "l=" << l << ", r=" << r << std::endl;
@@ -103,8 +103,8 @@ Y_UTEST(mpn)
     std::cerr << "-- subtraction" << std::endl;
     for(size_t iter=0;iter<ITERS;++iter)
     {
-        uint64_t l = alea.partial<mpn::word_type>();
-        uint64_t r = alea.partial<mpn::word_type>();
+        uint64_t l = alea.partial<uint64_t>();
+        uint64_t r = alea.partial<uint64_t>();
         if(l<r) cswap(l,r);
         assert(l>=r);
         const uint64_t d = l-r;

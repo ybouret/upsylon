@@ -14,6 +14,8 @@ namespace upsylon
     namespace mpl
     {
 
+        typedef uint64_t word_t; //!< integral type for drop in replacement
+
         //! check natural sanity
 #define Y_MPN_CHECK(PTR)                                        \
 assert( is_a_power_of_two((PTR)->allocated) );                  \
@@ -28,7 +30,6 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
         class natural : public memory::ro_buffer
         {
         public:
-            typedef uint64_t word_type; //!< integral type for drop in replacement
 
             //__________________________________________________________________
             //
@@ -61,10 +62,10 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             }
 
             //! copy from a word_type
-            inline natural(word_type n) : Y_MPN_CTOR(sizeof(word_type),bytes)
+            inline natural(word_t n) : Y_MPN_CTOR(sizeof(word_t),bytes)
             {
                 n = swap_le(n);
-                memcpy(byte,&n,sizeof(word_type));
+                memcpy(byte,&n,sizeof(word_t));
                 update();
             }
 
@@ -77,7 +78,7 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             }
 
             //! assign from word_type
-            natural & operator=( word_type w )
+            natural & operator=( const word_t w )
             {
                 natural tmp(w);
                 xch(tmp);
@@ -94,10 +95,10 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             }
 
             //! Least Significant Word
-            inline word_type lsw() const throw()
+            inline word_t lsw() const throw()
             {
-                word_type    w = 0;
-                const size_t n = min_of(bytes,sizeof(word_type));
+                word_t       w = 0;
+                const size_t n = min_of(bytes,sizeof(word_t));
                 for(size_t i=n;i>0;--i)
                 {
                     (w <<= 8) |= item[i];
@@ -112,12 +113,12 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             inline virtual size_t length() const throw() { return bytes;  }
 
             //! prepare a scalar type
-            static inline const uint8_t * prepare( word_type &w, size_t &wb ) throw()
+            static inline const uint8_t * prepare( word_t &w, size_t &wb ) throw()
             {
                 w = swap_le(w);
                 const uint8_t *p = (const uint8_t*)&w;
                 const uint8_t *q = p-1;
-                wb = sizeof(word_type);
+                wb = sizeof(word_t);
                 while(wb>0&&q[wb]<=0)
                 {
                     --wb;
@@ -215,16 +216,16 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             //! multiple overloaded prototypes, no throw
 #define Y_MPN_DEFINE_NOTHROW(RET,BODY,CALL) \
 static inline RET BODY(const natural &lhs, const natural &rhs) throw() { return CALL(lhs.byte,lhs.bytes,rhs.byte,rhs.bytes);      }\
-static inline RET BODY(const natural &lhs, word_type      w  ) throw() { Y_MPN_PREPARE(w); return CALL(lhs.byte,lhs.bytes,pw,nw); }\
-static inline RET BODY(word_type      w,   const natural &rhs) throw() { Y_MPN_PREPARE(w); return CALL(pw,nw,rhs.byte,rhs.bytes); }
+static inline RET BODY(const natural &lhs, word_t         w  ) throw() { Y_MPN_PREPARE(w); return CALL(lhs.byte,lhs.bytes,pw,nw); }\
+static inline RET BODY(word_t         w,   const natural &rhs) throw() { Y_MPN_PREPARE(w); return CALL(pw,nw,rhs.byte,rhs.bytes); }
 
             Y_MPN_DEFINE_NOTHROW(int,compare,compare_blocks)
 
             //! comparison operator declarations
 #define Y_MPN_CMP(OP) \
 inline friend bool operator OP ( const natural  &lhs, const natural  &rhs ) throw() { return compare(lhs,rhs) OP 0; } \
-inline friend bool operator OP ( const natural  &lhs, const word_type rhs ) throw() { return compare(lhs,rhs) OP 0; } \
-inline friend bool operator OP ( const word_type lhs, const natural  &rhs ) throw() { return compare(lhs,rhs) OP 0; }
+inline friend bool operator OP ( const natural  &lhs, const word_t    rhs ) throw() { return compare(lhs,rhs) OP 0; } \
+inline friend bool operator OP ( const word_t    lhs, const natural  &rhs ) throw() { return compare(lhs,rhs) OP 0; }
 
             Y_MPN_CMP(==)
             Y_MPN_CMP(!=)
@@ -236,16 +237,16 @@ inline friend bool operator OP ( const word_type lhs, const natural  &rhs ) thro
             //! multiple overloaded prototypes
 #define Y_MPN_DEFINE(RET,BODY) \
 static inline RET BODY(const natural &lhs, const natural &rhs) { return BODY(lhs.byte,lhs.bytes,rhs.byte,rhs.bytes);      }\
-static inline RET BODY(const natural &lhs, word_type      w  ) { Y_MPN_PREPARE(w); return BODY(lhs.byte,lhs.bytes,pw,nw); }\
-static inline RET BODY(word_type      w,   const natural &rhs) { Y_MPN_PREPARE(w); return BODY(pw,nw,rhs.byte,rhs.bytes); }
+static inline RET BODY(const natural &lhs, word_t         w  ) { Y_MPN_PREPARE(w); return BODY(lhs.byte,lhs.bytes,pw,nw); }\
+static inline RET BODY(word_t         w,   const natural &rhs) { Y_MPN_PREPARE(w); return BODY(pw,nw,rhs.byte,rhs.bytes); }
 
             //! multiple prototype for operators
 #define Y_MPN_IMPL(OP,CALL) \
 natural & operator OP##=(const natural  &rhs) { natural ans = CALL(*this,rhs); xch(ans); return *this; } \
-natural & operator OP##=(const word_type rhs) { natural ans = CALL(*this,rhs); xch(ans); return *this; } \
+natural & operator OP##=(const word_t    rhs) { natural ans = CALL(*this,rhs); xch(ans); return *this; } \
 inline friend natural operator OP ( const natural  &lhs, const natural  &rhs ) { return CALL(lhs,rhs); } \
-inline friend natural operator OP ( const natural  &lhs, const word_type rhs ) { return CALL(lhs,rhs); } \
-inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) { return CALL(lhs,rhs); }
+inline friend natural operator OP ( const natural  &lhs, const word_t    rhs ) { return CALL(lhs,rhs); } \
+inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) { return CALL(lhs,rhs); }
 
 #define Y_MPN_WRAP(OP,CALL) Y_MPN_DEFINE(natural,CALL) Y_MPN_IMPL(OP,CALL)
 
