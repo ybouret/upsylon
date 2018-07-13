@@ -484,6 +484,15 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             Y_MPN_WRAP(|,__or)
             Y_MPN_WRAP(^,__xor)
 
+            //__________________________________________________________________
+            //
+            //
+            // Arithmetic
+            //
+            //__________________________________________________________________
+            static natural mod_inv( const natural &b, const natural &n );                     //!< modular inverse
+            static natural mod_exp( const natural &b, const natural &e, const natural &n );   //!< modular exponentiation (b^e)[n]
+
         private:
             size_t   bytes;     //!< active bytes
             size_t   allocated; //!< allocated bytes
