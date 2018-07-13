@@ -32,6 +32,18 @@ namespace {
         }
         return ans;
     }
+
+    template <>
+    inline float support:: get<float>()
+    {
+        return alea.to<float>();
+    }
+
+    template <>
+    inline double support:: get<double>()
+    {
+        return alea.to<double>();
+    }
 }
 
 #endif

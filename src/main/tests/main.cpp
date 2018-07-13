@@ -45,7 +45,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(ostreams);
     Y_UTEST(istreams);
     Y_UTEST(fft);
-
+    Y_UTEST(sort);
 }
 Y_UTEST_EXEC()
 

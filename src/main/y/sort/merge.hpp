@@ -14,7 +14,7 @@ namespace upsylon
         typedef core::list_of<NODE> sub_list;
         typedef int (*compare_node_proc)(const NODE *lhs, const NODE *rhs, void *args);
 
-        template <typename LIST>
+        template <typename LIST> static inline
         void sort( LIST &source, compare_node_proc proc, void *args)
         {
             if( source.size > 1 )
