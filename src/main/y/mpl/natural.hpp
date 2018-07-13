@@ -105,7 +105,7 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             }
 
             //! copy from a word_type
-            inline natural(word_t w) : Y_MPN_CTOR(0,bytes)
+            inline natural(word_t w) : Y_MPN_CTOR(0,sizeof(word_t))
             {
                 memcpy(byte,prepare(w,bytes),sizeof(word_t));
                 Y_MPN_CHECK(this);
