@@ -145,6 +145,18 @@ const uint32_t tmp32 = p32; p32=q32; q32=tmp32
         core::bswap<sizeof(T)>(&a,&b);
     }
 
+    //! memory reversal
+    inline void mreverse( void *addr, const size_t size ) throw()
+    {
+        assert(!(addr==0&&size>0));
+        uint8_t *p = static_cast<uint8_t*>(addr);
+        uint8_t *q = static_cast<uint8_t*>(addr)+size;
+        for(size_t i=(size>>1);i>0;--i)
+        {
+            cswap(*(p++), *(--q));
+        }
+    }
+
 }
 
 

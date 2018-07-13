@@ -178,16 +178,19 @@ Y_UTEST(mpn)
         }
     }
 
-    std::cerr << "-- divisions" << std::endl;
+    std::cerr << "-- divisions/modulos" << std::endl;
     for(size_t iter=0;iter<ITERS;++iter)
     {
         const uint64_t num = alea.partial<uint64_t>();
         const uint64_t den = 1+alea.partial<uint64_t>(60);
         const uint64_t q   = num/den;
+        const uint64_t r   = num%den;
         const mpn Num = num;
         const mpn Den = den;
         const mpn Q   = Num/Den;
+        const mpn R   = Num%Den;
         Y_ASSERT(Q.lsw()==q);
+        Y_ASSERT(R.lsw()==r);
     }
 
 }

@@ -462,6 +462,28 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             //__________________________________________________________________
             Y_MPN_DEFINE(natural,__div)
             Y_MPN_IMPL(/,__div)
+            static inline void split( natural &q, natural &r, const natural &num, const natural &den )
+            {
+                r = num - ( (q=num/den) * den );
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            // MOD
+            //
+            //__________________________________________________________________
+            Y_MPN_DEFINE(natural,__mod)
+            Y_MPN_IMPL(%,__mod)
+
+            //__________________________________________________________________
+            //
+            //
+            // boolean ops
+            //
+            //__________________________________________________________________
+            typedef uint8_t (*booleanOp)(const uint8_t lhs, const uint8_t rhs);
+
 
         private:
             size_t   bytes;     //!< active bytes
@@ -520,8 +542,15 @@ inline friend natural operator OP ( const word_type lhs, const natural  &rhs ) {
             static natural __mul(const uint8_t *l, const size_t nl,
                                  const uint8_t *r, const size_t nr);
 
-            static natural __div(const uint8_t *l, const size_t nl,
-                                 const uint8_t *r, const size_t nr);
+            static natural __div(const uint8_t *num, const size_t nn,
+                                 const uint8_t *den, const size_t nd);
+
+            static natural __mod(const uint8_t *num, const size_t nn,
+                                 const uint8_t *den, const size_t nd);
+
+            static natural __bool(const uint8_t *l, const size_t nl,
+                                  const uint8_t *r, const size_t nr,
+                                  booleanOp  proc);
             
         };
     }

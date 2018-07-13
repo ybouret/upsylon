@@ -40,7 +40,7 @@ namespace upsylon
             virtual ~rw_buffer() throw(); //!< destructor
 
             void *rw() throw(); //!< assuming writable area
-
+            void  reverse() throw(); //!< using mreverse
         protected:
             explicit rw_buffer() throw(); //!< constructor
 

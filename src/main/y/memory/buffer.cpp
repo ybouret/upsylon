@@ -1,4 +1,3 @@
-
 #include "y/memory/buffer.hpp"
 
 namespace upsylon
@@ -30,6 +29,11 @@ namespace upsylon
         void *rw_buffer:: rw() throw()
         {
             return (void*)ro();
+        }
+
+        void rw_buffer:: reverse() throw()
+        {
+            mreverse( rw(), length() );
         }
     }
 }
