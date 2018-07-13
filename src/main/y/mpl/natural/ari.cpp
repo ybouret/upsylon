@@ -90,8 +90,33 @@ namespace upsylon
             }
 
             return result;
-
         }
+
+        bool natural:: is_prime( const natural &n )
+        {
+            if(n<=1)
+                return false; //!< for 0 and 1
+            else if(n<=3)
+                return true;  //!< for 2 and 3
+            else if( n.is_divisible_by_byte(2) || n.is_divisible_by_byte(3) ) //! for 2,4,6,8,9...
+                return false;
+            else
+            {
+                assert(n>=5);
+                natural i = 5;
+                for(;;)
+                {
+                    const natural isq = natural::square_of(i);
+                    if(isq>n) break;
+                    if( n.is_divisible_by(i) ) return false;
+                    const natural j=i+2;
+                    if( n.is_divisible_by(j) )  return false;
+                    i += 6;
+                }
+                return true;
+            }
+        }
+
     }
 
 }

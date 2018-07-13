@@ -62,11 +62,9 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             }
 
             //! copy from a word_type
-            inline natural(word_t n) : Y_MPN_CTOR(sizeof(word_t),bytes)
+            inline natural(word_t w) : Y_MPN_CTOR(sizeof(word_t),bytes)
             {
-                n = swap_le(n);
-                memcpy(byte,&n,sizeof(word_t));
-                update();
+                memcpy(byte,prepare(w,bytes),sizeof(word_t));
             }
 
             //! assign
@@ -283,6 +281,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
                 xch(tmp);
                 return tmp;
             }
+            
 
             //__________________________________________________________________
             //
@@ -473,6 +472,24 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //
             //__________________________________________________________________
             Y_MPN_WRAP(%,__mod)
+            inline bool is_divisible_by( const natural &rhs ) const
+            {
+                const natural ans = __mod(*this,rhs);
+                return ans.is_zero();
+            }
+
+            inline bool is_divisible_by(word_t w) const
+            {
+                Y_MPN_PREPARE(w);
+                const natural ans = __mod(byte,bytes,pw,nw);
+                return ans.is_zero();
+            }
+
+            inline bool is_divisible_by_byte(const uint8_t b) const
+            {
+                const natural ans = __mod(byte,bytes,&b,1);
+                return ans.is_zero();
+            }
 
             //__________________________________________________________________
             //
@@ -493,7 +510,8 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //__________________________________________________________________
             static natural mod_inv( const natural &b, const natural &n );                     //!< modular inverse
             static natural mod_exp( const natural &b, const natural &e, const natural &n );   //!< modular exponentiation (b^e)[n]
-
+            static bool is_prime(const natural &);
+            
         private:
             size_t   bytes;     //!< active bytes
             size_t   allocated; //!< allocated bytes

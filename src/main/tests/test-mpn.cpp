@@ -1,11 +1,13 @@
 #include "y/mpl/natural.hpp"
 #include "y/code/arith.hpp"
 #include "y/utest/run.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/code/primality.hpp"
 
 using namespace upsylon;
 
 #define ITERS (1<<14)
-
+#define ITERS_SMALL (1<<10)
 Y_UTEST(mpn)
 {
     mpn a;
@@ -216,7 +218,7 @@ Y_UTEST(mpn)
 
     std::cerr << "-- arithmetic" << std::endl;
 
-    for(size_t iter=0;iter<ITERS;++iter)
+    for(size_t iter=0;iter<ITERS_SMALL;++iter)
     {
         uint64_t l = alea.partial<uint64_t>();
         uint64_t r = alea.partial<uint64_t>();
@@ -230,6 +232,18 @@ Y_UTEST(mpn)
         arithmetic::simplify(L,R);
         Y_ASSERT(L.lsw()==l);
         Y_ASSERT(R.lsw()==r);
+    }
+
+    std::cerr << "-- primality" << std::endl;
+    vector<uint64_t> p;
+    {
+        size_t i=0;
+        while(p.size()<=100)
+        {
+            i = primality::next(i+1);
+            p.push_back(i);
+        }
+        std::cerr << "p=" << p << std::endl;
     }
 
 }
