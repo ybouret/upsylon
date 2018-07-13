@@ -1,4 +1,5 @@
 #include "y/mpl/natural.hpp"
+#include "y/code/arith.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -211,6 +212,24 @@ Y_UTEST(mpn)
         Y_ASSERT(O.lsw()==o);
         Y_ASSERT(X.lsw()==x);
 
+    }
+
+    std::cerr << "-- arithmetic" << std::endl;
+
+    for(size_t iter=0;iter<ITERS;++iter)
+    {
+        uint64_t l = alea.partial<uint64_t>();
+        uint64_t r = alea.partial<uint64_t>();
+        const uint64_t g = arithmetic::gcd(l,r);
+
+        mpn L = l;
+        mpn R = r;
+        const mpn G = arithmetic::gcd(L,R);
+        Y_ASSERT(G.lsw()==g);
+        arithmetic::simplify(l,r);
+        arithmetic::simplify(L,R);
+        Y_ASSERT(L.lsw()==l);
+        Y_ASSERT(R.lsw()==r);
     }
 
 }

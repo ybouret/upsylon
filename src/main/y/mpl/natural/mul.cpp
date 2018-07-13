@@ -113,7 +113,8 @@ namespace upsylon
                 //--------------------------------------------------------------
                 //-- compute common power of two
                 //--------------------------------------------------------------
-                const size_t nn = P.allocated; assert(nn==next_power_of_two(np));
+                const size_t nn = P.allocated; assert(nn>=next_power_of_two(np));
+
 
                 size_t       n2 = nn<<1;
                 size_t       workspace = 0;
