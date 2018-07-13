@@ -81,7 +81,6 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             //
             //__________________________________________________________________
 
-
             //! a zero natural
             inline natural() : Y_MPN_CTOR(0,0) { Y_MPN_CHECK(this); }
 
@@ -92,48 +91,38 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             inline virtual ~natural() throw()
             {
                 static manager &mgr = manager::location();
-                Y_MPN_CHECK(this);
-                mgr.__release(byte,allocated);
+                Y_MPN_CHECK(this); mgr.__release(byte,allocated);
             }
 
             //! copy
             inline natural(const natural &other) : Y_MPN_CTOR(other.bytes,bytes)
             {
-                Y_MPN_CHECK(&other);
-                memcpy(byte,other.byte,bytes);
-                Y_MPN_CHECK(this);
+                Y_MPN_CHECK(&other); memcpy(byte,other.byte,bytes); Y_MPN_CHECK(this);
             }
 
             //! copy from a word_type
             inline natural(word_t w) : Y_MPN_CTOR(0,sizeof(word_t))
             {
-                memcpy(byte,prepare(w,bytes),sizeof(word_t));
-                Y_MPN_CHECK(this);
+                memcpy(byte,prepare(w,bytes),sizeof(word_t)); Y_MPN_CHECK(this);
             }
 
             //! assign
             natural & operator=( const natural &other )
             {
-                natural tmp(other);
-                xch(tmp);
-                return *this;
+                natural tmp(other); xch(tmp); return *this;
             }
 
             //! assign from word_type
             natural & operator=( const word_t w )
             {
-                natural tmp(w);
-                xch(tmp);
-                return *this;
+                natural tmp(w); xch(tmp); return *this;
             }
 
             //! no throw exchange
             inline void xch( natural &other ) throw()
             {
-                cswap(bytes,other.bytes);
-                cswap(allocated,other.allocated);
-                cswap(byte,other.byte);
-                cswap(item,other.item);
+                cswap(bytes,other.bytes); cswap(allocated,other.allocated);
+                cswap(byte,other.byte);   cswap(item,other.item);
             }
 
             //! Least Significant Word
@@ -169,34 +158,13 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             }
 
             //! get number of bits
-            inline size_t bits() const throw()
-            {
-                return (bytes<=0) ? 0 : ( (bytes-1) << 3 ) + bits_table::count_for_byte[ item[bytes] ];
-            }
+            inline size_t bits() const throw() { return (bytes<=0) ? 0 : ( (bytes-1) << 3 ) + bits_table::count_for_byte[ item[bytes] ]; }
 
-            inline void clr() throw()
-            {
-                bytes = 0;
-                memset(byte,0,allocated);
-            }
+            //! clear memory
+            inline void clr() throw() { bytes = 0; memset(byte,0,allocated); }
 
-            inline natural(const size_t nbit, randomized::bits &gen ) : Y_MPN_CTOR(0,0)
-            {
-                if(nbit)
-                {
-                    const natural one(1);
-                    natural tmp = one;
-                    for(size_t i=nbit;i>1;--i)
-                    {
-                        tmp <<= 1;
-                        if(gen.choice())
-                        {
-                            tmp |= one;
-                        }
-                    }
-                    xch(tmp);
-                }
-            }
+            //! generate a random number
+            natural(const size_t nbit, randomized::bits &gen );
 
             //__________________________________________________________________
             //
@@ -205,15 +173,18 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             //
             //__________________________________________________________________
             //! formatted display
-            void display( std::ostream &) const;
+            std::ostream & display( std::ostream &) const;
 
+            //! operator to std::ostream
             inline friend std::ostream & operator<<( std::ostream &os, const natural &n)
             {
-                n.display(os);
-                return os;
+                return n.display(os);;
             }
 
+            //! convert to real value
             double to_real() const;
+
+            //! expand the ratio
             static double ratio_of(const natural &num,const natural &den);
 
             //__________________________________________________________________
@@ -227,17 +198,7 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             inline bool is_zero() const throw() { return (bytes<=0); }
 
             //! fast checking against a byte
-            inline bool is_byte(const uint8_t x) const throw()
-            {
-                if(x<=0)
-                {
-                    return (bytes<=0);
-                }
-                else
-                {
-                    return (1==bytes) && (x==byte[0]);
-                }
-            }
+            inline bool is_byte(const uint8_t x) const throw() { return (x<=0) ? (bytes<=0) : ((1==bytes) && (x==byte[0])); }
 
             //! comparison
             static inline
@@ -247,14 +208,8 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
                                const size_t   nr) throw()
             {
                 assert(l);assert(r);
-                if(nl<nr)
-                {
-                    return -1;
-                }
-                else if(nr<nl)
-                {
-                    return 1;
-                }
+                if(nl<nr)      { return -1; }
+                else if(nr<nl) { return  1; }
                 else
                 {
                     assert(nr==nl);
@@ -320,29 +275,14 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             natural operator+() { return *this; }
 
             //! increase by 1
-            inline natural __inc() const
-            {
-                static const uint8_t __one = 0x01;
-                return __add(byte,bytes,&__one,1);
-            }
+            inline natural __inc() const { static const uint8_t __one = 0x01; return __add(byte,bytes,&__one,1); }
 
             //! increase operator
-            inline natural & operator++()
-            {
-                natural tmp = __inc();
-                xch(tmp);
-                return *this;
-            }
+            inline natural & operator++() { natural tmp = __inc(); xch(tmp); return *this; }
 
             //! increase operator
-            natural operator++(int)
-            {
-                natural tmp = __inc();
-                xch(tmp);
-                return tmp;
-            }
+            natural operator++(int) { natural tmp = __inc(); xch(tmp); return tmp; }
             
-
             //__________________________________________________________________
             //
             //
@@ -352,27 +292,13 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             Y_MPN_WRAP(-,__sub)
 
             //! decrease by 1
-            inline natural __dec() const
-            {
-                static const uint8_t __one = 0x01;
-                return __sub(byte,bytes,&__one,1);
-            }
+            inline natural __dec() const { static const uint8_t __one = 0x01; return __sub(byte,bytes,&__one,1); }
 
             //! decrease operator
-            inline natural & operator--()
-            {
-                natural tmp = __dec();
-                xch(tmp);
-                return *this;
-            }
+            inline natural & operator--() { natural tmp = __dec(); xch(tmp); return *this; }
 
             //! decrease operator
-            natural operator--(int)
-            {
-                natural tmp = __dec();
-                xch(tmp);
-                return tmp;
-            }
+            natural operator--(int) { natural tmp = __dec(); xch(tmp); return tmp; }
 
             //__________________________________________________________________
             //
@@ -393,63 +319,29 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //__________________________________________________________________
 
             //! ready any byte
-            uint8_t operator[](size_t indx) const throw()
-            {
-                if(indx>=bytes) return 0;
-                else return byte[indx];
-            }
+            uint8_t operator[](size_t indx) const throw() { return (indx>=bytes) ? 0 : byte[indx]; }
 
             //! ready valid bit to 0 or 1
-            inline uint8_t get_bit(const size_t ibit) const throw()
-            {
-                assert(ibit<=bits());
-                return bits_table::_true[ byte[ibit>>3] & bits_table::value[ibit&7] ];
-            }
+            inline uint8_t get_bit(const size_t ibit) const throw() { assert(ibit<=bits()); return bits_table::_true[ byte[ibit>>3] & bits_table::value[ibit&7] ]; }
 
             //! test a valid bit
-            inline bool has_bit(const size_t ibit) const throw()
-            {
-                return 0!=(byte[ibit>>3] & bits_table::value[ibit&7]);
-            }
+            inline bool has_bit(const size_t ibit) const throw() { assert(ibit<=bits()); return 0!=(byte[ibit>>3] & bits_table::value[ibit&7]); }
 
             //! left shift
-            natural shl(const size_t shift) const
-            {
-                if(shift>0&&bytes>0)
-                {
-                    return __shl(shift);
-                }
-                else
-                {
-                    return *this;
-                }
-            }
+            natural shl(const size_t shift) const { return (shift>0&&bytes>0) ? __shl(shift) : *this; }
 
             //! in place left shift
             natural & shl()
             {
-                if(bytes>0)
-                {
-                    natural tmp = __shl(1);
-                    xch(tmp);
-                }
+                if(bytes>0) { natural tmp = __shl(1); xch(tmp); }
                 return *this;
             }
 
             //! in place left shift operator
-            inline natural & operator<<=(const size_t shift)
-            {
-                natural ans = shl(shift);
-                xch(ans);
-                return *this;
-            }
+            inline natural & operator<<=(const size_t shift) { natural ans = shl(shift); xch(ans); return *this; }
 
             //! left shift operator
-            inline friend natural operator<<(const natural &n,const size_t shift)
-            {
-                const natural ans = n.shl(shift);
-                return ans;
-            }
+            inline friend natural operator<<(const natural &n,const size_t shift) { return n.shl(shift); }
 
             //! right shift
             inline natural shr(const size_t shift) const
@@ -479,27 +371,13 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             }
 
             //! in place right shift
-            natural & shr()
-            {
-                natural tmp = shr(1);
-                xch(tmp);
-                return *this;
-            }
+            natural & shr() { natural tmp = shr(1); xch(tmp); return *this; }
 
             //! in place right shift operator
-            inline natural & operator>>=(const size_t shift)
-            {
-                natural ans = shr(shift);
-                xch(ans);
-                return *this;
-            }
+            inline natural & operator>>=(const size_t shift) { natural ans = shr(shift); xch(ans); return *this; }
 
             //! left shift operator
-            inline friend natural operator>>(const natural &n, const size_t shift)
-            {
-                const natural ans = n.shr(shift);
-                return ans;
-            }
+            inline friend natural operator>>(const natural &n, const size_t shift){ return n.shr(shift); }
 
             //! 2^j
             static inline natural exp2( const size_t j )
@@ -520,10 +398,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //
             //__________________________________________________________________
             Y_MPN_WRAP(/,__div)
-            static inline void split( natural &q, natural &r, const natural &num, const natural &den )
-            {
-                r = num - ( (q=num/den) * den );
-            }
+            static inline void split( natural &q, natural &r, const natural &num, const natural &den ) { r = num - ( (q=num/den) * den ); }
 
             //__________________________________________________________________
             //
@@ -534,8 +409,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             Y_MPN_WRAP(%,__mod)
             inline bool is_divisible_by( const natural &rhs ) const
             {
-                const natural ans = __mod(*this,rhs);
-                return ans.is_zero();
+                const natural ans = __mod(*this,rhs);  return ans.is_zero();
             }
 
             inline bool is_divisible_by(word_t w) const
@@ -573,22 +447,16 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             static bool    is_prime(const natural &);
             static natural next_prime(const natural &);
             static bool    are_coprimes(const natural &, const natural &);
+            
         private:
             size_t   bytes;     //!< active bytes
             size_t   allocated; //!< allocated bytes
             uint8_t *byte;      //!< byte[0..allocated-1]
             uint8_t *item;      //!< item[1..allocated]
 
-            inline void update() throw()
-            {
-                while(bytes>0&&item[bytes]<=0) --bytes;
-            }
+            inline void update() throw() { while(bytes>0&&item[bytes]<=0) --bytes; }
 
-            inline void upgrade() throw()
-            {
-                bytes = allocated;
-                update();
-            }
+            inline void upgrade() throw() { bytes = allocated; update(); }
 
             static inline uint8_t * __acquire(size_t &n)
             {

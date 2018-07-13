@@ -14,7 +14,7 @@ namespace upsylon
         }
 
 
-        void natural:: display( std::ostream &os ) const
+        std::ostream & natural:: display( std::ostream &os ) const
         {
             static const MPN &_ = MPN::instance();
 
@@ -84,6 +84,7 @@ namespace upsylon
             {
                 throw exception("natural.display: unsupported format");
             }
+            return os;
         }
 
         double natural:: to_real() const

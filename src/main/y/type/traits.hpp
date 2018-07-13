@@ -195,7 +195,7 @@ namespace upsylon
         enum { is_arithmetic    = ( is_integral || is_std_real )                 };
         enum { is_fundamental   = ( is_arithmetic  || is_same_type<T,void>::value) };
         enum { is_primitive     = ( is_fundamental || is_pointer || is_pointer_to_member ) };
-
+        
 
         /** \brief optimized parameter type.
 
