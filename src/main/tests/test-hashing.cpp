@@ -13,6 +13,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/utest/timings.hpp"
+#include "y/hashing/key-hasher.hpp"
 
 using namespace upsylon;
 
@@ -91,6 +92,13 @@ Y_UTEST(hashing)
             perform(*phash[i],lines);
         }
     }
+
+    key_hasher<string>               skh_default;
+    key_hasher<string,hashing::sha1> skh_crypto;
+    const string s = "Hello, World!";
+    std::cerr << "default=" << skh_default(s) << std::endl;
+    std::cerr << "crypto =" << skh_crypto(s)  << std::endl;
+
 }
 Y_UTEST_DONE()
 
