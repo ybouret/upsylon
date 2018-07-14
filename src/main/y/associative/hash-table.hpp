@@ -116,8 +116,48 @@ namespace upsylon
                 upsylon::bswap(items,other.items);
                 upsylon::bswap(nodes,other.nodes);
                 upsylon::bswap(metas,other.metas);
+                upsylon::bswap(buffer,other.buffer);
+                upsylon::bswap(allocated,other.allocated);
+
             }
 
+            template <
+            typename KEY,
+            typename T>
+            void insert(typename type_traits<KEY>::parameter_type node_key,
+                        const size_t                              node_hkey,
+                        typename type_traits<T>::parameter_type   node_data)
+            {
+                assert(chain.size<items);
+                NODE *node = nodes.acquire();
+                try
+                {
+                    new (node) NODE(node_key,node_hkey,node_data);
+                }
+                catch(...)
+                {
+                    nodes.release(node);
+                    throw;
+                }
+                assert(node_hkey==node->hkey);
+                slot[ node_key & smask ].push_front(node);
+                meta_node *meta = metas.acquire();
+                new (meta) meta_node(node);
+                node->meta = meta;
+                chain.push_back(meta);
+            }
+
+            //! duplicate
+            inline void duplicate(const hash_table &other)
+            {
+                assert(0==chain.size);
+                assert(items>=other.size);
+                for(const meta_node *meta=other.chain.head;meta;meta=meta->next)
+                {
+                    assert(meta->addr);
+                    const NODE &source = *(meta->addr);
+                }
+            }
 
             meta_list  chain; //!< list of meta nodes
             slot_type *slot;  //!< slots entry
