@@ -27,13 +27,24 @@ namespace
             //std::cerr << "key=" << k << "=>h=" << h << std::endl;
         }
 
+        inline hnode(const hnode &other) :
+        next(0),
+        prev(0),
+        meta(0),
+        key(other.key),
+        hkey(other.hkey),
+        data(other.data)
+        {
+        }
+
+
         inline ~hnode() throw()
         {
         }
 
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(hnode);
+        Y_DISABLE_ASSIGN(hnode);
     };
 }
 
@@ -56,7 +67,10 @@ Y_UTEST(associative)
         core::hash_table<hnode> hnew;
         hnew.swap_with(htable);
         assert(hnew.chain.size==n);
-        
+
+        core::hash_table<hnode> hdup(n+5);
+        hdup.duplicate(hnew);
+
     }
 }
 Y_UTEST_DONE()

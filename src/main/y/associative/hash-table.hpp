@@ -140,22 +140,30 @@ namespace upsylon
                     throw;
                 }
                 assert(node_hkey==node->hkey);
-                slot[ node_key & smask ].push_front(node);
-                meta_node *meta = metas.acquire();
-                new (meta) meta_node(node);
-                node->meta = meta;
-                chain.push_back(meta);
+                hook(node);
             }
 
             //! duplicate
             inline void duplicate(const hash_table &other)
             {
                 assert(0==chain.size);
-                assert(items>=other.size);
+                assert(items>=other.chain.size);
                 for(const meta_node *meta=other.chain.head;meta;meta=meta->next)
                 {
                     assert(meta->addr);
                     const NODE &source = *(meta->addr);
+                    NODE *node = nodes.acquire();
+                    try
+                    {
+                        new (node) NODE(source);
+                    }
+                    catch(...)
+                    {
+                        nodes.release(node);
+                        throw;
+                    }
+                    assert(source.hkey==node->hkey);
+                    hook(node);
                 }
             }
 
@@ -172,6 +180,16 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(hash_table);
             void   *buffer;
             size_t  allocated;
+
+            inline  void hook( NODE *node ) throw()
+            {
+                slot[ node->hkey & smask].push_front(node);
+                assert(0==node->meta);
+                meta_node *meta = metas.acquire();
+                new (meta) meta_node(node);
+                node->meta = meta;
+                chain.push_back(meta);
+            }
         };
     }
 
