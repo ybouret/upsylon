@@ -5,19 +5,21 @@
 #include "y/core/addr-list.hpp"
 #include "y/memory/slab.hpp"
 #include "y/type/utils.hpp"
+#include "y/container/container.hpp"
 
 namespace upsylon
 {
 
     namespace core
     {
+        //! base class for hash_table parameters
         class hash_table_info
         {
         public:
             inline virtual ~hash_table_info() throw() {}
             inline explicit hash_table_info() throw() {}
-            static const size_t load_factor = 4;
-            static const size_t min_slots   = 8;
+            static const size_t load_factor = 4; //!< maximum number of nodes per slot
+            static const size_t min_slots   = 8; //!< minimum number of slots
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(hash_table_info);
@@ -28,16 +30,17 @@ namespace upsylon
          NODE must have :
          - a size_t hkey
          - a void *meta field
+         - a const_key & key() const throw() function
          */
         template <typename NODE,typename ALLOCATOR = memory::global>
         class hash_table : public hash_table_info
         {
         public:
-            typedef addr_node<NODE>         meta_node;
-            typedef addr_list<NODE>         meta_list;
-            typedef core::list_of<NODE>     slot_type;
-            typedef memory::slab<NODE>      node_slab;
-            typedef memory::slab<meta_node> meta_slab;
+            typedef addr_node<NODE>         meta_node; //!< to store node addresses
+            typedef addr_list<NODE>         meta_list; //!< list of node addresses
+            typedef core::list_of<NODE>     slot_type; //!< a slot of the hash table
+            typedef memory::slab<NODE>      node_slab; //!< to acquire/release node
+            typedef memory::slab<meta_node> meta_slab; //!< to acquire/release meta
 
             //! default initialization
 #define Y_CORE_HASH_TABLE_CTOR() chain(),slot(0),slots(0),smask(0),nodes(0,0),metas(0,0),buffer(0),allocated(0)
@@ -49,6 +52,7 @@ namespace upsylon
             //! self content n objects
             inline  hash_table(const size_t n) throw() : Y_CORE_HASH_TABLE_CTOR()
             {
+                std::cerr << "hash_table(" << n << ")" << std::endl;
                 if(n>0)
                 {
                     static memory::allocator &hmem = ALLOCATOR::instance();
@@ -71,12 +75,14 @@ namespace upsylon
                     items = n;
                     assert(nodes.capacity()>=n);
                     assert(metas.capacity()>=n);
+                    std::cerr << "|_#slots=" << slots << std::endl;
                 }
             }
 
             //! uses NODE destructor to free memory
             inline void free() throw()
             {
+                std::cerr << "[hash_table.free] scanning #slots=" << slots << std::endl;
                 for(size_t i=0;i<slots;++i)
                 {
                     slot_type &s = slot[i];
@@ -100,6 +106,7 @@ namespace upsylon
             {
                 if(allocated)
                 {
+                    std::cerr << "[hash_table.kill] #allocated=" << allocated << std::endl;
                     static memory::allocator &hmem = ALLOCATOR::location();
                     free();
                     hmem.release(buffer,allocated);
@@ -121,12 +128,68 @@ namespace upsylon
 
             }
 
+            //! creation/insertion of a new node with enough space
             template <
             typename KEY,
             typename T>
-            void insert(typename type_traits<KEY>::parameter_type node_key,
+            bool insert(typename type_traits<KEY>::parameter_type node_key,
                         const size_t                              node_hkey,
                         typename type_traits<T>::parameter_type   node_data)
+            {
+
+
+
+                slot_type *pSlot = 0;
+                if( search_node<KEY>(node_key,node_hkey,&pSlot) )
+                {
+                    //__________________________________________________________
+                    //
+                    // multiple data
+                    //__________________________________________________________
+                    assert(pSlot);
+                    return false; // multiple data
+                }
+                else
+                {
+                    NODE *node = 0;
+                    if(chain.size>=items)
+                    {
+                        //______________________________________________________
+                        //
+                        // need to grow
+                        //______________________________________________________
+                        const size_t nxt_capa = container::next_capacity(items);
+                        std::cerr << "[hash_table.grow] " << items << " -> " << nxt_capa << std::endl;
+                        hash_table temp( nxt_capa );
+                        temp.duplicate(*this);
+                        node = temp.create<KEY,T>(node_key,node_hkey,node_data);
+                        swap_with(temp);
+                        pSlot = &slot[node_hkey&smask];
+                    }
+                    else
+                    {
+                        // slot already computed
+                        assert(chain.size<items);
+                        assert(pSlot);
+                        node = this->create<KEY,T>(node_key,node_hkey,node_data);
+                    }
+                    assert(slot);
+                    assert(pSlot);
+                    assert(pSlot>=slot);
+                    assert(pSlot<slot+slots);
+                    pSlot->push_front(node);
+                    return true;
+                }
+
+            }
+
+            //! create a node and its chained meta node, need to be inserted
+            template <
+            typename KEY,
+            typename T>
+            NODE *create(typename type_traits<KEY>::parameter_type node_key,
+                         const size_t                              node_hkey,
+                         typename type_traits<T>::parameter_type   node_data)
             {
                 assert(chain.size<items);
                 NODE *node = nodes.acquire();
@@ -140,10 +203,10 @@ namespace upsylon
                     throw;
                 }
                 assert(node_hkey==node->hkey);
-                hook(node);
+                return start(node);
             }
 
-            //! duplicate
+            //! duplicate another table in this EMPTY table, using the NODE copy
             inline void duplicate(const hash_table &other)
             {
                 assert(0==chain.size);
@@ -163,7 +226,34 @@ namespace upsylon
                         throw;
                     }
                     assert(source.hkey==node->hkey);
-                    hook(node);
+                    slot[node->hkey&smask].push_front( start(node) );
+                }
+            }
+
+            //! search for a node with a given key/hahs
+            template <typename KEY>
+            const NODE *search_node(typename type_traits<KEY>::parameter_type k,
+                                    const size_t                              h,
+                                    slot_type                               **ppSlot ) const throw()
+            {
+                assert(ppSlot);
+                assert(! *ppSlot);
+                if(slot)
+                {
+                    slot_type &s = * (*ppSlot= &slot[h&smask]);
+                    for(const NODE *node=s.head;node;node=node->next)
+                    {
+                        if( (h==node->hkey) && (k==node->key()) )
+                        {
+                            return node;
+                        }
+                    }
+                    return 0;
+                }
+                else
+                {
+                    // no data at all
+                    return 0;
                 }
             }
 
@@ -181,14 +271,14 @@ namespace upsylon
             void   *buffer;
             size_t  allocated;
 
-            inline  void hook( NODE *node ) throw()
+            inline NODE * start(NODE *node) throw()
             {
-                slot[ node->hkey & smask].push_front(node);
                 assert(0==node->meta);
                 meta_node *meta = metas.acquire();
                 new (meta) meta_node(node);
                 node->meta = meta;
                 chain.push_back(meta);
+                return node;
             }
         };
     }

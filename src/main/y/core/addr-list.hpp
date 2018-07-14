@@ -10,16 +10,19 @@ namespace upsylon
 {
     namespace core
     {
+        //! node to store some address
         template <typename T>
         class addr_node : public object
         {
         public:
             Y_DECL_ARGS(T,type); //!< alias
-            addr_node    *next;
-            addr_node    *prev;
-            type         *addr;
+            addr_node    *next;  //!< for list
+            addr_node    *prev;  //!< for list
+            type         *addr;  //!< the address
 
+            //! store the address
             inline explicit addr_node( type *args ) throw() : next(0), prev(0), addr( args ) {}
+            //! destructor
             inline virtual ~addr_node() throw() {}
 
 
@@ -32,9 +35,11 @@ namespace upsylon
         class addr_list : public LIST< addr_node<T> >
         {
         public:
-            typedef addr_node<T> node_type;
+            typedef addr_node<T> node_type; //!< alias
 
+            //! constructor
             inline explicit addr_list() throw() {}
+            //! destructor
             inline virtual ~addr_list() throw() {}
 
         private:

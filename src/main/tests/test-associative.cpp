@@ -12,15 +12,17 @@ namespace
         hnode *next;
         hnode *prev;
         void  *meta;
-        const size_t key;
+        const size_t key_;
         const size_t hkey;
         int          data;
+
+        const size_t & key() const throw() { return key_; }
 
         inline hnode(size_t k, size_t h, int i) throw() :
         next(0),
         prev(0),
         meta(0),
-        key(k),
+        key_(k),
         hkey(h),
         data(i)
         {
@@ -31,7 +33,7 @@ namespace
         next(0),
         prev(0),
         meta(0),
-        key(other.key),
+        key_(other.key_),
         hkey(other.hkey),
         data(other.data)
         {
@@ -58,19 +60,18 @@ Y_UTEST(associative)
 
     for(size_t n=0;n<=1000;n+=1+alea.leq(30))
     {
+        std::cerr << std::endl;
         core::hash_table<hnode> htable(n);
-        std::cerr << "n=" << n << " -> items=" << htable.items <<  ", slots=" << htable.slots << ", max_load=" << double(htable.items)/max_of<size_t>(1,htable.slots) << std::endl;
-        for(size_t i=1;i<=n;++i)
+        for(size_t i=1;i<=2*n;++i)
         {
             htable.insert<size_t,int>(i,H(i),alea.full<int>());
         }
         core::hash_table<hnode> hnew;
         hnew.swap_with(htable);
-        assert(hnew.chain.size==n);
 
-        core::hash_table<hnode> hdup(n+5);
+        core::hash_table<hnode> hdup(hnew.items+alea.leq(100));
         hdup.duplicate(hnew);
-
+        
     }
 }
 Y_UTEST_DONE()
