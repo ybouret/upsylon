@@ -11,9 +11,10 @@ namespace upsylon
     class merging
     {
     public:
-        typedef core::list_of<NODE> sub_list;
-        typedef int (*compare_node_proc)(const NODE *lhs, const NODE *rhs, void *args);
+        typedef core::list_of<NODE> sub_list; //!< internal sub list to hold nodes
+        typedef int (*compare_node_proc)(const NODE *lhs, const NODE *rhs, void *args); //!< node comparison function
 
+        //! sort a given list with same members than sub_list
         template <typename LIST> static inline
         void sort( LIST &source, compare_node_proc proc, void *args)
         {

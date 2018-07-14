@@ -20,6 +20,7 @@ namespace upsylon
             //! valid length() byte
             virtual size_t      length() const throw() = 0;
 
+            //! endless byte reading
             inline uint8_t get_byte(const size_t i) const throw()
             {
                 return (i>=length()) ? 0 : *(static_cast<const uint8_t*>(ro())+i);

@@ -23,25 +23,20 @@ namespace upsylon
         class manager : public singleton<manager>, public memory::allocator
         {
         public:
-            virtual void *acquire( size_t &n )
-            {
-                Y_LOCK(access);
-                return IO.acquire(n);
-            }
+            //! allocator interface
+            virtual void *acquire( size_t &n ) { Y_LOCK(access); return IO.acquire(n); }
 
-            virtual void release(void * &p, size_t &n ) throw()
-            {
-                Y_LOCK(access);
-                IO.release(p,n);
-            }
+            //! allocator interface
+            virtual void release(void * &p, size_t &n ) throw() { Y_LOCK(access); IO.release(p,n); }
 
-
+            //! specialized acquire
             inline uint8_t * __acquire(size_t &n)
             {
                 Y_LOCK(access);
                 return static_cast<uint8_t*>(IO.acquire(n));
             }
 
+            //! specialized release
             inline void __release(uint8_t * &p,size_t &n) throw()
             {
                 Y_LOCK(access);
@@ -56,7 +51,7 @@ namespace upsylon
             memory::vein IO;
 
         public:
-            static const at_exit::longevity life_time = object::life_time - 1;
+            static const at_exit::longevity life_time = object::life_time - 1; //!< need only objects
         };
 
         //! check natural sanity
@@ -261,6 +256,7 @@ inline friend natural operator OP ( const natural  &lhs, const natural  &rhs ) {
 inline friend natural operator OP ( const natural  &lhs, const word_t    rhs ) { return CALL(lhs,rhs); } \
 inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) { return CALL(lhs,rhs); }
 
+            //! declaration and implementation of function for a given operator
 #define Y_MPN_WRAP(OP,CALL) Y_MPN_DEFINE(natural,CALL) Y_MPN_IMPL(OP,CALL)
 
             //__________________________________________________________________
@@ -398,6 +394,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //
             //__________________________________________________________________
             Y_MPN_WRAP(/,__div)
+            //! num = q*den+r
             static inline void split( natural &q, natural &r, const natural &num, const natural &den ) { r = num - ( (q=num/den) * den ); }
 
             //__________________________________________________________________
@@ -407,11 +404,13 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //
             //__________________________________________________________________
             Y_MPN_WRAP(%,__mod)
+            //! test divisibility
             inline bool is_divisible_by( const natural &rhs ) const
             {
                 const natural ans = __mod(*this,rhs);  return ans.is_zero();
             }
 
+            //! test divisibility
             inline bool is_divisible_by(word_t w) const
             {
                 Y_MPN_PREPARE(w);
@@ -419,6 +418,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
                 return ans.is_zero();
             }
 
+            //! test divisibility
             inline bool is_divisible_by_byte(const uint8_t b) const
             {
                 const natural ans = __mod(byte,bytes,&b,1);
@@ -431,6 +431,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             // boolean ops
             //
             //__________________________________________________________________
+            //! byte-wise operator
             typedef uint8_t (*booleanOp)(const uint8_t lhs, const uint8_t rhs);
             Y_MPN_WRAP(&,__and)
             Y_MPN_WRAP(|,__or)
@@ -444,9 +445,9 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //__________________________________________________________________
             static natural mod_inv( const natural &b, const natural &n );                     //!< modular inverse
             static natural mod_exp( const natural &b, const natural &e, const natural &n );   //!< modular exponentiation (b^e)[n]
-            static bool    is_prime(const natural &);
-            static natural next_prime(const natural &);
-            static bool    are_coprimes(const natural &, const natural &);
+            static bool    is_prime(const natural &);   //!< slow primality test
+            static natural next_prime(const natural &); //!< slow find of next prime
+            static bool    are_coprimes(const natural &, const natural &); //!< test co-primailty
             
         private:
             size_t   bytes;     //!< active bytes
@@ -507,6 +508,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             static natural __bool(const uint8_t *l, const size_t nl,
                                   const uint8_t *r, const size_t nr,
                                   booleanOp  proc);
+            //! low level boolean functions implementation
 #define Y_MPN_BOOL(CALL,OP) \
 static inline uint8_t __##CALL##__(const uint8_t a, const uint8_t b ) throw() { return (a OP b); }\
 static inline natural __##CALL(const uint8_t *l, const size_t nl, const uint8_t *r, const size_t nr) { return __bool(l,nl,r,nr,__##CALL##__); }
@@ -520,14 +522,14 @@ static inline natural __##CALL(const uint8_t *l, const size_t nl, const uint8_t 
         class MPN : public singleton<MPN>
         {
         public:
-            const natural _0;
-            const natural _1;
-            const natural _2;
-            const natural _3;
-            const natural _4;
-            const natural _5;
-            const natural _6;
-            const natural _10;
+            const natural _0;  //!< 0
+            const natural _1;  //!< 1
+            const natural _2;  //!< 2
+            const natural _3;  //!< 3
+            const natural _4;  //!< 4
+            const natural _5;  //!< 5
+            const natural _6;  //!< 6
+            const natural _10; //!< 10
 
         private:
             inline explicit MPN() :
@@ -537,7 +539,7 @@ static inline natural __##CALL(const uint8_t *l, const size_t nl, const uint8_t 
             friend class singleton<MPN>;
 
         public:
-            static const at_exit::longevity life_time = manager::life_time - 1;
+            static const at_exit::longevity life_time = manager::life_time - 1; //!< based on manager existence
         };
     }
 

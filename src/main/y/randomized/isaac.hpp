@@ -10,7 +10,8 @@ namespace upsylon
 
 	namespace randomized
 	{
-		
+
+        //! how to initialize
 		enum ISAAC_INIT
 		{
 			ISAAC_INIT_NULL, //!< init with null space
@@ -22,23 +23,21 @@ namespace upsylon
 		template <const size_t ALPHA>
 		class isaac {
 		public:
-			static const size_t SIZE = ( 1<<ALPHA );
+			static const size_t SIZE = ( 1<<ALPHA ); //!< internal size
 			
 			virtual ~isaac() throw();
 			explicit isaac( ISAAC_INIT how = ISAAC_INIT_NULL ) throw(); //!< default init, with null workspace
 			explicit isaac( const memory::ro_buffer &key ) throw();     //!< fill and init
-			explicit isaac( const uint32_t wksp[], const size_t wlen ) throw();
+			explicit isaac( const uint32_t wksp[], const size_t wlen ) throw(); //!< fill and init
 			
-			//-- manual access
-			uint32_t         &rsl( const size_t index ) throw();       //!< 0 - SIZE-1
-			const uint32_t   &rsl( const size_t index ) const throw(); //!< 0 - SIZE-1
+			uint32_t         &rsl( const size_t index ) throw();       //!< manual access, 0 - SIZE-1
+			const uint32_t   &rsl( const size_t index ) const throw(); //!< manual access, 0 - SIZE-1
 			
 			void              ini(bool flag) throw(); //!< call randinit
 			void              run() throw();          //!< call isaac
-			
-			
-			//-- automatic access
-			uint32_t rand32() throw();
+
+
+            uint32_t rand32() throw(); //!< generate a new 32 bit random number
 			void     reset( const memory::ro_buffer &key ) throw();  //!< fill and init
 			
 		private:
@@ -59,20 +58,26 @@ namespace upsylon
 			static uint32_t rand(randctx *ctx) throw();                   //!< generate a next 32 bits value
 
 		};
-		
+
+        //! interface of ISAAC
         template <const size_t ALPHA>
         class ISAAC : public bits
         {
         public:
+            //! constructor, default is use null space
             inline explicit ISAAC(ISAAC_INIT how = ISAAC_INIT_NULL) throw() :
             bits(0xffffffff),
             _isaac(how)
             {
             }
 
+            //! desctructor
             inline virtual ~ISAAC() throw() {}
 
+            //! bits interface : generate
             inline virtual uint32_t next32() throw() { return _isaac.rand32(); }
+
+            //! bits interface : reseed
             inline virtual void     reseed( bits &bits ) throw()
             {
                 for(size_t i=0;i<isaac<ALPHA>::SIZE;++i)
@@ -81,6 +86,7 @@ namespace upsylon
                 }
                 _isaac.ini(true);
             }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ISAAC);
             isaac<ALPHA> _isaac;

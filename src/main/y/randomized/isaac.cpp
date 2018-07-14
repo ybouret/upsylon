@@ -41,6 +41,10 @@ namespace upsylon
             return BitsSource::instance().__crypto;
         }
 
+        lockable & bits:: access()
+        {
+            return BitsSource::access;
+        }
     }
 
 }

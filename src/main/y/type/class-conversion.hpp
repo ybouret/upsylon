@@ -1,42 +1,46 @@
 //! \file
 #ifndef Y_CLASS_CONVERSION_INCLUDED
-#define Y_CLASS_CONVERSION_INCLUDE 1
+#define Y_CLASS_CONVERSION_INCLUDED 1
 
 #include "y/os/platform.hpp"
 
 namespace upsylon
 {
+    //! class conversion prototype
     template <class T,class U>
     class conversion {
     private:
-        typedef uint8_t small_type;
-        class           large_type { uint32_t unused; };
+        typedef uint8_t small_type; //!< small type alias
+        class           large_type { uint32_t unused; }; //! inner large type
 
-        static  small_type test( U );
-        static  large_type test(...);
-        static  T     makeT();
+        static  small_type test( U ); //!< returned type for U
+        static  large_type test(...); //!< returned type for other U
+        static  T     makeT();        //!< a prototype for returning T
 
     public:
         conversion(); //!< or some compiler will complain about all private...
         enum
         {
-            exists   = ( sizeof( test(makeT()) ) == sizeof(small_type) ),
-            same_type = false
+            exists   = ( sizeof( test(makeT()) ) == sizeof(small_type) ), //!< type conversion is possible
+            same_type = false                                             //!< with different types!
         };
     };
 
+    //! specialized self conversion
     template <class T >
     class conversion<T,T> {
     public:
         enum {
-            exists   = true,
-            same_type = true
+            exists   = true, //!< obvious
+            same_type = true //!< obvious
         };
     };
 
+    //! true if U is derived from T, may be T
 #define Y_IS_SUPERSUBCLASS(T,U) \
 (conversion<const U *,const T *>::exists && (!conversion<const T *, const void *>::same_type) )
 
+    //! true is U is derived from T, and not T
 #define Y_IS_SUPERSUBCLASS_STRICT(T,U) \
 ( YOCTO_IS_SUPERSUBCLASS(T,U) && (!conversion<const T,const U>::same_type) )
 

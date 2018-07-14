@@ -6,6 +6,7 @@
 
 namespace upsylon
 {
+    //! basic arithmetic algorithm
     struct arithmetic
     {
         //! greated commond divider, assuming positive values
@@ -33,6 +34,7 @@ namespace upsylon
                 return T(1);
         }
 
+        //! fraction simplification
         template <typename T> static inline
         void simplify( T &num, T &den )
         {

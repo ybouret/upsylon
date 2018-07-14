@@ -63,6 +63,16 @@ namespace upsylon
             inline virtual ~MarsagliaBits() throw() {}
             //! use selected generator
             inline virtual uint32_t next32() throw() { return (*this.*G)(); }
+            inline virtual void     reseed( bits &other ) throw()
+            {
+                const uint32_t i1 = other.full<uint32_t>();
+                const uint32_t i2 = other.full<uint32_t>();
+                const uint32_t i3 = other.full<uint32_t>();
+                const uint32_t i4 = other.full<uint32_t>();
+                const uint32_t i5 = other.full<uint32_t>();
+                const uint32_t i6 = other.full<uint32_t>();
+                settable(i1,i2,i3,i4,i5,i6);
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MarsagliaBits);

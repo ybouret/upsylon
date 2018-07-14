@@ -4,6 +4,7 @@
 
 #include "y/type/ints.hpp"
 #include "y/type/bswap.hpp"
+#include "y/lockable.hpp"
 #include <cstdlib>
 #include <cmath>
 
@@ -24,7 +25,8 @@ namespace upsylon
             const float    denF; //!< 1.0f+float(span)
 
             virtual uint32_t next32() throw() = 0; //!< next 32-bits value in 0..span
-
+            virtual void     reseed( bits &bits ) throw() = 0; //!< initialize state with other bits
+            
             template <typename T> T to() throw(); //!< in 0:1 exclusive [float|double]
 
             //! random full integral type
@@ -152,9 +154,9 @@ namespace upsylon
                 l.swap_with(tmp);
             }
 
-            static bits & simple();
-            static bits & crypto();
-
+            static bits & simple(); //!< isaac<4> bits generator
+            static bits & crypto(); //!< isaac<8> bits generator
+            static lockable & access(); //!< to lock access to global generators
         protected:
             //! sets span and auxiliary values
             explicit bits(const uint32_t maxValue) throw();
@@ -177,7 +179,8 @@ namespace upsylon
 
             //! call rand
             inline virtual uint32_t next32() throw() { return rand(); }
-
+            inline virtual void     reseed(bits &other) throw() { srand( other.full<unsigned>() ); }
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(cstdbits);
         };

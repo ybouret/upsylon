@@ -12,17 +12,21 @@
 namespace upsylon
 {
 
-    //! generic key hasher
+    //! generic key hasher return size_t from any type
     template <typename T, typename HASHING_FUNCTION = hashing::fnv >
     class key_hasher
     {
     public:
-        Y_DECL_ARGS(T,type);
-        HASHING_FUNCTION  __hash;
+        Y_DECL_ARGS(T,type);      //!< alias
+        HASHING_FUNCTION  __hash; //!< hashing function for external use
 
+        //! constructor
         inline  key_hasher() : __hash() {}
+
+        //! desctructor
         inline ~key_hasher() throw() {}
 
+        //! hasher invocation
         inline size_t operator()( param_type args ) throw()
         {
             return hash( args, int2type< Y_IS_SUPERSUBCLASS(memory::ro_buffer,mutable_type) >() );

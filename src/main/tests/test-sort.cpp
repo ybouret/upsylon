@@ -63,10 +63,12 @@ namespace
     }
 
 }
+
 Y_UTEST(sort)
 {
     perform<int>();
     perform<float>();
+    perform<double>();
     perform<string>();
 }
 Y_UTEST_DONE()

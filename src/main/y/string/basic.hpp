@@ -314,6 +314,7 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
                 return *this;
             }
 
+            //! trim all bad chars
             inline string &trim( bool (*is_bad)(const char C) ) throw()
             {
                 if(is_bad)
