@@ -47,6 +47,9 @@ Y_UTEST_INIT(64)
     Y_UTEST(fft);
     Y_UTEST(sort);
     Y_UTEST(associative);
+    Y_UTEST(map);
+    Y_UTEST(set);
+
 }
 Y_UTEST_EXEC()
 

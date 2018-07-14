@@ -14,7 +14,7 @@ namespace upsylon
 #define    Y_DECL_ARGS(T,NAME)                                              \
 typedef T                                        NAME;                      \
 typedef typename type_traits<T>::mutable_type    mutable_##NAME;            \
-typedef const mutable_type                       const_##NAME;                \
+typedef const mutable_##NAME                     const_##NAME;                \
 typedef typename                                                            \
 upsylon::select_type<                                                       \
 type_traits<mutable_##NAME>::is_primitive, /* no references in containers */  \
