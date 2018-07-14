@@ -2,7 +2,7 @@
 #ifndef Y_MP_NATURAL_INCLUDED
 #define Y_MP_NATURAL_INCLUDED 1
 
-#include "y/memory/buffer.hpp"
+#include "y/string.hpp"
 #include "y/memory/vein.hpp"
 #include "y/type/utils.hpp"
 #include "y/os/endian.hpp"
@@ -181,6 +181,9 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
 
             //! expand the ratio
             static double ratio_of(const natural &num,const natural &den);
+
+            static natural dec( const string &s ); //!< parse decimal string
+            static natural hex( const string &s ); //!< parse hexadecimal string
 
             //__________________________________________________________________
             //

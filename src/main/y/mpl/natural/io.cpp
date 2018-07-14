@@ -1,8 +1,8 @@
 
 #include "y/mpl/natural.hpp"
-#include "y/exception.hpp"
+#include "y/exceptions.hpp"
 #include "y/code/utils.hpp"
-#include "y/string.hpp"
+#include <cerrno>
 
 namespace upsylon
 {
@@ -114,6 +114,38 @@ namespace upsylon
                 fac *= 0.1;
                 const double x = q.to_real();
                 ans += fac*x;
+            }
+            return ans;
+        }
+
+        natural natural:: hex( const string &s )
+        {
+            if(s.size()<=0) throw libc::exception(EDOM,"natural.hex(empty.string)");
+            natural ans;
+            for(size_t i=0;i<s.size();++i)
+            {
+                const char c = s[i];
+                const int  d = hexadecimal::to_decimal(c);
+                if(d<0) throw libc::exception(EDOM,"natural.hex(invalid char '%c')", c);
+
+                (ans <<= 4) |= d;
+            }
+
+            return ans;
+        }
+
+        natural natural:: dec( const string &s )
+        {
+            if(s.size()<=0) throw libc::exception(EDOM,"natural.dec(empty.string)");
+            natural ans;
+            const mpn &ten = MPN::instance()._10;
+            for(size_t i=0;i<s.size();++i)
+            {
+                const char c = s[i];
+                if(c<'0'||c>'9') throw libc::exception(EDOM,"natural.dec(invalid char '%c')", c);
+                const mpn  d = c-'0';
+                ans *= ten;
+                ans += d;
             }
             return ans;
         }

@@ -24,6 +24,8 @@ namespace upsylon
         //! internal formatting of an address to a C-string
         static const char *address( const void *addr ) throw();
 
+        //! return the decimal value, -1 on error
+        static int to_decimal(const char h) throw();
     };
 
 

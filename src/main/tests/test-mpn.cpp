@@ -36,6 +36,8 @@ Y_UTEST(mpn)
         Y_ASSERT(z==x);
     }
 
+
+
     std::cerr << "-- bits with words" << std::endl;
     for(size_t iter=0;iter<ITERS;++iter)
     {
@@ -300,6 +302,37 @@ Y_UTEST(mpn)
         }
 
     }
+
+    std::cerr << "-- input hex" << std::endl;
+    for(size_t iter=0;iter<ITERS_SMALL;++iter)
+    {
+        const size_t ns=1+alea.leq(30);
+        string h;
+        for(size_t i=0;i<ns;++i)
+        {
+            h << hexadecimal::lowercase_word[ alea.lt(16) ];
+        }
+        std::cerr << std::dec << "h=  " << h << std::endl;
+        const mpn n = mpn::hex(h);
+        std::cerr << std::hex << "n=" << n << std::endl;
+    }
+
+    std::cerr << "-- input dec" << std::endl;
+    for(size_t iter=0;iter<ITERS_SMALL;++iter)
+    {
+        const size_t ns=1+alea.leq(30);
+        string  d;
+        std::cerr << std::dec;
+        for(size_t i=0;i<ns;++i)
+        {
+            d << char('0'+alea.lt(10));
+        }
+        std::cerr << std::dec << "d=" << d << std::endl;
+        const mpn n = mpn::dec(d);
+        std::cerr << std::dec << "n=" << n << std::endl;
+    }
+
+
 
 
 }
