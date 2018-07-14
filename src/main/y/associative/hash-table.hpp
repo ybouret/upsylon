@@ -52,12 +52,11 @@ namespace upsylon
             //! self content n objects
             inline  hash_table(const size_t n) throw() : Y_CORE_HASH_TABLE_CTOR()
             {
-                std::cerr << "hash_table(" << n << ")" << std::endl;
                 if(n>0)
                 {
                     static memory::allocator &hmem = ALLOCATOR::instance();
 
-                    const size_t num_slots  = next_power_of_two(max_of<size_t>(n/load_factor,min_slots));
+                    const size_t num_slots    = next_power_of_two(max_of<size_t>(n/load_factor,min_slots));
                     const size_t slots_offset = 0;
                     const size_t slots_length = num_slots * sizeof(slot_type);
                     const size_t nodes_offset = memory::align(slots_offset+slots_length);
@@ -75,14 +74,12 @@ namespace upsylon
                     items = n;
                     assert(nodes.capacity()>=n);
                     assert(metas.capacity()>=n);
-                    std::cerr << "|_#slots=" << slots << std::endl;
                 }
             }
 
             //! uses NODE destructor to free memory
             inline void free() throw()
             {
-                std::cerr << "[hash_table.free] scanning #slots=" << slots << std::endl;
                 for(size_t i=0;i<slots;++i)
                 {
                     slot_type &s = slot[i];
@@ -106,7 +103,6 @@ namespace upsylon
             {
                 if(allocated)
                 {
-                    std::cerr << "[hash_table.kill] #allocated=" << allocated << std::endl;
                     static memory::allocator &hmem = ALLOCATOR::location();
                     free();
                     hmem.release(buffer,allocated);
@@ -136,9 +132,6 @@ namespace upsylon
                         const size_t                              node_hkey,
                         typename type_traits<T>::parameter_type   node_data)
             {
-
-
-
                 slot_type *pSlot = 0;
                 if( search_node<KEY>(node_key,node_hkey,&pSlot) )
                 {
@@ -158,9 +151,7 @@ namespace upsylon
                         //
                         // need to grow
                         //______________________________________________________
-                        const size_t nxt_capa = container::next_capacity(items);
-                        std::cerr << "[hash_table.grow] " << items << " -> " << nxt_capa << std::endl;
-                        hash_table temp( nxt_capa );
+                        hash_table temp( container::next_capacity(items) );
                         temp.duplicate(*this);
                         node = temp.create<KEY,T>(node_key,node_hkey,node_data);
                         swap_with(temp);
