@@ -19,9 +19,9 @@ namespace upsylon
     public:
         Y_DECL_ARGS(T,type);       //!< alias
         Y_DECL_ARGS(KEY,key_type); //!< alias
-        typedef core::hash_table<NODE,ALLOCATOR> table_type;
-        typedef typename table_type::slot_type   slot_type;
-        typedef typename table_type::meta_node   meta_node;
+        typedef core::hash_table<NODE,ALLOCATOR> table_type; //!< internal table
+        typedef typename table_type::slot_type   slot_type;  //!< slot of data
+        typedef typename table_type::meta_node   meta_node;  //!< meta node
         
         //! destructor
         inline virtual ~hash_container() throw() {}
@@ -106,7 +106,7 @@ namespace upsylon
             if(n)
             {
                 assert(s); assert(s->owns(n));
-                table.__free( s->unlink((NODE *)n) );    
+                table.__free( s->unlink((NODE *)n) );
                 return true;
             }
             else
@@ -117,10 +117,10 @@ namespace upsylon
         }
         
     protected:
-        table_type table;
+        table_type table; //!< handle low level operations
 
     public:
-        mutable KEY_HASHER hash;
+        mutable KEY_HASHER hash; //!< hasher for the key type
 
     };
 }

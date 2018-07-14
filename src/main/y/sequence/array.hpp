@@ -72,10 +72,13 @@ namespace upsylon
     class lightweight_array : public array<T>
     {
     public:
+        //! default empty array
         inline explicit lightweight_array() throw() : array<T>() {}
+        //! C++ array on a C array
         inline explicit lightweight_array(T *p,const size_t n) throw() : array<T>(p,n) { assert(!(p==NULL&&n>0)); }
+        //! destructor
         inline virtual ~lightweight_array() throw() {}
-
+        //! dynamic interface: size
         inline virtual size_t size() const throw() { return this->size_; }
 
     private:
