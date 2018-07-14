@@ -42,7 +42,7 @@ namespace upsylon
     template <
     typename KEY,
     typename T,
-    typename KEY_HASHER = key_hasher<T>,
+    typename KEY_HASHER = key_hasher<KEY>,
     typename ALLOCATOR  = memory::global >
     class map : public hash_container<KEY,T, core::map_node<KEY,T> >
     {
