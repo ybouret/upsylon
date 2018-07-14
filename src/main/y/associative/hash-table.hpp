@@ -86,16 +86,21 @@ namespace upsylon
                     while(s.size)
                     {
                         NODE *node = s.pop_back();
-                        assert(node->meta);
-                        metas.release( chain.unlink( static_cast<meta_node *>(node->meta) ) );
-                        node->~NODE();
-                        nodes.release( node );
+                        __free(node);
                     }
                 }
                 assert( nodes.is_filled() );
                 assert( metas.is_filled() );
             }
 
+            inline void __free( NODE *node ) throw()
+            {
+                assert(node);
+                assert(node->meta);
+                metas.release( chain.unlink( static_cast<meta_node *>(node->meta) ) );
+                node->~NODE();
+                nodes.release( node );
+            }
             
 
             //! clear all

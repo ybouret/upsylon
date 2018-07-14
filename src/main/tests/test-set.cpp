@@ -58,6 +58,10 @@ namespace
             Y_ASSERT(db.search(keys[i]));
             Y_ASSERT(dbc.search(keys[i]));
         }
+        for(size_t i=1;i<=keys.size();++i)
+        {
+            Y_ASSERT(db.remove(keys[i]));
+        }
     }
 
 }
