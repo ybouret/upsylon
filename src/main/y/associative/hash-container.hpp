@@ -17,6 +17,11 @@ namespace upsylon
     class hash_container : public container
     {
     public:
+        Y_DECL_ARGS(T,type);       //!< alias
+        Y_DECL_ARGS(KEY,key_type); //!< alias
+        typedef core::hash_table<NODE,ALLOCATOR> table_type;
+        typedef typename table_type::slot_type   slot_type;
+        
         //! destructor
         inline virtual ~hash_container() throw() {}
 
@@ -57,12 +62,45 @@ namespace upsylon
             return *this;
         }
 
+        //! search
+        inline type *search( param_key_type k ) throw()
+        {
+            slot_type   *s = 0;
+            const size_t h = hash(k);
+            const NODE  *n = table.template search_node<KEY>(k,h, &s);
+            if(n)
+            {
+                NODE *node = (NODE *)n;
+                // TODO: move to front ?
+                return &(node->data);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        
+        //! search, const type
+        inline const_type *search( param_key_type k ) const throw()
+        {
+            slot_type   *s = 0;
+            const size_t h = hash(k);
+            const NODE  *n = table.template search_node<KEY>(k,h, &s);
+            if(n)
+            {
+                return &(n->data);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        
     protected:
-        typedef core::hash_table<NODE,ALLOCATOR> table_type;
         table_type table;
 
     public:
-        KEY_HASHER hash;
+        mutable KEY_HASHER hash;
 
     };
 }

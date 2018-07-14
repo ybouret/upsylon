@@ -8,28 +8,33 @@ namespace upsylon
 {
     namespace core
     {
+        //! internal map node
         template <
         typename KEY,
         typename T>
         class map_node
         {
         public:
-            Y_DECL_ARGS(KEY,key_type);
-            Y_DECL_ARGS(T,type);
+            Y_DECL_ARGS(KEY,key_type); //!< alias
+            Y_DECL_ARGS(T,type);       //!< alias
 
-            map_node      *next;
-            map_node      *prev;
-            const_key_type key_;
-            const size_t   hkey;
-            type           data;
-            void          *meta;
+            map_node      *next; //!< for slots
+            map_node      *prev; //!< for slots
+            const_key_type key_; //!< key hard copy
+            const size_t   hkey; //!< hash(key_)
+            type           data; //!< effective data
+            void          *meta; //!< meta node
 
+            //! node API for hash_table
             inline const_key_type & key() const throw() { return key_; }
 
+            //! destructor
             inline ~map_node() throw() {}
+            //! build
             inline  map_node(param_key_type k, const size_t h, param_type args) :
             next(0), prev(0), key_(k), hkey(h), data(args), meta(0) {}
 
+            //! copy constructor
             inline map_node(const map_node &other) :
             next(0), prev(0), key_(other.key_), hkey(other.hkey), data(other.data), meta(0) {}
 
@@ -39,6 +44,7 @@ namespace upsylon
         };
     }
 
+    //! relational map
     template <
     typename KEY,
     typename T,
@@ -47,10 +53,10 @@ namespace upsylon
     class map : public hash_container<KEY,T, core::map_node<KEY,T> >
     {
     public:
-        typedef core::map_node<KEY,T>           node_type;
-        typedef hash_container<KEY,T,node_type> base_type;
-        Y_DECL_ARGS(KEY,key_type);
-        Y_DECL_ARGS(T,type);
+        typedef core::map_node<KEY,T>           node_type; //!< internal node
+        typedef hash_container<KEY,T,node_type> base_type; //!< hash_table wrapper
+        Y_DECL_ARGS(KEY,key_type); //!< alias
+        Y_DECL_ARGS(T,type);       //!< alias
 
         //! default constructor
         inline explicit map() throw() : base_type() {}
@@ -72,6 +78,7 @@ namespace upsylon
         //! desctructor
         inline virtual ~map() throw() {}
 
+        //! insert args with key, return false if key already in
         inline bool insert( param_key_type k, param_type args )
         {
             const size_t h = this->hash(k);

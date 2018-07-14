@@ -6,6 +6,7 @@
 #include "y/type/ints.hpp"
 #include "y/memory/io.hpp"
 #include "y/memory/ownership.hpp"
+#include <iostream>
 
 namespace upsylon
 {
@@ -54,7 +55,6 @@ namespace upsylon
             still_available(0),
             provided_number(0)
             {
-                assert( block_size >= sizeof(word_type)  );
                 assert( chunk_size == size_t(memory::io::delta(data,last)) );
                 assert( chunk_size<=0 || chunk_size >= sizeof(word_type)  );
                 assert( chunk_size<=0 || chunk_size >= sizeof(block_size) );

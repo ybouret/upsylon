@@ -1,5 +1,6 @@
 #include "y/associative/set.hpp"
 #include "y/utest/run.hpp"
+#include "y/sequence/vector.hpp"
 
 #include "support.hpp"
 
@@ -18,7 +19,6 @@ namespace
 
         dummy( const KEY &l, const T &v ) : label( l ), value( v ) {}
         ~dummy() throw() {}
-
         dummy( const dummy &other ) : label(other.label), value(other.value) {}
 
 
@@ -35,6 +35,7 @@ namespace
         { set_type db1(100,as_capacity); }
         set_type db;
         size_t count = 0;
+        vector<KEY> keys;
         for(size_t i=0;i<1000;++i)
         {
             const KEY k = support::get<KEY>();
@@ -44,11 +45,19 @@ namespace
             if( db.insert(d) )
             {
                 ++count;
+                keys.push_back(k);
             }
         }
         std::cerr << "count=" << count << std::endl;
         Y_CHECK(count==db.size());
-
+        Y_CHECK(count==keys.size());
+        alea.shuffle(*keys,keys.size());
+        const set_type &dbc = db;
+        for(size_t i=1;i<=keys.size();++i)
+        {
+            Y_ASSERT(db.search(keys[i]));
+            Y_ASSERT(dbc.search(keys[i]));
+        }
     }
 
 }

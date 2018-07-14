@@ -221,7 +221,7 @@ namespace upsylon
                 }
             }
 
-            //! search for a node with a given key/hahs
+            //! search for a node with a given key/hash
             template <typename KEY>
             const NODE *search_node(typename type_traits<KEY>::parameter_type k,
                                     const size_t                              h,

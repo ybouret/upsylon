@@ -1,6 +1,7 @@
 #include "y/associative/map.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace upsylon;
 
@@ -14,6 +15,7 @@ namespace
         { map_t db0; }
         { map_t db1(5,as_capacity); }
         map_t db;
+        vector<KEY> keys;
         size_t count = 0;
         for(size_t i=0;i<1000;++i)
         {
@@ -22,11 +24,22 @@ namespace
             if(db.insert(k,v))
             {
                 ++count;
+                keys.push_back(k);
             }
+            
         }
         std::cerr << "count=" << count << std::endl;
         Y_CHECK(count==db.size());
+        Y_CHECK(count==keys.size());
+        alea.shuffle(*keys,keys.size());
+        const map_t &dbc = db;
+        for(size_t i=1;i<=keys.size();++i)
+        {
+            Y_ASSERT(db.search(keys[i]));
+            Y_ASSERT(dbc.search(keys[i]));
+        }
     }
+    
 
 }
 

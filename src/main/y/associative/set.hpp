@@ -42,6 +42,7 @@ namespace upsylon
         };
     }
 
+    //! set of object with own key
     template <
     typename KEY,
     typename T,
