@@ -56,19 +56,32 @@ namespace upsylon
         //! default initialisation
         inline array() throw() : dynamic(), memory::ro_buffer(), item_(0), size_(0) {}
 
-        //! intialize from precomputed data
-        inline array(T *user_item,const size_t user_size) throw() :
-        dynamic(),
-        memory::ro_buffer(),
-        item_(user_item),
-        size_(user_size)
+        //! default C-style init
+        inline array(type *p,const size_t n) throw() :
+        item_( ((mutable_type*)p)-1 ), size_( n )
         {
-
         }
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(array);
     };
+
+    //! a simple wrapper
+    template <typename T>
+    class lightweight_array : public array<T>
+    {
+    public:
+        inline explicit lightweight_array() throw() : array<T>() {}
+        inline explicit lightweight_array(T *p,const size_t n) throw() : array<T>(p,n) { assert(!(p==NULL&&n>0)); }
+        inline virtual ~lightweight_array() throw() {}
+
+        inline virtual size_t size() const throw() { return this->size_; }
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(lightweight_array);
+    };
+
 }
 
 #endif
