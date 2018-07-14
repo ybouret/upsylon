@@ -113,11 +113,17 @@ IF( "${Y_CC}" MATCHES "^gcc.*" )
 	SET(Y_GNU            ON)
 	Y_FIND_COMPILER_VERSION()
 	
+	SET(SPECIFIC_CXX_FLAGS "")
+	IF( "${Y_COMPILER_MAJOR}" GREATER 6 )
+		MESSAGE(STATUS "GNU version 7+, deactivating -no-except-type")
+		SET(SPECIFIC_CXX_FLAGS "-Wno-noexcept-type")
+	ENDIF()
+        
 	SET(COMMON_C_FLAGS        "-Wall -Wextra -pipe" )
 	SET(CMAKE_C_FLAGS_DEBUG   "${COMMON_C_FLAGS} -g -O0" )
 	SET(CMAKE_C_FLAGS_RELEASE "${COMMON_C_FLAGS} -O2 -DNDEBUG=1 -D_FORTIFY_SOURCE=2")
-
-	SET(COMMON_CXX_FLAGS        "-Wall -Wextra -pipe -fexceptions -Weffc++" )
+	
+	SET(COMMON_CXX_FLAGS        "-Wall -Wextra -pipe -fexceptions -Weffc++ ${SPECIFIC_CXX_FLAGS}" )
 	SET(CMAKE_CXX_FLAGS_DEBUG   "${COMMON_CXX_FLAGS} -g -O0" )
 	SET(CMAKE_CXX_FLAGS_RELEASE "${COMMON_CXX_FLAGS} -O2 -DNDEBUG=1 -D_FORTIFY_SOURCE=2")
 ENDIF()
