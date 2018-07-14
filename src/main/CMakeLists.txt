@@ -85,6 +85,12 @@ SET(sequence_srcs ${sequence_decl} ${sequence_code})
 SOURCE_GROUP( sequence FILES ${sequence_srcs} )
 INSTALL( FILES ${sequence_decl} DESTINATION include/y/sequence )
 
+FILE(GLOB associative_decl   y/associative/*.hpp)
+FILE(GLOB associative_code y/associative/*.cpp)
+SET(associative_srcs ${associative_decl} ${associative_code})
+SOURCE_GROUP( associative FILES ${associative_srcs} )
+INSTALL( FILES ${associative_decl} DESTINATION include/y/associative )
+
 FILE(GLOB hashing_decl y/hashing/*.hpp)
 FILE(GLOB hashing_code y/hashing/*.cpp)
 SET(hashing_srcs ${hashing_decl} ${hashing_code})
@@ -146,6 +152,7 @@ ${ptr_srcs}
 ${iterate_srcs}
 ${container_srcs}
 ${sequence_srcs}
+${associative_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
 ${ios_srcs}

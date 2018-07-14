@@ -54,10 +54,10 @@ namespace upsylon
             still_available(0),
             provided_number(0)
             {
-                assert(block_size>0);
+                assert( block_size >= sizeof(word_type)  );
                 assert( chunk_size == size_t(memory::io::delta(data,last)) );
-                assert( chunk_size >= sizeof(word_type)  );
-                assert( chunk_size >= sizeof(block_size) );
+                assert( chunk_size<=0 || chunk_size >= sizeof(word_type)  );
+                assert( chunk_size<=0 || chunk_size >= sizeof(block_size) );
                 
                 //______________________________________________________________
                 //
