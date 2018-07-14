@@ -69,6 +69,11 @@ namespace upsylon
                 chunk.release(static_cast<void*>(addr));
             }
 
+            //! check memory
+            inline bool owns(const T *addr) const throw()
+            {
+                return chunk.owns(addr);
+            }
 
         private:
             chunk_type chunk;

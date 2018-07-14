@@ -23,41 +23,110 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(hash_table_info);
         };
 
-        template <typename NODE>
+        //! hash table of NODE
+        /**
+         NODE must have :
+         - a size_t hkey
+         - a void *meta field
+         */
+        template <typename NODE,typename ALLOCATOR = memory::global>
         class hash_table : public hash_table_info
         {
         public:
-            typedef core::list_of<NODE> slot_type;
-            typedef memory::slab<NODE>  slab_type;
+            typedef addr_node<NODE>         meta_node;
+            typedef addr_list<NODE>         meta_list;
+            typedef core::list_of<NODE>     slot_type;
+            typedef memory::slab<NODE>      node_slab;
+            typedef memory::slab<meta_node> meta_slab;
 
-            inline  hash_table() throw() : slot(0), slots(0), smask(0), cache(0,0), buffer(0), allocated(0)
+            //! default initialization
+#define Y_CORE_HASH_TABLE_CTOR() chain(),slot(0),slots(0),smask(0),nodes(0,0),metas(0,0),buffer(0),allocated(0)
+            //! empty table
+            inline  hash_table() throw() : Y_CORE_HASH_TABLE_CTOR()
             {
             }
 
-            inline  hash_table(const size_t n) throw() : slot(0), slots(0), smask(0), cache(0,0), buffer(0), allocated(0)
+            //! self content n objects
+            inline  hash_table(const size_t n) throw() : Y_CORE_HASH_TABLE_CTOR()
             {
                 if(n>0)
                 {
-                    const size_t nreq       = n;
-                    const size_t num_slots  = next_power_of_two(max_of<size_t>(nreq/load_factor,min_slots));
-                    const size_t slot_offset = 0;
-                    const size_t slot_length = num_slots * sizeof(slot_type);
-                    const size_t slab_offset = memory::align(slot_offset+slot_length);
-                    const size_t slab_length = slab_type::bytes_for(nreq);
+                    static memory::allocator &hmem = ALLOCATOR::instance();
 
-                    allocated = memory::align(slab_offset+slab_length);
+                    const size_t num_slots  = next_power_of_two(max_of<size_t>(n/load_factor,min_slots));
+                    const size_t slots_offset = 0;
+                    const size_t slots_length = num_slots * sizeof(slot_type);
+                    const size_t nodes_offset = memory::align(slots_offset+slots_length);
+                    const size_t nodes_length = node_slab::bytes_for(n);
+                    const size_t metas_offset = memory::align(nodes_offset+nodes_length);
+                    const size_t metas_length = meta_slab::bytes_for(n);
+
+                    allocated = memory::align(metas_offset+metas_length);
+                    char *p   = static_cast<char *>( buffer    = hmem.acquire(allocated) );
+                    slot      = static_cast<slot_type *>( (void *) &p[slots_offset] );
+                    new ( &nodes ) node_slab( &p[nodes_offset], nodes_length );
+                    new ( &metas ) meta_slab( &p[metas_offset], metas_length );
+                    slots = num_slots;
+                    smask = num_slots-1;
+                    items = n;
+                    assert(nodes.capacity()>=n);
+                    assert(metas.capacity()>=n);
                 }
             }
 
-
-            inline  virtual ~hash_table() throw()
+            //! uses NODE destructor to free memory
+            inline void free() throw()
             {
+                for(size_t i=0;i<slots;++i)
+                {
+                    slot_type &s = slot[i];
+                    while(s.size)
+                    {
+                        NODE *node = s.pop_back();
+                        assert(node->meta);
+                        metas.release( chain.unlink( static_cast<meta_node *>(node->meta) ) );
+                        node->~NODE();
+                        nodes.release( node );
+                    }
+                }
+                assert( nodes.is_filled() );
+                assert( metas.is_filled() );
             }
 
+            
+
+            //! clear all
+            inline  virtual ~hash_table() throw()
+            {
+                if(allocated)
+                {
+                    static memory::allocator &hmem = ALLOCATOR::location();
+                    free();
+                    hmem.release(buffer,allocated);
+                }
+            }
+
+            //! no throw swap
+            inline void swap_with( hash_table &other ) throw()
+            {
+                upsylon::bswap(chain,other.chain);
+                upsylon::bswap(slot,other.slot);
+                upsylon::bswap(slots,other.slots);
+                upsylon::bswap(smask,other.smask);
+                upsylon::bswap(items,other.items);
+                upsylon::bswap(nodes,other.nodes);
+                upsylon::bswap(metas,other.metas);
+            }
+
+
+            meta_list  chain; //!< list of meta nodes
             slot_type *slot;  //!< slots entry
             size_t     slots; //!< 0 or a power of two
             size_t     smask; //!< slots-1
-            slab_type  cache; //!< to store nodes
+            size_t     items; //!< max number of items
+            node_slab  nodes; //!< to store nodes
+            meta_slab  metas; //!< to store metas node
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(hash_table);
