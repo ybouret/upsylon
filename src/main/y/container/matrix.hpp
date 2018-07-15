@@ -32,6 +32,8 @@ namespace upsylon
 
     protected:
         void  *workspace;
+        void   hook() throw();
+        void   exchange( matrix_data &other ) throw();
 
     private:
         Y_DISABLE_ASSIGN(matrix_data);
@@ -54,14 +56,14 @@ namespace upsylon
         inline matrix(const size_t nr=0, const size_t nc=0) :
         matrix_data(nr,nc,sizeof(T)), row_ptr(0)
         {
-            setup();
-            init0();
+            initialize();
         }
 
         //! row access
-        inline array<T>  & operator[](const size_t r) throw()       { assert(r>0); assert(r<=rows); return row_ptr[r]; }
+        inline array<type>  & operator[](const size_t r) throw()             { assert(r>0); assert(r<=rows); return row_ptr[r]; }
+
         //! row access
-        inline const array<T>  & operator[](const size_t r) const throw() { assert(r>0); assert(r<=rows); return row_ptr[r]; }
+        inline const array<type>  & operator[](const size_t r) const throw() { assert(r>0); assert(r<=rows); return row_ptr[r]; }
 
         //! destructor
         inline virtual ~matrix() throw()
@@ -69,6 +71,7 @@ namespace upsylon
             __clear(total_items);
         }
 
+        //! display Octave/Julia style
         inline friend std::ostream & operator<<( std::ostream &os, const matrix &m )
         {
             os << '[';
@@ -84,13 +87,96 @@ namespace upsylon
             os << ']';
             return os;
         }
-        
+
+        //! copy
+        inline matrix(const matrix &other) :
+        matrix_data(other.rows,other.cols,sizeof(T)), row_ptr(0)
+        {
+            initialize();
+            assert(items==other.items);
+            mutable_type *target = memory::io::cast<mutable_type>(workspace,data_offset);
+            const_type   *source = memory::io::cast<mutable_type>(other.workspace,other.data_offset);
+            size_t        count  = 0;
+            try
+            {
+                while(count<items)
+                {
+                    target[count] = source[count];
+                    ++count;
+                }
+            }
+            catch(...)
+            {
+                __clear(count);
+                throw;
+            }
+        }
+
+        //! swap and link everything
+        inline void swap_with( matrix &other ) throw()
+        {
+            exchange(other);
+            setup();
+            other.setup();
+        }
+
+        //! assignment
+        inline matrix & operator=(const matrix &other )
+        {
+            if( this != &other )
+            {
+                matrix tmp(other);
+                swap_with(tmp);
+            }
+            return *this;
+        }
+
+        //! change dimension, no further initialization
+        inline matrix & make(const size_t nr, const size_t nc)
+        {
+            if(nr!=rows||nc!=rows)
+            {
+                matrix tmp(nr,nc);
+                swap_with(tmp);
+            }
+            return *this;
+        }
+
+        //! load value
+        void ld( param_type value )
+        {
+            mutable_type *p = memory::io::cast<T>(workspace,data_offset);
+            for(size_t i=0;i<items;++i)
+            {
+                p[i] = value;
+            }
+        }
+
+        //! load values
+        void diag(param_type diag_value,
+                  param_type extra_value)
+        {
+            matrix &self = *this;
+            for(size_t r=rows;r>0;--r)
+            {
+                array<type> &R = self[r];
+                for(size_t c=cols;c>0;--c)
+                {
+                    R[c] = (r==c) ? diag_value : extra_value;
+                }
+            }
+        }
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(matrix);
         row *row_ptr; //! [1..rows]
 
-        //! just preparing memory
+        inline void initialize()
+        {
+            setup();
+            init0();
+        }
+
+        //! just preparing memory layout
         void setup() throw()
         {
             //__________________________________________________________________
@@ -98,12 +184,12 @@ namespace upsylon
             // prepare auxiliary arrays
             //__________________________________________________________________
             {
-            T *extra = static_cast<T*>(workspace)+items;
-            new (&r_scalars) row(extra,rows);
-            new (&c_scalars) row(extra,cols);
-            extra += largest;
-            new (&r_auxiliary) row(extra,rows);
-            new (&c_auxiliary) row(extra,cols);
+                T *extra = static_cast<T*>(workspace)+items;
+                new (&r_scalars) row(extra,rows);
+                new (&c_scalars) row(extra,cols);
+                extra += largest;
+                new (&r_auxiliary) row(extra,rows);
+                new (&c_auxiliary) row(extra,cols);
             }
             //__________________________________________________________________
             //
@@ -111,7 +197,7 @@ namespace upsylon
             //__________________________________________________________________
             row_ptr = memory::io::cast<row>(workspace,rows_offset);
             {
-                T *p = memory::io::cast<T>(workspace,data_offset);
+                mutable_type *p = memory::io::cast<mutable_type>(workspace,data_offset);
                 for(size_t r=0;r<rows;++r,p+=cols)
                 {
                     new (row_ptr+r) row(p,cols);
