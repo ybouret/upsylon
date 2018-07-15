@@ -16,9 +16,9 @@ namespace  {
         std::cerr << "sizeof(matrix<" << typeid(T).name() << ">)=" << sizeof(matrix<T>) << std::endl;
         { matrix<T> m0; }
 
-        for(size_t iter=0;iter<100;++iter)
+        for(size_t iter=0;iter<16;++iter)
         {
-            matrix<T> m(1+alea.leq(10),1+alea.leq(10));
+            matrix<T> m(1+alea.leq(20),1+alea.leq(20));
 
             for(size_t r=1;r<=m.rows;++r)
             {
@@ -46,7 +46,9 @@ Y_UTEST(matrix)
     do_test<double>();
     do_test<int>();
     do_test<string>();
+    do_test<mpn>();
 
+    if(false)
     {
         matrix<mpn> M(3,5);
         std::cerr << "M=" << M << std::endl;

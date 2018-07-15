@@ -2,7 +2,7 @@
 #ifndef SUPPORT_INCLUDED
 #define SUPPORT_INCLUDED 1
 
-#include "y/string.hpp"
+#include "y/mpl/natural.hpp"
 #include "y/alea.hpp"
 
 using namespace upsylon;
@@ -43,6 +43,12 @@ namespace {
     inline double support:: get<double>()
     {
         return alea.to<double>();
+    }
+
+    template <>
+    inline mpn support:: get<mpn>()
+    {
+        return mpn( alea.leq(100), alea );
     }
 }
 
