@@ -19,9 +19,9 @@ namespace
 
         const KEY & key() const throw() { return label; }
 
-        dummy( const KEY &l, const T &v ) : label( l ), value( v ) {}
+        dummy( const KEY &l, const T &v ) : counted_object(), label( l ), value( v ) {}
         virtual ~dummy() throw() {}
-        dummy( const dummy &other ) : label(other.label), value(other.value) {}
+        dummy( const dummy &other ) : counted_object(), label(other.label), value(other.value) {}
 
 
 
