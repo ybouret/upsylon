@@ -4,6 +4,7 @@
 #define Y_HASH_CONTAINER_INCLUDED 1
 
 #include "y/associative/hash-table.hpp"
+#include "y/container/associative.hpp"
 #include "y/hashing/key-hasher.hpp"
 namespace upsylon
 {
@@ -14,7 +15,7 @@ namespace upsylon
     typename NODE,
     typename KEY_HASHER = key_hasher<KEY>,
     typename ALLOCATOR  = memory::global >
-    class hash_container : public container
+    class hash_container : public associative<KEY,T>
     {
     public:
         Y_DECL_ARGS(T,type);       //!< alias
@@ -64,7 +65,7 @@ namespace upsylon
         }
 
         //! search
-        inline type *search( param_key_type k ) throw()
+        inline virtual type *search( param_key_type k ) throw()
         {
             slot_type   *s = 0;
             const size_t h = hash(k);
@@ -82,7 +83,7 @@ namespace upsylon
         }
         
         //! search, const type
-        inline const_type *search( param_key_type k ) const throw()
+        inline virtual const_type *search( param_key_type k ) const throw()
         {
             slot_type   *s = 0;
             const size_t h = hash(k);
@@ -98,7 +99,7 @@ namespace upsylon
         }
         
         //! remove object with given key, if found
-        inline bool remove( param_key_type k ) throw()
+        inline virtual bool remove( param_key_type k ) throw()
         {
             slot_type   *s = 0;
             const size_t h = hash(k);
