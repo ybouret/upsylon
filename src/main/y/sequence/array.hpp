@@ -82,6 +82,9 @@ namespace upsylon
         //! dynamic interface: size
         inline virtual size_t size() const throw() { return this->size_; }
 
+        //! dynamic interface: capacity
+        inline virtual size_t capacity() const throw() { return this->size_; }
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(lightweight_array);
     };
