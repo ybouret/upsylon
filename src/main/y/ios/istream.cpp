@@ -1,5 +1,6 @@
 
 #include "y/ios/istream.hpp"
+#include "y/exceptions.hpp"
 
 namespace upsylon
 {
@@ -26,6 +27,23 @@ namespace upsylon
             {
                 return false;
             }
+        }
+
+        void istream:: input(void *buffer,const size_t buflen)
+        {
+            assert(!(0==buffer&&buflen>0));
+            char *target = static_cast<char *>(buffer);
+            char  C      = 0;
+
+            for(size_t i=0;i<buflen;++i)
+            {
+                if(!query(C))
+                {
+                    throw imported::exception("End Of Input","istream.read(%u/%u)", unsigned(i+1), unsigned(buflen));
+                }
+                *(target++) = C;
+            }
+
         }
 
         bool istream:: gets( string &line )

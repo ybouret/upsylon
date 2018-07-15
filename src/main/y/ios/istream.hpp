@@ -4,6 +4,7 @@
 
 #include "y/ios/stream.hpp"
 #include "y/string.hpp"
+#include "y/os/endian.hpp"
 
 namespace upsylon
 {
@@ -29,6 +30,12 @@ namespace upsylon
             //! get a new line
             bool gets( string &line );
 
+            //! read exactly buflen bytes
+            void input(void *buffer,const size_t buflen);
+
+            //! get an integral type
+            template <typename T>
+            T read() { T ans(0); input(&ans,sizeof(T)); return swap_be_as<T>(ans); }
             
         protected:
             //! constructor

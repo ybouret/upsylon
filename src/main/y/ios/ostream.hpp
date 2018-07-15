@@ -4,6 +4,7 @@
 
 #include "y/ios/stream.hpp"
 #include "y/string.hpp"
+#include "y/os/endian.hpp"
 
 namespace upsylon
 {
@@ -57,6 +58,14 @@ namespace upsylon
             //! output binary address
             ostream & viz( const void *addr );
 
+            //! emit integral types
+            template <typename T>
+            ostream & emit(T x)
+            {
+                x = swap_be_as<T>(x);
+                output(&x,sizeof(T));
+                return *this;
+            }
 
         protected:
             //! constructor
