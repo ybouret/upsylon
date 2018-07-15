@@ -12,8 +12,10 @@ namespace upsylon
         class imstream : public istream
         {
         public:
+            //! destructor
             inline virtual ~imstream() throw() {}
 
+            //! temporary input stream on more persistent buffer
             inline imstream( const void *buf, const size_t len ) throw() :
             curr( static_cast<const char *>(buf) ),
             last( curr+len ),
@@ -22,6 +24,7 @@ namespace upsylon
                 assert(!(0==buf&&len>0));
             }
 
+            //! temporary input stream on more persistent buffer
             inline imstream( const memory::ro_buffer &buf ) throw() :
             curr( static_cast<const char *>(buf.ro()) ),
             last( curr + buf.length() ),
@@ -29,6 +32,7 @@ namespace upsylon
             {
             }
 
+            //! read one char
             inline virtual bool query( char &C )
             {
                 if(curr<last)
@@ -42,6 +46,7 @@ namespace upsylon
                 }
             }
 
+            //! unread one char with checks
             virtual void store( const char C );
 
         private:

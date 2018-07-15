@@ -1,4 +1,5 @@
 #include "y/ios/ocstream.hpp"
+#include "y/ios/osstream.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -22,6 +23,19 @@ Y_UTEST(ostreams)
         fp << '\n';
         fp << "Hello, World!" << "\n";
         fp("Hello, %d\n", ++i);
+    }
+
+    {
+        string output;
+        {
+            ios::osstream fp(output);
+            int i=0;
+            fp("Hello, %d\n",++i);
+            fp("Hello, %d\n",++i);
+            fp("Hello, %d\n",++i);
+            fp << "World" << '\n';
+        }
+        std::cerr << output << std::endl;
     }
 }
 Y_UTEST_DONE()
