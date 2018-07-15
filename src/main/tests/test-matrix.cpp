@@ -30,11 +30,14 @@ namespace  {
             }
             std::cerr << "m" << m.rows << "x" << m.cols << "=" << m << std::endl;
 
-            matrix<T> m2 = m;
-            matrix<T> m3(1+alea.leq(10),1+alea.leq(10));
+            {
+                matrix<T> m2 = m;
+                matrix<T> m3(1+alea.leq(10),1+alea.leq(10));
 
-            m3.swap_with(m2);
+                m3.swap_with(m2);
+            }
 
+            matrix<T> mT(m,matrix_transpose);
         }
 
     }

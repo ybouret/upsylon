@@ -19,7 +19,7 @@ namespace upsylon
     class intr_ptr : public ptr<T>
     {
     public:
-        Y_DECL_ARGS(KEY,key_type);
+        Y_DECL_ARGS(KEY,key_type); //!< alias
 
         //! attache and withhold address
         inline intr_ptr(T *addr) throw() : ptr<T>(addr)

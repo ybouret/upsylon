@@ -1,7 +1,7 @@
 
 //! \file
 #ifndef Y_OSSTREAM_INCLUDED
-#define Y_OSSSTREAM_INCLUDED 1
+#define Y_OSSTREAM_INCLUDED 1
 
 #include "y/ios/ostream.hpp"
 
@@ -9,6 +9,7 @@ namespace upsylon
 {
     namespace ios
     {
+        //! output string stream
         class osstream : public ostream
         {
         public:

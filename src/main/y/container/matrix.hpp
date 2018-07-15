@@ -7,11 +7,17 @@
 namespace upsylon
 {
 
+    //! special for transposition
+    struct matrix_transpose_t {};
+    //! helper for transposition
+    extern const matrix_transpose_t matrix_transpose;
+
+    //! data for matrix layout, whith enough space for alebra
     class matrix_data : public object
     {
     public:
-        const size_t rows;
-        const size_t cols;
+        const size_t rows;            //!< number of rows
+        const size_t cols;            //!< number of columns
         const size_t items;           //!< rows*cols
         const bool   is_square;       //!< rows==cols
         const size_t largest;         //!< max_of(cols,rows)
@@ -27,13 +33,17 @@ namespace upsylon
         lightweight_array<size_t> r_indx; //!< size() = rows
         lightweight_array<size_t> c_indx; //!< size() = cols
 
+        //! destructor
         virtual ~matrix_data() throw();
-        explicit matrix_data(const size_t nr, const size_t nc, const size_t item_size);
+
 
     protected:
-        void  *workspace;
-        void   hook() throw();
-        void   exchange( matrix_data &other ) throw();
+        void  *workspace; //!< where all memory is
+        //!constructor
+        explicit matrix_data(const size_t nr, const size_t nc, const size_t item_size);
+
+        void   hook() throw(); //!< reset arrays
+        void   exchange( matrix_data &other ) throw(); //!< full exchange
 
     private:
         Y_DISABLE_ASSIGN(matrix_data);
@@ -41,18 +51,21 @@ namespace upsylon
     };
 
 
+    //! versatile matrix
     template <typename T>
     class matrix : public matrix_data
     {
     public:
-        Y_DECL_ARGS(T,type);
-        typedef lightweight_array<T> row;
+        Y_DECL_ARGS(T,type); //!< alias
+        typedef lightweight_array<T> row; //!< internal row type
 
         row r_scalars;   //!< size() = rows
         row c_scalars;   //!< size() = cols
         row r_auxiliary; //!< size() = rows
         row c_auxiliary; //!< size() = cols
 
+
+        //! default constructor
         inline matrix(const size_t nr=0, const size_t nc=0) :
         matrix_data(nr,nc,sizeof(T)), row_ptr(0)
         {
@@ -107,10 +120,34 @@ namespace upsylon
             }
             catch(...)
             {
-                __clear(count);
+                __clear(total_items);
                 throw;
             }
         }
+
+        //! copy transpose
+        inline matrix(const matrix &other, const matrix_transpose_t & ) :
+        matrix_data(other.cols,other.rows,sizeof(T)), row_ptr(0)
+        {
+            initialize();
+            try
+            {
+                matrix &self = *this;
+                for(size_t r=rows;r>0;--r)
+                {
+                    for(size_t c=cols;c>0;--c)
+                    {
+                        self[r][c] = other[c][r];
+                    }
+                }
+            }
+            catch(...)
+            {
+                __clear(total_items);
+                throw;
+            }
+        }
+
 
         //! swap and link everything
         inline void swap_with( matrix &other ) throw()

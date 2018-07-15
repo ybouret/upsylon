@@ -5,7 +5,8 @@
 
 namespace upsylon
 {
-
+    const matrix_transpose_t matrix_transpose = {};
+    
     void matrix_data:: __kill() throw()
     {
         memory::global::location().release(workspace,(size_t&)allocated);
