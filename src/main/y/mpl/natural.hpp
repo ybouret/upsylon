@@ -17,8 +17,8 @@ namespace upsylon
     namespace mpl
     {
 
-        typedef uint64_t word_t; //!< integral type for drop in replacement
-
+        typedef uint64_t word_t;    //!< integral type for drop in replacement
+        typedef int64_t  integer_t; //!< integral type for
         //! dedicated memory manager
         class manager : public singleton<manager>, public memory::allocator
         {
