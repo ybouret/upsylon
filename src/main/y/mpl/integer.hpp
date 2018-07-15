@@ -69,7 +69,7 @@ namespace upsylon
                 if(n.is_zero()) (sign_type &)s = __zero;
             }
 
-            // output
+            //! output
             inline friend std::ostream & operator<<( std::ostream &os, const integer &z )
             {
                 if(__negative==z.s) os << '-';
