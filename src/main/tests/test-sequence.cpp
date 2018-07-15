@@ -117,6 +117,7 @@ Y_UTEST(sequence)
     do_test< vector<uint16_t,memory::pooled> >();
     do_test< vector<string,memory::pooled>   >();
 
+    std::cerr << "sizeof(ligthweight_array)=" << sizeof(lightweight_array<int>) << std::endl;
 }
 Y_UTEST_DONE()
 

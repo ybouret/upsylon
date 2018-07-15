@@ -57,7 +57,8 @@ namespace upsylon
         inline array() throw() : dynamic(), memory::ro_buffer(), item_(0), size_(0) {}
 
         //! default C-style init
-        inline array(type *p,const size_t n) throw() :
+        inline array(type *p, const size_t n) throw() :
+        dynamic(), memory::ro_buffer(),
         item_( ((mutable_type*)p)-1 ), size_( n )
         {
         }
