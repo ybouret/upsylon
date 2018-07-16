@@ -119,6 +119,26 @@ Y_UTEST(mpq)
     }
     std::cerr << std::endl;
     
+    std::cerr << "-- mpq multiplication" << std::endl;
+    for(size_t iter=0;iter<ITER;++iter)
+    {
+        const int64_t  a = alea.partial<int64_t>(24);
+        const uint64_t b = 1+alea.partial<uint64_t>(20);
+        const int64_t  c = alea.partial<int64_t>(24);
+        const uint64_t d = 1+alea.partial<uint64_t>(20);
+        
+        const mpq P(a,b);
+        const mpq Q(c,d);
+        const mpq M0(a*c,b*d);
+        const mpq M1 = P * Q;
+        Y_ASSERT(M0==M1);
+    }
+    for(mpq i=1;i.to_real()>=0.01;i*=mpq(1,2))
+    {
+        std::cerr << i << ':';
+    }
+    std::cerr << std::endl;
+    
 }
 Y_UTEST_DONE()
 
