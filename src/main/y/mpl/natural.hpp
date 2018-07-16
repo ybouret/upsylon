@@ -209,6 +209,20 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             //! fast checking against a byte
             inline bool is_byte(const uint8_t x) const throw() { return (x<=0) ? (bytes<=0) : ((1==bytes) && (x==byte[0])); }
 
+            //! fast setting to a byte
+            inline void set_byte(const uint8_t x) throw()
+            {
+                if(x<=0)
+                {
+                    bytes=0;
+                }
+                else
+                {
+                    bytes=1;
+                    byte[0] = x;
+                }
+            }
+
             //! comparison
             static inline
             int compare_blocks(const uint8_t *l,

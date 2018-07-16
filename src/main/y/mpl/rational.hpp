@@ -45,6 +45,40 @@ namespace upsylon
                 return os;
             }
 
+            //! copy
+            inline rational( const rational &q ) : num(q.num), den(q.den) {}
+
+            //! no throw exchange
+            inline void xch( rational &q ) throw()
+            {
+                ( (integer &)num ).xch( (integer &)(q.num) );
+                ( (integer &)den ).xch( (integer &)(q.den) );
+            }
+
+            //!assign
+            inline rational & operator=( const rational &q )
+            {
+                rational tmp(q);
+                xch(tmp);
+                return *this;
+            }
+
+            inline rational & operator=( const integer_t i )
+            {
+                rational tmp(i); xch(tmp); return *this;
+            }
+
+            inline rational & operator=( const integer & z )
+            {
+                rational tmp(z); xch(tmp); return *this;
+            }
+
+            //__________________________________________________________________
+            //
+            // comparisons
+            //__________________________________________________________________
+            
+
         private:
             void __simplify();
         };

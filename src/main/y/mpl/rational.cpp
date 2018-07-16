@@ -20,10 +20,21 @@ namespace upsylon
         {
             assert(den>0);
             natural &d = (natural &) den;
-            if(!d.is_byte(1))
+            integer &z = (integer &) num;
+            if(z.s==__zero)
             {
-                natural &n = (natural &)(num.n);
-                arithmetic::simplify(n,d);
+                if(!d.is_byte(1))
+                {
+                    d.set_byte(1);
+                }
+            }
+            else
+            {
+                if(!d.is_byte(1))
+                {
+                    natural &n = (natural &)(num.n);
+                    arithmetic::simplify(n,d);
+                }
             }
         }
     }
