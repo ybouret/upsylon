@@ -51,6 +51,9 @@ namespace upsylon
     };
 
 
+    //! constructor helper
+#define Y_MATRIX_CTOR(NR,NC) matrix_data(NR,NC,sizeof(T)), row_ptr(0), r_scalars(), c_scalars(), r_auxiliary(), c_auxiliary()
+
     //! versatile matrix
     template <typename T>
     class matrix : public matrix_data
@@ -59,15 +62,10 @@ namespace upsylon
         Y_DECL_ARGS(T,type); //!< alias
         typedef lightweight_array<T> row; //!< internal row type
 
-        row r_scalars;   //!< size() = rows
-        row c_scalars;   //!< size() = cols
-        row r_auxiliary; //!< size() = rows
-        row c_auxiliary; //!< size() = cols
 
 
         //! default constructor
-        inline matrix(const size_t nr=0, const size_t nc=0) :
-        matrix_data(nr,nc,sizeof(T)), row_ptr(0)
+        inline matrix(const size_t nr=0, const size_t nc=0) : Y_MATRIX_CTOR(nr,nc)
         {
             initialize();
         }
@@ -102,8 +100,7 @@ namespace upsylon
         }
 
         //! copy
-        inline matrix(const matrix &other) :
-        matrix_data(other.rows,other.cols,sizeof(T)), row_ptr(0)
+        inline matrix(const matrix &other) : Y_MATRIX_CTOR(other.rows,other.cols)
         {
             initialize();
             assert(items==other.items);
@@ -126,8 +123,7 @@ namespace upsylon
         }
 
         //! copy transpose
-        inline matrix(const matrix &other, const matrix_transpose_t & ) :
-        matrix_data(other.cols,other.rows,sizeof(T)), row_ptr(0)
+        inline matrix(const matrix &other, const matrix_transpose_t & ) : Y_MATRIX_CTOR(other.cols,other.rows)
         {
             initialize();
             try
@@ -271,6 +267,11 @@ namespace upsylon
                 throw;
             }
         }
+    public:
+        row r_scalars;   //!< size() = rows
+        row c_scalars;   //!< size() = cols
+        row r_auxiliary; //!< size() = rows
+        row c_auxiliary; //!< size() = cols
     };
 
 }
