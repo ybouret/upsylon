@@ -23,11 +23,16 @@ namespace upsylon
             const uint32_t half; //!< span/2
             const double   denD; //!< 1.0+double(span)
             const float    denF; //!< 1.0f+float(span)
-
+            const double   symD; //!< 0.5*denD
+            const float    symF; //!< 0.5*denF
+            const double   midD; //!< span * 0.5
+            const double   midF; //!< span * 0.5f
+            
             virtual uint32_t next32() throw() = 0; //!< next 32-bits value in 0..span
             virtual void     reseed( bits &bits ) throw() = 0; //!< initialize state with other bits
             
-            template <typename T> T to() throw(); //!< in 0:1 exclusive [float|double]
+            template <typename T> T to()   throw(); //!< in 0:1 exclusive [float|double]
+            template <typename T> T symm() throw(); //!< in -1:1 exclusive [float|double]
 
             //! random full integral type
             template <typename T> inline
@@ -160,9 +165,16 @@ namespace upsylon
                 l.swap_with(tmp);
             }
 
-            static bits & simple(); //!< isaac<4> bits generator
-            static bits & crypto(); //!< isaac<8> bits generator
+            static bits     & simple(); //!< global isaac<4> bits generator
+            static bits     & crypto(); //!< global isaac<8> bits generator
             static lockable & access(); //!< to lock access to global generators
+
+            template <typename T>
+            void on_disk( T &x, T &y ) throw()
+            {
+                x=0;
+                y=0;
+            }
         protected:
             //! sets span and auxiliary values
             explicit bits(const uint32_t maxValue) throw();

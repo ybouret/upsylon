@@ -14,7 +14,11 @@ namespace upsylon
         nbit(bits_for(span)),
         half(span>>1),
         denD(1.0+double(span)),
-        denF(1.0f+float(span))
+        denF(1.0f+float(span)),
+        symD(0.5*denD),
+        symF(0.5f*denF),
+        midD(0.5*double(span)),
+        midF(0.5f*float(span))
         {
         }
 
@@ -28,6 +32,19 @@ namespace upsylon
         double bits:: to<double>() throw()
         {
             return (0.5 + double( next32() ))/denD;
+        }
+
+
+        template <>
+        float bits:: symm<float>() throw()
+        {
+            return ( float(next32()) - midF ) / symF;
+        }
+
+        template <>
+        double bits:: symm<double>() throw()
+        {
+            return ( double(next32()) - midD ) / symD;
         }
     }
 
