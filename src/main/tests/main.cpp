@@ -42,6 +42,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(xbitrev);
     Y_UTEST(mpn);
     Y_UTEST(mpz);
+    Y_UTEST(mpq);
     Y_UTEST(hashing);
     Y_UTEST(ostreams);
     Y_UTEST(istreams);
@@ -51,7 +52,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(map);
     Y_UTEST(set);
     Y_UTEST(matrix);
-
+    
 }
 Y_UTEST_EXEC()
 
