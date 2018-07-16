@@ -21,6 +21,7 @@ namespace upsylon
                 return T(1);
         }
 
+        //! gcd for positive types
         template <typename T> static inline
         T gcd_positive(const T &x, const T &y)
         {
