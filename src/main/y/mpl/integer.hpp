@@ -198,20 +198,51 @@ inline friend bool operator OP ( const integer_t lhs, const integer   &rhs ) thr
             Y_MPZ_CMP(>=)
             Y_MPZ_CMP(>)
 
+#define Y_MPZ_DEFINE(RET,BODY) \
+static inline RET BODY(const integer &lhs, const integer  &rhs) { return BODY(Y_MPZ_ZARGS(lhs), Y_MPZ_ZARGS(rhs) ); }\
+static inline RET BODY(const integer &lhs, integer_t       i  ) { Y_MPZ_PREPARE(); return BODY(Y_MPZ_ZARGS(lhs),Y_MPZ_IARGS()); }\
+static inline RET BODY(integer_t      i,   const integer  &rhs) { Y_MPZ_PREPARE(); return BODY(Y_MPZ_IARGS(),Y_MPZ_ZARGS(rhs)); }
+
+            //! multiple prototype for operators
+#define Y_MPZ_IMPL(OP,CALL) \
+integer & operator OP##=(const integer  &rhs) { integer ans = CALL(*this,rhs); xch(ans); return *this; } \
+integer & operator OP##=(const integer_t rhs) { integer ans = CALL(*this,rhs); xch(ans); return *this; } \
+inline friend integer operator OP ( const integer  &lhs, const integer  &rhs ) { return CALL(lhs,rhs); } \
+inline friend integer operator OP ( const integer  &lhs, const integer_t rhs ) { return CALL(lhs,rhs); } \
+inline friend integer operator OP ( const integer_t lhs, const integer  &rhs ) { return CALL(lhs,rhs); }
+
+            //! declaration and implementation of function for a given operator
+#define Y_MPZ_WRAP(OP,CALL) Y_MPZ_DEFINE(integer,CALL) Y_MPZ_IMPL(OP,CALL)
             //__________________________________________________________________
             //
             // ADD
             //__________________________________________________________________
+            Y_MPZ_WRAP(+,__add)
 
+            //! unary plus
+            inline integer operator+() { return *this; }
+
+            //! increment
+            inline integer __inc() const
+            {
+                const uint8_t b = 1;
+                return __add(this->s,this->n.byte,this->n.bytes,__positive,&b,1);
+            }
+
+            //! pre increment operator
+            integer & operator++() { integer tmp = __inc(); xch(tmp); return *this; }
+
+            //! post increment operator
+            integer   operator++(int) { integer tmp = __inc(); xch(tmp); return tmp; }
 
         private:
             static inline
-            integer add(const sign_type ls,
-                        const uint8_t  *l,
-                        const size_t    nl,
-                        const sign_type rs,
-                        const uint8_t  *r,
-                        const size_t    nr)
+            integer __add(const sign_type ls,
+                          const uint8_t  *l,
+                          const size_t    nl,
+                          const sign_type rs,
+                          const uint8_t  *r,
+                          const size_t    nr)
             {
                 switch(ls)
                 {
@@ -242,7 +273,16 @@ inline friend bool operator OP ( const integer_t lhs, const integer   &rhs ) thr
 
             case __positive:switch(rs)
                 {
-                    case __negative: exit(0); return integer(); // ls>0,rs<0
+                    case __negative:
+                         switch( natural::compare_blocks(l,nl,r,nr) )
+                    {
+                        case -1: // |l| < |r|
+                        { const natural D = natural::__sub(r,nr,l,nl); assert(!D.is_zero()); return integer(D,as_negative); }
+                        case 1: // |l| > |r|
+                        { const natural D = natural::__sub(l,nl,r,nr); assert(!D.is_zero()); return integer(D); }
+                        default: // |l| = |r|
+                            return integer();
+                    }
                     case __zero: ;   { natural L(l,nl);                       assert(!L.is_zero()); return integer(L); } // ls>0,rs=0
                     case __positive: { natural S = natural::__add(l,nl,r,nr); assert(!S.is_zero()); return integer(S); } // ls>0,rs>0
                 }
