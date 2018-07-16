@@ -47,6 +47,21 @@ namespace upsylon
                 return os;
             }
 
+            //! conversion
+            inline double to_real() const throw()
+            {
+                switch(num.s)
+                {
+                    case __negative: return -natural::ratio_of(num.n,den);
+                    case __positive: return  natural::ratio_of(num.n,den);
+                    case __zero:     return 0;
+                }
+#if defined(__ICC)
+                critical_error("corrupted code@mpq.to_real");
+                return 0;
+#endif
+            }
+
             //! copy
             inline rational( const rational &q ) : num(q.num), den(q.den) {}
 
@@ -112,6 +127,64 @@ Y_MPQ_OVERLOAD(friend bool,operator OP)
             Y_MPQ_CMP(>)
             Y_MPQ_CMP(>=)
 
+#define Y_MPQ_WRAP(OP,CALL) \
+inline rational & operator OP##=(const rational &q) { rational tmp = CALL(*this,q); xch(tmp); return *this; }\
+inline rational & operator OP##=(const integer  &z) { const rational q(z); return (*this) += q;             }\
+inline rational & operator OP##=(const integer_t i) { const rational q(i); return (*this) += q;             }\
+inline friend rational operator OP (const rational &lhs, const rational &rhs ) { return CALL(lhs,rhs);      }\
+Y_MPQ_IMPL(friend rational ,operator OP,CALL)
+
+            //__________________________________________________________________
+            //
+            // ADD
+            //__________________________________________________________________
+            Y_MPQ_WRAP(+,__add)
+
+            //! unary plus
+            rational operator+() const
+            {
+                return *this;
+            }
+
+            //! increment
+            rational __inc() const
+            {
+                const integer new_num = num + den;
+                return rational(new_num,den);
+            }
+
+            //! pre increment operator
+            rational & operator++()  { rational tmp = __inc(); xch(tmp); return *this; }
+
+            //! post increment operator
+            rational operator++(int) { rational tmp = __inc(); xch(tmp); return tmp; }
+
+            //__________________________________________________________________
+            //
+            // SUB
+            //__________________________________________________________________
+            Y_MPQ_WRAP(-,__sub)
+
+            //! unary minus
+            rational operator-() const
+            {
+                const integer new_num( sign_neg(num.s), num.n );
+                return rational(new_num,den);
+            }
+
+            //! increment
+            rational __dec() const
+            {
+                const integer new_num = num - den;
+                return rational(new_num,den);
+            }
+
+            //! pre increment operator
+            rational & operator--()  { rational tmp = __dec(); xch(tmp); return *this; }
+
+            //! post increment operator
+            rational operator--(int) { rational tmp = __dec(); xch(tmp); return tmp; }
+
 
         private:
             void __simplify();
@@ -121,6 +194,15 @@ Y_MPQ_OVERLOAD(friend bool,operator OP)
                 const integer ad = lhs.num * rhs.den;
                 const integer cb = rhs.num * lhs.den;
                 const integer nn = ad+cb;
+                return rational(nn,dd);
+            }
+
+            static inline rational __sub( const rational &lhs, const rational &rhs )
+            {
+                const natural dd = lhs.den * rhs.den;
+                const integer ad = lhs.num * rhs.den;
+                const integer cb = rhs.num * lhs.den;
+                const integer nn = ad-cb;
                 return rational(nn,dd);
             }
         };

@@ -65,6 +65,32 @@ Y_UTEST(mpq)
         Y_ASSERT(cmp==CMP);
     }
 
+    std::cerr << "-- mpq additions" << std::endl;
+    for(size_t iter=0;iter<ITER;++iter)
+    {
+        const int64_t  a = alea.partial<int64_t>(24);
+        const uint64_t b = 1+alea.partial<uint64_t>(20);
+        const int64_t  c = alea.partial<int64_t>(24);
+        const uint64_t d = 1+alea.partial<uint64_t>(20);
+
+        const mpq P(a,b);
+        const mpq Q(c,d);
+        const mpq S0(a*d+c*b,b*d);
+        const mpq S1 = P + Q;
+        Y_ASSERT(S0==S1);
+    }
+    std::cerr << "-- mpq loop++" << std::endl;
+    for( mpq i(1,2); i<=10; i++)
+    {
+        std::cerr << i << ':';
+    }
+    std::cerr << std::endl;
+    std::cerr << "-- mpq ++loop" << std::endl;
+    for( mpq i(1,2); i<=10; ++i)
+    {
+        std::cerr << i << ':';
+    }
+    std::cerr << std::endl;
 }
 Y_UTEST_DONE()
 

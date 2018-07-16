@@ -87,6 +87,8 @@ namespace upsylon
             //! constructor from natural, negative
             inline integer(const natural &u,const as_negative_t &) : s( u.is_zero() ? __zero : __negative ), n(u) {}
 
+            inline integer(const sign_type _s, const natural &u ) : s( u.is_zero() ? __zero : _s), n(u) {}
+
             //! status update
             inline void update() throw()
             {
@@ -217,9 +219,11 @@ inline friend bool operator OP ( const integer_t lhs, const integer   &rhs ) thr
 
             //! define wrappers
 #define Y_MPZ_DEFINE(RET,BODY) \
-static inline RET BODY(const integer &lhs, const integer  &rhs) { return BODY(Y_MPZ_ZARGS(lhs), Y_MPZ_ZARGS(rhs) ); }\
-static inline RET BODY(const integer &lhs, integer_t       i  ) { Y_MPZ_PREPARE(); return BODY(Y_MPZ_ZARGS(lhs),Y_MPZ_IARGS()); }\
-static inline RET BODY(integer_t      i,   const integer  &rhs) { Y_MPZ_PREPARE(); return BODY(Y_MPZ_IARGS(),Y_MPZ_ZARGS(rhs)); }
+static inline RET BODY(const integer &lhs, const integer  &rhs)   {                       return BODY(Y_MPZ_ZARGS(lhs), Y_MPZ_ZARGS(rhs) ); }\
+static inline RET BODY(const integer &lhs, integer_t       i  )   { Y_MPZ_PREPARE();      return BODY(Y_MPZ_ZARGS(lhs),Y_MPZ_IARGS());      }\
+static inline RET BODY(integer_t      i,   const integer  &rhs)   { Y_MPZ_PREPARE();      return BODY(Y_MPZ_IARGS(),Y_MPZ_ZARGS(rhs));      }\
+static inline RET BODY(const natural  &u,  const integer &rhs )   { const integer lhs(u); return BODY(Y_MPZ_ZARGS(lhs), Y_MPZ_ZARGS(rhs) ); } \
+static inline RET BODY(const integer &lhs, const natural &u   )   { const integer rhs(u); return BODY(Y_MPZ_ZARGS(lhs), Y_MPZ_ZARGS(rhs) ); }
 
             //! multiple prototype for operators
 #define Y_MPZ_IMPL(OP,CALL) \
@@ -228,8 +232,8 @@ integer & operator OP##=(const integer_t rhs) { integer ans = CALL(*this,rhs); x
 inline friend integer operator OP ( const integer  &lhs, const integer  &rhs ) { return CALL(lhs,rhs); } \
 inline friend integer operator OP ( const integer  &lhs, const integer_t rhs ) { return CALL(lhs,rhs); } \
 inline friend integer operator OP ( const integer_t lhs, const integer  &rhs ) { return CALL(lhs,rhs); } \
-inline friend integer operator OP ( const integer  &lhs, const natural &rhs )  { const integer I(rhs); return CALL(lhs,I); } \
-inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  { const integer I(lhs); return CALL(I,rhs); }
+inline friend integer operator OP ( const integer  &lhs, const natural &rhs )  { return CALL(lhs,rhs); } \
+inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  { return CALL(lhs,rhs); }
 
             //! declaration and implementation of function for a given operator
 #define Y_MPZ_WRAP(OP,CALL) Y_MPZ_DEFINE(integer,CALL) Y_MPZ_IMPL(OP,CALL)
