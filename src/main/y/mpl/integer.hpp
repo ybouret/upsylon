@@ -3,7 +3,9 @@
 #define Y_MP_INTEGER_INCLUDED 1
 
 #include "y/mpl/natural.hpp"
-
+#if defined(__ICC)
+#include "y/os/error.hpp"
+#endif
 namespace upsylon
 {
     namespace mpl
@@ -53,6 +55,10 @@ namespace upsylon
                 case __zero:     return __zero;
                 case __positive: return __negative;
             }
+#if defined(__ICC)
+            // never get here but complains
+            return __zero;
+#endif
         }
 
         //! integer class
@@ -102,7 +108,12 @@ namespace upsylon
                     case __zero:     return 0;
                     case __positive: return  integer_t(n.lsw());
                 }
+#if defined(__ICC)
+                // never get here but complains
+                return 0;
+#endif
             }
+
             //! no throw exchange
             inline void xch( integer &other ) throw()
             {
@@ -148,6 +159,10 @@ namespace upsylon
                         case __positive:  return natural::compare_blocks(l,nl,r,nr); //ls>0,rs>0
                     }
                 }
+#if defined(__ICC)
+                // never get here but complains
+                return 0;
+#endif
             }
 
             //! binary preparation
