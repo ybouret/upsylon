@@ -264,6 +264,12 @@ inline friend integer operator OP ( const integer_t lhs, const integer  &rhs ) {
             //__________________________________________________________________
             Y_MPZ_WRAP(*,__mul)
 
+            //__________________________________________________________________
+            //
+            // DIV
+            //__________________________________________________________________
+            Y_MPZ_WRAP(/,__div)
+
         private:
             static inline
             integer __add(const sign_type ls,
@@ -357,6 +363,13 @@ inline friend integer operator OP ( const integer_t lhs, const integer  &rhs ) {
                 }
             }
 
+            static
+            integer __div(const sign_type ls,
+                          const uint8_t  *l,
+                          const size_t    nl,
+                          const sign_type rs,
+                          const uint8_t  *r,
+                          const size_t    nr);
         };
 
     }

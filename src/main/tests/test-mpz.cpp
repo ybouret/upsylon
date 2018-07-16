@@ -3,7 +3,7 @@
 
 using namespace upsylon;
 
-#define ITER 16384
+#define ITER (1<<14)
 
 Y_UTEST(mpz)
 {
@@ -74,7 +74,22 @@ Y_UTEST(mpz)
         const int64_t p   = i*j;
         const mpz I   = i;   Y_ASSERT(I.lsi()==i);
         const mpz J   = j;   Y_ASSERT(J.lsi()==j);
-        const mpz S   = I*J; Y_ASSERT(S.lsi()==p);
+        const mpz P   = I*J; Y_ASSERT(P.lsi()==p);
     }
+
+    std::cerr << "-- mpz division" << std::endl;
+    for(size_t iter=0;iter<ITER;++iter)
+    {
+        const int64_t i   = (1+alea.partial<int64_t>(61)) * alea.pm();
+        const int64_t j   = (1+alea.partial<int64_t>(32)) * alea.pm();
+        const int64_t q   = i/j;
+        const mpz I   = i;   Y_ASSERT(I.lsi()==i);
+        const mpz J   = j;   Y_ASSERT(J.lsi()==j);
+        const mpz Q   = I/J;
+        //std::cerr << "i=" << i << ", j=" << j << ", q=" << q << std::endl;
+        //std::cerr << "I=" << I << ", J=" << J << ", Q=" << Q << std::endl;
+        Y_ASSERT(Q.lsi()==q);
+    }
+
 }
 Y_UTEST_DONE()

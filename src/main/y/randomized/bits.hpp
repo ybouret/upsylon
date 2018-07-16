@@ -52,7 +52,7 @@ namespace upsylon
                 return ans;
             }
 
-            //! random full integral type
+            //! random partial integral type on given bits
             template <typename T> inline
             T partial(size_t nbits) throw()
             {
