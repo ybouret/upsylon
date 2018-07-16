@@ -169,12 +169,91 @@ namespace upsylon
             static bits     & crypto(); //!< global isaac<8> bits generator
             static lockable & access(); //!< to lock access to global generators
 
+            //! generate point on unit circle
             template <typename T>
-            void on_disk( T &x, T &y ) throw()
+            void on_circle( T &x, T &y ) throw()
             {
-                x=0;
-                y=0;
+                while(true)
+                {
+                    const T x1 = symm<T>();
+                    const T x2 = symm<T>();
+                    const T x12 = x1*x1;
+                    const T x22 = x2*x2;
+                    const T den = x12+x22;
+                    if(den>0&&den<1)
+                    {
+                        const T h = x1*x2;
+                        x = (x12-x22)/den;
+                        y = (h+h)/den;
+                        return;
+                    }
+                }
             }
+
+            //! generate point within unit disk, excluded
+            template <typename T>
+            void in_disk(T &x, T &y) throw()
+            {
+                while(true)
+                {
+                    const T x1 = symm<T>();
+                    const T x2 = symm<T>();
+                    const T x12 = x1*x1;
+                    const T x22 = x2*x2;
+                    const T d2  = x12+x22;
+                    if(d2<1)
+                    {
+                        x=x1;
+                        y=x2;
+                        return;
+                    }
+                }
+            }
+
+            //! generate point on unit sphere
+            template <typename T>
+            void on_sphere(T &x, T &y, T&z ) throw()
+            {
+                while(true)
+                {
+                    const T x1 = symm<T>();
+                    const T x2 = symm<T>();
+                    const T x12 = x1*x1;
+                    const T x22 = x2*x2;
+                    const T ssq = x12+x22;
+                    if(ssq<1)
+                    {
+                        const T del = 1-ssq;
+                        const T fac = sqrt(1-ssq);
+                        z = del-ssq;
+                        const T hx  = x1 * fac;
+                        const T hy  = x2 * fac;
+                        x=hx+hx;
+                        y=hy+hy;
+                        return;
+                    }
+                }
+            }
+
+            template <typename T>
+            void in_ball(T &x, T &y, T &z) throw()
+            {
+                while(true)
+                {
+                    const T x1 = symm<T>();
+                    const T x2 = symm<T>();
+                    const T x3 = symm<T>();
+                    const T d2 = x1*x1 + x2*x2 + x3*x2;
+                    if(d2<1)
+                    {
+                        x=x1;
+                        y=x2;
+                        z=x3;
+                        return;
+                    }
+                }
+            }
+
         protected:
             //! sets span and auxiliary values
             explicit bits(const uint32_t maxValue) throw();
