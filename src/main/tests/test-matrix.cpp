@@ -50,12 +50,7 @@ Y_UTEST(matrix)
     do_test<int>();
     do_test<string>();
     do_test<mpn>();
-
-    if(false)
-    {
-        matrix<mpn> M(3,5);
-        std::cerr << "M=" << M << std::endl;
-    }
+    
 }
 Y_UTEST_DONE()
 

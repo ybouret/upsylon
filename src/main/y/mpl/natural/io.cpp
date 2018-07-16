@@ -41,7 +41,7 @@ namespace upsylon
                     os << s;
                 }
             }
-            else if( flags & std::ios::dec )
+            else //assuming decimal
             {
                 //______________________________________________________________
                 //
@@ -80,10 +80,7 @@ namespace upsylon
                 }
 
             }
-            else
-            {
-                throw exception("natural.display: unsupported format");
-            }
+           
             return os;
         }
 
