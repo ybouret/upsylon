@@ -11,7 +11,7 @@ namespace upsylon
         {
             if(den.is_zero())
             {
-                throw libc::exception(EDOM,"mpl.rational: nul denominator");
+                throw libc::exception(EDOM,"mpl.rational: zero denominator");
             }
             __simplify();
         }

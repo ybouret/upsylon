@@ -122,9 +122,9 @@ Y_UTEST(mpq)
     std::cerr << "-- mpq multiplication" << std::endl;
     for(size_t iter=0;iter<ITER;++iter)
     {
-        const int64_t  a = alea.partial<int64_t>(24);
+        const int64_t  a = alea.partial<int64_t>(24) * alea.pm();
         const uint64_t b = 1+alea.partial<uint64_t>(20);
-        const int64_t  c = alea.partial<int64_t>(24);
+        const int64_t  c = alea.partial<int64_t>(24)*alea.pm();
         const uint64_t d = 1+alea.partial<uint64_t>(20);
         
         const mpq P(a,b);
@@ -139,6 +139,25 @@ Y_UTEST(mpq)
     }
     std::cerr << std::endl;
     
+    std::cerr << "-- mpq division" << std::endl;
+    for(size_t iter=0;iter<ITER;++iter)
+    {
+        const int64_t  a = 1+alea.partial<uint64_t>(24);
+        const uint64_t b = 1+alea.partial<uint64_t>(24);
+        const int64_t  c = 1+alea.partial<uint64_t>(24);
+        const uint64_t d = 1+alea.partial<uint64_t>(24);
+        
+        const mpq P(a,b);
+        const mpq Q(c,d);
+        const mpq R0(a*d,b*c);
+        const mpq R1 = P / Q;
+        Y_ASSERT(R0==R1);
+    }
+    for(mpq i=1;i.to_real()>=0.001;i/=3)
+    {
+        std::cerr << i << ':';
+    }
+    std::cerr << std::endl;
 }
 Y_UTEST_DONE()
 

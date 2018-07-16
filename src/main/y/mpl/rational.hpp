@@ -125,8 +125,8 @@ Y_MPQ_OVERLOAD(friend bool,operator OP)
 
 #define Y_MPQ_WRAP(OP,CALL) \
 inline rational & operator OP##=(const rational &q) { rational tmp = CALL(*this,q); xch(tmp); return *this; }\
-inline rational & operator OP##=(const integer  &z) { const rational q(z); return (*this) += q;             }\
-inline rational & operator OP##=(const integer_t i) { const rational q(i); return (*this) += q;             }\
+inline rational & operator OP##=(const integer  &z) { const rational q(z); return (*this) OP##= q;          }\
+inline rational & operator OP##=(const integer_t i) { const rational q(i); return (*this) OP##= q;          }\
 inline friend rational operator OP (const rational &lhs, const rational &rhs ) { return CALL(lhs,rhs);      }\
 Y_MPQ_IMPL(friend rational ,operator OP,CALL)
 
@@ -188,7 +188,11 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
             //__________________________________________________________________
             Y_MPQ_WRAP(*,__mul)
 
-            
+            //__________________________________________________________________
+            //
+            // MUL
+            //__________________________________________________________________
+            Y_MPQ_WRAP(/,__div)
 
         private:
             void __simplify();
@@ -216,6 +220,15 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
                 const natural new_den = lhs.den * rhs.den;
                 return rational(new_num,new_den);
             }
+            
+            static inline rational __div( const rational &lhs, const rational &rhs )
+            {
+                const integer i_num = lhs.num * rhs.den;
+                const integer i_den = lhs.den * rhs.num;
+                const integer o_num( sign_product(i_num.s,i_den.s), i_num.n);
+                return rational(o_num,i_den.n);
+            }
+            
         };
     }
 
