@@ -198,6 +198,7 @@ inline friend bool operator OP ( const integer_t lhs, const integer   &rhs ) thr
             Y_MPZ_CMP(>=)
             Y_MPZ_CMP(>)
 
+            //! define wrappers
 #define Y_MPZ_DEFINE(RET,BODY) \
 static inline RET BODY(const integer &lhs, const integer  &rhs) { return BODY(Y_MPZ_ZARGS(lhs), Y_MPZ_ZARGS(rhs) ); }\
 static inline RET BODY(const integer &lhs, integer_t       i  ) { Y_MPZ_PREPARE(); return BODY(Y_MPZ_ZARGS(lhs),Y_MPZ_IARGS()); }\
@@ -235,6 +236,34 @@ inline friend integer operator OP ( const integer_t lhs, const integer  &rhs ) {
             //! post increment operator
             integer   operator++(int) { integer tmp = __inc(); xch(tmp); return tmp; }
 
+            //__________________________________________________________________
+            //
+            // SUB
+            //__________________________________________________________________
+            Y_MPZ_WRAP(-,__sub)
+
+            //! unary minus
+            inline integer operator-() { return integer(n,as_negative); }
+
+            //! increment
+            inline integer __dec() const
+            {
+                const uint8_t b = 1;
+                return __add(this->s,this->n.byte,this->n.bytes,__negative,&b,1);
+            }
+
+            //! pre increment operator
+            integer & operator--() { integer tmp = __dec(); xch(tmp); return *this; }
+
+            //! post increment operator
+            integer   operator--(int) { integer tmp = __dec(); xch(tmp); return tmp; }
+
+            //__________________________________________________________________
+            //
+            // MUL
+            //__________________________________________________________________
+            Y_MPZ_WRAP(*,__mul)
+
         private:
             static inline
             integer __add(const sign_type ls,
@@ -263,36 +292,76 @@ inline friend integer operator OP ( const integer_t lhs, const integer  &rhs ) {
 
                     }
 
-
-            case __zero: switch(rs)
-                {
-                    case __negative: { natural R(r,nr); assert(!R.is_zero()); return integer(R,as_negative); } // ls=0,rs<0
-                    case __zero:      return integer();                                                        // ls=0,rs=0
-                    case __positive: { natural R(r,nr); assert(!R.is_zero()); return integer(R);             } // ls=0,rs>0
-                }
-
-            case __positive:switch(rs)
-                {
-                    case __negative:
-                         switch( natural::compare_blocks(l,nl,r,nr) )
+                    case __zero: switch(rs)
                     {
-                        case -1: // |l| < |r|
-                        { const natural D = natural::__sub(r,nr,l,nl); assert(!D.is_zero()); return integer(D,as_negative); }
-                        case 1: // |l| > |r|
-                        { const natural D = natural::__sub(l,nl,r,nr); assert(!D.is_zero()); return integer(D); }
-                        default: // |l| = |r|
-                            return integer();
+                        case __negative: { natural R(r,nr); assert(!R.is_zero()); return integer(R,as_negative); } // ls=0,rs<0
+                        case __zero:      return integer();                                                        // ls=0,rs=0
+                        case __positive: { natural R(r,nr); assert(!R.is_zero()); return integer(R);             } // ls=0,rs>0
                     }
-                    case __zero: ;   { natural L(l,nl);                       assert(!L.is_zero()); return integer(L); } // ls>0,rs=0
-                    case __positive: { natural S = natural::__add(l,nl,r,nr); assert(!S.is_zero()); return integer(S); } // ls>0,rs>0
+
+                    case __positive:switch(rs)
+                    {
+                        case __negative:
+                            switch( natural::compare_blocks(l,nl,r,nr) )
+                        {
+                            case -1: // |l| < |r|
+                            { const natural D = natural::__sub(r,nr,l,nl); assert(!D.is_zero()); return integer(D,as_negative); }
+                            case 1: // |l| > |r|
+                            { const natural D = natural::__sub(l,nl,r,nr); assert(!D.is_zero()); return integer(D); }
+                            default: // |l| = |r|
+                                return integer();
+                        }
+                        case __zero: ;   { natural L(l,nl);                       assert(!L.is_zero()); return integer(L); } // ls>0,rs=0
+                        case __positive: { natural S = natural::__add(l,nl,r,nr); assert(!S.is_zero()); return integer(S); } // ls>0,rs>0
+                    }
                 }
             }
-        }
-    };
 
-}
+            static inline
+            integer __sub(const sign_type ls,
+                          const uint8_t  *l,
+                          const size_t    nl,
+                          const sign_type rs,
+                          const uint8_t  *r,
+                          const size_t    nr)
+            {
+                return __add(ls,l,nl,sign_neg(rs),r,nr);
+            }
 
-typedef mpl::integer mpz; //!< alias for mp-signed
+            static inline
+            integer __mul(const sign_type ls,
+                          const uint8_t  *l,
+                          const size_t    nl,
+                          const sign_type rs,
+                          const uint8_t  *r,
+                          const size_t    nr)
+            {
+                switch(ls)
+                {
+                    case __negative: switch(rs)
+                    {
+                        case __negative: { const natural p = natural::__mul(l,nl,r,nr); assert(!p.is_zero()); return integer(p);             }
+                        case __zero:     {                                                                    return integer();              }
+                        case __positive: { const natural p = natural::__mul(l,nl,r,nr); assert(!p.is_zero()); return integer(p,as_negative); }
+                    }
+
+                    case __zero:
+                        return integer();
+
+                    case __positive: switch(rs)
+                    {
+                        case __negative: { const natural p = natural::__mul(l,nl,r,nr); assert(!p.is_zero()); return integer(p,as_negative); }
+                        case __zero:     {                                                                    return integer();              }
+                        case __positive: { const natural p = natural::__mul(l,nl,r,nr); assert(!p.is_zero()); return integer(p);             }
+                    }
+                }
+            }
+
+        };
+
+    }
+
+    typedef mpl::integer mpz; //!< alias for mp-signed
 }
 
 
