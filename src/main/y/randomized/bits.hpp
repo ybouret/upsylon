@@ -244,7 +244,7 @@ namespace upsylon
                     const T x1 = symm<T>();
                     const T x2 = symm<T>();
                     const T x3 = symm<T>();
-                    const T d2 = x1*x1 + x2*x2 + x3*x2;
+                    const T d2 = x1*x1 + x2*x2 + x3*x3;
                     if(d2<1)
                     {
                         x=x1;
