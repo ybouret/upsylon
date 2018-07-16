@@ -200,6 +200,60 @@ namespace upsylon
             }
         }
 
+        //! store the minor_{I,J} of M
+        template <typename U>
+        inline void minor_of(const matrix<U>       &M,
+                             const size_t           I,
+                             const size_t           J) throw()
+        {
+            assert(M.rows>1);
+            assert(M.cols>1);
+            assert(this->rows==M.rows-1);
+            assert(this->cols==M.cols-1);
+
+            matrix<T>   &self = *this;
+            const size_t nr = M.rows;
+            const size_t nc = M.cols;
+            for(size_t i=1,ir=1;i<=nr;++i)
+            {
+                if(i!=I)
+                {
+                    for(size_t j=1,jr=1;j<=nc;++j)
+                    {
+                        if(j!=J)
+                        {
+                            self[ir][jr] = T(M[i][j]);
+                            ++jr;
+                        }
+                    }
+                    ++ir;
+                }
+            }
+        }
+
+        //! swap rows content
+        inline void swap_rows(const size_t r1,const size_t r2) throw()
+        {
+            matrix<T> &self = *this;
+            array<T>  &R1   = self[r1];
+            array<T>  &R2   = self[r2];
+            for(size_t i=cols;i>0;--i)
+            {
+                bswap(R1[i],R2[i]);
+            }
+        }
+
+        //! swap cols content
+        inline void swap_cols(const size_t c1, const size_t c2) throw()
+        {
+            matrix<T> &self = *this;
+            for(size_t i=rows;i>0;--i)
+            {
+                bswap(self[i][c1],self[i][c2]);
+            }
+        }
+
+
     private:
         row *row_ptr; //! [1..rows]
 
