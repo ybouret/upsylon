@@ -15,7 +15,10 @@ namespace upsylon
             __zero,     //!<  0
             __positive  //!<  1
         };
-        
+
+        typedef int2type<__negative> as_negative_t; //!< named type for constructor
+        extern const as_negative_t   as_negative;   //!< names instance
+
         //! product of signs
         inline sign_type sign_product(const sign_type a, const sign_type b) throw()
         {
@@ -73,6 +76,9 @@ namespace upsylon
 
             //! constructor from natural
             inline integer(const natural &u) : s( u.is_zero() ? __zero : __positive ), n(u) {}
+            
+            //! constructor from natural, negative
+            inline integer(const natural &u,const as_negative_t &) : s( u.is_zero() ? __zero : __negative ), n(u) {}
 
             //! status update
             inline void update() throw()
@@ -211,23 +217,23 @@ inline friend bool operator OP ( const integer_t lhs, const integer   &rhs ) thr
                 {
                     case __negative: switch(rs)
                     {
-                        case __negative:
-                        case __zero:
-                        case __positive:
+                        case __negative: { natural S = natural::__add(l,nl,r,nr); assert(!S.is_zero()); return integer(S,as_negative); } // ls<0,rs<0
+                        case __zero:     { natural L(l,nl);                       assert(!L.is_zero()); return integer(L,as_negative); } // ls<0,rs=0
+                        case __positive: exit(0); return integer(); // ls<0,rhs>0
                     }
 
                     case __zero: switch(rs)
                     {
-                        case __negative:
-                        case __zero:
-                        case __positive:
+                        case __negative: { natural R(r,nr); assert(!R.is_zero()); return integer(R,as_negative); } // ls=0,rs<0
+                        case __zero:      return integer();                                                        // ls=0,rs=0
+                        case __positive: { natural R(r,nr); assert(!R.is_zero()); return integer(R);             } // ls=0,rs>0
                     }
 
                     case __positive:switch(rs)
                     {
-                        case __negative:
-                        case __zero:
-                        case __positive:
+                        case __negative: exit(0); return integer(); // ls>0,rs<0
+                        case __zero: ;   { natural L(l,nl);                       assert(!L.is_zero()); return integer(L); } // ls>0,rs=0
+                        case __positive: { natural S = natural::__add(l,nl,r,nr); assert(!S.is_zero()); return integer(S); } // ls>0,rs>0
                     }
                 }
             }

@@ -11,6 +11,7 @@
 #include "y/concurrent/singleton.hpp"
 #include "y/randomized/bits.hpp"
 #include <iostream>
+#include <cstring>
 
 namespace upsylon
 {
@@ -101,6 +102,14 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             inline natural(word_t w) : Y_MPN_CTOR(0,sizeof(word_t))
             {
                 memcpy(byte,prepare(w,bytes),sizeof(word_t)); Y_MPN_CHECK(this);
+            }
+
+            //! copy from raw memory
+            inline natural( const void  *buffer, size_t buflen) : Y_MPN_CTOR(buflen,buflen)
+            {
+                assert(bytes==buflen);
+                memcpy(byte,buffer,buflen);
+                update();
             }
 
             //! assign
@@ -520,6 +529,8 @@ static inline natural __##CALL(const uint8_t *l, const size_t nl, const uint8_t 
             Y_MPN_BOOL(and,&)
             Y_MPN_BOOL(or,|)
             Y_MPN_BOOL(xor,^)
+
+
 
             friend class integer;
         };
