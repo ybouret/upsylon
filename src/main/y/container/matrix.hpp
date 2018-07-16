@@ -46,7 +46,7 @@ namespace upsylon
         void   exchange( matrix_data &other ) throw(); //!< full exchange
 
     private:
-        Y_DISABLE_ASSIGN(matrix_data);
+        Y_DISABLE_COPY_AND_ASSIGN(matrix_data);
         void __kill() throw();
     };
 
