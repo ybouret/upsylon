@@ -21,9 +21,9 @@ namespace upsylon
                 case __negative: switch(rs)
                 {
                     case __negative: { const natural p = natural::__div(l,nl,r,nr); return integer(p);             }
-                    case __zero:     goto DIV_BY_ZERO;
-                    case __positive: { const natural p = natural::__div(l,nl,r,nr);  return integer(p,as_negative); }
-                }
+                    case __zero:     goto DIV_BY_ZERO; 
+                    case __positive: { const natural p = natural::__div(l,nl,r,nr);  return integer(p,as_negative); } 
+                } /* FALLTHRU */
 
                 case __zero:
                     return integer();

@@ -17,12 +17,12 @@ namespace upsylon
         Y_DECL_ARGS(T,type); //!< aliases
         
         //! initialize fields
-#define Y_VECTOR_CTOR(n)   \
-sequence<T>(),              \
-array<T>(),                  \
-maxi_(n),                     \
-bytes(0),                      \
-hmem_( ALLOCATOR::instance() ), \
+#define Y_VECTOR_CTOR(n)                       \
+sequence<T>(),                                  \
+array<T>(),                                      \
+maxi_(n),                                         \
+bytes(0),                                          \
+hmem_( ALLOCATOR::instance() ),                     \
 addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
 
         inline vector() : Y_VECTOR_CTOR(0) {}
