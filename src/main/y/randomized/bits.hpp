@@ -67,7 +67,7 @@ namespace upsylon
             template <typename T> inline
             T partial() throw()
             {
-                return partial<T>( 8*sizeof(T) );
+                return partial<T>( leq(8*sizeof(T)) );
             }
 
 
@@ -133,6 +133,12 @@ namespace upsylon
             inline bool choice() throw()
             {
                 return (next32() <= half);
+            }
+
+            //! +/-
+            inline int pm() throw()
+            {
+                return ( choice() ) ? 1:-1;
             }
 
             //! shuffle LIST type

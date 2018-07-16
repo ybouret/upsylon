@@ -64,6 +64,8 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
         //! in place constructor
 #define Y_MPN_CTOR(SZ,MX) memory::ro_buffer(), bytes(SZ), allocated(MX), byte( __acquire(allocated) ), item(byte-1)
 
+        class integer; //!< forward declaration
+
         //! big natural number
         class natural : public memory::ro_buffer
         {
@@ -519,6 +521,7 @@ static inline natural __##CALL(const uint8_t *l, const size_t nl, const uint8_t 
             Y_MPN_BOOL(or,|)
             Y_MPN_BOOL(xor,^)
 
+            friend class integer;
         };
 
         //! precompiled naturals
