@@ -49,17 +49,7 @@ namespace upsylon
         //! negative sign
         inline sign_type sign_neg( const sign_type s ) throw()
         {
-            switch(s)
-            {
-                case __negative: return __positive;
-                case __zero:     return __zero;
-                case __positive: return __negative;
-            }
-#if defined(__ICC)
-            // never get here but complains
-            fatal_error("corrupted code@mpl.sign_neg");
-            return __zero;
-#endif
+            return (s == __negative) ? __positive : ( s == __positive ? __negative : __zero );
         }
 
         //! integer class

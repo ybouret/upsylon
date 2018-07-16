@@ -69,7 +69,7 @@ namespace upsylon
             inline void xch( rational &q ) throw()
             {
                 ( (integer &)num ).xch( (integer &)(q.num) );
-                ( (integer &)den ).xch( (integer &)(q.den) );
+                ( (natural &)den ).xch( (natural &)(q.den) );
             }
 
             //!assign
@@ -147,17 +147,17 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
             }
 
             //! increment
-            rational __inc() const
+            inline rational __inc() const
             {
                 const integer new_num = num + den;
                 return rational(new_num,den);
             }
 
             //! pre increment operator
-            rational & operator++()  { rational tmp = __inc(); xch(tmp); return *this; }
+            inline rational & operator++()  { rational tmp = __inc(); xch(tmp); return *this; }
 
             //! post increment operator
-            rational operator++(int) { rational tmp = __inc(); xch(tmp); return tmp; }
+            inline rational operator++(int) { rational tmp = __inc(); xch(tmp); return tmp; }
 
             //__________________________________________________________________
             //
