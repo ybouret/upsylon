@@ -3,9 +3,7 @@
 #define Y_MP_INTEGER_INCLUDED 1
 
 #include "y/mpl/natural.hpp"
-#if defined(__ICC)
-#include "y/os/error.hpp"
-#endif
+
 namespace upsylon
 {
     namespace mpl

@@ -2,7 +2,7 @@
 #ifndef SUPPORT_INCLUDED
 #define SUPPORT_INCLUDED 1
 
-#include "y/mpl/natural.hpp"
+#include "y/mpl/rational.hpp"
 #include "y/alea.hpp"
 
 using namespace upsylon;
@@ -50,6 +50,29 @@ namespace {
     {
         return mpn( alea.leq(100), alea );
     }
+    
+    template <>
+    inline mpz support:: get<mpz>()
+    {
+        const mpn n( alea.leq(100), alea );
+        return mpz( alea.choice() ? mpl::__negative : mpl::__positive, n );
+    }
+    
+    template <>
+    inline mpq support:: get<mpq>()
+    {
+        const mpz num = support::get<mpz>();
+        while(true)
+        {
+            const mpn den = support::get<mpn>();
+            if( !den.is_zero() )
+            {
+                return mpq(num,den);
+            }
+        }
+    }
+    
+    
 }
 
 #endif

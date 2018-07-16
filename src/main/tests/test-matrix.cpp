@@ -1,7 +1,6 @@
 #include "y/container/matrix.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
-#include "y/mpl/natural.hpp"
 #include <typeinfo>
 #include "support.hpp"
 
@@ -79,7 +78,9 @@ Y_UTEST(matrix)
     do_test<string>();
     std::cerr << std::hex;
     do_test<mpn>();
-    
+    do_test<mpz>();
+    do_test<mpq>();
+
 }
 Y_UTEST_DONE()
 
