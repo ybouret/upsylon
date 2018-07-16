@@ -227,7 +227,9 @@ integer & operator OP##=(const integer  &rhs) { integer ans = CALL(*this,rhs); x
 integer & operator OP##=(const integer_t rhs) { integer ans = CALL(*this,rhs); xch(ans); return *this; } \
 inline friend integer operator OP ( const integer  &lhs, const integer  &rhs ) { return CALL(lhs,rhs); } \
 inline friend integer operator OP ( const integer  &lhs, const integer_t rhs ) { return CALL(lhs,rhs); } \
-inline friend integer operator OP ( const integer_t lhs, const integer  &rhs ) { return CALL(lhs,rhs); }
+inline friend integer operator OP ( const integer_t lhs, const integer  &rhs ) { return CALL(lhs,rhs); } \
+inline friend integer operator OP ( const integer  &lhs, const natural &rhs )  { const integer I(rhs); return CALL(lhs,I); } \
+inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  { const integer I(lhs); return CALL(I,rhs); }
 
             //! declaration and implementation of function for a given operator
 #define Y_MPZ_WRAP(OP,CALL) Y_MPZ_DEFINE(integer,CALL) Y_MPZ_IMPL(OP,CALL)

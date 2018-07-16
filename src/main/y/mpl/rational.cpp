@@ -23,6 +23,8 @@ namespace upsylon
             integer &z = (integer &) num;
             if(z.s==__zero)
             {
+                // numerator is null => denominator to 1
+                assert(true==z.n.is_zero());
                 if(!d.is_byte(1))
                 {
                     d.set_byte(1);
@@ -30,10 +32,16 @@ namespace upsylon
             }
             else
             {
+                // numerator is not zero, obviously not for denominator
+                assert( z.s   != __zero        );
+                assert( false == z.n.is_zero() );
+
                 if(!d.is_byte(1))
                 {
-                    natural &n = (natural &)(num.n);
-                    arithmetic::simplify(n,d);
+                    natural      &n = (natural &)(num.n);
+                    const natural g = arithmetic::gcd_positive(n,d);
+                    n /= g;
+                    d /= g;
                 }
             }
         }

@@ -26,6 +26,8 @@ namespace upsylon
             inline rational( const integer_t i ) : num(i), den(1) {}
             //! from mpz
             inline rational( const integer & z ) : num(z), den(1) {}
+            //! from mpn
+            inline rational( const natural & n ) : num(n), den(1) {}
             //! from integral fraction
             inline rational( const integer_t n, const word_t d) : num(n), den(d) { check(); }
             //! from mpz/mpn
@@ -77,10 +79,50 @@ namespace upsylon
             //
             // comparisons
             //__________________________________________________________________
-            
+            static inline int compare( const rational &lhs, const rational &rhs)
+            {
+                const integer L = lhs.num * rhs.den;
+                const integer R = rhs.num * lhs.den;
+                return integer::compare(L,R);
+            }
+
+#define Y_MPQ_DEFINE_RHS(RET,BODY,CALL,TYPE)  inline RET BODY( const rational &lhs, const TYPE      rhs ) { const rational R(rhs); return CALL(lhs,R); }
+
+#define Y_MPQ_DEFINE_LHS(RET,BODY,CALL,TYPE)  inline RET BODY( const TYPE      lhs, const rational &rhs ) { const rational L(lhs); return CALL(L,rhs); }
+
+#define Y_MPQ_DEFINE(RET,BODY,CALL,TYPE) Y_MPQ_DEFINE_RHS(RET,BODY,CALL,TYPE) Y_MPQ_DEFINE_LHS(RET,BODY,CALL,TYPE)
+
+#define Y_MPQ_IMPL(RET,BODY,CALL)     \
+Y_MPQ_DEFINE(RET,BODY,CALL,integer_t) \
+Y_MPQ_DEFINE(RET,BODY,CALL,integer &) \
+Y_MPQ_DEFINE(RET,BODY,CALL,natural &)
+
+#define Y_MPQ_OVERLOAD(RET,CALL) Y_MPQ_IMPL(RET,CALL,CALL)
+
+            Y_MPQ_OVERLOAD(static int,compare)
+
+#define Y_MPQ_CMP(OP) \
+inline friend bool operator OP ( const rational &lhs, const rational &rhs ) { return compare(lhs,rhs) OP 0; }\
+Y_MPQ_OVERLOAD(friend bool,operator OP)
+
+            Y_MPQ_CMP(==)
+            Y_MPQ_CMP(!=)
+            Y_MPQ_CMP(<)
+            Y_MPQ_CMP(<=)
+            Y_MPQ_CMP(>)
+            Y_MPQ_CMP(>=)
+
 
         private:
             void __simplify();
+            static inline rational __add( const rational &lhs, const rational &rhs )
+            {
+                const natural dd = lhs.den * rhs.den;
+                const integer ad = lhs.num * rhs.den;
+                const integer cb = rhs.num * lhs.den;
+                const integer nn = ad+cb;
+                return rational(nn,dd);
+            }
         };
     }
 

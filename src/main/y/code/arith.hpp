@@ -15,32 +15,48 @@ namespace upsylon
         {
             if( x > 0 && y > 0 )
             {
-                T a = x;
-                T b = y;
-                if( b > a )
-                {
-                    a = y;
-                    b = x;
-                }
-                while( b > 0 )
-                {
-                    const T t = b;
-                    b = a % b;
-                    a = t;
-                }
-                return a;
+                return gcd_positive(x,y);
             }
             else
                 return T(1);
+        }
+
+        template <typename T> static inline
+        T gcd_positive(const T &x, const T &y)
+        {
+            assert(x>0);
+            assert(y>0);
+            T a = x;
+            T b = y;
+            if( b > a )
+            {
+                a = y;
+                b = x;
+            }
+            while( b > 0 )
+            {
+                const T t = b;
+                b = a % b;
+                a = t;
+            }
+            return a;
         }
 
         //! fraction simplification
         template <typename T> static inline
         void simplify( T &num, T &den )
         {
-            const T __gcd = gcd(num,den);
-            num /=  __gcd;
-            den /=  __gcd;
+            if(num==0)
+            {
+                den = 1;
+            }
+            else
+            {
+                assert(den>0);
+                const T __gcd = gcd_positive(num,den);
+                num /=  __gcd;
+                den /=  __gcd;
+            }
         }
 
         //! least common multiplier
