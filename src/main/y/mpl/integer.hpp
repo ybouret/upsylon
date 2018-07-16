@@ -57,6 +57,7 @@ namespace upsylon
             }
 #if defined(__ICC)
             // never get here but complains
+            fatal_error("corrupted code@mpl.sign_neg");
             return __zero;
 #endif
         }
@@ -110,6 +111,7 @@ namespace upsylon
                 }
 #if defined(__ICC)
                 // never get here but complains
+                fatal_error("corrupted code@mpl.integer.lsi");
                 return 0;
 #endif
             }
@@ -336,6 +338,10 @@ inline friend integer operator OP ( const integer_t lhs, const integer  &rhs ) {
                         case __positive: { natural S = natural::__add(l,nl,r,nr); assert(!S.is_zero()); return integer(S); } // ls>0,rs>0
                     }
                 }
+#if defined(__ICC)
+		fatal_error("corrupted code@mpl.integer.__add");
+		return integer();
+#endif
             }
 
             static inline
@@ -376,6 +382,10 @@ inline friend integer operator OP ( const integer_t lhs, const integer  &rhs ) {
                         case __positive: { const natural p = natural::__mul(l,nl,r,nr); assert(!p.is_zero()); return integer(p);             }
                     }
                 }
+#if defined(__ICC)
+		fatal_error("corrupted code@mpl.integer.__add");
+		return integer();
+#endif
             }
 
             static
