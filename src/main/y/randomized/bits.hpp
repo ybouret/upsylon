@@ -235,6 +235,7 @@ namespace upsylon
                 }
             }
 
+            //! generate point strictly within unit ball
             template <typename T>
             void in_ball(T &x, T &y, T &z) throw()
             {

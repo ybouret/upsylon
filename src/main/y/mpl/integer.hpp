@@ -144,6 +144,7 @@ namespace upsylon
                 }
             }
 
+            //! binary preparation
             static inline const uint8_t *prepare( integer_t &i, sign_type &si, size_t &ni ) throw()
             {
                 assert(__zero==si);
@@ -164,10 +165,13 @@ namespace upsylon
                     return (const uint8_t*)i;
                 }
             }
-
+            //! raw data from integert_t
 #define Y_MPZ_PREPARE() sign_type si = __zero; size_t ni=0; const uint8_t *bi = prepare(i,si,ni)
+            //! present arguments from integer
 #define Y_MPZ_ZARGS(V)  V.s,V.n.byte,V.n.bytes
+            //! present arguments from integer_t
 #define Y_MPZ_IARGS()   si,bi,ni
+            //! multiple implementation
 #define Y_MPZ_IMPL_NOTHROW(RET,BODY,CALL) \
 inline RET BODY(const integer &lhs, const integer  &rhs) throw() { return CALL(Y_MPZ_ZARGS(lhs), Y_MPZ_ZARGS(rhs) ); }\
 inline RET BODY(const integer &lhs, integer_t       i  ) throw() { Y_MPZ_PREPARE(); return CALL(Y_MPZ_ZARGS(lhs),Y_MPZ_IARGS()); }\
@@ -193,7 +197,7 @@ inline friend bool operator OP ( const integer_t lhs, const integer   &rhs ) thr
 
     }
 
-    typedef mpl::integer mpz;
+    typedef mpl::integer mpz; //!< alias for mp-signed
 }
 
 
