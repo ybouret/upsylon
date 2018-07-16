@@ -15,7 +15,7 @@ namespace upsylon
             __zero,     //!<  0
             __positive  //!<  1
         };
-
+        
         //! product of signs
         inline sign_type sign_product(const sign_type a, const sign_type b) throw()
         {
@@ -192,7 +192,45 @@ inline friend bool operator OP ( const integer_t lhs, const integer   &rhs ) thr
             Y_MPZ_CMP(>=)
             Y_MPZ_CMP(>)
 
+            //__________________________________________________________________
+            //
+            // ADD
+            //__________________________________________________________________
 
+
+        private:
+            static inline
+            integer add(const sign_type ls,
+                        const uint8_t  *l,
+                        const size_t    nl,
+                        const sign_type rs,
+                        const uint8_t  *r,
+                        const size_t    nr)
+            {
+                switch(ls)
+                {
+                    case __negative: switch(rs)
+                    {
+                        case __negative:
+                        case __zero:
+                        case __positive:
+                    }
+
+                    case __zero: switch(rs)
+                    {
+                        case __negative:
+                        case __zero:
+                        case __positive:
+                    }
+
+                    case __positive:switch(rs)
+                    {
+                        case __negative:
+                        case __zero:
+                        case __positive:
+                    }
+                }
+            }
         };
 
     }
