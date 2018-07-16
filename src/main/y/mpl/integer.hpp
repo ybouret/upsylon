@@ -77,6 +77,7 @@ namespace upsylon
             //! constructor from natural, negative
             inline integer(const natural &u,const as_negative_t &) : s( u.is_zero() ? __zero : __negative ), n(u) {}
 
+            //! create from a natural and a given sign
             inline integer(const sign_type _s, const natural &u ) : s( u.is_zero() ? __zero : _s), n(u) {}
 
             //! status update
@@ -101,11 +102,6 @@ namespace upsylon
                     case __zero:     return 0;
                     case __positive: return  integer_t(n.lsw());
                 }
-#if defined(__ICC)
-                // never get here but complains
-                fatal_error("corrupted code@mpl.integer.lsi");
-                return 0;
-#endif
             }
 
             //! no throw exchange

@@ -56,10 +56,6 @@ namespace upsylon
                     case __positive: return  natural::ratio_of(num.n,den);
                     case __zero:     return 0;
                 }
-#if defined(__ICC)
-                critical_error("corrupted code@mpq.to_real");
-                return 0;
-#endif
             }
 
             //! copy
@@ -185,6 +181,14 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
             //! post increment operator
             rational operator--(int) { rational tmp = __dec(); xch(tmp); return tmp; }
 
+            
+            //__________________________________________________________________
+            //
+            // MUL
+            //__________________________________________________________________
+            Y_MPQ_WRAP(*,__mul)
+
+            
 
         private:
             void __simplify();
@@ -204,6 +208,13 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
                 const integer cb = rhs.num * lhs.den;
                 const integer nn = ad-cb;
                 return rational(nn,dd);
+            }
+            
+            static inline rational __mul( const rational &lhs, const rational &rhs )
+            {
+                const integer new_num = lhs.num * rhs.num;
+                const natural new_den = lhs.den * rhs.den;
+                return rational(new_num,new_den);
             }
         };
     }
