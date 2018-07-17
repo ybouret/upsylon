@@ -3,6 +3,7 @@
 Y_UTEST_INIT(64)
 {
     Y_UTEST(types);
+    Y_UTEST(LU);
 }
 Y_UTEST_EXEC()
 

@@ -4,7 +4,8 @@ ADD_EXECUTABLE(test-m main.cpp ${srcs} ../../main/tests/support.hpp)
 TARGET_LINK_Y(test-m m)
 
 ENABLE_TESTING()
-ADD_TEST(Types test-math types)
+ADD_TEST(Types test-m types)
+ADD_TEST(LU    test-m LU)
 
 ADD_CUSTOM_TARGET(utest-m
 COMMAND ${CMAKE_CTEST_COMMAND} -V
