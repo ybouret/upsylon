@@ -1,3 +1,4 @@
+INCLUDE_DIRECTORIES(../../main/tests)
 FILE(GLOB srcs test-*.cpp)
 
 ADD_EXECUTABLE(test-m main.cpp ${srcs} ../../main/tests/support.hpp)

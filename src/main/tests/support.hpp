@@ -3,6 +3,7 @@
 #define SUPPORT_INCLUDED 1
 
 #include "y/mpl/rational.hpp"
+#include "y/type/complex.hpp"
 #include "y/alea.hpp"
 
 using namespace upsylon;
@@ -48,13 +49,13 @@ namespace {
     template <>
     inline mpn support:: get<mpn>()
     {
-        return mpn( alea.leq(100), alea );
+        return mpn( alea.leq(30), alea );
     }
     
     template <>
     inline mpz support:: get<mpz>()
     {
-        const mpn n( alea.leq(100), alea );
+        const mpn n( alea.leq(30), alea );
         return mpz( alea.choice() ? mpl::__negative : mpl::__positive, n );
     }
     
@@ -71,7 +72,20 @@ namespace {
             }
         }
     }
-    
+
+    template <>
+    complex<float> support:: get< complex<float> >()
+    {
+        return complex<float>( get<float>(), get<float>() );
+    }
+
+
+    template <>
+    complex<double> support:: get< complex<double> >()
+    {
+        return complex<double>( get<double>(), get<double>() );
+    }
+
     
 }
 

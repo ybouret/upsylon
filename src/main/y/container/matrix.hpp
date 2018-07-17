@@ -30,8 +30,8 @@ namespace upsylon
         const size_t indx_length;     //!< largest * sizeof(size_t)
         const size_t allocated;       //!< |indx_offset+indx_length|
 
-        lightweight_array<size_t> r_indx; //!< size() = rows
-        lightweight_array<size_t> c_indx; //!< size() = cols
+        lightweight_array<size_t> r_indices; //!< size() = rows
+        lightweight_array<size_t> c_indices; //!< size() = cols
 
         //! destructor
         virtual ~matrix_data() throw();

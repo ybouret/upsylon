@@ -34,8 +34,8 @@ namespace upsylon
     indx_offset( memory::align(rows_offset+rows_length)  ),
     indx_length( sizeof(size_t) * largest                ),
     allocated( memory::align(indx_offset+indx_length)    ),
-    r_indx(),
-    c_indx(),
+    r_indices(),
+    c_indices(),
     workspace( memory::global::instance().acquire((size_t&)allocated) )
     {
         assert(item_size>0);
@@ -54,8 +54,8 @@ namespace upsylon
     {
         // hook indices
         size_t *ipos = memory::io::cast<size_t>(workspace,indx_offset);
-        new ( &r_indx ) lightweight_array<size_t>(ipos,rows);
-        new ( &c_indx ) lightweight_array<size_t>(ipos,cols);
+        new ( &r_indices ) lightweight_array<size_t>(ipos,rows);
+        new ( &c_indices ) lightweight_array<size_t>(ipos,cols);
     }
 
 #define _XCH(FIELD) cswap(FIELD,other.FIELD)
@@ -79,8 +79,8 @@ namespace upsylon
         // reset arrays
         hook();
         other.hook();
-        assert( r_indx.size() == rows );
-        assert( c_indx.size() == cols );
+        assert( r_indices.size() == rows );
+        assert( c_indices.size() == cols );
     }
 
 }

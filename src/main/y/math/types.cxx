@@ -37,4 +37,5 @@ namespace upsylon
 #endif
 	}
 
+    template <> math::real_t xnumeric<math::real_t>::abs_minimum() { return math::numeric<math::real_t>::minimum; }
 }

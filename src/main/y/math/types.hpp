@@ -4,6 +4,7 @@
 
 #include "y/type/complex.hpp"
 #include "y/type/utils.hpp"
+#include "y/type/ints.hpp"
 #include <cmath>
 
 namespace upsylon
@@ -64,7 +65,9 @@ namespace upsylon
         inline float  __pow( const float  x, const float  p) throw() { return powf(x,p); } //!< pow
         inline double __pow( const double x, const double p) throw() { return pow(x,p); }  //!< pow
 
+
     }
+
 }
 
 #if !defined(Y_MATH_IN_TYPES_CXX)
@@ -102,6 +105,7 @@ Y_MATH_EXTERN(huge);       //!< extern
 #endif
 
 #endif
+
 
 
 #endif

@@ -142,6 +142,12 @@ namespace upsylon
         static const uint8_t  _true[256];          //!< [0,1,1,1,1,1,1...1,1,1]
     };
 
+    template <typename T>
+    struct xnumeric
+    {
+        static T abs_minimum() { return 0; }
+    };
+
 }
 
 #endif
