@@ -28,6 +28,48 @@ namespace upsylon
         static int to_decimal(const char h) throw();
     };
 
+    //! integer power
+    template <typename T>
+    inline T   ipower( T x, size_t n) throw()
+    {
+        T ans(1);
+        while( n != 0 )
+        {
+            if( (n & 1) != 0)
+            {
+                ans *= x;
+                if (n == 1) return ans;
+            }
+            x *= x;
+            n >>= 1;
+        }
+        return ans;
+    }
+
+    //! integer square root
+    template <typename T> inline
+    T isqrt(const T n) throw()
+    {
+        if(n<=1)
+        {
+            return n;
+        }
+        else
+        {
+            T x0 = n;
+            T x1 = (n>>1);
+            while(true)
+            {
+                x0 = x1;
+                x1 = ((x0+n/x0)>>1);
+                if(x1>=x0)
+                {
+                    return x0;
+                }
+            }
+        }
+
+    }
 
 }
 
