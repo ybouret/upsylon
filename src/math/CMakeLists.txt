@@ -13,10 +13,13 @@ SET(kernel_srcs ${kernel_decl} ${kernel_code})
 SOURCE_GROUP( kernel FILES ${kernel_srcs} )
 INSTALL( FILES ${os_decl} DESTINATION include/y/math/kernel )
 
+
+IF(FALSE)
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
 ${kernel_srcs}
 )
-
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
+ENDIF()
+
 ADD_SUBDIRECTORY(tests)

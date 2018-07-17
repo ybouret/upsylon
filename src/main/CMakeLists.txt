@@ -136,6 +136,14 @@ SET(mpl_natural_srcs ${mpl_natural_decl} ${mpl_natural_code})
 SOURCE_GROUP( mpl/natural FILES ${mpl_natural_srcs} )
 INSTALL( FILES ${mpl_natural_decl} DESTINATION include/y/mpl/natural )
 
+
+FILE(GLOB math_decl y/math/*.hpp)
+FILE(GLOB math_code y/math/*.cpp)
+SET(math_srcs ${math_decl} ${math_code})
+SOURCE_GROUP( math FILES ${math_srcs} )
+INSTALL( FILES ${math_decl} DESTINATION include/y/math )
+
+
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
 ${os_srcs}
@@ -159,6 +167,7 @@ ${ios_srcs}
 ${fft_srcs}
 ${mpl_srcs}
 ${mpl_natural_srcs}
+${math_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
