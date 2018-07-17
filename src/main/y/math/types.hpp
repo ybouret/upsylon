@@ -9,25 +9,28 @@ namespace upsylon
 {
     namespace math
     {
+        //! corresponding real type
         template <typename T>
         struct real_for
         {
             typedef T type;
         };
 
+        //! specialized for complex<float>
         template <>
         struct real_for< complex<float> >
         {
             typedef float type;
         };
 
+        //! specialized for complex<double>
         template <>
         struct real_for< complex<double> >
         {
             typedef double type;
         };
 
-
+        //! numeric definitions
         template <typename T>
         struct numeric
         {

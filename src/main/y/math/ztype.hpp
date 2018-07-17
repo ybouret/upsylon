@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_MATH_ZTYPE_INCLUDED
 #define Y_MATH_ZTYPE_INCLUDED 1
 

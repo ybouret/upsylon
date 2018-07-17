@@ -1,2 +1,2 @@
-#define Y_ZTYPE 's'
+#define Y_ZTYPE 'd'
 #include "types.cxx"
