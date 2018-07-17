@@ -1,7 +1,7 @@
 FILE(GLOB srcs test-*.cpp)
 
 ADD_EXECUTABLE(test-m main.cpp ${srcs} ../../main/tests/support.hpp)
-TARGET_LINK_Y(test-m)
+TARGET_LINK_Y(test-m m)
 
 ENABLE_TESTING()
 ADD_TEST(Types test-math types)

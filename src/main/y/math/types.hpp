@@ -47,8 +47,41 @@ namespace upsylon
             static const T      max_10_exp; //!< maximal 10 exponent
             
         };
+
+
     }
 }
+
+#if !defined(Y_MATH_IN_TYPES_CXX)
+
+#define Y_MATH_DECL_EXTERN 1
+
+#if defined(Y_MATH_DECL_EXTERN) && (1==Y_MATH_DECL_EXTERN)
+
+#define Y_MATH_EXTERN__(TYPE,NAME) \
+extern template const TYPE upsylon::math::numeric<TYPE>::NAME
+
+#define Y_MATH_EXTERN(NAME)   \
+Y_MATH_EXTERN__(float,NAME);  \
+Y_MATH_EXTERN__(double,NAME)
+
+Y_MATH_EXTERN(minimum);
+Y_MATH_EXTERN(maximum);
+Y_MATH_EXTERN(epsilon);
+Y_MATH_EXTERN(pi);
+Y_MATH_EXTERN(two_pi);
+Y_MATH_EXTERN(half_pi);
+Y_MATH_EXTERN(min_exp);
+Y_MATH_EXTERN(max_exp);
+Y_MATH_EXTERN(dig);
+Y_MATH_EXTERN(min_10_exp);
+Y_MATH_EXTERN(max_10_exp);
+
+
+#endif
+
+#endif
+
 
 #endif
 

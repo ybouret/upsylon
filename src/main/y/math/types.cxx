@@ -1,3 +1,4 @@
+#define Y_MATH_IN_TYPES_CXX 1
 #include "y/math/ztype.hpp"
 #include "y/math/types.hpp"
 

@@ -202,9 +202,11 @@ ENDIF()
 MACRO(TARGET_LINK_Y tgt)
 
 	SET(ylibs "")
+	
 	# populate with dependendcy
 	FOREACH( extra ${ARGN} )
-	
+		LIST( APPEND ylibs "y-${extra}" )
+		
 	ENDFOREACH()
 	
 	#finalize

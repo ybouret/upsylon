@@ -14,7 +14,7 @@ SOURCE_GROUP( kernel FILES ${kernel_srcs} )
 INSTALL( FILES ${os_decl} DESTINATION include/y/math/kernel )
 
 
-IF(FALSE)
+IF(TRUE)
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
 ${kernel_srcs}
