@@ -7,8 +7,6 @@ namespace upsylon
 {
     namespace mpl
     {
-        const as_negative_t as_negative = {};
-
         integer integer::__div(const sign_type ls,
                                const uint8_t  *l,
                                const size_t    nl,
@@ -22,7 +20,7 @@ namespace upsylon
                 {
                     case __negative: { const natural p = natural::__div(l,nl,r,nr); return integer(p);             }
                     case __zero:     goto DIV_BY_ZERO; 
-                    case __positive: { const natural p = natural::__div(l,nl,r,nr);  return integer(p,as_negative); } 
+                    case __positive: { const natural p = natural::__div(l,nl,r,nr);  return integer(__negative,p); }
                 } /* FALLTHRU */
 
                 case __zero:
@@ -30,7 +28,7 @@ namespace upsylon
 
                 case __positive: switch(rs)
                 {
-                    case __negative: { const natural p = natural::__div(l,nl,r,nr); return integer(p,as_negative); }
+                    case __negative: { const natural p = natural::__div(l,nl,r,nr); return integer(__negative,p);  }
                     case __zero:    goto DIV_BY_ZERO;
                     case __positive: { const natural p = natural::__div(l,nl,r,nr); return integer(p);             }
                 }

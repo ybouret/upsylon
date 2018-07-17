@@ -16,8 +16,6 @@ namespace upsylon
             __positive  //!<  1
         };
 
-        typedef int2type<__negative> as_negative_t; //!< named type for constructor
-        extern const as_negative_t   as_negative;   //!< names instance
 
         //! product of signs
         inline sign_type sign_product(const sign_type a, const sign_type b) throw()
@@ -38,6 +36,12 @@ namespace upsylon
             return (i<0) ? __negative : ( (0<i)  ? __positive : __zero );
         }
 
+        //! sign for natural
+        inline sign_type sign_for(const natural &u) throw()
+        {
+            return (u.is_zero()) ? __zero : __positive;
+        }
+
         //! absolute value
         inline word_t word_for(const integer_t i) throw()
         {
@@ -49,6 +53,8 @@ namespace upsylon
         {
             return (s == __negative) ? __positive : ( s == __positive ? __negative : __zero );
         }
+
+
 
         //! integer class
         class integer : public object
@@ -70,11 +76,8 @@ namespace upsylon
             inline integer(const integer_t &i) : s( sign_for(i) ), n( word_for(i) ) {}
 
             //! constructor from natural
-            inline integer(const natural &u) : s( u.is_zero() ? __zero : __positive ), n(u) {}
+            inline integer(const natural &u) : s( sign_for(u) ), n(u) {}
             
-            //! constructor from natural, negative
-            inline integer(const natural &u,const as_negative_t &) : s( u.is_zero() ? __zero : __negative ), n(u) {}
-
             //! create from a natural and a given sign
             inline integer(const sign_type _s, const natural &u ) : s( u.is_zero() ? __zero : _s), n(u) {}
 
@@ -147,10 +150,6 @@ namespace upsylon
                         case __positive:  return natural::compare_blocks(l,nl,r,nr); //ls>0,rs>0
                     }
                 }
-#if defined(__ICC)
-                // never get here but complains
-                return 0;
-#endif
             }
 
             //! binary preparation
@@ -180,11 +179,15 @@ namespace upsylon
 #define Y_MPZ_ZARGS(V)  V.s,V.n.byte,V.n.bytes
             //! present arguments from integer_t
 #define Y_MPZ_IARGS()   si,bi,ni
+            //! present arguments from natura;
+#define Y_MPZ_UARGS()   sign_for(u),u.byte,u.bytes
             //! multiple implementation
 #define Y_MPZ_IMPL_NOTHROW(RET,BODY,CALL) \
 inline RET BODY(const integer &lhs, const integer  &rhs) throw() { return CALL(Y_MPZ_ZARGS(lhs), Y_MPZ_ZARGS(rhs) ); }\
 inline RET BODY(const integer &lhs, integer_t       i  ) throw() { Y_MPZ_PREPARE(); return CALL(Y_MPZ_ZARGS(lhs),Y_MPZ_IARGS()); }\
-inline RET BODY(integer_t      i,   const integer  &rhs) throw() { Y_MPZ_PREPARE(); return CALL(Y_MPZ_IARGS(),Y_MPZ_ZARGS(rhs)); }
+inline RET BODY(integer_t      i,   const integer  &rhs) throw() { Y_MPZ_PREPARE(); return CALL(Y_MPZ_IARGS(),Y_MPZ_ZARGS(rhs)); }\
+inline RET BODY(const natural &u,   const integer  &rhs) throw() { return CALL(Y_MPZ_UARGS(),Y_MPZ_ZARGS(rhs)); }\
+inline RET BODY(const integer &lhs, const natural  &u  ) throw() { return CALL(Y_MPZ_ZARGS(lhs),Y_MPZ_UARGS()); }
 
             Y_MPZ_IMPL_NOTHROW(static int,compare,compare_blocks)
 
@@ -192,8 +195,9 @@ inline RET BODY(integer_t      i,   const integer  &rhs) throw() { Y_MPZ_PREPARE
 #define Y_MPZ_CMP(OP) \
 inline friend bool operator OP ( const integer  &lhs, const integer   &rhs ) throw() { return compare(lhs,rhs) OP 0; } \
 inline friend bool operator OP ( const integer  &lhs, const integer_t  rhs ) throw() { return compare(lhs,rhs) OP 0; } \
-inline friend bool operator OP ( const integer_t lhs, const integer   &rhs ) throw() { return compare(lhs,rhs) OP 0; }
-
+inline friend bool operator OP ( const integer_t lhs, const integer   &rhs ) throw() { return compare(lhs,rhs) OP 0; } \
+inline friend bool operator OP ( const natural  &lhs, const integer   &rhs ) throw() { return compare(lhs,rhs) OP 0; } \
+inline friend bool operator OP ( const integer  &lhs, const natural   &rhs ) throw() { return compare(lhs,rhs) OP 0; }
             Y_MPZ_CMP(==)
             Y_MPZ_CMP(!=)
             Y_MPZ_CMP(<=)
@@ -238,10 +242,10 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
             }
 
             //! pre increment operator
-            integer & operator++() { integer tmp = __inc(); xch(tmp); return *this; }
+            integer & operator++()    { integer tmp = __inc(); xch(tmp); return *this; }
 
             //! post increment operator
-            integer   operator++(int) { integer tmp = __inc(); xch(tmp); return tmp; }
+            integer   operator++(int) { integer tmp = __inc(); xch(tmp); return tmp;   }
 
             //__________________________________________________________________
             //
@@ -250,7 +254,7 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
             Y_MPZ_WRAP(-,__sub)
 
             //! unary minus
-            inline integer operator-() { return integer(n,as_negative); }
+            inline integer operator-() { return integer(sign_neg(s),n); }
 
             //! increment
             inline integer __dec() const
@@ -290,15 +294,15 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
                 {
                     case __negative: switch(rs)
                     {
-                        case __negative: { const natural S = natural::__add(l,nl,r,nr); assert(!S.is_zero()); return integer(S,as_negative); } // ls<0,rs<0
-                        case __zero:     { const natural L(l,nl);                       assert(!L.is_zero()); return integer(L,as_negative); } // ls<0,rs=0
+                        case __negative: { const natural S = natural::__add(l,nl,r,nr); assert(!S.is_zero()); return integer(__negative,S); } // ls<0,rs<0
+                        case __zero:     { const natural L(l,nl);                       assert(!L.is_zero()); return integer(__negative,L); } // ls<0,rs=0
                         case __positive: // ls<0,rhs>0
                             switch( natural::compare_blocks(l,nl,r,nr) )
                         {
                             case -1: // |l|<|r|
                             { const natural D = natural::__sub(r,nr,l,nl); assert(!D.is_zero()); return integer(D); }
                             case  1: // |l|>|r|
-                            { const natural D = natural::__sub(l,nl,r,nr); assert(!D.is_zero()); return integer(D,as_negative); }
+                            { const natural D = natural::__sub(l,nl,r,nr); assert(!D.is_zero()); return integer(__negative,D); }
                             default: // |l| = |r|
                                 return integer();
                         }
@@ -307,7 +311,7 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
 
                     case __zero: switch(rs)
                     {
-                        case __negative: { natural R(r,nr); assert(!R.is_zero()); return integer(R,as_negative); } // ls=0,rs<0
+                        case __negative: { natural R(r,nr); assert(!R.is_zero()); return integer(__negative,R);  } // ls=0,rs<0
                         case __zero:      return integer();                                                        // ls=0,rs=0
                         case __positive: { natural R(r,nr); assert(!R.is_zero()); return integer(R);             } // ls=0,rs>0
                     }
@@ -318,7 +322,7 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
                             switch( natural::compare_blocks(l,nl,r,nr) )
                         {
                             case -1: // |l| < |r|
-                            { const natural D = natural::__sub(r,nr,l,nl); assert(!D.is_zero()); return integer(D,as_negative); }
+                            { const natural D = natural::__sub(r,nr,l,nl); assert(!D.is_zero()); return integer(__negative,D); }
                             case 1: // |l| > |r|
                             { const natural D = natural::__sub(l,nl,r,nr); assert(!D.is_zero()); return integer(D); }
                             default: // |l| = |r|
@@ -328,10 +332,6 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
                         case __positive: { natural S = natural::__add(l,nl,r,nr); assert(!S.is_zero()); return integer(S); } // ls>0,rs>0
                     }
                 }
-#if defined(__ICC)
-		fatal_error("corrupted code@mpl.integer.__add");
-		return integer();
-#endif
             }
 
             static inline
@@ -359,7 +359,7 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
                     {
                         case __negative: { const natural p = natural::__mul(l,nl,r,nr); assert(!p.is_zero()); return integer(p);             }
                         case __zero:     {                                                                    return integer();              }
-                        case __positive: { const natural p = natural::__mul(l,nl,r,nr); assert(!p.is_zero()); return integer(p,as_negative); }
+                        case __positive: { const natural p = natural::__mul(l,nl,r,nr); assert(!p.is_zero()); return integer(__negative,p);  }
                     }
 
                     case __zero:
@@ -367,15 +367,11 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
 
                     case __positive: switch(rs)
                     {
-                        case __negative: { const natural p = natural::__mul(l,nl,r,nr); assert(!p.is_zero()); return integer(p,as_negative); }
+                        case __negative: { const natural p = natural::__mul(l,nl,r,nr); assert(!p.is_zero()); return integer(__negative,p);  }
                         case __zero:     {                                                                    return integer();              }
                         case __positive: { const natural p = natural::__mul(l,nl,r,nr); assert(!p.is_zero()); return integer(p);             }
                     }
                 }
-#if defined(__ICC)
-		fatal_error("corrupted code@mpl.integer.__add");
-		return integer();
-#endif
             }
 
             static
