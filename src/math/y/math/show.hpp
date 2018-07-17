@@ -8,8 +8,10 @@ namespace upsylon {
 
     namespace math
     {
+        //! display data
         struct show
         {
+            //! on std::cerr
             static void info();
         };
     }

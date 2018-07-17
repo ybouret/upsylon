@@ -6,6 +6,7 @@ TARGET_LINK_Y(test-m m)
 
 ENABLE_TESTING()
 ADD_TEST(Types test-m types)
+ADD_TEST(TAO   test-m tao)
 ADD_TEST(LU    test-m LU)
 
 ADD_CUSTOM_TARGET(utest-m

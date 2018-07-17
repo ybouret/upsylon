@@ -10,8 +10,10 @@ namespace upsylon
     namespace math
     {
 
+        //! LU decomposition and application
         struct LU
         {
+            //! build LU decomposition using matrix extra data
             template <typename T> static inline
             bool build( matrix<T> &a, bool *dneg=0 ) throw()
             {

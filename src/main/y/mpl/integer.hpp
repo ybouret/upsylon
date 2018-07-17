@@ -388,7 +388,7 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
     typedef mpl::integer mpz; //!< alias for mp-signed
     namespace math
     {
-        inline mpz __fabs(const mpz &z) { return mpz(z.n); }
+        inline mpz __fabs(const mpz &z) { return mpz(z.n); } //!< overloaded __fabs function
     }
 }
 

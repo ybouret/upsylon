@@ -245,7 +245,7 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
     typedef mpl::rational mpq; //!< alias
     namespace math
     {
-        inline mpq __fabs( const mpq &q ) { return mpq( __fabs(q.num), q.den ); }
+        inline mpq __fabs( const mpq &q ) { return mpq( __fabs(q.num), q.den ); } //!< overload __fabs function
     }
 }
 

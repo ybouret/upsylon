@@ -94,7 +94,7 @@ Y_MATH_EXTERN(two_pi);     //!< extern
 Y_MATH_EXTERN(half_pi);    //!< extern
 Y_MATH_EXTERN(min_exp);    //!< extern
 Y_MATH_EXTERN(max_exp);    //!< extern
-Y_MATH_EXTERN(dig);        //!< extern
+//Y_MATH_EXTERN(dig);        //!< extern
 Y_MATH_EXTERN(min_10_exp); //!< extern
 Y_MATH_EXTERN(max_10_exp); //!< extern
 Y_MATH_EXTERN(ftol);       //!< extern
