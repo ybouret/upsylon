@@ -17,6 +17,11 @@ namespace upsylon
         template <> const size_t numeric<real_t>::dig          = REAL_DIG;
         template <> const real_t numeric<real_t>::min_10_exp   = REAL_MIN_10_EXP;
         template <> const real_t numeric<real_t>::max_10_exp   = REAL_MAX_10_EXP;
+        template <> const real_t numeric<real_t>::ftol         = __pow( REAL(10.0), -real_t(dig) );
+        template <> const real_t numeric<real_t>::sqrt_ftol    = __pow( REAL(10.0), -real_t(dig/2+1) );
+        template <> const real_t numeric<real_t>::tiny         = __pow( REAL(10.0), numeric<real_t>::min_10_exp );
+        template <> const real_t numeric<real_t>::huge         = __pow( REAL(10.0), numeric<real_t>::max_10_exp );
+
 #if 0
 
 		template <> const real_t numeric<real_t>::sqrt_epsilon = Sqrt( REAL_EPSILON );

@@ -18,7 +18,11 @@ SHOW(T,min_exp);    \
 SHOW(T,max_exp);    \
 SHOW(T,dig);        \
 SHOW(T,min_10_exp); \
-SHOW(T,max_10_exp)
+SHOW(T,max_10_exp); \
+SHOW(T,ftol);       \
+SHOW(T,sqrt_ftol);  \
+SHOW(T,tiny);       \
+SHOW(T,huge)
 
 
         void show:: info()
