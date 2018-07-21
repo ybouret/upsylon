@@ -74,14 +74,14 @@ namespace {
     }
 
     template <>
-    complex<float> support:: get< complex<float> >()
+    inline complex<float> support:: get< complex<float> >()
     {
         return complex<float>( get<float>(), get<float>() );
     }
 
 
     template <>
-    complex<double> support:: get< complex<double> >()
+    inline complex<double> support:: get< complex<double> >()
     {
         return complex<double>( get<double>(), get<double>() );
     }
