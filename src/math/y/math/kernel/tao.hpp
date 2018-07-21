@@ -154,6 +154,7 @@ namespace upsylon
             template <typename T,typename U,typename V> static inline
             T dot( const array<U> &a, const array<V> &b, concurrent::for_each *loop )
             {
+                assert(a.size()==b.size());
                 if(loop)
                 {
                     return _dot<T,U,V>(a,b,*loop);
@@ -163,6 +164,29 @@ namespace upsylon
                     return _dot<T,U,V>(a,b);
                 }
             }
+
+            ////////////////////////////////////////////////////////////////////
+            //
+            // level-2 : matrix/array ops
+            //
+            ////////////////////////////////////////////////////////////////////
+#include "tao-mmul.hxx"
+            
+            //! a = M*b
+            template <typename T,typename U,typename V> static inline
+            void mmul( array<T> &a, const matrix<U> &M, const array<V> &b, concurrent::for_each *loop)
+            {
+                assert(M.cols==b.size());
+                if(loop)
+                {
+                    _mmul<T,U,V>(a,M,b,*loop);
+                }
+                else
+                {
+                    _mmul<T,U,V>(a,M,b);
+                }
+            }
+
 
         };
 
