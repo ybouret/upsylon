@@ -26,6 +26,24 @@ namespace upsylon
             //! access to individual context
             virtual parallel & operator[](const size_t) throw() = 0;
 
+            //! allocate memory per context
+            void make_all(const size_t n);
+            void free_all() throw();
+
+            //! allocate for T per context
+            template <typename T>
+            void make_for() { make_all( sizeof(T) ); }
+
+            template <typename T>
+            T &get(const size_t indx) throw()
+            {
+                executor &self = *this;
+                parallel &ctx  = self[indx];
+                assert(ctx.bytes>=sizeof(T));
+                assert(ctx.space);
+                return *static_cast<T*>(ctx.space);
+            }
+
         protected:
             //! constructor
             explicit  executor() throw();

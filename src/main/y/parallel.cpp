@@ -27,4 +27,29 @@ namespace upsylon
             snprintf(s,sizeof(label),fmt,unsigned(size),unsigned(rank));
         }
     }
+
+    void parallel:: free() throw()
+    {
+        if(bytes>0)
+        {
+            assert(space);
+            object::operator delete(space,bytes);
+            bytes = 0;
+            space = 0;
+        }
+    }
+
+    void parallel:: make( const size_t n )
+    {
+        if(n>bytes)
+        {
+            free();
+            space = object::operator new(n);
+            bytes = n;
+        }
+        else
+        {
+            memset(space,0,bytes);
+        }
+    }
 }

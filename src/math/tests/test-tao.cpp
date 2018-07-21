@@ -87,6 +87,7 @@ namespace
     double do_test_dot(const size_t n, concurrent::for_each *loop)
     {
         rt_clock clk;
+        std::cerr << "-- dot<" << typeid(T).name() << ">" << "," << n << ", " << (loop? "PAR" : "SEQ") << ": ";
 
         vector<U> a(n);
         vector<V> b(n);
@@ -104,7 +105,29 @@ namespace
             (void) tao::dot<T,U,V>(a,b,loop);
             tmx += rt_clock::ticks()-mark;
         }
+        std::cerr <<  clk(tmx) << std::endl;
+
         return clk(tmx);
+    }
+
+
+    template <typename T,typename U,typename V> static inline
+    void do_test_dot_eq(const size_t n, concurrent::for_each &loop)
+    {
+        vector<U> a(n);
+        vector<V> b(n);
+
+
+        for(size_t i=n;i>0;--i)
+        {
+            a[i] = support::get<U>();
+            b[i] = support::get<V>();
+        }
+
+        const T ans_seq = tao::_dot<T,U,V>(a,b);
+        const T ans_par = tao::_dot<T,U,V>(a,b,loop);
+        //std::cerr << "-- dot<" << typeid(T).name() << ">: ";
+        Y_ASSERT(ans_seq==ans_par);
     }
 
 }
@@ -116,39 +139,47 @@ Y_UTEST(tao)
 {
     concurrent::simd loop;
 
-    _PAR(do_test_ld<float>);
-    _PAR(do_test_ld<double>);
-    _SEQ(do_test_ld<mpn>);
+    if(true)
+    {
+        _PAR(do_test_ld<float>);
+        _PAR(do_test_ld<double>);
+        _SEQ(do_test_ld<mpn>);
 
-    _PAR((do_test_<float,float,tao::set>));
-    _PAR((do_test_<double,float,tao::set>));
-    _PAR((do_test_<double,double,tao::set>));
-    _SEQ((do_test_<mpz,int,tao::set>));
+        _PAR((do_test_<float,float,tao::set>));
+        _PAR((do_test_<double,float,tao::set>));
+        _PAR((do_test_<double,double,tao::set>));
+        _SEQ((do_test_<mpz,int,tao::set>));
 
-    _PAR((do_test_<float,float,tao::add>));
-    _PAR((do_test_<double,float,tao::add>));
-    _PAR((do_test_<double,double,tao::add>));
-    _SEQ((do_test_<mpn,uint16_t,tao::add>));
+        _PAR((do_test_<float,float,tao::add>));
+        _PAR((do_test_<double,float,tao::add>));
+        _PAR((do_test_<double,double,tao::add>));
+        _SEQ((do_test_<mpn,uint16_t,tao::add>));
 
-    _PAR((do_test_<float,float,tao::sub>));
-    _PAR((do_test_<double,float,tao::sub>));
-    _PAR((do_test_<double,double,tao::sub>));
-    _SEQ((do_test_<mpz,int16_t,tao::sub>));
+        _PAR((do_test_<float,float,tao::sub>));
+        _PAR((do_test_<double,float,tao::sub>));
+        _PAR((do_test_<double,double,tao::sub>));
+        _SEQ((do_test_<mpz,int16_t,tao::sub>));
 
-    _PAR((do_test2_<float,float,tao::muladd>));
-    _PAR((do_test2_<complex<double>,float,tao::muladd>));
-    _SEQ((do_test2_<mpn,uint32_t,tao::muladd>));
+        _PAR((do_test2_<float,float,tao::muladd>));
+        _PAR((do_test2_<complex<double>,float,tao::muladd>));
+        _SEQ((do_test2_<mpn,uint32_t,tao::muladd>));
 
-    _PAR((do_test2_<float,float,tao::mulsub>));
-    _PAR((do_test2_<complex<double>,float,tao::mulsub>));
-    _SEQ((do_test2_<mpz,int32_t,tao::mulsub>));
+        _PAR((do_test2_<float,float,tao::mulsub>));
+        _PAR((do_test2_<complex<double>,float,tao::mulsub>));
+        _SEQ((do_test2_<mpz,int32_t,tao::mulsub>));
 
-    _PAR((do_test2_<float,float,tao::mulset>));
-    _PAR((do_test2_<complex<double>,float,tao::mulset>));
-    _SEQ((do_test2_<mpz,int32_t,tao::mulset>));
+        _PAR((do_test2_<float,float,tao::mulset>));
+        _PAR((do_test2_<complex<double>,float,tao::mulset>));
+        _SEQ((do_test2_<mpz,int32_t,tao::mulset>));
 
-    _PAR((do_test_dot<double,double,float>));
+        _PAR((do_test_dot<double,double,float>));
+    }
 
+    std::cerr << "-- Testing Dot Equality" << std::endl;
+    for(size_t n=0;n<4000;++n)
+    {
+        do_test_dot_eq<uint64_t,uint16_t,uint16_t>(n,loop);
+    }
 }
 Y_UTEST_DONE()
 

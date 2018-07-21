@@ -76,6 +76,7 @@ Y_UTEST(simd)
 #if 1
     double par_speed = 0;
     concurrent::simd par(false);
+    par.engine().make_all(12);
     {
         wtime  chrono;
         size_t cycles=0;
@@ -92,6 +93,7 @@ Y_UTEST(simd)
     double seq_speed = 0;
     {
         concurrent::sequential_for engine;
+        engine.engine().make_all(10);
         wtime  chrono;
         size_t cycles=0;
         double ellapsed=0;
