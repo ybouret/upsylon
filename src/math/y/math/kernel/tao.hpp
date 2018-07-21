@@ -77,6 +77,7 @@ namespace upsylon
                 }
             }
 
+
             //__________________________________________________________________
             //
             // sub
@@ -93,6 +94,73 @@ namespace upsylon
                 else
                 {
                     _sub(a,b);
+                }
+            }
+
+            //__________________________________________________________________
+            //
+            // muladd
+            //__________________________________________________________________
+#include "tao-muladd.hxx"
+            //! a[1..size()] += x * b[1..a.size()]
+            template <typename T,typename U> static inline
+            void muladd( array<T> &a, typename type_traits<T>::parameter_type x, const array<U> &b, concurrent::for_each *loop )
+            {
+                if(loop)
+                {
+                    _muladd(a,x,b,*loop);
+                }
+                else
+                {
+                    _muladd(a,x,b);
+                }
+            }
+
+            //! a[1..size()] -= x * b[1..a.size()]
+            template <typename T,typename U> static inline
+            void mulsub( array<T> &a, typename type_traits<T>::parameter_type x, const array<U> &b, concurrent::for_each *loop )
+            {
+                if(loop)
+                {
+                    _mulsub(a,x,b,*loop);
+                }
+                else
+                {
+                    _mulsub(a,x,b);
+                }
+            }
+
+            //! a[1..size()] = x*b[1..a.size()]
+            template <typename T,typename U> static inline
+            void mulset( array<T> &a, typename type_traits<T>::parameter_type x, const array<U> &b, concurrent::for_each *loop )
+            {
+                if(loop)
+                {
+                    _mulset(a,x,b,*loop);
+                }
+                else
+                {
+                    _mulset(a,x,b);
+                }
+            }
+
+
+            //__________________________________________________________________
+            //
+            // sub
+            //__________________________________________________________________
+#include "tao-dot.hxx"
+            //! a*b
+            template <typename T,typename U,typename V> static inline
+            T dot( const array<U> &a, const array<V> &b, concurrent::for_each *loop )
+            {
+                if(loop)
+                {
+                    return _dot<T,U,V>(a,b,*loop);
+                }
+                else
+                {
+                    return _dot<T,U,V>(a,b);
                 }
             }
 

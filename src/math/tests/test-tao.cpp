@@ -17,7 +17,7 @@ namespace
     template <typename T>
     double do_test_ld(const size_t n, concurrent::for_each *loop)
     {
-        static const size_t ITER_MAX = (sizeof(T)>16) ? 16 : 128;
+        static const size_t ITER_MAX = (sizeof(T)>16) ? 8 : 64;
         // ld
         rt_clock clk;
         std::cerr << "-- ld<" << typeid(T).name() << ">" << "," << n << ", " << (loop? "PAR" : "SEQ") << ": ";
@@ -41,7 +41,7 @@ namespace
     template <typename T,typename U,void (*OP)(array<T>&,const array<U>&,concurrent::for_each*)>
     double do_test_(const size_t n,concurrent::for_each *loop)
     {
-        static const size_t ITER_MAX = (sizeof(T)>16) ? 16 : 128;
+        static const size_t ITER_MAX = (sizeof(T)>16) ? 8 : 64;
 
         rt_clock clk;
 
@@ -60,6 +60,52 @@ namespace
         return clk(tmx);
     }
 
+    template <typename T,typename U,void (*OP)(array<T>&, typename type_traits<T>::parameter_type, const array<U>&,concurrent::for_each*)>
+    double do_test2_(const size_t n,concurrent::for_each *loop)
+    {
+        static const size_t ITER_MAX = (sizeof(T)>16) ? 8 : 64;
+
+        rt_clock clk;
+
+        std::cerr << "-- OP<" << typeid(T).name() << ">" << "," << n << ", " << (loop? "PAR" : "SEQ") << ": ";
+        vector<T> a(n);
+        vector<U> b(n);
+        for(size_t i=n;i>0;--i) b[i] = support::get<U>();
+        uint64_t tmx = 0;
+        for(size_t iter=0;iter<ITER_MAX;++iter)
+        {
+            const T x = support::get<T>();
+            const uint64_t mark = rt_clock::ticks();
+            OP(a,x,b,loop);
+            tmx += rt_clock::ticks()-mark;
+        }
+        std::cerr <<  clk(tmx) << std::endl;
+        return clk(tmx);
+    }
+
+    template <typename T,typename U,typename V> static inline
+    double do_test_dot(const size_t n, concurrent::for_each *loop)
+    {
+        rt_clock clk;
+
+        vector<U> a(n);
+        vector<V> b(n);
+        static const size_t ITER_MAX = (sizeof(T)>16) ? 8 : 64;
+
+        uint64_t tmx = 0;
+        for(size_t iter=0;iter<ITER_MAX;++iter)
+        {
+            for(size_t i=n;i>0;--i)
+            {
+                a[i] = support::get<U>();
+                b[i] = support::get<V>();
+            }
+            const uint64_t mark = rt_clock::ticks();
+            (void) tao::dot<T,U,V>(a,b,loop);
+            tmx += rt_clock::ticks()-mark;
+        }
+        return clk(tmx);
+    }
 
 }
 
@@ -88,6 +134,20 @@ Y_UTEST(tao)
     _PAR((do_test_<double,float,tao::sub>));
     _PAR((do_test_<double,double,tao::sub>));
     _SEQ((do_test_<mpz,int16_t,tao::sub>));
+
+    _PAR((do_test2_<float,float,tao::muladd>));
+    _PAR((do_test2_<complex<double>,float,tao::muladd>));
+    _SEQ((do_test2_<mpn,uint32_t,tao::muladd>));
+
+    _PAR((do_test2_<float,float,tao::mulsub>));
+    _PAR((do_test2_<complex<double>,float,tao::mulsub>));
+    _SEQ((do_test2_<mpz,int32_t,tao::mulsub>));
+
+    _PAR((do_test2_<float,float,tao::mulset>));
+    _PAR((do_test2_<complex<double>,float,tao::mulset>));
+    _SEQ((do_test2_<mpz,int32_t,tao::mulset>));
+
+    _PAR((do_test_dot<double,double,float>));
 
 }
 Y_UTEST_DONE()

@@ -9,7 +9,7 @@ void _sub( array<T> &a, const array<U> &b)
 template <typename T,typename U> static inline
 void _sub( array<T> &a, const array<U> &b, concurrent::for_each &loop)
 {
-    __set<T,U> args = { &a, &b };
+    __set<T,U> args = { &a, &b, NULL };
     loop.run( __set<T,U>::call_sub, &args );
 }
 

@@ -8,8 +8,9 @@ void _set( array<T> &a, const array<U> &b)
 //! internal concurrent wrapper
 template <typename T, typename U> struct __set
 {
-    array<T>  *a; //!< pointer to array
+    array<T>        *a; //!< pointer to array
     const array<U>  *b; //!< pointer to value
+    const T         *x; //!< some value
     //! concurrent kernel
     static inline void call_set(void *args, parallel &ctx, lockable &)
     {
@@ -55,11 +56,59 @@ template <typename T, typename U> struct __set
             ++offset;
         }
     }
+
+    static inline void call_muladd(void *args, parallel &ctx, lockable &)
+    {
+        __set          *self = (__set *)args;
+        array<T>       &a    = *(self->a);
+        const array<U> &b    = *(self->b);
+        const T        &x    = *(self->x);
+        size_t offset = 1;
+        size_t length = a.size();
+        ctx.split(length,offset);
+        while(length--)
+        {
+            a[offset] += x * static_cast<T>(b[offset]);
+            ++offset;
+        }
+    }
+
+    static inline void call_mulsub(void *args, parallel &ctx, lockable &)
+    {
+        __set          *self = (__set *)args;
+        array<T>       &a    = *(self->a);
+        const array<U> &b    = *(self->b);
+        const T        &x    = *(self->x);
+        size_t offset = 1;
+        size_t length = a.size();
+        ctx.split(length,offset);
+        while(length--)
+        {
+            a[offset] -= x * static_cast<T>(b[offset]);
+            ++offset;
+        }
+    }
+
+    static inline void call_mulset(void *args, parallel &ctx, lockable &)
+    {
+        __set          *self = (__set *)args;
+        array<T>       &a    = *(self->a);
+        const array<U> &b    = *(self->b);
+        const T        &x    = *(self->x);
+        size_t offset = 1;
+        size_t length = a.size();
+        ctx.split(length,offset);
+        while(length--)
+        {
+            a[offset] = x * static_cast<T>(b[offset]);
+            ++offset;
+        }
+    }
 };
 
 template <typename T,typename U> static inline
 void _set( array<T> &a, const array<U> &b, concurrent::for_each &loop)
 {
-    __set<T,U> args= { &a, &b };
+    __set<T,U> args= { &a, &b, NULL};
     loop.run( __set<T,U>::call_set, &args );
 }
