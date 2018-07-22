@@ -9,6 +9,8 @@
 
 namespace upsylon
 {
+
+
     //! vector of memory movable objects...
     template <typename T, typename ALLOCATOR = memory::global >
     class vector :  public sequence<T>, public array<T>
@@ -18,8 +20,8 @@ namespace upsylon
         
         //! initialize fields
 #define Y_VECTOR_CTOR(n)                       \
-sequence<T>(),                                  \
-array<T>(),                                      \
+dynamic(),                                      \
+sequence<T>(), array<T>(),                       \
 maxi_(n),                                         \
 bytes(0),                                          \
 hmem_( ALLOCATOR::instance() ),                     \
