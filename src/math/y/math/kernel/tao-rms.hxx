@@ -1,3 +1,4 @@
+//! RMS, sequential
 template <typename T> static inline
 typename real_for<T>::type _rms( const array<T> &a )
 {
@@ -17,6 +18,7 @@ typename real_for<T>::type _rms( const array<T> &a )
     }
 }
 
+//! MOD2, sequential
 template <typename T> static inline
 typename real_for<T>::type _mod2( const array<T> &a )
 {
@@ -36,6 +38,7 @@ typename real_for<T>::type _mod2( const array<T> &a )
     }
 }
 
+//! RMS, sequential
 template <typename T> static inline
 typename real_for<T>::type _rms( const array<T> &a, const array<T> &b )
 {
@@ -56,6 +59,7 @@ typename real_for<T>::type _rms( const array<T> &a, const array<T> &b )
     }
 }
 
+//! MOD2, sequential
 template <typename T> static inline
 typename real_for<T>::type _mod2( const array<T> &a, const array<T> &b )
 {
@@ -76,12 +80,14 @@ typename real_for<T>::type _mod2( const array<T> &a, const array<T> &b )
     }
 }
 
+//! context to perform concurrent RMS/MOD2
 template <typename T>
 struct __rms
 {
     const array<T> *a; //!< single of first vector
     const array<T> *b; //!< NULL of second vector
 
+    //! store sum of local mod2
     static inline
     void call1( void *args, parallel &ctx, lockable & )
     {
@@ -100,6 +106,7 @@ struct __rms
         ctx.get<typename real_for<T>::type>() = sum;
     }
 
+    //! store sum of local mod2
     static inline
     void call2( void *args, parallel &ctx, lockable & )
     {
@@ -121,6 +128,7 @@ struct __rms
 
 };
 
+//! RMS, parallel
 template <typename T> static inline
 typename real_for<T>::type _rms( const array<T> &a, concurrent::for_each &loop )
 {
@@ -139,6 +147,7 @@ typename real_for<T>::type _rms( const array<T> &a, concurrent::for_each &loop )
     }
 }
 
+//! MOD2, parallel
 template <typename T> static inline
 typename real_for<T>::type _mod2( const array<T> &a, concurrent::for_each &loop )
 {
@@ -157,6 +166,7 @@ typename real_for<T>::type _mod2( const array<T> &a, concurrent::for_each &loop 
     }
 }
 
+//! RMS, parallel
 template <typename T> static inline
 typename real_for<T>::type _rms( const array<T> &a, const array<T> &b, concurrent::for_each &loop )
 {
@@ -175,6 +185,7 @@ typename real_for<T>::type _rms( const array<T> &a, const array<T> &b, concurren
     }
 }
 
+//! MOD2, parallel
 template <typename T> static inline
 typename real_for<T>::type _mod2( const array<T> &a, const array<T> &b, concurrent::for_each &loop )
 {

@@ -1,5 +1,6 @@
 
 
+//! a += x*b, sequential
 template <typename T,typename U> static inline
 void _muladd( array<T> &a, typename type_traits<T>::parameter_type x, const array<U> &b)
 {
@@ -7,6 +8,7 @@ void _muladd( array<T> &a, typename type_traits<T>::parameter_type x, const arra
     for(size_t i=a.size();i>0;--i) a[i] += x*static_cast<T>(b[i]);
 }
 
+//! a += x*b, parallel
 template <typename T,typename U> static inline
 void _muladd( array<T> &a, typename type_traits<T>::parameter_type x, const array<U> &b, concurrent::for_each &loop)
 {
@@ -14,8 +16,7 @@ void _muladd( array<T> &a, typename type_traits<T>::parameter_type x, const arra
     loop.run( __set<T,U>::call_muladd, &args );
 }
 
-
-
+//! a -= x*b, sequential
 template <typename T,typename U> static inline
 void _mulsub( array<T> &a, typename type_traits<T>::parameter_type x, const array<U> &b)
 {
@@ -23,6 +24,7 @@ void _mulsub( array<T> &a, typename type_traits<T>::parameter_type x, const arra
     for(size_t i=a.size();i>0;--i) a[i] -= x*static_cast<T>(b[i]);
 }
 
+//! a -= x*b, parallel
 template <typename T,typename U> static inline
 void _mulsub( array<T> &a, typename type_traits<T>::parameter_type x, const array<U> &b, concurrent::for_each &loop)
 {
@@ -30,6 +32,7 @@ void _mulsub( array<T> &a, typename type_traits<T>::parameter_type x, const arra
     loop.run( __set<T,U>::call_mulsub, &args );
 }
 
+//! a = x*b, sequential
 template <typename T,typename U> static inline
 void _mulset( array<T> &a, typename type_traits<T>::parameter_type x, const array<U> &b)
 {
@@ -37,6 +40,8 @@ void _mulset( array<T> &a, typename type_traits<T>::parameter_type x, const arra
     for(size_t i=a.size();i>0;--i) a[i] = x*static_cast<T>(b[i]);
 }
 
+
+//! a = x*b, parallel
 template <typename T,typename U> static inline
 void _mulset( array<T> &a, typename type_traits<T>::parameter_type x, const array<U> &b, concurrent::for_each &loop)
 {

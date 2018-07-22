@@ -1,8 +1,11 @@
+//! context for parallel dot product
 template <typename T,typename U,typename V>
 struct __dot
 {
-    const array<U> *a;
-    const array<V> *b;
+    const array<U> *a; //!< source vector
+    const array<V> *b; //!< source vector
+
+    //! store partial dot product
     static inline void call(void *args, parallel &ctx, lockable &)
     {
         __dot<T,U,V> *self = (__dot<T,U,V>*)args;
@@ -23,6 +26,8 @@ struct __dot
 
 };
 
+
+//! dot product, sequential
 template <typename T,typename U,typename V> static inline
 T _dot( const array<U> &a, const array<V> &b )
 {
@@ -34,6 +39,7 @@ T _dot( const array<U> &a, const array<V> &b )
     return sum;
 }
 
+//! dot product, parallel
 template <typename T,typename U,typename V> static inline
 T _dot( const array<U> &a, const array<V> &b, concurrent::for_each &loop )
 {

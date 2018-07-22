@@ -83,6 +83,7 @@ namespace upsylon
         core::bzset<sizeof(T)>(&args);
     }
 
+    //! test that a given block is zeroed
     template <typename T>
     inline bool is_zset(const T &args) throw()
     {

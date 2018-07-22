@@ -28,6 +28,8 @@ namespace upsylon
 
             //! allocate memory per context
             void make_all(const size_t n);
+
+            //! free all memory per context
             void free_all() throw();
 
             //! allocate for T per context
@@ -45,6 +47,7 @@ namespace upsylon
                 return *static_cast<T*>(ctx.space);
             }
 
+            //! sum of local stored type
             template <typename T> inline
             T sum()
             {

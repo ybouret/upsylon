@@ -1,4 +1,4 @@
-
+//! a += b, sequential
 template <typename T,typename U> static inline
 void _add( array<T> &a, const array<U> &b)
 {
@@ -6,6 +6,7 @@ void _add( array<T> &a, const array<U> &b)
     for(size_t i=a.size();i>0;--i) a[i] += static_cast<T>(b[i]);
 }
 
+//! a += b, parallel
 template <typename T,typename U> static inline
 void _add( array<T> &a, const array<U> &b, concurrent::for_each &loop)
 {

@@ -1,3 +1,4 @@
+//! set a=b, sequential
 template <typename T,typename U> static inline
 void _set( array<T> &a, const array<U> &b)
 {
@@ -11,6 +12,7 @@ template <typename T, typename U> struct __set
     array<T>        *a; //!< pointer to array
     const array<U>  *b; //!< pointer to value
     const T         *x; //!< some value
+
     //! concurrent kernel
     static inline void call_set(void *args, parallel &ctx, lockable &)
     {
@@ -27,6 +29,7 @@ template <typename T, typename U> struct __set
         }
     }
 
+    //! concurrent kernel to add
     static inline void call_add(void *args, parallel &ctx, lockable &)
     {
         __set          *self = (__set *)args;
@@ -42,6 +45,7 @@ template <typename T, typename U> struct __set
         }
     }
 
+    //! concurrent kernel to sub
     static inline void call_sub(void *args, parallel &ctx, lockable &)
     {
         __set          *self = (__set *)args;
@@ -57,6 +61,7 @@ template <typename T, typename U> struct __set
         }
     }
 
+    //! concurent kernel to muladd
     static inline void call_muladd(void *args, parallel &ctx, lockable &)
     {
         __set          *self = (__set *)args;
@@ -73,6 +78,7 @@ template <typename T, typename U> struct __set
         }
     }
 
+    //! concurrent kernel to mulsub
     static inline void call_mulsub(void *args, parallel &ctx, lockable &)
     {
         __set          *self = (__set *)args;
@@ -89,6 +95,7 @@ template <typename T, typename U> struct __set
         }
     }
 
+    //! concurrent kernel to mulset
     static inline void call_mulset(void *args, parallel &ctx, lockable &)
     {
         __set          *self = (__set *)args;
@@ -106,6 +113,7 @@ template <typename T, typename U> struct __set
     }
 };
 
+//! set a=b in parallel
 template <typename T,typename U> static inline
 void _set( array<T> &a, const array<U> &b, concurrent::for_each &loop)
 {
