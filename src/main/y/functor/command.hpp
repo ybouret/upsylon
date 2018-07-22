@@ -27,10 +27,14 @@ namespace upsylon {
             }
             //! destructor
             virtual ~command() throw() {}
+
+            //! cloneable interface
             virtual  callable<R,TLIST> *clone() const { return new command( *this ); }
 
+            //! parameters aliases
             Y_FUNCTOR_PARAMETERS();
 
+            //! no argument call
             inline R operator()(void)
             {
                 assert( NULL != object_ );
@@ -38,6 +42,7 @@ namespace upsylon {
                 return ( (*object_).*method_ )();
             }
 
+            //! one argument call
             inline R operator()( param1 P1 )
             {
                 assert( NULL != object_ );
@@ -45,6 +50,7 @@ namespace upsylon {
                 return ( (*object_).*method_ )( P1 );
             }
 
+            //! two arguments call
             inline R operator()( param1 P1, param2 P2 )
             {
                 assert( NULL != object_ );
@@ -52,6 +58,7 @@ namespace upsylon {
                 return ( (*object_).*method_ )( P1, P2 );
             }
 
+            //! three arguments call
             inline R operator()( param1 P1, param2 P2, param3 P3)
             {
                 assert( NULL != object_ );
@@ -59,6 +66,7 @@ namespace upsylon {
                 return ( (*object_).*method_ )( P1, P2, P3 );
             }
 
+            //! four arguments call
             inline R operator()( param1 P1, param2 P2, param3 P3, param4 P4)
             {
                 assert( NULL != object_ );

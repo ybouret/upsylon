@@ -1,4 +1,4 @@
-// !\file
+//! \file
 #ifndef Y_FFT_INCLUDED
 #define Y_FFT_INCLUDED 1
 
