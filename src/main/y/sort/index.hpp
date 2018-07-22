@@ -52,17 +52,22 @@ namespace upsylon
             while( inc > 1 );
         }
 
+        //! rank source into target according to indices
         template <typename T> static inline
-        void rank(array<T>            &rra,
-                  const array<size_t> &idx,
-                  array<T>            &tmp )
+        void rank( array<T> &target, const array<T> &source, const array<size_t> &indices )
         {
-            assert(rra.size()==idx.size());
-            assert(idx.size()==rra.size());
-            const size_t n = rra.size();
-            for(size_t i=n;i>0;--i) tmp[i] = rra[i];
-            for(size_t i=n;i>0;--i) rra[i] = tmp[ idx[i] ];
+            assert(target.size()==source.size());
+            assert(target.size()==indices.size());
+            for(size_t i=target.size();i>0;--i)
+            {
+                assert(indices[i]>0);
+                assert(indices[i]<=target.size());
+                target[i] = source[indices[i]];
+            }
         }
+
+
+
 
     };
 

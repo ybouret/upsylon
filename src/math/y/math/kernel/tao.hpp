@@ -263,7 +263,7 @@ namespace upsylon
                 }
             }
 
-            //! a += M*b
+            //! a -= M*b
             template <typename T,typename U,typename V> static inline
             void mul_sub( array<T> &a, const matrix<U> &M, const array<V> &b, concurrent::for_each *loop=0)
             {
