@@ -104,7 +104,12 @@ namespace upsylon
                     case __positive: return  integer_t(n.lsw());
                 }
 #if defined(__ICC)
-		fatal_error("corrupted code@mpl.integer.lsi");
+		fatal_error("intel corrupted code@mpl.integer.lsi");
+		return 0;
+#endif
+
+#if defined(Y_WIN) && defined(__GNUC__)
+		fatal_error("gnu corrupted code@mpl.integer.lsi");
 		return 0;
 #endif
             }

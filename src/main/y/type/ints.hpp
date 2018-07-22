@@ -147,7 +147,7 @@ namespace upsylon
     struct xnumeric
     {
         //! absolute minimum for type 
-        static T abs_minimum() { return 0; }
+        static T abs_minimum();
     };
 
 }

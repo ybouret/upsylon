@@ -57,7 +57,11 @@ namespace upsylon
                     case __zero:     return 0;
                 }
 #if defined(__ICC)
-		fatal_error("corrupted code@mpl.rational.to_real");
+		fatal_error("intel corrupted code@mpl.rational.to_real");
+		return 0;
+#endif
+#if defined(Y_WIN) && defined(__GNUC__)
+		fatal_error("gnu corrupted code@mpl.rational.to_real");
 		return 0;
 #endif
             }
@@ -252,6 +256,8 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
         inline mpq __fabs( const mpq &q ) { return mpq( __fabs(q.num), q.den ); } //!< overload __fabs function
         inline mpq __mod2( const mpq &q ) { return q*q;                         } //!< overload __mod2 function
     }
+    template <>
+    struct xnumeric<mpq> { static mpq abs_minimum() { return mpq(); } };
 }
 
 #endif
