@@ -83,6 +83,17 @@ namespace upsylon
         core::bzset<sizeof(T)>(&args);
     }
 
+    template <typename T>
+    inline bool is_zset(const T &args) throw()
+    {
+        const char *p = (const char *)&args;
+        for(size_t i=0;i<sizeof(T);++i)
+        {
+            if( 0 != p[i] ) return false;
+        }
+        return true;
+    }
+
 }
 
 #endif

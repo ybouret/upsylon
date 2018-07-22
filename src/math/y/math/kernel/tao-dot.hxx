@@ -17,7 +17,7 @@ struct __dot
             sum += static_cast<T>(a[offset]) * static_cast<T>(b[offset]);
             ++offset;
         }
-        assert(0==ctx.get<T>());
+        assert(is_zset(ctx.get<T>()));
         ctx.get<T>() = sum;
     }
 

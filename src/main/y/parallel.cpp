@@ -37,6 +37,10 @@ namespace upsylon
             bytes = 0;
             space = 0;
         }
+        else
+        {
+            assert(0==space);
+        }
     }
 
     void parallel:: make( const size_t n )
@@ -51,5 +55,6 @@ namespace upsylon
         {
             memset(space,0,bytes);
         }
+        assert(bytes>=n);
     }
 }

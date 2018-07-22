@@ -1,5 +1,6 @@
 #include "support.hpp"
 #include "y/math/kernel/lu.hpp"
+#include "y/math/kernel/tao.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 
@@ -42,7 +43,9 @@ namespace
 
             vector<T> u = r;
             LU::solve<T>(a,u);
-
+            vector<T> d = r;
+            tao::mul_sub(d,a0,u);
+            std::cerr << "d=" << d << std::endl;
         }
     }
 }

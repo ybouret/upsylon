@@ -130,6 +130,31 @@ namespace
         Y_ASSERT(ans_seq==ans_par);
     }
 
+    template <typename T> static inline
+    void do_test_rms(const size_t n, concurrent::for_each &loop )
+    {
+        vector<T> a(n);
+        vector<T> b(n);
+
+
+        for(size_t i=n;i>0;--i)
+        {
+            a[i] = support::get<T>();
+            b[i] = support::get<T>();
+        }
+        {
+            const typename real_for<T>::type ans_seq = tao::_rms(a);
+            const typename real_for<T>::type ans_par = tao::_rms(a,loop);
+            std::cerr << "rms1: " << ans_seq << "/" << ans_par << std::endl;
+        }
+
+        {
+            const typename real_for<T>::type ans_seq = tao::_rms(a,b);
+            const typename real_for<T>::type ans_par = tao::_rms(a,b,loop);
+            std::cerr << "rms2: " << ans_seq << "/" << ans_par << std::endl;
+        }
+    }
+
 }
 
 
@@ -139,7 +164,7 @@ Y_UTEST(tao)
 {
     concurrent::simd loop;
 
-    if(true)
+    if(false)
     {
         _PAR(do_test_ld<float>);
         _PAR(do_test_ld<double>);
@@ -176,10 +201,17 @@ Y_UTEST(tao)
     }
 
     std::cerr << "-- Testing Dot Equality" << std::endl;
-    for(size_t n=0;n<4000;++n)
+    for(size_t n=0;n<2000;++n)
     {
         do_test_dot_eq<uint64_t,uint16_t,uint16_t>(n,loop);
     }
+
+    std::cerr << "-- Testing RMS" << std::endl;
+    do_test_rms<float>(1000,loop);
+    do_test_rms<double>(1000,loop);
+    do_test_rms<complex<float> >(1000,loop);
+    do_test_rms<complex<double> >(1000,loop);
+
 }
 Y_UTEST_DONE()
 

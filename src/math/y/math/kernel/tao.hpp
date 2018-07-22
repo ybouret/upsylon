@@ -5,6 +5,8 @@
 #include "y/container/matrix.hpp"
 #include "y/sequence/array.hpp"
 #include "y/concurrent/scheme/simd.hpp"
+#include "y/type/bzset.hpp"
+#include "y/math/types.hpp"
 
 namespace upsylon
 {
@@ -27,7 +29,7 @@ namespace upsylon
 #include "tao-ld.hxx"
             //! a[1..size()]=v
             template <typename T> static inline
-            void ld( array<T> &a, typename type_traits<T>::parameter_type v, concurrent::for_each *loop )
+            void ld( array<T> &a, typename type_traits<T>::parameter_type v, concurrent::for_each *loop=0)
             {
                 if(loop)
                 {
@@ -46,7 +48,7 @@ namespace upsylon
 #include "tao-set.hxx"
             //! a[1..size()] = b[1..a.size()]
             template <typename T,typename U> static inline
-            void set( array<T> &a, const array<U> &b, concurrent::for_each *loop )
+            void set( array<T> &a, const array<U> &b, concurrent::for_each *loop=0)
             {
                 if(loop)
                 {
@@ -58,6 +60,8 @@ namespace upsylon
                 }
             }
 
+
+
             //__________________________________________________________________
             //
             // add
@@ -65,7 +69,7 @@ namespace upsylon
 #include "tao-add.hxx"
             //! a[1..size()] += b[1..a.size()]
             template <typename T,typename U> static inline
-            void add( array<T> &a, const array<U> &b, concurrent::for_each *loop )
+            void add( array<T> &a, const array<U> &b, concurrent::for_each *loop=0)
             {
                 if(loop)
                 {
@@ -85,7 +89,7 @@ namespace upsylon
 #include "tao-sub.hxx"
             //! a[1..size()] -= b[1..a.size()]
             template <typename T,typename U> static inline
-            void sub( array<T> &a, const array<U> &b, concurrent::for_each *loop )
+            void sub( array<T> &a, const array<U> &b, concurrent::for_each *loop=0)
             {
                 if(loop)
                 {
@@ -104,7 +108,7 @@ namespace upsylon
 #include "tao-muladd.hxx"
             //! a[1..size()] += x * b[1..a.size()]
             template <typename T,typename U> static inline
-            void muladd( array<T> &a, typename type_traits<T>::parameter_type x, const array<U> &b, concurrent::for_each *loop )
+            void muladd( array<T> &a, typename type_traits<T>::parameter_type x, const array<U> &b, concurrent::for_each *loop=0)
             {
                 if(loop)
                 {
@@ -116,9 +120,13 @@ namespace upsylon
                 }
             }
 
+            //__________________________________________________________________
+            //
+            // mulsub
+            //__________________________________________________________________
             //! a[1..size()] -= x * b[1..a.size()]
             template <typename T,typename U> static inline
-            void mulsub( array<T> &a, typename type_traits<T>::parameter_type x, const array<U> &b, concurrent::for_each *loop )
+            void mulsub( array<T> &a, typename type_traits<T>::parameter_type x, const array<U> &b, concurrent::for_each *loop=0)
             {
                 if(loop)
                 {
@@ -130,9 +138,13 @@ namespace upsylon
                 }
             }
 
+            //__________________________________________________________________
+            //
+            // mulset
+            //__________________________________________________________________
             //! a[1..size()] = x*b[1..a.size()]
             template <typename T,typename U> static inline
-            void mulset( array<T> &a, typename type_traits<T>::parameter_type x, const array<U> &b, concurrent::for_each *loop )
+            void mulset( array<T> &a, typename type_traits<T>::parameter_type x, const array<U> &b, concurrent::for_each *loop=0)
             {
                 if(loop)
                 {
@@ -147,12 +159,12 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // sub
+            // dot product
             //__________________________________________________________________
 #include "tao-dot.hxx"
-            //! a*b
+            //! a*b, don't use concurrent version on compound types!
             template <typename T,typename U,typename V> static inline
-            T dot( const array<U> &a, const array<V> &b, concurrent::for_each *loop )
+            T dot( const array<U> &a, const array<V> &b, concurrent::for_each *loop=0)
             {
                 assert(a.size()==b.size());
                 if(loop)
@@ -165,6 +177,42 @@ namespace upsylon
                 }
             }
 
+
+            //__________________________________________________________________
+            //
+            // rms
+            //__________________________________________________________________
+#include "tao-rms.hxx"
+            //! single vector
+            template <typename T> static inline
+            typename real_for<T>::type rms( const array<T> &a, concurrent::for_each *loop)
+            {
+                if(loop)
+                {
+                    return _rms<T>(a,*loop);
+                }
+                else
+                {
+                    return _rms<T>(a);
+                }
+            }
+
+            template <typename T> static inline
+            typename real_for<T>::type rms( const array<T> &a, const array<T> &b, concurrent::for_each *loop)
+            {
+                assert(a.size()==b.size());
+                if(loop)
+                {
+                    return _rms<T>(a,b,*loop);
+                }
+                else
+                {
+                    return _rms<T>(a,b);
+                }
+            }
+
+
+
             ////////////////////////////////////////////////////////////////////
             //
             // level-2 : matrix/array ops
@@ -174,18 +222,49 @@ namespace upsylon
             
             //! a = M*b
             template <typename T,typename U,typename V> static inline
-            void mmul( array<T> &a, const matrix<U> &M, const array<V> &b, concurrent::for_each *loop)
+            void mul( array<T> &a, const matrix<U> &M, const array<V> &b, concurrent::for_each *loop=0)
             {
                 assert(M.cols==b.size());
                 if(loop)
                 {
-                    _mmul<T,U,V>(a,M,b,*loop);
+                    _mul<T,U,V>(a,M,b,*loop);
                 }
                 else
                 {
-                    _mmul<T,U,V>(a,M,b);
+                    _mul<T,U,V>(a,M,b);
                 }
             }
+
+            //! a += M*b
+            template <typename T,typename U,typename V> static inline
+            void mul_add( array<T> &a, const matrix<U> &M, const array<V> &b, concurrent::for_each *loop=0)
+            {
+                assert(M.cols==b.size());
+                if(loop)
+                {
+                    _mul_add<T,U,V>(a,M,b,*loop);
+                }
+                else
+                {
+                    _mul_add<T,U,V>(a,M,b);
+                }
+            }
+
+            //! a += M*b
+            template <typename T,typename U,typename V> static inline
+            void mul_sub( array<T> &a, const matrix<U> &M, const array<V> &b, concurrent::for_each *loop=0)
+            {
+                assert(M.cols==b.size());
+                if(loop)
+                {
+                    _mul_sub<T,U,V>(a,M,b,*loop);
+                }
+                else
+                {
+                    _mul_sub<T,U,V>(a,M,b);
+                }
+            }
+
 
 
         };

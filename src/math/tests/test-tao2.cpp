@@ -19,10 +19,10 @@ namespace
         matrix<U> M(n,m);
         vector<T> b(m);
         uint64_t tmx = 0;
-        for(size_t iter=0;iter<16;++iter)
+        for(size_t iter=0;iter<32;++iter)
         {
             const uint64_t mark = rt_clock::ticks();
-            tao::mmul(a,M,b,loop);
+            tao::mul(a,M,b,loop);
             tmx += rt_clock::ticks() - mark;
         }
         std::cerr << clk(tmx) << std::endl;

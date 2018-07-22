@@ -10,8 +10,10 @@ namespace upsylon
 
         void executor:: make_all(const size_t n)
         {
-            executor &self = *this;
-            for(size_t i=0;i<num_threads();++i)
+            //std::cerr << "alloc/clear space for " << n <<  " bytes" << std::endl;
+            executor    &self = *this;
+            const size_t nthr = num_threads();
+            for(size_t i=0;i<nthr;++i)
             {
                 self[i].make(n);
             }
