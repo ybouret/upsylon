@@ -5,6 +5,7 @@
 #include "y/comparison.hpp"
 #include "y/sort/merge.hpp"
 #include "y/sort/heap.hpp"
+#include "y/sort/index.hpp"
 #include "y/sequence/vector.hpp"
 
 using namespace upsylon;
@@ -60,6 +61,20 @@ namespace
         std::cerr << "V1=" << V << std::endl;
         hsort(V, comparison::increasing<T> );
         std::cerr << "V2=" << V << std::endl;
+
+        vector<size_t> indx(V.size());
+        for(size_t i=1;i<=indx.size();++i)
+        {
+            indx[i] = i;
+        }
+        alea.shuffle(*indx,indx.size());
+        hsort(indx,V,comparison::increasing<size_t>);
+
+        alea.shuffle(*V,V.size());
+        indexing::make(indx, comparison::increasing<T>, V);
+        std::cerr << "V=" << V << std::endl;
+        std::cerr << "I=" << indx << std::endl;
+
     }
 
 }

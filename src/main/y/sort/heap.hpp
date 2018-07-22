@@ -21,8 +21,8 @@ namespace upsylon
         //----------------------------------------------------------------------
         // local memory
         //----------------------------------------------------------------------
-        uint64_t     wksp[ Y_U64_FOR_ITEM(T) ];
-        T           &rra  = *(T*)&wksp[0];
+        char wksp[ Y_MEMALIGN(sizeof(T)) ]; assert(sizeof(wksp)>=sizeof(T));
+        T   &rra = *(T*)&wksp[0];
 
         //----------------------------------------------------------------------
         // algorithm
@@ -79,11 +79,11 @@ namespace upsylon
         //----------------------------------------------------------------------
         //-- local memory
         //----------------------------------------------------------------------
-        uint64_t     wksp[ Y_U64_FOR_ITEM(T) ];
-        T           &rra  = *(T*)&wksp[0];
+        char wksp[ Y_MEMALIGN(sizeof(T)) ]; assert(sizeof(wksp)>=sizeof(T));
+        T   &rra = *(T*)&wksp[0];
 
-        uint64_t     wksp2[ Y_U64_FOR_ITEM(U) ];
-        U           &rrb  = *(U*)&wksp2[0];
+        char wksp2[ Y_MEMALIGN(sizeof(U)) ]; assert(sizeof(wksp2)>=sizeof(U));
+        U   &rrb  = *(U*)&wksp2[0];
 
         //----------------------------------------------------------------------
         //-- algorithm
