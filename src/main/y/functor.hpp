@@ -18,8 +18,8 @@ namespace upsylon
     class functor : public core::callable<R,TLIST>
     {
     public:
-        typedef typename core::callable<R,TLIST>  callable;
-        virtual callable  *clone() const { return new functor( *this); }
+        typedef typename core::callable<R,TLIST>  callable; //!< base class
+        virtual callable  *clone() const { return new functor( *this); } //!< cloneable interface, using copy constructor
 
         //! destroy the internal wrappers
         inline virtual ~functor() throw() { assert(function_); destroy(); }
@@ -76,26 +76,29 @@ namespace upsylon
         //======================================================================
         // inner definitions
         //======================================================================
-        typedef R        result;
-        typedef TLIST    arguments;
-        Y_FUNCTOR_PARAMETERS();
+        typedef R        result;    //!< alias for result
+        typedef TLIST    arguments; //!< alias for type list
+        Y_FUNCTOR_PARAMETERS();     //!< alias for parameters
 
 
         //======================================================================
         // forwarding calls, using optimized parameter types
         // to avoid copy overhead
         //======================================================================
+        //! forward no argument call
         inline R operator()(void) {
             assert(function_);
             return (*function_)();
         }
 
+        //! forward one argument call
         inline R operator()(param1 p1)
         {
             assert(function_);
             return (*function_)(p1);
         }
 
+        //! forward two arguments call
         inline R operator()(param1 p1,
                             param2 p2)
         {
@@ -103,6 +106,7 @@ namespace upsylon
             return (*function_)(p1,p2);
         }
 
+        //! forward three arguments call
         inline R operator()(param1 p1,
                             param2 p2,
                             param3 p3)
@@ -111,6 +115,7 @@ namespace upsylon
             return (*function_)(p1,p2,p3);
         }
 
+        //! forward four arguments call
         inline R operator()(param1 p1,
                             param2 p2,
                             param3 p3,
@@ -120,7 +125,7 @@ namespace upsylon
             return (*function_)(p1,p2,p3,p4);
         }
 
-        //! direct assignation for binder_first
+        //! direct assignation for binder_first or manual setting
         explicit functor( callable *proc ) throw() : function_( proc ) { assert( proc ); }
 
     private:
@@ -144,36 +149,45 @@ namespace upsylon
         class binder_first : public callable<typename incoming::result, typename incoming::arguments::tail>
         {
         public:
-            typedef typename incoming::result                     R;
-            typedef typename incoming::arguments::tail            TLIST;
-            typedef functor<R,TLIST>                              outgoing;
+            typedef typename incoming::result                     R;        //!< return type alias
+            typedef typename incoming::arguments::tail            TLIST;    //!< arguments alias
+            typedef functor<R,TLIST>                              outgoing; //!< return functor alias
 
-            typedef typename incoming::arguments::head            bounded;
-            typedef typename type_traits<bounded>::parameter_type bounded_param;
+            typedef typename incoming::arguments::head            bounded;       //!< bounded type
+            typedef typename type_traits<bounded>::parameter_type bounded_param; //!< bounded parameter type
 
-
+            //! cloneable interface by copy
             virtual callable<R,TLIST> *clone() const { return new binder_first( *this ); }
 
+            //! constructor
             explicit binder_first( const incoming &f, bounded_param b ) :
             functor_( f ),
             bounded_( b )
             {}
 
+            //! destructor
             virtual ~binder_first() throw() {}
 
 
-            Y_FUNCTOR_PARAMETERS();
+            Y_FUNCTOR_PARAMETERS(); //!< parameters alias
 
+            //! 1->0 argument call
             inline R operator()(void)
             {
                 return functor_(bounded_);
             }
 
+            //! 2->1 argument call
             inline R operator()(param1 p1)
             {
                 return functor_(bounded_,p1);
             }
 
+            //! 23->2 arguments call
+            inline R operator()(param1 p1, param2 p2)
+            {
+                return functor_(bounded_,p1,p2);
+            }
 
 
         private:
@@ -188,6 +202,7 @@ namespace upsylon
         };
     }
 
+    //! bind first parameter to make a new functor
     template <typename incoming>
     inline
     typename core::binder_first<incoming>::outgoing

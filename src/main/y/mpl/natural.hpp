@@ -10,6 +10,8 @@
 #include "y/code/utils.hpp"
 #include "y/concurrent/singleton.hpp"
 #include "y/randomized/bits.hpp"
+#include "y/type/xnumeric.hpp"
+
 #include <iostream>
 #include <cstring>
 
@@ -580,6 +582,12 @@ static inline natural __##CALL(const uint8_t *l, const size_t nl, const uint8_t 
         inline mpn __fabs(const mpn &u) { return u;   } //!< overloaded __fabs function
         inline mpn __mod2(const mpn &u) { return u*u; } //!< overloaded __mod2 function
     }
+
+    //! extended numeric for mpn
+    template <> struct xnumeric<mpn> {
+        static mpn abs_minimum() { return mpn(); } //!< 0
+    };
+
 }
 #endif
 

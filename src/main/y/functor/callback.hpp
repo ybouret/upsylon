@@ -18,32 +18,40 @@ namespace upsylon {
         class callback : public virtual callable<R,TLIST>
         {
         public:
+            //! constructor by copy
             explicit callback( const FUNCTION &fn ) : function_( fn ) {}
+            //! desctructor
             virtual ~callback() throw()    {}
+            //! cloneable interface: use copy constructor
             virtual callable<R,TLIST> *clone() const { return new callback( *this ); }
 
-            Y_FUNCTOR_PARAMETERS();
+            Y_FUNCTOR_PARAMETERS(); //!< alias for parameters
 
+            //! no argument call
             inline R operator()(void)
             {
                 return function_();
             }
 
+            //! one argument call
             inline R operator()( param1 P1 )
             {
                 return function_( P1 );
             }
 
+            //! two arguments call
             inline R operator()( param1 P1, param2 P2 )
             {
                 return function_( P1, P2 );
             }
 
+            //! three arguments call
             inline R operator()( param1 P1, param2 P2, param3 P3)
             {
                 return function_( P1, P2, P3 );
             }
 
+            //! four arguments call
             inline R operator()( param1 P1, param2 P2, param3 P3, param4 P4)
             {
                 return function_( P1, P2, P3, P4);

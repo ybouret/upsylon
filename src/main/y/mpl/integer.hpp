@@ -108,7 +108,7 @@ namespace upsylon
 		return 0;
 #endif
 
-#if defined(Y_WIN) && defined(__GNUC__)
+#if  defined(__GNUC__)
 		fatal_error("gnu corrupted code@mpl.integer.lsi");
 		return 0;
 #endif
@@ -411,6 +411,12 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
         inline mpz __fabs(const mpz &z) { return mpz(z.n); } //!< overloaded __fabs function
         inline mpz __mod2(const mpz &z) { return z*z;      } //!< overloaded __mod2 function
     }
+
+    //! extended numeric for mpz
+    template <> struct xnumeric<mpz> {
+        static mpz abs_minimum() { return mpz(); } //!< 0
+    };
+
 }
 
 

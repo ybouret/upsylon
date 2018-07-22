@@ -17,6 +17,7 @@ namespace upsylon {
         class command : public virtual callable<R,TLIST>
         {
         public:
+            //! construct from host+method
             explicit command( const OBJECT_POINTER o, const METHOD_POINTER m ) :
             object_( o ),
             method_( m )
@@ -24,6 +25,7 @@ namespace upsylon {
                 assert( NULL != object_ );
                 assert( NULL != method_ );
             }
+            //! destructor
             virtual ~command() throw() {}
             virtual  callable<R,TLIST> *clone() const { return new command( *this ); }
 
