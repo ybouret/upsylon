@@ -34,7 +34,8 @@ namespace upsylon
             template <typename T>
             void make_for() { make_all( sizeof(T) ); }
 
-            template <typename T>
+            //! get cast memory
+            template <typename T> inline
             T &get(const size_t indx) throw()
             {
                 executor &self = *this;
@@ -42,6 +43,21 @@ namespace upsylon
                 assert(ctx.bytes>=sizeof(T));
                 assert(ctx.space);
                 return *static_cast<T*>(ctx.space);
+            }
+
+            template <typename T> inline
+            T sum()
+            {
+                executor &self = *this;
+                T         ans  = 0;
+                size_t    i    = num_threads();
+                while(i-->0)
+                {
+                    assert(self[i].bytes>=sizeof(T));
+                    assert(self[i].space!=0);
+                    ans += *static_cast<T*>(self[i].space);
+                }
+                return ans;
             }
 
         protected:

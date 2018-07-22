@@ -185,7 +185,7 @@ namespace upsylon
 #include "tao-rms.hxx"
             //! single vector
             template <typename T> static inline
-            typename real_for<T>::type rms( const array<T> &a, concurrent::for_each *loop)
+            typename real_for<T>::type rms( const array<T> &a, concurrent::for_each *loop=0)
             {
                 if(loop)
                 {
@@ -197,8 +197,9 @@ namespace upsylon
                 }
             }
 
+            //! two vectors
             template <typename T> static inline
-            typename real_for<T>::type rms( const array<T> &a, const array<T> &b, concurrent::for_each *loop)
+            typename real_for<T>::type rms( const array<T> &a, const array<T> &b, concurrent::for_each *loop=0)
             {
                 assert(a.size()==b.size());
                 if(loop)
@@ -211,7 +212,19 @@ namespace upsylon
                 }
             }
 
-
+            //! single vector
+            template <typename T> static inline
+            typename real_for<T>::type mod2( const array<T> &a, concurrent::for_each *loop=0)
+            {
+                if(loop)
+                {
+                    return _mod2<T>(a,*loop);
+                }
+                else
+                {
+                    return _mod2<T>(a);
+                }
+            }
 
             ////////////////////////////////////////////////////////////////////
             //

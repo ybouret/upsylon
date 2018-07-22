@@ -246,6 +246,7 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
     namespace math
     {
         inline mpq __fabs( const mpq &q ) { return mpq( __fabs(q.num), q.den ); } //!< overload __fabs function
+        inline mpq __mod2( const mpq &q ) { return q*q;                         } //!< overload __mod2 function
     }
 }
 

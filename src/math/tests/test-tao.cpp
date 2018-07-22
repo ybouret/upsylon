@@ -145,13 +145,23 @@ namespace
         {
             const typename real_for<T>::type ans_seq = tao::_rms(a);
             const typename real_for<T>::type ans_par = tao::_rms(a,loop);
-            std::cerr << "rms1: " << ans_seq << "/" << ans_par << std::endl;
+            std::cerr << "rms1  : " << ans_seq << "/" << ans_par << std::endl;
+        }
+        {
+            const typename real_for<T>::type ans_seq = tao::_mod2(a);
+            const typename real_for<T>::type ans_par = tao::_mod2(a,loop);
+            std::cerr << "mod2_1: " << ans_seq << "/" << ans_par << std::endl;
         }
 
         {
             const typename real_for<T>::type ans_seq = tao::_rms(a,b);
             const typename real_for<T>::type ans_par = tao::_rms(a,b,loop);
-            std::cerr << "rms2: " << ans_seq << "/" << ans_par << std::endl;
+            std::cerr << "rms2  : " << ans_seq << "/" << ans_par << std::endl;
+        }
+        {
+            const typename real_for<T>::type ans_seq = tao::_mod2(a,b);
+            const typename real_for<T>::type ans_par = tao::_mod2(a,b,loop);
+            std::cerr << "mod2_2: " << ans_seq << "/" << ans_par << std::endl;
         }
     }
 

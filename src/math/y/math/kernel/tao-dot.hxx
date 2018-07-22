@@ -37,16 +37,10 @@ T _dot( const array<U> &a, const array<V> &b )
 template <typename T,typename U,typename V> static inline
 T _dot( const array<U> &a, const array<V> &b, concurrent::for_each &loop )
 {
-    __dot<T,U,V>          args = { &a, &b };
+    __dot<T,U,V>          args   = { &a, &b };
     concurrent::executor &engine = loop.engine();
     engine.make_all( sizeof(T) );
-    T            sum = 0;
-    const size_t nt  = engine.num_threads();
     loop.run( __dot<T,U,V>::call, &args);
-    for(size_t i=0;i<nt;++i)
-    {
-        sum += engine.get<T>(i);
-    }
-    return sum;
+    return engine.sum<T>();
 }
 

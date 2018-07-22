@@ -45,7 +45,7 @@ namespace
             LU::solve<T>(a,u);
             vector<T> d = r;
             tao::mul_sub(d,a0,u);
-            std::cerr << "d=" << d << std::endl;
+            std::cerr << "\t|d|^2=" << tao::mod2(d) << std::endl;
         }
     }
 }

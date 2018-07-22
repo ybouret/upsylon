@@ -18,13 +18,32 @@ typename real_for<T>::type _rms( const array<T> &a )
 }
 
 template <typename T> static inline
+typename real_for<T>::type _mod2( const array<T> &a )
+{
+    const size_t n   = a.size();
+    if(n>0)
+    {
+        typename real_for<T>::type sum = 0;
+        for(size_t i=n;i>0;--i)
+        {
+            sum += __mod2(a[i]);
+        }
+        return sum;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+template <typename T> static inline
 typename real_for<T>::type _rms( const array<T> &a, const array<T> &b )
 {
     assert(a.size()==b.size());
     const size_t               n   = a.size();
-    typename real_for<T>::type sum = 0;
     if(n>0)
     {
+        typename real_for<T>::type sum = 0;
         for(size_t i=n;i>0;--i)
         {
             sum += __mod2(a[i]-b[i]);
@@ -33,7 +52,27 @@ typename real_for<T>::type _rms( const array<T> &a, const array<T> &b )
     }
     else
     {
+        return 0;
+    }
+}
+
+template <typename T> static inline
+typename real_for<T>::type _mod2( const array<T> &a, const array<T> &b )
+{
+    assert(a.size()==b.size());
+    const size_t n   = a.size();
+    if(n>0)
+    {
+        typename real_for<T>::type sum = 0;
+        for(size_t i=n;i>0;--i)
+        {
+            sum += __mod2(a[i]-b[i]);
+        }
         return sum;
+    }
+    else
+    {
+        return 0;
     }
 }
 
@@ -85,48 +124,73 @@ struct __rms
 template <typename T> static inline
 typename real_for<T>::type _rms( const array<T> &a, concurrent::for_each &loop )
 {
-    typename real_for<T>::type sum = 0;
-    const size_t               n   = a.size();
+    const size_t n   = a.size();
     if(n>0)
     {
         __rms<T> args = { &a, 0 };
         concurrent::executor &engine = loop.engine();
         engine.make_for<typename real_for<T>::type>();
         loop.run( __rms<T>::call1, &args );
-        size_t i = engine.num_threads();
-        while(i-->0)
-        {
-            sum += engine[i].get<typename real_for<T>::type>();
-        }
-        return __sqrt(sum/n);
+        return __sqrt( engine.sum<typename real_for<T>::type>()/n );
     }
     else
     {
-        return sum;
+        return 0;
+    }
+}
+
+template <typename T> static inline
+typename real_for<T>::type _mod2( const array<T> &a, concurrent::for_each &loop )
+{
+    const size_t n   = a.size();
+    if(n>0)
+    {
+        __rms<T> args = { &a, 0 };
+        concurrent::executor &engine = loop.engine();
+        engine.make_for<typename real_for<T>::type>();
+        loop.run( __rms<T>::call1, &args );
+        return engine.sum<typename real_for<T>::type>();
+    }
+    else
+    {
+        return 0;
     }
 }
 
 template <typename T> static inline
 typename real_for<T>::type _rms( const array<T> &a, const array<T> &b, concurrent::for_each &loop )
 {
-    typename real_for<T>::type sum = 0;
-    const size_t               n   = a.size();
+    const size_t n   = a.size();
     if(n>0)
     {
         __rms<T> args = { &a, &b };
         concurrent::executor &engine = loop.engine();
         engine.make_for<typename real_for<T>::type>();
         loop.run( __rms<T>::call2, &args );
-        size_t i = engine.num_threads();
-        while(i-->0)
-        {
-            sum += engine[i].get<typename real_for<T>::type>();
-        }
-        return __sqrt(sum/n);
+        return __sqrt(engine.sum<typename real_for<T>::type>()/n);
     }
     else
     {
-        return sum;
+        return 0;
     }
 }
+
+template <typename T> static inline
+typename real_for<T>::type _mod2( const array<T> &a, const array<T> &b, concurrent::for_each &loop )
+{
+    const size_t n   = a.size();
+    if(n>0)
+    {
+        __rms<T> args = { &a, &b };
+        concurrent::executor &engine = loop.engine();
+        engine.make_for<typename real_for<T>::type>();
+        loop.run( __rms<T>::call2, &args );
+        return engine.sum<typename real_for<T>::type>();
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 
