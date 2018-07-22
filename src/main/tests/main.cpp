@@ -52,7 +52,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(map);
     Y_UTEST(set);
     Y_UTEST(matrix);
-    
+    Y_UTEST(functor);
 }
 Y_UTEST_EXEC()
 

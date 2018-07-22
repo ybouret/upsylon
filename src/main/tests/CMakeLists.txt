@@ -53,6 +53,7 @@ ADD_TEST(Associative test-main associative)
 ADD_TEST(Set         test-main set)
 ADD_TEST(Map         test-main map)
 ADD_TEST(Matrix      test-main matrix)
+ADD_TEST(Functor     test-main functor)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V

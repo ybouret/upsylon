@@ -144,6 +144,13 @@ SOURCE_GROUP( math FILES ${math_srcs} )
 INSTALL( FILES ${math_decl} DESTINATION include/y/math )
 
 
+FILE(GLOB functor_decl y/functor/*.hpp)
+FILE(GLOB functor_code y/functor/*.cpp)
+SET(functor_srcs ${functor_decl} ${functor_code})
+SOURCE_GROUP( functor FILES ${functor_srcs} )
+INSTALL( FILES ${functor_decl} DESTINATION include/y/functor )
+
+
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
 ${os_srcs}
@@ -168,6 +175,7 @@ ${fft_srcs}
 ${mpl_srcs}
 ${mpl_natural_srcs}
 ${math_srcs}
+${functor_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
