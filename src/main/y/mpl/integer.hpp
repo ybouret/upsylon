@@ -103,6 +103,10 @@ namespace upsylon
                     case __zero:     return 0;
                     case __positive: return  integer_t(n.lsw());
                 }
+#if defined(__ICC)
+		fatal_error("corrupted code@mpl.integer.lsi");
+		return 0;
+#endif
             }
 
             //! no throw exchange

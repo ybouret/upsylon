@@ -56,6 +56,10 @@ namespace upsylon
                     case __positive: return  natural::ratio_of(num.n,den);
                     case __zero:     return 0;
                 }
+#if defined(__ICC)
+		fatal_error("corrupted code@mpl.rational.to_real");
+		return 0;
+#endif
             }
 
             //! copy
