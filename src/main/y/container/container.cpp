@@ -9,7 +9,7 @@ namespace upsylon {
     {
     }
 
-    container:: container() throw()
+    container:: container() throw() : dynamic(), object()
     {
     }
 

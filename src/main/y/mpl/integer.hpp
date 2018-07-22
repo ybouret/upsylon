@@ -150,6 +150,10 @@ namespace upsylon
                         case __positive:  return natural::compare_blocks(l,nl,r,nr); //ls>0,rs>0
                     }
                 }
+#if defined(__GNUC__)
+                fatal_error("corrupted code@mpl.interger.compare_blocks");
+                return 0;
+#endif
             }
 
             //! binary preparation
@@ -306,15 +310,14 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
                             default: // |l| = |r|
                                 return integer();
                         }
-
-                    }
+                    } /* FALLTHRU */
 
                     case __zero: switch(rs)
                     {
                         case __negative: { natural R(r,nr); assert(!R.is_zero()); return integer(__negative,R);  } // ls=0,rs<0
                         case __zero:      return integer();                                                        // ls=0,rs=0
                         case __positive: { natural R(r,nr); assert(!R.is_zero()); return integer(R);             } // ls=0,rs>0
-                    }
+                    } /* FALLTHRU */
 
                     case __positive:switch(rs)
                     {
@@ -332,6 +335,10 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
                         case __positive: { natural S = natural::__add(l,nl,r,nr); assert(!S.is_zero()); return integer(S); } // ls>0,rs>0
                     }
                 }
+#if defined(__GNUC__)
+                fatal_error("corrupted code@mpl.interger.add");
+                return integer();
+#endif
             }
 
             static inline
@@ -360,7 +367,7 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
                         case __negative: { const natural p = natural::__mul(l,nl,r,nr); assert(!p.is_zero()); return integer(p);             }
                         case __zero:     {                                                                    return integer();              }
                         case __positive: { const natural p = natural::__mul(l,nl,r,nr); assert(!p.is_zero()); return integer(__negative,p);  }
-                    }
+                    } /* FALLTHRU */
 
                     case __zero:
                         return integer();
@@ -372,6 +379,10 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
                         case __positive: { const natural p = natural::__mul(l,nl,r,nr); assert(!p.is_zero()); return integer(p);             }
                     }
                 }
+#if defined(__GNUC__)
+                fatal_error("corrupted code@mpl.interger.mul");
+                return integer();
+#endif
             }
 
             static
