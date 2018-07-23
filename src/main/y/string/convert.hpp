@@ -8,8 +8,8 @@ namespace upsylon
 {
     struct string_convert
     {
-        template <typename T>
-        T to( const string &data, const char *name);
+        template <typename T> static
+        T to( const string &data, const char *name=NULL);
     };
 }
 
