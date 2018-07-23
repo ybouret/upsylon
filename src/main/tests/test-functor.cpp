@@ -11,10 +11,24 @@ namespace
 
         dummy(const int v) : value(v)
         {
+            std::cerr << "init@" << value << std::endl;
         }
 
         dummy(const dummy &d) : value(d.value)
         {
+            std::cerr << "copy@value" << std::endl;
+        }
+
+        inline
+        double operator()(void)
+        {
+            return value;
+        }
+
+        inline
+        double operator()(double x)
+        {
+            return value+x;
         }
 
         double get0() throw() { return value; }
@@ -38,23 +52,47 @@ namespace
         std::cerr << "G=" << G() << std::endl;
     }
 
+    template <typename FUNCTOR>
+    static inline
+    void do_test(FUNCTOR &F, double x)
+    {
+        std::cerr << "F=" << F(x) << std::endl;
+        FUNCTOR G = F;
+        std::cerr << "G=" << G(x) << std::endl;
+    }
+
 }
 
 Y_UTEST(functor)
 {
     dummy d(5);
     {
+        std::cerr << "-- No Args" << std::endl;
+        std::cerr << "using functor command" << std::endl;
         functor<double,null_type> f0( &d, & dummy::get0 );
-        std::cerr << "f0=" << f0() << std::endl;
         do_test(f0);
-        double (*proc0)() = dummy::Get0;
-        functor<double,null_type> F0 = proc0;
-        std::cerr << "F0=" << F0() << std::endl;
-        do_test(F0);
+        std::cerr << "using functor callback" << std::endl;
+        functor<double,null_type> f1( d );
+        d.value++;
+        do_test(f1);
+        std::cerr << "recall functor command" << std::endl;
+        do_test(f0);
+        std::cerr << "using functor callback/C-style" << std::endl;
+        double (*proc)() = dummy::Get0;
+        functor<double,null_type> f2( proc );
+        do_test(f2);
     }
 
     {
-        functor<double,TL1(double)> f1( &d, & dummy::get1 );
+        std::cerr << "using functor command" << std::endl;
+        functor<double,TL1(double)> f0( &d, & dummy::get1 );
+        do_test(f0,7.13);
+        std::cerr << "using functor callback" << std::endl;
+        functor<double,TL1(double)> f1(d);
+        d.value++;
+        do_test(f1,7.13);
+        std::cerr << "recall functor command" << std::endl;
+        do_test(f0,7.13);
     }
 
 }
