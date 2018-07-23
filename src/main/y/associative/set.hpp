@@ -60,6 +60,7 @@ namespace upsylon
 
         typedef core::set_node<KEY,T>           node_type; //!< internal node
         typedef hash_container<KEY,T,node_type> base_type; //!< base type alias
+        typedef typename base_type::meta_node   meta_node; //!< meta node alias
 
         //! default constructor
         inline explicit set() throw() : base_type() {}

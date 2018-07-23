@@ -6,6 +6,8 @@
 #include "y/associative/hash-table.hpp"
 #include "y/container/associative.hpp"
 #include "y/hashing/key-hasher.hpp"
+#include "y/iterate/meta.hpp"
+
 namespace upsylon
 {
     //! base functions for set/map
@@ -122,6 +124,16 @@ namespace upsylon
 
     public:
         mutable KEY_HASHER hash; //!< hasher for the key type
+
+        typedef iterate::meta<key_type,type,meta_node,iterate::forward> iterator; //!< forward iterator
+        inline  iterator begin() throw() { return iterator(table.chain.head); }   //!< first forward iterator
+        inline  iterator end()   throw() { return iterator(NULL); }               //!< last  forwatd iterator
+
+        typedef iterate::meta<key_type,const_type,const meta_node,iterate::forward> const_iterator; //!< const iterator
+        inline  const_iterator begin() const throw() { return const_iterator(table.chain.head); }   //!< first const forward iterator
+        inline  const_iterator end()   const throw() { return const_iterator(NULL); }               //!< last  const forward iterator
+
+
 
     };
 }

@@ -38,6 +38,20 @@ namespace
             Y_ASSERT(db.search(keys[i]));
             Y_ASSERT(dbc.search(keys[i]));
         }
+        std::cerr << "iterators..." << std::endl;
+        for( typename map_t::iterator i=db.begin();i!=db.end();++i)
+        {
+            std::cerr << i.key() << ":" << *i << std::endl;
+        }
+
+        {
+            const map_t &cdb = db;
+            for( typename map_t::const_iterator i=cdb.begin();i!=cdb.end();++i)
+            {
+                std::cerr << i.key() << ":" << *i << std::endl;
+            }
+
+        }
         for(size_t i=1;i<=keys.size();++i)
         {
             Y_ASSERT(db.remove(keys[i]));

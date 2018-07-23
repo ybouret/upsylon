@@ -23,7 +23,11 @@ namespace
         virtual ~dummy() throw() {}
         dummy( const dummy &other ) : counted_object(), label(other.label), value(other.value) {}
 
-
+        inline friend std::ostream & operator<<( std::ostream &os, const dummy &d)
+        {
+            os << "[" << d.label << ":" << d.value << "]";
+            return os;
+        }
 
     private:
         Y_DISABLE_ASSIGN(dummy);
@@ -63,6 +67,21 @@ namespace
                 Y_ASSERT(db.search(keys[i]));
                 Y_ASSERT(dbc.search(keys[i]));
             }
+
+            std::cerr << "iterators..." << std::endl;
+            for( typename set_type::iterator i=db.begin();i!=db.end();++i)
+            {
+                std::cerr << i.key() << ":" << *i << std::endl;
+            }
+
+
+            for( typename set_type::const_iterator i=dbc.begin();i!=dbc.end();++i)
+            {
+                std::cerr << i.key() << ":" << *i << std::endl;
+            }
+
+
+
             for(size_t i=1;i<=keys.size();++i)
             {
                 Y_ASSERT(db.remove(keys[i]));
