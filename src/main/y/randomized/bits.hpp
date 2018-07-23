@@ -26,7 +26,7 @@ namespace upsylon
             const double   symD; //!< 0.5*denD
             const float    symF; //!< 0.5*denF
             const double   midD; //!< span * 0.5
-            const double   midF; //!< span * 0.5f
+            const float    midF; //!< span * 0.5f
             
             virtual uint32_t next32() throw() = 0; //!< next 32-bits value in 0..span
             virtual void     reseed( bits &bits ) throw() = 0; //!< initialize state with other bits
