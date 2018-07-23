@@ -2,6 +2,7 @@
 #include "y/hashing/hash64.hpp"
 #include "y/utest/run.hpp"
 #include "y/code/utils.hpp"
+#include "y/type/utils.hpp"
 #include <cstdio>
 
 using namespace upsylon;
@@ -94,7 +95,27 @@ Y_UTEST(code)
     }
     std::cerr << std::endl;
 
-    std::cerr << "isqrt" << std::endl;
+    std::cerr << "-- visible chars" << std::endl;
+    for(unsigned i=128;i<256;++i)
+    {
+        char tmp[16] = { 0 };
+        snprintf(tmp,15, "\"0x%02x\"",i);
+        std::cerr << tmp;
+        if(i<255) std::cerr << ", ";
+        if( !((i+1)&15) ) std::cerr << std::endl;
+    }
+    std::cerr << std::endl;
+
+#if 1
+    for(size_t i=0;i<=255;++i)
+    {
+        std::cerr << i << "->" << visible_char[i];
+        if(i<255) std::cerr << ", ";
+        if( !((i+1)&7) ) std::cerr << std::endl;
+    }
+#endif
+
+    std::cerr << "-- isqrt" << std::endl;
     for(uint64_t i=1;i<limit_of<uint32_t>::maximum ; i += 1+alea.leq(1024) )
     {
 

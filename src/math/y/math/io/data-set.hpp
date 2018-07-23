@@ -8,6 +8,7 @@ namespace upsylon
 {
     namespace math
     {
+        //! temporaty object to load data files
         template <typename T>
         class data_set
         {
