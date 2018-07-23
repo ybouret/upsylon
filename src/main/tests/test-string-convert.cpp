@@ -21,6 +21,13 @@ Y_UTEST(string_convert)
             }
                 break;
 
+            case 'i': std::cerr << "to<unit_t>(" << data << ")=";
+            {
+                const unit_t d = string_convert::to<unit_t>(data);
+                std::cerr << d << std::endl;
+            }
+                break;
+
             default:
                 throw exception("unknown type '%s'", *type);
         }
