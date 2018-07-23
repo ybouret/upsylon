@@ -35,7 +35,7 @@ namespace
 
         static double Get0() throw() { return 0.0; }
 
-        float get1( double x ) { return value+x; }
+        float get1( double x ) { return float(value+x); }
 
         static double Get1(double x) throw() { return 1.0+x; }
 

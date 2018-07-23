@@ -64,6 +64,10 @@ namespace upsylon
                 fatal_error("gnu corrupted code@mpl.rational.to_real");
                 return 0;
 #endif
+#if defined(_MSC_VER)
+				fatal_error("MSC corrupted code@mpl.rational.to_real");
+				return 0;
+#endif
             }
 
             //! copy

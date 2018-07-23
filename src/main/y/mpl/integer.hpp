@@ -103,15 +103,9 @@ namespace upsylon
                     case __zero:     return 0;
                     case __positive: return  integer_t(n.lsw());
                 }
-#if defined(__ICC)
-		fatal_error("intel corrupted code@mpl.integer.lsi");
-		return 0;
-#endif
+				fatal_error("corrupted code@mpl.integer.lsi");
+				return 0;
 
-#if  defined(__GNUC__)
-		fatal_error("gnu corrupted code@mpl.integer.lsi");
-		return 0;
-#endif
             }
 
             //! no throw exchange
@@ -159,10 +153,9 @@ namespace upsylon
                         case __positive:  return natural::compare_blocks(l,nl,r,nr); //ls>0,rs>0
                     }
                 }
-#if defined(__GNUC__)
+
                 fatal_error("corrupted code@mpl.interger.compare_blocks");
                 return 0;
-#endif
             }
 
             //! binary preparation
@@ -344,10 +337,8 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
                         case __positive: { natural S = natural::__add(l,nl,r,nr); assert(!S.is_zero()); return integer(S); } // ls>0,rs>0
                     }
                 }
-#if defined(__GNUC__)
-                fatal_error("corrupted code@mpl.interger.add");
+                fatal_error("corrupted code@mpl.integer.add");
                 return integer();
-#endif
             }
 
             static inline
@@ -388,11 +379,8 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
                         case __positive: { const natural p = natural::__mul(l,nl,r,nr); assert(!p.is_zero()); return integer(p);             }
                     }
                 }
-#if defined(__GNUC__)
                 fatal_error("corrupted code@mpl.interger.mul");
-                return integer();
-#endif
-            }
+                return integer();            }
 
             static
             integer __div(const sign_type ls,
