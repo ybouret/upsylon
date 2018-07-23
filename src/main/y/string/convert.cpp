@@ -221,19 +221,50 @@ namespace upsylon
                 case '7': ip *= ten; ip+=7; break;
                 case '8': ip *= ten; ip+=8; break;
                 case '9': ip *= ten; ip+=9; break;
+
                 case '.':
                 case ',':
+                    ++i;
                     goto PARSE_FP;
+
                 case 'e':
                 case 'E':
                     ++i; // skip [eE]
                     goto PARSE_EXP;
                 default:
-                    throw exception("%sinvalid decimal '%s' for %s interger part",fn, visible_char[ uint8_t(C) ], id);
+                    throw exception("%sinvalid decimal '%s' for %s integer part",fn, visible_char[ uint8_t(C) ], id);
             }
         }
         return s*ip;
     PARSE_FP:
+        {
+            T fp = tenth;
+            for(;i<n;++i)
+            {
+                const char C = data[i];
+                switch(C)
+                {
+                    case '0': fp *= tenth;  break;
+                    case '1': ip += fp;    fp *= tenth;   break;
+                    case '2': ip += fp+fp; fp *= tenth;   break;
+                    case '3': ip += 3*fp;  fp *= tenth;   break;
+                    case '4': ip += 4*fp;  fp *= tenth;   break;
+                    case '5': ip += 5*fp;  fp *= tenth;   break;
+                    case '6': ip += 6*fp;  fp *= tenth;   break;
+                    case '7': ip += 7*fp;  fp *= tenth;   break;
+                    case '8': ip += 8*fp;  fp *= tenth;   break;
+                    case '9': ip += 9*fp;  fp *= tenth;   break;
+
+                    case 'e':
+                    case 'E':
+                        ++i; // skip [eE]
+                        goto PARSE_EXP;
+                        
+                    default:
+                        throw exception("%sinvalid decimal '%s' for %s fractional part",fn, visible_char[ uint8_t(C) ], id);
+                }
+            }
+        }
         return s*ip;
     PARSE_EXP:
         {
@@ -258,7 +289,7 @@ namespace upsylon
                     case '1': exp_v *= 10; exp_v += 1; break;
                     case '2': exp_v *= 10; exp_v += 2; break;
                     case '3': exp_v *= 10; exp_v += 3; break;
-                    case '4': exp_v *= 10; exp_v += 5; break;
+                    case '4': exp_v *= 10; exp_v += 4; break;
                     case '5': exp_v *= 10; exp_v += 5; break;
                     case '6': exp_v *= 10; exp_v += 6; break;
                     case '7': exp_v *= 10; exp_v += 7; break;
