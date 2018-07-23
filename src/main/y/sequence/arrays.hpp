@@ -17,55 +17,84 @@ namespace upsylon
 
         //! prepare memory for num_arrays, with possible already num_items
         inline explicit arrays(const size_t num_arrays,
-                               const size_t num_items=0) :
+                               const size_t array_size=0) :
         count(num_arrays),
         hmem_( ALLOCATOR::instance() ),
         _count(count),
-        _array( hmem_. acquire_as<array_type>(count) ),
+        _bytes(0),
+        _array( hmem_. template acquire_as<array_type>(_count,_bytes) ),
         sizes(0),
+        items(0),
         bytes(0),
         entry(0),
         indx(0)
         {
             try
             {
-                acquire(num_items);
+                acquire(array_size);
             }
             catch(...)
             {
-                release_all(); throw;
+                hmem_. template release_as<array_type>(_array,_count,_bytes);
+                throw;
             }
         }
 
         //! destructor
         inline virtual ~arrays() throw()
         {
-            release_all();
+            __release();
+            hmem_. template release_as<array_type>(_array,_count,_bytes);
         }
 
         //! release current memory, reset arrays
         inline void release() throw()
         {
-            hmem_. release(entry,bytes);
-            sizes = 0;
-            reset();
+            __release();
+            format();
         }
 
         //! acquire new memory, reset arrays
-        inline void acquire(const size_t num_items)
+        inline void acquire(const size_t array_size)
         {
+            // release old memory
             release();
-            sizes = num_items;
-            bytes = num_items * count * sizeof(T);
+
+            // get new memory
+            sizes = array_size;
+            items = count * sizes;
+            bytes = items * sizeof(T);
             try
             {
                 entry = hmem_.acquire(bytes);
-                reset();
             }
             catch(...)
             {
-                sizes=0; throw;
+                sizes = items = 0;
+                throw;
             }
+
+            //! build items
+            size_t built=0;
+            try
+            {
+                mutable_type *dat = static_cast<mutable_type *>(entry);
+                while(built<items)
+                {
+                    new (dat+built) type();
+                    ++built;
+                }
+            }
+            catch(...)
+            {
+                __free(built);
+                hmem_.release(entry,bytes);
+                sizes=items=0;
+                throw;
+            }
+
+            // format arrays
+            format();
         }
 
         //! one time get new array
@@ -87,29 +116,46 @@ namespace upsylon
             assert(i<count); return _array[i];
         }
 
+        //! common size
+        inline size_t size() const throw() { return sizes; }
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(arrays);
         memory::allocator& hmem_;
         size_t            _count;
+        size_t            _bytes;
         array_type *      _array;
         size_t             sizes;
+        size_t             items;
         size_t             bytes;
         void  *            entry;
         size_t             indx;
 
-        //! release all memory
-        inline void release_all() throw()
+        //! free n built items
+        inline void __free(size_t n) throw()
         {
-            hmem_. release(entry,bytes);
-            hmem_. release_as<array_type>(_array,_count);
-            sizes = 0;
+            mutable_type *dat = static_cast<mutable_type *>(entry);
+            while(n-->0)
+            {
+                destruct(dat+n);
+            }
         }
 
-        inline void reset() throw()
+        //! release built items
+        inline void __release() throw()
         {
+            __free(items);
+            hmem_. release(entry,bytes);
+            sizes = items = 0;
+        }
+
+        inline void format() throw()
+        {
+            assert(_array);
             array_type   *arr = static_cast<array_type   *>(_array);
             if(sizes)
             {
+                assert(entry);
                 mutable_type *dat = static_cast<mutable_type *>(entry);
                 for(size_t i=0;i<count;++i,dat+=sizes)
                 {
