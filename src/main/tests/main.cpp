@@ -26,6 +26,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(buffers);
     Y_UTEST(string);
     Y_UTEST(string_convert);
+    Y_UTEST(tokenizer);
     Y_UTEST(nugget);
     Y_UTEST(nuggets);
     Y_UTEST(vein);
