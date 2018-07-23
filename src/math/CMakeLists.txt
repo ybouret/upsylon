@@ -11,13 +11,20 @@ FILE(GLOB kernel_decl y/math/kernel/*.h??)
 FILE(GLOB kernel_code y/math/kernel/*.cpp)
 SET(kernel_srcs ${kernel_decl} ${kernel_code})
 SOURCE_GROUP( kernel FILES ${kernel_srcs} )
-INSTALL( FILES ${os_decl} DESTINATION include/y/math/kernel )
+INSTALL( FILES ${kernel_decl} DESTINATION include/y/math/kernel )
+
+FILE(GLOB io_decl y/math/io/*.hpp)
+FILE(GLOB io_code y/math/io/*.cpp)
+SET(io_srcs ${io_decl} ${io_code})
+SOURCE_GROUP( io FILES ${io_srcs} )
+INSTALL( FILES ${io_decl} DESTINATION include/y/math/io )
 
 
 IF(TRUE)
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
 ${kernel_srcs}
+${io_srcs}
 )
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
 ENDIF()
