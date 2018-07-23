@@ -153,6 +153,7 @@ namespace upsylon
                 assert(node); assert(node->addr); return &(node->addr->data);
             }
 
+            //! assuming the pointed node has a key() function
             inline const_key_type & key() const throw()
             {
                 assert(node); assert(node->addr); return node->addr->key();

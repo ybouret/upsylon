@@ -6,6 +6,7 @@
 
 namespace upsylon
 {
+    //! multiple arrays of same length
     template <typename T,typename ALLOCATOR = memory::global>
     class arrays
     {

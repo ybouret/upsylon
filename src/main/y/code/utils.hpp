@@ -28,6 +28,7 @@ namespace upsylon
         static int to_decimal(const char h) throw();
     };
 
+    //! convert a byte into a visible char
     extern const char *visible_char[256];
     
 

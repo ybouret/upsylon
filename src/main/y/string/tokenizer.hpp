@@ -6,12 +6,14 @@
 
 namespace upsylon
 {
+    //! tokenizer for strings
     template <typename T>
     class tokenizer
     {
     public:
 
-        inline explicit tokenizer( const core::string<T> &input) :
+        //! initialize
+        inline explicit tokenizer( const core::string<T> &input) throw():
         curr_( *input ),
         last_( curr_+input.size() ),
         token_(NULL),
@@ -21,10 +23,12 @@ namespace upsylon
 
         }
 
+        //! destructor
         inline virtual ~tokenizer() throw()
         {
         }
 
+        //! scan for next tokenizer
         template <typename FUNC>
         inline bool next( FUNC &is_separator ) throw()
         {
