@@ -23,7 +23,21 @@ Y_UTEST(string_convert)
 
             case 'i': std::cerr << "to<unit_t>(" << data << ")=";
             {
-                const unit_t d = string_convert::to<unit_t>(data);
+                const unit_t j = string_convert::to<unit_t>(data);
+                std::cerr << j << std::endl;
+            }
+                break;
+
+            case 'f': std::cerr << "to<float>(" << data << ")=";
+            {
+                const float f = string_convert::to<float>(data);
+                std::cerr << f << std::endl;
+            }
+                break;
+
+            case 'd': std::cerr << "to<double>(" << data << ")=";
+            {
+                const double d = string_convert::to<double>(data);
                 std::cerr << d << std::endl;
             }
                 break;
