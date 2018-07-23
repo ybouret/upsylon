@@ -18,8 +18,11 @@ namespace upsylon {
         class callback : public virtual callable<R,TLIST>
         {
         public:
+            typedef callable<R,TLIST> callable_type; //!< alias
+
             //! constructor by copy
             explicit callback( const FUNCTION &fn ) : function_( fn ) {}
+
             //! desctructor
             virtual ~callback() throw()    {}
             //! cloneable interface: use copy constructor
@@ -61,7 +64,7 @@ namespace upsylon {
         private:
             Y_DISABLE_ASSIGN(callback);
             //! use the copy semantics of FUNCTION to clone
-            explicit callback( const callback &other ) : function_( other.function_ ) {}
+            explicit callback( const callback &other ) : callable_type(), function_( other.function_ ) {}
             FUNCTION function_;
         };
 

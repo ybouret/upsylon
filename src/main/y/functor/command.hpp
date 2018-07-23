@@ -17,6 +17,8 @@ namespace upsylon {
         class command : public virtual callable<R,TLIST>
         {
         public:
+            typedef callable<R,TLIST> callable_type; //!< alias
+
             //! construct from host+method
             explicit command( const OBJECT_POINTER o, const METHOD_POINTER m ) :
             object_( o ),
@@ -82,6 +84,7 @@ namespace upsylon {
 
             //! copy for the clone function
             explicit command( const command &other ) throw():
+            callable_type(),
             object_( other.object_ ),
             method_( other.method_ )
             {

@@ -1,6 +1,6 @@
 #include "y/hashing/mph.hpp"
 #include "y/exception.hpp"
-//#include "y/sort/merge.hpp"
+#include "y/sort/merge.hpp"
 #include "y/comparison.hpp"
 
 namespace upsylon
@@ -54,19 +54,19 @@ namespace upsylon
             }
         }
         
-#if 0
+#if 1
         static inline int __compare_mph_nodes(const mperf::node_type *lhs,
                                               const mperf::node_type *rhs,
                                               void *) throw()
         {
-            const int ans = __compare_decreasing(lhs->freq,rhs->freq);
+            const int ans = comparison::decreasing(lhs->freq,rhs->freq);
             if(ans!=0)
             {
                 return ans;
             }
             else
             {
-                return __compare(lhs->code,rhs->code);
+                return comparison::increasing(lhs->code,rhs->code);
             }
         }
 #endif
@@ -77,7 +77,7 @@ namespace upsylon
             {
                 node->optimize();
             }
-            //core::merging<node_type>::sort(chld, __compare_mph_nodes, 0);
+            merging<node_type>::sort(chld, __compare_mph_nodes, 0);
         }
 
 

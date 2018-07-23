@@ -56,6 +56,24 @@ namespace upsylon
             }
         }
 
+        //! compare by decreasing value
+        template <typename T> static inline
+        int decreasing( const T &lhs, const T &rhs ) throw()
+        {
+            if(lhs<rhs)
+            {
+                return 1;
+            }
+            else if(rhs<lhs)
+            {
+                return -1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
     private:
         template <typename T> static inline
         int __lexicographic(const T     *small_data,
