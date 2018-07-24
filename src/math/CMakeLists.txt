@@ -19,12 +19,19 @@ SET(io_srcs ${io_decl} ${io_code})
 SOURCE_GROUP( io FILES ${io_srcs} )
 INSTALL( FILES ${io_decl} DESTINATION include/y/math/io )
 
+FILE(GLOB fcn_decl y/math/fcn/*.hpp)
+FILE(GLOB fcn_code y/math/fcn/*.cpp)
+SET(fcn_srcs ${fcn_decl} ${fcn_code})
+SOURCE_GROUP( fcn FILES ${fcn_srcs} )
+INSTALL( FILES ${fcn_decl} DESTINATION include/y/math/fcn )
+
 
 IF(TRUE)
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
 ${kernel_srcs}
 ${io_srcs}
+${fcn_srcs}
 )
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
 ENDIF()
