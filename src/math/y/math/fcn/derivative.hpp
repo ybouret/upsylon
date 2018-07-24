@@ -2,41 +2,50 @@
 #ifndef Y_MATH_FCN_DERIVATIVE_INCLUDED
 #define Y_MATH_FCN_DERIVATIVE_INCLUDED 1
 
-#include "y/math/types.hpp"
+#include "y/math/round.hpp"
 #include "y/container/matrix.hpp"
-#include "y/exception.hpp"
+#include "y/exceptions.hpp"
+#include <cerrno>
 
 namespace upsylon
 {
 
     namespace math
     {
+        //! derivative computation
         template <typename T,const size_t NTAB=16>
         class derivative
         {
         public:
 
+            //! constructor
             inline explicit derivative() : a(NTAB,NTAB) {}
+
+            //! destructor
             inline virtual ~derivative() throw() {}
 
-            //! regularize step
+            //! regularize step and check underflow
             static inline T regularize( const T x, const T h )
             {
                 assert(h>=0);
                 volatile T temp = x+h;
                 const    T step = temp-x;
-                if( step<=0 ) throw exception("derivative underflow");
+                if( step<=0 ) throw libc::exception(EDOM,"derivative underflow");
                 return step;
             }
 
-            //! choose step scaling w.r.t characteristic scale of 1
-            static inline T step_size() throw()
+            //! step scaling w.r.t characteristic scale of 1
+            static inline T unit_step_size() throw()
             {
-                static const T scaling_factor = __pow(numeric<T>::epsilon,T(1.0)/T(3.0));
-                return scaling_factor;
+                static const T value = log_round_floor(__pow(numeric<T>::epsilon,T(1.0)/T(3.0)));
+                return value;
             }
 
             //! estimate derivative by Ridder's method
+            /**
+             if x_c is the characteristic scaling of f variations, then
+             h = x_c * unit_step_size() is a good choice
+             */
             template <typename FUNC>
             inline T compute( FUNC &f, const T x, const T h, T &err )
             {
@@ -71,6 +80,30 @@ namespace upsylon
                     if(__fabs(a[i][i]-a[im][im]) >= (err+err) ) break; // higher order error increases
                 }
                 return ans;
+            }
+
+            //! best effort
+            template <typename FUNC>
+            inline T compute( FUNC &f, const T x, T h )
+            {
+                static const T max_ftol = log_round_ceil( __sqrt( numeric<T>::epsilon ) );
+                static const T CON(1.2);
+                // initialize
+                T err  = 0;
+                T dFdx = compute(f,x,h,err);
+                // try to decrease h
+                while(err>max_ftol*__fabs(dFdx) )
+                {
+                    T       new_err  = 0;
+                    const T new_dFdx = compute(f,x,h/=CON,new_err);
+                    if(new_err>=err)
+                    {
+                        break; // not better
+                    }
+                    err  = new_err;
+                    dFdx = new_dFdx;
+                }
+                return dFdx;
             }
 
         private:

@@ -71,6 +71,21 @@ namespace upsylon
         inline float   __mod2(const complex<float>  x) throw() { return x.mod2(); } //!< |x|^2
         inline double  __mod2(const complex<double> x) throw() { return x.mod2(); } //!< |x|^2
 
+        inline float  __floor( const float  x ) throw() { return floorf(x); } //!< floor
+        inline double __floor( const double x ) throw() { return floor(x);  } //!< floor
+        inline unit_t __floor( const unit_t x ) throw() { return x; }         //!< floor
+
+        inline float  __ceil( const float  x ) throw() { return ceilf(x); } //!< floor
+        inline double __ceil( const double x ) throw() { return ceil(x);  } //!< floor
+        inline unit_t __ceil( const unit_t x ) throw() { return x; }        //!< ceil
+
+        inline float  __log10( const float  x ) throw() { return log10f(x); } //!< log10
+        inline double __log10( const double x ) throw() { return log10(x); }  //!< log10
+
+        inline float  __anint( const float  x ) throw() { return floorf(x+0.5f); }
+        inline double __anint( const double x ) throw() { return floor(x+0.5); }
+
+
     }
 
 }
