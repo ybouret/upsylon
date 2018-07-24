@@ -11,6 +11,7 @@ ADD_TEST(TAO        test-m tao2)
 ADD_TEST(LU         test-m LU)
 ADD_TEST(DataSet    test-m data_set ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
 ADD_TEST(Derivative test-m drvs)
+ADD_TEST(ZFind      test-m zfind)
 
 ADD_CUSTOM_TARGET(utest-m
 COMMAND ${CMAKE_CTEST_COMMAND} -V

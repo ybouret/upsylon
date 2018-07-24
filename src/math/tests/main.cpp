@@ -8,6 +8,8 @@ Y_UTEST_INIT(64)
     Y_UTEST(LU);
     Y_UTEST(data_set);
     Y_UTEST(drvs);
+    Y_UTEST(zfind);
+    
 }
 Y_UTEST_EXEC()
 
