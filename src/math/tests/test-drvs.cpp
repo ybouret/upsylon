@@ -25,10 +25,12 @@ Y_UTEST(drvs)
         double (*proc)(double) = sin;
         numeric<double>::function F = proc;
         ios::ocstream fp("drvs.dat");
+        ios::ocstream fp2("drv2.dat");
+
         for(double x=0;x<=3;x+=0.1)
         {
-            const double dd = drvs.diff(proc, x, 0.01);
-            fp("%g %g %g %g\n", x, proc(x), dd, drvs.diff(F,x,0.01) );
+            fp("%g %g %g %g\n", x, proc(x), drvs.diff(proc, x, 0.01), drvs.diff(F,x,0.01) );
+            fp2("%g %g %g %g\n", x, proc(x), drvs.diff2(proc, x, 0.01), drvs.diff2(F,x,0.01) );
         }
     }
     std::cerr << "unit_step_size: " << derivative<float>::unit_step_size() << ", " <<  derivative<double>::unit_step_size() << std::endl;

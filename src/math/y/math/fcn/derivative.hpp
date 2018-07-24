@@ -82,7 +82,7 @@ namespace upsylon
                 return ans;
             }
 
-            //! best effort
+            //! best effort first order derivative
             template <typename FUNC>
             inline T diff( FUNC &f, const T x, T h )
             {
@@ -104,6 +104,68 @@ namespace upsylon
                     dFdx = new_dFdx;
                 }
                 return dFdx;
+            }
+
+            //! local computation of second order derivative
+            template <typename FUNC>
+            inline T diff2( const T f0, FUNC &f, const T x, const T h, T &err )
+            {
+                static const T CON(1.2);
+                static const T CON2 = CON*CON;
+                assert(h>=0);
+                T    hh  = regularize(x,h);
+                T    ww  = hh*hh;
+                T    ans = a[1][1] = ( (f(x+hh)-f0)+(f(x-hh)-f0))/ww;
+                bool ini = true;
+                err      = -1;
+                for(size_t i=2,im=1;i<=NTAB;++i,++im)
+                {
+                    hh      = regularize(x,hh/CON);
+                    ww      = hh*hh;
+                    a[1][i] = ( (f(x+hh)-f0)+(f(x-hh)-f0))/ww;
+                    T fac   = CON2;
+                    for(size_t j=2,jm=1;j<=i;++j,++jm)
+                    {
+                        a[j][i]=(a[jm][i]*fac-a[jm][im])/(fac-T(1));
+                        fac=CON2*fac;
+                        const T errt=max_of<T>(__fabs(a[j][i]-a[jm][i]),__fabs(a[j][i]-a[jm][im]));
+                        if( ini || (errt<=err) )
+                        {
+                            err = errt;
+                            ans = a[j][i];
+                            ini = false;
+                        }
+                    }
+                    assert(!ini);
+                    assert(err>=0);
+                    if(__fabs(a[i][i]-a[im][im]) >= (err+err) ) break; // higher order error increases
+                }
+                return ans;
+            }
+
+            //! best effort second order derivative
+            template <typename FUNC>
+            inline T diff2( FUNC &f, const T x, T h )
+            {
+                static const T max_ftol = log_round_ceil( __sqrt( numeric<T>::epsilon ) );
+                static const T CON(1.2);
+                // initialize
+                const T f0     = f(x);
+                T       err    = 0;
+                T       d2Fdx2 = diff2(f0,f,x,h,err);
+                // try to decrease h
+                while(err>max_ftol*__fabs(d2Fdx2) )
+                {
+                    T       new_err  = 0;
+                    const T new_d2Fdx2 = diff2(f0,f,x,h/=CON,new_err);
+                    if(new_err>=err)
+                    {
+                        break; // not better
+                    }
+                    err  = new_err;
+                    d2Fdx2 = new_d2Fdx2;
+                }
+                return d2Fdx2;
             }
 
         private:
