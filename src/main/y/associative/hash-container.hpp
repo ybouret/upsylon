@@ -116,12 +116,19 @@ namespace upsylon
             {
                 return false;
             }
-            
         }
-        
+
+        //! sort internal nodes by data
+        template <typename COMPARE_DATA>
+        inline void sort_data( COMPARE_DATA &compare_data ) { table.sort_by_data(compare_data); }
+
+        //! sort internal nodes by keys
+        template <typename COMPARE_KEYS>
+        inline void sort_keys( COMPARE_KEYS &compare_keys ) { table.sort_by_keys(compare_keys); }
+
     protected:
         table_type table; //!< handle low level operations
-
+        
     public:
         mutable KEY_HASHER hash; //!< hasher for the key type
 

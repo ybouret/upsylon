@@ -79,7 +79,21 @@ namespace
             {
                 std::cerr << i.key() << ":" << *i << std::endl;
             }
-
+#if 0
+            std::cerr << "sorting by data" << std::endl;
+            db.sort_data(comparison::increasing<T>);
+            for( typename set_type::iterator i=db.begin();i!=db.end();++i)
+            {
+                std::cerr << i.key() << ":" << *i << std::endl;
+            }
+#endif
+            
+            std::cerr << "sorting by keys" << std::endl;
+            db.sort_keys(comparison::increasing<KEY>);
+            for( typename set_type::iterator i=db.begin();i!=db.end();++i)
+            {
+                std::cerr << i.key() << ":" << *i << std::endl;
+            }
 
 
             for(size_t i=1;i<=keys.size();++i)

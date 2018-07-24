@@ -12,7 +12,7 @@ namespace upsylon
     {
     public:
 
-        //! initialize
+        //! initialize from a string, must not change!
         inline explicit tokenizer( const core::string<T> &input) throw():
         curr_( *input ),
         last_( curr_+input.size() ),
@@ -24,9 +24,7 @@ namespace upsylon
         }
 
         //! destructor
-        inline virtual ~tokenizer() throw()
-        {
-        }
+        inline virtual ~tokenizer() throw() { }
 
         //! scan for next tokenizer
         template <typename FUNC>
@@ -36,9 +34,7 @@ namespace upsylon
             units_ = 0;
             for(;;)
             {
-                if( curr_ >= last_ )
-                    return false;
-
+                if( curr_ >= last_ ) return false;
                 if( is_separator( *curr_ ) )
                 {
                     ++curr_;

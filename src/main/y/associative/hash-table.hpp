@@ -6,6 +6,7 @@
 #include "y/memory/slab.hpp"
 #include "y/type/utils.hpp"
 #include "y/container/container.hpp"
+#include "y/sort/merge.hpp"
 
 namespace upsylon
 {
@@ -263,6 +264,19 @@ namespace upsylon
             meta_slab  metas; //!< to store metas node
 
 
+
+            template <typename COMPARE_DATA>
+            inline void sort_by_data( COMPARE_DATA &compare_data )
+            {
+                merging<meta_node>::sort(chain,__compare_node_data<COMPARE_DATA>, (void *)&compare_data);
+            }
+
+            template <typename COMPARE_KEYS>
+            inline void sort_by_keys( COMPARE_KEYS &compare_keys )
+            {
+                merging<meta_node>::sort(chain,__compare_node_keys<COMPARE_KEYS>, (void*)&compare_keys);
+            }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(hash_table);
             void   *buffer;
@@ -276,6 +290,22 @@ namespace upsylon
                 node->meta = meta;
                 chain.push_back(meta);
                 return node;
+            }
+
+            template <typename COMPARE_DATA> static inline
+            int __compare_node_data( const meta_node *lhs, const meta_node *rhs, void *args )
+            {
+                assert(args); assert(lhs); assert(rhs);
+                COMPARE_DATA &compare_data = *(COMPARE_DATA *)args;
+                return compare_data(lhs->addr->data,rhs->addr->data);
+            }
+
+            template <typename COMPARE_KEYS> static inline
+            int __compare_node_keys( const meta_node *lhs, const meta_node *rhs, void *args )
+            {
+                assert(args); assert(lhs); assert(rhs);
+                COMPARE_KEYS &compare_keys = *(COMPARE_KEYS *)args;
+                return compare_keys(lhs->addr->key(),rhs->addr->key());
             }
         };
     }
