@@ -26,7 +26,7 @@ Y_UTEST(drvs)
         ios::ocstream fp("drvs.dat");
         for(double x=0;x<=3;x+=0.1)
         {
-            const double dd = drvs.compute(proc, x, 0.01);
+            const double dd = drvs.diff(proc, x, 0.01);
             fp("%g %g %g\n", x, proc(x), dd);
         }
     }

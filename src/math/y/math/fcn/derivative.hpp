@@ -47,7 +47,7 @@ namespace upsylon
              h = x_c * unit_step_size() is a good choice
              */
             template <typename FUNC>
-            inline T compute( FUNC &f, const T x, const T h, T &err )
+            inline T diff( FUNC &f, const T x, const T h, T &err )
             {
                 static const T CON(1.2);
                 static const T CON2 = CON*CON;
@@ -84,18 +84,18 @@ namespace upsylon
 
             //! best effort
             template <typename FUNC>
-            inline T compute( FUNC &f, const T x, T h )
+            inline T diff( FUNC &f, const T x, T h )
             {
                 static const T max_ftol = log_round_ceil( __sqrt( numeric<T>::epsilon ) );
                 static const T CON(1.2);
                 // initialize
                 T err  = 0;
-                T dFdx = compute(f,x,h,err);
+                T dFdx = diff(f,x,h,err);
                 // try to decrease h
                 while(err>max_ftol*__fabs(dFdx) )
                 {
                     T       new_err  = 0;
-                    const T new_dFdx = compute(f,x,h/=CON,new_err);
+                    const T new_dFdx = diff(f,x,h/=CON,new_err);
                     if(new_err>=err)
                     {
                         break; // not better

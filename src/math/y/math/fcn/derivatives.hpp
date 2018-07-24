@@ -33,7 +33,7 @@ namespace upsylon
                 for(i=X.size();i>0;--i)
                 {
                     const T xi = X[i];
-                    grad[i]    = this->compute(g,xi,h);
+                    grad[i]    = this->diff(g,xi,h);
                     Y[i]       = xi;
                 }
             }
