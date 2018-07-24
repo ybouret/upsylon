@@ -2,6 +2,7 @@
 #include "y/ios/icstream.hpp"
 #include "y/ptr/arc.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/string/tokenizer.hpp"
 
 using namespace upsylon;
 
@@ -9,12 +10,37 @@ class swaps : public counted_object
 {
 public:
     const string title;
-    string data;
+    string       data;
+    static inline bool is_sep(const int C) { return ':' == C; }
 
     inline swaps(const string &id, const string &dd ) :
     title(id), data(dd)
     {
-        
+        data.trim(1).skip(1);
+        const string &source = data;
+        {
+            string        target;
+            for(size_t i=0;i<source.size();++i)
+            {
+                if( ',' == source[i] && ' '==source[i+1] )
+                {
+                    target<< ':';
+                    ++i;
+                }
+                else
+                {
+                    target << source[i];
+                }
+            }
+            data.swap_with(target);
+        }
+        tokenizer<char> tkn(data);
+        while( tkn.next(is_sep) )
+        {
+            const string swp = tkn.to_string();
+            std::cerr << swp << "/";
+        }
+        std::cerr << std::endl;
     }
 
     virtual ~swaps() throw()
