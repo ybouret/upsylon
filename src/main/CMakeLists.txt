@@ -150,6 +150,12 @@ SET(functor_srcs ${functor_decl} ${functor_code})
 SOURCE_GROUP( functor FILES ${functor_srcs} )
 INSTALL( FILES ${functor_decl} DESTINATION include/y/functor )
 
+FILE(GLOB fs_decl y/fs/*.hpp)
+FILE(GLOB fs_code y/fs/*.cpp)
+SET(fs_srcs ${fs_decl} ${fs_code})
+SOURCE_GROUP( fs FILES ${fs_srcs} )
+INSTALL( FILES ${fs_decl} DESTINATION include/y/fs )
+
 
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
@@ -176,9 +182,13 @@ ${mpl_srcs}
 ${mpl_natural_srcs}
 ${math_srcs}
 ${functor_srcs}
+${fs_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
+
+ADD_EXECUTABLE(nwsrt nwsrt.cpp)
+TARGET_LINK_Y(nwsrt)
 
 ADD_SUBDIRECTORY(tests)
 

@@ -98,11 +98,33 @@ namespace upsylon
         }
 
         //! sequence interface: push_back()
-        inline virtual void push_front( param_type args )
+        inline virtual void push_front( param_type args ) { nodes.push_front( query(args) ); }
+        //! sequence interface: back()
+        inline virtual type       & back() throw()       { assert(nodes.size>0); return nodes.tail->data; }
+        //! sequence interface: back() const
+        inline virtual const_type & back() const throw() { assert(nodes.size>0); return nodes.tail->data; }
+        //! sequence interface : front()
+        inline virtual type       & front() throw()       { assert(nodes.size>0); return nodes.head->data; }
+        //! sequence interface : front(), const
+        inline virtual const_type & front() const throw() { assert(nodes.size>0); return nodes.head->data; }
+        //! sequence interface : pop_back()
+        inline virtual void pop_back() throw()
         {
-            nodes.push_front( query(args) );
+            assert(nodes.size>0);
+            node_type *node = nodes.pop_back();
+            destruct(node);
+            cache.store(node);
         }
-        
+        //! sequence interface : pop_front()
+        inline virtual void pop_front() throw()
+        {
+            assert(nodes.size>0);
+            node_type *node = nodes.pop_front();
+            destruct(node);
+            cache.store(node);
+        }
+
+
         typedef iterate::linked<type,node_type,iterate::forward>             iterator;        //!< forward iterator
         typedef iterate::linked<const_type,const node_type,iterate::forward> const_iterator;  //!< forward const iterator
 

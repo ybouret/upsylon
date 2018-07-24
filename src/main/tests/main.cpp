@@ -56,6 +56,8 @@ Y_UTEST_INIT(64)
     Y_UTEST(set);
     Y_UTEST(matrix);
     Y_UTEST(functor);
+    Y_UTEST(vfs);
+    
 }
 Y_UTEST_EXEC()
 
