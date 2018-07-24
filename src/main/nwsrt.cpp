@@ -1,9 +1,11 @@
 #include "y/program.hpp"
 #include "y/ios/icstream.hpp"
+#include "y/ios/ocstream.hpp"
 #include "y/ptr/arc.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/string/tokenizer.hpp"
 #include "y/string/convert.hpp"
+#include "y/sort/heap.hpp"
 
 using namespace upsylon;
 
@@ -15,7 +17,7 @@ public:
     inline  swap(unsigned i,unsigned j) throw() : I(i), J(j) { assert(I!=J); }
     inline ~swap() throw() {}
     inline  swap(const swap &other) throw() : I(other.I), J(other.J) {}
-
+    
 private:
     Y_DISABLE_ASSIGN(swap);
 };
@@ -28,7 +30,7 @@ public:
     vector<swap> tests;
     template <char CH>
     static inline bool is_char(const int C) { return CH == C; }
-
+    
     inline swaps(const string &id, const string &dd ) :
     tests(256,as_capacity)
     {
@@ -43,7 +45,7 @@ public:
             count = unsigned( string_convert::to<size_t>(cnt,"count") );
             std::cerr << "count=" << count << std::endl;
         }
-
+        
         {
             string       data = dd;
             data.trim(1).skip(1);
@@ -85,53 +87,114 @@ public:
                 const string J = sub.to_string();
                 const swap   s(unsigned(string_convert::to<size_t>(I,"I")),
                                unsigned(string_convert::to<size_t>(J,"J")));
-
-                //std::cerr << s.I << "-" << s.J << "/";
+                
                 tests.push_back(s);
             }
             //std::cerr << std::endl;
         }
         std::cerr << "#tests=" << tests.size() << std::endl;
     }
-
+    
     virtual ~swaps() throw()
     {
     }
-
+    
 private:
     Y_DISABLE_COPY_AND_ASSIGN(swaps);
 };
 
 typedef arc_ptr<swaps> swaps_ptr;
 
+static inline int __compare_swaps_ptr( const swaps_ptr &lhs, const swaps_ptr &rhs) throw()
+{
+    return comparison::increasing(lhs->count,rhs->count);
+}
+
 Y_PROGRAM_START()
 {
     if(argc>1)
     {
-        ios::icstream fp(argv[1]);
         vector<swaps_ptr> Swaps(128,as_capacity);
-        string line;
-        while( fp.gets(line) )
         {
-            string title = line;
-            if(!fp.gets(line))
+            ios::icstream fp(argv[1]);
+            string line;
+            while( fp.gets(line) )
             {
-                throw exception("Missing Data for '%s'", *title);
-            }
-            string data = line;
-            if(!fp.gets(line))
-            {
-                throw exception("Cannot skip line after '%s'",*title);
-            }
-            std::cerr << title << std::endl;
-            const swaps_ptr p = new swaps(title,data);
-            if(Swaps.size()<=0 || p->count>Swaps.back()->count)
-            {
-                Swaps.push_back(p);
+                string title = line;
+                if(!fp.gets(line))
+                {
+                    throw exception("Missing Data for '%s'", *title);
+                }
+                string data = line;
+                if(!fp.gets(line))
+                {
+                    throw exception("Cannot skip line after '%s'",*title);
+                }
+                std::cerr << title << std::endl;
+                const swaps_ptr p = new swaps(title,data);
+                if(Swaps.size()<=0 || p->count>Swaps.back()->count)
+                {
+                    Swaps.push_back(p);
+                }
             }
         }
         std::cerr << "Found " << Swaps.size() << " swaps" << std::endl;
-
+        hsort(Swaps,__compare_swaps_ptr);
+        const unsigned count_max = Swaps.back()->count;
+        const unsigned ns = unsigned(Swaps.size());
+        {
+            ios::ocstream fp("nwsrt.hpp");
+            
+            // file prolog
+            fp << "#ifndef Y_NWSRT_INCLUDED\n";
+            fp << "#define Y_NWSRT_INCLUDED 1\n";
+            fp << "#include \"y/type/bswap.hpp\"\n";
+            fp << "namespace upsylon {\n";
+            
+            // nwsrt
+            fp << "\tstruct nwsrt {\n";
+            fp("\t\tstatic const size_t max_size=%u; //!< max handled case\n",count_max);
+            
+            for(unsigned i=1;i<=ns;++i)
+            {
+                const unsigned count = Swaps[i]->count;
+                fp("\t\t//!built-in version on %u items\n",count);
+                fp("\t\ttemplate <typename T> static inline void on%u(T *a) {\n",count);
+                fp << "\t\t\tassert(a);\n";
+                const array<swap> &tests = Swaps[i]->tests;
+                const size_t       nt    = tests.size();
+                for(size_t j=1;j<=nt;++j)
+                {
+                    const swap &swp = tests[j];
+                    fp("\t\t\t{ T &aI = a[%2u]; T &aJ = a[%2u]; if(aJ<aI) bswap(aI,aJ); }\n",swp.I,swp.J);
+                }
+                fp << "\t\t}\n";
+            }
+            
+            // gather
+            fp("\t\t//!built-in version on 0-%u items\n",count_max);
+            fp << "\t\ttemplate <typename T> static inline void on(T *a, const size_t n) {\n";
+            
+            fp << "\t\t\tswitch(n) {\n";
+            for(size_t i=1;i<=ns;++i)
+            {
+                const unsigned count = Swaps[i]->count;
+                fp("\t\t\t\tcase %u: on%u(a); break;\n",count,count);
+            }
+            fp << "\t\t\t\tdefault: break;\n";
+            fp << "\t\t\t}\n";
+            
+            fp << "\t\t}\n";
+            
+            // end of nwsrt
+            fp<< "\t};\n";
+            
+            // file epilog
+            fp << "}\n";
+            fp << "#endif\n";
+        }
+        
+        
     }
 }
 Y_PROGRAM_END()
