@@ -9,7 +9,7 @@ ADD_TEST(Types    test-m types)
 ADD_TEST(TAO      test-m tao)
 ADD_TEST(TAO      test-m tao2)
 ADD_TEST(LU       test-m LU)
-ADD_TEST(DataSet  test-m data_set)
+ADD_TEST(DataSet  test-m data_set ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
 
 ADD_CUSTOM_TARGET(utest-m
 COMMAND ${CMAKE_CTEST_COMMAND} -V
