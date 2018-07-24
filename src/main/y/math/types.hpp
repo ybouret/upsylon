@@ -5,6 +5,7 @@
 #include "y/type/complex.hpp"
 #include "y/type/utils.hpp"
 #include "y/functor.hpp"
+#include "y/sequence/array.hpp"
 #include <cmath>
 
 namespace upsylon
@@ -52,7 +53,9 @@ namespace upsylon
             static const T      tiny;       //!< \f$10^{min_{10}exp}\f$
             static const T      huge;       //!< \f$10^{max_{10}exp}\f$
 
-            typedef functor<T,TL1(T)> function; //!< 1-argument function wrapper
+            typedef functor<T,TL1(T)> function;                   //!< 1-argument function wrapper
+            typedef functor<T,TL1(const array<T>&)> scalar_field; //!< scalar field (for gradient)
+
         };
 
         inline float  __sqrt( const float  f ) throw() { return sqrtf(f); } //!< sqrt
