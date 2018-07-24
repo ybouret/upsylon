@@ -121,6 +121,7 @@ namespace upsylon
         const_reverse_iterator rbegin() const throw() { return const_reverse_iterator( nodes.tail ); } //!< begin reverse const
         const_reverse_iterator rend()   const throw() { return const_reverse_iterator(0);            } //!< end reverse const
 
+        //! output as a julia/octave array
         inline friend std::ostream & operator<<( std::ostream &os, const list &L )
         {
             os << '[';

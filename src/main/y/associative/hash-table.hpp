@@ -264,13 +264,14 @@ namespace upsylon
             meta_slab  metas; //!< to store metas node
 
 
-
+            //! sort internal chain by data
             template <typename COMPARE_DATA>
             inline void sort_by_data( COMPARE_DATA &compare_data )
             {
                 merging<meta_node>::sort(chain,__compare_node_data<COMPARE_DATA>, (void *)&compare_data);
             }
 
+            //! sort internal chain by keys
             template <typename COMPARE_KEYS>
             inline void sort_by_keys( COMPARE_KEYS &compare_keys )
             {

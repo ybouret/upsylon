@@ -19,15 +19,16 @@ namespace upsylon
         class data_set
         {
         public:
-            Y_DECL_ARGS(T,type);
-            typedef sequence<type>           sequence_type;
-            typedef sequence_type           *column;
-            typedef map<size_t,column>       colmap;
+            Y_DECL_ARGS(T,type);                //!< type alias
+            typedef sequence<type>     *column; //!< simple pointer to a sequence
+            typedef map<size_t,column>  colmap; //!< [index:column] map
 
+            //! constructor, reserve a little memory
             inline explicit data_set() : columns(4,as_capacity) {}
+            //! destructor
             inline virtual ~data_set() throw() {}
-
-            inline void use( const size_t column_index, sequence_type &seq )
+            //! link a column index to a columnx
+            inline void use( const size_t column_index, sequence<type> &seq )
             {
                 if(column_index<=0) throw exception("data_set: column index <= 0");
                 if(!columns.insert(column_index,&seq))
@@ -36,6 +37,7 @@ namespace upsylon
                 }
             }
 
+            //! free all register columns
             inline void free_all() throw()
             {
                 for(typename colmap::iterator i=columns.begin();i!=columns.end();++i)
@@ -44,6 +46,7 @@ namespace upsylon
                 }
             }
 
+            //! load data from input stream, 
             inline void load( ios::istream &fp, const size_t skip=0, const size_t nmax=0)
             {
                 // preparing columns, order by increasing index
