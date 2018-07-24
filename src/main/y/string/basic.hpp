@@ -380,6 +380,14 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
                 return trim(is_bad).skip(is_bad);
             }
 
+            //! back operator
+            inline T &       back() throw()       { assert(size_>0); return addr_[size_-1]; }
+            //! back, csont
+            inline const T & back() const throw() { assert(size_>0); return addr_[size_-1]; }
+            //! front
+            inline T &       front() throw()       { assert(size_>0); return addr_[0]; }
+            //! front, csont
+            inline const T & front() const throw() { assert(size_>0); return addr_[0]; }
         private:
             T     *addr_;
             size_t size_;

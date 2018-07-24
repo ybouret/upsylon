@@ -267,7 +267,27 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
 
         inline const_reverse_iterator rbegin() const throw() { return const_reverse_iterator(this->item_+this->size_); } //!< begin reverse const
         inline const_reverse_iterator rend()   const throw() { return const_reverse_iterator(this->item_);             } //!< end reverse const
-        
+
+        inline virtual type       & back()  throw()       { assert(this->size_>0); return this->item_[this->size_]; } //!< sequence interface
+        inline virtual const_type & back()  const throw() { assert(this->size_>0); return this->item_[this->size_]; } //!< sequence interface
+        inline virtual type       & front() throw()       { assert(this->size_>0); return this->addr_[0]; }           //!< sequence interface
+        inline virtual const_type & front() const throw() { assert(this->size_>0); return this->addr_[0]; }           //!< sequence interface
+
+        //! sequence interface
+        inline virtual void pop_back() throw()
+        {
+            assert(this->size_>0);
+            destruct( & this->item_[this->size_--] );
+        }
+
+        //! sequence interface
+        inline virtual void pop_front() throw()
+        {
+            assert(this->size_>0);
+            destruct(this->addr_);
+            memmove( static_cast<void *>(this->addr_), static_cast<const void *>(this->addr_+1), --(this->size_) * sizeof(T) );
+        }
+
     private:
         size_t             maxi_;
         size_t             bytes;

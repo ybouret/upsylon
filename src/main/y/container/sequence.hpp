@@ -21,7 +21,25 @@ namespace upsylon
         
         //! push an object at the front of the sequence
         virtual void push_front( param_type ) = 0;
+
+        //! get the back item
+        virtual type &back() throw() = 0;
         
+        //! get the back item, const
+        virtual const_type & back() const throw() = 0;
+
+        //! get the front item
+        virtual type &front() throw() = 0;
+
+        //! get the front item, const
+        virtual const_type & front() const throw() = 0;
+
+        //! remove last item
+        virtual void pop_back() throw() = 0;
+
+        //! remove first item
+        virtual void pop_front() throw() = 0;
+
     protected:
         //! constructor
         explicit sequence() throw() : container() {}
