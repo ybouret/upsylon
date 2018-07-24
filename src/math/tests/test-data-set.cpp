@@ -16,6 +16,7 @@ namespace
               const size_t  ix,
               const size_t  iy)
     {
+        std::cerr << "Loading x=#" << ix << ", y=#" << iy << std::endl;
         data_set<T> ds;
         ios::icstream fp(filename);
         vector<T> x;
@@ -25,6 +26,8 @@ namespace
 
         ds.free_all();
         ds.load(fp);
+        std::cerr << "x=" << x << std::endl;
+        std::cerr << "y=" << y << std::endl;
     }
 }
 
@@ -35,7 +38,7 @@ Y_UTEST(data_set)
     {
         const string fn = argv[1];
         load<float>(fn,1,2);
-        load<double>(fn,2,1);
+        load<double>(fn,3,1);
     }
 
 }

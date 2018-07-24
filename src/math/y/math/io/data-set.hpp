@@ -72,9 +72,12 @@ namespace upsylon
                         {
                             if(!tkn.next(__sep))
                             {
-                                throw exception("");
+                                throw exception("%u:data_set missing column #%u",iline,unsigned(idx));
                             }
                         }
+                        const string word  = tkn.to_string();
+                        const T      value = string_convert::to<T>(word); // todo: add field?
+                        (**i).push_back(value);
                     }
                     if(nmax>0&&++loaded>=nmax)
                     {

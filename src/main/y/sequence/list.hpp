@@ -6,6 +6,7 @@
 #include "y/core/list.hpp"
 #include "y/core/pool.hpp"
 #include "y/iterate/linked.hpp"
+#include <iostream>
 
 namespace upsylon
 {
@@ -119,7 +120,27 @@ namespace upsylon
 
         const_reverse_iterator rbegin() const throw() { return const_reverse_iterator( nodes.tail ); } //!< begin reverse const
         const_reverse_iterator rend()   const throw() { return const_reverse_iterator(0);            } //!< end reverse const
-        
+
+        inline friend std::ostream & operator<<( std::ostream &os, const list &L )
+        {
+            os << '[';
+            const node_type *curr = L.nodes.head;
+            while(curr)
+            {
+                const node_type *next = curr->next;
+                os << (curr->data);
+                if(next)
+                {
+                    os << ' ';
+                    curr = next;
+                }
+                else
+                    break;
+            }
+            os << ']' << '\'';
+            return os;
+        }
+
     private:
         core::list_of<node_type> nodes;
         core::pool_of<node_type> cache;
