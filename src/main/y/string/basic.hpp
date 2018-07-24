@@ -315,25 +315,69 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
             }
 
             //! trim all bad chars
-            inline string &trim( bool (*is_bad)(const char C) ) throw()
+            template <typename FUNC> //bool (*is_bad)(const char C)
+            inline string &trim( FUNC &is_bad ) throw()
             {
-                if(is_bad)
+                while(size_>0)
                 {
-                    while(size_>0)
+                    const size_t i = size_-1;
+                    if(!is_bad(addr_[i]))
                     {
-                        const size_t i = size_-1;
-                        if(!is_bad(addr_[i]))
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            addr_[i] = 0;
-                            size_ = i;
-                        }
+                        break;
+                    }
+                    else
+                    {
+                        addr_[i] = 0;
+                        size_ = i;
                     }
                 }
                 return *this;
+            }
+
+            //! skip n first chars
+            inline string & skip(const size_t n) throw()
+            {
+                if(n>=size_)
+                {
+                    clear();
+                }
+                else
+                {
+                    size_ -= n;
+                    for(size_t i=0,j=n;i<size_;++i,++j)
+                    {
+                        addr_[i] = addr_[j];
+                    }
+                    addr_[size_] = 0;
+                    Y_CORE_STRING_CHECK(*this);
+                }
+                return *this;
+            }
+
+            //! skip first 'is_bad' chars
+            template <typename FUNC>
+            inline string & skip( FUNC &is_bad ) throw()
+            {
+                size_t n = 0;
+                for(size_t i=0;i<size_;++i)
+                {
+                    if(is_bad(addr_[i]))
+                    {
+                        ++n;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                return skip(n);
+            }
+
+            //! remove first and last bad chars
+            template <typename FUNC>
+            inline string & clean( FUNC &is_bad ) throw()
+            {
+                return trim(is_bad).skip(is_bad);
             }
 
         private:

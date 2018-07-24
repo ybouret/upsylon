@@ -9,11 +9,12 @@ class swaps : public counted_object
 {
 public:
     const string title;
-    const string data;
+    string data;
 
     inline swaps(const string &id, const string &dd ) :
     title(id), data(dd)
     {
+        
     }
 
     virtual ~swaps() throw()

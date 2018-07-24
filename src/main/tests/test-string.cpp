@@ -58,6 +58,28 @@ Y_UTEST(string)
     Y_CHECK(rhs>=lhs); Y_CHECK(rhs>=l); Y_CHECK(rhs>=L);
     Y_CHECK(rhs>lhs);  Y_CHECK(rhs>l);  Y_CHECK(rhs>L);
 
+    std::cerr << "skip/trim" << std::endl;
+    {
+        string s;
+        for(size_t i=0;i<80;++i)
+        {
+            s += alea.range<char>('!','~');
+        }
+        std::cerr << s << std::endl;
+        while(s.size())
+        {
+            if( alea.choice() )
+            {
+                s.trim( alea.leq(10) );
+            }
+            else
+            {
+                s.skip( alea.leq(10) );
+            }
+            std::cerr << s << std::endl;
+        }
+    }
+
 }
 Y_UTEST_DONE()
 
