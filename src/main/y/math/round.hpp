@@ -8,6 +8,7 @@ namespace upsylon
 {
     namespace math
     {
+        //! round to a lower integer*exponent10
         template <typename T>
         inline T log_round_floor( T a ) throw()
         {
@@ -17,6 +18,7 @@ namespace upsylon
             return  a_one * __pow( T(10.0),a_log);
         }
 
+        //! round to a upper integer*exponent10
         template <typename T>
         inline T log_round_ceil( T a ) throw()
         {
@@ -26,6 +28,7 @@ namespace upsylon
             return  a_one * __pow( T(10.0),a_log);
         }
 
+        //! return every time step to save around each dt_save, updated
         template <typename T>
         inline size_t simulation_save_every_(const T dt, T &dt_save) throw()
         {
@@ -39,6 +42,7 @@ namespace upsylon
             return every;
         }
 
+        //! simplify dt/dt_save and return every time step to save
         template <typename T>
         inline size_t simulation_save_every( T &dt, T &dt_save ) throw()
         {
@@ -47,6 +51,7 @@ namespace upsylon
             return simulation_save_every_(dt,dt_save);
         }
 
+        //! number of iterations to run
         template <typename T>
         inline size_t simulation_iter( const T t_run, const T dt, const size_t every ) throw()
         {

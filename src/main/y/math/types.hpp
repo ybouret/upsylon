@@ -55,7 +55,7 @@ namespace upsylon
 
             typedef functor<T,TL1(T)>                 function;            //!< 1-argument function wrapper
             typedef functor<T,TL1(const array<T>&)>   scalar_field;        //!< scalar field (for gradient)
-            typedef functor<T,TL2(T,const array<T>&)> parametric_function; 
+            typedef functor<T,TL2(T,const array<T>&)> parametric_function; //!< parametric function
 
         };
 
@@ -88,8 +88,8 @@ namespace upsylon
         inline float  __log10( const float  x ) throw() { return log10f(x); } //!< log10
         inline double __log10( const double x ) throw() { return log10(x); }  //!< log10
 
-        inline float  __anint( const float  x ) throw() { return floorf(x+0.5f); }
-        inline double __anint( const double x ) throw() { return floor(x+0.5); }
+        inline float  __anint( const float  x ) throw() { return floorf(x+0.5f); } //!< nearest integer
+        inline double __anint( const double x ) throw() { return floor(x+0.5); }   //!< nearest integer
 
 
     }

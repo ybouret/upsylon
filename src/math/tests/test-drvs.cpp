@@ -23,11 +23,12 @@ Y_UTEST(drvs)
     {
         derivative<double> drvs;
         double (*proc)(double) = sin;
+        numeric<double>::function F = proc;
         ios::ocstream fp("drvs.dat");
         for(double x=0;x<=3;x+=0.1)
         {
             const double dd = drvs.diff(proc, x, 0.01);
-            fp("%g %g %g\n", x, proc(x), dd);
+            fp("%g %g %g %g\n", x, proc(x), dd, drvs.diff(F,x,0.01) );
         }
     }
     std::cerr << "unit_step_size: " << derivative<float>::unit_step_size() << ", " <<  derivative<double>::unit_step_size() << std::endl;
@@ -36,6 +37,8 @@ Y_UTEST(drvs)
         ios::ocstream fp("grad.dat");
         vector<float> p(2);
         vector<float> g(2);
+        float (*proc2)(const array<float> &) = f2;
+        numeric<float>::scalar_field F2 = proc2;
         for(float x=0;x<=3;x+=0.1)
         {
             p[1] = x;
@@ -43,8 +46,9 @@ Y_UTEST(drvs)
             {
                 p[2] = y;
                 const float value = f2(p);
-                drvs.gradient(g,f2,p,0.001);
+                drvs.grad(g,f2,p,0.001);
                 fp("%g %g %g %g %g\n", x,y, value, g[1], g[2] );
+                drvs.grad(g,F2,p,0.001);
             }
             fp << '\n';
         }
