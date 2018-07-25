@@ -21,6 +21,8 @@ namespace upsylon
             {
                 nwsrt::on3( &a, &other.a );
             }
+            inline void ld(const T x) throw() { a=b=c=x; }
+            
             friend inline std::ostream & operator<<( std::ostream &os, const triplet x)
             {
                 return (os << '[' << x.a << ' ' << x.b << ' ' << x.c << ']' << '\'' );
