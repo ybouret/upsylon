@@ -205,8 +205,8 @@ namespace upsylon
             {
                 while(true)
                 {
-                    const T x1 = symm<T>();
-                    const T x2 = symm<T>();
+                    const T x1  = symm<T>();
+                    const T x2  = symm<T>();
                     const T x12 = x1*x1;
                     const T x22 = x2*x2;
                     const T d2  = x12+x22;

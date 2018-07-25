@@ -4,6 +4,7 @@
 
 #include "y/math/types.hpp"
 #include "y/container/matrix.hpp"
+#include "y/type/xnumeric.hpp"
 
 namespace upsylon
 {
