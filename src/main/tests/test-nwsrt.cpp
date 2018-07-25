@@ -11,16 +11,20 @@ namespace
     static inline void do_test()
     {
         
-        vector<T> v( nwsrt::max_size, as_capacity);
+        vector<T>      v( nwsrt::max_size, as_capacity);
+        vector<size_t> w( nwsrt::max_size, as_capacity);
+
         for(size_t n=0;n<=nwsrt::max_size;++n)
         {
             for(size_t iter=0;iter<16;++iter)
             {
                 v.free();
+                w.free();
                 for(size_t j=0;j<n;++j)
                 {
                     const T x = support::get<T>();
                     v.push_back(x);
+                    w.push_back(0);
                 }
                 
                 for(size_t jter=0;jter<16;++jter)
@@ -30,6 +34,19 @@ namespace
                     for(size_t j=1;j<n;++j)
                     {
                         Y_ASSERT(v[j]<=v[j+1]);
+                    }
+                    alea.shuffle(*v,n);
+                    for(size_t j=1;j<=n;++j) w[j] = j;
+                    if(jter<=0&&iter<=0)
+                    {
+                        std::cerr << "v_raw=" << v << std::endl;
+                        std::cerr << "w_raw=" << w << std::endl;
+                    }
+                    nwsrt::on(*v,*w,n);
+                    if(jter<=0&&iter<=0)
+                    {
+                        std::cerr << "v_srt=" << v << std::endl;
+                        std::cerr << "w_srt=" << w << std::endl;
                     }
                 }
             }

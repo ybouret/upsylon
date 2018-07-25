@@ -133,7 +133,15 @@ namespace upsylon {
         static string  to_directory( const string &path );
         static string  to_directory( const char   *path );
         static void    change_extension( string &path, const string &ext );
+        static inline string  with_new_extension( const string &path, const string &ext)
+        {
+            string tmp = path; change_extension(tmp,ext); return tmp;
+        }
         static void    remove_extension( string &path ) throw();
+        static inline string without_extension( const string &path )
+        {
+            string tmp = path; remove_extension(tmp); return tmp;
+        }
         static string  base_name_from(const string &name);  //!< make an acceptable file name
         static string  cpp_label_from(const string &name);  //!< C Pre Processor label
         static string  class_name_for(const string &name);  //!< acceptable class name

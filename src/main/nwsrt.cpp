@@ -114,6 +114,11 @@ Y_PROGRAM_START()
 {
     if(argc>1)
     {
+        const string filename = argv[1];
+        const string output   = vfs::with_new_extension(filename,"hpp");
+        std::cerr << "input : " << filename << std::endl;
+        std::cerr << "output: " << output   << std::endl;
+
         vector<swaps_ptr> Swaps(128,as_capacity);
         {
             ios::icstream fp(argv[1]);
@@ -143,53 +148,111 @@ Y_PROGRAM_START()
         const unsigned count_max = Swaps.back()->count;
         const unsigned ns = unsigned(Swaps.size());
         {
-            ios::ocstream fp("nwsrt.hpp");
-            
+            ios::ocstream fp(output);
+
+            //__________________________________________________________________
+            //
             // file prolog
+            //__________________________________________________________________
+            fp << "//! \file\n";
             fp << "#ifndef Y_NWSRT_INCLUDED\n";
             fp << "#define Y_NWSRT_INCLUDED 1\n";
             fp << "#include \"y/type/bswap.hpp\"\n";
             fp << "namespace upsylon {\n";
-            
-            // nwsrt
-            fp << "\tstruct nwsrt {\n";
-            fp("\t\tstatic const size_t max_size=%u; //!< max handled case\n",count_max);
-            
-            for(unsigned i=1;i<=ns;++i)
+
             {
-                const unsigned count = Swaps[i]->count;
-                fp("\t\t//!built-in version on %u items\n",count);
-                fp("\t\ttemplate <typename T> static inline void on%u(T *a) {\n",count);
-                fp << "\t\t\tassert(a);\n";
-                const array<swap> &tests = Swaps[i]->tests;
-                const size_t       nt    = tests.size();
-                for(size_t j=1;j<=nt;++j)
+                //______________________________________________________________
+                //
+                // nwsrt
+                //______________________________________________________________
+                fp << "\tstruct nwsrt {\n";
+                fp("\t\tstatic const size_t max_size=%u; //!< max handled case\n",count_max);
+
+                // one array version
                 {
-                    const swap &swp = tests[j];
-                    fp("\t\t\t{ T &aI = a[%2u]; T &aJ = a[%2u]; if(aJ<aI) bswap(aI,aJ); }\n",swp.I,swp.J);
+                    for(unsigned i=1;i<=ns;++i)
+                    {
+                        const unsigned count = Swaps[i]->count;
+                        fp("\t\t//!built-in version on %u items\n",count);
+                        fp("\t\ttemplate <typename T> static inline void on%u(T *a) {\n",count);
+                        fp << "\t\t\tassert(a);\n";
+                        const array<swap> &tests = Swaps[i]->tests;
+                        const size_t       nt    = tests.size();
+                        for(size_t j=1;j<=nt;++j)
+                        {
+                            const swap &swp = tests[j];
+                            fp("\t\t\t{ T &aI = a[%2u]; T &aJ = a[%2u]; if(aJ<aI) bswap(aI,aJ); }\n",swp.I,swp.J);
+                        }
+                        fp << "\t\t}\n";
+                    }
+
+                    //__________________________________________________________
+                    //
+                    // gather
+                    //__________________________________________________________
+                    fp("\t\t//!built-in version on 0-%u items\n",count_max);
+                    fp << "\t\ttemplate <typename T> static inline void on(T *a, const size_t n) {\n";
+
+                    fp << "\t\t\tswitch(n) {\n";
+                    for(size_t i=1;i<=ns;++i)
+                    {
+                        const unsigned count = Swaps[i]->count;
+                        fp("\t\t\t\tcase %2u: on%u(a); %sbreak;\n",count,count,(count<10?" " : ""));
+                    }
+                    fp << "\t\t\t\tdefault: break;\n";
+                    fp << "\t\t\t}\n";
+
+                    fp << "\t\t}\n";
                 }
-                fp << "\t\t}\n";
+
+                // two arrays version
+                {
+                    for(unsigned i=1;i<=ns;++i)
+                    {
+                        const unsigned count = Swaps[i]->count;
+                        fp("\t\t//!built-in version on %u items\n",count);
+                        fp("\t\ttemplate <typename T,typename U> static inline void on%u(T *a, U *b) {\n",count);
+                        fp << "\t\t\tassert(a); assert(b);\n";
+                        const array<swap> &tests = Swaps[i]->tests;
+                        const size_t       nt    = tests.size();
+                        for(size_t j=1;j<=nt;++j)
+                        {
+                            const swap &swp = tests[j];
+                            fp("\t\t\t{ T &aI = a[%2u]; T &aJ = a[%2u]; if(aJ<aI) { bswap(aI,aJ); bswap(b[%2d],b[%2d]); } }\n",swp.I,swp.J,swp.I,swp.J);
+                        }
+                        fp << "\t\t}\n";
+                    }
+
+                    //__________________________________________________________
+                    //
+                    // gather
+                    //__________________________________________________________
+                    fp("\t\t//!built-in version on 0-%u items\n",count_max);
+                    fp << "\t\ttemplate <typename T, typename U> static inline void on(T *a, U *b, const size_t n) {\n";
+
+                    fp << "\t\t\tswitch(n) {\n";
+                    for(size_t i=1;i<=ns;++i)
+                    {
+                        const unsigned count = Swaps[i]->count;
+                        fp("\t\t\t\tcase %2u: on%u(a,b); %sbreak;\n",count,count,(count<10?" " : ""));
+                    }
+                    fp << "\t\t\t\tdefault: break;\n";
+                    fp << "\t\t\t}\n";
+
+                    fp << "\t\t}\n";
+                }
+
+                //______________________________________________________________
+                //
+                // end of nwsrt
+                //______________________________________________________________
+                fp<< "\t};\n";
             }
-            
-            // gather
-            fp("\t\t//!built-in version on 0-%u items\n",count_max);
-            fp << "\t\ttemplate <typename T> static inline void on(T *a, const size_t n) {\n";
-            
-            fp << "\t\t\tswitch(n) {\n";
-            for(size_t i=1;i<=ns;++i)
-            {
-                const unsigned count = Swaps[i]->count;
-                fp("\t\t\t\tcase %u: on%u(a); break;\n",count,count);
-            }
-            fp << "\t\t\t\tdefault: break;\n";
-            fp << "\t\t\t}\n";
-            
-            fp << "\t\t}\n";
-            
-            // end of nwsrt
-            fp<< "\t};\n";
-            
+
+            //__________________________________________________________________
+            //
             // file epilog
+            //__________________________________________________________________
             fp << "}\n";
             fp << "#endif\n";
         }
