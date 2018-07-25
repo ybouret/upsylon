@@ -10,6 +10,9 @@ namespace upsylon
     {
 
         //! compute determinant, with LU decomposition of a
+        /**
+         so that T must be a corps
+         */
         template <typename T>
         T __determinant( matrix<T> &a )
         {
@@ -37,6 +40,9 @@ namespace upsylon
         }
 
         //! assuming integer type
+        /**
+         internal double computation
+         */
         template <typename T>
         T ideterminant( const matrix<T> &a )
         {
