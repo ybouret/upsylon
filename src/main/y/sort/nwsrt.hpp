@@ -1,8 +1,9 @@
-//! ile
+//! \file
 #ifndef Y_NWSRT_INCLUDED
 #define Y_NWSRT_INCLUDED 1
 #include "y/type/bswap.hpp"
 namespace upsylon {
+	//! network sorting
 	struct nwsrt {
 		static const size_t max_size=32; //!< max handled case
 		//!built-in version on 2 items

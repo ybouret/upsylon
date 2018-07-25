@@ -41,60 +41,25 @@ namespace upsylon
         return entry::is_dir == this->query_attribute( path, link );
     }
     
-    void vfs:: remove_files( const string &dirname, entry::callback &filter )
-    {
-        list<string>           matching;
-        //-- fill the list of matching path
-        {
-            auto_ptr<vfs::scanner> scan( this->new_scanner(dirname) );
-            const vfs::entry *ep = 0;
-            while( 0 != (ep=scan->next()) )
-            {
-                if( filter(*ep) )
-                    matching.push_back( ep->path );
-            }
-        }
-        
-        //-- remove winners
-        while( matching.size() )
-        {
-            this->remove_file( matching.back() );
-            matching.pop_back();
-        }
-    }
-    
-    void vfs:: remove_files( const string &dirname, bool (*filter)( const entry &) )
-    {
-        assert(filter);
-        entry::callback cb( cfunctor(filter) );
-        remove_files( dirname, cb );
-    }
-    
+
     namespace
     {
-        class rm_wrapper
+        struct rm_param
         {
-        public:
-            const string &ext;
-            rm_wrapper( const string &user_ext ) throw() : ext(user_ext) {}
-            inline ~rm_wrapper() throw() {}
-            
-            inline bool has_ext( const vfs::entry &ep ) throw()
+            const string *pExt;
+            inline bool operator()(const vfs::entry &ep)
             {
-                return  ep.is_regular() && ep.has_extension(ext);
+                assert(pExt);
+                return  ep.is_regular() && ep.has_extension( *pExt );
             }
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(rm_wrapper);
         };
     }
-    
+
     void vfs:: remove_files_with_extension_in( const string &dirname, const string &extension)
     {
-        rm_wrapper w(extension);
-        entry::callback cb( &w, & rm_wrapper::has_ext );
+        rm_param cb = { &extension };
         remove_files(dirname,cb);
     }
-    
     
     void vfs::try_remove_file( const string &path) throw()
     {

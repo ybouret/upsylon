@@ -154,7 +154,7 @@ Y_PROGRAM_START()
             //
             // file prolog
             //__________________________________________________________________
-            fp << "//! \file\n";
+            fp << "//! \\file\n";
             fp << "#ifndef Y_NWSRT_INCLUDED\n";
             fp << "#define Y_NWSRT_INCLUDED 1\n";
             fp << "#include \"y/type/bswap.hpp\"\n";
@@ -165,6 +165,7 @@ Y_PROGRAM_START()
                 //
                 // nwsrt
                 //______________________________________________________________
+                fp << "\t//! network sorting\n";
                 fp << "\tstruct nwsrt {\n";
                 fp("\t\tstatic const size_t max_size=%u; //!< max handled case\n",count_max);
 

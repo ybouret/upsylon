@@ -79,7 +79,7 @@ namespace upsylon {
         }
     }
     
-    
+#if 0
     void vfs:: foreach_in( const string &dirname,  vfs::entry::callback &on_entry ) const
     {
         scanner *scan = new_scanner( dirname );
@@ -100,6 +100,6 @@ namespace upsylon {
         }
         
     }
-    
+#endif
 	
 }
