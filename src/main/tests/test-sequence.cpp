@@ -72,6 +72,19 @@ namespace
             std::cerr << "seq.capacity = " << seq.capacity() << std::endl;
             scan(seq);
             scan_const(seq);
+            while(seq.size())
+            {
+                (void)seq.front();
+                (void)seq.back();
+                if( alea.choice() )
+                {
+                    seq.pop_back();
+                }
+                else
+                {
+                    seq.pop_front();
+                }
+            }
         }
     }
 

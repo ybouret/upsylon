@@ -58,7 +58,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(functor);
     Y_UTEST(vfs);
     Y_UTEST(nwsrt);
-
+    Y_UTEST(triplet);
 }
 Y_UTEST_EXEC()
 

@@ -230,10 +230,13 @@ Y_UTEST(mpn)
         mpn R = r;
         const mpn G = arithmetic::gcd(L,R);
         Y_ASSERT(G.lsw()==g);
-        arithmetic::simplify(l,r);
-        arithmetic::simplify(L,R);
-        Y_ASSERT(L.lsw()==l);
-        Y_ASSERT(R.lsw()==r);
+        if(r>0)
+        {
+            arithmetic::simplify(l,r);
+            arithmetic::simplify(L,R);
+            Y_ASSERT(L.lsw()==l);
+            Y_ASSERT(R.lsw()==r);
+        }
     }
 
     std::cerr << "-- I/O" << std::endl;
