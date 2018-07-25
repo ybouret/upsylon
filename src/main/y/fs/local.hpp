@@ -8,6 +8,7 @@
 namespace upsylon
 {
 
+    //! local file system
     class local_fs : public singleton<local_fs>, public vfs
     {
     public:

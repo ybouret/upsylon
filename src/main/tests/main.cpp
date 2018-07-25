@@ -59,6 +59,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(vfs);
     Y_UTEST(nwsrt);
     Y_UTEST(triplet);
+    Y_UTEST(points);
 }
 Y_UTEST_EXEC()
 

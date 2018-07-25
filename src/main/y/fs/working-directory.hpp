@@ -6,16 +6,20 @@
 
 namespace upsylon
 {
+    //! changing working directory
     class working_directory : public singleton<working_directory>
     {
     public:
-        string get() const;
-        void   set( const string & ) const;
-        
+        string get() const; //!< get current directory
+        void   set( const string & ) const; //!< set current directory
+
+        //! to change and restore working directory
         class change_lock
         {
         public:
+            //! set current directory to target, saving CWD
             change_lock( const string &target, bool *status );
+            //! set current directory to target, saving CWD
             change_lock( const char   *target, bool *status );
             ~change_lock() throw();
             
@@ -34,7 +38,8 @@ namespace upsylon
         
         static const at_exit::longevity life_time = object::life_time - 9; // TODO: check this value
     };
-    
+
+    //! avoid code deleting...
     typedef volatile working_directory::change_lock chdir_lock;
     
 }

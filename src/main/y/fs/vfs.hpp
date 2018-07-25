@@ -8,7 +8,7 @@
 
 namespace upsylon {
 	
-	
+	//! Virtual File System interface
     class vfs : public object {
     public:
         virtual ~vfs() throw();
@@ -17,6 +17,7 @@ namespace upsylon {
         // entry API
         //
         //==================================================================
+        //! one entry
         class entry : public object
         {
         public:
@@ -25,18 +26,21 @@ namespace upsylon {
             static const attribute is_reg = 1; //!< regular file
             static const attribute is_dir = 2; //!< directory
             static const attribute is_unk = 4; //!< unknown
-            
+
+            //! build entry
             explicit entry( const string &vfs_path, const vfs &vfs_from );
+            //! destructor
             virtual ~entry() throw();
+            //! copy
             entry( const entry &other );
             
-            const string     path;
-            const char      *cstr;
-            const char      *base_name;
-            const char      *extension;
-            const bool       link;
-            const attribute  attr;
-            
+            const string     path;      //!< full path
+            const char      *cstr;      //!< full path, low-level
+            const char      *base_name; //!< base name
+            const char      *extension; //!< extension, may be null
+            const bool       link;      //!< if recognized as long
+            const attribute  attr;      //!< the attribute
+
             typedef functor<bool,TL1(const entry &)> callback;
             
             bool is_regular()   const throw();

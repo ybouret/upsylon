@@ -11,24 +11,25 @@ namespace upsylon
     namespace math
     {
 
+        //! finding zero
         struct zfind
         {
-            static const unsigned __z  = 0x00;
-            static const unsigned __p  = 0x01;
-            static const unsigned __n  = 0x02;
+            static const unsigned __z  = 0x00; //!< zero
+            static const unsigned __p  = 0x01; //!< positive
+            static const unsigned __n  = 0x02; //!< negative
 
-            static const unsigned _zz  = (__z<<8)|__z;
+            static const unsigned _zz  = (__z<<8)|__z; //!< zero|zero
 
-            static const unsigned _zp  = (__z<<8)|__p;
-            static const unsigned _pz  = (__p<<8)|__z;
+            static const unsigned _zp  = (__z<<8)|__p; //!< zero|positive
+            static const unsigned _pz  = (__p<<8)|__z; //!< positive|zero
 
-            static const unsigned _zn  = (__z<<8)|__n;
-            static const unsigned _nz  = (__n<<8)|__z;
+            static const unsigned _zn  = (__z<<8)|__n; //!< zero|negative
+            static const unsigned _nz  = (__n<<8)|__z; //!< negative|zero
 
-            static const unsigned _np  = (__n<<8)|__p;
-            static const unsigned _pn  = (__p<<8)|__n;
+            static const unsigned _np  = (__n<<8)|__p; //!< negative|positive
+            static const unsigned _pn  = (__p<<8)|__n; //!< positive|negative
 
-
+            //! get the sign of x
             template <typename T>
             static inline unsigned __sign(const T x) throw()
             {
