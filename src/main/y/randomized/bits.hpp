@@ -175,8 +175,8 @@ namespace upsylon
             {
                 while(true)
                 {
-                    const T x1 = symm<T>();
-                    const T x2 = symm<T>();
+                    const T x1  = symm<T>();
+                    const T x2  = symm<T>();
                     const T x12 = x1*x1;
                     const T x22 = x2*x2;
                     const T den = x12+x22;
@@ -188,6 +188,15 @@ namespace upsylon
                         return;
                     }
                 }
+            }
+
+            //! generate a point2d or complex
+            template <typename T, template <typename> class VTX>
+            VTX<T> on_circle()
+            {
+                T x(0),y(0);
+                on_circle(x,y);
+                return VTX<T>(x,y);
             }
 
             //! generate point within unit disk, excluded
@@ -208,6 +217,15 @@ namespace upsylon
                         return;
                     }
                 }
+            }
+
+            //! a point2d or complex in unit disk
+            template <typename T, template <typename> class VTX>
+            VTX<T> in_disk()
+            {
+                T x(0),y(0);
+                in_disk(x,y);
+                return VTX<T>(x,y);
             }
 
             //! generate point on unit sphere
@@ -235,6 +253,15 @@ namespace upsylon
                 }
             }
 
+            //! generate a point3d or something else on_sphere
+            template <typename T, template <typename> class VTX>
+            VTX<T> on_sphere()
+            {
+                T x(0),y(0),z(0);
+                on_sphere(x,y,z);
+                return VTX<T>(x,y,z);
+            }
+
             //! generate point strictly within unit ball
             template <typename T>
             void in_ball(T &x, T &y, T &z) throw()
@@ -253,6 +280,15 @@ namespace upsylon
                         return;
                     }
                 }
+            }
+
+            //! generate a point3d or something else in_ball
+            template <typename T, template <typename> class VTX>
+            VTX<T> in_ball()
+            {
+                T x(0),y(0),z(0);
+                in_ball(x,y,z);
+                return VTX<T>(x,y,z);
             }
 
         protected:
