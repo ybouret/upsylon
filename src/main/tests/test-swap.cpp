@@ -24,7 +24,7 @@ namespace
 std::cerr << "bswap<" #Q ">" << std::endl;\
 init(); core::bswap<Q>(arr,brr);\
 for(int i=0;i<Q;++i) {\
-std::cerr << "\t@" << i << ":"; Y_CHECK(arr[i]==uint8_t(i+1)&&brr[i]==0);\
+Y_ASSERT(arr[i]==uint8_t(i+1)&&brr[i]==0);\
 }\
 double speed=0;\
 Y_TIMINGS(speed,D,core::bswap<Q>(arr,brr));\

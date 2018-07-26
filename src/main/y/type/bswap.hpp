@@ -53,16 +53,21 @@ const uint16_t tmp16 = p16; p16=q16; q16=tmp16
 
         //! swapping 32 bits
 #define Y_BSWAP32(P,Q) \
-volatile uint32_t      &p32   = *(uint32_t *)(P);\
-volatile uint32_t      &q32   = *(uint32_t *)(Q);\
-volatile const uint32_t tmp32 = p32; p32=q32; q32=tmp32
+volatile uint32_t      *p32   = (uint32_t *)(P);\
+volatile uint32_t      *q32   = (uint32_t *)(Q);\
+volatile const uint32_t tmp32 = *p32; *p32=*q32; *q32=tmp32
 
         //! 4 bytes swap
         template <>
         inline void bswap<4>(void *a, void *b) throw()
         {
-            //std::cerr << "bswap<4>" << std::endl;
-            Y_BSWAP32(a,b);
+            uint8_t *A = (uint8_t *)a;
+            uint8_t *B = (uint8_t *)b;
+            cswap(A[0],B[0]);
+            cswap(A[1],B[1]);
+            cswap(A[2],B[2]);
+            cswap(A[3],B[3]);
+
         }
 
 
