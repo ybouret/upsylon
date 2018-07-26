@@ -56,6 +56,28 @@ namespace upsylon
             }
         }
 
+        //! C-style
+        template <typename T> static inline
+        int __increasing( const void *L, const void *R ) throw()
+        {
+            assert(L);assert(R);
+            const T &lhs = *(const T *)L;
+            const T &rhs = *(const T *)R;
+            if(lhs<rhs)
+            {
+                return -1;
+            }
+            else if(rhs<lhs)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+
         //! compare by decreasing value
         template <typename T> static inline
         int decreasing( const T &lhs, const T &rhs ) throw()

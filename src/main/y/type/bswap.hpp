@@ -135,6 +135,63 @@ const uint32_t tmp32 = p32; p32=q32; q32=tmp32
             { Y_BSWAP64(3); }
         }
 
+        //! 40 bytes swap
+        template <>
+        inline void bswap<40>(void *a, void *b) throw()
+        {
+            uint64_t *p = (uint64_t *)a;
+            uint64_t *q = (uint64_t *)b;
+            { Y_BSWAP64(0); }
+            { Y_BSWAP64(1); }
+            { Y_BSWAP64(2); }
+            { Y_BSWAP64(3); }
+            { Y_BSWAP64(4); }
+        }
+
+        //! 48 bytes swap
+        template <>
+        inline void bswap<48>(void *a, void *b) throw()
+        {
+            uint64_t *p = (uint64_t *)a;
+            uint64_t *q = (uint64_t *)b;
+            { Y_BSWAP64(0); }
+            { Y_BSWAP64(1); }
+            { Y_BSWAP64(2); }
+            { Y_BSWAP64(3); }
+            { Y_BSWAP64(4); }
+            { Y_BSWAP64(5); }
+        }
+
+        //! 56 bytes swap
+        template <>
+        inline void bswap<56>(void *a, void *b) throw()
+        {
+            uint64_t *p = (uint64_t *)a;
+            uint64_t *q = (uint64_t *)b;
+            { Y_BSWAP64(0); }
+            { Y_BSWAP64(1); }
+            { Y_BSWAP64(2); }
+            { Y_BSWAP64(3); }
+            { Y_BSWAP64(4); }
+            { Y_BSWAP64(5); }
+            { Y_BSWAP64(6); }
+        }
+
+        //! 64 bytes swap
+        template <>
+        inline void bswap<64>(void *a, void *b) throw()
+        {
+            uint64_t *p = (uint64_t *)a;
+            uint64_t *q = (uint64_t *)b;
+            { Y_BSWAP64(0); }
+            { Y_BSWAP64(1); }
+            { Y_BSWAP64(2); }
+            { Y_BSWAP64(3); }
+            { Y_BSWAP64(4); }
+            { Y_BSWAP64(5); }
+            { Y_BSWAP64(6); }
+            { Y_BSWAP64(7); }
+        }
 
     }
 
