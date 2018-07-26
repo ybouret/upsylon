@@ -11,7 +11,7 @@ namespace upsylon
 
         //! compute determinant, with LU decomposition of a
         /**
-         so that T must be a corps
+         so that T must be a filed (float,double,complex,rational)
          */
         template <typename T>
         T __determinant( matrix<T> &a )
@@ -32,6 +32,7 @@ namespace upsylon
             return dneg ? -det : det;
         }
 
+        //! determinant using a copy of a
         template <typename T>
         T determinant( const matrix<T> &a )
         {

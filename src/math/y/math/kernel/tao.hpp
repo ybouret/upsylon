@@ -283,6 +283,7 @@ namespace upsylon
             // level-2 : matrix/matrix ops
             //
             ////////////////////////////////////////////////////////////////////
+            //! M=A*B
             template <typename T,typename U,typename V> static inline
             void mmul( matrix<T> &M, const matrix<U> &A, const matrix<V> &B )
             {
