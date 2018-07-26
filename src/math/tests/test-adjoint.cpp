@@ -29,16 +29,6 @@ namespace {
             std::cerr << "b=" << b << std::endl;
             matrix<T> p(n,n);
             tao::mmul(p,a,b);
-            if(__fabs(det)>0)
-            {
-                for(size_t i=1;i<=n;++i)
-                {
-                    for(size_t j=1;j<=n;++j)
-                    {
-                        p[i][j] /= det;
-                    }
-                }
-            }
             std::cerr << "p=" << p << std::endl;
         }
     }
