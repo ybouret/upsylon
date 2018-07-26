@@ -68,7 +68,7 @@ namespace upsylon
             {
                 
                 const string args = folder + '*';
-                YOCTO_GIANT_LOCK();
+                Y_GIANT_LOCK();
                 hFind_ = ::FindFirstFile( &args[0], &hData_ );
                 
                 if( hFind_ == INVALID_HANDLE_VALUE )
@@ -84,7 +84,7 @@ namespace upsylon
                 {
                     //std::cerr << "[WIN32] has next entry '" << hData_.cFileName << "'" << std::endl;
                     const vfs::entry *ep = make_entry( hData_.cFileName );
-                    YOCTO_GIANT_LOCK();
+                    Y_GIANT_LOCK();
                     if( ! ::FindNextFile( hFind_, &hData_ ) )
                     {
                         const DWORD err = ::GetLastError();

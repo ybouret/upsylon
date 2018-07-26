@@ -41,16 +41,16 @@ Y_UTEST(drvs)
         vector<float> g(2);
         float (*proc2)(const array<float> &) = f2;
         numeric<float>::scalar_field F2 = proc2;
-        for(float x=0;x<=3;x+=0.1)
+        for(float x=0;x<=3;x+=0.1f)
         {
             p[1] = x;
-            for(float y=0;y<=3;y+=0.1)
+            for(float y=0;y<=3;y+=0.1f)
             {
                 p[2] = y;
                 const float value = f2(p);
-                drvs.grad(g,f2,p,0.001);
+                drvs.grad(g,f2,p,0.001f);
                 fp("%g %g %g %g %g\n", x,y, value, g[1], g[2] );
-                drvs.grad(g,F2,p,0.001);
+                drvs.grad(g,F2,p,0.001f);
             }
             fp << '\n';
         }

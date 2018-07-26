@@ -177,8 +177,8 @@ namespace upsylon
     template <typename T>
     static inline T __to_real(const string &data, const char *fn, const char *id )
     {
-        static const T ten(10);
-        static const T tenth(0.1);
+        static const T ten   = T(10);
+        static const T tenth = T(0.1);
 
         assert(fn);
         assert(id);
@@ -320,7 +320,7 @@ namespace upsylon
     template <>
     float string_convert::to<float>(const string &data, const char *name)
     {
-        return __to_real<double>(data,"string_convert::to<float>: ",name?name:default_name);
+        return __to_real<float>(data,"string_convert::to<float>: ",name?name:default_name);
     }
 
 }

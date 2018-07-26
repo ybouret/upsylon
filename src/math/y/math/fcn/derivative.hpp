@@ -49,7 +49,7 @@ namespace upsylon
             template <typename FUNC>
             inline T diff( FUNC &f, const T x, const T h, T &err )
             {
-                static const T CON(1.2);
+                static const T CON = T(1.2);
                 static const T CON2 = CON*CON;
                 assert(h>=0);
                 T    hh  = regularize(x,h);
@@ -87,7 +87,7 @@ namespace upsylon
             inline T diff( FUNC &f, const T x, T h )
             {
                 static const T max_ftol = log_round_ceil( __sqrt( numeric<T>::epsilon ) );
-                static const T CON(1.2);
+                static const T CON = T(1.2);
                 // initialize
                 T err  = 0;
                 T dFdx = diff(f,x,h,err);
@@ -110,7 +110,7 @@ namespace upsylon
             template <typename FUNC>
             inline T diff2( const T f0, FUNC &f, const T x, const T h, T &err )
             {
-                static const T CON(1.2);
+                static const T CON = T(1.2);
                 static const T CON2 = CON*CON;
                 assert(h>=0);
                 T    hh  = regularize(x,h);
