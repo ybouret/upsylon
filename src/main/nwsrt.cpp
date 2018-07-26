@@ -183,7 +183,7 @@ Y_PROGRAM_START()
 						for (size_t j = 1; j <= nt; ++j)
 						{
 							const swap &swp = tests[j];
-							fp("\t\t\t{ T &aI = a[%2u]; T &aJ = a[%2u]; if(aJ<aI) bswap(aI,aJ); }\n", swp.I, swp.J);
+                            fp("\t\t\t{ T &aI = a[%2u]; T &aJ = a[%2u]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }\n", swp.I, swp.J);
 						}
 						fp << "\t\t}\n";
 					}
@@ -220,7 +220,7 @@ Y_PROGRAM_START()
 						for (size_t j = 1; j <= nt; ++j)
 						{
 							const swap &swp = tests[j];
-							fp("\t\t\t{ T &aI = a[%2u]; T &aJ = a[%2u]; if(aJ<aI) { bswap(aI,aJ); bswap(b[%2d],b[%2d]); } }\n", swp.I, swp.J, swp.I, swp.J);
+                            fp("\t\t\t{ T &aI = a[%2u]; T &aJ = a[%2u]; if(aJ<aI) { core::bswap<sizeof(T)>(&aI,&aJ); core::bswap<sizeof(U)>(&b[%2d],&b[%2d]); } }\n", swp.I, swp.J, swp.I, swp.J);
 						}
 						fp << "\t\t}\n";
 					}

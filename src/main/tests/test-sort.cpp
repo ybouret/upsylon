@@ -12,6 +12,7 @@
 #include "y/os/rt-clock.hpp"
 #include <cstdlib>
 #include "y/ios/ocstream.hpp"
+#include <typeinfo>
 
 using namespace upsylon;
 

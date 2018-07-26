@@ -16,6 +16,7 @@ namespace
 
         for(size_t n=0;n<=nwsrt::max_size;++n)
         {
+            std::cerr << "n=" << n << std::endl;
             for(size_t iter=0;iter<16;++iter)
             {
                 v.free();
@@ -30,7 +31,9 @@ namespace
                 for(size_t jter=0;jter<16;++jter)
                 {
                     alea.shuffle(*v,n);
+                    std::cerr << "\tv0=" << v << std::endl;
                     nwsrt::on(*v,n);
+                    std::cerr << "\tv1=" << v << std::endl;
                     for(size_t j=1;j<n;++j)
                     {
                         Y_ASSERT(v[j]<=v[j+1]);
