@@ -2,8 +2,13 @@
 #ifndef Y_NWSRT_INCLUDED
 #define Y_NWSRT_INCLUDED 1
 #include "y/type/bswap.hpp"
-#include "y/exception.hpp"
-#include <iostream>
+#if defined(Y_NWSRT_VERBOSE)
+#   include <iostream>
+#   include "y/exception.hpp"
+#   define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) { core::bswap< sizeof(T) >( &aI, &aJ ); } if(aJ<aI) throw exception("%u,%u, sizeof(T)=%lu",I,J,sizeof(T)); }
+#else
+#   define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) core::bswap< sizeof(T) >( &aI, &aJ ); }
+#endif
 namespace upsylon {
 	//! network sorting
 	struct nwsrt {
@@ -11,2801 +16,2801 @@ namespace upsylon {
 		//!built-in version on 2 items
 		template <typename T> static inline void on2(T *a) {
 			assert(a);
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 0, 1)
 		}
 		//!built-in version on 3 items
 		template <typename T> static inline void on3(T *a) {
 			assert(a);
-            { T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); } if( a[2]<a[1] ) { std::cerr << "1: " << a[1] << " , 2: " << a[2] << std::endl; throw exception("1,2"); }
-            { T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); } if( a[2]<a[0] ) { std::cerr << "0: " << a[0] << " , 2: " << a[2] << std::endl; throw exception("0,2"); }
-            { T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); } if( a[1]<a[0] ) { std::cerr << "0: " << a[0] << " , 1: " << a[1] << std::endl; throw exception("0,1"); }
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 0, 1)
 		}
 		//!built-in version on 4 items
 		template <typename T> static inline void on4(T *a) {
 			assert(a);
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 1, 2)
 		}
 		//!built-in version on 5 items
 		template <typename T> static inline void on5(T *a) {
 			assert(a);
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 0, 3)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 1, 2)
 		}
 		//!built-in version on 6 items
 		template <typename T> static inline void on6(T *a) {
 			assert(a);
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 0, 3)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 2, 3)
 		}
 		//!built-in version on 7 items
 		template <typename T> static inline void on7(T *a) {
 			assert(a);
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP( 0, 4)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP( 0, 3)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 2, 3)
 		}
 		//!built-in version on 8 items
 		template <typename T> static inline void on8(T *a) {
 			assert(a);
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 0, 4)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 3, 6)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 3, 4)
 		}
 		//!built-in version on 9 items
 		template <typename T> static inline void on9(T *a) {
 			assert(a);
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP( 0, 5)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 0, 7)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 5, 8)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 2, 7)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 4, 5)
 		}
 		//!built-in version on 10 items
 		template <typename T> static inline void on10(T *a) {
 			assert(a);
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 0, 9)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 0, 7)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP( 3, 6)
+			Y_NWSRT_SWAP( 4, 9)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP( 4, 7)
+			Y_NWSRT_SWAP( 1, 8)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 5, 8)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 5, 6)
 		}
 		//!built-in version on 11 items
 		template <typename T> static inline void on11(T *a) {
 			assert(a);
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 0, 4)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP( 5, 9)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP( 0, 4)
+			Y_NWSRT_SWAP( 3, 8)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 7,10)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 7, 8)
 		}
 		//!built-in version on 12 items
 		template <typename T> static inline void on12(T *a) {
 			assert(a);
-			{ T &aI = a[ 0]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 0, 5)
+			Y_NWSRT_SWAP( 2, 7)
+			Y_NWSRT_SWAP( 4,10)
+			Y_NWSRT_SWAP( 3, 6)
+			Y_NWSRT_SWAP( 8,11)
+			Y_NWSRT_SWAP( 1, 9)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 1, 8)
+			Y_NWSRT_SWAP( 0, 3)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP( 7,10)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP( 6,11)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 5, 8)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 7,10)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 3, 4)
 		}
 		//!built-in version on 13 items
 		template <typename T> static inline void on13(T *a) {
 			assert(a);
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP( 0, 9)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 6,11)
+			Y_NWSRT_SWAP( 1,12)
+			Y_NWSRT_SWAP( 0, 6)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 5, 8)
+			Y_NWSRT_SWAP( 7,12)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP( 3, 6)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 2, 8)
+			Y_NWSRT_SWAP( 5, 9)
+			Y_NWSRT_SWAP( 4, 7)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 1, 8)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 5, 6)
 		}
 		//!built-in version on 14 items
 		template <typename T> static inline void on14(T *a) {
 			assert(a);
-			{ T &aI = a[ 0]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 0, 6)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 1,10)
+			Y_NWSRT_SWAP( 7,13)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP( 3, 6)
+			Y_NWSRT_SWAP( 4, 7)
+			Y_NWSRT_SWAP( 5,13)
+			Y_NWSRT_SWAP( 1, 8)
+			Y_NWSRT_SWAP(10,12)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP( 0, 9)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 6,13)
+			Y_NWSRT_SWAP( 2, 7)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 3, 8)
+			Y_NWSRT_SWAP( 6,11)
+			Y_NWSRT_SWAP( 7,10)
+			Y_NWSRT_SWAP( 5, 8)
+			Y_NWSRT_SWAP( 2, 9)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 3, 9)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 6, 7)
 		}
 		//!built-in version on 15 items
 		template <typename T> static inline void on15(T *a) {
 			assert(a);
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 3,11)
+			Y_NWSRT_SWAP( 2,10)
+			Y_NWSRT_SWAP( 4, 9)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP( 1,14)
+			Y_NWSRT_SWAP(11,14)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 7,10)
+			Y_NWSRT_SWAP( 0,12)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 9,14)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP(11,13)
+			Y_NWSRT_SWAP( 3,12)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 5,11)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 6,13)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP(10,13)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP( 8,11)
+			Y_NWSRT_SWAP( 4, 9)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP(10,12)
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP( 7,10)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP( 6, 7)
 		}
 		//!built-in version on 16 items
 		template <typename T> static inline void on16(T *a) {
 			assert(a);
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP(11,15)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP(10,14)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP( 9,13)
+			Y_NWSRT_SWAP( 0, 4)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP( 7,15)
+			Y_NWSRT_SWAP( 6,14)
+			Y_NWSRT_SWAP( 5,13)
+			Y_NWSRT_SWAP( 4,12)
+			Y_NWSRT_SWAP( 3,11)
+			Y_NWSRT_SWAP( 2,10)
+			Y_NWSRT_SWAP( 1, 9)
+			Y_NWSRT_SWAP( 0, 8)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 3,12)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP( 7,11)
+			Y_NWSRT_SWAP( 5,10)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP( 2, 8)
+			Y_NWSRT_SWAP( 7,13)
+			Y_NWSRT_SWAP( 3, 9)
+			Y_NWSRT_SWAP( 5,12)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP(11,14)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP(10,12)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP(11,13)
+			Y_NWSRT_SWAP( 3, 6)
+			Y_NWSRT_SWAP( 7,10)
+			Y_NWSRT_SWAP( 5, 8)
+			Y_NWSRT_SWAP( 9,12)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP(11,12)
 		}
 		//!built-in version on 17 items
 		template <typename T> static inline void on17(T *a) {
 			assert(a);
-			{ T &aI = a[ 5]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 5,11)
+			Y_NWSRT_SWAP( 4, 9)
+			Y_NWSRT_SWAP( 7,12)
+			Y_NWSRT_SWAP( 0,14)
+			Y_NWSRT_SWAP( 2,16)
+			Y_NWSRT_SWAP( 1,15)
+			Y_NWSRT_SWAP( 3, 8)
+			Y_NWSRT_SWAP( 6,13)
+			Y_NWSRT_SWAP( 3,10)
+			Y_NWSRT_SWAP( 8,13)
+			Y_NWSRT_SWAP( 4, 7)
+			Y_NWSRT_SWAP( 9,12)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP( 1, 6)
+			Y_NWSRT_SWAP(10,15)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP(11,13)
+			Y_NWSRT_SWAP( 0, 4)
+			Y_NWSRT_SWAP(12,16)
+			Y_NWSRT_SWAP( 2, 9)
+			Y_NWSRT_SWAP( 7,14)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP( 5,10)
+			Y_NWSRT_SWAP( 6,11)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP(11,13)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 8,14)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 6,12)
+			Y_NWSRT_SWAP(10,14)
+			Y_NWSRT_SWAP( 1, 8)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 9,12)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 3,10)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP(11,14)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 3, 8)
+			Y_NWSRT_SWAP(10,12)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP( 3, 6)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP( 7, 8)
 		}
 		//!built-in version on 18 items
 		template <typename T> static inline void on18(T *a) {
 			assert(a);
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP(12,17)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP( 0, 4)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP(11,16)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP(14,17)
+			Y_NWSRT_SWAP( 7,16)
+			Y_NWSRT_SWAP( 6,17)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP(10,14)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP( 9,15)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 1,13)
+			Y_NWSRT_SWAP( 0, 8)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP( 7,14)
+			Y_NWSRT_SWAP( 5,12)
+			Y_NWSRT_SWAP( 3,15)
+			Y_NWSRT_SWAP( 6,13)
+			Y_NWSRT_SWAP( 4,10)
+			Y_NWSRT_SWAP( 2,11)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 1, 8)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP( 7,13)
+			Y_NWSRT_SWAP( 5,11)
+			Y_NWSRT_SWAP( 3,10)
+			Y_NWSRT_SWAP( 4,15)
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP( 5, 9)
+			Y_NWSRT_SWAP( 7,11)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP(12,16)
+			Y_NWSRT_SWAP( 3, 6)
+			Y_NWSRT_SWAP(10,13)
+			Y_NWSRT_SWAP( 5, 8)
+			Y_NWSRT_SWAP(11,14)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 4, 5)
 		}
 		//!built-in version on 19 items
 		template <typename T> static inline void on19(T *a) {
 			assert(a);
-			{ T &aI = a[ 4]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 4,10)
+			Y_NWSRT_SWAP( 3,12)
+			Y_NWSRT_SWAP( 0,16)
+			Y_NWSRT_SWAP( 7,14)
+			Y_NWSRT_SWAP( 8,11)
+			Y_NWSRT_SWAP( 6,13)
+			Y_NWSRT_SWAP(15,17)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP( 9,18)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP(11,16)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP( 6,15)
+			Y_NWSRT_SWAP(10,12)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP(13,17)
+			Y_NWSRT_SWAP( 0, 8)
+			Y_NWSRT_SWAP(14,18)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 5,16)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP( 4,15)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP( 1, 6)
+			Y_NWSRT_SWAP(12,16)
+			Y_NWSRT_SWAP( 2,11)
+			Y_NWSRT_SWAP( 7,13)
+			Y_NWSRT_SWAP( 5,10)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP(16,18)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP( 2, 9)
+			Y_NWSRT_SWAP(11,15)
+			Y_NWSRT_SWAP(12,17)
+			Y_NWSRT_SWAP( 0, 3)
+			Y_NWSRT_SWAP( 1, 7)
+			Y_NWSRT_SWAP( 8,14)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP(10,14)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 6,13)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(14,17)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP(10,15)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 7,13)
+			Y_NWSRT_SWAP( 9,12)
+			Y_NWSRT_SWAP( 8,11)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 7,11)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP( 5, 8)
+			Y_NWSRT_SWAP( 6,11)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP(10,13)
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP(11,12)
 		}
 		//!built-in version on 20 items
 		template <typename T> static inline void on20(T *a) {
 			assert(a);
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP(18,19)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP(17,19)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP(16,18)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP(15,19)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP(14,18)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP(13,17)
+			Y_NWSRT_SWAP( 0, 4)
+			Y_NWSRT_SWAP(12,16)
+			Y_NWSRT_SWAP( 7,19)
+			Y_NWSRT_SWAP( 6,18)
+			Y_NWSRT_SWAP( 5,17)
+			Y_NWSRT_SWAP( 4,16)
+			Y_NWSRT_SWAP( 3,15)
+			Y_NWSRT_SWAP( 2,14)
+			Y_NWSRT_SWAP( 1,13)
+			Y_NWSRT_SWAP( 0,12)
+			Y_NWSRT_SWAP( 2,19)
+			Y_NWSRT_SWAP( 3, 8)
+			Y_NWSRT_SWAP(11,16)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 5,15)
+			Y_NWSRT_SWAP( 9,14)
+			Y_NWSRT_SWAP(10,13)
+			Y_NWSRT_SWAP( 6,12)
+			Y_NWSRT_SWAP( 0,19)
+			Y_NWSRT_SWAP( 1,18)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP( 7,15)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 8,14)
+			Y_NWSRT_SWAP( 5, 9)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 9,12)
+			Y_NWSRT_SWAP(13,16)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP( 0,15)
+			Y_NWSRT_SWAP( 7,14)
+			Y_NWSRT_SWAP( 8,11)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 3, 6)
+			Y_NWSRT_SWAP( 7,13)
+			Y_NWSRT_SWAP(14,17)
+			Y_NWSRT_SWAP(18,19)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 5,10)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP(12,15)
+			Y_NWSRT_SWAP(16,18)
+			Y_NWSRT_SWAP( 1,17)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 7,10)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP(18,19)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP(15,16)
 		}
 		//!built-in version on 21 items
 		template <typename T> static inline void on21(T *a) {
 			assert(a);
-			{ T &aI = a[ 5]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 5, 9)
+			Y_NWSRT_SWAP(11,15)
+			Y_NWSRT_SWAP( 1,19)
+			Y_NWSRT_SWAP( 2,14)
+			Y_NWSRT_SWAP( 6,18)
+			Y_NWSRT_SWAP( 0,17)
+			Y_NWSRT_SWAP( 3,20)
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP(12,16)
+			Y_NWSRT_SWAP( 7,13)
+			Y_NWSRT_SWAP( 1, 7)
+			Y_NWSRT_SWAP(13,19)
+			Y_NWSRT_SWAP( 2,11)
+			Y_NWSRT_SWAP( 9,18)
+			Y_NWSRT_SWAP( 4,12)
+			Y_NWSRT_SWAP( 8,16)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP(15,17)
+			Y_NWSRT_SWAP( 0,10)
+			Y_NWSRT_SWAP(10,20)
+			Y_NWSRT_SWAP( 0, 6)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP(16,19)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP(14,20)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 4,11)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP(19,20)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 5,12)
+			Y_NWSRT_SWAP( 6,13)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 4, 9)
+			Y_NWSRT_SWAP(18,20)
+			Y_NWSRT_SWAP( 8,15)
+			Y_NWSRT_SWAP( 7,14)
+			Y_NWSRT_SWAP(17,19)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP( 3,12)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP(11,18)
+			Y_NWSRT_SWAP( 9,14)
+			Y_NWSRT_SWAP( 8,16)
+			Y_NWSRT_SWAP(18,19)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP(13,17)
+			Y_NWSRT_SWAP( 2, 7)
+			Y_NWSRT_SWAP(10,14)
+			Y_NWSRT_SWAP(12,16)
+			Y_NWSRT_SWAP( 3, 8)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP(15,19)
+			Y_NWSRT_SWAP(11,17)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP( 3, 6)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP(15,18)
+			Y_NWSRT_SWAP(11,13)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP( 7,10)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP( 9,13)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 9,12)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP( 9,10)
 		}
 		//!built-in version on 22 items
 		template <typename T> static inline void on22(T *a) {
 			assert(a);
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 2, 8)
+			Y_NWSRT_SWAP(13,19)
+			Y_NWSRT_SWAP( 3,15)
+			Y_NWSRT_SWAP( 6,18)
+			Y_NWSRT_SWAP( 1,16)
+			Y_NWSRT_SWAP( 5,20)
+			Y_NWSRT_SWAP( 0,17)
+			Y_NWSRT_SWAP( 4,21)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP( 0, 4)
+			Y_NWSRT_SWAP(17,21)
+			Y_NWSRT_SWAP( 3,12)
+			Y_NWSRT_SWAP( 9,18)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP(19,20)
+			Y_NWSRT_SWAP( 7,13)
+			Y_NWSRT_SWAP( 8,14)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP( 1,10)
+			Y_NWSRT_SWAP(11,20)
+			Y_NWSRT_SWAP( 0, 3)
+			Y_NWSRT_SWAP(18,21)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP(17,19)
+			Y_NWSRT_SWAP( 0, 5)
+			Y_NWSRT_SWAP(16,21)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP(10,12)
+			Y_NWSRT_SWAP( 2, 7)
+			Y_NWSRT_SWAP(14,19)
+			Y_NWSRT_SWAP( 6,13)
+			Y_NWSRT_SWAP( 8,15)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP(20,21)
+			Y_NWSRT_SWAP( 3, 9)
+			Y_NWSRT_SWAP(12,18)
+			Y_NWSRT_SWAP( 4,11)
+			Y_NWSRT_SWAP(10,17)
+			Y_NWSRT_SWAP( 8,13)
+			Y_NWSRT_SWAP( 5,10)
+			Y_NWSRT_SWAP(11,16)
+			Y_NWSRT_SWAP( 3, 6)
+			Y_NWSRT_SWAP(15,18)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP(19,20)
+			Y_NWSRT_SWAP( 9,12)
+			Y_NWSRT_SWAP( 4,14)
+			Y_NWSRT_SWAP( 7,17)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP(18,20)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP(15,19)
+			Y_NWSRT_SWAP(12,17)
+			Y_NWSRT_SWAP( 4, 9)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP(16,20)
+			Y_NWSRT_SWAP(11,18)
+			Y_NWSRT_SWAP( 3,10)
+			Y_NWSRT_SWAP( 4, 7)
+			Y_NWSRT_SWAP(14,17)
+			Y_NWSRT_SWAP( 9,12)
+			Y_NWSRT_SWAP( 8,13)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP(16,19)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP(11,15)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP(18,19)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP(10,13)
+			Y_NWSRT_SWAP( 8,11)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP(12,15)
+			Y_NWSRT_SWAP( 8,11)
+			Y_NWSRT_SWAP(10,13)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP(13,14)
 		}
 		//!built-in version on 23 items
 		template <typename T> static inline void on23(T *a) {
 			assert(a);
-			{ T &aI = a[ 1]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 1,20)
+			Y_NWSRT_SWAP( 2,21)
+			Y_NWSRT_SWAP( 5,13)
+			Y_NWSRT_SWAP( 9,17)
+			Y_NWSRT_SWAP( 0, 7)
+			Y_NWSRT_SWAP(15,22)
+			Y_NWSRT_SWAP( 4,11)
+			Y_NWSRT_SWAP( 6,12)
+			Y_NWSRT_SWAP(10,16)
+			Y_NWSRT_SWAP( 8,18)
+			Y_NWSRT_SWAP(14,19)
+			Y_NWSRT_SWAP( 3, 8)
+			Y_NWSRT_SWAP( 4,14)
+			Y_NWSRT_SWAP(11,18)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP(16,20)
+			Y_NWSRT_SWAP( 0, 9)
+			Y_NWSRT_SWAP(13,22)
+			Y_NWSRT_SWAP( 5,15)
+			Y_NWSRT_SWAP( 7,17)
+			Y_NWSRT_SWAP( 1,10)
+			Y_NWSRT_SWAP(12,21)
+			Y_NWSRT_SWAP( 8,19)
+			Y_NWSRT_SWAP(17,22)
+			Y_NWSRT_SWAP( 0, 5)
+			Y_NWSRT_SWAP(20,21)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 6,15)
+			Y_NWSRT_SWAP( 7,16)
+			Y_NWSRT_SWAP(18,19)
+			Y_NWSRT_SWAP(21,22)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 8,11)
+			Y_NWSRT_SWAP(17,20)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 9,12)
+			Y_NWSRT_SWAP(10,13)
+			Y_NWSRT_SWAP(19,22)
+			Y_NWSRT_SWAP( 0, 3)
+			Y_NWSRT_SWAP(11,14)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP(15,18)
+			Y_NWSRT_SWAP(20,21)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 5,17)
+			Y_NWSRT_SWAP( 4,11)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP( 3, 9)
+			Y_NWSRT_SWAP(13,19)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 4, 7)
+			Y_NWSRT_SWAP(16,18)
+			Y_NWSRT_SWAP( 8,14)
+			Y_NWSRT_SWAP( 7,15)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP(18,21)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP(11,13)
+			Y_NWSRT_SWAP(16,20)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP(19,21)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP(13,18)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP(15,17)
+			Y_NWSRT_SWAP(11,16)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 4, 9)
+			Y_NWSRT_SWAP(19,20)
+			Y_NWSRT_SWAP( 5, 8)
+			Y_NWSRT_SWAP(14,17)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP(13,16)
+			Y_NWSRT_SWAP(12,15)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP(18,20)
+			Y_NWSRT_SWAP(17,19)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP(18,19)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP(15,17)
+			Y_NWSRT_SWAP(10,14)
+			Y_NWSRT_SWAP( 6,11)
+			Y_NWSRT_SWAP( 9,12)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP(11,13)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP(11,12)
 		}
 		//!built-in version on 24 items
 		template <typename T> static inline void on24(T *a) {
 			assert(a);
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP(18,19)
+			Y_NWSRT_SWAP(20,21)
+			Y_NWSRT_SWAP(22,23)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP(17,19)
+			Y_NWSRT_SWAP(21,23)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP(16,18)
+			Y_NWSRT_SWAP(20,22)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP(21,22)
+			Y_NWSRT_SWAP( 0, 4)
+			Y_NWSRT_SWAP( 7,11)
+			Y_NWSRT_SWAP(12,16)
+			Y_NWSRT_SWAP(19,23)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP(13,17)
+			Y_NWSRT_SWAP(18,22)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP(15,19)
+			Y_NWSRT_SWAP(16,20)
+			Y_NWSRT_SWAP( 5, 9)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP(17,21)
+			Y_NWSRT_SWAP(14,18)
+			Y_NWSRT_SWAP( 0, 4)
+			Y_NWSRT_SWAP( 7,11)
+			Y_NWSRT_SWAP(12,16)
+			Y_NWSRT_SWAP(19,23)
+			Y_NWSRT_SWAP( 3, 8)
+			Y_NWSRT_SWAP(15,20)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP(13,17)
+			Y_NWSRT_SWAP(18,22)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP(20,21)
+			Y_NWSRT_SWAP( 0,12)
+			Y_NWSRT_SWAP(11,23)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 7,10)
+			Y_NWSRT_SWAP(13,16)
+			Y_NWSRT_SWAP(19,22)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP(15,17)
+			Y_NWSRT_SWAP(18,20)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP(19,21)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP( 1,13)
+			Y_NWSRT_SWAP(10,22)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP(19,20)
+			Y_NWSRT_SWAP( 2,14)
+			Y_NWSRT_SWAP( 5,17)
+			Y_NWSRT_SWAP( 6,18)
+			Y_NWSRT_SWAP( 9,21)
+			Y_NWSRT_SWAP( 3,15)
+			Y_NWSRT_SWAP( 4,16)
+			Y_NWSRT_SWAP( 7,19)
+			Y_NWSRT_SWAP( 8,20)
+			Y_NWSRT_SWAP( 2,12)
+			Y_NWSRT_SWAP(11,21)
+			Y_NWSRT_SWAP( 6,14)
+			Y_NWSRT_SWAP( 9,17)
+			Y_NWSRT_SWAP( 3,13)
+			Y_NWSRT_SWAP(10,20)
+			Y_NWSRT_SWAP( 4,12)
+			Y_NWSRT_SWAP( 7,15)
+			Y_NWSRT_SWAP( 8,16)
+			Y_NWSRT_SWAP(11,19)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP(21,22)
+			Y_NWSRT_SWAP( 5,13)
+			Y_NWSRT_SWAP(10,18)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP(11,15)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP(19,20)
+			Y_NWSRT_SWAP( 9,13)
+			Y_NWSRT_SWAP(10,14)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP(15,17)
+			Y_NWSRT_SWAP(10,12)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP(11,13)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP(15,16)
 		}
 		//!built-in version on 25 items
 		template <typename T> static inline void on25(T *a) {
 			assert(a);
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP(19,20)
+			Y_NWSRT_SWAP(21,22)
+			Y_NWSRT_SWAP(23,24)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP(15,17)
+			Y_NWSRT_SWAP(18,20)
+			Y_NWSRT_SWAP(21,23)
+			Y_NWSRT_SWAP(22,24)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 8,11)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP(14,17)
+			Y_NWSRT_SWAP(18,19)
+			Y_NWSRT_SWAP(22,23)
+			Y_NWSRT_SWAP(20,24)
+			Y_NWSRT_SWAP( 0, 3)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP( 7,10)
+			Y_NWSRT_SWAP( 5,11)
+			Y_NWSRT_SWAP(12,15)
+			Y_NWSRT_SWAP(13,16)
+			Y_NWSRT_SWAP(18,22)
+			Y_NWSRT_SWAP(19,23)
+			Y_NWSRT_SWAP(17,24)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP( 0, 6)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP(18,21)
+			Y_NWSRT_SWAP(20,23)
+			Y_NWSRT_SWAP(11,24)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP( 1, 7)
+			Y_NWSRT_SWAP( 4,10)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP(19,21)
+			Y_NWSRT_SWAP(20,22)
+			Y_NWSRT_SWAP(16,23)
+			Y_NWSRT_SWAP( 2, 8)
+			Y_NWSRT_SWAP( 1, 6)
+			Y_NWSRT_SWAP( 3, 9)
+			Y_NWSRT_SWAP( 5,10)
+			Y_NWSRT_SWAP(20,21)
+			Y_NWSRT_SWAP(12,19)
+			Y_NWSRT_SWAP(15,22)
+			Y_NWSRT_SWAP(17,23)
+			Y_NWSRT_SWAP( 2, 7)
+			Y_NWSRT_SWAP( 4, 9)
+			Y_NWSRT_SWAP(12,18)
+			Y_NWSRT_SWAP(13,20)
+			Y_NWSRT_SWAP(14,21)
+			Y_NWSRT_SWAP(16,22)
+			Y_NWSRT_SWAP(10,23)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP( 5, 9)
+			Y_NWSRT_SWAP( 4, 7)
+			Y_NWSRT_SWAP(14,20)
+			Y_NWSRT_SWAP(13,18)
+			Y_NWSRT_SWAP(17,22)
+			Y_NWSRT_SWAP(11,23)
+			Y_NWSRT_SWAP( 3, 6)
+			Y_NWSRT_SWAP( 5, 8)
+			Y_NWSRT_SWAP(14,19)
+			Y_NWSRT_SWAP(16,20)
+			Y_NWSRT_SWAP(17,21)
+			Y_NWSRT_SWAP( 0,13)
+			Y_NWSRT_SWAP( 9,22)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP(14,18)
+			Y_NWSRT_SWAP(15,19)
+			Y_NWSRT_SWAP(17,20)
+			Y_NWSRT_SWAP( 0,12)
+			Y_NWSRT_SWAP( 8,21)
+			Y_NWSRT_SWAP(10,22)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP(15,18)
+			Y_NWSRT_SWAP(17,19)
+			Y_NWSRT_SWAP( 1,14)
+			Y_NWSRT_SWAP( 7,20)
+			Y_NWSRT_SWAP(11,22)
+			Y_NWSRT_SWAP(16,18)
+			Y_NWSRT_SWAP( 2,15)
+			Y_NWSRT_SWAP( 1,12)
+			Y_NWSRT_SWAP( 6,19)
+			Y_NWSRT_SWAP( 8,20)
+			Y_NWSRT_SWAP(11,21)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP( 2,14)
+			Y_NWSRT_SWAP( 3,16)
+			Y_NWSRT_SWAP( 7,19)
+			Y_NWSRT_SWAP(10,20)
+			Y_NWSRT_SWAP( 2,13)
+			Y_NWSRT_SWAP( 4,17)
+			Y_NWSRT_SWAP( 5,18)
+			Y_NWSRT_SWAP( 8,19)
+			Y_NWSRT_SWAP(11,20)
+			Y_NWSRT_SWAP( 2,12)
+			Y_NWSRT_SWAP( 5,17)
+			Y_NWSRT_SWAP( 4,16)
+			Y_NWSRT_SWAP( 3,13)
+			Y_NWSRT_SWAP( 9,19)
+			Y_NWSRT_SWAP( 5,16)
+			Y_NWSRT_SWAP( 3,12)
+			Y_NWSRT_SWAP( 4,14)
+			Y_NWSRT_SWAP(10,19)
+			Y_NWSRT_SWAP( 5,15)
+			Y_NWSRT_SWAP( 4,12)
+			Y_NWSRT_SWAP(11,19)
+			Y_NWSRT_SWAP( 9,16)
+			Y_NWSRT_SWAP(10,17)
+			Y_NWSRT_SWAP( 5,14)
+			Y_NWSRT_SWAP( 8,15)
+			Y_NWSRT_SWAP(11,18)
+			Y_NWSRT_SWAP(10,16)
+			Y_NWSRT_SWAP( 5,13)
+			Y_NWSRT_SWAP( 7,14)
+			Y_NWSRT_SWAP(11,17)
+			Y_NWSRT_SWAP( 5,12)
+			Y_NWSRT_SWAP( 6,13)
+			Y_NWSRT_SWAP( 8,14)
+			Y_NWSRT_SWAP(11,16)
+			Y_NWSRT_SWAP( 6,12)
+			Y_NWSRT_SWAP( 8,13)
+			Y_NWSRT_SWAP(10,14)
+			Y_NWSRT_SWAP(11,15)
+			Y_NWSRT_SWAP( 7,12)
+			Y_NWSRT_SWAP( 9,13)
+			Y_NWSRT_SWAP(11,14)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP(11,13)
+			Y_NWSRT_SWAP( 9,12)
+			Y_NWSRT_SWAP(10,12)
+			Y_NWSRT_SWAP(11,12)
 		}
 		//!built-in version on 26 items
 		template <typename T> static inline void on26(T *a) {
 			assert(a);
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP(20,21)
+			Y_NWSRT_SWAP(22,23)
+			Y_NWSRT_SWAP(24,25)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP(10,12)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP(16,18)
+			Y_NWSRT_SWAP(19,21)
+			Y_NWSRT_SWAP(22,24)
+			Y_NWSRT_SWAP(23,25)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP(15,18)
+			Y_NWSRT_SWAP(19,20)
+			Y_NWSRT_SWAP(23,24)
+			Y_NWSRT_SWAP(21,25)
+			Y_NWSRT_SWAP( 0, 3)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP( 7,11)
+			Y_NWSRT_SWAP( 5,12)
+			Y_NWSRT_SWAP(13,16)
+			Y_NWSRT_SWAP(14,17)
+			Y_NWSRT_SWAP(19,23)
+			Y_NWSRT_SWAP(20,24)
+			Y_NWSRT_SWAP(18,25)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP( 8,11)
+			Y_NWSRT_SWAP(15,17)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP(19,22)
+			Y_NWSRT_SWAP(21,24)
+			Y_NWSRT_SWAP(12,25)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP( 4,11)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP(20,22)
+			Y_NWSRT_SWAP(21,23)
+			Y_NWSRT_SWAP(17,24)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP( 0, 7)
+			Y_NWSRT_SWAP( 3,10)
+			Y_NWSRT_SWAP( 5,11)
+			Y_NWSRT_SWAP(21,22)
+			Y_NWSRT_SWAP(13,20)
+			Y_NWSRT_SWAP(16,23)
+			Y_NWSRT_SWAP(18,24)
+			Y_NWSRT_SWAP( 0, 6)
+			Y_NWSRT_SWAP( 1, 8)
+			Y_NWSRT_SWAP( 2, 9)
+			Y_NWSRT_SWAP( 4,10)
+			Y_NWSRT_SWAP(13,19)
+			Y_NWSRT_SWAP(14,21)
+			Y_NWSRT_SWAP(15,22)
+			Y_NWSRT_SWAP(17,23)
+			Y_NWSRT_SWAP(11,24)
+			Y_NWSRT_SWAP( 2, 8)
+			Y_NWSRT_SWAP( 1, 6)
+			Y_NWSRT_SWAP( 5,10)
+			Y_NWSRT_SWAP(15,21)
+			Y_NWSRT_SWAP(14,19)
+			Y_NWSRT_SWAP(18,23)
+			Y_NWSRT_SWAP( 0,13)
+			Y_NWSRT_SWAP(12,24)
+			Y_NWSRT_SWAP( 2, 7)
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP( 5, 9)
+			Y_NWSRT_SWAP(15,20)
+			Y_NWSRT_SWAP(17,21)
+			Y_NWSRT_SWAP(18,22)
+			Y_NWSRT_SWAP( 1,14)
+			Y_NWSRT_SWAP(10,23)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP( 5, 8)
+			Y_NWSRT_SWAP(15,19)
+			Y_NWSRT_SWAP(16,20)
+			Y_NWSRT_SWAP(18,21)
+			Y_NWSRT_SWAP( 1,13)
+			Y_NWSRT_SWAP( 9,22)
+			Y_NWSRT_SWAP(12,23)
+			Y_NWSRT_SWAP( 3, 6)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP(16,19)
+			Y_NWSRT_SWAP(18,20)
+			Y_NWSRT_SWAP( 2,15)
+			Y_NWSRT_SWAP( 8,21)
+			Y_NWSRT_SWAP(10,22)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP(17,19)
+			Y_NWSRT_SWAP( 2,14)
+			Y_NWSRT_SWAP( 3,16)
+			Y_NWSRT_SWAP( 7,20)
+			Y_NWSRT_SWAP(11,22)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP(18,19)
+			Y_NWSRT_SWAP( 2,13)
+			Y_NWSRT_SWAP( 4,17)
+			Y_NWSRT_SWAP( 8,20)
+			Y_NWSRT_SWAP(12,22)
+			Y_NWSRT_SWAP(11,21)
+			Y_NWSRT_SWAP( 5,18)
+			Y_NWSRT_SWAP( 4,16)
+			Y_NWSRT_SWAP( 3,13)
+			Y_NWSRT_SWAP( 6,19)
+			Y_NWSRT_SWAP(10,20)
+			Y_NWSRT_SWAP(12,21)
+			Y_NWSRT_SWAP( 5,17)
+			Y_NWSRT_SWAP( 4,14)
+			Y_NWSRT_SWAP( 7,19)
+			Y_NWSRT_SWAP(12,20)
+			Y_NWSRT_SWAP( 5,16)
+			Y_NWSRT_SWAP( 4,13)
+			Y_NWSRT_SWAP( 8,19)
+			Y_NWSRT_SWAP( 5,15)
+			Y_NWSRT_SWAP( 9,19)
+			Y_NWSRT_SWAP( 5,14)
+			Y_NWSRT_SWAP(10,19)
+			Y_NWSRT_SWAP( 8,15)
+			Y_NWSRT_SWAP( 9,16)
+			Y_NWSRT_SWAP( 5,13)
+			Y_NWSRT_SWAP(11,19)
+			Y_NWSRT_SWAP( 7,14)
+			Y_NWSRT_SWAP(10,17)
+			Y_NWSRT_SWAP(12,19)
+			Y_NWSRT_SWAP( 6,13)
+			Y_NWSRT_SWAP( 8,14)
+			Y_NWSRT_SWAP(10,16)
+			Y_NWSRT_SWAP(11,18)
+			Y_NWSRT_SWAP( 7,13)
+			Y_NWSRT_SWAP(12,18)
+			Y_NWSRT_SWAP(11,16)
+			Y_NWSRT_SWAP(10,14)
+			Y_NWSRT_SWAP( 8,13)
+			Y_NWSRT_SWAP(12,17)
+			Y_NWSRT_SWAP(11,15)
+			Y_NWSRT_SWAP(12,16)
+			Y_NWSRT_SWAP( 9,13)
+			Y_NWSRT_SWAP(10,13)
+			Y_NWSRT_SWAP(12,15)
+			Y_NWSRT_SWAP(11,13)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP(12,13)
 		}
 		//!built-in version on 27 items
 		template <typename T> static inline void on27(T *a) {
 			assert(a);
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[25]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP(18,19)
+			Y_NWSRT_SWAP(21,22)
+			Y_NWSRT_SWAP(23,24)
+			Y_NWSRT_SWAP(25,26)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP(10,12)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP(16,18)
+			Y_NWSRT_SWAP(17,19)
+			Y_NWSRT_SWAP(20,22)
+			Y_NWSRT_SWAP(23,25)
+			Y_NWSRT_SWAP(24,26)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP(15,19)
+			Y_NWSRT_SWAP(20,21)
+			Y_NWSRT_SWAP(24,25)
+			Y_NWSRT_SWAP(22,26)
+			Y_NWSRT_SWAP( 0, 3)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP( 7,11)
+			Y_NWSRT_SWAP( 5,12)
+			Y_NWSRT_SWAP(13,17)
+			Y_NWSRT_SWAP(14,18)
+			Y_NWSRT_SWAP(20,24)
+			Y_NWSRT_SWAP(21,25)
+			Y_NWSRT_SWAP(19,26)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP( 8,11)
+			Y_NWSRT_SWAP(13,16)
+			Y_NWSRT_SWAP(15,18)
+			Y_NWSRT_SWAP(20,23)
+			Y_NWSRT_SWAP(22,25)
+			Y_NWSRT_SWAP(12,26)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP( 4,11)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP(15,17)
+			Y_NWSRT_SWAP(21,23)
+			Y_NWSRT_SWAP(22,24)
+			Y_NWSRT_SWAP(13,20)
+			Y_NWSRT_SWAP(18,25)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP( 0, 7)
+			Y_NWSRT_SWAP( 3,10)
+			Y_NWSRT_SWAP( 5,11)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP(22,23)
+			Y_NWSRT_SWAP(14,21)
+			Y_NWSRT_SWAP(17,24)
+			Y_NWSRT_SWAP(19,25)
+			Y_NWSRT_SWAP( 0, 6)
+			Y_NWSRT_SWAP( 1, 8)
+			Y_NWSRT_SWAP( 2, 9)
+			Y_NWSRT_SWAP( 4,10)
+			Y_NWSRT_SWAP(15,22)
+			Y_NWSRT_SWAP(14,20)
+			Y_NWSRT_SWAP(16,23)
+			Y_NWSRT_SWAP(19,24)
+			Y_NWSRT_SWAP(11,25)
+			Y_NWSRT_SWAP( 2, 8)
+			Y_NWSRT_SWAP( 1, 6)
+			Y_NWSRT_SWAP( 5,10)
+			Y_NWSRT_SWAP(15,21)
+			Y_NWSRT_SWAP(17,23)
+			Y_NWSRT_SWAP( 0,14)
+			Y_NWSRT_SWAP(12,25)
+			Y_NWSRT_SWAP( 2, 7)
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP( 5, 9)
+			Y_NWSRT_SWAP(15,20)
+			Y_NWSRT_SWAP(18,23)
+			Y_NWSRT_SWAP(17,21)
+			Y_NWSRT_SWAP( 0,13)
+			Y_NWSRT_SWAP(10,24)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP( 5, 8)
+			Y_NWSRT_SWAP(19,23)
+			Y_NWSRT_SWAP(16,20)
+			Y_NWSRT_SWAP(18,22)
+			Y_NWSRT_SWAP( 1,15)
+			Y_NWSRT_SWAP(12,24)
+			Y_NWSRT_SWAP( 3, 6)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP(17,20)
+			Y_NWSRT_SWAP(19,22)
+			Y_NWSRT_SWAP( 2,16)
+			Y_NWSRT_SWAP( 1,13)
+			Y_NWSRT_SWAP( 9,23)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP(18,20)
+			Y_NWSRT_SWAP(19,21)
+			Y_NWSRT_SWAP( 2,15)
+			Y_NWSRT_SWAP( 3,17)
+			Y_NWSRT_SWAP( 8,22)
+			Y_NWSRT_SWAP(10,23)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP(19,20)
+			Y_NWSRT_SWAP( 2,14)
+			Y_NWSRT_SWAP( 4,18)
+			Y_NWSRT_SWAP( 7,21)
+			Y_NWSRT_SWAP(11,23)
+			Y_NWSRT_SWAP( 2,13)
+			Y_NWSRT_SWAP( 5,19)
+			Y_NWSRT_SWAP( 4,17)
+			Y_NWSRT_SWAP( 3,14)
+			Y_NWSRT_SWAP( 6,20)
+			Y_NWSRT_SWAP( 8,21)
+			Y_NWSRT_SWAP(12,23)
+			Y_NWSRT_SWAP(11,22)
+			Y_NWSRT_SWAP( 5,18)
+			Y_NWSRT_SWAP( 3,13)
+			Y_NWSRT_SWAP( 4,15)
+			Y_NWSRT_SWAP( 7,20)
+			Y_NWSRT_SWAP(10,21)
+			Y_NWSRT_SWAP(12,22)
+			Y_NWSRT_SWAP( 5,17)
+			Y_NWSRT_SWAP( 4,13)
+			Y_NWSRT_SWAP( 8,20)
+			Y_NWSRT_SWAP(12,21)
+			Y_NWSRT_SWAP( 5,16)
+			Y_NWSRT_SWAP( 9,20)
+			Y_NWSRT_SWAP( 5,15)
+			Y_NWSRT_SWAP(10,20)
+			Y_NWSRT_SWAP( 9,16)
+			Y_NWSRT_SWAP( 5,14)
+			Y_NWSRT_SWAP(11,20)
+			Y_NWSRT_SWAP( 8,15)
+			Y_NWSRT_SWAP(10,17)
+			Y_NWSRT_SWAP( 5,13)
+			Y_NWSRT_SWAP(12,20)
+			Y_NWSRT_SWAP( 7,14)
+			Y_NWSRT_SWAP(10,16)
+			Y_NWSRT_SWAP(11,18)
+			Y_NWSRT_SWAP( 6,13)
+			Y_NWSRT_SWAP( 8,14)
+			Y_NWSRT_SWAP(12,19)
+			Y_NWSRT_SWAP(11,16)
+			Y_NWSRT_SWAP( 7,13)
+			Y_NWSRT_SWAP(12,18)
+			Y_NWSRT_SWAP(10,14)
+			Y_NWSRT_SWAP(11,15)
+			Y_NWSRT_SWAP( 8,13)
+			Y_NWSRT_SWAP(12,17)
+			Y_NWSRT_SWAP(12,16)
+			Y_NWSRT_SWAP( 9,13)
+			Y_NWSRT_SWAP(10,13)
+			Y_NWSRT_SWAP(12,15)
+			Y_NWSRT_SWAP(11,13)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP(12,13)
 		}
 		//!built-in version on 28 items
 		template <typename T> static inline void on28(T *a) {
 			assert(a);
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[26]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[25]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[25]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP(19,20)
+			Y_NWSRT_SWAP(22,23)
+			Y_NWSRT_SWAP(24,25)
+			Y_NWSRT_SWAP(26,27)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP(10,12)
+			Y_NWSRT_SWAP(11,13)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP(17,19)
+			Y_NWSRT_SWAP(18,20)
+			Y_NWSRT_SWAP(21,23)
+			Y_NWSRT_SWAP(24,26)
+			Y_NWSRT_SWAP(25,27)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP( 9,13)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP(18,19)
+			Y_NWSRT_SWAP(16,20)
+			Y_NWSRT_SWAP(21,22)
+			Y_NWSRT_SWAP(25,26)
+			Y_NWSRT_SWAP(23,27)
+			Y_NWSRT_SWAP( 0, 4)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP( 7,11)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP( 6,13)
+			Y_NWSRT_SWAP(14,18)
+			Y_NWSRT_SWAP(15,19)
+			Y_NWSRT_SWAP(21,25)
+			Y_NWSRT_SWAP(22,26)
+			Y_NWSRT_SWAP(20,27)
+			Y_NWSRT_SWAP( 0, 3)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 7,10)
+			Y_NWSRT_SWAP( 9,12)
+			Y_NWSRT_SWAP(14,17)
+			Y_NWSRT_SWAP(16,19)
+			Y_NWSRT_SWAP(21,24)
+			Y_NWSRT_SWAP(23,26)
+			Y_NWSRT_SWAP(13,27)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP( 0, 7)
+			Y_NWSRT_SWAP( 5,12)
+			Y_NWSRT_SWAP(15,17)
+			Y_NWSRT_SWAP(16,18)
+			Y_NWSRT_SWAP(22,24)
+			Y_NWSRT_SWAP(23,25)
+			Y_NWSRT_SWAP(14,21)
+			Y_NWSRT_SWAP(19,26)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 1, 8)
+			Y_NWSRT_SWAP( 4,11)
+			Y_NWSRT_SWAP( 6,12)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP(23,24)
+			Y_NWSRT_SWAP(15,22)
+			Y_NWSRT_SWAP(18,25)
+			Y_NWSRT_SWAP(20,26)
+			Y_NWSRT_SWAP( 0,14)
+			Y_NWSRT_SWAP( 2, 9)
+			Y_NWSRT_SWAP( 1, 7)
+			Y_NWSRT_SWAP( 3,10)
+			Y_NWSRT_SWAP( 6,11)
+			Y_NWSRT_SWAP(16,23)
+			Y_NWSRT_SWAP(15,21)
+			Y_NWSRT_SWAP(17,24)
+			Y_NWSRT_SWAP(20,25)
+			Y_NWSRT_SWAP(12,26)
+			Y_NWSRT_SWAP( 2, 8)
+			Y_NWSRT_SWAP( 4,10)
+			Y_NWSRT_SWAP(16,22)
+			Y_NWSRT_SWAP(18,24)
+			Y_NWSRT_SWAP( 1,15)
+			Y_NWSRT_SWAP(11,25)
+			Y_NWSRT_SWAP(13,26)
+			Y_NWSRT_SWAP( 2, 7)
+			Y_NWSRT_SWAP( 5,10)
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP(16,21)
+			Y_NWSRT_SWAP(19,24)
+			Y_NWSRT_SWAP(18,22)
+			Y_NWSRT_SWAP( 1,14)
+			Y_NWSRT_SWAP(13,25)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP( 5, 9)
+			Y_NWSRT_SWAP(20,24)
+			Y_NWSRT_SWAP(17,21)
+			Y_NWSRT_SWAP(19,23)
+			Y_NWSRT_SWAP( 2,16)
+			Y_NWSRT_SWAP( 4, 7)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP(18,21)
+			Y_NWSRT_SWAP(20,23)
+			Y_NWSRT_SWAP( 2,15)
+			Y_NWSRT_SWAP( 3,17)
+			Y_NWSRT_SWAP(10,24)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP(19,21)
+			Y_NWSRT_SWAP(20,22)
+			Y_NWSRT_SWAP( 2,14)
+			Y_NWSRT_SWAP( 4,18)
+			Y_NWSRT_SWAP( 9,23)
+			Y_NWSRT_SWAP(11,24)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP(20,21)
+			Y_NWSRT_SWAP( 4,17)
+			Y_NWSRT_SWAP( 5,19)
+			Y_NWSRT_SWAP( 3,14)
+			Y_NWSRT_SWAP( 8,22)
+			Y_NWSRT_SWAP(12,24)
+			Y_NWSRT_SWAP( 6,20)
+			Y_NWSRT_SWAP( 5,17)
+			Y_NWSRT_SWAP( 4,15)
+			Y_NWSRT_SWAP( 7,21)
+			Y_NWSRT_SWAP( 9,22)
+			Y_NWSRT_SWAP(13,24)
+			Y_NWSRT_SWAP(12,23)
+			Y_NWSRT_SWAP( 6,19)
+			Y_NWSRT_SWAP( 4,14)
+			Y_NWSRT_SWAP( 5,16)
+			Y_NWSRT_SWAP( 8,21)
+			Y_NWSRT_SWAP(11,22)
+			Y_NWSRT_SWAP(13,23)
+			Y_NWSRT_SWAP( 6,18)
+			Y_NWSRT_SWAP( 5,14)
+			Y_NWSRT_SWAP( 9,21)
+			Y_NWSRT_SWAP(13,22)
+			Y_NWSRT_SWAP( 6,17)
+			Y_NWSRT_SWAP(10,21)
+			Y_NWSRT_SWAP( 6,16)
+			Y_NWSRT_SWAP(11,21)
+			Y_NWSRT_SWAP(10,17)
+			Y_NWSRT_SWAP( 6,15)
+			Y_NWSRT_SWAP(12,21)
+			Y_NWSRT_SWAP( 9,16)
+			Y_NWSRT_SWAP(11,18)
+			Y_NWSRT_SWAP( 6,14)
+			Y_NWSRT_SWAP(13,21)
+			Y_NWSRT_SWAP( 8,15)
+			Y_NWSRT_SWAP(11,17)
+			Y_NWSRT_SWAP(12,19)
+			Y_NWSRT_SWAP( 7,14)
+			Y_NWSRT_SWAP( 9,15)
+			Y_NWSRT_SWAP(13,20)
+			Y_NWSRT_SWAP(12,17)
+			Y_NWSRT_SWAP( 8,14)
+			Y_NWSRT_SWAP(13,19)
+			Y_NWSRT_SWAP(11,15)
+			Y_NWSRT_SWAP(12,16)
+			Y_NWSRT_SWAP( 9,14)
+			Y_NWSRT_SWAP(13,18)
+			Y_NWSRT_SWAP(13,17)
+			Y_NWSRT_SWAP(10,14)
+			Y_NWSRT_SWAP(11,14)
+			Y_NWSRT_SWAP(13,16)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP(13,14)
 		}
 		//!built-in version on 29 items
 		template <typename T> static inline void on29(T *a) {
 			assert(a);
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[25]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[27]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[25]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[26]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[26]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP(19,20)
+			Y_NWSRT_SWAP(21,22)
+			Y_NWSRT_SWAP(23,24)
+			Y_NWSRT_SWAP(25,26)
+			Y_NWSRT_SWAP(27,28)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP(10,12)
+			Y_NWSRT_SWAP(11,13)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP(17,19)
+			Y_NWSRT_SWAP(18,20)
+			Y_NWSRT_SWAP(21,23)
+			Y_NWSRT_SWAP(22,24)
+			Y_NWSRT_SWAP(25,27)
+			Y_NWSRT_SWAP(26,28)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP( 9,13)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP(18,19)
+			Y_NWSRT_SWAP(16,20)
+			Y_NWSRT_SWAP(22,23)
+			Y_NWSRT_SWAP(26,27)
+			Y_NWSRT_SWAP(21,25)
+			Y_NWSRT_SWAP(24,28)
+			Y_NWSRT_SWAP( 0, 4)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP( 7,11)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP( 6,13)
+			Y_NWSRT_SWAP(14,18)
+			Y_NWSRT_SWAP(15,19)
+			Y_NWSRT_SWAP(22,26)
+			Y_NWSRT_SWAP(23,27)
+			Y_NWSRT_SWAP(20,28)
+			Y_NWSRT_SWAP( 0, 3)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 7,10)
+			Y_NWSRT_SWAP( 9,12)
+			Y_NWSRT_SWAP(14,17)
+			Y_NWSRT_SWAP(16,19)
+			Y_NWSRT_SWAP(22,25)
+			Y_NWSRT_SWAP(24,27)
+			Y_NWSRT_SWAP(13,28)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP( 0, 7)
+			Y_NWSRT_SWAP( 5,12)
+			Y_NWSRT_SWAP(15,17)
+			Y_NWSRT_SWAP(16,18)
+			Y_NWSRT_SWAP(23,25)
+			Y_NWSRT_SWAP(24,26)
+			Y_NWSRT_SWAP(14,22)
+			Y_NWSRT_SWAP(19,27)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP( 1, 8)
+			Y_NWSRT_SWAP( 4,11)
+			Y_NWSRT_SWAP( 6,12)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP(24,25)
+			Y_NWSRT_SWAP(14,21)
+			Y_NWSRT_SWAP(15,23)
+			Y_NWSRT_SWAP(18,26)
+			Y_NWSRT_SWAP(20,27)
+			Y_NWSRT_SWAP( 2, 9)
+			Y_NWSRT_SWAP( 1, 7)
+			Y_NWSRT_SWAP( 3,10)
+			Y_NWSRT_SWAP( 6,11)
+			Y_NWSRT_SWAP(16,24)
+			Y_NWSRT_SWAP(15,21)
+			Y_NWSRT_SWAP(17,25)
+			Y_NWSRT_SWAP(20,26)
+			Y_NWSRT_SWAP(12,27)
+			Y_NWSRT_SWAP( 2, 8)
+			Y_NWSRT_SWAP( 4,10)
+			Y_NWSRT_SWAP(16,23)
+			Y_NWSRT_SWAP(18,25)
+			Y_NWSRT_SWAP( 0,15)
+			Y_NWSRT_SWAP(11,26)
+			Y_NWSRT_SWAP(13,27)
+			Y_NWSRT_SWAP( 2, 7)
+			Y_NWSRT_SWAP( 5,10)
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP(16,22)
+			Y_NWSRT_SWAP(19,25)
+			Y_NWSRT_SWAP( 0,14)
+			Y_NWSRT_SWAP(13,26)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP( 5, 9)
+			Y_NWSRT_SWAP(16,21)
+			Y_NWSRT_SWAP(20,25)
+			Y_NWSRT_SWAP(18,22)
+			Y_NWSRT_SWAP(19,23)
+			Y_NWSRT_SWAP( 4, 7)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP(17,21)
+			Y_NWSRT_SWAP(20,24)
+			Y_NWSRT_SWAP( 1,16)
+			Y_NWSRT_SWAP(10,25)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP(18,21)
+			Y_NWSRT_SWAP(20,23)
+			Y_NWSRT_SWAP( 2,17)
+			Y_NWSRT_SWAP( 1,14)
+			Y_NWSRT_SWAP( 9,24)
+			Y_NWSRT_SWAP(11,25)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP(19,21)
+			Y_NWSRT_SWAP(20,22)
+			Y_NWSRT_SWAP( 2,16)
+			Y_NWSRT_SWAP( 3,18)
+			Y_NWSRT_SWAP( 8,23)
+			Y_NWSRT_SWAP(12,25)
+			Y_NWSRT_SWAP(20,21)
+			Y_NWSRT_SWAP( 2,15)
+			Y_NWSRT_SWAP( 4,19)
+			Y_NWSRT_SWAP( 7,22)
+			Y_NWSRT_SWAP( 9,23)
+			Y_NWSRT_SWAP(13,25)
+			Y_NWSRT_SWAP(12,24)
+			Y_NWSRT_SWAP( 2,14)
+			Y_NWSRT_SWAP( 4,18)
+			Y_NWSRT_SWAP( 5,20)
+			Y_NWSRT_SWAP( 6,21)
+			Y_NWSRT_SWAP( 8,22)
+			Y_NWSRT_SWAP(11,23)
+			Y_NWSRT_SWAP(13,24)
+			Y_NWSRT_SWAP( 6,20)
+			Y_NWSRT_SWAP( 5,18)
+			Y_NWSRT_SWAP( 3,14)
+			Y_NWSRT_SWAP( 4,15)
+			Y_NWSRT_SWAP( 9,22)
+			Y_NWSRT_SWAP(13,23)
+			Y_NWSRT_SWAP( 6,19)
+			Y_NWSRT_SWAP( 4,14)
+			Y_NWSRT_SWAP( 5,16)
+			Y_NWSRT_SWAP(10,22)
+			Y_NWSRT_SWAP( 6,18)
+			Y_NWSRT_SWAP( 5,14)
+			Y_NWSRT_SWAP(11,22)
+			Y_NWSRT_SWAP( 6,17)
+			Y_NWSRT_SWAP(12,22)
+			Y_NWSRT_SWAP(10,18)
+			Y_NWSRT_SWAP(11,19)
+			Y_NWSRT_SWAP( 6,16)
+			Y_NWSRT_SWAP(13,22)
+			Y_NWSRT_SWAP( 9,17)
+			Y_NWSRT_SWAP(11,18)
+			Y_NWSRT_SWAP(12,20)
+			Y_NWSRT_SWAP( 6,15)
+			Y_NWSRT_SWAP( 8,16)
+			Y_NWSRT_SWAP(13,21)
+			Y_NWSRT_SWAP(12,18)
+			Y_NWSRT_SWAP( 6,14)
+			Y_NWSRT_SWAP( 7,15)
+			Y_NWSRT_SWAP( 9,16)
+			Y_NWSRT_SWAP(13,20)
+			Y_NWSRT_SWAP( 7,14)
+			Y_NWSRT_SWAP( 9,15)
+			Y_NWSRT_SWAP(13,19)
+			Y_NWSRT_SWAP(12,16)
+			Y_NWSRT_SWAP( 8,14)
+			Y_NWSRT_SWAP(13,18)
+			Y_NWSRT_SWAP(11,15)
+			Y_NWSRT_SWAP( 9,14)
+			Y_NWSRT_SWAP(13,17)
+			Y_NWSRT_SWAP(10,14)
+			Y_NWSRT_SWAP(13,16)
+			Y_NWSRT_SWAP(11,14)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP(13,14)
 		}
 		//!built-in version on 30 items
 		template <typename T> static inline void on30(T *a) {
 			assert(a);
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[26]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[28]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[26]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[27]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[27]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[25]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[25]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[25]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[25]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP(18,19)
+			Y_NWSRT_SWAP(20,21)
+			Y_NWSRT_SWAP(22,23)
+			Y_NWSRT_SWAP(24,25)
+			Y_NWSRT_SWAP(26,27)
+			Y_NWSRT_SWAP(28,29)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP(11,13)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP(15,17)
+			Y_NWSRT_SWAP(18,20)
+			Y_NWSRT_SWAP(19,21)
+			Y_NWSRT_SWAP(22,24)
+			Y_NWSRT_SWAP(23,25)
+			Y_NWSRT_SWAP(26,28)
+			Y_NWSRT_SWAP(27,29)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP( 7,11)
+			Y_NWSRT_SWAP(10,14)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP(19,20)
+			Y_NWSRT_SWAP(17,21)
+			Y_NWSRT_SWAP(23,24)
+			Y_NWSRT_SWAP(27,28)
+			Y_NWSRT_SWAP(22,26)
+			Y_NWSRT_SWAP(25,29)
+			Y_NWSRT_SWAP( 0, 4)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP( 9,13)
+			Y_NWSRT_SWAP( 6,14)
+			Y_NWSRT_SWAP(15,19)
+			Y_NWSRT_SWAP(16,20)
+			Y_NWSRT_SWAP(23,27)
+			Y_NWSRT_SWAP(24,28)
+			Y_NWSRT_SWAP(21,29)
+			Y_NWSRT_SWAP( 0, 3)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 8,11)
+			Y_NWSRT_SWAP(10,13)
+			Y_NWSRT_SWAP(15,18)
+			Y_NWSRT_SWAP(17,20)
+			Y_NWSRT_SWAP(23,26)
+			Y_NWSRT_SWAP(25,28)
+			Y_NWSRT_SWAP(14,29)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP(10,12)
+			Y_NWSRT_SWAP( 0, 8)
+			Y_NWSRT_SWAP( 5,13)
+			Y_NWSRT_SWAP(16,18)
+			Y_NWSRT_SWAP(17,19)
+			Y_NWSRT_SWAP(24,26)
+			Y_NWSRT_SWAP(25,27)
+			Y_NWSRT_SWAP(15,23)
+			Y_NWSRT_SWAP(20,28)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 0, 7)
+			Y_NWSRT_SWAP( 1, 9)
+			Y_NWSRT_SWAP( 4,12)
+			Y_NWSRT_SWAP( 6,13)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP(25,26)
+			Y_NWSRT_SWAP(15,22)
+			Y_NWSRT_SWAP(16,24)
+			Y_NWSRT_SWAP(19,27)
+			Y_NWSRT_SWAP(21,28)
+			Y_NWSRT_SWAP( 2,10)
+			Y_NWSRT_SWAP( 1, 7)
+			Y_NWSRT_SWAP( 3,11)
+			Y_NWSRT_SWAP( 6,12)
+			Y_NWSRT_SWAP(17,25)
+			Y_NWSRT_SWAP(16,22)
+			Y_NWSRT_SWAP(18,26)
+			Y_NWSRT_SWAP(21,27)
+			Y_NWSRT_SWAP( 0,15)
+			Y_NWSRT_SWAP(13,28)
+			Y_NWSRT_SWAP( 2, 9)
+			Y_NWSRT_SWAP( 4,11)
+			Y_NWSRT_SWAP(17,24)
+			Y_NWSRT_SWAP(19,26)
+			Y_NWSRT_SWAP( 1,16)
+			Y_NWSRT_SWAP(12,27)
+			Y_NWSRT_SWAP(14,28)
+			Y_NWSRT_SWAP( 2, 8)
+			Y_NWSRT_SWAP( 5,11)
+			Y_NWSRT_SWAP(17,23)
+			Y_NWSRT_SWAP(20,26)
+			Y_NWSRT_SWAP( 1,15)
+			Y_NWSRT_SWAP(14,27)
+			Y_NWSRT_SWAP( 2, 7)
+			Y_NWSRT_SWAP( 6,11)
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP( 5, 9)
+			Y_NWSRT_SWAP(17,22)
+			Y_NWSRT_SWAP(21,26)
+			Y_NWSRT_SWAP(19,23)
+			Y_NWSRT_SWAP(20,24)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP(18,22)
+			Y_NWSRT_SWAP(21,25)
+			Y_NWSRT_SWAP( 2,17)
+			Y_NWSRT_SWAP(11,26)
+			Y_NWSRT_SWAP( 4, 7)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP(19,22)
+			Y_NWSRT_SWAP(21,24)
+			Y_NWSRT_SWAP( 2,16)
+			Y_NWSRT_SWAP( 3,18)
+			Y_NWSRT_SWAP(10,25)
+			Y_NWSRT_SWAP(12,26)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP(20,22)
+			Y_NWSRT_SWAP(21,23)
+			Y_NWSRT_SWAP( 2,15)
+			Y_NWSRT_SWAP( 4,19)
+			Y_NWSRT_SWAP( 9,24)
+			Y_NWSRT_SWAP(13,26)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP(21,22)
+			Y_NWSRT_SWAP( 4,18)
+			Y_NWSRT_SWAP( 5,20)
+			Y_NWSRT_SWAP( 3,15)
+			Y_NWSRT_SWAP( 8,23)
+			Y_NWSRT_SWAP(10,24)
+			Y_NWSRT_SWAP(14,26)
+			Y_NWSRT_SWAP( 6,21)
+			Y_NWSRT_SWAP( 5,18)
+			Y_NWSRT_SWAP( 4,16)
+			Y_NWSRT_SWAP( 7,22)
+			Y_NWSRT_SWAP(10,23)
+			Y_NWSRT_SWAP(13,24)
+			Y_NWSRT_SWAP(14,25)
+			Y_NWSRT_SWAP( 6,20)
+			Y_NWSRT_SWAP( 4,15)
+			Y_NWSRT_SWAP( 5,17)
+			Y_NWSRT_SWAP( 8,22)
+			Y_NWSRT_SWAP(12,23)
+			Y_NWSRT_SWAP(14,24)
+			Y_NWSRT_SWAP( 6,19)
+			Y_NWSRT_SWAP( 5,15)
+			Y_NWSRT_SWAP( 9,22)
+			Y_NWSRT_SWAP(14,23)
+			Y_NWSRT_SWAP( 6,18)
+			Y_NWSRT_SWAP(10,22)
+			Y_NWSRT_SWAP( 6,17)
+			Y_NWSRT_SWAP(11,22)
+			Y_NWSRT_SWAP(10,18)
+			Y_NWSRT_SWAP( 6,16)
+			Y_NWSRT_SWAP(12,22)
+			Y_NWSRT_SWAP( 9,17)
+			Y_NWSRT_SWAP(11,19)
+			Y_NWSRT_SWAP( 6,15)
+			Y_NWSRT_SWAP(13,22)
+			Y_NWSRT_SWAP( 8,16)
+			Y_NWSRT_SWAP(10,17)
+			Y_NWSRT_SWAP(12,20)
+			Y_NWSRT_SWAP(14,22)
+			Y_NWSRT_SWAP( 7,15)
+			Y_NWSRT_SWAP(10,16)
+			Y_NWSRT_SWAP(12,19)
+			Y_NWSRT_SWAP(13,21)
+			Y_NWSRT_SWAP( 8,15)
+			Y_NWSRT_SWAP(14,21)
+			Y_NWSRT_SWAP(13,19)
+			Y_NWSRT_SWAP(12,16)
+			Y_NWSRT_SWAP( 9,15)
+			Y_NWSRT_SWAP(14,20)
+			Y_NWSRT_SWAP(13,17)
+			Y_NWSRT_SWAP(10,15)
+			Y_NWSRT_SWAP(14,19)
+			Y_NWSRT_SWAP(11,15)
+			Y_NWSRT_SWAP(14,18)
+			Y_NWSRT_SWAP(12,15)
+			Y_NWSRT_SWAP(14,17)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP(14,15)
 		}
 		//!built-in version on 31 items
 		template <typename T> static inline void on31(T *a) {
 			assert(a);
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[25]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[27]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[29]; T &aJ = a[30]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[27]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[28]; T &aJ = a[30]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[28]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[26]; T &aJ = a[30]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[25]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[30]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[26]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[30]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[25]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[26]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[26]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP(15,16)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP(19,20)
+			Y_NWSRT_SWAP(21,22)
+			Y_NWSRT_SWAP(23,24)
+			Y_NWSRT_SWAP(25,26)
+			Y_NWSRT_SWAP(27,28)
+			Y_NWSRT_SWAP(29,30)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP(11,13)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP(15,17)
+			Y_NWSRT_SWAP(16,18)
+			Y_NWSRT_SWAP(19,21)
+			Y_NWSRT_SWAP(20,22)
+			Y_NWSRT_SWAP(23,25)
+			Y_NWSRT_SWAP(24,26)
+			Y_NWSRT_SWAP(27,29)
+			Y_NWSRT_SWAP(28,30)
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP( 7,11)
+			Y_NWSRT_SWAP(10,14)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP(20,21)
+			Y_NWSRT_SWAP(15,19)
+			Y_NWSRT_SWAP(18,22)
+			Y_NWSRT_SWAP(24,25)
+			Y_NWSRT_SWAP(28,29)
+			Y_NWSRT_SWAP(23,27)
+			Y_NWSRT_SWAP(26,30)
+			Y_NWSRT_SWAP( 0, 4)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP( 9,13)
+			Y_NWSRT_SWAP( 6,14)
+			Y_NWSRT_SWAP(16,20)
+			Y_NWSRT_SWAP(17,21)
+			Y_NWSRT_SWAP(24,28)
+			Y_NWSRT_SWAP(25,29)
+			Y_NWSRT_SWAP(15,23)
+			Y_NWSRT_SWAP(22,30)
+			Y_NWSRT_SWAP( 0, 3)
+			Y_NWSRT_SWAP( 2, 5)
+			Y_NWSRT_SWAP( 8,11)
+			Y_NWSRT_SWAP(10,13)
+			Y_NWSRT_SWAP(16,19)
+			Y_NWSRT_SWAP(18,21)
+			Y_NWSRT_SWAP(24,27)
+			Y_NWSRT_SWAP(26,29)
+			Y_NWSRT_SWAP(14,30)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP(10,12)
+			Y_NWSRT_SWAP( 0, 8)
+			Y_NWSRT_SWAP( 5,13)
+			Y_NWSRT_SWAP(17,19)
+			Y_NWSRT_SWAP(18,20)
+			Y_NWSRT_SWAP(25,27)
+			Y_NWSRT_SWAP(26,28)
+			Y_NWSRT_SWAP(16,24)
+			Y_NWSRT_SWAP(21,29)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP( 0, 7)
+			Y_NWSRT_SWAP( 1, 9)
+			Y_NWSRT_SWAP( 4,12)
+			Y_NWSRT_SWAP( 6,13)
+			Y_NWSRT_SWAP(18,19)
+			Y_NWSRT_SWAP(26,27)
+			Y_NWSRT_SWAP(16,23)
+			Y_NWSRT_SWAP(17,25)
+			Y_NWSRT_SWAP(20,28)
+			Y_NWSRT_SWAP(22,29)
+			Y_NWSRT_SWAP( 2,10)
+			Y_NWSRT_SWAP( 1, 7)
+			Y_NWSRT_SWAP( 3,11)
+			Y_NWSRT_SWAP( 6,12)
+			Y_NWSRT_SWAP(18,26)
+			Y_NWSRT_SWAP(17,23)
+			Y_NWSRT_SWAP(19,27)
+			Y_NWSRT_SWAP(22,28)
+			Y_NWSRT_SWAP( 0,16)
+			Y_NWSRT_SWAP(13,29)
+			Y_NWSRT_SWAP( 2, 9)
+			Y_NWSRT_SWAP( 4,11)
+			Y_NWSRT_SWAP(18,25)
+			Y_NWSRT_SWAP(20,27)
+			Y_NWSRT_SWAP( 0,15)
+			Y_NWSRT_SWAP( 1,17)
+			Y_NWSRT_SWAP(12,28)
+			Y_NWSRT_SWAP(14,29)
+			Y_NWSRT_SWAP( 2, 8)
+			Y_NWSRT_SWAP( 5,11)
+			Y_NWSRT_SWAP(18,24)
+			Y_NWSRT_SWAP(21,27)
+			Y_NWSRT_SWAP( 1,15)
+			Y_NWSRT_SWAP(14,28)
+			Y_NWSRT_SWAP( 2, 7)
+			Y_NWSRT_SWAP( 6,11)
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP( 5, 9)
+			Y_NWSRT_SWAP(18,23)
+			Y_NWSRT_SWAP(22,27)
+			Y_NWSRT_SWAP(20,24)
+			Y_NWSRT_SWAP(21,25)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP(19,23)
+			Y_NWSRT_SWAP(22,26)
+			Y_NWSRT_SWAP( 2,18)
+			Y_NWSRT_SWAP(11,27)
+			Y_NWSRT_SWAP( 4, 7)
+			Y_NWSRT_SWAP( 6, 9)
+			Y_NWSRT_SWAP(20,23)
+			Y_NWSRT_SWAP(22,25)
+			Y_NWSRT_SWAP( 2,17)
+			Y_NWSRT_SWAP( 3,19)
+			Y_NWSRT_SWAP(10,26)
+			Y_NWSRT_SWAP(12,27)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP(21,23)
+			Y_NWSRT_SWAP(22,24)
+			Y_NWSRT_SWAP( 2,16)
+			Y_NWSRT_SWAP( 4,20)
+			Y_NWSRT_SWAP( 9,25)
+			Y_NWSRT_SWAP(13,27)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP(22,23)
+			Y_NWSRT_SWAP( 2,15)
+			Y_NWSRT_SWAP( 4,19)
+			Y_NWSRT_SWAP( 5,21)
+			Y_NWSRT_SWAP( 8,24)
+			Y_NWSRT_SWAP(10,25)
+			Y_NWSRT_SWAP(14,27)
+			Y_NWSRT_SWAP( 6,22)
+			Y_NWSRT_SWAP( 5,19)
+			Y_NWSRT_SWAP( 3,15)
+			Y_NWSRT_SWAP( 4,16)
+			Y_NWSRT_SWAP( 7,23)
+			Y_NWSRT_SWAP(10,24)
+			Y_NWSRT_SWAP(13,25)
+			Y_NWSRT_SWAP(14,26)
+			Y_NWSRT_SWAP( 6,21)
+			Y_NWSRT_SWAP( 4,15)
+			Y_NWSRT_SWAP( 5,17)
+			Y_NWSRT_SWAP( 8,23)
+			Y_NWSRT_SWAP(12,24)
+			Y_NWSRT_SWAP(14,25)
+			Y_NWSRT_SWAP( 6,20)
+			Y_NWSRT_SWAP( 5,15)
+			Y_NWSRT_SWAP( 9,23)
+			Y_NWSRT_SWAP(14,24)
+			Y_NWSRT_SWAP( 6,19)
+			Y_NWSRT_SWAP(10,23)
+			Y_NWSRT_SWAP( 6,18)
+			Y_NWSRT_SWAP(11,23)
+			Y_NWSRT_SWAP( 6,17)
+			Y_NWSRT_SWAP(12,23)
+			Y_NWSRT_SWAP(10,18)
+			Y_NWSRT_SWAP(11,19)
+			Y_NWSRT_SWAP( 6,16)
+			Y_NWSRT_SWAP(13,23)
+			Y_NWSRT_SWAP( 9,17)
+			Y_NWSRT_SWAP(12,20)
+			Y_NWSRT_SWAP( 6,15)
+			Y_NWSRT_SWAP(14,23)
+			Y_NWSRT_SWAP( 8,16)
+			Y_NWSRT_SWAP(10,17)
+			Y_NWSRT_SWAP(12,19)
+			Y_NWSRT_SWAP(13,21)
+			Y_NWSRT_SWAP( 7,15)
+			Y_NWSRT_SWAP(10,16)
+			Y_NWSRT_SWAP(14,22)
+			Y_NWSRT_SWAP(13,19)
+			Y_NWSRT_SWAP( 8,15)
+			Y_NWSRT_SWAP(14,21)
+			Y_NWSRT_SWAP(12,16)
+			Y_NWSRT_SWAP(13,17)
+			Y_NWSRT_SWAP( 9,15)
+			Y_NWSRT_SWAP(14,20)
+			Y_NWSRT_SWAP(10,15)
+			Y_NWSRT_SWAP(14,19)
+			Y_NWSRT_SWAP(11,15)
+			Y_NWSRT_SWAP(14,18)
+			Y_NWSRT_SWAP(12,15)
+			Y_NWSRT_SWAP(14,17)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP(14,15)
 		}
 		//!built-in version on 32 items
 		template <typename T> static inline void on32(T *a) {
 			assert(a);
-			{ T &aI = a[ 0]; T &aJ = a[ 1]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[26]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[28]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[30]; T &aJ = a[31]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 3]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[25]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[28]; T &aJ = a[30]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[29]; T &aJ = a[31]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 2]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 7]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[25]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[29]; T &aJ = a[30]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[24]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[27]; T &aJ = a[31]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[15]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[25]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[26]; T &aJ = a[30]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[16]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[31]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 6]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[25]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[27]; T &aJ = a[30]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 0]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[31]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 5]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[26]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[27]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[30]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 4]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[14]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[27]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[17]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[30]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[13]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[18]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[30]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 1]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[30]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 2]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[29]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[12]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[19]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[11]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[20]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[10]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[21]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 9]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[22]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[ 8]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[23]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 3]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[28]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 4]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[27]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 5]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[26]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 6]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[25]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 7]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[24]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 8]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[23]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[ 9]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[22]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[10]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[21]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[11]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[20]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[12]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[19]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[13]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[18]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[14]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[17]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
-			{ T &aI = a[15]; T &aJ = a[16]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }
+			Y_NWSRT_SWAP( 0, 1)
+			Y_NWSRT_SWAP( 2, 3)
+			Y_NWSRT_SWAP( 4, 5)
+			Y_NWSRT_SWAP( 6, 7)
+			Y_NWSRT_SWAP( 8, 9)
+			Y_NWSRT_SWAP(10,11)
+			Y_NWSRT_SWAP(12,13)
+			Y_NWSRT_SWAP(14,15)
+			Y_NWSRT_SWAP(16,17)
+			Y_NWSRT_SWAP(18,19)
+			Y_NWSRT_SWAP(20,21)
+			Y_NWSRT_SWAP(22,23)
+			Y_NWSRT_SWAP(24,25)
+			Y_NWSRT_SWAP(26,27)
+			Y_NWSRT_SWAP(28,29)
+			Y_NWSRT_SWAP(30,31)
+			Y_NWSRT_SWAP( 0, 2)
+			Y_NWSRT_SWAP( 1, 3)
+			Y_NWSRT_SWAP( 4, 6)
+			Y_NWSRT_SWAP( 5, 7)
+			Y_NWSRT_SWAP( 8,10)
+			Y_NWSRT_SWAP( 9,11)
+			Y_NWSRT_SWAP(12,14)
+			Y_NWSRT_SWAP(13,15)
+			Y_NWSRT_SWAP(16,18)
+			Y_NWSRT_SWAP(17,19)
+			Y_NWSRT_SWAP(20,22)
+			Y_NWSRT_SWAP(21,23)
+			Y_NWSRT_SWAP(24,26)
+			Y_NWSRT_SWAP(25,27)
+			Y_NWSRT_SWAP(28,30)
+			Y_NWSRT_SWAP(29,31)
+			Y_NWSRT_SWAP( 1, 2)
+			Y_NWSRT_SWAP( 5, 6)
+			Y_NWSRT_SWAP( 0, 4)
+			Y_NWSRT_SWAP( 3, 7)
+			Y_NWSRT_SWAP( 9,10)
+			Y_NWSRT_SWAP(13,14)
+			Y_NWSRT_SWAP( 8,12)
+			Y_NWSRT_SWAP(11,15)
+			Y_NWSRT_SWAP(17,18)
+			Y_NWSRT_SWAP(21,22)
+			Y_NWSRT_SWAP(16,20)
+			Y_NWSRT_SWAP(19,23)
+			Y_NWSRT_SWAP(25,26)
+			Y_NWSRT_SWAP(29,30)
+			Y_NWSRT_SWAP(24,28)
+			Y_NWSRT_SWAP(27,31)
+			Y_NWSRT_SWAP( 1, 5)
+			Y_NWSRT_SWAP( 2, 6)
+			Y_NWSRT_SWAP( 9,13)
+			Y_NWSRT_SWAP(10,14)
+			Y_NWSRT_SWAP( 0, 8)
+			Y_NWSRT_SWAP( 7,15)
+			Y_NWSRT_SWAP(17,21)
+			Y_NWSRT_SWAP(18,22)
+			Y_NWSRT_SWAP(25,29)
+			Y_NWSRT_SWAP(26,30)
+			Y_NWSRT_SWAP(16,24)
+			Y_NWSRT_SWAP(23,31)
+			Y_NWSRT_SWAP( 1, 4)
+			Y_NWSRT_SWAP( 3, 6)
+			Y_NWSRT_SWAP( 9,12)
+			Y_NWSRT_SWAP(11,14)
+			Y_NWSRT_SWAP(17,20)
+			Y_NWSRT_SWAP(19,22)
+			Y_NWSRT_SWAP(25,28)
+			Y_NWSRT_SWAP(27,30)
+			Y_NWSRT_SWAP( 0,16)
+			Y_NWSRT_SWAP(15,31)
+			Y_NWSRT_SWAP( 2, 4)
+			Y_NWSRT_SWAP( 3, 5)
+			Y_NWSRT_SWAP(10,12)
+			Y_NWSRT_SWAP(11,13)
+			Y_NWSRT_SWAP( 1, 9)
+			Y_NWSRT_SWAP( 6,14)
+			Y_NWSRT_SWAP(18,20)
+			Y_NWSRT_SWAP(19,21)
+			Y_NWSRT_SWAP(26,28)
+			Y_NWSRT_SWAP(27,29)
+			Y_NWSRT_SWAP(17,25)
+			Y_NWSRT_SWAP(22,30)
+			Y_NWSRT_SWAP( 3, 4)
+			Y_NWSRT_SWAP(11,12)
+			Y_NWSRT_SWAP( 1, 8)
+			Y_NWSRT_SWAP( 2,10)
+			Y_NWSRT_SWAP( 5,13)
+			Y_NWSRT_SWAP( 7,14)
+			Y_NWSRT_SWAP(19,20)
+			Y_NWSRT_SWAP(27,28)
+			Y_NWSRT_SWAP(17,24)
+			Y_NWSRT_SWAP(18,26)
+			Y_NWSRT_SWAP(21,29)
+			Y_NWSRT_SWAP(23,30)
+			Y_NWSRT_SWAP( 3,11)
+			Y_NWSRT_SWAP( 2, 8)
+			Y_NWSRT_SWAP( 4,12)
+			Y_NWSRT_SWAP( 7,13)
+			Y_NWSRT_SWAP(19,27)
+			Y_NWSRT_SWAP(18,24)
+			Y_NWSRT_SWAP(20,28)
+			Y_NWSRT_SWAP(23,29)
+			Y_NWSRT_SWAP( 1,17)
+			Y_NWSRT_SWAP(14,30)
+			Y_NWSRT_SWAP( 3,10)
+			Y_NWSRT_SWAP( 5,12)
+			Y_NWSRT_SWAP(19,26)
+			Y_NWSRT_SWAP(21,28)
+			Y_NWSRT_SWAP( 1,16)
+			Y_NWSRT_SWAP( 2,18)
+			Y_NWSRT_SWAP(13,29)
+			Y_NWSRT_SWAP(15,30)
+			Y_NWSRT_SWAP( 3, 9)
+			Y_NWSRT_SWAP( 6,12)
+			Y_NWSRT_SWAP(19,25)
+			Y_NWSRT_SWAP(22,28)
+			Y_NWSRT_SWAP( 2,16)
+			Y_NWSRT_SWAP(15,29)
+			Y_NWSRT_SWAP( 3, 8)
+			Y_NWSRT_SWAP( 7,12)
+			Y_NWSRT_SWAP( 5, 9)
+			Y_NWSRT_SWAP( 6,10)
+			Y_NWSRT_SWAP(19,24)
+			Y_NWSRT_SWAP(23,28)
+			Y_NWSRT_SWAP(21,25)
+			Y_NWSRT_SWAP(22,26)
+			Y_NWSRT_SWAP( 4, 8)
+			Y_NWSRT_SWAP( 7,11)
+			Y_NWSRT_SWAP(20,24)
+			Y_NWSRT_SWAP(23,27)
+			Y_NWSRT_SWAP( 3,19)
+			Y_NWSRT_SWAP(12,28)
+			Y_NWSRT_SWAP( 5, 8)
+			Y_NWSRT_SWAP( 7,10)
+			Y_NWSRT_SWAP(21,24)
+			Y_NWSRT_SWAP(23,26)
+			Y_NWSRT_SWAP( 3,18)
+			Y_NWSRT_SWAP( 4,20)
+			Y_NWSRT_SWAP(11,27)
+			Y_NWSRT_SWAP(13,28)
+			Y_NWSRT_SWAP( 6, 8)
+			Y_NWSRT_SWAP( 7, 9)
+			Y_NWSRT_SWAP(22,24)
+			Y_NWSRT_SWAP(23,25)
+			Y_NWSRT_SWAP( 3,17)
+			Y_NWSRT_SWAP( 5,21)
+			Y_NWSRT_SWAP(10,26)
+			Y_NWSRT_SWAP(14,28)
+			Y_NWSRT_SWAP( 7, 8)
+			Y_NWSRT_SWAP(23,24)
+			Y_NWSRT_SWAP( 3,16)
+			Y_NWSRT_SWAP( 5,20)
+			Y_NWSRT_SWAP( 6,22)
+			Y_NWSRT_SWAP( 9,25)
+			Y_NWSRT_SWAP(11,26)
+			Y_NWSRT_SWAP(15,28)
+			Y_NWSRT_SWAP( 7,23)
+			Y_NWSRT_SWAP( 6,20)
+			Y_NWSRT_SWAP( 4,16)
+			Y_NWSRT_SWAP( 5,17)
+			Y_NWSRT_SWAP( 8,24)
+			Y_NWSRT_SWAP(11,25)
+			Y_NWSRT_SWAP(14,26)
+			Y_NWSRT_SWAP(15,27)
+			Y_NWSRT_SWAP( 7,22)
+			Y_NWSRT_SWAP( 5,16)
+			Y_NWSRT_SWAP( 6,18)
+			Y_NWSRT_SWAP( 9,24)
+			Y_NWSRT_SWAP(13,25)
+			Y_NWSRT_SWAP(15,26)
+			Y_NWSRT_SWAP( 7,21)
+			Y_NWSRT_SWAP( 6,16)
+			Y_NWSRT_SWAP(10,24)
+			Y_NWSRT_SWAP(15,25)
+			Y_NWSRT_SWAP( 7,20)
+			Y_NWSRT_SWAP(11,24)
+			Y_NWSRT_SWAP( 7,19)
+			Y_NWSRT_SWAP(12,24)
+			Y_NWSRT_SWAP( 7,18)
+			Y_NWSRT_SWAP(13,24)
+			Y_NWSRT_SWAP(11,19)
+			Y_NWSRT_SWAP(12,20)
+			Y_NWSRT_SWAP( 7,17)
+			Y_NWSRT_SWAP(14,24)
+			Y_NWSRT_SWAP(10,18)
+			Y_NWSRT_SWAP(13,21)
+			Y_NWSRT_SWAP( 7,16)
+			Y_NWSRT_SWAP(15,24)
+			Y_NWSRT_SWAP( 9,17)
+			Y_NWSRT_SWAP(11,18)
+			Y_NWSRT_SWAP(13,20)
+			Y_NWSRT_SWAP(14,22)
+			Y_NWSRT_SWAP( 8,16)
+			Y_NWSRT_SWAP(11,17)
+			Y_NWSRT_SWAP(15,23)
+			Y_NWSRT_SWAP(14,20)
+			Y_NWSRT_SWAP( 9,16)
+			Y_NWSRT_SWAP(15,22)
+			Y_NWSRT_SWAP(13,17)
+			Y_NWSRT_SWAP(14,18)
+			Y_NWSRT_SWAP(10,16)
+			Y_NWSRT_SWAP(15,21)
+			Y_NWSRT_SWAP(11,16)
+			Y_NWSRT_SWAP(15,20)
+			Y_NWSRT_SWAP(12,16)
+			Y_NWSRT_SWAP(15,19)
+			Y_NWSRT_SWAP(13,16)
+			Y_NWSRT_SWAP(15,18)
+			Y_NWSRT_SWAP(14,16)
+			Y_NWSRT_SWAP(15,17)
+			Y_NWSRT_SWAP(15,16)
 		}
 		//!built-in version on 0-32 items
 		template <typename T> static inline void on(T *a, const size_t n) {

@@ -159,6 +159,14 @@ Y_PROGRAM_START()
 			fp << "#ifndef Y_NWSRT_INCLUDED\n";
 			fp << "#define Y_NWSRT_INCLUDED 1\n";
 			fp << "#include \"y/type/bswap.hpp\"\n";
+
+            fp << "#if defined(Y_NWSRT_VERBOSE)\n";
+            fp << "#   include <iostream>\n";
+            fp << "#   define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) { std::cerr << \"a[\" << J << \"]=\" << a[J] << \"<\" << \"a[\" << I << \"]=\" << a[I] << std::endl; core::bswap< sizeof(T) >( &aI, &aJ ); } }\n";
+            fp << "#else\n";
+            fp << "#   define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) core::bswap< sizeof(T) >( &aI, &aJ ); }\n";
+            fp << "#endif\n";
+
 			fp << "namespace upsylon {\n";
 
 			{
@@ -183,7 +191,7 @@ Y_PROGRAM_START()
 						for (size_t j = 1; j <= nt; ++j)
 						{
 							const swap &swp = tests[j];
-                            fp("\t\t\t{ T &aI = a[%2u]; T &aJ = a[%2u]; if(aJ<aI) core::bswap<sizeof(T)>(&aI,&aJ); }\n", swp.I, swp.J);
+                            fp("\t\t\tY_NWSRT_SWAP(%2u,%2u)\n", swp.I, swp.J);
 						}
 						fp << "\t\t}\n";
 					}

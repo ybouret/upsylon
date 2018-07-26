@@ -3,7 +3,7 @@
 #define Y_TYPE_BSWAP_INCLUDED 1
 
 #include "y/type/cswap.hpp"
-
+#include <iostream>
 namespace upsylon
 {
     namespace core
@@ -53,14 +53,15 @@ const uint16_t tmp16 = p16; p16=q16; q16=tmp16
 
         //! swapping 32 bits
 #define Y_BSWAP32(P,Q) \
-uint32_t      &p32   = *(uint32_t *)(P);\
-uint32_t      &q32   = *(uint32_t *)(Q);\
-const uint32_t tmp32 = p32; p32=q32; q32=tmp32
+volatile uint32_t      &p32   = *(uint32_t *)(P);\
+volatile uint32_t      &q32   = *(uint32_t *)(Q);\
+volatile const uint32_t tmp32 = p32; p32=q32; q32=tmp32
 
         //! 4 bytes swap
         template <>
         inline void bswap<4>(void *a, void *b) throw()
         {
+            //std::cerr << "bswap<4>" << std::endl;
             Y_BSWAP32(a,b);
         }
 
