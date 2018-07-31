@@ -231,7 +231,7 @@ namespace upsylon
             // level-2 : matrix/array ops
             //
             ////////////////////////////////////////////////////////////////////
-#include "tao-mmul.hxx"
+#include "tao-mul.hxx"
             
             //! a = M*b
             template <typename T,typename U,typename V> static inline
