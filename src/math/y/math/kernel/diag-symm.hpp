@@ -145,6 +145,59 @@ namespace upsylon
                 
                 
             }
+            
+            //! sort eigenvalues/vectors by DECREASING value
+            template <typename T> static inline
+            void  eigsrt( array<T> &d, matrix<T> &v) throw()
+            {
+                const size_t n = v.rows;
+                assert( d.size() >= v.rows );
+                for (size_t i=1,ip=2;i<n;++i,++ip)
+                {
+                    size_t k = i;
+                    T      p = d[k];
+                    for (size_t j=ip;j<=n;j++)
+                    {
+                        if (d[j] >= p)
+                        {
+                            p=d[k=j];
+                        }
+                    }
+                    if (k != i)
+                    {
+                        d[k]=d[i];
+                        d[i]=p;
+                        v.swap_cols(i,k);
+                    }
+                }
+            }
+            
+            //! sort by DECREASING ABSOLUTE valye
+            template <typename T> static inline
+            void eigsrtA( array<T> &d, matrix<T> &v) throw()
+            {
+                const size_t n = v.rows;
+                assert( d.size() >= v.rows );
+                for (size_t i=1;i<n;i++)
+                {
+                    size_t k = i;
+                    T      p = d[k];
+                    for (size_t j=i+1;j<=n;j++)
+                    {
+                        if( __fabs(d[j]) >= __fabs(p) )
+                        {
+                            p=(d[k=j]);
+                        }
+                    }
+                    if (k != i)
+                    {
+                        d[k]=d[i];
+                        d[i]=p;
+                        v.swap_cols(i,k);
+                    }
+                }
+            }
+            
         };
         
     }
