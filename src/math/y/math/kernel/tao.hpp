@@ -294,6 +294,7 @@ namespace upsylon
                 assert(M.cols==B.cols);
                 if(loop)
                 {
+                    _mmul(M,A,B,*loop);
                 }
                 else
                 {
