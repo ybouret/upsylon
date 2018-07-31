@@ -12,6 +12,9 @@ ADD_TEST(LU         test-m LU)
 ADD_TEST(DataSet    test-m data_set ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
 ADD_TEST(Derivative test-m drvs)
 ADD_TEST(ZFind      test-m zfind)
+ADD_TEST(Adjoint    test-m adjoint)
+ADD_TEST(DiagSymm   test-m diag_symm)
+
 
 ADD_CUSTOM_TARGET(utest-m
 COMMAND ${CMAKE_CTEST_COMMAND} -V

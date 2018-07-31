@@ -58,6 +58,7 @@ namespace upsylon
             typedef functor<T,TL2(T,const array<T>&)>     parametric_function; //!< parametric function
             typedef functor<array<T>,TL1(const array<T>)> vector_field;        //!< vector field
             
+            
         };
 
         inline float  __sqrt( const float  f ) throw() { return sqrtf(f); } //!< sqrt
@@ -92,7 +93,12 @@ namespace upsylon
         inline float  __anint( const float  x ) throw() { return floorf(x+0.5f); } //!< nearest integer
         inline double __anint( const double x ) throw() { return floor(x+0.5); }   //!< nearest integer
 
-
+        template <typename T>
+        static inline bool almost_equal( const T X, const T Y) throw()
+        {
+            static T fac = T(0.5) * numeric<T>::epsilon;
+            return ( __fabs(X-Y) <= fac * ( __fabs(X) + __fabs(Y) ) );
+        }
     }
 
 }

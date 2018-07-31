@@ -52,7 +52,7 @@ namespace upsylon
 
 
     //! constructor helper
-#define Y_MATRIX_CTOR(NR,NC) matrix_data(NR,NC,sizeof(T)), row_ptr(0), r_scalars(), c_scalars(), r_auxiliary(), c_auxiliary()
+#define Y_MATRIX_CTOR(NR,NC) matrix_data(NR,NC,sizeof(T)), row_ptr(0), r_aux1(), c_aux1(), r_aux2(), c_aux2()
 
     //! versatile matrix
     template <typename T>
@@ -199,7 +199,13 @@ namespace upsylon
                 }
             }
         }
-
+        
+        //! test dimensions
+        inline bool same_size_than( const matrix &other ) throw()
+        {
+            return (rows==other.rows) && (cols==other.cols);
+        }
+        
         //! store the minor_{I,J} of M
         template <typename U>
         inline void minor_of(const matrix<U>       &M,
@@ -272,11 +278,11 @@ namespace upsylon
             //__________________________________________________________________
             {
                 T *extra = static_cast<T*>(workspace)+items;
-                new (&r_scalars) row(extra,rows);
-                new (&c_scalars) row(extra,cols);
+                new (&r_aux1) row(extra,rows);
+                new (&c_aux1) row(extra,cols);
                 extra += largest;
-                new (&r_auxiliary) row(extra,rows);
-                new (&c_auxiliary) row(extra,cols);
+                new (&r_aux2) row(extra,rows);
+                new (&c_aux2) row(extra,cols);
             }
             //__________________________________________________________________
             //
@@ -322,10 +328,10 @@ namespace upsylon
             }
         }
     public:
-        row r_scalars;   //!< size() = rows
-        row c_scalars;   //!< size() = cols
-        row r_auxiliary; //!< size() = rows
-        row c_auxiliary; //!< size() = cols
+        row r_aux1;  //!< size() = rows
+        row c_aux1;  //!< size() = cols
+        row r_aux2;  //!< size() = rows
+        row c_aux2;  //!< size() = cols
     };
 
 }

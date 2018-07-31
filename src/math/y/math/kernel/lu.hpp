@@ -38,7 +38,7 @@ namespace upsylon
                 //______________________________________________________________
                 const size_t    n       = a.rows;
                 array<size_t>  &indx    = a.r_indices; assert(indx.size()==n);
-                array<T>       &extra   = a.r_scalars; assert(extra.size()==n);
+                array<T>       &extra   = a.r_aux1;    assert(extra.size()==n);
                 scalar_array    scal( (scalar_type *)extra.ro(), n );
                 if(dneg) *dneg=false;
 
