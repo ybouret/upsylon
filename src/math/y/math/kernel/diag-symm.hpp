@@ -11,8 +11,9 @@ namespace upsylon
     {
         struct diag_symm
         {
-            
-#define _Y_JACOBI(a,i,j,k,l) g=a[i][j];h=a[k][l];a[i][j]=g-s*(h+g*tau); a[k][l]=h+s*(g-h*tau)
+            static const size_t min_iter = 4;
+            static const size_t max_iter = 64;
+#define _Y_JACOBI(a,i,j,k,l) g=a[i][j]; h=a[k][l]; a[i][j]=g-s*(h+g*tau); a[k][l]=h+s*(g-h*tau)
 
             //! Jacobi reduction
             /**
@@ -39,16 +40,20 @@ namespace upsylon
                 //==============================================================
                 for(size_t ip=1;ip<=n; ++ip)
                 {
-                    for(size_t iq=1;iq<=n;++iq) v[ip][iq]=T(0.0);
-                    v[ip][ip]=T(1.0);
-                    b[ip]=d[ip]=a[ip][ip];
-                    z[ip]=T(0.0);
+                    {
+                        array<T> &v_ip = v[ip];
+                        for(size_t iq=1;iq<=n;++iq) v_ip[iq]=T(0);
+                        v_ip[ip]=T(1);
+                    }
+                    array<T> &a_ip = a[ip];
+                    b[ip]=d[ip]=a_ip[ip];
+                    z[ip]=T(0);
                 }
                 
                 //==============================================================
                 // looping over sweeps
                 //==============================================================
-                for(size_t iter=1;iter<=64;++iter)
+                for(size_t iter=1;iter<=max_iter;++iter)
                 {
                     T sm = 0;
                     for(size_t ip=1;ip<n;++ip) {
@@ -61,15 +66,15 @@ namespace upsylon
                         goto DONE; // OK
                     }
                     
-                    const T tresh = (iter < 4) ? T(0.2)*sm/(n*n) : T(0.0);
+                    const T tresh = (iter<min_iter) ? T(0.2)*sm/(n*n) : T(0);
                     
                     
                     for(size_t ip=1;ip<n;++ip)
                     {
-                        for(size_t iq=ip+1;iq<=n;iq++)
+                        for(size_t iq=ip+1;iq<=n;++iq)
                         {
                             T g=T(100) * __fabs(a[ip][iq]);
-                            if (iter > 4 && almost_equal( __fabs(d[ip])+g, __fabs(d[ip]))
+                            if ( (iter>min_iter) && almost_equal( __fabs(d[ip])+g, __fabs(d[ip]))
                                 && almost_equal( __fabs(d[iq])+g, __fabs(d[iq])) )
                             {
                                 a[ip][iq]=T(0.0);

@@ -3,7 +3,6 @@
 #define Y_MATH_TAO_INCLUDED 1
 
 #include "y/container/matrix.hpp"
-#include "y/sequence/array.hpp"
 #include "y/concurrent/scheme/simd.hpp"
 #include "y/type/bzset.hpp"
 #include "y/math/types.hpp"
@@ -283,26 +282,22 @@ namespace upsylon
             // level-2 : matrix/matrix ops
             //
             ////////////////////////////////////////////////////////////////////
+#include "tao-mmul.hxx"
             //! M=A*B
             template <typename T,typename U,typename V> static inline
-            void mmul( matrix<T> &M, const matrix<U> &A, const matrix<V> &B )
+            void mmul(matrix<T>       &M,
+                      const matrix<U> &A,
+                      const matrix<V> &B, concurrent::for_each *loop=0 )
             {
                 assert(M.rows==A.rows);
                 assert(A.cols==B.rows);
                 assert(M.cols==B.cols);
-                const size_t n = A.cols;
-                for(size_t i=M.rows;i>0;--i)
+                if(loop)
                 {
-                    array<T> &M_i = M[i];
-                    for(size_t j=M.cols;j>0;--j)
-                    {
-                        T sum = 0;
-                        for(size_t k=n;k>0;--k)
-                        {
-                            sum += T(A[i][k]) * T(B[k][j]);
-                        }
-                        M_i[j] = sum;
-                    }
+                }
+                else
+                {
+                    _mmul(M,A,B);
                 }
             }
 

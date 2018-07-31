@@ -66,7 +66,15 @@ namespace  {
                 mm.minor_of(m,i,j);
             }
         }
-
+        
+        std::cerr << "\ttesting direct access" << std::endl;
+        for(size_t i=0;i<m.items;++i)
+        {
+            const T &source = (*m)[i];
+            size_t r=0,c=0;
+            m.get_item(i,r,c);
+            Y_ASSERT( source == m[r][c] );
+        }
     }
 }
 Y_UTEST(matrix)

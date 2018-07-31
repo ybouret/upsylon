@@ -3,6 +3,7 @@
 #define Y_MATRIX_INCLUDED 1
 
 #include "y/sequence/array.hpp"
+#include <cstdlib>
 
 namespace upsylon
 {
@@ -35,7 +36,16 @@ namespace upsylon
 
         //! destructor
         virtual ~matrix_data() throw();
-
+        
+        //! item = (r-1)*cols+(c-1) in [0:items-1]
+        inline void get_item( const size_t item, size_t &r, size_t &c) const
+        {
+            assert(item<items);
+            const ldiv_t d = ldiv(item,cols);
+            r=d.quot+1; assert(r>0); assert(r<=rows);
+            c=d.rem +1; assert(c>0); assert(c<=cols);
+            assert((r-1)*cols+(c-1)==item);
+        }
 
     protected:
         void  *workspace; //!< where all memory is
@@ -186,8 +196,8 @@ namespace upsylon
         }
 
         //! load values
-        void diag(param_type diag_value,
-                  param_type extra_value)
+        inline void diag(param_type diag_value,
+                         param_type extra_value)
         {
             matrix &self = *this;
             for(size_t r=rows;r>0;--r)
@@ -198,6 +208,55 @@ namespace upsylon
                     R[c] = (r==c) ? diag_value : extra_value;
                 }
             }
+        }
+        
+        //! load values
+        inline void diag( const array<T> &d )
+        {
+            assert(d.size()>=rows);
+            assert(is_square);
+            matrix &self = *this;
+            for(size_t r=rows;r>0;--r)
+            {
+                array<type> &R = self[r];
+                for(size_t c=cols;c>0;--c)
+                {
+                    R[c] = T(0);
+                }
+                R[r] = d[r];
+            }
+        }
+        
+        //! load indentity
+        inline void Id()
+        {
+            assert(is_square);
+            matrix &self = *this;
+            for(size_t r=rows;r>0;--r)
+            {
+                array<type> &R = self[r];
+                for(size_t c=cols;c>0;--c)
+                {
+                    R[c] = T(0);
+                }
+                R[r] = T(1);
+            }
+        }
+        
+        //! direct access of [0:items-1]
+        inline type * operator*() throw()
+        {
+            assert(items>0);
+            matrix<T>   &self = *this;
+            return &self[1][1];
+        }
+        
+        //! direct access of [0:items-1]
+        inline const_type * operator*() const throw()
+        {
+            assert(items>0);
+            const matrix<T>   &self = *this;
+            return &self[1][1];
         }
         
         //! test dimensions
