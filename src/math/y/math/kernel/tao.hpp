@@ -279,7 +279,7 @@ namespace upsylon
 
             ////////////////////////////////////////////////////////////////////
             //
-            // level-2 : matrix/matrix ops
+            // level-3 : matrix/matrix ops
             //
             ////////////////////////////////////////////////////////////////////
 #include "tao-mmul.hxx"
@@ -299,6 +299,25 @@ namespace upsylon
                 else
                 {
                     _mmul(M,A,B);
+                }
+            }
+
+            //! M=A*B'
+            template <typename T,typename U,typename V> static inline
+            void mmul_rtrn(matrix<T>  &M,
+                      const matrix<U> &A,
+                      const matrix<V> &B, concurrent::for_each *loop=0 )
+            {
+                assert(M.rows==A.rows);
+                assert(A.cols==B.rows);
+                assert(M.cols==B.cols);
+                if(loop)
+                {
+                    //_mmul(M,A,B,*loop);
+                }
+                else
+                {
+                    _mmul_rtrn(M,A,B);
                 }
             }
 

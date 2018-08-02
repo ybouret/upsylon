@@ -8,19 +8,21 @@ void _mmul( matrix<T> &M, const matrix<U> &A, const matrix<V> &B)
     const size_t n = A.cols;
     for(size_t i=M.rows;i>0;--i)
     {
-        array<T> &M_i = M[i];
+        array<T>       &M_i = M[i];
+        const array<U> &A_i = A[i];
         for(size_t j=M.cols;j>0;--j)
         {
             T sum = 0;
             for(size_t k=n;k>0;--k)
             {
-                sum += T(A[i][k]) * T(B[k][j]);
+                sum += T(A_i[k]) * T(B[k][j]);
             }
             M_i[j] = sum;
         }
     }
 }
 
+//! context for matrix multiplication
 template <typename T, typename U, typename V>
 struct __mmul
 {
@@ -58,7 +60,7 @@ struct __mmul
     
 };
 
-
+//! M=A*B', parallel
 template <typename T,typename U,typename V> static inline
 void _mmul( matrix<T> &M, const matrix<U> &A, const matrix<V> &B, concurrent::for_each &loop)
 {
@@ -69,4 +71,29 @@ void _mmul( matrix<T> &M, const matrix<U> &A, const matrix<V> &B, concurrent::fo
     __mmul<T,U,V> args = { &M, &A, &B };
     loop.run( __mmul<T,U,V>::call , &args);
     
+}
+
+//! M = A*B'
+template <typename T,typename U,typename V> static inline
+void _mmul_rtrn( matrix<T> &M, const matrix<U> &A, const matrix<V> &B)
+{
+    assert(M.rows==A.rows);
+    assert(A.cols==B.cols);
+    assert(M.cols==B.rows);
+    const size_t n = A.cols;
+    for(size_t i=M.rows;i>0;--i)
+    {
+        array<T>       &M_i = M[i];
+        const array<U> &A_i = A[i];
+        for(size_t j=M.cols;j>0;--j)
+        {
+            const array<V> &B_j = B[j];
+            T sum = 0;
+            for(size_t k=n;k>0;--k)
+            {
+                sum += T(A_i[k]) * T(B_j[k]);
+            }
+            M_i[j] = sum;
+        }
+    }
 }

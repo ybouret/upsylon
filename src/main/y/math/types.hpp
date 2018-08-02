@@ -61,6 +61,7 @@ namespace upsylon
             
         };
 
+       
         inline float  __sqrt( const float  f ) throw() { return sqrtf(f); } //!< sqrt
         inline double __sqrt( const double f ) throw() { return sqrt(f);  } //!< sqrt
 
@@ -70,6 +71,12 @@ namespace upsylon
         inline float  __fabs( const complex<float>  c) throw() { return max_of(fabsf(c.re),fabsf(c.im)); } //!< fabs
         inline double __fabs( const complex<double> c) throw() { return max_of(fabs(c.re),fabs(c.im));   } //!< fabs
 
+        template <typename T>
+        inline T      __id(const T &f) { return f; }
+        
+        template <typename T>
+        inline typename real_for<T>::type __abs( const T &f ) { return __fabs(f); }
+        
         inline float  __pow( const float  x, const float  p) throw() { return powf(x,p); } //!< pow
         inline double __pow( const double x, const double p) throw() { return pow(x,p); }  //!< pow
 
