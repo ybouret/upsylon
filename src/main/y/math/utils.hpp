@@ -2,6 +2,8 @@
 #define Y_MATH_UTILS_INCLUDED 1
 
 #include "y/math/types.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/sort/index.hpp"
 
 namespace upsylon
 {
@@ -97,8 +99,8 @@ namespace upsylon
             template <typename SEQUENCE>
             size_t truncate( SEQUENCE &seq )
             {
-                size_t n    = 0;
-                type   vmax = 0;
+                size_t       n    = 0;
+                mutable_type vmax = 0;
                 for( typename SEQUENCE::iterator i=seq.begin(); i != seq.end(); ++i, ++n )
                 {
                     const_type tmp = __fabs(*i);
@@ -111,11 +113,58 @@ namespace upsylon
                     type &v = *i;
                     if( __fabs(v) <= tol )
                     {
-                        v = 0;
+                        (mutable_type&)v = 0;
                         ++ker;
                     }
                 }
                 return ker;
+            }
+            
+            //! keep img_size largest absolute values
+            template <typename SEQUENCE> static inline
+            void __set_size( SEQUENCE &seq, const size_t sz)
+            {
+                assert(seq.size()>=sz);
+                const size_t n = seq.size();
+                vector<mutable_type> v(n,as_capacity);
+                vector<size_t>       I(n,as_capacity);
+                mutable_type         vmax = 0;
+                {
+                    size_t j=1;
+                    for( typename SEQUENCE::iterator i=seq.begin(); i != seq.end(); ++i,++j)
+                    {
+                        const_type temp = *i;
+                        const_type vtmp = __fabs(temp);
+                        if(vtmp>vmax) vmax=vtmp;
+                        v.push_back(vtmp);
+                        I.push_back(j);
+                    }
+                }
+                indexing::make(I,comparison::increasing<type>,v);
+                //std::cerr << "I=" << I << std::endl;
+                for(size_t i=n-sz;i>0;--i)
+                {
+                    const size_t j = I[i];
+                    //std::cerr << "set 0@" << j << std::endl;
+                    typename SEQUENCE::iterator k = seq.begin() + (j-1);
+                    ((mutable_type &) *k) = 0;
+                }
+            }
+            
+            //! keep img_size largest absolute values
+            template <typename SEQUENCE> static inline
+            void set_image_size( SEQUENCE &seq, const size_t img_size )
+            {
+                assert(seq.size()>=img_size);
+                __set_size(seq,img_size);
+            }
+            
+            //! keep img_size largest absolute values
+            template <typename SEQUENCE> static inline
+            void set_kernel_size( SEQUENCE &seq, const size_t ker_size )
+            {
+                assert(seq.size()>=ker_size);
+                __set_size(seq,seq.size()-ker_size);
             }
         };
         

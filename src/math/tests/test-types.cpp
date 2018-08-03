@@ -50,6 +50,21 @@ Y_UTEST(types)
     std::cerr << "abs_max_of(l)=" << __find<float>::abs_max_of(l) << std::endl;
     std::cerr << "abs_max_of(c)=" << __find<float>::abs_max_of(c) << std::endl;
 
+    std::cerr << "Setting sizes" << std::endl;
+    std::cerr << "v=" << v << std::endl;
+    for(size_t i=0;i<=v.size();++i)
+    {
+        vector<float> V = v;
+        __find<float>::set_image_size(V,i);
+        std::cerr << "#img=" << i << " => " << V << std::endl;
+    }
+    for(size_t i=0;i<=v.size();++i)
+    {
+        vector<float> V = v;
+        __find<float>::set_kernel_size(V,i);
+        std::cerr << "#ker=" << i << " => " << V << std::endl;
+    }
+    
 }
 Y_UTEST_DONE()
 
