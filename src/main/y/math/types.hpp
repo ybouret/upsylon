@@ -72,10 +72,10 @@ namespace upsylon
         inline double __fabs( const complex<double> c) throw() { return max_of(fabs(c.re),fabs(c.im));   } //!< fabs
 
         template <typename T>
-        inline T      __id(const T &f) { return f; }
+        inline T      __id(const T &f) { return f; } //!< identity operator
         
         template <typename T>
-        inline typename real_for<T>::type __abs( const T &f ) { return __fabs(f); }
+        inline typename real_for<T>::type __abs( const T &f ) { return __fabs(f); } //!< absolute value operator
         
         inline float  __pow( const float  x, const float  p) throw() { return powf(x,p); } //!< pow
         inline double __pow( const double x, const double p) throw() { return pow(x,p); }  //!< pow

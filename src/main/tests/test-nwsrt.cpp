@@ -1,4 +1,4 @@
-#define Y_NWSRT_VERBOSE 1
+//#define Y_NWSRT_VERBOSE 1
 #include "y/sort/nwsrt.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
@@ -67,9 +67,9 @@ namespace
 
 Y_UTEST(nwsrt)
 {
-    //do_test<int>();
-    do_test<float>();
-    //do_test<string>();
+    do_test<int32_t>();
+    do_test<double>();
+    do_test<string>();
 }
 Y_UTEST_DONE()
 

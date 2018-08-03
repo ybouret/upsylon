@@ -12,7 +12,7 @@ namespace upsylon
         template <typename T>
         struct __find
         {
-            Y_DECL_ARGS(T,type);
+            Y_DECL_ARGS(T,type); //!< aliases
             
             //! max_of(i,i<last,FUNC(*i)),
             template <typename ITERATOR, typename FUNC> static inline

@@ -9,10 +9,11 @@ namespace upsylon
     
     namespace math
     {
+        //! diagonalisation of symmetric matrices
         struct diag_symm
         {
-            static const size_t min_iter = 4;
-            static const size_t max_iter = 64;
+            static const size_t min_iter = 4;  //!< for tolerance scaling
+            static const size_t max_iter = 64; //!< algorithm should converge before
 #define _Y_JACOBI(a,i,j,k,l) g=a[i][j]; h=a[k][l]; a[i][j]=g-s*(h+g*tau); a[k][l]=h+s*(g-h*tau)
 
             //! Jacobi reduction
@@ -20,7 +21,7 @@ namespace upsylon
              \param a is a symetric matrix, REGENERATED at the end...
              \param d are the eigenvalues
              \param v columns are the eigenvectors
-             \param Diag = V'* A * V
+             \return a =  v'* d * v
              */
             template <typename T> static inline
             bool build( matrix<T> &a, array<T> &d, matrix<T> &v )

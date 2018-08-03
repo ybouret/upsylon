@@ -1,4 +1,4 @@
-
+//! M=A*B, sequential
 template <typename T,typename U,typename V> static inline
 void _mmul( matrix<T> &M, const matrix<U> &A, const matrix<V> &B)
 {
@@ -26,10 +26,11 @@ void _mmul( matrix<T> &M, const matrix<U> &A, const matrix<V> &B)
 template <typename T, typename U, typename V>
 struct __mmul
 {
-    matrix<T>       *pM;
-    const matrix<U> *pA;
-    const matrix<V> *pB;
+    matrix<T>       *pM; //!< &M
+    const matrix<U> *pA; //!< &A
+    const matrix<V> *pB; //!< &B
     
+    //! normal multiplication
     static inline void call( void *args, parallel &ctx, lockable & )
     {
         __mmul *         self   = (__mmul *)args;
