@@ -224,6 +224,20 @@ namespace upsylon
                     return _mod2<T>(a);
                 }
             }
+            
+            //! two vectors
+            template <typename T> static inline
+            typename real_for<T>::type mod2( const array<T> &a, const array<T> &b, concurrent::for_each *loop=0)
+            {
+                if(loop)
+                {
+                    return _mod2<T>(a,b,*loop);
+                }
+                else
+                {
+                    return _mod2<T>(a,b);
+                }
+            }
 
             ////////////////////////////////////////////////////////////////////
             //
@@ -309,11 +323,11 @@ namespace upsylon
                       const matrix<V> &B, concurrent::for_each *loop=0 )
             {
                 assert(M.rows==A.rows);
-                assert(A.cols==B.rows);
-                assert(M.cols==B.cols);
+                assert(A.cols==B.cols);
+                assert(M.cols==B.rows);
                 if(loop)
                 {
-                    //_mmul(M,A,B,*loop);
+                    _mmul_rtrn(M,A,B,*loop);
                 }
                 else
                 {

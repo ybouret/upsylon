@@ -70,7 +70,7 @@ namespace upsylon
     {
     public:
         Y_DECL_ARGS(T,type); //!< alias
-        typedef lightweight_array<T> row; //!< internal row type
+        typedef lightweight_array<type> row; //!< internal row type
 
 
 
@@ -80,6 +80,20 @@ namespace upsylon
             initialize();
         }
 
+        //! temporary array of all items
+        lightweight_array<type> as_array()
+        {
+            if(items>0)
+            {
+                matrix &self = *this;
+                return lightweight_array<type>(&self[1][1],items);
+            }
+            else
+            {
+                return row(0,0);
+            }
+        }
+        
         //! row access
         inline array<type>  & operator[](const size_t r) throw()             { assert(r>0); assert(r<=rows); return row_ptr[r]; }
 

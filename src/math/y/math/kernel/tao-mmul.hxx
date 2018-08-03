@@ -59,9 +59,39 @@ struct __mmul
         }
     }
     
+    //! normal multiplication
+    static inline void call_rtrn( void *args, parallel &ctx, lockable & )
+    {
+        __mmul *         self   = (__mmul *)args;
+        matrix<T>       &M      = *(self->pM);
+        const matrix<U> &A      = *(self->pA);
+        const matrix<V> &B      = *(self->pB);
+        const size_t     n      = A.cols; // internal summation
+        size_t           offset = 0;
+        size_t           length = M.items;
+        size_t           r=0,c=0;
+        ctx.split(length,offset);
+        T               *data = *M + offset;
+        while(length-->0)
+        {
+            // compute r,c from offset
+            M.get_item(offset,r,c);
+            const array<U> &A_r = A[r];
+            const array<V> &B_c = B[c];
+            T sum = 0;
+            for(size_t k=n;k>0;--k)
+            {
+                sum += T(A_r[k]) * T(B_c[k]);
+            }
+            *(data++) = sum;
+            // next
+            ++offset;
+        }
+    }
+    
 };
 
-//! M=A*B', parallel
+//! M=A*B, parallel
 template <typename T,typename U,typename V> static inline
 void _mmul( matrix<T> &M, const matrix<U> &A, const matrix<V> &B, concurrent::for_each &loop)
 {
@@ -74,7 +104,7 @@ void _mmul( matrix<T> &M, const matrix<U> &A, const matrix<V> &B, concurrent::fo
     
 }
 
-//! M = A*B'
+//! M = A*B', sequential
 template <typename T,typename U,typename V> static inline
 void _mmul_rtrn( matrix<T> &M, const matrix<U> &A, const matrix<V> &B)
 {
@@ -97,4 +127,17 @@ void _mmul_rtrn( matrix<T> &M, const matrix<U> &A, const matrix<V> &B)
             M_i[j] = sum;
         }
     }
+}
+
+//! M=A*B', parallel
+template <typename T,typename U,typename V> static inline
+void _mmul_rtrn( matrix<T> &M, const matrix<U> &A, const matrix<V> &B, concurrent::for_each &loop)
+{
+    assert(M.rows==A.rows);
+    assert(A.cols==B.cols);
+    assert(M.cols==B.rows);
+    
+    __mmul<T,U,V> args = { &M, &A, &B };
+    loop.run( __mmul<T,U,V>::call_rtrn, &args);
+    
 }
