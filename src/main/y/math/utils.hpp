@@ -96,7 +96,7 @@ namespace upsylon
              - set seq[i] to to 0 if |seq[i]|<=tol
              \return the number of almost zero, a.k.a the numeric kernel size.
              */
-            template <typename SEQUENCE>
+            template <typename SEQUENCE> static inline
             size_t truncate( SEQUENCE &seq )
             {
                 size_t       n    = 0;

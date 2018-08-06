@@ -2,6 +2,8 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
+#include "y/math/utils.hpp"
+#include "y/math/kernel/tao.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -16,6 +18,9 @@ namespace
         size_t pp = 0;
         for(size_t n=1;n<=32;++n)
         {
+            vector<T> b(n); // A*x=b
+            vector<T> x(n); // x values
+            vector<T> y(n); // y=A*x
             for(size_t m=1;m<=32;++m)
             {
                 matrix<T> a(n,m);
@@ -40,6 +45,26 @@ namespace
                         continue;
                     }
                     
+                  
+                    
+                    if(n==m)
+                    {
+                        const size_t ker = __find<T>::truncate(w);
+                        if(ker>0)
+                        {
+                            std::cerr << ker;
+                        }
+                        
+                        for(size_t i=1;i<=n;++i)
+                        {
+                            b[i]  = support::get<T>();
+                        }
+                        svd::solve(u,w,v,b,x);
+                        tao::mul(y,a,x);
+                        const T RMS = tao::rms(y,b);
+                        std::cerr << '<' << RMS << '>';
+                    }
+                    
                     (std::cerr << ".").flush();
                     if( 0 == ((++pp) & 63) ) std::cerr << std::endl;
                 }
@@ -54,7 +79,8 @@ namespace
 Y_UTEST(svd)
 {
     do_test<float>();
-    
+    do_test<double>();
+
 }
 Y_UTEST_DONE()
 

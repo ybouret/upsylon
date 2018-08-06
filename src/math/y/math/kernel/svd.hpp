@@ -56,13 +56,13 @@ namespace upsylon
                             a[i][i]=f-g;
                             for(size_t j=l;j<=n;++j)
                             {
-                                for(s=0.0,k=i;k<=m;k++)
+                                for(s=0.0,k=i;k<=m;++k)
                                     s += a[k][i]*a[k][j];
                                 f=s/h;
-                                for(k=i;k<=m;k++)
+                                for(k=i;k<=m;++k)
                                     a[k][j] += f*a[k][i];
                             }
-                            for (k=i;k<=m;k++) a[k][i] *= scale;
+                            for (k=i;k<=m;++k) a[k][i] *= scale;
                         }
                     }
                     w[i]=scale *g;
@@ -75,7 +75,7 @@ namespace upsylon
                         }
                         if (scale>0)
                         {
-                            for(k=l;k<=n;k++)
+                            for(k=l;k<=n;++k)
                             {
                                 a[i][k] /= scale;
                                 s += a[i][k]*a[i][k];
@@ -86,7 +86,7 @@ namespace upsylon
                             a[i][l]=f-g;
                             for(k=l;k<=n;k++)
                                 rv1[k]=a[i][k]/h;
-                            for(size_t j=l;j<=m;j++) {
+                            for(size_t j=l;j<=m;++j) {
                                 for (s=0.0,k=l;k<=n;k++)
                                     s += a[j][k]*a[i][k];
                                 for(k=l;k<=n;k++)
@@ -98,20 +98,19 @@ namespace upsylon
                     }
                     anorm = max_of<T>(anorm,(__fabs(w[i])+__fabs(rv1[i])));
                 }
-                for(size_t i=n;i>=1;i--)
+                for(size_t i=n;i>=1;--i)
                 {
-                    /* Accumulation of right-hand transformations. */
                     if (i<n)
                     {
                         if(__fabs(g)>0)
                         {
-                            for(size_t j=l;j<=n;++j) /* double division to avoid possible underflow. */
+                            for(size_t j=l;j<=n;++j)
                                 v[j][i]=(a[i][j]/a[i][l])/g;
                             for(size_t j=l;j<=n;j++)
                             {
-                                for (s=0.0,k=l;k<=n;k++)
+                                for (s=0.0,k=l;k<=n;++k)
                                     s += a[i][k]*v[k][j];
-                                for (k=l;k<=n;k++)
+                                for (k=l;k<=n;++k)
                                     v[k][j] += s*v[k][i];
                             }
                         }
@@ -253,6 +252,48 @@ namespace upsylon
                     }
                 }
                 return true;
+            }
+            
+            
+            //! solve a system after a singular value decomposition
+            /**
+             Solves A·X = B for a vector X, where A is specified
+             by the arrays u[1..m][1..n], w[1..n], v[1..n][1..n] as returned by svdcmp.
+             m and n are the dimensions of a,
+             and will be equal for square matrices.
+             b[1..m] is the input right-hand side.
+             x[1..n] is the output solution vector.
+             No input quantities are destroyed, so the routine may be called sequentially with different b’s.
+             */
+            template <typename T> static inline
+            void solve(const matrix<T> &u,
+                       const array<T>  &w,
+                       const matrix<T> &v,
+                       const array<T>  &b,
+                       array<T>        &x)
+            {
+                const size_t m = u.rows;
+                const size_t n = u.cols;
+                assert( w.size() == n );
+                assert( v.rows == n);
+                assert( v.cols == n );
+                
+                array<T> &tmp = u.c_aux1;
+                for(size_t j=n;j>0;--j) {
+                    T s=0;
+                    if( __fabs(w[j])>0 )
+                    {
+                        for(size_t i=m;i>0;--i) s += u[i][j]*b[i];
+                        s /= w[j];
+                    }
+                    tmp[j]=s;
+                }
+                for(size_t j=n;j>0;--j)
+                {
+                    T s=0;
+                    for(size_t jj=n;jj>0;--jj) s += v[j][jj]*tmp[jj];
+                    x[j]=s;
+                }
             }
         };
     }

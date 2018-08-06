@@ -75,9 +75,8 @@ namespace upsylon
     class matrix : public matrix_data
     {
     public:
-        Y_DECL_ARGS(T,type); //!< alias
+        Y_DECL_ARGS(T,type);                 //!< alias
         typedef lightweight_array<type> row; //!< internal row type
-
 
 
         //! default constructor
@@ -87,7 +86,7 @@ namespace upsylon
         }
 
         //! temporary array of all items
-        lightweight_array<type> as_array()
+        inline lightweight_array<type> as_array() throw()
         {
             if(items>0)
             {
@@ -424,8 +423,8 @@ namespace upsylon
             }
         }
     public:
-        row r_aux1;  //!< size() = rows
-        row c_aux1;  //!< size() = cols
+        mutable row r_aux1;  //!< size() = rows
+        mutable row c_aux1;  //!< size() = cols
         row r_aux2;  //!< size() = rows
         row c_aux2;  //!< size() = cols
     };

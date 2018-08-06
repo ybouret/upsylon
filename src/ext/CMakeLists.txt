@@ -9,7 +9,7 @@ MESSAGE( STATUS "")
 
 ADD_CUSTOM_TARGET(ext 
 DEPENDS 
-y-z    test-z
+y-z    utest-z
 COMMENT "Tested External Projects")
 
 
