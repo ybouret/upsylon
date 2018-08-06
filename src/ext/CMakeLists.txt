@@ -1,6 +1,9 @@
 MESSAGE( STATUS "")
 MESSAGE( STATUS "External Projects: preparing..." )
 
+MESSAGE( STATUS "                   lua")
+ADD_SUBDIRECTORY(y/lua)
+
 MESSAGE( STATUS "                   zlib")
 ADD_SUBDIRECTORY(y/zlib)
 
@@ -29,6 +32,7 @@ y-jbig utest-jbig
 y-bz2  utest-bz2
 y-png  utest-png
 y-jpeg utest-jpeg
+y-lua
 COMMENT "Tested External Projects")
 
 
