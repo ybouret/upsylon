@@ -207,6 +207,10 @@ MACRO(TARGET_LINK_Y tgt)
 	FOREACH( extra ${ARGN} )
 		LIST( APPEND ylibs "y-${extra}" )
 		
+		IF( ${extra} STREQUAL "z++" )
+			LIST(APPEND ylibs "y-z")
+		ENDIF()
+		
 	ENDFOREACH()
 	
 	#finalize
