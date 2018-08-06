@@ -2,6 +2,7 @@
 #define Y_MATH_UTILS_INCLUDED 1
 
 #include "y/math/types.hpp"
+#include "y/container/matrix.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sort/index.hpp"
 
@@ -106,7 +107,7 @@ namespace upsylon
                     const_type tmp = __fabs(*i);
                     if(tmp>vmax) vmax=tmp;
                 }
-                const_type tol = numeric<type>::epsilon * n * vmax;
+                const_type tol = numeric<type>::epsilon * type(n) * vmax;
                 size_t     ker = 0;
                 for( typename SEQUENCE::iterator i=seq.begin(); i != seq.end(); ++i )
                 {
@@ -118,6 +119,75 @@ namespace upsylon
                     }
                 }
                 return ker;
+            }
+            
+            //! truncate and return number of 'zero' values
+            /**
+             - compute tol = epsilon * n * max(|seq|).
+             - set seq[i] to to 0 if |seq[i]|<=tol, 1/seq[i] otherwise
+             \return the number of almost zero, a.k.a the numeric kernel size.
+             */
+            template <typename SEQUENCE> static inline
+            size_t inverse( SEQUENCE &seq )
+            {
+                size_t       n    = 0;
+                mutable_type vmax = 0;
+                for( typename SEQUENCE::iterator i=seq.begin(); i != seq.end(); ++i, ++n )
+                {
+                    const_type tmp = __fabs(*i);
+                    if(tmp>vmax) vmax=tmp;
+                }
+                const_type tol = numeric<type>::epsilon * type(n) * vmax;
+                size_t     ker = 0;
+                for( typename SEQUENCE::iterator i=seq.begin(); i != seq.end(); ++i )
+                {
+                    type &v = *i;
+                    if( __fabs(v) <= tol )
+                    {
+                        (mutable_type&)v = 0;
+                        ++ker;
+                    }
+                    else
+                    {
+                        (mutable_type&)v = T(1)/v;
+                    }
+                }
+                return ker;
+            }
+            
+            
+            
+            //! truncate matrix
+            /**
+             - compute tol = epsilon * sqrt(rows*cols) * max(|A|)
+             */
+            static inline
+            void truncate( matrix<T> &A )
+            {
+                T        Amax =  0;
+                {
+                    const T *a    = *A;
+                    for(size_t i=A.items;i>0;--i)
+                    {
+                        const T Atmp = __fabs(*(a++));
+                        if(Atmp>Amax)
+                        {
+                            Amax=Atmp;
+                        }
+                    }
+                }
+                const T tol = __sqrt( T(A.items) ) * numeric<T>::epsilon * Amax;
+                {
+                    T *a = *A;
+                    for(size_t i=A.items;i>0;--i)
+                    {
+                        T &v = *(a++);
+                        if( __fabs(v) <= tol )
+                        {
+                            v=0;
+                        }
+                    }
+                }
             }
             
             //! keep sz largest absolute values

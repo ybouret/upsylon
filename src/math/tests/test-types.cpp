@@ -21,6 +21,23 @@ std::cerr << "\tlog_round_ceil =" << log_round_ceil(VAR) << std::endl
     {
         std::cerr << std::endl << "-- Rounding" << std::endl;
         ROUND(numeric<T>::epsilon);
+        std::cerr << std::endl << "-- Truncate" << std::endl;
+        vector<T> v(1+alea.leq(100));
+        for(size_t i=1;i<=v.size();++i)
+        {
+            v[i] = support::get<T>();
+        }
+        
+        (void)__find<T>::truncate(v);
+        matrix<T> A( 1+alea.leq(10), 1+alea.leq(10));
+        for(size_t i=1;i<=A.rows;++i)
+        {
+            for(size_t j=1;j<=A.cols;++j)
+            {
+                A[i][j] = support::get<T>();
+            }
+        }
+        __find<T>::truncate(A);
     }
 }
 
@@ -58,12 +75,16 @@ Y_UTEST(types)
         __find<float>::set_image_size(V,i);
         std::cerr << "#img=" << i << " => " << V << std::endl;
     }
+    
     for(size_t i=0;i<=v.size();++i)
     {
         vector<float> V = v;
         __find<float>::set_kernel_size(V,i);
         std::cerr << "#ker=" << i << " => " << V << std::endl;
     }
+    
+    
+    
     
 }
 Y_UTEST_DONE()

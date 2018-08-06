@@ -3,6 +3,7 @@
 
 #include "y/container/matrix.hpp"
 #include "y/math/types.hpp"
+#include "y/sequence/vector.hpp"
 
 namespace upsylon
 {
@@ -295,6 +296,119 @@ namespace upsylon
                     for(size_t jj=n;jj>0;--jj) s += v[j][jj]*tmp[jj];
                     x[j]=s;
                 }
+            }
+            
+            //! build a supplementary orthonormal basis
+            /**
+             The rows/or columns of P needs to form a free family
+             P.cols>0, P.rows>0 and P.cols != P.rows
+             */
+            template <typename T> static inline
+            bool orthonormal( matrix<T> &Q, const matrix<T> &P)
+            {
+                //--------------------------------------------------------------
+                // sanity check
+                //--------------------------------------------------------------
+                assert(P.cols>0);
+                assert(P.rows>0);
+                assert(P.cols!=P.rows);
+                
+                //--------------------------------------------------------------
+                // check dims
+                //--------------------------------------------------------------
+                const size_t nr  = P.rows;
+                const size_t nc  = P.cols;
+                size_t       dim = 0;
+                size_t       sub = 0;
+                const bool   cols_are_vector = nr>nc;
+                if(cols_are_vector)
+                {
+                    dim = nr;
+                    sub = nc;
+                }
+                else
+                {
+                    dim = nc;
+                    sub = nr;
+                }
+                
+                //--------------------------------------------------------------
+                // Q space
+                //--------------------------------------------------------------
+                const size_t dof = dim-sub;
+                if(cols_are_vector)
+                {
+                    Q.make(dim,dof);
+                }
+                else
+                {
+                    Q.make(dof,dim);
+                }
+                
+                //--------------------------------------------------------------
+                // total space
+                //--------------------------------------------------------------
+                matrix<T> F(dim,dim);
+                if(cols_are_vector)
+                {
+                    for(size_t v=sub;v>0;--v)
+                    {
+                        for(size_t i=dim;i>0;--i)
+                        {
+                            F[i][v] = P[i][v];
+                        }
+                    }
+                }
+                else
+                {
+                    for(size_t v=sub;v>0;--v)
+                    {
+                        for(size_t i=dim;i>0;--i)
+                        {
+                            F[i][v] = P[v][i];
+                        }
+                    }
+                }
+                
+                //--------------------------------------------------------------
+                // use SVD
+                //--------------------------------------------------------------
+                {
+                    vector<T> W(dim);
+                    matrix<T> V(dim,dim);
+                    if(!build(F,W,V))
+                        return false;
+                }
+                
+                //--------------------------------------------------------------
+                // save
+                //--------------------------------------------------------------
+                if(cols_are_vector)
+                {
+                    for(size_t v=dof;v>0;--v)
+                    {
+                        for(size_t i=dim;i>0;--i)
+                        {
+                            Q[i][v] = F[i][v+sub];
+                        }
+                    }
+                }
+                else
+                {
+                    for(size_t v=dof;v>0;--v)
+                    {
+                        for(size_t i=dim;i>0;--i)
+                        {
+                            Q[v][i] = F[i][v+sub];
+                        }
+                    }
+                    
+                }
+                
+                //--------------------------------------------------------------
+                // All done !
+                //--------------------------------------------------------------
+                return true;
             }
         };
     }
