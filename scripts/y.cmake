@@ -211,6 +211,18 @@ MACRO(TARGET_LINK_Y tgt)
 			LIST(APPEND ylibs "y-z")
 		ENDIF()
 		
+		IF( ${extra} STREQUAL "bz2++" )
+			LIST(APPEND ylibs "y-bz2")
+		ENDIF()
+		
+		IF( ${extra} STREQUAL "png" )
+			LIST(APPEND ylibs "y-z")
+		ENDIF()
+		
+		IF( ${extra} STREQUAL "tiff" )
+			LIST(APPEND ylibs "y-jpeg;y-jbig;y-png;y-z")
+		ENDIF()
+		
 	ENDFOREACH()
 	
 	#finalize

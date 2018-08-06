@@ -26,6 +26,12 @@ namespace upsylon
         {
         }
 
+        
+        FILE * icstream:: __get() throw()
+        {
+            return *handle;
+        }
+        
         bool icstream:: query(char &C)
         {
             if( 1 != fread( &C, 1, 1, *handle) )
