@@ -21,4 +21,5 @@ ELSE()
 		COMMENT "Generating Documentation")
 ENDIF()
 
+ADD_SUBDIRECTORY(ext)
 

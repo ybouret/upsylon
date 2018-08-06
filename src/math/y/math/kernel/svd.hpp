@@ -27,9 +27,7 @@ namespace upsylon
                 assert(v.cols==a.cols);
                 assert(v.rows==a.cols);
                 assert(w.size()==a.cols);
-                //vector<real_t> rv1(n,0);
                 array<T> &rv1 = a.c_aux1;
-                //rv1.ld(0);
                 size_t k;
                 T      c,f,h,s,x,y,z;
                 size_t l = 0;
@@ -56,7 +54,7 @@ namespace upsylon
                             g = -__sgn(__sqrt(s),f);
                             h = f*g-s;
                             a[i][i]=f-g;
-                            for(size_t j=l;j<=n;j++)
+                            for(size_t j=l;j<=n;++j)
                             {
                                 for(s=0.0,k=i;k<=m;k++)
                                     s += a[k][i]*a[k][j];
