@@ -47,6 +47,12 @@ namespace upsylon
             assert((r-1)*cols+(c-1)==item);
         }
 
+        //! test dimensions
+        inline bool same_size_than( const matrix_data &other ) throw()
+        {
+            return (rows==other.rows) && (cols==other.cols);
+        }
+        
     protected:
         void  *workspace; //!< where all memory is
         //!constructor
@@ -177,13 +183,36 @@ namespace upsylon
             other.setup();
         }
 
+        //! manual assignment
+        template <typename U>
+        inline void assign( const matrix<U> &other )
+        {
+            assert( same_size_than(other) );
+            for(size_t i=rows;i>0;--i)
+            {
+                array<type>       &target = (*this)[i];
+                const array<U>    &source = other[i];
+                for(size_t j=cols;j>0;--j)
+                {
+                    target[j] = static_cast<type>(source[j]);
+                }
+            }
+        }
+        
         //! assignment
-        inline matrix & operator=(const matrix &other )
+        inline matrix & operator=(const matrix &other)
         {
             if( this != &other )
             {
-                matrix tmp(other);
-                swap_with(tmp);
+                if( same_size_than(other) )
+                {
+                    assign(other);
+                }
+                else
+                {
+                    matrix tmp(other);
+                    swap_with(tmp);
+                }
             }
             return *this;
         }
@@ -271,12 +300,6 @@ namespace upsylon
             assert(items>0);
             const matrix<T>   &self = *this;
             return &self[1][1];
-        }
-        
-        //! test dimensions
-        inline bool same_size_than( const matrix &other ) throw()
-        {
-            return (rows==other.rows) && (cols==other.cols);
         }
         
         //! store the minor_{I,J} of M

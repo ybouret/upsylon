@@ -12,6 +12,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(zfind);
     Y_UTEST(adjoint);
     Y_UTEST(diag_symm);
+    Y_UTEST(svd);
 
 }
 Y_UTEST_EXEC()

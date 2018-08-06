@@ -120,7 +120,7 @@ namespace upsylon
                 return ker;
             }
             
-            //! keep img_size largest absolute values
+            //! keep sz largest absolute values
             template <typename SEQUENCE> static inline
             void __set_size( SEQUENCE &seq, const size_t sz)
             {

@@ -49,6 +49,15 @@ namespace upsylon
         //! buffer interface : length in bytes
         inline size_t length() const throw() { return size_ * sizeof(T); }
         
+        //! load same value
+        inline void ld( param_type a )
+        {
+            for(size_t i=1;i<=size_;++i)
+            {
+                item_[i] = a;
+            }
+        }
+        
     protected:
         mutable_type *item_; //!< item_[1..size()]
         size_t        size_; //!< size()
