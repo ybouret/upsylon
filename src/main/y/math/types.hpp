@@ -71,6 +71,7 @@ namespace upsylon
         inline float  __fabs( const complex<float>  c) throw() { return max_of(fabsf(c.re),fabsf(c.im)); } //!< fabs
         inline double __fabs( const complex<double> c) throw() { return max_of(fabs(c.re),fabs(c.im));   } //!< fabs
         
+        //! return the signed value of a w.r.t the sign of b
         template <typename T, typename U>
         inline T __sgn(T a, U b) throw()
         {
@@ -113,6 +114,7 @@ namespace upsylon
             return ( __fabs(X-Y) <= fac * ( __fabs(X) + __fabs(Y) ) );
         }
         
+        //! hypothenuse withouth underflow or overflowe
         inline float __hypotenuse( float a, float b) throw()
         {
             const float absa=__fabs(a);
@@ -127,6 +129,7 @@ namespace upsylon
             }
         }
         
+        //! hypothenuse withouth underflow or overflowe
         inline double __hypotenuse( double a, double b) throw()
         {
             const double absa=__fabs(a);

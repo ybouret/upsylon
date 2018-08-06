@@ -8,9 +8,10 @@ namespace upsylon
 {
     namespace math
     {
+        //! singular value decomposition code
         struct svd
         {
-            static const size_t SVD_MAX_ITS = 1024;
+            static const size_t MAX_ITS = 1024; //!< maximum iterations
 
             //! singular value decomposition
             /**
@@ -147,7 +148,7 @@ namespace upsylon
                 {
                     /* Diagonalization of the bidiagonal form. */
                     unsigned its=0;
-                    for(its=1;its<=SVD_MAX_ITS;its++)
+                    for(its=1;its<=MAX_ITS;its++)
                     {
                         int   flag = 1;
                         size_t nm  = 0;
@@ -194,7 +195,7 @@ namespace upsylon
                             }
                             break;
                         }
-                        if (its >= SVD_MAX_ITS)
+                        if (its >= MAX_ITS)
                         {
                             return false; // no convergence
                         }

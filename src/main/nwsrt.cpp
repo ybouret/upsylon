@@ -160,13 +160,19 @@ Y_PROGRAM_START()
 			fp << "#define Y_NWSRT_INCLUDED 1\n";
 			fp << "#include \"y/type/bswap.hpp\"\n";
 
+#if 0
             fp << "#if defined(Y_NWSRT_VERBOSE)\n";
             fp << "#   include <iostream>\n";
             fp << "#   define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) { std::cerr << \"a[\" << J << \"]=\" << a[J] << \"<\" << \"a[\" << I << \"]=\" << a[I] << std::endl; core::bswap< sizeof(T) >( &aI, &aJ ); } }\n";
             fp << "#else\n";
             fp << "#   define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) core::bswap< sizeof(T) >( &aI, &aJ ); }\n";
             fp << "#endif\n";
+#endif
+            
+            fp << "//! swapping the pair I,J\n";
+            fp << "#define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) core::bswap< sizeof(T) >( &aI, &aJ ); }\n";
 
+            
 			fp << "namespace upsylon {\n";
 
 			{

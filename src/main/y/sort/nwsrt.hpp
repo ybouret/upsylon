@@ -2,13 +2,8 @@
 #ifndef Y_NWSRT_INCLUDED
 #define Y_NWSRT_INCLUDED 1
 #include "y/type/bswap.hpp"
-#if defined(Y_NWSRT_VERBOSE)
-#   include <iostream>
-#   include "y/exception.hpp"
-#   define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) { core::bswap< sizeof(T) >( &aI, &aJ ); } if(aJ<aI) throw exception("%u,%u, sizeof(T)=%lu",I,J,sizeof(T)); }
-#else
-#   define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) core::bswap< sizeof(T) >( &aI, &aJ ); }
-#endif
+//! swapping the pair I,J
+#define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) core::bswap< sizeof(T) >( &aI, &aJ ); }
 namespace upsylon {
 	//! network sorting
 	struct nwsrt {
