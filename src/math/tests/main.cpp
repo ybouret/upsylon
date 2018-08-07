@@ -13,6 +13,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(adjoint);
     Y_UTEST(diag_symm);
     Y_UTEST(svd);
+    Y_UTEST(cholesky);
 
 }
 Y_UTEST_EXEC()

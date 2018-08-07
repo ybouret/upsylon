@@ -11,7 +11,7 @@ namespace upsylon
 {
     namespace math
     {
-
+        
         //! Templated Algebraic Operations
         struct tao
         {
@@ -20,7 +20,7 @@ namespace upsylon
             // level-1 : array ops
             //
             ////////////////////////////////////////////////////////////////////
-
+            
             //__________________________________________________________________
             //
             // ld
@@ -39,7 +39,7 @@ namespace upsylon
                     _ld(a,v);
                 }
             }
-
+            
             //__________________________________________________________________
             //
             // set
@@ -58,9 +58,9 @@ namespace upsylon
                     _set(a,b);
                 }
             }
-
-
-
+            
+            
+            
             //__________________________________________________________________
             //
             // add
@@ -79,8 +79,8 @@ namespace upsylon
                     _add(a,b);
                 }
             }
-
-
+            
+            
             //__________________________________________________________________
             //
             // sub
@@ -99,7 +99,7 @@ namespace upsylon
                     _sub(a,b);
                 }
             }
-
+            
             //__________________________________________________________________
             //
             // muladd
@@ -118,7 +118,7 @@ namespace upsylon
                     _muladd(a,x,b);
                 }
             }
-
+            
             //__________________________________________________________________
             //
             // mulsub
@@ -136,7 +136,7 @@ namespace upsylon
                     _mulsub(a,x,b);
                 }
             }
-
+            
             //__________________________________________________________________
             //
             // mulset
@@ -154,8 +154,8 @@ namespace upsylon
                     _mulset(a,x,b);
                 }
             }
-
-
+            
+            
             //__________________________________________________________________
             //
             // dot product
@@ -175,8 +175,8 @@ namespace upsylon
                     return _dot<T,U,V>(a,b);
                 }
             }
-
-
+            
+            
             //__________________________________________________________________
             //
             // rms
@@ -195,7 +195,7 @@ namespace upsylon
                     return _rms<T>(a);
                 }
             }
-
+            
             //! two vectors
             template <typename T> static inline
             typename real_for<T>::type rms( const array<T> &a, const array<T> &b, concurrent::for_each *loop=0)
@@ -210,7 +210,7 @@ namespace upsylon
                     return _rms<T>(a,b);
                 }
             }
-
+            
             //! single vector
             template <typename T> static inline
             typename real_for<T>::type mod2( const array<T> &a, concurrent::for_each *loop=0)
@@ -238,7 +238,7 @@ namespace upsylon
                     return _mod2<T>(a,b);
                 }
             }
-
+            
             ////////////////////////////////////////////////////////////////////
             //
             // level-2 : matrix/array ops
@@ -260,7 +260,7 @@ namespace upsylon
                     _mul<T,U,V>(a,M,b);
                 }
             }
-
+            
             //! a += M*b
             template <typename T,typename U,typename V> static inline
             void mul_add( array<T> &a, const matrix<U> &M, const array<V> &b, concurrent::for_each *loop=0)
@@ -275,7 +275,7 @@ namespace upsylon
                     _mul_add<T,U,V>(a,M,b);
                 }
             }
-
+            
             //! a -= M*b
             template <typename T,typename U,typename V> static inline
             void mul_sub( array<T> &a, const matrix<U> &M, const array<V> &b, concurrent::for_each *loop=0)
@@ -290,7 +290,7 @@ namespace upsylon
                     _mul_sub<T,U,V>(a,M,b);
                 }
             }
-
+            
             ////////////////////////////////////////////////////////////////////
             //
             // level-3 : matrix/matrix ops
@@ -315,12 +315,12 @@ namespace upsylon
                     _mmul(M,A,B);
                 }
             }
-
+            
             //! M=A*B'
             template <typename T,typename U,typename V> static inline
-            void mmul_rtrn(matrix<T>  &M,
-                      const matrix<U> &A,
-                      const matrix<V> &B, concurrent::for_each *loop=0 )
+            void mmul_rtrn(matrix<T>       &M,
+                           const matrix<U> &A,
+                           const matrix<V> &B, concurrent::for_each *loop=0 )
             {
                 assert(M.rows==A.rows);
                 assert(A.cols==B.cols);
@@ -334,9 +334,9 @@ namespace upsylon
                     _mmul_rtrn(M,A,B);
                 }
             }
-
+            
         };
-
+        
     }
 }
 

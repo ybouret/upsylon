@@ -112,7 +112,7 @@ else()
   list(APPEND tiff_SOURCES tif_unix.c)
 endif()
 
-MESSAGE(STATUS "TIFF_INCLUDES=${TIFF_INCLUDES}" )
+#MESSAGE(STATUS "TIFF_INCLUDES=${TIFF_INCLUDES}" )
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
                     ${CMAKE_CURRENT_BINARY_DIR}
                     ${TIFF_INCLUDES})
@@ -123,7 +123,7 @@ add_library(y-tiff STATIC ${tiff_SOURCES} ${tiff_HEADERS} ${nodist_tiff_HEADERS}
 
 install(TARGETS y-tiff ARCHIVE DESTINATION lib)
 install(FILES ${tiff_HEADERS} ${nodist_tiff_HEADERS}
-        DESTINATION include/yocto/tiff)
+        DESTINATION include/y/tiff)
         
 IF(OFF)
 install(TARGETS tiff
