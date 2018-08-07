@@ -93,7 +93,7 @@ namespace upsylon
                     switch( bzerror )
                     {
                         case BZ_STREAM_END:
-                            alive=false;
+                            alive=false; /* FALLTHRU */
                         case BZ_OK:
                             return res>0;
                         default:

@@ -135,16 +135,16 @@ namespace upsylon
                     case __negative: switch(rs)
                     {
                         case __negative: return -natural::compare_blocks(l,nl,r,nr);  //ls<0,rs<0
-                        case __zero:                   // ls<0, rs=0
+                        case __zero:    /* FALLTHRU */ // ls<0, rs=0
                         case __positive: return -1;    // ls<0, rs>0
-                    }
+                    } /* FALLTHRU */
 
                     case __zero: switch(rs)
                     {
                         case __negative: return  1; // ls=0,rs<0
                         case __zero:     return  0; // ls=0,rs=0
                         case __positive: return -1; // ls=0,rs>0
-                    }
+                    } /* FALLTHRU */
 
                     case __positive: switch(rs)
                     {
