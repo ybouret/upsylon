@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_PROGRAM_INCLUDED
 #define Y_PROGRAM_INCLUDED 1
 
@@ -5,12 +6,14 @@
 #include "y/exception.hpp"
 #include <iostream>
 
+//! wrapper to start program
 #define Y_PROGRAM_START()                                         \
 int main(int argc, char *argv[]) {                                \
 static const char *program = upsylon::vfs::get_base_name(argv[0]);\
 (void)argc;                                                       \
 try {
 
+//! wrapper to end program
 #define Y_PROGRAM_END()                                         \
 return 0;                                                       \
 }                                                               \

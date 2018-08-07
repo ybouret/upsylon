@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_SVD_INCLUDED
 #define Y_SVD_INCLUDED 1
 

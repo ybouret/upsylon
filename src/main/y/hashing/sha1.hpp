@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_HASHING_SHA1_INCLUDED
 #define Y_HASHING_SHA1_INCLUDED 1
 

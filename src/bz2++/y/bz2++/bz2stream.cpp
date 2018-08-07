@@ -40,7 +40,7 @@ namespace upsylon
         alive(true),
         last_close(0)
         {
-            bzfile = BZ2_bzReadOpen( &bzerror, fp.__get(), 0, 0, 0, 0);
+            bzfile = BZ2_bzReadOpen( &bzerror, *fp, 0, 0, 0, 0);
             if( !bzfile )
                 throw exception("BZ2_bzReadOpen(%s)/%s", get_error(), *filename);
         }
@@ -53,7 +53,7 @@ namespace upsylon
         alive(true),
         last_close(0)
         {
-            bzfile = BZ2_bzReadOpen( &bzerror, fp.__get(), 0, 0, 0, 0);
+            bzfile = BZ2_bzReadOpen( &bzerror, *fp, 0, 0, 0, 0);
             if( !bzfile )
                 throw exception("BZ2_bzReadOpen(%s)/stdin",get_error());
         }

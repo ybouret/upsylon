@@ -10,6 +10,7 @@ namespace upsylon
     namespace math
     {
         
+        //! Cholesky decomposition
         struct cholesky
         {
             

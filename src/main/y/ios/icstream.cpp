@@ -27,7 +27,7 @@ namespace upsylon
         }
 
         
-        FILE * icstream:: __get() throw()
+        FILE * icstream:: operator*() throw()
         {
             return *handle;
         }

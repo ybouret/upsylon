@@ -31,7 +31,8 @@ namespace upsylon
             //! map to STDIN
             icstream(const cstdin_t &);
 
-            FILE * __get() throw();
+            //! transitive file handle
+            FILE * operator*() throw();
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(icstream);

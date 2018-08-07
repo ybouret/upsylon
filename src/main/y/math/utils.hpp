@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_MATH_UTILS_INCLUDED
 #define Y_MATH_UTILS_INCLUDED 1
 

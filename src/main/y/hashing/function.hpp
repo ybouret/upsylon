@@ -1,5 +1,6 @@
-#ifndef YOCTO_HASHING_FUNCTION_INCLUDED
-#define YOCTO_HASHING_FUNCTION_INCLUDED 1
+//! \file
+#ifndef Y_HASHING_FUNCTION_INCLUDED
+#define Y_HASHING_FUNCTION_INCLUDED 1
 
 
 #include "y/ptr/counted.hpp"
@@ -68,6 +69,7 @@ namespace upsylon
 			Y_DISABLE_COPY_AND_ASSIGN(function);
 		};
 		
+        //! format hashing function prototype
 #define Y_HASHING_FUNCTION_DECL(NAME,L,W) \
 explicit NAME() throw();\
 virtual ~NAME() throw();\
