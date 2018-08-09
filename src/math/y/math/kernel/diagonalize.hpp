@@ -2,8 +2,7 @@
 #define Y_MATH_DIAGONALIZE_INCLUDED 1
 
 
-#include "y/container/matrix.hpp"
-#include "y/math/types.hpp"
+#include "y/math/kernel/svd.hpp"
 #include "y/sort/heap.hpp"
 #include "y/comparison.hpp"
 
@@ -12,336 +11,357 @@ namespace upsylon
     namespace math
     {
         
+        //! routines to diagonalize a real matrix
         struct diagonalize
         {
-            //! balance a real matrix
-            /**
-             Given a matrix a[1..n][1..n], this routine replaces it by a balanced matrix with identical eigenvalues.
-             A symmetric matrix is already balanced and is unaffected by this procedure.
-             */
-            template <typename T> static inline
-            void HessenbergBalance( matrix<T> &a ) throw()
+            //! Hessenberg algorithms
+            struct Hessenberg
             {
-                static const T RADIX = T(2);
-                static const T sqrdx = RADIX*RADIX;
-                
-                assert( a.is_square );
-                assert( a.rows>0    );
-                const size_t n = a.rows;
-                
-                size_t last=0;
-                while(0==last)
+                //! balance a real matrix
+                /**
+                 Given a matrix a[1..n][1..n], this routine replaces it by a balanced matrix with identical eigenvalues.
+                 A symmetric matrix is already balanced and is unaffected by this procedure.
+                 */
+                template <typename T> static inline
+                void Balance( matrix<T> &a ) throw()
                 {
-                    last=1;
-                    for(size_t i=1;i<=n;i++)
+                    static const T RADIX = T(2);
+                    static const T sqrdx = RADIX*RADIX;
+                    
+                    assert( a.is_square );
+                    assert( a.rows>0    );
+                    const size_t n = a.rows;
+                    
+                    size_t last=0;
+                    while(0==last)
                     {
-                        T r=0,c=0;
-                        for (size_t j=1;j<=n;j++)
-                        if (j != i)
+                        last=1;
+                        for(size_t i=1;i<=n;i++)
                         {
-                            c += __fabs(a[j][i]);
-                            r += __fabs(a[i][j]);
-                        }
-                        if( (c>0) && (r>0) )
-                        {
-                            T g=r/RADIX;
-                            T f=T(1);
-                            T s=c+r;
-                            while (c<g)
+                            T r=0,c=0;
+                            for (size_t j=1;j<=n;j++)
+                            if (j != i)
                             {
-                                f *= RADIX;
-                                c *= sqrdx;
+                                c += __fabs(a[j][i]);
+                                r += __fabs(a[i][j]);
                             }
-                            g=r*RADIX;
-                            while (c>g)
+                            if( (c>0) && (r>0) )
                             {
-                                f /= RADIX;
-                                c /= sqrdx;
-                            }
-                            if( (c+r)/f < T(0.95)*s)
-                            {
-                                last=0;
-                                g=T(1)/f;
-                                for(size_t j=1;j<=n;j++) a[i][j] *= g;
-                                for(size_t j=1;j<=n;j++) a[j][i] *= f;
-                            }
-                        }
-                    }
-                }
-            }
-            
-            //! reduction to a real Hessenberg form
-            /**
-             matrix should be balanced.
-             */
-            template <typename T> static inline
-            void HessenbergReduce( matrix<T> &a ) throw()
-            {
-                assert(a.is_square);
-                const size_t n = a.rows;
-                
-                //------------------------------------------------------------------
-                // m = r+1
-                //------------------------------------------------------------------
-                for(size_t m=2; m<n; ++m )
-                {
-                    const size_t r   = m-1;
-                    T            piv = 0;
-                    size_t       s   = m;
-                    for( size_t j=m+1;j<=n;++j)
-                    {
-                        //----------------------------------------------------------
-                        // find the pivot
-                        //----------------------------------------------------------
-                        const T tmp = a[j][r];
-                        if(__fabs(tmp)>__fabs(piv))
-                        {
-                            piv = tmp;
-                            s   = j;
-                        }
-                    }
-                    if( s != m )
-                    {
-                        //std::cerr << "\t#SWAP(" << s << "," << m << ")" <<  "/pivot=" << piv << std::endl;
-                        assert(__fabs(piv)>0);
-                        //----------------------------------------------------------
-                        // First similarity transform: exchange colums/rows
-                        //----------------------------------------------------------
-                        a.swap_both(s,m);
-                        
-                        //----------------------------------------------------------
-                        // Second similarity transform
-                        //----------------------------------------------------------
-                        assert( __fabs(piv-a[m][m-1]) <= 0 );
-                        for(size_t i=m+1;i<=n;++i)
-                        {
-                            const T factor = a[i][r] / piv;
-                            
-                            //------------------------------------------------------
-                            // subtract factor times row r + 1 from row i
-                            //------------------------------------------------------
-                            for(size_t j=1;j<=n;++j) a[i][j] -= factor * a[m][j];
-                            
-                            //------------------------------------------------------
-                            // add factor times column i to column r + 1
-                            //------------------------------------------------------
-                            for(size_t j=1;j<=n;j++) a[j][m] += factor * a[j][i];
-                        }
-                    }
-                }
-                
-                //==================================================================
-                // clean up to the exact Hessenberg form
-                //==================================================================
-                for(size_t j=n;j>0;--j)
-                {
-                    for(size_t i=j+2;i<=n;++i)
-                    a[i][j] = 0;
-                }
-            }
-            
-            static const unsigned MAX_ITS =100; //!< maximum number of cycles
-            static const unsigned SCALING = 10; //!< scaling every cycle
-            //! find the eigen values
-            /**
-             \param a  a real matrix reduced to its Hessenberg form: destructed !
-             \param wr an array that will be filled with the real parts
-             \param wi an array that will be filled with the imagnary parts
-             \param nr the number or real eigenvalues
-             wi[1..nr]=0 and wr[1..nr] are sorted by increasing order.
-             */
-            template <typename T> static inline
-            bool HessenbergQR( matrix<T> &a, array<T> &wr, array<T> &wi, size_t &nr) throw()
-            {
-                assert( a.is_square );
-                assert( a.rows>0    );
-                const ptrdiff_t n = a.rows;
-                assert( wr.size()   >= a.rows );
-                assert( wi.size()   >= a.rows );
-                //assert( flag.size() >= n );
-                
-                ptrdiff_t nn,m,l,k,j,i,mmin;
-                T         z,y,x,w,v,u,t,s,r=0,q=0,p=0,anorm;
-                
-                size_t   ir = 1; //! where to put real eigenvalues
-                size_t   ic = n; //! where to put cplx eigenvalues
-                nr    = 0;
-                anorm = 0;
-                for (i=1;i<=n;i++)
-                for (j=max_of<size_t>(i-1,1);j<=n;j++)
-                anorm += __fabs(a[i][j]);
-                nn=n;
-                t=0;
-                while(nn>=1)
-                {
-                    unsigned its=0;
-                    do
-                    {
-                        for (l=nn;l>=2;l--)
-                        {
-                            s=__fabs(a[l-1][l-1])+__fabs(a[l][l]);
-                            if (s <= 0)
-                            s=anorm;
-                            if ((T)(__fabs(a[l][l-1]) + s) == s)
-                            break;
-                        }
-                        x=a[nn][nn];
-                        if (l == nn)
-                        {
-                            wr[ir]=x+t;
-                            wi[ir]=0;
-                            //std::cerr << "#EIG: real single: " << wr[ir] << std::endl;
-                            ++ir;
-                            ++nr;
-                            --nn;
-                        }
-                        else
-                        {
-                            y=a[nn-1][nn-1];
-                            w=a[nn][nn-1]*a[nn-1][nn];
-                            if(l == (nn-1))
-                            {
-                                p=T(0.5)*(y-x);
-                                q=p*p+w;
-                                z=__sqrt(__fabs(q));
-                                x += t;
-                                if (q >= 0)
+                                T g=r/RADIX;
+                                T f=T(1);
+                                T s=c+r;
+                                while (c<g)
                                 {
-                                    z=p+__sgn(z,p);
-                                    wr[ir+1]=wr[ir]=x+z;
-                                    if( __fabs(z)>0 )
-                                    wr[ir]=x-w/z;
-                                    //std::cerr << "#EIG: real pair: " << wr[ir] << ", " << wr[ir+1] << ", x=" << x << ", w=" << w << ", z=" << z << ", p=" << p << ", sq=" << Sqrt(Fabs(q)) << std::endl;
-                                    wi[ir+1]=wi[ir]=0;
-                                    ir += 2;
-                                    nr += 2;
+                                    f *= RADIX;
+                                    c *= sqrdx;
                                 }
-                                else
+                                g=r*RADIX;
+                                while (c>g)
                                 {
-                                    wr[ic-1]=wr[ic]=x+p;
-                                    wi[ic-1]= -(wi[ic]=z);
-                                    ic -= 2;
+                                    f /= RADIX;
+                                    c /= sqrdx;
                                 }
-                                nn -= 2;
+                                if( (c+r)/f < T(0.95)*s)
+                                {
+                                    last=0;
+                                    g=T(1)/f;
+                                    for(size_t j=1;j<=n;j++) a[i][j] *= g;
+                                    for(size_t j=1;j<=n;j++) a[j][i] *= f;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                //! reduction to a real Hessenberg form
+                /**
+                 matrix should be balanced.
+                 */
+                template <typename T> static inline
+                void Reduce( matrix<T> &a ) throw()
+                {
+                    assert(a.is_square);
+                    const size_t n = a.rows;
+                    
+                    //------------------------------------------------------------------
+                    // m = r+1
+                    //------------------------------------------------------------------
+                    for(size_t m=2; m<n; ++m )
+                    {
+                        const size_t r   = m-1;
+                        T            piv = 0;
+                        size_t       s   = m;
+                        for( size_t j=m+1;j<=n;++j)
+                        {
+                            //----------------------------------------------------------
+                            // find the pivot
+                            //----------------------------------------------------------
+                            const T tmp = a[j][r];
+                            if(__fabs(tmp)>__fabs(piv))
+                            {
+                                piv = tmp;
+                                s   = j;
+                            }
+                        }
+                        if( s != m )
+                        {
+                            //std::cerr << "\t#SWAP(" << s << "," << m << ")" <<  "/pivot=" << piv << std::endl;
+                            assert(__fabs(piv)>0);
+                            //----------------------------------------------------------
+                            // First similarity transform: exchange colums/rows
+                            //----------------------------------------------------------
+                            a.swap_both(s,m);
+                            
+                            //----------------------------------------------------------
+                            // Second similarity transform
+                            //----------------------------------------------------------
+                            assert( __fabs(piv-a[m][m-1]) <= 0 );
+                            for(size_t i=m+1;i<=n;++i)
+                            {
+                                const T factor = a[i][r] / piv;
+                                
+                                //------------------------------------------------------
+                                // subtract factor times row r + 1 from row i
+                                //------------------------------------------------------
+                                for(size_t j=1;j<=n;++j) a[i][j] -= factor * a[m][j];
+                                
+                                //------------------------------------------------------
+                                // add factor times column i to column r + 1
+                                //------------------------------------------------------
+                                for(size_t j=1;j<=n;j++) a[j][m] += factor * a[j][i];
+                            }
+                        }
+                    }
+                    
+                    //==================================================================
+                    // clean up to the exact Hessenberg form
+                    //==================================================================
+                    for(size_t j=n;j>0;--j)
+                    {
+                        for(size_t i=j+2;i<=n;++i)
+                        a[i][j] = 0;
+                    }
+                }
+                
+                static const unsigned MAX_ITS =100; //!< maximum number of cycles
+                static const unsigned SCALING = 10; //!< scaling every cycle
+                //! find the eigen values
+                /**
+                 \param a  a real matrix reduced to its Hessenberg form: destructed !
+                 \param wr an array that will be filled with the real parts
+                 \param wi an array that will be filled with the imagnary parts
+                 \param nr the number or real eigenvalues
+                 wi[1..nr]=0 and wr[1..nr] are sorted by increasing order.
+                 */
+                template <typename T> static inline
+                bool QR( matrix<T> &a, array<T> &wr, array<T> &wi, size_t &nr) throw()
+                {
+                    assert( a.is_square );
+                    assert( a.rows>0    );
+                    const ptrdiff_t n = a.rows;
+                    assert( wr.size()   >= a.rows );
+                    assert( wi.size()   >= a.rows );
+                    //assert( flag.size() >= n );
+                    
+                    ptrdiff_t nn,m,l,k,j,i,mmin;
+                    T         z,y,x,w,v,u,t,s,r=0,q=0,p=0,anorm;
+                    
+                    size_t   ir = 1; //! where to put real eigenvalues
+                    size_t   ic = n; //! where to put cplx eigenvalues
+                    nr    = 0;
+                    anorm = 0;
+                    for (i=1;i<=n;i++)
+                    for (j=max_of<size_t>(i-1,1);j<=n;j++)
+                    anorm += __fabs(a[i][j]);
+                    nn=n;
+                    t=0;
+                    while(nn>=1)
+                    {
+                        unsigned its=0;
+                        do
+                        {
+                            for (l=nn;l>=2;l--)
+                            {
+                                s=__fabs(a[l-1][l-1])+__fabs(a[l][l]);
+                                if (s <= 0)
+                                s=anorm;
+                                if ((T)(__fabs(a[l][l-1]) + s) == s)
+                                break;
+                            }
+                            x=a[nn][nn];
+                            if (l == nn)
+                            {
+                                wr[ir]=x+t;
+                                wi[ir]=0;
+                                //std::cerr << "#EIG: real single: " << wr[ir] << std::endl;
+                                ++ir;
+                                ++nr;
+                                --nn;
                             }
                             else
                             {
-                                if (its >= MAX_ITS)
+                                y=a[nn-1][nn-1];
+                                w=a[nn][nn-1]*a[nn-1][nn];
+                                if(l == (nn-1))
                                 {
-                                    return false;
-                                }
-                                if (0 == (its%SCALING) )
-                                {
-                                    t += x;
-                                    for (i=1;i<=nn;i++)
-                                    a[i][i] -= x;
-                                    s=__fabs(a[nn][nn-1])+__fabs(a[nn-1][nn-2]);
-                                    y=x= T(0.75)*s;
-                                    w = -T(0.4375)*s*s;
-                                }
-                                ++its;
-                                for(m=(nn-2);m>=l;m--)
-                                {
-                                    z=a[m][m];
-                                    r=x-z;
-                                    s=y-z;
-                                    p=(r*s-w)/a[m+1][m]+a[m][m+1];
-                                    q=a[m+1][m+1]-z-r-s;
-                                    r=a[m+2][m+1];
-                                    s=__fabs(p)+__fabs(q)+__fabs(r);
-                                    p /= s;
-                                    q /= s;
-                                    r /= s;
-                                    if (m == l)
+                                    p=T(0.5)*(y-x);
+                                    q=p*p+w;
+                                    z=__sqrt(__fabs(q));
+                                    x += t;
+                                    if (q >= 0)
                                     {
-                                        break;
+                                        z=p+__sgn(z,p);
+                                        wr[ir+1]=wr[ir]=x+z;
+                                        if( __fabs(z)>0 )
+                                        wr[ir]=x-w/z;
+                                        //std::cerr << "#EIG: real pair: " << wr[ir] << ", " << wr[ir+1] << ", x=" << x << ", w=" << w << ", z=" << z << ", p=" << p << ", sq=" << Sqrt(Fabs(q)) << std::endl;
+                                        wi[ir+1]=wi[ir]=0;
+                                        ir += 2;
+                                        nr += 2;
                                     }
-                                    u=__fabs(a[m][m-1])*(__fabs(q)+__fabs(r));
-                                    v=__fabs(p)*(__fabs(a[m-1][m-1])+__fabs(z)+__fabs(a[m+1][m+1]));
-                                    if ((T)(u+v) == v)
+                                    else
                                     {
-                                        break;
+                                        wr[ic-1]=wr[ic]=x+p;
+                                        wi[ic-1]= -(wi[ic]=z);
+                                        ic -= 2;
                                     }
+                                    nn -= 2;
                                 }
-                                for (i=m+2;i<=nn;i++)
+                                else
                                 {
-                                    a[i][i-2]=0;
-                                    if (i != (m+2))
-                                    a[i][i-3]=0;
-                                }
-                                for (k=m;k<=nn-1;k++)
-                                {
-                                    if (k != m)
+                                    if (its >= MAX_ITS)
                                     {
-                                        p=a[k][k-1];
-                                        q=a[k+1][k-1];
-                                        r=0;
-                                        if (k != (nn-1)) r=a[k+2][k-1];
-                                        if ( (x=__fabs(p)+__fabs(q)+__fabs(r))>0 )
+                                        return false;
+                                    }
+                                    if (0 == (its%SCALING) )
+                                    {
+                                        t += x;
+                                        for (i=1;i<=nn;i++)
+                                        a[i][i] -= x;
+                                        s=__fabs(a[nn][nn-1])+__fabs(a[nn-1][nn-2]);
+                                        y=x= T(0.75)*s;
+                                        w = -T(0.4375)*s*s;
+                                    }
+                                    ++its;
+                                    for(m=(nn-2);m>=l;m--)
+                                    {
+                                        z=a[m][m];
+                                        r=x-z;
+                                        s=y-z;
+                                        p=(r*s-w)/a[m+1][m]+a[m][m+1];
+                                        q=a[m+1][m+1]-z-r-s;
+                                        r=a[m+2][m+1];
+                                        s=__fabs(p)+__fabs(q)+__fabs(r);
+                                        p /= s;
+                                        q /= s;
+                                        r /= s;
+                                        if (m == l)
                                         {
-                                            p /= x;
-                                            q /= x;
-                                            r /= x;
+                                            break;
+                                        }
+                                        u=__fabs(a[m][m-1])*(__fabs(q)+__fabs(r));
+                                        v=__fabs(p)*(__fabs(a[m-1][m-1])+__fabs(z)+__fabs(a[m+1][m+1]));
+                                        if ((T)(u+v) == v)
+                                        {
+                                            break;
                                         }
                                     }
-                                    if( __fabs(s=__sgn(__sqrt(p*p+q*q+r*r),p)) > 0 )
+                                    for (i=m+2;i<=nn;i++)
                                     {
-                                        if (k == m)
+                                        a[i][i-2]=0;
+                                        if (i != (m+2))
+                                        a[i][i-3]=0;
+                                    }
+                                    for (k=m;k<=nn-1;k++)
+                                    {
+                                        if (k != m)
                                         {
-                                            if (l != m)
-                                            a[k][k-1] = -a[k][k-1];
-                                        }
-                                        else
-                                        {
-                                            a[k][k-1] = -s*x;
-                                        }
-                                        p += s;
-                                        x=p/s;
-                                        y=q/s;
-                                        z=r/s;
-                                        q /= p;
-                                        r /= p;
-                                        for(j=k;j<=nn;j++)
-                                        {
-                                            p=a[k][j]+q*a[k+1][j];
-                                            if (k != (nn-1))
+                                            p=a[k][k-1];
+                                            q=a[k+1][k-1];
+                                            r=0;
+                                            if (k != (nn-1)) r=a[k+2][k-1];
+                                            if ( (x=__fabs(p)+__fabs(q)+__fabs(r))>0 )
                                             {
-                                                p += r*a[k+2][j];
-                                                a[k+2][j] -= p*z;
+                                                p /= x;
+                                                q /= x;
+                                                r /= x;
                                             }
-                                            a[k+1][j] -= p*y;
-                                            a[k][j]   -= p*x;
                                         }
-                                        mmin = nn<k+3 ? nn : k+3;
-                                        for (i=l;i<=mmin;i++)
+                                        if( __fabs(s=__sgn(__sqrt(p*p+q*q+r*r),p)) > 0 )
                                         {
-                                            p=x*a[i][k]+y*a[i][k+1];
-                                            if (k != (nn-1)) {
-                                                p += z*a[i][k+2];
-                                                a[i][k+2] -= p*r;
+                                            if (k == m)
+                                            {
+                                                if (l != m)
+                                                a[k][k-1] = -a[k][k-1];
                                             }
-                                            a[i][k+1] -= p*q;
-                                            a[i][k] -= p;
+                                            else
+                                            {
+                                                a[k][k-1] = -s*x;
+                                            }
+                                            p += s;
+                                            x=p/s;
+                                            y=q/s;
+                                            z=r/s;
+                                            q /= p;
+                                            r /= p;
+                                            for(j=k;j<=nn;j++)
+                                            {
+                                                p=a[k][j]+q*a[k+1][j];
+                                                if (k != (nn-1))
+                                                {
+                                                    p += r*a[k+2][j];
+                                                    a[k+2][j] -= p*z;
+                                                }
+                                                a[k+1][j] -= p*y;
+                                                a[k][j]   -= p*x;
+                                            }
+                                            mmin = nn<k+3 ? nn : k+3;
+                                            for (i=l;i<=mmin;i++)
+                                            {
+                                                p=x*a[i][k]+y*a[i][k+1];
+                                                if (k != (nn-1)) {
+                                                    p += z*a[i][k+2];
+                                                    a[i][k+2] -= p*r;
+                                                }
+                                                a[i][k+1] -= p*q;
+                                                a[i][k] -= p;
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
-                    } while (l < nn-1);
+                        } while (l < nn-1);
+                    }
+                    lightweight_array<T> W(*wr,nr);
+                    hsort(W,comparison::increasing<T>);
+                    return true;
                 }
-                lightweight_array<T> W(*wr,nr);
-                hsort(W,comparison::increasing<T>);
-                return true;
-            }
+                
+            };
             
             //! all in one eigenvalues finding....
             template <typename T> static inline
             bool eig( matrix<T> &a, array<T> &wr, array<T> &wi, size_t &nr) throw()
             {
-                HessenbergBalance(a);
-                HessenbergReduce(a);
-                return HessenbergQR(a, wr, wi, nr);
+                Hessenberg::Balance(a);
+                Hessenberg::Reduce(a);
+                return Hessenberg::QR(a, wr, wi, nr);
             }
+            
+            
+#if 0
+            //! find the eigenvectors from initial eigenvalues
+            /**
+             \param transpose eigenvectors: #rows <= number of REAL eigenvalues
+             \param a initial matrix
+             \param wr initial eigenvalues, 1..ev.rows are REAL. Shall be SORTED
+             */
+            template <typename T> static inline
+            void eigv( matrix<T> &ev, const matrix<T> &a, array<T> &wr )
+            {
+                
+            }
+#endif
             
         };
         
