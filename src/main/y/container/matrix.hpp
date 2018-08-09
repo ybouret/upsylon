@@ -354,6 +354,12 @@ namespace upsylon
             }
         }
 
+        //! swap both columns and rows
+        inline void swap_both(size_t i,size_t j) throw()
+        {
+            swap_rows(i,j);
+            swap_cols(i,j);
+        }
 
     private:
         row *row_ptr; //! [1..rows]
