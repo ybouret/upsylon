@@ -352,29 +352,7 @@ namespace upsylon
                 return Hessenberg::QR(a, wr, wi, nr);
             }
             
-#if 0
-            template <typename T> static inline
-            T __refine(const matrix<T>  &A,
-                       const matrix<T>  &B,
-                       array<T>         &y,
-                       array<T>         &z,
-                       array<T>         &r
-                       )
-            {
-                tao::mul(r, B, y);
-                tao::mul(z, A, y);
-                T zy  = 0;
-                T ry  = 0;
-                T den = 0;
-                for(size_t i=y.size();i>0;--i)
-                {
-                    zy += z[i] * y[i];
-                    ry += r[i] * y[i];
-                    den += y[i] * y[i];
-                }
-                return (zy+ry)/den;
-            }
-#endif
+            
             
             template <typename T> static inline
             int __compare_fabs(const T lhs, const T rhs) throw()
@@ -387,7 +365,7 @@ namespace upsylon
             //! find the eigenvectors from initial eigenvalues
             /**
              \param transpose eigenvectors: #rows <= number of REAL eigenvalues
-             \param a initial matrix
+             \param a  initial matrix
              \param wr initial eigenvalues, 1..ev.rows are REAL. MUST be SORTED
              */
             template <typename T> static inline
