@@ -353,7 +353,7 @@ namespace upsylon
             }
             
             
-            
+            //! compare by absolute real type value
             template <typename T> static inline
             int __compare_fabs(const T lhs, const T rhs) throw()
             {
@@ -364,8 +364,8 @@ namespace upsylon
             
             //! find the eigenvectors from initial eigenvalues
             /**
-             \param transpose eigenvectors: #rows <= number of REAL eigenvalues
-             \param a  initial matrix
+             \param ev transpose eigenvectors: e.vrows <= number of REAL eigenvalues
+             \param A  initial matrix
              \param wr initial eigenvalues, 1..ev.rows are REAL. MUST be SORTED
              */
             template <typename T> static inline
