@@ -439,13 +439,14 @@ namespace upsylon
                             throw exception("diag::eigv(Bad Matrix,level-1)");
                         }
                         nz = __find<T>::truncate(W);
-                        indexing::make(J, __compare_fabs<T>, W);
                         
                         if(nz>0)
                         {
                             break;
                         }
                         
+                        indexing::make(J, __compare_fabs<T>, W);
+
                         //------------------------------------------------------
                         // inverse power using the smallest singular value
                         //------------------------------------------------------
