@@ -15,6 +15,8 @@ namespace {
         for(size_t n=1;n<=32;++n)
         {
             matrix<T> a(n,n);
+            matrix<T> a0(n,n);
+            
             vector<T> wr(n),wi(n);
             size_t    nr=0;
             for(size_t i=1;i<=n;++i)
@@ -24,12 +26,14 @@ namespace {
                     a[i][j] = support::get<T>();
                 }
             }
-            
+            a0.assign(a);
             //std::cerr << "a=" << a << std::endl;
             if( diagonalize::eig(a,wr,wi,nr) )
             {
                 std::cerr << "wr=" << wr << std::endl;
                 std::cerr << "wi=" << wi << std::endl;
+                matrix<T> ev(nr,n);
+                diagonalize::eigv(ev,a0,wr);
             }
             else
             {

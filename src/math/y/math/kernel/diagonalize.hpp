@@ -2,9 +2,13 @@
 #define Y_MATH_DIAGONALIZE_INCLUDED 1
 
 
+#include "y/math/utils.hpp"
 #include "y/math/kernel/svd.hpp"
+#include "y/math/kernel/tao.hpp"
 #include "y/sort/heap.hpp"
+#include "y/sort/index.hpp"
 #include "y/comparison.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -348,20 +352,140 @@ namespace upsylon
                 return Hessenberg::QR(a, wr, wi, nr);
             }
             
-            
 #if 0
+            template <typename T> static inline
+            T __refine(const matrix<T>  &A,
+                       const matrix<T>  &B,
+                       array<T>         &y,
+                       array<T>         &z,
+                       array<T>         &r
+                       )
+            {
+                tao::mul(r, B, y);
+                tao::mul(z, A, y);
+                T zy  = 0;
+                T ry  = 0;
+                T den = 0;
+                for(size_t i=y.size();i>0;--i)
+                {
+                    zy += z[i] * y[i];
+                    ry += r[i] * y[i];
+                    den += y[i] * y[i];
+                }
+                return (zy+ry)/den;
+            }
+#endif
+            
+            template <typename T> static inline
+            int __compare_fabs(const T lhs, const T rhs) throw()
+            {
+                const T L = __fabs(lhs);
+                const T R = __fabs(rhs);
+                return comparison::increasing(L,R);
+            }
+            
             //! find the eigenvectors from initial eigenvalues
             /**
              \param transpose eigenvectors: #rows <= number of REAL eigenvalues
              \param a initial matrix
-             \param wr initial eigenvalues, 1..ev.rows are REAL. Shall be SORTED
+             \param wr initial eigenvalues, 1..ev.rows are REAL. MUST be SORTED
              */
             template <typename T> static inline
-            void eigv( matrix<T> &ev, const matrix<T> &a, array<T> &wr )
+            void eigv( matrix<T> &ev, const matrix<T> &A, array<T> &wr )
             {
+                assert( A.is_square );
+                assert( wr.size() >= ev.rows );
                 
+                const size_t n  = A.rows;
+                const size_t nv = ev.rows;
+                assert(ev.cols==n);
+                
+                matrix<T>      B(n,n); //! A - tau * Id
+                matrix<T>      U(n,n); //! for SVD
+                matrix<T>      V(n,n); //! for SVD
+                vector<T>      W(n);   //! for SVD
+                vector<size_t> J(n);   //! for indexing |W|
+                
+                vector<T> y(n);
+                vector<T> z(n);
+                
+                ev.ld(0);
+                
+                for(size_t iv=1; iv <= nv; )
+                {
+                    //==========================================================
+                    //
+                    // Check null space in SVD
+                    //
+                    //==========================================================
+                    size_t nz = 0;
+                    while(true)
+                    {
+                        //------------------------------------------------------
+                        // B = A - wr[iv]*Id
+                        //------------------------------------------------------
+                        B.assign(A);
+                        for(size_t i=n;i>0;--i)
+                        {
+                            B[i][i] -= wr[iv];
+                        }
+                        
+                        //------------------------------------------------------
+                        // B = U * W * V'
+                        //------------------------------------------------------
+                        U.assign(B);
+                        if( !svd::build(U, W, V) )
+                        {
+                            throw exception("diag::eigv(Bad Matrix,level-1)");
+                        }
+                        nz = __find<T>::truncate(W);
+                        indexing::make(J, __compare_fabs<T>, W);
+                        
+                        if(nz>0)
+                        {
+                            break;
+                        }
+                        
+                        //------------------------------------------------------
+                        // inverse power using the smallest singular value
+                        //------------------------------------------------------
+                        const size_t j0 = J[1]; assert(j0>0); assert(j0<=n);
+                        for(size_t i=n;i>0;--i)
+                        {
+                            y[i] = V[i][j0];
+                        }
+                        svd::solve(U, W, V, y, z);
+                        
+                        //------------------------------------------------------
+                        // improve tau
+                        //------------------------------------------------------
+                        const T dtau = T(1) / tao::dot<T>(y,z);
+                        wr[iv] += dtau;
+                    }
+                    
+                    //==========================================================
+                    // Compute nullspace
+                    //==========================================================
+                    assert(nz>0);
+                    const T tau = wr[iv];
+                    for(size_t k=1;k<=nz;++k)
+                    {
+                        if(iv>nv)
+                        {
+                            break;
+                        }
+                        wr[iv] = tau;
+                        array<T> &vec = ev[iv];
+                        const size_t j = J[k]; assert(j>0); assert(j<=n);
+                        assert(__fabs(W[j])<=0);
+                        for(size_t i=n;i>0;--i)
+                        {
+                            vec[i] = V[i][j];
+                        }
+                        ++iv;
+                    }
+                }
             }
-#endif
             
         };
         
