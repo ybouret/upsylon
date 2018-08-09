@@ -12,12 +12,14 @@ namespace {
     static inline
     void do_test()
     {
-        for(size_t n=1;n<=32;++n)
+        for(size_t n=32;n>=1;--n)
         {
             matrix<T> a(n,n);
             matrix<T> a0(n,n);
             
             vector<T> wr(n),wi(n);
+            vector<T> y(n);
+            
             size_t    nr=0;
             for(size_t i=1;i<=n;++i)
             {
@@ -30,10 +32,25 @@ namespace {
             //std::cerr << "a=" << a << std::endl;
             if( diagonalize::eig(a,wr,wi,nr) )
             {
-                std::cerr << "wr=" << wr << std::endl;
-                std::cerr << "wi=" << wi << std::endl;
+                // std::cerr << "wr=" << wr << std::endl;
+                // std::cerr << "wi=" << wi << std::endl;
+                std::cerr << "#nr=" << nr << "/" << n << std::endl;
                 matrix<T> ev(nr,n);
                 diagonalize::eigv(ev,a0,wr);
+                for(size_t i=1;i<=nr;++i)
+                {
+                    std::cerr << "\t" << wr[i] << " => " << ev[i] << std::endl;
+                    const T         lam = wr[i];
+                    const array<T> &v   = ev[i];
+                    tao::mul(y,a0,v);
+                    T rms = 0;
+                    for(size_t i=n;i>0;--i)
+                    {
+                        rms += square_of(y[i]-lam*v[i]);
+                    }
+                    rms = __sqrt( rms/n );
+                    std::cerr << "\t\trms=" << rms << std::endl;
+                }
             }
             else
             {
@@ -46,6 +63,7 @@ namespace {
 Y_UTEST(diag)
 {
     do_test<float>();
+    do_test<double>();
 }
 Y_UTEST_DONE()
 
