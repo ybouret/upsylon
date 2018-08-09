@@ -58,7 +58,9 @@ ADD_TEST(Matrix      test-main matrix)
 ADD_TEST(Functor     test-main functor)
 ADD_TEST(vfs         test-main vfs .)
 ADD_TEST(nwsrt       test-main nwsrt)
-
+ADD_TEST(Triplet     test-main triplet)
+ADD_TEST(Points      test-main points)
+ADD_TEST(Tuple       test-main tuple)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V
