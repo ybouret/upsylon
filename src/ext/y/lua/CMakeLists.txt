@@ -14,12 +14,12 @@ INSTALL( TARGETS y-lua ARCHIVE       DESTINATION lib )
 ADD_EXECUTABLE(y_lua lua.c)
 TARGET_LINK_LIBRARIES(y_lua y-lua)
 
-ADD_EXECUTABLE(y_luac luac.c)
-TARGET_LINK_LIBRARIES(y_luac y-lua)
+#ADD_EXECUTABLE(y_luac luac.c)
+#TARGET_LINK_LIBRARIES(y_luac y-lua)
 
 IF(NOT MSVC)
 TARGET_LINK_LIBRARIES(y_lua  m)
-TARGET_LINK_LIBRARIES(y_luac m)
+#TARGET_LINK_LIBRARIES(y_luac m)
 ENDIF()
 
 SET(LUA_TESTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests)
@@ -30,3 +30,6 @@ ADD_TEST(Sort    y_lua ${LUA_TESTS_DIR}/sort.lua)
 ADD_TEST(Sieve   y_lua ${LUA_TESTS_DIR}/sieve.lua)
 ADD_TEST(Life    y_lua ${LUA_TESTS_DIR}/life.lua)
  
+ADD_CUSTOM_TARGET(utest-lua
+COMMAND ${CMAKE_CTEST_COMMAND} -V
+DEPENDS y_lua)
