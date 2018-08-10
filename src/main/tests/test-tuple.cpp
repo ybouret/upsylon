@@ -1,6 +1,7 @@
 #include "y/container/tuple.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
+#include "support.hpp"
 
 using namespace upsylon;
 
@@ -20,6 +21,9 @@ namespace
     
     Y_SEXTUPLE_DECL(STANDARD,dummy6,int,v1,int,v2,int,v3,int,v4,int,v5,int,v6);
     Y_SEXTUPLE_END();
+    
+    Y_SEPTUPLE_DECL(STANDARD,dummy7,int,v1,int,v2,int,v3,int,v4,int,v5,int,v6,string,v7);
+    Y_SEPTUPLE_END();
 }
 
 Y_UTEST(tuple)
@@ -77,6 +81,17 @@ Y_UTEST(tuple)
         Y_CHECK(d6c==d6a);
         std::cerr << "d6a=" << d6a << std::endl;
         std::cerr << "d6b=" << d6b << std::endl;
+    }
+    
+    {
+        dummy7 d7a('a','b','c','d','e','f','g');
+        dummy7 d7b('a','b','c','d','e','f','h');
+        dummy7 d7c = d7a;
+        Y_CHECK(d7a!=d7b);
+        Y_CHECK(!(d7a==d7b));
+        Y_CHECK(d7c==d7a);
+        std::cerr << "d7a=" << d7a << std::endl;
+        std::cerr << "d7b=" << d7b << std::endl;
     }
     
     
