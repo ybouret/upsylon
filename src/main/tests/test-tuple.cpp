@@ -17,6 +17,9 @@ namespace
     
     Y_PENTUPLE_DECL(STANDARD,dummy5,char,v1,short,v2,int,v3,long,v4,string,v5);
     Y_PENTUPLE_END();
+    
+    Y_SEXTUPLE_DECL(STANDARD,dummy6,int,v1,int,v2,int,v3,int,v4,int,v5,int,v6);
+    Y_SEXTUPLE_END();
 }
 
 Y_UTEST(tuple)
@@ -27,6 +30,7 @@ Y_UTEST(tuple)
         dummy2 d2c = d2a;
         Y_CHECK(d2a!=d2b);
         Y_CHECK(!(d2a==d2b));
+        Y_CHECK(d2c==d2a);
         std::cerr << "d2a=" << d2a << std::endl;
         std::cerr << "d2b=" << d2b << std::endl;
     }
@@ -37,6 +41,7 @@ Y_UTEST(tuple)
         dummy3 d3c = d3a;
         Y_CHECK(d3a!=d3b);
         Y_CHECK(!(d3a==d3b));
+        Y_CHECK(d3c==d3a);
         std::cerr << "d3a=" << d3a << std::endl;
         std::cerr << "d3b=" << d3b << std::endl;
     }
@@ -47,6 +52,7 @@ Y_UTEST(tuple)
         dummy4 d4c = d4a;
         Y_CHECK(d4a!=d4b);
         Y_CHECK(!(d4a==d4b));
+        Y_CHECK(d4c==d4a);
         std::cerr << "d4a=" << d4a << std::endl;
         std::cerr << "d4b=" << d4b << std::endl;
     }
@@ -57,8 +63,20 @@ Y_UTEST(tuple)
         dummy5 d5c = d5a;
         Y_CHECK(d5a!=d5b);
         Y_CHECK(!(d5a==d5b));
+        Y_CHECK(d5c==d5a);
         std::cerr << "d5a=" << d5a << std::endl;
         std::cerr << "d5b=" << d5b << std::endl;
+    }
+    
+    {
+        dummy6 d6a('a','b','c','d','e','f');
+        dummy6 d6b('a','b','c','d','e','g');
+        dummy6 d6c = d6a;
+        Y_CHECK(d6a!=d6b);
+        Y_CHECK(!(d6a==d6b));
+        Y_CHECK(d6c==d6a);
+        std::cerr << "d6a=" << d6a << std::endl;
+        std::cerr << "d6b=" << d6b << std::endl;
     }
     
     
