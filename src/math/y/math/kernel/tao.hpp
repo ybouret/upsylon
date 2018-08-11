@@ -239,6 +239,15 @@ namespace upsylon
                 }
             }
             
+            //! b = a + x * step
+            template <typename T, typename U, typename V> static inline
+            void setprobe( array<T> &b, const array<U> &a, typename type_traits<T>::parameter_type x, const array<V> & step )
+            {
+                for(size_t i=b.size();i>0;--i)
+                {
+                    b[i] = static_cast<T>(a[i]) + x * static_cast<T>(step[i]);
+                }
+            }
             ////////////////////////////////////////////////////////////////////
             //
             // level-2 : matrix/array ops
