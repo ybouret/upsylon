@@ -8,14 +8,16 @@ namespace upsylon
 {
     namespace ink
     {
+        //! coordinate
         typedef point2d<unit_t> coord;
         
+        //! area
         class area : public object
         {
         public:
-            const coord lower;
-            const coord upper;
-            const coord sizes;
+            const coord lower; //!< lower coordinate
+            const coord upper; //!< upper coordinate
+            const coord sizes; //!< upper-lower+1
             
             inline area() throw() : lower(0,0), upper(0,0), sizes(1,1)
             {

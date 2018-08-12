@@ -7,6 +7,17 @@ namespace upsylon
     {
         bitmap:: ~bitmap() throw()
         {
+            switch(model)
+            {
+                case memory_is_global: break;
+                case memory_from_user: break;
+                case memory_is_shared:
+                    if(shared->liberate())
+                    {
+                        delete shared;
+                    }
+                    break;
+            }
             memory::global::location().release(private_memory,private_length);
         }
         
@@ -19,6 +30,7 @@ namespace upsylon
         }
         
         bitmap:: bitmap(const unit_t W, const unit_t H, const unit_t D) :
+        area( coord(0,0), coord(W-1,H-1) ),
         entry(0),
         rows(0),
         w(     __check(W,"width")  ),
@@ -36,6 +48,44 @@ namespace upsylon
             allocate();
         }
         
+        static inline bitmap *__check(bitmap *bmp)
+        {
+            return bmp;
+        }
+        
+        bitmap:: bitmap( bitmap *bmp ) :
+        area( *__check(bmp) ),
+        entry( bmp->entry   ),
+        rows(0),
+        w( bmp->w ),
+        h( bmp->h ),
+        depth( bmp->depth ),
+        scanline( bmp->scanline ),
+        stride(   bmp->stride   ),
+        pixels(   bmp->pixels   ),
+        bytes(    bmp->bytes    ),
+        shared( bmp ),
+        private_memory(0),
+        private_length(0),
+        model( memory_is_shared )
+        {
+            shared->withhold();
+            try
+            {
+                allocate_rows_only();
+            }
+            catch(...)
+            {
+                if(shared->liberate())
+                {
+                    delete shared;
+                }
+                throw;
+            }
+        }
+        
+        
+        
         void bitmap:: allocate()
         {
             const size_t data_offset = 0;
@@ -45,6 +95,7 @@ namespace upsylon
             
             private_length = memory::align(rows_offset+rows_length);
             private_memory = memory::global::instance().acquire(private_length);
+            
             entry = private_memory;
             rows  = memory::io::cast<void>(entry,rows_offset);
             

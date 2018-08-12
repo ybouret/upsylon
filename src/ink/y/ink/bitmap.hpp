@@ -10,6 +10,7 @@ namespace upsylon
     namespace ink
     {
      
+        //! type agnostic bitmap
         class bitmap : public area, public counted
         {
         public:
@@ -31,7 +32,14 @@ namespace upsylon
             const unit_t bytes;    //!< pixels*depth
             
             //! memory_is_global bitmap
-            explicit bitmap( const unit_t W, const unit_t H, const unit_t D);
+            explicit bitmap(const unit_t W,const unit_t H,const unit_t D);
+            
+            //! memory_is_shared bitmap, same layouts
+            explicit bitmap( bitmap *bmp );
+            
+            
+            
+            //! release private memory
             virtual ~bitmap() throw();
             
             
@@ -39,6 +47,7 @@ namespace upsylon
             Y_DISABLE_ASSIGN(bitmap);
             //! layout of a pixmap row
             struct row_layout { void *p; unit_t w; };
+            
             bitmap *shared;
             void   *private_memory;
             size_t  private_length;

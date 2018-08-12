@@ -10,7 +10,8 @@ Y_UTEST(bitmap)
     {
         for(size_t iter=1;iter<=2;++iter)
         {
-            bitmap bmp( 1+alea.leq(100), 1+alea.leq(100), d);
+            bitmap bmp1( 1+alea.leq(100), 1+alea.leq(100), d);
+            bitmap bmp2( new bitmap(1+alea.leq(100), 1+alea.leq(100), d) );
         }
     }
 }
