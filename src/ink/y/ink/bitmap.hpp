@@ -43,6 +43,7 @@ namespace upsylon
             void   *private_memory;
             size_t  private_length;
             
+            void allocate();
             void allocate_rows_only();
             void link_rows() throw();
             

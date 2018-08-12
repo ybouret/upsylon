@@ -33,6 +33,11 @@ namespace upsylon
         private_length(0),
         model( memory_is_global )
         {
+            allocate();
+        }
+        
+        void bitmap:: allocate()
+        {
             const size_t data_offset = 0;
             const size_t data_length = bytes;
             const size_t rows_offset = memory::align(data_length+data_offset);
@@ -42,6 +47,19 @@ namespace upsylon
             private_memory = memory::global::instance().acquire(private_length);
             entry = private_memory;
             rows  = memory::io::cast<void>(entry,rows_offset);
+            
+            link_rows();
+        }
+        
+        void bitmap:: allocate_rows_only()
+        {
+            assert(entry);
+            const size_t rows_offset = 0;
+            const size_t rows_length = h * sizeof(row_layout);
+            
+            private_length = memory::align(rows_offset+rows_length);
+            private_memory = memory::global::instance().acquire(private_length);
+            rows  = private_memory;
             
             link_rows();
         }
