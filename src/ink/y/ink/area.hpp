@@ -3,6 +3,7 @@
 #define Y_INK_AREA_INCLUDED 1
 
 #include "y/type/point2d.hpp"
+#include "y/sequence/vector.hpp"
 
 namespace upsylon
 {
@@ -15,6 +16,7 @@ namespace upsylon
         class area : public object
         {
         public:
+            
             const coord lower; //!< lower coordinate
             const coord upper; //!< upper coordinate
             const coord sizes; //!< upper-lower+1
@@ -51,6 +53,24 @@ namespace upsylon
             }
         };
         
+        typedef vector<area> __areas;
+
+        class areas : public __areas
+        {
+        public:
+            inline virtual ~areas() throw() {}
+            inline          areas(const areas &other) : __areas( other ) {}
+            inline areas( const area &source, const size_t n) : __areas(n,as_capacity)
+            {
+                if(n>0)
+                {
+                    
+                }
+            }
+            
+        private:
+            Y_DISABLE_ASSIGN(areas);
+        };
     }
 }
 

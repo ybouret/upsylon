@@ -37,7 +37,8 @@ namespace upsylon
             //! memory_is_shared bitmap, same layouts
             explicit bitmap( bitmap *bmp );
             
-            
+            //! copy with same memory
+            bitmap( const bitmap &bmp );
             
             //! release private memory
             virtual ~bitmap() throw();

@@ -14,6 +14,7 @@ Y_UTEST(bitmap)
             bitmap bmp2( new bitmap(1+alea.leq(100), 1+alea.leq(100), d) );
         }
     }
+    std::cerr << "sizeof(area)=" << sizeof(area) << std::endl;
 }
 Y_UTEST_DONE()
 

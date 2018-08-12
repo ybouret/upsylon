@@ -130,6 +130,34 @@ namespace upsylon
             }
         }
         
+        bitmap:: bitmap( const bitmap &bmp ) :
+        area( bmp ),
+        entry(0),
+        rows(0),
+        w( bmp.w ),
+        h( bmp.h ),
+        depth(    bmp.depth    ),
+        scanline( bmp.scanline ),
+        stride(   bmp.depth    ),
+        pixels(   bmp.pixels   ),
+        bytes(    bmp.bytes    ),
+        model(    bmp.model    )
+        {
+            switch(model)
+            {
+                case memory_is_global:
+                    break;
+                    
+                case memory_is_shared:
+                    break;
+                    
+                case memory_from_user:
+                    break;
+            }
+        }
+        
+        
+        
     }
 }
 

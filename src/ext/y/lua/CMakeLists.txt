@@ -4,6 +4,9 @@ PROJECT(lua C)
 SET(lua_srcs lapi.c lcode.c lctype.c ldebug.c ldo.c ldump.c lfunc.c lgc.c llex.c lmem.c lobject.c lopcodes.c lparser.c lstate.c lstring.c ltable.c ltm.c lundump.c lvm.c lzio.c lauxlib.c lbaselib.c lbitlib.c lcorolib.c ldblib.c liolib.c lmathlib.c loslib.c lstrlib.c ltablib.c lutf8lib.c loadlib.c linit.c)
 SET(lua_incl lua.h luaconf.h lualib.h lauxlib.h lua.hpp)
 
+IF(Y_SUNOS AND Y_GNU)
+ADD_DEFINITIONS(-std=c99)
+ENDIF()
 
 
 ADD_LIBRARY(y-lua STATIC ${lua_srcs})
