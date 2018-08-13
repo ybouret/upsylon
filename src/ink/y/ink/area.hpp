@@ -64,14 +64,7 @@ namespace upsylon
             {
                 if(n>0)
                 {
-                    if(source.w>source.h)
-                    {
-                        
-                    }
-                    else
-                    {
-                        
-                    }
+                    
                 }
             }
             
