@@ -141,6 +141,7 @@ namespace upsylon
         stride(   bmp.depth    ),
         pixels(   bmp.pixels   ),
         bytes(    bmp.bytes    ),
+        shared(   bmp.shared   ),
         model(    bmp.model    )
         {
             switch(model)
