@@ -132,6 +132,7 @@ namespace upsylon
         
         bitmap:: bitmap( const bitmap &bmp ) :
         area( bmp ),
+        counted(),
         entry(0),
         rows(0),
         w( bmp.w ),
@@ -142,6 +143,8 @@ namespace upsylon
         pixels(   bmp.pixels   ),
         bytes(    bmp.bytes    ),
         shared(   bmp.shared   ),
+        private_memory(0),
+        private_length(0),
         model(    bmp.model    )
         {
             switch(model)

@@ -59,8 +59,8 @@ namespace upsylon
         {
         public:
             inline virtual ~areas() throw() {}
-            inline          areas(const areas &other) : __areas( other ) {}
-            inline areas( const area &source, const size_t n) : __areas(n,as_capacity)
+            inline          areas(const areas &other) : dynamic(), __areas( other ) {}
+            inline areas( const area &source, const size_t n) : dynamic(), __areas(n,as_capacity)
             {
                 if(n>0)
                 {
