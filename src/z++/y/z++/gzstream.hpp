@@ -34,7 +34,7 @@ namespace upsylon {
             virtual ~igzstream() throw();
             
             virtual bool query( char &C );
-            virtual void store( char C  );
+            virtual void store( const char C  );
         private:
             Y_DISABLE_COPY_AND_ASSIGN(igzstream);
         };

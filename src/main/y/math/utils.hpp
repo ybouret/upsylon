@@ -22,10 +22,10 @@ namespace upsylon
             template <typename ITERATOR, typename FUNC> static inline
             type max_within( ITERATOR i, const ITERATOR last, FUNC &f)
             {
-                type v = f(*i);
+                type v = type(f(*i));
                 while(++i!=last)
                 {
-                    const_type t = f(*i);
+                    const_type t = type(f(*i));
                     if(t>v)
                     {
                         v = t;
@@ -59,10 +59,10 @@ namespace upsylon
             template <typename ITERATOR, typename FUNC> static inline
             type min_within( ITERATOR i, const ITERATOR last, FUNC &f)
             {
-                type v = f(*i);
+                type v = type(f(*i));
                 while(++i!=last)
                 {
-                    const_type t = f(*i);
+                    const_type t = type(f(*i));
                     if(t<v)
                     {
                         v = t;

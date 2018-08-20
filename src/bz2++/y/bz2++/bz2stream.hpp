@@ -36,7 +36,7 @@ namespace upsylon
             virtual ~ibz2stream() throw();
             
             virtual bool query( char &C );
-			virtual void store( char  C );
+			virtual void store( const char  C );
             
         private:
             ios::icstream fp;

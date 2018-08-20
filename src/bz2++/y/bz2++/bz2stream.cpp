@@ -69,7 +69,7 @@ namespace upsylon
             BZ2_bzReadClose(err,bzfile);
         }
         
-        void ibz2stream:: store( char  C )
+        void ibz2stream:: store( const char  C )
         {
             if( cache < 0 )
                 cache = uint8_t(C);

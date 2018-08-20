@@ -63,8 +63,8 @@ Y_UTEST(types)
 
     std::cerr << "max_of(v)    =" << __find<float>::max_of(v) << std::endl;
     std::cerr << "abs_max_of(v)=" << __find<float>::abs_max_of(v) << std::endl;
-    std::cerr << "max_of(l)    =" << __find<float>::max_of(l) << std::endl;
-    std::cerr << "abs_max_of(l)=" << __find<float>::abs_max_of(l) << std::endl;
+    std::cerr << "max_of(l)    =" << __find<double>::max_of(l) << std::endl;
+    std::cerr << "abs_max_of(l)=" << __find<double>::abs_max_of(l) << std::endl;
     std::cerr << "abs_max_of(c)=" << __find<float>::abs_max_of(c) << std::endl;
 
     std::cerr << "Setting sizes" << std::endl;
