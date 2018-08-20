@@ -60,6 +60,11 @@ namespace upsylon
         //! div by scalar
         inline friend point2d operator/(const point2d p,param_type u) { return point2d(p.x/u,p.y/u); }
 
+        //! increase all by 1
+        inline point2d & inc() throw() { ++x; ++y; return *this; }
+
+        //! increase all by 2
+        inline point2d & dec() throw() { --x; --y; return *this; }
     };
 
 }

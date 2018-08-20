@@ -67,6 +67,12 @@ namespace upsylon
 
         //! change semantics
         inline friend point3d operator^(const point3d a, const point3d b) { return cross(a,b); }
+
+        //! increase all by 1
+        inline point3d & inc() throw() { ++x; ++y; ++z; return *this; }
+        //! decrease all by 1
+        inline point3d & dec() throw() { --x; --y; --z; return *this; }
+
     };
 }
 

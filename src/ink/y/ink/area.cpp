@@ -10,16 +10,17 @@ namespace upsylon
         {
             if(n>0)
             {
-                coord  lower  = source.lower;
-                coord  upper  = source.upper;
-                coord  sizes  = source.sizes;
-                unit_t pixels = source.pixels;
-                
+                coord        lower  = source.lower;
+                const coord  upper  = source.upper;
+                coord        sizes  = source.sizes;
+                unit_t       pixels = source.pixels;
+                std::cerr << "init sizes=" << sizes << ", #pixels=" << pixels << std::endl;
                 for(size_t r=0;r<n;++r)
                 {
                     const unit_t pieces      = n-r;
                     const unit_t todo        = pixels/pieces;
-                    if(todo&&pieces<sizes.x&&pieces<sizes.y)
+                    std::cerr << "-- #pieces=" << pieces << std::endl;
+                    if(todo&&pieces<=sizes.x&&pieces<=sizes.y)
                     {
                         // cut along x
                         const unit_t x_length    = sizes.x/pieces;
@@ -34,21 +35,33 @@ namespace upsylon
                         if(delta_x<delta_y)
                         {
                             std::cerr << "split along x" << std::endl;
-                            const coord sz(x_length,sizes.y);
-                            std::cerr << "\tsz=" << sz << std::endl;
+                            const coord sz = coord(x_length,sizes.y);
+                            const area a(lower,sz,area_sizes);
+                            push_back(a);
+                            lower.x += x_length;
+                            sizes.x  = upper.x-lower.x+1;
+                            pixels  -= x_pixels;
                         }
                         else
                         {
                             std::cerr << "split_along y" << std::endl;
-                            const coord sz(sizes.x,y_length);
-                            std::cerr << "\tsz=" << sz << std::endl;
+                            const coord sz = coord(sizes.x,y_length);
+                            const area a(lower,sz,area_sizes);
+                            push_back(a);
+                            lower.y += y_length;
+                            sizes.y  = upper.y-lower.y+1;
+                            pixels  -= y_pixels;
                         }
+
+                        std::cerr << "+sz" << back().sizes << "@" << back().pixels << std::endl;
+                        std::cerr << "|_remaining #pixels=" << pixels << std::endl;
                     }
                     else
                     {
-                        //empty area
+                        std::cerr << "+empty" << std::endl;
+                        const area empty(lower,coord(0,0),area_sizes);
+                        push_back(empty);
                     }
-                    exit(1);
                 }
 
 

@@ -1,6 +1,7 @@
 
 #include "y/ink/bitmap.hpp"
 #include "y/utest/run.hpp"
+#include "y/string/convert.hpp"
 
 using namespace upsylon;
 using namespace ink;
@@ -11,7 +12,11 @@ Y_UTEST(areas)
     std::cerr << "sizeof(area)=" << sizeof(area) << std::endl;
     if(argc>3)
     {
-
+        const unit_t w   = string_convert::to<unit_t>(argv[1],"w");
+        const unit_t h   = string_convert::to<unit_t>(argv[2],"h");
+        const size_t n   = string_convert::to<size_t>(argv[3],"n");
+        const area   A0  = area( coord(0,0), coord(w,h), area_sizes);
+        areas zones(A0,n);
     }
     else
     {
