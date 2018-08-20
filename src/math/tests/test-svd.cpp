@@ -30,7 +30,7 @@ namespace
                 
                 for(size_t iter=1;iter<=2;++iter)
                 {
-                   
+
                     for(size_t i=1;i<=n;++i)
                     {
                         for(size_t j=1;j<=m;++j)
@@ -45,7 +45,7 @@ namespace
                         continue;
                     }
                     
-                  
+
                     
                     if(n==m)
                     {
@@ -71,8 +71,36 @@ namespace
             }
         }
         std::cerr << std::endl;
+
+        for(size_t iter=1;iter<=32;++iter)
+        {
+            for(;;)
+            {
+                const size_t n = 1 + alea.leq(20);
+                const size_t m = 1 + alea.leq(20);
+                if(n==m) continue;
+                matrix<T> P(n,m);
+                for(size_t i=1;i<=n;++i)
+                {
+                    for(size_t j=1;j<=m;++j)
+                    {
+                        P[i][j] = support::get<T>();
+                    }
+                }
+                matrix<T> Q;
+                if(!svd::orthonormal(Q,P))
+                {
+                    std::cerr << "-";
+                }
+                else
+                {
+                    std::cerr << "+";
+                }
+                break;
+            }
+        }
+        std::cerr << std::endl;
     }
-    
 }
 
 
