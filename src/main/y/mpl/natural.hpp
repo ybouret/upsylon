@@ -585,7 +585,7 @@ static inline natural __##CALL(const uint8_t *l, const size_t nl, const uint8_t 
 
     //! extended numeric for mpn
     template <> struct xnumeric<mpn> {
-        static mpn abs_minimum() { return mpn(); } //!< 0
+        static inline mpn abs_minimum() { return mpn(); } //!< 0
     };
 
 }

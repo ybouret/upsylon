@@ -263,7 +263,7 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
     
     //! extended numeric for mpq
     template <> struct xnumeric<mpq> {
-        static mpq abs_minimum() { return mpq(); } //!< 0
+        static inline mpq abs_minimum() { return mpq(); } //!< 0
     };
 }
 
