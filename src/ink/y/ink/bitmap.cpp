@@ -30,7 +30,7 @@ namespace upsylon
         }
         
         bitmap:: bitmap(const unit_t W, const unit_t H, const unit_t D) :
-        area( coord(0,0), coord(W-1,H-1) ),
+        area( coord(0,0), coord(W,H), area_sizes ),
         entry(0),
         rows(0),
         w(     __check(W,"width")  ),

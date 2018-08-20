@@ -14,11 +14,12 @@ namespace upsylon
         class bitmap : public area, public counted
         {
         public:
+            //! different kind of bitmap
             enum memory_model
             {
-                memory_is_global,
-                memory_is_shared,
-                memory_from_user
+                memory_is_global, //!< fully allocated
+                memory_is_shared, //!< shared bitmap
+                memory_from_user  //!< memory from user
             };
             
             void        *entry;    //!< address of first pixel
@@ -58,7 +59,7 @@ namespace upsylon
             void link_rows() throw();
             
         public:
-            const memory_model model;
+            const memory_model model; //!< memory model for this bitmap
         };
     }
 }
