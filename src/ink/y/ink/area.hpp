@@ -121,13 +121,8 @@ namespace upsylon
             inline          areas(const areas &other) : dynamic(), __areas( other ) {}
 
             //! tile
-            inline areas( const area &source, const size_t n) : dynamic(), __areas(n,as_capacity)
-            {
-                if(n>0)
-                {
-                    
-                }
-            }
+            areas( const area &source, const size_t n);
+            
             
         private:
             Y_DISABLE_ASSIGN(areas);
