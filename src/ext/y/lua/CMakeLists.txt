@@ -31,7 +31,7 @@ ADD_TEST(Hello   y_lua ${LUA_TESTS_DIR}/hello.lua)
 ADD_TEST(Bisect  y_lua ${LUA_TESTS_DIR}/bisect.lua)
 ADD_TEST(Sort    y_lua ${LUA_TESTS_DIR}/sort.lua)
 ADD_TEST(Sieve   y_lua ${LUA_TESTS_DIR}/sieve.lua)
-ADD_TEST(Life    y_lua ${LUA_TESTS_DIR}/life.lua)
+#ADD_TEST(Life    y_lua ${LUA_TESTS_DIR}/life.lua)
  
 ADD_CUSTOM_TARGET(utest-lua
 COMMAND ${CMAKE_CTEST_COMMAND} -V
