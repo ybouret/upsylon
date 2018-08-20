@@ -25,18 +25,19 @@ namespace upsylon
         public:
             static const size_t DIMENSION = 2; //!< physical dimension
 
-            const coord lower; //!< lower coordinate
-            const coord upper; //!< upper coordinate
-            const coord sizes; //!< upper-lower+1m or zero if invalid
+            const coord  lower;  //!< lower coordinate
+            const coord  upper;  //!< upper coordinate
+            const coord  sizes;  //!< upper-lower+1m or zero if invalid
+            const unit_t pixels; //!< w*h
 
             //! default area, origin
-            inline area() throw() : lower(0,0), upper(0,0), sizes(1,1)
+            inline area() throw() : lower(0,0), upper(0,0), sizes(1,1), pixels(1)
             {
             }
 
             //! copy
             inline area(const area &other) throw() :
-            lower(other.lower), upper(other.upper), sizes(other.sizes) {}
+            lower(other.lower), upper(other.upper), sizes(other.sizes), pixels(other.pixels) {}
 
             //! destructor
             inline ~area() throw() {}
@@ -50,7 +51,8 @@ namespace upsylon
                         const area_build_type t = area_upper) throw() :
             lower(l),
             upper(p),
-            sizes(p)
+            sizes(p),
+            pixels(0)
             {
                 switch(t)
                 {
@@ -62,6 +64,7 @@ namespace upsylon
                         setup_by_sizes();
                         break;
                 }
+                (unit_t &)pixels = sizes.x * sizes.y;
             }
 
             //! test if coordinate is insinde

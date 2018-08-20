@@ -29,7 +29,6 @@ namespace upsylon
             const unit_t depth;    //!< bytes per pixel > 0
             const unit_t scanline; //!< w*depth
             const unit_t stride;   //!< stride>=scanline
-            const unit_t pixels;   //!< w*h
             const unit_t bytes;    //!< pixels*depth
             
             //! memory_is_global bitmap
