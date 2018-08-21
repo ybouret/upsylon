@@ -210,7 +210,7 @@ namespace upsylon
                                 {
                                     p=T(0.5)*(y-x);
                                     q=p*p+w;
-                                    z=__sqrt(__fabs(q));
+                                    z=sqrt_of(__fabs(q));
                                     x += t;
                                     if (q >= 0)
                                     {
@@ -291,7 +291,7 @@ namespace upsylon
                                                 r /= x;
                                             }
                                         }
-                                        if( __fabs(s=__sgn(__sqrt(p*p+q*q+r*r),p)) > 0 )
+                                        if( __fabs(s=__sgn(sqrt_of(p*p+q*q+r*r),p)) > 0 )
                                         {
                                             if (k == m)
                                             {

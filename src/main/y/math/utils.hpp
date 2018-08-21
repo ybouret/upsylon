@@ -177,7 +177,7 @@ namespace upsylon
                         }
                     }
                 }
-                const T tol = __sqrt( T(A.items) ) * numeric<T>::epsilon * Amax;
+                const T tol = sqrt_of( T(A.items) ) * numeric<T>::epsilon * Amax;
                 {
                     T *a = *A;
                     for(size_t i=A.items;i>0;--i)

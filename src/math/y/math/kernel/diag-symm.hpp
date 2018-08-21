@@ -94,11 +94,11 @@ namespace upsylon
                                     else
                                     {
                                         const T theta=T(0.5)*h/(a[ip][iq]);
-                                        t=T(1.0)/(__fabs(theta)+__sqrt(T(1.0)+theta*theta));
+                                        t=T(1.0)/(__fabs(theta)+sqrt_of(T(1.0)+theta*theta));
                                         if (theta < T(0.0))
                                             t = -t;
                                     }
-                                    const T c   = T(1.0)/__sqrt(T(1.0)+t*t);
+                                    const T c   = T(1.0)/sqrt_of(T(1.0)+t*t);
                                     const T s   = t*c;
                                     const T tau = s/(T(1.0)+c);
                                     h=t*a[ip][iq];

@@ -62,8 +62,8 @@ namespace upsylon
         };
         
         
-        inline float  __sqrt( const float  f ) throw() { return sqrtf(f); } //!< sqrt
-        inline double __sqrt( const double f ) throw() { return sqrt(f);  } //!< sqrt
+        inline float  sqrt_of( const float  f ) throw() { return sqrtf(f); } //!< sqrt
+        inline double sqrt_of( const double f ) throw() { return sqrt(f);  } //!< sqrt
         
         inline float  __fabs( const float  f ) throw() { return fabsf(f); }       //!< fabs
         inline double __fabs( const double f ) throw() { return fabs(f);  }       //!< fabs

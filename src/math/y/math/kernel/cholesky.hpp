@@ -43,7 +43,7 @@ namespace upsylon
                         {
                             if( sum <= __zero )
                                 return false;
-                            diag[i] = __sqrt( sum );
+                            diag[i] = sqrt_of( sum );
                         }
                         else
                         {

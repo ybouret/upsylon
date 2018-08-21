@@ -10,7 +10,7 @@ typename real_for<T>::type _rms( const array<T> &a )
         {
             sum += __mod2(a[i]);
         }
-        return __sqrt(sum/n);
+        return sqrt_of(sum/n);
     }
     else
     {
@@ -51,7 +51,7 @@ typename real_for<T>::type _rms( const array<T> &a, const array<T> &b )
         {
             sum += __mod2(a[i]-b[i]);
         }
-        return __sqrt(sum/n);
+        return sqrt_of(sum/n);
     }
     else
     {
@@ -139,7 +139,7 @@ typename real_for<T>::type _rms( const array<T> &a, concurrent::for_each &loop )
         concurrent::executor &engine = loop.engine();
         engine.make_for<typename real_for<T>::type>();
         loop.run( __rms<T>::call1, &args );
-        return __sqrt( engine.sum<typename real_for<T>::type>()/n );
+        return sqrt_of( engine.sum<typename real_for<T>::type>()/n );
     }
     else
     {
@@ -177,7 +177,7 @@ typename real_for<T>::type _rms( const array<T> &a, const array<T> &b, concurren
         concurrent::executor &engine = loop.engine();
         engine.make_for<typename real_for<T>::type>();
         loop.run( __rms<T>::call2, &args );
-        return __sqrt(engine.sum<typename real_for<T>::type>()/n);
+        return sqrt_of(engine.sum<typename real_for<T>::type>()/n);
     }
     else
     {

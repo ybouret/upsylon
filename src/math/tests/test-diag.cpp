@@ -48,7 +48,7 @@ namespace {
                     {
                         rms += square_of(y[i]-lam*v[i]);
                     }
-                    rms = __sqrt( rms/n );
+                    rms = sqrt_of( rms/n );
                     std::cerr << "\t\trms=" << rms << std::endl;
                 }
             }

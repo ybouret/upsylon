@@ -108,7 +108,6 @@ Y_UTEST(svd)
 {
     do_test<float>();
     do_test<double>();
-
 }
 Y_UTEST_DONE()
 

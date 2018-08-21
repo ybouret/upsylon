@@ -54,7 +54,7 @@ namespace upsylon
                                 s += a[k][i]*a[k][i];
                             }
                             f = a[i][i];
-                            g = -__sgn(__sqrt(s),f);
+                            g = -__sgn(sqrt_of(s),f);
                             h = f*g-s;
                             a[i][i]=f-g;
                             for(size_t j=l;j<=n;++j)
@@ -84,7 +84,7 @@ namespace upsylon
                                 s += a[i][k]*a[i][k];
                             }
                             f=a[i][l];
-                            g = - __sgn(__sqrt(s),f);
+                            g = - __sgn(sqrt_of(s),f);
                             h=f*g-s;
                             a[i][l]=f-g;
                             for(k=l;k<=n;k++)
