@@ -11,7 +11,7 @@ Y_UTEST(areas)
 
     std::cerr << "sizeof(area)=" << sizeof(area) << std::endl;
     
-    for(size_t n=1;n<=256;++n)
+    for(size_t n=1;n<=32;++n)
     {
         size_t lo = isqrt(n);
         size_t hi = n/lo;
