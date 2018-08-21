@@ -34,6 +34,6 @@ y-png  utest-png
 y-jpeg utest-jpeg
 y-tiff 
 y-lua  utest-lua
-COMMENT "Tested External Projects")
+COMMENT "External Projects are now tested!!!")
 
 

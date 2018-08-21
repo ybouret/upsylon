@@ -2,15 +2,14 @@
 #ifndef Y_INK_AREA_INCLUDED
 #define Y_INK_AREA_INCLUDED 1
 
-#include "y/type/point2d.hpp"
+#include "y/ink/types.hpp"
 #include "y/sequence/vector.hpp"
 
 namespace upsylon
 {
     namespace ink
     {
-        //! coordinate
-        typedef point2d<unit_t> coord;
+       
 
         //! how to specify an area
         enum area_build_type

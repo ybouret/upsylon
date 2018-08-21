@@ -2,7 +2,7 @@
 #ifndef Y_INK_COLOR_RGB_INCLUDED
 #define Y_INK_COLOR_RGB_INCLUDED 1
 
-#include "y/ink/color.hpp"
+#include "y/ink/pixel.hpp"
 #include "y/type/args.hpp"
 
 namespace upsylon
@@ -43,13 +43,13 @@ namespace upsylon
             type a; //!< alpha  channel
 
             //! constructor
-            inline  rgba( param_type R=0, param_type G=0, param_type B=0, param_type A=color<type>::opaque) throw() : r(R), g(G), b(B), a(A) {}
+            inline  rgba( param_type R=0, param_type G=0, param_type B=0, param_type A=pixel<type>::opaque) throw() : r(R), g(G), b(B), a(A) {}
             //! destructor
             inline ~rgba() throw() {}
             //! copy
             inline  rgba(const rgba   &other) throw() : r(other.r), g(other.g), b(other.b), a(other.a) {}
             //! copy with different alpha channel
-            inline  rgba(const rgb<T> &other,param_type A=color<type>::opaque) throw() : r(other.r), g(other.g), b(other.b), a(A) {}
+            inline  rgba(const rgb<T> &other,param_type A=pixel<type>::opaque) throw() : r(other.r), g(other.g), b(other.b), a(A) {}
             //! assign
             inline  rgba & operator=( const rgba   &other) throw() { r=other.r; g=other.g; b=other.b; a=other.a; return *this; }
             //! assign only rgb, keep alpha channel
@@ -62,6 +62,12 @@ namespace upsylon
 
     }
 }
+
+#if !defined(Y_INK_PIXEL_IMPL)
+Y_PIXEL_DECL(upsylon::ink::RGB);
+Y_PIXEL_DECL(upsylon::ink::RGBA);
+#endif
+
 
 #endif
 
