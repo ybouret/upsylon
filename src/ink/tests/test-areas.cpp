@@ -10,6 +10,21 @@ Y_UTEST(areas)
 {
 
     std::cerr << "sizeof(area)=" << sizeof(area) << std::endl;
+    
+    for(size_t n=1;n<=256;++n)
+    {
+        size_t lo = isqrt(n);
+        size_t hi = n/lo;
+        while(hi*lo!=n)
+        {
+            --lo;
+            hi = n/lo;
+        }
+        std::cerr << n << "->" << lo  << "*" << hi << std::endl;
+
+    }
+    return 0;
+    
     if(argc>3)
     {
         const unit_t w   = string_convert::to<unit_t>(argv[1],"w");
