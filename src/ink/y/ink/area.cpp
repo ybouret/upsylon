@@ -28,11 +28,11 @@ namespace upsylon
             const unit_t cores = n;
             coord split = coord::sqrt_of(cores);
             bool  x_is_small = true;
-            bool  y_is_small = false;
+            //bool  y_is_small = false;
             if(sizes.x>sizes.y)
             {
                 x_is_small = false;
-                y_is_small = true;
+                //y_is_small = true;
                 split.swap_xy();
             }
 
