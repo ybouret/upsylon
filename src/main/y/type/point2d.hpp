@@ -65,6 +65,27 @@ namespace upsylon
 
         //! increase all by 2
         inline point2d & dec() throw() { --x; --y; return *this; }
+
+        //! swap x and y coordinates
+        inline point2d & swap_xy() throw() { bswap(x,y); return *this; }
+
+        //! x*y=n, x<=y, starting from x=isqrt(n);
+        inline static point2d sqrt_of( param_type n ) throw()
+        {
+            point2d s;
+            if(n>0)
+            {
+                s.x = isqrt<mutable_type>(n); assert(s.x>0);
+                s.y = n/s.x;
+                while(s.x*s.y!=n)
+                {
+                    --s.x;
+                    s.y=n/s.x;
+                }
+            }
+            return s;
+        }
+
     };
 
 }

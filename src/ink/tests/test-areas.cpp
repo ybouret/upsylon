@@ -13,6 +13,7 @@ Y_UTEST(areas)
     
     for(size_t n=1;n<=32;++n)
     {
+#if 0
         size_t lo = isqrt(n);
         size_t hi = n/lo;
         while(hi*lo!=n)
@@ -21,6 +22,9 @@ Y_UTEST(areas)
             hi = n/lo;
         }
         std::cerr << n << "->" << lo  << "*" << hi << std::endl;
+#endif
+        coord s = coord::sqrt_of(n);
+        std::cerr << n << "->" << s << std::endl;
 
     }
     return 0;
