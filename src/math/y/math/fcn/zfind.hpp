@@ -12,8 +12,9 @@ namespace upsylon
     {
 
         //! finding zero
-        struct zfind
+        class zfind
         {
+        public:
             static const unsigned __z  = 0x00; //!< zero
             static const unsigned __p  = 0x01; //!< positive
             static const unsigned __n  = 0x02; //!< negative
@@ -88,15 +89,6 @@ namespace upsylon
                 }
             }
 
-#if 0
-            template <typename T,typename FUNC>
-            struct zcall
-            {
-                FUNC *pF;
-                T     F0;
-                inline T operator()(const T x ) { assert(pF); return (*pF)(x)-F0; }
-            };
-#endif
 
         };
 
