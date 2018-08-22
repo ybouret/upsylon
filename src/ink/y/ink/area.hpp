@@ -78,7 +78,11 @@ namespace upsylon
                 return has(sub.lower) && has(sub.upper);
             }
 
-            
+            inline friend std::ostream & operator<<( std::ostream &os, const area &a )
+            {
+                os << '{' << a.lower << "->" << a.upper << " : " << a.sizes << " #" << a.pixels << '}';
+                return os;
+            }
         private:
             Y_DISABLE_ASSIGN(area);
             inline void setup_by_upper() throw()

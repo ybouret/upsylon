@@ -7,6 +7,19 @@
 using namespace upsylon;
 using namespace ink;
 
+namespace
+{
+    //! just for a callable prototype
+    struct dummyOps
+    {
+        void operator()(int value, const area &zone, lockable &sync )
+        {
+            Y_LOCK(sync);
+            std::cerr << "passed value=" << value << ", zone=" << zone << std::endl;
+        }
+    };
+}
+
 Y_UTEST(areas)
 {
 
@@ -33,6 +46,10 @@ Y_UTEST(areas)
         engine seq(__seq,A0);
         std::cerr << "Parallel Tiles" << std::endl;
         engine par(__par,A0);
+
+        int value = 7;
+        dummyOps ops;
+        par.run(ops,value);
 
     }
     else
