@@ -33,6 +33,9 @@ namespace upsylon
             //! read exactly buflen bytes
             void input(void *buffer,const size_t buflen);
 
+            //! read at most bulen
+            size_t try_get(void *buffer,const size_t buflen);
+
             //! get an integral type
             template <typename T>
             T read() { T ans(0); input(&ans,sizeof(T)); return swap_be_as<T>(ans); }

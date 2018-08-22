@@ -78,6 +78,12 @@ namespace upsylon
                 throw libc::exception( EIO, "ocstream::echo('%s',...)", *filename );
         }
 
+
+        FILE * ocstream:: operator*() throw()
+        {
+            return *handle;
+        }
+
     }
 
 }

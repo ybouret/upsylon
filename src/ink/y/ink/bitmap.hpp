@@ -32,7 +32,7 @@ namespace upsylon
             const unit_t bytes;    //!< pixels*depth
             
             //! memory_is_global bitmap
-            explicit bitmap(const unit_t W,const unit_t H,const unit_t D);
+            explicit bitmap(const unit_t D,const unit_t W,const unit_t H);
             
             //! memory_is_shared bitmap, same layouts
             explicit bitmap( bitmap *bmp );
@@ -42,12 +42,40 @@ namespace upsylon
             
             //! release private memory
             virtual ~bitmap() throw();
-            
+
+            //! get line address
+            inline void *get_line(const unit_t j) throw()
+            {
+                assert(j>=0);assert(j<w);
+                return (static_cast<row_layout *>(rows)+j)->p;
+            }
+
+            //! get line address, const
+            inline const void *get_line(const unit_t j) const throw()
+            {
+                assert(j>=0);assert(j<w);
+                return (static_cast<row_layout *>(rows)+j)->p;
+            }
+
+            inline void *get(const unit_t i, const unit_t j) throw()
+            {
+                assert(i>=0);assert(i<w);
+                assert(j>=0);assert(j<h);
+                return 0;
+            }
+
+            inline const void *get(const unit_t i, const unit_t j) const throw()
+            {
+                assert(i>=0);assert(i<w);
+                assert(j>=0);assert(j<h);
+                return 0;
+            }
+
             
         private:
             Y_DISABLE_ASSIGN(bitmap);
             //! layout of a pixmap row
-            struct row_layout { void *p; unit_t w; };
+            struct row_layout { uint8_t *p; unit_t w; };
             
             bitmap *shared;
             void   *private_memory;

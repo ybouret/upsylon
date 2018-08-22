@@ -31,8 +31,9 @@ namespace upsylon
 
             //! global memory pixmap
             inline explicit pixmap(const unit_t W, const unit_t H) :
-            bitmap(W,H,sizeof(type))
+            bitmap(sizeof(type),W,H)
             {
+                assert(sizeof(type)==depth);
             }
 
             //! destructor

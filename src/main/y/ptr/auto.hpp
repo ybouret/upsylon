@@ -49,6 +49,13 @@ namespace upsylon
             return *this;
         }
 
+        inline T *yield() throw()
+        {
+            T *p = this->pointee;
+            zero();
+            return p;
+        }
+
     private:
         void zero() const throw() { *(pointee_type *)( &(this->pointee) ) = 0;  }
         void kill() throw()       { if(this->pointee) { delete this->pointee; this->pointee=0; } }

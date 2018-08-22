@@ -17,10 +17,6 @@ namespace upsylon
         class imageIO : public counted_object
         {
         public:
-            typedef intr_ptr<string,imageIO> pointer;
-            typedef set<string,pointer>      database;
-
-
             const string name;
             inline virtual ~imageIO() throw() {}
             inline const string & key() const throw() { return name; }
@@ -45,6 +41,30 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(imageIO);
+        };
+
+        //! handling different imageIO
+        class image : public imageIO
+        {
+        public:
+            class format : public imageIO
+            {
+            public:
+                typedef intr_ptr<string,format> pointer;
+                virtual bool         lossless()   const throw() = 0;
+                virtual const char **extensions() const throw() = 0;
+
+                inline virtual ~format() throw() {}
+
+            protected:
+                inline explicit format(const char *id) : imageIO(id) {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(format);
+            };
+
+        private:
+
         };
     }
 }

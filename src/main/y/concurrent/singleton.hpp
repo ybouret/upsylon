@@ -75,6 +75,12 @@ namespace upsylon
             return instance_ != NULL;
         }
 
+        //! create the singleton
+        static inline void create()
+        {
+            (void) instance();
+        }
+
     protected:
         inline explicit singleton() throw() {}
         inline virtual ~singleton() throw() {}

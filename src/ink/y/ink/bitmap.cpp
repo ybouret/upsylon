@@ -29,7 +29,7 @@ namespace upsylon
             return v;
         }
         
-        bitmap:: bitmap(const unit_t W, const unit_t H, const unit_t D) :
+        bitmap:: bitmap(const unit_t D, const unit_t W, const unit_t H) :
         area( coord(0,0), coord(W,H), area_sizes ),
         entry(0),
         rows(0),

@@ -5,6 +5,7 @@ INCLUDE_DIRECTORIES(.)
 FILE(GLOB main_decl y/*.hpp)
 FILE(GLOB main_code y/*.cpp)
 SET(main_srcs ${main_decl} ${main_code})
+SOURCE_GROUP( main FILES ${main_srcs} )
 INSTALL( FILES ${main_decl} DESTINATION include/y )
 
 FILE(GLOB os_decl y/os/*.hpp)

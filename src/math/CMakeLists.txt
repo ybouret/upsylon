@@ -5,6 +5,7 @@ INCLUDE_DIRECTORIES(. ../main)
 FILE(GLOB main_decl y/math/*.hpp)
 FILE(GLOB main_code y/math/*.cpp)
 SET(main_srcs ${main_decl} ${main_code})
+SOURCE_GROUP( math FILES ${main_srcs} )
 INSTALL( FILES ${main_decl} DESTINATION include/y/math )
 
 FILE(GLOB kernel_decl y/math/kernel/*.h??)
