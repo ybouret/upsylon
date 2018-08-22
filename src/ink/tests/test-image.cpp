@@ -23,7 +23,7 @@ namespace
     template <typename T>
     static inline void do_test(imageIO &img,const string &id)
     {
-        pixmap<T> pxm( 1+alea.leq(100), 1+alea.leq(100) );
+        pixmap<T> pxm( 100+alea.leq(400), 100+alea.leq(400) );
         for(unit_t y=0;y<pxm.h;++y)
         {
             for(unit_t x=0;x<pxm.w;++x)

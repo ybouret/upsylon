@@ -55,13 +55,13 @@ namespace upsylon
             auto_ptr<bitmap> B(new bitmap(depth,w,h) );
             
             // map raster to bitmap
-            const uint32_t *p = raster.data;
+            const uint32_t *p = raster();
             for(int j=0;j<h;++j)
             {
                 for(int i=0;i<w;++i)
                 {
                     const uint32_t P = *(p++);
-                    const RGBA   C( TIFFGetR(P), TIFFGetG(P), TIFFGetB(P), TIFFGetA(P));
+                    const RGBA     C( TIFFGetR(P), TIFFGetG(P), TIFFGetB(P), TIFFGetA(P));
                     proc(B->get(i,j),C);
                 }
             }
@@ -102,13 +102,14 @@ namespace upsylon
             const unit_t w = bmp.w;
             const unit_t h = bmp.h;
             raster.startup(w*h);
-            uint32_t *p = raster.data;
+            uint32_t *p = raster();
             for(unit_t j=0;j<h;++j)
             {
+                uint32_t *q = &p[j*w];
                 for(unit_t i=0;i<w;++i)
                 {
                     const RGBA C = proc(bmp.get(i,j));
-                    uint32_t  &Q = *(p++);
+                    uint32_t  &Q = *(q++);
                     Q  = C.a; Q <<= 8;
                     Q |= C.b; Q <<= 8;
                     Q |= C.g; Q <<= 8;

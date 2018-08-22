@@ -1,6 +1,5 @@
 #include "y/ink/image/tiff++.hpp"
 #include "y/exceptions.hpp"
-#include "y/memory/global.hpp"
 #include "tiffio.h"
 
 
@@ -21,43 +20,6 @@ namespace upsylon
     }
 }
 
-
-namespace upsylon
-{
-    namespace ink
-    {
-
-        _TIFF:: Raster:: ~Raster() throw()
-        {
-            cleanup();
-        }
-
-        _TIFF:: Raster:: Raster() :
-        data(0),
-        size(0),
-        bytes(0)
-        {
-            memory::global::create();
-        }
-
-        void _TIFF:: Raster:: cleanup() throw()
-        {
-            memory::global::location().release_as<uint32_t>(data,size,bytes);
-        }
-
-        void _TIFF:: Raster:: startup(const size_t n)
-        {
-            if(n>size)
-            {
-                cleanup();
-                size = n;
-                data = memory::global::instance().acquire_as<uint32_t>(size,bytes);
-            }
-        }
-
-    }
-
-}
 
 namespace upsylon
 {
@@ -124,7 +86,7 @@ namespace upsylon
             const int    h   = GetHeight();
             raster.startup(w*h);
 
-            if( 1 != TIFFReadRGBAImage((TIFF*)handle, w, h, raster.data) )
+            if( 1 != TIFFReadRGBAImage((TIFF*)handle, w, h, raster() ) )
             {
                 throw imported::exception("TIFFReadRGBAImage","failure...");
             }
@@ -226,17 +188,20 @@ namespace upsylon
 
             const size_t usr_scanline = samples_per_pixel * w;
             const size_t out_scanline = TIFFScanlineSize(out);
-            memory::buffer_of<char,memory::global> tmpbuf( max_of(usr_scanline,out_scanline) );
-            unsigned char *buf = static_cast<unsigned char *>(tmpbuf.rw());
+            const size_t buf_scanline = max_of(usr_scanline,out_scanline);
+            memory::global_buffer_of<unsigned char> tmpbuf(buf_scanline);
+            unsigned char *buf = tmpbuf();
 
             // We set the strip size of the file to be size of one row of pixels
             TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, TIFFDefaultStripSize(out,usr_scanline) );
 
             //Now writing image to the file one strip at a time
+            const uint32_t *p = raster();
             for(int row=0,top=h; row<h; ++row)
             {
                 --top;
-                memcpy(buf, &raster.data[top*w], usr_scanline);    // check the index here, and figure out why not using h*linebytes
+                memset(buf,0,buf_scanline);
+                memcpy(buf, &p[top*w], usr_scanline);    // check the index here, and figure out why not using h*linebytes
                 if (1 != TIFFWriteScanline(out, buf, row, 0) )
                     break;
             }

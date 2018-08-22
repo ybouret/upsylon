@@ -16,26 +16,29 @@ namespace upsylon
             //! desctructor
             virtual ~ _TIFF() throw();
 
-            //! internal temporary raster object
-            class Raster
+            //! internal raster base type
+            typedef memory::global_buffer_of<uint32_t> _Raster;
+            //! internal memory raster
+            class Raster : public _Raster
             {
             public:
-                uint32_t    *data;
-                size_t       size;
-                size_t       bytes;
-                Raster();
-                ~Raster() throw();
-                void cleanup() throw();
-                void startup(const size_t n);
-                
+                inline explicit Raster() : _Raster(0) {}
+                inline virtual ~Raster() throw() {}
+                inline void startup( const size_t n)
+                {
+                    if( n > size )
+                    {
+                        _Raster tmp(n);
+                        swap_with(tmp);
+                    }
+                }
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Raster);
             };
-
             
         protected:
             explicit _TIFF() throw(); //!< constructor
-            void *handle;             //!< TIFF object
+            void     *handle;         //!< TIFF object
         private:
             Y_DISABLE_COPY_AND_ASSIGN(_TIFF);
         };

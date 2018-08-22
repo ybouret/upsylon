@@ -43,6 +43,14 @@ namespace upsylon
             //! buffer interface
             inline virtual size_t      length() const throw() { return size*sizeof(T); }
 
+            //! swap
+            inline void swap_with( buffer_of &other ) throw()
+            {
+                cswap(size,other.size);
+                cswap(items,other.items);
+                cswap(bytes,other.bytes);
+                cswap(data,other.data);
+            }
         private:
             Y_DISABLE_COPY_AND_ASSIGN(buffer_of);
             
