@@ -8,12 +8,14 @@ namespace upsylon
 {
     namespace ink
     {
-
+        //! convert RGBA to something
         class rgba2data
         {
         public:
+            //! destructor
             inline virtual ~rgba2data() throw() {}
 
+            //! callable interface
             void operator()( void *addr, const RGBA &C ) throw()
             {
                 assert(addr);
@@ -21,6 +23,7 @@ namespace upsylon
             }
 
         protected:
+            //! constructor
             inline explicit rgba2data() throw() {}
 
         private:
@@ -28,6 +31,7 @@ namespace upsylon
             virtual void put(void *addr,const RGBA &C) throw() = 0;
         };
 
+        //! create derived class for rgba2data
 #define Y_INK_RGBA2DATA(NAME,CODE)                            \
 class NAME : public rgba2data {                                \
 public:                                                         \
@@ -37,9 +41,13 @@ private:                                                           \
 Y_DISABLE_COPY_AND_ASSIGN(NAME);                                    \
 inline virtual void put(void *addr, const RGBA &C) throw() { CODE; } \
 }
+        //! RGBA -> RGBA
         Y_INK_RGBA2DATA(put_rgba, *(RGBA    *)addr = C);
+        //! RGBA -> RGB
         Y_INK_RGBA2DATA(put_rgb,  *(RGB     *)addr = *(RGB *)&C);
+        //! RGBA -> greyscale as float
         Y_INK_RGBA2DATA(put_gsf,  *(float   *)addr = crux::grey_scale_f(C.r, C.g, C.b));
+        //! RGBA -> greyscale as byte
         Y_INK_RGBA2DATA(put_gsu,  *(uint8_t *)addr = crux::grey_scale_u(C.r, C.g, C.b));
 
     }

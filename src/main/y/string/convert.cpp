@@ -6,6 +6,23 @@
 namespace upsylon
 {
 
+    void string_convert:: to_lower( string &s )
+    {
+        for(size_t i=0;i<s.size();++i)
+        {
+            s[i] = tolower(s[i]);
+        }
+    }
+
+    void string_convert:: to_upper( string &s )
+    {
+        for(size_t i=0;i<s.size();++i)
+        {
+            s[i] = toupper(s[i]);
+        }
+    }
+
+
     static const char default_name[] = "variable";
 
     ////////////////////////////////////////////////////////////////////////////

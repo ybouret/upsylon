@@ -10,7 +10,7 @@ using namespace ink;
 namespace
 {
     template <typename T>
-    static inline void do_test()
+    static inline void do_test(imageIO &img,const string &id)
     {
         pixmap<T> pxm( 1+alea.leq(100), 1+alea.leq(100) );
         for(unit_t y=0;y<pxm.h;++y)
@@ -21,17 +21,27 @@ namespace
             }
         }
         std::cerr << "pixmap<" << typeid(T).name() << "> " << pxm.sizes << " => depth=" << pxm.depth << ", bytes=" << pxm.bytes << std::endl;
+
+        const string root = "img" + id + ".";
+        img.save(root+"jpg", pxm,NULL);
+        img.save(root+"png", pxm,NULL);
+        img.save(root+"tif", pxm,NULL);
+
     }
 
 }
 
-Y_UTEST(images)
+Y_UTEST(image)
 {
-    do_test<float>();
-    do_test<uint8_t>();
-    do_test<RGB>();
-    do_test<RGBA>();
-    do_test<cplx>();
+    image   &__img = image::instance().initialize();
+    imageIO &img   = __img;
+
+    __img.display();
+    do_test<float>(img,"f");
+    do_test<uint8_t>(img,"u");
+    do_test<RGB>(img,"3");
+    do_test<RGBA>(img,"4");
+    //do_test<cplx>();
 
 }
 Y_UTEST_DONE()

@@ -223,6 +223,9 @@ MACRO(TARGET_LINK_Y tgt)
 			LIST(APPEND ylibs "y-jpeg;y-jbig;y-png;y-z")
 		ENDIF()
 		
+		IF( ${extra} STREQUAL "ink" )
+			LIST(APPEND ylibs "y-tiff;y-jpeg;y-jbig;y-png;y-z")
+		ENDIF()
 	ENDFOREACH()
 	
 	#finalize

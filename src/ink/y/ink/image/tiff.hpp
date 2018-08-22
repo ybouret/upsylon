@@ -10,16 +10,19 @@ namespace upsylon
     namespace ink
     {
 
+        //! used libtiff for I/O
         class tiff_format : public image::format
         {
         public:
+            //! constructor
             explicit tiff_format();
+            //! destructor
             virtual ~tiff_format() throw();
-            
+
+
             virtual bool     lossless() const throw();
             
-            
-            //! option input_options...
+
             virtual bitmap  *load(const string          &filename,
                                   unit_t                 depth,
                                   rgba2data             &proc,
@@ -30,7 +33,7 @@ namespace upsylon
                                   data2rgba           &proc,
                                   const void          *options) const;
 
-
+            //! number of stored images in a file
             size_t count_directories(const string &filename) const;
 
             //! load a bitmap with 0<=indx<count_directories

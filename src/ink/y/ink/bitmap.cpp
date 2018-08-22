@@ -44,6 +44,9 @@ namespace upsylon
         private_length(0),
         model( memory_is_global )
         {
+
+            assert(w==sizes.x);
+            assert(h==sizes.y);
             allocate();
         }
         

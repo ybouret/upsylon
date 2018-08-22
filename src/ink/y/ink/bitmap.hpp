@@ -46,29 +46,33 @@ namespace upsylon
             //! get line address
             inline void *get_line(const unit_t j) throw()
             {
-                assert(j>=0);assert(j<w);
+                assert(j>=0);assert(j<h);
                 return (static_cast<row_layout *>(rows)+j)->p;
             }
 
             //! get line address, const
             inline const void *get_line(const unit_t j) const throw()
             {
-                assert(j>=0);assert(j<w);
+                assert(j>=0);assert(j<h);
                 return (static_cast<row_layout *>(rows)+j)->p;
             }
 
+            //! get pixel address
             inline void *get(const unit_t i, const unit_t j) throw()
             {
                 assert(i>=0);assert(i<w);
                 assert(j>=0);assert(j<h);
-                return 0;
+                uint8_t *p = (static_cast<row_layout *>(rows)+j)->p;
+                return &p[i*depth];
             }
 
+            //! get pixel address, const
             inline const void *get(const unit_t i, const unit_t j) const throw()
             {
                 assert(i>=0);assert(i<w);
                 assert(j>=0);assert(j<h);
-                return 0;
+                const uint8_t *p = (static_cast<row_layout *>(rows)+j)->p;
+                return &p[i*depth];
             }
 
             

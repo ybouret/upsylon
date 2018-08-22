@@ -9,7 +9,7 @@ extern "C"
 #include "y/ios/ocstream.hpp"
 #include "y/exception.hpp"
 #include "y/ptr/auto.hpp"
-#include "y/fs/vfs.hpp"
+#include "y/memory/buffers.hpp"
 
 #include <setjmp.h>
 
@@ -69,7 +69,8 @@ namespace upsylon
         }
         
         
-        
+        typedef memory::global_buffer_of<JSAMPLE> jsample_buffer;
+
         bitmap  * jpeg_format:: load(const string         &filename,
                                      unit_t                depth,
                                      rgba2data            &proc,
@@ -77,14 +78,11 @@ namespace upsylon
         {
             static const char fn[] = "jpeg::load";
             Y_GIANT_LOCK();
-            memory::global::create();
 
             ios::icstream                 fp(filename);
             struct jpeg_decompress_struct cinfo;
             struct my_error_mgr           jerr;
-            size_t   buflen = 0;
-            size_t   _bufsz = 0;
-            JSAMPLE *buffer = 0;
+
             memset(&cinfo,0,sizeof(cinfo));
             memset(&jerr,0,sizeof(jerr));
             
@@ -93,7 +91,7 @@ namespace upsylon
             // We set up the normal JPEG error routines,
             // then override error_exit
             //__________________________________________________________________
-            cinfo.err = jpeg_std_error(&jerr.pub);
+            cinfo.err           = jpeg_std_error(&jerr.pub);
             jerr.pub.error_exit = my_error_exit;
             
             //__________________________________________________________________
@@ -105,7 +103,6 @@ namespace upsylon
                  * We need to clean up the JPEG object, close the input file, and return.
                  */
                 jpeg_destroy_decompress(&cinfo);
-                memory::global::location().release_as<JSAMPLE>(buffer,buflen,_bufsz);
                 throw exception("%s(failure)",fn);
             }
             
@@ -157,9 +154,12 @@ namespace upsylon
                     throw exception("%s(unsupported image depth=%d)",fn,int(cinfo.output_components));
                 
                 auto_ptr<bitmap> bmp = new bitmap(depth,width,height);
-                
-                buflen = cinfo.output_width * cinfo.output_components;
-                buffer = memory::global::instance().acquire_as<JSAMPLE>(buflen,_bufsz);
+
+                jsample_buffer jsbuff(cinfo.output_width * cinfo.output_components);
+                JSAMPLE       *buffer = jsbuff();
+
+                //buflen = cinfo.output_width * cinfo.output_components;
+                //buffer = memory::global::instance().acquire_as<JSAMPLE>(buflen,_bufsz);
                 
                 unit_t j = height-1;
                 while (cinfo.output_scanline < cinfo.output_height)
@@ -184,14 +184,11 @@ namespace upsylon
                 /* We can ignore the return value since suspension is not possible
                  * with the stdio data source.
                  */
-                
-                memory::global::location().release_as<JSAMPLE>(buffer, buflen, _bufsz);
                 jpeg_destroy_decompress(&cinfo);
                 return bmp.yield();
             }
             catch(...)
             {
-                memory::global::location().release_as<JSAMPLE>(buffer, buflen, _bufsz);
                 jpeg_destroy_decompress(&cinfo);
                 throw;
             }
@@ -205,7 +202,6 @@ namespace upsylon
         {
             static const char fn[] = "jpeg::save";
             Y_GIANT_LOCK();
-            memory::global::create();
 
             ios::ocstream fp(filename,false);
             
@@ -213,9 +209,7 @@ namespace upsylon
             struct my_error_mgr         jerr;
             memset(&cinfo,0,sizeof(cinfo));
             memset(&jerr,0,sizeof(jerr));
-            size_t   buflen = 0;
-            size_t   _bufsz = 0;
-            JSAMPLE *buffer = 0;
+
             //__________________________________________________________________
             //
             // We set up the normal JPEG error routines,
@@ -241,7 +235,6 @@ namespace upsylon
                  * We need to clean up the JPEG object, close the input file, and return.
                  */
                 jpeg_destroy_compress(&cinfo);
-                memory::global::location().release_as<JSAMPLE>(buffer, buflen, _bufsz);
                 throw exception("%s(failure)",fn);
             }
             
@@ -283,10 +276,9 @@ namespace upsylon
             
             try
             {
-                
-                buflen = bmp.w * 3;
-                buffer = memory::global::instance().acquire_as<JSAMPLE>(buflen,_bufsz);
-                JSAMPROW row_pointer[1] = { buffer };
+                jsample_buffer jsbuff(bmp.w*3);
+                JSAMPLE       *buffer         = jsbuff();
+                JSAMPROW       row_pointer[1] = { buffer };
 
                 unit_t       j     = bmp.h - 1;
                 const unit_t depth = bmp.depth;
@@ -319,15 +311,13 @@ namespace upsylon
                 
                 /* This is an important step since it will release a good deal of memory. */
                 jpeg_destroy_compress(&cinfo);
-                memory::global::location().release_as<JSAMPLE>(buffer, buflen, _bufsz);
-                
+
                 // success
             }
             catch(...)
             {
                 
                 jpeg_destroy_compress(&cinfo);
-                memory::global::location().release_as<JSAMPLE>(buffer, buflen, _bufsz);
                 throw;
             }
             

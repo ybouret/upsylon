@@ -8,12 +8,13 @@ namespace upsylon
 {
     namespace ink
     {
+        //! uses libpng
         class png_format : public image::format
         {
         public:
             explicit png_format();
             virtual ~png_format() throw();
-            
+
             virtual bool     lossless() const throw();
             virtual bitmap  *load(const string          &filename,
                                   unit_t                 depth,

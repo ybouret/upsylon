@@ -14,7 +14,8 @@ namespace upsylon
         class buffer_of : public memory::rw_buffer
         {
         public:
-            //! acquire memory
+
+            //! acquire memory, instance is automatically created
             inline explicit buffer_of(const size_t n) :
             size(n),
             items(size),
@@ -49,6 +50,37 @@ namespace upsylon
             size_t bytes;
             T     *data;
         };
+
+        //! global buffer
+        template <typename T>
+        class global_buffer_of : public buffer_of<T,memory::global>
+        {
+        public:
+            typedef buffer_of<T,memory::global> buffer_type; //!< base class
+            //! constructor
+            inline explicit global_buffer_of(const size_t n) : buffer_type(n) {}
+            //! destructor
+            inline virtual ~global_buffer_of() throw() {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(global_buffer_of);
+        };
+
+        //! pooled buffer
+        template <typename T>
+        class pooled_buffer_of : public buffer_of<T,memory::pooled>
+        {
+        public:
+            typedef buffer_of<T,memory::pooled> buffer_type; //!< base class
+            //! constructor
+            inline explicit pooled_buffer_of(const size_t n) : buffer_type(n) {}
+            //! destructor
+            inline virtual ~pooled_buffer_of() throw() {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(pooled_buffer_of);
+        };
+
     }
 }
 

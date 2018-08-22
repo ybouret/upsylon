@@ -8,10 +8,13 @@ namespace upsylon
 {
     namespace ink
     {
+        //! jpeg format
         class jpeg_format : public image::format
         {
         public:
+            //! constructor
             explicit jpeg_format();
+            //! destructor
             virtual ~jpeg_format() throw();
             
             virtual bool     lossless() const throw();

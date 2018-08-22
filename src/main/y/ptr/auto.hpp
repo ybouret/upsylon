@@ -49,6 +49,7 @@ namespace upsylon
             return *this;
         }
 
+        //! drop ownership, return what was pointed at...
         inline T *yield() throw()
         {
             T *p = this->pointee;
