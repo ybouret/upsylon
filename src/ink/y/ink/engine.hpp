@@ -28,39 +28,36 @@ namespace upsylon
             virtual ~engine() throw();
 
 
-            //! FUNC(args,zone,sync), generic parallel processing
-            template <typename FUNC, typename T>
-            void run( FUNC &func, T &args )
+            //! FUNC(zone,sync), generic parallel processing
+            template <typename FUNC>
+            void run( FUNC &func )
             {
-                parameters<FUNC,T> params = { this, &func, &args };
-                agent->run( call<FUNC,T>, &params);
+                parameters<FUNC> params = { this, &func };
+                agent->run( call<FUNC>, &params);
             }
 
         private:
             dispatcher  agent;
-            template <typename FUNC,typename T>
+            template <typename FUNC>
             struct parameters
             {
                 engine *self_p;
                 FUNC   *func_p;
-                T      *args_p;
             };
 
-            template <typename FUNC,typename T>
+            template <typename FUNC>
             static inline void call( void *addr, parallel &ctx, lockable &sync )
             {
                 assert(addr);
-                parameters<FUNC,T> *p = static_cast< parameters<FUNC,T> *>(addr);
+                parameters<FUNC> *p = static_cast<parameters<FUNC>*>(addr);
                 assert(p->self_p);
                 assert(p->func_p);
-                assert(p->args_p);
                 assert(ctx.size==p->self_p->tiles.size());
 
                 engine     &self = *(p->self_p);
                 FUNC       &func = *(p->func_p);
-                T          &args = *(p->args_p);
                 const area &zone = self.tiles[ctx.indx];
-                func(args,zone,sync);
+                func(zone,sync);
             }
 
         public:

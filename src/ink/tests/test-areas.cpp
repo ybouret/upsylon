@@ -12,10 +12,10 @@ namespace
     //! just for a callable prototype
     struct dummyOps
     {
-        void operator()(int value, const area &zone, lockable &sync )
+        void operator()(const area &zone, lockable &sync )
         {
             Y_LOCK(sync);
-            std::cerr << "passed value=" << value << ", zone=" << zone << std::endl;
+            std::cerr << "dummyOps@zone=" << zone << std::endl;
         }
     };
 }
@@ -42,14 +42,18 @@ Y_UTEST(areas)
         const area   A0  = area( coord(0,0), coord(w,h), area_sizes);
         std::cerr << "Manual Tiles" << std::endl;
         areas zones(A0,n);
+        std::cerr << std::endl;
+
+        dummyOps ops;
         std::cerr << "Sequential Tiles" << std::endl;
         engine seq(__seq,A0);
+        seq.run(ops);
+        std::cerr << std::endl;
+
         std::cerr << "Parallel Tiles" << std::endl;
         engine par(__par,A0);
-
-        int value = 7;
-        dummyOps ops;
-        par.run(ops,value);
+        par.run(ops);
+        std::cerr << std::endl;
 
     }
     else
