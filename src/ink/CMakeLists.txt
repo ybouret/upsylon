@@ -5,6 +5,7 @@ INCLUDE_DIRECTORIES(. ../main)
 FILE(GLOB main_decl y/ink/*.hpp)
 FILE(GLOB main_code y/ink/*.cpp)
 SET(main_srcs ${main_decl} ${main_code})
+SOURCE_GROUP( ink FILES ${main_srcs} )
 INSTALL( FILES ${main_decl} DESTINATION include/y/ink )
 
 FILE(GLOB color_decl y/ink/color/*.hpp)
