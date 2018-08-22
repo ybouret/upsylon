@@ -127,7 +127,8 @@ namespace upsylon
             TIFFSetField(out, TIFFTAG_PHOTOMETRIC,  PHOTOMETRIC_RGB);
 
             // Initially: no compression
-            TIFFSetField(out, TIFFTAG_COMPRESSION, COMPRESSION_LZW);
+            //TIFFSetField(out, TIFFTAG_COMPRESSION, COMPRESSION_LZW);
+            TIFFSetField(out, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
 
         }
 
