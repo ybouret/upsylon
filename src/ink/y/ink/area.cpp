@@ -28,11 +28,9 @@ namespace upsylon
             const unit_t cores = n;
             coord split = coord::sqrt_of(cores);
             bool  x_is_small = true;
-            //bool  y_is_small = false;
             if(sizes.x>sizes.y)
             {
                 x_is_small = false;
-                //y_is_small = true;
                 split.swap_xy();
             }
 
@@ -59,7 +57,7 @@ namespace upsylon
 
             for(unit_t j=0;j<split.y;++j)
             {
-                std::cerr << "@j=" << j << std::endl;
+                //std::cerr << "@j=" << j << std::endl;
                 const parallel par_y(split.y,j);
                 unit_t         y_length = sizes.y;
                 unit_t         y_offset = source.lower.y;
@@ -75,7 +73,7 @@ namespace upsylon
                     const coord l(x_offset,y_offset);
                     const coord s(x_length,y_length);
                     const area  a(l,s,area_sizes);
-                    std::cerr << "\t" << a.lower << "+" << a.sizes << "=" << a.pixels << std::endl;
+                    //std::cerr << "\t" << a.lower << "+" << a.sizes << "=" << a.pixels << std::endl;
                     push_back(a);
                 }
             }

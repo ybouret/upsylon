@@ -3,6 +3,7 @@
 #define Y_CONCURRENT_FOR_EACH_INCLUDED 1
 
 #include "y/concurrent/executor.hpp"
+#include "y/ptr/counted.hpp"
 
 namespace upsylon
 {
@@ -15,7 +16,7 @@ namespace upsylon
          The parallel context is provided to compute where to compute,
          and a lockable object is provided for synchronization.
          */
-        class for_each
+        class for_each : public counted_object
         {
         public:
             

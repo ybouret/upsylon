@@ -10,6 +10,7 @@ namespace upsylon
     {
         //! coordinate
         typedef point2d<unit_t> coord;
+        //! complex type
         typedef complex<float>  cplx;
         
         //! red weight
