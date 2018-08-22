@@ -319,7 +319,7 @@ namespace upsylon
                 
                 /* This is an important step since it will release a good deal of memory. */
                 jpeg_destroy_compress(&cinfo);
-                memory::kind<memory::global>::release_as<JSAMPLE>(buffer, buflen);
+                memory::global::location().release_as<JSAMPLE>(buffer, buflen, _bufsz);
                 
                 // success
             }
@@ -327,7 +327,7 @@ namespace upsylon
             {
                 
                 jpeg_destroy_compress(&cinfo);
-                memory::kind<memory::global>::release_as<JSAMPLE>(buffer, buflen);
+                memory::global::location().release_as<JSAMPLE>(buffer, buflen, _bufsz);
                 throw;
             }
             

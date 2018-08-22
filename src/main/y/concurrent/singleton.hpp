@@ -75,7 +75,7 @@ namespace upsylon
             return instance_ != NULL;
         }
 
-        //! create the singleton
+        //! create the singleton, no matter what...
         static inline void create()
         {
             (void) instance();
