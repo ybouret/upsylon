@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_INK_ENGINE_INCLUDED
 #define Y_INK_ENGINE_INCLUDED 1
 
@@ -9,30 +10,34 @@ namespace upsylon
 {
     namespace ink
     {
-        typedef arc_ptr<concurrent::for_each> workers;
+        //! shared for_each object
+        typedef arc_ptr<concurrent::for_each> dispatcher;
 
 
         //! parallel engine for a given area
+        /**
+         build an engine for a given area, with a reusable dispatcher
+         */
         class engine : public area
         {
         public:
-            explicit engine(const workers &shared,
-                            const area    &full);
+            //! constructor, build tiles with shared from full
+            explicit engine(const dispatcher &shared,
+                            const area       &full);
+            //! desctructor
             virtual ~engine() throw();
 
-            //! FUNC(args,zone,sync)
+
+            //! FUNC(args,zone,sync), generic parallel processing
             template <typename FUNC, typename T>
             void run( FUNC &func, T &args )
             {
                 parameters<FUNC,T> params = { this, &func, &args };
-                agents->run( call<FUNC,T>, &params);
+                agent->run( call<FUNC,T>, &params);
             }
 
         private:
-            workers    agents;
-
-        public:
-            const areas tiles;
+            dispatcher  agent;
             template <typename FUNC,typename T>
             struct parameters
             {
@@ -57,6 +62,9 @@ namespace upsylon
                 const area &zone = self.tiles[ctx.indx];
                 func(args,zone,sync);
             }
+
+        public:
+            const areas tiles; //!< computed tiles
         };
 
     }

@@ -9,10 +9,10 @@ namespace upsylon
         {
         }
 
-        engine:: engine( const workers &shared, const area &full ) :
+        engine:: engine( const dispatcher &shared, const area &full ) :
         area(full),
-        agents(shared),
-        tiles( *this, agents->engine().num_threads() )
+        agent(shared),
+        tiles( *this, agent->engine().num_threads() )
         {
         }
 

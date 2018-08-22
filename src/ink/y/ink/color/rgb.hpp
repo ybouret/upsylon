@@ -64,8 +64,8 @@ namespace upsylon
 }
 
 #if !defined(Y_INK_PIXEL_IMPL)
-Y_PIXEL_DECL(upsylon::ink::RGB);
-Y_PIXEL_DECL(upsylon::ink::RGBA);
+Y_PIXEL_DECL(upsylon::ink::RGB);  //!< external template
+Y_PIXEL_DECL(upsylon::ink::RGBA); //!< external template
 #endif
 
 

@@ -1,6 +1,4 @@
-
 //! \file
-
 #ifndef Y_INK_PIXMAPS_INCLUDED
 #define Y_INK_PIXMAPS_INCLUDED 1
 
@@ -12,12 +10,12 @@ namespace upsylon
 {
     namespace ink
     {
-        typedef pixmap<float>   fpixmap;
-        typedef pixmap<uint8_t> upixmap;
-        typedef pixmap<RGB>     RGBpixmap;
-        typedef pixmap<RGBA>    RGBApixmap;
-        typedef pixmap<YUV>     YUVpixmap;
-        typedef pixmap<cplx>    zpixmap;
+        typedef pixmap<float>   fpixmap;     //!< floating point pixmap
+        typedef pixmap<uint8_t> upixmap;     //!< pixmap of bytes
+        typedef pixmap<RGB>     RGBpixmap;   //!< pixmap of packed RGB
+        typedef pixmap<RGBA>    RGBApixmap;  //!< pixmap of packed RGBA
+        typedef pixmap<YUV>     YUVpixmap;   //!< pixmap of packed YUV
+        typedef pixmap<cplx>    zpixmap;     //!< pixmap of complex real
     }
 
 }

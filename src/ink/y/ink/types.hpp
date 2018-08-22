@@ -1,4 +1,4 @@
-//! \fi;e
+//! \file
 #ifndef Y_INK_TYPES_INCLUDED
 #define Y_INK_TYPES_INCLUDED 1
 

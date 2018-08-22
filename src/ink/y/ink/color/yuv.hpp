@@ -11,19 +11,27 @@ namespace upsylon
     namespace ink
     {
 
+        //! YUV format
         class YUV
         {
         public:
-            float y,u,v;
+            float y; //!< luminance   Y
+            float u; //!< chrominance U
+            float v; //!< chrominance V
+            //!  constructor
             inline  YUV(const float Y=0,const float U=0,const float V=0) throw() : y(Y), u(U), v(V) {}
+            //! destructor
             inline ~YUV() throw() {}
+            //! copy
             inline  YUV(const YUV &other) throw() : y(other.y), u(other.u), v(other.v) {}
+            //! assign
             inline  YUV & operator=( const YUV &other ) throw()
             {
                 y=other.y; u=other.u; v=other.v;
                 return *this;
             }
 
+            //! YUV->RGB
             static inline
             RGB toRGB(const YUV &C) throw()
             {
@@ -36,6 +44,7 @@ namespace upsylon
                            );
             }
 
+            //! RGB->YUV
             static inline
             YUV fromRGB(const RGB &C) throw()
             {
@@ -48,6 +57,7 @@ namespace upsylon
                 return YUV(Y,U,V);
             }
 
+            //! RGBA->YUV
             static inline
             YUV fromRGBA(const RGBA &C) throw()
             {
@@ -60,7 +70,7 @@ namespace upsylon
 }
 
 #if !defined(Y_INK_PIXEL_IMPL)
-Y_PIXEL_DECL(upsylon::ink::YUV);
+Y_PIXEL_DECL(upsylon::ink::YUV); //!< extern template for YUV pixel
 #endif
 
 

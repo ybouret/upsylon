@@ -23,8 +23,8 @@ namespace
 Y_UTEST(areas)
 {
 
-    workers __par  = new concurrent::simd();
-    workers __seq  = new concurrent::sequential_for();
+    dispatcher __par  = new concurrent::simd();
+    dispatcher __seq  = new concurrent::sequential_for();
 
     std::cerr << "sizeof(area)=" << sizeof(area) << std::endl;
     
