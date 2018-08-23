@@ -150,12 +150,18 @@ namespace upsylon
             switch(model)
             {
                 case memory_is_global:
+                    allocate();
+                    memcpy(entry,bmp.entry,bytes);
                     break;
                     
                 case memory_is_shared:
+                    assert(shared);
+                    shared->withhold();
+                    allocate_rows_only();
                     break;
                     
                 case memory_from_user:
+                    allocate_rows_only();
                     break;
             }
         }

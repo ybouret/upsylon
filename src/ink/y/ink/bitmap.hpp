@@ -23,7 +23,9 @@ namespace upsylon
             };
             
             void        *entry;    //!< address of first pixel
+        protected:
             void        *rows;     //!< address of first row
+        public:
             const unit_t w;        //!< width
             const unit_t h;        //!< height
             const unit_t depth;    //!< bytes per pixel > 0
