@@ -106,7 +106,14 @@ namespace upsylon
         
         inline float  __anint( const float  x ) throw() { return floorf(x+0.5f); } //!< nearest integer
         inline double __anint( const double x ) throw() { return floor(x+0.5); }   //!< nearest integer
-        
+
+        inline float  __log(const float x) throw() { return logf(x); } //!< natural log
+        inline double __log(const double x) throw() { return log(x); } //!< natural log
+
+        inline float  __exp(const float  x) throw() { return expf(x); } //!< exp
+        inline double __exp(const double x) throw() { return exp(x);  } //!< exp
+
+
         template <typename T>
         static inline bool almost_equal( const T X, const T Y) throw()
         {

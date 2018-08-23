@@ -37,7 +37,7 @@ namespace upsylon
                 return (x<0) ? __n : ( (0<x) ? __p : __z);
             }
 
-            //! find zero with precomputed triplets
+            //! find zero with precomputed triplets at 'a' and 'c'
             template <typename T,typename FUNC>
             static inline
             bool run( FUNC &F, triplet<T> &x, triplet<T> &f )
