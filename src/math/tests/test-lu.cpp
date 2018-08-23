@@ -33,6 +33,7 @@ namespace
             else
             {
                 std::cerr << "[FAILURE]" << std::endl;
+                continue;
             }
 
             vector<T> r(n);

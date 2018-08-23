@@ -403,6 +403,8 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
     //! extended numeric for mpz
     template <> struct xnumeric<mpz> {
         static mpz abs_minimum() { return mpz(); } //!< 0
+        static inline bool is_zero(const mpz &z)     { return mpl::__zero     == z.s; }
+        static inline bool is_positive(const mpz &z) { return mpl::__positive == z.s; }
     };
 
 }

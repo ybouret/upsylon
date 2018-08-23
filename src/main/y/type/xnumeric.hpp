@@ -12,6 +12,8 @@ namespace upsylon
     {
         //! absolute minimum for type
         static T abs_minimum();
+        static inline bool is_zero( const T &x )    { return x==0; }
+        static inline bool is_positive( const T &x) { return x>0;  }
     };
 }
 

@@ -2,7 +2,7 @@
 #ifndef Y_ARITH_INCLUDED
 #define Y_ARITH_INCLUDED 1
 
-#include "y/os/platform.hpp"
+#include "y/type/xnumeric.hpp"
 
 namespace upsylon
 {
@@ -13,7 +13,7 @@ namespace upsylon
         template <typename T> static inline
         T gcd( T x , T y )
         {
-            if( x > 0 && y > 0 )
+            if( xnumeric<T>::is_positive(x) && xnumeric<T>::is_positive(y) )
             {
                 return gcd_positive(x,y);
             }
@@ -25,8 +25,8 @@ namespace upsylon
         template <typename T> static inline
         T gcd_positive(const T &x, const T &y)
         {
-            assert(x>0);
-            assert(y>0);
+            assert(xnumeric<T>::is_positive(x));
+            assert(xnumeric<T>::is_positive(y));
             T a = x;
             T b = y;
             if( b > a )
@@ -34,7 +34,7 @@ namespace upsylon
                 a = y;
                 b = x;
             }
-            while( b > 0 )
+            while( xnumeric<T>::is_positive(b) )
             {
                 const T t = b;
                 b = a % b;
@@ -47,13 +47,13 @@ namespace upsylon
         template <typename T> static inline
         void simplify( T &num, T &den )
         {
-            if(num==0)
+            if(xnumeric<T>::is_zero(num))
             {
                 den = 1;
             }
             else
             {
-                assert(den>0);
+                assert(xnumeric<T>::is_positive(den)>0);
                 const T __gcd = gcd_positive(num,den);
                 num /=  __gcd;
                 den /=  __gcd;
