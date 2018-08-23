@@ -9,14 +9,14 @@ namespace {
     template <typename T>
     static inline T f(const T x )
     {
-        return square_of(__cos(x*x))/(2*numeric<T>::pi);
+        return square_of(cos_of(x*x))/(2*numeric<T>::pi);
     }
 
 
     template <typename T>
     static inline T g(const T x )
     {
-        return __sin(x*x);
+        return sin_of(x*x);
     }
 
     template <typename T>

@@ -113,11 +113,11 @@ namespace upsylon
         inline float  __exp(const float  x) throw() { return expf(x); } //!< exp
         inline double __exp(const double x) throw() { return exp(x);  } //!< exp
 
-        inline float  __cos( const float  x ) throw() { return cosf(x); } //!< cosine
-        inline double __cos( const double x ) throw() { return cos(x);  } //!< cosine
+        inline float  cos_of( const float  x ) throw() { return cosf(x); } //!< cosine
+        inline double cos_of( const double x ) throw() { return cos(x);  } //!< cosine
 
-        inline float  __sin( const float  x ) throw() { return sinf(x); } //!< sine
-        inline double __sin( const double x ) throw() { return sin(x);  } //!< sine
+        inline float  sin_of( const float  x ) throw() { return sinf(x); } //!< sine
+        inline double sin_of( const double x ) throw() { return sin(x);  } //!< sine
 
         template <typename T>
         static inline bool almost_equal( const T X, const T Y) throw()
