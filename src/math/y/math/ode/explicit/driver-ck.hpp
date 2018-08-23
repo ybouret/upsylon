@@ -15,7 +15,7 @@ namespace upsylon
             template <typename T>
             struct DriverCK
             {
-                typedef ExplicitDriver<T,RK45,RKCK> type;
+                typedef ExplicitDriver<T,RK45,RKCK> Type;
             };
         }
     }

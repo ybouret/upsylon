@@ -12,13 +12,13 @@ namespace upsylon
         {
             
             template <typename T>
-            class implicit_step : public Field<T>::Arrays
+            class ImplicitStep : public Field<T>::Arrays
             {
             public:
                 typedef typename Field<T>::Equation  equation;
                 typedef typename Field<T>::Jacobian  jacobian;
                 
-                virtual ~implicit_step() throw();
+                virtual ~ImplicitStep() throw();
                 
                 virtual void operator()(array<T>       &y,
                                         array<T>       &dydx,
@@ -32,10 +32,10 @@ namespace upsylon
                                         jacobian       &jacobn
                                         ) = 0;
             protected:
-                explicit implicit_step( const size_t num );
+                explicit ImplicitStep( const size_t num );
                 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(implicit_step);
+                Y_DISABLE_COPY_AND_ASSIGN(ImplicitStep);
             };
             
         }

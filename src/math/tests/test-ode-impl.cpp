@@ -63,7 +63,7 @@ Y_UTEST(ode_impl)
     Real dx = 0.01;
     
     {
-        ODE::driverRS<Real>::type drv;
+        ODE::DriverRS<Real>::Type drv;
         drv.start(3);
         drv.eps = 1e-4;
         Real h  = 2.9e-4;
@@ -84,7 +84,7 @@ Y_UTEST(ode_impl)
     
     
     {
-        ODE::driverKR<Real>::type drv;
+        ODE::DriverKR<Real>::Type drv;
         drv.start(3);
         drv.eps = 1e-3;
         Real h  = 2.9e-4;

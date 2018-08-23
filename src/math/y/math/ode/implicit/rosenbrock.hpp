@@ -1,3 +1,4 @@
+//! \file
 #ifndef YOCTO_ODE_ROSENBROCK_INCLUDED
 #define YOCTO_ODE_ROSENBROCK_INCLUDED 1
 
@@ -12,21 +13,21 @@ namespace upsylon
         {
             
             template <typename T>
-            class rosenbrock : public implicit_step<T>
+            class Rosenbrock : public ImplicitStep<T>
             {
             public:
-                virtual ~rosenbrock() throw();
+                virtual ~Rosenbrock() throw();
                 void     prepare( size_t nv );
                 
                 
             protected:
-                explicit rosenbrock();
+                explicit Rosenbrock();
                 array<T>    &g1, &g2, &g3, &g4, &dfdx,&err,&ysav,&dysav;
                 matrix<T>    dfdy;
                 matrix<T>    a;
                 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(rosenbrock);
+                Y_DISABLE_COPY_AND_ASSIGN(Rosenbrock);
             };
 
                      

@@ -186,10 +186,10 @@ namespace
 Y_UTEST(ode_expl)
 {
     
-    solve<double,ODE::DriverCK<double>::type>( "ck" );
-    solve<double,ODE::DriverDP<double>::type>( "dp" );
-    solve<float,ODE::DriverCK<float>::type>( "ck" );
-    solve<float,ODE::DriverDP<float>::type>( "dp" );
+    solve<double,ODE::DriverCK<double>::Type>( "ck" );
+    solve<double,ODE::DriverDP<double>::Type>( "dp" );
+    solve<float,ODE::DriverCK<float>::Type>( "ck" );
+    solve<float,ODE::DriverDP<float>::Type>( "dp" );
     
 }
 Y_UTEST_DONE()

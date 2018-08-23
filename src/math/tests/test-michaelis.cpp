@@ -110,7 +110,7 @@ static inline void  Output( double t, const array<double> &C)
 Y_UTEST(michaelis)
 {
    
-    ODE::DriverCK<double>::type       odeint;
+    ODE::DriverCK<double>::Type       odeint;
     Michaelis                         enzyme;
     ODE::Field<double>::Equation      diffeq( &enzyme, & Michaelis::rate );
 

@@ -12,18 +12,18 @@ namespace upsylon
         {
             
             template <typename T>
-            class implicit_solver : public SolverData<T>
+            class ImplicitSolver : public SolverData<T>
             {
             public:
-                typedef typename implicit_step<T>::equation equation;
-                typedef typename implicit_step<T>::jacobian jacobian;
+                typedef typename ImplicitStep<T>::equation equation;
+                typedef typename ImplicitStep<T>::jacobian jacobian;
                 
-                explicit implicit_solver();
-                virtual ~implicit_solver() throw();
+                explicit ImplicitSolver();
+                virtual ~ImplicitSolver() throw();
                 
                 void operator()(equation         &derivs,
                                 jacobian         &jacobn,
-								implicit_step<T> &forward,
+								ImplicitStep<T>  &forward,
 								array<T>         &ystart,
 								const T           x1,
 								const T           x2,
@@ -31,21 +31,21 @@ namespace upsylon
 								);
                 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(implicit_solver);
+                Y_DISABLE_COPY_AND_ASSIGN(ImplicitSolver);
             };
             
             template <
             typename T,
             template <class> class STEP
-            > class implicit_driver : public implicit_solver<T>
+            > class ImplicitDriver : public ImplicitSolver<T>
             {
             public:
-                typedef typename implicit_step<T>::equation equation;
-                typedef typename implicit_step<T>::jacobian jacobian;
+                typedef typename ImplicitStep<T>::equation equation;
+                typedef typename ImplicitStep<T>::jacobian jacobian;
 
                 
-                explicit implicit_driver() : implicit_solver<T>(), step_() {}
-                virtual ~implicit_driver() throw() {}
+                explicit ImplicitDriver() : ImplicitSolver<T>(), step_() {}
+                virtual ~ImplicitDriver() throw() {}
                 
                 inline void start( size_t nv )
                 {
@@ -62,13 +62,13 @@ namespace upsylon
 								T                &h1
 								)
                 {
-                    implicit_solver<T> &s = *this;
+                    ImplicitSolver<T> &s = *this;
                     s(derivs,jacobn,step_,ystart,x1,x2,h1);
                 }
                 
             private:
                 STEP<T> step_;
-                Y_DISABLE_COPY_AND_ASSIGN(implicit_driver);
+                Y_DISABLE_COPY_AND_ASSIGN(ImplicitDriver);
             };
             
             

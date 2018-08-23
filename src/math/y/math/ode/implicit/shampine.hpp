@@ -13,14 +13,14 @@ namespace upsylon
         {
             
             template <typename T>
-            class shampine : public rosenbrock<T>
+            class Shampine : public Rosenbrock<T>
             {
             public:
-                virtual ~shampine() throw();
-                explicit shampine();
+                virtual ~Shampine() throw();
+                explicit Shampine();
                 
-                typedef typename implicit_step<T>::equation equation;
-                typedef typename implicit_step<T>::jacobian jacobian;
+                typedef typename ImplicitStep<T>::equation equation;
+                typedef typename ImplicitStep<T>::jacobian jacobian;
                 
                 virtual void operator()(array<T>       &y,
                                         array<T>       &dydx,
@@ -35,7 +35,7 @@ namespace upsylon
                                         );
                 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(shampine);
+                Y_DISABLE_COPY_AND_ASSIGN(Shampine);
             };
 
         }

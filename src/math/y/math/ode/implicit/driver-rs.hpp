@@ -13,9 +13,9 @@ namespace upsylon
 
             //! Rosenbrock Shampine stiff integrator
             template <typename T>
-            struct driverRS
+            struct DriverRS
             {
-                typedef implicit_driver<T,shampine> type;
+                typedef ImplicitDriver<T,Shampine> Type;
             };
             
         }

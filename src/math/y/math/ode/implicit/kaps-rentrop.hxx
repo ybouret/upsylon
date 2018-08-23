@@ -1,4 +1,4 @@
-#define STIFF_STEP kaps_rentrop
+#define STIFF_STEP KapsRentrop
 #define STIFF_NAME "Kaps-Rentrop"
 
 #define GAM REAL(0.231)

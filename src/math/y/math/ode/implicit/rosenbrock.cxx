@@ -10,11 +10,11 @@ namespace upsylon
         {
 
             template <>
-            rosenbrock<real_t>:: ~rosenbrock() throw() {}
+            Rosenbrock<real_t>:: ~Rosenbrock() throw() {}
             
             template <>
-            rosenbrock<real_t>:: rosenbrock() : 
-            implicit_step<real_t>( 9 ),
+            Rosenbrock<real_t>:: Rosenbrock() :
+            ImplicitStep<real_t>( 9 ),
             g1(    next() ),
             g2(    next() ),
             g3(    next() ),
@@ -29,7 +29,7 @@ namespace upsylon
             }
             
             template <>
-            void rosenbrock<real_t>:: prepare( size_t nv )
+            void Rosenbrock<real_t>:: prepare( size_t nv )
             {
                 assert(nv>0);
                 acquire(nv);

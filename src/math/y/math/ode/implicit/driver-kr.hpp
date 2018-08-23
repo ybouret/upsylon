@@ -14,9 +14,9 @@ namespace upsylon
             
             //! Rosenbrock Kaps-Rentrop stiff integrator
             template <typename T>
-            struct driverKR
+            struct DriverKR
             {
-                typedef implicit_driver<T,kaps_rentrop> type;
+                typedef ImplicitDriver<T,KapsRentrop> Type;
             };
             
         }

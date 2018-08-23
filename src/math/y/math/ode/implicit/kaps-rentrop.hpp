@@ -1,5 +1,6 @@
-#ifndef YOCTO_ODE_KAPS_RENTROP_INCLUDED
-#define YOCTO_ODE_KAPS_RENTROP_INCLUDED 1
+//! \file
+#ifndef Y_ODE_KAPS_RENTROP_INCLUDED
+#define Y_ODE_KAPS_RENTROP_INCLUDED 1
 
 #include "y/math/ode/implicit/rosenbrock.hpp"
 
@@ -12,14 +13,14 @@ namespace upsylon
         {
             
             template <typename T>
-            class kaps_rentrop : public rosenbrock<T>
+            class KapsRentrop : public Rosenbrock<T>
             {
             public:
-                virtual ~kaps_rentrop() throw();
-                explicit kaps_rentrop();
+                virtual ~KapsRentrop() throw();
+                explicit KapsRentrop();
                 
-                typedef typename implicit_step<T>::equation equation;
-                typedef typename implicit_step<T>::jacobian jacobian;
+                typedef typename ImplicitStep<T>::equation equation;
+                typedef typename ImplicitStep<T>::jacobian jacobian;
                 
                 virtual void operator()(array<T>       &y,
                                         array<T>       &dydx,
@@ -34,7 +35,7 @@ namespace upsylon
                                         );
                 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(kaps_rentrop);
+                Y_DISABLE_COPY_AND_ASSIGN(KapsRentrop);
             };
             
         }
