@@ -41,7 +41,7 @@ namespace upsylon
         inline void get_item( const size_t item, size_t &r, size_t &c) const
         {
             assert(item<items);
-            const ldiv_t d = ldiv(item,cols);
+            const ldiv_t d = ldiv(long(item),long(cols));
             r=d.quot+1; assert(r>0); assert(r<=rows);
             c=d.rem +1; assert(c>0); assert(c<=cols);
             assert((r-1)*cols+(c-1)==item);
