@@ -32,13 +32,25 @@ SET(ode_srcs ${ode_decl} ${ode_code})
 SOURCE_GROUP( ode FILES ${ode_srcs} )
 INSTALL( FILES ${ode_decl} DESTINATION include/y/math/ode )
 
+FILE(GLOB ode_expl_decl y/math/ode/explicit/*.hpp)
+FILE(GLOB ode_expl_code y/math/ode/explicit/*.cpp)
+SET(ode_expl_srcs ${ode_expl_decl} ${ode_expl_code})
+SOURCE_GROUP( ode/explicit FILES ${ode_expl_srcs} )
+INSTALL( FILES ${ode_expl_decl} DESTINATION include/y/math/ode/explicit )
+
+FILE(GLOB ode_impl_decl y/math/ode/implicit/*.hpp)
+FILE(GLOB ode_impl_code y/math/ode/implicit/*.cpp)
+SET(ode_impl_srcs ${ode_impl_decl} ${ode_impl_code})
+SOURCE_GROUP( ode/implicit FILES ${ode_impl_srcs} )
+INSTALL( FILES ${ode_impl_decl} DESTINATION include/y/math/ode/implicit )
+
 
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
 ${kernel_srcs}
 ${io_srcs}
 ${fcn_srcs}
-${ode_srcs}
+${ode_srcs} ${ode_expl_srcs} ${ode_impl_srcs}
 )
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
 
