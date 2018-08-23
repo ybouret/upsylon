@@ -58,9 +58,10 @@ namespace upsylon
             const uint32_t *p = raster();
             for(int j=0;j<h;++j)
             {
+                const uint32_t *q = &p[j*w];
                 for(int i=0;i<w;++i)
                 {
-                    const uint32_t P = *(p++);
+                    const uint32_t P = *(q++);
                     const RGBA     C( TIFFGetR(P), TIFFGetG(P), TIFFGetB(P), TIFFGetA(P));
                     proc(B->get(i,j),C);
                 }
