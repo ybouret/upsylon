@@ -16,7 +16,7 @@ namespace upsylon
             template <typename T>
             struct DriverKR
             {
-                typedef ImplicitDriver<T,KapsRentrop> Type;
+                typedef ImplicitDriver<T,KapsRentrop> Type; //!< the integrator
             };
             
         }

@@ -1,4 +1,4 @@
-//! \fi;e
+//! \file
 #ifndef Y_MATH_ODE_EXPLICIT_DRIVER_CK_INCLUDED
 #define Y_MATH_ODE_EXPLICIT_DRIVER_CK_INCLUDED 1
 
@@ -12,10 +12,11 @@ namespace upsylon
     {
         namespace ODE
         {
+            //! Assemble a driver for Cash-Karp
             template <typename T>
             struct DriverCK
             {
-                typedef ExplicitDriver<T,RK45,RKCK> Type;
+                typedef ExplicitDriver<T,RK45,RKCK> Type; //!< the integrator
             };
         }
     }

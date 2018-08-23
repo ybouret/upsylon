@@ -264,8 +264,8 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
     //! extended numeric for mpq
     template <> struct xnumeric<mpq> {
         static inline mpq  abs_minimum() { return mpq(); } //!< 0
-        static inline bool is_zero(const mpq &q)     { return mpl::__zero     == q.num.s; }
-        static inline bool is_positive(const mpq &q) { return mpl::__positive == q.num.s; }
+        static inline bool is_zero(const mpq &q)     { return mpl::__zero     == q.num.s; } //!< q==0
+        static inline bool is_positive(const mpq &q) { return mpl::__positive == q.num.s; } //!< q>0
     };
 }
 

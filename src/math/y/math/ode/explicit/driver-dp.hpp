@@ -12,10 +12,11 @@ namespace upsylon
     {
         namespace ODE
         {
+            //! Assemble a driver for Dormand-Prince
             template <typename T>
             struct DriverDP
             {
-                typedef ExplicitDriver<T,RK45,RKDP> Type;
+                typedef ExplicitDriver<T,RK45,RKDP> Type; //!< the integrator
             };
         }
     }

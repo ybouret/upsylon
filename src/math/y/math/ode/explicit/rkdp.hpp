@@ -17,12 +17,13 @@ namespace upsylon
 			class RKDP : public ExplicitStep<T>
 			{
 			public:
-				typedef typename Field<T>::Equation equation;
-                typedef typename Field<T>::Callback callback;
+				typedef typename Field<T>::Equation equation; //!< equation alias
+                typedef typename Field<T>::Callback callback; //!< callback alias
                 
-				explicit RKDP();
-				virtual ~RKDP() throw();
+				explicit RKDP();         //!< constructor
+				virtual ~RKDP() throw(); //!< destructor
 				
+                //! take a step
                 virtual void operator()(array<T>        &yout,
                                         array<T>        &yerr,
                                         equation        &drvs,

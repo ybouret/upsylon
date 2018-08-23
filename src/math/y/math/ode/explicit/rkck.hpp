@@ -18,12 +18,13 @@ namespace upsylon
             class RKCK : public ExplicitStep<T>
             {
             public:
-                typedef typename Field<T>::Equation equation;
-                typedef typename Field<T>::Callback callback;
+                typedef typename Field<T>::Equation equation; //!< equation alias
+                typedef typename Field<T>::Callback callback; //!< callback alias
                 
-                explicit RKCK();
-                virtual ~RKCK() throw();
+                explicit RKCK();         //!< constructor
+                virtual ~RKCK() throw(); //!< destructor
                 
+                //! take the step
                 virtual void operator()(array<T>        &yout,
                                         array<T>        &yerr,
                                         equation        &drvs,

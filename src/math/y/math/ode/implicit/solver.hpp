@@ -11,16 +11,20 @@ namespace upsylon
         namespace ODE
         {
             
+            //! solver interface
             template <typename T>
             class ImplicitSolver : public SolverData<T>
             {
             public:
-                typedef typename ImplicitStep<T>::equation equation;
-                typedef typename ImplicitStep<T>::jacobian jacobian;
+                typedef typename ImplicitStep<T>::equation equation; //!< equation alias
+                typedef typename ImplicitStep<T>::jacobian jacobian; //!< jacobian alias
                 
+                //! constructor
                 explicit ImplicitSolver();
+                //! destructor
                 virtual ~ImplicitSolver() throw();
                 
+                //! solve interface
                 void operator()(equation         &derivs,
                                 jacobian         &jacobn,
 								ImplicitStep<T>  &forward,
@@ -34,19 +38,22 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(ImplicitSolver);
             };
             
+            //! drive an implicit step
             template <
             typename T,
             template <class> class STEP
             > class ImplicitDriver : public ImplicitSolver<T>
             {
             public:
-                typedef typename ImplicitStep<T>::equation equation;
-                typedef typename ImplicitStep<T>::jacobian jacobian;
+                typedef typename ImplicitStep<T>::equation equation; //!< equation alias
+                typedef typename ImplicitStep<T>::jacobian jacobian; //!< jacobian alias
 
-                
+                //! constructor
                 explicit ImplicitDriver() : ImplicitSolver<T>(), step_() {}
+                //! destructor
                 virtual ~ImplicitDriver() throw() {}
                 
+                //! acquire all memory
                 inline void start( size_t nv )
                 {
                     assert(nv>0);
@@ -54,6 +61,7 @@ namespace upsylon
                     step_.prepare( nv );  //-- step data
                 }
                 
+                //! perform the step
                 void operator()(equation         &derivs,
                                 jacobian         &jacobn,
 								array<T>         &ystart,

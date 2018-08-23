@@ -11,17 +11,18 @@ namespace upsylon
         
         namespace ODE
         {
-            
+            //! Shampine method
             template <typename T>
             class Shampine : public Rosenbrock<T>
             {
             public:
-                virtual ~Shampine() throw();
-                explicit Shampine();
+                virtual ~Shampine() throw(); //!< destructor
+                explicit Shampine();         //!< constructor
                 
-                typedef typename ImplicitStep<T>::equation equation;
-                typedef typename ImplicitStep<T>::jacobian jacobian;
+                typedef typename ImplicitStep<T>::equation equation; //!< equation alias
+                typedef typename ImplicitStep<T>::jacobian jacobian; //!< jacobian alias
                 
+                //! Shampine's step
                 virtual void operator()(array<T>       &y,
                                         array<T>       &dydx,
                                         T              &x,

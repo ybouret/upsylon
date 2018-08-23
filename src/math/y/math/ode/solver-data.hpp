@@ -12,10 +12,12 @@ namespace upsylon
         namespace ODE
         {
 
+            //! common data for solvers
             template <typename T>
             class SolverData : public Field<T>::Arrays
             {
             public:
+                //! destructor
                 inline virtual ~SolverData() throw() {}
 
                 T hmin; //!< initial=0
@@ -34,7 +36,9 @@ namespace upsylon
                 }
 
             protected:
-                array<T> &y, &dydx, &yscal;
+                array<T> &y;     //!< current y
+                array<T> &dydx;  //!< current slope
+                array<T> &yscal; //!< current scaling
 
 
             private:

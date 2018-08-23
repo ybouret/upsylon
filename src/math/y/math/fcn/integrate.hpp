@@ -10,9 +10,11 @@ namespace upsylon
     {
         namespace kernel
         {
+            //! summation for trapeze rule
             template <typename T, typename FUNC, const size_t n>
             struct dyadic_sum
             {
+                //! evaluate
                 static inline T compute(FUNC &F, const T X, const T D)
                 {
                     assert(is_a_power_of_two(n));
@@ -22,9 +24,11 @@ namespace upsylon
                 }
             };
 
+            //! special case
             template <typename T, typename FUNC>
             struct dyadic_sum<T,FUNC,1>
             {
+                //! evaluate
                 static inline T compute(FUNC &F, const T X, const T )
                 {
                     return F(X);
@@ -47,32 +51,36 @@ namespace upsylon
 
         }
 
+        //! functions for integration
         struct integrate
         {
 
 
-
+            //! prolog of quad step
 #define Y_INTG_PROLOG(N)                    \
 st = kernel::trpz<T,FUNC,N>(st,a,w,F);      \
 s = ( T(4.0) * st - old_st )/T(3.0)
 
+            //! epilog for quad step
 #define Y_INTG_EPILOG()                     \
 old_st  = st;                               \
 old_s   = s
-
+            //! check convergence in quad step
 #define Y_INTG_CHECK()                      \
 if( __fabs(s-old_s) <= __fabs( ftol * s ) ) \
 return true
-
+            //! warm up step
 #define Y_INTG_FAST(N)                      \
 Y_INTG_PROLOG(N);                           \
 Y_INTG_EPILOG()
-
+            
+            //! convergence checking step
 #define Y_INTG_TEST(N)                      \
 Y_INTG_PROLOG(N);                           \
 Y_INTG_CHECK();                             \
 Y_INTG_EPILOG()
 
+            //! Simpson's quadrature
             template <typename T,typename FUNC> static inline
             bool quad( T &s, FUNC &F, const T a, const T b, const T ftol )
             {

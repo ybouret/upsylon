@@ -22,8 +22,11 @@ namespace upsylon
             class Raster : public _Raster
             {
             public:
+                //! constructor
                 inline explicit Raster() : _Raster(0) {}
+                //! destructor
                 inline virtual ~Raster() throw() {}
+                //! ensure enough dwords
                 inline void startup( const size_t n)
                 {
                     if( n > size )

@@ -16,8 +16,8 @@ namespace upsylon
             class ExplicitStep : public Field<T>::Arrays
             {
             public:
-                typedef typename Field<T>::Equation equation;
-                typedef typename Field<T>::Callback callback;
+                typedef typename Field<T>::Equation equation; //!< equation alias
+                typedef typename Field<T>::Callback callback; //!< callback alias
                 
                 virtual ~ExplicitStep() throw();
                 
@@ -28,8 +28,8 @@ namespace upsylon
                  \param drvs the differential equation
                  \param x    starting point
                  \param h    guess step
-                 \param y    initial values @x
-                 \param dydx initial derivatives @x
+                 \param y    initial values at x
+                 \param dydx initial derivatives at x
                  \param cb   called BEFORE the equation on a trial point/time
                  The callback is used to modify (i.e. project or something)
                  the trial vectors.
@@ -46,7 +46,7 @@ namespace upsylon
                 
                 
             protected:
-                explicit ExplicitStep(size_t na);
+                explicit ExplicitStep(size_t na); //!< constructor
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ExplicitStep);

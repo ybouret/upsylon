@@ -99,12 +99,14 @@ namespace upsylon
                 save(filename,bmp,proc,options);
             }
 
+            //! save pixmap<RGB>
             inline void save(const string &filename, const pixmap<RGB> &bmp, const void *options) const
             {
                 get_from_rgb proc;
                 save(filename,bmp,proc,options);
             }
 
+            //! save pixmap<RGBA>
             inline void save(const string &filename, const pixmap<RGBA> &bmp, const void *options) const
             {
                 get_from_rgba proc;

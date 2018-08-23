@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_MATH_FCN_BESSEL_INCLUDED
 #define Y_MATH_FCN_BESSEL_INCLUDED 1
 
@@ -8,7 +9,7 @@ namespace upsylon
     
     namespace math
     {
-        
+        //! Bessel functions
         template <typename T>
         struct bessel
         {

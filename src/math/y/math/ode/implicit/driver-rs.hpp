@@ -15,7 +15,7 @@ namespace upsylon
             template <typename T>
             struct DriverRS
             {
-                typedef ImplicitDriver<T,Shampine> Type;
+                typedef ImplicitDriver<T,Shampine> Type; //!< the integrator
             };
             
         }

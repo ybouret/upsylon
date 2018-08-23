@@ -19,14 +19,14 @@ namespace upsylon
 			class ExplicitSolver : public SolverData<T>
 			{
 			public:
-				typedef typename Field<T>::Equation equation;
-                typedef typename Field<T>::Callback callback;
+				typedef typename Field<T>::Equation equation; //!< equation alias
+                typedef typename Field<T>::Callback callback; //!< callback alias
                 
 				explicit ExplicitSolver();
 				virtual ~ExplicitSolver() throw();
 				
                 
-                //! ystart@x1 -> x1
+                //! ystart at x1 -> x2
                 /**
                  \param drvs    differential equation
                  \param ctrl    an adaptive controler
@@ -35,6 +35,7 @@ namespace upsylon
                  \param x1      initial parameter
                  \param x2      final   parameter
                  \param h1      guess step, updated
+                 \param cb      a callback to correct trials
                  */
 				void operator()(equation              &drvs,
 								ExplicitControler<T>  &ctrl,
@@ -61,8 +62,8 @@ namespace upsylon
 			> class ExplicitDriver : public ExplicitSolver<T>
 			{
 			public:
-				typedef typename Field<T>::Equation equation;
-                typedef typename Field<T>::Callback callback;
+				typedef typename Field<T>::Equation equation; //!< equation alias
+                typedef typename Field<T>::Callback callback; //!< callback alias
 
 				explicit ExplicitDriver() : ExplicitSolver<T>(), ctrl_(), step_() {}
 				virtual ~ExplicitDriver() throw() {}

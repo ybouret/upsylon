@@ -207,6 +207,7 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
 
             //! fast checking against 0
             inline bool is_zero() const throw()     { return (bytes<=0); }
+            //! fast checking greater than zero
             inline bool is_positive() const throw() { return (bytes>0);  }
 
             //! fast checking against a byte
@@ -587,8 +588,8 @@ static inline natural __##CALL(const uint8_t *l, const size_t nl, const uint8_t 
     //! extended numeric for mpn
     template <> struct xnumeric<mpn> {
         static inline mpn  abs_minimum() { return mpn(); } //!< 0
-        static inline bool is_zero(const mpn &x)     { return x.is_zero();     }
-        static inline bool is_positive(const mpn &x) { return x.is_positive(); }
+        static inline bool is_zero(const mpn &x)     { return x.is_zero();     } //!< x==0
+        static inline bool is_positive(const mpn &x) { return x.is_positive(); } //!< x>0
     };
 
 }
