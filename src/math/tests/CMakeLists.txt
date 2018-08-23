@@ -16,6 +16,7 @@ ADD_TEST(Adjoint    test-m adjoint)
 ADD_TEST(DiagSymm   test-m diag_symm)
 ADD_TEST(SVD        test-m svd)
 ADD_TEST(Diag       test-m diag)
+ADD_TEST(ODE        test-m ode)
 
 
 ADD_CUSTOM_TARGET(utest-m

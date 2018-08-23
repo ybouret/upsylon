@@ -26,15 +26,20 @@ SET(fcn_srcs ${fcn_decl} ${fcn_code})
 SOURCE_GROUP( fcn FILES ${fcn_srcs} )
 INSTALL( FILES ${fcn_decl} DESTINATION include/y/math/fcn )
 
+FILE(GLOB ode_decl y/math/ode/*.hpp)
+FILE(GLOB ode_code y/math/ode/*.cpp)
+SET(ode_srcs ${ode_decl} ${ode_code})
+SOURCE_GROUP( ode FILES ${ode_srcs} )
+INSTALL( FILES ${ode_decl} DESTINATION include/y/math/ode )
 
-IF(TRUE)
+
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
 ${kernel_srcs}
 ${io_srcs}
 ${fcn_srcs}
+${ode_srcs}
 )
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
-ENDIF()
 
 ADD_SUBDIRECTORY(tests)
