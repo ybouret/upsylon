@@ -18,7 +18,7 @@ namespace upsylon
 
         void rational:: __simplify()
         {
-            assert(den>0);
+            assert(den.is_positive());
             natural &d = (natural &) den;
             integer &z = (integer &) num;
             if(z.s==__zero)
