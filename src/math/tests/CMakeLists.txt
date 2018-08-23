@@ -17,7 +17,7 @@ ADD_TEST(DiagSymm   test-m diag_symm)
 ADD_TEST(SVD        test-m svd)
 ADD_TEST(Diag       test-m diag)
 ADD_TEST(ODE        test-m ode)
-
+ADD_TEST(RK4        test-m rk4)
 
 ADD_CUSTOM_TARGET(utest-m
 COMMAND ${CMAKE_CTEST_COMMAND} -V
