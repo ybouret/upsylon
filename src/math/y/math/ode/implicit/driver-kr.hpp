@@ -5,7 +5,7 @@
 #include "y/math/ode/implicit/solver.hpp"
 #include "y/math/ode/implicit/kaps-rentrop.hpp"
 
-namespace yocto
+namespace upsylon
 {
     namespace math 
     {

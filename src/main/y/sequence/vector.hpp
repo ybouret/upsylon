@@ -19,12 +19,12 @@ namespace upsylon
         Y_DECL_ARGS(T,type); //!< aliases
         
         //! initialize fields
-#define Y_VECTOR_CTOR(n)                       \
-dynamic(),                                      \
-sequence<T>(), array<T>(),                       \
-maxi_(n),                                         \
-bytes(0),                                          \
-hmem_( ALLOCATOR::instance() ),                     \
+#define Y_VECTOR_CTOR(n)                             \
+dynamic(),                                           \
+sequence<T>(), array<T>(),                           \
+maxi_(n),                                            \
+bytes(0),                                            \
+hmem_( ALLOCATOR::instance() ),                      \
 addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
 
         inline vector() : Y_VECTOR_CTOR(0) {}
@@ -75,6 +75,17 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
             {
                 __release();
                 throw;
+            }
+        }
+
+        //! make a vector of size n with same values
+        inline void make(const size_t n, param_type v)
+        {
+            free();
+            this->ensure(n);
+            while(this->size_<n)
+            {
+                push_back_(v);
             }
         }
 

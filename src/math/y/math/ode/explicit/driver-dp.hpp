@@ -1,15 +1,16 @@
-#ifndef YOCTO_MATH_ODE_EXPLICIT_DRIVER_DP_INCLUDED
-#define YOCTO_MATH_ODE_EXPLICIT_DRIVER_DP_INCLUDED 1
+//! \file
+#ifndef Y_MATH_ODE_EXPLICIT_DRIVER_DP_INCLUDED
+#define Y_MATH_ODE_EXPLICIT_DRIVER_DP_INCLUDED 1
 
-#include "yocto/math/ode/explicit/solver.hpp"
-#include "yocto/math/ode/explicit/rk45.hpp"
-#include "yocto/math/ode/explicit/rkdp.hpp"
+#include "y/math/ode/explicit/solver.hpp"
+#include "y/math/ode/explicit/rk45.hpp"
+#include "y/math/ode/explicit/rkdp.hpp"
 
-namespace yocto
+namespace upsylon
 {
     namespace math
     {
-        namespace ode
+        namespace ODE
         {
             template <typename T>
             struct driverDP

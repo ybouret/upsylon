@@ -44,13 +44,13 @@ namespace upsylon
                 typedef typename implicit_step<T>::jacobian jacobian;
 
                 
-                explicit implicit_driver( T user_eps ) : implicit_solver<T>( user_eps ), step_() {}
+                explicit implicit_driver() : implicit_solver<T>(), step_() {}
                 virtual ~implicit_driver() throw() {}
                 
                 inline void start( size_t nv )
                 {
                     assert(nv>0);
-                    this->allocate( nv ); //-- solver data
+                    this->acquire( nv );  //-- solver data
                     step_.prepare( nv );  //-- step data
                 }
                 

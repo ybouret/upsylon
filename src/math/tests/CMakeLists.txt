@@ -7,7 +7,8 @@ TARGET_LINK_Y(test-m m)
 ENABLE_TESTING()
 ADD_TEST(Types      test-m types)
 ADD_TEST(TAO        test-m tao)
-ADD_TEST(TAO        test-m tao2)
+ADD_TEST(TAO2       test-m tao2)
+ADD_TEST(TAO3       test-m tao3)
 ADD_TEST(LU         test-m LU)
 ADD_TEST(DataSet    test-m data_set ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
 ADD_TEST(Derivative test-m drvs)
@@ -20,6 +21,10 @@ ADD_TEST(ODE        test-m ode)
 ADD_TEST(RK4        test-m rk4)
 ADD_TEST(Functions  test-m functions)
 ADD_TEST(intg       test-m intg)
+ADD_TEST(michaelis  test-m michaelis)
+ADD_TEST(ode_expl   test-m odex_expl)
+ADD_TEST(ode_impl   test-m odex_impl)
+
 
 ADD_CUSTOM_TARGET(utest-m
 COMMAND ${CMAKE_CTEST_COMMAND} -V

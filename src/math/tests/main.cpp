@@ -19,6 +19,9 @@ Y_UTEST_INIT(64)
     Y_UTEST(rk4);
     Y_UTEST(functions);
     Y_UTEST(intg);
+    Y_UTEST(michaelis);
+    Y_UTEST(ode_expl);
+    Y_UTEST(ode_impl);
 
 }
 Y_UTEST_EXEC()

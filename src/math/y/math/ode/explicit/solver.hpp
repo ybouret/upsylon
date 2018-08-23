@@ -1,5 +1,6 @@
-#ifndef YOCTO_MATH_ODE_EXPLICIT_SOLVER_INCLUDED
-#define YOCTO_MATH_ODE_EXPLICIT_SOLVER_INCLUDED 1
+//! \file
+#ifndef Y_MATH_ODE_EXPLICIT_SOLVER_INCLUDED
+#define Y_MATH_ODE_EXPLICIT_SOLVER_INCLUDED 1
 
 #include "y/math/ode/explicit/controler.hpp"
 #include "y/math/ode/solver-data.hpp"
@@ -63,15 +64,15 @@ namespace upsylon
 				typedef typename Field<T>::Equation equation;
                 typedef typename Field<T>::Callback callback;
 
-				explicit explicit_driver( T user_eps ) : explicit_solver<T>( user_eps ), ctrl_(), step_() {}
+				explicit explicit_driver() : explicit_solver<T>(), ctrl_(), step_() {}
 				virtual ~explicit_driver() throw() {}
 				
                 //! allocate all memory
 				inline void start( size_t nvar )
 				{
-					this->allocate( nvar );
-					ctrl_.allocate( nvar );
-					step_.allocate( nvar );
+					this->acquire( nvar );
+					ctrl_.acquire( nvar );
+					step_.acquire( nvar );
 				}
 				
                 //! make a step
