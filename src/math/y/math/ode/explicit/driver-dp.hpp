@@ -13,9 +13,9 @@ namespace upsylon
         namespace ODE
         {
             template <typename T>
-            struct driverDP
+            struct DriverDP
             {
-                typedef explicit_driver<T,RK45,RKDP> type;
+                typedef ExplicitDriver<T,RK45,RKDP> type;
             };
         }
     }

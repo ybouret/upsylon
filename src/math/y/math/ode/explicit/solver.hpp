@@ -16,14 +16,14 @@ namespace upsylon
              needs to be prepared before integration.
              */
             template <typename T>
-			class explicit_solver : public SolverData<T>
+			class ExplicitSolver : public SolverData<T>
 			{
 			public:
 				typedef typename Field<T>::Equation equation;
                 typedef typename Field<T>::Callback callback;
                 
-				explicit explicit_solver();
-				virtual ~explicit_solver() throw();
+				explicit ExplicitSolver();
+				virtual ~ExplicitSolver() throw();
 				
                 
                 //! ystart@x1 -> x1
@@ -37,8 +37,8 @@ namespace upsylon
                  \param h1      guess step, updated
                  */
 				void operator()(equation              &drvs,
-								explicit_controler<T> &ctrl,
-								explicit_step<T>      &forward,
+								ExplicitControler<T>  &ctrl,
+								ExplicitStep<T>       &forward,
 								array<T>              &ystart,
 								const T                x1,
 								const T                x2,
@@ -49,7 +49,7 @@ namespace upsylon
 				
 				
 			private:
-				Y_DISABLE_COPY_AND_ASSIGN(explicit_solver);
+				Y_DISABLE_COPY_AND_ASSIGN(ExplicitSolver);
 			};
             
             
@@ -58,14 +58,14 @@ namespace upsylon
 			typename T,
 			template <typename> class CTRL,
 			template <typename> class STEP
-			> class explicit_driver : public explicit_solver<T>
+			> class ExplicitDriver : public ExplicitSolver<T>
 			{
 			public:
 				typedef typename Field<T>::Equation equation;
                 typedef typename Field<T>::Callback callback;
 
-				explicit explicit_driver() : explicit_solver<T>(), ctrl_(), step_() {}
-				virtual ~explicit_driver() throw() {}
+				explicit ExplicitDriver() : ExplicitSolver<T>(), ctrl_(), step_() {}
+				virtual ~ExplicitDriver() throw() {}
 				
                 //! allocate all memory
 				inline void start( size_t nvar )
@@ -84,14 +84,14 @@ namespace upsylon
                                        callback   *cb
 									   )
 				{
-                    explicit_solver<T> &self = *this;
+                    ExplicitSolver<T> &self = *this;
 					self( drvs, ctrl_, step_, ystart, x1, x2, h1,cb);
 				}
 				
 			private:
 				CTRL<T> ctrl_;
 				STEP<T> step_;
-                Y_DISABLE_COPY_AND_ASSIGN(explicit_driver);
+                Y_DISABLE_COPY_AND_ASSIGN(ExplicitDriver);
 			};
             
             

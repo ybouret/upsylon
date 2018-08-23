@@ -15,7 +15,7 @@ namespace upsylon
             
             //! Runge-Kutta Cash-Karp 4/5 step
             template <typename T>
-            class RKCK : public explicit_step<T>
+            class RKCK : public ExplicitStep<T>
             {
             public:
                 typedef typename Field<T>::Equation equation;

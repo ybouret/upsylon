@@ -13,13 +13,13 @@ namespace upsylon
 
             //! memory and method for one step
             template <typename T>
-            class explicit_step : public Field<T>::Arrays
+            class ExplicitStep : public Field<T>::Arrays
             {
             public:
                 typedef typename Field<T>::Equation equation;
                 typedef typename Field<T>::Callback callback;
                 
-                virtual ~explicit_step() throw();
+                virtual ~ExplicitStep() throw();
                 
                 //! compute evaluation and embedded error
                 /**
@@ -46,10 +46,10 @@ namespace upsylon
                 
                 
             protected:
-                explicit explicit_step(size_t na);
+                explicit ExplicitStep(size_t na);
                 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(explicit_step);
+                Y_DISABLE_COPY_AND_ASSIGN(ExplicitStep);
                 
             };
             

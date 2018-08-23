@@ -14,7 +14,7 @@ namespace upsylon
             template <> RK45<real_t>:: ~RK45() throw() {}
             
             template <> RK45<real_t>:: RK45() :
-            explicit_controler<real_t>(2),
+            ExplicitControler<real_t>(2),
             yerr( next() ),
             ytmp( next() )
             {
@@ -22,7 +22,7 @@ namespace upsylon
             }
             
             template <>
-			void RK45<real_t>::operator()(explicit_step<real_t> &forward,
+			void RK45<real_t>::operator()(ExplicitStep<real_t>  &forward,
 										  array<real_t>         &y,
 										  const array<real_t>   &dydx,
 										  equation              &drvs,

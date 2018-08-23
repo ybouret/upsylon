@@ -11,10 +11,10 @@ namespace upsylon
         {
             
             
-            template <> explicit_step<real_t>:: ~explicit_step() throw() {}
+            template <> ExplicitStep<real_t>:: ~ExplicitStep() throw() {}
             
             template <>
-            explicit_step<real_t> :: explicit_step( size_t na ) :
+            ExplicitStep<real_t> :: ExplicitStep( size_t na ) :
             Field<real_t>::Arrays(na)
             {
             }

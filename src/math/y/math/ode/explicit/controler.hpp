@@ -15,13 +15,13 @@ namespace upsylon
              needs to be prepared before integration
              */
             template <typename T>
-            class explicit_controler : public Field<T>::Arrays
+            class ExplicitControler : public Field<T>::Arrays
             {
             public:
                 typedef typename Field<T>::Equation equation;
                 typedef typename Field<T>::Callback callback;
                 
-                virtual ~explicit_controler() throw();
+                virtual ~ExplicitControler() throw();
                 
                 //! try to forward
                 /**
@@ -35,7 +35,7 @@ namespace upsylon
                  \param yscal   scaling values
                  \param eps     fractional tolerance for h
                  */
-                virtual void operator()(explicit_step<T> &forward,
+                virtual void operator()(ExplicitStep<T>  &forward,
                                         array<T>         &y,
                                         const array<T>   &dydx,
                                         equation         &drvs,
@@ -47,10 +47,10 @@ namespace upsylon
                                         const T           eps,
                                         callback         *cb) = 0;
             protected:
-                explicit explicit_controler(size_t na);
+                explicit ExplicitControler(size_t na);
                 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(explicit_controler);
+                Y_DISABLE_COPY_AND_ASSIGN(ExplicitControler);
             };
         }
     }

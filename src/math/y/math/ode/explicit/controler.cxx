@@ -9,10 +9,10 @@ namespace upsylon
         {
             
             template <>
-            explicit_controler<real_t>:: ~explicit_controler() throw() {}
+            ExplicitControler<real_t>:: ~ExplicitControler() throw() {}
             
             template <>
-            explicit_controler<real_t>:: explicit_controler( size_t na ) :
+            ExplicitControler<real_t>:: ExplicitControler( size_t na ) :
             Field<real_t>::Arrays(na)
             {
             }

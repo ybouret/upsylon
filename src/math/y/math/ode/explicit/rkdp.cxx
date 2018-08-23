@@ -16,7 +16,7 @@ namespace upsylon
             
 			template <>
 			RKDP<real_t>:: RKDP() :
-			explicit_step<real_t>(7),
+			ExplicitStep<real_t>(7),
             ytmp( next()   ),
             ak2(  next()   ),
             ak3(  next()   ),

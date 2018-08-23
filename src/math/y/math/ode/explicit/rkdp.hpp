@@ -14,7 +14,7 @@ namespace upsylon
 			
 			//! Runge-Kutta Dormand-Price 4/5 step
 			template <typename T>
-			class RKDP : public explicit_step<T>
+			class RKDP : public ExplicitStep<T>
 			{
 			public:
 				typedef typename Field<T>::Equation equation;

@@ -11,7 +11,7 @@ namespace upsylon
         namespace ODE
         {
             template <typename T>
-			class RK45 : public explicit_controler<T>
+			class RK45 : public ExplicitControler<T>
             {
             public:
                 typedef typename Field<T>::Equation equation;
@@ -32,7 +32,7 @@ namespace upsylon
                  \param yscal   scaling values
                  \param eps     fractional tolerance for h
                  */
-                void operator()(explicit_step<T> &forward,
+                void operator()(ExplicitStep<T>  &forward,
                                 array<T>         &y,
                                 const array<T>   &dydx,
                                 equation         &drvs,
