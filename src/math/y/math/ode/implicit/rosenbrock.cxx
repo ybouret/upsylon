@@ -1,12 +1,12 @@
-#include "yocto/math/ztype.hpp"
-#include "yocto/math/ode/implicit/rosenbrock.hpp"
+#include "y/math/ztype.hpp"
+#include "y/math/ode/implicit/rosenbrock.hpp"
 
-namespace yocto
+namespace upsylon
 {
     namespace math
     {
         
-        namespace ode
+        namespace ODE
         {
 
             template <>
@@ -15,14 +15,14 @@ namespace yocto
             template <>
             rosenbrock<real_t>:: rosenbrock() : 
             implicit_step<real_t>( 9 ),
-            g1(    next_array() ),
-            g2(    next_array() ),
-            g3(    next_array() ),
-            g4(    next_array() ),
-            dfdx(  next_array() ),
-            err(   next_array() ),
-            ysav(  next_array() ),
-            dysav( next_array() ),
+            g1(    next() ),
+            g2(    next() ),
+            g3(    next() ),
+            g4(    next() ),
+            dfdx(  next() ),
+            err(   next() ),
+            ysav(  next() ),
+            dysav( next() ),
             dfdy(),
             a()
             {
@@ -32,9 +32,9 @@ namespace yocto
             void rosenbrock<real_t>:: prepare( size_t nv )
             {
                 assert(nv>0);
-                allocate(nv);
-                dfdy.make(nv);
-                a.make(nv);
+                acquire(nv);
+                dfdy.make(nv,nv);
+                a.make(nv,nv);
             }
             
         }

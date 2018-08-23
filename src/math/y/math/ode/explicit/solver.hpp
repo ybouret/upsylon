@@ -1,27 +1,27 @@
 #ifndef YOCTO_MATH_ODE_EXPLICIT_SOLVER_INCLUDED
 #define YOCTO_MATH_ODE_EXPLICIT_SOLVER_INCLUDED 1
 
-#include "yocto/math/ode/explicit/controler.hpp"
-#include "yocto/math/ode/solver-data.hpp"
+#include "y/math/ode/explicit/controler.hpp"
+#include "y/math/ode/solver-data.hpp"
 
-namespace yocto
+namespace upsylon
 {
     namespace math
     {
-        namespace ode
+        namespace ODE
         {
             //! explicit solver
             /**
              needs to be prepared before integration.
              */
             template <typename T>
-			class explicit_solver : public solver_data<T>
+			class explicit_solver : public SolverData<T>
 			{
 			public:
 				typedef typename Field<T>::Equation equation;
                 typedef typename Field<T>::Callback callback;
                 
-				explicit explicit_solver( T user_eps );
+				explicit explicit_solver();
 				virtual ~explicit_solver() throw();
 				
                 
@@ -48,7 +48,7 @@ namespace yocto
 				
 				
 			private:
-				YOCTO_DISABLE_COPY_AND_ASSIGN(explicit_solver);
+				Y_DISABLE_COPY_AND_ASSIGN(explicit_solver);
 			};
             
             
@@ -90,7 +90,7 @@ namespace yocto
 			private:
 				CTRL<T> ctrl_;
 				STEP<T> step_;
-                YOCTO_DISABLE_COPY_AND_ASSIGN(explicit_driver);
+                Y_DISABLE_COPY_AND_ASSIGN(explicit_driver);
 			};
             
             

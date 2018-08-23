@@ -1,14 +1,14 @@
 #ifndef YOCTO_ODE_KAPS_RENTROP_INCLUDED
 #define YOCTO_ODE_KAPS_RENTROP_INCLUDED 1
 
-#include "yocto/math/ode/implicit/rosenbrock.hpp"
+#include "y/math/ode/implicit/rosenbrock.hpp"
 
-namespace yocto
+namespace upsylon
 {
     namespace math
     {
         
-        namespace ode
+        namespace ODE
         {
             
             template <typename T>
@@ -34,7 +34,7 @@ namespace yocto
                                         );
                 
             private:
-                YOCTO_DISABLE_COPY_AND_ASSIGN(kaps_rentrop);
+                Y_DISABLE_COPY_AND_ASSIGN(kaps_rentrop);
             };
             
         }

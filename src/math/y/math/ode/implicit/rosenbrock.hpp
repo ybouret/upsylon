@@ -1,15 +1,14 @@
 #ifndef YOCTO_ODE_ROSENBROCK_INCLUDED
 #define YOCTO_ODE_ROSENBROCK_INCLUDED 1
 
-#include "yocto/math/ode/implicit/step.hpp"
-#include "yocto/math/core/lu.hpp"
+#include "y/math/ode/implicit/step.hpp"
+#include "y/math/kernel/lu.hpp"
 
-namespace yocto
+namespace upsylon
 {
     namespace math
     {
-        
-        namespace ode
+        namespace ODE
         {
             
             template <typename T>
@@ -27,7 +26,7 @@ namespace yocto
                 matrix<T>    a;
                 
             private:
-                YOCTO_DISABLE_COPY_AND_ASSIGN(rosenbrock);
+                Y_DISABLE_COPY_AND_ASSIGN(rosenbrock);
             };
 
                      

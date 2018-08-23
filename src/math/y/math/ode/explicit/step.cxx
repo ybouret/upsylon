@@ -1,13 +1,13 @@
-#include "yocto/math/ztype.hpp"
-#include "yocto/math/ode/explicit/step.hpp"
+#include "y/math/ztype.hpp"
+#include "y/math/ode/explicit/step.hpp"
 
 
-namespace yocto
+namespace upsylon
 {
     namespace math
     {
         
-        namespace ode
+        namespace ODE
         {
             
             

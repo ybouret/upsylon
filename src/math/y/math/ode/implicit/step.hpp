@@ -1,14 +1,14 @@
 #ifndef YOCTO_ODE_IMPLICIT_STEP_INCLUDED
 #define YOCTO_ODE_IMPLICIT_STEP_INCLUDED 1
 
-#include "yocto/math/ode/types.hpp"
+#include "y/math/ode/types.hpp"
 
-namespace yocto
+namespace upsylon
 {
     namespace math
     {
         
-        namespace ode
+        namespace ODE
         {
             
             template <typename T>
@@ -35,7 +35,7 @@ namespace yocto
                 explicit implicit_step( const size_t num );
                 
             private:
-                YOCTO_DISABLE_COPY_AND_ASSIGN(implicit_step);
+                Y_DISABLE_COPY_AND_ASSIGN(implicit_step);
             };
             
         }

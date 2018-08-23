@@ -1,12 +1,12 @@
-#include "yocto/math/ztype.hpp"
-#include "yocto/exceptions.hpp"
-#include "yocto/code/utils.hpp"
+#include "y/math/ztype.hpp"
+#include "y/exceptions.hpp"
+#include "y/type/utils.hpp"
 
-namespace yocto
+namespace upsylon
 {
     namespace math
     {
-        namespace ode
+        namespace ODE
         {
             template <> STIFF_STEP<real_t>:: STIFF_STEP()
             {
@@ -33,13 +33,13 @@ namespace yocto
                 static const real_t PGROW  = REAL(-0.25);
                 static const real_t SHRNK  = REAL(0.5);
                 static const real_t PSHRNK = REAL(-1.0)/REAL(3.0);
-                static const real_t ERRCON = Pow( GROW/SAFETY, (REAL(1.0)/PGROW) );
+                static const real_t ERRCON = __pow( GROW/SAFETY, (REAL(1.0)/PGROW) );
                 
                 const size_t n = y.size();
                 assert( n > 0 );
-                assert( n == dydx.size() );
+                assert( n == dydx.size()  );
                 assert( n == yscal.size() );
-                assert( n == size      );
+                assert( n == size()       );
                 assert( n == dfdy.rows );
                 assert( n == dfdy.cols );
                 assert( n == a.rows );
@@ -70,14 +70,14 @@ namespace yocto
                         a[i][i] += __diag;
                     }
                     
-                    if( !LU<real_t>::build(a) )
+                    if( !LU::build(a) )
                     {
                         throw exception("%s step: singular jacobian", STIFF_NAME);
                     }
                     
                     for( size_t i=n; i>0 ; --i )
                         g1[i]=dysav[i]+h*C1X*dfdx[i];
-                    LU<real_t>::solve(a,g1);
+                    LU::solve(a,g1);
                     for (size_t i=1;i<=n;i++)
                         y[i]=ysav[i]+A21*g1[i];
                     
@@ -85,7 +85,7 @@ namespace yocto
                     derivs(dydx,x,y);
                     for( size_t i=n; i>0 ; --i )
                         g2[i]=dydx[i]+h*C2X*dfdx[i]+C21*g1[i]/h;
-                    LU<real_t>::solve(a,g2);
+                    LU::solve(a,g2);
                     for( size_t i=n; i>0 ; --i )
                         y[i]=ysav[i]+A31*g1[i]+A32*g2[i];
                     
@@ -93,11 +93,11 @@ namespace yocto
                     derivs(dydx,x,y);
                     for( size_t i=n; i>0 ; --i )
                         g3[i]=dydx[i]+h*C3X*dfdx[i]+(C31*g1[i]+C32*g2[i])/h;
-                    LU<real_t>::solve(a,g3);
+                    LU::solve(a,g3);
                     
                     for( size_t i=n; i>0 ; --i )
                         g4[i]=dydx[i]+h*C4X*dfdx[i]+(C41*g1[i]+C42*g2[i]+C43*g3[i])/h;
-                    LU<real_t>::solve(a,g4);
+                    LU::solve(a,g4);
                     
                     for( size_t i=n; i>0 ; --i )
                     {
@@ -107,23 +107,25 @@ namespace yocto
                     
                     //-- update x
                     x=xsav+h;
-                    if ( Fabs(x - xsav) <= 0 )
+                    if ( REAL(fabs)(x - xsav) <= 0 )
                         throw exception("%s: step size not significant", STIFF_NAME);
                     
                     //-- error control
                     real_t errmax=0;
                     for( size_t i=n; i>0 ; --i )
-                        errmax=max_of<real_t>(errmax,Fabs(err[i]/yscal[i]));
+                    {
+                        errmax=max_of<real_t>(errmax,REAL(fabs)(err[i]/yscal[i]));
+                    }
                     errmax /= eps;
                     if (errmax <= REAL(1.0))
                     {
                         hdid  = h;
-                        hnext = (errmax > ERRCON ? SAFETY*h*Pow(errmax,PGROW) : GROW*h);
+                        hnext = (errmax > ERRCON ? SAFETY*h*REAL(pow)(errmax,PGROW) : GROW*h);
                         return;
                     }
                     else
                     {
-                        hnext=SAFETY*h*Pow(errmax,PSHRNK);
+                        hnext=SAFETY*h*REAL(pow)(errmax,PSHRNK);
                         h=(h >= REAL(0.0) ? max_of<real_t>(hnext,SHRNK*h) : min_of<real_t>(hnext,SHRNK*h));
                     }
                 }

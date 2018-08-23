@@ -15,7 +15,7 @@ namespace upsylon
         typedef lightweight_array<T> array_type; //!< array alias
 
         const size_t count; //!< count of individual arrays
-
+        
         //! prepare memory for num_arrays, with possible already num_items
         inline explicit arrays(const size_t num_arrays,
                                const size_t array_size=0) :

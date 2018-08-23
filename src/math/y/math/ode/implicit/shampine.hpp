@@ -1,14 +1,15 @@
-#ifndef YOCTO_ODE_SHAMPINE_INCLUDED
-#define YOCTO_ODE_SHAMPINE_INCLUDED 1
+//! \file
+#ifndef Y_ODE_SHAMPINE_INCLUDED
+#define Y_ODE_SHAMPINE_INCLUDED 1
 
-#include "yocto/math/ode/implicit/rosenbrock.hpp"
+#include "y/math/ode/implicit/rosenbrock.hpp"
 
-namespace yocto
+namespace upsylon
 {
     namespace math
     {
         
-        namespace ode
+        namespace ODE
         {
             
             template <typename T>
@@ -34,7 +35,7 @@ namespace yocto
                                         );
                 
             private:
-                YOCTO_DISABLE_COPY_AND_ASSIGN(shampine);
+                Y_DISABLE_COPY_AND_ASSIGN(shampine);
             };
 
         }

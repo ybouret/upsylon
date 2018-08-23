@@ -1,11 +1,11 @@
-#include "yocto/math/ztype.hpp"
-#include "yocto/math/ode/explicit/controler.hpp"
+#include "y/math/ztype.hpp"
+#include "y/math/ode/explicit/controler.hpp"
 
-namespace yocto
+namespace upsylon
 {
     namespace math
     {
-        namespace ode
+        namespace ODE
         {
             
             template <>

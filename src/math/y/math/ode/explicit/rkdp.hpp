@@ -2,14 +2,14 @@
 #define YOCTO_MATH_ODE_EXPLICIT_RKDP_INCLUDED 1
 
 
-#include "yocto/math/ode/explicit/step.hpp"
+#include "y/math/ode/explicit/step.hpp"
 
-namespace yocto
+namespace upsylon
 {
 	namespace math
 	{
 		
-		namespace ode
+		namespace ODE
 		{
 			
 			//! Runge-Kutta Dormand-Price 4/5 step
@@ -33,7 +33,7 @@ namespace yocto
                                         callback        *cb
                                         );
 			private:
-				YOCTO_DISABLE_COPY_AND_ASSIGN(RKDP);
+				Y_DISABLE_COPY_AND_ASSIGN(RKDP);
 				array<T> &ytmp, &ak2, &ak3, &ak4, &ak5, &ak6, &ak7;
 			};
 		}

@@ -1,13 +1,14 @@
-#ifndef YOCTO_MATH_ODE_EXPLICIT_CONTROLER_INCLUDED
-#define YOCTO_MATH_ODE_EXPLICIT_CONTROLER_INCLUDED 1
+//! \file
+#ifndef Y_MATH_ODE_EXPLICIT_CONTROLER_INCLUDED
+#define Y_MATH_ODE_EXPLICIT_CONTROLER_INCLUDED 1
 
-#include "yocto/math/ode/explicit/step.hpp"
+#include "y/math/ode/explicit/step.hpp"
 
-namespace yocto
+namespace upsylon
 {
     namespace math
     {
-        namespace ode
+        namespace ODE
         {
             //! adaptive controler
             /**
@@ -49,7 +50,7 @@ namespace yocto
                 explicit explicit_controler(size_t na);
                 
             private:
-                YOCTO_DISABLE_COPY_AND_ASSIGN(explicit_controler);
+                Y_DISABLE_COPY_AND_ASSIGN(explicit_controler);
             };
         }
     }

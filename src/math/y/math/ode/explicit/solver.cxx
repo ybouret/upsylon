@@ -1,21 +1,20 @@
-#include "yocto/math/ztype.hpp"
-#include "yocto/math/ode/explicit/solver.hpp"
-#include "yocto/math/types.hpp"
-#include "yocto/exception.hpp"
+#include "y/math/ztype.hpp"
+#include "y/math/ode/explicit/solver.hpp"
+#include "y/exception.hpp"
 
-namespace yocto
+namespace upsylon
 {
     namespace math
     {
-        namespace ode
+        namespace ODE
         {
             
             template <>
             explicit_solver<real_t>:: ~explicit_solver() throw() {}
             
             template <>
-            explicit_solver<real_t>:: explicit_solver( real_t user_eps ) :
-            solver_data<real_t>(user_eps)
+            explicit_solver<real_t>:: explicit_solver() :
+            SolverData<real_t>()
             {
                 
             }
@@ -33,20 +32,20 @@ namespace yocto
                        )
 			{
 				const size_t   n    = ystart.size();
-				const real_t  _TINY = Fabs( TINY );
+				const real_t  _TINY = REAL(fabs)( TINY );
 				
 				//--------------------------------------------------------------
 				// sanity check
 				//--------------------------------------------------------------
-				assert( size         == n );
-				assert( ctrl.size    == n );
-				assert( forward.size == n );
+				assert( size()         == n );
+				assert( ctrl.size()    == n );
+				assert( forward.size() == n );
 				
 				
 				//--------------------------------------------------------------
 				// initialize
 				//--------------------------------------------------------------
-				real_t h = x2 < x1 ? -Fabs(h1) : Fabs(h1);
+				real_t h = x2 < x1 ? -__fabs(h1) : __fabs(h1);
 				real_t x = x1;
 				for( size_t i=n;i>0;--i) y[i] = ystart[i];
 				
@@ -60,7 +59,7 @@ namespace yocto
 					//----------------------------------------------------------
 					drvs( dydx, x, y );
 					for( size_t i=n; i>0; --i )
-						yscal[i] = Fabs(y[i]) + Fabs( h * dydx[i] ) + _TINY;
+						yscal[i] = REAL(fabs)(y[i]) + REAL(fabs)( h * dydx[i] ) + _TINY;
 					
 					//----------------------------------------------------------
 					// check no overshooting
@@ -92,7 +91,7 @@ namespace yocto
 					//----------------------------------------------------------
 					// check if not too small
 					//----------------------------------------------------------
-					if( Fabs(h_next) < Fabs(hmin) )
+					if( REAL(fabs)(h_next) < REAL(fabs)(hmin) )
 						throw exception( "h=%g<hmin=%g in ode::solver", h, hmin );
 					
 					h=h_next;

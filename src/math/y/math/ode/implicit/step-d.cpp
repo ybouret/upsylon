@@ -1,2 +1,2 @@
-#define YOCTO_ZTYPE 'd'
+#define Y_ZTYPE 'd'
 #include "step.cxx"

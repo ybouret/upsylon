@@ -1,17 +1,16 @@
 #ifndef YOCTO_MATH_ODE_EXPLICIT_STEP_INCLUDED
 #define YOCTO_MATH_ODE_EXPLICIT_STEP_INCLUDED 1
 
-#include "yocto/math/ode/types.hpp"
+#include "y/math/ode/types.hpp"
 
-namespace yocto
+namespace upsylon
 {
     namespace math
     {
         
-        namespace ode
+        namespace ODE
         {
-            
-            
+
             //! memory and method for one step
             template <typename T>
             class explicit_step : public Field<T>::Arrays
@@ -50,7 +49,7 @@ namespace yocto
                 explicit explicit_step(size_t na);
                 
             private:
-                YOCTO_DISABLE_COPY_AND_ASSIGN(explicit_step);
+                Y_DISABLE_COPY_AND_ASSIGN(explicit_step);
                 
             };
             

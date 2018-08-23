@@ -1,13 +1,14 @@
-#ifndef YOCTO_MATH_ODE_EXPLICIT_RK45_INCLUDED
-#define YOCTO_MATH_ODE_EXPLICIT_RK45_INCLUDED 1
+//! \file
+#ifndef Y_MATH_ODE_EXPLICIT_RK45_INCLUDED
+#define Y_MATH_ODE_EXPLICIT_RK45_INCLUDED 1
 
-#include "yocto/math/ode/explicit/controler.hpp"
+#include "y/math/ode/explicit/controler.hpp"
 
-namespace yocto
+namespace upsylon
 {
     namespace math
     {
-        namespace ode
+        namespace ODE
         {
             template <typename T>
 			class RK45 : public explicit_controler<T>
@@ -44,7 +45,7 @@ namespace yocto
                                 callback         *cb);
                 
             private:
-                YOCTO_DISABLE_COPY_AND_ASSIGN(RK45);
+                Y_DISABLE_COPY_AND_ASSIGN(RK45);
                 array<T> &yerr,&ytmp;
             };
             

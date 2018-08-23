@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_MATH_ODE_TYPES_INCLUDED
 #define Y_MATH_ODE_TYPES_INCLUDED 1
 

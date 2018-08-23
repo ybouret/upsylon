@@ -2,14 +2,14 @@
 #define YOCTO_ODE_RKCK_INCLUDED 1
 
 
-#include "yocto/math/ode/explicit/step.hpp"
+#include "y/math/ode/explicit/step.hpp"
 
-namespace yocto
+namespace upsylon
 {
 	namespace math
 	{
 		
-		namespace ode
+		namespace ODE
 		{
             
             
@@ -35,7 +35,7 @@ namespace yocto
                                         );
                 
             private:
-                YOCTO_DISABLE_COPY_AND_ASSIGN(RKCK);
+                Y_DISABLE_COPY_AND_ASSIGN(RKCK);
                 array<T> &ytmp, &ak2, &ak3, &ak4, &ak5, &ak6;
             };
             

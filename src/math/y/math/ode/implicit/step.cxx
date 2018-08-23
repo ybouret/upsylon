@@ -1,13 +1,13 @@
-#include "yocto/math/ztype.hpp"
-#include "yocto/math/ode/implicit/step.hpp"
+#include "y/math/ztype.hpp"
+#include "y/math/ode/implicit/step.hpp"
 
 
-namespace yocto
+namespace upsylon
 {
     namespace math 
     {
         
-        namespace ode
+        namespace ODE
         {
             template <> implicit_step<real_t>:: ~implicit_step() throw() {}
             

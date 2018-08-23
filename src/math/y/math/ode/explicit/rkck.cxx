@@ -1,13 +1,12 @@
-#include "yocto/math/ztype.hpp"
-#include "yocto/math/ode/explicit/rkck.hpp"
-#include "yocto/math/ztype.hpp"
+#include "y/math/ztype.hpp"
+#include "y/math/ode/explicit/rkck.hpp"
 
-namespace yocto
+namespace upsylon
 {
 	namespace math
 	{
 		
-		namespace ode
+		namespace ODE
 		{
 			
 			template <>
@@ -18,12 +17,12 @@ namespace yocto
 			template <>
 			RKCK<real_t>:: RKCK() :
             explicit_step<real_t>(6),
-			ytmp( next_array() ),
-			ak2(  next_array()   ),
-			ak3(  next_array()   ),
-			ak4(  next_array()   ),
-			ak5(  next_array()   ),
-			ak6(  next_array()   )
+			ytmp( next()   ),
+			ak2(  next()   ),
+			ak3(  next()   ),
+			ak4(  next()   ),
+			ak5(  next()   ),
+			ak6(  next()   )
 			{
 			}
 			

@@ -1,24 +1,24 @@
 #ifndef YOCTO_STIFF_SOLVER_INCLUDED
 #define YOCTO_STIFF_SOLVER_INCLUDED 1
 
-#include "yocto/math/ode/implicit/step.hpp"
-#include "yocto/math/ode/solver-data.hpp"
+#include "y/math/ode/implicit/step.hpp"
+#include "y/math/ode/solver-data.hpp"
 
-namespace yocto
+namespace upsylon
 {
     namespace math
     {
-        namespace ode
+        namespace ODE
         {
             
             template <typename T>
-            class implicit_solver : public solver_data<T>
+            class implicit_solver : public SolverData<T>
             {
             public:
                 typedef typename implicit_step<T>::equation equation;
                 typedef typename implicit_step<T>::jacobian jacobian;
                 
-                explicit implicit_solver( T user_eps );
+                explicit implicit_solver();
                 virtual ~implicit_solver() throw();
                 
                 void operator()(equation         &derivs,
@@ -31,7 +31,7 @@ namespace yocto
 								);
                 
             private:
-                YOCTO_DISABLE_COPY_AND_ASSIGN(implicit_solver);
+                Y_DISABLE_COPY_AND_ASSIGN(implicit_solver);
             };
             
             template <
@@ -68,6 +68,7 @@ namespace yocto
                 
             private:
                 STEP<T> step_;
+                Y_DISABLE_COPY_AND_ASSIGN(implicit_driver);
             };
             
             
