@@ -24,6 +24,7 @@ ADD_TEST(intg       test-m intg)
 ADD_TEST(michaelis  test-m michaelis)
 ADD_TEST(ode_expl   test-m ode_expl)
 ADD_TEST(ode_impl   test-m ode_impl)
+ADD_TEST(shapes2d   test-m shapes2d)
 
 
 ADD_CUSTOM_TARGET(utest-m

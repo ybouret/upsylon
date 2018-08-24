@@ -34,7 +34,7 @@ namespace upsylon
             virtual ~fit_circle() throw();
 
             template <typename ITERATOR>
-            void compute( ITERATOR curr, const size_t n)
+            bool compute( ITERATOR curr, const size_t n)
             {
                 xc=yc=radius=0;
                 if(n>0)
@@ -46,17 +46,21 @@ namespace upsylon
                         const double Y = double( (*curr).y );
                         const double X2 = X*X;
                         const double Y2 = Y*Y;
+                        const double Z = X2+Y2;
                         x[i]  = X;
                         y[i]  = Y;
                         x2[i] = X2;
                         y2[i] = Y2;
                         xy[i] = X*Y;
-                        const double Z = X2+Y2;
                         z[i]  = Z;
                         zx[i] = Z*X;
                         zy[i] = Z*Y;
                     }
-                    __compute();
+                    return __compute();
+                }
+                else
+                {
+                    return true;
                 }
             }
 
@@ -72,7 +76,7 @@ namespace upsylon
             array<double> &zx;
             array<double> &zy;
             Y_DISABLE_COPY_AND_ASSIGN(fit_circle);
-            void __compute();
+            bool __compute();
             
         public:
             double xc;

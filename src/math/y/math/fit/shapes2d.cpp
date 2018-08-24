@@ -47,7 +47,7 @@ namespace upsylon
         {
         }
 
-        void fit_circle:: __compute()
+        bool fit_circle:: __compute()
         {
             mu[1][1] = sorted_sum(x2);
             mu[2][2] = sorted_sum(y2);
@@ -60,7 +60,7 @@ namespace upsylon
             if(!LU::build(mu))
             {
                 xc=yc=radius=0;
-                throw exception("math::fit_circle: singular set of points");
+                return false;
             }
 
             rhs[1] = sorted_sum(zx);
@@ -69,9 +69,11 @@ namespace upsylon
             LU::solve(mu,rhs);
             const double a = rhs[1];
             const double b = rhs[2];
-            xc = 0.5*a;
-            yc = 0.5*b;
-            radius = rhs[3] + xc*xc + yc*yc;
+            const double c = rhs[3];
+            xc     = 0.5*a;
+            yc     = 0.5*b;
+            radius = sqrt(c + xc*xc + yc*yc);
+            return true;
         }
 
     }
