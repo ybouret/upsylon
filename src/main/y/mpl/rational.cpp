@@ -1,7 +1,6 @@
 #include "y/mpl/rational.hpp"
 #include "y/exceptions.hpp"
 #include <cerrno>
-#include "y/code/arith.hpp"
 
 namespace upsylon
 {
@@ -38,10 +37,23 @@ namespace upsylon
 
                 if(!d.is_byte(1))
                 {
-                    natural      &n = (natural &)(num.n);
-                    const natural g = arithmetic::gcd_positive(n,d);
-                    n /= g;
-                    d /= g;
+                    natural      &n = (natural &)(z.n);
+                    natural      a=n;
+                    natural      b=d;
+                    if(b>a)
+                    {
+                        a.xch(b);
+                    }
+                    // b<=a
+                    while( b.is_positive() )
+                    {
+                        natural m = natural::__mod(a,b);
+                        a.xch(b);
+                        b.xch(m);
+                    }
+                    // a is the gcd
+                    n/=a;
+                    d/=a;
                 }
             }
         }

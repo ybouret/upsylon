@@ -153,8 +153,9 @@ Y_UTEST(mpq)
         const mpq R1 = P / Q;
         Y_ASSERT(R0==R1);
     }
-    for(mpq i=1;i.to_real()>=0.001;i/=3)
+    for(mpq i=1;i.to_real()>=0.001;i/=6)
     {
+        i*=2;
         std::cerr << i << ':';
     }
     std::cerr << std::endl;
