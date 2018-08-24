@@ -26,7 +26,7 @@ namespace upsylon
 
             const coord  lower;  //!< lower coordinate
             const coord  upper;  //!< upper coordinate
-            const coord  sizes;  //!< upper-lower+1m or zero if invalid
+            const coord  sizes;  //!< upper-lower+1m or zero if empty
             const unit_t pixels; //!< w*h
 
             //! default area, origin

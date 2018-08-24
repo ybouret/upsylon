@@ -1,5 +1,6 @@
-#ifndef YOCTO_STIFF_SOLVER_INCLUDED
-#define YOCTO_STIFF_SOLVER_INCLUDED 1
+//! \file
+#ifndef Y_STIFF_SOLVER_INCLUDED
+#define Y_STIFF_SOLVER_INCLUDED 1
 
 #include "y/math/ode/implicit/step.hpp"
 #include "y/math/ode/solver-data.hpp"

@@ -1,5 +1,6 @@
-#ifndef YOCTO_ODE_RKCK_INCLUDED
-#define YOCTO_ODE_RKCK_INCLUDED 1
+//! \file
+#ifndef Y_ODE_RKCK_INCLUDED
+#define Y_ODE_RKCK_INCLUDED 1
 
 
 #include "y/math/ode/explicit/step.hpp"

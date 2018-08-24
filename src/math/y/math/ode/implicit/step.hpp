@@ -1,5 +1,6 @@
-#ifndef YOCTO_ODE_IMPLICIT_STEP_INCLUDED
-#define YOCTO_ODE_IMPLICIT_STEP_INCLUDED 1
+//! \file
+#ifndef Y_ODE_IMPLICIT_STEP_INCLUDED
+#define Y_ODE_IMPLICIT_STEP_INCLUDED 1
 
 #include "y/math/ode/types.hpp"
 

@@ -1,5 +1,6 @@
-#ifndef YOCTO_MATH_ODE_EXPLICIT_RKDP_INCLUDED
-#define YOCTO_MATH_ODE_EXPLICIT_RKDP_INCLUDED 1
+//! \file
+#ifndef Y_MATH_ODE_EXPLICIT_RKDP_INCLUDED
+#define Y_MATH_ODE_EXPLICIT_RKDP_INCLUDED 1
 
 
 #include "y/math/ode/explicit/step.hpp"
@@ -12,7 +13,7 @@ namespace upsylon
 		namespace ODE
 		{
 			
-			//! Runge-Kutta Dormand-Price 4/5 step
+			//! Runge-Kutta Dormand-Prince 4/5 step
 			template <typename T>
 			class RKDP : public ExplicitStep<T>
 			{
