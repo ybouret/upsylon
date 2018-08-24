@@ -1,6 +1,5 @@
 //! \file
-
-#ifndef Y_FIT_SHAPED2D_INCLUDED
+#ifndef Y_FIT_SHAPES2D_INCLUDED
 #define Y_FIT_SHAPES2D_INCLUDED 1
 
 #include "y/type/point2d.hpp"
@@ -12,27 +11,31 @@ namespace upsylon
 {
     namespace math
     {
-        typedef arrays<double,memory::global> shape2d_arrays;
+        typedef arrays<double,memory::global> shape2d_arrays; //!< for internal arrays
 
+        //! base class to perform computation
         class shape2d : public shape2d_arrays
         {
         public:
+            //! shapoe
             virtual ~shape2d() throw();
 
 
         protected:
-            explicit shape2d(const size_t num_arrays);
+            explicit shape2d(const size_t num_arrays); //!< memory for num_arrays
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(shape2d);
         };
 
+        //! fit data points to a circle (Kasa/Coope)
         class fit_circle : public shape2d
         {
         public:
-            explicit fit_circle();
-            virtual ~fit_circle() throw();
+            explicit fit_circle();         //!< initialize
+            virtual ~fit_circle() throw(); //!< destructor
 
+            //! construct arrays and perform computation
             template <typename ITERATOR>
             bool compute( ITERATOR curr, const size_t n)
             {
@@ -79,9 +82,9 @@ namespace upsylon
             bool __compute();
             
         public:
-            double xc;
-            double yc;
-            double radius;
+            double xc;      //!< fit center_x
+            double yc;      //!< fit center_y
+            double radius;  //!< fit radius
         };
 
     }

@@ -15,6 +15,17 @@ namespace
         const float y = u[2];
         return 1.0f + sinf(2.0f*x) * cosf(3.0f*y);
     }
+
+    static inline
+    double f3( double x, array<double> &param )
+    {
+        double ans = 0;
+        for(size_t i=1;i<=param.size();++i)
+        {
+            ans += ipower(x,i-1) * param[i];
+        }
+        return ans;
+    }
 }
 
 
@@ -53,6 +64,26 @@ Y_UTEST(drvs)
                 drvs.grad(g,F2,p,0.001f);
             }
             fp << '\n';
+        }
+    }
+
+    {
+        vector<double>      param(3); param[1] = 1.2; param[2] = 2.1; param[3] = 0.1;
+        derivatives<double> drvs;
+        for(double x=0;x<=1;x+=0.1)
+        {
+            std::cerr << "parametric_diff(" << x << ")=" << f3(x,param) << " -> " << drvs.parametric_diff(f3,x,param,0.001) << std::endl;
+        }
+    }
+
+    {
+        vector<double>     param(3); param[1] = 1.2; param[2] = 2.1; param[3] = 0.1;
+        vector<double>     g( param.size() );
+        derivatives<double> drvs;
+        for(double x=0;x<=1;x+=0.1)
+        {
+            drvs.parametric_grad(g, f3, x, param, 0.001);
+            std::cerr << "parametric_grad(" << x << "," << param << ")=" << f3(x,param) << " -> " << g << std::endl;
         }
     }
 

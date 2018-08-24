@@ -40,7 +40,7 @@ namespace upsylon
 
             //! derivative of a parametric function dF(x,param)/dx
             template <typename FUNC>
-            T parametric_diff( FUNC &F, const T x, const array<T> &param, const T h )
+            T parametric_diff( FUNC &F, const T x, array<T> &param, const T h )
             {
                 parametric_call<FUNC> proxy = { &F, &param };
                 return this->diff(proxy,x,h);
@@ -81,8 +81,8 @@ namespace upsylon
 
             template <typename FUNC> struct parametric_call
             {
-                FUNC           *pF;
-                const array<T> *pParam;
+                FUNC     *pF;
+                array<T> *pParam;
                 inline T operator()(const T x )
                 {
                     assert(pF);assert(pParam);

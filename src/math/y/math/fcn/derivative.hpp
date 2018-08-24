@@ -106,6 +106,7 @@ namespace upsylon
                 return dFdx;
             }
 
+            
             //! local computation of second order derivative
             template <typename FUNC>
             inline T diff2( const T f0, FUNC &f, const T x, const T h, T &err )
