@@ -6,6 +6,7 @@
 #include "y/container/matrix.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sort/index.hpp"
+#include "y/sort/heap.hpp"
 
 namespace upsylon
 {

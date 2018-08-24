@@ -44,6 +44,12 @@ SET(ode_impl_srcs ${ode_impl_decl} ${ode_impl_code})
 SOURCE_GROUP( ode/implicit FILES ${ode_impl_srcs} )
 INSTALL( FILES ${ode_impl_decl} DESTINATION include/y/math/ode/implicit )
 
+FILE(GLOB fit_decl y/math/fit/*.hpp)
+FILE(GLOB fit_cfit y/math/fit/*.cpp)
+SET(fit_srcs ${fit_decl} ${fit_cfit})
+SOURCE_GROUP( fit FILES ${fit_srcs} )
+INSTALL( FILES ${fit_decl} DESTINATION include/y/math/fit )
+
 
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
@@ -51,6 +57,7 @@ ${kernel_srcs}
 ${io_srcs}
 ${fcn_srcs}
 ${ode_srcs} ${ode_expl_srcs} ${ode_impl_srcs}
+${fit_srcs}
 )
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
 
