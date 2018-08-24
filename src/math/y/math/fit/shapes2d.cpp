@@ -72,7 +72,7 @@ namespace upsylon
             const double c = rhs[3];
             xc     = 0.5*a;
             yc     = 0.5*b;
-            radius = sqrt(c + xc*xc + yc*yc);
+            radius = sqrt( max_of(c + xc*xc + yc*yc,0.0) );
             return true;
         }
 
