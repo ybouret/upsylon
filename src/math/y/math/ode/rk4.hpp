@@ -36,7 +36,11 @@ namespace upsylon
                 inline ~RK4() throw()
                 {
                 }
-
+                
+                //! compute the estimate
+#define YMK_RK4_UPDATE(I) \
+const T _k2 = k2[I]; const T _k3 = k3[I]; Y[I] += scal * (k1[I]+(_k2+_k2)+(_k3+_k3)+k4[I])
+                
                 //! integrate from X0 to X1
                 inline void operator()( Equation &F, Array &Y, const T X0, const T X1, Callback *cb=0 )
                 {
@@ -80,10 +84,8 @@ namespace upsylon
                     // Y += h/6*(k1+2*k2+2*k3+k4)
                     //__________________________________________________________
                     
-                    //! compute the estimate
-#define YMK_RK4_UPDATE(I) const T _k2 = k2[I]; const T _k3 = k3[I]; Y[I] += scal * (k1[I]+(_k2+_k2)+(_k3+_k3)+k4[I])
+                  
                     Y_LOOP_FUNC_(Yt.size(), YMK_RK4_UPDATE, 1);
-//#undef  YMK_RK4_UPDATE
                 }
 
             private:
