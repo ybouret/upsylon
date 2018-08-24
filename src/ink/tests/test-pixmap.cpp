@@ -22,7 +22,9 @@ Y_UTEST(pixmap)
     {
         const string    fn   = argv[iarg];
         arc_ptr<bitmap> bmp1 = img.load1(fn,NULL);
-
+        arc_ptr<bitmap> bmpf = img.loadf(fn,NULL);
+        arc_ptr<bitmap> bmp3 = img.load3(fn,NULL);
+        arc_ptr<bitmap> bmp4 = img.load4(fn,NULL);
     }
 
 }

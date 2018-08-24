@@ -96,7 +96,7 @@ namespace upsylon
         private_length(0),
         model( memory_from_user )
         {
-            if( stride < scanline ) throw exception("bitmpa from user data: invalid stride!");
+            if( stride < scanline ) throw exception("bitmap from user data: invalid stride!");
             allocate_rows_only();
         }
 
@@ -134,6 +134,7 @@ namespace upsylon
         {
             assert(rows);
             assert(entry);
+            assert(stride>=scanline);
             uint8_t    *p = (uint8_t    *)entry;
             row_layout *r = (row_layout *)rows;
             for(size_t j=0;j<h;++j)

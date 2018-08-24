@@ -217,11 +217,8 @@ namespace upsylon
             for(unit_t j=0;j<height;++j)
             {
                 const png_byte *q = mem.rows[j];
-                //uint8_t        *p = static_cast<uint8_t*>(bmp->get_line(--y));
-                uint8_t p[32];
-                for(unit_t i=0;i<width;++i,q += num_channels
-                    //, p += depth
-                    )
+                uint8_t        *p = static_cast<uint8_t*>(bmp->get_line(--y));
+                for(unit_t i=0;i<width;++i,q += num_channels , p += depth )
                 {
                     switch(num_channels)
                     {
@@ -232,15 +229,13 @@ namespace upsylon
 
                         case 3: {
                             const RGBA C( q[0], q[1], q[2], 0xff);
-                            proc(p,C); }
-                            break;
+                            proc(p,C);
+                        } break;
                             
                         case 4: {
                             const RGBA C( q[0], q[1], q[2], q[3]);
                             proc(p,C);
-
-                        }
-                            break;
+                        } break;
                             
                         default:
                             // never get here

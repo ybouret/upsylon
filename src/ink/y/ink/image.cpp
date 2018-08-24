@@ -21,7 +21,7 @@ namespace upsylon
         void image:: enroll( const format::pointer &fmt )
         {
             static const char fn[] = "image::enroll";
-            std::cerr << "enrolling " << fmt->name << std::endl;
+            //std::cerr << "enrolling " << fmt->name << std::endl;
 
             //__________________________________________________________________
             //
@@ -41,7 +41,7 @@ namespace upsylon
             {
                 string ext = *exts;
                 string_convert::to_lower(ext);
-                std::cerr << "|_" << ext << std::endl;
+                //std::cerr << "|_" << ext << std::endl;
                 if( !ext_db.insert(ext,fmt) )
                 {
                     throw exception("%s('%s' already register in format '%s')", fn, *ext, *id);
@@ -59,7 +59,7 @@ namespace upsylon
                 throw exception("no format matching extension '%s'", *ext);
             }
             image::format::pointer proxy( *ppFmt );
-            std::cerr << "using [" << proxy->name << "] for " << filename << std::endl;
+            //std::cerr << "using [" << proxy->name << "] for " << filename << std::endl;
             return *proxy;
         }
 

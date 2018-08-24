@@ -45,6 +45,7 @@ namespace upsylon
                 if(lower.y>upper.y) cswap(lower.y,upper.y);
                 (size_t&)w = 1+upper.x-lower.x;
                 (size_t&)h = 1+upper.y-lower.y;
+                (size_t&)pixels = w*h;
             }
 
             //! build by lower coordinate and size, may be empty
@@ -55,7 +56,7 @@ namespace upsylon
             upper(l),
             w(W),
             h(H),
-            pixels(0)
+            pixels(w*h)
             {
                 coord &u = (coord&)upper;
                 u.x += W;

@@ -86,12 +86,10 @@ namespace upsylon
             const int    h   = GetHeight();
             raster.startup(w*h);
 
-            std::cerr << "ReadingRGBA image from libtiff..." << std::endl;
             if( 1 != TIFFReadRGBAImage((TIFF*)handle, w, h, raster() ) )
             {
                 throw imported::exception("TIFFReadRGBAImage","failure...");
             }
-            std::cerr << "...done" << std::endl;
         }
 
 
