@@ -26,12 +26,10 @@ namespace upsylon
         protected:
             void        *rows;     //!< address of first row
         public:
-            const unit_t w;        //!< width  = sizes.x
-            const unit_t h;        //!< height = sizes.y
             const unit_t depth;    //!< bytes per pixel > 0
             const unit_t scanline; //!< w*depth
             const unit_t stride;   //!< stride>=scanline
-            const unit_t bytes;    //!< pixels*depth
+            const size_t bytes;    //!< pixels*depth
             
             //! memory_is_global bitmap
             explicit bitmap(const unit_t D,const unit_t W,const unit_t H);
@@ -53,33 +51,33 @@ namespace upsylon
             virtual ~bitmap() throw();
 
             //! get line address
-            inline void *get_line(const unit_t j) throw()
+            inline void *get_line(const size_t j) throw()
             {
-                assert(j>=0);assert(j<h);
+                assert(j<h);
                 return (static_cast<row_layout *>(rows)+j)->p;
             }
 
             //! get line address, const
-            inline const void *get_line(const unit_t j) const throw()
+            inline const void *get_line(const size_t j) const throw()
             {
-                assert(j>=0);assert(j<h);
+                assert(j<h);
                 return (static_cast<row_layout *>(rows)+j)->p;
             }
 
             //! get pixel address
-            inline void *get(const unit_t i, const unit_t j) throw()
+            inline void *get(const size_t i, const size_t j) throw()
             {
-                assert(i>=0);assert(i<w);
-                assert(j>=0);assert(j<h);
+                assert(i<w);
+                assert(j<h);
                 uint8_t *p = (static_cast<row_layout *>(rows)+j)->p;
                 return &p[i*depth];
             }
 
             //! get pixel address, const
-            inline const void *get(const unit_t i, const unit_t j) const throw()
+            inline const void *get(const size_t i, const size_t j) const throw()
             {
-                assert(i>=0);assert(i<w);
-                assert(j>=0);assert(j<h);
+                assert(i<w);
+                assert(j<h);
                 const uint8_t *p = (static_cast<row_layout *>(rows)+j)->p;
                 return &p[i*depth];
             }
@@ -88,7 +86,7 @@ namespace upsylon
         private:
             Y_DISABLE_ASSIGN(bitmap);
             //! layout of a pixmap row
-            struct row_layout { uint8_t *p; unit_t w; };
+            struct row_layout { uint8_t *p; size_t w; };
             
             bitmap *shared;
             void   *private_memory;

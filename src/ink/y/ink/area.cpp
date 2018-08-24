@@ -12,9 +12,10 @@ namespace upsylon
             //! sanity check
             if(n<=0) return;
 
-            const coord sizes = source.sizes;
+            const size_t w = source.w;
+            const size_t h = source.h;
             //! full empty
-            if(sizes.x<=0||sizes.y<=0)
+            if(w<=0||h<=0)
             {
                 const area empty;
                 for(size_t r=0;r<n;++r)
@@ -24,20 +25,20 @@ namespace upsylon
                 return;
             }
 
-            assert(sizes.x>0&&sizes.y>0);
+            assert(w>0&&h>0);
             const unit_t cores = n;
             coord split = coord::sqrt_of(cores);
-            bool  x_is_small = true;
-            if(sizes.x>sizes.y)
+            bool  w_is_small = true;
+            if(w>h)
             {
-                x_is_small = false;
+                w_is_small = false;
                 split.swap_xy();
             }
 
-            std::cerr << "should map " << sizes << " to " << split << std::endl;
-            if(x_is_small)
+            std::cerr << "should map " << w << 'x' << h  << " to " << split << std::endl;
+            if(w_is_small)
             {
-                while(split.x>1&&split.x>sizes.x)
+                while(split.x>1&&size_t(split.x)>w)
                 {
                     --split.x;
                     split.y = n/split.x;
@@ -46,7 +47,7 @@ namespace upsylon
             }
             else
             {
-                while(split.y>1&&split.y>sizes.y)
+                while(split.y>1&&size_t(split.y)>h)
                 {
                     --split.y;
                     split.x = n/split.y;
@@ -59,20 +60,20 @@ namespace upsylon
             {
                 //std::cerr << "@j=" << j << std::endl;
                 const parallel par_y(split.y,j);
-                unit_t         y_length = sizes.y;
+                unit_t         y_length = h;
                 unit_t         y_offset = source.lower.y;
                 par_y.split(y_length,y_offset);
                 for(unit_t i=0;i<split.x;++i)
                 {
                     const parallel par_x(split.x,i);
-                    unit_t         x_length = sizes.x;
+                    unit_t         x_length = w;
                     unit_t         x_offset = source.lower.x;
                     par_x.split(x_length,x_offset);
 
 
                     const coord l(x_offset,y_offset);
-                    const coord s(x_length,y_length);
-                    const area  a(l,s,area_sizes);
+                    //const coord s(x_length,y_length);
+                    const area  a(l,x_length,y_length);
                     //std::cerr << "\t" << a.lower << "+" << a.sizes << "=" << a.pixels << std::endl;
                     push_back(a);
                 }

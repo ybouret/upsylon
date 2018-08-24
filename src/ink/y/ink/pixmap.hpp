@@ -19,18 +19,18 @@ namespace upsylon
             {
             public:
                 type        *p; //!< first iterm of the wrow
-                const unit_t w; //!< row width
+                const size_t w; //!< row width
                 //! item access
-                inline type       & operator[](const unit_t x) throw()       { assert(x>=0);assert(x<w); assert(p); return p[x]; }
+                inline type       & operator[](const size_t x) throw()       { assert(x<w); assert(p); return p[x]; }
                 //! item access, const
-                inline const_type & operator[](const unit_t x) const throw() { assert(x>=0);assert(x<w); assert(p); return p[x]; }
+                inline const_type & operator[](const size_t x) const throw() { assert(x<w); assert(p); return p[x]; }
 
             private:
                 row(); ~row(); Y_DISABLE_COPY_AND_ASSIGN(row);
             };
 
             //! global memory pixmap
-            inline explicit pixmap(const unit_t W, const unit_t H) :
+            inline explicit pixmap(const size_t W, const size_t H) :
             bitmap(sizeof(type),W,H)
             {
                 assert(sizeof(type)==depth);
@@ -42,10 +42,10 @@ namespace upsylon
             }
 
             //! row access from bitmap rows
-            inline row &       operator[](const unit_t y) throw()       { assert(y>=0); assert(y<sizes.y); return *(static_cast<row *>(rows)+y); }
+            inline row &       operator[](const size_t y) throw()       { assert(y<h); return *(static_cast<row *>(rows)+y); }
             
             //! frow access from bitmap rows, const
-            inline const row & operator[](const unit_t y) const throw() { assert(y>=0); assert(y<sizes.y); return *(static_cast<row *>(rows)+y); }
+            inline const row & operator[](const size_t y) const throw() { assert(y<h); return *(static_cast<row *>(rows)+y); }
 
 
         private:

@@ -30,11 +30,9 @@ namespace upsylon
         }
         
         bitmap:: bitmap(const unit_t D, const unit_t W, const unit_t H) :
-        area( coord(0,0), coord(W,H), area_sizes ),
+        area( coord(0,0),__check(W,"width"),__check(H,"height") ),
         entry(0),
         rows(0),
-        w(     __check(W,"width")  ),
-        h(     __check(H,"height") ),
         depth( __check(D,"depth")  ),
         scanline( w * depth ),
         stride( scanline ),
@@ -45,8 +43,6 @@ namespace upsylon
         model( memory_is_global )
         {
 
-            assert(w==sizes.x);
-            assert(h==sizes.y);
             allocate();
         }
         
@@ -59,13 +55,11 @@ namespace upsylon
         area( *__check(bmp) ),
         entry( bmp->entry   ),
         rows(0),
-        w( bmp->w ),
-        h( bmp->h ),
-        depth( bmp->depth ),
+        depth(    bmp->depth    ),
         scanline( bmp->scanline ),
         stride(   bmp->stride   ),
         bytes(    bmp->bytes    ),
-        shared( bmp ),
+        shared(   bmp           ),
         private_memory(0),
         private_length(0),
         model( memory_is_shared )
@@ -90,11 +84,9 @@ namespace upsylon
                         const unit_t W,
                         const unit_t H,
                         const unit_t S) :
-        area( coord(0,0), coord(W,H), area_sizes ),
+        area( coord(0,0),__check(W,"width"),__check(H,"height") ),
         entry((void*)data),
         rows(0),
-        w(     __check(W,"width")  ),
-        h(     __check(H,"height") ),
         depth( __check(D,"depth")  ),
         scanline( w * depth ),
         stride( S ),
@@ -105,8 +97,6 @@ namespace upsylon
         model( memory_from_user )
         {
 
-            assert(w==sizes.x);
-            assert(h==sizes.y);
             if( stride <= scanline ) throw exception("bitmpa from user data: invalid stride!");
             allocate_rows_only();
         }
@@ -147,7 +137,7 @@ namespace upsylon
             assert(entry);
             uint8_t    *p = (uint8_t    *)entry;
             row_layout *r = (row_layout *)rows;
-            for(unit_t j=0;j<h;++j)
+            for(size_t j=0;j<h;++j)
             {
                 r->p = p;
                 r->w = w;
@@ -161,8 +151,6 @@ namespace upsylon
         counted(),
         entry(0),
         rows(0),
-        w( bmp.w ),
-        h( bmp.h ),
         depth(    bmp.depth    ),
         scanline( bmp.scanline ),
         stride(   bmp.depth    ),
