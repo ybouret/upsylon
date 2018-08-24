@@ -39,7 +39,7 @@ Y_UTEST(areas)
         const unit_t w   = string_convert::to<unit_t>(argv[1],"w");
         const unit_t h   = string_convert::to<unit_t>(argv[2],"h");
         const size_t n   = string_convert::to<size_t>(argv[3],"n");
-        const area   A0  = area( coord(0,0), coord(w,h), area_sizes);
+        const area   A0  = area( coord(0,0), w,h );
         std::cerr << "Manual Tiles" << std::endl;
         areas zones(A0,n);
         std::cerr << std::endl;

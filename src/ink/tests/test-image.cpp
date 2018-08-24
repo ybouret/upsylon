@@ -24,14 +24,14 @@ namespace
     static inline void do_test(imageIO &img,const string &id)
     {
         pixmap<T> pxm( 100+alea.leq(400), 100+alea.leq(400) );
-        for(unit_t y=0;y<pxm.h;++y)
+        for(size_t y=0;y<pxm.h;++y)
         {
-            for(unit_t x=0;x<pxm.w;++x)
+            for(size_t x=0;x<pxm.w;++x)
             {
                 pxm[y][x] = genPixel::get<T>();
             }
         }
-        std::cerr << "pixmap<" << typeid(T).name() << "> " << pxm.sizes << " => depth=" << pxm.depth << ", bytes=" << pxm.bytes << std::endl;
+        std::cerr << "pixmap<" << typeid(T).name() << "> " << pxm.w << 'x' << pxm.h << " => depth=" << pxm.depth << ", bytes=" << pxm.bytes << std::endl;
 
         const string root = "img" + id + ".";
         img.save(root+"jpg", pxm,NULL);

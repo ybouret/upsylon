@@ -26,23 +26,23 @@ namespace upsylon
         protected:
             void        *rows;     //!< address of first row
         public:
-            const unit_t depth;    //!< bytes per pixel > 0
-            const unit_t scanline; //!< w*depth
-            const unit_t stride;   //!< stride>=scanline
+            const size_t depth;    //!< bytes per pixel > 0
+            const size_t scanline; //!< w*depth
+            const size_t stride;   //!< stride>=scanline
             const size_t bytes;    //!< pixels*depth
             
             //! memory_is_global bitmap
-            explicit bitmap(const unit_t D,const unit_t W,const unit_t H);
+            explicit bitmap(const size_t D,const size_t W,const size_t H);
             
             //! memory_is_shared bitmap, same layouts
             explicit bitmap( bitmap *bmp );
 
             //! memory from user
             explicit bitmap(const void  *data,
-                            const unit_t D,
-                            const unit_t W,
-                            const unit_t H,
-                            const unit_t S);
+                            const size_t D,
+                            const size_t W,
+                            const size_t H,
+                            const size_t S);
 
             //! copy with same memory
             bitmap( const bitmap &bmp );

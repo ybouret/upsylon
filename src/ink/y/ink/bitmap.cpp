@@ -22,14 +22,14 @@ namespace upsylon
         }
         
         static inline
-        unit_t __check(const unit_t v, const char *id)
+        unit_t __check(const size_t v, const char *id)
         {
             assert(id);
             if(v<=0) throw exception("ink.bitmap(%s<=0)", id);
             return v;
         }
         
-        bitmap:: bitmap(const unit_t D, const unit_t W, const unit_t H) :
+        bitmap:: bitmap(const size_t D, const size_t W, const size_t H) :
         area( coord(0,0),__check(W,"width"),__check(H,"height") ),
         entry(0),
         rows(0),
@@ -80,10 +80,10 @@ namespace upsylon
         }
         
         bitmap:: bitmap(const void  *data,
-                        const unit_t D,
-                        const unit_t W,
-                        const unit_t H,
-                        const unit_t S) :
+                        const size_t D,
+                        const size_t W,
+                        const size_t H,
+                        const size_t S) :
         area( coord(0,0),__check(W,"width"),__check(H,"height") ),
         entry((void*)data),
         rows(0),
@@ -96,8 +96,7 @@ namespace upsylon
         private_length(0),
         model( memory_from_user )
         {
-
-            if( stride <= scanline ) throw exception("bitmpa from user data: invalid stride!");
+            if( stride < scanline ) throw exception("bitmpa from user data: invalid stride!");
             allocate_rows_only();
         }
 

@@ -13,14 +13,14 @@ namespace
     static inline void do_test()
     {
         pixmap<T> pxm( 1+alea.leq(100), 1+alea.leq(100) );
-        for(unit_t y=0;y<pxm.h;++y)
+        for(size_t y=0;y<pxm.h;++y)
         {
-            for(unit_t x=0;x<pxm.w;++x)
+            for(size_t x=0;x<pxm.w;++x)
             {
                 pxm[y][x] = pixel<T>::zero;
             }
         }
-        std::cerr << "pixmap<" << typeid(T).name() << "> " << pxm.sizes << " => depth=" << pxm.depth << ", bytes=" << pxm.bytes << std::endl;
+        std::cerr << "pixmap<" << typeid(T).name() << "> " << pxm.w << 'x' << pxm.h << " => depth=" << pxm.depth << ", bytes=" << pxm.bytes << std::endl;
     }
 
 }
