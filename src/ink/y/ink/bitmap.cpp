@@ -193,6 +193,53 @@ namespace upsylon
             }
         }
 
+        void bitmap:: __signature( hashing::function &H ) const throw()
+        {
+            H.set();
+            for(size_t j=0;j<h;++j)
+            {
+                H.run(get_line(j),scanline);
+            }
+        }
+
+
+        namespace
+        {
+            struct copyOps
+            {
+                bitmap       *target;
+                const bitmap *source;
+                inline void operator()( const area &zone, lockable & ) throw()
+                {
+                    assert(target);
+                    assert(source);
+                    assert(target->contains(zone));
+                    assert(source->contains(zone));
+                    if(zone.pixels)
+                    {
+                        const size_t bytes_per_line = target->depth * zone.w;
+                        const unit_t jlo = zone.lower.y;
+                        const unit_t ilo = zone.lower.x;
+                        for(unit_t j=zone.upper.y;j>=jlo;--j)
+                        {
+                            memcpy(target->get(ilo,j),source->get(ilo,j),bytes_per_line);
+                        }
+                    }
+
+                }
+            };
+        }
+        void bitmap:: copy(const bitmap &other, engine &E)
+        {
+            if(this!=&other)
+            {
+                assert(h==other.h);
+                assert(scanline==other.scanline);
+                copyOps ops = { this, &other };
+                E.run(ops);
+            }
+        }
+
         
     }
 }

@@ -2,8 +2,9 @@
 #ifndef Y_INK_BITMAP_INCLUDED
 #define Y_INK_BITMAP_INCLUDED 1
 
-#include "y/ink/area.hpp"
+#include "y/ink/engine.hpp"
 #include "y/ptr/counted.hpp"
+#include "y/hashing/function.hpp"
 
 namespace upsylon
 {
@@ -82,9 +83,22 @@ namespace upsylon
                 return &p[i*depth];
             }
 
-            //! hard copy a part
+            //! hard copy
             void copy(const bitmap &other) throw();
+            //! hard copy with tiles
+            void copy(const bitmap &other, engine &E);
+
+            //! H.set(), H.run(on all data)
+            void __signature( hashing::function &H ) const throw();
             
+            //! get a hash
+            template <typename T>
+            T __hash( hashing::function &H ) const throw()
+            {
+                __signature(H);
+                return H.key<T>();
+            }
+
         private:
             Y_DISABLE_ASSIGN(bitmap);
             //! layout of a pixmap row

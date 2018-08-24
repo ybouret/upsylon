@@ -2,7 +2,7 @@
 #ifndef Y_INK_ENGINE_INCLUDED
 #define Y_INK_ENGINE_INCLUDED 1
 
-#include "y/concurrent/scheme/for-each.hpp"
+#include "y/concurrent/scheme/simd.hpp"
 #include "y/ink/area.hpp"
 #include "y/ptr/arc.hpp"
 

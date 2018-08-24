@@ -2,7 +2,6 @@
 #include "y/ink/engine.hpp"
 #include "y/utest/run.hpp"
 #include "y/string/convert.hpp"
-#include "y/concurrent/scheme/simd.hpp"
 
 using namespace upsylon;
 using namespace ink;
