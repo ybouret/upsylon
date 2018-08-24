@@ -66,7 +66,7 @@ namespace upsylon
                     const RGBA     C( TIFFGetR(P), TIFFGetG(P), TIFFGetB(P), TIFFGetA(P));
                     uint64_t tgt = 0;
                     proc( &tgt, C);
-                    proc(B->get(i,j),C);
+                    //proc(B->get(i,j),C);
                 }
             }
             
