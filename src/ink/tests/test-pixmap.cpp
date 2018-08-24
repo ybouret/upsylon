@@ -21,10 +21,11 @@ Y_UTEST(pixmap)
     for(int iarg=1;iarg<argc;++iarg)
     {
         const string    fn   = argv[iarg];
-        arc_ptr<bitmap> bmp1 = img.load1(fn,NULL);
-        arc_ptr<bitmap> bmpf = img.loadf(fn,NULL);
-        arc_ptr<bitmap> bmp3 = img.load3(fn,NULL);
-        arc_ptr<bitmap> bmp4 = img.load4(fn,NULL);
+        pixmapf         pxmf = img.loadf(fn,0);
+        pixmap1         pxm1 = img.load1(fn,0);
+        pixmap3         pxm3 = img.load3(fn,0);
+        pixmap4         pxm4 = img.load4(fn,0);
+
     }
 
 }

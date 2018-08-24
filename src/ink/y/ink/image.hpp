@@ -52,31 +52,31 @@ namespace upsylon
 
 
             //! load a floating point grey scale bitmap
-            inline bitmap *loadf(const string &filename, const void *options) const
+            inline pixmapf loadf(const string &filename, const void *options) const
             {
                 put_gsf proc;
-                return load(filename,sizeof(float),proc,options);
+                return pixmapf(load(filename,sizeof(float),proc,options));
             }
 
             //! load a 8-bits grey-scale bitmap
-            inline bitmap *load1(const string &filename, const void *options) const
+            inline pixmap1 load1(const string &filename, const void *options) const
             {
                 put_gsu proc;
-                return load(filename,sizeof(uint8_t),proc,options);
+                return pixmap1(load(filename,sizeof(uint8_t),proc,options));
             }
 
             //! load an rgb bitmap
-            inline bitmap *load3(const string &filename, const void *options) const
+            inline pixmap3 load3(const string &filename, const void *options) const
             {
                 put_rgb proc;
-                return load(filename,sizeof(RGB),proc,options);
+                return pixmap3(load(filename,sizeof(RGB),proc,options));
             }
 
             //! load an rgba bitmap
-            inline bitmap *load4(const string &filename, const void *options) const
+            inline pixmap4 load4(const string &filename, const void *options) const
             {
                 put_rgba proc;
-                return load(filename,sizeof(RGBA),proc,options);
+                return pixmap4(load(filename,sizeof(RGBA),proc,options));
             }
 
             //==================================================================

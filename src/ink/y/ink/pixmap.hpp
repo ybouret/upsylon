@@ -3,6 +3,7 @@
 #define Y_INK_PIXMAP_INCLUDED 1
 
 #include "y/ink/bitmap.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -36,6 +37,19 @@ namespace upsylon
                 assert(sizeof(type)==depth);
             }
 
+            //! shared pixmap with compatible size
+            inline explicit pixmap( bitmap *bmp ) :
+            bitmap(bmp)
+            {
+                if(depth!=sizeof(T)) throw exception("pixmap: incompatible depths!!!");
+            }
+
+            //! copy, relying on bitmap
+            pixmap(const pixmap &other) :
+            bitmap(other)
+            {
+            }
+
             //! destructor
             inline virtual ~pixmap() throw()
             {
@@ -49,7 +63,7 @@ namespace upsylon
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(pixmap);
+            Y_DISABLE_ASSIGN(pixmap);
         };
     }
 }
