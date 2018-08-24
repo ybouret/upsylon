@@ -53,7 +53,7 @@ namespace upsylon
             }
             else
             {
-                assert(xnumeric<T>::is_positive(den)>0);
+                assert(xnumeric<T>::is_positive(den));
                 const T __gcd = gcd_positive(num,den);
                 num /=  __gcd;
                 den /=  __gcd;

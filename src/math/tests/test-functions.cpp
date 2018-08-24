@@ -14,7 +14,7 @@ namespace {
         {
             const string  fn = vformat("bessel%d.dat",int(sizeof(T))*8);
             ios::ocstream fp(fn);
-            for(T x=0.01;x<=5;x+=0.01)
+            for(T x=T(0.01);x<=T(5);x+=T(0.01))
             {
                 fp("%g %g %g %g %g\n", x, bessel<T>::j0(x), bessel<T>::y0(x), bessel<T>::i0(x), bessel<T>::k0(x));
             }
@@ -23,7 +23,7 @@ namespace {
         {
             const string fn = vformat("erf%d.dat",int(sizeof(T))*8);
             ios::ocstream fp(fn);
-            for(T x=-2;x<=2;x+=0.01)
+            for(T x=T(-2);x<=T(2);x+=T(0.01))
             {
                 const T q  = qerf(x);
                 const T qc = qerfc(x);
