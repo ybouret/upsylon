@@ -53,7 +53,8 @@ namespace upsylon
             const int w = tiff.GetWidth();
             const int h = tiff.GetHeight();
             auto_ptr<bitmap> B(new bitmap(depth,w,h) );
-            
+
+
             // map raster to bitmap
             const uint32_t *p = raster();
             for(int j=0;j<h;++j)
@@ -63,6 +64,8 @@ namespace upsylon
                 {
                     const uint32_t P = *(q++);
                     const RGBA     C( TIFFGetR(P), TIFFGetG(P), TIFFGetB(P), TIFFGetA(P));
+                    uint64_t tgt = 0;
+                    proc( &tgt, C);
                     proc(B->get(i,j),C);
                 }
             }

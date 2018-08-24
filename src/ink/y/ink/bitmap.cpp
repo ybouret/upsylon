@@ -178,7 +178,20 @@ namespace upsylon
             }
         }
         
-        
+        void bitmap:: copy(const bitmap &other) throw()
+        {
+            if(this!=&other)
+            {
+                assert(h==other.h);
+                assert(scanline==other.scanline);
+                const size_t n = scanline;
+                for(size_t j=0;j<h;++j)
+                {
+                    memcpy(get_line(j),other.get_line(j),n);
+                }
+            }
+        }
+
         
     }
 }

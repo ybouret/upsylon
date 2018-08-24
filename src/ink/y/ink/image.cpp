@@ -59,6 +59,7 @@ namespace upsylon
                 throw exception("no format matching extension '%s'", *ext);
             }
             image::format::pointer proxy( *ppFmt );
+            std::cerr << "using [" << proxy->name << "] for " << filename << std::endl;
             return *proxy;
         }
 

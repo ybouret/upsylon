@@ -34,6 +34,7 @@ namespace upsylon
                         _Raster tmp(n);
                         swap_with(tmp);
                     }
+                    assert(size>=n);
                 }
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Raster);

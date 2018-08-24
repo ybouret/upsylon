@@ -82,6 +82,8 @@ namespace upsylon
                 return &p[i*depth];
             }
 
+            //! hard copy a part
+            void copy(const bitmap &other) throw();
             
         private:
             Y_DISABLE_ASSIGN(bitmap);

@@ -62,8 +62,7 @@ namespace upsylon
                 u.y += H;
                 u.dec();
             }
-
-
+            
             //! test if coordinate is insinde
             inline bool has( const coord c ) const throw()
             {
