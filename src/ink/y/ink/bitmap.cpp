@@ -85,8 +85,33 @@ namespace upsylon
             }
         }
         
-        
-        
+        bitmap:: bitmap(const void  *data,
+                        const unit_t D,
+                        const unit_t W,
+                        const unit_t H,
+                        const unit_t S) :
+        area( coord(0,0), coord(W,H), area_sizes ),
+        entry((void*)data),
+        rows(0),
+        w(     __check(W,"width")  ),
+        h(     __check(H,"height") ),
+        depth( __check(D,"depth")  ),
+        scanline( w * depth ),
+        stride( S ),
+        bytes(pixels*depth),
+        shared(0),
+        private_memory(0),
+        private_length(0),
+        model( memory_from_user )
+        {
+
+            assert(w==sizes.x);
+            assert(h==sizes.y);
+            if( stride <= scanline ) throw exception("bitmpa from user data: invalid stride!");
+            allocate_rows_only();
+        }
+
+
         void bitmap:: allocate()
         {
             const size_t data_offset = 0;

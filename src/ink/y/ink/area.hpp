@@ -30,13 +30,10 @@ namespace upsylon
             const unit_t pixels; //!< w*h
 
             //! default area, origin
-            inline area() throw() : lower(0,0), upper(0,0), sizes(1,1), pixels(1)
-            {
-            }
+            inline area() throw() : lower(0,0), upper(0,0), sizes(1,1), pixels(1) { }
 
             //! copy
-            inline area(const area &other) throw() :
-            lower(other.lower), upper(other.upper), sizes(other.sizes), pixels(other.pixels) {}
+            inline area(const area &other) throw() : lower(other.lower), upper(other.upper), sizes(other.sizes), pixels(other.pixels) {}
 
             //! destructor
             inline ~area() throw() {}
@@ -84,6 +81,7 @@ namespace upsylon
                 os << '{' << a.lower << "->" << a.upper << " : " << a.sizes << " #" << a.pixels << '}';
                 return os;
             }
+            
         private:
             Y_DISABLE_ASSIGN(area);
             inline void setup_by_upper() throw()

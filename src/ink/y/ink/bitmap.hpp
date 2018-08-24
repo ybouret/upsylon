@@ -26,8 +26,8 @@ namespace upsylon
         protected:
             void        *rows;     //!< address of first row
         public:
-            const unit_t w;        //!< width
-            const unit_t h;        //!< height
+            const unit_t w;        //!< width  = sizes.x
+            const unit_t h;        //!< height = sizes.y
             const unit_t depth;    //!< bytes per pixel > 0
             const unit_t scanline; //!< w*depth
             const unit_t stride;   //!< stride>=scanline
@@ -38,7 +38,14 @@ namespace upsylon
             
             //! memory_is_shared bitmap, same layouts
             explicit bitmap( bitmap *bmp );
-            
+
+            //! memory from user
+            explicit bitmap(const void  *data,
+                            const unit_t D,
+                            const unit_t W,
+                            const unit_t H,
+                            const unit_t S);
+
             //! copy with same memory
             bitmap( const bitmap &bmp );
             
