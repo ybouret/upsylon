@@ -142,6 +142,123 @@ namespace upsylon
                 }
 
             }
+
+            //! bracket minium inside x.a,x.c with f.a, f.c computed
+            template <typename T, typename FUNC> static inline
+            void inside(FUNC       & func,
+                        triplet<T> & x,
+                        triplet<T> & f )
+            {
+
+                static const T SHRINK = T(0.3819660112501051);
+
+                // ordering..
+                if(x.a>x.c)
+                {
+                    cswap(x.a, x.c);
+                    cswap(f.a, f.c);
+                }
+
+                //__________________________________________________________________
+                //
+                // try to find x.b so that f.b <= f.a and f.b <= f.c
+                //__________________________________________________________________
+                const int GTA = 1;
+                const int GTC = 2;
+
+                // and at least one turn
+                T width = x.c-x.a; assert(width>=0);
+                for(;;)
+                {
+                    if(f.a < f.c )
+                    {
+                        x.b = clamp<T>(x.a,x.a + SHRINK*(x.c-x.a),x.c);
+                    }
+                    else
+                    {
+                        if(f.c<f.a)
+                        {
+                            x.b = clamp<T>(x.a,x.c - SHRINK*(x.c-x.a),x.c);
+                        }
+                        else
+                        {
+                            x.b = clamp<T>(x.a,x.a + T(0.5) * (x.c-x.a),x.c);
+                        }
+                    }
+                    f.b = func(x.b);
+                    assert(x.a<=x.b);
+                    assert(x.b<=x.c);
+                    int flag = 0;
+                    if(f.b>f.c) flag |= GTC;
+                    if(f.b>f.a) flag |= GTA;
+
+                    switch(flag)
+                    {
+
+                        case GTA:
+                            assert(f.b<=f.c);
+                            assert(f.b>f.a);
+                            // move c to b
+                            x.c = x.b;
+                            f.c = f.b;
+                            break;
+
+                        case GTC:
+                            assert(f.b<=f.a);
+                            assert(f.b>f.c);
+                            // move a to b
+                            x.a = x.b;
+                            f.a = f.b;
+                            break;
+
+                        case GTA|GTC:
+                            assert(f.b>f.c);
+                            assert(f.b>f.a);
+                            // got to make a choice..
+                            if(f.a<=f.c)
+                            {
+                                x.c = x.b;
+                                f.c = f.b;
+                            }
+                            else
+                            {
+                                x.a=x.b;
+                                f.a=f.b;
+                            }
+                            break;
+
+
+                        default:
+                            assert(f.b<=f.a);
+                            assert(f.b<=f.c);
+                            return;
+                    }
+
+                    const T new_width = x.c-x.a;
+                    if(new_width>=width)
+                    {
+                        // one min is numerically on the side
+                        break;
+                    }
+
+                    width = new_width;
+                }
+
+                // prepare the triplet so that minimize shall work...
+                if( f.a <= f.c )
+                {
+                    x.b = x.c = x.a;
+                    f.b = f.c = f.a;
+                }
+                else
+                {
+                    x.b = x.a = x.c;
+                    f.b = f.a = f.c;
+                }
+
+            }
+
+
         };
     }
 }
