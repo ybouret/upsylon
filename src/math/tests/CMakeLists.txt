@@ -26,6 +26,7 @@ ADD_TEST(ODE_expl   test-m ode_expl)
 ADD_TEST(ODE_impl   test-m ode_impl)
 ADD_TEST(Shapes2d   test-m shapes2d)
 ADD_TEST(Bracket    test-m bracket)
+ADD_TEST(Minimize   test-m min)
 
 
 ADD_CUSTOM_TARGET(utest-m
