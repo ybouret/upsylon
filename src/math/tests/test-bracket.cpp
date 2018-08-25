@@ -46,7 +46,7 @@ namespace
 
         {
             std::cerr << "inside@left" << std::endl;
-            triplet<T> x = { -1, -1, 0 };
+            triplet<T> x = { -1, -1, 1 };
             triplet<T> f = { F(x.a), -1, F(x.c) };
             bracket::inside(F<T>,x,f);
             std::cerr << "\tx=" << x << std::endl;
@@ -60,7 +60,6 @@ Y_UTEST(bracket)
 {
     do_test<float>();
     do_test<double>();
-
 }
 Y_UTEST_DONE()
 
