@@ -15,11 +15,15 @@ namespace
     template <typename T>
     void do_test()
     {
-        triplet<T> x = { 0,1.5, -1 };
-        triplet<T> f = { F(x.a), F(x.b), -1 };
-        bracket::expand(F<T>,x,f);
-        std::cerr << "x=" << x << std::endl;
-        std::cerr << "f=" << f << std::endl;
+        for(size_t iter=0;iter<4;++iter)
+        {
+            std::cerr << "@iter=" << iter << std::endl;
+            triplet<T> x = { 10*alea.to<T>(),10*alea.to<T>(), -1 };
+            triplet<T> f = { F(x.a), F(x.b), -1 };
+            bracket::expand(F<T>,x,f);
+            std::cerr << "\tx=" << x << std::endl;
+            std::cerr << "\tf=" << f << std::endl;
+        }
     }
 }
 

@@ -51,6 +51,8 @@ namespace upsylon
                 return is_increasing() || is_decreasing();
             }
 
+            //! shift value a <- b <- c <- d
+            inline void shift(const T d) throw() { a=b; b=c; c=d; }
 
         };
     }
