@@ -52,7 +52,7 @@ namespace upsylon
             static const T      max_10_exp; //!< maximal 10 exponent
             static const T      tiny;       //!< \f$10^{min_{10}exp}\f$
             static const T      huge;       //!< \f$10^{max_{10}exp}\f$
-            
+            static const T      gold;       //!< golden ratio
             typedef functor<T,TL1(T)>                     function;            //!< 1-argument function wrapper
             typedef functor<T,TL1(const array<T>&)>       scalar_field;        //!< scalar field (for gradient)
             typedef functor<T,TL2(T,const array<T>&)>     parametric_function; //!< parametric function
@@ -190,7 +190,7 @@ Y_MATH_EXTERN(ftol);       //!< extern
 Y_MATH_EXTERN(sqrt_ftol);  //!< extern
 Y_MATH_EXTERN(tiny);       //!< extern
 Y_MATH_EXTERN(huge);       //!< extern
-
+Y_MATH_EXTERN(gold);       //!< extern
 #endif
 
 #endif

@@ -23,6 +23,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(ode_expl);
     Y_UTEST(ode_impl);
     Y_UTEST(shapes2d);
+    Y_UTEST(bracket);
 
 }
 Y_UTEST_EXEC()

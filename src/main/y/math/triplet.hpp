@@ -32,6 +32,26 @@ namespace upsylon
             {
                 return (os << '[' << x.a << ' ' << x.b << ' ' << x.c << ']' << '\'' );
             }
+
+            //! check increasing order
+            inline bool is_increasing() const throw()
+            {
+                return (a<=b) && (b<=c);
+            }
+
+            //! check decreasing order
+            inline bool is_decreasing() const throw()
+            {
+                return (c<=b) && (b<=a);
+            }
+
+            //! check ordered
+            inline bool is_ordered() const throw()
+            {
+                return is_increasing() || is_decreasing();
+            }
+
+
         };
     }
 }

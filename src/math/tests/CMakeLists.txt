@@ -20,11 +20,12 @@ ADD_TEST(Diag       test-m diag)
 ADD_TEST(ODE        test-m ode)
 ADD_TEST(RK4        test-m rk4)
 ADD_TEST(Functions  test-m functions)
-ADD_TEST(intg       test-m intg)
-ADD_TEST(michaelis  test-m michaelis)
-ADD_TEST(ode_expl   test-m ode_expl)
-ADD_TEST(ode_impl   test-m ode_impl)
-ADD_TEST(shapes2d   test-m shapes2d)
+ADD_TEST(Intg       test-m intg)
+ADD_TEST(Michaelis  test-m michaelis)
+ADD_TEST(ODE_expl   test-m ode_expl)
+ADD_TEST(ODE_impl   test-m ode_impl)
+ADD_TEST(Shapes2d   test-m shapes2d)
+ADD_TEST(Bracket    test-m bracket)
 
 
 ADD_CUSTOM_TARGET(utest-m

@@ -50,6 +50,11 @@ SET(fit_srcs ${fit_decl} ${fit_cfit})
 SOURCE_GROUP( fit FILES ${fit_srcs} )
 INSTALL( FILES ${fit_decl} DESTINATION include/y/math/fit )
 
+FILE(GLOB opt_decl y/math/opt/*.hpp)
+FILE(GLOB opt_copt y/math/opt/*.cpp)
+SET(opt_srcs ${opt_decl} ${opt_copt})
+SOURCE_GROUP( opt FILES ${opt_srcs} )
+INSTALL( FILES ${opt_decl} DESTINATION include/y/math/opt )
 
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
@@ -58,6 +63,7 @@ ${io_srcs}
 ${fcn_srcs}
 ${ode_srcs} ${ode_expl_srcs} ${ode_impl_srcs}
 ${fit_srcs}
+${opt_srcs}
 )
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
 
