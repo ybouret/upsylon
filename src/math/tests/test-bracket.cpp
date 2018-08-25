@@ -59,7 +59,8 @@ namespace
 Y_UTEST(bracket)
 {
     do_test<float>();
-    
+    do_test<double>();
+
 }
 Y_UTEST_DONE()
 
