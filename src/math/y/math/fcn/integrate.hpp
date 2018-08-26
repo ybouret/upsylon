@@ -3,6 +3,8 @@
 #define Y_MATH_INTEGRATE_INCLUDED 1
 
 #include "y/math/types.hpp"
+#include "y/core/pool.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon
 {
@@ -105,6 +107,53 @@ Y_INTG_EPILOG()
 
                 return false;
             }
+
+            template <typename T> class range : public object
+            {
+            public:
+                const T ini;
+                const T end;
+                T       sum;
+                range  *next;
+                range  *prev;
+                inline explicit range(const T a,const T b) throw() :
+                ini(a), end(b), sum(0), next(0), prev(0) {}
+                inline virtual ~range() throw() {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(range);
+            };
+
+            template <typename T,typename FUNC> static inline
+            T compute( FUNC &F, const T a, const T b, const T ftol )
+            {
+                core::pool_of_cpp< range<T> > todo;
+                core::list_of_cpp< range<T> > done;
+                todo.store( new range<T>(a,b) );
+                while(todo.size>0)
+                {
+                    auto_ptr< range<T> > curr = todo.query();
+                    if( quad(curr->sum,F,curr->ini,curr->end,ftol) )
+                    {
+                        done.push_back( curr.yield() );
+                    }
+                    else
+                    {
+                        const T mid = (curr->ini+curr->end)/2;
+                        todo.store( new range<T>(mid,curr->end) );
+                        todo.store( new range<T>(curr->ini,mid) );
+                    }
+                }
+                assert(done.size>0);
+                T sum = 0;
+                while(done.size>0)
+                {
+                    sum += done.head->sum;
+                    delete done.pop_front();
+                }
+                return sum;
+            }
+
         };
 
     }
