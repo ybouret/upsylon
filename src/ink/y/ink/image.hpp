@@ -175,6 +175,12 @@ namespace upsylon
             //! enroll default format
             image &initialize();
 
+            //! return inialized instance
+            static inline image & init()
+            {
+                return instance().initialize();
+            }
+
             //! display supported extension
             void display() const;
 

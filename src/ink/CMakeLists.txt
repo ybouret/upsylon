@@ -24,8 +24,18 @@ SET(image_srcs ${image_decl} ${image_code})
 SOURCE_GROUP( image FILES ${image_srcs} )
 INSTALL( FILES ${image_decl} DESTINATION include/y/ink/image )
 
+FILE(GLOB ops_decl y/ink/ops/*.hpp)
+FILE(GLOB ops_code y/ink/ops/*.cpp)
+SET(ops_srcs ${ops_decl} ${ops_code})
+SOURCE_GROUP( ops FILES ${ops_srcs} )
+INSTALL( FILES ${ops_decl} DESTINATION include/y/ink/ops )
 
-ADD_LIBRARY(y-ink STATIC ${main_srcs} ${color_srcs} ${image_srcs})
+ADD_LIBRARY(y-ink STATIC 
+${main_srcs} 
+${color_srcs} 
+${image_srcs}
+${ops_srcs}
+)
 INSTALL( TARGETS y-ink ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
