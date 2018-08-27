@@ -44,7 +44,7 @@ namespace upsylon
             typedef memory::slab<meta_node> meta_slab; //!< to acquire/release meta
 
             //! default initialization
-#define Y_CORE_HASH_TABLE_CTOR() chain(),slot(0),slots(0),smask(0),items(0),nodes(0,0),metas(0,0),buffer(0),allocated(0)
+#define Y_CORE_HASH_TABLE_CTOR() hash_table_info(), chain(),slot(0),slots(0),smask(0),items(0),nodes(0,0),metas(0,0),buffer(0),allocated(0)
             //! empty table
             inline  hash_table() throw() : Y_CORE_HASH_TABLE_CTOR()
             {
