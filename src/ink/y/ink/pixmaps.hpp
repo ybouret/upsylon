@@ -18,10 +18,12 @@ namespace upsylon
         typedef pixmap<cplx>    pixmapz;     //!< pixmap of complex real
 
 
+        //! multiple pixmaps of same type and size
         template <typename T>
         class pixmaps : public area, public slots< pixmap<T> >
         {
         public:
+            //! constructor
             explicit pixmaps(const size_t num,
                              const size_t W,
                              const size_t H) :
@@ -34,6 +36,7 @@ namespace upsylon
                 }
             }
 
+            //! destructor
             inline virtual ~pixmaps() throw()
             {
             }

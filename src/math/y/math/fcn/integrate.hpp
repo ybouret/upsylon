@@ -108,22 +108,26 @@ Y_INTG_EPILOG()
                 return false;
             }
 
+            //! integration range for adaptive method
             template <typename T> class range : public object
             {
             public:
-                const T ini;
-                const T end;
-                T       sum;
-                range  *next;
-                range  *prev;
+                const T ini;  //!< start point
+                const T end;  //!< end point
+                T       sum;  //!< local sum
+                range  *next; //!< for list/pool
+                range  *prev; //!< for list
+                //! constructor
                 inline explicit range(const T a,const T b) throw() :
                 ini(a), end(b), sum(0), next(0), prev(0) {}
+                //! destructor
                 inline virtual ~range() throw() {}
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(range);
             };
 
+            //! adaptive computation
             template <typename T,typename FUNC> static inline
             T compute( FUNC &F, const T a, const T b, const T ftol )
             {

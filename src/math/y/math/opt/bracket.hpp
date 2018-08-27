@@ -9,8 +9,10 @@ namespace upsylon
 {
     namespace math
     {
+        //! bracketing method
         struct bracket
         {
+            //! check minimum bracketing triplet
             template <typename T> static inline
             bool is_valid( triplet<T> &f ) throw()
             {

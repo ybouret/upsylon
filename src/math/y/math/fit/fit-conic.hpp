@@ -13,7 +13,8 @@ namespace upsylon
         class fit_conic : public shape2d
         {
         public:
-            
+            static const size_t SIZE = 6; //!< number of parameters
+
             //! destructor
             virtual ~fit_conic() throw();
 
@@ -36,7 +37,7 @@ namespace upsylon
                     {0,0} // unused
                 };
 
-                a=b=c=d=e=f=0;
+                q.ld(0);
                 if(n>0)
                 {
                     acquire(n);
@@ -76,17 +77,13 @@ namespace upsylon
             matrix<double> S; //!< symetric weigts matrix
             matrix<double> M; //!< inv(S)*C
             matrix<double> M0;
-            vector<double> wr;
-            vector<double> wi;
+
             bool __compute();
-            
+            shape2d_arrays prv;
+            array<double>  &wr;
+            array<double>  &wi;
         public:
-            double a;
-            double b;
-            double c;
-            double d;
-            double e;
-            double f;
+            array<double>  &q; //!< conic parameters
 
         };
 

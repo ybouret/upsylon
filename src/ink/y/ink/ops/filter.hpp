@@ -9,9 +9,11 @@ namespace upsylon
     namespace ink
     {
 
+        //! to apply function on pixmaps
         class filter
         {
         public:
+            //! target = func(source), with an engine
             template <typename T,typename U,typename FUNC> static inline
             void apply(pixmap<T>       &target,
                        const pixmap<U> &source,

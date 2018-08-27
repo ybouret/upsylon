@@ -77,6 +77,7 @@ namespace upsylon
                 x.co_sort(f);
             }
 
+            //! run minimisation steps until convergence
             template <typename T, typename FUNC> static inline
             T run(FUNC       &func,
                   triplet<T> &x,

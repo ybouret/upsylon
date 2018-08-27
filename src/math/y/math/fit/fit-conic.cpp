@@ -21,8 +21,10 @@ namespace upsylon
         S(6,6),
         M(6,6),
         M0(6,6),
-        wr(6),
-        wi(6)
+        prv(3,SIZE),
+        wr(prv.next()),
+        wi(prv.next()),
+        q(prv.next())
         {
 
             {
@@ -100,8 +102,8 @@ namespace upsylon
             {
                 return false;
             }
-            tao::mulset(U,1.0/sqrt(UCU),U);
-            std::cerr << "conic=" << U << std::endl;
+            tao::mulset(q,1.0/sqrt(UCU),U);
+            std::cerr << "conic=" << q << std::endl;
             return true;
         }
 
