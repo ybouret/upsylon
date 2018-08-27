@@ -11,23 +11,26 @@ namespace upsylon
 {
     namespace math
     {
-        typedef arrays<double,memory::global> shape2d_arrays; //!< for internal arrays
-
-        //! base class to perform computation
-        class shape2d : public shape2d_arrays
+        namespace Fit
         {
-        public:
-            //! shapoe
-            virtual ~shape2d() throw();
+            typedef arrays<double,memory::global> Arrays; //!< for internal arrays
+
+            //! base class to perform computation
+            class Shape2D : public Arrays
+            {
+            public:
+                //! destructor
+                virtual ~Shape2D() throw();
 
 
-        protected:
-            explicit shape2d(const size_t num_arrays); //!< memory for num_arrays
+            protected:
+                explicit Shape2D(const size_t num_arrays); //!< memory for num_arrays
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Shape2D);
+            };
             
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(shape2d);
-        };
-
+        }
       
 
     }

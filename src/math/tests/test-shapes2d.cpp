@@ -28,7 +28,7 @@ Y_UTEST(fit_circle)
         points.push_back(P);
     }
 
-    math::fit_circle fc;
+    Fit::Circle fc;
     if(fc.compute(points.begin(),points.size()))
     {
         std::cerr << "Fitted " << r << "@" << center << " to " << fc.radius << "@" << fc.xc << "," << fc.yc << std::endl;
@@ -73,7 +73,7 @@ Y_UTEST(fit_conic)
         points.push_back(P);
     }
 
-    fit_conic fc;
+    Fit::Conic fc;
     fc.compute(points.begin(),points.size());
     
 
