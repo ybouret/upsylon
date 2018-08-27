@@ -3,6 +3,7 @@
 #include "y/sort/sorted-sum.hpp"
 #include "y/math/kernel/lu.hpp"
 #include "y/exception.hpp"
+#include "y/math/kernel/diagonalize.hpp"
 
 namespace upsylon
 {
@@ -18,7 +19,10 @@ namespace upsylon
         C(6,6),
         v(0),
         S(6,6),
-        M(6,6)
+        M(6,6),
+        M0(6,6),
+        wr(6),
+        wi(6)
         {
 
             {
@@ -52,6 +56,7 @@ namespace upsylon
             std::cerr << "S=" << S << std::endl;
             if( !LU::build(S) )
             {
+                std::cerr << "Singular Distribution" << std::endl;
                 return false;
             }
             
@@ -62,7 +67,42 @@ namespace upsylon
             LU::solve(S,M);
             std::cerr << "M=" << M << std::endl;
 
-            return false;
+            M0.assign(M);
+
+            size_t nr = 0;
+            if(!diagonalize::eig(M,wr,wi,nr))
+            {
+                std::cerr << "Couldn't Diagonalize M" << std::endl;
+                return false;
+            }
+
+            if(nr<=0)
+            {
+                std::cerr << "No Real EigenValue" << std::endl;
+                return false;
+            }
+
+
+            const double lam = wr[nr];
+            if(lam<=0)
+            {
+                std::cerr << "Negative Highest Eigenvalue" << std::endl;
+            }
+            std::cerr << "lam=" << lam << std::endl;
+            matrix<double> ev(nr,6);
+            diagonalize::eigv(ev,M0,wr);
+            array<double> &U = ev[nr];
+            std::cerr << "U=" << U << std::endl;
+            tao::mul(wi,C,U);
+            const double UCU = tao::dot<double>(U,wi);
+            std::cerr << "UCU=" << UCU << std::endl;
+            if(UCU<=0)
+            {
+                return false;
+            }
+            tao::mulset(U,1.0/sqrt(UCU),U);
+            std::cerr << "conic=" << U << std::endl;
+            return true;
         }
 
     }

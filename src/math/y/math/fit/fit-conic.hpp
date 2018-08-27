@@ -75,7 +75,9 @@ namespace upsylon
             double         v; //!< constraint value : A'*C*A=v
             matrix<double> S; //!< symetric weigts matrix
             matrix<double> M; //!< inv(S)*C
-
+            matrix<double> M0;
+            vector<double> wr;
+            vector<double> wi;
             bool __compute();
             
         public:
