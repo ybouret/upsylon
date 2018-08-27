@@ -4,6 +4,7 @@
 
 #include "y/string.hpp"
 #include "y/associative/set.hpp"
+#include "y/sequence/array.hpp"
 
 namespace upsylon
 {
@@ -38,6 +39,7 @@ namespace upsylon
                     return os;
                 }
 
+                size_t check_index(const size_t against_size) const;
 
             private:
                 Y_DISABLE_ASSIGN(Variable);
@@ -73,20 +75,50 @@ namespace upsylon
                 //! functional operator for glboal variable
                 inline Variables & operator()(const char   *name) { return create_global(name); }
 
+                //! link to a global variable
                 Variables        & operator()(const string &name, const Variable &global);
+
+                //! link to a global variable
                 inline Variables & operator()(const char   *name, const Variable &global)
                 {
                     const string __name(name); return (*this)(__name,global);
                 }
 
+                //! access to variable
                 const Variable & operator[]( const string &name ) const;
+
+                //! access to variable
                 inline const Variable & operator[]( const char *name) const
                 {
                     const string __name(name);
                     return (*this)[__name];
                 }
 
+                template <typename T>
+                inline T & operator()(array<T> &arr,const string &name) const
+                {
+                    return arr[ (*this)[name].check_index(arr.size()) ];
+                }
+
+                template <typename T>
+                inline T & operator()(array<T> &arr,const char *name) const
+                {
+                    return arr[ (*this)[name].check_index(arr.size()) ];
+                }
+
+                template <typename T>
+                inline const T & operator()(const array<T> &arr, const string &name) const
+                {
+                    return arr[ (*this)[name].check_index(arr.size()) ];
+                }
+
+                template <typename T>
+                inline const T & operator()(const array<T> &arr, const char *name) const
+                {
+                    return arr[ (*this)[name].check_index(arr.size()) ];
+                }
             };
+            
         }
         
     }

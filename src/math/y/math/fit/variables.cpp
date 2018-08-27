@@ -1,4 +1,5 @@
 #include "y/math/fit/variables.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -29,12 +30,19 @@ namespace upsylon
                 return name;
             }
 
+            size_t Variable:: check_index(const size_t against_size) const
+            {
+                assert(indx>0);
+                if(indx>against_size) throw exception("Fit::Variable '%s' invalid index=%u against %u", *name, unsigned(indx), unsigned(against_size) );
+                return indx;
+            }
+            
+
         }
     }
 
 }
 
-#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -87,9 +95,6 @@ namespace upsylon
                 }
                 return *this;
             }
-
-
-
 
         }
     }
