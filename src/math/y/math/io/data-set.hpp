@@ -14,6 +14,12 @@ namespace upsylon
 {
     namespace math
     {
+        namespace kernel
+        {
+            inline bool data_set_separator(const int C) { return ' '==C || '\t' == C; }
+
+        }
+
         //! temporaty object to load data files
         template <typename T>
         class data_set
@@ -73,7 +79,7 @@ namespace upsylon
                         const size_t idx = i.key();
                         while( tkn.count() != idx )
                         {
-                            if(!tkn.next(__sep))
+                            if(!tkn.next(kernel::data_set_separator))
                             {
                                 throw exception("%u:data_set missing column #%u",iline,unsigned(idx));
                             }
@@ -93,7 +99,6 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(data_set);
             colmap columns;
-            static inline bool __sep(const int C) { return ' '==C || '\t' == C; }
         };
     }
 }
