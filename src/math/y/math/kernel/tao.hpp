@@ -299,7 +299,28 @@ namespace upsylon
                     _mul_sub<T,U,V>(a,M,b);
                 }
             }
-            
+
+            //! A'*S*A, assuming S is SYMMETRIC
+            template <typename T,typename U,typename V> static inline
+            T quadratic(const matrix<U> &S, const array<V> &A)
+            {
+                assert(S.rows==S.cols);
+                assert(S.rows==A.size());
+                const size_t n = S.rows;
+                T q(0), p(0);
+                for(size_t i=n,im=i-1;i>0;--i,--im)
+                {
+                    const array<U> &S_i = S[i];
+                    const T         A_i = static_cast<T>(A[i]);
+                    q += static_cast<T>(S_i[i]) * (A_i*A_i);
+                    for(size_t j=im;j>0;--j)
+                    {
+                        p += static_cast<T>(S_i[j]) * A_i * static_cast<T>(A[j]);
+                    }
+                }
+                return q+(p+p);
+            }
+
             ////////////////////////////////////////////////////////////////////
             //
             // level-3 : matrix/matrix ops

@@ -1,4 +1,5 @@
-#include "y/math/fit/shapes2d.hpp"
+#include "y/math/fit/fit-circle.hpp"
+#include "y/math/fit/fit-conic.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/list.hpp"
 #include "y/ios/ocstream.hpp"
@@ -12,7 +13,7 @@ namespace
     typedef point2d<unit_t> point;
 }
 
-Y_UTEST(shapes2d)
+Y_UTEST(fit_circle)
 {
     const double          r = 1+alea.leq(100);
     const point2d<double> center( 10 * alea.symm<double>(), 10 * alea.symm<double>() );
@@ -51,6 +52,31 @@ Y_UTEST(shapes2d)
     {
         std::cerr << "Singular Distribution!!!" << std::endl;
     }
+
+
+}
+Y_UTEST_DONE()
+
+Y_UTEST(fit_conic)
+{
+    list<point> points;
+    const double ra = 1 + alea.leq(100);
+    const double rb = 1 + alea.leq(100);
+    const point2d<double> center( 10 * alea.symm<double>(), 10 * alea.symm<double>() );
+    for(size_t n=10;n>0;--n)
+    {
+        const double theta = numeric<double>::two_pi * alea.to<double>();
+        point2d<double> p( ra * cos(theta), rb*sin(theta) );
+        // rotation
+        p += center;
+        const point           P( unit_t(p.x), unit_t(p.y) );
+        points.push_back(P);
+    }
+
+    fit_conic fc;
+    fc.compute(points.begin(),points.size());
+    
+
 }
 Y_UTEST_DONE()
 
