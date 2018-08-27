@@ -3,6 +3,7 @@
 #define Y_INK_OPS_FILTER_INCLUDED 1
 
 #include "y/ink/pixmap.hpp"
+#include "y/container/matrix.hpp"
 
 namespace upsylon
 {
@@ -22,6 +23,15 @@ namespace upsylon
             {
                 parameters<T,U,FUNC> proxy = { &target, &source, &func };
                 E.run(proxy);
+            }
+
+            template <typename T, typename U> static inline
+            void apply(pixmap<float>   &target,
+                       const pixmap<T> &source,
+                       const matrix<U> &block,
+                       engine          &E)
+            {
+
             }
 
         private:
@@ -53,9 +63,22 @@ namespace upsylon
                             tgt[x] = func(src[x]);
                         }
                     }
+                }
+            };
+
+            template <typename T, typename U>
+            struct block_parameters
+            {
+                pixmap<float>   *_target;
+                const pixmap<T> *_source;
+                const matrix<U> *_block;
+
+                inline void operator()(const area &zone, lockable &)
+                {
 
                 }
             };
+
         };
     }
 }
