@@ -19,7 +19,7 @@ Y_UTEST(lsf)
     var2("t0")("D",var["D2"]);
     std::cerr << "var2=" << var2 << std::endl;
 
-    const size_t nvar = var.size();
+    const size_t   nvar = var.size();
     vector<double> aorg(nvar);
 
     var(aorg,"t0") = 1.0;
