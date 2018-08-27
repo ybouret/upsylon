@@ -51,13 +51,13 @@ namespace upsylon
             }
 
             //! self content n objects
-            inline  hash_table(const size_t n) throw() : Y_CORE_HASH_TABLE_CTOR()
+            inline  hash_table(const size_t n) throw() :  Y_CORE_HASH_TABLE_CTOR()
             {
                 setup(n);
             }
 
             //! hard copy another table
-            inline hash_table( const hash_table &other ) : Y_CORE_HASH_TABLE_CTOR()
+            inline hash_table( const hash_table &other ) :  Y_CORE_HASH_TABLE_CTOR()
             {
                 setup(other.chain.size);
                 duplicate(other);

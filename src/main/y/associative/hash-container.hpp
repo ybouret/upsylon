@@ -30,10 +30,10 @@ namespace upsylon
         inline virtual ~hash_container() throw() {}
 
         //! default constructor
-        inline explicit hash_container() throw() : table(), hash() {}
+        inline explicit hash_container() throw() : dynamic(), table(), hash() {}
 
         //! constructor with capacity
-        inline explicit hash_container(const size_t n, const as_capacity_t &) : table(n), hash() {}
+        inline explicit hash_container(const size_t n, const as_capacity_t &) : dynamic(), table(n), hash() {}
 
         //! container interface: size
         inline virtual size_t size() const throw() { return table.chain.size; }
@@ -56,7 +56,7 @@ namespace upsylon
         }
 
         //! copy
-        inline hash_container(const hash_container &other) : table(other.table) {}
+        inline hash_container(const hash_container &other) : dynamic(), table(other.table) {}
 
         //! assign by duplication
         inline hash_container & operator=( const hash_container &other )
