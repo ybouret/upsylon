@@ -25,15 +25,15 @@ namespace upsylon
         typedef core::hash_table<NODE,ALLOCATOR> table_type; //!< internal table
         typedef typename table_type::slot_type   slot_type;  //!< slot of data
         typedef typename table_type::meta_node   meta_node;  //!< meta node
-        
+        typedef associative<KEY,T>               base_type;  //!< base type 
         //! destructor
         inline virtual ~hash_container() throw() {}
 
         //! default constructor
-        inline explicit hash_container() throw() : dynamic(), table(), hash() {}
+        inline explicit hash_container() throw() : dynamic(), base_type(), table(), hash() {}
 
         //! constructor with capacity
-        inline explicit hash_container(const size_t n, const as_capacity_t &) : dynamic(), table(n), hash() {}
+        inline explicit hash_container(const size_t n, const as_capacity_t &) : dynamic(), base_type(), table(n), hash() {}
 
         //! container interface: size
         inline virtual size_t size() const throw() { return table.chain.size; }
@@ -56,7 +56,7 @@ namespace upsylon
         }
 
         //! copy
-        inline hash_container(const hash_container &other) : dynamic(), table(other.table) {}
+        inline hash_container(const hash_container &other) : dynamic(), base_type(), table(other.table), hash() {}
 
         //! assign by duplication
         inline hash_container & operator=( const hash_container &other )

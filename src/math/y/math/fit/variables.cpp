@@ -58,7 +58,7 @@ namespace upsylon
             {
             }
 
-            Variables:: Variables(const Variables &other) : Variable::Set(other) {}
+            Variables:: Variables(const Variables &other) : dynamic(), Variable::Set(other) {}
 
             Variables & Variables:: operator=(const Variables &other)
             {
