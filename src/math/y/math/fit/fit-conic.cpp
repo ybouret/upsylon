@@ -17,8 +17,8 @@ namespace upsylon
         sums(count),
         C(6,6),
         v(0),
-        S(6,6)
-
+        S(6,6),
+        M(6,6)
         {
 
             {
@@ -50,6 +50,18 @@ namespace upsylon
                 }
             }
             std::cerr << "S=" << S << std::endl;
+            if( !LU::build(S) )
+            {
+                return false;
+            }
+            
+            std::cerr << "C=" << C << std::endl;
+            M.assign(C);
+
+
+            LU::solve(S,M);
+            std::cerr << "M=" << M << std::endl;
+
             return false;
         }
 

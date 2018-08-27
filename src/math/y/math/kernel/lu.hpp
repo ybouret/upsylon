@@ -194,6 +194,22 @@ namespace upsylon
 
                 }
             }
+
+            //! solve a matrix using a previously LU build matrix
+            template <typename T>
+            static inline
+            void solve( const matrix<T> &a, matrix<T> &m ) throw()
+            {
+                const size_t n = m.rows;
+                array<T>    &b = m.r_aux1;
+                for(size_t j=m.cols;j>0;--j)
+                {
+                    for(size_t i=n;i>0;--i) b[i]   = m[i][j];
+                    solve(a,b);
+                    for(size_t i=n;i>0;--i) m[i][j] = b[i];
+                }
+            }
+
         };
 
     }

@@ -73,8 +73,8 @@ namespace upsylon
             vector<double> sums;
             matrix<double> C;
             double         v; //!< constraint value : A'*C*A=v
-            matrix<double> S;
-
+            matrix<double> S; //!< symetric weigts matrix
+            matrix<double> M; //!< inv(S)*C
 
             bool __compute();
             
