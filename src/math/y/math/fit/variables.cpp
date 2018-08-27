@@ -16,14 +16,6 @@ namespace upsylon
                 assert(indx>0);
             }
 
-            Variable:: Variable(const string & __name, const size_t __indx ) :
-            name( __name ),
-            link( __name ),
-            indx( __indx )
-            {
-                assert(indx>0);
-            }
-
             Variable:: Variable(const string & __name, const string & __link, const size_t __indx ) :
             name( __name ),
             link( __link ),
@@ -67,11 +59,9 @@ namespace upsylon
                 return *this;
             }
 
-
-
-            Variables & Variables:: operator<<(const string &name)
+            Variables & Variables:: create_global(const string &name)
             {
-                const Variable var(name,size()+1);
+                const Variable var(name,name,size()+1);
                 if(!insert(var))
                 {
                     throw exception("Fit::Variables(multiple '%s')", *name);
@@ -79,28 +69,26 @@ namespace upsylon
                 return *this;
             }
 
-            Variables & Variables:: operator<<(const char   *name)
+            const Variable & Variables:: operator[]( const string &name ) const
             {
-                const string id(name);
-                return (*this) << id;
+                const Variable *pVar = search(name);
+                if(!pVar) throw exception("NO Fit::Variables['%s']", *name);
+                return *pVar;
             }
 
-            Variables & Variables:: operator()(const string &name, const string &link)
+            
+            Variables & Variables:: operator()(const string &name, const Variable &global)
             {
-                const Variable var(name,link,size()+1);
+                if(!global.is_global()) throw exception("Fit:: linking to a local variables: '%s'->'%s'",*global.name,*global.link);
+                const Variable var(name,global.name,global.indx);
                 if(!insert(var))
                 {
-                    throw exception("Fit::Variables(multiple '%s' [link='%s'] )", *name, *link);
+                    throw exception("Fit::Variables(multiple '%s' [link='%s'] )", *name, *global.link);
                 }
                 return *this;
             }
 
-            Variables & Variables:: operator()(const char   *name, const char   *link)
-            {
-                const string __name(name);
-                const string __link(link);
-                return (*this)(__name,__link);
-            }
+
 
 
         }

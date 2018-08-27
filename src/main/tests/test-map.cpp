@@ -103,6 +103,14 @@ Y_UTEST(map)
     do_test<string,int>();
     do_test<int,string>();
     do_test<string,string>();
+
+    {
+        map<string,int> m;
+        m.insert("a",10);
+        m.insert("z",20);
+        m.insert("k",32);
+        std::cerr << "m=" << m << std::endl;
+    }
 }
 Y_UTEST_DONE()
 

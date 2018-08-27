@@ -85,6 +85,21 @@ namespace upsylon
             return this->table.template insert<key_type,type>(k,h,args);
         }
 
+        //! output key:T
+        inline friend std::ostream & operator<<( std::ostream &os, const map &s )
+        {
+            os << '{';
+            const size_t n = s.size();
+            size_t       i = 1;
+            for( typename base_type::const_iterator j=s.begin();i<=n;++i,++j)
+            {
+                os << j.key() << ':' << *j;
+                if(i<n) os << ',';
+            }
+            os << '}';
+            return os;
+        }
+
     };
 
 
