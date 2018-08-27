@@ -53,30 +53,17 @@ namespace upsylon
             //! self content n objects
             inline  hash_table(const size_t n) throw() : Y_CORE_HASH_TABLE_CTOR()
             {
-                if(n>0)
-                {
-                    static memory::allocator &hmem = ALLOCATOR::instance();
-
-                    const size_t num_slots    = next_power_of_two(max_of<size_t>(n/load_factor,min_slots));
-                    const size_t slots_offset = 0;
-                    const size_t slots_length = num_slots * sizeof(slot_type);
-                    const size_t nodes_offset = memory::align(slots_offset+slots_length);
-                    const size_t nodes_length = node_slab::bytes_for(n);
-                    const size_t metas_offset = memory::align(nodes_offset+nodes_length);
-                    const size_t metas_length = meta_slab::bytes_for(n);
-
-                    allocated = memory::align(metas_offset+metas_length);
-                    char *p   = static_cast<char *>( buffer    = hmem.acquire(allocated) );
-                    slot      = static_cast<slot_type *>( (void *) &p[slots_offset] );
-                    new ( &nodes ) node_slab( &p[nodes_offset], nodes_length );
-                    new ( &metas ) meta_slab( &p[metas_offset], metas_length );
-                    slots = num_slots;
-                    smask = num_slots-1;
-                    items = n;
-                    assert(nodes.capacity()>=n);
-                    assert(metas.capacity()>=n);
-                }
+                setup(n);
             }
+
+            //! hard copy another table
+            inline hash_table( const hash_table &other ) : Y_CORE_HASH_TABLE_CTOR()
+            {
+                setup(other.chain.size);
+                duplicate(other);
+            }
+
+
 
             //! uses NODE destructor to free memory
             inline void free() throw()
@@ -278,8 +265,9 @@ namespace upsylon
                 merging<meta_node>::sort(chain,__compare_node_keys<COMPARE_KEYS>, (void*)&compare_keys);
             }
 
+
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(hash_table);
+            Y_DISABLE_ASSIGN(hash_table);
             void   *buffer;
             size_t  allocated;
 
@@ -307,6 +295,33 @@ namespace upsylon
                 assert(args); assert(lhs); assert(rhs);
                 COMPARE_KEYS &compare_keys = *(COMPARE_KEYS *)args;
                 return compare_keys(lhs->addr->key(),rhs->addr->key());
+            }
+
+            inline void setup(const size_t n)
+            {
+                if(n>0)
+                {
+                    static memory::allocator &hmem = ALLOCATOR::instance();
+
+                    const size_t num_slots    = next_power_of_two(max_of<size_t>(n/load_factor,min_slots));
+                    const size_t slots_offset = 0;
+                    const size_t slots_length = num_slots * sizeof(slot_type);
+                    const size_t nodes_offset = memory::align(slots_offset+slots_length);
+                    const size_t nodes_length = node_slab::bytes_for(n);
+                    const size_t metas_offset = memory::align(nodes_offset+nodes_length);
+                    const size_t metas_length = meta_slab::bytes_for(n);
+
+                    allocated = memory::align(metas_offset+metas_length);
+                    char *p   = static_cast<char *>( buffer    = hmem.acquire(allocated) );
+                    slot      = static_cast<slot_type *>( (void *) &p[slots_offset] );
+                    new ( &nodes ) node_slab( &p[nodes_offset], nodes_length );
+                    new ( &metas ) meta_slab( &p[metas_offset], metas_length );
+                    slots = num_slots;
+                    smask = num_slots-1;
+                    items = n;
+                    assert(nodes.capacity()>=n);
+                    assert(metas.capacity()>=n);
+                }
             }
         };
     }

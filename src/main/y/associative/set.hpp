@@ -4,6 +4,7 @@
 #define Y_ASSOCIATIVE_SET_INCLUDED 1
 
 #include "y/associative/hash-container.hpp"
+#include <iostream>
 
 namespace upsylon
 {
@@ -75,6 +76,32 @@ namespace upsylon
             const_key_type &k = t.key();
             const size_t    h = this->hash(k);
             return this->table.template insert<key_type,type>(k,h,args);
+        }
+
+        //! copy constructor
+        inline set( const set &other ) : base_type(other) {}
+
+        //! assign
+        inline set & operator=( const set &other )
+        {
+            base_type &self = *this;
+            self = other;
+            return *this;
+        }
+
+        //! output, user's defined T behavior
+        inline friend std::ostream & operator<<( std::ostream &os, const set &s )
+        {
+            os << '{';
+            const size_t n = s.size();
+            size_t       i = 1;
+            for( typename base_type::const_iterator j=s.begin();i<=n;++i,++j)
+            {
+                os << *j;
+                if(i<n) os << ' ';
+            }
+            os << '}';
+            return os;
         }
 
     };

@@ -87,7 +87,7 @@ namespace
                 std::cerr << i.key() << ":" << *i << std::endl;
             }
 #endif
-            
+
             std::cerr << "sorting by keys" << std::endl;
             db.sort_keys(comparison::increasing<KEY>);
             for( typename set_type::iterator i=db.begin();i!=db.end();++i)
@@ -95,6 +95,19 @@ namespace
                 std::cerr << i.key() << ":" << *i << std::endl;
             }
 
+
+            {
+                std::cerr << "copy" << std::endl;
+                set_type tmp(db);
+                Y_CHECK(tmp.size()==db.size());
+            }
+
+            {
+                std::cerr << "assign" << std::endl;
+                set_type tmp;
+
+                tmp = db;
+            }
 
             for(size_t i=1;i<=keys.size();++i)
             {

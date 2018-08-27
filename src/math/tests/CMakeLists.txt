@@ -29,6 +29,7 @@ ADD_TEST(FitCircle  test-m fit_circle)
 ADD_TEST(FitConic   test-m fit_conic)
 ADD_TEST(Bracket    test-m bracket)
 ADD_TEST(Minimize   test-m min)
+ADD_TEST(LSF        test-m lsf)
 
 
 ADD_CUSTOM_TARGET(utest-m

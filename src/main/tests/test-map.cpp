@@ -68,6 +68,19 @@ namespace
         }
 
 
+        {
+            std::cerr << "copy" << std::endl;
+            map_t tmp(db);
+            Y_CHECK(tmp.size()==db.size());
+        }
+
+        {
+            std::cerr << "assign" << std::endl;
+            map_t tmp;
+
+            tmp = db;
+        }
+
         for(size_t i=1;i<=keys.size();++i)
         {
             Y_ASSERT(db.remove(keys[i]));

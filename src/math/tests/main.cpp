@@ -26,6 +26,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(fit_conic);
     Y_UTEST(bracket);
     Y_UTEST(min);
+    Y_UTEST(lsf);
 
 }
 Y_UTEST_EXEC()
