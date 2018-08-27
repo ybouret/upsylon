@@ -18,7 +18,7 @@ namespace upsylon
 
             const coord  lower;  //!< lower coordinate
             const coord  upper;  //!< upper coordinate
-            const size_t w;      //!< width: u.x-l.x+1 or 0 if empty
+            const size_t w;      //!< width:  u.x-l.x+1 or 0 if empty
             const size_t h;      //!< height: u.y-l.y+1, or 0 if empty
             const size_t pixels; //!< w*h
 
