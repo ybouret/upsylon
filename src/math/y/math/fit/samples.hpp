@@ -67,7 +67,7 @@ namespace upsylon
                     {
                         assert(dFda.size()==aorg.size());
                         assert(used.size()==aorg.size());
-                        Parameters proxy = { x, *aorg, &vars, &F, 0 };
+                        Parameters proxy = { x, &aorg, &vars, &F, 0 };
                         size_t    &i     = proxy.ivar;
                         for(i=aorg.size();i>0;--i)
                         {
@@ -103,7 +103,7 @@ namespace upsylon
                             try
                             {
                                 ai = atry;
-                                const T ans = func(xvalue,a,v);
+                                const T ans = F(xvalue,a,v);
                                 ai = a0;
                                 return ans;
                             }
@@ -127,9 +127,10 @@ namespace upsylon
             class SampleType : public SampleInfo
             {
             public:
-                typedef typename Type<T>::Function Function; //!< alias
-                typedef typename Type<T>::Array    Array;    //!< alias
-                typedef typename Type<T>::Matrix   Matrix;   //!< alis
+                typedef typename Type<T>::Function   Function; //!< alias
+                typedef typename Type<T>::Array      Array;    //!< alias
+                typedef typename Type<T>::Matrix     Matrix;   //!< alias
+                typedef typename Type<T>::Gradient   Gradient; //!< alias
 
                 //! desctructor
                 inline virtual ~SampleType() throw() {}
@@ -137,6 +138,14 @@ namespace upsylon
                 //! compute D2 only
                 virtual T computeD2(Function     &F,
                                     const Array  &aorg) = 0;
+
+                //! compute D2, beta and alpha, beta and alpha initialy empty
+                virtual T computeD2(Function          &F,
+                                    const Array       &aorg,
+                                    Array             &beta,
+                                    Matrix            &alpha,
+                                    Gradient          &grad,
+                                    const array<bool> &used) = 0;
 
             protected:
                 //! initialize
@@ -165,6 +174,7 @@ namespace upsylon
                 typedef typename Type<T>::Function Function;   //!< alias
                 typedef typename Type<T>::Array    Array;      //!< alias
                 typedef typename Type<T>::Matrix   Matrix;     //!< alias
+                typedef typename Type<T>::Gradient Gradient;   //!< alias
 
                 const Array &X;  //!< X values
                 const Array &Y;  //!< Y values
@@ -195,11 +205,54 @@ namespace upsylon
                     for(size_t i=X.size();i>0;--i)
                     {
                         const T Fi = (Yf[i]=F(X[i],aorg,this->variables));
-                        ans += square_of(Fi);
+                        ans += square_of(Y[i]-Fi);
                     }
                     return ans;
                 }
 
+                //! compute D2 and sum differential values
+                virtual T computeD2(Function          &F,
+                                    const Array       &aorg,
+                                    Array             &beta,
+                                    Matrix            &alpha,
+                                    Gradient          &grad,
+                                    const array<bool> &used)
+                {
+                    const size_t nvar = aorg.size();
+                    assert(beta.size()==nvar);
+                    assert(alpha.rows ==nvar);
+                    assert(alpha.cols ==nvar);
+                    assert(X.size()==Y.size());
+                    assert(X.size()==Yf.size());
+
+                    Array &dFda = alpha.r_aux1;
+                    T ans = 0;
+                    for(size_t i=X.size();i>0;--i)
+                    {
+                        const T Xi  = X[i];
+                        const T Fi  = (Yf[i]=F(Xi,aorg,this->variables));
+                        const T dFi = Y[i]-Fi;
+                        ans += square_of(dFi);
+                        grad(dFda,F,Xi,aorg,this->variables,used);
+                        for(size_t j=nvar;j>0;--j)
+                        {
+                            if(used[j])
+                            {
+                                const T dFda_j = dFda[j];
+                                beta[j] += dFi * dFda_j;
+                                Array &alpha_j = alpha[j];
+                                for(size_t k=j;k>0;--k)
+                                {
+                                    if(used[k])
+                                    {
+                                        alpha_j[k] += dFda_j * dFda[k];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return ans;
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Sample);
@@ -218,6 +271,7 @@ namespace upsylon
                 typedef typename Type<T>::Array     Array;    //!< alias
                 typedef typename Type<T>::Matrix    Matrix;   //!< alias
                 typedef typename Sample<T>::Pointer Pointer;  //!< alias
+                typedef typename Type<T>::Gradient  Gradient; //!< alias
 
                 //! destructor
                 inline virtual ~Samples() throw() {}
@@ -247,6 +301,23 @@ namespace upsylon
                     this->push_back(p);
                     return *p;
                 }
+
+                virtual T computeD2(Function          &F,
+                                    const Array       &aorg,
+                                    Array             &beta,
+                                    Matrix            &alpha,
+                                    Gradient          &grad,
+                                    const array<bool> &used)
+                {
+                    typename Sample<T>::Collection &self = *this;
+                    T ans = 0;
+                    for(size_t k=this->size();k>0;--k)
+                    {
+                        ans += self[k]->computeD2(F,aorg,beta,alpha,grad,used);
+                    }
+                    return ans;
+                }
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Samples);

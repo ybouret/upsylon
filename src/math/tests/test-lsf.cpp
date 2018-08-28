@@ -1,4 +1,4 @@
-#include "y/math/fit/samples.hpp"
+#include "y/math/fit/ls.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ios/ocstream.hpp"
@@ -148,6 +148,15 @@ Y_UTEST(lsf)
 
     const double DD2 = SS.computeD2(F,aa);
     std::cerr << "DD2=" << DD2 << std::endl;
+
+    vector<bool> used(2,true);
+    vector<double> aerr(2);
+    Fit::LeastSquare<double> ls;
+    ls.fit(S1,F,a1,aerr,used);
+    
+
+
+    
 }
 Y_UTEST_DONE()
 
