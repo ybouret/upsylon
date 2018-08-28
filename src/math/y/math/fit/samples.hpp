@@ -23,9 +23,10 @@ namespace upsylon
             {
             public:
                 Variables variables; //!< local or global variables
-                virtual ~SampleInfo() throw();
+                virtual ~SampleInfo() throw(); //!< destructor
 
             protected:
+                //! initialize
                 explicit SampleInfo(const size_t nvar_max);
 
             private:
@@ -50,9 +51,13 @@ namespace upsylon
                 {
                 public:
                     T scale; //!< parameters scaling, default=1e-4
+
+                    //! initialize
                     inline explicit Gradient() : derivative<T>(), scale(1e-4) {}
+                    //! destuctor
                     inline virtual ~Gradient() throw() {}
 
+                    //! compute all active components
                     inline void operator()(Array             &dFda,
                                            Function          &F,
                                            const T            x,
@@ -122,9 +127,9 @@ namespace upsylon
             class SampleType : public SampleInfo
             {
             public:
-                typedef typename Type<T>::Function Function;
-                typedef typename Type<T>::Array    Array;
-                typedef typename Type<T>::Matrix   Matrix;
+                typedef typename Type<T>::Function Function; //!< alias
+                typedef typename Type<T>::Array    Array;    //!< alias
+                typedef typename Type<T>::Matrix   Matrix;   //!< alis
 
                 //! desctructor
                 inline virtual ~SampleType() throw() {}
@@ -134,6 +139,7 @@ namespace upsylon
                                     const Array  &aorg) = 0;
 
             protected:
+                //! initialize
                 inline explicit SampleType(const size_t nvar_max) :
                 SampleInfo(nvar_max)
                 {
@@ -154,18 +160,20 @@ namespace upsylon
             class Sample : public SampleType<T>
             {
             public:
-                typedef arc_ptr<Sample> Pointer;
-                typedef vector<Pointer> Collection;
-
-                typedef typename Type<T>::Function Function;
-                typedef typename Type<T>::Array    Array;
-                typedef typename Type<T>::Matrix   Matrix;
+                typedef arc_ptr<Sample>            Pointer;    //!< smart pointer
+                typedef vector<Pointer>            Collection; //!< for multiple samples
+                typedef typename Type<T>::Function Function;   //!< alias
+                typedef typename Type<T>::Array    Array;      //!< alias
+                typedef typename Type<T>::Matrix   Matrix;     //!< alias
 
                 const Array &X;  //!< X values
                 const Array &Y;  //!< Y values
                 Array       &Yf; //!< Yf = F(x,...) values
 
+                //! destructor
                 inline virtual ~Sample() throw() {}
+
+                //! initialize
                 inline explicit Sample(const Array &userX,
                                        const Array &userY,
                                        Array       &userYf,
@@ -177,7 +185,7 @@ namespace upsylon
                 {}
 
 
-
+                //! compute D2 only
                 virtual T computeD2(Function     &F,
                                     const Array  &aorg)
                 {
@@ -206,14 +214,17 @@ namespace upsylon
             class Samples : public SampleType<T>, public Sample<T>::Collection
             {
             public:
-                typedef typename Type<T>::Function  Function;
-                typedef typename Type<T>::Array     Array;
-                typedef typename Type<T>::Matrix    Matrix;
-                typedef typename Sample<T>::Pointer Pointer;
+                typedef typename Type<T>::Function  Function; //!< alias
+                typedef typename Type<T>::Array     Array;    //!< alias
+                typedef typename Type<T>::Matrix    Matrix;   //!< alias
+                typedef typename Sample<T>::Pointer Pointer;  //!< alias
 
+                //! destructor
                 inline virtual ~Samples() throw() {}
+                //! initialize
                 inline explicit Samples(const size_t nvar_max=0,const size_t size_max=0) : SampleType<T>(nvar_max), Sample<T>::Collection(size_max,as_capacity) {}
 
+                //! compute D2 by summation
                 virtual T computeD2(Function     &F,
                                     const Array  &aorg)
                 {
@@ -226,7 +237,7 @@ namespace upsylon
                     return ans;
                 }
 
-                //! create a append a new sample
+                //! create and append a new sample
                 Sample<T> & add(const Array &userX,
                                 const Array &userY,
                                 Array       &userYf,

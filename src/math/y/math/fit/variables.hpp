@@ -41,6 +41,7 @@ namespace upsylon
                     return os;
                 }
 
+                //! check index() is valid
                 size_t check_index( const size_t against_size ) const;
 
             protected:
