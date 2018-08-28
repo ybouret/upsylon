@@ -1,31 +1,110 @@
-#include "y/math/fit/variables.hpp"
+#include "y/math/fit/samples.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 using namespace math;
 
-Y_UTEST(lsf)
+namespace
 {
-    Fit::Variables var;
-    var << "t0" << "D1" << "D2";
-    std::cerr << "var=" << var << std::endl;
-
+    static inline void test_vars()
     {
-        Fit::Variables tmp = var;
-        std::cerr << "tmp=" << tmp << std::endl;
-        tmp.release();
-        tmp = var;
-        std::cerr << "tmp=" << tmp << std::endl;
+
+        Fit::Variables var;
+        var << "t0" << "D1" << "D2";
+        std::cerr << "var=" << var << std::endl;
+
+        {
+            Fit::Variables tmp = var;
+            std::cerr << "tmp=" << tmp << std::endl;
+            tmp.release();
+            tmp = var;
+            std::cerr << "tmp=" << tmp << std::endl;
+        }
+
+        Fit::Variables var1;
+        var1("t0",var["t0"])("D",var["D1"]);
+        std::cerr << "var1=" << var1 << std::endl;
+
+        Fit::Variables var2;
+        var2("t0",var["t0"])("D",var["D2"]);
+        std::cerr << "var2=" << var2 << std::endl;
+
+        std::cerr << "var.size ="  << var.size() << std::endl;
+        std::cerr << "var1.size=" << var1.size() << std::endl;
+        std::cerr << "var2.size=" << var2.size() << std::endl;
+
     }
 
-    Fit::Variables var1;
-    var1("t0",var["t0"])("D",var["D1"]);
-    std::cerr << "var1=" << var1 << std::endl;
+    static inline void save(const string &fn, const array<double> &x, const array<double> &y)
+    {
+        ios::ocstream fp(fn);
+        for(size_t i=1;i<=x.size();++i)
+        {
+            fp("%g %g\n", x[i], y[i]);
+        }
+    }
 
-    Fit::Variables var2;
-    var2("t0",var["t0"])("D",var["D2"]);
-    std::cerr << "var2=" << var2 << std::endl;
+    struct diffusion
+    {
+        size_t ncall;
+        double compute( double t, const array<double> &a, const Fit::Variables &var)
+        {
+            ++ncall;
+            const double t0    = var(a,"t0");
+            const double slope = var(a,"slope");
+            return sqrt( slope*fabs(t-t0) );
+        }
+
+    };
+}
+Y_UTEST(lsf)
+{
+    std::cerr << std::endl;
+    std::cerr << "-- testing some vars" << std::endl;
+    test_vars();
+
+    std::cerr << std::endl;
+    std::cerr << "-- building samples" << std::endl;
+    const double _t1[] = { 30,80,140,200,270,320,430,550,640,720,830,890 };
+    const double _x1[] = { 4.414520,5.011710,5.632319,6.194379,6.721311,7.330211,8.009368,8.735363,9.297424,9.707260,10.339578,10.878220};
+
+    const double _t2[] = { 60,120,200,270,360,460,580,670,790,920,1040 };
+    const double _x2[] = { 5.199063,5.854801,6.662763,7.365340,8.067916,8.782201,9.578454,10.175644,10.878220,11.651054,12.213115};
+
+    const lightweight_array<double> t1( (double*)_t1, sizeof(_t1)/sizeof(_t1[0]) );
+    const lightweight_array<double> x1( (double*)_x1, sizeof(_x1)/sizeof(_x1[0]) );
+    const lightweight_array<double> t2( (double*)_t2, sizeof(_t2)/sizeof(_t2[0]) );
+    const lightweight_array<double> x2( (double*)_x2, sizeof(_x2)/sizeof(_x2[0]) );
+
+    save("d1.dat",t1,x1);
+    save("d2.dat",t2,x2);
+
+
+    vector<double> z1(t1.size(),0);
+    vector<double> z2(t2.size(),0);
+
+    Fit::Sample<double> S1(t1,x1,z1);
+    S1.variables << "t0" << "slope";
+    std::cerr << "S1.variables=" << S1.variables << std::endl;
+
+    Fit::Sample<double> S2(t2,x2,z2);
+    S2.variables << "t0" << "slope";
+    std::cerr << "S2.variables=" << S1.variables << std::endl;
+
+    Fit::Samples<double> SS;
+    SS.variables << "t0" << "slope1" << "slope2";
+    std::cerr << "SS.variables=" << SS.variables << std::endl;
+
+    Fit::Sample<double>  &SS1 = SS.add(t1,x1,z1);
+    SS1.variables("t0")("slope",SS.variables["slope1"]);
+    std::cerr << "SS1.variables=" << SS1.variables << std::endl;
+
+    Fit::Sample<double>  &SS2 = SS.add(t2,x2,z2);
+    SS2.variables("t0")("slope",SS.variables["slope2"]);
+    std::cerr << "SS2.variables=" << SS2.variables << std::endl;
+
 
 }
 Y_UTEST_DONE()

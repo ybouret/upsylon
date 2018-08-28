@@ -40,6 +40,9 @@ namespace upsylon
                     os << var.name << '@' << var.index();
                     return os;
                 }
+
+                size_t check_index( const size_t against_size ) const;
+
             protected:
                 //! constructor
                 explicit Variable(const string &__name,
@@ -107,8 +110,15 @@ namespace upsylon
                 inline Variables & operator<<( const string &name) { return create_global(name); }
                 //! quick create a global variable
                 inline Variables & operator<<( const char   *name) { return create_global(name); }
+
                 //! access
                 const Variable::Pointer & operator[](const string &name) const;
+                //! access
+                inline const Variable::Pointer & operator[](const char *name) const
+                {
+                    const string _ = name; return (*this)[_];
+                }
+
                 //! create a global variable
                 inline Variables & operator()(const string &name) { return create_global(name); }
                 //! create a global variable
@@ -120,6 +130,39 @@ namespace upsylon
                 {
                     const string __name = name; return (*this)(__name,link);
                 }
+
+                //! access named variables
+                template <typename T>
+                inline T & operator()( array<T> &arr, const string &name ) const
+                {
+                    const Variables &self = *this;
+                    return arr[ self[name]->check_index(arr.size()) ];
+                }
+
+                //! access named variables
+                template <typename T>
+                inline T & operator()( array<T> &arr, const char *name ) const
+                {
+                    const Variables &self = *this;
+                    return arr[ self[name]->check_index(arr.size()) ];
+                }
+
+                //! access named variable, CONST
+                template <typename T>
+                inline const T & operator()( const array<T> &arr, const string &name ) const
+                {
+                    const Variables &self = *this;
+                    return arr[ self[name]->check_index(arr.size()) ];
+                }
+
+                //! access named variable, CONST
+                template <typename T>
+                inline const T & operator()( const array<T> &arr, const char *name ) const
+                {
+                    const Variables &self = *this;
+                    return arr[ self[name]->check_index(arr.size()) ];
+                }
+
 
             };
 
