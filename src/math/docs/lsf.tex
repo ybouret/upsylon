@@ -1,0 +1,54 @@
+\documentclass[aps]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{mathptmx}
+\usepackage{xfrac}
+
+%% concentration notations
+\newcommand{\mymat}[1]{\boldsymbol{#1}}
+\newcommand{\mytrn}[1]{~^{\mathsf{t}}\!{#1}}
+\newcommand{\myvec}[1]{\overrightarrow{#1}}
+\newcommand{\mygrad}{\vec{\nabla}}
+\newcommand{\myhess}{\mathcal{H}}
+
+
+\begin{document}
+\title{Least Square Fit}
+\maketitle
+	
+\section{Notations}
+Let us assume that we have a set of points $(x_i,y_i)$ and we want to fit
+with $F(x,\vec{a})$ by minimising
+\begin{equation}
+	D^2 = \sum_i\left[ y_i - F\left(x_i,\vec{a}\right)\right]^2.
+\end{equation}
+The descent direction is
+\begin{equation}
+	\vec{\beta} = -\dfrac{1}{2}\partial_{\vec{a}} D^2,
+	 \;\; \beta_j = \sum_i \left[y_i - F\left(x_i,\vec{a}\right)\right] \left(\dfrac{\partial F}{\partial a_j}\right)_i.
+\end{equation}
+The extension of $\vec\beta$ yields
+\begin{equation}
+	\vec{\beta}\left(\vec{a}+\vec{h}\right) = \vec{\beta} + \left(\dfrac{\partial \beta_j}{\partial a_k}\right) \cdot \vec{h}
+\end{equation}
+with
+\begin{equation}
+	\left(\dfrac{\partial \beta_j}{\partial a_k}\right) = 
+	\left(
+	 \sum_i \left[y_i - F\left(x_i,\vec{a}\right)\right] \left(\dfrac{\partial^2 F}{\partial a_j\partial a_k}\right)_i
+	 \right) - \sum_i \left(\dfrac{\partial F}{\partial a_j}\right)_i\left(\dfrac{\partial F}{\partial a_k}\right)_i
+\end{equation}
+We define the matrix $\mymat{\alpha}$ such that
+\begin{equation}
+		\alpha_{jk} = \sum_i \left(\dfrac{\partial F}{\partial a_j}\right)_i\left(\dfrac{\partial F}{\partial a_k}\right)_i
+\end{equation}
+and the modified curvature matrix $\mymat{C}_\lambda$ with increases the diagonal part of $\mymat{\alpha}$ by $1+\lambda$.
+
+\section{Algorithm}
+
+\end{document}
+
+
