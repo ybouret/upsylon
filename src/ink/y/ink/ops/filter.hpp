@@ -73,7 +73,7 @@ namespace upsylon
                 const pixmap<T> *_source;
                 const matrix<U> *_block;
 
-                inline void operator()(const area &zone, lockable &)
+                inline void operator()(const tile &zone, lockable &)
                 {
 
                 }

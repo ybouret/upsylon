@@ -1,4 +1,4 @@
-#include "y/ink/area.hpp"
+#include "y/ink/tiles.hpp"
 #include "y/parallel.hpp"
 
 namespace upsylon
@@ -7,7 +7,7 @@ namespace upsylon
     {
 
 
-        areas:: areas( const area &source, const size_t n) : dynamic(), __areas(n,as_capacity)
+        tiles:: tiles( const area &source, const size_t n) : dynamic(), __tiles(n,as_capacity)
         {
             //! sanity check
             if(n<=0) return;
@@ -74,8 +74,9 @@ namespace upsylon
                     const coord l(x_offset,y_offset);
                     //const coord s(x_length,y_length);
                     const area  a(l,x_length,y_length);
+                    const tile  t(a);
                     //std::cerr << "\t" << a.lower << "+" << a.sizes << "=" << a.pixels << std::endl;
-                    push_back(a);
+                    push_back(t);
                 }
             }
 

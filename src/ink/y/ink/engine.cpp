@@ -12,7 +12,7 @@ namespace upsylon
         engine:: engine( const dispatcher &shared, const area &full ) :
         area(full),
         agent(shared),
-        tiles( *this, agent->engine().num_threads() )
+        zones( *this, agent->engine().num_threads() )
         {
         }
 

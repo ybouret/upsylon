@@ -3,7 +3,7 @@
 #define Y_INK_ENGINE_INCLUDED 1
 
 #include "y/concurrent/scheme/simd.hpp"
-#include "y/ink/area.hpp"
+#include "y/ink/tiles.hpp"
 #include "y/ptr/arc.hpp"
 
 namespace upsylon
@@ -52,16 +52,16 @@ namespace upsylon
                 parameters<FUNC> *p = static_cast<parameters<FUNC>*>(addr);
                 assert(p->self_p);
                 assert(p->func_p);
-                assert(ctx.size==p->self_p->tiles.size());
+                assert(ctx.size==p->self_p->zones.size());
 
                 engine     &self = *(p->self_p);
                 FUNC       &func = *(p->func_p);
-                const area &zone = self.tiles[ctx.indx];
+                const tile &zone = self.zones[ctx.indx];
                 func(zone,sync);
             }
 
         public:
-            const areas tiles; //!< computed tiles
+            const tiles zones; //!< computed tiles
         };
 
     }

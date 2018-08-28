@@ -40,7 +40,7 @@ Y_UTEST(areas)
         const size_t n   = string_convert::to<size_t>(argv[3],"n");
         const area   A0  = area( coord(0,0), w,h );
         std::cerr << "Manual Tiles" << std::endl;
-        areas zones(A0,n);
+        tiles zones(A0,n);
         std::cerr << std::endl;
 
         dummyOps ops;
@@ -62,7 +62,7 @@ Y_UTEST(areas)
             area A0( coord(1+alea.leq(100),1+alea.leq(100)), coord(1+alea.leq(100),1+alea.leq(100)) );
             for(size_t n=2;n<=10;++n)
             {
-                areas zones(A0,n);
+                tiles zones(A0,n);
             }
         }
     }

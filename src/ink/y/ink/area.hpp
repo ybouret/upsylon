@@ -4,6 +4,7 @@
 
 #include "y/ink/types.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/memory/cslot.hpp"
 
 namespace upsylon
 {
@@ -88,26 +89,8 @@ namespace upsylon
 
         };
 
-        //! sequence of areas base type
-        typedef vector<area> __areas;
-
-        //! areas for tiling
-        class areas : public __areas
-        {
-        public:
-            //! destructor
-            inline virtual ~areas() throw() {}
-
-            //! copy
-            inline          areas(const areas &other) : dynamic(), __areas( other ) {}
-
-            //! tile
-            areas( const area &source, const size_t n);
-            
-            
-        private:
-            Y_DISABLE_ASSIGN(areas);
-        };
+        
+      
     }
 }
 
