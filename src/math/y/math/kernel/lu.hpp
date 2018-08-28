@@ -195,10 +195,10 @@ namespace upsylon
                 }
             }
 
-            //! solve a matrix using a previously LU build matrix
+            //! solve a matrix using a previously LU built matrix
             template <typename T>
             static inline
-            void solve( const matrix<T> &a, matrix<T> &m ) throw()
+            void solve( const matrix<T> &a, matrix<T> &m )
             {
                 const size_t n = m.rows;
                 array<T>    &b = m.r_aux1;
@@ -207,6 +207,27 @@ namespace upsylon
                     for(size_t i=n;i>0;--i) b[i]   = m[i][j];
                     solve(a,b);
                     for(size_t i=n;i>0;--i) m[i][j] = b[i];
+                }
+            }
+
+            //! compute the inverse of a previously LU built matrix
+            template <typename T>
+            static inline
+            void inverse( const matrix<T> &a, matrix<T> &I )
+            {
+                assert( a.rows == I.rows );
+                assert( a.cols == I.cols );
+                assert( I.is_square      );
+                const T __zero = 0;
+                const T __one  = 1;
+                const size_t n = I.rows;
+                array<T>    &b = I.r_aux1;
+                for(size_t j=I.cols;j>0;--j)
+                {
+                    for(size_t i=n;i>0;--i) b[i] = __zero;
+                    b[j] = __one;
+                    solve(a,b);
+                    for(size_t i=n;i>0;--i) I[i][j] = b[i];
                 }
             }
 

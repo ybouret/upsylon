@@ -3,6 +3,7 @@
 #include "y/math/kernel/tao.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/math/utils.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -35,7 +36,7 @@ namespace
                 std::cerr << "[FAILURE]" << std::endl;
                 continue;
             }
-
+            std::cerr << "|_checking residue" << std::endl;
             vector<T> r(n);
             for(size_t i=n;i>0;--i)
             {
@@ -49,6 +50,40 @@ namespace
             std::cerr << "\t|d|^2=" << tao::mod2(d) << std::endl;
         }
     }
+
+    template <typename T>
+    static inline void do_test_inv(const size_t nmax=5)
+    {
+        for(size_t n=1;n<=nmax;++n)
+        {
+            std::cerr << "inverse<" << typeid(T).name() << "> " << n << "x" << n << std::endl;
+            matrix<T> a(n,n);
+            for(size_t i=n;i>0;--i)
+            {
+                for(size_t j=n;j>0;--j)
+                {
+                    a[i][j] = support::get<T>();
+                }
+            }
+            const matrix<T> a0 = a;
+            if( LU::build(a) )
+            {
+                std::cerr << "\t[LU SUCCESS]" << std::endl;
+            }
+            else
+            {
+                std::cerr << "\t[LU FAILURE]" << std::endl;
+                continue;
+            }
+            matrix<T> b(n,n);
+            LU::inverse(a,b);
+            matrix<T> P(n,n);
+            tao::mmul(P,a0,b);
+            //__find<T>::truncate(P);
+            std::cerr << "P=" << P << std::endl;
+
+        }
+    }
 }
 
 Y_UTEST(LU)
@@ -59,6 +94,12 @@ Y_UTEST(LU)
     do_test< complex<double> >();
 
     do_test<mpq>(5);
+
+    do_test_inv<float>();
+    do_test_inv<double>();
+    do_test_inv< complex<float> >();
+    do_test_inv< complex<double> >();
+    do_test_inv<mpq>();
 
 }
 Y_UTEST_DONE()
