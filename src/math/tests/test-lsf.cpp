@@ -8,8 +8,16 @@ using namespace math;
 Y_UTEST(lsf)
 {
     Fit::Variables var;
-    var.create_global("A");
+    var << "t0" << "D1" << "D2";
     std::cerr << "var=" << var << std::endl;
+
+    {
+        Fit::Variables tmp = var;
+        std::cerr << "tmp=" << tmp << std::endl;
+        tmp.release();
+        tmp = var;
+        std::cerr << "tmp=" << tmp << std::endl;
+    }
 }
 Y_UTEST_DONE()
 

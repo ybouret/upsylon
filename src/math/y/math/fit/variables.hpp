@@ -29,8 +29,8 @@ namespace upsylon
 
                 const   string  name;
                 const   Type    type;
-                const   string &key() const throw();
-                virtual size_t index() const throw() = 0;
+                const   string &key()   const throw();
+                virtual size_t  index() const throw() = 0;
                 virtual ~Variable() throw();
                 
                 inline friend std::ostream & operator<<( std::ostream &os, const Variable &var )
@@ -91,8 +91,19 @@ namespace upsylon
                     return create_global(__name);
                 }
 
-                Variables & operator<<( const string &name) { return create_global(name); }
-                Variables & operator<<( const char   *name) { return create_global(name); }
+                inline Variables & operator<<( const string &name) { return create_global(name); }
+                inline Variables & operator<<( const char   *name) { return create_global(name); }
+
+                const Variable::Pointer & operator[](const string &name) const;
+
+                inline Variables & operator()(const string &name) { return create_global(name); }
+                inline Variables & operator()(const char   *name) { return create_global(name); }
+
+                Variables        & operator()(const string &name, const Variable::Pointer &link);
+                inline Variables & operator()(const char   *name, const Variable::Pointer &link)
+                {
+                    const string __name = name; return (*this)(__name,link);
+                }
 
             };
 

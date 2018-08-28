@@ -76,7 +76,7 @@ namespace upsylon
 
             Variables:: ~Variables() throw() {}
 
-            Variables:: Variables(const Variables &other) : Variable::Set(other) {}
+            Variables:: Variables(const Variables &other) : dynamic(), Variable::Set(other) {}
 
             Variables & Variables:: operator=( const Variables &other )
             {
@@ -90,10 +90,28 @@ namespace upsylon
                 const Variable::Pointer p = new GlobalVariable(name,size()+1);
                 if( ! insert(p) )
                 {
-                    throw exception("Variables( multiple '%s' )", *name );
+                    throw exception("Variables( Multiple Global '%s' )", *name );
                 }
                 return *this;
             }
+
+            const Variable::Pointer & Variables:: operator[](const string &name) const
+            {
+                const Variable::Pointer *ppVar = search(name);
+                if(!ppVar) throw exception("no Variables['%s']", *name);
+                return *ppVar;
+            }
+
+            Variables & Variables:: operator()(const string &name, const Variable::Pointer &link)
+            {
+                const Variable::Pointer p = new LocalVariable(name,link);
+                if(!insert(p))
+                {
+                    throw exception("Variables( Multiple Local '%s' )", *name );
+                }
+                return *this;
+            }
+
         }
 
     }
