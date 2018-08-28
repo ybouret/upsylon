@@ -24,6 +24,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(carver);
     Y_UTEST(pooled);
     Y_UTEST(buffers);
+    Y_UTEST(cslot);
     Y_UTEST(string);
     Y_UTEST(string_convert);
     Y_UTEST(tokenizer);

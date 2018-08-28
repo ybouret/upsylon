@@ -188,8 +188,10 @@ ${fs_srcs}
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
 
-ADD_EXECUTABLE(nwsrt nwsrt.cpp)
-TARGET_LINK_Y(nwsrt)
+IF(FALSE)
+  ADD_EXECUTABLE(nwsrt nwsrt.cpp)
+  TARGET_LINK_Y(nwsrt)
+ENDIF()
 
 ADD_SUBDIRECTORY(tests)
 
