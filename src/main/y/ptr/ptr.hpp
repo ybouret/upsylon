@@ -3,6 +3,7 @@
 #define Y_PTR_INCLUDED 1
 
 #include "y/type/args.hpp"
+#include <iosfwd>
 
 namespace upsylon
 {
@@ -29,6 +30,20 @@ namespace upsylon
 
         //! check validity
         inline bool is_valid() const throw() { return 0!=pointee; }
+
+        //! output forwarding
+        inline friend std::ostream & operator<<( std::ostream &os, const ptr &p )
+        {
+            if(p.pointee)
+            {
+                os << *(p.pointee);
+            }
+            else
+            {
+                os << "(nil)";
+            }
+            return os;
+        }
 
     protected:
         pointee_type pointee; //!< internal pointer
