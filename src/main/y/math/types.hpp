@@ -48,8 +48,8 @@ namespace upsylon
             static const size_t dig;        //!< significant digits
             static const T      ftol;       //!< \f$10^{-dig}\f$
             static const T      sqrt_ftol;  //!< \f$10^{-dig/2-1}\f$
-            static const T      min_10_exp; //!< minimal 10 exponent
-            static const T      max_10_exp; //!< maximal 10 exponent
+            static const int    min_10_exp; //!< minimal 10 exponent
+            static const int    max_10_exp; //!< maximal 10 exponent
             static const T      tiny;       //!< \f$10^{min_{10}exp}\f$
             static const T      huge;       //!< \f$10^{max_{10}exp}\f$
             static const T      gold;       //!< golden ratio
