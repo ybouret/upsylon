@@ -32,7 +32,7 @@ namespace upsylon
                 }
                 else
                 {
-                    memset(data,n,0);
+                    memset(data,0,n);
                 }
             }
 
