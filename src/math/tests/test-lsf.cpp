@@ -18,6 +18,15 @@ Y_UTEST(lsf)
         tmp = var;
         std::cerr << "tmp=" << tmp << std::endl;
     }
+
+    Fit::Variables var1;
+    var1("t0",var["t0"])("D",var["D1"]);
+    std::cerr << "var1=" << var1 << std::endl;
+
+    Fit::Variables var2;
+    var2("t0",var["t0"])("D",var["D2"]);
+    std::cerr << "var2=" << var2 << std::endl;
+
 }
 Y_UTEST_DONE()
 
