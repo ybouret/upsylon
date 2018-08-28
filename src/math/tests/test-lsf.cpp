@@ -80,7 +80,9 @@ Y_UTEST(lsf)
 
     save("d1.dat",t1,x1);
     save("d2.dat",t2,x2);
-
+#define INI_T0 -100
+#define INI_S1 0.02
+#define INI_S2 0.01
 
     vector<double> z1(t1.size(),0);
     vector<double> z2(t2.size(),0);
@@ -89,13 +91,39 @@ Y_UTEST(lsf)
     S1.variables << "t0" << "slope";
     std::cerr << "S1.variables=" << S1.variables << std::endl;
 
+    vector<double> a1(2);
+    double &start1 = S1.variables(a1,"t0");
+    double &slope1 = S1.variables(a1,"slope");
+
+    start1 = INI_T0;
+    slope1 = INI_S1;
+    std::cerr << "a1=" << a1 << std::endl;
+
     Fit::Sample<double> S2(t2,x2,z2);
     S2.variables << "t0" << "slope";
     std::cerr << "S2.variables=" << S1.variables << std::endl;
+    vector<double> a2(2);
+    double &start2 = S2.variables(a2,"t0");
+    double &slope2 = S2.variables(a2,"slope");
+
+    start2 = INI_T0;
+    slope2 = INI_S2;
+    std::cerr << "a2=" << a2 << std::endl;
+
+
 
     Fit::Samples<double> SS;
     SS.variables << "t0" << "slope1" << "slope2";
-    std::cerr << "SS.variables=" << SS.variables << std::endl;
+    std::cerr << "SS.variables =" << SS.variables << std::endl;
+    vector<double> aa(3);
+
+    double &start = SS.variables(aa,"t0");
+    double &diff1 = SS.variables(aa,"slope1");
+    double &diff2 = SS.variables(aa,"slope2");
+
+    start = INI_T0;
+    diff1 = slope1;
+    diff2 = slope2;
 
     Fit::Sample<double>  &SS1 = SS.add(t1,x1,z1);
     SS1.variables("t0")("slope",SS.variables["slope1"]);
@@ -106,6 +134,20 @@ Y_UTEST(lsf)
     std::cerr << "SS2.variables=" << SS2.variables << std::endl;
 
 
+    diffusion DD;
+    Fit::Type<double>::Function F(&DD, & diffusion::compute );
+
+    const double D21 = S1.computeD2(F,a1); std::cerr << "D21=" << D21 << std::endl;
+    const double D22 = S2.computeD2(F,a2); std::cerr << "D22=" << D22 << std::endl;
+
+    const double DD21 = SS1.computeD2(F,aa); std::cerr << "DD21=" << DD21 << std::endl;
+    const double DD22 = SS2.computeD2(F,aa); std::cerr << "DD22=" << DD22 << std::endl;
+
+    Y_CHECK( fabs(D21-DD21)<=0 );
+    Y_CHECK( fabs(D22-DD22)<=0 );
+
+    const double DD2 = SS.computeD2(F,aa);
+    std::cerr << "DD2=" << DD2 << std::endl;
 }
 Y_UTEST_DONE()
 
