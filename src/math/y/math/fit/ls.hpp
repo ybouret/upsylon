@@ -12,6 +12,8 @@ namespace upsylon
         namespace Fit
         {
 
+#define Y_LSF_OUT(CODE) if(verbose) do { CODE; } while(false)
+
             template <typename T>
             class LeastSquare : public arrays<T>
             {
@@ -27,6 +29,7 @@ namespace upsylon
                 Matrix   curv;
                 Array   &beta;
                 Array   &delta;
+                Array   &atry;
                 Gradient grad;
                 bool     verbose;
 
@@ -37,6 +40,7 @@ namespace upsylon
                 alpha(),
                 beta(  this->next() ),
                 delta( this->next() ),
+                atry(  this->next() ),
                 grad(),
                 verbose(true)
                 {
@@ -58,14 +62,25 @@ namespace upsylon
 
                 inline bool compute_curvature()
                 {
-                    const size_t n = alpha.rows;
+                    const size_t nvar = alpha.rows;
                     while(true)
                     {
                         curv.assign( alpha );
                         const T      fac = T(1) + lam;
-                        for(size_t i=n;i>0;--i)
+                        for(size_t i=nvar;i>0;--i)
                         {
                             curv[i][i] *= fac;
+                        }
+                        if( !LU::build(curv) )
+                        {
+                            if(!increase_lambda())
+                            {
+                                return false;
+                            }
+                            else
+                            {
+                                continue; // with a new lambda
+                            }
                         }
                         return true;
                     }
@@ -80,19 +95,28 @@ namespace upsylon
                     assert(aerr.size()==aorg.size());
                     assert(used.size()==aorg.size());
                     const size_t nvar = aorg.size();
-
-                    if(nvar<=0) return true;
+                    //__________________________________________________________
+                    //
+                    // init
+                    //__________________________________________________________
+                    if(verbose) { std::cerr << "[LSF] Initialize" << std::endl; }
+                    aerr.ld(0);
+                    if(nvar<=0)
+                    {
+                        Y_LSF_OUT(std::cerr << "[LSF] No Variables => SUCCESS" << std::endl);
+                        return true;
+                    }
 
                     this->acquire(nvar);
                     alpha.make(nvar,nvar);
                     curv.make(nvar,nvar);
 
-                    // init
-                    aerr.ld(0);
-                    alpha.ld(0);
-                    beta.ld(0);
                     p   = -4;
                     compute_lam();
+                    Y_LSF_OUT(std::cerr << "[LSF] Initial lam=" << lam << "/p=" << p << std::endl);
+
+                    alpha.ld(0);
+                    beta.ld(0);
                     T D2_org = sample.computeD2(F,aorg,beta,alpha,grad,used);
                     while(true)
                     {
@@ -100,26 +124,78 @@ namespace upsylon
                         //
                         // normalize alpha
                         //______________________________________________________
-                        if(verbose) { std::cerr << "[LSF] D2_org=" << D2_org << std::endl; }
+                        if(verbose) { std::cerr << "[LSF] D2_org=" << D2_org << "@" << aorg << std::endl; }
+                        for(size_t i=nvar;i>0;--i)
+                        {
+                            if(used[i])
+                            {
+                                for(size_t j=i-1;j>0;--j)
+                                {
+                                    alpha[j][i] = alpha[i][j];
+                                }
+                            }
+                            else
+                            {
+                                alpha[i][i] = 1; // for a null gradient
+                            }
+                        }
+                        Y_LSF_OUT(std::cerr << "[LSF] descent and jacobian" << std::endl;
+                                  std::cerr << "    beta  = "  << beta  << std::endl;
+                                  std::cerr << "    alpha = " << alpha << std::endl);
 
-                        std::cerr << "beta=" << beta << std::endl;
-                        std::cerr << "alpha=" << alpha << std::endl;
-                        exit(1);
+                        //______________________________________________________
+                        //
+                        // compute curvature if possible
+                        //______________________________________________________
                         if( !compute_curvature() )
                         {
-                            if(verbose) { std::cerr << "[LSF] Singular Point" << std::endl; }
+                            Y_LSF_OUT(std::cerr << "[LSF] Singular Point" << std::endl);
                             return false;
                         }
-                        break;
+
+                        //______________________________________________________
+                        //
+                        // compute step from this point
+                        //______________________________________________________
+                        tao::set(delta,beta);
+                        LU::solve(curv,delta);
+                        Y_LSF_OUT(std::cerr << "    delta = " << delta << std::endl);
+
+                        //______________________________________________________
+                        //
+                        // probe new value
+                        //______________________________________________________
+                        tao::setprobe(atry, aorg,1,delta);
+                        const T D2_try = sample.computeD2(F,atry);
+                        Y_LSF_OUT(std::cerr << "[LSF] D2_try=" << D2_try << "@" << atry << std::endl);
+                        if(D2_try>=D2_org)
+                        {
+                            std::cerr << "Increasing..." << std::endl;
+                            exit(1);
+                        }
+
+                        // successfull step
+                        decrease_lambda();
+                        tao::set(aorg,atry);
+                        alpha.ld(0);
+                        beta.ld(0);
+                        const T D2_err = D2_org - D2_try; assert(D2_err>=0);
+                        D2_org = sample.computeD2(F,aorg,beta,alpha,grad,used);
+                        if( D2_err <= numeric<T>::ftol * D2_org )
+                        {
+                            Y_LSF_OUT(std::cerr << "[LSF] D2 convergence" << std::endl);
+                            goto CONVERGED;
+                        }
                     }
 
-
+                CONVERGED:
                     return false;
                 }
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(LeastSquare);
+
                 //! initialize value of lam
                 inline void compute_lam()
                 {
@@ -135,9 +211,35 @@ namespace upsylon
                         }
                         else
                         {
-                            return lam = 1;
+                            lam = 1;
                         }
                     }
+                }
+
+                bool increase_lambda() throw()
+                {
+                    static const int pmax = get_pmax();
+                    if(++p>pmax) return false; //!< overflow
+                    lam *= 10;
+                    Y_LSF_OUT(std::cerr << "[LSF] (++) lam=" << lam << "/p=" << p << std::endl);
+                    return true;
+                }
+
+                void decrease_lambda() throw()
+                {
+                    static const int pmin = get_pmin();
+
+                    if(--p<pmin)
+                    {
+                        p   = pmin;
+                        lam = 0;
+                    }
+                    else
+                    {
+                        lam *= T(0.1);
+                    }
+                    Y_LSF_OUT(std::cerr << "[LSF] (--) lam=" << lam << "/p=" << p << std::endl);
+
                 }
             };
 

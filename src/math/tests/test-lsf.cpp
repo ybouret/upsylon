@@ -81,8 +81,8 @@ Y_UTEST(lsf)
     save("d1.dat",t1,x1);
     save("d2.dat",t2,x2);
 #define INI_T0 -100
-#define INI_S1 0.02
-#define INI_S2 0.01
+#define INI_S1 0.1
+#define INI_S2 0.2
 
     vector<double> z1(t1.size(),0);
     vector<double> z2(t2.size(),0);
@@ -151,6 +151,7 @@ Y_UTEST(lsf)
 
     vector<bool> used(2,true);
     vector<double> aerr(2);
+    //used[2] = false;
     Fit::LeastSquare<double> ls;
     ls.fit(S1,F,a1,aerr,used);
     
