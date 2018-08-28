@@ -9,16 +9,23 @@ namespace upsylon
 {
     namespace ink
     {
+        //! reusable local memory for one tile
         typedef memory::cslot<memory::global> local_memory;
 
+        //! a tile is an area with a memory cache
         class tile : public area
         {
         public:
+            //! constructor
             inline tile( const area &a ) : area(a), cache() {}
+
+            //! copy
             inline tile(const tile &other) : area(other), cache() {}
+
+            //!destructor
             inline virtual ~tile() throw() {}
 
-            local_memory cache;
+            local_memory cache; //!< for parallel computation
 
         private:
             Y_DISABLE_ASSIGN(tile);

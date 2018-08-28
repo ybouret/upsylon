@@ -25,6 +25,7 @@ namespace upsylon
                 E.run(proxy);
             }
 
+            //! apply a matrix as a filter
             template <typename T, typename U> static inline
             void apply(pixmap<float>   &target,
                        const pixmap<T> &source,

@@ -9,6 +9,7 @@ namespace upsylon
 {
     namespace ink
     {
+        //! define metrics for zero flux computation
 #define Y_PIXMAP_SIGNED_METRICS()  sw(w), ww(w+w), sh(h), hh(sh+sh)
 
         //! pixmap of any type

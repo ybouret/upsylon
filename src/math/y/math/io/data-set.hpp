@@ -16,6 +16,7 @@ namespace upsylon
     {
         namespace kernel
         {
+            //! separators for columns
             inline bool data_set_separator(const int C) { return ' '==C || '\t' == C; }
 
         }

@@ -10,11 +10,12 @@ namespace upsylon
 {
     namespace memory
     {
+        //! slot of reusable memory
         template <typename ALLOCATOR = global>
         class cslot
         {
         public:
-            const size_t size;
+            const size_t size; //!< current maximum size
 
             //! constructor, be sure to activate allocator
             inline explicit cslot(const size_t n=0) : size(n), data( ALLOCATOR::instance().acquire( (size_t &)size )) { }
@@ -49,6 +50,7 @@ namespace upsylon
             inline T & get() const throw()
             { assert(size>=sizeof(T)); assert(data); return *static_cast<const T*>(data); }
 
+            //! local access, asuming multiple items
             template <typename T>
             inline T & get(const size_t i) throw()
             {
@@ -57,6 +59,7 @@ namespace upsylon
                 return *(static_cast<T*>(data)+i);
             }
 
+            //! local access, asuming multiple items, CONST
             template <typename T>
             inline const T & get(const size_t i) const throw()
             {
