@@ -32,7 +32,8 @@ namespace upsylon
                        const matrix<U> &block,
                        engine          &E)
             {
-
+                block_parameters<T,U> proxy = { &target, &source, &block };
+                E.run(proxy);
             }
 
         private:
@@ -76,7 +77,31 @@ namespace upsylon
 
                 inline void operator()(const tile &zone, lockable &)
                 {
+                    assert(_target);assert(_source);assert(_block);
+                    if(zone.pixels)
+                    {
+                        pixmap<float>   &target = * _target;
+                        const pixmap<T> &source = * _source;
+                        const matrix<U> &block  = * _block;
 
+                        const unit_t mx = unit_t(block.cols);
+                        const unit_t my = unit_t(block.rows);
+                        const unit_t dx = (mx-1)/2;
+                        const unit_t dy = (my-1)/2;
+                        const unit_t ymin = zone.lower.y;
+                        const unit_t xmin = zone.lower.x;
+                        const unit_t xmax = zone.upper.x;
+                        for(unit_t y=zone.upper.y;y>=ymin;--y)
+                        {
+                            pixmap<float>::row            &tgt = target[y];
+                            for(unit_t x=xmax;x>=xmin;--x)
+                            {
+                                float ans = 0;
+                                
+                                tgt[x] = ans;
+                            }
+                        }
+                    }
                 }
             };
 
