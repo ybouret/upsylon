@@ -20,8 +20,8 @@ namespace upsylon
         template <> const int    numeric<real_t>::max_10_exp   = REAL_MAX_10_EXP;
         template <> const real_t numeric<real_t>::ftol         = REAL(pow)( REAL(10.0), -real_t(dig) );
         template <> const real_t numeric<real_t>::sqrt_ftol    = REAL(pow)( REAL(10.0), -real_t(dig/2+1) );
-        template <> const real_t numeric<real_t>::tiny         = REAL(pow)( REAL(10.0), numeric<real_t>::min_10_exp );
-        template <> const real_t numeric<real_t>::huge         = REAL(pow)( REAL(10.0), numeric<real_t>::max_10_exp );
+        template <> const real_t numeric<real_t>::tiny         = REAL(pow)( REAL(10.0), REAL_MIN_10_EXP);
+        template <> const real_t numeric<real_t>::huge         = REAL(pow)( REAL(10.0), REAL_MAX_10_EXP);
         template <> const real_t numeric<real_t>::gold         = REAL(0.5) * ( REAL(sqrt)( REAL(5.0) ) + REAL(1.0) );
 
 #if 0

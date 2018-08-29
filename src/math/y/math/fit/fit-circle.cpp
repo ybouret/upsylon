@@ -35,7 +35,7 @@ namespace upsylon
             {
                 mu[1][1] = sorted_sum(x2);
                 mu[2][2] = sorted_sum(y2);
-                mu[3][3] = size();
+                mu[3][3] = double(size());
 
                 mu[1][2] = mu[2][1] = sorted_sum(xy);
                 mu[1][3] = mu[3][1] = sorted_sum(x);

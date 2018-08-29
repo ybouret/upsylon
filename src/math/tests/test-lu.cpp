@@ -4,6 +4,7 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/math/utils.hpp"
+#include <typeinfo>
 
 using namespace upsylon;
 using namespace math;

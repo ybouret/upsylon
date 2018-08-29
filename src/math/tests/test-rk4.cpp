@@ -14,7 +14,7 @@ namespace {
     {
     public:
         T k;
-        inline dummy() : k(1.7)
+        inline dummy() : k(T(1.7))
         {
         }
 

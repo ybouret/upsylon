@@ -15,7 +15,7 @@ namespace
 
 Y_UTEST(fit_circle)
 {
-    const double          r = 1+alea.leq(100);
+    const double          r = double(1+alea.leq(100));
     const point2d<double> center( 10 * alea.symm<double>(), 10 * alea.symm<double>() );
     list<point> points;
     for(size_t n=3+alea.leq(100);n>0;--n)

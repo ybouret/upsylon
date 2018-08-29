@@ -9,7 +9,7 @@ namespace
     template <typename T> inline
     T F(T x)
     {
-        return cos_of(x*x*0.3);
+        return cos_of(x*x*T(0.3));
     }
 
     template <typename T>

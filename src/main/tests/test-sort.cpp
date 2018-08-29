@@ -121,7 +121,7 @@ namespace
         hspd.free();
         qspd.free();
         yspd.free();
-        for(size_t n=1;n<=2048;n*=2)
+        for(unsigned n=1;n<=2048;n*=2)
         {
             count.push_back(n);
             vector<T> arr(n,as_capacity);
