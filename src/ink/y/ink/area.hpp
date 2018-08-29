@@ -89,6 +89,12 @@ namespace upsylon
 
         };
 
+        //! wrapper to extract value
+#define Y_INK_AREA_LIMITS(A)     \
+const unit_t xmin = (A).lower.x; \
+const unit_t xmax = (A).upper.x; \
+const unit_t ymin = (A).lower.y; \
+const unit_t ymax = (A).upper.y
         
       
     }

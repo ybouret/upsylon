@@ -12,7 +12,9 @@ Y_UTEST(ops)
     dispatcher __par = new concurrent::simd();
 
     matrix<int> M(3,3);
-
+    M[2][2] = 1;
+    M.ld(1);
+    
     for(int iarg=1;iarg<argc;++iarg)
     {
         const string fn  = argv[iarg];
@@ -29,6 +31,15 @@ Y_UTEST(ops)
         pixmapf target(w,h);
 
         filter::stencil(target,pxm1,M,par);
+        const float vmin = filter::find_min(target,par);
+        std::cerr << "vmin=" << vmin << std::endl;
+        const float vmax = filter::find_max(target,par);
+        std::cerr << "vmax=" << vmax << std::endl;
+
+        float vmin2=0,vmax2=0;
+        filter::find_min_max(vmin2, vmax2,target,par);
+        std::cerr << "min_max=" << vmin2 << "," << vmax2 << std::endl;
+
         //img.save("stenf.png",pxmf,0);
         
 

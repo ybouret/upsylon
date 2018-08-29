@@ -35,7 +35,75 @@ namespace upsylon
                 block_parameters<T,U> proxy = { &target, &source, &block };
                 E.run(proxy);
             }
-            
+
+            template <typename T> static inline
+            T find_min( const pixmap<T> &source, engine &E )
+            {
+                E.acquire_all(sizeof(T));
+                {
+                    __find_min<T> proxy = { &source };
+                    E.run(proxy);
+                }
+                const array<tile> &zones = E.zones;
+                size_t n   = zones.size();
+                T      ans = zones[n].cache.get<T>();
+                for(--n;n>0;--n)
+                {
+                    const T tmp = zones[n].cache.get<T>();
+                    if(tmp<ans) ans=tmp;
+                }
+                return ans;
+            }
+
+            template <typename T> static inline
+            T find_max( const pixmap<T> &source, engine &E )
+            {
+                E.acquire_all(sizeof(T));
+                {
+                    __find_max<T> proxy = { &source };
+                    E.run(proxy);
+                }
+                const array<tile> &zones = E.zones;
+                size_t n   = zones.size();
+                T      ans = zones[n].cache.get<T>();
+                for(--n;n>0;--n)
+                {
+                    const T tmp = zones[n].cache.get<T>();
+                    if(tmp>ans) ans=tmp;
+                }
+                return ans;
+            }
+
+            template <typename T> static inline
+            void find_min_max( T &vmin, T&vmax, const pixmap<T> &source, engine &E )
+            {
+                E.acquire_all_for<T>(2);
+                {
+                    __find_min_max<T> proxy = { &source };
+                    E.run(proxy);
+                }
+                const array<tile> &zones = E.zones;
+                size_t n   = zones.size();
+                vmin = zones[n].cache.get<T>(0);
+                vmax = zones[n].cache.get<T>(1);
+                for(--n;n>0;--n)
+                {
+                    {
+                        const T tmp = zones[n].cache.get<T>(0);
+                        if(tmp<vmin)
+                        {
+                            vmin = tmp;
+                        }
+                    }
+                    {
+                        const T tmp = zones[n].cache.get<T>(1);
+                        if(vmax<tmp)
+                        {
+                            vmax = tmp;
+                        }
+                    }
+                }
+            }
 
 
         private:
@@ -54,11 +122,9 @@ namespace upsylon
                     pixmap<T>       &target = * _target;
                     const pixmap<U> &source = * _source;
                     FUNC            &func   = * _func;
+                    Y_INK_AREA_LIMITS(zone);
 
-                    const unit_t ymin = zone.lower.y;
-                    const unit_t xmin = zone.lower.x;
-                    const unit_t xmax = zone.upper.x;
-                    for(unit_t y=zone.upper.y;y>=ymin;--y)
+                    for(unit_t y=ymax;y>=ymin;--y)
                     {
                         typename       pixmap<T>::row &tgt = target[y];
                         const typename pixmap<U>::row &src = source[y];
@@ -90,10 +156,7 @@ namespace upsylon
                         const unit_t my = unit_t(block.rows);
                         const unit_t dx = (mx-1)/2;
                         const unit_t dy = (my-1)/2;
-                        const unit_t ymax = zone.upper.y;
-                        const unit_t ymin = zone.lower.y;
-                        const unit_t xmin = zone.lower.x;
-                        const unit_t xmax = zone.upper.x;
+                        Y_INK_AREA_LIMITS(zone);
                         for(unit_t y=ymax;y>=ymin;--y)
                         {
                             pixmap<float>::row            &tgt = target[y];
@@ -118,28 +181,101 @@ namespace upsylon
                                 tgt[x] = ans;
                             }
                         }
-#if 0
-                        float vmin = target[ymin][xmin], vmax = vmin;
-                        for(unit_t y=ymax;y>=ymin;--y)
-                        {
-                            const pixmap<float>::row &tgt = target[y];
-                            for(unit_t x=xmax;x>=xmin;--x)
-                            {
-                                const float v = tgt[x];
-                                if(v<vmin) vmin = v;
-                                else if(v<vmax) vmax=v;
-                            }
-                        }
-                        zone.cache.get<float>(0) = vmin;
-                        zone.cache.get<float>(1) = vmax;
-#endif
                     }
                 }
             };
 
+            template <typename T>
+            struct __find_min
+            {
+                const pixmap<T> *_source;
+
+                inline void operator()( const tile &zone, lockable &)
+                {
+                    assert(_source);
+                    if(zone.pixels)
+                    {
+                        const pixmap<T> &source = * _source;
+                        Y_INK_AREA_LIMITS(zone);
+
+
+                        T vmin = source[ymin][xmin];
+                        for(unit_t y=ymax;y>=ymin;--y)
+                        {
+                            const typename pixmap<T>::row &tgt = source[y];
+                            for(unit_t x=xmax;x>=xmin;--x)
+                            {
+                                const T v = tgt[x];
+                                if(v<vmin) vmin = v;
+                            }
+                        }
+                        zone.cache.get<float>(0) = vmin;
+                    }
+                }
+            };
+
+            template <typename T>
+            struct __find_max
+            {
+                const pixmap<T> *_source;
+
+                inline void operator()( const tile &zone, lockable &)
+                {
+                    assert(_source);
+                    if(zone.pixels)
+                    {
+                        const pixmap<T> &source = * _source;
+                        Y_INK_AREA_LIMITS(zone);
+                        T vmax = source[ymin][xmin];
+                        for(unit_t y=ymax;y>=ymin;--y)
+                        {
+                            const typename pixmap<T>::row &tgt = source[y];
+                            for(unit_t x=xmax;x>=xmin;--x)
+                            {
+                                const T v = tgt[x];
+                                if(v>vmax) vmax= v;
+                            }
+                        }
+                        zone.cache.get<float>(0) = vmax;
+                    }
+                }
+            };
+
+            template <typename T>
+            struct __find_min_max
+            {
+                const pixmap<T> *_source;
+
+                inline void operator()( const tile &zone, lockable &)
+                {
+                    assert(_source);
+                    if(zone.pixels)
+                    {
+                        const pixmap<T> &source = * _source;
+                        Y_INK_AREA_LIMITS(zone);
+                        T vmax = source[ymin][xmin], vmin=vmax;
+                        for(unit_t y=ymax;y>=ymin;--y)
+                        {
+                            const typename pixmap<T>::row &tgt = source[y];
+                            for(unit_t x=xmax;x>=xmin;--x)
+                            {
+                                const T v = tgt[x];
+                                if(vmax<v)      vmax=v;
+                                else if(v<vmin) vmin=v;
+                            }
+                        }
+                        zone.cache.get<float>(0) = vmin;
+                        zone.cache.get<float>(1) = vmax;
+                    }
+                }
+            };
+
+
         };
-    }
+
+    };
 }
+
 
 #endif
 
