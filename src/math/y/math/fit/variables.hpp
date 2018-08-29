@@ -4,7 +4,7 @@
 
 #include "y/string.hpp"
 #include "y/associative/set.hpp"
-#include "y/sequence/array.hpp"
+#include "y/sequence/vector.hpp"
 #include "y/ptr/intr.hpp"
 
 namespace upsylon
@@ -28,11 +28,11 @@ namespace upsylon
                 typedef intr_ptr<string,Variable>   Pointer; //!< shared pointer
                 typedef set<string,Pointer>         Set;     //!< for database
 
-                const   string  name; //!< unique name
-                const   Type    type; //!< keep track
+                const   string  name;                      //!< unique name
+                const   Type    type;                      //!< keep track
                 const   string &key()   const throw();     //!< name
                 virtual size_t  index() const throw() = 0; //!< global index
-                virtual ~Variable() throw(); //!< desctrutor
+                virtual ~Variable() throw();               //!< destructor
 
                 //! display
                 inline friend std::ostream & operator<<( std::ostream &os, const Variable &var )
@@ -162,6 +162,71 @@ namespace upsylon
                 {
                     const Variables &self = *this;
                     return arr[ self[name]->check_index(arr.size()) ];
+                }
+
+                //! get max(name.size())
+                size_t get_max_name_size() const throw();
+
+                template <typename T> inline
+                void diplay(std::ostream &os, const array<T> &arr,const char *pfx=NULL) const
+                {
+                    const size_t sz = get_max_name_size();
+                    for(const_iterator i=begin();i!=end();++i)
+                    {
+                        const string &name  = (**i).name;
+                        const T      &value = (*this)(arr,name);
+                        if(pfx) os << pfx;
+                        os << name;
+                        for(size_t j=sz;j>name.size();--j) os << ' ';
+                        os << " = ";
+                        os << value << std::endl;
+                    }
+                }
+
+                template <typename T> inline
+                void diplay(std::ostream &os, const array<T> &aorg, const array<T> &aerr, const char *pfx=NULL) const
+                {
+                    const size_t sz = get_max_name_size();
+                    const size_t nv = this->size();
+                    vector<string,memory::pooled> astr(nv,as_capacity);
+                    vector<string,memory::pooled> estr(nv,as_capacity);
+                    size_t       am = 0;
+                    size_t       em = 0;
+
+                    for(const_iterator i=begin();i!=end();++i)
+                    {
+                        const string &name  = (**i).name;
+                        {
+                            const string  s     = vformat("%.15g",double( (*this)(aorg,name) ));
+                            astr.push_back(s);
+                            am = max_of(am,s.size());
+                        }
+                        {
+                            const string  s     = vformat("%.15g",double( (*this)(aerr,name) ));
+                            estr.push_back(s);
+                            em = max_of(em,s.size());
+                        }
+                    }
+                    size_t iv=1;
+                    for(const_iterator i=begin();i!=end();++i,++iv)
+                    {
+                        const string &name  = (**i).name;
+                        if(pfx) os << pfx;
+                        os << name;
+                        for(size_t j=sz;j>name.size();--j) os << ' ';
+                        os << " = ";
+                        {
+                            const string &value = astr[iv];
+                            os << value; for(size_t j=am;j>value.size();--j) os << ' ';
+                            os << " +/- ";
+                        }
+                        {
+                            const string &value = estr[iv];
+                            os << value; for(size_t j=em;j>value.size();--j) os << ' ';
+                            os << " ... ";
+                        }
+                        os << std::endl;
+                    }
                 }
 
 

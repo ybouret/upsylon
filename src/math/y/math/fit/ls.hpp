@@ -33,16 +33,17 @@ namespace upsylon
                 Gradient grad;
                 bool     verbose;
 
-                inline explicit LeastSquare() :
+                inline explicit LeastSquare(const bool is_verbose=false) :
                 arrays<T>(10),
                 p(0),
                 lam(0),
                 alpha(),
+                curv(),
                 beta(  this->next() ),
                 delta( this->next() ),
                 atry(  this->next() ),
                 grad(),
-                verbose(true)
+                verbose(is_verbose)
                 {
                 }
 
@@ -86,7 +87,7 @@ namespace upsylon
                     }
                 }
 
-                inline bool fit(Sample<T>         &sample,
+                inline bool fit(SampleType<T>     &sample,
                                 Function          &F,
                                 Array             &aorg,
                                 Array             &aerr,
@@ -99,10 +100,10 @@ namespace upsylon
                     //
                     // initialize
                     //__________________________________________________________
-                    if(verbose) { std::cerr << "[LSF] Initialize" << std::endl; }
+                    if(verbose) { std::cerr << "[LSF] initialize" << std::endl; }
                     if(nvar<=0)
                     {
-                        Y_LSF_OUT(std::cerr << "[LSF] No Variables => SUCCESS" << std::endl);
+                        Y_LSF_OUT(std::cerr << "[LSF] no variables" << std::endl);
                         return true;
                     }
 
@@ -113,18 +114,18 @@ namespace upsylon
 
                     p   = -4;
                     compute_lam();
-                    Y_LSF_OUT(std::cerr << "[LSF] Initial lam=" << lam << "/p=" << p << std::endl);
+                    Y_LSF_OUT(std::cerr << "[LSF] initial lambda=" << lam << "/p=" << p << std::endl);
 
                     alpha.ld(0);
                     beta.ld(0);
-                    T D2_org = sample.computeD2(F,aorg,beta,alpha,grad,used);
+                    T D2 = sample.computeD2(F,aorg,beta,alpha,grad,used);
                     while(true)
                     {
                         //______________________________________________________
                         //
                         // normalize alpha
                         //______________________________________________________
-                        Y_LSF_OUT(std::cerr << "[LSF] D2_org=" << D2_org << "@" << aorg << std::endl);
+                        Y_LSF_OUT(std::cerr << "[LSF] D2=" << D2 << "@" << aorg << std::endl);
                         for(size_t i=nvar;i>0;--i)
                         {
                             if(used[i])
@@ -145,11 +146,12 @@ namespace upsylon
 
                         //______________________________________________________
                         //
-                        // compute curvature if possible
+                        // compute curvature if possible, using current lam
                         //______________________________________________________
+                    FIND_STEP:
                         if( !compute_curvature() )
                         {
-                            Y_LSF_OUT(std::cerr << "[LSF] Singular Point" << std::endl);
+                            Y_LSF_OUT(std::cerr << "[LSF] singular parameters" << std::endl);
                             return false;
                         }
 
@@ -168,31 +170,109 @@ namespace upsylon
                         tao::add(atry,aorg,delta);
                         const T D2_try = sample.computeD2(F,atry);
                         Y_LSF_OUT(std::cerr << "[LSF] D2_try=" << D2_try << "@" << atry << std::endl);
-                        if(D2_try>=D2_org)
+
+                        //______________________________________________________
+                        //
+                        // check if increasing D2
+                        //______________________________________________________
+                        if(D2_try>=D2)
                         {
-                            std::cerr << "Increasing..." << std::endl;
-                            exit(1);
+                            Y_LSF_OUT(std::cerr << "[LSF] local minimum" << std::endl);
+                            // test variable convergence
+                            bool converged = true;
+                            for(size_t i=nvar;i>0;--i)
+                            {
+                                const T da = __fabs(aorg[i]-atry[i]);
+                                if( da > numeric<T>::ftol * __fabs(aorg[i]))
+                                {
+                                    converged = false;
+                                    break;
+                                }
+                            }
+                            if(converged)
+                            {
+                                Y_LSF_OUT(std::cerr << "[LSF] variables convergence" << std::endl);
+                                goto CONVERGED;
+                            }
+                            if(!increase_lambda())
+                            {
+                                Y_LSF_OUT(std::cerr << "[LSF] spurious parameters" << std::endl);
+                                return false;
+                            }
+                            goto FIND_STEP;
                         }
 
                         //______________________________________________________
                         //
-                        // successfull step
+                        // successfull step: update and test convergence
                         //______________________________________________________
-                        decrease_lambda();
                         tao::set(aorg,atry);
-                        alpha.ld(0);
-                        beta.ld(0);
-                        const T D2_err = D2_org - D2_try; assert(D2_err>=0);
-                        D2_org = sample.computeD2(F,aorg,beta,alpha,grad,used);
-                        if( D2_err <= numeric<T>::ftol * D2_org )
+                        const T D2_err = __fabs(D2 - D2_try);
+                        if( D2_err <= numeric<T>::ftol * D2 )
                         {
-                            Y_LSF_OUT(std::cerr << "[LSF] D2 convergence" << std::endl);
+                            Y_LSF_OUT(std::cerr << "[LSF] least squares convergence" << std::endl);
                             goto CONVERGED;
                         }
+
+                        //______________________________________________________
+                        //
+                        // prepare next step: full computation
+                        //______________________________________________________
+                        decrease_lambda();
+                        alpha.ld(0);
+                        beta.ld(0);
+                        D2 = sample.computeD2(F,aorg,beta,alpha,grad,used);
                     }
 
                 CONVERGED:
-                    return false;
+                    //__________________________________________________________
+                    //
+                    // D2_org, aorg and alpha are computed
+                    //__________________________________________________________
+                    Y_LSF_OUT(std::cerr<<"[LSF] analyzing parameters"<<std::endl);
+                    const size_t ndat = sample.count();
+
+                    size_t nprm = nvar;
+                    for(size_t j=nvar;j>0;--j)
+                    {
+                        if(!used[j]) --nprm;
+                    }
+                    Y_LSF_OUT(std::cerr << "|_#data       = " << ndat << std::endl);
+                    Y_LSF_OUT(std::cerr << "|_#variables  = " << nvar << std::endl);
+                    Y_LSF_OUT(std::cerr << "|_#parameters = " << nprm << std::endl);
+
+                    if(nprm>ndat)
+                    {
+                        Y_LSF_OUT(std::cerr<< "[LSF] more parameters than data"<<std::endl);
+                        aerr.ld(-1);
+                        return false;
+                    }
+                    else if(nprm==ndat)
+                    {
+                        Y_LSF_OUT(std::cerr<< "[LSF] no degree of freedom: interpolarion"<<std::endl);
+                        aerr.ld(0);
+                        return true;
+                    }
+                    assert(ndat>nprm);
+                    const size_t ndof = ndat-nprm;
+                    Y_LSF_OUT(std::cerr << "|_#dof        = " << ndof << std::endl);
+
+                    Y_LSF_OUT(std::cerr<< "alpha=" << alpha << std::endl);
+                    if(!LU::build(alpha))
+                    {
+                        Y_LSF_OUT(std::cerr << "[LSF] unexpected singular minimum" << std::endl);
+                        return false;
+                    }
+
+
+                    LU::inverse(alpha,curv);
+                    Y_LSF_OUT(std::cerr<< "curv=" << curv << std::endl);
+                    const T dS = D2/ndof;
+                    for(size_t i=nvar;i>0;--i)
+                    {
+                        if(used[i]) aerr[i] = sqrt_of( max_of<T>(0,dS*curv[i][i]) );
+                    }
+                    return true;
                 }
 
 

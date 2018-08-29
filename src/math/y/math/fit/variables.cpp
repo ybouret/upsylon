@@ -122,6 +122,17 @@ namespace upsylon
                 return *this;
             }
 
+            size_t Variables:: get_max_name_size() const throw()
+            {
+                size_t sz = 0;
+                for( const_iterator i=begin();i!=end();++i)
+                {
+                    const string &name = (**i).name;
+                    sz = max_of(sz,name.size());
+                }
+                return sz;
+            }
+
         }
 
     }

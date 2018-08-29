@@ -28,7 +28,7 @@ with $F(x,\vec{a})$ by minimising
 The descent direction is
 \begin{equation}
 	\vec{\beta} = -\dfrac{1}{2}\partial_{\vec{a}} D^2,
-	 \;\; \beta_j = \sum_i \left[y_i - F\left(x_i,\vec{a}\right)\right] \left(\dfrac{\partial F}{\partial a_j}\right)_i.
+	 \;\; \beta_j = \sum_i \left[y_i - F\left(x_i,\vec{a}\right)\right] \left(\dfrac{\partial F_i}{\partial a_j}\right).
 \end{equation}
 The extension of $\vec\beta$ yields
 \begin{equation}
@@ -38,12 +38,12 @@ with
 \begin{equation}
 	\left(\dfrac{\partial \beta_j}{\partial a_k}\right) = 
 	\left(
-	 \sum_i \left[y_i - F\left(x_i,\vec{a}\right)\right] \left(\dfrac{\partial^2 F}{\partial a_j\partial a_k}\right)_i
-	 \right) - \sum_i \left(\dfrac{\partial F}{\partial a_j}\right)_i\left(\dfrac{\partial F}{\partial a_k}\right)_i
+	 \sum_i \left[y_i - F\left(x_i,\vec{a}\right)\right] \left(\dfrac{\partial^2 F_i}{\partial a_j\partial a_k}\right)
+	 \right) - \sum_i \left(\dfrac{\partial F_i}{\partial a_j}\right)\left(\dfrac{\partial F_i}{\partial a_k}\right)
 \end{equation}
 We define the matrix $\mymat{\alpha}$ such that
 \begin{equation}
-		\alpha_{jk} = \sum_i \left(\dfrac{\partial F}{\partial a_j}\right)_i\left(\dfrac{\partial F}{\partial a_k}\right)_i
+		\alpha_{jk} = \sum_i \left(\dfrac{\partial F_i}{\partial a_j}\right)\left(\dfrac{\partial F_i}{\partial a_k}\right)
 \end{equation}
 and the modified curvature matrix $\mymat{C}_\lambda$ with increases the diagonal part of $\mymat{\alpha}$ by $1+\lambda$.
 

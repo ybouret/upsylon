@@ -25,6 +25,8 @@ namespace upsylon
                 Variables variables; //!< local or global variables
                 virtual ~SampleInfo() throw(); //!< destructor
 
+                virtual size_t count() const throw() = 0; //!< number of points
+
             protected:
                 //! initialize
                 explicit SampleInfo(const size_t nvar_max);
@@ -135,6 +137,7 @@ namespace upsylon
                 //! desctructor
                 inline virtual ~SampleType() throw() {}
 
+
                 //! compute D2 only
                 virtual T computeD2(Function     &F,
                                     const Array  &aorg) = 0;
@@ -146,6 +149,8 @@ namespace upsylon
                                     Matrix            &alpha,
                                     Gradient          &grad,
                                     const array<bool> &used) = 0;
+
+
 
             protected:
                 //! initialize
@@ -194,6 +199,13 @@ namespace upsylon
                 Yf(userYf)
                 {}
 
+                //! X.size()
+                virtual size_t count() const throw()
+                {
+                    assert(X.size()==Y.size());
+                    assert(X.size()==Yf.size());
+                    return X.size();
+                }
 
                 //! compute D2 only
                 virtual T computeD2(Function     &F,
@@ -291,6 +303,19 @@ namespace upsylon
                     return ans;
                 }
 
+                //! sum of all counts
+                virtual size_t count() const throw()
+                {
+                    const typename Sample<T>::Collection &self = *this;
+                    size_t ans = 0;
+                    for(size_t k=self.size();k>0;--k)
+                    {
+                        ans += self[k]->count();
+                    }
+                    return ans;
+                }
+
+
                 //! create and append a new sample
                 Sample<T> & add(const Array &userX,
                                 const Array &userY,
@@ -311,7 +336,7 @@ namespace upsylon
                 {
                     typename Sample<T>::Collection &self = *this;
                     T ans = 0;
-                    for(size_t k=this->size();k>0;--k)
+                    for(size_t k=self.size();k>0;--k)
                     {
                         ans += self[k]->computeD2(F,aorg,beta,alpha,grad,used);
                     }

@@ -117,6 +117,7 @@ Y_UTEST(lsf)
     std::cerr << "SS.variables =" << SS.variables << std::endl;
     vector<double> aa(3);
 
+
     double &start = SS.variables(aa,"t0");
     double &diff1 = SS.variables(aa,"slope1");
     double &diff2 = SS.variables(aa,"slope2");
@@ -124,6 +125,7 @@ Y_UTEST(lsf)
     start = INI_T0;
     diff1 = slope1;
     diff2 = slope2;
+
 
     Fit::Sample<double>  &SS1 = SS.add(t1,x1,z1);
     SS1.variables("t0")("slope",SS.variables["slope1"]);
@@ -149,13 +151,45 @@ Y_UTEST(lsf)
     const double DD2 = SS.computeD2(F,aa);
     std::cerr << "DD2=" << DD2 << std::endl;
 
-    vector<bool> used(2,true);
+    vector<bool>   used(2,true);
     vector<double> aerr(2);
-    //used[2] = false;
-    Fit::LeastSquare<double> ls;
-    ls.fit(S1,F,a1,aerr,used);
-    
 
+    Fit::LeastSquare<double> ls;
+
+    //ls.verbose = true;
+    std::cerr << "Fit 1" << std::endl;
+    if(ls.fit(S1,F,a1,aerr,used))
+    {
+        S1.variables.diplay(std::cerr,a1,aerr,"\t\t");
+        save("fit1.dat",t1,z1);
+    }
+    else
+    {
+        std::cerr << "S1 failure" << std::endl;
+    }
+
+    std::cerr << "Fit 2" << std::endl;
+    if(ls.fit(S2,F,a2,aerr,used))
+    {
+        S2.variables.diplay(std::cerr,a2,aerr,"\t\t");
+        save("fit2.dat",t2,z2);
+    }
+    else
+    {
+        std::cerr << "S2 failure" <<std::endl;
+    }
+
+    std::cerr << "Fit 1&2" << std::endl;
+    aerr.make(3,0);
+    used.make(3,true);
+    if(ls.fit(SS,F,aa,aerr,used))
+    {
+        SS.variables.diplay(std::cerr,aa,aerr,"\t\t");
+    }
+    else
+    {
+        std::cerr << "SS failure" <<std::endl;
+    }
 
     
 }
