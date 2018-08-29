@@ -25,7 +25,7 @@ namespace upsylon
             //!destructor
             inline virtual ~tile() throw() {}
 
-            local_memory cache; //!< for parallel computation
+            mutable local_memory cache; //!< for parallel computation
 
         private:
             Y_DISABLE_ASSIGN(tile);
@@ -47,7 +47,7 @@ namespace upsylon
 
             //! create tiles
             tiles( const area &source, const size_t n);
-
+            
 
         private:
             Y_DISABLE_ASSIGN(tiles);

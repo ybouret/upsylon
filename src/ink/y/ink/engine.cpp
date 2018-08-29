@@ -16,5 +16,12 @@ namespace upsylon
         {
         }
 
+        void engine:: acquire_all( const size_t n )
+        {
+            for(size_t i=zones.size();i>0;--i)
+            {
+                zones[i].cache.acquire(n);
+            }
+        }
     }
 }

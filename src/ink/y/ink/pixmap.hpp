@@ -10,7 +10,7 @@ namespace upsylon
     namespace ink
     {
         //! define metrics for zero flux computation
-#define Y_PIXMAP_SIGNED_METRICS()  sw(w), ww(w+w), sh(h), hh(sh+sh)
+#define Y_PIXMAP_SIGNED_METRICS()  sw(w), ww( (sw+sw)-2 ), sh(h), hh( (sh+sh) - 2 )
 
         //! pixmap of any type
         template <typename T>
@@ -82,6 +82,7 @@ namespace upsylon
                 }
                 else
                 {
+                    assert(y>=0&&y<sh);
                     return y;
                 }
             }
