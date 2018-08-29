@@ -84,6 +84,8 @@ namespace upsylon
                   triplet<T> &f)
             {
                 static const T ftol = numeric<T>::ftol;
+                static const T xtol = numeric<T>::sqrt_ftol;
+
                 assert(x.is_ordered());
                 x.co_sort(f);
                 assert(x.a<=x.b);
@@ -94,25 +96,36 @@ namespace upsylon
                 T dx_prev = __fabs(x.c-x.a);
                 for(;;)
                 {
-
+                    //__________________________________________________________
+                    //
+                    // reduce interval
+                    //__________________________________________________________
                     __step<T,FUNC>(func,x,f);
                     assert(x.a<=x.b);
                     assert(x.b<=x.c);
                     assert(f.b<=f.a);
                     assert(f.b<=f.c);
 
-                    std::cerr << "\tx=" << x << " | f=" << f << std::endl;
-                    const T df      = max_of( __fabs(f.c-f.b),__fabs(f.a-f.b));
-                    if( df <= ftol * __fabs(f.b) )
+                    //__________________________________________________________
+                    //
+                    // check convergence on values
+                    //__________________________________________________________
                     {
-                        std::cerr << "|_converged@df=" << df << std::endl;
-                        break;
+                        const T df = max_of(__fabs(f.c-f.b),__fabs(f.a-f.b));
+                        const T ff = ftol * __fabs(f.b);
+                        if(df<=ff) break;
                     }
-                    const T dx_curr = __fabs(x.c-x.a);
-                    if(dx_curr>=dx_prev)
-                        break;
 
-                    dx_prev = dx_curr;
+                    //__________________________________________________________
+                    //
+                    // check convergence on interval
+                    //__________________________________________________________
+                    {
+                        const T dx = __fabs(x.c-x.a);
+                        const T xx = xtol * __fabs(x.b);
+                        if(dx<=xx||dx>=dx_prev) break;
+                        dx_prev = dx;
+                    }
                 }
                 return x.b;
             }

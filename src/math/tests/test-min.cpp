@@ -19,6 +19,7 @@ namespace
     {
         for(size_t iter=0;iter<4;++iter)
         {
+            std::cerr << std::endl;
             std::cerr << "expand@iter=" << iter << std::endl;
             const T ini = 10*alea.symm<T>();
             triplet<T> x = { ini,ini+1, -1 };
@@ -34,6 +35,7 @@ namespace
         }
 
         {
+            std::cerr << std::endl;
             std::cerr << "inside@success" << std::endl;
             triplet<T> x = { 1, -1, 4 };
             triplet<T> f = { F(x.a), -1, F(x.c) };
