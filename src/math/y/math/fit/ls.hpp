@@ -97,16 +97,16 @@ namespace upsylon
                     const size_t nvar = aorg.size();
                     //__________________________________________________________
                     //
-                    // init
+                    // initialize
                     //__________________________________________________________
                     if(verbose) { std::cerr << "[LSF] Initialize" << std::endl; }
-                    aerr.ld(0);
                     if(nvar<=0)
                     {
                         Y_LSF_OUT(std::cerr << "[LSF] No Variables => SUCCESS" << std::endl);
                         return true;
                     }
 
+                    aerr.ld(0);
                     this->acquire(nvar);
                     alpha.make(nvar,nvar);
                     curv.make(nvar,nvar);
@@ -124,7 +124,7 @@ namespace upsylon
                         //
                         // normalize alpha
                         //______________________________________________________
-                        if(verbose) { std::cerr << "[LSF] D2_org=" << D2_org << "@" << aorg << std::endl; }
+                        Y_LSF_OUT(std::cerr << "[LSF] D2_org=" << D2_org << "@" << aorg << std::endl);
                         for(size_t i=nvar;i>0;--i)
                         {
                             if(used[i])
@@ -165,7 +165,7 @@ namespace upsylon
                         //
                         // probe new value
                         //______________________________________________________
-                        tao::setprobe(atry, aorg,1,delta);
+                        tao::add(atry,aorg,delta);
                         const T D2_try = sample.computeD2(F,atry);
                         Y_LSF_OUT(std::cerr << "[LSF] D2_try=" << D2_try << "@" << atry << std::endl);
                         if(D2_try>=D2_org)
@@ -174,7 +174,10 @@ namespace upsylon
                             exit(1);
                         }
 
+                        //______________________________________________________
+                        //
                         // successfull step
+                        //______________________________________________________
                         decrease_lambda();
                         tao::set(aorg,atry);
                         alpha.ld(0);

@@ -83,6 +83,7 @@ namespace upsylon
                   triplet<T> &x,
                   triplet<T> &f)
             {
+                static const T ftol = numeric<T>::ftol;
                 assert(x.is_ordered());
                 x.co_sort(f);
                 assert(x.a<=x.b);
@@ -93,9 +94,24 @@ namespace upsylon
                 T dx_prev = __fabs(x.c-x.a);
                 for(;;)
                 {
+
                     __step<T,FUNC>(func,x,f);
+                    assert(x.a<=x.b);
+                    assert(x.b<=x.c);
+                    assert(f.b<=f.a);
+                    assert(f.b<=f.c);
+
+                    std::cerr << "\tx=" << x << " | f=" << f << std::endl;
+                    const T df      = max_of( __fabs(f.c-f.b),__fabs(f.a-f.b));
+                    if( df <= ftol * __fabs(f.b) )
+                    {
+                        std::cerr << "|_converged@df=" << df << std::endl;
+                        break;
+                    }
                     const T dx_curr = __fabs(x.c-x.a);
-                    if(dx_curr>=dx_prev) break;
+                    if(dx_curr>=dx_prev)
+                        break;
+
                     dx_prev = dx_curr;
                 }
                 return x.b;

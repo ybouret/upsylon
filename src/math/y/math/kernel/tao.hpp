@@ -79,7 +79,20 @@ namespace upsylon
                     _add(a,b);
                 }
             }
-            
+
+            //! a[1..size()] += b[1..a.size()] + c[]
+            template <typename T,typename U,typename V> static inline
+            void add( array<T> &a, const array<U> &b, const array<V> &c)
+            {
+                assert(b.size()>=a.size());
+                assert(c.size()>=a.size());
+                for(size_t i=a.size();i>0;--i)
+                {
+                    a[i] = static_cast<T>(b[i])+static_cast<T>(c[i]);
+                }
+
+            }
+
             
             //__________________________________________________________________
             //
@@ -99,7 +112,20 @@ namespace upsylon
                     _sub(a,b);
                 }
             }
-            
+
+            //! a[1..size()] += b[1..a.size()] - c[]
+            template <typename T,typename U,typename V> static inline
+            void sub( array<T> &a, const array<U> &b, const array<V> &c)
+            {
+                assert(b.size()>=a.size());
+                assert(c.size()>=a.size());
+                for(size_t i=a.size();i>0;--i)
+                {
+                    a[i] = static_cast<T>(b[i])-static_cast<T>(c[i]);
+                }
+
+            }
+
             //__________________________________________________________________
             //
             // muladd
