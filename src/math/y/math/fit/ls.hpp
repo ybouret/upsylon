@@ -12,29 +12,32 @@ namespace upsylon
         namespace Fit
         {
 
+            //! macro to activate output on verbose flag
 #define Y_LSF_OUT(CODE) if(verbose) do { CODE; } while(false)
 
+            //! Least Squares fit
             template <typename T>
-            class LeastSquare : public arrays<T>
+            class LeastSquares : public arrays<T>
             {
             public:
-                typedef typename Type<T>::Function Function;
-                typedef typename Type<T>::Array    Array;
-                typedef typename Type<T>::Matrix   Matrix;
-                typedef typename Type<T>::Gradient Gradient;
+                typedef typename Type<T>::Function Function; //!< alias
+                typedef typename Type<T>::Array    Array;    //!< alias
+                typedef typename Type<T>::Matrix   Matrix;   //!< alias
+                typedef typename Type<T>::Gradient Gradient; //!< alias
 
-                int      p;
-                T        lam;
-                Matrix   alpha;
-                Matrix   curv;
-                Array   &beta;
-                Array   &delta;
-                Array   &atry;
-                Gradient grad;
-                bool     verbose;
+                int      p;       //!< controlled power for lam
+                T        lam;     //!< lam=10^p
+                Matrix   alpha;   //!< Jacobian of beta
+                Matrix   curv;    //!< almost inverse of alpha
+                Array   &beta;    //!< D2 descent direction
+                Array   &delta;   //!< predicted step
+                Array   &atry;    //!< trial position
+                Gradient grad;    //!< gradient computation
+                bool     verbose; //!< verbosity flag
 
-                inline explicit LeastSquare(const bool is_verbose=false) :
-                arrays<T>(10),
+                //! initialize LeastSquares
+                inline explicit LeastSquares(const bool is_verbose=false) :
+                arrays<T>(3),
                 p(0),
                 lam(0),
                 alpha(),
@@ -46,6 +49,12 @@ namespace upsylon
                 verbose(is_verbose)
                 {
                 }
+
+                //! destructor
+                inline virtual ~LeastSquares() throw()
+                {
+                }
+
 
                 //! p < pmin => lam = 0
                 static inline int get_pmin() throw()
@@ -59,34 +68,7 @@ namespace upsylon
                     return int(numeric<T>::max_10_exp);
                 }
 
-
-
-                inline bool compute_curvature()
-                {
-                    const size_t nvar = alpha.rows;
-                    while(true)
-                    {
-                        curv.assign( alpha );
-                        const T      fac = T(1) + lam;
-                        for(size_t i=nvar;i>0;--i)
-                        {
-                            curv[i][i] *= fac;
-                        }
-                        if( !LU::build(curv) )
-                        {
-                            if(!increase_lambda())
-                            {
-                                return false;
-                            }
-                            else
-                            {
-                                continue; // with a new lambda
-                            }
-                        }
-                        return true;
-                    }
-                }
-
+                //! try to fit sample
                 inline bool fit(SampleType<T>     &sample,
                                 Function          &F,
                                 Array             &aorg,
@@ -123,7 +105,7 @@ namespace upsylon
                     {
                         //______________________________________________________
                         //
-                        // normalize alpha
+                        // start cycle: normalize alpha
                         //______________________________________________________
                         Y_LSF_OUT(std::cerr << "[LSF] D2=" << D2 << "@" << aorg << std::endl);
                         for(size_t i=nvar;i>0;--i)
@@ -178,7 +160,10 @@ namespace upsylon
                         if(D2_try>=D2)
                         {
                             Y_LSF_OUT(std::cerr << "[LSF] local minimum" << std::endl);
+                            //__________________________________________________
+                            //
                             // test variable convergence
+                            //__________________________________________________
                             bool converged = true;
                             for(size_t i=nvar;i>0;--i)
                             {
@@ -194,6 +179,10 @@ namespace upsylon
                                 Y_LSF_OUT(std::cerr << "[LSF] variables convergence" << std::endl);
                                 goto CONVERGED;
                             }
+                            //__________________________________________________
+                            //
+                            // will reduce step by increasing lambda if possible
+                            //__________________________________________________
                             if(!increase_lambda())
                             {
                                 Y_LSF_OUT(std::cerr << "[LSF] spurious parameters" << std::endl);
@@ -277,7 +266,7 @@ namespace upsylon
 
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(LeastSquare);
+                Y_DISABLE_COPY_AND_ASSIGN(LeastSquares);
 
                 //! initialize value of lam
                 inline void compute_lam()
@@ -322,7 +311,32 @@ namespace upsylon
                         lam *= T(0.1);
                     }
                     Y_LSF_OUT(std::cerr << "[LSF] (--) lam=" << lam << "/p=" << p << std::endl);
+                }
 
+                inline bool compute_curvature()
+                {
+                    const size_t nvar = alpha.rows;
+                    while(true)
+                    {
+                        curv.assign( alpha );
+                        const T      fac = T(1) + lam;
+                        for(size_t i=nvar;i>0;--i)
+                        {
+                            curv[i][i] *= fac;
+                        }
+                        if( !LU::build(curv) )
+                        {
+                            if(!increase_lambda())
+                            {
+                                return false;
+                            }
+                            else
+                            {
+                                continue; // with a new lambda
+                            }
+                        }
+                        return true;
+                    }
                 }
             };
 

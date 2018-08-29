@@ -167,6 +167,7 @@ namespace upsylon
                 //! get max(name.size())
                 size_t get_max_name_size() const throw();
 
+                //! display named values of array
                 template <typename T> inline
                 void diplay(std::ostream &os, const array<T> &arr,const char *pfx=NULL) const
                 {
@@ -183,6 +184,7 @@ namespace upsylon
                     }
                 }
 
+                //! display named values and errors
                 template <typename T> inline
                 void diplay(std::ostream &os, const array<T> &aorg, const array<T> &aerr, const char *pfx=NULL) const
                 {

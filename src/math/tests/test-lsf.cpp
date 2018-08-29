@@ -154,7 +154,7 @@ Y_UTEST(lsf)
     vector<bool>   used(2,true);
     vector<double> aerr(2);
 
-    Fit::LeastSquare<double> ls;
+    Fit::LeastSquares<double> ls;
 
     //ls.verbose = true;
     std::cerr << "Fit 1" << std::endl;
