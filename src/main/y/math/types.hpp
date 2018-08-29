@@ -118,6 +118,11 @@ namespace upsylon
 
         inline float  sin_of( const float  x ) throw() { return sinf(x); } //!< sine
         inline double sin_of( const double x ) throw() { return sin(x);  } //!< sine
+        inline float  __atan(const float  x) { return atanf(x); } //!< arc tangent
+        inline double __atan(const double x) { return atan(x); }  //!< arc tangent
+
+        float  __atan2(float y,float x);     //!< in \f$]-\pi,\pi]\f$
+        double __atan2(double y,double x);   //!< in \f$]-\pi,\pi]\r$
 
         template <typename T>
         static inline bool almost_equal( const T X, const T Y) throw()

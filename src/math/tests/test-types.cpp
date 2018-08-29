@@ -5,6 +5,7 @@
 #include "y/sequence/list.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
+#include "y/math/gaussian.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -43,7 +44,6 @@ std::cerr << "\tlog_round_ceil =" << log_round_ceil(VAR) << std::endl
 
 Y_UTEST(types)
 {
-    math::show::info();
 
     do_round<float>();
     do_round<double>();
@@ -83,7 +83,8 @@ Y_UTEST(types)
         std::cerr << "#ker=" << i << " => " << V << std::endl;
     }
     
-    
+    math::show::info();
+
     
     
 }
