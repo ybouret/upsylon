@@ -38,13 +38,7 @@ namespace upsylon
 
             //! local caches
             void acquire_all( const size_t n );
-
-            //! local cache wrapper
-            template <typename T>
-            inline void acquire_all_for(const size_t n)
-            {
-                acquire_all(n*sizeof(T));
-            }
+            
 
         private:
             dispatcher  agent;

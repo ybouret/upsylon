@@ -13,7 +13,7 @@ Y_UTEST(ops)
 
     matrix<int> M(3,3);
     M[2][2] = 1;
-    M.ld(1);
+    //M.ld(1);
     
     for(int iarg=1;iarg<argc;++iarg)
     {
@@ -28,20 +28,35 @@ Y_UTEST(ops)
         filter::apply(pxm1,pxm,color_convert::make<uint8_t,RGB>,par);
         img.save("img1.png",pxm1,0);
 
+        pixmapf      pxmf(w,h);
+        filter::apply(pxmf,pxm,color_convert::make<float,RGB>,par);
+        img.save("imgf.png",pxmf,0);
+
+
+
         pixmapf target(w,h);
 
-        filter::stencil(target,pxm1,M,par);
-        const float vmin = filter::find_min(target,par);
-        std::cerr << "vmin=" << vmin << std::endl;
-        const float vmax = filter::find_max(target,par);
-        std::cerr << "vmax=" << vmax << std::endl;
+        {
+            filter::stencil(target,pxm1,M,par);
+            const float vmin = filter::find_min(target,par);
+            std::cerr << "vmin=" << vmin << std::endl;
+            const float vmax = filter::find_max(target,par);
+            std::cerr << "vmax=" << vmax << std::endl;
 
-        float vmin2=0,vmax2=0;
-        filter::find_min_max(vmin2, vmax2,target,par);
-        std::cerr << "min_max=" << vmin2 << "," << vmax2 << std::endl;
+            float vmin2=0,vmax2=0;
+            filter::find_min_max(vmin2,vmax2,target,par);
+            std::cerr << "min_max=" << vmin2 << "," << vmax2 << std::endl;
+        }
 
-        //img.save("stenf.png",pxmf,0);
-        
+        if(false)
+        {
+            float vmin=0,vmax=0;
+            filter::stencil(target,pxmf,M,par);
+            filter::find_min_max(vmin,vmax,target,par);
+            std::cerr << "float vmin=" << vmin << ", vmax=" << vmax << std::endl;
+            //filter::rescale(target,vmin, vmax, par);
+            img.save("stenf.png",target,0);
+        }
 
         pixmaps<uint8_t> ch3(3,w,h);
         

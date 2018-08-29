@@ -37,16 +37,6 @@ namespace upsylon
                 }
             }
 
-            //! wrapper for one item
-            template <typename T> inline void acquire_for() { acquire( sizeof(T) ); }
-
-            //! wrapper for multiple items
-            template <typename T> inline void acquire_for(size_t n)
-            {
-                if(n<=0) ++n;
-                acquire( n * sizeof(T) );
-            }
-
             //! release memory
             inline void release() throw() { ALLOCATOR::location().release(data,(size_t&)size); }
 

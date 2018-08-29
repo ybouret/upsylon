@@ -3,6 +3,7 @@
 #define Y_INK_OPS_FILTER_INCLUDED 1
 
 #include "y/ink/pixmap.hpp"
+#include "y/ink/pixel.hpp"
 #include "y/container/matrix.hpp"
 
 namespace upsylon
@@ -77,7 +78,7 @@ namespace upsylon
             template <typename T> static inline
             void find_min_max( T &vmin, T&vmax, const pixmap<T> &source, engine &E )
             {
-                E.acquire_all_for<T>(2);
+                E.acquire_all(2*sizeof(T));
                 {
                     __find_min_max<T> proxy = { &source };
                     E.run(proxy);
@@ -104,6 +105,16 @@ namespace upsylon
                     }
                 }
             }
+
+            template <typename T> static inline
+            void rescale( pixmap<T> &source, const T vmin, const T vmax, engine &E)
+            {
+                const array<tile> &zones = E.zones;
+                __rescale<T> proxy = { &source, vmin, vmax };
+                E.run(proxy);
+
+            }
+
 
 
         private:
@@ -266,6 +277,52 @@ namespace upsylon
                         }
                         zone.cache.get<float>(0) = vmin;
                         zone.cache.get<float>(1) = vmax;
+                    }
+                }
+            };
+
+            template <typename T>
+            struct __rescale
+            {
+                pixmap<T> *_source;
+                T    _vmin;
+                T    _vmax;
+                inline void operator()(const tile &zone, lockable &)
+                {
+                    assert(_source);
+                    if(zone.pixels)
+                    {
+                        pixmap<T> &source = *_source;
+                        const float vmin   = float(_vmin);
+                        const float vmax   = float(_vmax);
+                        Y_INK_AREA_LIMITS(zone);
+
+                        if(vmax>vmin)
+                        {
+                            const float scale = 1.0f/(vmax-vmin);
+                            for(unit_t y=ymax;y>=ymin;--y)
+                            {
+                                typename pixmap<T>::row &tgt = source[y];
+                                for(unit_t x=xmax;x>=xmin;--x)
+                                {
+                                    const float u = scale*(float(tgt[x])-vmin);
+                                    const float v = float(pixel<T>::opaque) * u + 0.5f;
+                                    const T     t = T( floorf(v) );
+                                    tgt[x] = t;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for(unit_t y=ymax;y>=ymin;--y)
+                            {
+                                typename pixmap<T>::row &tgt = source[y];
+                                for(unit_t x=xmax;x>=xmin;--x)
+                                {
+                                    tgt[x] = 0;
+                                }
+                            }
+                        }
                     }
                 }
             };
