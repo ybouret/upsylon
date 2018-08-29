@@ -185,6 +185,8 @@ Y_UTEST(lsf)
     if(ls.fit(SS,F,aa,aerr,used))
     {
         SS.variables.diplay(std::cerr,aa,aerr,"\t\t");
+        save("fit1b.dat",t1,z1);
+        save("fit2b.dat",t2,z2);
     }
     else
     {
