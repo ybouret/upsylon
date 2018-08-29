@@ -11,9 +11,8 @@ Y_UTEST(ops)
     imageIO   &img   = image::init();
     dispatcher __par = new concurrent::simd();
 
-    matrix<int> M(3,3);
-    M[2][2] = 1;
-    //M.ld(1);
+    matrix<int> M(5,5);
+    M.ld(1);
     
     for(int iarg=1;iarg<argc;++iarg)
     {
@@ -46,15 +45,18 @@ Y_UTEST(ops)
             float vmin2=0,vmax2=0;
             filter::find_min_max(vmin2,vmax2,target,par);
             std::cerr << "min_max=" << vmin2 << "," << vmax2 << std::endl;
+            Y_CHECK(fabsf(vmin-vmin2)<=0);
+            Y_CHECK(fabsf(vmax-vmax2)<=0);
+            filter::rescale(target,vmin,vmax,crux::float_to_float,par);
+            img.save("sten1.png",target,0);
         }
 
-        if(false)
         {
             float vmin=0,vmax=0;
             filter::stencil(target,pxmf,M,par);
             filter::find_min_max(vmin,vmax,target,par);
             std::cerr << "float vmin=" << vmin << ", vmax=" << vmax << std::endl;
-            //filter::rescale(target,vmin, vmax, par);
+            filter::rescale(target,vmin,vmax,crux::float_to_float,par);
             img.save("stenf.png",target,0);
         }
 

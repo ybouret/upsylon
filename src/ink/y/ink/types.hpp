@@ -32,6 +32,11 @@ namespace upsylon
 
             //! function float to byte
             static inline uint8_t float_to_byte( const float x) throw() { return Y_INK_F2B(x); }
+
+            //! float to float
+            static inline float float_to_float(const float x) throw() { return x; }
+            
+
             //! convert to float grey scale
             static inline float   grey_scale_f( const uint8_t r, const uint8_t g, const uint8_t b) throw()
             {

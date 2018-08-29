@@ -106,13 +106,12 @@ namespace upsylon
                 }
             }
 
-            template <typename T> static inline
-            void rescale( pixmap<T> &source, const T vmin, const T vmax, engine &E)
+            
+            template <typename T, typename F2T> static inline
+            void rescale( pixmap<T> &source, const T vmin, const T vmax, F2T &float2type, engine &E)
             {
-                const array<tile> &zones = E.zones;
-                __rescale<T> proxy = { &source, vmin, vmax };
+                __rescale<T,F2T> proxy = { &source, vmin, vmax, &float2type };
                 E.run(proxy);
-
             }
 
 
@@ -281,18 +280,23 @@ namespace upsylon
                 }
             };
 
-            template <typename T>
+            template <typename T,typename F2T>
             struct __rescale
             {
                 pixmap<T> *_source;
-                T    _vmin;
-                T    _vmax;
+                T          _vmin;
+                T          _vmax;
+                F2T       *_func;
+
                 inline void operator()(const tile &zone, lockable &)
                 {
                     assert(_source);
+                    assert(_func);
                     if(zone.pixels)
                     {
                         pixmap<T> &source = *_source;
+                        F2T       &func   = *_func;
+
                         const float vmin   = float(_vmin);
                         const float vmax   = float(_vmax);
                         Y_INK_AREA_LIMITS(zone);
@@ -305,10 +309,7 @@ namespace upsylon
                                 typename pixmap<T>::row &tgt = source[y];
                                 for(unit_t x=xmax;x>=xmin;--x)
                                 {
-                                    const float u = scale*(float(tgt[x])-vmin);
-                                    const float v = float(pixel<T>::opaque) * u + 0.5f;
-                                    const T     t = T( floorf(v) );
-                                    tgt[x] = t;
+                                    tgt[x] = func(scale*(float(tgt[x])-vmin));
                                 }
                             }
                         }
