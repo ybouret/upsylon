@@ -13,6 +13,8 @@ namespace upsylon
         class Stencil : public counted_object
         {
         public:
+            const string name;
+
             //! destructor
             inline virtual ~Stencil() throw() {}
 
@@ -20,7 +22,7 @@ namespace upsylon
 
         protected:
             //! constructor
-            inline explicit Stencil() throw() {}
+            inline explicit Stencil(const char *id) : name(id) {}
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Stencil);
@@ -29,7 +31,7 @@ namespace upsylon
 #define Y_INK_STENCIL_IMPL(NAME,CODE) \
 template <typename T> class NAME : public Stencil<T> {\
 public:\
-inline explicit NAME() throw() {}\
+inline explicit NAME() : Stencil<T>(#NAME) {}\
 inline virtual ~NAME() throw() {}\
 inline virtual void build( matrix<T> &m ) const { CODE; }\
 private: Y_DISABLE_COPY_AND_ASSIGN(NAME);\

@@ -219,11 +219,13 @@ namespace upsylon
         //! change dimension, no further initialization
         inline matrix & make(const size_t nr, const size_t nc)
         {
-            if(nr!=rows||nc!=rows)
+            if( (nr!=rows) || (nc!=cols) )
             {
                 matrix tmp(nr,nc);
                 swap_with(tmp);
             }
+            assert(rows==nr);
+            assert(cols==nc);
             return *this;
         }
 

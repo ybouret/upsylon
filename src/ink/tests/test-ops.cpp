@@ -2,25 +2,49 @@
 #include "y/ink/image.hpp"
 #include "y/utest/run.hpp"
 #include "y/ink/stencil/delta.hpp"
+#include "y/ink/stencil/sobel.hpp"
 
 using namespace upsylon;
 using namespace Ink;
+
+namespace
+{
+    template <typename T>
+    static inline
+    void display( const Stencil<T> &s )
+    {
+        matrix<T> M;
+        s.build(M);
+        std::cerr << s.name << std::endl << M << std::endl;
+    }
+}
 
 Y_UTEST(ops)
 {
     ImageIO   &img   = Image::Init();
     Dispatcher __par = new concurrent::simd();
 
-    matrix<int> M;
-    DeltaX<int> DX;
-    DeltaY<int> DY;
-    Laplacian<int> LL;
-    DX.build(M);
-    DY.build(M);
+    matrix<int>    M;
+    DeltaX<int>    dx;
+    DeltaY<int>    dy;
+    Laplacian<int> lap;
+    SobelX3<int>   sobelX3;
+    SobelY3<int>   sobelY3;
+    SobelX5<int>   sobelX5;
+    SobelY5<int>   sobelY5;
+
+    display(dx);
+    display(dy);
+    display(lap);
+    display(sobelX3);
+    display(sobelY3);
+
+    display(sobelX5);
+    display(sobelY5);
 
     M.make(5,5);
     M.ld(1);
-    
+
     for(int iarg=1;iarg<argc;++iarg)
     {
         const string fn  = argv[iarg];
@@ -67,12 +91,20 @@ Y_UTEST(ops)
             img.save("stenf.png",target,0);
         }
 
-        {
-            LL.build(M);
-            Filter::Stencil(target,pxm1,M,par);
-            Filter::Autoscale(target,Crux::FloatToFloat,par);
-            img.save("lap.png",target,0);
-        }
+#define DO_STENCIL(S) \
+do {\
+std::cerr << "Stencil " << S.name << std::endl;   \
+S.build(M);                                       \
+std::cerr << "|_M=" << M << std::endl;            \
+Filter::Stencil(target,pxm1,M,par);               \
+Filter::Autoscale(target,Crux::FloatToFloat,par); \
+img.save( #S ".png",target,0);                    \
+} while(false)
+
+        DO_STENCIL(dx);
+        DO_STENCIL(dy);
+        DO_STENCIL(lap);
+
 
         Pixmaps<uint8_t> ch3(3,w,h);
         
