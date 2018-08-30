@@ -37,6 +37,7 @@ namespace upsylon
                 E.run(proxy);
             }
 
+            //! find minimum value
             template <typename T> static inline
             T FindMin( const Pixmap<T> &source, Engine &E )
             {
@@ -56,6 +57,7 @@ namespace upsylon
                 return ans;
             }
 
+            //! find maximum value
             template <typename T> static inline
             T FindMax( const Pixmap<T> &source, Engine &E )
             {
@@ -75,6 +77,7 @@ namespace upsylon
                 return ans;
             }
 
+            //! find min and max values
             template <typename T> static inline
             void FindMinMax( T &vmin, T&vmax, const Pixmap<T> &source, Engine &E )
             {
@@ -106,7 +109,7 @@ namespace upsylon
                 }
             }
 
-            
+            //! rescale using vmin and vmax, and a conversion: unit float to T
             template <typename T, typename F2T> static inline
             void Rescale( Pixmap<T> &source, const T vmin, const T vmax, F2T &float2type, Engine &E)
             {

@@ -12,11 +12,14 @@ namespace upsylon
         namespace Fit
         {
 
+            //! wrappers for fit with Gaussians
             struct Gaussians
             {
 
+                //! create the name for n gaussians (a,mu,sigma)
                 static void Create( Variables &vars, const size_t n);
-                
+
+                //! compute the sum of unerlying gaussians
                 template <typename T> static inline
                 T Compute( T x, const array<double> &aorg, const Variables &vars )
                 {

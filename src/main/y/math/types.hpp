@@ -122,7 +122,7 @@ namespace upsylon
         inline double __atan(const double x) { return atan(x); }  //!< arc tangent
 
         float  __atan2(float y,float x);     //!< in \f$]-\pi,\pi]\f$
-        double __atan2(double y,double x);   //!< in \f$]-\pi,\pi]\r$
+        double __atan2(double y,double x);   //!< in \f$]-\pi,\pi]\f$
 
         template <typename T>
         static inline bool almost_equal( const T X, const T Y) throw()

@@ -185,6 +185,7 @@ namespace upsylon
                     }
                 }
 
+                //! evaluate relative error for display
                 template <typename T>
                 static inline
                 T compute_relative_error( const T aorg, const T aerr ) throw()

@@ -47,7 +47,7 @@ namespace upsylon
                 typedef vector<T> Vector;  //!< sequence
                 typedef matrix<T> Matrix;  //!< matrix
                 typedef functor<T,TL3(T,const Array&,const Variables&)> Function; //!< fit function prototype!
-                typedef T (*CFunction)(T,const Array&,const Variables&); //! fit CFunction prototyp
+                typedef T (*CFunction)(T,const Array&,const Variables&); //!< fit CFunction prototyp
 
                 //! compute gradient of fit function
                 class Gradient : public derivative<T>
