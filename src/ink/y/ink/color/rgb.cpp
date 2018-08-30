@@ -3,10 +3,10 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
-        template <> const RGB  pixel<RGB>::zero(0,0,0);
-        template <> const RGBA pixel<RGBA>::zero(0,0,0,0xff);
+        template <> const RGB  Pixel<RGB>::Zero(0,0,0);
+        template <> const RGBA Pixel<RGBA>::Zero(0,0,0,0xff);
     }
 }
 

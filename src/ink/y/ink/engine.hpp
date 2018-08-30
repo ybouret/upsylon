@@ -8,24 +8,24 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
         //! shared for_each object
-        typedef arc_ptr<concurrent::for_each> dispatcher;
+        typedef arc_ptr<concurrent::for_each> Dispatcher;
 
 
         //! parallel engine for a given area
         /**
          build an engine for a given area, with a reusable dispatcher
          */
-        class engine : public area
+        class Engine : public Area
         {
         public:
             //! constructor, build tiles with shared from full
-            explicit engine(const dispatcher &shared,
-                            const area       &full);
+            explicit Engine(const Dispatcher &shared,
+                            const Area       &full);
             //! desctructor
-            virtual ~engine() throw();
+            virtual ~Engine() throw();
 
 
             //! FUNC(zone,sync), generic parallel processing
@@ -41,11 +41,11 @@ namespace upsylon
             
 
         private:
-            dispatcher  agent;
+            Dispatcher  agent;
             template <typename FUNC>
             struct parameters
             {
-                engine *self_p;
+                Engine *self_p;
                 FUNC   *func_p;
             };
 
@@ -56,16 +56,16 @@ namespace upsylon
                 parameters<FUNC> *p = static_cast<parameters<FUNC>*>(addr);
                 assert(p->self_p);
                 assert(p->func_p);
-                assert(ctx.size==p->self_p->zones.size());
+                assert(ctx.size==p->self_p->tiles.size());
 
-                engine     &self = *(p->self_p);
+                Engine     &self = *(p->self_p);
                 FUNC       &func = *(p->func_p);
-                const tile &zone = self.zones[ctx.indx];
-                func(zone,sync);
+                const Tile &tile = self.tiles[ctx.indx];
+                func(tile,sync);
             }
 
         public:
-            const tiles zones; //!< computed tiles
+            const Tiles tiles; //!< computed tiles
         };
 
     }

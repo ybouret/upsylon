@@ -3,13 +3,13 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
-        engine:: ~engine() throw()
+        Engine:: ~Engine() throw()
         {
         }
 
-        engine:: engine( const dispatcher &shared, const area &full ) :
+        Engine:: Engine( const Dispatcher &shared, const area &full ) :
         area(full),
         agent(shared),
         zones( *this, agent->engine().num_threads() )

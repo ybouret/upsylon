@@ -2,7 +2,7 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
 #if defined(U)
 #undef U
@@ -27,7 +27,7 @@ U(208),U(209),U(210),U(211),U(212),U(213),U(214),U(215),U(216),U(217),U(218),U(2
 U(224),U(225),U(226),U(227),U(228),U(229),U(230),U(231),U(232),U(233),U(234),U(235),U(236),U(237),U(238),U(239),\
 U(240),U(241),U(242),U(243),U(244),U(245),U(246),U(247),U(248),U(249),U(250),U(251),U(252),U(253),U(254),U(255)
 
-        const float crux::u_float[256] =
+        const float Crux::u_float[256] =
         {
             UTABLE
         };
@@ -35,7 +35,7 @@ U(240),U(241),U(242),U(243),U(244),U(245),U(246),U(247),U(248),U(249),U(250),U(2
 #undef  U
 #define U(I) (Y_INK_R2GS*I##.0f)/255.0f
 
-        const float crux::r_float[256] =
+        const float Crux::r_float[256] =
         {
             UTABLE
         };
@@ -43,7 +43,7 @@ U(240),U(241),U(242),U(243),U(244),U(245),U(246),U(247),U(248),U(249),U(250),U(2
 #undef  U
 #define U(I) (Y_INK_G2GS*I##.0f)/255.0f
 
-        const float crux::g_float[256] =
+        const float Crux::g_float[256] =
         {
             UTABLE
         };
@@ -51,7 +51,7 @@ U(240),U(241),U(242),U(243),U(244),U(245),U(246),U(247),U(248),U(249),U(250),U(2
 #undef  U
 #define U(I) (Y_INK_B2GS*I##.0f)/255.0f
 
-        const float crux::b_float[256] =
+        const float Crux::b_float[256] =
         {
             UTABLE
         };

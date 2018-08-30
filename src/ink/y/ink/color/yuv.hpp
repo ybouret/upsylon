@@ -8,7 +8,7 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
 
         //! YUV format
@@ -48,9 +48,9 @@ namespace upsylon
             static inline
             YUV fromRGB(const RGB &C) throw()
             {
-                const float rf = crux::u_float[C.r];
-                const float gf = crux::u_float[C.g];
-                const float bf = crux::u_float[C.b];
+                const float rf = Crux::u_float[C.r];
+                const float gf = Crux::u_float[C.g];
+                const float bf = Crux::u_float[C.b];
                 const float Y  =  0.29900f*rf+0.58700f*gf+0.11400f*bf;
                 const float U  = -0.14713f*rf-0.28886f*gf+0.43600f*bf;
                 const float V  =  0.61500f*rf-0.51499f*gf-0.10001f*bf;
@@ -70,7 +70,7 @@ namespace upsylon
 }
 
 #if !defined(Y_INK_PIXEL_IMPL)
-Y_PIXEL_DECL(upsylon::ink::YUV); //!< extern template for YUV pixel
+Y_PIXEL_DECL(upsylon::Ink::YUV); //!< extern template for YUV pixel
 #endif
 
 

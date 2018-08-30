@@ -7,7 +7,7 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
 
         //! packed r,g,b values
@@ -43,13 +43,13 @@ namespace upsylon
             type a; //!< alpha  channel
 
             //! constructor
-            inline  rgba( param_type R=0, param_type G=0, param_type B=0, param_type A=pixel<type>::opaque) throw() : r(R), g(G), b(B), a(A) {}
+            inline  rgba( param_type R=0, param_type G=0, param_type B=0, param_type A=Pixel<type>::Opaque) throw() : r(R), g(G), b(B), a(A) {}
             //! destructor
             inline ~rgba() throw() {}
             //! copy
             inline  rgba(const rgba   &other) throw() : r(other.r), g(other.g), b(other.b), a(other.a) {}
             //! copy with different alpha channel
-            inline  rgba(const rgb<T> &other,param_type A=pixel<type>::opaque) throw() : r(other.r), g(other.g), b(other.b), a(A) {}
+            inline  rgba(const rgb<T> &other,param_type A=Pixel<type>::Opaque) throw() : r(other.r), g(other.g), b(other.b), a(A) {}
             //! assign
             inline  rgba & operator=( const rgba   &other) throw() { r=other.r; g=other.g; b=other.b; a=other.a; return *this; }
             //! assign only rgb, keep alpha channel
@@ -64,8 +64,8 @@ namespace upsylon
 }
 
 #if !defined(Y_INK_PIXEL_IMPL)
-Y_PIXEL_DECL(upsylon::ink::RGB);  //!< external template
-Y_PIXEL_DECL(upsylon::ink::RGBA); //!< external template
+Y_PIXEL_DECL(upsylon::Ink::RGB);  //!< external template
+Y_PIXEL_DECL(upsylon::Ink::RGBA); //!< external template
 #endif
 
 

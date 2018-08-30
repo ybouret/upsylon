@@ -3,11 +3,11 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
 
 
-        tiles:: tiles( const area &source, const size_t n) : dynamic(), __tiles(n,as_capacity)
+        Tiles:: Tiles( const Area &source, const size_t n) : dynamic(), __Tiles(n,as_capacity)
         {
             //! sanity check
             if(n<=0) return;
@@ -17,7 +17,7 @@ namespace upsylon
             //! full empty
             if(w<=0||h<=0)
             {
-                const area empty;
+                const Area empty;
                 for(size_t r=0;r<n;++r)
                 {
                     push_back(empty);
@@ -73,8 +73,8 @@ namespace upsylon
 
                     const coord l(x_offset,y_offset);
                     //const coord s(x_length,y_length);
-                    const area  a(l,x_length,y_length);
-                    const tile  t(a);
+                    const Area  a(l,x_length,y_length);
+                    const Tile  t(a);
                     //std::cerr << "\t" << a.lower << "+" << a.sizes << "=" << a.pixels << std::endl;
                     push_back(t);
                 }

@@ -4,8 +4,8 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
-        template <> const YUV  pixel<YUV>::zero(0,0,0);
+        template <> const YUV  Pixel<YUV>::Zero(0,0,0);
     }
 }

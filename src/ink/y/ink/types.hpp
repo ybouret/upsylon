@@ -6,7 +6,7 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
         //! coordinate
         typedef point2d<unit_t> coord;
@@ -23,7 +23,7 @@ namespace upsylon
 #define Y_INK_F2B(x) (uint8_t(floorf((x)*255.0f+0.5f)))
 
         //! crux components and functions
-        struct crux
+        struct Crux
         {
             static const float u_float[256]; //!< unitfloat
             static const float r_float[256]; //!< red    unit float = Y_INK_R2GS*u_float
@@ -31,21 +31,21 @@ namespace upsylon
             static const float b_float[256]; //!< blue   unit float = Y_INK_B2GS*u_float
 
             //! function float to byte
-            static inline uint8_t float_to_byte( const float x) throw() { return Y_INK_F2B(x); }
+            static inline uint8_t FloatToByte( const float x) throw() { return Y_INK_F2B(x); }
 
             //! float to float
-            static inline float float_to_float(const float x) throw() { return x; }
+            static inline float FloatToFloat(const float x) throw() { return x; }
             
 
             //! convert to float grey scale
-            static inline float   grey_scale_f( const uint8_t r, const uint8_t g, const uint8_t b) throw()
+            static inline float   GreyScaleF( const uint8_t r, const uint8_t g, const uint8_t b) throw()
             {
                 return r_float[r] + g_float[g] + b_float[b];
             }
             //! convert to byte greyscale
-            static inline uint8_t  grey_scale_u( const uint8_t r, const uint8_t g, const uint8_t b) throw()
+            static inline uint8_t  GreyScale1( const uint8_t r, const uint8_t g, const uint8_t b) throw()
             {
-                return Y_INK_F2B(grey_scale_f(r,g,b));
+                return Y_INK_F2B(GreyScaleF(r,g,b));
             }
         };
     }

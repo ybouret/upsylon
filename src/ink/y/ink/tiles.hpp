@@ -7,50 +7,50 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
         //! reusable local memory for one tile
-        typedef memory::cslot<memory::global> local_memory;
+        typedef memory::cslot<memory::global> LocalMemory;
 
         //! a tile is an area with a memory cache
-        class tile : public area
+        class Tile : public Area
         {
         public:
             //! constructor
-            inline tile( const area &a ) : area(a), cache() {}
+            inline Tile( const Area &a ) : Area(a), cache() {}
 
             //! copy
-            inline tile(const tile &other) : area(other), cache() {}
+            inline Tile(const Tile &other) : Area(other), cache() {}
 
             //!destructor
-            inline virtual ~tile() throw() {}
+            inline virtual ~Tile() throw() {}
 
-            mutable local_memory cache; //!< for parallel computation
+            mutable LocalMemory cache; //!< for parallel computation
 
         private:
-            Y_DISABLE_ASSIGN(tile);
+            Y_DISABLE_ASSIGN(Tile);
         };
 
 
         //! sequence of tiles base type
-        typedef vector<tile> __tiles;
+        typedef vector<Tile> __Tiles;
 
         //! areas for tiling
-        class tiles : public __tiles
+        class Tiles : public __Tiles
         {
         public:
             //! destructor
-            inline virtual ~tiles() throw() {}
+            inline virtual ~Tiles() throw() {}
 
             //! copy
-            inline          tiles(const tiles &other) : dynamic(), __tiles( other ) {}
+            inline          Tiles(const Tiles &other) : dynamic(), __Tiles( other ) {}
 
             //! create tiles
-            tiles( const area &source, const size_t n);
+            Tiles( const Area &source, const size_t n);
             
 
         private:
-            Y_DISABLE_ASSIGN(tiles);
+            Y_DISABLE_ASSIGN(Tiles);
         };
 
     }

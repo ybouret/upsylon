@@ -8,11 +8,11 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
 
         //! area
-        class area : public object
+        class Area : public object
         {
         public:
             static const size_t DIMENSION = 2; //!< physical dimension
@@ -24,17 +24,17 @@ namespace upsylon
             const size_t pixels; //!< w*h
 
             //! default area, origin
-            inline area() throw() : lower(0,0), upper(0,0), w(1), h(1), pixels(1) {}
+            inline Area() throw() : lower(0,0), upper(0,0), w(1), h(1), pixels(1) {}
 
             //! copy
-            inline area(const area &other) throw() :
+            inline Area(const Area &other) throw() :
             lower(other.lower), upper(other.upper), w(other.w), h(other.h), pixels(other.pixels) {}
 
             //! destructor
-            inline ~area() throw() {}
+            inline ~Area() throw() {}
 
             //! build by upper or by coordinates, never empty
-            inline area(const coord           l,
+            inline Area(const coord           l,
                         const coord           p) throw() :
             lower(l),
             upper(p),
@@ -50,7 +50,7 @@ namespace upsylon
             }
 
             //! build by lower coordinate and size, may be empty
-            inline area(const coord           l,
+            inline Area(const coord           l,
                         const size_t          W,
                         const size_t          H) throw() :
             lower(l),
@@ -72,20 +72,20 @@ namespace upsylon
             }
 
             //! test if contains a sub-area
-            inline bool contains(const area &sub) const throw()
+            inline bool contains(const Area &sub) const throw()
             {
                 return has(sub.lower) && has(sub.upper);
             }
 
             //! output info
-            inline friend std::ostream & operator<<( std::ostream &os, const area &a )
+            inline friend std::ostream & operator<<( std::ostream &os, const Area &a )
             {
                 os << '{' << a.lower << "->" << a.upper << " : " << a.w << "x" << a.h << " #" << a.pixels << '}';
                 return os;
             }
             
         private:
-            Y_DISABLE_ASSIGN(area);
+            Y_DISABLE_ASSIGN(Area);
 
         };
 
@@ -96,7 +96,7 @@ const unit_t xmax = (A).upper.x; \
 const unit_t ymin = (A).lower.y; \
 const unit_t ymax = (A).upper.y
         
-      
+
     }
 }
 
