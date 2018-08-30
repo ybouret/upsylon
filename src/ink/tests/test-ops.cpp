@@ -2,6 +2,7 @@
 #include "y/ink/image.hpp"
 #include "y/utest/run.hpp"
 #include "y/ink/stencil/delta.hpp"
+#include "y/ink/stencil/scharr.hpp"
 #include "y/ink/stencil/sobel.hpp"
 
 using namespace upsylon;
@@ -15,7 +16,7 @@ namespace
     {
         matrix<T> M;
         s.build(M);
-        std::cerr << s.name << std::endl << M << std::endl;
+        std::cerr << s.name << '=' << M << std::endl;
     }
 }
 
@@ -28,19 +29,29 @@ Y_UTEST(ops)
     DeltaX<int>    dx;
     DeltaY<int>    dy;
     Laplacian<int> lap;
-    SobelX3<int>   sobelX3;
-    SobelY3<int>   sobelY3;
-    SobelX5<int>   sobelX5;
-    SobelY5<int>   sobelY5;
+    Sobel3X<int>   sobel3X;
+    Sobel3Y<int>   sobel3Y;
+    Sobel5X<int>   sobel5X;
+    Sobel5Y<int>   sobel5Y;
+
+    Scharr3X<int>   scharr3X;
+    Scharr3Y<int>   scharr3Y;
+    Scharr5X<int>   scharr5X;
+    Scharr5Y<int>   scharr5Y;
 
     display(dx);
     display(dy);
     display(lap);
-    display(sobelX3);
-    display(sobelY3);
 
-    display(sobelX5);
-    display(sobelY5);
+    display(sobel3X);
+    display(sobel3Y);
+    display(sobel5X);
+    display(sobel5Y);
+
+    display(scharr3X);
+    display(scharr3Y);
+    display(scharr5X);
+    display(scharr5Y);
 
     M.make(5,5);
     M.ld(1);
@@ -104,7 +115,17 @@ img.save( #S ".png",target,0);                    \
         DO_STENCIL(dx);
         DO_STENCIL(dy);
         DO_STENCIL(lap);
+        DO_STENCIL(sobel3X);
+        DO_STENCIL(sobel3Y);
+        DO_STENCIL(sobel5X);
+        DO_STENCIL(sobel5Y);
 
+        DO_STENCIL(scharr3X);
+        DO_STENCIL(scharr3Y);
+        DO_STENCIL(scharr5X);
+        DO_STENCIL(scharr5Y);
+
+        
 
         Pixmaps<uint8_t> ch3(3,w,h);
         
