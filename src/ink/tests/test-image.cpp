@@ -5,7 +5,7 @@
 #include <typeinfo>
 
 using namespace upsylon;
-using namespace ink;
+using namespace Ink;
 
 namespace
 {
@@ -21,9 +21,9 @@ namespace
     template <> RGBA    genPixel::get<RGBA>()      { return RGBA(alea.full<uint8_t>(),alea.full<uint8_t>(),alea.full<uint8_t>(),alea.full<uint8_t>()); }
 
     template <typename T>
-    static inline void do_test(imageIO &img,const string &id)
+    static inline void do_test(ImageIO &img,const string &id)
     {
-        pixmap<T> pxm( 100+alea.leq(400), 100+alea.leq(400) );
+        Pixmap<T> pxm( 100+alea.leq(400), 100+alea.leq(400) );
         for(size_t y=0;y<pxm.h;++y)
         {
             for(size_t x=0;x<pxm.w;++x)
@@ -31,7 +31,7 @@ namespace
                 pxm[y][x] = genPixel::get<T>();
             }
         }
-        std::cerr << "pixmap<" << typeid(T).name() << "> " << pxm.w << 'x' << pxm.h << " => depth=" << pxm.depth << ", bytes=" << pxm.bytes << std::endl;
+        std::cerr << "Pixmap<" << typeid(T).name() << "> " << pxm.w << 'x' << pxm.h << " => depth=" << pxm.depth << ", bytes=" << pxm.bytes << std::endl;
 
         const string root = "img" + id + ".";
         img.save(root+"jpg", pxm,NULL);
@@ -44,8 +44,8 @@ namespace
 
 Y_UTEST(image)
 {
-    image   &__img = image::instance().initialize();
-    imageIO &img   = __img;
+    Image   &__img = Image::Init();
+    ImageIO &img   = __img;
 
     __img.display();
     do_test<float>(img,"f");

@@ -8,11 +8,11 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
      
         //! type agnostic bitmap
-        class bitmap : public area, public counted
+        class Bitmap : public Area, public counted
         {
         public:
             //! different kind of bitmap
@@ -33,23 +33,23 @@ namespace upsylon
             const size_t bytes;    //!< pixels*depth
             
             //! memory_is_global bitmap
-            explicit bitmap(const size_t D,const size_t W,const size_t H);
+            explicit Bitmap(const size_t D,const size_t W,const size_t H);
             
             //! memory_is_shared bitmap, same layouts
-            explicit bitmap( bitmap *bmp );
+            explicit Bitmap( Bitmap *bmp );
 
             //! memory from user
-            explicit bitmap(const void  *data,
+            explicit Bitmap(const void  *data,
                             const size_t D,
                             const size_t W,
                             const size_t H,
                             const size_t S);
 
             //! copy with same memory
-            bitmap( const bitmap &bmp );
+            Bitmap( const Bitmap &bmp );
             
             //! release private memory
-            virtual ~bitmap() throw();
+            virtual ~Bitmap() throw();
 
             //! get line address
             inline void *get_line(const size_t j) throw()
@@ -84,9 +84,9 @@ namespace upsylon
             }
 
             //! hard copy
-            void copy(const bitmap &other) throw();
+            void copy(const Bitmap &other) throw();
             //! hard copy with tiles
-            void copy(const bitmap &other, engine &E);
+            void copy(const Bitmap &other, Engine &E);
 
             //! H.set(), H.run(on all data)
             void __signature( hashing::function &H ) const throw();
@@ -100,11 +100,11 @@ namespace upsylon
             }
 
         private:
-            Y_DISABLE_ASSIGN(bitmap);
+            Y_DISABLE_ASSIGN(Bitmap);
             //! layout of a pixmap row
             struct row_layout { uint8_t *p; size_t w; };
             
-            bitmap *shared;
+            Bitmap *shared;
             void   *private_memory;
             size_t  private_length;
             

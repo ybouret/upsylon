@@ -7,11 +7,11 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
 
         //! used libtiff for I/O
-        class tiff_format : public image::format
+        class tiff_format : public Image::Format
         {
         public:
             //! constructor
@@ -23,13 +23,13 @@ namespace upsylon
             virtual bool     lossless() const throw();
             
 
-            virtual bitmap  *load(const string          &filename,
+            virtual Bitmap  *load(const string          &filename,
                                   unit_t                 depth,
                                   rgba2data             &proc,
                                   const void            *options) const;
             
             virtual void     save(const string        &filename,
-                                  const bitmap        &bmp,
+                                  const Bitmap        &bmp,
                                   data2rgba           &proc,
                                   const void          *options) const;
 
@@ -37,7 +37,7 @@ namespace upsylon
             size_t count_directories(const string &filename) const;
 
             //! load a bitmap with 0<=indx<count_directories
-            bitmap *load_bitmap(const string          &filename,
+            Bitmap *load_bitmap(const string          &filename,
                                 unit_t                 depth,
                                 rgba2data             &proc,
                                 const size_t           indx) const;

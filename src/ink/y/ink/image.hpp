@@ -12,16 +12,18 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
 
         //! interface for image Input/Output
-        class imageIO : public counted_object
+        class ImageIO : public counted_object
         {
         public:
             const string name; //!< identifier for databse
+
             //! destructor
-            inline virtual ~imageIO() throw() {}
+            inline virtual ~ImageIO() throw() {}
+
             //! key=name for database
             inline const string & key() const throw() { return name; }
 
@@ -32,14 +34,14 @@ namespace upsylon
             //==================================================================
 
             //! load a bitmap with proc converting RGBA to something sizeof=depth
-            virtual bitmap  *load(const string          &filename,
+            virtual Bitmap  *load(const string          &filename,
                                   unit_t                 depth,
                                   rgba2data             &proc,
                                   const void            *options) const = 0;
 
             //! save a bitmap with proc converting each pixel into RGBA
             virtual void     save(const string        &filename,
-                                  const bitmap        &bmp,
+                                  const Bitmap        &bmp,
                                   data2rgba           &proc,
                                   const void          *options) const = 0;
 
@@ -52,31 +54,31 @@ namespace upsylon
 
 
             //! load a floating point grey scale bitmap
-            inline pixmapf loadf(const string &filename, const void *options) const
+            inline PixmapF loadf(const string &filename, const void *options) const
             {
                 put_gsf proc;
-                return pixmapf(load(filename,sizeof(float),proc,options));
+                return PixmapF(load(filename,sizeof(float),proc,options));
             }
 
             //! load a 8-bits grey-scale bitmap
-            inline pixmap1 load1(const string &filename, const void *options) const
+            inline Pixmap1 load1(const string &filename, const void *options) const
             {
-                put_gsu proc;
-                return pixmap1(load(filename,sizeof(uint8_t),proc,options));
+                put_gs1 proc;
+                return Pixmap1(load(filename,sizeof(uint8_t),proc,options));
             }
 
             //! load an rgb bitmap
-            inline pixmap3 load3(const string &filename, const void *options) const
+            inline Pixmap3 load3(const string &filename, const void *options) const
             {
                 put_rgb proc;
-                return pixmap3(load(filename,sizeof(RGB),proc,options));
+                return Pixmap3(load(filename,sizeof(RGB),proc,options));
             }
 
             //! load an rgba bitmap
-            inline pixmap4 load4(const string &filename, const void *options) const
+            inline Pixmap4 load4(const string &filename, const void *options) const
             {
                 put_rgba proc;
-                return pixmap4(load(filename,sizeof(RGBA),proc,options));
+                return Pixmap4(load(filename,sizeof(RGBA),proc,options));
             }
 
             //==================================================================
@@ -86,28 +88,28 @@ namespace upsylon
             //==================================================================
 
             //! save pixmap<float>
-            inline void save(const string &filename, const pixmap<float> &bmp, const void *options) const
+            inline void save(const string &filename, const Pixmap<float> &bmp, const void *options) const
             {
                 get_from_float proc;
                 save(filename,bmp,proc,options);
             }
 
             //! save pixmap<uint8_t>
-            inline void save(const string &filename, const pixmap<uint8_t> &bmp, const void *options) const
+            inline void save(const string &filename, const Pixmap<uint8_t> &bmp, const void *options) const
             {
                 get_from_byte proc;
                 save(filename,bmp,proc,options);
             }
 
             //! save pixmap<RGB>
-            inline void save(const string &filename, const pixmap<RGB> &bmp, const void *options) const
+            inline void save(const string &filename, const Pixmap<RGB> &bmp, const void *options) const
             {
                 get_from_rgb proc;
                 save(filename,bmp,proc,options);
             }
 
             //! save pixmap<RGBA>
-            inline void save(const string &filename, const pixmap<RGBA> &bmp, const void *options) const
+            inline void save(const string &filename, const Pixmap<RGBA> &bmp, const void *options) const
             {
                 get_from_rgba proc;
                 save(filename,bmp,proc,options);
@@ -115,68 +117,68 @@ namespace upsylon
 
         protected:
             //! initialize
-            inline explicit imageIO(const char *id) : name(id) {}
+            inline explicit ImageIO(const char *id) : name(id) {}
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(imageIO);
+            Y_DISABLE_COPY_AND_ASSIGN(ImageIO);
         };
 
         //! handling different imageIO
-        class image : public imageIO, public singleton<image>
+        class Image : public ImageIO, public singleton<Image>
         {
         public:
 
             //! a format is an imageIO plus info
-            class format : public imageIO
+            class Format : public ImageIO
             {
             public:
-                typedef intr_ptr<string,format> pointer;  //!< held in set
-                typedef set<string,pointer>     database; //!< database of formats, by nmae
-                typedef map<string,pointer>     exttable; //!< database of formats, by extensions
+                typedef intr_ptr<string,Format> Pointer;  //!< held in set
+                typedef set<string,Pointer>     Database; //!< database of formats, by nmae
+                typedef map<string,Pointer>     ExtTable; //!< database of formats, by extensions
 
                 //! information
                 virtual bool         lossless()   const throw() = 0;
                 //! table of possible extensions
                 virtual const char **extensions() const throw() = 0;
                 //! destructor
-                inline virtual ~format() throw() {}
+                inline virtual ~Format() throw() {}
 
             protected:
                 //! initialize
-                inline explicit format(const char *id) : imageIO(id) {}
+                inline explicit Format(const char *id) : ImageIO(id) {}
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(format);
+                Y_DISABLE_COPY_AND_ASSIGN(Format);
             };
 
             //! enrolling a new format
-            void enroll( const format::pointer &fmt );
+            void enroll( const Format::Pointer &fmt );
 
             //! low level creation, register the format only
             template <typename  FMT>
             FMT & create()
             {
                 FMT *fmt = new FMT();
-                const format::pointer format(fmt);
-                enroll(fmt);
+                const Format::Pointer f(fmt);
+                enroll(f);
                 return  *fmt;
             }
             
-            virtual bitmap  *load(const string          &filename,
+            virtual Bitmap  *load(const string          &filename,
                                   unit_t                 depth,
                                   rgba2data             &proc,
                                   const void            *options) const;
 
             virtual void     save(const string        &filename,
-                                  const bitmap        &bmp,
+                                  const Bitmap        &bmp,
                                   data2rgba           &proc,
                                   const void          *options) const;
 
             //! enroll default format
-            image &initialize();
+            Image &initialize();
 
             //! return inialized instance
-            static inline image & init()
+            static inline Image & Init()
             {
                 return instance().initialize();
             }
@@ -185,17 +187,17 @@ namespace upsylon
             void display() const;
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(image);
-            friend class singleton<image>;
+            Y_DISABLE_COPY_AND_ASSIGN(Image);
+            friend class singleton<Image>;
 
-            format::database fmt_db;
-            format::exttable ext_db;
+            Format::Database fmt_db;
+            Format::ExtTable ext_db;
 
-            explicit image();
-            virtual ~image() throw();
+            explicit Image();
+            virtual ~Image() throw();
             static const at_exit::longevity life_time = object::life_time-10;
 
-            format & get_format_for(const string &filename) const;
+            Format & get_format_for(const string &filename) const;
         };
     }
 }

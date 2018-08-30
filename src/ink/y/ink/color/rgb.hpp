@@ -60,6 +60,9 @@ namespace upsylon
         typedef rgb<uint8_t>  RGB;   //!< default 3-bytes RGB
         typedef rgba<uint8_t> RGBA;  //!< default 4-bytes RGBA
 
+        inline uint8_t RGBtoByte(const RGB &C) throw() {  return Crux::GreyScale1(C.r,C.g,C.b); };
+        inline uint8_t RGBtoFloat(const RGB &C) throw() { return Crux::GreyScaleF(C.r,C.g,C.b); };
+
     }
 }
 

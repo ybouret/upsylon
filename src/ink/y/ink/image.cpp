@@ -5,20 +5,20 @@
 
 namespace upsylon
 {
-    namespace  ink
+    namespace  Ink
     {
-        image:: ~image() throw()
+        Image:: ~Image() throw()
         {
         }
 
-        image:: image() :
-        imageIO("image"),
+        Image:: Image() :
+        ImageIO("image"),
         fmt_db( ),
         ext_db( )
         {
         }
 
-        void image:: enroll( const format::pointer &fmt )
+        void Image:: enroll( const Format::Pointer &fmt )
         {
             static const char fn[] = "image::enroll";
             //std::cerr << "enrolling " << fmt->name << std::endl;
@@ -49,22 +49,22 @@ namespace upsylon
             }
         }
 
-        image::format & image::get_format_for(const string &filename) const
+        Image::Format & Image::get_format_for(const string &filename) const
         {
             string ext = vfs::get_extension(filename);
             string_convert::to_lower(ext);
-            const format::pointer *ppFmt = ext_db.search(ext);
+            const Format::Pointer *ppFmt = ext_db.search(ext);
             if(!ppFmt)
             {
                 throw exception("no format matching extension '%s'", *ext);
             }
-            image::format::pointer proxy( *ppFmt );
+            Image::Format::Pointer proxy( *ppFmt );
             //std::cerr << "using [" << proxy->name << "] for " << filename << std::endl;
             return *proxy;
         }
 
 
-        bitmap  *image::load(const string          &filename,
+        Bitmap  *Image::load(const string          &filename,
                              unit_t                 depth,
                              rgba2data             &proc,
                              const void            *options) const
@@ -72,18 +72,18 @@ namespace upsylon
             return get_format_for(filename).load(filename,depth,proc,options);
         }
         
-        void     image:: save(const string        &filename,
-                              const bitmap        &bmp,
+        void     Image:: save(const string        &filename,
+                              const Bitmap        &bmp,
                               data2rgba           &proc,
                               const void          *options) const
         {
             get_format_for(filename).save(filename,bmp,proc,options);
         }
 
-        void image:: display() const
+        void Image:: display() const
         {
             std::cerr << "<supported extensions>" << std::endl;
-            for(format::exttable::const_iterator i=ext_db.begin(); i!=ext_db.end();++i)
+            for(Format::ExtTable::const_iterator i=ext_db.begin(); i!=ext_db.end();++i)
             {
                 std::cerr << "|_" << i.key() << std::endl;
             }

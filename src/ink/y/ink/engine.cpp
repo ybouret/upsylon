@@ -9,18 +9,18 @@ namespace upsylon
         {
         }
 
-        Engine:: Engine( const Dispatcher &shared, const area &full ) :
-        area(full),
+        Engine:: Engine( const Dispatcher &shared, const Area &full ) :
+        Area(full),
         agent(shared),
-        zones( *this, agent->engine().num_threads() )
+        tiles( *this, agent->engine().num_threads() )
         {
         }
 
-        void engine:: acquire_all( const size_t n )
+        void Engine:: acquire_all( const size_t n )
         {
-            for(size_t i=zones.size();i>0;--i)
+            for(size_t i=tiles.size();i>0;--i)
             {
-                zones[i].cache.acquire(n);
+                tiles[i].cache.acquire(n);
             }
         }
     }

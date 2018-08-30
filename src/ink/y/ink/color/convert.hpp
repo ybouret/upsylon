@@ -6,8 +6,9 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
+#if 0
         //! color conversion template
         struct color_convert
         {
@@ -42,7 +43,7 @@ namespace upsylon
         {
             return crux::grey_scale_u(C.r,C.g,C.b);
         }
-
+#endif
     }
 }
 

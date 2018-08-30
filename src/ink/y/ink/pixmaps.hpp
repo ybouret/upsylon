@@ -8,27 +8,27 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
-        typedef pixmap<float>   pixmapf;     //!< floating point pixmap
-        typedef pixmap<uint8_t> pixmap1;     //!< pixmap of bytes
-        typedef pixmap<RGB>     pixmap3;     //!< pixmap of packed RGB
-        typedef pixmap<RGBA>    pixmap4;     //!< pixmap of packed RGBA
-        typedef pixmap<YUV>     YUVpixmap;   //!< pixmap of packed YUV
-        typedef pixmap<cplx>    pixmapz;     //!< pixmap of complex real
+        typedef Pixmap<float>   PixmapF;     //!< floating point pixmap
+        typedef Pixmap<uint8_t> Pixmap1;     //!< pixmap of bytes
+        typedef Pixmap<RGB>     Pixmap3;     //!< pixmap of packed RGB
+        typedef Pixmap<RGBA>    Pixmap4;     //!< pixmap of packed RGBA
+        typedef Pixmap<YUV>     PixmapYUV;   //!< pixmap of packed YUV
+        typedef Pixmap<cplx>    PixmapZ;     //!< pixmap of complex real
 
 
         //! multiple pixmaps of same type and size
         template <typename T>
-        class pixmaps : public area, public slots< pixmap<T> >
+        class Pixmaps : public Area, public slots< Pixmap<T> >
         {
         public:
             //! constructor
-            explicit pixmaps(const size_t num,
+            explicit Pixmaps(const size_t num,
                              const size_t W,
                              const size_t H) :
-            area( coord(0,0), W, H ),
-            slots< pixmap<T> >(num)
+            Area( coord(0,0), W, H ),
+            slots< Pixmap<T> >(num)
             {
                 for(size_t i=0;i<num;++i)
                 {
@@ -37,12 +37,12 @@ namespace upsylon
             }
 
             //! destructor
-            inline virtual ~pixmaps() throw()
+            inline virtual ~Pixmaps() throw()
             {
             }
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(pixmaps);
+            Y_DISABLE_COPY_AND_ASSIGN(Pixmaps);
         };
     }
 

@@ -6,7 +6,7 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
         //! convert RGBA to something
         class rgba2data
@@ -46,9 +46,9 @@ inline virtual void put(void *addr, const RGBA &C) throw() { CODE; } \
         //! RGBA -> RGB
         Y_INK_RGBA2DATA(put_rgb,  *(RGB     *)addr = *(RGB *)&C);
         //! RGBA -> greyscale as float
-        Y_INK_RGBA2DATA(put_gsf,  *(float   *)addr = crux::grey_scale_f(C.r, C.g, C.b));
+        Y_INK_RGBA2DATA(put_gsf,  *(float   *)addr = Crux::GreyScaleF(C.r, C.g, C.b));
         //! RGBA -> greyscale as byte
-        Y_INK_RGBA2DATA(put_gsu,  *(uint8_t *)addr = crux::grey_scale_u(C.r, C.g, C.b));
+        Y_INK_RGBA2DATA(put_gs1,  *(uint8_t *)addr = Crux::GreyScale1(C.r, C.g, C.b));
 
     }
 }

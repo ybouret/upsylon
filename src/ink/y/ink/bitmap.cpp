@@ -3,9 +3,9 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
-        bitmap:: ~bitmap() throw()
+        Bitmap:: ~Bitmap() throw()
         {
             switch(model)
             {
@@ -29,8 +29,8 @@ namespace upsylon
             return v;
         }
         
-        bitmap:: bitmap(const size_t D, const size_t W, const size_t H) :
-        area( coord(0,0),__check(W,"width"),__check(H,"height") ),
+        Bitmap:: Bitmap(const size_t D, const size_t W, const size_t H) :
+        Area( coord(0,0),__check(W,"width"),__check(H,"height") ),
         entry(0),
         rows(0),
         depth( __check(D,"depth")  ),
@@ -46,13 +46,13 @@ namespace upsylon
             allocate();
         }
         
-        static inline bitmap *__check(bitmap *bmp)
+        static inline Bitmap *__check(Bitmap *bmp)
         {
             return bmp;
         }
         
-        bitmap:: bitmap( bitmap *bmp ) :
-        area( *__check(bmp) ),
+        Bitmap:: Bitmap( Bitmap *bmp ) :
+        Area( *__check(bmp) ),
         entry( bmp->entry   ),
         rows(0),
         depth(    bmp->depth    ),
@@ -79,12 +79,12 @@ namespace upsylon
             }
         }
         
-        bitmap:: bitmap(const void  *data,
+        Bitmap:: Bitmap(const void  *data,
                         const size_t D,
                         const size_t W,
                         const size_t H,
                         const size_t S) :
-        area( coord(0,0),__check(W,"width"),__check(H,"height") ),
+        Area( coord(0,0),__check(W,"width"),__check(H,"height") ),
         entry((void*)data),
         rows(0),
         depth( __check(D,"depth")  ),
@@ -101,7 +101,7 @@ namespace upsylon
         }
 
 
-        void bitmap:: allocate()
+        void Bitmap:: allocate()
         {
             const size_t data_offset = 0;
             const size_t data_length = bytes;
@@ -117,7 +117,7 @@ namespace upsylon
             link_rows();
         }
         
-        void bitmap:: allocate_rows_only()
+        void Bitmap:: allocate_rows_only()
         {
             assert(entry);
             const size_t rows_offset = 0;
@@ -130,7 +130,7 @@ namespace upsylon
             link_rows();
         }
         
-        void bitmap:: link_rows() throw()
+        void Bitmap:: link_rows() throw()
         {
             assert(rows);
             assert(entry);
@@ -146,8 +146,8 @@ namespace upsylon
             }
         }
         
-        bitmap:: bitmap( const bitmap &bmp ) :
-        area( bmp ),
+        Bitmap:: Bitmap( const Bitmap &bmp ) :
+        Area( bmp ),
         counted(),
         entry(0),
         rows(0),
@@ -179,7 +179,7 @@ namespace upsylon
             }
         }
         
-        void bitmap:: copy(const bitmap &other) throw()
+        void Bitmap:: copy(const Bitmap &other) throw()
         {
             if(this!=&other)
             {
@@ -193,7 +193,7 @@ namespace upsylon
             }
         }
 
-        void bitmap:: __signature( hashing::function &H ) const throw()
+        void Bitmap:: __signature( hashing::function &H ) const throw()
         {
             H.set();
             for(size_t j=0;j<h;++j)
@@ -207,9 +207,9 @@ namespace upsylon
         {
             struct copyOps
             {
-                bitmap       *target;
-                const bitmap *source;
-                inline void operator()( const area &zone, lockable & ) throw()
+                Bitmap       *target;
+                const Bitmap *source;
+                inline void operator()( const Area &zone, lockable & ) throw()
                 {
                     assert(target);
                     assert(source);
@@ -229,7 +229,8 @@ namespace upsylon
                 }
             };
         }
-        void bitmap:: copy(const bitmap &other, engine &E)
+
+        void Bitmap:: copy(const Bitmap &other, Engine &E)
         {
             if(this!=&other)
             {

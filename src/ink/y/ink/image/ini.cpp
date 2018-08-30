@@ -5,9 +5,9 @@
 
 namespace upsylon
 {
-    namespace  ink
+    namespace  Ink
     {
-        image &image:: initialize()
+        Image &Image:: initialize()
         {
             (void) create<jpeg_format>();
             (void) create<png_format>();

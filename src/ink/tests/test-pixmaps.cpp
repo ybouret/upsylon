@@ -5,22 +5,22 @@
 #include <typeinfo>
 
 using namespace upsylon;
-using namespace ink;
+using namespace Ink;
 
 namespace
 {
     template <typename T>
     static inline void do_test()
     {
-        pixmap<T> pxm( 1+alea.leq(100), 1+alea.leq(100) );
+        Pixmap<T> pxm( 1+alea.leq(100), 1+alea.leq(100) );
         for(size_t y=0;y<pxm.h;++y)
         {
             for(size_t x=0;x<pxm.w;++x)
             {
-                pxm[y][x] = pixel<T>::zero;
+                pxm[y][x] = Pixel<T>::Zero;
             }
         }
-        std::cerr << "pixmap<" << typeid(T).name() << "> " << pxm.w << 'x' << pxm.h << " => depth=" << pxm.depth << ", bytes=" << pxm.bytes << std::endl;
+        std::cerr << "Pixmap<" << typeid(T).name() << "> " << pxm.w << 'x' << pxm.h << " => depth=" << pxm.depth << ", bytes=" << pxm.bytes << std::endl;
     }
 
 }

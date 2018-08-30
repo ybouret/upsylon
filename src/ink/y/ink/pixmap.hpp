@@ -7,14 +7,14 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
         //! define metrics for zero flux computation
 #define Y_PIXMAP_SIGNED_METRICS()  sw(w), ww( (sw+sw)-2 ), sh(h), hh( (sh+sh) - 2 )
 
         //! pixmap of any type
         template <typename T>
-        class pixmap : public bitmap
+        class Pixmap : public Bitmap
         {
         public:
             Y_DECL_ARGS(T,type); //!< alias
@@ -39,27 +39,27 @@ namespace upsylon
             };
 
             //! global memory pixmap
-            inline explicit pixmap(const size_t W, const size_t H) :
-            bitmap(sizeof(type),W,H), Y_PIXMAP_SIGNED_METRICS()
+            inline explicit Pixmap(const size_t W, const size_t H) :
+            Bitmap(sizeof(type),W,H), Y_PIXMAP_SIGNED_METRICS()
             {
                 assert(sizeof(type)==depth);
             }
 
             //! shared pixmap with compatible size
-            inline explicit pixmap( bitmap *bmp ) :
-            bitmap(bmp), Y_PIXMAP_SIGNED_METRICS()
+            inline explicit Pixmap( Bitmap *bmp ) :
+            Bitmap(bmp), Y_PIXMAP_SIGNED_METRICS()
             {
                 if(depth!=sizeof(T)) throw exception("pixmap: incompatible depths!!!");
             }
 
             //! copy, relying on bitmap
-            pixmap(const pixmap &other) :
-            bitmap(other), Y_PIXMAP_SIGNED_METRICS()
+            Pixmap(const Pixmap &other) :
+            Bitmap(other), Y_PIXMAP_SIGNED_METRICS()
             {
             }
 
             //! destructor
-            inline virtual ~pixmap() throw()
+            inline virtual ~Pixmap() throw()
             {
             }
 
@@ -107,7 +107,7 @@ namespace upsylon
 
 
         private:
-            Y_DISABLE_ASSIGN(pixmap);
+            Y_DISABLE_ASSIGN(Pixmap);
         };
     }
 }

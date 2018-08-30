@@ -15,9 +15,9 @@ extern "C"
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
-        jpeg_format:: jpeg_format() : image::format("JPEG")
+        jpeg_format:: jpeg_format() : Image::Format("JPEG")
         {
         }
         
@@ -71,7 +71,7 @@ namespace upsylon
         
         typedef memory::global_buffer_of<JSAMPLE> jsample_buffer;
 
-        bitmap  * jpeg_format:: load(const string         &filename,
+        Bitmap  * jpeg_format:: load(const string         &filename,
                                      unit_t                depth,
                                      rgba2data            &proc,
                                      const void           *) const
@@ -153,7 +153,7 @@ namespace upsylon
                 if(cinfo.output_components!=3)
                     throw exception("%s(unsupported image depth=%d)",fn,int(cinfo.output_components));
                 
-                auto_ptr<bitmap> bmp = new bitmap(depth,width,height);
+                auto_ptr<Bitmap> bmp = new Bitmap(depth,width,height);
 
                 jsample_buffer jsbuff(cinfo.output_width * cinfo.output_components);
                 JSAMPLE       *buffer = jsbuff();
@@ -196,7 +196,7 @@ namespace upsylon
         }
         
         void jpeg_format:: save(const string        &filename,
-                                const bitmap        &bmp,
+                                const Bitmap        &bmp,
                                 data2rgba           &proc,
                                 const void          *options) const
         {

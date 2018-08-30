@@ -9,14 +9,14 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
         
         png_format:: ~png_format() throw()
         {
         }
         
-        png_format:: png_format() : image::format("PNG")
+        png_format:: png_format() : Image::Format("PNG")
         {
         }
         
@@ -84,7 +84,7 @@ namespace upsylon
             };
         }
         
-        bitmap  *png_format:: load(const string          &filename,
+        Bitmap  *png_format:: load(const string          &filename,
                                    unit_t                 depth,
                                    rgba2data             &proc,
                                    const void            *) const
@@ -184,11 +184,11 @@ namespace upsylon
             }
             
             
-            auto_ptr<bitmap> bmp = NULL;
+            auto_ptr<Bitmap> bmp = NULL;
             PNG_Mem          mem;
             try
             {
-                bmp = new bitmap(depth,width,height);
+                bmp = new Bitmap(depth,width,height);
                 mem.allocate(width,height,num_channels);
             }
             catch(...)
@@ -254,7 +254,7 @@ namespace upsylon
         
         
         void png_format:: save(const string        &filename,
-                               const bitmap        &bmp,
+                               const Bitmap        &bmp,
                                data2rgba           &proc,
                                const void          *options) const
         {

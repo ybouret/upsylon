@@ -2,7 +2,7 @@
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
-using namespace ink;
+using namespace Ink;
 
 Y_UTEST(bitmap)
 {
@@ -10,8 +10,8 @@ Y_UTEST(bitmap)
     {
         for(size_t iter=1;iter<=2;++iter)
         {
-            bitmap bmp1( d, 1+alea.leq(100), 1+alea.leq(100));
-            bitmap bmp2( new bitmap(d,1+alea.leq(100), 1+alea.leq(100)) );
+            Bitmap bmp1( d, 1+alea.leq(100), 1+alea.leq(100));
+            Bitmap bmp2( new Bitmap(d,1+alea.leq(100), 1+alea.leq(100)) );
         }
     }
 

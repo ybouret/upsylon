@@ -5,7 +5,7 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
         _TIFF:: _TIFF() throw() : handle(0) {}
 
@@ -23,7 +23,7 @@ namespace upsylon
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
 
         I_TIFF:: I_TIFF(const string &filename) :
@@ -102,7 +102,7 @@ namespace upsylon
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
 
         O_TIFF :: ~O_TIFF() throw()

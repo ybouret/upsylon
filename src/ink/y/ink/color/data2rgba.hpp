@@ -7,7 +7,7 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
 
         //! convert data from an address into RGBA

@@ -35,7 +35,7 @@ Y_PIXEL_DECL(uint8_t);   //!< for byte pixel
 Y_PIXEL_DECL(double);    //!< for double pixel
 Y_PIXEL_DECL(uint16_t);  //!< for word pixel
 Y_PIXEL_DECL(uint32_t);  //!< for dword pixel
-Y_PIXEL_DECL(upsylon::ink::cplx); //!< for complex pixel
+Y_PIXEL_DECL(upsylon::Ink::cplx); //!< for complex pixel
 
 #endif
 

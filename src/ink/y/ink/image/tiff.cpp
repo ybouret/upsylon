@@ -3,7 +3,7 @@
 
 namespace upsylon
 {
-    namespace ink
+    namespace Ink
     {
         
         tiff_format:: ~tiff_format() throw()
@@ -11,7 +11,7 @@ namespace upsylon
         }
         
         tiff_format:: tiff_format() :
-        image::format("TIFF"),
+        Image::Format("TIFF"),
         raster()
         {
         }
@@ -31,7 +31,7 @@ namespace upsylon
 #define TIFFGetB(abgr) (((abgr) >> 16) & 0xff)
 #define TIFFGetA(abgr) (((abgr) >> 24) & 0xff)
         
-        bitmap  *tiff_format:: load(const string          &filename,
+        Bitmap  *tiff_format:: load(const string          &filename,
                                     unit_t                 depth,
                                     rgba2data             &proc,
                                     const void            *options) const
@@ -52,7 +52,7 @@ namespace upsylon
             // allocate resources
             const int w = tiff.GetWidth();
             const int h = tiff.GetHeight();
-            auto_ptr<bitmap> B(new bitmap(depth,w,h) );
+            auto_ptr<Bitmap> B(new Bitmap(depth,w,h) );
 
 
             // map raster to bitmap
@@ -81,7 +81,7 @@ namespace upsylon
         }
         
         
-        bitmap *tiff_format:: load_bitmap(const string          &filename,
+        Bitmap *tiff_format:: load_bitmap(const string          &filename,
                                           unit_t                 depth,
                                           rgba2data             &proc,
                                           const size_t           indx) const
@@ -93,7 +93,7 @@ namespace upsylon
         
         
         void tiff_format:: save(const string        &filename,
-                                const bitmap        &bmp,
+                                const Bitmap        &bmp,
                                 data2rgba           &proc,
                                 const void          *options) const
         {
