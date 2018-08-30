@@ -16,7 +16,7 @@ namespace upsylon
             //! destructor
             inline virtual ~Stencil() throw() {}
 
-            virtual void build( matrix<T> &weights ) const = 0;
+            virtual void build( matrix<T> &m ) const = 0;
 
         protected:
             //! constructor
@@ -31,7 +31,7 @@ template <typename T> class NAME : public Stencil<T> {\
 public:\
 inline explicit NAME() throw() {}\
 inline virtual ~NAME() throw() {}\
-inline virtual void build( matrix<T> &weights ) const { CODE; }\
+inline virtual void build( matrix<T> &m ) const { CODE; }\
 private: Y_DISABLE_COPY_AND_ASSIGN(NAME);\
 }
 

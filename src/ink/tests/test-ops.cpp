@@ -14,6 +14,7 @@ Y_UTEST(ops)
     matrix<int> M;
     DeltaX<int> DX;
     DeltaY<int> DY;
+    Laplacian<int> LL;
     DX.build(M);
     DY.build(M);
 
@@ -64,6 +65,13 @@ Y_UTEST(ops)
             std::cerr << "float vmin=" << vmin << ", vmax=" << vmax << std::endl;
             Filter::Rescale(target,vmin,vmax,Crux::FloatToFloat,par);
             img.save("stenf.png",target,0);
+        }
+
+        {
+            LL.build(M);
+            Filter::Stencil(target,pxm1,M,par);
+            Filter::Autoscale(target,Crux::FloatToFloat,par);
+            img.save("lap.png",target,0);
         }
 
         Pixmaps<uint8_t> ch3(3,w,h);

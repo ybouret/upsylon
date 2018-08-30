@@ -117,6 +117,14 @@ namespace upsylon
                 E.run(proxy);
             }
 
+            //! rescale from global vmin and vmax
+            template <typename T, typename F2T> static inline
+            void Autoscale( Pixmap<T> &source, F2T &float2type, Engine &E)
+            {
+                float vmin=0,vmax=0;
+                FindMinMax(vmin,vmax,source,E);
+                Rescale(source,vmin,vmax,float2type,E);
+            }
 
 
         private:
