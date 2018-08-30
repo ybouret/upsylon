@@ -6,6 +6,7 @@
 #include "y/associative/set.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ptr/intr.hpp"
+#include "y/math/types.hpp"
 
 namespace upsylon
 {
@@ -184,6 +185,14 @@ namespace upsylon
                     }
                 }
 
+                template <typename T>
+                static inline
+                T compute_relative_error( const T aorg, const T aerr ) throw()
+                {
+                    const T ratio = (__fabs(aerr)+numeric<T>::tiny)/(__fabs(aorg)+numeric<T>::tiny);
+                    return 100 * ratio;
+                }
+
                 //! display named values and errors
                 template <typename T> inline
                 void diplay(std::ostream &os, const array<T> &aorg, const array<T> &aerr, const char *pfx=NULL) const
@@ -225,7 +234,9 @@ namespace upsylon
                         {
                             const string &value = estr[iv];
                             os << value; for(size_t j=em;j>value.size();--j) os << ' ';
-                            os << " ... ";
+                            os << ' ';
+                            const string percent = vformat( "%6.2f", double(compute_relative_error((*this)(aorg,name) , (*this)(aerr,name))) );
+                            os << '(' << percent << '%' << ')';
                         }
                         os << std::endl;
                     }

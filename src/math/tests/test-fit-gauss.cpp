@@ -61,7 +61,7 @@ Y_UTEST(fit_gauss)
     Fit::LeastSquares<double> ls(true);
     if( ls.fit(sample,F,aorg,aerr,used) )
     {
-        sample.variables.diplay(std::cerr,aorg,aerr);
+        sample.variables.diplay(std::cerr,aorg,aerr,"\t");
         ios::ocstream fp("gaussf.dat");
         const size_t M = 200;
         for(size_t i=1;i<=M;++i)
