@@ -40,7 +40,7 @@ namespace upsylon
 
             inline T operator()( const T x ) const
             {
-                return __exp( square_of(x-mu) / scale )/factor;
+                return __exp( -square_of(x-mu) / scale )/factor;
             }
 
 
