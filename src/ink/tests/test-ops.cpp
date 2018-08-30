@@ -1,7 +1,7 @@
 #include "y/ink/ops/filter.hpp"
 #include "y/ink/image.hpp"
 #include "y/utest/run.hpp"
-#include "y/ink/color/convert.hpp"
+#include "y/ink/stencil/delta.hpp"
 
 using namespace upsylon;
 using namespace Ink;
@@ -11,7 +11,13 @@ Y_UTEST(ops)
     ImageIO   &img   = Image::Init();
     Dispatcher __par = new concurrent::simd();
 
-    matrix<int> M(5,5);
+    matrix<int> M;
+    DeltaX<int> DX;
+    DeltaY<int> DY;
+    DX.build(M);
+    DY.build(M);
+
+    M.make(5,5);
     M.ld(1);
     
     for(int iarg=1;iarg<argc;++iarg)

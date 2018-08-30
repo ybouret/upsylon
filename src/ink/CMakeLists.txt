@@ -30,11 +30,18 @@ SET(ops_srcs ${ops_decl} ${ops_code})
 SOURCE_GROUP( ops FILES ${ops_srcs} )
 INSTALL( FILES ${ops_decl} DESTINATION include/y/ink/ops )
 
+FILE(GLOB stencil_decl y/ink/stencil/*.hpp)
+FILE(GLOB stencil_code y/ink/stencil/*.cpp)
+SET(stencil_srcs ${stencil_decl} ${stencil_code})
+SOURCE_GROUP( stencil FILES ${stencil_srcs} )
+INSTALL( FILES ${stencil_decl} DESTINATION include/y/ink/stencil )
+
 ADD_LIBRARY(y-ink STATIC 
 ${main_srcs} 
 ${color_srcs} 
 ${image_srcs}
 ${ops_srcs}
+${stencil_srcs}
 )
 INSTALL( TARGETS y-ink ARCHIVE DESTINATION lib )
 
