@@ -50,6 +50,10 @@ inline virtual RGBA get(const void *addr) throw() { CODE; } \
         //! byte  -> RGBA
         Y_INK_DATA2RGBA(get_from_byte,   const uint8_t u = *(uint8_t *)addr; return RGBA(u,u,u));
 
+        Y_INK_DATA2RGBA(red_from_byte,   return RGBA(*(uint8_t *)addr,0,0,0xff) );
+        Y_INK_DATA2RGBA(green_from_byte, return RGBA(0,*(uint8_t *)addr,0,0xff) );
+        Y_INK_DATA2RGBA(blue_from_byte,  return RGBA(0,0,*(uint8_t *)addr,0xff) );
+
     }
 }
 

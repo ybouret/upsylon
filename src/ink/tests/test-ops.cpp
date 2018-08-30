@@ -4,6 +4,7 @@
 #include "y/ink/stencil/delta.hpp"
 #include "y/ink/stencil/scharr.hpp"
 #include "y/ink/stencil/sobel.hpp"
+#include "y/ink/ops/channels.hpp"
 
 using namespace upsylon;
 using namespace Ink;
@@ -73,7 +74,16 @@ Y_UTEST(ops)
         Filter::Apply(pxmf,pxm,RGBtoFloat,par);
         img.save("imgf.png",pxmf,0);
 
-
+        {
+            Pixmaps<uint8_t> ch(3,w,h);
+            Channels::Split(ch,pxm,par);
+            red_from_byte   red;
+            green_from_byte green;
+            blue_from_byte  blue;
+            img.save("img_r.png",ch[0],red,NULL);
+            img.save("img_g.png",ch[1],green,NULL);
+            img.save("img_b.png",ch[2],blue,NULL);
+        }
 
         PixmapF target(w,h);
 
@@ -127,8 +137,7 @@ img.save( #S ".png",target,0);                    \
 
         
 
-        Pixmaps<uint8_t> ch3(3,w,h);
-        
+
 
     }
 
