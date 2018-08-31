@@ -9,6 +9,8 @@ ADD_TEST(Bitmap  test-ink bitmap)
 ADD_TEST(Areas   test-ink areas)
 ADD_TEST(Pixmaps test-ink pixmaps)
 ADD_TEST(Image   test-ink image)
+ADD_TEST(Ops     test-ink ops)
+ADD_TEST(Blur    test-ink blur)
 
 ADD_CUSTOM_TARGET(utest-ink
 COMMAND ${CMAKE_CTEST_COMMAND} -V

@@ -48,6 +48,16 @@ namespace upsylon
                 return Y_INK_F2B(GreyScaleF(r,g,b));
             }
         };
+
+        //! base class
+        class Object : public object
+        {
+        public:
+            virtual ~Object() throw();
+            explicit Object() throw();
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Object);
+        };
     }
 }
 

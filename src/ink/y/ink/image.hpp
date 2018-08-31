@@ -16,7 +16,7 @@ namespace upsylon
     {
 
         //! interface for image Input/Output
-        class ImageIO : public counted_object
+        class ImageIO : public Object, public counted
         {
         public:
             const string name; //!< identifier for databse

@@ -10,7 +10,7 @@ namespace upsylon
     {
         //! Stencil builder interface
         template <typename T>
-        class Stencil : public counted_object
+        class Stencil : public Object, public counted
         {
         public:
             const string name;

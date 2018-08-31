@@ -4,6 +4,18 @@ namespace upsylon
 {
     namespace Ink
     {
+
+        Object:: Object() throw()
+        {
+
+        }
+
+        Object:: ~Object() throw()
+        {
+            
+        }
+
+
 #if defined(U)
 #undef U
 #endif

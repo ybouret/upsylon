@@ -12,7 +12,7 @@ namespace upsylon
     {
 
         //! area
-        class Area : public object
+        class Area : public Object
         {
         public:
             static const size_t DIMENSION = 2; //!< physical dimension
