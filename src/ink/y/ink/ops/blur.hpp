@@ -65,7 +65,7 @@ namespace upsylon
                         for(unit_t y=ymax;y>=ymin;--y)
                         {
                             //typename Pixmap<TCOLOR>::row       &tgt = target[y];
-                            const typename Pixmap<SCOLOR>::row &src = source[y];
+                            const typename Pixmap<SCOLOR>::Row &src = source[y];
                             for(unit_t xx=xhi,ii=ihi;xx>=xlo;--xx,--ii)
                             {
                                 assert(abs_of(ii)<=length);

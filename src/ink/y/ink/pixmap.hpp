@@ -24,7 +24,7 @@ namespace upsylon
             const unit_t hh;     //!< sh+sh
 
             //! shadow row, mapping binary bitmap row
-            class row
+            class Row
             {
             public:
                 type        *p; //!< first iterm of the wrow
@@ -35,7 +35,7 @@ namespace upsylon
                 inline const_type & operator[](const size_t x) const throw() { assert(x<w); assert(p); return p[x]; }
 
             private:
-                row(); ~row(); Y_DISABLE_COPY_AND_ASSIGN(row);
+                Row(); ~Row(); Y_DISABLE_COPY_AND_ASSIGN(Row);
             };
 
             //! global memory pixmap
@@ -64,10 +64,10 @@ namespace upsylon
             }
 
             //! row access from bitmap rows
-            inline row &       operator[](const size_t y) throw()       { assert(y<h); return *(static_cast<row *>(rows)+y); }
+            inline Row &       operator[](const size_t y) throw()       { assert(y<h); return *(static_cast<Row *>(rows)+y); }
             
             //! frow access from bitmap rows, const
-            inline const row & operator[](const size_t y) const throw() { assert(y<h); return *(static_cast<row *>(rows)+y); }
+            inline const Row & operator[](const size_t y) const throw() { assert(y<h); return *(static_cast<Row *>(rows)+y); }
 
             //! zero flux y
             inline unit_t zfy(const unit_t y) const throw()

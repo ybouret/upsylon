@@ -38,7 +38,7 @@ namespace upsylon
                     
                     for(unit_t y=ymax;y>=ymin;--y)
                     {
-                        const typename Pixmap<COLOR>::row &src = source[y];
+                        const typename Pixmap<COLOR>::Row &src = source[y];
                         for(unit_t x=xmax;x>=xmin;--x)
                         {
                             const SCALAR *p = (const SCALAR *) & src[x];

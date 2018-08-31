@@ -147,8 +147,8 @@ namespace upsylon
 
                     for(unit_t y=ymax;y>=ymin;--y)
                     {
-                        typename       Pixmap<T>::row &tgt = target[y];
-                        const typename Pixmap<U>::row &src = source[y];
+                        typename       Pixmap<T>::Row &tgt = target[y];
+                        const typename Pixmap<U>::Row &src = source[y];
                         for(unit_t x=xmax;x>=xmin;--x)
                         {
                             tgt[x] = func(src[x]);
@@ -180,7 +180,7 @@ namespace upsylon
                         Y_INK_AREA_LIMITS(zone);
                         for(unit_t y=ymax;y>=ymin;--y)
                         {
-                            Pixmap<float>::row            &tgt = target[y];
+                            Pixmap<float>::Row            &tgt = target[y];
                             const unit_t local_y=y-dy;
                             for(unit_t x=xmax;x>=xmin;--x)
                             {
@@ -189,7 +189,7 @@ namespace upsylon
                                 for(unit_t iy=1,ly=local_y;iy<=my;++iy,++ly)
                                 {
                                     const unit_t                   zfy   = source.zfy(ly);
-                                    const typename Pixmap<T>::row &src_y = source[ zfy ];
+                                    const typename Pixmap<T>::Row &src_y = source[ zfy ];
                                     const array<U>                &blk_y = block[iy];
                                     for(unit_t ix=1,lx=local_x;ix<=mx;++ix,++lx)
                                     {
@@ -223,7 +223,7 @@ namespace upsylon
                         T vmin = source[ymin][xmin];
                         for(unit_t y=ymax;y>=ymin;--y)
                         {
-                            const typename Pixmap<T>::row &tgt = source[y];
+                            const typename Pixmap<T>::Row &tgt = source[y];
                             for(unit_t x=xmax;x>=xmin;--x)
                             {
                                 const T v = tgt[x];
@@ -250,7 +250,7 @@ namespace upsylon
                         T vmax = source[ymin][xmin];
                         for(unit_t y=ymax;y>=ymin;--y)
                         {
-                            const typename Pixmap<T>::row &tgt = source[y];
+                            const typename Pixmap<T>::Row &tgt = source[y];
                             for(unit_t x=xmax;x>=xmin;--x)
                             {
                                 const T v = tgt[x];
@@ -277,7 +277,7 @@ namespace upsylon
                         T vmax = source[ymin][xmin], vmin=vmax;
                         for(unit_t y=ymax;y>=ymin;--y)
                         {
-                            const typename Pixmap<T>::row &tgt = source[y];
+                            const typename Pixmap<T>::Row &tgt = source[y];
                             for(unit_t x=xmax;x>=xmin;--x)
                             {
                                 const T v = tgt[x];
@@ -317,7 +317,7 @@ namespace upsylon
                             const float scale = 1.0f/(vmax-vmin);
                             for(unit_t y=ymax;y>=ymin;--y)
                             {
-                                typename Pixmap<T>::row &tgt = source[y];
+                                typename Pixmap<T>::Row &tgt = source[y];
                                 for(unit_t x=xmax;x>=xmin;--x)
                                 {
                                     tgt[x] = func(scale*(float(tgt[x])-vmin));
@@ -328,7 +328,7 @@ namespace upsylon
                         {
                             for(unit_t y=ymax;y>=ymin;--y)
                             {
-                                typename Pixmap<T>::row &tgt = source[y];
+                                typename Pixmap<T>::Row &tgt = source[y];
                                 for(unit_t x=xmax;x>=xmin;--x)
                                 {
                                     tgt[x] = 0;
