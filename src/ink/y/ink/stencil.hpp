@@ -3,6 +3,7 @@
 #define Y_INK_STENCIL_INCLUDED 1
 
 #include "y/container/matrix.hpp"
+#include "y/string.hpp"
 
 namespace upsylon
 {

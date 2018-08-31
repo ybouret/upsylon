@@ -24,37 +24,37 @@ namespace upsylon
             array<float>  &weight;  //!< counts
 
             template <typename SCALAR,typename TCOLOR, typename SCOLOR, const size_t CHANNELS, typename F2T>
-            inline void _applyX( Pixmap<TCOLOR> &target, const Pixmap<SCOLOR> &source, F2T &float2type, Engine &E)
+            inline void _applyX( Pixmap<TCOLOR> &target, const Pixmap<SCOLOR> &source, F2T &float2type, Engine &E) const
             {
                 __applyX<SCALAR,TCOLOR,SCOLOR,CHANNELS,F2T> proxy = { this, &target, &source, &float2type };
                 E.run(proxy);
             }
 
             template <typename SCALAR,typename TCOLOR, typename SCOLOR, const size_t CHANNELS, typename F2T>
-            inline void _applyY( Pixmap<TCOLOR> &target, const Pixmap<SCOLOR> &source, F2T &float2type, Engine &E)
+            inline void _applyY( Pixmap<TCOLOR> &target, const Pixmap<SCOLOR> &source, F2T &float2type, Engine &E) const
             {
                 __applyY<SCALAR,TCOLOR,SCOLOR,CHANNELS,F2T> proxy = { this, &target, &source, &float2type};
                 E.run(proxy);
             }
 
             template <typename SCALAR,typename TCOLOR, typename SCOLOR, const size_t CHANNELS, typename F2T>
-            inline void _apply( Pixmap<TCOLOR> &target, Pixmap<TCOLOR> &temp, const Pixmap<SCOLOR> &source,F2T &float2type, Engine &E)
+            inline void _apply( Pixmap<TCOLOR> &target, Pixmap<TCOLOR> &temp, const Pixmap<SCOLOR> &source,F2T &float2type, Engine &E) const
             {
                 _applyX<SCALAR,TCOLOR,SCOLOR,CHANNELS,F2T>(temp,source,float2type,E);
                 _applyY<SCALAR,TCOLOR,TCOLOR,CHANNELS,F2T>(target,temp,float2type,E);
             }
 
-            void apply( Pixmap3 &target, Pixmap3 &temp, const Pixmap3 &source, Engine &E)
+            void apply( Pixmap3 &target, Pixmap3 &temp, const Pixmap3 &source, Engine &E) const
             {
                 _apply<uint8_t,RGB,RGB,3>(target,temp,source,Crux::ClosestByte,E);
             }
 
-            void apply( Pixmap3 &target, Pixmap3 &temp, const Pixmap4 &source, Engine &E)
+            void apply( Pixmap3 &target, Pixmap3 &temp, const Pixmap4 &source, Engine &E) const
             {
                 _apply<uint8_t,RGB,RGBA,3>(target,temp,source,Crux::ClosestByte,E);
             }
 
-            void apply( PixmapF &target, PixmapF &temp, const PixmapF &source, Engine &E)
+            void apply( PixmapF &target, PixmapF &temp, const PixmapF &source, Engine &E) const
             {
                 _apply<float,float,float,1>(target,temp,source,Crux::ClosestFloat,E);
             }

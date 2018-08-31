@@ -21,6 +21,9 @@ namespace upsylon
         class Engine : public Area
         {
         public:
+            //! prototype for the use of functor
+            typedef functor<void,TL2(const Area &,lockable &)> Function;
+
             //! constructor, build tiles with shared from full
             explicit Engine(const Dispatcher &shared,
                             const Area       &full);
@@ -41,6 +44,8 @@ namespace upsylon
             
 
         private:
+            Y_DISABLE_COPY_AND_ASSIGN(Engine);
+            
             Dispatcher  agent;
             template <typename FUNC>
             struct parameters

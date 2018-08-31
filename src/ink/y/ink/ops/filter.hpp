@@ -37,6 +37,7 @@ namespace upsylon
                 E.run(proxy);
             }
 
+
             //! find minimum value
             template <typename T> static inline
             T FindMin( const Pixmap<T> &source, Engine &E )
