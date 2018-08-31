@@ -35,7 +35,13 @@ namespace upsylon
 
             //! float to float
             static inline float FloatToFloat(const float x) throw() { return x; }
-            
+
+            //! closest byte
+            static inline uint8_t ClosestByte( const float x) throw() { return uint8_t(floorf(x+0.5f)); }
+
+            //! closest byte
+            static inline uint8_t ClosestFloat( const float x ) throw() { return x; }
+
 
             //! convert to float grey scale
             static inline float   GreyScaleF( const uint8_t r, const uint8_t g, const uint8_t b) throw()

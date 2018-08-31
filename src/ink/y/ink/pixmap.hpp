@@ -104,7 +104,16 @@ namespace upsylon
                 }
             }
 
-
+            inline void ld( param_type value )
+            {
+                for(size_t j=0;j<h;++j)
+                {
+                    for(size_t i=0;i<w;++i)
+                    {
+                        (*this)[j][i] = value;
+                    }
+                }
+            }
 
         private:
             Y_DISABLE_ASSIGN(Pixmap);
