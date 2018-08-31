@@ -20,7 +20,7 @@ namespace upsylon
             inline Tile( const Area &a ) : Area(a), cache() {}
 
             //! copy
-            inline Tile(const Tile &other) : Area(other), cache() {}
+            inline Tile(const Tile &other) : Area(other), cache() { assert(0==other.cache.size); }
 
             //!destructor
             inline virtual ~Tile() throw() {}

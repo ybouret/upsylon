@@ -32,13 +32,13 @@ namespace upsylon
 
             if( x > 0 )
             {
-                return __atan(y/x);
+                return REAL(atan)(y/x);
             }
             else
             {
                 if( x < 0 )
                 {
-                    return (y >= 0) ? __atan(y/x) + full_pi : __atan(y/x) - full_pi;
+                    return (y >= 0) ? REAL(atan)(y/x) + full_pi : REAL(atan)(y/x) - full_pi;
                 }
                 else
                 {

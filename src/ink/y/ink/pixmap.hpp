@@ -69,6 +69,12 @@ namespace upsylon
             //! frow access from bitmap rows, const
             inline const Row & operator[](const size_t y) const throw() { assert(y<h); return *(static_cast<Row *>(rows)+y); }
 
+            //! access by coordinate
+            inline type & operator[]( const coord p) throw() { assert(this->has(p)); return (*this)[p.y][p.x]; }
+
+            //! access by coordinate
+            inline const_type & operator[]( const coord p) const throw() { assert(this->has(p)); return (*this)[p.y][p.x]; }
+
             //! zero flux y
             inline unit_t zfy(const unit_t y) const throw()
             {

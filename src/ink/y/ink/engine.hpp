@@ -22,7 +22,7 @@ namespace upsylon
         {
         public:
             //! prototype for the use of functor
-            typedef functor<void,TL2(const Area &,lockable &)> Function;
+            typedef functor<void,TL2(const Tile &,lockable &)> Function;
 
             //! constructor, build tiles with shared from full
             explicit Engine(const Dispatcher &shared,

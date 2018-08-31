@@ -4,14 +4,29 @@
 #include "y/string/convert.hpp"
 #include "y/ink/stencil/delta.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 using namespace Ink;
+using namespace math;
 
 Y_UTEST(edges)
 {
     ImageIO   &img = Image::Init();
     Dispatcher par = new concurrent::simd();
+
+    {
+        ios::ocstream fp("probe.dat");
+        for(int a=0;a<3600;++a)
+        {
+            const float  theta = (a*numeric<float>::pi)/1800.0f;
+            const float  x0    =  cosf(theta);
+            const float  y0    =  sinf(theta);
+            const unit_t x = unit_t(  floorf( x0 + 0.5f ) );
+            const unit_t y = unit_t(  floorf( y0 + 0.5f ) );
+            fp("%g %g\n%g %g\n\n", x0,y0,double(x), double(y) );
+        }
+    }
 
     DeltaX<int> DX;
     DeltaY<int> DY;
@@ -41,11 +56,15 @@ Y_UTEST(edges)
 
         Edges edges(w,h);
         Filter::Apply(edges.pixels,src,RGBtoFloat,eng);
-        edges.compute_metrics(blur,dx,dy,eng);
+        edges.compute(blur,dx,dy,eng);
 
         Filter::Autoscale(edges.grad,Crux::FloatToFloat,eng);
         img.save("grad.png",edges.grad,0);
-        
+
+        Filter::Autoscale(edges.border,Crux::FloatToFloat,eng);
+        img.save("border.png",edges.border,0);
+
+
     }
 
 
