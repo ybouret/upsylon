@@ -40,7 +40,7 @@ namespace upsylon
             static inline uint8_t ClosestByte( const float x) throw() { return uint8_t(floorf(x+0.5f)); }
 
             //! closest byte
-            static inline uint8_t ClosestFloat( const float x ) throw() { return x; }
+            static inline float ClosestFloat( const float x ) throw() { return x; }
 
 
             //! convert to float grey scale
