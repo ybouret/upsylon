@@ -47,12 +47,12 @@ namespace upsylon
                     __find_min<T> proxy = { &source };
                     E.run(proxy);
                 }
-                const array<Tile> &zones = E.tiles;
+                const array<Tile::Pointer> &zones = E.tiles;
                 size_t n   = zones.size();
-                T      ans = zones[n].cache.get<T>();
+                T      ans = zones[n]->cache.get<T>();
                 for(--n;n>0;--n)
                 {
-                    const T tmp = zones[n].cache.get<T>();
+                    const T tmp = zones[n]->cache.get<T>();
                     if(tmp<ans) ans=tmp;
                 }
                 return ans;
@@ -67,12 +67,12 @@ namespace upsylon
                     __find_max<T> proxy = { &source };
                     E.run(proxy);
                 }
-                const array<Tile> &zones = E.tiles;
+                const array<Tile::Pointer> &zones = E.tiles;
                 size_t n   = zones.size();
-                T      ans = zones[n].cache.get<T>();
+                T      ans = zones[n]->cache.get<T>();
                 for(--n;n>0;--n)
                 {
-                    const T tmp = zones[n].cache.get<T>();
+                    const T tmp = zones[n]->cache.get<T>();
                     if(tmp>ans) ans=tmp;
                 }
                 return ans;
@@ -87,21 +87,21 @@ namespace upsylon
                     __find_min_max<T> proxy = { &source };
                     E.run(proxy);
                 }
-                const array<Tile> &zones = E.tiles;
+                const array<Tile::Pointer> &zones = E.tiles;
                 size_t n   = zones.size();
-                vmin = zones[n].cache.get<T>(0);
-                vmax = zones[n].cache.get<T>(1);
+                vmin = zones[n]->cache.get<T>(0);
+                vmax = zones[n]->cache.get<T>(1);
                 for(--n;n>0;--n)
                 {
                     {
-                        const T tmp = zones[n].cache.get<T>(0);
+                        const T tmp = zones[n]->cache.get<T>(0);
                         if(tmp<vmin)
                         {
                             vmin = tmp;
                         }
                     }
                     {
-                        const T tmp = zones[n].cache.get<T>(1);
+                        const T tmp = zones[n]->cache.get<T>(1);
                         if(vmax<tmp)
                         {
                             vmax = tmp;

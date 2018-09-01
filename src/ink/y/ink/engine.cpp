@@ -20,7 +20,7 @@ namespace upsylon
         {
             for(size_t i=tiles.size();i>0;--i)
             {
-                tiles[i].cache.acquire(n);
+                tiles[i]->cache.acquire(n);
             }
         }
     }

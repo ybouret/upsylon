@@ -4,6 +4,8 @@
 
 #include "y/ink/area.hpp"
 #include "y/memory/cslot.hpp"
+#include "y/ptr/counted.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace upsylon
 {
@@ -13,27 +15,26 @@ namespace upsylon
         typedef memory::cslot<memory::global> LocalMemory;
 
         //! a tile is an area with a memory cache
-        class Tile : public Area
+        class Tile : public Area, public counted
         {
         public:
+            typedef arc_ptr<Tile> Pointer;
+
             //! constructor
             inline Tile( const Area &a ) : Area(a), cache() {}
-
-            //! copy
-            inline Tile(const Tile &other) : Area(other), cache() { assert(0==other.cache.size); }
 
             //!destructor
             inline virtual ~Tile() throw() {}
 
-            mutable LocalMemory cache; //!< for parallel computation
+            mutable LocalMemory cache;
 
         private:
-            Y_DISABLE_ASSIGN(Tile);
+            Y_DISABLE_COPY_AND_ASSIGN(Tile);
         };
 
 
         //! sequence of tiles base type
-        typedef vector<Tile> __Tiles;
+        typedef vector<Tile::Pointer> __Tiles;
 
         //! areas for tiling
         class Tiles : public __Tiles
@@ -43,7 +44,7 @@ namespace upsylon
             inline virtual ~Tiles() throw() {}
 
             //! copy
-            inline          Tiles(const Tiles &other) : dynamic(), __Tiles( other ) {}
+            //inline          Tiles(const Tiles &other) : dynamic(), __Tiles( other ) {}
 
             //! create tiles
             Tiles( const Area &source, const size_t n);

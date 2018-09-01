@@ -17,10 +17,11 @@ namespace upsylon
             //! full empty
             if(w<=0||h<=0)
             {
-                const Area empty;
+                const Area          empty_area;
+                const Tile::Pointer empty_tile = new Tile(empty_area);
                 for(size_t r=0;r<n;++r)
                 {
-                    push_back(empty);
+                    push_back(empty_tile);
                 }
                 return;
             }
@@ -74,7 +75,7 @@ namespace upsylon
                     const coord l(x_offset,y_offset);
                     //const coord s(x_length,y_length);
                     const Area  a(l,x_length,y_length);
-                    const Tile  t(a);
+                    const Tile::Pointer  t = new Tile(a);
                     //std::cerr << "\t" << a.lower << "+" << a.sizes << "=" << a.pixels << std::endl;
                     push_back(t);
                 }

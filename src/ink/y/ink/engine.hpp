@@ -65,7 +65,7 @@ namespace upsylon
 
                 Engine     &self = *(p->self_p);
                 FUNC       &func = *(p->func_p);
-                const Tile &tile = self.tiles[ctx.indx];
+                const Tile &tile = *self.tiles[ctx.indx];
                 func(tile,sync);
             }
 

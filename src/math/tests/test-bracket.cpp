@@ -18,7 +18,8 @@ namespace
         for(size_t iter=0;iter<4;++iter)
         {
             std::cerr << "expand@iter=" << iter << std::endl;
-            triplet<T> x = { 10*alea.symm<T>(),x.a+1, -1 };
+            const T    x0= 10*alea.symm<T>();
+            triplet<T> x = { x0,x0+1, -1 };
             triplet<T> f = { F(x.a), F(x.b), -1 };
             bracket::expand(F<T>,x,f);
             std::cerr << "\tx=" << x << std::endl;

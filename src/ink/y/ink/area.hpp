@@ -24,10 +24,10 @@ namespace upsylon
             const size_t pixels; //!< w*h
 
             //! default area, origin
-            inline Area() throw() : lower(0,0), upper(0,0), w(1), h(1), pixels(1) {}
+            inline Area() throw() : Object(), lower(0,0), upper(0,0), w(1), h(1), pixels(1) {}
 
             //! copy
-            inline Area(const Area &other) throw() :
+            inline Area(const Area &other) throw() : Object(),
             lower(other.lower), upper(other.upper), w(other.w), h(other.h), pixels(other.pixels) {}
 
             //! destructor
@@ -36,6 +36,7 @@ namespace upsylon
             //! build by upper or by coordinates, never empty
             inline Area(const coord           l,
                         const coord           p) throw() :
+            Object(),
             lower(l),
             upper(p),
             w(0),
@@ -53,6 +54,7 @@ namespace upsylon
             inline Area(const coord           l,
                         const size_t          W,
                         const size_t          H) throw() :
+            Object(),
             lower(l),
             upper(l),
             w(W),
