@@ -110,6 +110,7 @@ namespace upsylon
                 }
             }
 
+            //! set all pixmap to same value
             inline void ld( param_type value )
             {
                 for(size_t j=0;j<h;++j)

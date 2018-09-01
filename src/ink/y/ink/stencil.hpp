@@ -14,11 +14,12 @@ namespace upsylon
         class Stencil : public Object, public counted
         {
         public:
-            const string name;
+            const string name; //!< identifier
 
             //! destructor
             inline virtual ~Stencil() throw() {}
 
+            //! set matrix size and fill values
             virtual void build( matrix<T> &m ) const = 0;
 
         protected:
@@ -29,6 +30,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Stencil);
         };
 
+        //! in place stencil implementation
 #define Y_INK_STENCIL_IMPL(NAME,CODE) \
 template <typename T> class NAME : public Stencil<T> {\
 public:\

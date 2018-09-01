@@ -8,20 +8,21 @@ namespace upsylon
 {
     namespace Ink
     {
-        //!
+        //! Histogram manipulation
         class Histogram : public Object
         {
         public:
-            static const size_t BINS = 256;
+            static const size_t BINS = 256; //!< 8-bit version
 
-            size_t bins[BINS];
+            size_t bins[BINS]; //!< bins with their count
 
-            explicit Histogram() throw();
-            virtual ~Histogram() throw();
+            explicit Histogram() throw(); //!< set bins to 0
+            virtual ~Histogram() throw(); //!< destructor
 
-            void reset() throw();
-            void append( const size_t *other_bins ) throw();
+            void reset() throw(); //!< set bins to 0
+            void append( const size_t *other_bins ) throw(); //!< low level append
 
+            //! build histogram with projection function
             template <typename T,typename FUNC>
             inline void build( const Pixmap<T> &source, FUNC &type2byte, Engine &E, const bool init=true )
             {

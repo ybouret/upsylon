@@ -1,6 +1,6 @@
 //! \file
 #ifndef Y_INK_BLUR_INCLUDED
-#define Y_INL_BLUR_INCLUDED 1
+#define Y_INK_BLUR_INCLUDED 1
 
 #include "y/ink/pixmaps.hpp"
 #include "y/container/matrix.hpp"
@@ -14,7 +14,9 @@ namespace upsylon
         class Blur : public Object
         {
         public:
+            //! destructor
             virtual ~Blur() throw();
+            //! Blur building
             explicit Blur(const float sig);
             const float    sigma;   //!< gaussian deviation
             const float    scale;   //!< 2*sigma^2
@@ -23,6 +25,7 @@ namespace upsylon
             matrix<float>  normal;  //!< counts*counts
             array<float>  &weight;  //!< counts
 
+            //! apply along X
             template <typename SCALAR,typename TCOLOR, typename SCOLOR, const size_t CHANNELS, typename F2T>
             inline void _applyX( Pixmap<TCOLOR> &target, const Pixmap<SCOLOR> &source, F2T &float2type, Engine &E) const
             {
@@ -30,6 +33,7 @@ namespace upsylon
                 E.run(proxy);
             }
 
+            //! apply along Y
             template <typename SCALAR,typename TCOLOR, typename SCOLOR, const size_t CHANNELS, typename F2T>
             inline void _applyY( Pixmap<TCOLOR> &target, const Pixmap<SCOLOR> &source, F2T &float2type, Engine &E) const
             {
@@ -37,6 +41,7 @@ namespace upsylon
                 E.run(proxy);
             }
 
+            //! source -> temp -> target
             template <typename SCALAR,typename TCOLOR, typename SCOLOR, const size_t CHANNELS, typename F2T>
             inline void _apply( Pixmap<TCOLOR> &target, Pixmap<TCOLOR> &temp, const Pixmap<SCOLOR> &source,F2T &float2type, Engine &E) const
             {
@@ -44,16 +49,19 @@ namespace upsylon
                 _applyY<SCALAR,TCOLOR,TCOLOR,CHANNELS,F2T>(target,temp,float2type,E);
             }
 
+            //! full RGB version
             void apply( Pixmap3 &target, Pixmap3 &temp, const Pixmap3 &source, Engine &E) const
             {
                 _apply<uint8_t,RGB,RGB,3>(target,temp,source,Crux::ClosestByte,E);
             }
 
+            //! full RGB(A) version
             void apply( Pixmap3 &target, Pixmap3 &temp, const Pixmap4 &source, Engine &E) const
             {
                 _apply<uint8_t,RGB,RGBA,3>(target,temp,source,Crux::ClosestByte,E);
             }
 
+            //! full float function
             void apply( PixmapF &target, PixmapF &temp, const PixmapF &source, Engine &E) const
             {
                 _apply<float,float,float,1>(target,temp,source,Crux::ClosestFloat,E);

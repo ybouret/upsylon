@@ -9,16 +9,19 @@ namespace upsylon
     namespace Ink
     {
 
+        //! Delta X
         Y_INK_STENCIL_IMPL(DeltaX,
                            m.make(1,3);
                            m[1][1] = -1; m[1][2] = 0; m[1][3] =  1;);
 
+        //! Delta Y
         Y_INK_STENCIL_IMPL(DeltaY,
                            m.make(3,1);
                            m[1][ 1] = -1;
                            m[2][ 1] =  0;
                            m[3][ 1] =  1);
 
+        //! Laplacian
         Y_INK_STENCIL_IMPL(Laplacian,
                            m.make(3,3);
                            m[1][1] = 0; m[1][2] =  1; m[1][3] = 0;

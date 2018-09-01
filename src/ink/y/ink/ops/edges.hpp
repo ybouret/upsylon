@@ -10,13 +10,17 @@ namespace upsylon
     namespace Ink
     {
 
+        //! Edges detector implementation
         class Edges : public Object
         {
         public:
+            //! constructor for a given size
             explicit Edges(const size_t W,
                            const size_t H);
+            //! desctructor
             virtual ~Edges() throw();
 
+            //! compute
             template <typename T>
             inline void compute(const Blur       *blur,
                                 const matrix<T> &dx,

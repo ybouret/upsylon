@@ -18,7 +18,7 @@ namespace upsylon
         class Tile : public Area, public counted
         {
         public:
-            typedef arc_ptr<Tile> Pointer;
+            typedef arc_ptr<Tile> Pointer; //!< shared pointer
 
             //! constructor
             inline Tile( const Area &a ) : Area(a), cache() {}
@@ -26,7 +26,7 @@ namespace upsylon
             //!destructor
             inline virtual ~Tile() throw() {}
 
-            mutable LocalMemory cache;
+            mutable LocalMemory cache; //!< extra local memory for temporary storage
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tile);

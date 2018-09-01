@@ -9,9 +9,11 @@ namespace upsylon
     namespace Ink
     {
 
+        //! operation on channels
         struct Channels
         {
 
+            //! split channels into target
             template <typename SCALAR,typename COLOR> static inline
             void Split(Pixmaps<SCALAR>     &target,
                        const Pixmap<COLOR> &source,
@@ -21,7 +23,7 @@ namespace upsylon
                 E.run(proxy);
             };
 
-
+        private:
             template <typename SCALAR,typename COLOR>
             struct __split
             {
