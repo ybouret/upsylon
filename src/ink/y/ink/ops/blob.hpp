@@ -53,6 +53,7 @@ namespace upsylon
                 // loop
                 //______________________________________________________________
                 Y_INK_AREA_LIMITS(*this);
+                size_t max_stack = 0;
                 for(unit_t y=ymax;y>=ymin;--y)
                 {
                     const typename Pixmap<T>::Row &P = pxm[y];
@@ -108,12 +109,14 @@ namespace upsylon
                                 if(self[q]>0)                continue; // already in blob
                                 vstack.store( vpool(q) );
                             }
+                            max_stack = max_of(max_stack,vstack.size);
                         }
                         
                     }
                 }
                 std::cerr << "blobs.count=" << count << std::endl;
                 std::cerr << "vpool.size =" << vpool.size << std::endl;
+                std::cerr << "max_stack  =" << max_stack << std::endl;
             }
 
 

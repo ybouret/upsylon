@@ -2,6 +2,7 @@
 #include "y/ink/image.hpp"
 #include "y/ink/ops/histogram.hpp"
 #include "y/utest/run.hpp"
+#include "y/ink/color/named-colors.hpp"
 
 using namespace upsylon;
 using namespace Ink;
@@ -26,10 +27,16 @@ Y_UTEST(blob)
         img.save("fg.png",fg,0);
 
         Blobs blobs(w,h);
-
+        
         blobs.build(fg,Connect4);
         
+        index_to_rgba proc;
+        img.save("blob4.png", blobs, proc, 0);
+        
+        blobs.build(fg,Connect8);
+        img.save("blob8.png", blobs, proc, 0);
 
+        
     }
 
 

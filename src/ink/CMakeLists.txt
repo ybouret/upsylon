@@ -11,7 +11,7 @@ SET(main_srcs ${main_decl} ${main_code})
 SOURCE_GROUP( ink FILES ${main_srcs} )
 INSTALL( FILES ${main_decl} DESTINATION include/y/ink )
 
-FILE(GLOB color_decl y/ink/color/*.hpp)
+FILE(GLOB color_decl y/ink/color/*.h??)
 FILE(GLOB color_code y/ink/color/*.cpp)
 SET(color_srcs ${color_decl} ${color_code})
 SOURCE_GROUP( color FILES ${color_srcs} )
@@ -45,7 +45,7 @@ ${stencil_srcs}
 )
 INSTALL( TARGETS y-ink ARCHIVE DESTINATION lib )
 
-ADD_EXECUTABLE(named-colors named-colors.cpp)
-TARGET_LINK_LIBRARIES(named-colors y)
+#ADD_EXECUTABLE(named-colors named-colors.cpp)
+#TARGET_LINK_LIBRARIES(named-colors y)
 
 ADD_SUBDIRECTORY(tests)
