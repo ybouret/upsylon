@@ -15,8 +15,8 @@ namespace upsylon
         {
             static const  T Zero;   //!< the zero value
             static const  T Opaque; //!< the opaque value
-            static inline T Copy( const T &C ) { return C; }
-            static T Inverse(const T &C);
+            static inline T Copy( const T &C ) { return C; } //!< copy function
+            static T Inverse(const T &C); //!< inverse function
         };
 
     }

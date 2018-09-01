@@ -14,8 +14,8 @@ namespace upsylon
         class Edges : public Pixmap1
         {
         public:
-            static const uint8_t Strong = 0xff;
-            static const uint8_t Weak   = 0x80;
+            static const uint8_t Strong = 0xff; //!< strong edge marker
+            static const uint8_t Weak   = 0x80; //!< weak edge marker
             
             //! constructor for a given size
             explicit Edges(const size_t W,

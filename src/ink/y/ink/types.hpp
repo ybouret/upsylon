@@ -53,6 +53,10 @@ namespace upsylon
             {
                 return Y_INK_F2B(GreyScaleF(r,g,b));
             }
+
+            //! 4+4 probe
+            static const coord Delta[8];
+
         };
 
         //! base class

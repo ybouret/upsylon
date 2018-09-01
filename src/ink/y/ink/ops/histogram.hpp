@@ -14,7 +14,7 @@ namespace upsylon
         public:
             typedef size_t count_t;             //!< bins content
             static  const  size_t   BINS = 256; //!< 8-bit version
-            static  const  size_t   BYTES = sizeof(count_t)*BINS;
+            static  const  size_t   BYTES = sizeof(count_t)*BINS; //!< for local engine memory
 
             count_t bins[BINS]; //!< bins with their count
 
@@ -106,6 +106,7 @@ namespace upsylon
 
         };
 
+        //! build pixmap from a threshold level
         struct Threshold
         {
             //! generic keep function
@@ -131,49 +132,40 @@ namespace upsylon
                 E.run(proxy);
             }
 
-            typedef bool (*AcceptProc)(const size_t,const size_t);
-            static inline bool __gt__( const size_t x, const size_t level) { return x>level;  }
-            static inline bool __geq__(const size_t x, const size_t level) { return x>=level; }
-            static inline bool __lt__( const size_t x, const size_t level) { return x<level;  }
-            static inline bool __leq__(const size_t x, const size_t level) { return x<=level; }
+            typedef bool (*AcceptProc)(const size_t,const size_t); //!< accept a pixel prototype
+            static inline bool __gt__( const size_t x, const size_t level) { return x>level;  } //!< true if x>level
+            static inline bool __geq__(const size_t x, const size_t level) { return x>=level; } //!< true if x>=level
+            static inline bool __lt__( const size_t x, const size_t level) { return x<level;  } //!< true if x<level
+            static inline bool __leq__(const size_t x, const size_t level) { return x<=level; } //!< true if x<=level
 
-            template <typename T, typename FUNC> static inline
+            //! Keep Foreground
+            template <typename T, typename FUNC, typename OP> static inline
             void Foreground(Pixmap<T>       &fg,
                             const Pixmap<T> &source,
                             FUNC            &func,
                             const size_t     level,
                             Engine          &E,
+                            OP              &op,
                             const bool       accept_strict=false)
             {
                 AcceptProc acc = __geq__;
                 if(accept_strict) acc = __gt__;
-                Keep(fg,source,func,acc,level,Pixel<T>::Copy,E);
+                Keep(fg,source,func,acc,level,op,E);
             }
 
-            template <typename T, typename FUNC> static inline
+            //! Keep Background
+            template <typename T, typename FUNC, typename OP> static inline
             void Background(Pixmap<T>       &fg,
                             const Pixmap<T> &source,
                             FUNC            &func,
                             const size_t     level,
                             Engine          &E,
+                            OP              &op,
                             const bool       accept_strict=false)
             {
                 AcceptProc acc = __leq__;
                 if(accept_strict) acc = __lt__;
-                Keep(fg,source,func,acc,level,Pixel<T>::Copy,E);
-            }
-
-            template <typename T, typename FUNC> static inline
-            void InverseBackground(Pixmap<T>       &fg,
-                                   const Pixmap<T> &source,
-                                   FUNC            &func,
-                                   const size_t     level,
-                                   Engine          &E,
-                                   const bool       accept_strict=false)
-            {
-                AcceptProc acc = __leq__;
-                if(accept_strict) acc = __lt__;
-                Keep(fg,source,func,acc,level,Pixel<T>::Inverse,E);
+                Keep(fg,source,func,acc,level,op,E);
             }
 
 

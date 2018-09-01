@@ -43,20 +43,26 @@ Y_UTEST(hist)
 
         Pixmap3 tgt3(w,h);
 
-        Threshold::Foreground(tgt3,img3,RGBtoByte,level,E);
-        img.save("fg_normal.png",tgt3,0);
-        Threshold::Foreground(tgt3,img3,RGBtoByte,level,E,true);
-        img.save("fg_strict.png",tgt3,0);
+        Threshold::Foreground(tgt3,img3,RGBtoByte,level,E,Pixel<RGB>::Copy);
+        img.save("fg_cpy_normal.png",tgt3,0);
+        Threshold::Foreground(tgt3,img3,RGBtoByte,level,E,Pixel<RGB>::Copy,true);
+        img.save("fg_cpy_strict.png",tgt3,0);
 
-        Threshold::Background(tgt3,img3,RGBtoByte,level,E);
-        img.save("bg_normal.png",tgt3,0);
-        Threshold::Background(tgt3,img3,RGBtoByte,level,E,true);
-        img.save("bg_strict.png",tgt3,0);
+        Threshold::Foreground(tgt3,img3,RGBtoByte,level,E,Pixel<RGB>::Inverse);
+        img.save("fg_inv_normal.png",tgt3,0);
+        Threshold::Foreground(tgt3,img3,RGBtoByte,level,E,Pixel<RGB>::Inverse,true);
+        img.save("fg_inv_strict.png",tgt3,0);
 
-        Threshold::InverseBackground(tgt3,img3,RGBtoByte,level,E);
-        img.save("ib_normal.png",tgt3,0);
-        Threshold::InverseBackground(tgt3,img3,RGBtoByte,level,E,true);
-        img.save("ib_strict.png",tgt3,0);
+        Threshold::Background(tgt3,img3,RGBtoByte,level,E,Pixel<RGB>::Copy);
+        img.save("bg_cpy_normal.png",tgt3,0);
+        Threshold::Background(tgt3,img3,RGBtoByte,level,E,Pixel<RGB>::Copy,true);
+        img.save("bg_cpy_strict.png",tgt3,0);
+
+        Threshold::Background(tgt3,img3,RGBtoByte,level,E,Pixel<RGB>::Inverse);
+        img.save("bg_inv_normal.png",tgt3,0);
+        Threshold::Background(tgt3,img3,RGBtoByte,level,E,Pixel<RGB>::Inverse,true);
+        img.save("bg_inv_strict.png",tgt3,0);
+
 
     }
 }

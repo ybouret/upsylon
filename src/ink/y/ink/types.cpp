@@ -15,6 +15,18 @@ namespace upsylon
             
         }
 
+        const coord Crux::Delta[8] =
+        {
+            coord( 1, 0),
+            coord( 0, 1),
+            coord(-1, 0),
+            coord( 0,-1),
+
+            coord( 1, 1),
+            coord(-1, 1),
+            coord(-1,-1),
+            coord( 1,-1)
+        };
 
 #if defined(U)
 #undef U

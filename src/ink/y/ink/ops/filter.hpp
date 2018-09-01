@@ -90,7 +90,7 @@ namespace upsylon
                 FindMinMax(vmin,vmax,source,E);
                 Rescale(source,vmin,vmax,float2type,E);
             }
-
+            
 
         private:
             template <typename T,typename U,typename FUNC>
