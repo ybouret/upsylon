@@ -12,7 +12,7 @@ namespace upsylon
         typedef point2d<unit_t> coord;
         //! complex type
         typedef complex<float>  cplx;
-        
+
         //! red weight
 #define Y_INK_R2GS 0.2126f
         //! green weight
@@ -69,7 +69,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Object);
         };
 
-        
+       
     }
 }
 

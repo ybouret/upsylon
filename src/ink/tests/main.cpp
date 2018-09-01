@@ -10,6 +10,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(ops);
     Y_UTEST(blur);
     Y_UTEST(hist);
+    Y_UTEST(blob);
     Y_UTEST(edges);
 }
 Y_UTEST_EXEC()

@@ -73,7 +73,13 @@ namespace upsylon
             //! Otsu's threshold
             size_t threshold() const throw();
 
-
+            template <typename T,typename FUNC> static inline
+            size_t Level(const Pixmap<T> &pxm, FUNC &func, Engine &E )
+            {
+                Histogram H;
+                H.build<T,FUNC>(pxm,func,E,true);
+                return H.threshold();
+            }
 
 
         private:
@@ -167,7 +173,7 @@ namespace upsylon
                 if(accept_strict) acc = __lt__;
                 Keep(fg,source,func,acc,level,op,E);
             }
-
+            
 
 
         private:

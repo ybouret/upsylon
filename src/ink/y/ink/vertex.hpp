@@ -1,0 +1,61 @@
+//! file
+#ifndef Y_INK_VERTEX_INCLUDED
+#define Y_INK_VERTEX_INCLUDED 1
+
+#include "y/ink/types.hpp"
+#include "y/core/pool.hpp"
+#include "y/core/list.hpp"
+
+namespace upsylon
+{
+    namespace Ink
+    {
+        //! dynamic vertex
+        class Vertex : public Object
+        {
+        public:
+            coord position; //!< x,y
+            Vertex *next;   //!< for list/pool
+            Vertex *prev;   //!< for list/pool
+            inline Vertex( const coord C ) throw() : Object(), position(C), next(0), prev(0) {}
+            inline Vertex(const Vertex &other) throw() : Object(), position(other.position), next(0), prev(0) {}
+            inline Vertex & operator=( Vertex &other ) throw()
+            {
+                position = other.position;
+                return *this;
+            }
+
+            typedef core::list_of_cpp<Vertex> List; //!< list of vertices
+            typedef core::pool_of_cpp<Vertex> PoolType; //!< pool of vertices
+            class Pool : public PoolType
+            {
+            public:
+                inline Pool() throw() : PoolType() {}
+                inline virtual ~Pool() throw() {}
+
+                Vertex * operator()(const coord pos)
+                {
+                    if(size>0)
+                    {
+                        Vertex *vtx = query();
+                        vtx->position = pos;
+                        return vtx;
+                    }
+                    else
+                    {
+                        return new Vertex(pos);
+                    }
+                }
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Pool);
+            };
+        };
+
+    }
+
+}
+
+#endif
+

@@ -12,6 +12,7 @@ ADD_TEST(Image   test-ink image)
 ADD_TEST(Ops     test-ink ops)
 ADD_TEST(Blur    test-ink blur)
 ADD_TEST(Hist    test-ink hist)
+ADD_TEST(Blob    test-ink blob)
 ADD_TEST(Edges   test-ink edges)
 
 
