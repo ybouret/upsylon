@@ -12,15 +12,17 @@ namespace upsylon
         class Histogram : public Object
         {
         public:
-            static const size_t BINS = 256; //!< 8-bit version
+            typedef size_t count_t;             //!< bins content
+            static  const  size_t   BINS = 256; //!< 8-bit version
+            static  const  size_t   BYTES = sizeof(count_t)*BINS;
 
-            size_t bins[BINS]; //!< bins with their count
+            count_t bins[BINS]; //!< bins with their count
 
             explicit Histogram() throw(); //!< set bins to 0
             virtual ~Histogram() throw(); //!< destructor
 
             void reset() throw(); //!< set bins to 0
-            void append( const size_t *other_bins ) throw(); //!< low level append
+            void append( const count_t *other_bins ) throw(); //!< low level append
 
             //! build histogram with projection function
             template <typename T,typename FUNC>
@@ -33,38 +35,36 @@ namespace upsylon
                 }
                 __build<T,FUNC> proxy = { &source, &type2byte };
                 E.run(proxy);
-                const Tiles &zones = E.tiles;
-                for(size_t i=zones.size();i>0;--i)
-                {
-                    const size_t *b = &(zones[i]->cache.get<size_t>());
-                    append(b);
-                }
+                append_from(E);
             }
 
+            //! append from local collection
+            void append_from( const Engine &E ) throw();
+
             //! zero-th order moment (total)
-            inline size_t moment0() const throw()
+            inline count_t moment0() const throw()
             {
-                size_t ans = 0;
+                count_t ans = 0;
                 for(size_t i=0;i<BINS;++i) ans += bins[i];
                 return ans;
             }
 
             //! first order moment
-            inline size_t moment1() const throw()
+            inline count_t moment1() const throw()
             {
-                size_t ans = 0;
+                count_t ans = 0;
                 for(size_t i=1;i<BINS;++i) ans += i*bins[i];
                 return ans;
             }
 
             //! both moment0 and moment1
-            inline void moments(size_t &mu0, size_t &mu1) const throw()
+            inline void moments(count_t &mu0, count_t &mu1) const throw()
             {
                 mu0 = bins[0];
                 mu1 = 0;
                 for(size_t i=1;i<BINS;++i)
                 {
-                    const size_t b = bins[i];
+                    const count_t b = bins[i];
                     mu0 += b;
                     mu1 += i*b;
                 }
@@ -90,7 +90,7 @@ namespace upsylon
                     assert(_func);
                     const Pixmap<T> &source = *_source;
                     FUNC            &func   = *_func;
-                    size_t          *b      = & tile.cache.get<size_t>();
+                    count_t         *b      = & tile.cache.get<count_t>();
                     Y_INK_AREA_LIMITS(tile);
                     for(unit_t y=ymax;y>=ymin;--y)
                     {

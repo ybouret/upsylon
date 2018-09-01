@@ -14,12 +14,24 @@ namespace upsylon
             reset();
         }
 
-        void Histogram:: append( const size_t *other_bins ) throw()
+        void Histogram:: append( const count_t *other_bins ) throw()
         {
             assert(other_bins);
             for(size_t i=0;i<BINS;++i)
             {
                 bins[i] += other_bins[i];
+            }
+        }
+
+        void Histogram:: append_from( const Engine &E ) throw()
+        {
+            const Tiles &zones = E.tiles;
+            for(size_t i=zones.size();i>0;--i)
+            {
+                LocalMemory &cache = zones[i]->cache;
+                assert(cache.size>=BYTES);
+                const count_t *b = & cache.get<count_t>();
+                append(b);
             }
         }
 

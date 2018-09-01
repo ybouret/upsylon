@@ -1,4 +1,5 @@
 #include "y/ink/ops/edges.hpp"
+#include "y/ink/ops/histogram.hpp"
 
 namespace upsylon
 {
@@ -9,22 +10,62 @@ namespace upsylon
         }
 
         Edges:: Edges( const size_t W, const size_t H ):
+        Pixmap1(W,H),
         pixels(W,H),
         grad_x(W,H),
         grad_y(W,H),
         grad(W,H),
         gmax(0),
         angle(W,H),
-        border(W,H),
         compute_metrics_func( this , & Edges::compute_metrics_call),
         analyze_borders_func( this , & Edges::analyze_borders_call)
         {
         }
 
+
+        namespace
+        {
+            struct __discriminate
+            {
+                Pixmap1 *_edges;
+                size_t   strongLevel;
+                size_t   weakLevel;
+
+                inline void operator()( const Area &area, lockable & )
+                {
+                    assert(_edges);
+
+                    Pixmap1 &edges = * _edges;
+                    Y_INK_AREA_LIMITS(area);
+
+                    for(unit_t y=ymax;y>=ymin;--y)
+                    {
+                        Pixmap1::Row &B = edges[y];
+                        for(unit_t x=xmax;x>xmin;--x)
+                        {
+                            const size_t level = B[x];
+                            if(level>=strongLevel)
+                            {
+                                B[x] = Edges::Strong;
+                            }
+                            else if(level>=weakLevel)
+                            {
+                                B[x] = Edges::Weak;
+                            }
+                            else
+                            {
+                                B[x] = 0;
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
         void Edges:: compute_with(Engine &E)
         {
             // initialize
-            E.acquire_all(sizeof(float));
+            E.acquire_all(Histogram::BYTES);
             gmax=0;
 
             // start to run
@@ -32,7 +73,19 @@ namespace upsylon
             gmax = E.get_max<float>();
             if(gmax>0)
             {
+                // ok, some borders are detected
+                Histogram H;
                 E.run(analyze_borders_func);
+                H.append_from(E);
+                const size_t thr = H.threshold();
+                const size_t sub   = thr>>1;
+                std::cerr << "Levels: " << thr << "," << sub << std::endl;
+                __discriminate proxy = { this, thr, sub };
+                E.run(proxy);
+            }
+            else
+            {
+                this->ld(0);
             }
         }
 
@@ -64,11 +117,14 @@ namespace upsylon
         void Edges:: analyze_borders_call(const Tile &area, lockable &)
         {
             Y_INK_AREA_LIMITS(area);
+            LocalMemory        &cache = area.cache; assert(cache.size>=Histogram::BYTES);
+            Histogram::count_t *bins  = & cache.get<Histogram::count_t>();
+            for(size_t i=0;i<Histogram::BINS;++i) bins[i] = 0;
             for(unit_t y=ymax;y>=ymin;--y)
             {
                 const PixmapF::Row &G  = grad[y];
                 const PixmapF::Row &A  = angle[y];
-                PixmapF::Row       &B  = border[y];
+                Pixmap1::Row       &B  = (*this)[y];
                 for(unit_t x=xmax;x>=xmin;--x)
                 {
                     const float g0 = G[x];
@@ -90,7 +146,8 @@ namespace upsylon
                     }
                     if( (g0>=gp) && (g0>=gn) )
                     {
-                        B[x] = g0/gmax;
+                        const uint8_t b    = Y_INK_F2B(g0/gmax);
+                        ++bins[ (B[x] = b) ];
                     }
                     else
                     {

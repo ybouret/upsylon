@@ -62,7 +62,7 @@ Y_UTEST(edges)
         img.save("grad.png",edges.grad,0);
 
         //Filter::Autoscale(edges.border,Crux::FloatToFloat,eng);
-        img.save("border.png",edges.border,0);
+        img.save("border.png",edges,0);
 
 
     }

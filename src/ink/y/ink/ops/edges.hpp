@@ -11,9 +11,12 @@ namespace upsylon
     {
 
         //! Edges detector implementation
-        class Edges : public Object
+        class Edges : public Pixmap1
         {
         public:
+            static const uint8_t Strong = 0xff;
+            static const uint8_t Weak   = 0x80;
+            
             //! constructor for a given size
             explicit Edges(const size_t W,
                            const size_t H);
@@ -47,7 +50,6 @@ namespace upsylon
             PixmapF grad;   //!< |grad|
             float   gmax;   //!< max|grad|
             PixmapF angle;  //!< angle of gradient
-            PixmapF border; //!< local mininum
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Edges);
