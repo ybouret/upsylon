@@ -13,8 +13,10 @@ namespace upsylon
         template <typename T>
         struct Pixel
         {
-            static const T Zero;   //!< the zero value
-            static const T Opaque; //!< the opaque value
+            static const  T Zero;   //!< the zero value
+            static const  T Opaque; //!< the opaque value
+            static inline T Copy( const T &C ) { return C; }
+            static T Inverse(const T &C);
         };
 
     }

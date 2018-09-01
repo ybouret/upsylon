@@ -20,5 +20,8 @@ namespace upsylon
         template <> const float    Pixel<float>::Zero    = 0.0f;
         template <> const double   Pixel<double>::Zero   = 0.0;
 
+        template <> uint8_t  Pixel<uint8_t>::Inverse(const uint8_t &x) { return 0xff-x; }
+        template <> float    Pixel<float>  ::Inverse(const float   &x) { return 1.0f-x; }
+
     }
 }
