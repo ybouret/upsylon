@@ -27,7 +27,7 @@ namespace upsylon
             inline virtual ~Tile() throw() {}
 
             mutable LocalMemory cache;
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tile);
         };
@@ -43,15 +43,12 @@ namespace upsylon
             //! destructor
             inline virtual ~Tiles() throw() {}
 
-            //! copy
-            //inline          Tiles(const Tiles &other) : dynamic(), __Tiles( other ) {}
-
             //! create tiles
             Tiles( const Area &source, const size_t n);
             
 
         private:
-            Y_DISABLE_ASSIGN(Tiles);
+            Y_DISABLE_COPY_AND_ASSIGN(Tiles);
         };
 
     }

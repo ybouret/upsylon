@@ -41,7 +41,68 @@ namespace upsylon
 
             //! local caches
             void acquire_all( const size_t n );
-            
+
+            //! get min of all local cache
+            template <typename T>
+            inline T get_min() const
+            {
+                assert(tiles.size()>0);
+                size_t n = tiles.size();
+                T ans = tiles[n]->cache.get<T>();
+                for(--n;n>0;--n)
+                {
+                    const T tmp = tiles[n]->cache.get<T>();
+                    if(tmp<ans)
+                    {
+                        ans = tmp;
+                    }
+                }
+                return ans;
+            }
+
+            //! get max of all local cache
+            template <typename T>
+            inline T get_max() const
+            {
+                assert(tiles.size()>0);
+                size_t n = tiles.size();
+                T ans = tiles[n]->cache.get<T>();
+                for(--n;n>0;--n)
+                {
+                    const T tmp = tiles[n]->cache.get<T>();
+                    if(tmp>ans)
+                    {
+                        ans = tmp;
+                    }
+                }
+                return ans;
+            }
+
+            //! get min/max of all local cache
+            template <typename T>
+            inline void get_min_max( T &vmin, T &vmax) const
+            {
+                assert(tiles.size()>0);
+                size_t n = tiles.size();
+                vmin = vmax  = tiles[n]->cache.get<T>();
+                for(--n;n>0;--n)
+                {
+                    {
+                        const T tmp = tiles[n]->cache.get<T>(0);
+                        if(tmp<vmin)
+                        {
+                            vmin = tmp;
+                        }
+                    }
+                    {
+                        const T tmp = tiles[n]->cache.get<T>(1);
+                        if(tmp>vmax)
+                        {
+                            vmax = tmp;
+                        }
+                    }
+                }
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Engine);
