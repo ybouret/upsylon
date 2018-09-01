@@ -45,4 +45,7 @@ ${stencil_srcs}
 )
 INSTALL( TARGETS y-ink ARCHIVE DESTINATION lib )
 
+ADD_EXECUTABLE(named-colors named-colors.cpp)
+TARGET_LINK_LIBRARIES(named-colors y)
+
 ADD_SUBDIRECTORY(tests)

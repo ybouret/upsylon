@@ -3,6 +3,7 @@
 #define Y_STRING_TOKENIZER_INCLUDED 1
 
 #include "y/string.hpp"
+#include "y/container/sequence.hpp"
 
 namespace upsylon
 {
@@ -72,6 +73,21 @@ namespace upsylon
 
         //! direct conversion to string
         inline core::string<T> to_string(void) const { return core::string<T>( token_, units_); }
+
+        template <typename FUNC> static inline
+        size_t split(sequence< core::string<T> > &words,
+                     const core::string<T>       &input,
+                     FUNC                        &is_sep)
+        {
+            words.free();
+            tokenizer tkn(input);
+            while(tkn.next(is_sep))
+            {
+                const core::string<T> s( tkn.token_, tkn.units_ );
+                words.push_back(s);
+            }
+            return words.size();
+        }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(tokenizer);
