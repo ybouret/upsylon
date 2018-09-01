@@ -5,6 +5,8 @@
 #include "y/ink/stencil/delta.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/ink/color/named-colors.hpp"
+
 
 using namespace upsylon;
 using namespace Ink;
@@ -63,7 +65,9 @@ Y_UTEST(edges)
 
         //Filter::Autoscale(edges.border,Crux::FloatToFloat,eng);
         img.save("border.png",edges,0);
-
+        
+        index_to_rgba proc;
+        img.save("eblobs.png", edges.blobs, proc, 0);
 
     }
 

@@ -17,6 +17,7 @@ namespace upsylon
         grad(W,H),
         gmax(0),
         angle(W,H),
+        blobs(W,H),
         compute_metrics_func( this , & Edges::compute_metrics_call),
         analyze_borders_func( this , & Edges::analyze_borders_call)
         {
@@ -41,14 +42,14 @@ namespace upsylon
                     for(unit_t y=ymax;y>=ymin;--y)
                     {
                         Pixmap1::Row &B = edges[y];
-                        for(unit_t x=xmax;x>xmin;--x)
+                        for(unit_t x=xmax;x>=xmin;--x)
                         {
                             const size_t level = B[x];
                             if(level>=strongLevel)
                             {
                                 B[x] = Edges::Strong;
                             }
-                            else if(level>=weakLevel)
+                            else if(level>weakLevel)
                             {
                                 B[x] = Edges::Weak;
                             }
@@ -73,7 +74,7 @@ namespace upsylon
             gmax = E.get_max<float>();
             if(gmax>0)
             {
-                // ok, some borders are detected
+                // ok, some borders are detected: find significant levels
                 Histogram H;
                 E.run(analyze_borders_func);
                 H.append_from(E);
@@ -82,6 +83,11 @@ namespace upsylon
                 std::cerr << "Levels: " << thr << "," << sub << std::endl;
                 __discriminate proxy = { this, thr, sub };
                 E.run(proxy);
+                
+                // find borders blobs !
+                blobs.build(*this,Connect8);
+                
+                
             }
             else
             {

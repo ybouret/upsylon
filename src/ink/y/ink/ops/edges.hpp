@@ -4,6 +4,7 @@
 
 #include "y/ink/ops/blur.hpp"
 #include "y/ink/ops/filter.hpp"
+#include "y/ink/ops/blob.hpp"
 
 namespace upsylon
 {
@@ -50,7 +51,8 @@ namespace upsylon
             PixmapF grad;   //!< |grad|
             float   gmax;   //!< max|grad|
             PixmapF angle;  //!< angle of gradient
-
+            Blobs   blobs;  //!< for reconnection
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Edges);
             Engine::Function compute_metrics_func;
