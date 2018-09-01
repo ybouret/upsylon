@@ -41,6 +41,7 @@ namespace upsylon
             PixmapF grad_x; //!< grad_x
             PixmapF grad_y; //!< grad_y
             PixmapF grad;   //!< |grad|
+            float   gmax;   //!< max|grad|
             PixmapF angle;  //!< angle of gradient
             PixmapF border; //!< local mininum
 

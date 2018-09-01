@@ -61,7 +61,7 @@ Y_UTEST(edges)
         Filter::Autoscale(edges.grad,Crux::FloatToFloat,eng);
         img.save("grad.png",edges.grad,0);
 
-        Filter::Autoscale(edges.border,Crux::FloatToFloat,eng);
+        //Filter::Autoscale(edges.border,Crux::FloatToFloat,eng);
         img.save("border.png",edges.border,0);
 
 

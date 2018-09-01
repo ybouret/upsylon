@@ -13,6 +13,7 @@ namespace upsylon
         grad_x(W,H),
         grad_y(W,H),
         grad(W,H),
+        gmax(0),
         angle(W,H),
         border(W,H),
         compute_metrics_func( this , & Edges::compute_metrics_call),
@@ -22,9 +23,17 @@ namespace upsylon
 
         void Edges:: compute_with(Engine &E)
         {
+            // initialize
             E.acquire_all(sizeof(float));
+            gmax=0;
+
+            // start to run
             E.run(compute_metrics_func);
-            E.run(analyze_borders_func);
+            gmax = E.get_max<float>();
+            if(gmax>0)
+            {
+                E.run(analyze_borders_func);
+            }
         }
 
         void Edges:: compute_metrics_call(const Tile &tile, lockable &)
@@ -81,7 +90,7 @@ namespace upsylon
                     }
                     if( (g0>=gp) && (g0>=gn) )
                     {
-                        B[x] = g0;
+                        B[x] = g0/gmax;
                     }
                     else
                     {
