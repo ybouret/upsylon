@@ -17,7 +17,9 @@ namespace upsylon
             const coord position; //!< x,y
             Vertex *next;   //!< for list/pool
             Vertex *prev;   //!< for list/pool
+            //! initialize
             inline Vertex( const coord C ) throw() : Object(), position(C), next(0), prev(0) {}
+            //! copy
             inline Vertex(const Vertex &other) throw() : Object(), position(other.position), next(0), prev(0) {}
 
 
@@ -28,9 +30,10 @@ namespace upsylon
             class Pool : public PoolType
             {
             public:
-                inline Pool() throw() : PoolType() {}
-                inline virtual ~Pool() throw() {}
+                inline Pool() throw() : PoolType() {} //!< constructor
+                inline virtual ~Pool() throw() {}     //!< destructor
 
+                //! query/create and construct a vertex for pos
                 Vertex * operator()(const coord pos)
                 {
                     if(size>0)

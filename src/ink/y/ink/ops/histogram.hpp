@@ -73,6 +73,7 @@ namespace upsylon
             //! Otsu's threshold
             size_t threshold() const throw();
 
+            //! Otsu's level computing
             template <typename T,typename FUNC> static inline
             size_t Level(const Pixmap<T> &pxm, FUNC &func, Engine &E )
             {

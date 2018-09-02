@@ -6,6 +6,7 @@
 
 namespace upsylon
 {
+    //! careful sum of types to minimize underflow
     template <typename T>
     inline T sorted_sum( array<T> &arr )
     {

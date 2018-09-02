@@ -114,6 +114,7 @@ namespace upsylon
 
 
 #include "filter/average.hxx"
+            //! replace pixel by the average of itself and its neighbors
             template <typename T> static inline
             void Average( Pixmap<T> &target, const Pixmap<T> &source, Engine &E)
             {
@@ -121,6 +122,7 @@ namespace upsylon
                 E.run(proxy);
             }
 
+            //! replace pixel by the median of itself and its neighbors
             template <typename T> static inline
             void Median( Pixmap<T> &target, const Pixmap<T> &source, Engine &E)
             {
@@ -128,6 +130,7 @@ namespace upsylon
                 E.run(proxy);
             }
 
+            //! replace pixel by the minimum value of itself and its neighbors
             template <typename T> static inline
             void Erode( Pixmap<T> &target, const Pixmap<T> &source, Engine &E)
             {
@@ -135,6 +138,7 @@ namespace upsylon
                 E.run(proxy);
             }
 
+            //! replace pixel by the maximum value of itself and its neighbors
             template <typename T> static inline
             void Dilate( Pixmap<T> &target, const Pixmap<T> &source, Engine &E)
             {

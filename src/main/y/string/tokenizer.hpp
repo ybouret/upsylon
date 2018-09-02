@@ -74,6 +74,7 @@ namespace upsylon
         //! direct conversion to string
         inline core::string<T> to_string(void) const { return core::string<T>( token_, units_); }
 
+        //! automatic splitting of a line
         template <typename FUNC> static inline
         size_t split(sequence< core::string<T> > &words,
                      const core::string<T>       &input,

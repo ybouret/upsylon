@@ -18,6 +18,7 @@ namespace upsylon
         gmax(0),
         angle(W,H),
         blobs(W,H),
+        particles(),
         compute_metrics_func( this , & Edges::compute_metrics_call),
         analyze_borders_func( this , & Edges::analyze_borders_call)
         {

@@ -21,7 +21,8 @@ namespace upsylon
             static        bool IsZero(const T &C);                       //!< test if is zero pixel
             static        T    Average(T *arr, const size_t num);        //!< average of pixels
             static        int  Compare(const T &lhs, const T &rhs);      //!< comparison
-            //! Median value
+
+            //! median value
             static inline T    Median(T *arr,const size_t num)
             {
                 switch(num)
@@ -47,6 +48,8 @@ namespace upsylon
                     return Pixel<T>::Average(arr+((num>>1)-1),2);
                 }
             }
+
+            //! minimum value of items
             static inline T Erode(T *arr,const size_t num)
             {
                 assert(num>0);
@@ -62,6 +65,7 @@ namespace upsylon
                 return ans;
             }
 
+            //! maximum value of items
             static inline T Dilate(T *arr,const size_t num)
             {
                 assert(num>0);

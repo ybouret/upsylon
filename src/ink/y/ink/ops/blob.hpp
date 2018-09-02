@@ -10,24 +10,27 @@ namespace upsylon
     namespace Ink
     {
 
+        //! Probing level
         enum Connectivity
         {
-            Connect4,
-            Connect8
+            Connect4, //!< four  neighbors
+            Connect8  //!< eight neighbors
         };
 
-        typedef Pixmap<size_t> __Blobs; //!< blob base type
-        typedef Particle<size_t> Blob;
+        typedef Pixmap<size_t>   __Blobs; //!< blob base type
+        typedef Particle<size_t> Blob;    //!< Particle with an index tag
 
+        //! Build blobs map and particle
         class Blobs : public __Blobs
         {
         public:
 
             virtual ~Blobs() throw(); //!< destructor
+            explicit Blobs(const size_t W, size_t H);  //!< constructor
 
-            explicit Blobs(const size_t W, size_t H);
 
-            size_t count; //!< current number of blobs
+            size_t       count; //!< current number of blobs
+            Vertex::Pool vpool; //!< pool of reusable vertices
 
             //! build the blobs
             template <typename T>
@@ -124,10 +127,9 @@ namespace upsylon
                 //______________________________________________________________
                 particles.sort();
                 rewrite(particles,false);
-                std::cerr << "blobs.count=" << count << std::endl;
-                std::cerr << "vpool.size =" << vpool.size << std::endl;
             }
 
+            //! tranform particles into blob map, with optional reset of map
             inline void rewrite( const Blob::List &particles, const bool reset=true ) throw()
             {
                 Blobs &self = *this;
@@ -144,7 +146,6 @@ namespace upsylon
             }
 
 
-            Vertex::Pool vpool;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blobs);

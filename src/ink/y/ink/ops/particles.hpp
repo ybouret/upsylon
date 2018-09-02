@@ -10,6 +10,7 @@ namespace upsylon
 {
     namespace Ink
     {
+        //! a particle is a list of vertices
         template <typename T>
         class Particle : public Object, public Vertex::List
         {
@@ -46,15 +47,18 @@ namespace upsylon
                 return comparison::decreasing(lhs->size,rhs->size);
             }
 
+            //! base class for particles list
             typedef core::list_of_cpp<Particle> ListType;
 
+            //! a list of particle
             class List : public ListType
             {
             public:
-                inline explicit List() throw() : ListType() {}
-                inline virtual ~List() throw() {}
-                inline List(const List &other) : ListType(other) {}
+                inline explicit List() throw() : ListType() {}      //!< constructor
+                inline virtual ~List() throw() {}                   //!< desctructor
+                inline List(const List &other) : ListType(other) {} //!< copy
 
+                //! sort by decreasing sizes
                 inline void sort()
                 {
                     merging<Particle>::sort( *this, Particle::CompareBySize, NULL);

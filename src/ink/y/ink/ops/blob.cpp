@@ -11,7 +11,8 @@ namespace upsylon
 
         Blobs:: Blobs(const size_t W, const size_t H) :
         __Blobs(W,H),
-        count(0)
+        count(0),
+        vpool()
         {
         }
         
