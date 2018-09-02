@@ -8,13 +8,13 @@ namespace upsylon
         "0","1","2","3","4","5","6","7",
         "8","9","a","b","c","d","e","f"
     };
-
+    
     const char *hexadecimal::uppercase_word[16] =
     {
         "0","1","2","3","4","5","6","7",
         "8","9","A","B","C","D","E","F"
     };
-
+    
     const char *hexadecimal::lowercase[256] =
     {
         "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "0a", "0b", "0c", "0d", "0e", "0f",
@@ -34,7 +34,7 @@ namespace upsylon
         "e0", "e1", "e2", "e3", "e4", "e5", "e6", "e7", "e8", "e9", "ea", "eb", "ec", "ed", "ee", "ef",
         "f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "fa", "fb", "fc", "fd", "fe", "ff"
     };
-
+    
     const char *hexadecimal::uppercase[256] =
     {
         "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "0A", "0B", "0C", "0D", "0E", "0F",
@@ -54,7 +54,7 @@ namespace upsylon
         "E0", "E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "EA", "EB", "EC", "ED", "EE", "EF",
         "F0", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "FA", "FB", "FC", "FD", "FE", "FF"
     };
-
+    
     const char * hexadecimal:: address(const void *ptr) throw()
     {
         static char  buf[ 4*sizeof(void*) ];
@@ -68,7 +68,7 @@ namespace upsylon
         }
         return buf;
     }
-
+    
     int hexadecimal::to_decimal(const char h) throw()
     {
         switch(h)
@@ -83,32 +83,32 @@ namespace upsylon
             case '7': return 7;
             case '8': return 8;
             case '9': return 9;
-
+                
             case 'a':
             case 'A': return 10;
-
+                
             case 'b':
             case 'B': return 11;
-
+                
             case 'c':
             case 'C': return 12;
-
+                
             case 'd':
             case 'D': return 13;
-
+                
             case 'e':
             case 'E': return 14;
-
+                
             case 'f':
             case 'F': return 15;
-
-
+                
+                
             default:
                 break;
         }
         return -1;
     }
-
+    
     const char *visible_char[256] =
     {
         "NUL", "SOH", "STX", "ETX", "EOT", "ENQ", "ACK", "BEL", "BS", "HT", "LF",   "VT",  "FF", "CR", "SO", "SI",
@@ -128,6 +128,6 @@ namespace upsylon
         "0xe0", "0xe1", "0xe2", "0xe3", "0xe4", "0xe5", "0xe6", "0xe7", "0xe8", "0xe9", "0xea", "0xeb", "0xec", "0xed", "0xee", "0xef",
         "0xf0", "0xf1", "0xf2", "0xf3", "0xf4", "0xf5", "0xf6", "0xf7", "0xf8", "0xf9", "0xfa", "0xfb", "0xfc", "0xfd", "0xfe", "0xff"
     };
-
-
+    
+    
 }
