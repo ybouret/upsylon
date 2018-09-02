@@ -43,7 +43,10 @@ namespace upsylon
                 ave.a += float(C.a);
 
             }
-            return RGBA( floorf(ave.r/num+0.5f), floorf(ave.g/num+0.5f), floorf(ave.b/num+0.5f), floorf(ave.a/num+0.5f) );
+            return RGBA(uint8_t(floorf(ave.r/num+0.5f)), 
+						uint8_t(floorf(ave.g/num+0.5f)),
+						uint8_t(floorf(ave.b/num+0.5f)),
+						uint8_t(floorf(ave.a/num+0.5f)) );
         }
 
         template <> int Pixel<RGB>:: Compare( const RGB &lhs, const RGB &rhs )

@@ -9,7 +9,7 @@ using namespace Ink;
 
 Y_UTEST(blur)
 {
-    for(float sig=0.1;sig<=5.0;sig+=0.1)
+    for(float sig=0.1f;sig<=5.0f;sig+=0.1f)
     {
         const Blur blur(sig);
         std::cerr << "blur.sigma=" << blur.sigma << "#=" << blur.length << blur.weight << std::endl;
