@@ -60,8 +60,8 @@ Y_UTEST_DONE()
 Y_UTEST(fit_conic)
 {
     list<point> points;
-    const double ra = 1 + alea.leq(100);
-    const double rb = 1 + alea.leq(100);
+    const double ra = 1 + double(alea.leq(100));
+    const double rb = 1 + double(alea.leq(100));
     const point2d<double> center( 10 * alea.symm<double>(), 10 * alea.symm<double>() );
     for(size_t n=10;n>0;--n)
     {
