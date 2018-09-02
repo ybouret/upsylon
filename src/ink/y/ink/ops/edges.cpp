@@ -67,6 +67,8 @@ namespace upsylon
         void Edges:: compute_with(Engine &E)
         {
             // initialize
+            particles.clear();
+            ld(0);
             E.acquire_all(Histogram::BYTES);
             gmax=0;
 
@@ -129,10 +131,7 @@ namespace upsylon
                 }
 
             }
-            else
-            {
-                this->ld(0);
-            }
+            
         }
 
         void Edges:: compute_metrics_call(const Tile &tile, lockable &)
