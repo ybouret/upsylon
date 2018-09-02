@@ -3,6 +3,7 @@
 #define Y_INK_PIXEL_INCLUDED 1
 
 #include "y/ink/types.hpp"
+#include "y/sort/heap.hpp"
 
 namespace upsylon
 {
@@ -18,7 +19,63 @@ namespace upsylon
             static inline T    Copy( const T &C ) { return C; }          //!< copy function
             static        T    Inverse(const T &C);                      //!< inverse function
             static        bool IsZero(const T &C);                       //!< test if is zero pixel
-            static        T    Average( const T *arr, const size_t num); //!< average of pixels
+            static        T    Average(T *arr, const size_t num);        //!< average of pixels
+            static        int  Compare(const T &lhs, const T &rhs);      //!< comparison
+            //! Median value
+            static inline T    Median(T *arr,const size_t num)
+            {
+                switch(num)
+                {
+                    case 0: return Pixel<T>::Zero;
+                    case 1: return arr[0];
+                    default:
+                        break;
+                }
+                assert(num>=2);
+                {
+                    lightweight_array<T> ra(arr,num);
+                    hsort(ra,Pixel<T>::Compare);
+                }
+                if( (num&1) != 0 )
+                {
+                    // odd
+                    return arr[num>>1];
+                }
+                else
+                {
+                    // even
+                    return Pixel<T>::Average(arr+((num>>1)-1),2);
+                }
+            }
+            static inline T Erode(T *arr,const size_t num)
+            {
+                assert(num>0);
+                T ans = arr[0];
+                for(size_t i=1;i<num;++i)
+                {
+                    const T tmp = arr[i];
+                    if( Compare(tmp,ans) < 0 )
+                    {
+                        ans = tmp;
+                    }
+                }
+                return ans;
+            }
+
+            static inline T Dilate(T *arr,const size_t num)
+            {
+                assert(num>0);
+                T ans = arr[0];
+                for(size_t i=1;i<num;++i)
+                {
+                    const T tmp = arr[i];
+                    if( Compare(tmp,ans) > 0 )
+                    {
+                        ans = tmp;
+                    }
+                }
+                return ans;
+            }
         };
 
     }

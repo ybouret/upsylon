@@ -15,6 +15,7 @@ namespace upsylon
         class Filter
         {
         public:
+#include "filter/apply.hxx"
             //! target = func(source), with an engine
             template <typename T,typename U,typename FUNC> static inline
             void Apply(Pixmap<T>       &target,
@@ -22,10 +23,11 @@ namespace upsylon
                        FUNC            &func,
                        Engine          &E)
             {
-                parameters<T,U,FUNC> proxy = { &target, &source, &func };
+                __apply<T,U,FUNC> proxy = { &target, &source, &func };
                 E.run(proxy);
             }
 
+#include "filter/stencil.hxx"
             //! apply a matrix as a stencil
             template <typename T, typename U> static inline
             void Stencil(Pixmap<float>   &target,
@@ -33,11 +35,12 @@ namespace upsylon
                          const matrix<U> &block,
                          Engine          &E)
             {
-                block_parameters<T,U> proxy = { &target, &source, &block };
+                __stencil<T,U> proxy = { &target, &source, &block };
                 E.run(proxy);
             }
 
 
+#include "filter/min-max.hxx"
             //! find minimum value
             template <typename T> static inline
             T FindMin( const Pixmap<T> &source, Engine &E )
@@ -74,6 +77,7 @@ namespace upsylon
                 return E.get_min_max(vmin,vmax);
             }
 
+#include "filter/rescale.hxx"
             //! rescale using vmin and vmax, and a conversion: unit float to T
             template <typename T, typename F2T> static inline
             void Rescale( Pixmap<T> &source, const T vmin, const T vmax, F2T &float2type, Engine &E)
@@ -109,222 +113,38 @@ namespace upsylon
             }
 
 
-        private:
-            template <typename T,typename U,typename FUNC>
-            struct parameters
+#include "filter/average.hxx"
+            template <typename T> static inline
+            void Average( Pixmap<T> &target, const Pixmap<T> &source, Engine &E)
             {
-                Pixmap<T>       *_target;
-                const Pixmap<U> *_source;
-                FUNC            *_func;
+                __collect<T> proxy = { &target, &source, Pixel<T>::Average };
+                E.run(proxy);
+            }
 
-                inline void operator()(const Area &tile, lockable &)
-                {
-                    assert(_target);
-                    assert(_source);
-                    assert(_func);
-                    Pixmap<T>       &target = * _target;
-                    const Pixmap<U> &source = * _source;
-                    FUNC            &func   = * _func;
-                    Y_INK_AREA_LIMITS(tile);
-
-                    for(unit_t y=ymax;y>=ymin;--y)
-                    {
-                        typename       Pixmap<T>::Row &tgt = target[y];
-                        const typename Pixmap<U>::Row &src = source[y];
-                        for(unit_t x=xmax;x>=xmin;--x)
-                        {
-                            tgt[x] = func(src[x]);
-                        }
-                    }
-                }
-            };
-
-            template <typename T, typename U>
-            struct block_parameters
+            template <typename T> static inline
+            void Median( Pixmap<T> &target, const Pixmap<T> &source, Engine &E)
             {
-                Pixmap<float>   *_target;
-                const Pixmap<T> *_source;
-                const matrix<U> *_block;
+                __collect<T> proxy = { &target, &source, Pixel<T>::Median };
+                E.run(proxy);
+            }
 
-                inline void operator()(const Tile &zone, lockable &)
-                {
-                    assert(_target);assert(_source);assert(_block);
-                    if(zone.pixels)
-                    {
-                        Pixmap<float>   &target = * _target;
-                        const Pixmap<T> &source = * _source;
-                        const matrix<U> &block  = * _block;
-
-                        const unit_t mx = unit_t(block.cols);
-                        const unit_t my = unit_t(block.rows);
-                        const unit_t dx = (mx-1)/2;
-                        const unit_t dy = (my-1)/2;
-                        Y_INK_AREA_LIMITS(zone);
-                        for(unit_t y=ymax;y>=ymin;--y)
-                        {
-                            Pixmap<float>::Row            &tgt = target[y];
-                            const unit_t local_y=y-dy;
-                            for(unit_t x=xmax;x>=xmin;--x)
-                            {
-                                float ans = 0;
-                                const unit_t local_x=x-dx;
-                                for(unit_t iy=1,ly=local_y;iy<=my;++iy,++ly)
-                                {
-                                    const unit_t                   zfy   = source.zfy(ly);
-                                    const typename Pixmap<T>::Row &src_y = source[ zfy ];
-                                    const array<U>                &blk_y = block[iy];
-                                    for(unit_t ix=1,lx=local_x;ix<=mx;++ix,++lx)
-                                    {
-                                        const unit_t zfx = source.zfx(lx);
-                                        const float  b   = float(blk_y[ix]);
-                                        const float  s   = float(src_y[zfx]);
-                                        ans += b*s;
-                                    }
-                                }
-                                tgt[x] = ans;
-                            }
-                        }
-                    }
-                }
-            };
-
-            template <typename T>
-            struct __find_min
+            template <typename T> static inline
+            void Erode( Pixmap<T> &target, const Pixmap<T> &source, Engine &E)
             {
-                const Pixmap<T> *_source;
+                __collect<T> proxy = { &target, &source, Pixel<T>::Erode };
+                E.run(proxy);
+            }
 
-                inline void operator()( const Tile &zone, lockable &)
-                {
-                    assert(_source);
-                    if(zone.pixels)
-                    {
-                        const Pixmap<T> &source = * _source;
-                        Y_INK_AREA_LIMITS(zone);
-
-
-                        T vmin = source[ymin][xmin];
-                        for(unit_t y=ymax;y>=ymin;--y)
-                        {
-                            const typename Pixmap<T>::Row &tgt = source[y];
-                            for(unit_t x=xmax;x>=xmin;--x)
-                            {
-                                const T v = tgt[x];
-                                if(v<vmin) vmin = v;
-                            }
-                        }
-                        zone.cache.get<float>(0) = vmin;
-                    }
-                }
-            };
-
-            template <typename T>
-            struct __find_max
+            template <typename T> static inline
+            void Dilate( Pixmap<T> &target, const Pixmap<T> &source, Engine &E)
             {
-                const Pixmap<T> *_source;
-
-                inline void operator()( const Tile &zone, lockable &)
-                {
-                    assert(_source);
-                    if(zone.pixels)
-                    {
-                        const Pixmap<T> &source = * _source;
-                        Y_INK_AREA_LIMITS(zone);
-                        T vmax = source[ymin][xmin];
-                        for(unit_t y=ymax;y>=ymin;--y)
-                        {
-                            const typename Pixmap<T>::Row &tgt = source[y];
-                            for(unit_t x=xmax;x>=xmin;--x)
-                            {
-                                const T v = tgt[x];
-                                if(v>vmax) vmax= v;
-                            }
-                        }
-                        zone.cache.get<float>(0) = vmax;
-                    }
-                }
-            };
-
-            template <typename T>
-            struct __find_min_max
-            {
-                const Pixmap<T> *_source;
-
-                inline void operator()( const Tile &zone, lockable &)
-                {
-                    assert(_source);
-                    if(zone.pixels)
-                    {
-                        const Pixmap<T> &source = * _source;
-                        Y_INK_AREA_LIMITS(zone);
-                        T vmax = source[ymin][xmin], vmin=vmax;
-                        for(unit_t y=ymax;y>=ymin;--y)
-                        {
-                            const typename Pixmap<T>::Row &tgt = source[y];
-                            for(unit_t x=xmax;x>=xmin;--x)
-                            {
-                                const T v = tgt[x];
-                                if(vmax<v)      vmax=v;
-                                else if(v<vmin) vmin=v;
-                            }
-                        }
-                        zone.cache.get<float>(0) = vmin;
-                        zone.cache.get<float>(1) = vmax;
-                    }
-                }
-            };
-
-            template <typename T,typename F2T>
-            struct __rescale
-            {
-                Pixmap<T> *_source;
-                T          _vmin;
-                T          _vmax;
-                F2T       *_func;
-
-                inline void operator()(const Tile &zone, lockable &)
-                {
-                    assert(_source);
-                    assert(_func);
-                    if(zone.pixels)
-                    {
-                        Pixmap<T> &source = *_source;
-                        F2T       &func   = *_func;
-
-                        const float vmin   = float(_vmin);
-                        const float vmax   = float(_vmax);
-                        Y_INK_AREA_LIMITS(zone);
-
-                        if(vmax>vmin)
-                        {
-                            const float scale = 1.0f/(vmax-vmin);
-                            for(unit_t y=ymax;y>=ymin;--y)
-                            {
-                                typename Pixmap<T>::Row &tgt = source[y];
-                                for(unit_t x=xmax;x>=xmin;--x)
-                                {
-                                    tgt[x] = func(scale*(float(tgt[x])-vmin));
-                                }
-                            }
-                        }
-                        else
-                        {
-                            for(unit_t y=ymax;y>=ymin;--y)
-                            {
-                                typename Pixmap<T>::Row &tgt = source[y];
-                                for(unit_t x=xmax;x>=xmin;--x)
-                                {
-                                    tgt[x] = 0;
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-
+                __collect<T> proxy = { &target, &source, Pixel<T>::Dilate };
+                E.run(proxy);
+            }
         };
 
-    };
+
+    }
 }
 
 

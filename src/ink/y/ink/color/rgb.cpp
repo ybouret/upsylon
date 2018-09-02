@@ -15,7 +15,7 @@ namespace upsylon
         template <> bool Pixel<RGBA>:: IsZero(const RGBA &C) { return (C.r<=0) && (C.g<=0) && (C.b<=0); }
 
 
-        template <> RGB Pixel<RGB>::Average(const RGB *arr, const size_t num)
+        template <> RGB Pixel<RGB>::Average(RGB *arr, const size_t num)
         {
 
             rgb<float> ave(0,0,0);
@@ -30,7 +30,7 @@ namespace upsylon
             return RGB( floorf(ave.r/num+0.5f), floorf(ave.g/num+0.5f), floorf(ave.b/num+0.5f) );
         }
 
-        template <> RGBA Pixel<RGBA>::Average(const RGBA *arr, const size_t num)
+        template <> RGBA Pixel<RGBA>::Average(RGBA *arr, const size_t num)
         {
 
             rgba<float> ave(0,0,0,0);
@@ -44,6 +44,16 @@ namespace upsylon
 
             }
             return RGBA( floorf(ave.r/num+0.5f), floorf(ave.g/num+0.5f), floorf(ave.b/num+0.5f), floorf(ave.a/num+0.5f) );
+        }
+
+        template <> int Pixel<RGB>:: Compare( const RGB &lhs, const RGB &rhs )
+        {
+            return (int(lhs.r)+int(lhs.g)+int(lhs.b))-(int(rhs.r)+int(rhs.g)+int(rhs.b));
+        }
+
+        template <> int Pixel<RGBA>:: Compare( const RGBA &lhs, const RGBA &rhs )
+        {
+            return (int(lhs.r)+int(lhs.g)+int(lhs.b))-(int(rhs.r)+int(rhs.g)+int(rhs.b));
         }
 
     }

@@ -31,11 +31,21 @@ Y_UTEST(blob)
         fg2.copy(fg,E);
         Filter::FillHoles(fg,E);
         img.save("fg1.png",fg,0);
+
         Filter::FillHoles(fg2,img3,E);
         img.save("fg2.png",fg2,0);
 
+        Filter::Average(fg2,fg,E);
+        img.save("ave.png",fg2,0);
 
+        Filter::Median(fg2,fg,E);
+        img.save("med.png",fg2,0);
 
+        Filter::Erode(fg2,fg,E);
+        img.save("erode.png",fg2,0);
+
+        Filter::Dilate(fg2,fg,E);
+        img.save("dilate.png",fg2,0);
 
         Blobs blobs(w,h);
 

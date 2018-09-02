@@ -3,6 +3,9 @@
 #include "y/ink/image.hpp"
 #include "y/string/convert.hpp"
 #include "y/ink/stencil/delta.hpp"
+#include "y/ink/stencil/sobel.hpp"
+#include "y/ink/stencil/scharr.hpp"
+
 #include "y/ptr/auto.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/ink/color/named-colors.hpp"
@@ -11,6 +14,35 @@
 using namespace upsylon;
 using namespace Ink;
 using namespace math;
+
+namespace
+{
+    static inline
+    void find_edges(const  string &label,
+                    Edges         &edges,
+                    const Stencil<int> &sx,
+                    const Stencil<int> &sy,
+                    const Blur    *blur,
+                    const Pixmap3 &src,
+                    Engine        &E)
+    {
+        ImageIO   &img = Image::instance();
+        matrix<int> dx;
+        matrix<int> dy;
+        sx.build(dx);
+        sy.build(dy);
+        Filter::Apply(edges.pixels,src,RGBtoFloat,E);
+        edges.compute(blur,dx,dy,E);
+
+        Filter::Autoscale(edges.grad,Crux::FloatToFloat, E);
+
+        img.save( label + "-grad.png", edges.grad, 0 );
+
+        img.save( label + "-edges.png", edges, 0 );
+        index_to_rgba proc;
+        img.save( label + "-blobs.png", edges.blobs, proc, 0);
+    }
+}
 
 Y_UTEST(edges)
 {
@@ -33,6 +65,18 @@ Y_UTEST(edges)
     DeltaX<int> DX;
     DeltaY<int> DY;
 
+    Sobel3X<int> sobel3X;
+    Sobel3Y<int> sobel3Y;
+
+    Sobel5X<int> sobel5X;
+    Sobel5Y<int> sobel5Y;
+
+    Scharr3X<int> scharr3X;
+    Scharr3Y<int> scharr3Y;
+
+    Scharr5X<int> scharr5X;
+    Scharr5Y<int> scharr5Y;
+
     matrix<int> dx;
     matrix<int> dy;
 
@@ -50,24 +94,19 @@ Y_UTEST(edges)
         }
         Blur *blur = 0;
         if(pBlur.is_valid()) blur = & *pBlur;
-        Engine        eng(par,src);
+        Engine        E(par,src);
         const size_t  w = src.w;
         const size_t  h = src.h;
 
         img.save("img.png",src,0);
 
         Edges edges(w,h);
-        Filter::Apply(edges.pixels,src,RGBtoFloat,eng);
-        edges.compute(blur,dx,dy,eng);
+        find_edges("delta",   edges, DX,       DY     ,blur,src,E);
+        find_edges("sobel3",  edges, sobel3X,  sobel3Y,blur,src,E);
+        find_edges("sobel5",  edges, sobel5X,  sobel5Y,blur,src,E);
+        find_edges("scharr3", edges, scharr3X, scharr3Y,blur,src,E);
+        find_edges("scharr5", edges, scharr5X, scharr5Y,blur,src,E);
 
-        Filter::Autoscale(edges.grad,Crux::FloatToFloat,eng);
-        img.save("grad.png",edges.grad,0);
-
-        //Filter::Autoscale(edges.border,Crux::FloatToFloat,eng);
-        img.save("border.png",edges,0);
-        
-        index_to_rgba proc;
-        img.save("eblobs.png", edges.blobs, proc, 0);
 
     }
 

@@ -1,6 +1,7 @@
 #define Y_INK_PIXEL_IMPL
 
 #include "y/ink/pixel.hpp"
+#include "y/comparison.hpp"
 
 namespace upsylon
 {
@@ -27,7 +28,7 @@ namespace upsylon
         template <> bool Pixel<float>  ::IsZero(const float   &C) { return fabs(C)<=0.0f; }
 
 
-        template <> uint8_t Pixel<uint8_t>::Average(const uint8_t *arr, const size_t num)
+        template <> uint8_t Pixel<uint8_t>::Average(uint8_t *arr, const size_t num)
         {
             assert(num>0);
 
@@ -39,7 +40,7 @@ namespace upsylon
             return Y_INK_F2B(ave/num);
         }
 
-        template <> float Pixel<float>::Average(const float *arr, const size_t num)
+        template <> float Pixel<float>::Average(float *arr, const size_t num)
         {
             assert(num>0);
             float ave  = 0.0f;
@@ -48,6 +49,16 @@ namespace upsylon
                 ave += arr[i];
             }
             return ave/num;
+        }
+
+        template < > int Pixel<uint8_t>::Compare(const uint8_t &lhs, const uint8_t &rhs)
+        {
+            return int(lhs)-int(rhs);
+        }
+
+        template < > int Pixel<float>::Compare(const float &lhs, const float &rhs)
+        {
+            return comparison::increasing(lhs,rhs);
         }
 
 
