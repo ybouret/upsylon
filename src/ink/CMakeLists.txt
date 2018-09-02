@@ -30,6 +30,12 @@ SET(ops_srcs ${ops_decl} ${ops_code})
 SOURCE_GROUP( ops FILES ${ops_srcs} )
 INSTALL( FILES ${ops_decl} DESTINATION include/y/ink/ops )
 
+FILE(GLOB ops_filter_decl y/ink/ops/filter/*.hxx)
+SET(ops_filter_srcs ${ops_filter_decl} )
+SOURCE_GROUP( ops/filter FILES ${ops_filter_srcs} )
+INSTALL( FILES ${ops_filter_decl} DESTINATION include/y/ink/ops/filter )
+
+
 FILE(GLOB stencil_decl y/ink/stencil/*.hpp)
 FILE(GLOB stencil_code y/ink/stencil/*.cpp)
 SET(stencil_srcs ${stencil_decl} ${stencil_code})
@@ -41,6 +47,7 @@ ${main_srcs}
 ${color_srcs} 
 ${image_srcs}
 ${ops_srcs}
+${ops_filter_srcs}
 ${stencil_srcs}
 )
 INSTALL( TARGETS y-ink ARCHIVE DESTINATION lib )

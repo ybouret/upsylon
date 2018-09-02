@@ -3,6 +3,7 @@
 #include "y/ink/ops/histogram.hpp"
 #include "y/utest/run.hpp"
 #include "y/ink/color/named-colors.hpp"
+#include "y/ink/ops/filter.hpp"
 
 using namespace upsylon;
 using namespace Ink;
@@ -20,11 +21,21 @@ Y_UTEST(blob)
         const size_t  h    = img3.h;
         Engine        E(par,img3);
         Pixmap3       fg(w,h);
+        Pixmap3       fg2(w,h);
         const size_t  level = Histogram::Level(img3,RGBtoByte,E);
         Threshold::Foreground(fg,img3,RGBtoByte,level,E,Pixel<RGB>::Copy);
 
         img.save("img3.png",img3,0);
-        img.save("fg.png",fg,0);
+        img.save("fg0.png",fg,0);
+
+        fg2.copy(fg,E);
+        Filter::FillHoles(fg,E);
+        img.save("fg1.png",fg,0);
+        Filter::FillHoles(fg2,img3,E);
+        img.save("fg2.png",fg2,0);
+
+
+
 
         Blobs blobs(w,h);
 

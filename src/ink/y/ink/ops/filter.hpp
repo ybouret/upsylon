@@ -90,7 +90,24 @@ namespace upsylon
                 FindMinMax(vmin,vmax,source,E);
                 Rescale(source,vmin,vmax,float2type,E);
             }
-            
+
+#include "filter/fill-holes.hxx"
+            //! Fill Holes by interpolation
+            template <typename T> static inline
+            void FillHoles( Pixmap<T> &source, Engine &E )
+            {
+                __fill_holes<T> proxy = { &source };
+                E.run(proxy);
+            }
+
+            //! Fill Holes by copy
+            template <typename T> static inline
+            void FillHoles( Pixmap<T> &target, const Pixmap<T> &source, Engine &E )
+            {
+                __fill_holes2<T> proxy = { &target, &source };
+                E.run(proxy);
+            }
+
 
         private:
             template <typename T,typename U,typename FUNC>

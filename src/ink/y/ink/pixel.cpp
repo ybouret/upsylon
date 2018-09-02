@@ -27,5 +27,29 @@ namespace upsylon
         template <> bool Pixel<float>  ::IsZero(const float   &C) { return fabs(C)<=0.0f; }
 
 
+        template <> uint8_t Pixel<uint8_t>::Average(const uint8_t *arr, const size_t num)
+        {
+            assert(num>0);
+
+            float ave = 0.0f;
+            for(size_t i=0;i<num;++i)
+            {
+                ave += float(arr[i]);
+            }
+            return Y_INK_F2B(ave/num);
+        }
+
+        template <> float Pixel<float>::Average(const float *arr, const size_t num)
+        {
+            assert(num>0);
+            float ave  = 0.0f;
+            for(size_t i=0;i<num;++i)
+            {
+                ave += arr[i];
+            }
+            return ave/num;
+        }
+
+
     }
 }
