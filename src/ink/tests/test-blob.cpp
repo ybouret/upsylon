@@ -27,13 +27,15 @@ Y_UTEST(blob)
         img.save("fg.png",fg,0);
 
         Blobs blobs(w,h);
-        
-        blobs.build(fg,Connect4);
+
+        Blob::List particles;
+
+        blobs.build(particles,fg,Connect4);
         
         index_to_rgba proc;
         img.save("blob4.png", blobs, proc, 0);
         
-        blobs.build(fg,Connect8);
+        blobs.build(particles,fg,Connect8);
         img.save("blob8.png", blobs, proc, 0);
 
         

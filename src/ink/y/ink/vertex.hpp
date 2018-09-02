@@ -14,19 +14,17 @@ namespace upsylon
         class Vertex : public Object
         {
         public:
-            coord position; //!< x,y
+            const coord position; //!< x,y
             Vertex *next;   //!< for list/pool
             Vertex *prev;   //!< for list/pool
             inline Vertex( const coord C ) throw() : Object(), position(C), next(0), prev(0) {}
             inline Vertex(const Vertex &other) throw() : Object(), position(other.position), next(0), prev(0) {}
-            inline Vertex & operator=( Vertex &other ) throw()
-            {
-                position = other.position;
-                return *this;
-            }
+
 
             typedef core::list_of_cpp<Vertex> List; //!< list of vertices
             typedef core::pool_of_cpp<Vertex> PoolType; //!< pool of vertices
+
+            //! a pool to reuse vertices
             class Pool : public PoolType
             {
             public:
@@ -38,7 +36,7 @@ namespace upsylon
                     if(size>0)
                     {
                         Vertex *vtx = query();
-                        vtx->position = pos;
+                        (coord &)(vtx->position) = pos;
                         return vtx;
                     }
                     else
@@ -51,6 +49,9 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Pool);
             };
+
+        private:
+            Y_DISABLE_ASSIGN(Vertex);
         };
 
     }

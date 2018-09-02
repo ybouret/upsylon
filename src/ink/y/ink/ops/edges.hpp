@@ -11,8 +11,10 @@ namespace upsylon
     namespace Ink
     {
 
+        typedef Pixmap1 EdgesType; //!< base type for Edges
+
         //! Edges detector implementation
-        class Edges : public Pixmap1
+        class Edges : public EdgesType
         {
         public:
             static const uint8_t Strong = 0xff; //!< strong edge marker
@@ -45,14 +47,14 @@ namespace upsylon
             }
 
 
-            PixmapF pixels; //!< original pixels
-            PixmapF grad_x; //!< grad_x
-            PixmapF grad_y; //!< grad_y
-            PixmapF grad;   //!< |grad|
-            float   gmax;   //!< max|grad|
-            PixmapF angle;  //!< angle of gradient
-            Blobs   blobs;  //!< for reconnection
-            
+            PixmapF    pixels; //!< original pixels
+            PixmapF    grad_x; //!< grad_x
+            PixmapF    grad_y; //!< grad_y
+            PixmapF    grad;   //!< |grad|
+            float      gmax;   //!< max|grad|
+            PixmapF    angle;  //!< angle of gradient
+            Blobs      blobs;  //!< for reconnection
+            Blob::List particles;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Edges);
             Engine::Function compute_metrics_func;

@@ -3,7 +3,7 @@
 #define Y_INK_BLOB_INCLUDED 1
 
 #include "y/ink/pixmaps.hpp"
-#include "y/ink/vertex.hpp"
+#include "y/ink/ops/particles.hpp"
 
 namespace upsylon
 {
@@ -17,10 +17,12 @@ namespace upsylon
         };
 
         typedef Pixmap<size_t> __Blobs; //!< blob base type
+        typedef Particle<size_t> Blob;
 
         class Blobs : public __Blobs
         {
         public:
+
             virtual ~Blobs() throw(); //!< destructor
 
             explicit Blobs(const size_t W, size_t H);
@@ -29,7 +31,8 @@ namespace upsylon
 
             //! build the blobs
             template <typename T>
-            void build(const Pixmap<T>    &pxm,
+            void build(Blob::List         &particles,
+                       const Pixmap<T>    &pxm,
                        const Connectivity  cnx)
             {
                 //______________________________________________________________
@@ -45,6 +48,7 @@ namespace upsylon
                     case Connect8: neighbors=8; break;
                 }
                 assert(neighbors>0);
+                particles.clear();
                 count = 0;
                 this->ld(0);
 
@@ -53,7 +57,6 @@ namespace upsylon
                 // loop
                 //______________________________________________________________
                 Y_INK_AREA_LIMITS(*this);
-                size_t max_stack = 0;
                 for(unit_t y=ymax;y>=ymin;--y)
                 {
                     const typename Pixmap<T>::Row &P = pxm[y];
@@ -85,6 +88,7 @@ namespace upsylon
                         //______________________________________________________
                         ++count;
                         Vertex::PoolType vstack;
+                        auto_ptr<Blob>   particle = new Blob(count);
                         vstack.store( vpool( coord(x,y) ) );
                         while( vstack.size > 0 )
                         {
@@ -99,7 +103,7 @@ namespace upsylon
 
                             // register this pixel
                             self[pos] = count;
-
+                            particle->push_back( vpool(pos) );
                             // and probe neighbors
                             for(size_t k=0;k<neighbors;++k)
                             {
@@ -109,14 +113,34 @@ namespace upsylon
                                 if(self[q]>0)                continue; // already in blob
                                 vstack.store( vpool(q) );
                             }
-                            max_stack = max_of(max_stack,vstack.size);
                         }
-                        
+                        particles.push_back( particle.yield() );
                     }
                 }
+
+                //______________________________________________________________
+                //
+                // rewrite by decreasing particle size
+                //______________________________________________________________
+                particles.sort();
+                rewrite(particles,false);
                 std::cerr << "blobs.count=" << count << std::endl;
                 std::cerr << "vpool.size =" << vpool.size << std::endl;
-                std::cerr << "max_stack  =" << max_stack << std::endl;
+            }
+
+            inline void rewrite( const Blob::List &particles, const bool reset=true ) throw()
+            {
+                Blobs &self = *this;
+                if(reset) { self.ld(0); }
+                size_t i=0;
+                for(Blob *p=particles.head;p;p=p->next)
+                {
+                    (size_t&)(p->tag) = ++i;
+                    for(const Vertex *vtx=p->head;vtx;vtx=vtx->next)
+                    {
+                        self[vtx->position] = i;
+                    }
+                }
             }
 
 

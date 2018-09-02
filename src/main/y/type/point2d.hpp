@@ -86,6 +86,18 @@ namespace upsylon
             return s;
         }
 
+        //! equality
+        inline friend bool operator==( const point2d &lhs, const point2d &rhs )
+        {
+            return (lhs.x==rhs.x) && (lhs.y==rhs.y);
+        }
+
+        //! different
+        inline friend bool operator!=( const point2d &lhs, const point2d &rhs )
+        {
+            return (lhs.x!=rhs.x) || (lhs.y!=rhs.y);
+        }
+
     };
 
 }

@@ -75,6 +75,7 @@ namespace upsylon
             if(gmax>0)
             {
                 // ok, some borders are detected: find significant levels
+                EdgesType &self = *this;
                 Histogram H;
                 E.run(analyze_borders_func);
                 H.append_from(E);
@@ -85,9 +86,47 @@ namespace upsylon
                 E.run(proxy);
                 
                 // find borders blobs !
-                blobs.build(*this,Connect8);
-                
-                
+                blobs.build(particles,self,Connect8);
+
+                // analyze
+                Blob::List strongParticles;
+                while(particles.size)
+                {
+                    Blob *particle = particles.pop_back();
+                    bool  isStrong = false;
+                    for(const Vertex *vtx=particle->head;vtx;vtx=vtx->next)
+                    {
+                        if( Strong == self[vtx->position] )
+                        {
+                            isStrong = true;
+                            break;
+                        }
+                    }
+                    if(isStrong)
+                    {
+                        strongParticles.push_front(particle);
+                        for(const Vertex *vtx=particle->head;vtx;vtx=vtx->next)
+                        {
+                            self[vtx->position] = Strong;
+                        }
+                    }
+                    else
+                    {
+                        for(const Vertex *vtx=particle->head;vtx;vtx=vtx->next)
+                        {
+                            self[vtx->position] = 0;
+                        }
+                        delete particle;
+                    }
+                }
+                particles.swap_with(strongParticles);
+                blobs.rewrite(particles,true);
+                std::cerr << "#Edges=" << particles.size << std::endl;
+                for(const Blob *particle = particles.head;particle;particle=particle->next)
+                {
+                    std::cerr << "\tedge#" << particle->tag << " : " << particle->size << std::endl;
+                }
+
             }
             else
             {
