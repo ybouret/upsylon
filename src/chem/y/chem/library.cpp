@@ -12,7 +12,7 @@ namespace upsylon
         {
         }
 
-        Library:: Library(const Library &other) : Object(), LibraryType(other)
+        Library:: Library(const Library &other) : dynamic(), Object(), LibraryType(other)
         {
         }
 
