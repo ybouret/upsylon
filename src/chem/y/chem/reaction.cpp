@@ -25,6 +25,8 @@ namespace upsylon
     }
 }
 
+#include "y/type/utils.hpp"
+
 namespace upsylon
 {
     namespace Chemical
@@ -173,6 +175,28 @@ namespace upsylon
             }
             if(dz!=0) throw exception("%s does NOT conserve charge (deltaZ=%d)", *name, dz);
         }
+
+
+        double Reaction:: Gamma( const double K, const array<double> &C ) const throw()
+        {
+            double r_prod = 1;
+            double p_prod = 1;
+            for(const Component *r = r_list.head;r;r=r->next)
+            {
+                const size_t id = r->sp->indx; assert(id>0); assert(id<C.size());
+                const int    nu = r->nu;       assert(nu<0);
+                r_prod *= ipower<double>(C[id],-nu);
+            }
+            for(const Component *p = p_list.head;p;p=p->next)
+            {
+                const size_t id = p->sp->indx; assert(id>0); assert(id<C.size());
+                const int    nu = p->nu;       assert(nu>0);
+                p_prod *= ipower<double>(C[id],nu);
+            }
+            return r_prod * K - p_prod;
+        }
+
+
     }
 }
 

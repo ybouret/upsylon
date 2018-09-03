@@ -51,9 +51,13 @@ namespace upsylon
                 }
             }
 
+            //! check indices consistency
             void update() throw();
 
+            //! access by name
             Species        & operator[](const string &id ) const;
+
+            //! access by name
             inline Species & operator[](const char   *id ) const
             {
                 const string _ = id; return (*this)[_];
