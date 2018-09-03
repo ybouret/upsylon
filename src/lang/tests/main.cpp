@@ -3,8 +3,6 @@
 Y_UTEST_INIT(16)
 {
     Y_UTEST(token);
+    Y_UTEST(source);
 }
 Y_UTEST_EXEC()
-
-
-

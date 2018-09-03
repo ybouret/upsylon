@@ -13,6 +13,8 @@ namespace
     }
 }
 
+#define SHOW(CLASS) std::cerr << "sizeof(" #CLASS << ")=" << sizeof(CLASS) << std::endl
+
 Y_UTEST(token)
 {
     {
@@ -25,6 +27,14 @@ Y_UTEST(token)
     }
 
     std::cerr << "cache.size=" << Manager::instance().size << std::endl;
+    std::cerr << std::endl;
+    SHOW(Lang::Char);
+    SHOW(Lang::Token);
+    SHOW(Lang::Char::Pool);
+    SHOW(Lang::Char::List);
+    SHOW(Lang::Manager);
+
+
 }
 Y_UTEST_DONE()
 
