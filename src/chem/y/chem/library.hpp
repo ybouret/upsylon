@@ -51,6 +51,13 @@ namespace upsylon
                 }
             }
 
+            void update() throw();
+
+            Species        & operator[](const string &id ) const;
+            inline Species & operator[](const char   *id ) const
+            {
+                const string _ = id; return (*this)[_];
+            }
 
         private:
             Y_DISABLE_ASSIGN(Library);

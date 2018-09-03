@@ -34,15 +34,16 @@ namespace upsylon
             
             const string name;  //!< unique name
             const int    z;     //!< algebraic charge
+            const size_t indx;  //!< index in library
             LocalMemory  cache; //!< extra data
 
             //! constructor
-            inline Species( const string &identifier, const int charge ) :
-            Object(), name(identifier), z(charge), cache() {}
+            inline Species( const string &identifier, const int charge, const size_t ii ) :
+            Object(), name(identifier), z(charge), indx(ii), cache() {  }
 
             //! constructor
-            inline Species( const char *identifier, const int charge ) :
-            Object(), name(identifier), z(charge), cache() {}
+            inline Species( const char *identifier, const int charge, const size_t ii) :
+            Object(), name(identifier), z(charge), indx(ii), cache() {}
 
             //! destructor
             inline virtual ~Species() throw() {}

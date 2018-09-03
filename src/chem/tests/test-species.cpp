@@ -6,8 +6,8 @@ using namespace Chemical;
 
 Y_UTEST(species)
 {
-    Species proton( "H+", 1 );
-    Species hydroxy( "HO-", -1 );
+    Species proton(  "H+",   1,0 );
+    Species hydroxy( "HO-", -1,0  );
     
 }
 Y_UTEST_DONE()

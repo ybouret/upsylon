@@ -18,13 +18,25 @@ namespace upsylon
 
         Species & Library:: operator()(const string &name, const int z)
         {
-            Species::Pointer p = new Species(name,z);
+            Species::Pointer p = new Species(name,z,size()+1);
             if( !insert(p) )
             {
                 throw exception("Chemical::Library(multiple '%s')", *name);
             }
+            update();
             return *p;
         }
+
+        void Library:: update() throw()
+        {
+            size_t indx = 0;
+            for(iterator i=begin();i!=end();++i)
+            {
+                Species &sp = (**i);
+                (size_t &)(sp.indx) = ++indx;
+            }
+        }
+
 
         size_t Library:: max_name_length() const throw()
         {
@@ -35,6 +47,14 @@ namespace upsylon
                 if(tmp>ans) ans=tmp;
             }
             return ans;
+        }
+
+        Species & Library:: operator[](const string &id) const
+        {
+            const Species::Pointer *pp = search(id);
+            if(!pp) throw exception("no species '%s'",*id);
+            Species::Pointer q = *pp;
+            return *q;
         }
 
     }
