@@ -56,6 +56,12 @@ namespace upsylon
             //! add a new species to the reaction
             void add( Species &sp, const int nu );
 
+            //! add with nu=1
+            inline void add( Species &sp ) { add(sp,1);  }
+            //! add with nu=-1
+            inline void sub( Species &sp ) { add(sp,-1); }
+
+
             //! get the constant value
             virtual double  operator()( double t ) const = 0;
 
@@ -67,9 +73,7 @@ namespace upsylon
 
             //! compute Gamma with precomputed K
             double Gamma( const double K,  const array<double> &C ) const throw();
-
-
-
+            
         protected:
             //! initialize
             inline Reaction(const string &id) : name(id), r_list(), p_list() {}
