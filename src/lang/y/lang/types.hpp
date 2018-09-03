@@ -12,8 +12,8 @@ namespace upsylon
         class Object : public object
         {
         public:
-            explicit Object() throw();
-            virtual ~Object() throw();
+            explicit Object() throw(); //!< constructor
+            virtual ~Object() throw(); //!< desctructor
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Object);
@@ -25,7 +25,7 @@ namespace upsylon
         public:
             Char   *next; //!< for list
             Char   *prev; //!< for list
-            uint8_t code;   //!< current char value
+            uint8_t code; //!< current char value
 
             //! constructor
             inline          Char(const uint8_t c) throw() : Object(), next(0), prev(0), code(c) {}
@@ -50,7 +50,7 @@ namespace upsylon
                 inline explicit Pool() throw() : PoolType() {}
                 //! destructor
                 inline virtual ~Pool() throw() {}
-
+                //! cached creation
                 inline Char *make( const uint8_t code )
                 {
                     if(top)
@@ -70,6 +70,7 @@ namespace upsylon
             };
         };
 
+        //! cache for objects
         class Manager : public singleton<Manager>, public Char::Pool
         {
         public:
@@ -80,7 +81,7 @@ namespace upsylon
             virtual ~Manager() throw();
             friend class singleton<Manager>;
         public:
-            static const at_exit::longevity life_time = Object::life_time - 12;
+            static const at_exit::longevity life_time = Object::life_time - 12; //!< for singleton
         };
 
     }
