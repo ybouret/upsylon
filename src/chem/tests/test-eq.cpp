@@ -1,12 +1,12 @@
 
-#include "y/chem/reaction.hpp"
+#include "y/chem/equilibrium.hpp"
 #include "y/chem/library.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
 using namespace Chemical;
 
-Y_UTEST(rxn)
+Y_UTEST(eq)
 {
     Library lib;
     Species &proton  = lib("H+",1);
@@ -17,19 +17,19 @@ Y_UTEST(rxn)
     lib("A-",-1);
 
     {
-        Reaction::Component c1( proton, 1 );
-        Reaction::Component c2( hydroxy, 1 );
-        Reaction::Component c3( lib["AH"], -1 );
-        Reaction::Component c4( lib["A-"], -4 );
+        Equilibrium::Component c1( proton, 1 );
+        Equilibrium::Component c2( hydroxy, 1 );
+        Equilibrium::Component c3( lib["AH"], -1 );
+        Equilibrium::Component c4( lib["A-"], -4 );
     }
 
-    ConstReaction water("water",1e-14);
+    ConstEquilibrium water("water",1e-14);
 
     water.add( proton, 1);
     water.add( hydroxy, 1);
     water.validate();
 
-    ConstReaction acid("acid",pow(10,-4.8));
+    ConstEquilibrium acid("acid",pow(10,-4.8));
     acid.add(lib["AH"],-1);
     acid.add(lib["A-"],1);
     acid.add(proton,1);

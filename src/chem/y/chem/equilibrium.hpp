@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_CHEM_REACTION_INCLUDED
-#define Y_CHEM_REACTION_INCLUDED 1
+#ifndef Y_CHEM_EQUILIBRIUM_INCLUDED
+#define Y_CHEM_EQUILIBRIUM_INCLUDED 1
 
 #include "y/chem/species.hpp"
 #include "y/sequence/array.hpp"
@@ -10,11 +10,11 @@ namespace upsylon
     namespace Chemical
     {
 
-        //! Reaction description
-        class Reaction : public Object
+        //! Equilibrium description
+        class Equilibrium : public Object
         {
         public:
-            typedef intr_ptr<string,Reaction> Pointer; //!< alias
+            typedef intr_ptr<string,Equilibrium> Pointer; //!< alias
 
             //! a component
             class Component : public Object
@@ -45,7 +45,7 @@ namespace upsylon
             const string & key() const throw();
 
             //! desctructor
-            virtual ~Reaction() throw();
+            virtual ~Equilibrium() throw();
 
             //! list of reactants
             const Component::List  & reactants() const throw();
@@ -66,7 +66,7 @@ namespace upsylon
             virtual double  operator()( double t ) const = 0;
 
             //! output
-            friend std::ostream & operator<<( std::ostream &os, const Reaction &rxn );
+            friend std::ostream & operator<<( std::ostream &os, const Equilibrium &rxn );
 
             //! check valid equation
             void validate();
@@ -76,13 +76,13 @@ namespace upsylon
             
         protected:
             //! initialize
-            inline Reaction(const string &id) : name(id), r_list(), p_list() {}
+            inline Equilibrium(const string &id) : name(id), r_list(), p_list() {}
             //! initialize
-            inline Reaction(const char   *id) : name(id), r_list(), p_list() {}
+            inline Equilibrium(const char   *id) : name(id), r_list(), p_list() {}
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Reaction);
+            Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
             Component      *extract( const Species &sp ) throw();
             Component::List r_list;
             Component::List p_list;
@@ -91,22 +91,22 @@ namespace upsylon
 
 
         //! a reaction with a constant constant (!)
-        class ConstReaction : public Reaction
+        class ConstEquilibrium : public Equilibrium
         {
         public:
             //! destructor
-            inline virtual ~ConstReaction() throw() {}
+            inline virtual ~ConstEquilibrium() throw() {}
             //! initialize
-            inline explicit ConstReaction(const string &id, const double _K) : Reaction(id), K(_K) { check(); }
+            inline explicit ConstEquilibrium(const string &id, const double _K) : Equilibrium(id), K(_K) { check(); }
             //! initialize
-            inline explicit ConstReaction(const char   *id, const double _K) : Reaction(id), K(_K) { check(); }
+            inline explicit ConstEquilibrium(const char   *id, const double _K) : Equilibrium(id), K(_K) { check(); }
 
             const double K; //!< positive constant value
 
             inline virtual double  operator()( double ) const { return K; }
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(ConstReaction);
+            Y_DISABLE_COPY_AND_ASSIGN(ConstEquilibrium);
             void check() const;
         };
 

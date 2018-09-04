@@ -1,5 +1,5 @@
 
-#include "y/chem/reaction.hpp"
+#include "y/chem/equilibrium.hpp"
 #include "y/exception.hpp"
 #include "y/sort/merge.hpp"
 
@@ -7,9 +7,9 @@ namespace upsylon
 {
     namespace Chemical
     {
-        Reaction:: Component:: ~Component() throw() {}
+        Equilibrium:: Component:: ~Component() throw() {}
 
-        Reaction::Component:: Component( Species &s, const int n) throw() :
+        Equilibrium::Component:: Component( Species &s, const int n) throw() :
         next(0), prev(0),
         sp( &s ),
         nu( n  )
@@ -18,7 +18,7 @@ namespace upsylon
 
         }
 
-        int Reaction::Component::Compare(const Component *lhs, const Component *rhs,void*)
+        int Equilibrium::Component::Compare(const Component *lhs, const Component *rhs,void*)
         {
             return comparison::increasing(lhs->sp->indx,rhs->sp->indx);
         }
@@ -32,12 +32,12 @@ namespace upsylon
     namespace Chemical
     {
 
-        std::ostream & operator<<( std::ostream &os, const Reaction &rxn )
+        std::ostream & operator<<( std::ostream &os, const Equilibrium &rxn )
         {
             os << rxn.name << " : ";
             {
                 size_t count = 0;
-                for(const Reaction::Component *r=rxn.r_list.head;r;r=r->next)
+                for(const Equilibrium::Component *r=rxn.r_list.head;r;r=r->next)
                 {
                     const string name = r->sp->name;
                     const int    coef = r->nu;
@@ -57,7 +57,7 @@ namespace upsylon
             os << " <=> ";
             {
                 size_t count = 0;
-                for(const Reaction::Component *p=rxn.p_list.head;p;p=p->next)
+                for(const Equilibrium::Component *p=rxn.p_list.head;p;p=p->next)
                 {
                     const string name = p->sp->name;
                     const int    coef = p->nu;
@@ -79,26 +79,26 @@ namespace upsylon
         }
 
 
-        Reaction:: ~Reaction() throw()
+        Equilibrium:: ~Equilibrium() throw()
         {
         }
 
-        const string & Reaction:: key() const throw()
+        const string & Equilibrium:: key() const throw()
         {
             return name;
         }
 
-        const Reaction::Component::List  & Reaction:: reactants() const throw()
+        const Equilibrium::Component::List  & Equilibrium:: reactants() const throw()
         {
             return r_list;
         }
 
-        const Reaction::Component::List  & Reaction:: products() const throw()
+        const Equilibrium::Component::List  & Equilibrium:: products() const throw()
         {
             return p_list;
         }
 
-        Reaction::Component * Reaction:: extract(const Species &sp) throw()
+        Equilibrium::Component * Equilibrium:: extract(const Species &sp) throw()
         {
             for(Component *r=r_list.head;r;r=r->next)
             {
@@ -119,7 +119,7 @@ namespace upsylon
             return 0;
         }
 
-        void Reaction:: add( Species &sp, const int nu )
+        void Equilibrium:: add( Species &sp, const int nu )
         {
             Component *c = extract(sp);
             if(c)
@@ -159,7 +159,7 @@ namespace upsylon
             }
         }
 
-        void Reaction:: validate()
+        void Equilibrium:: validate()
         {
             if(p_list.size+r_list.size<=0) throw exception("%s: no component!", *name);
             merging<Component>::sort(p_list,Component::Compare,NULL);
@@ -177,7 +177,7 @@ namespace upsylon
         }
 
 
-        double Reaction:: Gamma( const double K, const array<double> &C ) const throw()
+        double Equilibrium:: Gamma( const double K, const array<double> &C ) const throw()
         {
             double r_prod = 1;
             double p_prod = 1;
@@ -205,7 +205,7 @@ namespace upsylon
     namespace Chemical
     {
 
-        void ConstReaction::check() const
+        void ConstEquilibrium::check() const
         {
             if(K<=0) throw exception("%s.K<=0", *name);
         }

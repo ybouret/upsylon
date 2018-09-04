@@ -1,4 +1,4 @@
-#include "y/chem/reactions.hpp"
+#include "y/chem/equilibria.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -13,16 +13,16 @@ Y_UTEST(cs)
     Species  &AH      = lib("AH",0);
     Species  &Am      = lib("Am",-1);
 
-    Reactions cs;
+    Equilibria cs;
 
     {
-        Reaction &water = cs("water",1e-14);
+        Equilibrium &water = cs("water",1e-14);
         water.add(proton);
         water.add(hydroxy);
     }
 
     {
-        Reaction &acetic = cs("acetic",pow(10.0,-4.8));
+        Equilibrium &acetic = cs("acetic",pow(10.0,-4.8));
         acetic.add(proton);
         acetic.add(Am);
         acetic.sub(AH);

@@ -1,27 +1,31 @@
-#include "y/chem/reactions.hpp"
+#include "y/chem/equilibria.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon
 {
     namespace Chemical
     {
-        Reactions:: ~Reactions() throw()
+        Equilibria:: ~Equilibria() throw()
         {
         }
 
-        Reactions:: Reactions(const size_t n) :
-        ReactionsType(n,as_capacity),
+        Equilibria:: Equilibria(const size_t n) :
+        EquilibriaType(n,as_capacity),
         N(0),
         M(0),
+        active(),
+        rxn(),
         Nu(),
-        Phi()
+        Phi(),
+        K(),
+        Gamma()
         {
         }
 
-        Reaction & Reactions:: enroll( Reaction *rxn )
+        Equilibrium & Equilibria:: enroll( Equilibrium *rxn )
         {
             assert(rxn);
-            Reaction::Pointer p(rxn);
+            Equilibrium::Pointer p(rxn);
             if( !insert(p) )
             {
                 throw exception("multiple reaction '%s'",*(p->name));
@@ -29,7 +33,7 @@ namespace upsylon
             return *p;
         }
 
-        size_t Reactions:: max_name_length() const throw()
+        size_t Equilibria:: max_name_length() const throw()
         {
             size_t ans = 0;
             for(const_iterator i=begin();i!=end();++i)
@@ -43,12 +47,12 @@ namespace upsylon
             return ans;
         }
 
-        std::ostream & operator<<( std::ostream &os, const Reactions &cs )
+        std::ostream & operator<<( std::ostream &os, const Equilibria &cs )
         {
             const size_t sz = cs.max_name_length();
             const size_t num = cs.size();
             size_t       idx = 1;
-            for(Reactions::const_iterator i=cs.begin();i!=cs.end();++i,++idx)
+            for(Equilibria::const_iterator i=cs.begin();i!=cs.end();++i,++idx)
             {
                 os << " (*)";
                 for(size_t j=(*i)->name.size();j<=sz;++j) os << ' ';
@@ -58,14 +62,14 @@ namespace upsylon
             return os;
         }
 
-        void Reactions:: release_all() throw()
+        void Equilibria:: release_all() throw()
         {
             (size_t &)N = 0;
             (size_t &)M = 0;
             rxn.free();
         }
 
-        void Reactions:: compile_for( Library &lib )
+        void Equilibria:: compile_for( Library &lib )
         {
 
             lib.update();
@@ -120,7 +124,7 @@ namespace upsylon
             }
         }
 
-        void Reactions:: computeK(const double t)
+        void Equilibria:: computeK(const double t)
         {
             for(size_t i=N;i>0;--i)
             {
@@ -128,7 +132,7 @@ namespace upsylon
             }
         }
 
-        void Reactions:: computeGamma(const array<double> &C)
+        void Equilibria:: computeGamma(const array<double> &C)
         {
             for(size_t i=N;i>0;--i)
             {
