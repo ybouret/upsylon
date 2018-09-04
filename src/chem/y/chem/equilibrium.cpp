@@ -246,7 +246,7 @@ namespace upsylon
             assert(p_list.size>0);
             bool   init  = true;
             double xiRev = 0;
-            size_t idRev = 0;
+            //size_t idRev = 0;
             for(const Equilibrium::Component *c =p_list.head;c;c=c->next)
             {
                 const size_t id = c->sp->indx;
@@ -258,7 +258,7 @@ namespace upsylon
                 {
                     init = false;
                     xiRev = xi;
-                    idRev = id;
+                    //idRev = id;
                 }
             }
             //std::cerr << "   |_xiRev=" << xiRev << "@" << idRev << std::endl;
@@ -270,7 +270,7 @@ namespace upsylon
             assert(r_list.size>0);
             bool   init  = true;
             double xiFwd = 0;
-            size_t idFwd = 0;
+            //size_t idFwd = 0;
             for(const Equilibrium::Component *c =r_list.head;c;c=c->next)
             {
                 const size_t id = c->sp->indx;
@@ -282,7 +282,7 @@ namespace upsylon
                 {
                     init = false;
                     xiFwd = xi;
-                    idFwd = id;
+                    //idFwd = id;
                 }
             }
             //std::cerr << "   |_xiFwd=" << xiFwd << "@" << idFwd << std::endl;
