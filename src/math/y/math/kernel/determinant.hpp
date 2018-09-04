@@ -55,7 +55,7 @@ namespace upsylon
             {
                 array<double>  &bi = b[i];
                 const array<T> &ai = a[i];
-                for(size_t j=n;j>0;--i)
+                for(size_t j=n;j>0;--j)
                 {
                     bi[j] = double(ai[j]);
                 }

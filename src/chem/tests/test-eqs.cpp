@@ -53,6 +53,10 @@ Y_UTEST(cs)
     std::cerr << "Gamma=" << cs.Gamma << std::endl;
     std::cerr << "Phi  =" << cs.Phi   << std::endl;
 
+    cs.computeW();
+    std::cerr << "W=" << cs.W << std::endl;
+
+
     for(size_t iter=0;iter<10000;++iter)
     {
         for(size_t i=C.size();i>0;--i)
@@ -68,6 +72,7 @@ Y_UTEST(cs)
             Y_ASSERT(delta<=0);
         }
     }
+
 
 }
 Y_UTEST_DONE()

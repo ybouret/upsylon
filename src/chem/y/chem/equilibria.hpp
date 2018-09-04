@@ -68,6 +68,7 @@ namespace upsylon
             vector<Equilibrium::Pointer> rxn;   //!< the equilibria linearly stored
             matrix<int>                  Nu;    //!< topology     [NxM]
             matrix<double>               Phi;   //!< Jacobian     [NxN]
+            matrix<double>               W;     //!< [NxN]
             vector<double>               K;     //!< constants    [N]
             vector<double>               Gamma; //!< Gamma values [N]
 
@@ -80,7 +81,8 @@ namespace upsylon
 
             //! compute excess
             size_t computeExcess(const array<double> &C);
-            
+
+            bool   computeW();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);

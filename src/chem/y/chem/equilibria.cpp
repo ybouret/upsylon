@@ -1,8 +1,12 @@
 #include "y/chem/equilibria.hpp"
 #include "y/exception.hpp"
+#include "y/math/kernel/tao.hpp"
+#include "y/math/kernel/determinant.hpp"
 
 namespace upsylon
 {
+    using namespace math;
+
     namespace Chemical
     {
         Equilibria:: ~Equilibria() throw()
@@ -17,6 +21,7 @@ namespace upsylon
         rxn(),
         Nu(),
         Phi(),
+        W(),
         K(),
         Gamma()
         {
@@ -114,6 +119,7 @@ namespace upsylon
                     rxn.ensure(N);
                     Nu.    make(N,M).ld(0);
                     Phi.   make(N,M).ld(0);
+                    W.     make(N,N).ld(0);
                     K.     make(N,0);
                     Gamma. make(N,0);
                     // build Nu
@@ -135,6 +141,13 @@ namespace upsylon
                             nu[j] = c->nu;
                             active[j] = true;
                         }
+                    }
+                    matrix<int> Nu2(N,N);
+                    tao::mmul_rtrn(Nu2, Nu, Nu);
+                    const int   d = ideterminant(Nu2);
+                    if(0==d)
+                    {
+                        throw exception("Equilibria: found dependency!");
                     }
                 }
 
@@ -186,6 +199,11 @@ namespace upsylon
             return nxs;
         }
 
+        bool Equilibria:: computeW()
+        {
+            tao::_mmul_rtrn(W,Phi,Nu);
+            return true;
+        }
 
     }
 
