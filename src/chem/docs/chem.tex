@@ -1,0 +1,33 @@
+\documentclass[aps]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{mathptmx}
+\usepackage{xfrac}
+
+%% concentration notations
+\newcommand{\mymat}[1]{\boldsymbol{#1}}
+\newcommand{\mytrn}[1]{~^{\mathsf{t}}\!{#1}}
+\newcommand{\myvec}[1]{\overrightarrow{#1}}
+\newcommand{\mygrad}{\vec{\nabla}}
+\newcommand{\myhess}{\mathcal{H}}
+
+
+\begin{document}
+\title{Chemical System}
+\maketitle
+
+\section{Notation}
+We assume that we have $M$ species $(A_1,\ldots,A_M)$ coupled
+by $N$ equilibria such that
+\begin{equation}
+	0 = \sum_j \mymat{\nu_{i,j}} A_j,\;\; K_i = \prod_j C_j^{\mymat{\nu}_{i,j}}.
+\end{equation}
+An equilibria is met when
+\begin{equation}
+	\Gamma_i = \left(K_i \prod_{\nu_{i,j}<0} C_j^{-\nu_{i,j}}\right) - \left(\prod_{\nu_{i,j}>0} C_j^{\nu_{i,j}}\right)
+\end{equation}
+equals $0$.
+\end{document}
