@@ -6,7 +6,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(lib);
     Y_UTEST(eq);
     Y_UTEST(cs);
-
+    Y_UTEST(balance);
 }
 Y_UTEST_EXEC()
 

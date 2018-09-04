@@ -62,17 +62,22 @@ namespace upsylon
             vector<double> excess; //!< negative concentraton
             vector<double> Cini;   //!< for initial concentrations
             vector<double> Ctry;   //!< for trial concentrations
-
+            vector<double> dC;     //!< some delta C
+            
             //__________________________________________________________________
             //
             // reaction dependent only
             //__________________________________________________________________
             vector<Equilibrium::Pointer> rxn;   //!< the equilibria linearly stored
             matrix<int>                  Nu;    //!< topology     [NxM]
+            matrix<double>               tNu;   //!< Nu'          [MxM]
+            matrix<double>               Prj;   //!< Nu'*Nu       [MxM]
             matrix<double>               Phi;   //!< Jacobian     [NxN]
             matrix<double>               W;     //!< [NxN]
+            vector<int>                  s2;    //!< sum Nu2 [N]
             vector<double>               K;     //!< constants    [N]
             vector<double>               Gamma; //!< Gamma values [N]
+            
 
             //! evaluate constants for a given time
             void computeK(const double t);
@@ -90,6 +95,7 @@ namespace upsylon
             //! solve single
             bool   solveSingle(const size_t iEq, array<double> &C);
 
+            bool   balance( array<double> &C );
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);

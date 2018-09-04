@@ -211,6 +211,24 @@ namespace upsylon
                 }
             }
         }
+
+        //! manual assignment of transpose matrix
+        template <typename U>
+        inline void assign_transpose( const matrix<U> &other )
+        {
+            assert( rows==other.cols );
+            assert( cols==other.rows );
+            for(size_t i=rows;i>0;--i)
+            {
+                array<type>       &target = (*this)[i];
+                for(size_t j=cols;j>0;--j)
+                {
+                    target[j] = static_cast<type>(other[j][i]);
+                }
+            }
+        }
+
+
         
         //! assignment
         inline matrix & operator=(const matrix &other)

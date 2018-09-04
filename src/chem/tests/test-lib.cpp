@@ -20,7 +20,7 @@ Y_UTEST(lib)
     vector<double> C(lib.size()+2);
     for(size_t i=1;i<=C.size();++i) C[i] = alea.to<double>();
     lib.display(std::cerr,C,"\t");
-    
+
 }
 Y_UTEST_DONE()
 

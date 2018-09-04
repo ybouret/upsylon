@@ -53,6 +53,9 @@ namespace upsylon
             //! list of products
             const Component::List  & products()  const throw();
 
+            //! sum of square values
+            int sum_nu2() const throw();
+
             //! add a new species to the reaction
             void add( Species &sp, const int nu );
 

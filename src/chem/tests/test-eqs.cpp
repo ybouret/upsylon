@@ -42,7 +42,9 @@ Y_UTEST(cs)
 
     lib.display(std::cerr,C);
     std::cerr << cs << std::endl;
-    std::cerr << "Nu=" << cs.Nu << std::endl;
+    std::cerr << "Nu =" << cs.Nu  << std::endl;
+    std::cerr << "tNu=" << cs.tNu << std::endl;
+    std::cerr << "Prj=" << cs.Prj << std::endl;
 
     std::cerr << "active=" << cs.active << std::endl;
     cs.computeK(0.0);

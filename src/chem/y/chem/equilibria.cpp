@@ -20,6 +20,7 @@ namespace upsylon
         active(),
         rxn(),
         Nu(),
+        Prj(),
         Phi(),
         W(),
         K(),
@@ -110,6 +111,7 @@ namespace upsylon
                 excess.make(M,0);
                 Cini.make(M,0);
                 Ctry.make(M,0);
+                dC.  make(M,0);
                 
                 //______________________________________________________________
                 //
@@ -120,8 +122,11 @@ namespace upsylon
                     rxn.free();
                     rxn.ensure(N);
                     Nu.    make(N,M).ld(0);
+                    tNu.   make(M,N).ld(0);
+                    Prj.   make(M,M).ld(0);
                     Phi.   make(N,M).ld(0);
                     W.     make(N,N).ld(0);
+                    s2.    make(N,0);
                     K.     make(N,0);
                     Gamma. make(N,0);
                     // build Nu
@@ -130,6 +135,7 @@ namespace upsylon
                     {
                         Equilibrium::Pointer &p = *i;
                         rxn.push_back(p);
+                        s2[k] = p->sum_nu2();
                         array<int> &nu = Nu[k];
                         for( const Equilibrium::Component *c=p->reactants().head;c;c=c->next)
                         {
@@ -144,13 +150,22 @@ namespace upsylon
                             active[j] = true;
                         }
                     }
-                    matrix<int> Nu2(N,N);
-                    tao::mmul_rtrn(Nu2, Nu, Nu);
-                    const int   d = ideterminant(Nu2);
-                    if(0==d)
+                    matrix<int> gram(N,N);
+                    tao::mmul_rtrn(gram, Nu, Nu);
+                    const int   g = ideterminant(gram);
+                    if(0==g)
                     {
                         throw exception("Equilibria: found dependency!");
                     }
+                    for(size_t i=N;i>0;--i)
+                    {
+                        const double d = sqrt( double(s2[i]) );
+                        for(size_t j=M;j>0;--j)
+                        {
+                            tNu[j][i] = double(Nu[i][j])/d;
+                        }
+                    }
+                    tao::mmul_rtrn(Prj,tNu,tNu);
                 }
 
 

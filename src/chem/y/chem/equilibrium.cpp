@@ -289,6 +289,21 @@ namespace upsylon
             return xiFwd;
         }
 
+
+        int Equilibrium:: sum_nu2() const throw()
+        {
+            int ans = 0;
+            for(const Equilibrium::Component *c =r_list.head;c;c=c->next)
+            {
+                ans += square_of(c->nu);
+            }
+            for(const Equilibrium::Component *c =p_list.head;c;c=c->next)
+            {
+                ans += square_of(c->nu);
+            }
+            return ans;
+        }
+
     }
 }
 
