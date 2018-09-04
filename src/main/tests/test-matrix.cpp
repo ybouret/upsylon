@@ -13,7 +13,10 @@ namespace  {
     void do_test()
     {
         std::cerr << "sizeof(matrix<" << typeid(T).name() << ">)=" << sizeof(matrix<T>) << std::endl;
-        { matrix<T> m0; }
+        { matrix<T> m0;
+
+            std::cerr << "0 allocated=" << m0.allocated << std::endl;
+        }
 
         std::cerr << "\ttesting access" << std::endl;
         for(size_t iter=0;iter<16;++iter)

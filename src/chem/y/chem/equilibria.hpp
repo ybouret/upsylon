@@ -60,6 +60,8 @@ namespace upsylon
 
             vector<bool>   active; //!< active species flags
             vector<double> excess; //!< negative concentraton
+            vector<double> Cini;   //!< for initial concentrations
+            vector<double> Ctry;   //!< for trial concentrations
 
             //__________________________________________________________________
             //
@@ -82,7 +84,12 @@ namespace upsylon
             //! compute excess
             size_t computeExcess(const array<double> &C);
 
+            //! toto
             bool   computeW();
+
+            //! solve single
+            bool   solveSingle(const size_t iEq, array<double> &C);
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);

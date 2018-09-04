@@ -30,6 +30,8 @@ namespace upsylon
             static const unsigned _np  = (__n<<8)|__p; //!< negative|positive
             static const unsigned _pn  = (__p<<8)|__n; //!< positive|negative
 
+            static const char *sign_text(const unsigned s) throw();
+
             //! get the sign of x
             template <typename T>
             static inline unsigned __sign(const T x) throw()

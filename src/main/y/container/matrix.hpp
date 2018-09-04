@@ -80,10 +80,24 @@ namespace upsylon
 
 
         //! default constructor
-        inline matrix(const size_t nr=0, const size_t nc=0) : Y_MATRIX_CTOR(nr,nc)
+        inline matrix(const size_t nr, const size_t nc) : Y_MATRIX_CTOR(nr,nc)
         {
             initialize();
         }
+
+        //! zero matrix needs no memory
+        inline matrix() throw() : Y_MATRIX_CTOR(0,0)
+        {
+
+        }
+
+        //! release memory
+        inline void release() throw()
+        {
+            matrix empty;
+            swap_with(empty);
+        }
+
 
         //! temporary array of all items
         inline lightweight_array<type> as_array() throw()

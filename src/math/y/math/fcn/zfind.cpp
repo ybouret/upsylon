@@ -1,4 +1,3 @@
-
 #include "y/math/fcn/zfind.hpp"
 
 
@@ -9,6 +8,17 @@ namespace upsylon
         const unsigned zfind::__z;
         const unsigned zfind::__n;
         const unsigned zfind::__p;
+
+        const char *zfind: sign_text(const unsigned s) throw()
+        {
+            switch(s)
+            {
+
+                default:
+                    break;
+            }
+            return "unknown";
+        }
     }
 }
 

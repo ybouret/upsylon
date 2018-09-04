@@ -108,7 +108,9 @@ namespace upsylon
                 assert(M>0);
                 active.make(M,false);
                 excess.make(M,0);
-
+                Cini.make(M,0);
+                Ctry.make(M,0);
+                
                 //______________________________________________________________
                 //
                 // construct data from equilibria

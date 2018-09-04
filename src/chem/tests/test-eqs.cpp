@@ -56,6 +56,10 @@ Y_UTEST(cs)
     cs.computeW();
     std::cerr << "W=" << cs.W << std::endl;
 
+    for(size_t i=1;i<=cs.N;++i)
+    {
+        cs.solveSingle(i,C);
+    }
 
     for(size_t iter=0;iter<10000;++iter)
     {
