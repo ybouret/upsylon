@@ -104,6 +104,14 @@ Y_UTEST(cs)
     }
     std::cerr << std::endl;
 
+    std::cerr << "From 0..." << std::endl;
+    C.ld(0);
+    cs.computeGammaAndPhi(C);
+    std::cerr << "Gamma=" << cs.Gamma << std::endl;
+    std::cerr << "Phi  =" << cs.Phi   << std::endl;
+
+    cs.computeW();
+    std::cerr << "W=" << cs.W << std::endl;
 
 }
 Y_UTEST_DONE()
