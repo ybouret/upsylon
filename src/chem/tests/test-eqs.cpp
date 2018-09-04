@@ -32,17 +32,16 @@ Y_UTEST(cs)
     }
 
     cs.compile_for(lib);
-    std::cerr << cs << std::endl;
-    std::cerr << "Nu=" << cs.Nu << std::endl;
-
     vector<double> C(cs.M+2);
     for(size_t i=C.size();i>0;--i)
     {
         C[i] = alea.to<double>();
     }
 
-
     lib.display(std::cerr,C);
+    std::cerr << cs << std::endl;
+    std::cerr << "Nu=" << cs.Nu << std::endl;
+
     std::cerr << "active=" << cs.active << std::endl;
     cs.computeK(0.0);
     cs.computeGamma(C);

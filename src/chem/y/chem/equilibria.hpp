@@ -47,21 +47,27 @@ namespace upsylon
             const size_t N; //!< number of reactions
             const size_t M; //!< number of components
 
+            //! prepare system metrics and memory
             void compile_for( Library &lib );
+
+            //! cleanup
             void release_all() throw();
 
-
-            vector<bool> active;
+            //! variables dependent
+            vector<bool> active; //!< active species flags
 
             // reaction dependent only
-            vector<Equilibrium::Pointer> rxn;
+            vector<Equilibrium::Pointer> rxn;   //!< the equilibria linearly stored
             matrix<int>                  Nu;    //!< topology [NxM]
             matrix<double>               Phi;   //!< Jacobian [NxN]
             vector<double>               K;     //!< constants [N]
             vector<double>               Gamma; //!< Gamma values
 
+            //! evaluate constants for a given time
             void computeK(const double t);
+            //! compute Gamma from a set of concentrations
             void computeGamma(const array<double> &C);
+            //! conmpute Gamma and Phi from a set of concentrations
             void computeGammaAndPhi(const array<double> &C);
             
         private:
