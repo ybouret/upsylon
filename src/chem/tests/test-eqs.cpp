@@ -41,8 +41,9 @@ Y_UTEST(cs)
         C[i] = alea.to<double>();
     }
 
-    lib.display(std::cerr,C);
 
+    lib.display(std::cerr,C);
+    std::cerr << "active=" << cs.active << std::endl;
     cs.computeK(0.0);
     cs.computeGamma(C);
     std::cerr << "K="     << cs.K     << std::endl;
