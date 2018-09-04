@@ -62,7 +62,8 @@ namespace upsylon
 
             void computeK(const double t);
             void computeGamma(const array<double> &C);
-
+            void computeGammaAndPhi(const array<double> &C);
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
         };

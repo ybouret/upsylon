@@ -24,7 +24,7 @@ namespace upsylon
                 Component              *prev;  //!< for list
                 const Species::Pointer  sp;    //!< species
                 const int               nu;    //!< stoichio
-
+                
                 typedef core::list_of_cpp<Component> List; //!< list type
 
                 //! initialize
@@ -73,7 +73,11 @@ namespace upsylon
 
             //! compute Gamma with precomputed K
             double Gamma( const double K,  const array<double> &C ) const throw();
-            
+
+            //! compute Gamma and gradient with precomputed K
+            double GammaAndPhi( array<double> &grad, const double K, const array<double> &C) const throw();
+
+
         protected:
             //! initialize
             inline Equilibrium(const string &id) : name(id), r_list(), p_list() {}

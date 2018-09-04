@@ -101,17 +101,37 @@ namespace upsylon
                 assert(M>0);
                 active.make(M,false);
 
+                //______________________________________________________________
+                //
+                // construct data from equilibria
+                //______________________________________________________________
                 if(N>0)
                 {
                     rxn.free();
                     rxn.ensure(N);
-                    Nu.    make(N,M);
-                    Phi.   make(N,M);
+                    Nu.    make(N,M).ld(0);
+                    Phi.   make(N,M).ld(0);
                     K.     make(N,0);
                     Gamma. make(N,0);
-                    for(iterator i=begin();i!=end();++i)
+                    // build Nu
+                    size_t k=1;
+                    for(iterator i=begin();i!=end();++i,++k)
                     {
-                        rxn.push_back(*i);
+                        Equilibrium::Pointer &p = *i;
+                        rxn.push_back(p);
+                        array<int> &nu = Nu[k];
+                        for( const Equilibrium::Component *c=p->reactants().head;c;c=c->next)
+                        {
+                            const size_t j = c->sp->indx;
+                            nu[j] = c->nu;
+                            active[j] = true;
+                        }
+                        for( const Equilibrium::Component *c=p->products().head;c;c=c->next)
+                        {
+                            const size_t j = c->sp->indx;
+                            nu[j] = c->nu;
+                            active[j] = true;
+                        }
                     }
                 }
 
@@ -139,6 +159,16 @@ namespace upsylon
                 Gamma[i] = rxn[i]->Gamma(K[i],C);
             }
         }
+
+        void Equilibria:: computeGammaAndPhi(const array<double> &C)
+        {
+            Phi.ld(0);
+            for(size_t i=N;i>0;--i)
+            {
+                Gamma[i] = rxn[i]->GammaAndPhi(Phi[i],K[i],C);
+            }
+        }
+
 
     }
 

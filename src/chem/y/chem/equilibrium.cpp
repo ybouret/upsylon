@@ -196,6 +196,51 @@ namespace upsylon
             return r_prod * K - p_prod;
         }
 
+        double Equilibrium:: GammaAndPhi( array<double> &grad, const double K, const array<double> &C) const throw()
+        {
+            double r_prod = 1;
+            double p_prod = 1;
+            for(const Component *r=r_list.head;r;r=r->next)
+            {
+                const size_t id = r->sp->indx; assert(id>0); assert(id<C.size());
+                const int    nu = r->nu;       assert(nu<0);
+                const int    q  = -nu;
+                const double CC = C[id];
+                r_prod *= ipower<double>(CC,q);
+
+                double g=K*q*ipower(CC,q-1);
+                for(const Component *s=r_list.head;s;s=s->next)
+                {
+                    if(s!=r)
+                    {
+                        g *= ipower<double>(C[s->sp->indx],-(s->nu));
+                    }
+                }
+                grad[id] = g;
+            }
+            
+            for(const Component *p = p_list.head;p;p=p->next)
+            {
+                const size_t id = p->sp->indx; assert(id>0); assert(id<C.size());
+                const int    nu = p->nu;       assert(nu>0);
+                const double CC = C[id];
+                p_prod *= ipower<double>(CC,nu);
+
+                double g = nu * ipower(CC,nu-1);
+
+                for(const Component *s=p_list.head;s;s=s->next)
+                {
+                    if(s!=p)
+                    {
+                        g *= ipower<double>(C[s->sp->indx],(s->nu));
+                    }
+                }
+                grad[id] = -g;
+
+            }
+            return r_prod * K - p_prod;
+        }
+
 
     }
 }
