@@ -67,6 +67,8 @@ namespace upsylon
             (size_t &)N = 0;
             (size_t &)M = 0;
             rxn.free();
+            excess.free();
+            active.free();
         }
 
         void Equilibria:: compile_for( Library &lib )
@@ -100,6 +102,7 @@ namespace upsylon
 
                 assert(M>0);
                 active.make(M,false);
+                excess.make(M,0);
 
                 //______________________________________________________________
                 //
@@ -167,6 +170,20 @@ namespace upsylon
             {
                 Gamma[i] = rxn[i]->GammaAndPhi(Phi[i],K[i],C);
             }
+        }
+
+        size_t Equilibria:: computeExcess(const array<double> &C)
+        {
+            size_t nxs = 0;
+            for(size_t i=M;i>0;--i)
+            {
+                if(C[i]<0)
+                {
+                    ++nxs;
+                    excess[i] = -C[i];
+                }
+            }
+            return nxs;
         }
 
 

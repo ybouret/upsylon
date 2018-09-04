@@ -1,6 +1,6 @@
 PROJECT(y-chem CXX)
 
-INCLUDE_DIRECTORIES(. ../main)
+INCLUDE_DIRECTORIES(. ../main ../math)
 
 FILE(GLOB main_decl y/chem/*.hpp)
 FILE(GLOB main_code y/chem/*.cpp)

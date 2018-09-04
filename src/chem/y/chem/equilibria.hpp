@@ -58,26 +58,30 @@ namespace upsylon
             // variables dependent
             //__________________________________________________________________
 
-            vector<bool> active; //!< active species flags
-
+            vector<bool>   active; //!< active species flags
+            vector<double> excess; //!< negative concentraton
 
             //__________________________________________________________________
             //
             // reaction dependent only
             //__________________________________________________________________
             vector<Equilibrium::Pointer> rxn;   //!< the equilibria linearly stored
-            matrix<int>                  Nu;    //!< topology [NxM]
-            matrix<double>               Phi;   //!< Jacobian [NxN]
-            vector<double>               K;     //!< constants [N]
-            vector<double>               Gamma; //!< Gamma values
+            matrix<int>                  Nu;    //!< topology     [NxM]
+            matrix<double>               Phi;   //!< Jacobian     [NxN]
+            vector<double>               K;     //!< constants    [N]
+            vector<double>               Gamma; //!< Gamma values [N]
 
             //! evaluate constants for a given time
             void computeK(const double t);
             //! compute Gamma from a set of concentrations
             void computeGamma(const array<double> &C);
-            //! conmpute Gamma and Phi from a set of concentrations
+            //! compute Gamma and Phi from a set of concentrations
             void computeGammaAndPhi(const array<double> &C);
+
+            //! compute excess
+            size_t computeExcess(const array<double> &C);
             
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
         };

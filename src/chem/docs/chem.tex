@@ -29,5 +29,23 @@ An equilibria is met when
 \begin{equation}
 	\Gamma_i = \left(K_i \prod_{\nu_{i,j}<0} C_j^{-\nu_{i,j}}\right) - \left(\prod_{\nu_{i,j}>0} C_j^{\nu_{i,j}}\right)
 \end{equation}
-equals $0$.
+equals $0$.\\
+We also define the gradient
+\begin{equation}
+	\vec{\Phi}_i = \partial_{\vec{C}}{\Gamma_i}
+\end{equation}
+
+\section{Properties of one equilibrium}
+For a given set of concentrations $\vec{C}$, the composition may evolve according to the chemical extent $\xi_i$
+such that
+\begin{equation}
+	\vec{C} = \vec{C}_0 + \xi_i \cdot \vec{\nu}_i
+\end{equation}
+so that
+\begin{equation}
+	\Gamma_i\left(\vec{C} = \vec{C}_0 + \xi_i  \vec{\nu}_i\right) 
+	\approx
+	\Gamma_i\left(\vec{C}_0\right) + \xi_i \underbrace{\left(\vec{\Phi}_i\vec{\nu}_i\right)}_{\leq 0}
+\end{equation}
+
 \end{document}
