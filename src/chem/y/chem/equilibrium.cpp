@@ -241,6 +241,53 @@ namespace upsylon
             return r_prod * K - p_prod;
         }
 
+        double Equilibrium:: computeMaximumReverse(const array<double> &C) const throw()
+        {
+            assert(p_list.size>0);
+            bool   init  = true;
+            double xiRev = 0;
+            size_t idRev = 0;
+            for(const Equilibrium::Component *c =p_list.head;c;c=c->next)
+            {
+                const size_t id = c->sp->indx;
+                const double CC = max_of<double>(C[id],0);
+                const int    nu = c->nu; assert(nu>0);
+                const double xi = CC/nu;
+                //std::cerr << "  |_[" << c->sp->name << "]=" << C[c->sp->indx] << " => " << xi << std::endl;
+                if(init||xi<xiRev)
+                {
+                    init = false;
+                    xiRev = xi;
+                    idRev = id;
+                }
+            }
+            //std::cerr << "   |_xiRev=" << xiRev << "@" << idRev << std::endl;
+            return xiRev;
+        }
+
+        double Equilibrium:: computeMaximumForward(const array<double> &C) const throw()
+        {
+            assert(r_list.size>0);
+            bool   init  = true;
+            double xiFwd = 0;
+            size_t idFwd = 0;
+            for(const Equilibrium::Component *c =r_list.head;c;c=c->next)
+            {
+                const size_t id = c->sp->indx;
+                const double CC = max_of<double>(C[id],0);
+                const int    nu = c->nu; assert(nu<0);
+                const double xi = CC/(-nu);
+                //std::cerr << "  |_[" << c->sp->name << "]=" << C[c->sp->indx] << " => " << xi << std::endl;
+                if(init||xi<xiFwd)
+                {
+                    init = false;
+                    xiFwd = xi;
+                    idFwd = id;
+                }
+            }
+            //std::cerr << "   |_xiFwd=" << xiFwd << "@" << idFwd << std::endl;
+            return xiFwd;
+        }
 
     }
 }

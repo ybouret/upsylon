@@ -9,7 +9,7 @@ namespace upsylon
         const unsigned zfind::__n;
         const unsigned zfind::__p;
 
-        const char *zfind: sign_text(const unsigned s) throw()
+        const char *zfind:: sign_text(const unsigned s) throw()
         {
             switch(s)
             {

@@ -27,9 +27,9 @@ Y_UTEST(cs)
 
     {
         Equilibrium &acetic = cs("acetic",pow(10.0,-4.8));
-        acetic.add(proton);
-        acetic.add(Am);
-        acetic.sub(AH);
+        acetic.add(proton,2);
+        acetic.add(Am,2);
+        acetic.add(AH,-2);
     }
 
     cs.compile_for(lib);
@@ -56,12 +56,29 @@ Y_UTEST(cs)
     cs.computeW();
     std::cerr << "W=" << cs.W << std::endl;
 
+    
     for(size_t i=1;i<=cs.N;++i)
     {
-        cs.solveSingle(i,C);
+        std::cerr << "SolveSingle '" << cs.rxn[i]->name << "'" << std::endl;
+        if(cs.solveSingle(i,C))
+        {
+            lib.display(std::cerr,C,"  (@) ");
+        }
     }
 
-    for(size_t iter=0;iter<10000;++iter)
+    
+    C.ld(0);
+    for(size_t i=1;i<=cs.N;++i)
+    {
+        std::cerr << "SolveSingle0 '" << cs.rxn[i]->name << "'" << std::endl;
+        if(cs.solveSingle(i,C))
+        {
+            lib.display(std::cerr,C,"  (@) ");
+        }
+    }
+
+
+    for(size_t iter=0;iter<1000;++iter)
     {
         for(size_t i=C.size();i>0;--i)
         {
@@ -75,7 +92,17 @@ Y_UTEST(cs)
             const double delta = math::tao::_dot<double>(grad,nu);
             Y_ASSERT(delta<=0);
         }
+        bool success = true;
+        for(size_t i=1;i<=cs.N;++i)
+        {
+            if(!cs.solveSingle(i,C))
+            {
+                success = false;
+            }
+        }
+        if(success) std::cerr << '+'; else std::cerr << '-';
     }
+    std::cerr << std::endl;
 
 
 }

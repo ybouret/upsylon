@@ -76,7 +76,14 @@ namespace upsylon
 
             //! compute Gamma and gradient with precomputed K
             double GammaAndPhi( array<double> &grad, const double K, const array<double> &C) const throw();
-            
+
+            //! products>0
+            double computeMaximumReverse(const array<double> &C) const throw();
+
+            //! reactants>0
+            double computeMaximumForward(const array<double> &C) const throw();
+
+
         protected:
             //! initialize
             inline Equilibrium(const string &id) : name(id), r_list(), p_list() {}
