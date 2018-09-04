@@ -53,10 +53,18 @@ namespace upsylon
             //! cleanup
             void release_all() throw();
 
-            //! variables dependent
+            //__________________________________________________________________
+            //
+            // variables dependent
+            //__________________________________________________________________
+
             vector<bool> active; //!< active species flags
 
+
+            //__________________________________________________________________
+            //
             // reaction dependent only
+            //__________________________________________________________________
             vector<Equilibrium::Pointer> rxn;   //!< the equilibria linearly stored
             matrix<int>                  Nu;    //!< topology [NxM]
             matrix<double>               Phi;   //!< Jacobian [NxN]
