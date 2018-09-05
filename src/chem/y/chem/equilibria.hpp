@@ -69,15 +69,16 @@ namespace upsylon
             //
             // reaction dependent only
             //__________________________________________________________________
-            vector<Equilibrium::Pointer> rxn;   //!< the equilibria linearly stored
-            matrix<int>                  Nu;    //!< topology     [NxM]
-            matrix<int>                  tNu;   //!< Nu'          [MxM]
-            matrix<int>                  Bal;   //!< Nu'*Nu       [MxM]
-            matrix<double>               Phi;   //!< Jacobian     [NxN]
-            matrix<double>               W;     //!< [NxN]
-            vector<double>               K;     //!< constants    [N]
-            vector<double>               Gamma; //!< Gamma values [N]
-            
+            vector<Equilibrium::Pointer> rxn;    //!< the equilibria linearly stored
+            matrix<int>                  Nu;     //!< topology     [NxM]
+            matrix<int>                  tNu;    //!< Nu'          [MxM]
+            matrix<double>               Phi;    //!< Jacobian     [NxN]
+            matrix<double>               W;      //!< [NxN]
+            vector<double>               K;      //!< constants    [N]
+            vector<double>               Gamma;  //!< Gamma values [N]
+            vector<double>               nrmNu;  //!< |Nu_i|       [N]
+            vector<double>               xi;     //!< a chemical extent [N]
+            vector<size_t>               bal;    //!< balancing indices [M]
 
             //! evaluate constants for a given time
             void computeK(const double t);

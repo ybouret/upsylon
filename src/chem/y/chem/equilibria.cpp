@@ -20,7 +20,6 @@ namespace upsylon
         active(),
         rxn(),
         Nu(),
-        Bal(),
         Phi(),
         W(),
         K(),
@@ -123,11 +122,14 @@ namespace upsylon
                     rxn.ensure(N);
                     Nu.    make(N,M).ld(0);
                     tNu.   make(M,N).ld(0);
-                    Bal.   make(M,M).ld(0);
                     Phi.   make(N,M).ld(0);
                     W.     make(N,N).ld(0);
                     K.     make(N,0);
                     Gamma. make(N,0);
+                    nrmNu. make(N,0);
+                    xi.    make(N,0);
+                    bal.   make(M,0);
+                    
                     // build Nu
                     size_t k=1;
                     for(iterator i=begin();i!=end();++i,++k)
@@ -147,6 +149,7 @@ namespace upsylon
                             nu[j] = c->nu;
                             active[j] = true;
                         }
+                        nrmNu[k] = sqrt( p->sumNu2 );
                     }
                     matrix<int> gram(N,N);
                     tao::mmul_rtrn(gram, Nu, Nu);
@@ -156,7 +159,6 @@ namespace upsylon
                         throw exception("Equilibria: found dependency!");
                     }
                     tNu.assign_transpose(Nu);
-                    tao::mmul_rtrn(Bal,tNu,tNu);
                 }
 
 

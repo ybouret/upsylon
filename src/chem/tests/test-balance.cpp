@@ -38,14 +38,22 @@ Y_UTEST(balance)
 
     C.ld(0);
 
-    //for(size_t i=C.size();i>0;--i)
-    for(size_t i=2;i>0;--i)
+    C[1] =  0.0;
+    C[2] =  0.0;
+    C[3] = -0.3;
+    C[4] =  0.2;
+    
+    /*
+    for(size_t i=C.size();i>0;--i)
     {
         C[i] = alea.symm<double>();
     }
+     */
 
     lib.display(std::cerr,C," (-) ");
-    std::cerr << "Bal=" << cs.Bal << std::endl;
+    std::cerr << "Nu    =" << cs.Nu  << std::endl;
+    std::cerr << "nrmNu =" << cs.nrmNu  << std::endl;
+
     cs.balance(C);
 
 }
