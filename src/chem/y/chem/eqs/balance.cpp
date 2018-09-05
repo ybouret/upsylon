@@ -1,6 +1,7 @@
 
 #include "y/chem/equilibria.hpp"
 #include "y/math/kernel/tao.hpp"
+#include "y/sort/sorted-sum.hpp"
 
 namespace upsylon
 {
@@ -8,29 +9,48 @@ namespace upsylon
 
     namespace Chemical
     {
+        double Equilibria:: computeExcess(array<double> &C)
+        {
+            beta2.free();
+            for(size_t j=M;j>0;--j)
+            {
+                beta[j] = 0;
+                const double Cj = C[j];
+                if(active[j]&&Cj<0)
+                {
+                    const double Cj2 = Cj*Cj;
+                    if(Cj2<=numeric<double>::minimum)
+                    {
+                        C[j] = 0;
+                    }
+                    else
+                    {
+                        beta[j] = -Cj;
+                        beta2.push_back(Cj2);
+                    }
+                }
+            }
+            return sorted_sum(beta2);
+        }
+
+
         bool Equilibria:: balance(array<double> &C)
         {
             // initialize
-            size_t nxs = 0;
             for(size_t j=M;j>0;--j)
             {
-                excess[j] = 0;
-                const double Cj = Cini[j]  = C[j];
-                if(active[j]&&Cj<0)
-                {
-                    ++nxs;
-                    excess[j] = -Cj;
-                }
+                Cini[j] = C[j];
             }
 
-            while(nxs)
+            double Eini = computeExcess(Cini);
+            while( Eini > 0 )
             {
-                std::cerr << "xs=" << excess << std::endl;
-                tao::mul(dC, Bal, excess);
-                std::cerr << "dC=" << dC << std::endl;
+                std::cerr << "beta  = " << beta << std::endl;
+                std::cerr << "Eini  = " << Eini << std::endl;
+                tao::mul(dC,Bal,beta);
+                std::cerr << "dC    = " << dC << std::endl;
                 break;
             }
-
             return false;
 
         }

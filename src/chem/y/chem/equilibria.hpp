@@ -59,7 +59,8 @@ namespace upsylon
             //__________________________________________________________________
 
             vector<bool>   active; //!< active species flags
-            vector<double> excess; //!< negative concentraton
+            vector<double> beta;   //!< negative concentraton
+            vector<double> beta2;  //!< squared negative concentrations
             vector<double> Cini;   //!< for initial concentrations
             vector<double> Ctry;   //!< for trial concentrations
             vector<double> dC;     //!< some delta C
@@ -85,8 +86,8 @@ namespace upsylon
             //! compute Gamma and Phi from a set of concentrations
             void computeGammaAndPhi(const array<double> &C);
 
-            //! compute excess
-            size_t computeExcess(const array<double> &C);
+            //! compute excess, cleaning too small values
+            double computeExcess(array<double> &C);
 
             //! toto
             bool   computeW();

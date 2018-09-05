@@ -36,7 +36,10 @@ Y_UTEST(balance)
     cs.compile_for(lib);
     vector<double> C(cs.M+2);
 
-    for(size_t i=C.size();i>0;--i)
+    C.ld(0);
+
+    //for(size_t i=C.size();i>0;--i)
+    for(size_t i=2;i>0;--i)
     {
         C[i] = alea.symm<double>();
     }
