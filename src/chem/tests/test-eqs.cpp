@@ -32,7 +32,13 @@ Y_UTEST(cs)
         acetic.add(AH,-2);
     }
 
+    std::cerr << "Raw Equilibria:" << std::endl;
+    std::cerr << cs << std::endl;
     cs.compile_for(lib);
+    std::cerr << "Compiled Equilibria:" << std::endl;
+    std::cerr << cs << std::endl;
+
+
     vector<double> C(cs.M+2);
 
     for(size_t i=C.size();i>0;--i)
@@ -41,10 +47,9 @@ Y_UTEST(cs)
     }
 
     lib.display(std::cerr,C);
-    std::cerr << cs << std::endl;
     std::cerr << "Nu =" << cs.Nu  << std::endl;
     std::cerr << "tNu=" << cs.tNu << std::endl;
-    std::cerr << "Prj=" << cs.Prj << std::endl;
+    std::cerr << "Bal=" << cs.Bal << std::endl;
 
     std::cerr << "active=" << cs.active << std::endl;
     cs.computeK(0.0);

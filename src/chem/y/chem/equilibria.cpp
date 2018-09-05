@@ -20,7 +20,7 @@ namespace upsylon
         active(),
         rxn(),
         Nu(),
-        Prj(),
+        Bal(),
         Phi(),
         W(),
         K(),
@@ -83,7 +83,7 @@ namespace upsylon
             lib.update();
             for(iterator i=begin();i!=end();++i)
             {
-                (*i)->validate();
+                (*i)->compile();
             }
             
             try
@@ -123,10 +123,9 @@ namespace upsylon
                     rxn.ensure(N);
                     Nu.    make(N,M).ld(0);
                     tNu.   make(M,N).ld(0);
-                    Prj.   make(M,M).ld(0);
+                    Bal.   make(M,M).ld(0);
                     Phi.   make(N,M).ld(0);
                     W.     make(N,N).ld(0);
-                    s2.    make(N,0);
                     K.     make(N,0);
                     Gamma. make(N,0);
                     // build Nu
@@ -135,7 +134,6 @@ namespace upsylon
                     {
                         Equilibrium::Pointer &p = *i;
                         rxn.push_back(p);
-                        s2[k] = p->sum_nu2();
                         array<int> &nu = Nu[k];
                         for( const Equilibrium::Component *c=p->reactants().head;c;c=c->next)
                         {
@@ -157,15 +155,8 @@ namespace upsylon
                     {
                         throw exception("Equilibria: found dependency!");
                     }
-                    for(size_t i=N;i>0;--i)
-                    {
-                        const double d = sqrt( double(s2[i]) );
-                        for(size_t j=M;j>0;--j)
-                        {
-                            tNu[j][i] = double(Nu[i][j])/d;
-                        }
-                    }
-                    tao::mmul_rtrn(Prj,tNu,tNu);
+                    tNu.assign_transpose(Nu);
+                    tao::mmul_rtrn(Bal,tNu,tNu);
                 }
 
 
@@ -181,7 +172,16 @@ namespace upsylon
         {
             for(size_t i=N;i>0;--i)
             {
-                K[i] = (*rxn[i])(t);
+                Equilibrium &eq = *rxn[i];
+                const double eqK = eq(t);
+                if(eq.rescale)
+                {
+                    K[i] = pow(eqK,eq.kpower);
+                }
+                else
+                {
+                    K[i] = eqK;
+                }
             }
         }
 

@@ -27,7 +27,8 @@ namespace upsylon
 
 #include "y/type/utils.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/sort/heap.hpp"
+#include "y/sort/unique.hpp"
+#include <cmath>
 
 namespace upsylon
 {
@@ -70,13 +71,19 @@ namespace upsylon
                     }
                     if(coef>1)
                     {
-                        os << -coef;
+                        os << coef;
                     }
                     os << '(' << name << ')';
                     ++count;
                 }
             }
-            os << " | K=" << rxn(0);
+            double eK = rxn(0);
+            if(rxn.rescale) eK=pow(eK,rxn.kpower);
+            os << " | K=" << eK;
+            if(rxn.rescale)
+            {
+                os << " (rescaled=" << rxn.kpower << ")";
+            }
             return os;
         }
 
@@ -161,37 +168,104 @@ namespace upsylon
             }
         }
 
-        void Equilibrium:: validate()
+        void Equilibrium:: compile()
         {
+            //__________________________________________________________________
+            //
+            // check components
+            //__________________________________________________________________
             if(p_list.size+r_list.size<=0) throw exception("%s: no component!", *name);
+
+            //__________________________________________________________________
+            //
+            // ordering
+            //__________________________________________________________________
             merging<Component>::sort(p_list,Component::Compare,NULL);
             merging<Component>::sort(r_list,Component::Compare,NULL);
 
-            int dz = 0;
-            vector<int> coef(p_list.size+r_list.size,as_capacity);
+            //__________________________________________________________________
+            //
+            // divider for normalization
+            //__________________________________________________________________
+            int divider=1;
+
+            {
+                vector<int> coef(p_list.size+r_list.size,as_capacity);
+
+                //______________________________________________________________
+                //
+                // check electroneutrality and collect coefficients
+                //______________________________________________________________
+                {
+                    int dz = 0;
+                    for(const Component *c=p_list.head;c;c=c->next)
+                    {
+                        assert(c->nu>0);
+                        dz += (c->sp->z*c->nu);
+                        coef.push_back(c->nu);
+                    }
+                    for(const Component *c=r_list.head;c;c=c->next)
+                    {
+                        assert(c->nu<0);
+                        dz += (c->sp->z*c->nu);
+                        coef.push_back(-c->nu);
+                    }
+                    if(dz!=0) throw exception("%s does NOT conserve charge (deltaZ=%d)", *name, dz);
+                }
+
+                //______________________________________________________________
+                //
+                // find divider
+                //______________________________________________________________
+                //std::cerr << "coef=" << coef << std::endl;
+                unique(coef);
+                //std::cerr << "uniq=" << coef << std::endl;
+
+                const size_t nc = coef.size();
+                for(size_t i=1;i<=nc;++i)
+                {
+                    const int tmp = coef[i];
+                    bool divides = true;
+                    for(size_t j=i;j<=nc;++j)
+                    {
+                        if( 0 != (coef[j]%tmp) )
+                        {
+                            divides=false;
+                            break;
+                        }
+                    }
+                    if(divides)
+                    {
+                        divider=tmp;
+                    }
+                }
+
+                //std::cerr << "divider=" << divider << std::endl;
+                if(divider>1)
+                {
+                    (bool  &)rescale = true;
+                    (double&)kpower  = 1.0/divider;
+                }
+            }
+
+            //__________________________________________________________________
+            //
+            // finalize
+            //__________________________________________________________________
+            int &s2 = (int &)sumNu2;
             for(const Component *c=p_list.head;c;c=c->next)
             {
-                assert(c->nu>0);
-                dz += (c->sp->z*c->nu);
-                coef.push_back(c->nu);
+                (int&)(c->nu) /= divider;
+                s2 += square_of(c->nu);
             }
+
             for(const Component *c=r_list.head;c;c=c->next)
             {
-                assert(c->nu<0);
-                dz += (c->sp->z*c->nu);
-                coef.push_back(-c->nu);
-            }
-            if(dz!=0) throw exception("%s does NOT conserve charge (deltaZ=%d)", *name, dz);
-
-
-            hsort(coef,comparison::increasing<int>);
-            std::cerr << "coef=" << coef << std::endl;
-            //int divider = 1;
-            for(size_t i=coef.size();i>0;--i)
-            {
-
+                (int&)(c->nu) /= divider;
+                s2 += square_of(c->nu);
             }
 
+            //std::cerr << "sumNu2=" << sumNu2 << std::endl;
 
         }
 
@@ -309,19 +383,7 @@ namespace upsylon
         }
 
 
-        int Equilibrium:: sum_nu2() const throw()
-        {
-            int ans = 0;
-            for(const Equilibrium::Component *c =r_list.head;c;c=c->next)
-            {
-                ans += square_of(c->nu);
-            }
-            for(const Equilibrium::Component *c =p_list.head;c;c=c->next)
-            {
-                ans += square_of(c->nu);
-            }
-            return ans;
-        }
+
 
     }
 }

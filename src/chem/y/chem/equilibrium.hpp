@@ -52,9 +52,7 @@ namespace upsylon
 
             //! list of products
             const Component::List  & products()  const throw();
-
-            //! sum of square values
-            int sum_nu2() const throw();
+            
 
             //! add a new species to the reaction
             void add( Species &sp, const int nu );
@@ -71,8 +69,8 @@ namespace upsylon
             //! output
             friend std::ostream & operator<<( std::ostream &os, const Equilibrium &rxn );
 
-            //! check valid equation
-            void validate();
+            //! check valid equation and compute associated data
+            void compile();
 
             //! compute Gamma with precomputed K
             double Gamma( const double K,  const array<double> &C ) const throw();
@@ -88,10 +86,11 @@ namespace upsylon
 
 
         protected:
+#define Y_CHEM_EQ_CTOR() name(id), r_list(), p_list(), rescale(false), kpower(1), sumNu2(0)
             //! initialize
-            inline Equilibrium(const string &id) : name(id), r_list(), p_list() {}
+            inline Equilibrium(const string &id) : Y_CHEM_EQ_CTOR() {}
             //! initialize
-            inline Equilibrium(const char   *id) : name(id), r_list(), p_list() {}
+            inline Equilibrium(const char   *id) : Y_CHEM_EQ_CTOR() {}
 
 
         private:
@@ -99,7 +98,10 @@ namespace upsylon
             Component      *extract( const Species &sp ) throw();
             Component::List r_list;
             Component::List p_list;
-
+        public:
+            const bool      rescale;
+            const double    kpower;
+            const int       sumNu2;
         };
 
 

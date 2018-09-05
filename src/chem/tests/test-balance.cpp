@@ -42,7 +42,7 @@ Y_UTEST(balance)
     }
 
     lib.display(std::cerr,C," (-) ");
-    std::cerr << "Prj=" << cs.Prj << std::endl;
+    std::cerr << "Bal=" << cs.Bal << std::endl;
     cs.balance(C);
 
 }

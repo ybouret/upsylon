@@ -27,14 +27,14 @@ Y_UTEST(eq)
 
     water.add( proton, 1);
     water.add( hydroxy, 1);
-    water.validate();
+    water.compile();
 
     ConstEquilibrium acid("acid",pow(10,-4.8));
     acid.add(lib["AH"],-1);
     acid.add(lib["A-"],1);
     acid.add(proton,1);
 
-    acid.validate();
+    acid.compile();
 
     std::cerr << water << std::endl;
     std::cerr << acid  << std::endl;

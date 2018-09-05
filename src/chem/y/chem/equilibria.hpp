@@ -70,11 +70,10 @@ namespace upsylon
             //__________________________________________________________________
             vector<Equilibrium::Pointer> rxn;   //!< the equilibria linearly stored
             matrix<int>                  Nu;    //!< topology     [NxM]
-            matrix<double>               tNu;   //!< Nu'          [MxM]
-            matrix<double>               Prj;   //!< Nu'*Nu       [MxM]
+            matrix<int>                  tNu;   //!< Nu'          [MxM]
+            matrix<int>                  Bal;   //!< Nu'*Nu       [MxM]
             matrix<double>               Phi;   //!< Jacobian     [NxN]
             matrix<double>               W;     //!< [NxN]
-            vector<int>                  s2;    //!< sum Nu2 [N]
             vector<double>               K;     //!< constants    [N]
             vector<double>               Gamma; //!< Gamma values [N]
             
