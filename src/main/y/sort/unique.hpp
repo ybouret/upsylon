@@ -8,7 +8,7 @@
 
 namespace upsylon
 {
-    //! sort an array
+    //! sort an array and put multiple values at the end
     template <typename T>
     size_t __unique( array<T> &arr )
     {
@@ -39,7 +39,7 @@ namespace upsylon
         return n;
     }
 
-    //! sort a list
+    //! sort a list and put multiple values at the end
     template <typename T>
     size_t __unique( list<T> &L )
     {
@@ -75,6 +75,7 @@ namespace upsylon
         return ans;
     }
 
+    //! sort and keep unique value
     template <typename SEQUENCE>
     void unique( SEQUENCE &seq )
     {

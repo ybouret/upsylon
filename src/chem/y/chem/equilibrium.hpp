@@ -86,6 +86,7 @@ namespace upsylon
 
 
         protected:
+            //! initialize fields
 #define Y_CHEM_EQ_CTOR() name(id), r_list(), p_list(), rescale(false), kpower(1), sumNu2(0)
             //! initialize
             inline Equilibrium(const string &id) : Y_CHEM_EQ_CTOR() {}
@@ -99,9 +100,9 @@ namespace upsylon
             Component::List r_list;
             Component::List p_list;
         public:
-            const bool      rescale;
-            const double    kpower;
-            const int       sumNu2;
+            const bool      rescale; //!< true if K needs to be rescaled
+            const double    kpower;  //!< the power value
+            const int       sumNu2;  //!< sum|nu^2|
         };
 
 

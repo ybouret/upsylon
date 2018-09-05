@@ -94,6 +94,7 @@ namespace upsylon
             //! solve single
             bool   solveSingle(const size_t iEq, array<double> &C);
 
+            //! balance possible negative active concentrations
             bool   balance( array<double> &C );
 
         private:

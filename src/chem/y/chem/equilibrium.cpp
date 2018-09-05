@@ -217,9 +217,7 @@ namespace upsylon
                 //
                 // find divider
                 //______________________________________________________________
-                //std::cerr << "coef=" << coef << std::endl;
                 unique(coef);
-                //std::cerr << "uniq=" << coef << std::endl;
 
                 const size_t nc = coef.size();
                 for(size_t i=1;i<=nc;++i)
@@ -240,7 +238,6 @@ namespace upsylon
                     }
                 }
 
-                //std::cerr << "divider=" << divider << std::endl;
                 if(divider>1)
                 {
                     (bool  &)rescale = true;
