@@ -26,6 +26,7 @@ namespace upsylon
             while(nxs)
             {
                 std::cerr << "xs=" << excess << std::endl;
+                tao::mul(dC, Bal, excess);
                 std::cerr << "dC=" << dC << std::endl;
                 break;
             }
