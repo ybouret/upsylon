@@ -52,6 +52,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(istreams);
     Y_UTEST(fft);
     Y_UTEST(sort);
+    Y_UTEST(unique);
     Y_UTEST(associative);
     Y_UTEST(map);
     Y_UTEST(set);

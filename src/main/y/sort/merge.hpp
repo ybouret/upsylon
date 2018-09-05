@@ -18,6 +18,7 @@ namespace upsylon
         template <typename LIST> static inline
         void sort( LIST &source, compare_node_proc proc, void *args)
         {
+            assert(proc);
             if( source.size > 1 )
             {
                 sub_list L;

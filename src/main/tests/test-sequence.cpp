@@ -26,6 +26,10 @@ namespace
             std::cerr << *i << "/";
         }
         std::cerr << "." << std::endl;
+        for(size_t i=seq.size();i>0;--i)
+        {
+            (void) seq[i];
+        }
     }
 
     template <typename SEQ>

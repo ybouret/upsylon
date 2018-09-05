@@ -26,6 +26,8 @@ namespace upsylon
 }
 
 #include "y/type/utils.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/sort/heap.hpp"
 
 namespace upsylon
 {
@@ -164,16 +166,33 @@ namespace upsylon
             if(p_list.size+r_list.size<=0) throw exception("%s: no component!", *name);
             merging<Component>::sort(p_list,Component::Compare,NULL);
             merging<Component>::sort(r_list,Component::Compare,NULL);
+
             int dz = 0;
+            vector<int> coef(p_list.size+r_list.size,as_capacity);
             for(const Component *c=p_list.head;c;c=c->next)
             {
+                assert(c->nu>0);
                 dz += (c->sp->z*c->nu);
+                coef.push_back(c->nu);
             }
             for(const Component *c=r_list.head;c;c=c->next)
             {
+                assert(c->nu<0);
                 dz += (c->sp->z*c->nu);
+                coef.push_back(-c->nu);
             }
             if(dz!=0) throw exception("%s does NOT conserve charge (deltaZ=%d)", *name, dz);
+
+
+            hsort(coef,comparison::increasing<int>);
+            std::cerr << "coef=" << coef << std::endl;
+            //int divider = 1;
+            for(size_t i=coef.size();i>0;--i)
+            {
+
+            }
+
+
         }
 
 

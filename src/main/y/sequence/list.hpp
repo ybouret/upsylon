@@ -7,6 +7,7 @@
 #include "y/core/pool.hpp"
 #include "y/iterate/linked.hpp"
 #include <iostream>
+#include "y/sort/merge.hpp"
 
 namespace upsylon
 {
@@ -33,6 +34,9 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(node_type);
         };
+
+        typedef core::list_of<node_type> nodes_list; //!< hold active nodes
+        typedef core::pool_of<node_type> nodes_pool; //!< hold inactive nodes
 
         //! default constructor
         inline explicit list() throw() : nodes(), cache() {}
@@ -164,9 +168,37 @@ namespace upsylon
             return os;
         }
 
+        //! inline SLOW access
+        inline  type       & operator[](const size_t i) throw()       { assert(i>0);assert(i<=size()); return nodes.fetch(i-1)->data; }
+
+        //! inline SLOW access, CONST
+        inline  const_type & operator[](const size_t i) const throw() { assert(i>0);assert(i<=size()); return nodes.fetch(i-1)->data; }
+
+        //! sorting by data
+        template <typename FUNC>
+        void sort(FUNC &func)
+        {
+            merging<node_type>::sort( nodes, compare_data<FUNC>, (void*) &func );
+        }
+
+        //! send low level control
+        void __send_all( nodes_list &target )
+        {
+            target.merge_back(nodes);
+        }
+
+        //! recv from low_level
+        void __recv_all( nodes_list &target )
+        {
+            nodes.merge_back(target);
+        }
+
+
+
+
     private:
-        core::list_of<node_type> nodes;
-        core::pool_of<node_type> cache;
+        nodes_list nodes;
+        nodes_pool cache;
         inline node_type *query(param_type args)
         {
             node_type *node = (cache.size>0) ? cache.query() : object::acquire1<node_type>();
@@ -211,6 +243,15 @@ namespace upsylon
                 object::release1(node);
             }
         }
+
+        template <typename FUNC> static inline
+        int compare_data( const node_type *lhs, const node_type *rhs, void *args )
+        {
+            assert(args);
+            FUNC &func = *(FUNC *)args;
+            return func(lhs->data,rhs->data);
+        }
+
     };
 }
 
