@@ -42,7 +42,8 @@ Y_UTEST(balance)
     C[2] =  0;
     C[3] = -0.3;
     C[4] =  0.2999;
-    
+    //C[4] =  0.301;
+
     /*
     for(size_t i=C.size();i>0;--i)
     {

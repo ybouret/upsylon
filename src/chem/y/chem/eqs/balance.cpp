@@ -4,6 +4,7 @@
 #include "y/sort/sorted-sum.hpp"
 #include "y/math/opt/bracket.hpp"
 #include "y/math/opt/minimize.hpp"
+#include "y/math/utils.hpp"
 
 namespace upsylon
 {
@@ -60,7 +61,10 @@ namespace upsylon
         {
             static const double _end = 1;
 
-            // initialize
+            //__________________________________________________________________
+            //
+            // initialize search
+            //__________________________________________________________________
             for(size_t j=M;j>0;--j)
             {
                 Cini[j] = C[j];
@@ -71,8 +75,8 @@ namespace upsylon
             double Eini = computeExcess(Cini);
             while( Eini > 0 )
             {
-                std::cerr << "Cini  = " << Cini << std::endl;
-                std::cerr << "beta  = " << beta << std::endl;
+                //std::cerr << "Cini  = " << Cini << std::endl;
+                //std::cerr << "beta  = " << beta << std::endl;
                 std::cerr << "Eini  = " << Eini << "/" << E(0) << std::endl;
 
                 //______________________________________________________________
@@ -84,54 +88,85 @@ namespace upsylon
                     xi[i] = tao::_dot<double>(Nu[i],beta)/nu2[i];
                 }
                 tao::mul(dC,tNu,xi);
-                std::cerr << "xi    = " << xi << std::endl;
-                std::cerr << "dC    = " << dC << std::endl;
                 triplet<double> aa   = {0,0,0};
                 triplet<double> EE   = {Eini,Eini,Eini};
                 const double    Eend = E(_end);
+
+                //______________________________________________________________
+                //
+                // locate minimum
+                //______________________________________________________________
                 if(Eend<Eini)
                 {
                     // expand
-                    std::cerr << "|_expand search" << std::endl;
                     aa.b=_end; EE.b = Eend;
                     bracket::expand(E,aa,EE);
                 }
                 else
                 {
                     // backtrack
-                    std::cerr << "|_backtrack search" << std::endl;
                     aa.c=_end; EE.c = Eend;
                     bracket::inside(E,aa,EE);
                 }
-                //std::cerr << "alpha=" << aa << ", E=" << EE << std::endl;
+                //______________________________________________________________
+                //
+                // minimize accordingly
+                //______________________________________________________________
                 const double alpha = max_of<double>(0,minimize::run(E,aa,EE));
                 const double Etry  = E(alpha);
-                std::cerr << "alpha=" << alpha << std::endl;
-                std::cerr << "Etry =" << Etry  << "@" << Ctry << std::endl;
                 if(Etry>=Eini)
                 {
-                    break;
+                    break; // minimum is reached
                 }
                 Eini = Etry;
                 tao::_set(Cini,Ctry);
             }
 
-            if(Eini<=0)
+            //__________________________________________________________________
+            //
+            // check values
+            //__________________________________________________________________
+            std::cerr << "Cini=" << Cini << std::endl;
+            double Cmax = 0;
+            size_t na   = 0;
+            for(size_t j=M;j>0;--j)
             {
-                std::cerr << "Numerically NULL" << std::endl;
-                for(size_t j=M;j>0;--j)
+                if(active[j])
                 {
-                    if(active[j])
+                    ++na;
+                    const double AC = fabs(Cini[j]);
+                    if(AC>Cmax) Cmax = AC;
+                }
+            }
+            const double Ctol = Cmax * na * numeric<double>::ftol;
+            
+            std::cerr << "Cmax=" << Cmax << std::endl;
+            std::cerr << "na  =" << na << std::endl;
+            std::cerr << "Ctol=" << Ctol << std::endl;
+            for(size_t j=M;j>0;--j)
+            {
+                if(active[j])
+                {
+                    const double CC = Cini[j];
+                    if(fabs(CC)<=Ctol)
                     {
-                        C[j] = max_of<double>(0,Cini[j]);
+                        Cini[j] = 0;
+                    }
+                    else
+                    {
+                        if(CC<0)
+                        {
+                            std::cerr << "unable to find valid C#" << j << std::endl;
+                            return false;
+                        }
                     }
                 }
-                return true;
             }
-            else
+            for(size_t j=M;j>0;--j)
             {
-                return false;
+                C[j] = Cini[j];
             }
+            return true;
 
         }
     }
