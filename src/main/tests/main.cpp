@@ -63,6 +63,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(triplet);
     Y_UTEST(points);
     Y_UTEST(tuple);
+    Y_UTEST(release);
 }
 Y_UTEST_EXEC()
 
