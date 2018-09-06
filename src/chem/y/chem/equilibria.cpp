@@ -18,12 +18,20 @@ namespace upsylon
         N(0),
         M(0),
         active(),
+        beta(),
+        beta2(),
+        Cini(),
+        Ctry(),
+        dC(),
         rxn(),
         Nu(),
+        tNu(),
         Phi(),
         W(),
         K(),
-        Gamma()
+        Gamma(),
+        nu2(),
+        xi()
         {
         }
 
@@ -71,9 +79,21 @@ namespace upsylon
         {
             (size_t &)N = 0;
             (size_t &)M = 0;
-            rxn.free();
-            beta.free();
-            active.free();
+            xi.    release();
+            nu2.   release();
+            Gamma. release();
+            K.     release();
+            W.     release();
+            Phi.   release();
+            tNu.   release();
+            Nu.    release();
+            rxn.   release();
+            dC.    release();
+            Ctry.  release();
+            Cini.  release();
+            beta2. release();
+            beta.  release();
+            active.release();
         }
 
         void Equilibria:: compile_for( Library &lib )

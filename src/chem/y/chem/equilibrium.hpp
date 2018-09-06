@@ -102,7 +102,7 @@ namespace upsylon
         public:
             const bool      rescale; //!< true if K needs to be rescaled
             const double    kpower;  //!< the power value
-            int  sum_nu2() const throw();
+            int  sum_nu2() const throw(); //!< sum of nu2 for balance scaling
         };
 
 
