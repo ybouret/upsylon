@@ -77,7 +77,7 @@ namespace upsylon
             {
                 //std::cerr << "Cini  = " << Cini << std::endl;
                 //std::cerr << "beta  = " << beta << std::endl;
-                std::cerr << "Eini  = " << Eini << "/" << E(0) << std::endl;
+                //std::cerr << "Eini  = " << Eini << "/" << E(0) << std::endl;
 
                 //______________________________________________________________
                 //
@@ -140,9 +140,9 @@ namespace upsylon
             }
             const double Ctol = Cmax * na * numeric<double>::ftol;
             
-            std::cerr << "Cmax=" << Cmax << std::endl;
-            std::cerr << "na  =" << na << std::endl;
-            std::cerr << "Ctol=" << Ctol << std::endl;
+            //std::cerr << "Cmax=" << Cmax << std::endl;
+            //std::cerr << "na  =" << na << std::endl;
+            //std::cerr << "Ctol=" << Ctol << std::endl;
             for(size_t j=M;j>0;--j)
             {
                 if(active[j])
