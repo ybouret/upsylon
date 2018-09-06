@@ -39,9 +39,9 @@ Y_UTEST(balance)
     C.ld(0);
 
     C[1] =  0.0;
-    C[2] =  0.0;
+    C[2] =  0;
     C[3] = -0.3;
-    C[4] =  0.2;
+    C[4] =  0.2999;
     
     /*
     for(size_t i=C.size();i>0;--i)
@@ -52,9 +52,15 @@ Y_UTEST(balance)
 
     lib.display(std::cerr,C," (-) ");
     std::cerr << "Nu    =" << cs.Nu  << std::endl;
-    std::cerr << "nrmNu =" << cs.nrmNu  << std::endl;
-
-    cs.balance(C);
+    std::cerr << "nu2   =" << cs.nu2 << std::endl;
+    if(cs.balance(C))
+    {
+        std::cerr << "balanced=" << C << std::endl;
+    }
+    else
+    {
+        std::cerr << "unable to balance" << std::endl;
+    }
 
 }
 Y_UTEST_DONE()

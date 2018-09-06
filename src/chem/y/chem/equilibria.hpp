@@ -76,9 +76,8 @@ namespace upsylon
             matrix<double>               W;      //!< [NxN]
             vector<double>               K;      //!< constants    [N]
             vector<double>               Gamma;  //!< Gamma values [N]
-            vector<double>               nrmNu;  //!< |Nu_i|       [N]
+            vector<int>                  nu2;    //!< |Nu_i|^2       [N]
             vector<double>               xi;     //!< a chemical extent [N]
-            vector<size_t>               bal;    //!< balancing indices [M]
 
             //! evaluate constants for a given time
             void computeK(const double t);

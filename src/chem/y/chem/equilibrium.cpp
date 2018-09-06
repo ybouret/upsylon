@@ -249,21 +249,32 @@ namespace upsylon
             //
             // finalize
             //__________________________________________________________________
-            int &s2 = (int &)sumNu2;
             for(const Component *c=p_list.head;c;c=c->next)
             {
+                assert(0==(c->nu)%divider);
                 (int&)(c->nu) /= divider;
-                s2 += square_of(c->nu);
             }
 
             for(const Component *c=r_list.head;c;c=c->next)
             {
+                assert(0==(c->nu)%divider);
                 (int&)(c->nu) /= divider;
-                s2 += square_of(c->nu);
             }
 
-            //std::cerr << "sumNu2=" << sumNu2 << std::endl;
+        }
 
+        int Equilibrium:: sum_nu2() const throw()
+        {
+            int s2 = 0;
+            for(const Component *c=p_list.head;c;c=c->next)
+            {
+                s2 += square_of(c->nu);
+            }
+            for(const Component *c=r_list.head;c;c=c->next)
+            {
+                s2 += square_of(c->nu);
+            }
+            return s2;
         }
 
 

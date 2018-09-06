@@ -108,6 +108,7 @@ namespace upsylon
                 assert(M>0);
                 active.make(M,false);
                 beta.  make(M,0);
+                beta2. make(M,0);
                 Cini.  make(M,0);
                 Ctry.  make(M,0);
                 dC.    make(M,0);
@@ -126,11 +127,13 @@ namespace upsylon
                     W.     make(N,N).ld(0);
                     K.     make(N,0);
                     Gamma. make(N,0);
-                    nrmNu. make(N,0);
+                    nu2.  make(N,0);
                     xi.    make(N,0);
-                    bal.   make(M,0);
-                    
-                    // build Nu
+
+                    //__________________________________________________________
+                    //
+                    // register equilibria, build Nu and nu2
+                    //__________________________________________________________
                     size_t k=1;
                     for(iterator i=begin();i!=end();++i,++k)
                     {
@@ -149,7 +152,7 @@ namespace upsylon
                             nu[j] = c->nu;
                             active[j] = true;
                         }
-                        nrmNu[k] = sqrt( p->sumNu2 );
+                        nu2[k] = p->sum_nu2();
                     }
                     matrix<int> gram(N,N);
                     tao::mmul_rtrn(gram, Nu, Nu);
