@@ -10,6 +10,7 @@ ADD_TEST(Library     test-chem lib)
 ADD_TEST(Equilibrium test-chem eq)
 ADD_TEST(Equilibria  test-chem cs)
 ADD_TEST(Balance     test-chem balance)
+ADD_TEST(Normalize   test-chem normalize)
 
 ADD_CUSTOM_TARGET(utest-chem
 COMMAND ${CMAKE_CTEST_COMMAND} -V

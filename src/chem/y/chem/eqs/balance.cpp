@@ -75,10 +75,6 @@ namespace upsylon
             double Eini = computeExcess(Cini);
             while( Eini > 0 )
             {
-                //std::cerr << "Cini  = " << Cini << std::endl;
-                //std::cerr << "beta  = " << beta << std::endl;
-                //std::cerr << "Eini  = " << Eini << "/" << E(0) << std::endl;
-
                 //______________________________________________________________
                 //
                 // compute E descent, normalized/nu
@@ -126,7 +122,6 @@ namespace upsylon
             //
             // check values
             //__________________________________________________________________
-            std::cerr << "Cini=" << Cini << std::endl;
             double Cmax = 0;
             size_t na   = 0;
             for(size_t j=M;j>0;--j)
@@ -140,9 +135,7 @@ namespace upsylon
             }
             const double Ctol = Cmax * na * numeric<double>::ftol;
             
-            //std::cerr << "Cmax=" << Cmax << std::endl;
-            //std::cerr << "na  =" << na << std::endl;
-            //std::cerr << "Ctol=" << Ctol << std::endl;
+            
             for(size_t j=M;j>0;--j)
             {
                 if(active[j])

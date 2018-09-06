@@ -2,12 +2,11 @@
 #include "y/chem/equilibria.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
-#include "y/math/kernel/tao.hpp"
 
 using namespace upsylon;
 using namespace Chemical;
 
-Y_UTEST(balance)
+Y_UTEST(normalize)
 {
 
     Library   lib;
@@ -47,42 +46,37 @@ Y_UTEST(balance)
 
     C.ld(0);
 
-#if 0
-    C[1] =  0.0;
-    C[2] =  0;
-    C[3] =  0.11;
-    C[4] =  -0.1;
-    //C[4] =  0.301;
-#endif
-
-    cs.computeK(0.0);
-    for(size_t iter =0;iter<100;++iter)
+    cs.computeK(0);
+    
+    // solve from 0
+    std::cerr << "Normalize from 0" << std::endl;
+    if( !cs.normalize(C) )
     {
-        for(size_t i=C.size();i>0;--i)
-        {
-            C[i] = alea.symm<double>();
-        }
-        lib.display(std::cerr,C," (-) ");
-        if(cs.balance(C))
-        {
-            if(cs.tryShift(C))
-            {
-                std::cerr << "balance/shifted" << std::endl;
-                lib.display(std::cerr,C," (+) ");
-            }
-            else
-            {
-                std::cerr << "balanced/NOT shifted" << std::endl;
-                lib.display(std::cerr,C," (!) ");
-            }
-        }
-        else
-        {
-            std::cerr << "..unable to balance..." << std::endl;
-        }
-        std::cerr << std::endl;
+        std::cerr << "cannot start from 0" << std::endl;
     }
+    else
+    {
+        lib.display(std::cerr,C," (0) ");
+    }
+
+    for(size_t iter=0;iter<100;++iter)
+    {
+        for(size_t j=cs.M;j>0;--j)
+        {
+            C[j] = alea.to<double>() * (alea.to<double>() - 0.3 );
+        }
+        std::cerr << "Start from: " << std::endl;
+        lib.display(std::cerr,C," (-) ");
+        if( cs.normalize(C) )
+        {
+            std::cerr << "...normalized:" << std::endl;
+            lib.display(std::cerr,C," (+) ");
+            cs.computeGamma(C);
+            std::cerr << "\t=> Gamma=" << cs.Gamma << std::endl;
+        }
+
+    }
+
 
 }
 Y_UTEST_DONE()
-

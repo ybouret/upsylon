@@ -59,7 +59,15 @@ namespace upsylon
                 }
             }
             
-            
+            template <typename T,typename U> static inline
+            void neg( array<T> &a, const array<U> &b )
+            {
+                assert(a.size()<=b.size());
+                for(size_t i=a.size();i>0;--i)
+                {
+                    a[i] = -static_cast<T>(b[i]);
+                }
+            }
             
             //__________________________________________________________________
             //

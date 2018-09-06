@@ -137,7 +137,10 @@ namespace upsylon
                     // default magnification step
                     //----------------------------------------------------------
                 PROBE:
-                    x.shift(x.b + GOLD * (x.b - x.a));
+                    //std::cerr << "x0=" << x << std::endl;
+                    x.shift(x.c + GOLD * (x.c - x.b));
+                    //std::cerr << "x1=" << x << std::endl;
+
                     f.shift(F(x.c));
                     assert(f.b<=f.a);
                     assert(x.is_ordered());

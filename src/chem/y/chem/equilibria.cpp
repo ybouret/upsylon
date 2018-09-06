@@ -24,6 +24,9 @@ namespace upsylon
         Cini(),
         Ctry(),
         dC(),
+        Corg(),
+        step(),
+        Cnew(),
         eqs(),
         Nu(),
         tNu(),
@@ -91,6 +94,9 @@ namespace upsylon
             tNu.   release();
             Nu.    release();
             eqs.   release();
+            Cnew.  release();
+            step.  release();
+            Corg.  release();
             dC.    release();
             Ctry.  release();
             Cini.  release();
@@ -135,7 +141,10 @@ namespace upsylon
                 Cini.  make(M,0);
                 Ctry.  make(M,0);
                 dC.    make(M,0);
-                
+                Corg.  make(M,0);
+                step.  make(M,0);
+                Cnew.  make(M,0);
+
                 //______________________________________________________________
                 //
                 // construct data from equilibria

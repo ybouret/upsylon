@@ -64,6 +64,9 @@ namespace upsylon
             vector<double> Cini;   //!< for initial concentrations
             vector<double> Ctry;   //!< for trial concentrations
             vector<double> dC;     //!< some delta C
+            vector<double> Corg;   //!< for normalizing
+            vector<double> step;   //!< for normalizing
+            vector<double> Cnew;   //!< for normalizing
             
             //__________________________________________________________________
             //
@@ -93,14 +96,17 @@ namespace upsylon
             //! toto
             bool   computeW();
 
-            //! solve single
+            //! solve single, K must be computed
             bool   solveSingle(const size_t iEq, array<double> &C);
 
-            //! try shifting a least one equilibrium
+            //! try shifting a least one equilibrium, K must be computed
             bool   tryShift(array<double> &C);
 
             //! balance possible negative active concentrations
             bool   balance( array<double> &C );
+
+            //! normalize, K must be computed
+            bool normalize( array<double> &C );
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
