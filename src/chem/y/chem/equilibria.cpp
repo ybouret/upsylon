@@ -2,6 +2,7 @@
 #include "y/exception.hpp"
 #include "y/math/kernel/tao.hpp"
 #include "y/math/kernel/determinant.hpp"
+#include "y/sort/heap.hpp"
 
 namespace upsylon
 {
@@ -23,7 +24,7 @@ namespace upsylon
         Cini(),
         Ctry(),
         dC(),
-        rxn(),
+        eqs(),
         Nu(),
         tNu(),
         Phi(),
@@ -31,7 +32,8 @@ namespace upsylon
         K(),
         Gamma(),
         nu2(),
-        xi()
+        xi(),
+        sorted()
         {
         }
 
@@ -79,6 +81,7 @@ namespace upsylon
         {
             (size_t &)N = 0;
             (size_t &)M = 0;
+            sorted.release();
             xi.    release();
             nu2.   release();
             Gamma. release();
@@ -87,7 +90,7 @@ namespace upsylon
             Phi.   release();
             tNu.   release();
             Nu.    release();
-            rxn.   release();
+            eqs.   release();
             dC.    release();
             Ctry.  release();
             Cini.  release();
@@ -139,16 +142,16 @@ namespace upsylon
                 //______________________________________________________________
                 if(N>0)
                 {
-                    rxn.free();
-                    rxn.ensure(N);
+                    eqs.free(); eqs.ensure(N);
                     Nu.    make(N,M).ld(0);
                     tNu.   make(M,N).ld(0);
                     Phi.   make(N,M).ld(0);
                     W.     make(N,N).ld(0);
                     K.     make(N,0);
                     Gamma. make(N,0);
-                    nu2.  make(N,0);
+                    nu2.   make(N,0);
                     xi.    make(N,0);
+                    sorted.free(); sorted.ensure(N);
 
                     //__________________________________________________________
                     //
@@ -158,7 +161,8 @@ namespace upsylon
                     for(iterator i=begin();i!=end();++i,++k)
                     {
                         Equilibrium::Pointer &p = *i;
-                        rxn.push_back(p);
+                        eqs.push_back_(p);
+                        sorted.push_back_(p);
                         array<int> &nu = Nu[k];
                         for( const Equilibrium::Component *c=p->reactants().head;c;c=c->next)
                         {
@@ -174,6 +178,10 @@ namespace upsylon
                         }
                         nu2[k] = p->sum_nu2();
                     }
+                    //__________________________________________________________
+                    //
+                    // check linearly independant eqs
+                    //__________________________________________________________
                     matrix<int> gram(N,N);
                     tao::mmul_rtrn(gram, Nu, Nu);
                     const int   g = ideterminant(gram);
@@ -181,10 +189,13 @@ namespace upsylon
                     {
                         throw exception("Equilibria: found dependency!");
                     }
+                    //__________________________________________________________
+                    //
+                    // prepare auxiliary data
+                    //__________________________________________________________
                     tNu.assign_transpose(Nu);
+                    hsort(sorted,Equilibrium::CompareDecreasingSumNu);
                 }
-
-
             }
             catch(...)
             {
@@ -197,7 +208,7 @@ namespace upsylon
         {
             for(size_t i=N;i>0;--i)
             {
-                Equilibrium &eq = *rxn[i];
+                Equilibrium &eq = *eqs[i];
                 const double eqK = eq(t);
                 if(eq.rescale)
                 {
@@ -214,7 +225,7 @@ namespace upsylon
         {
             for(size_t i=N;i>0;--i)
             {
-                Gamma[i] = rxn[i]->Gamma(K[i],C);
+                Gamma[i] = eqs[i]->Gamma(K[i],C);
             }
         }
 
@@ -223,7 +234,7 @@ namespace upsylon
             Phi.ld(0);
             for(size_t i=N;i>0;--i)
             {
-                Gamma[i] = rxn[i]->GammaAndPhi(Phi[i],K[i],C);
+                Gamma[i] = eqs[i]->GammaAndPhi(Phi[i],K[i],C);
             }
         }
 

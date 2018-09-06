@@ -69,7 +69,7 @@ namespace upsylon
             //
             // reaction dependent only
             //__________________________________________________________________
-            vector<Equilibrium::Pointer> rxn;    //!< the equilibria linearly stored
+            vector<Equilibrium::Pointer> eqs;    //!< the equilibria linearly stored
             matrix<int>                  Nu;     //!< topology     [NxM]
             matrix<int>                  tNu;    //!< Nu'          [MxM]
             matrix<double>               Phi;    //!< Jacobian     [NxN]
@@ -78,6 +78,7 @@ namespace upsylon
             vector<double>               Gamma;  //!< Gamma values [N]
             vector<int>                  nu2;    //!< |Nu_i|^2       [N]
             vector<double>               xi;     //!< a chemical extent [N]
+            vector<Equilibrium::Pointer> sorted; //!< sorted by decreasing delta_nu [N]
 
             //! evaluate constants for a given time
             void computeK(const double t);
@@ -94,6 +95,9 @@ namespace upsylon
 
             //! solve single
             bool   solveSingle(const size_t iEq, array<double> &C);
+
+            //! try shifting a least one equilibrium
+            bool   tryShift(array<double> &C);
 
             //! balance possible negative active concentrations
             bool   balance( array<double> &C );

@@ -43,7 +43,7 @@ namespace upsylon
                 assert( !(active[i]&&C[i]<0) );
                 Cini[i] = C[i];
             }
-            Equilibrium      &eq = *rxn[iEq];
+            Equilibrium      &eq = *eqs[iEq];
             const array<int> &nu =  Nu[iEq];
             __single_solver   F  = { &eq, K[iEq], &Cini, &nu, &Ctry };
 
@@ -134,5 +134,18 @@ namespace upsylon
                 return false;
             }
         }
+
+        bool   Equilibria:: tryShift( array<double> &C )
+        {
+            for(size_t i=1;i<=N;++i)
+            {
+                if( solveSingle(i,C) )
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 }

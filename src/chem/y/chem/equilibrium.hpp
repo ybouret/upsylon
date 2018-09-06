@@ -102,7 +102,15 @@ namespace upsylon
         public:
             const bool      rescale; //!< true if K needs to be rescaled
             const double    kpower;  //!< the power value
-            int  sum_nu2() const throw(); //!< sum of nu2 for balance scaling
+            int             sum_nu2()  const throw(); //!< sum of nu2 for balance scaling
+            int             sum_nu()   const throw(); //!< delta_r nu
+
+            static inline
+            int CompareDecreasingSumNu(const Pointer &lhs, const Pointer &rhs ) throw()
+            {
+                return rhs->sum_nu() - lhs->sum_nu();
+            }
+
         };
 
 

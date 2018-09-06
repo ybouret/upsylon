@@ -14,6 +14,7 @@ Y_UTEST(cs)
     Species  &hydroxy = lib("HO-",-1);
     Species  &AH      = lib("AH",0);
     Species  &Am      = lib("Am",-1);
+   
     lib("Na+",1);
     lib("Cl-",-1);
 
@@ -65,7 +66,7 @@ Y_UTEST(cs)
     
     for(size_t i=1;i<=cs.N;++i)
     {
-        std::cerr << "SolveSingle '" << cs.rxn[i]->name << "'" << std::endl;
+        std::cerr << "SolveSingle '" << cs.eqs[i]->name << "'" << std::endl;
         if(cs.solveSingle(i,C))
         {
             lib.display(std::cerr,C,"  (@) ");
@@ -76,7 +77,7 @@ Y_UTEST(cs)
     C.ld(0);
     for(size_t i=1;i<=cs.N;++i)
     {
-        std::cerr << "SolveSingle0 '" << cs.rxn[i]->name << "'" << std::endl;
+        std::cerr << "SolveSingle0 '" << cs.eqs[i]->name << "'" << std::endl;
         if(cs.solveSingle(i,C))
         {
             lib.display(std::cerr,C,"  (@) ");

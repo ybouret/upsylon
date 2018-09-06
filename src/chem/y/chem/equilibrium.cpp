@@ -277,6 +277,20 @@ namespace upsylon
             return s2;
         }
 
+        int Equilibrium:: sum_nu() const throw()
+        {
+            int ans = 0;
+            for(const Component *c=p_list.head;c;c=c->next)
+            {
+                ans += c->nu;
+            }
+            for(const Component *c=r_list.head;c;c=c->next)
+            {
+                ans += c->nu;
+            }
+            return ans;
+        }
+
 
         double Equilibrium:: Gamma( const double K, const array<double> &C ) const throw()
         {
