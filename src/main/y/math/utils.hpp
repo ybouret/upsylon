@@ -238,6 +238,53 @@ namespace upsylon
                 assert(seq.size()>=ker_size);
                 __set_size(seq,seq.size()-ker_size);
             }
+
+            static inline
+            T simplify( array<T> &arr ) throw()
+            {
+                mutable_type dmax = 0;
+                const size_t n    = arr.size();
+                for(size_t i=n;i>0;--i)
+                {
+                    const_type dtmp = abs_of(arr[i]);
+                    if(dtmp>dmax)
+                    {
+                        dmax=dtmp;
+                    }
+                }
+                mutable_type divider = 1;
+                for(mutable_type d=2;d<=dmax;++d)
+                {
+                    bool divides = true;
+                    for(size_t j=n;j>0;--j)
+                    {
+                        if( 0 != (arr[j]%d) )
+                        {
+                            divides = false;
+                            break;
+                        }
+                    }
+                    if(divides)
+                    {
+                        divider=d;
+                    }
+                }
+                for(size_t j=n;j>0;--j)
+                {
+                    arr[j]/=divider;
+                }
+                return divider;
+            }
+
+            template <typename U>
+            static inline
+            void simplify( array<U> &dividers, matrix<T> &M )
+            {
+                for(size_t i=M.rows;i>0;--i)
+                {
+                    dividers[i] = simplify(M[i]);
+                }
+            }
         };
         
     }

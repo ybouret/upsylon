@@ -49,7 +49,7 @@ Y_UTEST(boot)
     loader.electroneutrality(lib);
     loader.conserve(0,Na);
     loader.conserve(0,Cl);
-    loader.conserve(0,Am,AH);
+    loader.conserve(0.001,Am,AH);
     loader.conserve(0,NH4,NH3);
 
     vector<double> C( cs.M+2 );
@@ -57,6 +57,7 @@ Y_UTEST(boot)
     std::cerr << loader << std::endl;
 
 
+    std::cerr << "Nu=" << cs.Nu << std::endl;
     cs.boot(C,loader);
 
 }

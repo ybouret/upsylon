@@ -217,16 +217,15 @@ namespace upsylon
                 //
                 // find divider
                 //______________________________________________________________
-                unique(coef);
-
-                const size_t nc = coef.size();
-                for(size_t i=1;i<=nc;++i)
+                unique(coef); // unique coefs, from the smallest to the biggest one
+                const int    dmax = coef.back();
+                const size_t nc   = coef.size();
+                for(int d=1;d<=dmax;++d)
                 {
-                    const int tmp = coef[i];
                     bool divides = true;
-                    for(size_t j=i;j<=nc;++j)
+                    for(size_t j=1;j<=nc;++j)
                     {
-                        if( 0 != (coef[j]%tmp) )
+                        if( 0 != (coef[j]%d) )
                         {
                             divides=false;
                             break;
@@ -234,7 +233,7 @@ namespace upsylon
                     }
                     if(divides)
                     {
-                        divider=tmp;
+                        divider=d;
                     }
                 }
 

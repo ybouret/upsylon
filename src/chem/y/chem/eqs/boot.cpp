@@ -2,6 +2,7 @@
 #include "y/exception.hpp"
 #include "y/math/kernel/tao.hpp"
 #include "y/math/kernel/adjoint.hpp"
+#include "y/math/utils.hpp"
 
 namespace upsylon
 {
@@ -25,7 +26,7 @@ namespace upsylon
                 throw exception("unhandled special case");
             }
 
-            matrix<double> P(Nc,M);
+            matrix<int>    P(Nc,M);
             vector<double> L(Nc);
             {
                 size_t ic = 0;
@@ -39,7 +40,7 @@ namespace upsylon
             }
             std::cerr << "P=" << P << std::endl;
             std::cerr << "L=" << L << std::endl;
-            matrix<double> P2(Nc,Nc);
+            matrix<int> P2(Nc,Nc);
             tao::mmul_rtrn(P2,P,P);
             std::cerr << "P2=" << P2 << std::endl;
             const int detP2 = ideterminant(P2);
@@ -51,6 +52,17 @@ namespace upsylon
             matrix<int> adjP2(Nc,Nc);
             iadjoint(adjP2,P2);
             std::cerr << "adjP2=" << adjP2 << std::endl;
+            matrix<int> tP(P,matrix_transpose);
+            matrix<int> L2C(M,Nc);
+            tao::_mmul(L2C,tP,adjP2);
+            std::cerr << "L2C0=" << L2C << std::endl;
+            vector<double> DVD(M);
+            __find<int>::simplify(DVD,L2C);
+            std::cerr << "L2C=" << L2C << std::endl;
+            std::cerr << "DVD=" << DVD << std::endl;
+            
+            
+
             return false;
         }
 
