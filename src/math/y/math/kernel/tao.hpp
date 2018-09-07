@@ -58,7 +58,8 @@ namespace upsylon
                     _set(a,b);
                 }
             }
-            
+
+            //! negate all values
             template <typename T,typename U> static inline
             void neg( array<T> &a, const array<U> &b )
             {

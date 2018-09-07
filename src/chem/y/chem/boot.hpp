@@ -23,13 +23,15 @@ namespace upsylon
             class Actor : public Object
             {
             public:
-                typedef intr_ptr<string,Actor> Pointer;
+                typedef intr_ptr<string,Actor> Pointer;           //!< for database
                 explicit Actor( Species &s, const int w) throw(); //!< initialize
-                virtual ~Actor() throw();            //!< destructor
-                const string & key() const throw();  //!< sp->name
+                virtual ~Actor() throw();                         //!< destructor
+                const string & key() const throw();               //!< sp->name
 
                 const Species::Pointer species; //!< shared species
                 const int              weight;  //!< weight
+
+                //! output
                 friend std::ostream & operator<<( std::ostream &os, const Actor &a);
 
             private:
@@ -48,8 +50,8 @@ namespace upsylon
             class Constraint : public Object
             {
             public:
-                typedef arc_ptr<Constraint> Pointer;
-                const double value;
+                typedef arc_ptr<Constraint> Pointer;       //!< for list of constraints
+                const double value;                        //!< the constraint value
                 explicit Constraint(const double) throw(); //!< initialize
                 virtual ~Constraint() throw();             //!< desctructor
 

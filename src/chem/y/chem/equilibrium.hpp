@@ -105,6 +105,7 @@ namespace upsylon
             int             sum_nu2()  const throw(); //!< sum of nu2 for balance scaling
             int             sum_nu()   const throw(); //!< delta_r nu
 
+            //! compare by decreasing delta_r nu for optimized shifting computation
             static inline
             int CompareDecreasingSumNu(const Pointer &lhs, const Pointer &rhs ) throw()
             {

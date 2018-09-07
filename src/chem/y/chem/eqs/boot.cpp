@@ -1,6 +1,7 @@
 #include "y/chem/equilibria.hpp"
 #include "y/exception.hpp"
 #include "y/math/kernel/tao.hpp"
+#include "y/math/kernel/adjoint.hpp"
 
 namespace upsylon
 {
@@ -41,7 +42,15 @@ namespace upsylon
             matrix<double> P2(Nc,Nc);
             tao::mmul_rtrn(P2,P,P);
             std::cerr << "P2=" << P2 << std::endl;
-            
+            const int detP2 = ideterminant(P2);
+            std::cerr << "detP2=" << detP2 << std::endl;
+            if(!detP2)
+            {
+                throw exception("singular set of constraints");
+            }
+            matrix<int> adjP2(Nc,Nc);
+            iadjoint(adjP2,P2);
+            std::cerr << "adjP2=" << adjP2 << std::endl;
             return false;
         }
 

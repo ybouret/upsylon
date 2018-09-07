@@ -42,6 +42,7 @@ namespace upsylon
         //! destructor
         inline virtual ~to_release() throw() {}
 
+        //! release all releasable
         void release_all() throw()
         {
             for(node_type *node=hosts.tail;node;node=node->prev)
