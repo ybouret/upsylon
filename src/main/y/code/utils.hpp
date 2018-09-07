@@ -30,7 +30,8 @@ namespace upsylon
 
     //! convert a byte into a visible char
     extern const char *visible_char[256];
-    
+    extern const char *printable_char[256];
+
 
 }
 

@@ -9,7 +9,7 @@ namespace
     static inline void display( const Token &t )
     {
         std::cerr << "-- #chars=" << t.size << std::endl;
-        std::cerr << t << "|" << t.to_string() << "|" << t.to_visible_string() << std::endl;
+        std::cerr << t << "|" << t.to_string() << "|" << t.to_print() << std::endl;
     }
 }
 
@@ -18,7 +18,7 @@ namespace
 Y_UTEST(token)
 {
     {
-        const string s = "\tHello, World!\"\\\r\n";
+        const string s = "\tHello, World!\"\r\n";
         Token t;        display(t);
         Token t1 = s;   display(t1);
         Token t2 = *s;  display(t2);

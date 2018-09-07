@@ -76,7 +76,7 @@ namespace upsylon
             }
 
             string to_string() const; //!< convert to string
-            string to_visible_string() const; //!< convert to visible string
+            string to_print()  const; //!< convert to printable string
             
         private:
             Char::Pool &cache;

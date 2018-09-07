@@ -15,12 +15,12 @@ namespace upsylon
             return ans;
         }
 
-        string Token::to_visible_string() const
+        string Token::to_print() const
         {
             string ans(2*size,as_capacity);
             for(const Char *ch=head;ch;ch=ch->next)
             {
-                ans << visible_char[ch->code];
+                ans << printable_char[ch->code];
             }
             return ans;
         }
