@@ -8,6 +8,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(cs);
     Y_UTEST(balance);
     Y_UTEST(normalize);
+    Y_UTEST(boot);
 }
 Y_UTEST_EXEC()
 
