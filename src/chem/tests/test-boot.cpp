@@ -17,8 +17,8 @@ Y_UTEST(boot)
     Species  &Am      = lib("Am",-1);
     Species  &NH3     = lib("NH3",0);
     Species  &NH4     = lib("NH4+",1);
-    lib("Na+",1);
-    lib("Cl-",-1);
+    Species  &Na      = lib("Na+",1);
+    Species  &Cl      = lib("Cl-",-1);
 
     Equilibria cs;
 
@@ -45,9 +45,19 @@ Y_UTEST(boot)
     cs.compile_for(lib);
     
 
-    Boot loader;
+    Boot::Loader loader;
     loader.electroneutrality(lib);
+    loader.conserve(0,Na);
+    loader.conserve(0,Cl);
+    loader.conserve(0,Am,AH);
+    loader.conserve(0,NH4,NH3);
+
+    vector<double> C( cs.M+2 );
+    lib.display(std::cerr,C,"\t(0) " );
     std::cerr << loader << std::endl;
+
+
+    cs.boot(C,loader);
 
 }
 Y_UTEST_DONE()

@@ -102,26 +102,26 @@ namespace upsylon
     namespace Chemical
     {
 
-        Boot:: ~Boot() throw()
+        Boot:: Loader:: ~Loader() throw()
         {
         }
 
-        Boot:: Boot() throw() : constraints()
+        Boot:: Loader:: Loader() throw() : Constraints()
         {
         }
 
-        Boot::Constraint & Boot:: create(const double value)
+        Boot::Constraint & Boot:: Loader:: create(const double value)
         {
             Constraint::Pointer p = new Constraint(value);
-            constraints.push_back(p);
+            push_back(p);
             return *p;
         }
 
 
-        std::ostream & operator<<( std::ostream &os, const Boot &b)
+        std::ostream & operator<<( std::ostream &os, const Boot::Loader &b)
         {
-            os << "<Chemical::Boot constraints='" << b.constraints.size() << "'>" << std::endl;
-            for(Boot::Constraints::const_iterator i=b.constraints.begin();i!=b.constraints.end();++i)
+            os << "<Chemical::Boot constraints='" << b.size() << "'>" << std::endl;
+            for(Boot::Constraints::const_iterator i=b.begin();i!=b.end();++i)
             {
                 os << "|_< " << **i << " >" << std::endl;
             }
@@ -130,22 +130,22 @@ namespace upsylon
         }
 
 
-        void Boot:: conserve( const double C0, Species &sp1 )
+        void Boot:: Loader:: conserve( const double C0, Species &sp1 )
         {
             create(C0).add(sp1);
         }
 
-        void Boot:: conserve( const double C0, Species &sp1, Species &sp2 )
+        void Boot:: Loader:: conserve( const double C0, Species &sp1, Species &sp2 )
         {
             create(C0).add(sp1).add(sp2);
         }
 
-        void Boot:: conserve( const double C0, Species &sp1, Species &sp2, Species &sp3 )
+        void Boot:: Loader:: conserve( const double C0, Species &sp1, Species &sp2, Species &sp3 )
         {
             create(C0).add(sp1).add(sp2).add(sp3);
         }
 
-        void Boot:: electroneutrality(Library &lib)
+        void Boot:: Loader:: electroneutrality(Library &lib)
         {
             Constraint &EN = create(0);
             for(Library::iterator i=lib.begin();i!=lib.end();++i)
@@ -155,7 +155,7 @@ namespace upsylon
             }
         }
 
-        void Boot:: osmolarity(const double osm, Library &lib)
+        void Boot:: Loader:: osmolarity(const double osm, Library &lib)
         {
             Constraint &OSM = create(osm);
             for(Library::iterator i=lib.begin();i!=lib.end();++i)

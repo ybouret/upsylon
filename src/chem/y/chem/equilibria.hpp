@@ -3,7 +3,7 @@
 #define Y_CHEM_EQUILIBRIA_INCLUDED 1
 
 #include "y/chem/equilibrium.hpp"
-#include "y/chem/library.hpp"
+#include "y/chem/boot.hpp"
 #include "y/container/matrix.hpp"
 #include "y/sequence/vector.hpp"
 
@@ -107,6 +107,9 @@ namespace upsylon
 
             //! normalize, K must be computed
             bool normalize( array<double> &C );
+
+            //! boot a solution, K must be computed
+            bool boot( array<double> &C, const Boot::Loader &loader );
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);

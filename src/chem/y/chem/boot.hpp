@@ -12,7 +12,7 @@ namespace upsylon
     {
 
         //! holds a list of algebraic constraints
-        class Boot : public Object
+        struct Boot
         {
         public:
 
@@ -55,9 +55,25 @@ namespace upsylon
 
                 //! add/modify an actor
                 Constraint & add( Species &species, const int weight );
+                //! add/modify +1
                 inline Constraint &add(Species &species) { return add(species,1); }
 
+                //! output
                 friend std::ostream & operator<<( std::ostream &os, const Constraint &a);
+
+                //! store into a matrix row
+                template <typename T>
+                void fill( array<T> &arr ) const
+                {
+                    for(size_t j=arr.size();j>0;--j) arr[j] = 0;
+                    for( Actors::const_iterator i=actors.begin();i!=actors.end();++i)
+                    {
+                        const Actor   &a = **i;
+                        const size_t   j = a.species->indx;
+                        arr[j] = static_cast<T>( a.weight );
+                    }
+                }
+
 
             private:
                 Actors actors;
@@ -69,32 +85,34 @@ namespace upsylon
             typedef list<Constraint::Pointer> Constraints; //!< database of actors
             //__________________________________________________________________
 
-            //__________________________________________________________________
-            //
-            //! initialize a list of constraints
-            //__________________________________________________________________
-            explicit Boot() throw(); //!< constructor
-            virtual ~Boot() throw(); //!< destructor
 
-            //! create a new constraint
-            Constraint & create(const double value);
-            //! [sp1] = C0
-            void         conserve( const double C0, Species &sp1 );
-            //! [sp1] + [sp2] = C0
-            void         conserve( const double C0, Species &sp1, Species &sp2 );
-            //! [sp1] + [sp2] + [sp3] = C0
-            void         conserve( const double C0, Species &sp1, Species &sp2, Species &sp3 );
-            //! sum([sp].z) = 0
-            void         electroneutrality(Library &lib);
-            //! sum([sp]) = osm
-            void         osmolarity(const double osm, Library &lib);
+            //! A list of constraints
+            class Loader : public Constraints
+            {
+            public:
+                explicit Loader() throw();
+                virtual ~Loader() throw();
 
-            friend std::ostream & operator<<( std::ostream &os, const Boot &b);
+                //! create a new constraint
+                Constraint & create(const double value);
+                //! [sp1] = C0
+                void         conserve( const double C0, Species &sp1 );
+                //! [sp1] + [sp2] = C0
+                void         conserve( const double C0, Species &sp1, Species &sp2 );
+                //! [sp1] + [sp2] + [sp3] = C0
+                void         conserve( const double C0, Species &sp1, Species &sp2, Species &sp3 );
+                //! sum([sp].z) = 0
+                void         electroneutrality(Library &lib);
+                //! sum([sp]) = osm
+                void         osmolarity(const double osm, Library &lib);
 
+                //! output
+                friend std::ostream & operator<<( std::ostream &os, const Loader &b);
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Boot);
-            Constraints constraints;
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Loader);
+            };
+
         };
 
     }
