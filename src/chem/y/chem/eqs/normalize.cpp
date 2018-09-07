@@ -30,7 +30,6 @@ namespace upsylon
             while(true)
             {
                 // try to find a valid starting point
-                //std::cerr << "Corg=" << Corg << std::endl;
                 computeGammaAndPhi(Corg);
                 tao::_mmul_rtrn(W,Phi,Nu);
                 if( !LU::build(W) )
@@ -87,7 +86,7 @@ namespace upsylon
 
                 if(converged)
                 {
-                    std::cerr << "converged" << std::endl;
+                    //std::cerr << "converged" << std::endl;
                     break;
                 }
             }

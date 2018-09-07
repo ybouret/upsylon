@@ -48,15 +48,15 @@ Y_UTEST(boot)
     Boot::Loader loader;
     loader.electroneutrality(lib);
     loader.conserve(0,Na);
-    loader.conserve(0,Cl);
-    loader.conserve(0.001,Am,AH);
-    loader.conserve(0,NH4,NH3);
+    loader.conserve(0.1,Cl);
+    loader.conserve(0.000001,Am,AH);
+    loader.conserve(0.1,NH4,NH3);
 
     vector<double> C( cs.M+2 );
     lib.display(std::cerr,C,"\t(0) " );
     std::cerr << loader << std::endl;
 
-
+    cs.computeK(0.0);
     std::cerr << "Nu=" << cs.Nu << std::endl;
     cs.boot(C,loader);
 
