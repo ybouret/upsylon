@@ -48,9 +48,9 @@ Y_UTEST(boot)
     Boot::Loader loader;
     loader.electroneutrality(lib);
     loader.conserve(0,Na);
-    loader.conserve(0.1,Cl);
+    loader.conserve(0.0001,Cl);
     loader.conserve(0.000001,Am,AH);
-    loader.conserve(0.1,NH4,NH3);
+    loader.conserve(0.0001,NH4,NH3);
 
     vector<double> C( cs.M+2 );
     lib.display(std::cerr,C,"\t(0) " );
@@ -62,3 +62,56 @@ Y_UTEST(boot)
 
 }
 Y_UTEST_DONE()
+
+
+Y_UTEST(bootAB)
+{
+
+    Library   lib;
+    Species  &A  = lib("A", 0);
+    Species  &B  = lib("B", 0);
+
+    Equilibria cs;
+    cs.compile_for(lib);
+    vector<double> C(2);
+    std::cerr << cs << std::endl;
+
+    cs.computeK(0.0);
+    if(true)
+    {
+        Boot::Loader loader;
+        loader.conserve(0,A);
+        loader.conserve(1,A,B);
+        if(cs.boot(C,loader))
+        {
+            lib.display(std::cerr,C);
+        }
+        else std::cerr << "error loading" << std::endl;
+    }
+
+    std::cerr << "Adding AB" << std::endl;
+
+    {
+        Equilibrium &AB = cs("AB",1.2);
+        AB.add(B);
+        AB.sub(A);
+    }
+    cs.compile_for(lib);
+    cs.computeK(0.0);
+    std::cerr << cs << std::endl;
+
+    {
+        Boot::Loader loader;
+        loader.conserve(1.0,A,B);
+        if(cs.boot(C,loader))
+        {
+            lib.display(std::cerr,C);
+        } else std::cerr << "error loading" << std::endl;
+
+    }
+
+
+
+}
+Y_UTEST_DONE()
+

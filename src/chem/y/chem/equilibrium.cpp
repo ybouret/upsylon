@@ -297,13 +297,13 @@ namespace upsylon
             double p_prod = 1;
             for(const Component *r = r_list.head;r;r=r->next)
             {
-                const size_t id = r->sp->indx; assert(id>0); assert(id<C.size());
+                const size_t id = r->sp->indx; assert(id>0); assert(id<=C.size());
                 const int    nu = r->nu;       assert(nu<0);
                 r_prod *= ipower<double>(C[id],-nu);
             }
             for(const Component *p = p_list.head;p;p=p->next)
             {
-                const size_t id = p->sp->indx; assert(id>0); assert(id<C.size());
+                const size_t id = p->sp->indx; assert(id>0); assert(id<=C.size());
                 const int    nu = p->nu;       assert(nu>0);
                 p_prod *= ipower<double>(C[id],nu);
             }
@@ -316,7 +316,7 @@ namespace upsylon
             double p_prod = 1;
             for(const Component *r=r_list.head;r;r=r->next)
             {
-                const size_t id = r->sp->indx; assert(id>0); assert(id<C.size());
+                const size_t id = r->sp->indx; assert(id>0); assert(id<=C.size());
                 const int    nu = r->nu;       assert(nu<0);
                 const int    q  = -nu;
                 const double CC = C[id];
@@ -335,7 +335,7 @@ namespace upsylon
             
             for(const Component *p = p_list.head;p;p=p->next)
             {
-                const size_t id = p->sp->indx; assert(id>0); assert(id<C.size());
+                const size_t id = p->sp->indx; assert(id>0); assert(id<=C.size());
                 const int    nu = p->nu;       assert(nu>0);
                 const double CC = C[id];
                 p_prod *= ipower<double>(CC,nu);
@@ -363,7 +363,7 @@ namespace upsylon
             //size_t idRev = 0;
             for(const Equilibrium::Component *c =p_list.head;c;c=c->next)
             {
-                const size_t id = c->sp->indx;
+                const size_t id = c->sp->indx; assert(id>=0); assert(id<=C.size());
                 const double CC = max_of<double>(C[id],0);
                 const int    nu = c->nu; assert(nu>0);
                 const double xi = CC/nu;
@@ -387,7 +387,7 @@ namespace upsylon
             //size_t idFwd = 0;
             for(const Equilibrium::Component *c =r_list.head;c;c=c->next)
             {
-                const size_t id = c->sp->indx;
+                const size_t id = c->sp->indx; assert(id>=0); assert(id<=C.size());
                 const double CC = max_of<double>(C[id],0);
                 const int    nu = c->nu; assert(nu<0);
                 const double xi = CC/(-nu);

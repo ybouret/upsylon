@@ -64,32 +64,43 @@ namespace upsylon
             //__________________________________________________________________
             if(Nc==M)
             {
-                throw exception("unhandled special case");
+                const int   dP = ideterminant(P);
+                if(!dP)
+                {
+                    throw exception("invalid set of exact constraints");
+                }
+
+                matrix<int> aP(M,M);
+                iadjoint(aP,P);
+                for(size_t j=M;j>0;--j)
+                {
+                    C[j] = tao::_dot<double>(aP[j],L)/dP;
+                }
+
+                return true;
             }
 
             //__________________________________________________________________
             //
             // construct projection matrix
             //__________________________________________________________________
-            matrix<int> P2(Nc,Nc);
-            tao::_mmul_rtrn(P2,P,P);
-            std::cerr << "P2=" << P2 << std::endl;
-
-            const int detP2 = ideterminant(P2);
-            std::cerr << "detP2=" << detP2 << std::endl;
-            if(!detP2)
-            {
-                throw exception("singular set of constraints");
-            }
-            matrix<int> adjP2(Nc,Nc);
-            iadjoint(adjP2,P2);
-            std::cerr << "adjP2=" << adjP2 << std::endl;
             matrix<int> U2C(M,Nc);
+            int         detP2 = 0;
             {
-                matrix<int> tP(P,matrix_transpose);
-                tao::_mmul(U2C,tP,adjP2);
+                matrix<int> P2(Nc,Nc);
+                tao::_mmul_rtrn(P2,P,P);
+                detP2 = ideterminant(P2);
+                if(!detP2)
+                {
+                    throw exception("singular set of constraints");
+                }
+                matrix<int> adjP2(Nc,Nc);
+                iadjoint(adjP2,P2);
+                {
+                    matrix<int> tP(P,matrix_transpose);
+                    tao::_mmul(U2C,tP,adjP2);
+                }
             }
-            std::cerr << "U2C=" << U2C << std::endl;
 
             vector<double> C0(M);
             vector<double> C1(M);
@@ -129,27 +140,11 @@ namespace upsylon
 
                 std::cerr << "C1=" << C1 << std::endl;
 
-                bool converged = true;
                 for(size_t j=M;j>0;--j)
                 {
-                    const double delta = fabs(C0[j]-C1[j]);
-                    if( delta > numeric<double>::ftol  * max_of(C0[j],C1[j]) )
-                    {
-                        std::cerr << "\tdelta[" << j << "]=" << delta << "/" << max_of(C0[j],C1[j]) << std::endl;
-                        converged = false;
-                    }
-                    R[j]  = delta*delta;;
+                    R[j]  = fabs(C0[j]-C1[j]);
                 }
 
-                if(converged)
-                {
-                    std::cerr << "Boot: variable convergence" << std::endl;
-                    for(size_t j=M;j>0;--j)
-                    {
-                        C[j] = C1[j];
-                    }
-                    return true;
-                }
 
                 const double R1 = sorted_sum(R);
 

@@ -239,6 +239,7 @@ namespace upsylon
                 __set_size(seq,seq.size()-ker_size);
             }
 
+            //! simplify an array of integer values, return the common divider
             static inline
             T simplify( array<T> &arr ) throw()
             {
@@ -276,6 +277,7 @@ namespace upsylon
                 return divider;
             }
 
+            //! simplify a matrix of integers, return divider per row
             template <typename U>
             static inline
             void simplify( array<U> &dividers, matrix<T> &M )
