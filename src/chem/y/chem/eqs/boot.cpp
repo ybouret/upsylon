@@ -14,18 +14,22 @@ namespace upsylon
                                const Boot::Loader   &loader )
         {
 
-            
+            //__________________________________________________________________
+            //
+            // checking dimensions
+            //__________________________________________________________________
             const size_t Nc = loader.size();
             if( N+Nc!=M )
             {
                 throw exception("#species=%u != (#equation=%u+#constraint=%u)=%u", unsigned(M), unsigned(N), unsigned(Nc), unsigned(N+Nc) );
             }
 
-            if(Nc==M)
-            {
-                throw exception("unhandled special case");
-            }
 
+
+            //__________________________________________________________________
+            //
+            // building contraints
+            //__________________________________________________________________
             matrix<int>    P(Nc,M);
             vector<double> L(Nc);
             {
@@ -40,10 +44,21 @@ namespace upsylon
             }
             std::cerr << "P=" << P << std::endl;
             std::cerr << "L=" << L << std::endl;
+
+            //__________________________________________________________________
+            //
+            // check special cases
+            //__________________________________________________________________
+            if(Nc==M)
+            {
+                throw exception("unhandled special case");
+            }
+
             matrix<int> P2(Nc,Nc);
-            tao::mmul_rtrn(P2,P,P);
+            tao::_mmul_rtrn(P2,P,P);
             std::cerr << "P2=" << P2 << std::endl;
-            const int detP2 = ideterminant(P2);
+
+            const double detP2 = ideterminant(P2);
             std::cerr << "detP2=" << detP2 << std::endl;
             if(!detP2)
             {
@@ -52,16 +67,13 @@ namespace upsylon
             matrix<int> adjP2(Nc,Nc);
             iadjoint(adjP2,P2);
             std::cerr << "adjP2=" << adjP2 << std::endl;
-            matrix<int> tP(P,matrix_transpose);
-            matrix<int> L2C(M,Nc);
-            tao::_mmul(L2C,tP,adjP2);
-            std::cerr << "L2C0=" << L2C << std::endl;
-            vector<double> DVD(M);
-            __find<int>::simplify(DVD,L2C);
-            std::cerr << "L2C=" << L2C << std::endl;
-            std::cerr << "DVD=" << DVD << std::endl;
-            
-            
+            matrix<int> U2C(M,Nc);
+            {
+                matrix<int> tP(P,matrix_transpose);
+                tao::_mmul(U2C,tP,adjP2);
+            }
+            std::cerr << "U2C=" << U2C << std::endl;
+
 
             return false;
         }
