@@ -1,8 +1,10 @@
 #include "y/chem/equilibria.hpp"
 #include "y/exception.hpp"
+#include "y/math/kernel/tao.hpp"
 
 namespace upsylon
 {
+    using namespace math;
 
     namespace Chemical
     {
@@ -36,7 +38,10 @@ namespace upsylon
             }
             std::cerr << "P=" << P << std::endl;
             std::cerr << "L=" << L << std::endl;
-
+            matrix<double> P2(Nc,Nc);
+            tao::mmul_rtrn(P2,P,P);
+            std::cerr << "P2=" << P2 << std::endl;
+            
             return false;
         }
 
