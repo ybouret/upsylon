@@ -363,7 +363,7 @@ namespace upsylon
             //size_t idRev = 0;
             for(const Equilibrium::Component *c =p_list.head;c;c=c->next)
             {
-                const size_t id = c->sp->indx; assert(id>=0); assert(id<=C.size());
+                const size_t id = c->sp->indx; assert(id>0); assert(id<=C.size());
                 const double CC = max_of<double>(C[id],0);
                 const int    nu = c->nu; assert(nu>0);
                 const double xi = CC/nu;
@@ -387,7 +387,7 @@ namespace upsylon
             //size_t idFwd = 0;
             for(const Equilibrium::Component *c =r_list.head;c;c=c->next)
             {
-                const size_t id = c->sp->indx; assert(id>=0); assert(id<=C.size());
+                const size_t id = c->sp->indx; assert(id>0); assert(id<=C.size());
                 const double CC = max_of<double>(C[id],0);
                 const int    nu = c->nu; assert(nu<0);
                 const double xi = CC/(-nu);
