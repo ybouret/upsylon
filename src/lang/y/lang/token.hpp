@@ -2,7 +2,8 @@
 #ifndef Y_LANG_TOKEN_INCLUDED
 #define Y_LANG_TOKEN_INCLUDED 1
 
-#include "y/lang/types.hpp"
+#include "y/lang/char.hpp"
+#include "y/ios/ostream.hpp"
 
 namespace upsylon
 {
@@ -32,10 +33,11 @@ namespace upsylon
             {
                 for(const Char *ch = other.head;ch;ch=ch->next)
                 {
-                    push_back( cache.make(ch->code) );
+                    push_back( cache.make(ch->code,*ch) );
                 }
             }
 
+#if 0
             //! from string
             inline Token( const string &s ) : Y_LANG_TOKEN_CTOR()
             {
@@ -55,6 +57,7 @@ namespace upsylon
                     push_back( cache.make( uint8_t(s[i]) ) );
                 }
             }
+#endif
 
 
             //! assign
@@ -77,7 +80,8 @@ namespace upsylon
 
             string to_string() const; //!< convert to string
             string to_print()  const; //!< convert to printable string
-            
+            void   viz( ios::ostream &fp ) const;
+
         private:
             Char::Pool &cache;
 

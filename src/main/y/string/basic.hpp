@@ -7,6 +7,7 @@
 #include "y/type/cswap.hpp"
 #include "y/dynamic.hpp"
 #include "y/comparison.hpp"
+#include "y/ptr/counted.hpp"
 #include <cstring>
 #include <iosfwd>
 
@@ -53,7 +54,7 @@ maxi_ = items-1
     {
         //! string on a base class
         template <typename T>
-        class string : public memory::rw_buffer, public dynamic
+        class string : public memory::rw_buffer, public dynamic, public counted
         {
         public:
             //! buffer interface

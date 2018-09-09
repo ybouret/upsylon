@@ -24,5 +24,15 @@ namespace upsylon
             }
             return ans;
         }
+
+        void Token::viz( ios::ostream &fp ) const
+        {
+            fp << '\'';
+            for(const Char *ch=head;ch;ch=ch->next)
+            {
+                fp << printable_char[ch->code];
+            }
+            fp << '\'';
+        }
     }
 }

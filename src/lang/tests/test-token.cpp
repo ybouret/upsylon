@@ -20,9 +20,7 @@ Y_UTEST(token)
     {
         const string s = "\tHello, World!\"\r\n";
         Token t;        display(t);
-        Token t1 = s;   display(t1);
-        Token t2 = *s;  display(t2);
-        t = t1;         display(t);
+       // t = t1;         display(t);
 
     }
 

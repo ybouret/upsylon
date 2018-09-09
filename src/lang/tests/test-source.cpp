@@ -11,6 +11,7 @@ Y_UTEST(source)
     if(argc>1)
     {
         Input  input = new ios::icstream( argv[1] );
+#if 0
         Source source(input);
         {
             source.unget_copy("Hello, World!\n");
@@ -27,7 +28,7 @@ Y_UTEST(source)
                 break;
         }
         std::cerr << content << std::endl;
-
+#endif
 
     }
 }

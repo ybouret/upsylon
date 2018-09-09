@@ -12,7 +12,7 @@ namespace upsylon
         class Any1 : public Pattern
         {
         public:
-
+            
         private:
             Y_DISABLE_ASSIGN(Any1);
         };

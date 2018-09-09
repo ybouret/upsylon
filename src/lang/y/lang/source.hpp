@@ -12,7 +12,7 @@ namespace upsylon
     {
         typedef arc_ptr<ios::istream> Input; //!< shared input
 
-
+#if 0
         //! convert input stream into a source of tokens
         class Source : public Object
         {
@@ -31,6 +31,8 @@ namespace upsylon
             Char::List  iobuf;
             Char::Pool &cache;
         };
+#endif
+        
     }
 }
 

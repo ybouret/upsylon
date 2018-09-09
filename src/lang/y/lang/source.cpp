@@ -5,6 +5,7 @@ namespace upsylon
 {
     namespace Lang
     {
+#if 0
         Source:: ~Source() throw()
         {
             while( iobuf.size ) cache.store( iobuf.pop_back() );
@@ -84,7 +85,7 @@ namespace upsylon
                 }
             }
         }
-
+#endif
         
     }
 }
