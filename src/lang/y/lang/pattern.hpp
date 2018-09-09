@@ -12,14 +12,19 @@ namespace upsylon
         class Pattern : public Object
         {
         public:
-            const uint32_t uuid;
-            Pattern       *next;
-            Pattern       *prev;
+            const uint32_t uuid; //!< unique ID for the class
+            Pattern       *next; //!< for List
+            Pattern       *prev; //!< for List
 
-            inline virtual ~Pattern() throw() {}
+            virtual ~Pattern() throw(); //!< destructor
 
             ios::ostream & emitAddress( ios::ostream &os ) const;
+
+            virtual Pattern *clone() const = 0;
             
+
+            typedef core::list_of_cloneable<Pattern> List;
+
         protected:
             inline Pattern(const uint32_t id)    throw() : uuid(id), next(0), prev(0) {}
             inline Pattern(const Pattern &other) throw() : uuid(other.uuid), next(0), prev(0) {}
