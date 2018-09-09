@@ -3,7 +3,6 @@
 #define Y_LANG_PATTERN_BASIC_INCLUDED 1
 
 #include "y/lang/pattern.hpp"
-#include "y/type/fourcc.hpp"
 
 namespace upsylon
 {

@@ -457,14 +457,14 @@ namespace upsylon
             inline void merge_back_copy( const list_of_cpp &other)
             {
                 list_of_cpp tmp(other);
-                this->merge_back(other);
+                this->merge_back(tmp);
             }
 
             //! copy and merge front
             inline void merge_front_copy( const list_of_cpp &other)
             {
                 list_of_cpp tmp(other);
-                this->merge_front(other);
+                this->merge_front(tmp);
             }
 
 
@@ -523,14 +523,14 @@ namespace upsylon
             inline void merge_back_copy( const list_of_cloneable &other)
             {
                 list_of_cloneable tmp(other);
-                this->merge_back(other);
+                this->merge_back(tmp);
             }
 
             //! copy by cloning and merge front
             inline void merge_front_copy( const list_of_cloneable &other)
             {
                 list_of_cloneable tmp(other);
-                this->merge_front(other);
+                this->merge_front(tmp);
             }
 
 

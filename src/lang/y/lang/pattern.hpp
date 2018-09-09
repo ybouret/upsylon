@@ -5,6 +5,7 @@
 #include "y/lang/token.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/lang/source.hpp"
+#include "y/type/fourcc.hpp"
 
 namespace upsylon
 {
@@ -27,7 +28,8 @@ namespace upsylon
             virtual Pattern *clone() const = 0;
             virtual bool     match( Token &tkn, Source &src) const = 0;
 
-
+            typedef core::list_of_cloneable<Pattern> List;
+            
         protected:
             //! build pattern from ID
             explicit Pattern(const uint32_t id)  throw();
