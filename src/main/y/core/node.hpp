@@ -9,6 +9,21 @@ namespace upsylon
 {
     namespace core
     {
+
+        template <typename T>
+        class dlnode
+        {
+        public:
+            Y_DECL_ARGS(T,type); //!< alias
+            mutable_type *next;
+            mutable_type *prev;
+            inline virtual ~dlnode() throw() {}
+            inline explicit dlnode() throw() : next(0), prev(0) {}
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(dlnode);
+        };
+
         //! a generic node with data
         template <typename T>
         class node_of : public object
@@ -34,6 +49,7 @@ namespace upsylon
         private:
             Y_DISABLE_ASSIGN(node_of);
         };
+
     }
 }
 

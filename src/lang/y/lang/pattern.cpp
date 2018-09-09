@@ -15,6 +15,9 @@ namespace upsylon
             os.viz(this);
             return os;
         }
+
+        Pattern:: Pattern(const uint32_t t) throw() : uuid(t) {}
+        
     }
 
 }

@@ -1,4 +1,5 @@
 #include "y/type/ints.hpp"
+#include "y/type/fourcc.hpp"
 
 #include "y/utest/run.hpp"
 #include <typeinfo>
@@ -35,5 +36,8 @@ Y_UTEST(types)
     test_ints<unsigned int>();
     test_ints<long>();
     test_ints<unsigned long>();
+    const uint32_t t1 = Y_FOURCC(1,2,3,4);
+    const uint32_t t2 = Y_FOURCC(4,3,2,1);
+    std::cerr << std::hex << t1 << " | " << t2 << std::endl;
 }
 Y_UTEST_DONE()

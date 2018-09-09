@@ -1,4 +1,4 @@
-//! \fule
+//! \file
 #ifndef Y_LANG_TYPES_INCLUDED
 #define Y_LANG_TYPES_INCLUDED 1
 

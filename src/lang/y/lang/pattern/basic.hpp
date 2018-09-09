@@ -9,14 +9,88 @@ namespace upsylon
 {
     namespace Lang
     {
-
-        class Any1 : public Pattern
+        //! Matching One char
+        class Match1 : public Pattern
         {
         public:
-            static const uint32_t UUID = Y_FOURCC('A','N','Y','1');
+            inline virtual ~Match1() throw() {}
+
+            //! common match function
+            virtual bool match( Token &tkn, Source &src ) const;
+
+        protected:
+            inline explicit Match1(const uint32_t id) throw() : Pattern(id) {}
+
         private:
-            Y_DISABLE_ASSIGN(Any1);
+            Y_DISABLE_COPY_AND_ASSIGN(Match1);
+            virtual bool accept_byte( const uint8_t c ) const throw() = 0;
         };
+
+        //! Matching Any One char
+        class Any1 : public Match1
+        {
+        public:
+            static const uint32_t UUID = Y_FOURCC('A', 'N', 'Y', '1'); //<! 0xANY1
+            inline virtual ~Any1() throw() {}                          //!< destructor
+            inline explicit Any1() throw() : Match1(UUID) {}           //!< constructor
+
+            inline virtual  Any1 *clone() const { return new Any1(); } //!< clone
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Any1);
+            inline virtual bool accept_byte( const uint8_t ) const throw()
+            {
+                return true;
+            }
+        };
+
+        //! Matching a Single char
+        class Single : public Match1
+        {
+        public:
+            static const uint32_t UUID = Y_FOURCC('S', 'N', 'G', 'L'); //!< 0xSNGL
+            const uint8_t         code;                                //!< the matching code
+
+            //! initialize
+            inline explicit Single(const uint8_t c) throw() : Match1(UUID), code(c) {}
+            //! destructor
+            inline virtual ~Single() throw() {}
+            //! clone
+            inline virtual Single *clone() const { return new Single(code); }
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Single);
+            inline virtual bool accept_byte( const uint8_t c) const throw()
+            {
+                return c==code;
+            }
+        };
+
+        //! matching a char in a range
+        class Range : public Match1
+        {
+        public:
+            static const uint32_t UUID = Y_FOURCC('R','N','G','E');  //!< 0xRNGE
+            const uint8_t         lower;                             //!<  lower code
+            const uint8_t         upper;                             //!<  lower code
+
+            //! intialize
+            inline explicit Range(const uint8_t lo, const uint8_t up) throw() : Match1(UUID), lower(lo), upper(up)
+            { if(upper<lower) cswap(lower,upper); }
+            //! destructor
+            inline virtual ~Range() throw() {}
+            //! clone
+            inline virtual Pattern *clone() const { return new Range(lower,upper); }
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Range);
+            inline virtual bool accept_byte( const uint8_t c) const throw()
+            {
+                return (c>=lower) && (c<=upper);
+            }
+        };
+
 
     }
 }

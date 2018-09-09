@@ -9,6 +9,7 @@ namespace upsylon
     namespace Lang
     {
 
+        //! origin and position of a Char
         class CharInfo : public Object
         {
         public:

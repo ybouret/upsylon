@@ -4,11 +4,14 @@
 
 #include "y/lang/token.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/lang/source.hpp"
 
 namespace upsylon
 {
     namespace Lang
     {
+
+        //! a pattern to accept from a source
         class Pattern : public Object
         {
         public:
@@ -18,20 +21,23 @@ namespace upsylon
 
             virtual ~Pattern() throw(); //!< destructor
 
+            //! emit its address for GraphViz
             ios::ostream & emitAddress( ios::ostream &os ) const;
 
             virtual Pattern *clone() const = 0;
-            
+            virtual bool     match( Token &tkn, Source &src) const = 0;
 
-            typedef core::list_of_cloneable<Pattern> List;
 
         protected:
-            inline Pattern(const uint32_t id)    throw() : uuid(id), next(0), prev(0) {}
-            inline Pattern(const Pattern &other) throw() : uuid(other.uuid), next(0), prev(0) {}
+            //! build pattern from ID
+            explicit Pattern(const uint32_t id)  throw();
+
 
         private:
-            Y_DISABLE_ASSIGN(Pattern);
+            Y_DISABLE_COPY_AND_ASSIGN(Pattern);
         };
+
+        
     }
 }
 
