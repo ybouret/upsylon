@@ -1,21 +1,14 @@
 #include "y/lang/source.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
     namespace Lang
     {
-#if 0
         Source:: ~Source() throw()
         {
             while( iobuf.size ) cache.store( iobuf.pop_back() );
-        }
-
-        Source:: Source(const Input &inp) :
-        input(inp),
-        iobuf(),
-        cache( Manager::instance() )
-        {
         }
 
         void Source:: unget(Char *ch) throw()
@@ -34,59 +27,37 @@ namespace upsylon
             iobuf.merge_front(tmp);
         }
 
+
+        static inline
+        Module *check_module_addr(Module *m)
+        {
+            if(!m) throw exception("NULL module for Lang::Source");
+            return m;
+        }
+
+        Source:: Source(Module *m)  :
+        module(check_module_addr(m)),
+        iobuf(),
+        cache( Manager::instance() )
+        {
+        }
+
+
         Char *Source:: get()
         {
-            if(iobuf.size)
-            {
-                return iobuf.pop_front();
-            }
-            else
-            {
-                auto_ptr<Char> pch = cache.make(0);
-                char &C = (char &)(pch->code);
-                try
-                {
-                    if( input->query(C) )
-                    {
-                        return pch.yield();
-                    }
-                    else
-                    {
-                        // no more iobuf, no more data
-                        return NULL;
-                    }
-                }
-                catch(...)
-                {
-                    cache.store( pch.yield() );
-                    throw;
-                }
-            }
+            return (iobuf.size) ? iobuf.pop_front() : module->get();
         }
 
         void Source:: prefetch(size_t n)
         {
             while(n-->0)
             {
-                auto_ptr<Char> pch = cache.make(0);
-                char &C = (char &)(pch->code);
-                try
-                {
-                    if( input->query(C) )
-                    {
-                        iobuf.push_back( pch.yield() );
-                    }
-                    else return;
-                }
-                catch(...)
-                {
-                    cache.store( pch.yield() );
-                    throw;
-                }
+                Char *ch = module->get();
+                if(!ch) return;
+                iobuf.push_back(ch);
             }
         }
-#endif
-        
+
     }
 }
 

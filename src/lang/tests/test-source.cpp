@@ -10,26 +10,30 @@ Y_UTEST(source)
 {
     if(argc>1)
     {
-        Input  input = new ios::icstream( argv[1] );
-#if 0
-        Source source(input);
+        const string filename = argv[1];
+        if(filename=="NULL") return 0;
+        
+        Source source( Module::OpenFile(argv[1]) );
         {
-            source.unget_copy("Hello, World!\n");
-        }
-        Token  content;
-        while(true)
-        {
-            Char *ch = source.get();
-            if(ch)
+            Token  content;
+            source.prefetch(4);
+
+            Char *ch = NULL;
+            while( NULL != (ch=source.get()) )
             {
                 content.push_back(ch);
             }
-            else
-                break;
+            std::cerr << "#chars=" << content.size << std::endl;
+            source.unget_copy(content);
         }
-        std::cerr << content << std::endl;
-#endif
-
+        Token content_copy;
+        {
+            Char *ch = NULL;
+            while( NULL != (ch=source.get()) )
+            {
+                content_copy.push_back(ch);
+            }
+        }
     }
 }
 Y_UTEST_DONE()

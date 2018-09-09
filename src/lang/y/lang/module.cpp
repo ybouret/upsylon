@@ -11,7 +11,7 @@ namespace upsylon
         Module:: Module( const Origin &org, const Input &inp ) :
         CharInfo(org,1,1),
         input(inp),
-        chMgr( Manager::instance() )
+        cache( Manager::instance() )
         {
         }
 
@@ -28,7 +28,7 @@ namespace upsylon
             if(input->query(C))
             {
                 ++( (int&)column );
-                return chMgr.make(C,*this);
+                return cache.make(C,*this);
             }
             else
             {

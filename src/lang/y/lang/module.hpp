@@ -10,7 +10,7 @@ namespace upsylon
     {
 
         //! will convert input char into Char
-        class Module : public CharInfo
+        class Module : public CharInfo, public counted
         {
         public:
             typedef arc_ptr<Module> Pointer; //!< pointer for Source
@@ -24,7 +24,7 @@ namespace upsylon
 
         private:
             Input          input;
-            Manager       &chMgr;
+            Char::Pool    &cache;
             Y_DISABLE_COPY_AND_ASSIGN(Module);
             explicit Module( const Origin &org, const Input &inp );
 
