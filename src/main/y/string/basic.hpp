@@ -39,7 +39,7 @@ assert( (S).size_<=(S).maxi_ );             \
 assert( 0 == (S).addr_[ (S).size_ ] )
 
     //! default fields initialisation
-#define Y_CORE_STRING_CTOR0()      memory::rw_buffer(), dynamic(), addr_(0)
+#define Y_CORE_STRING_CTOR0()      memory::rw_buffer(), dynamic(), counted(), addr_(0)
 
     //! string constructor to hold SIZE
 #define Y_CORE_STRING_CTOR(SIZE)   Y_CORE_STRING_CTOR0(), size_(SIZE), maxi_(0), items(size_+1), bytes(0)

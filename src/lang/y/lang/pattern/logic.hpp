@@ -52,7 +52,7 @@ namespace upsylon
         {
         public:
             //! 0x' && '
-            static const char UUID = Y_FOURCC(' ','&', '&', ' ' );
+            static const uint32_t UUID = Y_FOURCC(' ','&', '&', ' ' );
 
             //! destructor
             inline virtual ~AND() throw() {}
@@ -75,7 +75,7 @@ namespace upsylon
         {
         public:
             //! 0x' || '
-            static const char UUID = Y_FOURCC(' ','|', '|', ' ' );
+            static const uint32_t UUID = Y_FOURCC(' ','|', '|', ' ' );
 
             //! destructor
             inline virtual ~OR() throw() {}
@@ -97,7 +97,7 @@ namespace upsylon
         {
         public:
             //! 0x' !! '
-            static const char UUID = Y_FOURCC(' ','!', '!', ' ' );
+            static const uint32_t UUID = Y_FOURCC(' ','!', '!', ' ' );
 
             //! destructor
             inline virtual ~NONE() throw() {}

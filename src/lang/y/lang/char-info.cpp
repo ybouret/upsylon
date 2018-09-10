@@ -8,6 +8,7 @@ namespace upsylon
         CharInfo:: ~CharInfo() throw() {}
 
         CharInfo:: CharInfo(const Origin &org, const int l, const int c) throw() :
+	Object(),
         origin(org),
         line(l),
         column(c)
@@ -15,6 +16,7 @@ namespace upsylon
         }
 
         CharInfo:: CharInfo( const CharInfo &other ) throw() :
+	Object(),
         origin( other.origin ),
         line(   other.line   ),
         column( other.column )
