@@ -1,11 +1,23 @@
 #include "y/lang/pattern/posix.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/ios/ocstream.hpp"
+#include "y/ios/icstream.hpp"
 
 using namespace upsylon;
 using namespace Lang;
 
-#define __CHECK(EXPR) do { auto_ptr<Pattern> p = Posix::EXPR(); p->GraphViz( #EXPR ".dot" ); } while(false)
+#define __CHECK(EXPR) do {                                          \
+std::cerr << "Checking " << #EXPR << std::endl;                     \
+std::cerr << "\t|_GraphViz" << std::endl;                           \
+auto_ptr<Pattern> p = Posix::EXPR(); p->GraphViz( #EXPR ".dot" );   \
+std::cerr << "\t|_saving" << std::endl;                             \
+{ ios::ocstream fp( #EXPR ".bin" ); p->write(fp); }                 \
+std::cerr << "\t|_reloading" << std::endl;                          \
+{ ios::icstream fp( #EXPR ".bin");                                  \
+auto_ptr<Pattern> q = Pattern::Load(fp); }                          \
+std::cerr << std::endl;                                             \
+} while(false)
 
 Y_UTEST(posix)
 {
