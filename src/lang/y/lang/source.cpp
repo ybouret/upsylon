@@ -21,7 +21,7 @@ namespace upsylon
             iobuf.merge_front(t);
         }
 
-        void Source:: unget_copy( const Token &t )
+        void Source:: ungetCopy( const Token &t )
         {
             Token tmp(t);
             iobuf.merge_front(tmp);
@@ -57,6 +57,53 @@ namespace upsylon
                 iobuf.push_back(ch);
             }
         }
+
+        void Source:: skip()
+        {
+            assert(iobuf.size>0);
+            cache.store( iobuf.pop_front() );
+        }
+
+        bool  Source:: isActive()
+        {
+            if(iobuf.size)
+            {
+                return true;
+            }
+            else
+            {
+                Char *ch = module->get();
+                if(ch)
+                {
+                    iobuf.push_front(ch);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        bool Source:: peek( char &C )
+        {
+            if(iobuf.size<=0)
+            {
+                Char *ch = module->get();
+                if(!ch)
+                {
+                    return false;
+                }
+                else
+                {
+                    iobuf.push_front(ch);
+                }
+            }
+            assert(iobuf.size>0);
+            C = iobuf.head->code;
+            return true;
+        }
+
 
     }
 }

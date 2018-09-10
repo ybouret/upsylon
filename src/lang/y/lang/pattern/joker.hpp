@@ -18,6 +18,9 @@ namespace upsylon
             typedef auto_ptr<const Pattern> Motif; //!< alias
             inline virtual ~Joker() throw() {}     //!< destructor
 
+            void optimize() throw();
+
+
 
         protected:
             //! initialize
@@ -87,6 +90,11 @@ namespace upsylon
             virtual void write( ios::ostream &fp ) const;
             //! match
             virtual bool match( Token &tkn, Source &src) const;
+
+            //! '*'
+            static inline Pattern *ZeroOrMore( Pattern *p ) { return Repeating::Create(p,0); }
+            //! '+'
+            static inline Pattern *OneOrMore( Pattern * p ) { return Repeating::Create(p,1); }
 
         private:
             inline explicit Repeating( Pattern *jk, const size_t n) throw() : Joker(UUID,jk), nmin(n)

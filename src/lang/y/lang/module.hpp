@@ -20,7 +20,30 @@ namespace upsylon
             static Module        *OpenSTDIN(); //!< stdin
             static Module        *OpenFile(const string &filename ); //!< regular file
             //! regular file
-            static inline Module *OpenFile(const char   *filename) { const string _(filename); return OpenFile(_); }
+            inline
+            static Module *OpenFile(const char   *filename) { const string _(filename); return OpenFile(_); }
+            //! data
+            static Module *OpenData( const string &name, const char *data, const size_t size);
+            //! data
+            inline
+            static Module *OpenData( const char *name, const char *data, const size_t size)
+            {
+                const string _(name); return OpenData(_,data,size);
+            }
+            //! data
+            inline
+            static Module *OpenData(const string &name, const memory::ro_buffer &buff)
+            {
+                return OpenData(name, (char *)buff.ro(), buff.length() );
+            }
+            //! data
+            inline
+            static Module *OpenData(const char *name, const memory::ro_buffer &buff)
+            {
+                return OpenData(name, (char *)buff.ro(), buff.length() );
+            }
+
+
 
         private:
             Input          input;

@@ -1,5 +1,6 @@
 #include "y/lang/module.hpp"
 #include "y/ios/icstream.hpp"
+#include "y/ios/imstream.hpp"
 
 namespace upsylon
 {
@@ -47,6 +48,13 @@ namespace upsylon
         {
             const Origin org = new string(filename);
             const Input  inp = new ios::icstream(filename);
+            return new Module(org,inp);
+        }
+
+        Module * Module:: OpenData( const string &name, const char *data, const size_t size)
+        {
+            const Origin org = new string(name);
+            const Input  inp = new ios::imstream( data, size );
             return new Module(org,inp);
         }
 

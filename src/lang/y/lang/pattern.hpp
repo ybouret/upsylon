@@ -22,6 +22,7 @@ namespace upsylon
             const uint32_t uuid; //!< unique ID for the class
             Pattern       *next; //!< for List
             Pattern       *prev; //!< for List
+            void          *priv; //!< pointer on derived type for optimization/compilation
 
             virtual ~Pattern() throw(); //!< destructor
 
@@ -64,7 +65,6 @@ namespace upsylon
             //! build pattern from ID
             explicit Pattern(const uint32_t id)  throw();
 
-            void *priv; //!< pointer on derived type for optimization/compilation
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pattern);

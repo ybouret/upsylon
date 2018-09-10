@@ -24,7 +24,7 @@ Y_UTEST(source)
                 content.push_back(ch);
             }
             std::cerr << "#chars=" << content.size << std::endl;
-            source.unget_copy(content);
+            source.ungetCopy(content);
         }
         Token content_copy;
         {

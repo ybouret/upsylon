@@ -20,8 +20,11 @@ namespace upsylon
             Char *get();                        //!< get next Char
             void  unget( Char *ch ) throw();    //!< unget a Char
             void  unget( Token &t ) throw();    //!< unget a token
-            void  unget_copy( const Token &t ); //!< unget a copy of a token
+            void  ungetCopy( const Token &t );  //!< unget a copy of a token
             void  prefetch(size_t n);           //!< try to prefetch at most n Chars
+            void  skip(); //!< iobuf.size>0
+            bool  isActive();
+            bool  peek( char &C );
 
         private:
             Module::Pointer module;

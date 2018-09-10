@@ -17,6 +17,12 @@ namespace upsylon
             link( & *motif, fp );
         }
 
+        void Joker:: optimize() throw()
+        {
+            auto_ptr<Pattern> &m = (auto_ptr<Pattern> &)motif;
+            Pattern *p = Pattern::Optimize( m.yield() );
+            m = p;
+        }
 
 
         void Optional:: __viz(ios::ostream &fp) const
