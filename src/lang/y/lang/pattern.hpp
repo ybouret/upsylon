@@ -23,13 +23,20 @@ namespace upsylon
             virtual ~Pattern() throw(); //!< destructor
 
             //! emit its address for GraphViz
-            ios::ostream & emitAddress( ios::ostream &os ) const;
+            void  tag( ios::ostream &os ) const;
 
             virtual Pattern *clone() const = 0;
             virtual bool     match( Token &tkn, Source &src) const = 0;
-
+            virtual void     __viz( ios::ostream &fp )       const = 0;
             typedef core::list_of_cloneable<Pattern> List;
-            
+
+            void viz( ios::ostream &os ) const; //!< tag+__viz
+
+            //! write a directed graph
+            void        GraphViz( const string &fn, bool keepFile=false) const;
+            //! write a directed graph
+            inline void GraphViz( const char   *fn, bool keepFile=false) const { const string _ = fn; GraphViz(_,keepFile); }
+
         protected:
             //! build pattern from ID
             explicit Pattern(const uint32_t id)  throw();

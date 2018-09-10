@@ -38,5 +38,29 @@ namespace upsylon
             return false;
         }
 
+        bool NONE:: match(Token &tkn, Source &src ) const
+        {
+            assert(0==tkn.size);
+            for(const Pattern *p=operands.head;p;p=p->next)
+            {
+                if(p->match(tkn,src))
+                {
+                    src.unget(tkn);
+                    return false;
+                }
+                assert(0==tkn.size);
+            }
+            Char *ch = src.get();
+            if(ch)
+            {
+                tkn.push_back(ch);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
     }
 }

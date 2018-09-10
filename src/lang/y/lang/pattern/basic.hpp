@@ -34,6 +34,7 @@ namespace upsylon
             inline explicit Any1() throw() : Match1(UUID) {}           //!< constructor
 
             inline virtual  Any1 *clone() const { return new Any1(); } //!< clone
+            virtual void          __viz( ios::ostream &fp ) const;     //!< GrapViz
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Any1);
@@ -56,6 +57,7 @@ namespace upsylon
             inline virtual ~Single() throw() {}
             //! clone
             inline virtual Single *clone() const { return new Single(code); }
+            virtual void           __viz( ios::ostream &fp ) const;     //!< GrapViz
 
 
         private:
@@ -81,7 +83,8 @@ namespace upsylon
             inline virtual ~Range() throw() {}
             //! clone
             inline virtual Pattern *clone() const { return new Range(lower,upper); }
-            
+            virtual void            __viz( ios::ostream &fp ) const;     //!< GrapViz
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Range);
             inline virtual bool accept_byte( const uint8_t c) const throw()

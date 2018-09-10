@@ -18,8 +18,15 @@ namespace upsylon
             Pattern::List operands;
             inline void     add(const Logical &l) { operands.merge_back_copy(l.operands); }
 
+
         protected:
             inline explicit Logical(const uint32_t id) throw() : Pattern(id), operands() {}
+            inline Pattern *__clone( Logical *l ) const
+            {
+                auto_ptr<Logical> p = l;
+                l->add(*this);
+                return p.yield();
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Logical);
@@ -29,7 +36,7 @@ namespace upsylon
         class AND : public Logical
         {
         public:
-            //! 0x &&
+            //! 0x' && '
             static const char UUID = Y_FOURCC(' ','&', '&', ' ' );
 
             //! destructor
@@ -38,10 +45,8 @@ namespace upsylon
             inline explicit AND() throw() : Logical(UUID) {}
 
             //! clone
-            inline virtual Pattern *clone() const
-            {
-                auto_ptr<AND> p = new AND(); p->add(*this); return p.yield();
-            }
+            inline virtual Pattern *clone() const { return __clone( new AND() ); }
+            virtual void            __viz( ios::ostream &fp ) const;     //!< GrapViz
 
             //! must match all patterns
             virtual bool match( Token &tkn, Source &src ) const;
@@ -54,7 +59,7 @@ namespace upsylon
         class OR : public Logical
         {
         public:
-            //! 0x ||
+            //! 0x' || '
             static const char UUID = Y_FOURCC(' ','|', '|', ' ' );
 
             //! destructor
@@ -62,16 +67,35 @@ namespace upsylon
             //! initialize
             inline explicit OR() throw() : Logical(UUID) {}
             //! clone
-            inline virtual Pattern *clone() const
-            {
-                auto_ptr<OR> p = new OR(); p->add(*this); return p.yield();
-            }
+            inline virtual Pattern *clone() const { return __clone( new OR() ); }
+            virtual void            __viz( ios::ostream &fp ) const;     //!< GrapViz
 
             //! match first pattern
             virtual bool match( Token &tkn, Source &src ) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OR);
+        };
+
+        class NONE : public Logical
+        {
+        public:
+            //! 0x' !! '
+            static const char UUID = Y_FOURCC(' ','!', '!', ' ' );
+
+            //! destructor
+            inline virtual ~NONE() throw() {}
+            //! initialize
+            inline explicit NONE() throw() : Logical(UUID) {}
+            //! clone
+            inline virtual Pattern *clone() const { return __clone( new NONE() ); }
+            virtual void            __viz( ios::ostream &fp ) const;     //!< GrapViz
+
+            //! match none of the patterns, returns single next char of false if not char
+            virtual bool match( Token &tkn, Source &src ) const;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(NONE);
         };
 
     }

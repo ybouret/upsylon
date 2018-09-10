@@ -1,4 +1,5 @@
 #include "y/lang/pattern/basic.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon
 {
@@ -20,6 +21,16 @@ namespace upsylon
                 src.unget(ch);
                 return false;
             }
+        }
+
+        void Any1:: __viz(ios::ostream &fp) const
+        {
+            fp(" [shape=circle,label=\"any1\"];\n");
+        }
+
+        void Single:: __viz(ios::ostream &fp) const
+        {
+            fp(" [shape=square,label=\"%s\"];\n", printable_char[code] );
         }
     }
 }
