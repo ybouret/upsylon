@@ -117,6 +117,13 @@ SOURCE_GROUP( ios FILES ${ios_srcs} )
 INSTALL( FILES ${ios_decl} DESTINATION include/y/ios )
 
 
+FILE(GLOB codec_decl y/codec/*.hpp)
+FILE(GLOB codec_code y/codec/*.cpp)
+SET(codec_srcs ${codec_decl} ${codec_code})
+SOURCE_GROUP( codec FILES ${codec_srcs} )
+INSTALL( FILES ${codec_decl} DESTINATION include/y/codec )
+
+
 FILE(GLOB fft_decl y/fft/*.hpp)
 FILE(GLOB fft_code y/fft/*.cpp)
 SET(fft_srcs ${fft_decl} ${fft_code})
@@ -178,6 +185,7 @@ ${associative_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
 ${ios_srcs}
+${codec_srcs}
 ${fft_srcs}
 ${mpl_srcs}
 ${mpl_natural_srcs}
