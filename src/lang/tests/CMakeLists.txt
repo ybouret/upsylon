@@ -9,6 +9,7 @@ ADD_TEST(Token   test-lang token)
 ADD_TEST(Source  test-lang source NULl)
 ADD_TEST(Pattern test-lang pattern)
 ADD_TEST(Posix   test-lang posix)
+ADD_TEST(Regex   test-lang regex)
 
 
 ADD_CUSTOM_TARGET(utest-lang
