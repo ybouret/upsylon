@@ -1,4 +1,6 @@
 #include "y/lang/pattern/posix.hpp"
+#include "y/lang/pattern/dictionary.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/ios/ocstream.hpp"
@@ -21,11 +23,13 @@ const string q_bin = q->to_binary();                                \
 Y_CHECK(p_bin==q_bin);                                              \
 }                                                                   \
 std::cerr << "\t|_b64=" << p->to_base64() << std::endl;             \
+dict(#EXPR,p.yield());                                              \
 std::cerr << std::endl;                                             \
 } while(false)
 
 Y_UTEST(posix)
 {
+    Dictionary dict;
     __CHECK(lower);
     __CHECK(upper);
     __CHECK(alpha);
