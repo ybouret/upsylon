@@ -12,6 +12,8 @@ namespace upsylon
     namespace Lang
     {
 
+#define Y_LANG_PATTERN_IS(CLASS) do { priv = static_cast<CLASS*>(this); } while(false)
+
         //! a pattern to accept from a source
         class Pattern : public Object
         {
@@ -48,6 +50,7 @@ namespace upsylon
             //! build pattern from ID
             explicit Pattern(const uint32_t id)  throw();
 
+            void *priv; //!< pointer on derived type for optimization/compilation
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pattern);

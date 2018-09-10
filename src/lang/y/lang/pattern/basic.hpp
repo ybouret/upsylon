@@ -32,7 +32,11 @@ namespace upsylon
         public:
             static const uint32_t UUID = Y_FOURCC('A', 'N', 'Y', '1'); //!< 0xANY1
             inline virtual ~Any1() throw() {}                          //!< destructor
-            inline explicit Any1() throw() : Match1(UUID) {}           //!< constructor
+            //! constructor
+            inline explicit Any1() throw() : Match1(UUID)
+            {
+                Y_LANG_PATTERN_IS(Any1);
+            }
 
             inline virtual  Any1 *clone() const { return new Any1(); } //!< clone
             virtual void          __viz( ios::ostream &fp ) const;     //!< GrapViz
@@ -53,7 +57,10 @@ namespace upsylon
             const uint8_t         code;                                //!< the matching code
 
             //! initialize
-            inline explicit Single(const uint8_t c) throw() : Match1(UUID), code(c) {}
+            inline explicit Single(const uint8_t c) throw() : Match1(UUID), code(c)
+            {
+                Y_LANG_PATTERN_IS(Single);
+            }
             //! destructor
             inline virtual ~Single() throw() {}
             //! clone
@@ -79,7 +86,10 @@ namespace upsylon
 
             //! intialize
             inline explicit Range(const uint8_t lo, const uint8_t up) throw() : Match1(UUID), lower(lo), upper(up)
-            { if(upper<lower) cswap(lower,upper); }
+            {
+                Y_LANG_PATTERN_IS(Range);
+                if(upper<lower) cswap(lower,upper);
+            }
             //! destructor
             inline virtual ~Range() throw() {}
             //! clone

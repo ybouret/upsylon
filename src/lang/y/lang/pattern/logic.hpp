@@ -27,6 +27,11 @@ namespace upsylon
                 return p;
             }
 
+            static Pattern *Equal(const string &); //!< matching exact string
+            static Pattern *Among(const string &); //!< one character of the string
+
+            static inline Pattern *Equal(const char *s) { const string _ = s; return Equal(_); }
+            static inline Pattern *Among(const char *s) { const string _ = s; return Among(_); }
 
         protected:
             //! initialize
@@ -57,7 +62,7 @@ namespace upsylon
             //! destructor
             inline virtual ~AND() throw() {}
             //! initialize
-            inline explicit AND() throw() : Logical(UUID) {}
+            inline explicit AND() throw() : Logical(UUID) { Y_LANG_PATTERN_IS(AND); }
 
             //! clone
             inline virtual Pattern *clone() const { return __clone( new AND() ); }
@@ -80,7 +85,7 @@ namespace upsylon
             //! destructor
             inline virtual ~OR() throw() {}
             //! initialize
-            inline explicit OR() throw() : Logical(UUID) {}
+            inline explicit OR() throw() : Logical(UUID) { Y_LANG_PATTERN_IS(OR); }
             //! clone
             inline virtual Pattern *clone() const { return __clone( new OR() ); }
             virtual void            __viz( ios::ostream &fp ) const;     //!< GrapViz
@@ -102,7 +107,7 @@ namespace upsylon
             //! destructor
             inline virtual ~NONE() throw() {}
             //! initialize
-            inline explicit NONE() throw() : Logical(UUID) {}
+            inline explicit NONE() throw() : Logical(UUID) {Y_LANG_PATTERN_IS(NONE); }
             //! clone
             inline virtual Pattern *clone() const { return __clone( new NONE() ); }
             virtual void            __viz( ios::ostream &fp ) const;     //!< GrapViz

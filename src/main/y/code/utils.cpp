@@ -132,7 +132,7 @@ namespace upsylon
 
     const char *printable_char[256] =
     {
-        "NUL", "SOH", "STX", "ETX", "EOT", "ENQ", "ACK", "BEL", "BS", "\\t", "\\n",   "VT",  "FF", "\\r", "SO", "SI",
+        "NUL", "SOH", "STX", "ETX", "EOT", "ENQ", "ACK", "BEL", "BS", "\\\\t", "\\\\n",   "VT",  "FF", "\\\\r", "SO", "SI",
         "DLE", "DC1", "DC2", "DC3", "DC4", "NAK", "SYN", "ETB", "CAN", "EM", "SUB", "ESC", "FS", "GS", "RS", "US",
         " ",  "!",   "\\\"",  "#",   "$",   "%",   "&",   "\\'",   "(",   ")",  "*",   "+",   ",",  "-",  ".",  "/",
         "0",   "1",   "2",   "3",   "4",   "5",   "6",   "7",   "8",   "9",  ":",   ";",   "<",  "=",  ">",  "?",

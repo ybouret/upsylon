@@ -53,7 +53,10 @@ namespace upsylon
             virtual bool match( Token &tkn, Source &src) const;
 
         private:
-            inline explicit Optional( Pattern *jk ) throw() : Joker(UUID,jk) {}
+            inline explicit Optional( Pattern *jk ) throw() : Joker(UUID,jk)
+            {
+                Y_LANG_PATTERN_IS(Optional);
+            }
             Y_DISABLE_COPY_AND_ASSIGN(Optional);
         };
 
@@ -82,7 +85,10 @@ namespace upsylon
             virtual bool match( Token &tkn, Source &src) const;
 
         private:
-            inline explicit Repeating( Pattern *jk, const size_t n) throw() : Joker(UUID,jk), nmin(n) {}
+            inline explicit Repeating( Pattern *jk, const size_t n) throw() : Joker(UUID,jk), nmin(n)
+            {
+                Y_LANG_PATTERN_IS(Repeating);
+            }
 
             Y_DISABLE_COPY_AND_ASSIGN(Repeating);
         };
@@ -114,7 +120,12 @@ namespace upsylon
             virtual bool match( Token &tkn, Source &src) const;
 
         private:
-            inline explicit Counting( Pattern *jk, const size_t n, const size_t m) throw() : Joker(UUID,jk), nmin(n), nmax(m) {assert(nmin<=nmax);}
+            inline explicit Counting( Pattern *jk, const size_t n, const size_t m) throw() : Joker(UUID,jk), nmin(n), nmax(m)
+            {
+                Y_LANG_PATTERN_IS(Counting);
+                assert(nmin<=nmax);
+
+            }
 
             Y_DISABLE_COPY_AND_ASSIGN(Counting);
         };
