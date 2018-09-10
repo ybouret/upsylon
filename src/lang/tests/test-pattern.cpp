@@ -13,5 +13,10 @@ Y_UTEST(pattern)
     p->GraphViz("any1.dot");
     p = new Single('\\');
     p->GraphViz("single.dot");
+
+    p = new Range('a','z');
+    p->GraphViz("range.dot");
+    
+
 }
 Y_UTEST_DONE()

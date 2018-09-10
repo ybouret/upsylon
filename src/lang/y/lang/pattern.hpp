@@ -25,11 +25,16 @@ namespace upsylon
             //! emit its address for GraphViz
             void  tag( ios::ostream &os ) const;
 
+            //! clone
             virtual Pattern *clone() const = 0;
+            //! try to match
             virtual bool     match( Token &tkn, Source &src) const = 0;
+            //! GraphViz appearance
             virtual void     __viz( ios::ostream &fp )       const = 0;
+            //! list of cloneable patterns
             typedef core::list_of_cloneable<Pattern> List;
 
+            //! emit GraphViz node
             void viz( ios::ostream &os ) const; //!< tag+__viz
 
             //! write a directed graph

@@ -32,5 +32,12 @@ namespace upsylon
         {
             fp(" [shape=square,label=\"%s\"];\n", printable_char[code] );
         }
+
+        void Range:: __viz(ios::ostream &fp) const
+        {
+            fp(" [shape=box,label=\"%s-%s\"];\n", printable_char[lower], printable_char[upper] );
+        }
+
+
     }
 }

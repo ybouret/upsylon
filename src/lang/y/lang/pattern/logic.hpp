@@ -13,18 +13,23 @@ namespace upsylon
         class Logical : public Pattern
         {
         public:
+            //! destructor
             inline virtual ~Logical() throw() {}
 
+            //! list of operands
             Pattern::List operands;
-            inline void     add(const Logical &l) { operands.merge_back_copy(l.operands); }
+
 
 
         protected:
+            //! initialize
             inline explicit Logical(const uint32_t id) throw() : Pattern(id), operands() {}
+
+            //! finalize cloning by copy of operands
             inline Pattern *__clone( Logical *l ) const
             {
                 auto_ptr<Logical> p = l;
-                l->add(*this);
+                p->operands.merge_back_copy(operands);
                 return p.yield();
             }
 
@@ -77,6 +82,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(OR);
         };
 
+        //! accept something but NONE of the patterns
         class NONE : public Logical
         {
         public:

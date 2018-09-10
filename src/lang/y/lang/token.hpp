@@ -37,29 +37,6 @@ namespace upsylon
                 }
             }
 
-#if 0
-            //! from string
-            inline Token( const string &s ) : Y_LANG_TOKEN_CTOR()
-            {
-                const size_t n = s.size();
-                for(size_t i=0;i<n;++i)
-                {
-                    push_back( cache.make( uint8_t(s[i]) ) );
-                }
-            }
-
-            //! from text
-            inline Token(const char *s) : Y_LANG_TOKEN_CTOR()
-            {
-                const size_t n = length_of(s);
-                for(size_t i=0;i<n;++i)
-                {
-                    push_back( cache.make( uint8_t(s[i]) ) );
-                }
-            }
-#endif
-
-
             //! assign
             inline Token & operator=( const Token &other )
             {
@@ -80,7 +57,7 @@ namespace upsylon
 
             string to_string() const; //!< convert to string
             string to_print()  const; //!< convert to printable string
-            void   viz( ios::ostream &fp ) const;
+            void   viz( ios::ostream &fp ) const; //!< write content as GraphViz
 
         private:
             Char::Pool &cache;

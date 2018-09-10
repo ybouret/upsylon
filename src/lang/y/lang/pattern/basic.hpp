@@ -18,6 +18,7 @@ namespace upsylon
             virtual bool match( Token &tkn, Source &src ) const;
 
         protected:
+            //! initialize
             inline explicit Match1(const uint32_t id) throw() : Pattern(id) {}
 
         private:
@@ -29,7 +30,7 @@ namespace upsylon
         class Any1 : public Match1
         {
         public:
-            static const uint32_t UUID = Y_FOURCC('A', 'N', 'Y', '1'); //<! 0xANY1
+            static const uint32_t UUID = Y_FOURCC('A', 'N', 'Y', '1'); //!< 0xANY1
             inline virtual ~Any1() throw() {}                          //!< destructor
             inline explicit Any1() throw() : Match1(UUID) {}           //!< constructor
 
