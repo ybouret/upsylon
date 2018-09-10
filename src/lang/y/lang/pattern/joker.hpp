@@ -4,6 +4,7 @@
 
 #include "y/lang/pattern.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/type/utils.hpp"
 
 namespace upsylon
 {
@@ -84,6 +85,38 @@ namespace upsylon
             inline explicit Repeating( Pattern *jk, const size_t n) throw() : Joker(UUID,jk), nmin(n) {}
 
             Y_DISABLE_COPY_AND_ASSIGN(Repeating);
+        };
+
+
+        //! nmin <= count << nmax
+        class Counting : public Joker
+        {
+        public:
+            static const uint32_t UUID = Y_FOURCC('<','=','=','>'); //!< ID
+            const size_t          nmin; //!< minimal count
+            const size_t          nmax; //!< maximal count
+
+            inline virtual ~Counting() throw() {}
+
+            //! create with memory management
+            static inline Pattern *Create( Pattern *jk, const size_t n, const size_t m)
+            {
+                Motif guard(jk);
+                Pattern *p = new Counting(jk,min_of(n,m),max_of(n,m));
+                guard.dismiss();
+                return p;
+            }
+            //! clone
+            inline virtual Pattern *clone() const { return Create( motif->clone(), nmin, nmax); }
+            //! GraphViz
+            virtual void __viz( ios::ostream &fp ) const;
+            //! match
+            virtual bool match( Token &tkn, Source &src) const;
+
+        private:
+            inline explicit Counting( Pattern *jk, const size_t n, const size_t m) throw() : Joker(UUID,jk), nmin(n), nmax(m) {assert(nmin<=nmax);}
+
+            Y_DISABLE_COPY_AND_ASSIGN(Counting);
         };
 
     }

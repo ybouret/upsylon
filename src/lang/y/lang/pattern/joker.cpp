@@ -73,6 +73,38 @@ namespace upsylon
             }
         }
 
+        void Counting:: __viz( ios::ostream &fp ) const
+        {
+            fp(" [shape=diamond,label=\"[%u:%u]\"];\n", unsigned(nmin), unsigned(nmax) );
+            vizlink(fp);
+        }
+
+        bool Counting:: match(Token &tkn, Source &src ) const
+        {
+            assert(0==tkn.size);
+            size_t count = 0;
+            while(true)
+            {
+                Token tmp;
+                if(motif->match(tmp,src))
+                {
+                    ++count;
+                    tkn.merge_back(tmp);
+                    continue;
+                }
+                break;
+            }
+            if(count>=nmin&&count<=nmax)
+            {
+                return true;
+            }
+            else
+            {
+                src.unget(tkn);
+                return false;
+            }
+        }
+
     }
 
 }

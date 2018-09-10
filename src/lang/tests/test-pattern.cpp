@@ -35,7 +35,7 @@ Y_UTEST(pattern)
     q->add( Repeating::Create( new Single('B'), 0 ) );
     q->add( Repeating::Create( new Single('C'), 1 ) );
     q->add( Repeating::Create( new Single('D'), 2 ) );
-
+    q->add( Counting ::Create( new Single('E'),0,5) );
     q->GraphViz("jk.dot");
 
 
