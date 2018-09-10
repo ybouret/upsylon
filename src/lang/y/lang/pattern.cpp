@@ -18,6 +18,11 @@ namespace upsylon
             os.viz(this);
         }
 
+        void  Pattern:: link( const Pattern *p, ios::ostream  &os ) const
+        {
+            this->tag(os); os << "->"; p->tag(os); os << ";\n";
+        }
+
         Pattern:: Pattern(const uint32_t t) throw() : uuid(t) {}
 
 

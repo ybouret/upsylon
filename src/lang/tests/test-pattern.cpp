@@ -1,6 +1,7 @@
 
 #include "y/lang/pattern/basic.hpp"
 #include "y/lang/pattern/logic.hpp"
+#include "y/lang/pattern/joker.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -28,7 +29,15 @@ Y_UTEST(pattern)
     }
     q->add(new Single('p'));
     q->GraphViz("and.dot");
-    
+
+    q = new AND();
+    q->add( Optional ::Create( new Single('A') )    );
+    q->add( Repeating::Create( new Single('B'), 0 ) );
+    q->add( Repeating::Create( new Single('C'), 1 ) );
+    q->add( Repeating::Create( new Single('D'), 2 ) );
+
+    q->GraphViz("jk.dot");
+
 
 }
 Y_UTEST_DONE()

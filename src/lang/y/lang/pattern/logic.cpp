@@ -10,7 +10,7 @@ namespace upsylon
             for(const Pattern *p = operands.head;p;p=p->next)
             {
                 p->viz(fp);
-                tag(fp); fp << " -> "; p->tag(fp); fp << ";\n";
+                link(p,fp);
             }
         }
 

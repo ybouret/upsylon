@@ -24,6 +24,8 @@ namespace upsylon
 
             //! emit its address for GraphViz
             void  tag( ios::ostream &os ) const;
+            //! create a directed link for GraphViz
+            void  link( const Pattern *p, ios::ostream  &os ) const;
 
             //! clone
             virtual Pattern *clone() const = 0;

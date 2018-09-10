@@ -57,6 +57,9 @@ namespace upsylon
             return p;
         }
 
+        //! dismiss ownership
+        inline void dismiss() throw() { zero(); }
+
     private:
         void zero() const throw() { *(pointee_type *)( &(this->pointee) ) = 0;  }
         void kill() throw()       { if(this->pointee) { delete this->pointee; this->pointee=0; } }
