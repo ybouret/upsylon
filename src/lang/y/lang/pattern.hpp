@@ -49,6 +49,9 @@ namespace upsylon
             //! write a directed graph
             inline void GraphViz( const char   *fn, bool keepFile=false) const { const string _ = fn; GraphViz(_,keepFile); }
 
+            //! load from an input stream
+            static Pattern *Load( ios::istream &fp );
+
         protected:
             //! build pattern from ID
             explicit Pattern(const uint32_t id)  throw();
