@@ -14,6 +14,33 @@ namespace upsylon
         }
 
 
+        string codec:: to_string( const void *data, const size_t size )
+        {
+            assert( !(NULL==data&&size>0) );
+
+            reset();
+            string      ans;
+            char        C = 0;
+            const char *p = (const char *)data;
+            for(size_t i=size;i>0;--i)
+            {
+                write(*(p++));
+                while(query(C))
+                {
+                    ans << C;
+                }
+            }
+            flush();
+            while(query(C))
+            {
+                ans << C;
+            }
+            return ans;
+        }
+
+
+        //////////
+
         q_codec:: ~q_codec() throw()
         {}
 

@@ -15,7 +15,12 @@ std::cerr << "\t|_saving" << std::endl;                             \
 { ios::ocstream fp( #EXPR ".bin" ); p->write(fp); }                 \
 std::cerr << "\t|_reloading" << std::endl;                          \
 { ios::icstream fp( #EXPR ".bin");                                  \
-auto_ptr<Pattern> q = Pattern::Load(fp); }                          \
+auto_ptr<Pattern> q = Pattern::Load(fp);                            \
+const string p_bin = p->to_binary();                                \
+const string q_bin = q->to_binary();                                \
+Y_CHECK(p_bin==q_bin);                                              \
+}                                                                   \
+std::cerr << "\t|_b64=" << p->to_base64() << std::endl;             \
 std::cerr << std::endl;                                             \
 } while(false)
 

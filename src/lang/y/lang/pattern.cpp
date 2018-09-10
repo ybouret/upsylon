@@ -2,6 +2,8 @@
 #include "y/lang/pattern.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/ios/graphviz.hpp"
+#include "y/ios/osstream.hpp"
+#include "y/codec/base64.hpp"
 
 namespace upsylon
 {
@@ -40,6 +42,25 @@ namespace upsylon
                 fp << "}\n";
             }
             ios::GraphViz::Render(fn,keepFile);
+        }
+
+        string Pattern:: to_binary() const
+        {
+            string           ans;
+            ios::osstream fp(ans);
+            write(fp);
+            return ans;
+        }
+
+        string Pattern:: to_base64() const
+        {
+            string           ans;
+            {
+                ios::osstream fp(ans);
+                write(fp);
+            }
+            ios::base64::encoder b64;
+            return b64.to_string(ans);
         }
     }
 

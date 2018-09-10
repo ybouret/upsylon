@@ -56,6 +56,9 @@ namespace upsylon
             //! optimize pattern
             static Pattern *Optimize( Pattern *p ) throw();
 
+            //! binary "value"
+            string to_binary() const;
+            string to_base64() const;
 
         protected:
             //! build pattern from ID

@@ -14,9 +14,23 @@ namespace upsylon
         class codec : public istream, public ostream
         {
         public:
+            //! destructor
             virtual ~codec() throw();
 
+            //! reset codec
+            virtual void reset() throw() = 0;
+
+            //! utility : reset/write/read
+            string to_string( const void *data, const size_t size );
+
+            //! utility to encode a buffer
+            inline string to_string( const memory::ro_buffer &buff )
+            {
+                return to_string( buff.ro(), buff.length() );
+            }
+
         protected:
+            //! initialize
             explicit codec() throw();
 
         private:
