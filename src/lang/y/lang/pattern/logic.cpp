@@ -4,6 +4,17 @@ namespace upsylon
 {
     namespace Lang
     {
+
+        void Logical:: vizlink(ios::ostream &fp) const
+        {
+            for(const Pattern *p = operands.head;p;p=p->next)
+            {
+                p->viz(fp);
+                tag(fp); fp << " -> "; p->tag(fp); fp << ";\n";
+            }
+        }
+
+
         bool AND::match(Token &tkn, Source &src) const
         {
             assert(tkn.size==0);
@@ -24,6 +35,12 @@ namespace upsylon
             return true;
         }
 
+        void AND:: __viz( ios::ostream &fp ) const
+        {
+            fp(" [shape=house,label=\"&\"];\n");
+            vizlink(fp);
+        }
+
         bool OR:: match( Token &tkn, Source &src ) const
         {
             assert(0==tkn.size);
@@ -36,6 +53,12 @@ namespace upsylon
                 assert(0==tkn.size);
             }
             return false;
+        }
+
+        void OR:: __viz( ios::ostream &fp ) const
+        {
+            fp(" [shape=house,label=\"|\"];\n");
+            vizlink(fp);
         }
 
         bool NONE:: match(Token &tkn, Source &src ) const
@@ -61,6 +84,13 @@ namespace upsylon
                 return false;
             }
         }
+
+        void NONE:: __viz( ios::ostream &fp ) const
+        {
+            fp(" [shape=house,label=\"!\"];\n");
+            vizlink(fp);
+        }
+
 
     }
 }

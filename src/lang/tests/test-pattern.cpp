@@ -16,6 +16,18 @@ Y_UTEST(pattern)
 
     p = new Range('a','z');
     p->GraphViz("range.dot");
+
+    auto_ptr<Logical> q = new AND();
+    q->add(new Single('a'));
+    q->add(new Single('b'));
+    q->add(new Any1());
+    {
+        Logical *sub = q->add( new OR() );
+        sub->add(new Single('c'));
+        sub->add(new Range('A','Z'));
+    }
+    q->add(new Single('p'));
+    q->GraphViz("and.dot");
     
 
 }

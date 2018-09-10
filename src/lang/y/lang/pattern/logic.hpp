@@ -19,6 +19,13 @@ namespace upsylon
             //! list of operands
             Pattern::List operands;
 
+            //! syntactic helper
+            template <typename PATTERN>
+            inline PATTERN *add( PATTERN *p ) throw()
+            {
+                operands.push_back(p);
+                return p;
+            }
 
 
         protected:
@@ -32,6 +39,9 @@ namespace upsylon
                 p->operands.merge_back_copy(operands);
                 return p.yield();
             }
+
+            //! link in graphviz
+            void vizlink( ios::ostream &fp ) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Logical);
