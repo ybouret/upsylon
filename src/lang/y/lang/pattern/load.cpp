@@ -28,29 +28,40 @@ namespace upsylon
             {
                     //__________________________________________________________
                     //
-                    // basic
+                    // basics
                     //__________________________________________________________
                 case Any1  ::UUID : return new Any1();
                 case Single::UUID : return new Single( fp.read<uint8_t>() );
-                case Range ::UUID :
-                {
+                case Range ::UUID : {
                     const uint8_t lo = fp.read<uint8_t>();
                     const uint8_t hi = fp.read<uint8_t>();
-                    return new Range(lo,hi);
-                }
+                    return new Range(lo,hi); }
 
                     //__________________________________________________________
                     //
-                    // logic
+                    // logicals
                     //__________________________________________________________
                 case AND::  UUID: return __load( new AND(),  fp);
                 case OR ::  UUID: return __load( new OR(),   fp);
                 case NONE:: UUID: return __load( new NONE(), fp );
 
+                    //__________________________________________________________
+                    //
+                    // jokers
+                    //__________________________________________________________
+                case Optional :: UUID: return Optional::Create( Pattern::Load(fp) );
+                case Repeating:: UUID: {
+                    const uint32_t nmin = fp.read<uint32_t>();
+                    return Repeating::Create(Pattern::Load(fp),nmin); }
+                case Counting:: UUID: {
+                    const uint32_t nmin = fp.read<uint32_t>();
+                    const uint32_t nmax = fp.read<uint32_t>();
+                    return Counting::Create(Pattern::Load(fp),nmin,nmax); }
 
                 default:
-                    throw exception("Pattern::Load(unknown UUID=0x%08x)", unsigned(which) );
+                    break;
             }
+            throw exception("Pattern::Load(unknown UUID=0x%08x)", unsigned(which) );
         }
 
     }

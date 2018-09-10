@@ -8,21 +8,22 @@ namespace upsylon
 {
     namespace Lang
     {
+        //! posix patterns
         struct Posix
         {
-            static Pattern *lower();  //!< [a-z]
-            static Pattern *upper();  //!< [A-Z]
-            static Pattern *alpha();  //!< [a-zA-Z]
-            static Pattern *digit();  //!< [0-9]
-            static Pattern *alnum();  //!< [a-zA-Z0-9]
-            static Pattern *xdigit(); //!< [0-9a-fA-F]
-            static Pattern *blank();  //!< [ \t]
-            static Pattern *space();  //!< [ \n\r\t\v\f]
+            static Pattern *lower();  //!< \verbatim[a-z]\endverbatim
+            static Pattern *upper();  //!< \verbatim[A-Z]\endverbatim
+            static Pattern *alpha();  //!< \verbatim[a-zA-Z]\endverbatim
+            static Pattern *digit();  //!< \verbatim[0-9]\endverbatim
+            static Pattern *alnum();  //!< \verbatim[a-zA-Z0-9]\endverbatim
+            static Pattern *xdigit(); //!< \verbatim[0-9a-fA-F]\endverbatim
+            static Pattern *blank();  //!< \verbatim[ \t]\endverbatim
+            static Pattern *space();  //!< \verbatim[ \n\r\t\v\f]\endverbatim
 
 
-            static Pattern *word();   //!< [a-zA-Z0-9_]
-            static Pattern *endl();   //!< \n|\r|\r\n
-            static Pattern *dot();    //!< ^endl
+            static Pattern *word();   //!< \verbatim[a-zA-Z0-9_]\endverbatim
+            static Pattern *endl();   //!< \verbatim\n|\r|\r\n\endverbatim
+            static Pattern *dot();    //!< \verbatim^endl\endverbatim
         };
     }
 

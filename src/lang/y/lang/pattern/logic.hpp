@@ -30,7 +30,9 @@ namespace upsylon
             static Pattern *Equal(const string &); //!< matching exact string
             static Pattern *Among(const string &); //!< one character of the string
 
+            //!  matching exact string
             static inline Pattern *Equal(const char *s) { const string _ = s; return Equal(_); }
+            //! one character of the string
             static inline Pattern *Among(const char *s) { const string _ = s; return Among(_); }
 
             virtual void write( ios::ostream &fp ) const;

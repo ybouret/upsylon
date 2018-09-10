@@ -34,8 +34,9 @@ namespace upsylon
             virtual void store(const char C);
 
         protected:
+            //! initialize
             explicit   q_codec() throw();
-            list<char> Q;
+            list<char> Q; //!< local buffer for istream
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(q_codec);

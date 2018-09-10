@@ -12,6 +12,7 @@ namespace upsylon
     namespace Lang
     {
 
+        //! macro to mark priv as class
 #define Y_LANG_PATTERN_IS(CLASS) do { priv = static_cast<CLASS*>(this); } while(false)
 
         //! a pattern to accept from a source
@@ -51,6 +52,10 @@ namespace upsylon
 
             //! load from an input stream
             static Pattern *Load( ios::istream &fp );
+
+            //! optimize pattern
+            static Pattern *Optimize( Pattern *p ) throw();
+
 
         protected:
             //! build pattern from ID
