@@ -39,7 +39,8 @@ namespace upsylon
             }
 
             inline virtual  Any1 *clone() const { return new Any1(); } //!< clone
-            virtual void          __viz( ios::ostream &fp ) const;     //!< GrapViz
+            virtual void          __viz( ios::ostream &fp ) const;     //!< GraphViz
+            virtual void          write( ios::ostream &fp ) const;     //!< output
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Any1);
@@ -63,10 +64,10 @@ namespace upsylon
             }
             //! destructor
             inline virtual ~Single() throw() {}
-            //! clone
-            inline virtual Single *clone() const { return new Single(code); }
-            virtual void           __viz( ios::ostream &fp ) const;     //!< GrapViz
 
+            inline virtual Single *clone() const { return new Single(code); } //!< output
+            virtual void           __viz( ios::ostream &fp ) const;           //!< GraphViz
+            virtual void           write( ios::ostream &fp ) const;           //!< output
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Single);
@@ -92,9 +93,10 @@ namespace upsylon
             }
             //! destructor
             inline virtual ~Range() throw() {}
-            //! clone
-            inline virtual Pattern *clone() const { return new Range(lower,upper); }
-            virtual void            __viz( ios::ostream &fp ) const;     //!< GrapViz
+
+            inline virtual Pattern *clone() const { return new Range(lower,upper); } //!< clone
+            virtual void            __viz( ios::ostream &fp ) const;                 //!< GraphViz
+            virtual void            write( ios::ostream &fp ) const;                 //!< output
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Range);

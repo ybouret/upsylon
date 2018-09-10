@@ -25,6 +25,12 @@ namespace upsylon
             vizlink(fp);
         }
 
+        void Optional:: write(ios::ostream &fp) const
+        {
+            fp.emit(UUID);
+            motif->write(fp);
+        }
+
         bool Optional :: match(Token &tkn, Source &src ) const
         {
             assert(0==tkn.size);
@@ -45,6 +51,13 @@ namespace upsylon
             }
             fp << "\"];\n";
             vizlink(fp);
+        }
+
+        void Repeating:: write(ios::ostream &fp) const
+        {
+            fp.emit(UUID);
+            fp.emit<uint32_t>(nmin);
+            motif->write(fp);
         }
 
         bool Repeating:: match(Token &tkn, Source &src ) const
@@ -77,6 +90,14 @@ namespace upsylon
         {
             fp(" [shape=diamond,label=\"[%u:%u]\"];\n", unsigned(nmin), unsigned(nmax) );
             vizlink(fp);
+        }
+
+        void Counting:: write(ios::ostream &fp) const
+        {
+            fp.emit(UUID);
+            fp.emit<uint32_t>(nmin);
+            fp.emit<uint32_t>(nmax);
+            motif->write(fp);
         }
 
         bool Counting:: match(Token &tkn, Source &src ) const

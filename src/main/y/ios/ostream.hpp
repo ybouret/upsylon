@@ -63,7 +63,7 @@ namespace upsylon
             ostream & emit(T x)
             {
                 x = swap_be_as<T>(x);
-                output(&x,sizeof(T));
+                output((const char*)&x,sizeof(T));
                 return *this;
             }
 

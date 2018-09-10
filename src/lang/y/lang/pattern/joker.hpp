@@ -49,6 +49,8 @@ namespace upsylon
             inline virtual Pattern *clone() const { return Create( motif->clone() ); }
             //! GraphViz
             virtual void __viz( ios::ostream &fp ) const;
+            //! output
+            virtual void write( ios::ostream &fp ) const;
             //! match
             virtual bool match( Token &tkn, Source &src) const;
 
@@ -81,6 +83,8 @@ namespace upsylon
             inline virtual Pattern *clone() const { return Create( motif->clone(), nmin ); }
             //! GraphViz
             virtual void __viz( ios::ostream &fp ) const;
+            //! output
+            virtual void write( ios::ostream &fp ) const;
             //! match
             virtual bool match( Token &tkn, Source &src) const;
 
@@ -116,6 +120,9 @@ namespace upsylon
             inline virtual Pattern *clone() const { return Create( motif->clone(), nmin, nmax); }
             //! GraphViz
             virtual void __viz( ios::ostream &fp ) const;
+            //! output
+            virtual void write( ios::ostream &fp ) const;
+
             //! match
             virtual bool match( Token &tkn, Source &src) const;
 

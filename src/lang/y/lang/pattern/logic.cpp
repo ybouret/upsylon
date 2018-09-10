@@ -15,6 +15,17 @@ namespace upsylon
         }
 
 
+        void Logical:: write( ios::ostream &fp ) const
+        {
+            fp.emit(uuid);
+            fp.emit<uint32_t>(operands.size);
+            for(const Pattern *p = operands.head;p;p=p->next)
+            {
+                p->write(fp);
+            }
+        }
+
+
         bool AND::match(Token &tkn, Source &src) const
         {
             assert(tkn.size==0);
@@ -40,6 +51,8 @@ namespace upsylon
             fp(" [shape=house,label=\"&\"];\n");
             vizlink(fp);
         }
+        
+
 
         bool OR:: match( Token &tkn, Source &src ) const
         {

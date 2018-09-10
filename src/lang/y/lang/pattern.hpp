@@ -35,6 +35,9 @@ namespace upsylon
             virtual bool     match( Token &tkn, Source &src) const = 0;
             //! GraphViz appearance
             virtual void     __viz( ios::ostream &fp )       const = 0;
+            //! binary output
+            virtual void     write( ios::ostream &fp )       const = 0;
+
             //! list of cloneable patterns
             typedef core::list_of_cloneable<Pattern> List;
 
