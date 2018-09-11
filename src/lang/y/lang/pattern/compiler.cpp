@@ -118,11 +118,17 @@ namespace upsylon
                             // escape sequence
                             //--------------------------------------------------
                         case BACKSLASH:
-                            ++curr; // skip backslash
+                            ++curr; // skip BACKSLASH
                             p->add( subEscape() );
                             break;
 
-
+                            //--------------------------------------------------
+                            // a new group!
+                            //--------------------------------------------------
+                        case LBRACK:
+                            ++curr; // skip LBRACK
+                            p->add( grp() );
+                            break;
 
                         default:
                             p->add( new Single(C) );
@@ -158,7 +164,9 @@ namespace upsylon
 
             //__________________________________________________________________
             //
+            //
             // escape sequence in sub-expression
+            //
             //__________________________________________________________________
             inline Pattern * subEscape()
             {
@@ -200,7 +208,9 @@ namespace upsylon
 
             //__________________________________________________________________
             //
+            //
             // parse hexadecimal
+            //
             //__________________________________________________________________
             inline Pattern *hexEscape()
             {
@@ -217,6 +227,125 @@ namespace upsylon
                 const uint8_t B = uint8_t(hi) << 4 | uint8_t(lo);
                 return new Single(B);
             }
+
+            //__________________________________________________________________
+            //
+            //
+            // parse group
+            //
+            //__________________________________________________________________
+            inline Pattern *grp()
+            {
+                assert(curr[-1]==LBRACK);
+                if(curr>=last)
+                {
+                    throw exception("%smissing group",fn);
+                }
+                //______________________________________________________________
+                //
+                // analyze the first char
+                //______________________________________________________________
+                auto_ptr<Logical> g = NULL;
+                {
+                    const char C = *curr;
+                    switch(C)
+                    {
+                        case ':':
+                            return posix();
+
+                        case '^':
+                            ++curr; // skip carret
+                            g = new NONE();
+                            break;
+
+                        default:
+                            g = new OR();
+                            break;
+                    }
+                }
+                assert( g.is_valid() );
+
+                //______________________________________________________________
+                //
+                // run
+                //______________________________________________________________
+                while(curr<last)
+                {
+                    const char C = *curr;
+                    switch(C)
+                    {
+                            //--------------------------------------------------
+                            // End Of Group
+                            //--------------------------------------------------
+                        case RBRACK:
+                            ++curr;
+                            if(g->operands.size<=0) throw exception("%sempty group",fn);
+                            return Pattern::Optimize( g.yield() );
+
+                            //--------------------------------------------------
+                            // recursive call
+                            //--------------------------------------------------
+                        case LBRACK:
+                            ++curr;
+                            g->add( grp() );
+                            break;
+
+                        default:
+                            ++curr;
+                            g->add( new Single(C) );
+                    }
+
+                }
+                throw exception("%sunfinished group",fn);
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            // identify a posix alias
+            //
+            //__________________________________________________________________
+#define Y_RX_POSIX(LABEL) if(label==#LABEL) return Posix:: LABEL()
+
+            inline Pattern *posix()
+            {
+                assert(':'==*curr);
+                const char *ini = curr;
+                do
+                {
+                    ++curr;
+                    if(curr>=last) throw exception("%sunfinished posix label",fn);
+                }
+                while( ':' != *curr );
+                const char *end = curr;
+                if(++curr>=last)  throw exception("%send of expression after ':'",fn);
+                if(RBRACK!=*curr) throw exception("%sinvalid '%s' after ':'", fn, visible_char[ uint8_t(*curr) ]);
+                ++curr; // skip RBRACK
+                assert(end>ini);
+                assert(*ini==':');
+                assert(*end==':');
+                ++ini;
+                const string label(ini,end-ini);
+                std::cerr << "label=" << label << std::endl;
+
+                Y_RX_POSIX(lower);
+                Y_RX_POSIX(upper);
+                Y_RX_POSIX(alpha);
+                Y_RX_POSIX(digit);
+                Y_RX_POSIX(alnum);
+                Y_RX_POSIX(xdigit);
+                Y_RX_POSIX(blank);
+                Y_RX_POSIX(space);
+                Y_RX_POSIX(punct);
+                Y_RX_POSIX(word);
+                Y_RX_POSIX(endl);
+                Y_RX_POSIX(dot);
+
+
+                throw exception("%sunknown posix label '%s'", fn, *label );
+
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
