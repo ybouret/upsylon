@@ -11,7 +11,6 @@ using namespace upsylon;
 Y_UTEST(base64)
 {
 
-
     if( (argc>1) && (0==strcmp(argv[1],"NULL")) )
     {
 
@@ -35,26 +34,23 @@ Y_UTEST(base64)
         return 0;
     }
 
+    std::cerr << "Encoding..." << std::endl;
     ios::icstream        fp( ios::cstdin  );
     ios::ocstream        op( ios::cstdout );
     ios::base64::encoder b64;
 
-    char C = 0;
-    while( fp.query(C) )
-    {
-        b64.write(C);
-        while(b64.query(C))
-        {
-            op.write(C);
-        }
-    }
-    b64.flush();
-    while(b64.query(C))
-    {
-        op.write(C);
-    }
+    b64.filter(op,fp);
 
 }
 Y_UTEST_DONE()
 
+Y_UTEST(u64)
+{
+    ios::icstream        fp( ios::cstdin  );
+    ios::ocstream        op( ios::cstdout );
+    ios::base64::decoder u64;
+    std::cerr << "Decoding..." << std::endl;
+    u64.filter(op,fp);
+}
+Y_UTEST_DONE()
 

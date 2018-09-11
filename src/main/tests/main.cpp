@@ -65,7 +65,8 @@ Y_UTEST_INIT(64)
     Y_UTEST(tuple);
     Y_UTEST(release);
     Y_UTEST(base64);
-    
+    Y_UTEST(u64);
+
 }
 Y_UTEST_EXEC()
 

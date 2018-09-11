@@ -1,5 +1,4 @@
 //! \file
-
 #ifndef Y_CODEC_BASE64_INCLUDED
 #define Y_CODEC_BASE64_INCLUDED
 
@@ -50,23 +49,25 @@ namespace upsylon
                 uint8_t     data[4];  //!< ready
                 const char *table;
                 const bool  pad;
-                void     emit(const size_t n);
+                void        emit(const size_t n);
+                void        clear() throw();
             };
 
             //! base64 -> decoder
             class decoder : public q_codec
             {
             public:
-                explicit decoder() throw();
-                virtual ~decoder() throw();
+                explicit decoder() throw(); //!< initialize
+                virtual ~decoder() throw(); //!< destructor
 
-                virtual void reset() throw(); //! clear all data
+                virtual void reset() throw(); //!< clear all data
                 virtual void write( char C ); //!< check and store character
                 virtual void flush();         //!< output depending on status
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(decoder);
-                size_t  count;
+                size_t  count; //! base64 decoded
+                size_t  nread; //! input size
                 short   input[4];
                 void    clear() throw(); //!< count=0, input=-1
                 void emit();

@@ -58,6 +58,12 @@ namespace upsylon
     namespace ios
     {
 
+        void base64:: encoder:: clear() throw()
+        {
+            flag = wait0;
+            memset(data,0,sizeof(data));
+        }
+
         base64:: encoder:: encoder(bool use_pad, bool use_url) throw() :
         q_codec(),
         flag(wait0),
@@ -65,7 +71,7 @@ namespace upsylon
         table(use_url?encode_url:encode_std),
         pad(use_pad)
         {
-            memset(data,0,sizeof(data));
+            clear();
         }
 
 
@@ -75,8 +81,7 @@ namespace upsylon
         
         void base64:: encoder:: reset() throw()
         {
-            flag = wait0;
-            memset(data,0,sizeof(data));
+            clear();
             Q.free();
         }
 
@@ -203,7 +208,7 @@ namespace upsylon
                     break;
             }
 
-            reset();
+            clear();
         }
 
         void base64:: encoder:: flush()
@@ -239,12 +244,14 @@ namespace upsylon
     {
         void    base64::decoder:: clear() throw()
         {
+            nread = 0;
             count = 0;
             memset(input,0xff,sizeof(input));
         }
 
         base64:: decoder:: decoder() throw() :
         count(0),
+        nread(0),
         input()
         {
             clear();
@@ -266,18 +273,21 @@ namespace upsylon
         void base64::decoder:: write(char C)
         {
             assert(count<4);
+            assert(nread<=count);
 
             if(C=='=')
             {
+                // doesn't change the nread
                 switch(count)
                 {
-
                     case 2:
                         assert(-1==input[2]);
+                        input[2] = 0;
                         count=3;
                         break;
                     case 3:
                         assert(-1==input[3]);
+                        input[3] = 0;
                         count=4;
                         break;
                     default:
@@ -289,10 +299,13 @@ namespace upsylon
                 const int B = decoded[ uint8_t(C) ];
                 if(B<0) throw exception("%sinvalid char '%s'", fn, visible_char[uint8_t(C)] );
                 input[count++] = uint8_t(B);
+                ++nread;
             }
+
             if(count>=4)
             {
                 assert(4==count);
+                assert(nread<=count);
                 emit();
             }
         }
@@ -303,7 +316,7 @@ namespace upsylon
         }
 
         static inline
-        void decode4to3( uint8_t *out, const short *input )
+        void __decode( uint8_t *out, const short *input )
         {
             assert(input[0]>=0&&input[0]<64);
             assert(input[1]>=0&&input[1]<64);
@@ -321,7 +334,7 @@ namespace upsylon
             out[1] = ( (B1&0x0f) << 4 ) | ( (B2&0x3c) >>2 );
 
             // 2+6
-            out[3] = ( (B2&0x03) << 6 ) | B3;
+            out[2] = ( (B2&0x03) << 6 ) | B3;
         }
 
         void base64:: decoder:: emit()
@@ -329,16 +342,17 @@ namespace upsylon
             assert(count<=4);
             size_t  num    = 0;
             uint8_t out[4] = {0,0,0,0};
-
-            switch(count)
+            switch(nread)
             {
                 case 0: return;
-                case 4: num=3; decode4to3(out,input); break;
-
+                case 1: throw exception("%smissing input after '%s'",fn,visible_char[ uint8_t(input[0]) ]);
+                case 2:
+                case 3:
+                case 4: num=nread-1;  break;
                 default:
-                    break;
-                    throw exception("%sunexpected count=%u",fn,unsigned(count));
+                    throw exception("%sunexpected #read=%u",fn,unsigned(count));
             }
+            __decode(out,input);
             for(size_t i=0;i<num;++i)
             {
                 Q.push_back(out[i]);

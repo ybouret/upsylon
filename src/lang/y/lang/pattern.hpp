@@ -54,12 +54,13 @@ namespace upsylon
             //! load from an input stream
             static Pattern *Load( ios::istream &fp );
 
+
             //! optimize pattern
             static Pattern *Optimize( Pattern *p ) throw();
 
             //! binary "value"
             string to_binary() const; //!< use output to get a binary code
-            string to_base64() const; //!< humar readable code
+            string to_base64() const; //!< human readable code
 
         protected:
             //! build pattern from ID

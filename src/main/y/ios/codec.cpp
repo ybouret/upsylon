@@ -1,4 +1,6 @@
 #include "y/ios/codec.hpp"
+#include "y/ios/imstream.hpp"
+#include "y/ios/osstream.hpp"
 
 namespace upsylon
 {
@@ -14,27 +16,39 @@ namespace upsylon
         }
 
 
+        void codec:: filter( ios::ostream &output, ios::istream &input )
+        {
+            char C=0;
+            // read from input
+            while( input.query(C) )
+            {
+                // process
+                this->write(C);
+                // save to output
+                while( this->query(C) )
+                {
+                    output.write(C);
+                }
+            }
+
+            // finalize
+            this->flush();
+            // save to output
+            while( this->query(C) )
+            {
+                output.write(C);
+            }
+        }
+
         string codec:: to_string( const void *data, const size_t size )
         {
             assert( !(NULL==data&&size>0) );
+            ios::imstream input(data,size);
+            string        ans;
+            ios::osstream output(ans);
 
             reset();
-            string      ans;
-            char        C = 0;
-            const char *p = (const char *)data;
-            for(size_t i=size;i>0;--i)
-            {
-                write(*(p++));
-                while(query(C))
-                {
-                    ans << C;
-                }
-            }
-            flush();
-            while(query(C))
-            {
-                ans << C;
-            }
+            filter(output,input);
             return ans;
         }
 

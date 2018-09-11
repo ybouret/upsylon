@@ -20,6 +20,9 @@ namespace upsylon
             //! reset codec
             virtual void reset() throw() = 0;
 
+            //! read/process/write until end of input
+            void filter( ios::ostream &output, ios::istream &input );
+
             //! utility : reset/write/read
             string to_string( const void *data, const size_t size );
 
