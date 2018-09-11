@@ -21,7 +21,8 @@ namespace upsylon
 #define BACKSLASH  '\\'
 #define LBRACK     '['
 #define RBRACK     ']'
-        
+#define DASH       '-'
+
         class Compiler
         {
         public:
@@ -168,6 +169,13 @@ namespace upsylon
             // escape sequence in sub-expression
             //
             //__________________________________________________________________
+#define Y_RX_ESC_CONTROL() \
+case 'n': return new Single('\n');\
+case 'r': return new Single('\r');\
+case 't': return new Single('\t');\
+case 'v': return new Single('\v');\
+case 'f': return new Single('\f')
+
             inline Pattern * subEscape()
             {
                 assert(BACKSLASH==curr[-1]);
@@ -187,14 +195,12 @@ namespace upsylon
                     case '+':
                     case '*':
                     case '?':
+                    case '"':
+                    case '\'':
                         return new Single(C);
 
                         // interpreted
-                    case 'n': return new Single('\n');
-                    case 'r': return new Single('\r');
-                    case 't': return new Single('\t');
-                    case 'v': return new Single('\v');
-                    case 'f': return new Single('\f');
+                        Y_RX_ESC_CONTROL();
 
                     case 'x':
                         return hexEscape();
@@ -258,6 +264,12 @@ namespace upsylon
                             g = new NONE();
                             break;
 
+                        case DASH:
+                            ++curr;
+                            g = new OR();
+                            g->add( new Single(DASH) );
+                            break;
+
                         default:
                             g = new OR();
                             break;
@@ -289,6 +301,19 @@ namespace upsylon
                             ++curr;
                             g->add( grp() );
                             break;
+
+                            //--------------------------------------------------
+                            // escape sequence
+                            //--------------------------------------------------
+                        case BACKSLASH:
+                            ++curr; // skip BACKSLASH
+                            g->add( grpEscape() );
+                            break;
+
+                            //--------------------------------------------------
+                            // making a range
+                            //--------------------------------------------------
+                        case DASH: makeRange( g ); break;
 
                         default:
                             ++curr;
@@ -346,6 +371,77 @@ namespace upsylon
 
             }
 
+
+            //__________________________________________________________________
+            //
+            //
+            // escape sequence in sub-expression
+            //
+            //__________________________________________________________________
+            inline Pattern * grpEscape()
+            {
+                assert(BACKSLASH==curr[-1]);
+                if(curr>=last) throw exception("%smissing group escape sequence",fn);
+                const char C = *(curr++);
+                switch(C)
+                {
+                        // direct sequence
+                    case '\\':
+                    case '[':
+                    case ']':
+                    case '-':
+                    case '^':
+                    case '"':
+                    case '\'':
+                        return new Single(C);
+
+                        // interpreted
+                        Y_RX_ESC_CONTROL();
+
+                    case 'x':
+                        return hexEscape();
+
+                    default:
+                        break;
+
+                }
+                throw exception("%sunknown group escape sequence '%s'",fn,visible_char[uint8_t(C)]);
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            // make a range
+            //
+            //__________________________________________________________________
+            inline void makeRange( auto_ptr<Logical> &g )
+            {
+                assert(DASH==*curr);
+                //______________________________________________________________
+                //
+                // check lhs
+                //______________________________________________________________
+                if(g->operands.size<=0) throw exception("%sno left argument for range",fn);
+                auto_ptr<Pattern> lhs = g->operands.pop_back();
+                if( Single::UUID != lhs->uuid) throw exception("%sno single char before dash",fn);
+                const char lo = static_cast<Single *>(lhs->priv)->code;
+                std::cerr << "range lo=" << lo << std::endl;
+
+                if(++curr>=last)
+                {
+                    throw exception("%sunfinished range",fn);
+                }
+                const char C = *curr;
+                switch(C)
+                {
+                    case RBRACK: throw exception("%sgroup ended before range",fn);
+
+                    default:
+                        throw exception("%sinvalid upper value for range='%s'",fn,visible_char[ uint8_t(C) ]);
+                }
+
+                exit(1);
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
