@@ -53,18 +53,18 @@ namespace upsylon
 
             //! load from an input stream
             static Pattern *Load( ios::istream &fp );
-
+            
 
             //! optimize pattern
             static Pattern *Optimize( Pattern *p ) throw();
 
-            //! test patterns
-
-            //! binary "value"
             string to_binary() const; //!< use output to get a binary code
             string to_base64() const; //!< human readable code
 
+            //! test equality
             static bool AreEqual(const Pattern &lhs, const Pattern &rhs) throw();
+
+            //! remove multiple same patterns
             static void NoMultiple( List &ops ) throw();
 
         protected:

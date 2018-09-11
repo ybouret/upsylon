@@ -15,9 +15,16 @@ SET(pattern_srcs ${pattern_decl} ${pattern_code})
 SOURCE_GROUP( lang/pattern FILES ${pattern_srcs} )
 INSTALL( FILES ${pattern_decl} DESTINATION include/y/lang/pattern )
 
+FILE(GLOB lexical_decl y/lang/lexical/*.hpp)
+FILE(GLOB lexical_code y/lang/lexical/*.cpp)
+SET(lexical_srcs ${lexical_decl} ${lexical_code})
+SOURCE_GROUP( lang/lexical FILES ${lexical_srcs} )
+INSTALL( FILES ${lexical_decl} DESTINATION include/y/lang/lexical )
+
 ADD_LIBRARY(y-lang STATIC 
 ${main_srcs} 
 ${pattern_srcs}
+${lexical_srcs}
 )
 INSTALL( TARGETS y-lang ARCHIVE DESTINATION lib )
 
