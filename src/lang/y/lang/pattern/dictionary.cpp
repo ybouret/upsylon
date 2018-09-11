@@ -42,7 +42,7 @@ namespace upsylon
             const Handle *ppP = entries.search(name);
             if(!ppP)
             {
-                throw exception("Dictionary: no '%s'",*name);
+                throw exception("Lang::Dictionary: no '%s'",*name);
             }
             const Pattern &p = **ppP;
             return p.clone();

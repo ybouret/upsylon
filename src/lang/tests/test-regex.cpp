@@ -8,11 +8,14 @@ using namespace Lang;
 
 Y_UTEST(regex)
 {
+    Dictionary dict;
+    dict("INT",Compile::RegEx("[:digit:]+"));
+
     if(argc>1)
     {
         const string rx = argv[1];
         std::cerr << "Compiling '" << rx << "'" << std::endl;
-        auto_ptr<Pattern> p = Compile::RegEx(rx,NULL);
+        auto_ptr<Pattern> p = Compile::RegEx(rx,&dict);
         p->GraphViz("regex.dot");
         if(argc>2&&0==strcmp(argv[2],"scan"))
         {

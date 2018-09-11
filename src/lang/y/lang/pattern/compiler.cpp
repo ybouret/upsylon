@@ -22,6 +22,8 @@ namespace upsylon
 #define LBRACK     '['
 #define RBRACK     ']'
 #define DASH       '-'
+#define LBRACE     '{'
+#define RBRACE     '}'
 
         class Compiler
         {
@@ -108,6 +110,14 @@ namespace upsylon
                             break;
 
                             //--------------------------------------------------
+                            // braced expression
+                            //--------------------------------------------------
+                        case LBRACE:
+                            //if(p->operands.size<=0) throw exception("%sno sub-expression before '%c'",fn,C);
+                            buildBraced(p);
+                            break;
+
+                            //--------------------------------------------------
                             // special characters
                             //--------------------------------------------------
                         case '.':
@@ -161,6 +171,86 @@ namespace upsylon
                         break;
                 }
                 throw exception("%sinvalid simple joker type!!!",fn);
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            // bulding from a braced expression
+            //
+            //__________________________________________________________________
+            inline void buildBraced( auto_ptr<Logical> &p )
+            {
+                //______________________________________________________________
+                //
+                // initialized
+                //______________________________________________________________
+                assert(LBRACE==curr[0]);
+                const char *ini = curr;
+
+                //______________________________________________________________
+                //
+                // look for end
+                //______________________________________________________________
+                do
+                {
+                    if(++curr>=last) throw exception("%sunfinished braced expression",fn);
+                }
+                while(RBRACE != *curr);
+                const char *end = curr;
+
+                //______________________________________________________________
+                //
+                // extract content
+                //______________________________________________________________
+                assert(end>ini);
+                assert(LBRACE==*ini);
+                assert(RBRACE==*end);
+                ++ini;
+                const string content(ini,end-ini);
+                if(content.size()<=0) throw exception("%sempty braces",fn);
+
+                //______________________________________________________________
+                //
+                // analyze
+                //______________________________________________________________
+                const char choice = content[0];
+                if(isalpha(choice))
+                {
+                    insertEntry(p,content);
+                }
+                else if( isdigit(choice) || ',' == choice )
+                {
+                    insertCounting(p,content);
+                }
+                else
+                {
+                    throw exception("%sinvalid content char '%s'",fn,visible_char[ uint8_t(content[0]) ]);
+                }
+                ++curr;
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            // insert a directory entry
+            //
+            //__________________________________________________________________
+            inline void insertEntry( auto_ptr<Logical> &p, const string &content )
+            {
+                if(!dict) throw exception("%smissing dictionary for '%s'",fn,*content);
+                p->add( dict->create(content) );
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            // insert a counting joker
+            //
+            //__________________________________________________________________
+            inline void insertCounting( auto_ptr<Logical> &p, const string &content )
+            {
+                exit(1);
             }
 
             //__________________________________________________________________
