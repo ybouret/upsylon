@@ -69,6 +69,11 @@ namespace upsylon
             return Logical::Among(" \t\n\r\v\f");
         }
 
+        Pattern * Posix::punct()
+        {
+            return Logical::Among("][!\"#$%&'()*+,./:;<=>?@\\^_`{|}~-");
+        }
+
         static inline void __fill_endl( Pattern::List &ops )
         {
             ops.push_back( new Single('\n') );

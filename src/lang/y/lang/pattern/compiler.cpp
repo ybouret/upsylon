@@ -3,6 +3,8 @@
 #include "y/lang/pattern/logic.hpp"
 #include "y/lang/pattern/basic.hpp"
 #include "y/lang/pattern/joker.hpp"
+#include "y/lang/pattern/posix.hpp"
+
 #include "y/exception.hpp"
 
 namespace upsylon
@@ -12,9 +14,10 @@ namespace upsylon
 
         static const char fn[] = "Lang::RegEx: ";
 
-#define LPAREN '('
-#define RPAREN ')'
-#define ALT    '|'
+#define LPAREN     '('
+#define RPAREN     ')'
+#define ALT        '|'
+#define BACKSLASH  '\\'
 
         class Compiler
         {
@@ -23,6 +26,7 @@ namespace upsylon
             const char       *last;
             int               depth;
             const Dictionary *dict;
+
             inline ~Compiler() throw() {}
 
             //__________________________________________________________________
@@ -43,7 +47,7 @@ namespace upsylon
             //! compile sub expression from curr
             //
             //__________________________________________________________________
-            Pattern *sub()
+            inline Pattern *sub()
             {
                 //______________________________________________________________
                 //
@@ -99,6 +103,22 @@ namespace upsylon
                             ++curr; // skip joker sign
                             break;
 
+                            //--------------------------------------------------
+                            // special characters
+                            //--------------------------------------------------
+                        case '.':
+                            p->add( Posix::dot() );
+                            ++curr;
+                            break;
+
+                            //--------------------------------------------------
+                            // escape sequence
+                            //--------------------------------------------------
+                        case BACKSLASH:
+                            ++curr; // skip backslash
+                            p->add( subEscape() );
+                            break;
+
                         default:
                             p->add( new Single(C) );
                             ++curr;
@@ -114,7 +134,11 @@ namespace upsylon
                 return Pattern::Optimize(p.yield());
             }
 
-            Pattern *simpleJoker(const int type,Pattern *jk)
+            //__________________________________________________________________
+            //
+            // making a simple joker
+            //__________________________________________________________________
+            inline Pattern *simpleJoker(const int type,Pattern *jk)
             {
                 switch(type)
                 {
@@ -125,6 +149,36 @@ namespace upsylon
                         break;
                 }
                 throw exception("%sinvalid simple joker type!!!",fn);
+            }
+
+            //__________________________________________________________________
+            //
+            // escape sequence in sub-expression
+            //__________________________________________________________________
+            inline Pattern * subEscape()
+            {
+                assert(BACKSLASH==curr[-1]);
+                if(curr>=last) throw exception("%smissing escape sequence",fn);
+                const char C = *(curr++);
+                switch(C)
+                {
+                        // direct sequence
+                    case '\\':
+                    case '.':
+                    case '(':
+                    case ')':
+                    case '[':
+                    case ']':
+                    case '{':
+                    case '}':
+                    case '+':
+                    case '*':
+                    case '?':
+                        return new Single(C);
+
+
+                }
+                return 0;
             }
 
         private:

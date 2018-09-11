@@ -19,7 +19,7 @@ namespace upsylon
             static Pattern *xdigit(); //!< \verbatim[0-9a-fA-F]\endverbatim
             static Pattern *blank();  //!< \verbatim[ \t]\endverbatim
             static Pattern *space();  //!< \verbatim[ \n\r\t\v\f]\endverbatim
-
+            static Pattern *punct();  //!< \verbatim][!"#$%&'()*+,./:;<=>?@\^_`{|}~-\endverbatim
 
             static Pattern *word();   //!< \verbatim[a-zA-Z0-9_]\endverbatim
             static Pattern *endl();   //!< \verbatim\n|\r|\r\n\endverbatim

@@ -41,6 +41,7 @@ Y_UTEST(posix)
     __CHECK(word);
     __CHECK(endl);
     __CHECK(dot);
+    __CHECK(punct);
 }
 Y_UTEST_DONE()
 
