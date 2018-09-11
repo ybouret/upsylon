@@ -19,6 +19,45 @@ namespace upsylon
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'
         };
 
+        int base64:: find_in_table(const char *table, const char C) throw()
+        {
+            assert(table);
+            for(int i=0;i<64;++i)
+            {
+                if(C==table[i]) return i;
+            }
+            return -1;
+        }
+
+        const short base64::decoded[256] =
+        {
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, 62, -1, 63,
+            52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1,
+            -1,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
+            15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, 63,
+            -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+            41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
+        };
+
+    }
+
+}
+
+namespace upsylon
+{
+    namespace ios
+    {
+
         base64:: encoder:: encoder(bool use_pad, bool use_url) throw() :
         q_codec(),
         flag(wait0),
@@ -38,6 +77,7 @@ namespace upsylon
         {
             flag = wait0;
             memset(data,0,sizeof(data));
+            Q.free();
         }
 
         void base64:: encoder:: write(char C)
@@ -150,6 +190,7 @@ namespace upsylon
                         Q.push_back('=');
                     }
                     break;
+                    
                 case 3:
                     encode3to4(out,data);
                     Q.push_back(table[out[0]]);
@@ -181,6 +222,84 @@ namespace upsylon
                     emit(2);
                     break;
             }
+        }
+
+
+    }
+
+}
+
+#include "y/code/utils.hpp"
+#include "y/exception.hpp"
+
+namespace upsylon
+{
+
+    namespace ios
+    {
+        base64:: decoder:: decoder() throw() :
+        count(0),
+        input()
+        {
+            memset(input,0xff,sizeof(input));
+        }
+
+        base64:: decoder:: ~decoder() throw()
+        {
+            
+        }
+
+        void base64:: decoder:: reset() throw()
+        {
+            count = 0;
+            memset(input,0xff,sizeof(input));
+            Q.free();
+        }
+
+        void base64::decoder:: write(char C)
+        {
+            static const char fn[] = "base64::decoder: ";
+            assert(count<4);
+
+            if(C=='=')
+            {
+                switch(count)
+                {
+
+                    case 2:
+                        assert(-1==input[2]);
+                        count=3;
+                        break;
+                    case 3:
+                        assert(-1==input[3]);
+                        count=4;
+                        break;
+                    default:
+                        throw exception("%sunexpected '='",fn);
+                }
+            }
+            else
+            {
+                const int B = decoded[ uint8_t(C) ];
+                if(B<0) throw exception("%sinvalid char '%s'", fn, visible_char[uint8_t(C)] );
+                input[count++] = uint8_t(B);
+            }
+            if(count>=4)
+            {
+                assert(4==count);
+                emit();
+            }
+        }
+
+        void base64:: decoder:: flush()
+        {
+            emit();
+        }
+
+        void base64:: decoder:: emit()
+        {
+            assert(count<=4);
+
         }
 
     }

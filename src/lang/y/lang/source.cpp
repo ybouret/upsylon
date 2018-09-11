@@ -64,6 +64,7 @@ namespace upsylon
             cache.store( iobuf.pop_front() );
         }
 
+#if 0
         bool  Source:: isActive()
         {
             if(iobuf.size)
@@ -84,7 +85,8 @@ namespace upsylon
                 }
             }
         }
-
+#endif
+        
         bool Source:: peek( char &C )
         {
             if(iobuf.size<=0)

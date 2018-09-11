@@ -22,9 +22,8 @@ namespace upsylon
             void  unget( Token &t ) throw();    //!< unget a token
             void  ungetCopy( const Token &t );  //!< unget a copy of a token
             void  prefetch(size_t n);           //!< try to prefetch at most n Chars
-            void  skip(); //!< iobuf.size>0
-            bool  isActive();
-            bool  peek( char &C );
+            void  skip();                       //!< iobuf.size>0, skip last unread char
+            bool  peek( char &C );              //!< try and read a char, then at top of iobuf
 
         private:
             Module::Pointer module;

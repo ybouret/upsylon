@@ -18,7 +18,7 @@ namespace upsylon
             typedef auto_ptr<const Pattern> Motif; //!< alias
             inline virtual ~Joker() throw() {}     //!< destructor
 
-            void optimize() throw();
+            void optimize() throw(); //!< call optimize on the motif
 
 
 

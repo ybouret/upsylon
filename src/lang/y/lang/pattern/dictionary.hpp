@@ -9,7 +9,7 @@ namespace upsylon
     namespace Lang
     {
 
-
+        //! Dictionary of patterns for RegEx
         class Dictionary : public Object
         {
         public:

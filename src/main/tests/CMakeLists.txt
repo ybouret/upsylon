@@ -64,7 +64,7 @@ ADD_TEST(Triplet     test-main triplet)
 ADD_TEST(Points      test-main points)
 ADD_TEST(Tuple       test-main tuple)
 ADD_TEST(Release     test-main release)
-ADD_TEST(Base64      test-main base64)
+ADD_TEST(Base64      test-main base64 NULL)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V

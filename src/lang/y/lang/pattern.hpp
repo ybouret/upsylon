@@ -58,8 +58,8 @@ namespace upsylon
             static Pattern *Optimize( Pattern *p ) throw();
 
             //! binary "value"
-            string to_binary() const;
-            string to_base64() const;
+            string to_binary() const; //!< use output to get a binary code
+            string to_base64() const; //!< humar readable code
 
         protected:
             //! build pattern from ID

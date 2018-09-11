@@ -85,11 +85,11 @@ namespace upsylon
                             alt->add( p.yield() );
                             ++curr; // skip ALT
                             alt->add( sub() );
-                            return Pattern::Optimize(alt.yield()); // both sides are optimized
+                            return Pattern::Optimize(alt.yield());
                         }
 
                             //--------------------------------------------------
-                            // joker
+                            // simple joker
                             //--------------------------------------------------
                         case '+':
                         case '*':
@@ -118,10 +118,9 @@ namespace upsylon
             {
                 switch(type)
                 {
-                    case '?': return Optional::Create(jk);
+                    case '?': return Optional ::Create(jk);
                     case '+': return Repeating::OneOrMore(jk);
                     case '*': return Repeating::ZeroOrMore(jk);
-
                     default:
                         break;
                 }

@@ -8,10 +8,17 @@ namespace upsylon
 {
     namespace Lang
     {
+        //! Compiling Regular Expressions
         struct Compile
         {
-            static Pattern *RegEx( const string &rx, const Dictionary *dict);
-            
+            //! compile a regular expression
+            static Pattern *RegEx( const string &rx, const Dictionary *dict=NULL);
+            //! compile a regular expression
+            inline
+            static Pattern *RegEx(const char *rx, const Dictionary *dict=NULL)
+            {
+                const string _ = rx; return RegEx(_,dict);
+            }
         };
     }
 }
