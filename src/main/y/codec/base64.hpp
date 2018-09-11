@@ -68,6 +68,7 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(decoder);
                 size_t  count;
                 short   input[4];
+                void    clear() throw(); //!< count=0, input=-1
                 void emit();
             };
 

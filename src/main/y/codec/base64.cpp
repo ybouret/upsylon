@@ -166,7 +166,7 @@ namespace upsylon
         {
             assert(n>0);
             assert(n<=3);
-            uint8_t out[4];
+            uint8_t out[4] = { 0,0,0,0 };
             switch(n)
             {
                 case 1:
@@ -237,11 +237,17 @@ namespace upsylon
 
     namespace ios
     {
+        void    base64::decoder:: clear() throw()
+        {
+            count = 0;
+            memset(input,0xff,sizeof(input));
+        }
+
         base64:: decoder:: decoder() throw() :
         count(0),
         input()
         {
-            memset(input,0xff,sizeof(input));
+            clear();
         }
 
         base64:: decoder:: ~decoder() throw()
@@ -251,14 +257,14 @@ namespace upsylon
 
         void base64:: decoder:: reset() throw()
         {
-            count = 0;
-            memset(input,0xff,sizeof(input));
+            clear();
             Q.free();
         }
 
+        static const char fn[] = "base64::decoder: ";
+
         void base64::decoder:: write(char C)
         {
-            static const char fn[] = "base64::decoder: ";
             assert(count<4);
 
             if(C=='=')
@@ -296,10 +302,48 @@ namespace upsylon
             emit();
         }
 
+        static inline
+        void decode4to3( uint8_t *out, const short *input )
+        {
+            assert(input[0]>=0&&input[0]<64);
+            assert(input[1]>=0&&input[1]<64);
+            assert(input[2]>=0&&input[2]<64);
+            assert(input[3]>=0&&input[3]<64);
+            const uint8_t B0 = uint8_t(input[0]);
+            const uint8_t B1 = uint8_t(input[1]);
+            const uint8_t B2 = uint8_t(input[2]);
+            const uint8_t B3 = uint8_t(input[3]);
+
+            // 6+2
+            out[0] = (B0<<2) | ( (B1&0x30)>>4 );
+
+            // 4+4
+            out[1] = ( (B1&0x0f) << 4 ) | ( (B2&0x3c) >>2 );
+
+            // 2+6
+            out[3] = ( (B2&0x03) << 6 ) | B3;
+        }
+
         void base64:: decoder:: emit()
         {
             assert(count<=4);
+            size_t  num    = 0;
+            uint8_t out[4] = {0,0,0,0};
 
+            switch(count)
+            {
+                case 0: return;
+                case 4: num=3; decode4to3(out,input); break;
+
+                default:
+                    break;
+                    throw exception("%sunexpected count=%u",fn,unsigned(count));
+            }
+            for(size_t i=0;i<num;++i)
+            {
+                Q.push_back(out[i]);
+            }
+            clear();
         }
 
     }
