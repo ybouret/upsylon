@@ -221,7 +221,7 @@ namespace upsylon
                 }
                 else if( isdigit(choice) || ',' == choice )
                 {
-                    insertCounting(p,content);
+                    insertJoker(p,content);
                 }
                 else
                 {
@@ -248,8 +248,13 @@ namespace upsylon
             // insert a counting joker
             //
             //__________________________________________________________________
-            inline void insertCounting( auto_ptr<Logical> &p, const string &content )
+
+            inline void insertJoker( auto_ptr<Logical> &p, const string &content )
             {
+                if(p->operands.size<=0) throw exception("%sno sub-expression before {%s}",fn,*content);
+                const char *smin = *content;
+                const char *sep  = strchr(smon,',');
+
                 exit(1);
             }
 
