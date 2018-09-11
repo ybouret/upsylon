@@ -10,6 +10,7 @@ ADD_TEST(Source  test-lang source NULL)
 ADD_TEST(Pattern test-lang pattern)
 ADD_TEST(Posix   test-lang posix)
 ADD_TEST(Regex   test-lang regex)
+ADD_TEST(Scanner test-lang scanner NULL)
 
 
 ADD_CUSTOM_TARGET(utest-lang

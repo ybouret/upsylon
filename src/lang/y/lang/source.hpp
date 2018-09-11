@@ -9,22 +9,32 @@ namespace upsylon
 {
     namespace Lang
     {
+        namespace Lexical
+        {
+            class Scanner;
+        }
 
         //! convert Module into a source of tokens
         class Source : public Object
         {
         public:
             explicit Source(Module *m);  //!< initialize
-            virtual ~Source() throw();  //!< desctructor, excess token are poured in cached
+            virtual ~Source() throw();   //!< desctructor, excess token are poured in cached
 
-            Char *get();                        //!< get next Char
-            void  unget( Char *ch ) throw();    //!< unget a Char
-            void  unget( Token &t ) throw();    //!< unget a token
-            void  ungetCopy( const Token &t );  //!< unget a copy of a token
-            void  prefetch(size_t n);           //!< try to prefetch at most n Chars
-            void  skip();                       //!< iobuf.size>0, skip last unread char
-            bool  peek( char &C );              //!< try and read a char, then at top of iobuf
+            Char       *get();                         //!< get next Char
+            void        unget( Char *ch ) throw();     //!< unget a Char
+            void        unget( Token &t ) throw();     //!< unget a token
+            void        ungetCopy( const Token &t );   //!< unget a copy of a token
+            void        prefetch(size_t n);            //!< try to prefetch at most n Chars
+            void        skip();                        //!< iobuf.size>0, skip last unread char
+            size_t      loaded() const throw();        //!< iobuf.size
+            void        forward(size_t n) throw();     //!< n<=loaded
+            bool        active();                      //!< try to ensure one next char in iobuf
+            const Char *peek();                        //!< copy of first char in iobuf
+            void        collect( Token &tkn ) throw(); //!< put in cache
 
+            const Module * operator*() const throw();
+            
         private:
             Module::Pointer module;
             Char::List      iobuf;

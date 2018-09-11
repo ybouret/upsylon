@@ -17,7 +17,7 @@ namespace upsylon
         }
 
 
-        void Module:: newLine() throw()
+        void Module:: newLine() const throw()
         {
             ++((int &)line);
             (int&)column = 1;

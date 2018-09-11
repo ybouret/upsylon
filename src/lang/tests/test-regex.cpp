@@ -9,13 +9,13 @@ using namespace Lang;
 Y_UTEST(regex)
 {
     Dictionary dict;
-    dict("INT",Compile::RegEx("[:digit:]+"));
+    dict("INT",Compile::RegExp("[:digit:]+"));
 
     if(argc>1)
     {
         const string rx = argv[1];
         std::cerr << "Compiling '" << rx << "'" << std::endl;
-        auto_ptr<Pattern> p = Compile::RegEx(rx,&dict);
+        auto_ptr<Pattern> p = Compile::RegExp(rx,&dict);
         p->GraphViz("regex.dot");
         if(argc>2&&0==strcmp(argv[2],"scan"))
         {
@@ -25,8 +25,7 @@ Y_UTEST(regex)
             while( std::cerr << "> ", fp.gets(line) )
             {
                 Source src( Module::OpenData("line",line) );
-                char C=0;
-                while( src.peek(C) )
+                while( src.active() )
                 {
                     Token tkn;
                     if(p->match(tkn,src))
@@ -35,7 +34,7 @@ Y_UTEST(regex)
                     }
                     else
                     {
-                        std::cerr << C;
+                        std::cerr << char(src.peek()->code);
                         src.skip();
                     }
                 }

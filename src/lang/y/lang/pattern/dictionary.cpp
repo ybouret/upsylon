@@ -5,7 +5,7 @@ namespace upsylon
 {
     namespace Lang
     {
-        Dictionary:: Dictionary() throw() : Object(), entries(), patterns()
+        Dictionary:: Dictionary() throw() : CountedObject(), entries(), patterns()
         {
         }
 

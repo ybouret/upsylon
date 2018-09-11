@@ -12,12 +12,12 @@ namespace upsylon
         struct Compile
         {
             //! compile a regular expression
-            static Pattern *RegEx( const string &rx, const Dictionary *dict=NULL);
+            static Pattern *RegExp( const string &rx, const Dictionary *dict=NULL);
             //! compile a regular expression
             inline
-            static Pattern *RegEx(const char *rx, const Dictionary *dict=NULL)
+            static Pattern *RegExp(const char *rx, const Dictionary *dict=NULL)
             {
-                const string _ = rx; return RegEx(_,dict);
+                const string _ = rx; return RegExp(_,dict);
             }
         };
     }

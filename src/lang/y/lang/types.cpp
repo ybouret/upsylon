@@ -6,6 +6,9 @@ namespace upsylon
     {
         Object::  Object() throw() {}
         Object:: ~Object() throw() {}
+
+        CountedObject::  CountedObject() throw() {}
+        CountedObject:: ~CountedObject() throw() {}
     }
 
 }

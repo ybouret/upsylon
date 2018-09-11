@@ -22,6 +22,15 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Object);
         };
 
+        //! base object for reference counting
+        class CountedObject : public Object, public counted
+        {
+        public:
+            explicit CountedObject() throw(); //!< constructor
+            virtual ~CountedObject() throw(); //!< desctructor
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(CountedObject);
+        };
 
         //! to identify a source/module
         typedef arc_ptr<const string> Origin;

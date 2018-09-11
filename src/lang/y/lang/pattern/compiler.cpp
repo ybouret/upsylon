@@ -616,7 +616,7 @@ case 'f': return new Single('\f')
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
         };
 
-        Pattern * Compile::RegEx( const string &rx, const Dictionary *dict )
+        Pattern * Compile::RegExp( const string &rx, const Dictionary *dict )
         {
 
             Compiler cmp(rx,dict);

@@ -16,7 +16,8 @@ namespace upsylon
             typedef arc_ptr<Module> Pointer; //!< pointer for Source
             virtual ~Module() throw();       //!< destructor
             Char *get();                     //!< convert char into Char
-            void  newLine() throw();         //!< if user recognizes a new line
+            void  newLine() const throw();   //!< if user recognizes a new line
+            
             static Module        *OpenSTDIN(); //!< stdin
             static Module        *OpenFile(const string &filename ); //!< regular file
             //! regular file

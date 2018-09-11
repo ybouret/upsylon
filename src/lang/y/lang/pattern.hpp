@@ -16,9 +16,12 @@ namespace upsylon
 #define Y_LANG_PATTERN_IS(CLASS) do { priv = static_cast<CLASS*>(this); } while(false)
 
         //! a pattern to accept from a source
-        class Pattern : public Object
+        class Pattern : public CountedObject
         {
         public:
+            typedef core::list_of_cloneable<Pattern> List;   //!< list of cloneable patterns
+            typedef arc_ptr<const Pattern>           Handle; //!< shared finalized pattern
+
             const uint32_t uuid; //!< unique ID for the class
             Pattern       *next; //!< for List
             Pattern       *prev; //!< for List
@@ -40,8 +43,7 @@ namespace upsylon
             //! binary output
             virtual void     write( ios::ostream &fp )       const = 0;
 
-            //! list of cloneable patterns
-            typedef core::list_of_cloneable<Pattern> List;
+
 
             //! emit GraphViz node
             void viz( ios::ostream &os ) const; //!< tag+__viz

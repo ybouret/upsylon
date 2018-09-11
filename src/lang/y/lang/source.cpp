@@ -64,30 +64,23 @@ namespace upsylon
             cache.store( iobuf.pop_front() );
         }
 
-#if 0
-        bool  Source:: isActive()
+
+
+        size_t Source:: loaded() const throw()
         {
-            if(iobuf.size)
+            return iobuf.size;
+        }
+
+        void Source:: forward(size_t n) throw()
+        {
+            assert(n<=iobuf.size);
+            while(n-->0)
             {
-                return true;
-            }
-            else
-            {
-                Char *ch = module->get();
-                if(ch)
-                {
-                    iobuf.push_front(ch);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                skip();
             }
         }
-#endif
-        
-        bool Source:: peek( char &C )
+
+        bool Source::active()
         {
             if(iobuf.size<=0)
             {
@@ -102,8 +95,30 @@ namespace upsylon
                 }
             }
             assert(iobuf.size>0);
-            C = iobuf.head->code;
+            //C = iobuf.head->code;
             return true;
+        }
+
+        const Char * Source:: peek()
+        {
+            if( active() )
+            {
+                return iobuf.head;
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+
+        void Source:: collect( Token &tkn ) throw()
+        {
+            while(tkn.size) cache.store(tkn.pop_back());
+        }
+
+        const Module * Source:: operator*() const throw()
+        {
+            return & *module;
         }
 
 

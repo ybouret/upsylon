@@ -9,8 +9,8 @@ namespace upsylon
     namespace Lang
     {
 
-        //! Dictionary of patterns for RegEx
-        class Dictionary : public Object
+        //! Dictionary of patterns for RegExp
+        class Dictionary : public CountedObject
         {
         public:
             typedef Pattern           *Handle; //!< alias

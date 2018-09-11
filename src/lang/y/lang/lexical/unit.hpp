@@ -35,6 +35,8 @@ namespace upsylon
             };
 
         }
+        typedef Lexical::Unit Lexeme;
+        typedef Lexeme::List  Lexemes;
     }
 }
 
