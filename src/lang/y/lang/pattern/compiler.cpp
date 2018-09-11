@@ -424,23 +424,38 @@ case 'f': return new Single('\f')
                 if(g->operands.size<=0) throw exception("%sno left argument for range",fn);
                 auto_ptr<Pattern> lhs = g->operands.pop_back();
                 if( Single::UUID != lhs->uuid) throw exception("%sno single char before dash",fn);
-                const char lo = static_cast<Single *>(lhs->priv)->code;
-                std::cerr << "range lo=" << lo << std::endl;
+                const uint8_t lo = static_cast<Single *>(lhs->priv)->code;
 
+                //______________________________________________________________
+                //
+                // find rhs
+                //______________________________________________________________
                 if(++curr>=last)
                 {
                     throw exception("%sunfinished range",fn);
                 }
-                const char C = *curr;
+                const char C  = *(curr++); // skip current char
+                uint8_t    up = uint8_t(C);
                 switch(C)
                 {
-                    case RBRACK: throw exception("%sgroup ended before range",fn);
+                    case RBRACK:
+                    case LBRACK:
+                        throw exception("%sinvalid upper value for range='%s'",fn,visible_char[ up ]);
+
+                    case BACKSLASH: {
+                        auto_ptr<Pattern> rhs = grpEscape(); assert( Single::UUID==rhs->uuid);
+                        up = static_cast<Single *>(rhs->priv)->code;
+                    } break;
 
                     default:
-                        throw exception("%sinvalid upper value for range='%s'",fn,visible_char[ uint8_t(C) ]);
+                        break;
                 }
 
-                exit(1);
+                //______________________________________________________________
+                //
+                // append range
+                //______________________________________________________________
+                g->add(new Range(lo,up));
             }
 
         private:
