@@ -6,6 +6,7 @@
 #include "y/lang/pattern/posix.hpp"
 
 #include "y/exception.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon
 {
@@ -18,7 +19,9 @@ namespace upsylon
 #define RPAREN     ')'
 #define ALT        '|'
 #define BACKSLASH  '\\'
-
+#define LBRACK     '['
+#define RBRACK     ']'
+        
         class Compiler
         {
         public:
@@ -119,6 +122,8 @@ namespace upsylon
                             p->add( subEscape() );
                             break;
 
+
+
                         default:
                             p->add( new Single(C) );
                             ++curr;
@@ -158,7 +163,7 @@ namespace upsylon
             inline Pattern * subEscape()
             {
                 assert(BACKSLASH==curr[-1]);
-                if(curr>=last) throw exception("%smissing escape sequence",fn);
+                if(curr>=last) throw exception("%smissing sub-expression escape sequence",fn);
                 const char C = *(curr++);
                 switch(C)
                 {
@@ -176,9 +181,41 @@ namespace upsylon
                     case '?':
                         return new Single(C);
 
+                        // interpreted
+                    case 'n': return new Single('\n');
+                    case 'r': return new Single('\r');
+                    case 't': return new Single('\t');
+                    case 'v': return new Single('\v');
+                    case 'f': return new Single('\f');
+
+                    case 'x':
+                        return hexEscape();
+
+                    default:
+                        break;
 
                 }
-                return 0;
+                throw exception("%sunknown sub-expression escape sequence '%s'",fn,visible_char[uint8_t(C)]);
+            }
+
+            //__________________________________________________________________
+            //
+            // parse hexadecimal
+            //__________________________________________________________________
+            inline Pattern *hexEscape()
+            {
+                assert('x'==curr[-1]);
+                // read 2 chars
+                if(curr>=last) throw exception("%smissing first hexadecimal char",fn);
+                const char hiCH = *(curr++);
+                if(curr>=last) throw exception("%smissing second hexadecimal char",fn);
+                const char loCH = *(curr++);
+
+                const int hi = hexadecimal::to_decimal(hiCH); if(hi<0) throw exception("%sinvalid first hexadecimal char '%s'",fn,visible_char[uint8_t(hiCH)]);
+                const int lo = hexadecimal::to_decimal(loCH); if(lo<0) throw exception("%sinvalid second hexadecimal char '%s'",fn,visible_char[uint8_t(loCH)]);
+
+                const uint8_t B = uint8_t(hi) << 4 | uint8_t(lo);
+                return new Single(B);
             }
 
         private:
