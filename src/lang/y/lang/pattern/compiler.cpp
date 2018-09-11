@@ -7,6 +7,7 @@
 
 #include "y/exception.hpp"
 #include "y/code/utils.hpp"
+#include "y/string/convert.hpp"
 
 namespace upsylon
 {
@@ -104,8 +105,8 @@ namespace upsylon
                         case '+':
                         case '*':
                         case '?':
-                            if(p->operands.size<=0) throw exception("%sno sub-expression before '%c'",fn,C);
-                            p->add( simpleJoker(C,p->operands.pop_back() ) );
+                            if(p->size()<=0) throw exception("%sno sub-expression before '%c'",fn,C);
+                            p->add( simpleJoker(C,p->remove() ) );
                             ++curr; // skip joker sign
                             break;
 
@@ -207,7 +208,7 @@ namespace upsylon
                 assert(LBRACE==*ini);
                 assert(RBRACE==*end);
                 ++ini;
-                const string content(ini,end-ini);
+                string content(ini,end-ini);
                 if(content.size()<=0) throw exception("%sempty braces",fn);
 
                 //______________________________________________________________
@@ -249,13 +250,71 @@ namespace upsylon
             //
             //__________________________________________________________________
 
-            inline void insertJoker( auto_ptr<Logical> &p, const string &content )
+            inline void insertJoker( auto_ptr<Logical> &p,  string &content )
             {
-                if(p->operands.size<=0) throw exception("%sno sub-expression before {%s}",fn,*content);
-                const char *smin = *content;
-                const char *sep  = strchr(smon,',');
+                //______________________________________________________________
+                //
+                // check status
+                //______________________________________________________________
+                if(p->size()<=0) throw exception("%sno sub-expression before {%s}",fn,*content);
 
-                exit(1);
+                //______________________________________________________________
+                //
+                // analyze
+                //______________________________________________________________
+                char  *smin = *content;
+                char  *smax = (char *)strchr(smin,',');
+                size_t lmax = 0;
+                size_t nmax = 0;
+
+                if( smax )
+                {
+                    *(smax++)=0;
+                    lmax = length_of(smax);
+                    std::cerr << "smax=" << smax << "/#" << lmax << std::endl;
+                    if(lmax>0)
+                    {
+                        nmax = string_convert::to<size_t>(smax,"Lang::RegEx::Range.nmax");
+                        std::cerr << "nmax=" << nmax << std::endl;
+                    }
+                }
+
+                const size_t lmin = length_of(smin);
+                std::cerr << "smin=" << smin << "/#" << lmin << std::endl;
+
+                //______________________________________________________________
+                //
+                // process
+                //______________________________________________________________
+                if(lmin>0)
+                {
+                    // smin has a value
+                    const size_t nmin = string_convert::to<size_t>(smin,"Lang::RegEx::Range.nmin");
+                    std::cerr << "nmin=" << nmin << std::endl;
+                    if(lmax>0)
+                    {
+                        p->add( Counting::Create(p->remove(),nmin,nmax) );
+                    }
+                    else
+                    {
+                        p->add( Repeating::Create(p->remove(),nmin) );
+                    }
+                }
+                else
+                {
+                    // empty smin -> nmin = 0
+                    assert(lmin<=0);
+                    if(lmax<=0)
+                    {
+                        auto_ptr<Logical> q = new NONE();
+                        q->add( p->remove() );
+                        p->add( q.yield() );
+                    }
+                    else
+                    {
+                        p->add( Counting::Create(p->remove(),0,nmax) );
+                    }
+                }
             }
 
             //__________________________________________________________________
@@ -386,7 +445,7 @@ case 'f': return new Single('\f')
                             //--------------------------------------------------
                         case RBRACK:
                             ++curr;
-                            if(g->operands.size<=0) throw exception("%sempty group",fn);
+                            if(g->size()<=0) throw exception("%sempty group",fn);
                             return Pattern::Optimize( g.yield() );
 
                             //--------------------------------------------------
@@ -517,7 +576,7 @@ case 'f': return new Single('\f')
                 // check lhs
                 //______________________________________________________________
                 if(g->operands.size<=0) throw exception("%sno left argument for range",fn);
-                auto_ptr<Pattern> lhs = g->operands.pop_back();
+                auto_ptr<Pattern> lhs = g->remove();
                 if( Single::UUID != lhs->uuid) throw exception("%sno single char before dash",fn);
                 const uint8_t lo = static_cast<Single *>(lhs->priv)->code;
 

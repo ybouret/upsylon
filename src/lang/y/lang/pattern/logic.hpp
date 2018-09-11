@@ -27,6 +27,16 @@ namespace upsylon
                 return p;
             }
 
+            //! wrapper
+            inline size_t size() const throw() { return operands.size; }
+
+            //! remove last pattern
+            inline Pattern *remove() throw()
+            {
+                assert(operands.size);
+                return operands.pop_back();
+            }
+
             static Pattern *Equal(const string &); //!< matching exact string
             static Pattern *Among(const string &); //!< one character of the string
 
