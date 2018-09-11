@@ -110,11 +110,7 @@ namespace upsylon
                 return NULL;
             }
         }
-
-        void Source:: collect( Token &tkn ) throw()
-        {
-            while(tkn.size) cache.store(tkn.pop_back());
-        }
+        
 
         const Module * Source:: operator*() const throw()
         {

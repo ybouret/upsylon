@@ -28,8 +28,9 @@ namespace upsylon
             char C = 0;
             if(input->query(C))
             {
+                Char *ch = cache.make(C,*this);
                 ++( (int&)column );
-                return cache.make(C,*this);
+                return ch;
             }
             else
             {

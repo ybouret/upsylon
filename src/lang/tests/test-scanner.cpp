@@ -15,6 +15,8 @@ namespace
         explicit localScanner() : Lexical::Scanner("localScanner")
         {
             emit("id","[:alpha:]+");
+            emit("int","[:digit:]+");
+            emit("dbl","[:digit:]+\\.[:digit:]*");
             drop("blanks","[:blank:]+");
             endl("endl","[:endl:]");
         }
@@ -43,6 +45,12 @@ Y_UTEST(scanner)
         while(NULL!=(lx=scanner.probe(source,result)))
         {
             lexemes.push_back(lx);
+        }
+        std::cerr << std::endl << "done" << std::endl;
+
+        for(lx=lexemes.head;lx;lx=lx->next)
+        {
+            std::cerr << *lx << std::endl;
         }
         
     }

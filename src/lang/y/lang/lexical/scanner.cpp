@@ -60,7 +60,6 @@ namespace upsylon
             {
 
                 probed =  *source;
-                std::cerr << "Probing '" << *(probed->origin) << "'" << std::endl;
                 while(true)
                 {
                     //__________________________________________________________
@@ -82,8 +81,6 @@ namespace upsylon
                     Rule *bestRule = rules.head;
                     for(;bestRule;bestRule=bestRule->next)
                     {
-                        std::cerr << "guessing '" << bestRule->label << "'" << std::endl;
-
                         if(bestRule->motif->match(bestData,source))
                         {
                             break;
@@ -106,7 +103,6 @@ namespace upsylon
                     source.ungetCopy(bestData);
                     for(Rule *tempRule=bestRule->next;tempRule;tempRule=tempRule->next)
                     {
-                        std::cerr << "checking '" << bestRule->label << "'" << std::endl;
                         Token tempData;
                         if(tempRule->motif->match(tempData,source))
                         {
@@ -115,7 +111,6 @@ namespace upsylon
                                 //----------------------------------------------
                                 // new winner
                                 //----------------------------------------------
-                                source.collect(bestData);
                                 bestData.swap_with(tempData);
                                 bestRule = tempRule;
                                 source.ungetCopy(bestData);
@@ -146,11 +141,9 @@ namespace upsylon
                         }
 
                         case Discard:
-                            source.collect(bestData);
                             break; // and continue
 
                         case Control:
-                            source.collect(bestData);
                             return NULL;
 
                     }
