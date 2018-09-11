@@ -6,7 +6,7 @@ TARGET_LINK_Y(test-lang lang)
 
 ENABLE_TESTING()
 ADD_TEST(Token   test-lang token)
-ADD_TEST(Source  test-lang source NULl)
+ADD_TEST(Source  test-lang source NULL)
 ADD_TEST(Pattern test-lang pattern)
 ADD_TEST(Posix   test-lang posix)
 ADD_TEST(Regex   test-lang regex)
