@@ -62,6 +62,34 @@ namespace upsylon
             ios::base64::encoder b64;
             return b64.to_string(ans);
         }
+
+        void Pattern:: NoMultiple( List &ops ) throw()
+        {
+            List                          tmp;
+            while( ops.size )
+            {
+                const Pattern *lhs      = ops.head;
+                bool           multiple = false;
+                for(const Pattern *rhs=tmp.head;rhs;rhs=rhs->next)
+                {
+                    if( AreEqual(*lhs,*rhs) )
+                    {
+                        multiple = true;
+                        break;
+                    }
+                }
+                if(multiple)
+                {
+                    delete ops.pop_front();
+                }
+                else
+                {
+                    tmp.push_back( ops.pop_front() );
+                }
+            }
+            ops.swap_with(tmp);
+        }
+
     }
 
 }

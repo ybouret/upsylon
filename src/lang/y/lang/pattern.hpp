@@ -58,9 +58,14 @@ namespace upsylon
             //! optimize pattern
             static Pattern *Optimize( Pattern *p ) throw();
 
+            //! test patterns
+
             //! binary "value"
             string to_binary() const; //!< use output to get a binary code
             string to_base64() const; //!< human readable code
+
+            static bool AreEqual(const Pattern &lhs, const Pattern &rhs) throw();
+            static void NoMultiple( List &ops ) throw();
 
         protected:
             //! build pattern from ID

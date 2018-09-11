@@ -58,7 +58,13 @@ namespace upsylon
                     return __Optimize<AND>(p);
 
                 case OR::UUID:
-                    return __Optimize<OR>(p);
+                    p = __Optimize<OR>(p);
+                    if(OR::UUID==p->uuid)
+                    {
+                        // still a OR
+                        NoMultiple(static_cast<OR *>(p->priv)->operands);
+                    }
+                    return p;
 
                 case NONE::UUID: {
                     Pattern::List &ops = static_cast<NONE *>(p->priv)->operands;
