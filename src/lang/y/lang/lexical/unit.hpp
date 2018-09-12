@@ -8,35 +8,31 @@ namespace upsylon
 {
     namespace Lang
     {
-        namespace Lexical
+
+        //! a Lexeme
+        class Lexeme : public Token
         {
+        public:
+            Lexeme        *next;  //!< for list
+            Lexeme        *prev;  //!< for list
+            const Origin label; //!< rule label
 
-            //! a Lexeme
-            class Unit : public Token
-            {
-            public:
-                Unit        *next;  //!< for list
-                Unit        *prev;  //!< for list
-                const Origin label; //!< rule label
+            //! initialize
+            explicit Lexeme(const Origin &ruleLabel);
+            //! copy content and label
+            Lexeme(const Lexeme &other);
+            //! destructor
+            virtual ~Lexeme() throw();
 
-                //! initialize
-                explicit Unit(const Origin &ruleLabel);
-                //! copy content and label
-                Unit(const Unit &other);
-                //! destructor
-                virtual ~Unit() throw();
+            //! list/cache
+            typedef core::list_of_cpp<Lexeme> List;
 
-                //! list/cache
-                typedef core::list_of_cpp<Unit> List;
+        private:
+            Y_DISABLE_ASSIGN(Lexeme);
 
-            private:
-                Y_DISABLE_ASSIGN(Unit);
+        };
 
-            };
 
-        }
-        typedef Lexical::Unit Lexeme;
-        typedef Lexeme::List  Lexemes;
     }
 }
 

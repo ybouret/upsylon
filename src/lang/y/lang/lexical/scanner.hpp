@@ -46,7 +46,7 @@ namespace upsylon
                  -- kind=control: change in translator
                  - if return not NULL, kind must be forward
                  */
-                Unit *probe( Source &source, Result &result );
+                Lexeme *probe( Source &source, Result &result );
 
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 inline void make(const string     &id,

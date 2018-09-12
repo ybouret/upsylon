@@ -56,7 +56,7 @@ namespace upsylon
     {
         namespace Lexical
         {
-            Unit *Scanner:: probe( Source &source, Result &result )
+            Lexeme *Scanner:: probe( Source &source, Result &result )
             {
 
                 probed =  *source;
@@ -135,7 +135,7 @@ namespace upsylon
                     switch(result)
                     {
                         case Forward: {
-                            Unit *u = new Unit(bestRule->label);
+                            Lexeme *u = new Lexeme(bestRule->label);
                             u->swap_with(bestData);
                             return u;
                         }

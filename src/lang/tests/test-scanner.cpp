@@ -39,8 +39,8 @@ Y_UTEST(scanner)
     {
         std::cerr << "Scanning..." << std::endl;
         Source   source( Module::OpenSTDIN() );
-        Lexemes  lexemes;
-        Lexeme  *lx = 0;
+        Lexeme::List  lexemes;
+        Lexeme       *lx = 0;
         Lexical::Result result = Lexical::Forward;
         while(NULL!=(lx=scanner.probe(source,result)))
         {
