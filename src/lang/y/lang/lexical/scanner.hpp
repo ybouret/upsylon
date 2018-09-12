@@ -18,7 +18,7 @@ namespace upsylon
             class Scanner : public CountedObject
             {
             public:
-                typedef intr_ptr<string,Scanner> Pointer; //! for database
+                typedef intr_ptr<string,Scanner> Pointer; //!< for database
                 const Origin label; //!< used as shared label/key
 
 
@@ -51,6 +51,7 @@ namespace upsylon
                     add(ruleLabel,ruleMotif,ruleEvent);
                 }
 
+                //! construct a forwarding rule
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 inline void forward(const char     *id,
                                     const char     *rx,
@@ -74,6 +75,7 @@ namespace upsylon
                     add(ruleLabel,ruleMotif,ruleEvent);
                 }
 
+                //! construct a discarding rule
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 inline void discard(const char     *id,
                                     const char     *rx,
@@ -98,6 +100,7 @@ namespace upsylon
                     add(ruleLabel,ruleMotif,ruleEvent);
                 }
 
+                //! construct a jump
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 inline void jump(const char     *target,
                                  const char     *rx,
@@ -122,6 +125,7 @@ namespace upsylon
                     add(ruleLabel,ruleMotif,ruleEvent);
                 }
 
+                //! construct a  call
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 inline void call(const char     *target,
                                  const char     *rx,
@@ -145,7 +149,7 @@ namespace upsylon
                     add(ruleLabel,ruleMotif,ruleEvent);
                 }
 
-                //! back
+                //! construct a back
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 inline void back(const char     *rx,
                                  OBJECT_POINTER  host,
@@ -154,12 +158,26 @@ namespace upsylon
                     const string __ = rx; back(__,host,meth);
                 }
 
+                //! do nothing
                 inline void nothing( const Token &) throw() {}
+                //! newline of the probed source
                 inline void newline(const Token &) throw() { assert(probed); probed->newLine(); }
 
+                //! helper to emit ID on rx
                 inline void emit(const string &id,const string &rx) { forward(id,rx,this,&Scanner::nothing); }
+                //! helper to emit ID on rx
+                inline void emit(const char   *id,const char   *rx) { const string _=id; const string __=rx; emit(_,__); }
+                //! helper to drop ID on rx
                 inline void drop(const string &id,const string &rx) { discard(id,rx,this,&Scanner::nothing); }
+                //! helper to drop ID on rx
+                inline void drop(const char   *id,const char   *rx) { const string _=id; const string __=rx; drop(_,__); }
+                //! helper for newline(id) on rx
                 inline void endl(const string &id,const string &rx) { discard(id,rx,this,&Scanner::newline); }
+                //! helper for newline(id) on rx
+                inline void endl(const char   *id,const char   *rx) { const string _=id; const string __=rx; endl(_,__); }
+
+                //! probe source
+                Lexeme *probe( Source &source, ControlEvent **ppEvent);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);

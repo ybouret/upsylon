@@ -31,8 +31,7 @@ namespace upsylon
             void        forward(size_t n) throw();     //!< n<=loaded
             bool        active();                      //!< try to ensure one next char in iobuf
             const Char *peek();                        //!< copy of first char in iobuf
-            
-            const Module * operator*() const throw();
+            const Module * operator*() const throw();  //!< access the module address
             
         private:
             Module::Pointer module;
