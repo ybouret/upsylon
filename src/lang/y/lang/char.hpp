@@ -12,6 +12,8 @@ namespace upsylon
         class Char : public CharInfo
         {
         public:
+            typedef core::list_of_cpp<Char> List; //!< list for I/O or buffer
+
             Char   *next; //!< for list
             Char   *prev; //!< for list
             uint8_t code; //!< current char value
@@ -21,11 +23,9 @@ namespace upsylon
 
             //! destructor
             inline virtual ~Char() throw() {}
+
             //! copy
             inline          Char(const Char &other) throw() : CharInfo(other), next(0), prev(0), code(other.code) {}
-
-
-            typedef core::list_of_cpp<Char> List; //!< list for I/O or buffer
 
         private:
             Y_DISABLE_ASSIGN(Char);

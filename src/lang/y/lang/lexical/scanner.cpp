@@ -8,22 +8,29 @@ namespace upsylon
     {
         namespace Lexical
         {
-#define Y_LANG_SCANNER_CTOR() \
-label(new string(id)),        \
+#define Y_LANG_SCANNER_CTOR(ID) \
+label(ID),        \
 rules(),                      \
 probed(0),                    \
 userDict(0)
 
-            Scanner:: Scanner( const string &id ) throw():
-            Y_LANG_SCANNER_CTOR()
+            Scanner:: Scanner( const string &id ) :
+            Y_LANG_SCANNER_CTOR(new string(id))
             {
             }
 
 
-            Scanner:: Scanner( const char *id ) throw():
-            Y_LANG_SCANNER_CTOR()
+            Scanner:: Scanner( const char *id ) :
+            Y_LANG_SCANNER_CTOR(new string(id))
             {
             }
+
+            Scanner:: Scanner( const Origin &id ) throw() :
+            Y_LANG_SCANNER_CTOR(id)
+            {
+            }
+            
+
 
             Scanner:: ~Scanner() throw() {}
 
