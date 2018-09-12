@@ -15,7 +15,8 @@ curr(0),                \
 base(0),                \
 cache(),                \
 history(),              \
-scanners(4,as_capacity)
+scanners(4,as_capacity),\
+dict()
 
             Translator:: Translator(const string &id) :
             Y_LANG_TRANS()

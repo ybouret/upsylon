@@ -54,7 +54,6 @@ namespace upsylon
             }
         }
         
-#if 1
         static inline int __compare_mph_nodes(const mperf::node_type *lhs,
                                               const mperf::node_type *rhs,
                                               void *) throw()
@@ -69,7 +68,7 @@ namespace upsylon
                 return comparison::increasing(lhs->code,rhs->code);
             }
         }
-#endif
+
         void mperf::node_type:: optimize() throw()
         {
 
@@ -77,6 +76,7 @@ namespace upsylon
             {
                 node->optimize();
             }
+
             merging<node_type>::sort(chld, __compare_mph_nodes, 0);
         }
 
