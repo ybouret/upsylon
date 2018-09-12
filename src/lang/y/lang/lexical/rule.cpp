@@ -16,6 +16,9 @@ namespace upsylon
             Rule:: Rule(const Origin      &ruleLabel,
                         const Motif       &ruleMotif,
                         const RegularCode &ruleEvent) :
+            Object(),
+            next(0),
+            prev(0),
             label(ruleLabel),
             motif(ruleMotif),
             handle( & *ruleEvent ),
@@ -27,6 +30,8 @@ namespace upsylon
             Rule:: Rule(const Origin      &ruleLabel,
                         const Motif       &ruleMotif,
                         const ControlCode &ruleEvent) :
+            next(0),
+            prev(0),
             label(ruleLabel),
             motif(ruleMotif),
             handle( & *ruleEvent ),
