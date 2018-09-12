@@ -12,9 +12,7 @@ Y_UTEST(token)
 
     SHOW(Lang::Char);
     SHOW(Lang::Token);
-    SHOW(Lang::Char::Pool);
     SHOW(Lang::Char::List);
-    SHOW(Lang::Manager);
 
 
 }

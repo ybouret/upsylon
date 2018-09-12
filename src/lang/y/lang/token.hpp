@@ -9,33 +9,22 @@ namespace upsylon
 {
     namespace Lang
     {
-        //! default fields init
-#define Y_LANG_TOKEN_BASE() Object(), Char::List()
 
-        //! default fields and memory init
-#define Y_LANG_TOKEN_CTOR() Y_LANG_TOKEN_BASE(), cache( Manager::instance() )
 
         //! full fledge token
         class Token : public Object, public Char::List
         {
         public:
             //! constructor
-            inline Token() : Y_LANG_TOKEN_CTOR() {}
+            inline Token() : Object(), Char::List() {}
 
             //! desctructor
             inline virtual ~Token() throw()
             {
-                while(size) cache.store( pop_back() );
             }
 
             //! direct copy
-            inline Token(const Token &other) : Y_LANG_TOKEN_BASE(), cache( other.cache )
-            {
-                for(const Char *ch = other.head;ch;ch=ch->next)
-                {
-                    push_back( cache.make(ch->code,*ch) );
-                }
-            }
+            inline Token(const Token &other) : Object(), Char::List(other){}
 
             //! assign
             inline Token & operator=( const Token &other )
@@ -59,8 +48,6 @@ namespace upsylon
             string to_print()  const; //!< convert to printable string
             void   viz( ios::ostream &fp ) const; //!< write content as GraphViz
 
-        private:
-            Char::Pool &cache;
 
         };
     }

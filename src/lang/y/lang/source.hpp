@@ -37,7 +37,6 @@ namespace upsylon
         private:
             Module::Pointer module;
             Char::List      iobuf;
-            Char::Pool     &cache;
         };
 
     }

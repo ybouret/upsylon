@@ -8,7 +8,6 @@ namespace upsylon
     {
         Source:: ~Source() throw()
         {
-            while( iobuf.size ) cache.store( iobuf.pop_back() );
         }
 
         void Source:: unget(Char *ch) throw()
@@ -37,8 +36,7 @@ namespace upsylon
 
         Source:: Source(Module *m)  :
         module(check_module_addr(m)),
-        iobuf(),
-        cache( Manager::instance() )
+        iobuf()
         {
         }
 
@@ -61,7 +59,7 @@ namespace upsylon
         void Source:: skip()
         {
             assert(iobuf.size>0);
-            cache.store( iobuf.pop_front() );
+            delete iobuf.pop_front();
         }
 
 

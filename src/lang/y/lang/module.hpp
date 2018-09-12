@@ -48,7 +48,6 @@ namespace upsylon
 
         private:
             Input          input;
-            Char::Pool    &cache;
             Y_DISABLE_COPY_AND_ASSIGN(Module);
             explicit Module( const Origin &org, const Input &inp );
 
