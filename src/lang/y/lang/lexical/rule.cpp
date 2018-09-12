@@ -12,27 +12,28 @@ namespace upsylon
             }
 
 
-            Rule:: Rule(const Rule &other):
-            Object(),
-            next(0),
-            prev(0),
-            label(other.label),
-            motif(other.motif),
-            action(other.action)
-            {
-            }
-
-            Rule:: Rule(const Origin &o, const Pattern::Handle &m, const Action &a ) :
-            Object(),
-            next(0),
-            prev(0),
-            label(o),
-            motif(m),
-            action(a)
+            Rule:: Rule(const Origin      &ruleLabel,
+                        const Motif       &ruleMotif,
+                        const RegularCode &ruleEvent) :
+            label(ruleLabel),
+            motif(ruleMotif),
+            handle( & *ruleEvent ),
+            event( (Event*)handle )
             {
 
             }
-            
+
+            Rule:: Rule(const Origin      &ruleLabel,
+                        const Motif       &ruleMotif,
+                        const ControlCode &ruleEvent) :
+            label(ruleLabel),
+            motif(ruleMotif),
+            handle( & *ruleEvent ),
+            event( (Event*)handle )
+            {
+
+            }
+
         }
     }
 }

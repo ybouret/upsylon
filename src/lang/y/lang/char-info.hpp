@@ -23,7 +23,6 @@ namespace upsylon
             explicit CharInfo(const Origin &org, const int l=0, const int c=0) throw();
             //! copy
             CharInfo( const CharInfo &other ) throw();
-            
             //! assign
             CharInfo & operator=( const CharInfo &other ) throw();
             //! no throw swap

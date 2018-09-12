@@ -20,7 +20,6 @@ namespace upsylon
         {
         public:
             typedef core::list_of_cloneable<Pattern> List;   //!< list of cloneable patterns
-            typedef arc_ptr<const Pattern>           Handle; //!< shared finalized pattern
 
             const uint32_t uuid; //!< unique ID for the class
             Pattern       *next; //!< for List

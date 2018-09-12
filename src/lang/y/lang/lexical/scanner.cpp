@@ -26,22 +26,16 @@ userDict(0)
             }
 
             Scanner:: ~Scanner() throw() {}
-            
 
-            void Scanner:: add(const string          &rule_label,
-                               const Pattern::Handle &rule_motif,
-                               const Action          &the_action)
+            void Scanner:: checkLabel(const Origin &ruleLabel) const
             {
-                std::cerr << "[" << label << "].." << rule_label << std::endl;
-                for(const Rule *rule = rules.head; rule; rule=rule->next)
+                for(const Rule *r = rules.head; r; r=r->next )
                 {
-                    if(*(rule->label)==rule_label)
+                    if( *ruleLabel == *(r->label) )
                     {
-                        throw exception("[%s]: multiple rule <%s>", **label, *rule_label);
+                        throw exception("[%s] multiple rule '%s'",**label,**ruleLabel);
                     }
                 }
-                const Origin rule_origin = new string(rule_label);
-                rules.push_back( new Rule(rule_origin,rule_motif,the_action) );
             }
 
         }
@@ -54,6 +48,7 @@ namespace upsylon
 {
     namespace Lang
     {
+#if 0
         namespace Lexical
         {
             Lexeme *Scanner:: probe( Source &source, Result &result )
@@ -153,5 +148,7 @@ namespace upsylon
             }
 
         }
+#endif
+        
     }
 }

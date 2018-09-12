@@ -31,9 +31,9 @@ namespace
     };
 }
 
-
 Y_UTEST(scanner)
 {
+#if 0
     localScanner scanner;
     if(argc<=1 || 0!=strcmp(argv[1],"NULL") )
     {
@@ -54,6 +54,7 @@ Y_UTEST(scanner)
         }
         
     }
+#endif
 }
 Y_UTEST_DONE()
 
