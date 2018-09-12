@@ -175,9 +175,7 @@ namespace upsylon
                 Rule                 *prev;   //!< for List
                 const Origin          label;  //!< identifier
                 const Motif           motif;  //!< matching pattern
-            protected:
                 const void           *handle; //!< regular/control event address
-            public:
                 const Event::Pointer  event; //!< shared event
 
                 virtual ~Rule() throw(); //!< destructor
