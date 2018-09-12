@@ -177,7 +177,11 @@ namespace upsylon
                 inline void endl(const char   *id,const char   *rx) { const string _=id; const string __=rx; endl(_,__); }
 
                 //! probe source
-                Lexeme *probe( Source &source, ControlEvent **ppEvent);
+                /**
+                 - return NULL: if no event, EOF, otherwise control for translator
+                 - otherwise result of a forwarding rule
+                 */
+                Lexeme *probe( Source &source, ControlEvent * &event );
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
