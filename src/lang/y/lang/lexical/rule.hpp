@@ -190,7 +190,7 @@ namespace upsylon
                               const Motif       &ruleMotif,
                               const ControlCode &ruleEvent);
             private:
-                Y_DISABLE_ASSIGN(Rule);
+                Y_DISABLE_COPY_AND_ASSIGN(Rule);
             };
 
         }
