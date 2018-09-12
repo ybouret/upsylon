@@ -1,5 +1,6 @@
 
 #include "y/lang/pattern/joker.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -24,10 +25,17 @@ namespace upsylon
             m = p;
         }
 
+    }
+}
+
+namespace upsylon
+{
+    namespace Lang
+    {
 
         void Optional:: __viz(ios::ostream &fp) const
         {
-            fp(" [shape=diamond,label=\"?\"];");
+            fp(" [shape=diamond,style=%s,label=\"?\"];",vizStyle());
             vizlink(fp);
         }
 
@@ -44,10 +52,29 @@ namespace upsylon
             return true;
         }
 
+    }
+}
+
+namespace upsylon
+{
+    namespace Lang
+    {
+
+        Pattern * Repeating:: Create( Pattern *jk, const size_t n)
+        {
+            Motif guard(jk);
+            if(guard->weak())
+            {
+                throw exception("Lang::Pattern::Repeating WEAK pattern");
+            }
+            Pattern *p = new Repeating(jk,n);
+            guard.dismiss();
+            return p;
+        }
 
         void Repeating:: __viz( ios::ostream &fp ) const
         {
-            fp << " [shape=diamond,label=\"";
+            fp("[shape=diamond,style=%s,label=\"", vizStyle());
             switch(nmin)
             {
                 case 0: fp << '*'; break;
@@ -92,9 +119,26 @@ namespace upsylon
             }
         }
 
+    }
+}
+
+namespace upsylon
+{
+    namespace Lang
+    {
+
+        Pattern *Counting:: Create( Pattern *jk, const size_t n, const size_t m)
+        {
+            Motif guard(jk);
+            if(guard->weak()) throw exception("Lang::Pattern::Counting WEAK pattern");
+            Pattern *p = new Counting(jk,min_of(n,m),max_of(n,m));
+            guard.dismiss();
+            return p;
+        }
+
         void Counting:: __viz( ios::ostream &fp ) const
         {
-            fp(" [shape=diamond,label=\"[%u:%u]\"];\n", unsigned(nmin), unsigned(nmax) );
+            fp(" [shape=diamond,style=%s,label=\"[%u:%u]\"];\n", vizStyle(),unsigned(nmin), unsigned(nmax) );
             vizlink(fp);
         }
 

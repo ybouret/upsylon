@@ -17,6 +17,9 @@ namespace upsylon
             //! common match function
             virtual bool match( Token &tkn, Source &src ) const;
 
+            //! false
+            virtual bool          weak() const throw() { return false; }
+
         protected:
             //! initialize
             inline explicit Match1(const uint32_t id) throw() : Pattern(id) {}
@@ -42,6 +45,7 @@ namespace upsylon
             virtual void          __viz( ios::ostream &fp ) const;     //!< GraphViz
             virtual void          write( ios::ostream &fp ) const;     //!< output
 
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Any1);
             inline virtual bool accept_byte( const uint8_t ) const throw()

@@ -86,6 +86,10 @@ namespace upsylon
             //! must match all patterns
             virtual bool match( Token &tkn, Source &src ) const;
 
+
+            virtual bool weak() const throw(); //!< if all are weak
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(AND);
         };
@@ -108,6 +112,8 @@ namespace upsylon
             //! match first pattern
             virtual bool match( Token &tkn, Source &src ) const;
 
+            virtual bool weak() const throw(); //!< if one is weak
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OR);
         };
@@ -128,6 +134,8 @@ namespace upsylon
 
             //! match none of the patterns, returns single next char of false if not char
             virtual bool match( Token &tkn, Source &src ) const;
+
+            virtual bool weak() const throw(); //!< ...
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(NONE);

@@ -56,6 +56,12 @@ namespace upsylon
             virtual void write( ios::ostream &fp ) const;
             //! match
             virtual bool match( Token &tkn, Source &src) const;
+            //! always true
+            inline
+            virtual bool weak() const throw()
+            {
+                return true;
+            }
 
         private:
             inline explicit Optional( Pattern *jk ) throw() : Joker(UUID,jk)
@@ -74,14 +80,9 @@ namespace upsylon
 
             inline virtual ~Repeating() throw() {}
 
-            //! create with memory management
-            static inline Pattern *Create( Pattern *jk, const size_t n)
-            {
-                Motif guard(jk);
-                Pattern *p = new Repeating(jk,n);
-                guard.dismiss();
-                return p;
-            }
+            //! create with memory management, jk must NOT be weak!!
+            static  Pattern *Create( Pattern *jk, const size_t n);
+            
             //! clone
             inline virtual Pattern *clone() const { return Create( motif->clone(), nmin ); }
             //! GraphViz
@@ -91,6 +92,13 @@ namespace upsylon
             //! match
             virtual bool match( Token &tkn, Source &src) const;
 
+            //! check
+            virtual bool weak() const throw()
+            {
+                assert(!motif->weak());
+                return (nmin<=0);
+            }
+
             //! '*'
             static inline Pattern *ZeroOrMore( Pattern *p ) { return Repeating::Create(p,0); }
             //! '+'
@@ -99,6 +107,7 @@ namespace upsylon
         private:
             inline explicit Repeating( Pattern *jk, const size_t n) throw() : Joker(UUID,jk), nmin(n)
             {
+                assert(! motif->weak() );
                 Y_LANG_PATTERN_IS(Repeating);
             }
 
@@ -106,7 +115,7 @@ namespace upsylon
         };
 
 
-        //! nmin <= count << nmax
+        //! nmin <= count <= nmax
         class Counting : public Joker
         {
         public:
@@ -114,22 +123,22 @@ namespace upsylon
             const size_t          nmin; //!< minimal count
             const size_t          nmax; //!< maximal count
 
+            //! destructor
             inline virtual ~Counting() throw() {}
-
             //! create with memory management
-            static inline Pattern *Create( Pattern *jk, const size_t n, const size_t m)
-            {
-                Motif guard(jk);
-                Pattern *p = new Counting(jk,min_of(n,m),max_of(n,m));
-                guard.dismiss();
-                return p;
-            }
+            static  Pattern *Create( Pattern *jk, const size_t n, const size_t m);
             //! clone
             inline virtual Pattern *clone() const { return Create( motif->clone(), nmin, nmax); }
             //! GraphViz
             virtual void __viz( ios::ostream &fp ) const;
             //! output
             virtual void write( ios::ostream &fp ) const;
+            //! nmin<=0
+            virtual bool weak() const throw()
+            {
+                assert(! motif->weak() );
+                return nmin<=0;
+            }
 
             //! match
             virtual bool match( Token &tkn, Source &src) const;

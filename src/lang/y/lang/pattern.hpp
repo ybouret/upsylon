@@ -26,13 +26,12 @@ namespace upsylon
             Pattern       *prev; //!< for List
             void          *priv; //!< pointer on derived type for optimization/compilation
 
-            virtual ~Pattern() throw(); //!< destructor
-
-            //! emit its address for GraphViz
-            void  tag( ios::ostream &os ) const;
-            //! create a directed link for GraphViz
-            void  link( const Pattern *p, ios::ostream  &os ) const;
-
+            //__________________________________________________________________
+            //
+            // virtual interface
+            //__________________________________________________________________
+            //! desctructor
+            virtual ~Pattern() throw();
             //! clone
             virtual Pattern *clone() const = 0;
             //! try to match
@@ -41,37 +40,41 @@ namespace upsylon
             virtual void     __viz( ios::ostream &fp )       const = 0;
             //! binary output
             virtual void     write( ios::ostream &fp )       const = 0;
+            //! weak if matches empty
+            virtual bool weak() const throw() = 0;
 
-
-
+            //__________________________________________________________________
+            //
+            // non virtual interface
+            //__________________________________________________________________
+            //! emit its address for GraphViz
+            void  tag( ios::ostream &os ) const;
+            //! create a directed link for GraphViz
+            void  link( const Pattern *p, ios::ostream  &os ) const;
             //! emit GraphViz node
             void viz( ios::ostream &os ) const; //!< tag+__viz
-
+            //! get GraphViz style
+            const char *vizStyle() const throw();
             //! write a directed graph
             void        GraphViz( const string &fn, bool keepFile=false) const;
             //! write a directed graph
             inline void GraphViz( const char   *fn, bool keepFile=false) const { const string _ = fn; GraphViz(_,keepFile); }
-
             //! load from an input stream
             static Pattern *Load( ios::istream &fp );
-            
-
             //! optimize pattern
             static Pattern *Optimize( Pattern *p ) throw();
-
-            string to_binary() const; //!< use output to get a binary code
-            string to_base64() const; //!< human readable code
-
+            //! use output to get a binary code
+            string to_binary() const;
+            //! human readable code
+            string to_base64() const;
             //! test equality
             static bool AreEqual(const Pattern &lhs, const Pattern &rhs) throw();
-
             //! remove multiple same patterns
             static void NoMultiple( List &ops ) throw();
 
         protected:
             //! build pattern from ID
             explicit Pattern(const uint32_t id)  throw();
-
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pattern);

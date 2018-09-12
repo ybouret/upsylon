@@ -33,6 +33,12 @@ namespace upsylon
             tag(os); __viz(os);
         }
 
+        const char * Pattern:: vizStyle() const throw()
+        {
+            return weak() ? "dashed" : "solid";
+        }
+
+
         void Pattern:: GraphViz( const string &fn, bool keepFile) const
         {
             {

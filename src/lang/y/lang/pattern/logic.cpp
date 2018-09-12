@@ -25,6 +25,14 @@ namespace upsylon
             }
         }
 
+    }
+
+}
+
+namespace upsylon
+{
+    namespace Lang
+    {
 
         bool AND::match(Token &tkn, Source &src) const
         {
@@ -48,12 +56,26 @@ namespace upsylon
 
         void AND:: __viz( ios::ostream &fp ) const
         {
-            fp(" [shape=house,label=\"&\"];\n");
+            fp(" [shape=house,style=%s,label=\"&\"];\n",vizStyle());
             vizlink(fp);
         }
-        
 
+        bool AND:: weak() const throw()
+        {
+            for(const Pattern *p=operands.head;p;p=p->next)
+            {
+                if(!p->weak()) return false;
+            }
+            return true; // all weak...
+        }
+    }
 
+}
+
+namespace upsylon
+{
+    namespace Lang
+    {
         bool OR:: match( Token &tkn, Source &src ) const
         {
             assert(0==tkn.size);
@@ -70,9 +92,25 @@ namespace upsylon
 
         void OR:: __viz( ios::ostream &fp ) const
         {
-            fp(" [shape=house,label=\"|\"];\n");
+            fp(" [shape=house,style=%s,label=\"|\"];\n", vizStyle());
             vizlink(fp);
         }
+
+        bool OR:: weak() const throw()
+        {
+            for(const Pattern *p=operands.head;p;p=p->next)
+            {
+                if(p->weak()) return true;
+            }
+            return false; //! no weak
+        }
+    }
+}
+
+namespace upsylon
+{
+    namespace Lang
+    {
 
         bool NONE:: match(Token &tkn, Source &src ) const
         {
@@ -104,6 +142,10 @@ namespace upsylon
             vizlink(fp);
         }
 
+        bool NONE:: weak() const throw()
+        {
+            return false;
+        }
 
     }
 }
