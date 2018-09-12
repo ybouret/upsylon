@@ -9,9 +9,9 @@ namespace upsylon
         namespace Lexical
         {
 #define Y_LANG_SCANNER_CTOR(ID) \
-label(ID),        \
-rules(),                      \
-probed(0),                    \
+label(ID),                      \
+rules(),                        \
+probed(0),                      \
 userDict(0)
 
             Scanner:: Scanner( const string &id ) :
@@ -30,7 +30,10 @@ userDict(0)
             {
             }
             
-
+            const string & Scanner:: key() const throw()
+            {
+                return *label;
+            }
 
             Scanner:: ~Scanner() throw() {}
 

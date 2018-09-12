@@ -35,12 +35,21 @@ namespace upsylon
         class addr_list : public LIST< addr_node<T> >
         {
         public:
+            Y_DECL_ARGS(T,type);            //!< alias
             typedef addr_node<T> node_type; //!< alias
 
             //! constructor
             inline explicit addr_list() throw() {}
+
             //! destructor
             inline virtual ~addr_list() throw() {}
+
+            //! helper
+            inline void append( T *data )
+            {
+                node_type *node = new node_type( (type *)data );
+                this->push_back(node);
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(addr_list);

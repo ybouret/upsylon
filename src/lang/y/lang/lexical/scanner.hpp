@@ -163,7 +163,7 @@ namespace upsylon
                 //! do nothing
                 inline void nothing( const Token &) throw() {}
                 //! newline of the probed source
-                inline void newline(const Token &) throw() { assert(probed); probed->newLine(); }
+                inline void newline(const Token &) throw() { if(probed) probed->newLine(); }
 
                 //! helper to emit ID on rx
                 inline void emit(const string &id,const string &rx) { forward(id,rx,this,&Scanner::nothing); }

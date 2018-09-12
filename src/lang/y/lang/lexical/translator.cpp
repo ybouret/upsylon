@@ -9,13 +9,16 @@ namespace upsylon
         namespace Lexical
         {
 
+#define Y_LANG_TRANS()  \
+name( new string(id) ), \
+curr(0),                \
+base(0),                \
+cache(),                \
+history(),              \
+scanners(4,as_capacity)
+
             Translator:: Translator(const string &id) :
-            name( new string(id) ),
-            curr(0),
-            root(0),
-            cache(),
-            history(),
-            scanners(4,as_capacity)
+            Y_LANG_TRANS()
             {
                 setup();
             }
@@ -26,17 +29,18 @@ namespace upsylon
 
             void Translator::setup()
             {
-                root = new Scanner(name);
-                const Scanner::Pointer p(root);
+                base = new Scanner(name);
+                const Scanner::Pointer p(base);
                 if(!scanners.insert(p))
                 {
                     throw exception("unable to insert base scanner [%s]", **(p->label));
                 }
+                curr = base;
             }
 
             Scanner & Translator:: decl(const string &id)
             {
-                assert(root);
+                assert(base);
                 Scanner::Pointer p = new Scanner(id);
                 if(!scanners.insert(p))
                 {
@@ -48,7 +52,7 @@ namespace upsylon
 
             void Translator:: reset() throw()
             {
-                curr = root;
+                curr = base;
                 history.clear();
                 cache.clear();
             }
@@ -67,6 +71,11 @@ namespace upsylon
                 }
             }
 
+            Scanner & Translator:: operator *() throw()
+            {
+                assert(base);
+                return *base;
+            }
 
         }
     }
@@ -104,6 +113,8 @@ namespace upsylon
                     //__________________________________________________________
                     while(true)
                     {
+                        assert(curr!=NULL);
+                        //std::cerr << "with [" << curr->label << "]" << std::endl;
                         Message msg = 0;
                         Lexeme *lx  = curr->probe(source,msg);
                         if(lx)
@@ -111,6 +122,7 @@ namespace upsylon
                             //--------------------------------------------------
                             // ok, regular one (some are possibly discarded...)
                             //--------------------------------------------------
+                            //std::cerr << "|_" << lx->label <<  " : " << *lx << std::endl;
                             return lx;
                         }
                         else if(msg!=0)
@@ -121,12 +133,27 @@ namespace upsylon
                             assert(NULL==lx);
                             switch(msg->type)
                             {
-                                case ControlEvent::Call: 
-                                case ControlEvent::Jump:
-                                    break;
-                                case ControlEvent::Back: break;
+                                case ControlEvent::Call: history.append(curr); // FALLTHRU
 
+                                case ControlEvent::Jump: {
+                                    //std::cerr << "|_[" << curr->label << "]->[" << msg->label << "]" << std::endl;
+                                    Scanner::Pointer *ppScanner = scanners.search(msg->label);
+                                    if(!ppScanner) throw exception("[%s] jump/call to undeclared [%s]", **(curr->label), *(msg->label) );
+                                    curr = & (**ppScanner);
+                                } break;
+
+                                case ControlEvent::Back:
+                                    if(history.size<=0)
+                                    {
+                                        throw exception("[%s] can't go back from [%s]", **name, **(curr->label) );
+                                    }
+                                    curr = history.tail->addr;
+                                    delete history.pop_back();
+                                    break;
                             }
+                            //--------------------------------------------------
+                            // and continue...
+                            //--------------------------------------------------
                         }
                         else
                         {

@@ -17,7 +17,7 @@ namespace upsylon
             {
             public:
                 typedef set<string,Scanner::Pointer> DataBase; //!< database of scanners
-                const Origin name; //!< shared name
+                const Origin name;                              //!< shared name
                 
                 //! destructor
                 virtual ~Translator() throw();
@@ -50,7 +50,7 @@ namespace upsylon
                 typedef core::addr_list<Scanner> sList;
 
                 Scanner     *curr;
-                Scanner     *root;
+                Scanner     *base;
                 Lexeme::List cache;
                 sList        history;
                 DataBase     scanners;
