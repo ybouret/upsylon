@@ -13,19 +13,19 @@ namespace upsylon
         class Lexeme : public Token
         {
         public:
+            typedef core::list_of_cpp<Lexeme> List; //!< alias
+
             Lexeme        *next;  //!< for list
             Lexeme        *prev;  //!< for list
             const Origin   label; //!< rule label
 
-            //! initialize
-            explicit Lexeme(const Origin &ruleLabel);
-            //! copy content and label
-            Lexeme(const Lexeme &other);
-            //! destructor
-            virtual ~Lexeme() throw();
 
-            typedef core::list_of_cpp<Lexeme> List;
-
+            explicit Lexeme(const Origin &ruleLabel);//!< initialize
+            Lexeme(const Lexeme &other);             //!<copy content and label
+            virtual ~Lexeme() throw();               //! destructor
+            const CharInfo & info() const;           //!< info for first token
+            int              line() const throw();   //!< 0 if empty
+            int              column() const throw(); //!< 0 if empty
         private:
             Y_DISABLE_ASSIGN(Lexeme);
 

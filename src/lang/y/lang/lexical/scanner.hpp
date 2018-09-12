@@ -13,7 +13,7 @@ namespace upsylon
     {
         namespace Lexical
         {
-            typedef const ControlEvent *Message;
+            typedef const ControlEvent *Message; //!< alias for probe
 
             //! simple 'Flex' scanner
             class Scanner : public CountedObject

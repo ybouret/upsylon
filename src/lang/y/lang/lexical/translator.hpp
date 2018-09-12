@@ -35,9 +35,13 @@ namespace upsylon
                 inline
                 Scanner & decl(const char *id) { const string _(id); return decl(_); }
 
+                //! reset curr to base and clean history
                 void    reset() throw();
 
+                //! unget an exctracted lexemes
                 void    unget( Lexeme *lx ) throw();
+
+                //! unget a chain of extracted lexemes
                 void    unget( Lexeme::List &lxm ) throw();
 
                 //! get the next lexeme
@@ -49,13 +53,16 @@ namespace upsylon
                 typedef core::addr_node<Scanner> sNode;
                 typedef core::addr_list<Scanner> sList;
 
-                Scanner     *curr;
-                Scanner     *base;
-                Lexeme::List cache;
-                sList        history;
-                DataBase     scanners;
+                Scanner     *curr;     //!< current scanner
+                Scanner     *base;     //!< root scanner
+                Lexeme::List cache;    //!< cache of lexemes
+                sList        history;  //!< for call/back
+                DataBase     scanners; //!< database of scanners
 
                 void setup();
+                
+            public:
+                Dictionary dict; //!< shared dictionary, set as userDict for registers scanners
             };
         }
 

@@ -1,5 +1,5 @@
-
 #include "y/lang/lexical/unit.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -17,6 +17,25 @@ namespace upsylon
         Lexeme:: Lexeme(const Lexeme &other):
         Token(other), next(0), prev(0), label(other.label)
         {}
+
+        const CharInfo & Lexeme:: info() const
+        {
+            const Char *ch = head;
+            if(!ch) throw exception("Lexeme::info(Empty Lexeme)");
+            return *ch;
+        }
+
+
+        int Lexeme:: line() const throw()
+        {
+            return (head) ? head->line : 0;
+        }
+
+        int Lexeme:: column() const throw()
+        {
+            return (head) ? head->column : 0;
+        }
+
 
     }
 }

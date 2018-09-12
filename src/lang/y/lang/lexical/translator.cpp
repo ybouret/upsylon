@@ -29,23 +29,18 @@ scanners(4,as_capacity)
 
             void Translator::setup()
             {
-                base = new Scanner(name);
-                const Scanner::Pointer p(base);
-                if(!scanners.insert(p))
-                {
-                    throw exception("unable to insert base scanner [%s]", **(p->label));
-                }
+                base = & decl(*name);
                 curr = base;
             }
 
             Scanner & Translator:: decl(const string &id)
             {
-                assert(base);
                 Scanner::Pointer p = new Scanner(id);
                 if(!scanners.insert(p))
                 {
                     throw exception("[%s] multiple scanner [%s]", **name, *id);
                 }
+                p->userDict = &dict;
                 return *p;
             }
 
@@ -122,7 +117,6 @@ namespace upsylon
                             //--------------------------------------------------
                             // ok, regular one (some are possibly discarded...)
                             //--------------------------------------------------
-                            //std::cerr << "|_" << lx->label <<  " : " << *lx << std::endl;
                             return lx;
                         }
                         else if(msg!=0)
@@ -136,7 +130,6 @@ namespace upsylon
                                 case ControlEvent::Call: history.append(curr); // FALLTHRU
 
                                 case ControlEvent::Jump: {
-                                    //std::cerr << "|_[" << curr->label << "]->[" << msg->label << "]" << std::endl;
                                     Scanner::Pointer *ppScanner = scanners.search(msg->label);
                                     if(!ppScanner) throw exception("[%s] jump/call to undeclared [%s]", **(curr->label), *(msg->label) );
                                     curr = & (**ppScanner);

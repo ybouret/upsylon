@@ -81,7 +81,7 @@ Y_UTEST(lex)
         std::cerr << "#lexemes=" << lexemes.size << std::endl;
         for(lx=lexemes.head;lx;lx=lx->next)
         {
-            std::cerr << lx->label << " : " << *lx << std::endl;
+            std::cerr << lx->label << " : " << *lx << "@" << lx->line() << ":" << lx->column() << std::endl;
         }
 
     }
