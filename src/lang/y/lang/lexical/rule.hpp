@@ -191,6 +191,7 @@ namespace upsylon
                               const ControlCode &ruleEvent);
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Rule);
+                void checkMotif() const;
             };
 
         }

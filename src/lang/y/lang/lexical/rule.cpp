@@ -1,5 +1,6 @@
 
 #include "y/lang/lexical/rule.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -20,7 +21,7 @@ namespace upsylon
             handle( & *ruleEvent ),
             event( (Event*)handle )
             {
-
+                checkMotif();
             }
 
             Rule:: Rule(const Origin      &ruleLabel,
@@ -31,9 +32,23 @@ namespace upsylon
             handle( & *ruleEvent ),
             event( (Event*)handle )
             {
-
+                checkMotif();
             }
 
+
+            void Rule:: checkMotif() const
+            {
+                if(motif->weak())
+                {
+                    const char *rid = **label;
+                    const char *tid = "Regular";
+                    if(event->type==Event::Control)
+                    {
+                        tid = "Control";
+                    }
+                    throw exception("Lexical::Rule <%s>/%s : Weak Pattern", rid,tid);
+                }
+            }
         }
     }
 }
