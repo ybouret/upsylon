@@ -21,17 +21,17 @@ namespace upsylon
             class Scanner : public CountedObject
             {
             public:
-                typedef intr_ptr<string,Scanner> Pointer;
+                typedef intr_ptr<string,Scanner> Pointer; //! for database
                 
-                const Origin label;
+                const Origin label; //! used as shared label/key
 
                 //! for Pointer
                 const string & key() const throw();
 
                 //! destructor
                 virtual ~Scanner() throw();
-                explicit Scanner(const string &id) throw();
-                explicit Scanner(const char   *id) throw();
+                explicit Scanner(const string &id) throw(); //!< initialize
+                explicit Scanner(const char   *id) throw(); //!< initialize
 
 
                 //! basic rule creation
