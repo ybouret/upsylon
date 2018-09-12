@@ -15,7 +15,7 @@ namespace upsylon
         public:
             Lexeme        *next;  //!< for list
             Lexeme        *prev;  //!< for list
-            const Origin label; //!< rule label
+            const Origin   label; //!< rule label
 
             //! initialize
             explicit Lexeme(const Origin &ruleLabel);

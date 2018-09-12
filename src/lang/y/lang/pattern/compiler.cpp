@@ -505,8 +505,7 @@ case 'f': return new Single('\f')
                 assert(*end==':');
                 ++ini;
                 const string label(ini,end-ini);
-                std::cerr << "label=" << label << std::endl;
-
+                
                 Y_RX_POSIX(lower);
                 Y_RX_POSIX(upper);
                 Y_RX_POSIX(alpha);

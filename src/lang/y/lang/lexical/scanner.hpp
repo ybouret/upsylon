@@ -13,6 +13,7 @@ namespace upsylon
     {
         namespace Lexical
         {
+            typedef const ControlEvent *ControlHandle;
 
             //! simple 'Flex' scanner
             class Scanner : public CountedObject
@@ -181,7 +182,7 @@ namespace upsylon
                  - return NULL: if no event, EOF, otherwise control for translator
                  - otherwise result of a forwarding rule
                  */
-                Lexeme *probe( Source &source, ControlEvent * &event );
+                Lexeme *probe( Source &source, ControlHandle &event );
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);

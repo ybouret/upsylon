@@ -9,7 +9,7 @@ namespace upsylon
     {
         namespace Lexical
         {
-            Lexeme *Scanner:: probe( Source &source, ControlEvent * &event )
+            Lexeme *Scanner:: probe( Source &source, ControlHandle &event )
             {
                 probed = *source;
                 event  = NULL;
@@ -50,7 +50,7 @@ namespace upsylon
                     {
                         assert(source.loaded()>0);
                         const Char *ch = source.peek();
-                        throw exception("%s:%d:%d unexpected '%s'",**(ch->origin),ch->line,ch->column,visible_char[ch->code]);
+                        throw exception("%s:%d:%d unexpected '%s' for [%s]",**(ch->origin),ch->line,ch->column,visible_char[ch->code],**label);
                     }
 
                     //__________________________________________________________
@@ -90,12 +90,59 @@ namespace upsylon
                                 source.unget(tempData);
                             }
                         }
+
                     }
-                    assert( source.loaded() >= bestData.size );
+                    assert(bestData.size>0);
+                    assert(source.loaded() >= bestData.size);
+
+                    //__________________________________________________________
+                    //
+                    //
+                    // act according to bestRule/bestData
+                    //
+                    //__________________________________________________________
+
+                    //----------------------------------------------------------
+                    // update source
+                    //----------------------------------------------------------
+                    source.forward( bestData.size );
+
+                    //----------------------------------------------------------
+                    // take action
+                    //----------------------------------------------------------
+                    bestRule->event->action( bestData );
+
+                    //----------------------------------------------------------
+                    // check production
+                    //----------------------------------------------------------
+                    switch(bestRule->event->type)
+                    {
+                        case Event::Regular: {
+
+                            const RegularEvent *ev = static_cast<const RegularEvent *>(bestRule->handle);
+                            switch (ev->type)
+                            {
+                                    //------------------------------------------
+                                case RegularEvent::Forward: { // make a lexeme!
+                                    Lexeme *lx = new Lexeme(bestRule->label);
+                                    lx->swap_with(bestData);
+                                    return lx;
+                                }
+
+                                    //------------------------------------------
+                                case RegularEvent::Discard: // take next step!!
+                                    //-------------------------------------------
+                                    break;
+                            }
+                        } break;
+
+                        case Event::Control:
+                            event = static_cast<const ControlEvent *>(bestRule->handle);
+                            return NULL;
+                    }
 
                 }
 
-                return NULL;
             }
 
         }

@@ -29,8 +29,9 @@ namespace upsylon
 
                 typedef arc_ptr<Event> Pointer; //!< shared pointer
 
-                const Type   type;   //!< category of event
-                const Action action; //!< action to be taken
+                const   Type   type;   //!< category of event
+                mutable Action action; //!< action to be taken
+                
                 //! destructor
                 inline virtual ~Event() throw() {}
 

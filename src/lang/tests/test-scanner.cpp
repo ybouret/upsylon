@@ -14,11 +14,14 @@ namespace
     public:
         explicit localScanner() : Lexical::Scanner("localScanner")
         {
-            emit("id","[:alpha:]+");
-            emit("int","[:digit:]+");
-            emit("dbl","[:digit:]+\\.[:digit:]*");
-            drop("blanks","[:blank:]+");
-            endl("endl","[:endl:]");
+            //if(false)
+            {
+                emit("id","[:alpha:]+");
+                emit("int","[:digit:]+");
+                emit("dbl","[:digit:]+\\.[:digit:]*");
+                drop("blanks","[:blank:]+");
+                endl("endl","[:endl:]");
+            }
         }
 
         virtual ~localScanner() throw()
@@ -33,28 +36,26 @@ namespace
 
 Y_UTEST(scanner)
 {
-#if 0
     localScanner scanner;
     if(argc<=1 || 0!=strcmp(argv[1],"NULL") )
     {
         std::cerr << "Scanning..." << std::endl;
         Source   source( Module::OpenSTDIN() );
-        Lexeme::List  lexemes;
-        Lexeme       *lx = 0;
-        Lexical::Result result = Lexical::Forward;
-        while(NULL!=(lx=scanner.probe(source,result)))
+        Lexeme::List           lexemes;
+        Lexeme                 *lx = 0;
+        Lexical::ControlHandle  cntrl = 0;
+        while(NULL!=(lx=scanner.probe(source,cntrl)))
         {
             lexemes.push_back(lx);
         }
-        std::cerr << std::endl << "done" << std::endl;
+        std::cerr << std::endl << "...done" << std::endl;
 
         for(lx=lexemes.head;lx;lx=lx->next)
         {
-            std::cerr << *lx << std::endl;
+            std::cerr << lx->label << " : " << *lx << std::endl;
         }
         
     }
-#endif
 }
 Y_UTEST_DONE()
 
