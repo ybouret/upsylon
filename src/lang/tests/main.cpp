@@ -7,6 +7,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(pattern);
     Y_UTEST(posix);
     Y_UTEST(regex);
-    Y_UTEST(scanner);    
+    Y_UTEST(scanner);
+    Y_UTEST(lex);
 }
 Y_UTEST_EXEC()

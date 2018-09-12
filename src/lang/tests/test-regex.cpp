@@ -44,6 +44,7 @@ Y_UTEST(regex)
         }
     }
 
+    std::cerr << "sizeof(Dictionary)=" << sizeof(Dictionary) << std::endl;
 
 }
 Y_UTEST_DONE()

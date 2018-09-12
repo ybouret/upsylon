@@ -9,11 +9,11 @@ namespace upsylon
     {
         namespace Lexical
         {
-            Lexeme *Scanner:: probe( Source &source, ControlHandle &event )
+            Lexeme *Scanner:: probe( Source &source, Message &event )
             {
                 probed = *source;
                 event  = NULL;
-
+                
                 while(true)
                 {
                     //__________________________________________________________

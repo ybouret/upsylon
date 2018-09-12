@@ -25,6 +25,9 @@ namespace upsylon
                 //! initialize
                 explicit Translator(const string &id);
 
+                //! return root scanner
+                Scanner & operator *() throw();
+
                 //! create, register and return a new scanner
                 Scanner & decl(const string &id);
 
@@ -32,12 +35,25 @@ namespace upsylon
                 inline
                 Scanner & decl(const char *id) { const string _(id); return decl(_); }
 
+                void    reset() throw();
+
+                void    unget( Lexeme *lx ) throw();
+                void    unget( Lexeme::List &lxm ) throw();
+
+                //! get the next lexeme
+                Lexeme *get( Source &source );
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Translator);
-                Scanner *curr;
-                Scanner *base;
-                DataBase scanners;
+                typedef core::addr_node<Scanner> sNode;
+                typedef core::addr_list<Scanner> sList;
+
+                Scanner     *curr;
+                Scanner     *root;
+                Lexeme::List cache;
+                sList        history;
+                DataBase     scanners;
 
                 void setup();
             };

@@ -9,7 +9,7 @@ namespace upsylon
     namespace Lang
     {
 
-        //! a Lexeme
+        //! a Lexeme is a labeled Token
         class Lexeme : public Token
         {
         public:
@@ -24,13 +24,13 @@ namespace upsylon
             //! destructor
             virtual ~Lexeme() throw();
 
-            //! list/cache
             typedef core::list_of_cpp<Lexeme> List;
 
         private:
             Y_DISABLE_ASSIGN(Lexeme);
 
         };
+        
 
 
     }

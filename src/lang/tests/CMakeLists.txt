@@ -11,6 +11,7 @@ ADD_TEST(Pattern test-lang pattern)
 ADD_TEST(Posix   test-lang posix)
 ADD_TEST(Regex   test-lang regex)
 ADD_TEST(Scanner test-lang scanner NULL)
+ADD_TEST(Lex     test-lang lex     NULL)
 
 
 ADD_CUSTOM_TARGET(utest-lang

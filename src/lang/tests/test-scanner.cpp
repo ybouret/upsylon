@@ -42,9 +42,9 @@ Y_UTEST(scanner)
         std::cerr << "Scanning..." << std::endl;
         Source   source( Module::OpenSTDIN() );
         Lexeme::List           lexemes;
-        Lexeme                 *lx = 0;
-        Lexical::ControlHandle  cntrl = 0;
-        while(NULL!=(lx=scanner.probe(source,cntrl)))
+        Lexeme                 *lx  = 0;
+        Lexical::Message        msg = 0;
+        while(NULL!=(lx=scanner.probe(source,msg)))
         {
             lexemes.push_back(lx);
         }
