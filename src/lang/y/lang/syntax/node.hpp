@@ -2,7 +2,7 @@
 #ifndef Y_LANG_SYNTAX_NODE_INCLUDED
 #define Y_LANG_SYNTAX_NODE_INCLUDED
 
-#include "y/lang/lexical/unit.hpp"
+#include "y/lang/lexical/translator.hpp"
 #include "y/ptr/auto.hpp"
 
 namespace upsylon
@@ -71,7 +71,10 @@ namespace upsylon
                 inline void GraphViz( const char   *fn, bool keepFile=false) const { const string _ = fn; GraphViz(_,keepFile); }
 
                 //! yield terminal lexeme and delete node memory
-                Lexeme *Yield(Node *node) throw();
+                static Lexeme *Yield(Node *node) throw();
+
+                //! return into lexer
+                static void BackTo( Lexical::Translator &lexer, Node *node ) throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);

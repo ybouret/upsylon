@@ -3,7 +3,6 @@
 #define Y_LANG_SYNTAX_RULE_INCLUDED
 
 #include "y/lang/syntax/node.hpp"
-#include "y/lang/lexical/translator.hpp"
 
 namespace upsylon
 {

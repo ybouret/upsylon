@@ -67,6 +67,23 @@ namespace upsylon
                 return lx;
             }
 
+            void Node:: BackTo( Lexical::Translator &lexer, Node *node ) throw()
+            {
+                assert(node);
+                if(node->internal)
+                {
+                    while(node->children.size)
+                    {
+                        BackTo(lexer,node->children.pop_back());
+                    }
+                    delete node;
+                }
+                else
+                {
+                    lexer.unget( Yield(node) );
+                }
+            }
+
         }
     }
 }
