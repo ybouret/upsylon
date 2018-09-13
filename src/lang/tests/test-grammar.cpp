@@ -43,6 +43,8 @@ namespace
     };
 }
 
+#include "y/fs/local.hpp"
+
 Y_UTEST(grammar)
 {
     SHOW(Syntax::Node);
@@ -50,7 +52,9 @@ Y_UTEST(grammar)
     SHOW(Syntax::Rule);
     SHOW(Syntax::Rule::List);
 
-
+    vfs &fs = local_fs::instance();
+    fs.try_remove_file("tree.dot");
+    fs.try_remove_file("tree.png");
 
     const Origin    gID = new string("grammar");
     myLex           lexer;
@@ -65,6 +69,8 @@ Y_UTEST(grammar)
         {
             Source source( Module::OpenSTDIN() );
             auto_ptr<Syntax::Node> Tree = G.run(lexer,source);
+            assert(Tree.is_valid());
+            Tree->GraphViz("tree.dot");
         }
         std::cerr << "...done" << std::endl;
     }
