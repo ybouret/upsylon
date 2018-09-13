@@ -15,9 +15,25 @@ namespace upsylon
             Node:: List:: List() throw() : Object(), ListType()
             {
             }
-            
 
-            Node:: ~Node() throw() {}
+
+            Node:: ~Node() throw()
+            {
+                assert(impl);
+                if(terminal)
+                {
+                    delete static_cast<Lexeme *>(impl);
+                }
+                else
+                {
+                    while( children.size )
+                    {
+                        delete children.pop_back();
+                    }
+                    delete static_cast<List *>(impl);
+                }
+                impl = 0;
+            }
 
 
             Node:: Node( const Rule &r, Lexeme *lx ) throw() :

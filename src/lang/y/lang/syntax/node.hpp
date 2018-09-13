@@ -35,7 +35,7 @@ namespace upsylon
                 virtual ~Node() throw();
 
                 //! create a terminal
-                static inline Node *Create( Lexeme *l, const Rule &r )
+                static inline Node *Create(const Rule &r, Lexeme *l)
                 {
                     assert(l);
                     auto_ptr<Lexeme> guard(l);

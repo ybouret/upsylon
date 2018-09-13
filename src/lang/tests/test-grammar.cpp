@@ -17,10 +17,21 @@ Y_UTEST(grammar)
     SHOW(Syntax::Rule);
     SHOW(Syntax::Rule::List);
 
+    const Origin label = new string("id");
     const Syntax::Terminal ID("id");
+    {
+        auto_ptr<Syntax::Node> node( Syntax::Node::Create(ID) );
+        Y_CHECK(node->internal);
+        Lexeme *lx = new Lexeme(label);
+        node->children.push_back( Syntax::Node::Create(ID,lx) );
+        node->children.push_back( Syntax::Node::Create(ID) );
+    }
 
-    auto_ptr<Syntax::Node> node( Syntax::Node::Create(ID) );
-    
+    Lexeme *lx = new Lexeme(label);
+    {
+        auto_ptr<Syntax::Node> node( Syntax::Node::Create(ID,lx) );
+        Y_CHECK(node->terminal);
+    }
 
 }
 Y_UTEST_DONE()
