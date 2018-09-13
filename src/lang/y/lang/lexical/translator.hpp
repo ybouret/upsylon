@@ -16,6 +16,7 @@ namespace upsylon
             class Translator : public Object
             {
             public:
+                typedef Lexical::Scanner Scanner;
                 typedef set<string,Scanner::Pointer> DataBase; //!< database of scanners
                 const Origin name;                              //!< shared name
                 
@@ -66,6 +67,7 @@ namespace upsylon
             };
         }
 
+        typedef Lexical::Translator Lexer;
     }
 }
 
