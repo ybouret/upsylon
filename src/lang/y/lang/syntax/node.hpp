@@ -49,9 +49,17 @@ namespace upsylon
                     return new Node(r);
                 }
 
+                //! write content as GraphViz
+                void viz( ios::ostream &fp ) const;
 
+                //! write a directed graph
+                void        GraphViz( const string &fn, bool keepFile=false) const;
+
+                //! write a directed graph
+                inline void GraphViz( const char   *fn, bool keepFile=false) const { const string _ = fn; GraphViz(_,keepFile); }
+                
             private:
-                Y_DISABLE_ASSIGN(Node);
+                Y_DISABLE_COPY_AND_ASSIGN(Node);
                 void *impl;
                 explicit Node( const Rule &r, Lexeme *lx ) throw() ;
                 explicit Node( const Rule &r ) throw();
