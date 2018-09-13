@@ -43,6 +43,14 @@ namespace upsylon
                 }
             }
 
+
+            const Rule * Grammar:: getRuleByName(const string &id) const
+            {
+                const MetaRule *m = rdb.search(id);
+                if(!m) return NULL; else return &(m->rule);
+            }
+
+
             const Rule * Grammar:: top() const throw()
             {
                 return rules.head;
@@ -61,52 +69,11 @@ namespace upsylon
                 }
             }
 
-            Node * Grammar:: run(Lexer &lexer, Source &source)
-            {
-                //______________________________________________________________
-                //
-                // Sanity check
-                //______________________________________________________________
-                if(rules.size<=0) throw exception("{%s} no rules", **name);
-
-                //______________________________________________________________
-                //
-                // try to probe rule
-                //______________________________________________________________
-                Rule *root = rules.head;
-                Node *tree = 0;
-                if(!root->accept(tree,lexer,source))
-                {
-                    // Syntax Error
-                    throw exception("{%s} syntax error",**name);
-                }
-
-                //______________________________________________________________
-                //
-                // accept a NULL tree
-                //______________________________________________________________
-                if(!tree)
-                {
-                    // shouldn't accept check accept empty...
-                    throw exception("{%s} is weak, found no syntax tree",**name);
-                }
-
-                //______________________________________________________________
-                //
-                // check status
-                //______________________________________________________________
-                auto_ptr<Node> guard(tree);
-                const Lexeme  *nlx = lexer.peek(source);
-                if( nlx )
-                {
-                    throw exception("{%s} unexpected extraneous <%s>", **name, **(nlx->label));
-                }
-
-                return guard.yield();
-            }
         }
-
     }
-
 }
+
+
+
+
 

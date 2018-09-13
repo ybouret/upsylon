@@ -62,6 +62,10 @@ Y_UTEST(grammar)
 
     Syntax::Rule &ID = G.terminal("ID");
     (void)ID;
+    Syntax::Rule &oomID = G.zeroOrMore(ID);
+
+    G.top( &oomID );
+
 
     if(argc>1&&0==strcmp(argv[1],"run"))
     {

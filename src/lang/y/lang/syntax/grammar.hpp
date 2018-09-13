@@ -28,6 +28,7 @@ namespace upsylon
                 const Rule *top() const throw(); //!< get top rule, maybe NULL
                 void        top(const Rule *);   //!< set a valid top rule
                 void        add( Rule *rule );   //!< add a valid rule
+
                 //! wrapper for derived rules
                 template <typename RULE>
                 inline RULE & __add( RULE *rule ) { add(rule); return *rule; }
@@ -57,7 +58,18 @@ namespace upsylon
                     return __add( new Terminal(id) );
                 }
 
+                Rule & optional( const Rule &r );                    //!< optional rule
+                Rule & repeating( const Rule &r, const size_t nmin); //!< repeating >= nmin
 
+                //! '*'
+                inline
+                Rule & zeroOrMore( const Rule &r ) { return repeating(r,0); }
+                //! '+'
+                inline
+                Rule & oneOrMore( const Rule &r ) { return repeating(r,1); }
+
+                //! check the rule belongs to the grammar
+                bool  owns( const Rule &r ) const throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
