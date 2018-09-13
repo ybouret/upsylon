@@ -14,14 +14,49 @@ namespace upsylon
             class Grammar
             {
             public:
-                explicit Grammar();          //!< initialize
-                virtual ~Grammar() throw();  //!< desctructor
 
-                
+                const Origin name; //!< shared name
+
+                explicit Grammar(const Origin &id); //!< initialize
+                virtual ~Grammar() throw();         //!< desctructor
+
+
+                void        add( Rule *rule );   //!< add a valid rule
+                const Rule *top() const throw(); //!< get top rule, maybe NULL
+                void        top(const Rule *);   //!< set a valid top rule
+
+                //! rule look up
+                const Rule * getRuleByName(const string &id) const;
+
+                //! rule look up
+                inline
+                const Rule * getRuleByName(const char   *id) const
+                {
+                    const string _ = id; return getRuleByName(_);
+                }
+
+                Node *run(Lexer &lexer, Source &source);
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
-                Rule::List rules;
+                class MetaRule
+                {
+                public:
+                    const Rule          & rule;
+                    inline const string & key() const throw() { return rule.name; }
+                    inline MetaRule(const Rule     &r    ) throw() : rule(r) {}
+                    inline MetaRule(const MetaRule &other) throw() : rule(other.rule) {}
+                    inline ~MetaRule() throw() {}
+
+                    typedef set<string,MetaRule> Set;
+                private:
+                    Y_DISABLE_ASSIGN(MetaRule);
+                };
+
+                Rule::List    rules;
+                MetaRule::Set rdb;
+
             };
         }
     }

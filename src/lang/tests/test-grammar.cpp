@@ -1,5 +1,8 @@
 
 #include "y/lang/syntax/terminal.hpp"
+#include "y/lang/syntax/joker.hpp"
+
+#include "y/lang/syntax/grammar.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ios/icstream.hpp"
@@ -75,7 +78,11 @@ Y_UTEST(grammar)
     }
 #endif
 
-    myLex lexer;
+    const Origin    gID = new string("grammar");
+    myLex           lexer;
+    Syntax::Grammar G(gID);
+
+    G.add( new Syntax::Terminal("ID") );
 
     if(argc>1&&0==strcmp(argv[1],"run"))
     {

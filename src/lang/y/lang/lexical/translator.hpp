@@ -48,6 +48,9 @@ namespace upsylon
                 //! get the next lexeme
                 Lexeme *get( Source &source );
                 
+                bool          active(Source &source);
+                const Lexeme *peek(Source &source);
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Translator);

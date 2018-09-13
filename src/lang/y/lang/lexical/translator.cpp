@@ -73,6 +73,41 @@ dict()
                 return *base;
             }
 
+            bool Translator:: active( Source &source )
+            {
+                if(cache.size>0)
+                {
+                    return true;
+                }
+                else
+                {
+                    Lexeme *lx = get(source);
+                    if(!lx)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        cache.push_front(lx);
+                        return true;
+                    }
+                }
+            }
+
+            const Lexeme * Translator:: peek(Source &source)
+            {
+                if(active(source))
+                {
+                    assert(cache.size>0);
+                    return cache.head;
+                }
+                else
+                {
+                    return NULL;
+                }
+            }
+            
+
         }
     }
 }
