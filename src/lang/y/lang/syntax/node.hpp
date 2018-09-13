@@ -11,30 +11,34 @@ namespace upsylon
     {
         namespace Syntax
         {
-            class Rule;
+            class Rule; //!< forward
 
+            //! a node of the AST
             class Node : public Object
             {
             public:
 
-                typedef core::list_of<Node> ListType;
+                typedef core::list_of<Node> ListType; //!< base class
+
+                //! for children nodes
                 class List : public Object, public ListType
                 {
                 public:
-                    explicit List() throw();
-                    virtual ~List() throw();
+                    explicit List() throw(); //!< initialize
+                    virtual ~List() throw(); //!< destructor, NO cleanup!
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(List);
                 };
 
-                Node      *next;
-                Node      *prev;
-                const bool terminal;
-                const bool internal;
-                virtual ~Node() throw();
+                Node      *next;     //!< for list
+                Node      *prev;     //!< for list
+                const bool terminal; //!< if is terminal
+                const bool internal; //!< !terminal
 
-                //! create a terminal
+                virtual ~Node() throw(); //!< destructor
+
+                //! create a terminal node
                 static inline Node *Create(const Rule &r, Lexeme *l)
                 {
                     assert(l);
@@ -43,10 +47,18 @@ namespace upsylon
                     guard.dismiss();
                     return node;
                 }
-                //! create an internal
+
+                //! create an internal node
                 static inline Node *Create( const Rule &r )
                 {
                     return new Node(r);
+                }
+
+                //! helper to grow child
+                inline void add( Node *child ) throw()
+                {
+                    assert(internal);
+                    children.push_back(child);
                 }
 
                 //! write content as GraphViz
@@ -65,9 +77,9 @@ namespace upsylon
                 explicit Node( const Rule &r ) throw();
 
             public:
-                Lexeme     &lexeme;
-                Node::List &children;
-                const Rule &rule;
+                Lexeme     &lexeme;    //!< hollow lexeme
+                Node::List &children;  //!< hollow children
+                const Rule &rule;      //!< generating rule
             };
 
         }

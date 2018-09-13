@@ -10,11 +10,12 @@ namespace upsylon
     {
         namespace Syntax
         {
+            //! for building set of rules
             class Grammar
             {
             public:
-                explicit Grammar();
-                virtual ~Grammar() throw();
+                explicit Grammar();          //!< initialize
+                virtual ~Grammar() throw();  //!< desctructor
 
                 
 

@@ -15,12 +15,16 @@ namespace upsylon
             class Terminal : public Rule
             {
             public:
+                //! class global identfier
                 static const uint32_t UUID = Y_FOURCC('T', 'E', 'R', 'M');
                 
-                explicit Terminal( const string &id );
-                virtual ~Terminal() throw();
+                explicit Terminal( const string &id ); //!< initialize
+                virtual ~Terminal() throw();           //!< destructor
 
+                //! accept if there is a lexeme with label==name
+                virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const;
 
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);
             };
