@@ -69,7 +69,10 @@ namespace upsylon
 
                 //! write a directed graph
                 inline void GraphViz( const char   *fn, bool keepFile=false) const { const string _ = fn; GraphViz(_,keepFile); }
-                
+
+                //! yield terminal lexeme and delete node memory
+                Lexeme *Yield(Node *node) throw();
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
                 void *impl;

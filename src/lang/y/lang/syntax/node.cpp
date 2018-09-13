@@ -59,6 +59,14 @@ namespace upsylon
             {
             }
 
+            Lexeme * Node:: Yield(Node *node) throw()
+            {
+                assert(node);
+                Lexeme *lx = & (node->lexeme);
+                object::release1(node);
+                return lx;
+            }
+
         }
     }
 }
