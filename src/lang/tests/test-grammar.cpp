@@ -50,55 +50,21 @@ Y_UTEST(grammar)
     SHOW(Syntax::Rule);
     SHOW(Syntax::Rule::List);
 
-#if 0
-    {
-        const Origin label = new string("id");
-        const Syntax::Terminal ID("id");
-        {
-            auto_ptr<Syntax::Node> node( Syntax::Node::Create(ID) );
-            Lexeme *lx = new Lexeme(label);
-            node->children.push_back( Syntax::Node::Create(ID,lx) );
-            node->children.push_back( Syntax::Node::Create(ID) );
-            Y_CHECK(node->internal);
-            node->GraphViz("internal.dot");
-        }
 
-        {
-            Lexeme *lx = new Lexeme(label);
-            auto_ptr<Syntax::Node> node( Syntax::Node::Create(ID,lx) );
-            Y_CHECK(node->terminal);
-            node->GraphViz("terminal.dot");
-        }
-        {
-            Lexeme *lx = new Lexeme(label);
-            auto_ptr<Syntax::Node> node( Syntax::Node::Create(ID,lx) );
-            Y_CHECK(node->terminal);
-            delete Syntax::Node::Yield( node.yield() );
-        }
-    }
-#endif
 
     const Origin    gID = new string("grammar");
     myLex           lexer;
     Syntax::Grammar G(gID);
 
-    G.add( new Syntax::Terminal("ID") );
+    Syntax::Rule &ID = G.terminal("ID");
+    (void)ID;
 
     if(argc>1&&0==strcmp(argv[1],"run"))
     {
         std::cerr << "running..." << std::endl;
         {
             Source source( Module::OpenSTDIN() );
-            while(true)
-            {
-                Lexeme *lx = lexer.get(source);
-                if(!lx)
-                {
-                    break;
-                }
-                std::cerr << lx->label << " : '" << *lx << "'@" << lx->line() << std::endl;
-                delete lx;
-            }
+            auto_ptr<Syntax::Node> Tree = G.run(lexer,source);
         }
         std::cerr << "...done" << std::endl;
     }

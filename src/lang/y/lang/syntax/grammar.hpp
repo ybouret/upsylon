@@ -17,13 +17,20 @@ namespace upsylon
 
                 const Origin name; //!< shared name
 
+                //______________________________________________________________
+                //
+                // Setup API
+                //______________________________________________________________
                 explicit Grammar(const Origin &id); //!< initialize
                 virtual ~Grammar() throw();         //!< desctructor
 
 
-                void        add( Rule *rule );   //!< add a valid rule
                 const Rule *top() const throw(); //!< get top rule, maybe NULL
                 void        top(const Rule *);   //!< set a valid top rule
+                void        add( Rule *rule );   //!< add a valid rule
+                //! wrapper for derived rules
+                template <typename RULE>
+                inline RULE & __add( RULE *rule ) { add(rule); return *rule; }
 
                 //! rule look up
                 const Rule * getRuleByName(const string &id) const;
@@ -35,7 +42,21 @@ namespace upsylon
                     const string _ = id; return getRuleByName(_);
                 }
 
+                //! run
                 Node *run(Lexer &lexer, Source &source);
+
+
+                //______________________________________________________________
+                //
+                // Building API
+                //______________________________________________________________
+
+                //! a new terminal
+                inline Rule & terminal( const string &id )
+                {
+                    return __add( new Terminal(id) );
+                }
+
 
 
             private:

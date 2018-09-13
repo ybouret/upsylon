@@ -15,7 +15,7 @@ namespace upsylon
             class Terminal : public Rule
             {
             public:
-                //! class global identfier
+                //! class  identfier
                 static const uint32_t UUID = Y_FOURCC('T', 'E', 'R', 'M');
                 
                 explicit Terminal( const string &id ); //!< initialize

@@ -63,7 +63,16 @@ namespace upsylon
 
             Node * Grammar:: run(Lexer &lexer, Source &source)
             {
+                //______________________________________________________________
+                //
+                // Sanity check
+                //______________________________________________________________
                 if(rules.size<=0) throw exception("{%s} no rules", **name);
+
+                //______________________________________________________________
+                //
+                // try to probe rule
+                //______________________________________________________________
                 Rule *root = rules.head;
                 Node *tree = 0;
                 if(!root->accept(tree,lexer,source))
@@ -72,16 +81,25 @@ namespace upsylon
                     throw exception("{%s} syntax error",**name);
                 }
 
+                //______________________________________________________________
+                //
+                // accept a NULL tree
+                //______________________________________________________________
                 if(!tree)
                 {
-                    // check accept empty...
-                    throw exception("{%s} no tree!",**name);
+                    // shouldn't accept check accept empty...
+                    throw exception("{%s} is weak, found no syntax tree",**name);
                 }
 
+                //______________________________________________________________
+                //
+                // check status
+                //______________________________________________________________
                 auto_ptr<Node> guard(tree);
-                if( lexer.active(source) )
+                const Lexeme  *nlx = lexer.peek(source);
+                if( nlx )
                 {
-
+                    throw exception("{%s} unexpected extraneous <%s>", **name, **(nlx->label));
                 }
 
                 return guard.yield();

@@ -16,9 +16,9 @@ namespace upsylon
             class Translator : public Object
             {
             public:
-                typedef Lexical::Scanner Scanner;
+                typedef Lexical::Scanner             Scanner;  //!< alias
                 typedef set<string,Scanner::Pointer> DataBase; //!< database of scanners
-                const Origin name;                              //!< shared name
+                const Origin name;                             //!< shared name
                 
                 //! destructor
                 virtual ~Translator() throw();
@@ -47,8 +47,11 @@ namespace upsylon
 
                 //! get the next lexeme
                 Lexeme *get( Source &source );
-                
+
+                //! check if there is a next lexeme
                 bool          active(Source &source);
+
+                //! check if there is a next lexeme
                 const Lexeme *peek(Source &source);
 
 
@@ -70,7 +73,7 @@ namespace upsylon
             };
         }
 
-        typedef Lexical::Translator Lexer;
+        typedef Lexical::Translator Lexer; //!< alias
     }
 }
 
