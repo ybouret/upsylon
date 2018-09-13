@@ -66,6 +66,7 @@ namespace upsylon
 #include "y/lang/syntax/rule.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/ios/graphviz.hpp"
+#include "y/string/convert.hpp"
 
 namespace upsylon
 {
@@ -76,12 +77,15 @@ namespace upsylon
             void Node:: viz( ios::ostream &fp ) const
             {
                 fp.viz(this);
+                const string RuleID = string_convert::to_printable(rule.name);
                 if(terminal)
                 {
-
+                    const string LexID = lexeme.to_print();
+                    fp("[label=\"%s='%s'\",shape=box];\n",*RuleID,*LexID);
                 }
                 else
                 {
+                    fp("[label=\"%s\",shape=egg];\n",*RuleID);
                     for(const Node *sub = children.head;sub;sub=sub->next)
                     {
                         sub->viz(fp);

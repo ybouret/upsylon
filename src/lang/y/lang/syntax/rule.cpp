@@ -12,7 +12,11 @@ namespace upsylon
             {
             }
 
-            Rule:: Rule(const uint32_t t) throw() : uuid(t), next(0), prev(0)
+            Rule:: Rule(const uint32_t t, const string &id) :
+            uuid(t),
+            name(id),
+            next(0),
+            prev(0)
             {
             }
             

@@ -16,8 +16,6 @@ namespace upsylon
             {
             public:
                 static const uint32_t UUID = Y_FOURCC('T', 'E', 'R', 'M');
-
-                const string label;
                 
                 explicit Terminal( const string &id );
                 virtual ~Terminal() throw();

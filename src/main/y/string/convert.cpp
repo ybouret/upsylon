@@ -22,6 +22,26 @@ namespace upsylon
         }
     }
 
+    string string_convert:: to_visible(const string &s)
+    {
+        string ans;
+        for(size_t i=0;i<s.size();++i)
+        {
+            ans << visible_char[ uint8_t(s[i]) ];
+        }
+        return ans;
+    }
+
+    string string_convert:: to_printable(const string &s)
+    {
+        string ans;
+        for(size_t i=0;i<s.size();++i)
+        {
+            ans << printable_char[ uint8_t(s[i]) ];
+        }
+        return ans;
+    }
+
 
     static const char default_name[] = "variable";
 

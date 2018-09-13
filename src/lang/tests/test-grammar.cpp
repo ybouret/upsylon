@@ -21,16 +21,19 @@ Y_UTEST(grammar)
     const Syntax::Terminal ID("id");
     {
         auto_ptr<Syntax::Node> node( Syntax::Node::Create(ID) );
-        Y_CHECK(node->internal);
         Lexeme *lx = new Lexeme(label);
         node->children.push_back( Syntax::Node::Create(ID,lx) );
         node->children.push_back( Syntax::Node::Create(ID) );
+        Y_CHECK(node->internal);
+        node->GraphViz("internal.dot");
     }
 
     Lexeme *lx = new Lexeme(label);
     {
         auto_ptr<Syntax::Node> node( Syntax::Node::Create(ID,lx) );
         Y_CHECK(node->terminal);
+        node->GraphViz("terminal.dot");
+
     }
 
 }

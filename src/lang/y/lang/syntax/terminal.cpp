@@ -9,7 +9,7 @@ namespace upsylon
         {
             Terminal:: ~Terminal() throw() {}
 
-            Terminal:: Terminal(const string &id ) : Rule(UUID), label(id)
+            Terminal:: Terminal(const string &id ) : Rule(UUID,id)
             {
             }
             

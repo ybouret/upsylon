@@ -18,13 +18,14 @@ namespace upsylon
                 typedef core::list_of_cpp<Rule> List;
 
                 const uint32_t uuid;
+                const string   name;
                 Rule          *next;
                 Rule          *prev;
 
                 virtual ~Rule()  throw();
 
             protected:
-                explicit Rule(const uint32_t t) throw();
+                explicit Rule(const uint32_t t,const string &id);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Rule);

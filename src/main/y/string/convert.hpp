@@ -20,8 +20,11 @@ namespace upsylon
             const string data(text); return to<T>(data,name);
         }
 
-        static void to_lower( string &s ); //!< each char tolower
-        static void to_upper( string &s ); //!< each char toupper
+        static void   to_lower( string &s ); //!< each char tolower
+        static void   to_upper( string &s ); //!< each char toupper
+        static string to_visible(const string &s); //!< each visible
+        static string to_printable(const string &s); //!< each visible
+
     };
 }
 

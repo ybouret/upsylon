@@ -45,6 +45,7 @@ namespace upsylon
 
         ostream & ostream:: viz( const void *addr )
         {
+            write('a');
             uint8_t block[ sizeof(void *) ];
             memcpy(block, &addr, sizeof(void*) );
             for(size_t i=0;i<sizeof(block);++i)
