@@ -17,6 +17,8 @@ namespace upsylon
             public:
                 virtual ~Joker() throw(); //!< destructor
 
+                virtual const char *__shape() const throw() { return "diamond"; }
+                virtual void epilog( ios::ostream &fp ) const;
 
             protected:
                 //! initialize
@@ -40,7 +42,6 @@ namespace upsylon
                 virtual ~Optional() throw();                          //!< destructor
                 explicit Optional(const string &id, const Rule &jk);  //!< initialize
                 virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const; //!< always true
-
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Optional);
             };
@@ -61,8 +62,7 @@ namespace upsylon
                 //! initialize
                 explicit Repeating(const string &id, const Rule &jk,const size_t n);
 
-                //! true if >= nmin occurences
-                virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const;
+                virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const; //!< true if >= nmin occurences
 
 
             private:

@@ -44,6 +44,13 @@ namespace upsylon
                     }
                 }
 
+                virtual const char *__shape() const throw(); //!< GraphViz node shape
+                virtual const char *__style() const throw(); //!< GraphViz node style
+
+                void         viz_id( ios::ostream &fp ) const; //!< fp.viz(this)
+                void         prolog( ios::ostream &fp ) const; //!< id+modifiers
+                virtual void epilog( ios::ostream &fp ) const; //!< linking
+
             protected:
                 //! initialize
                 explicit Rule(const uint32_t t,const string &id);

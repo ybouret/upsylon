@@ -13,8 +13,32 @@ namespace upsylon
 
             Grammar:: Grammar(const Origin &id) :
             name(id),
-            rules()
+            rules(),
+            rdb(),
+            altID(0)
             {
+            }
+
+
+            string Grammar:: nextAltID()
+            {
+                const string ans = vformat("alt#%u",++altID);
+                return ans;
+            }
+
+            const Rule & Grammar:: choice(const Rule &a1, const Rule &a2)
+            {
+                const string id = a1.name + '|' + a2.name;
+                const Rule *r = getRuleByName(id);
+                if(r)
+                {
+                    return *r;
+                }
+                else
+                {
+                    Compound  &a = alt(id);
+                    return a<<a1<<a2;
+                }
             }
 
 
@@ -56,8 +80,11 @@ namespace upsylon
                 return rules.head;
             }
 
-            void Grammar:: top(const Rule *rule)
+            void Grammar:: top(const Rule &rule)
             {
+                if(!rules.owns(&rule)) throw exception("{%s}.top(unregistered '%s')", **name, *(rule.name) );
+                rules.move_to_front((Rule*)&rule);
+#if 0
                 if(rule==NULL)
                 {
                     if(rules.size) throw exception("{%s} try to set top=NULL",**name);
@@ -67,6 +94,39 @@ namespace upsylon
                     if(!rules.owns(rule)) throw exception("{%s}.top(unregistered '%s')", **name, *(rule->name) );
                     rules.move_to_front((Rule*)rule);
                 }
+#endif
+            }
+
+
+        }
+    }
+}
+
+#include "y/ios/graphviz.hpp"
+
+namespace upsylon
+{
+    namespace Lang
+    {
+        namespace Syntax
+        {
+            void Grammar:: GraphViz( const string &filename ) const
+            {
+                {
+                    ios::ocstream fp(filename);
+                    fp << "digraph G {\n";
+                    for(const Rule *rule = rules.head; rule; rule=rule->next )
+                    {
+                        rule->prolog(fp);
+                    }
+                    for(const Rule *rule = rules.head; rule; rule=rule->next )
+                    {
+                        rule->epilog(fp);
+                    }
+                    fp << "}\n";
+                }
+                ios::GraphViz::Render(filename);
+
             }
 
         }

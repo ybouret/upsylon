@@ -43,9 +43,14 @@ namespace upsylon
             class Compound : public Rule, public Operand::List
             {
             public:
-                virtual ~Compound() throw(); //!< desctructor
+                //! destructor
+                virtual ~Compound() throw();
+
                 //! syntax helper
                 inline Compound & operator<<(const Rule &r) { add(r); return *this; }
+
+                //! linking
+                virtual void epilog( ios::ostream &fp ) const;
 
             protected:
                 //! initialize
@@ -73,6 +78,8 @@ namespace upsylon
                  */
                 virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const;
 
+                virtual const char * __shape() const throw() { return "house"; }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);
             };
@@ -91,6 +98,9 @@ namespace upsylon
 
                 //! true if one of the operand accepts
                 virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const;
+
+                virtual const char * __shape() const throw() { return "egg"; }
+                virtual const char * __style() const throw() { return "dashed"; }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alternate);

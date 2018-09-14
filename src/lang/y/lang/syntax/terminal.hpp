@@ -23,7 +23,6 @@ namespace upsylon
 
                 //! accept if there is a lexeme with label==name
                 virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const;
-
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);

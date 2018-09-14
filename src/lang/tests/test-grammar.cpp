@@ -24,8 +24,7 @@ namespace
             root.emit("ID", "[:alpha:]+");
             root.emit("INT", "[:digit:]+");
             root.emit("END", ";");
-            root.emit("ADDOP", "[-+]");
-            root.emit("MULOP", "[*/]");
+            //root.emit("EQ",  "=");
             root.endl("endl",  "[:endl:]");
             root.drop("blanks","[:blank:]+");
         }
@@ -60,11 +59,20 @@ Y_UTEST(grammar)
     myLex           lexer;
     Syntax::Grammar G(gID);
 
-    Syntax::Rule &ID = G.terminal("ID");
-    (void)ID;
-    Syntax::Rule &oomID = G.zeroOrMore(ID);
+    Syntax::Rule &ID  = G.terminal("ID");
+    Syntax::Rule &INT = G.terminal("INT");
+    Syntax::Rule &END = G.terminal("END");
+    //Syntax::Rule &EQ  = G.terminal("EQ");
 
-    G.top( &oomID );
+    Syntax::Aggregate &show = G.agg("show");
+    show << G.choice(ID,INT) << END;
+
+    Syntax::Aggregate &code = G.agg("code");
+    code << G.zeroOrMore(show);
+
+    G.top( code );
+
+    G.GraphViz("gram.dot");
 
 
     if(argc>1&&0==strcmp(argv[1],"run"))

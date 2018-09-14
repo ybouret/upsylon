@@ -46,7 +46,15 @@ namespace upsylon
             {
             }
 
-
+            void Compound:: epilog( ios::ostream &fp ) const
+            {
+                unsigned i=0;
+                for(const Operand *op=head;op;op=op->next)
+                {
+                    ++i;
+                    viz_id(fp); fp << " -> "; op->rule.viz_id(fp); fp(" [label=\"%u\"];\n",i);
+                }
+            }
 
         }
 

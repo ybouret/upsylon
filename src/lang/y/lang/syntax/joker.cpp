@@ -38,6 +38,12 @@ namespace upsylon
                 return true;
             }
 
+            void Joker:: epilog( ios::ostream &fp ) const
+            {
+                viz_id(fp); fp << " -> "; rule.viz_id(fp); fp << "[arrowhead=diamond];\n";
+            }
+
+
         }
 
     }
