@@ -1,8 +1,8 @@
-
+//! \file
 #ifndef Y_LANG_LEXICAL_COMMENT_INCLUDED
 #define Y_LANG_LEXICAL_COMMENT_INCLUDED 1
 
-#include "y/lang/lexical/scanner.hpp"
+#include "y/lang/lexical/plugin.hpp"
 
 namespace upsylon
 {
@@ -14,11 +14,17 @@ namespace upsylon
             class EndOfLine : public Plugin
             {
             public:
-                explicit EndOfLine(const string &id,const string &rx);
+                inline virtual ~EndOfLine() throw() {}
+                inline explicit EndOfLine(const string &id,const char *rx) : Plugin(id,rx) { setup(); }
+                inline explicit EndOfLine(const char   *id,const char *rx) : Plugin(id,rx) { setup(); }
                 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Plugin);
+                Y_DISABLE_COPY_AND_ASSIGN(EndOfLine);
+                void setup();
             };
+
+            
+
 
         }
 
@@ -26,5 +32,5 @@ namespace upsylon
 
 }
 
-#enfif
+#endif
 

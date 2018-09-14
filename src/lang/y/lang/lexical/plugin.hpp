@@ -14,10 +14,13 @@ namespace upsylon
             {
             public:
                 virtual ~Plugin() throw();
-                
-            protected:
-                explicit Plugin(const string &id);
 
+                const string trigger;
+
+            protected:
+                explicit Plugin(const string &id, const char *rx);
+                explicit Plugin(const char   *id, const char *rx);
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Plugin);
             };
