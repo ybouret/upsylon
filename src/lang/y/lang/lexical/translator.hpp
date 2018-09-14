@@ -64,7 +64,7 @@ namespace upsylon
                     if(p)
                         link(scanner,**p);
                     else
-                        link(scanner,enroll_plugin( new PLUGIN(pluginName) ) );
+                        link(scanner,enroll_plugin( new PLUGIN(*this,pluginName) ) );
                 }
 
                 //! no args PLUGIN constructor
@@ -81,7 +81,7 @@ namespace upsylon
                     if(p)
                         link(scanner,**p);
                     else
-                        link(scanner,enroll_plugin( new PLUGIN(pluginName,expr) ) );
+                        link(scanner,enroll_plugin( new PLUGIN(*this,pluginName,expr) ) );
                 }
 
                 template <typename PLUGIN>

@@ -34,7 +34,7 @@ namespace upsylon
             const char C_Comment:: init[] = "/\\*";
             const char C_Comment:: quit[] = "\\*/";
 
-            C_Comment:: C_Comment(const string &id) : Comment(id,init)
+            C_Comment:: C_Comment(Translator &t, const string &id) : Comment(t,id,init)
             {
                 {
                     const string drop_id = *label + ".drop";

@@ -10,15 +10,17 @@ namespace upsylon
             {
             }
 
-            Plugin:: Plugin(const string &id, const char *rx ) :
+            Plugin:: Plugin(Translator &t, const string &id, const char *rx ) :
             Scanner(id),
-            trigger(rx)
+            trigger(rx),
+            lexer(t)
             {
             }
 
-            Plugin:: Plugin(const string &id, const string &rx ) :
+            Plugin:: Plugin(Translator &t,const string &id, const string &rx ) :
             Scanner(id),
-            trigger(rx)
+            trigger(rx),
+            lexer(t)
             {
             }
 

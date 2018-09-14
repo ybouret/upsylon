@@ -11,17 +11,22 @@ namespace upsylon
         namespace Lexical
         {
 
+            //! almost json string
             class jString : public Plugin
             {
             public:
-                explicit jString(const string &id);
-                virtual ~jString() throw();
-                virtual void Init(const Token &);
 
-                Token content;
+                explicit jString(Translator &,const string &id); //!< initialize
+                virtual ~jString() throw();                      //!< destructor
+                virtual void Init(const Token &);                //!< clear content
+
+                Token content; //!< localy collected
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(jString);
+                void Collect(const Token &t);
+                void Finish(const Token &);
+                
             };
 
         }
