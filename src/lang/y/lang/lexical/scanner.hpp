@@ -119,7 +119,7 @@ namespace upsylon
                           OBJECT_POINTER  host,
                           METHOD_POINTER  meth)
                 {
-                    const string       id        = "call@" + target;
+                    const string       id        = "call_" + target;
                     const Origin       ruleLabel = new string(id);
                     const Motif        ruleMotif = Compile::RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);
@@ -143,7 +143,7 @@ namespace upsylon
                           OBJECT_POINTER  host,
                           METHOD_POINTER  meth)
                 {
-                    const string       id        = "back<" + *label;
+                    const string       id        = "quit_" + *label;
                     const Origin       ruleLabel = new string(id);
                     const Motif        ruleMotif = Compile::RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);
@@ -158,6 +158,18 @@ namespace upsylon
                                  METHOD_POINTER  meth)
                 {
                     const string __ = rx; back(__,host,meth);
+                }
+
+                //! return without any further ado
+                inline void ret(const string &rx)
+                {
+                    back(rx,this,&Scanner::nothing);
+                }
+
+                //! return without any further ado
+                inline void ret(const char *rx)
+                {
+                    const string _(rx); ret(_);
                 }
 
                 //! do nothing

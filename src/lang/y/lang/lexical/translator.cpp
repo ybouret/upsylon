@@ -45,6 +45,24 @@ dict()
                 p->userDict = &dict;
             }
 
+            Plugin & Translator:: enroll_plugin( Plugin *plg )
+            {
+                assert(plg);
+                Plugin::Pointer p = plg;
+                if(!plugins.insert(p))
+                {
+                    throw exception("[%s] multiple plugin [%s]", **name, **(p->label) );
+                }
+                enroll(plg);
+                return *plg;
+            }
+
+
+            void Translator:: link(Scanner &scanner,
+                                   Plugin  &plugin)
+            {
+                scanner.call(*(plugin.label),plugin.trigger, &plugin, & Plugin::Init );
+            }
 
             Scanner & Translator:: decl(const string &id)
             {

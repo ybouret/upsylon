@@ -2,7 +2,7 @@
 #ifndef Y_LANG_LEXICAL_TRANSLATOR_INCLUDED
 #define Y_LANG_LEXICAL_TRANSLATOR_INCLUDED 1
 
-#include "y/lang/lexical/scanner.hpp"
+#include "y/lang/lexical/plugin.hpp"
 #include "y/associative/set.hpp"
 #include "y/core/addr-list.hpp"
 
@@ -18,6 +18,7 @@ namespace upsylon
             public:
                 typedef Lexical::Scanner             Scanner;  //!< alias
                 typedef set<string,Scanner::Pointer> DataBase; //!< database of scanners
+                typedef set<string,Plugin::Pointer>  Plugins;  //!< database of plugins
                 const Origin name;                             //!< shared name
                 
                 //! destructor
@@ -54,14 +55,41 @@ namespace upsylon
                 //! check if there is a next lexeme
                 const Lexeme *peek(Source &source);
 
+
                 //! no args PLUGIN constructor
                 template <typename PLUGIN>
-                PLUGIN & hook( const string &id )
+                inline void hook( Scanner &scanner, const string &pluginName )
                 {
-                    PLUGIN *plugin = new PLUGIN(id);
-                    enroll(plugin);
-                    return *plugin;
+                    Plugin::Pointer *p = plugins.search( pluginName );
+                    if(p)
+                        link(scanner,**p);
+                    else
+                        link(scanner,enroll_plugin( new PLUGIN(pluginName) ) );
                 }
+
+                //! no args PLUGIN constructor
+                template <typename PLUGIN>
+                inline void hook( Scanner &scanner, const char *pluginName )
+                {
+                    const string _(pluginName); hook<PLUGIN>(scanner,_);
+                }
+
+                template <typename PLUGIN>
+                inline void hook( Scanner &scanner, const string &pluginName, const char *expr)
+                {
+                    Plugin::Pointer *p = plugins.search( pluginName );
+                    if(p)
+                        link(scanner,**p);
+                    else
+                        link(scanner,enroll_plugin( new PLUGIN(pluginName,expr) ) );
+                }
+
+                template <typename PLUGIN>
+                inline void hook( Scanner &scanner, const char *pluginName, const char *expr)
+                {
+                    const string _(pluginName); hook<PLUGIN>(scanner,_,expr);
+                }
+
 
 
             private:
@@ -74,9 +102,14 @@ namespace upsylon
                 Lexeme::List cache;    //!< cache of lexemes
                 History      history;  //!< for call/back
                 DataBase     scanners; //!< database of scanners
+                Plugins      plugins;  //!< database of plugins
 
-                void setup(); //!< finish constructor
-                void enroll( Scanner *s );
+                void    setup(); //!< finish constructor
+                void    enroll( Scanner *s );         //!< insert into scanners
+                Plugin &enroll_plugin( Plugin *plg ); //!< insert into plugins AND scanners
+                void    link(Scanner &, Plugin & ); //!< scanner calls plugin upon trigger
+
+
 
             public:
                 Dictionary dict; //!< shared dictionary, set as userDict for registers scanners

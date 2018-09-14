@@ -16,7 +16,7 @@ namespace upsylon
             {
             }
 
-            Plugin:: Plugin(const char *id, const char *rx ) :
+            Plugin:: Plugin(const string &id, const string &rx ) :
             Scanner(id),
             trigger(rx)
             {

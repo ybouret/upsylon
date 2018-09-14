@@ -1,5 +1,7 @@
 
 #include "y/lang/lexical/translator.hpp"
+#include "y/lang/lexical/plugin/comment.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/ios/ocstream.hpp"
@@ -19,7 +21,10 @@ namespace
             root.emit("int","[:digit:]+");
             root.drop("blanks","[:blank:]+");
             root.jump("COM1", "#",    this, & myLex::COM1_Enter);
-            root.call("COM2", "/\\*", this, & myLex::COM2_Enter);
+            root.call("COM2", "<!--", this, & myLex::COM2_Enter);
+            hook<Lexical::CXX_Comment>(root,"CXX");
+            hook<Lexical::EndOfLineComment>(root,"LatexComment","%");
+            hook<Lexical::C_Comment>(root,"C_Comment");
             root.endl("endl", "[:endl:]");
 
             Lexical::Scanner &COM1 = decl("COM1");
@@ -27,7 +32,7 @@ namespace
             COM1.jump("myLex", "[:endl:]",this, & myLex::COM1_Leave);
 
             Lexical::Scanner &COM2 = decl("COM2");
-            COM2.back("\\*/", this, &myLex::COM2_Leave);
+            COM2.back("-->", this, &myLex::COM2_Leave);
             COM2.drop("any",".");
             COM2.endl("endl","[:endl:]");
         }

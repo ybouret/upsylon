@@ -7,8 +7,25 @@ namespace upsylon
     {
         namespace Lexical
         {
-            const char jString::quote[] = "\\x22";
-            
+
+            jString:: ~jString() throw()
+            {
+            }
+
+            static const char __quote[] = "\\x22";
+
+            jString:: jString(const string &id) : Plugin(id,__quote), content()
+            {
+                
+                ret(__quote);
+            }
+
+            void jString:: Init( const Token & )
+            {
+                content.clear();
+            }
+
+
         }
     }
 }

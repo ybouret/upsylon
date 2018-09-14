@@ -11,30 +11,57 @@ namespace upsylon
         namespace Lexical
         {
 
-            class EndOfLineComment : public Plugin
+            class Comment : public Plugin
+            {
+            public:
+                inline virtual ~Comment() throw() {}
+
+                //! do nothing on Init
+                inline virtual void Init(const Token &) {}
+
+            protected:
+                inline explicit Comment(const string &id, const char   *rx) : Plugin(id,rx) {}
+                inline explicit Comment(const string &id, const string &rx) : Plugin(id,rx) {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Comment);
+            };
+
+            class EndOfLineComment : public Comment
             {
             public:
                 inline virtual ~EndOfLineComment() throw() {}
-                inline explicit EndOfLineComment(const string &id,const char *rx) : Plugin(id,rx) { setup(); }
-                inline explicit EndOfLineComment(const char   *id,const char *rx) : Plugin(id,rx) { setup(); }
-                
+                inline explicit EndOfLineComment(const string &id, const char   *rx) : Comment(id,rx) { setup(); }
+                inline explicit EndOfLineComment(const string &id, const string &rx) : Comment(id,rx) { setup(); }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(EndOfLineComment);
                 void setup();
             };
 
+
             class CXX_Comment : public EndOfLineComment
             {
             public:
                 inline virtual ~CXX_Comment() throw() {}
-                inline CXX_Comment(const string &id ) : EndOfLineComment(id,rx) {}
-                inline CXX_Comment(const char   *id ) : EndOfLineComment(id,rx) {}
+                inline explicit CXX_Comment(const string &id) : EndOfLineComment(id,init) {}
 
             private:
-                static const char rx[];
+                static const char init[];
                 Y_DISABLE_COPY_AND_ASSIGN(CXX_Comment);
             };
 
+            class C_Comment : public Comment
+            {
+            public:
+                inline
+                virtual ~C_Comment() throw() {}       //!< desctructor
+                explicit C_Comment(const string &id); //!< initialize
+                
+            private:
+                static const char init[];
+                static const char quit[];
+            };
             
 
         }

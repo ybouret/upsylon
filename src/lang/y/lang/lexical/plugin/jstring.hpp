@@ -14,15 +14,14 @@ namespace upsylon
             class jString : public Plugin
             {
             public:
-                explicit jString(const string &id) : Plugin(id,quote), content() { setup(); }
-                explicit jString(const char   *id) : Plugin(id,quote), content() { setup(); }
+                explicit jString(const string &id);
+                virtual ~jString() throw();
+                virtual void Init(const Token &);
 
                 Token content;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(jString);
-                static const char quote[];
-                void setup();
             };
 
         }
