@@ -18,7 +18,7 @@ namespace
             root.emit("id","[:alpha:]+");
             root.emit("int","[:digit:]+");
             root.drop("blanks","[:blank:]+");
-            root.jump("COM1", "//", this, & myLex::COM1_Enter);
+            root.jump("COM1", "#",    this, & myLex::COM1_Enter);
             root.call("COM2", "/\\*", this, & myLex::COM2_Enter);
             root.endl("endl", "[:endl:]");
 

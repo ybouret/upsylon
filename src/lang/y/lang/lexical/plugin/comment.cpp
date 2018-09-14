@@ -7,7 +7,7 @@ namespace upsylon
     {
         namespace Lexical
         {
-            void EndOfLine:: setup()
+            void EndOfLineComment:: setup()
             {
                 {
                     const string drop_id = *label + ".drop";
@@ -17,6 +17,9 @@ namespace upsylon
 
                 back("[:endl:]", this, & Scanner::newline );
             }
+
+
+            const char CXX_Comment:: rx[] = "//";
         }
     }
 }

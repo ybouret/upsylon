@@ -54,20 +54,30 @@ namespace upsylon
                 //! check if there is a next lexeme
                 const Lexeme *peek(Source &source);
 
+                //! no args PLUGIN constructor
+                template <typename PLUGIN>
+                PLUGIN & hook( const string &id )
+                {
+                    PLUGIN *plugin = new PLUGIN(id);
+                    enroll(plugin);
+                    return *plugin;
+                }
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Translator);
                 typedef core::addr_node<Scanner> sNode;
-                typedef core::addr_list<Scanner> sList;
+                typedef core::addr_list<Scanner> History;
 
                 Scanner     *curr;     //!< current scanner
                 Scanner     *base;     //!< root scanner
                 Lexeme::List cache;    //!< cache of lexemes
-                sList        history;  //!< for call/back
+                History      history;  //!< for call/back
                 DataBase     scanners; //!< database of scanners
 
-                void setup();
-                
+                void setup(); //!< finish constructor
+                void enroll( Scanner *s );
+
             public:
                 Dictionary dict; //!< shared dictionary, set as userDict for registers scanners
             };

@@ -34,15 +34,23 @@ dict()
                 curr = base;
             }
 
-            Scanner & Translator:: decl(const string &id)
+            void Translator :: enroll( Scanner *s )
             {
-                Scanner::Pointer p = new Scanner(id);
+                assert(s);
+                Scanner::Pointer p = s;
                 if(!scanners.insert(p))
                 {
-                    throw exception("[%s] multiple scanner [%s]", **name, *id);
+                    throw exception("[%s] multiple scanner [%s]", **name, **(p->label) );
                 }
                 p->userDict = &dict;
-                return *p;
+            }
+
+
+            Scanner & Translator:: decl(const string &id)
+            {
+                Scanner *s = new Scanner(id);
+                enroll(s);
+                return *s;
             }
 
 

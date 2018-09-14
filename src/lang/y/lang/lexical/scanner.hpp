@@ -23,11 +23,11 @@ namespace upsylon
                 const Origin label; //!< used as shared label/key
 
 
-                virtual ~Scanner() throw();         //!< destructor
-                explicit Scanner(const string &id); //!< initialize
-                explicit Scanner(const char   *id); //!< initialize
+                virtual ~Scanner() throw();                 //!< destructor
+                explicit Scanner(const string &id);         //!< initialize
+                explicit Scanner(const char   *id);         //!< initialize
                 explicit Scanner(const Origin &id) throw(); //!< initialize
-                const string & key() const throw(); //!< for database
+                const string & key() const throw();         //!< for database
 
                 //! construct a new rule
                 template <typename CODE>

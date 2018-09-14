@@ -177,7 +177,7 @@ namespace upsylon
                 const Origin          label;  //!< identifier
                 const Motif           motif;  //!< matching pattern
                 const void           *handle; //!< regular/control event address
-                const Event::Pointer  event; //!< shared event
+                const Event::Pointer  event;  //!< shared event
 
                 virtual ~Rule() throw(); //!< destructor
 
