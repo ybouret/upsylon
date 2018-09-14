@@ -21,6 +21,12 @@ SET(lexical_srcs ${lexical_decl} ${lexical_code})
 SOURCE_GROUP( lang/lexical FILES ${lexical_srcs} )
 INSTALL( FILES ${lexical_decl} DESTINATION include/y/lang/lexical )
 
+FILE(GLOB lexical_plugin_decl y/lang/lexical/plugin/*.hpp)
+FILE(GLOB lexical_plugin_code y/lang/lexical/plugin/*.cpp)
+SET(lexical_plugin_srcs ${lexical_plugin_decl} ${lexical_plugin_code})
+SOURCE_GROUP( lang/lexical/plugin FILES ${lexical_plugin_srcs} )
+INSTALL( FILES ${lexical_plugin_decl} DESTINATION include/y/lang/lexical/plugin )
+
 FILE(GLOB syntax_decl y/lang/syntax/*.hpp)
 FILE(GLOB syntax_code y/lang/syntax/*.cpp)
 SET(syntax_srcs ${syntax_decl} ${syntax_code})
@@ -31,6 +37,7 @@ ADD_LIBRARY(y-lang STATIC
 ${main_srcs} 
 ${pattern_srcs}
 ${lexical_srcs}
+${lexical_plugin_srcs}
 ${syntax_srcs}
 )
 INSTALL( TARGETS y-lang ARCHIVE DESTINATION lib )
