@@ -518,6 +518,7 @@ case 'f': return new Single('\f')
                 Y_RX_POSIX(word);
                 Y_RX_POSIX(endl);
                 Y_RX_POSIX(dot);
+                Y_RX_POSIX(core);
 
 
                 throw exception("%sunknown posix label '%s'", fn, *label );

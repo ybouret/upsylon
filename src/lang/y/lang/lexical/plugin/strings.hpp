@@ -26,6 +26,9 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(__String);
                 void Collect(const Token &);
                 void Forward(const Token &);
+                void EscCopy(const Token &); //!< quote(s)
+                void EscCode(const Token &); //!< \n, \r, \t,...
+                void EscHexa(const Token &);
             };
 
             //! almost json string, between double quotes

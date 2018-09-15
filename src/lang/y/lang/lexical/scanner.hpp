@@ -112,6 +112,18 @@ namespace upsylon
                     const string _ = target; const string __ = rx; jump(_,__,host,meth);
                 }
 
+                //! just jump to target on a regular expression
+                inline void jump(const string &target, const string &rx)
+                {
+                    jump(target,rx,this,&Scanner::nothing);
+                }
+
+                //! just jump to target on a regular expression
+                inline void jump(const char *target, const char *rx)
+                {
+                    const string _ = target; const string __ = rx; jump(_,__);
+                }
+
                 //! construct a call
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 void call(const string   &target,
@@ -137,13 +149,26 @@ namespace upsylon
                     const string _ = target; const string __ = rx; call(_,__,host,meth);
                 }
 
+                //! just call to target on a regular expression
+                inline void call(const string &target, const string &rx)
+                {
+                    call(target,rx,this,&Scanner::nothing);
+                }
+
+                //! just call to target on a regular expression
+                inline void call(const char *target, const char *rx)
+                {
+                    const string _ = target; const string __ = rx; call(_,__);
+                }
+
+
                 //! construct a back
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 void back(const string   &rx,
                           OBJECT_POINTER  host,
                           METHOD_POINTER  meth)
                 {
-                    const string       id        = "quit_" + *label;
+                    const string       id        = "quit_" + *label + "/" + rx;
                     const Origin       ruleLabel = new string(id);
                     const Motif        ruleMotif = Compile::RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);
@@ -161,15 +186,15 @@ namespace upsylon
                 }
 
                 //! return without any further ado
-                inline void ret(const string &rx)
+                inline void back(const string &rx)
                 {
                     back(rx,this,&Scanner::nothing);
                 }
 
                 //! return without any further ado
-                inline void ret(const char *rx)
+                inline void back(const char *rx)
                 {
-                    const string _(rx); ret(_);
+                    const string _(rx); back(_);
                 }
 
                 //! do nothing

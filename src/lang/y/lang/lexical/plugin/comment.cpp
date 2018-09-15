@@ -48,7 +48,7 @@ namespace upsylon
                     endl(endl_id,endl_rx);
                 }
 
-                ret(quit);
+                back(quit);
 
             }
             
