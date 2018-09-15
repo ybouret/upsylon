@@ -122,7 +122,7 @@ namespace upsylon
                             // special characters
                             //--------------------------------------------------
                         case '.':
-                            p->add( Posix::dot() );
+                            p->add( posix::dot() );
                             ++curr;
                             break;
 
@@ -484,7 +484,7 @@ case 'f': return new Single('\f')
             // identify a posix alias
             //
             //__________________________________________________________________
-#define Y_RX_POSIX(LABEL) if(label==#LABEL) return Posix:: LABEL()
+#define Y_RX_POSIX(LABEL) if(label==#LABEL) return posix:: LABEL()
 
             inline Pattern *posix()
             {

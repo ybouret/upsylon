@@ -9,7 +9,7 @@ namespace upsylon
     namespace Lang
     {
         //! posix patterns
-        struct Posix
+        struct posix
         {
             static Pattern *lower();  //!< \verbatim[a-z]\endverbatim
             static Pattern *upper();  //!< \verbatim[A-Z]\endverbatim
@@ -24,6 +24,7 @@ namespace upsylon
             static Pattern *word();   //!< \verbatim[a-zA-Z0-9_]\endverbatim
             static Pattern *endl();   //!< \verbatim\n|\r|\r\n\endverbatim
             static Pattern *dot();    //!< \verbatim^endl\endverbatim
+            static Pattern *core();   //!< core 7-bits string content
         };
     }
 

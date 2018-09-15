@@ -8,17 +8,17 @@ namespace upsylon
 {
     namespace Lang
     {
-        Pattern * Posix:: lower()
+        Pattern * posix:: lower()
         {
             return new Range('a','z');
         }
 
-        Pattern * Posix:: upper()
+        Pattern * posix:: upper()
         {
             return new Range('A','Z');
         }
 
-        Pattern * Posix:: alpha()
+        Pattern * posix:: alpha()
         {
             auto_ptr<Logical> p = new OR();
             p->add( lower() );
@@ -26,12 +26,12 @@ namespace upsylon
             return p.yield();
         }
 
-        Pattern * Posix:: digit()
+        Pattern * posix:: digit()
         {
             return new Range('0','9');
         }
 
-        Pattern * Posix:: alnum()
+        Pattern * posix:: alnum()
         {
             auto_ptr<Logical> p = new OR();
             p->add( lower() );
@@ -40,7 +40,7 @@ namespace upsylon
             return p.yield();
         }
 
-        Pattern * Posix:: word()
+        Pattern * posix:: word()
         {
             auto_ptr<Logical> p = new OR();
             p->add( lower() );
@@ -50,7 +50,7 @@ namespace upsylon
             return p.yield();
         }
 
-        Pattern * Posix:: xdigit()
+        Pattern * posix:: xdigit()
         {
             auto_ptr<Logical> p = new OR();
             p->add( digit() );
@@ -59,17 +59,17 @@ namespace upsylon
             return p.yield();
         }
 
-        Pattern * Posix:: blank()
+        Pattern * posix:: blank()
         {
             return Logical::Among(" \t");
         }
 
-        Pattern * Posix:: space()
+        Pattern * posix:: space()
         {
             return Logical::Among(" \t\n\r\v\f");
         }
 
-        Pattern * Posix::punct()
+        Pattern * posix::punct()
         {
             return Logical::Among("][!\"#$%&'()*+,./:;<=>?@\\^_`{|}~-");
         }
@@ -81,17 +81,27 @@ namespace upsylon
             ops.push_back( Logical::Equal("\r\n") );
         }
 
-        Pattern * Posix:: endl()
+        Pattern * posix:: endl()
         {
             auto_ptr<Logical> p = new OR();
             __fill_endl(p->operands);
             return p.yield();
         }
 
-        Pattern * Posix:: dot()
+        Pattern * posix:: dot()
         {
             auto_ptr<Logical> p = new NONE();
             __fill_endl(p->operands);
+            return p.yield();
+        }
+
+        Pattern * posix:: core()
+        {
+            auto_ptr<Logical> p = new OR();
+            p->add( new Single(0x20)     );
+            p->add( new Single(0x21)     );
+            p->add( new Range(0x23,0x5B) );
+            p->add( new Range(0x5D,0x7F) );
             return p.yield();
         }
 

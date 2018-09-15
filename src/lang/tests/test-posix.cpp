@@ -12,7 +12,7 @@ using namespace Lang;
 #define __CHECK(EXPR) do {                                          \
 std::cerr << "Checking " << #EXPR << std::endl;                     \
 std::cerr << "\t|_GraphViz" << std::endl;                           \
-auto_ptr<Pattern> p = Posix::EXPR(); p->GraphViz( #EXPR ".dot" );   \
+auto_ptr<Pattern> p = posix::EXPR(); p->GraphViz( #EXPR ".dot" );   \
 std::cerr << "\t|_saving" << std::endl;                             \
 { ios::ocstream fp( #EXPR ".bin" ); p->write(fp); }                 \
 std::cerr << "\t|_reloading" << std::endl;                          \
@@ -42,6 +42,7 @@ Y_UTEST(posix)
     __CHECK(endl);
     __CHECK(dot);
     __CHECK(punct);
+    __CHECK(core);
 }
 Y_UTEST_DONE()
 
