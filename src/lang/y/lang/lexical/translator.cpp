@@ -154,6 +154,7 @@ namespace upsylon
                 // get the next lexeme
                 //
                 //______________________________________________________________
+            RESCAN:
                 if(cache.size)
                 {
                     //__________________________________________________________
@@ -207,8 +208,10 @@ namespace upsylon
                                     break;
                             }
                             //--------------------------------------------------
-                            // and continue...
+                            // and continue, rescan since a new lexeme
+                            // may be in the cache
                             //--------------------------------------------------
+                            goto RESCAN;
                         }
                         else
                         {

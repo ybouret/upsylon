@@ -19,7 +19,7 @@ namespace upsylon
                 inline virtual void Init(const Token &) {} //!< do nothing on Init
 
             protected:
-                inline explicit Comment(Translator &t, const string &id, const char   *rx) : Plugin(t,id,rx) {}
+                inline explicit Comment(Translator &t, const string &id, const char   *rx) : Plugin(t,id,rx) {} //!< initialize
                 inline explicit Comment(Translator &t, const string &id, const string &rx) : Plugin(t,id,rx) {} //!< initialize
 
             private:

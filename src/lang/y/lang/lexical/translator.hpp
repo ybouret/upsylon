@@ -74,6 +74,7 @@ namespace upsylon
                     const string _(pluginName); hook<PLUGIN>(scanner,_);
                 }
 
+                //! PLUGIN with one argument
                 template <typename PLUGIN>
                 inline void hook( Scanner &scanner, const string &pluginName, const char *expr)
                 {
@@ -84,6 +85,7 @@ namespace upsylon
                         link(scanner,enroll_plugin( new PLUGIN(*this,pluginName,expr) ) );
                 }
 
+                //! PLUGIN with one argument
                 template <typename PLUGIN>
                 inline void hook( Scanner &scanner, const char *pluginName, const char *expr)
                 {

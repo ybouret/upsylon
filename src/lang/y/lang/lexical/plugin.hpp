@@ -18,7 +18,7 @@ namespace upsylon
             public:
                 typedef intr_ptr<string,Plugin> Pointer; //!< alias for database
                 
-                virtual ~Plugin() throw(); //!< desctructor
+                virtual ~Plugin() throw(); //!< destructor
 
                 const string trigger;                 //!< triggering expression
                 virtual void Init(const Token &) = 0; //!< what do do when plugin is called
@@ -27,7 +27,7 @@ namespace upsylon
                 explicit Plugin(Translator &attached, const string &id, const char   *rx); //!< initialize
                 explicit Plugin(Translator &attacher, const string &id, const string &rx); //!< initialize
 
-                Translator &lexer;
+                Translator &lexer; //!< lexer to store a compiled lexeme
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Plugin);
