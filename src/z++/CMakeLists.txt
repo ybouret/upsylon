@@ -8,7 +8,7 @@ SOURCE_GROUP( z++ FILES ${srcs} )
 
 INCLUDE_DIRECTORIES( . ../main)
 ## for local zlib
-MESSAGE( STATUS "z++ binary dir=${CMAKE_CURRENT_BINARY_DIR}")
+#MESSAGE( STATUS "z++ binary dir=${CMAKE_CURRENT_BINARY_DIR}")
 INCLUDE_DIRECTORIES(../ext ${CMAKE_CURRENT_BINARY_DIR}/../ext/y/zlib)
 
 ADD_LIBRARY( y-z++ STATIC ${srcs} )

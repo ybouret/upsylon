@@ -1,7 +1,7 @@
 
 #include "y/lang/lexical/translator.hpp"
 #include "y/lang/lexical/plugin/comment.hpp"
-#include "y/lang/lexical/plugin/jstring.hpp"
+#include "y/lang/lexical/plugin/strings.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ios/icstream.hpp"
@@ -28,6 +28,7 @@ namespace
             hook<Lexical::EndOfLineComment>(root,"LatexComment","%");
             hook<Lexical::C_Comment>(root,"C_Comment");
             hook<Lexical::jString>(root,"jstring");
+            hook<Lexical::rString>(root,"rstring");
             root.endl("endl", "[:endl:]");
 
             Lexical::Scanner &COM1 = decl("COM1");
