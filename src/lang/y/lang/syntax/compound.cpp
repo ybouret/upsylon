@@ -102,6 +102,11 @@ namespace upsylon
                 Grow(tree,subTree);
                 return true;
             }
+
+            bool Aggregate:: hollow() const throw()
+            {
+                return false;
+            }
         }
 
     }
@@ -128,7 +133,6 @@ namespace upsylon
 
             bool Alternate:: accept( Y_LANG_SYNTAX_RULE_ARGS ) const
             {
-
                 for(const Operand *op=head;op;op=op->next)
                 {
                     Node *tmp = NULL;
@@ -140,6 +144,15 @@ namespace upsylon
                     }
                 }
 
+                return false;
+            }
+
+            bool Alternate:: hollow() const throw()
+            {
+                for(const Operand *op=head;op;op=op->next)
+                {
+                    if(op->rule.hollow()) return true;
+                }
                 return false;
             }
         }

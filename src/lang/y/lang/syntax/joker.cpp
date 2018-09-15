@@ -38,6 +38,11 @@ namespace upsylon
                 return true;
             }
 
+            bool Optional:: hollow() const throw()
+            {
+                return true;
+            }
+
             void Joker:: epilog( ios::ostream &fp ) const
             {
                 viz_id(fp); fp << " -> "; rule.viz_id(fp); fp << "[arrowhead=diamond];\n";
@@ -115,6 +120,11 @@ namespace upsylon
                     return false;
                 }
 
+            }
+
+            bool Repeating:: hollow() const throw()
+            {
+                return (nmin<=0);
             }
 
         }

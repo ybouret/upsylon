@@ -30,6 +30,10 @@ namespace upsylon
                 //! virtual accept method
                 virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const = 0;
 
+                //! if can accept NULL tree
+                virtual bool hollow() const throw() = 0;
+
+
                 //! handling of new nodes
                 static inline void Grow( Node * &tree, Node *child ) throw()
                 {

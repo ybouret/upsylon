@@ -34,6 +34,11 @@ namespace upsylon
 
                 //! accept if there is a lexeme with label==name
                 virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const;
+
+                //! false
+                virtual bool hollow() const throw();
+
+                //! depends on type
                 virtual const char * __style() const throw();
 
             private:

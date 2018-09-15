@@ -74,9 +74,12 @@ namespace upsylon
 
                 //! accept all or no nodes
                 /**
-                 if true, an empty sub-tree is added => not weak
+                 if true, an empty sub-tree is added => not hollow!
                  */
                 virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const;
+                //! always create a sub-tree with its label, never hollow
+                virtual bool hollow() const throw();
+
 
                 virtual const char * __shape() const throw() { return "house"; }
 
@@ -101,6 +104,8 @@ namespace upsylon
 
                 virtual const char * __shape() const throw() { return "egg"; }
                 //virtual const char * __style() const throw() { return "dashed"; }
+                //! true if one of the member is hollow
+                virtual bool hollow() const throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alternate);

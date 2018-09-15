@@ -42,6 +42,8 @@ namespace upsylon
                 virtual ~Optional() throw();                          //!< destructor
                 explicit Optional(const string &id, const Rule &jk);  //!< initialize
                 virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const; //!< always true
+                virtual bool hollow() const throw();                  //!< true
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Optional);
             };
@@ -64,6 +66,7 @@ namespace upsylon
 
                 virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const; //!< true if >= nmin occurences
 
+                virtual bool hollow() const throw();  //!< true if nmin==0
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Repeating);

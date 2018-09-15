@@ -50,6 +50,12 @@ namespace upsylon
                 return "solid";
             }
           
+            bool Terminal:: hollow() const throw()
+            {
+                return false;
+            }
+
+
 
         }
 
