@@ -41,17 +41,17 @@ namespace upsylon
 
     namespace
     {
-        int  *   __argc = 0;
-        char *** __argv = 0;
-        int      __levl = 0;
-        bool     __call = false;
+        int  *   __mpi_argc = 0;
+        char *** __mpi_argv = 0;
+        int      __mpi_levl = 0;
+        bool     __mpi_call = false;
 
         static inline void __cleanup() throw()
         {
-            __argc=0;
-            __argv=0;
-            __levl=0;
-            __call=false;
+            __mpi_argc=0;
+            __mpi_argv=0;
+            __mpi_levl=0;
+            __mpi_call=false;
         }
 
         
@@ -68,10 +68,10 @@ namespace upsylon
         {
             throw upsylon::exception("mpi.init( already exist )");
         }
-        __argc = argc;
-        __argv = argv;
-        __levl = requestedThreadLevel;
-        __call = true;
+        __mpi_argc = argc;
+        __mpi_argv = argv;
+        __mpi_levl = requestedThreadLevel;
+        __mpi_call = true;
         try
         {
             mpi &MPI = instance();
@@ -113,8 +113,8 @@ namespace upsylon
     comTicks(0),
     rtClock()
     {
-        if(!__call) throw upsylon::exception("please call mpi.init(...)");
-        Y_MPI_CHECK(MPI_Init_thread(__argc,__argv,__levl, (int *)&threadLevel));
+        if(!__mpi_call) throw upsylon::exception("please call mpi.init(...)");
+        Y_MPI_CHECK(MPI_Init_thread(__mpi_argc,__mpi_argv,__mpi_levl, (int *)&threadLevel));
         try
         {
             Y_MPI_CHECK(MPI_Comm_size(MPI_COMM_WORLD,(int*)&size));
