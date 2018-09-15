@@ -15,9 +15,8 @@ namespace upsylon
             class Grammar
             {
             public:
-
                 const Origin name; //!< shared name
-
+                
                 //______________________________________________________________
                 //
                 // Setup API
