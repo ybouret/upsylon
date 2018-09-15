@@ -109,7 +109,7 @@ namespace upsylon
                 void    setup(); //!< finish constructor
                 void    enroll( Scanner *s );         //!< insert into scanners
                 Plugin &enroll_plugin( Plugin *plg ); //!< insert into plugins AND scanners
-                void    link(Scanner &, Plugin & ); //!< scanner calls plugin upon trigger
+                void    link(Scanner &, Plugin & );   //!< scanner calls plugin upon trigger
 
 
 
