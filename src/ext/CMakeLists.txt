@@ -1,5 +1,6 @@
 MESSAGE( STATUS "")
 MESSAGE( STATUS "External Projects: preparing..." )
+MESSAGE( STATUS "")
 
 MESSAGE( STATUS "                   lua")
 ADD_SUBDIRECTORY(y/lua)
@@ -22,6 +23,7 @@ ADD_SUBDIRECTORY(y/jpeg)
 MESSAGE( STATUS "                   tiff")
 ADD_SUBDIRECTORY(y/tiff)
 
+MESSAGE( STATUS "")
 MESSAGE( STATUS "External Projects are prepared!")
 MESSAGE( STATUS "")
 

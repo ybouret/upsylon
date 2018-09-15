@@ -29,8 +29,11 @@ ENDIF()
 MESSAGE( STATUS "")
 MESSAGE( STATUS "Scanning External Libraries" )
 MESSAGE( STATUS  )
-
 ADD_SUBDIRECTORY(ext)
+
+MESSAGE( STATUS "")
+MESSAGE( STATUS "Scanning C++ Wrapping Libraries" )
+MESSAGE( STATUS  )
 ADD_SUBDIRECTORY(z++)
 ADD_SUBDIRECTORY(bz2++)
 
