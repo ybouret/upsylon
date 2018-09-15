@@ -16,6 +16,7 @@ base(0),                \
 cache(),                \
 history(),              \
 scanners(4,as_capacity),\
+plugins(4,as_capacity), \
 dict()
 
             Translator:: Translator(const string &id) :
