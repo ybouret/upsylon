@@ -5,7 +5,11 @@ using namespace upsylon;
 
 Y_UTEST(init)
 {
-    mpi & MPI = mpi::instance();
+    Y_MPI(SINGLE);
+    if(MPI.isHead)
+    {
+        std::cerr << "ThreadLevel=" << MPI.threadLevelText() << std::endl;
+    }
 }
 Y_UTEST_DONE()
 
