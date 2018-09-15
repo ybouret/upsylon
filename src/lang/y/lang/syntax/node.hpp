@@ -71,7 +71,7 @@ namespace upsylon
                 inline void GraphViz( const char   *fn, bool keepFile=false) const { const string _ = fn; GraphViz(_,keepFile); }
 
                 //! yield terminal lexeme and delete node memory
-                static Lexeme *Yield(Node *node) throw();
+                static Lexeme *YieldLexeme(Node *node) throw();
 
                 //! return into lexer
                 static void BackTo( Lexical::Translator &lexer, Node *node ) throw();

@@ -59,7 +59,7 @@ namespace upsylon
             {
             }
 
-            Lexeme * Node:: Yield(Node *node) throw()
+            Lexeme * Node:: YieldLexeme(Node *node) throw()
             {
                 assert(node);
                 Lexeme *lx = & (node->lexeme);
@@ -80,7 +80,7 @@ namespace upsylon
                 }
                 else
                 {
-                    lexer.unget( Yield(node) );
+                    lexer.unget( YieldLexeme(node) );
                 }
             }
 
