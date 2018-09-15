@@ -76,7 +76,7 @@ Y_UTEST(lex)
     myLex lex;
     if(argc<=1 || 0!=strcmp(argv[1],"NULL") )
     {
-        std::cerr << "Start Translator [" << lex.name << "]" << std::endl;
+        std::cerr << "Start Translator [" << lex.label << "]" << std::endl;
         Source   source( Module::OpenSTDIN() );
         Lexeme::List           lexemes;
         Lexeme                 *lx  = 0;

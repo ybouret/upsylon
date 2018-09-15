@@ -19,7 +19,7 @@ namespace upsylon
                 typedef Lexical::Scanner             Scanner;  //!< alias
                 typedef set<string,Scanner::Pointer> DataBase; //!< database of scanners
                 typedef set<string,Plugin::Pointer>  Plugins;  //!< database of plugins
-                const Origin name;                             //!< shared name
+                const Origin label;                            //!< shared label
                 
                 //! destructor
                 virtual ~Translator() throw();
@@ -106,7 +106,6 @@ namespace upsylon
                 DataBase     scanners; //!< database of scanners
                 Plugins      plugins;  //!< database of plugins
 
-                void    setup(); //!< finish constructor
                 void    enroll( Scanner *s );         //!< insert into scanners
                 Plugin &enroll_plugin( Plugin *plg ); //!< insert into plugins AND scanners
                 void    link(Scanner &, Plugin & );   //!< scanner calls plugin upon trigger

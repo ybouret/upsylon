@@ -9,31 +9,31 @@ namespace upsylon
         namespace Lexical
         {
 
-#define Y_LANG_TRANS()  \
-name( new string(id) ), \
-curr(0),                \
-base(0),                \
-cache(),                \
-history(),              \
-scanners(4,as_capacity),\
-plugins(4,as_capacity), \
+#define Y_LANG_TRANS()   \
+label( new string(id) ), \
+curr(0),                 \
+base(0),                 \
+cache(),                 \
+history(),               \
+scanners(4,as_capacity), \
+plugins(4,as_capacity),  \
 dict()
 
             Translator:: Translator(const string &id) :
             Y_LANG_TRANS()
             {
-                setup();
+                base = new Scanner(label);
+                {
+                    const Scanner::Pointer p(base);
+                    if(!scanners.insert(p)) throw exception("[%s] cannot initialize scanners!!!", **label );
+                }
+                curr = base;
             }
 
             Translator:: ~Translator() throw()
             {
             }
 
-            void Translator::setup()
-            {
-                base = & decl(*name);
-                curr = base;
-            }
 
             void Translator :: enroll( Scanner *s )
             {
@@ -41,7 +41,7 @@ dict()
                 Scanner::Pointer p = s;
                 if(!scanners.insert(p))
                 {
-                    throw exception("[%s] multiple scanner [%s]", **name, **(p->label) );
+                    throw exception("[%s] multiple scanner [%s]", **label, **(p->label) );
                 }
                 p->userDict = &dict;
             }
@@ -52,7 +52,7 @@ dict()
                 Plugin::Pointer p = plg;
                 if(!plugins.insert(p))
                 {
-                    throw exception("[%s] multiple plugin [%s]", **name, **(p->label) );
+                    throw exception("[%s] multiple plugin [%s]", **label, **(p->label) );
                 }
                 enroll(plg);
                 return *plg;
@@ -202,7 +202,7 @@ namespace upsylon
                                 case ControlEvent::Back:
                                     if(history.size<=0)
                                     {
-                                        throw exception("[%s] can't go back from [%s]", **name, **(curr->label) );
+                                        throw exception("[%s] can't go back from [%s]", **label, **(curr->label) );
                                     }
                                     curr = history.tail->addr;
                                     delete history.pop_back();
