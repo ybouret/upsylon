@@ -9,7 +9,9 @@ namespace upsylon
         {
             Terminal:: ~Terminal() throw() {}
 
-            Terminal:: Terminal(const string &id ) : Rule(UUID,id)
+            Terminal:: Terminal(const string &id, const Type attr ) :
+            Rule(UUID,id),
+            type(attr)
             {
             }
 
@@ -36,6 +38,17 @@ namespace upsylon
                 }
             }
 
+            const char * Terminal:: __style() const throw()
+            {
+                switch(type)
+                {
+                    case Univocal: return "dashed";
+                    case Semantic: return "dotted";
+                    default:
+                        break;
+                }
+                return "solid";
+            }
           
 
         }

@@ -54,10 +54,10 @@ namespace upsylon
                 //______________________________________________________________
 
                 //! a new terminal
-                inline Rule & terminal( const string &id ) { return __add( new Terminal(id) ); }
+                inline Rule & terminal( const string &id, const Terminal::Type attr=Terminal::Standard ) { return __add( new Terminal(id,attr) ); }
 
                 //! a new terminal
-                inline Rule & terminal( const char   *id ) { const string _(id); return terminal(_); }
+                inline Rule & terminal( const char   *id, const Terminal::Type attr=Terminal::Standard ) { const string _(id); return terminal(_,attr); }
 
                 Rule & optional( const Rule &r );                    //!< optional rule
                 Rule & repeating( const Rule &r, const size_t nmin); //!< repeating >= nmin

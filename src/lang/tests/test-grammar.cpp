@@ -61,7 +61,7 @@ Y_UTEST(grammar)
 
     Syntax::Rule &ID  = G.terminal("ID");
     Syntax::Rule &INT = G.terminal("INT");
-    Syntax::Rule &END = G.terminal("END");
+    Syntax::Rule &END = G.terminal("END",Syntax::Terminal::Semantic);
     //Syntax::Rule &EQ  = G.terminal("EQ");
 
     Syntax::Aggregate &show = G.agg("show");
