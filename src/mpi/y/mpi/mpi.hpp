@@ -14,8 +14,10 @@
 namespace upsylon
 {
 
+    //! check a MPI function retuns MPI_SUCCESS
 #define Y_MPI_CHECK(CALL) do { const int err = CALL; if(MPI_SUCCESS!=err) throw mpi::exception(err,#CALL); } while(false)
 
+    //! MPI wrapping
     class mpi : public singleton<mpi>
     {
     public:
@@ -48,15 +50,15 @@ namespace upsylon
         class data_type : public type_spec
         {
         public:
-            typedef const MPI_Datatype                      value_type;
-            typedef type_traits<value_type>::parameter_type param_type;
-            typedef set<string,data_type>                   db;
+            typedef const MPI_Datatype                      value_type; //!< value type
+            typedef type_traits<value_type>::parameter_type param_type; //!< for passing parameters
+            typedef set<string,data_type>                   db;         //!< database
 
-            value_type value;
+            value_type value; //!< wrapped value
 
-            explicit data_type( const std::type_info &t, param_type v );
-            virtual ~data_type() throw();
-            data_type(const data_type &other);
+            explicit data_type( const std::type_info &t, param_type v ); //!< initialize
+            virtual ~data_type() throw();      //!< desctructor
+            data_type(const data_type &other); //!< copy
             
         private:
             Y_DISABLE_ASSIGN(data_type);
@@ -66,17 +68,19 @@ namespace upsylon
         //
         // data and initialization
         //______________________________________________________________________
-        const int        size;
-        const int        rank;
-        const int        last;
-        const bool       parallel;
-        const bool       isHead;
-        const bool       isTail;
-        const bool       isBulk;
+        const int        size;     //!< MPI_COMM_WOLRD size
+        const int        rank;     //!< MPI_COMM_WORLD rank
+        const int        last;     //!< rank-1
+        const bool       parallel; //!< size>1
+        const bool       isHead;   //!< 0==rank
+        const bool       isTail;   //!< last==rank
+        const bool       isBulk;   //!< !(isHead) && !(isTail)
         const int        threadLevel;   //!< current thread level
         uint64_t         comTicks;      //!< cumulative communication ticks
         const string     processorName; //!< the processor name
         const string     nodeName;      //!< size.rank
+
+        //! true initialization function
         static mpi & init( int * argc, char ***argv, int requestedThreadLevel );
 
 
@@ -192,6 +196,7 @@ namespace upsylon
         bool write_to(FILE *fp, const string &text) const throw();
 
     public:
+        //! life-time of the singleton
         static const  at_exit::longevity life_time = memory::pooled::life_time - 2;
     };
 
@@ -205,6 +210,7 @@ namespace upsylon
 #define Y_MPI(LEVEL) mpi & MPI = mpi::init( &argc, &argv, MPI_THREAD_##LEVEL )
 
 
+    //! send a string: size+data
     template <> inline
     void mpi:: Send<string>( const string &s, const int target, const int tag)
     {
@@ -216,6 +222,7 @@ namespace upsylon
         }
     }
 
+    //! recv a string, size+data
     template <> inline
     string mpi:: Recv<string>( const int source, const int tag )
     {

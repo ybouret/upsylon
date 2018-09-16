@@ -222,6 +222,7 @@ namespace upsylon
                  */
                 Lexeme *probe( Source &source, Message &msg );
 
+                //! find a rule by its label
                 const Rule * getRuleByLabel( const string &id ) const throw();
 
             private:
