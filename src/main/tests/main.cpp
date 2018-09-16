@@ -1,6 +1,6 @@
 #include "y/utest/driver.hpp"
 
-Y_UTEST_INIT(64)
+Y_UTEST_INIT(100)
 {
     Y_UTEST(platform);
     Y_UTEST(types);
@@ -66,7 +66,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(release);
     Y_UTEST(base64);
     Y_UTEST(u64);
-
+    Y_UTEST(spec);
 }
 Y_UTEST_EXEC()
 

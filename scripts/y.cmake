@@ -11,6 +11,11 @@ SET(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES ON)
 SET(CMAKE_SKIP_ASSEMBLY_SOURCE_RULES     ON)
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS    ON)
 
+# display a separator line
+MACRO(Y_SEPLINE)
+	MESSAGE( STATUS "************************************************" )
+ENDMACRO(Y_SEPLINE)
+
 ########################################################################
 ##
 ##
@@ -233,7 +238,7 @@ MACRO(TARGET_LINK_Y tgt)
 	
 	#specific libraries
 	LIST(REMOVE_DUPLICATES ylibs)
-	MESSAGE(STATUS "[${tgt}] <${ylibs}>")
+	MESSAGE(STATUS "[${tgt}]\t<${ylibs}>")
 	TARGET_LINK_LIBRARIES(${tgt} ${ylibs})
 	
 	IF(Y_FREEBSD OR Y_OPENBSD)
@@ -245,7 +250,7 @@ MACRO(TARGET_LINK_Y tgt)
 	ENDIF()
 	
 	#specific flags
-	IF( YOCTO_GNU AND WIN32)
+	IF( Y_GNU AND WIN32)
 		IF("${YOCTO_COMPILER_VERSION}" VERSION_GREATER "4.5.0" )
 		TARGET_LINK_LIBRARIES( ${tgt} -static-libgcc -static-libstdc++ )
 		ENDIF()
