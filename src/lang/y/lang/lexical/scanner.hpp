@@ -222,6 +222,8 @@ namespace upsylon
                  */
                 Lexeme *probe( Source &source, Message &msg );
 
+                const Rule * getRuleByLabel( const string &id ) const throw();
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
                 Rule::List    rules;

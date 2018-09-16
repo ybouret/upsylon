@@ -18,43 +18,57 @@ namespace upsylon
                 explicit Parser(const string &id); //!< initialize
                 virtual ~Parser() throw();         //!< destructor
 
-                //! create a new terminal
-                Rule & __term(const string &id, const string &rx, const Terminal::Attribute attr);
+                //! create a new terminal or recall previously created (MUST match)
+                const Rule & __term(const string &id, const string &rx, const Terminal::Attribute attr);
 
                 //! a regular terminal
                 inline
-                Rule & term( const string &id, const string &rx )
+                const Rule & term( const string &id, const string &rx )
                 {
                     return __term(id,rx,Terminal::Standard);
                 }
 
                 //! a regular terminal
                 inline
-                Rule & term(const char *id, const char *rx)
+                const Rule & term(const char *id, const char *rx)
                 {
                     const string _(id),__(rx); return term(_,__);
                 }
 
-                //! an univocal=alias terminal
+                //! an univocal=one sole possible result
                 inline
-                Rule & alias( const string &id, const string &rx )
+                const Rule & sole( const string &id, const string &rx )
                 {
                     return __term(id,rx,Terminal::Univocal);
                 }
 
-                //! an univocal=alias terminal
+                //! an univocal=one sole possible terminal
                 inline
-                Rule & alias(const char *id, const char *rx)
+                const Rule & sole(const char *id, const char *rx)
                 {
-                    const string _(id),__(rx); return alias(_,__);
+                    const string _(id),__(rx); return sole(_,__);
                 }
 
+                //! just a semantic marker
+                inline
+                const Rule & mark(const string &id, const string &rx )
+                {
+                    return __term(id,rx,Terminal::Semantic);
+                }
+
+                //! just a semantic marker
+                inline
+                const Rule & mark(const char *id, const char *rx)
+                {
+                    const string _(id),__(rx); return mark(_,__);
+                }
 
                 //! parse the source
                 inline Node *parse( Source &source )
                 {
                     return Node::AST( run(*this,source) );
                 }
+                
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);

@@ -48,6 +48,18 @@ userDict(0)
                 }
             }
 
+            const Rule * Scanner:: getRuleByLabel(const string &id) const throw()
+            {
+                for(const Rule *r = rules.head; r; r=r->next )
+                {
+                    if(id==*(r->label))
+                    {
+                        return r;
+                    }
+                }
+                return 0;
+            }
+
         }
 
     }
