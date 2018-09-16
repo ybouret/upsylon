@@ -80,7 +80,17 @@ namespace upsylon
                 {
                     throw exception("no lexical rule '%s'", *id);
                 }
-                return terminal(id);
+
+                Grammar    &G = *this;
+                const Rule *r = G.getRuleByName(id);
+                if(r)
+                {
+                    return *r;
+                }
+                else
+                {
+                    return terminal(id);
+                }
             }
 
 
