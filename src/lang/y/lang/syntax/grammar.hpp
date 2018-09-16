@@ -16,7 +16,7 @@ namespace upsylon
             class Grammar
             {
             public:
-                typedef vector<string,memory::pooled> Strings;
+                typedef vector<string,memory::pooled> Strings; //!< internally used
 
                 const Origin name; //!< shared name
                 
@@ -43,7 +43,7 @@ namespace upsylon
                 inline
                 const Rule * getRuleByName(const char   *id) const
                 {
-                    const string _ = id; return getRuleByName(_);
+                    const string _(id); return getRuleByName(_);
                 }
 
                 //! run

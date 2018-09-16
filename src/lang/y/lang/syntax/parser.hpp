@@ -11,11 +11,12 @@ namespace upsylon
     {
         namespace Syntax
         {
+            //! a parser linking a Lexer and a Grammar
             class Parser : public Lexical::Translator, public Grammar
             {
             public:
-                explicit Parser(const string &id);
-                virtual ~Parser() throw();
+                explicit Parser(const string &id); //!< initialize
+                virtual ~Parser() throw();         //!< destructor
 
                 //! create a new terminal
                 Rule & __term(const string &id, const string &rx, const Terminal::Attribute attr);
@@ -46,6 +47,13 @@ namespace upsylon
                 Rule & alias(const char *id, const char *rx)
                 {
                     const string _(id),__(rx); return alias(_,__);
+                }
+
+
+                //! parse the source
+                inline Node *parse( Source &source )
+                {
+                    return Node::AST( run(*this,source) );
                 }
 
             private:

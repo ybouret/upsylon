@@ -11,6 +11,7 @@ namespace upsylon
         namespace Lexical
         {
 
+            //! base class for a String like plugin
             class __String : public Plugin
             {
             public:
@@ -20,6 +21,7 @@ namespace upsylon
                 Token content; //!< collected
                 
             protected:
+                //! initialize with return type=id, and delimiter=ch
                 explicit __String(Translator &tr,const string &id, const char *ch);
 
             private:
@@ -28,7 +30,7 @@ namespace upsylon
                 void Forward(const Token &);
                 void EscCopy(const Token &); //!< quote(s)
                 void EscCode(const Token &); //!< \n, \r, \t,...
-                void EscHexa(const Token &);
+                void EscHexa(const Token &); //!< \xhh
             };
 
             //! almost json string, between double quotes
