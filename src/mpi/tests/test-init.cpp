@@ -24,6 +24,13 @@ Y_UTEST(init)
         MPI.Send(MPI.nodeName,0,mpi::io_tag);
     }
 
+    int value = alea.leq(100);
+    MPI.print(stderr, "initial value=%d\n", value);
+    MPI.Bcast(value,0);
+    MPI.print(stderr, "final   value=%d\n", value);
+
+
+
 }
 Y_UTEST_DONE()
 

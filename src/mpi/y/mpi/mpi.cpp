@@ -172,7 +172,7 @@ namespace upsylon
             }
 
             {
-                string tmp = vformat("%d.%d",size,rank);
+                string tmp = vformat("<%d.%d> ",size,rank);
                 tmp.swap_with( (string&)nodeName );
             }
 
@@ -272,14 +272,27 @@ namespace upsylon
         }
     }
 
+
+    bool mpi:: write_to(FILE *fp, const string &text) const throw()
+    {
+        const size_t n = text.size();
+        return n == fwrite( &text[0], 1, n, fp) ;
+    }
+
+
+
     void mpi:: print( FILE *fp, const char *format, ... )
     {
-        static const char fn[] = "mpi::print: ";
+        static const char fn[]  = "mpi::print: ";
 
         if(isHead)
         {
             assert(fp);
             assert(format);
+
+            // write prolog for head
+            if( !write_to(fp,nodeName)) throw libc::exception( EIO, "%swriting rank#0 name",fn);
+
             va_list args;
             va_start(args, format);
             vfprintf(fp, format, args);
@@ -288,16 +301,19 @@ namespace upsylon
             {
                 throw libc::exception( EIO, "%sformat='%s'", fn, format );
             }
+
             // then receive strings
             for(int r=1;r<size;++r)
             {
-
-                const string tmp = Recv<string>(r,io_tag);
-                if(tmp.size()!=fwrite(*tmp,1,tmp.size(),fp))
                 {
-                    throw libc::exception( EIO, "%swriting content from rank %d", fn, r);
+                    const string tmp = Recv<string>(r,io_tag);
+                    if(!write_to(fp,tmp)) throw libc::exception( EIO, "%swriting rank#%d name", fn, r);
                 }
 
+                {
+                    const string tmp = Recv<string>(r,io_tag);
+                    if(!write_to(fp,tmp)) throw libc::exception( EIO, "%swriting content from rank#%d", fn, r);
+                }
             }
         }
         else
@@ -309,7 +325,7 @@ namespace upsylon
                 char  *buffer  = databuf();
                 int    length  = int( databuf.length() );
                 if( length < 0 )
-                    throw libc::exception( ERANGE, "ostream(...) memory overflow");
+                    throw libc::exception( ERANGE, "%s(...) memory overflow", fn);
 
                 va_list ap;
                 va_start( ap, format );
@@ -319,7 +335,7 @@ namespace upsylon
 
                 if( success )
                 {
-                    //output( buffer, length_of(buffer) );
+                    Send(nodeName,0,io_tag);
                     const string tmp(buffer,length_of(buffer));
                     Send(tmp,0,io_tag);
                     return;

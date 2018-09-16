@@ -7,6 +7,7 @@
 #include "y/os/rt-clock.hpp"
 #include "y/type/spec.hpp"
 #include "y/associative/set.hpp"
+#include "y/sequence/array.hpp"
 
 #include <mpi.h>
 
@@ -92,6 +93,9 @@ namespace upsylon
             return get_data_type( typeid(T) );
         }
 
+        //! internal default channel
+        static const int io_tag = 7;
+
         //______________________________________________________________________
         //
         // point to point
@@ -143,8 +147,33 @@ namespace upsylon
             return x;
         }
 
-        static const int io_tag = 7;
-        
+        //______________________________________________________________________
+        //
+        // collective
+        //______________________________________________________________________
+
+        //! generic wrapper
+        inline void Bcast(void              *buffer,
+                          const size_t       count,
+                          const MPI_Datatype type,
+                          const int          root)
+        {
+            assert(!(0==buffer&&count>0));
+            const uint64_t mark = rt_clock::ticks();
+            Y_MPI_CHECK(MPI_Bcast(buffer,count,type,root,MPI_COMM_WORLD));
+            comTicks += rt_clock::ticks() - mark;
+        }
+
+        //! integral type wrapper
+        template <typename T>
+        inline void Bcast(T        &x,
+                          const int root)
+        {
+            static const MPI_Datatype _ = get_data_type_for<T>();
+            Bcast(&x,1,_,root);
+        }
+
+
         //! in order print message
         void print( FILE *fp, const char *fmt,... ) Y_PRINTF_CHECK(3,4);
 
@@ -160,7 +189,7 @@ namespace upsylon
 
 
         void finalizeAndCleanUp() throw();
-
+        bool write_to(FILE *fp, const string &text) const throw();
 
     public:
         static const  at_exit::longevity life_time = memory::pooled::life_time - 2;
