@@ -78,6 +78,20 @@ maxi_ = items-1
             //! set as empty
             inline void clear() throw() { addr_[(size_=0)]=0; }
 
+            //! force 0
+            inline void ldz() throw()
+            {
+                size_=0;
+                memset(addr_,0,bytes);
+            }
+
+            //! force size
+            inline void force( const size_t n ) throw()
+            {
+                assert(n<=maxi_);
+                addr_[ (size_=n) ] = 0;
+            }
+
             //! default constructor
             inline string() : Y_CORE_STRING_CTOR(0)
             {

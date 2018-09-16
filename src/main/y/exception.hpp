@@ -13,7 +13,7 @@ namespace upsylon
     {
     public:
         //! aligned internal space
-        static const size_t max_length = 256-sizeof(std::exception);
+        static const size_t max_length = 512-sizeof(std::exception);
 
         //! default destructor
         virtual ~exception() throw();
