@@ -15,7 +15,8 @@ namespace upsylon
 
             Parser:: Parser(const string &id) :
             Lexical::Translator(id),
-            Grammar(label)
+            Grammar(label),
+            root( **static_cast<Lexer *>(this) )
             {
             }
 
@@ -23,8 +24,7 @@ namespace upsylon
             {
                 static const char fn[] = "Parser:terminal: ";
                 Grammar &G = *this;
-                Lexer   &L = *this;
-                Scanner &S = *L;
+                Scanner &S = root;
 
                 const Rule *rule = G.getRuleByName(id);
                 if( rule )
@@ -71,6 +71,16 @@ namespace upsylon
                     return G.terminal(id,attr);  // register in Grammar
                 }
 
+            }
+
+
+            const Rule & Parser:: term(const string &id)
+            {
+                if(root.getRuleByLabel(id)==NULL)
+                {
+                    throw exception("no lexical rule '%s'", *id);
+                }
+                return terminal(id);
             }
 
 

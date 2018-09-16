@@ -1,4 +1,6 @@
 #include "y/lang/syntax/parser.hpp"
+#include "y/lang/lexical/plugin/comment.hpp"
+
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -11,7 +13,9 @@ namespace
     public:
         explicit myParser() : Syntax::Parser("JSON")
         {
+            hook<Lexical::CXX_Comment>("C++ Comment");
 
+            
         }
 
 

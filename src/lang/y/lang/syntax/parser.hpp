@@ -28,6 +28,10 @@ namespace upsylon
                     return __term(id,rx,Terminal::Standard);
                 }
 
+                //! a regular terminal linking to a lexical rule (a.k.a plugin)
+                const Rule & term( const string &id );
+
+
                 //! a regular terminal
                 inline
                 const Rule & term(const char *id, const char *rx)
@@ -63,12 +67,30 @@ namespace upsylon
                     const string _(id),__(rx); return mark(_,__);
                 }
 
+                //! lexical plugin, no lexeme production, 0 argument
+                template <typename PLUGIN> inline
+                void hook( const string &pluginName )
+                {
+                    Lexer &L = *this;
+                    L.hook<PLUGIN>(*L,pluginName);
+                }
+
+                //! lexical plugin, no lexeme production, 0 argument
+                template <typename PLUGIN> inline
+                void hook( const char *pluginName )
+                {
+                    const string _(pluginName); hook<PLUGIN>(_);
+                }
+
+
                 //! parse the source
                 inline Node *parse( Source &source )
                 {
                     return Node::AST( run(*this,source) );
                 }
-                
+
+            protected:
+                Scanner &root; //!< root scanner
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);
