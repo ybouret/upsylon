@@ -18,6 +18,18 @@ namespace upsylon
             {
             }
 
+            Rule & Parser:: __term( const string &id, const string &rx, const Terminal::Attribute attr)
+            {
+                // register in lexer
+                Lexer   &lexer = *this;
+                Scanner &root  = *lexer;
+
+                // register in grammar
+                root.emit(id,rx);
+                return terminal(id,attr);
+            }
+
+
         }
     }
 }

@@ -3,6 +3,7 @@
 #include "y/lang/syntax/joker.hpp"
 
 #include "y/lang/syntax/grammar.hpp"
+#include "y/lang/lexical/plugin/comment.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ios/icstream.hpp"
@@ -24,9 +25,10 @@ namespace
             root.emit("ID", "[:alpha:]+");
             root.emit("INT", "[:digit:]+");
             root.emit("END", ";");
-            //root.emit("EQ",  "=");
+            root.emit("EQ",  "=");
             root.endl("endl",  "[:endl:]");
             root.drop("blanks","[:blank:]+");
+            hook<Lexical::CXX_Comment>(root,"CXX_Comment");
         }
 
         virtual ~myLex() throw()
@@ -62,13 +64,18 @@ Y_UTEST(grammar)
     Syntax::Rule &ID  = G.terminal("ID");
     Syntax::Rule &INT = G.terminal("INT");
     Syntax::Rule &END = G.terminal("END",Syntax::Terminal::Semantic);
-    //Syntax::Rule &EQ  = G.terminal("EQ");
+    Syntax::Rule &EQ  = G.terminal("EQ", Syntax::Terminal::Univocal);
 
     Syntax::Aggregate &show = G.agg("show");
     show << G.choice(ID,INT) << END;
 
+    Syntax::Aggregate &assign = G.agg("assign");
+    assign << ID << EQ << G.choice(ID,INT) << END;
+
     Syntax::Aggregate &code = G.agg("code");
-    code << G.zeroOrMore(show);
+    code << G.zeroOrMore( G.choice(assign,show) );
+
+
 
     G.top( code );
 
@@ -83,6 +90,11 @@ Y_UTEST(grammar)
             auto_ptr<Syntax::Node> Tree = G.run(lexer,source);
             assert(Tree.is_valid());
             Tree->GraphViz("tree.dot");
+            {
+                Syntax::Node *tree = Tree.yield();
+                Tree = Syntax::Node::AST(tree);
+            }
+            Tree->GraphViz("ast.dot");
         }
         std::cerr << "...done" << std::endl;
     }

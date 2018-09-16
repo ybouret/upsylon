@@ -4,6 +4,7 @@
 
 #include "y/lang/syntax/terminal.hpp"
 #include "y/lang/syntax/compound.hpp"
+#include "y/sequence/vector.hpp"
 
 namespace upsylon
 {
@@ -15,6 +16,8 @@ namespace upsylon
             class Grammar
             {
             public:
+                typedef vector<string,memory::pooled> Strings;
+
                 const Origin name; //!< shared name
                 
                 //______________________________________________________________
@@ -53,10 +56,10 @@ namespace upsylon
                 //______________________________________________________________
 
                 //! a new terminal
-                inline Rule & terminal( const string &id, const Terminal::Type attr=Terminal::Standard ) { return __add( new Terminal(id,attr) ); }
+                inline Rule & terminal( const string &id, const Terminal::Attribute attr=Terminal::Standard ) { return __add( new Terminal(id,attr) ); }
 
                 //! a new terminal
-                inline Rule & terminal( const char   *id, const Terminal::Type attr=Terminal::Standard ) { const string _(id); return terminal(_,attr); }
+                inline Rule & terminal( const char   *id, const Terminal::Attribute attr=Terminal::Standard ) { const string _(id); return terminal(_,attr); }
 
                 Rule & optional( const Rule &r );                    //!< optional rule
                 Rule & repeating( const Rule &r, const size_t nmin); //!< repeating >= nmin
@@ -87,6 +90,10 @@ namespace upsylon
                 //! choice
                 const Rule & choice(const Rule &a1, const Rule &a2);
 
+                //! choice
+                const Rule & choice(const Rule &a1, const Rule &a2, const Rule &a3);
+
+
                 //! check the rule belongs to the grammar
                 bool  owns( const Rule &r ) const throw();
 
@@ -113,6 +120,9 @@ namespace upsylon
                 MetaRule::Set rdb;
                 unsigned      altID;
                 string        nextAltID();
+
+                static string MakeAltNameFrom( array<string> &names );
+
             };
         }
     }

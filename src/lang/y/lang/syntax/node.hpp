@@ -76,6 +76,9 @@ namespace upsylon
                 //! return into lexer
                 static void BackTo( Lexical::Translator &lexer, Node *node ) throw();
 
+                //! return AST operations
+                static Node *AST( Node *node ) throw();
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
                 void *impl;

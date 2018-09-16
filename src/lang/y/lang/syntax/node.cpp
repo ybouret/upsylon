@@ -106,7 +106,14 @@ namespace upsylon
                 if(terminal)
                 {
                     const string LexID = lexeme.to_print();
-                    fp("[label=\"%s='%s'\",shape=box];\n",*RuleID,*LexID);
+                    if(LexID.size()>0)
+                    {
+                        fp("[label=\"%s='%s'\",shape=box,style=bold];\n",*RuleID,*LexID);
+                    }
+                    else
+                    {
+                        fp("[label=\"%s\",shape=box,style=rounded];\n",*RuleID);
+                    }
                 }
                 else
                 {

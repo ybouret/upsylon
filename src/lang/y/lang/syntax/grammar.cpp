@@ -26,10 +26,14 @@ namespace upsylon
                 return ans;
             }
 
+
+
             const Rule & Grammar:: choice(const Rule &a1, const Rule &a2)
             {
-                const string id = a1.name + '|' + a2.name;
-                const Rule *r = getRuleByName(id);
+                Strings names(2,as_capacity);
+                names << a1.name << a2.name;
+                const string id = MakeAltNameFrom(names);
+                const Rule  *r  = getRuleByName(id);
                 if(r)
                 {
                     return *r;
@@ -40,6 +44,24 @@ namespace upsylon
                     return a<<a1<<a2;
                 }
             }
+
+            const Rule & Grammar:: choice(const Rule &a1, const Rule &a2, const Rule &a3)
+            {
+                Strings names(3,as_capacity);
+                names << a1.name << a2.name<< a3.name;
+                const string id = MakeAltNameFrom(names);
+                const Rule  *r  = getRuleByName(id);
+                if(r)
+                {
+                    return *r;
+                }
+                else
+                {
+                    Compound  &a = alt(id);
+                    return a<<a1<<a2<<a3;
+                }
+            }
+
 
 
             void Grammar:: add(Rule *rule)
@@ -84,17 +106,6 @@ namespace upsylon
             {
                 if(!rules.owns(&rule)) throw exception("{%s}.top(unregistered '%s')", **name, *(rule.name) );
                 rules.move_to_front((Rule*)&rule);
-#if 0
-                if(rule==NULL)
-                {
-                    if(rules.size) throw exception("{%s} try to set top=NULL",**name);
-                }
-                else
-                {
-                    if(!rules.owns(rule)) throw exception("{%s}.top(unregistered '%s')", **name, *(rule->name) );
-                    rules.move_to_front((Rule*)rule);
-                }
-#endif
             }
 
 
@@ -129,6 +140,41 @@ namespace upsylon
 
             }
 
+        }
+    }
+}
+
+#include "y/sort/heap.hpp"
+
+namespace upsylon
+{
+    namespace Lang
+    {
+        namespace Syntax
+        {
+            string Grammar:: MakeAltNameFrom( array<string> &names )
+            {
+                const size_t n = names.size();
+                switch(n)
+                {
+                    case 0: return string();
+                    case 1: return names[1];
+                    default:
+                        break;
+
+                }
+
+                hsort(names,string::compare);
+                string ans;
+                ans << '(';
+                for(size_t i=1;i<n;++i)
+                {
+                    ans << names[i] << '|';
+                }
+                ans << names[n];
+                ans << ')';
+                return ans;
+            }
         }
     }
 }

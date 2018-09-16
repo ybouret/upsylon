@@ -9,10 +9,11 @@ namespace upsylon
         {
             Terminal:: ~Terminal() throw() {}
 
-            Terminal:: Terminal(const string &id, const Type attr ) :
+            Terminal:: Terminal(const string &id, const Attribute flag ) :
             Rule(UUID,id),
-            type(attr)
+            attr(flag)
             {
+                data = &attr;
             }
 
             bool Terminal:: accept( Y_LANG_SYNTAX_RULE_ARGS ) const
@@ -40,14 +41,14 @@ namespace upsylon
 
             const char * Terminal:: __style() const throw()
             {
-                switch(type)
+                switch(attr)
                 {
-                    case Univocal: return "dashed";
-                    case Semantic: return "dotted";
+                    case Univocal: return "rounded";
+                    case Semantic: return "dashed";
                     default:
                         break;
                 }
-                return "solid";
+                return "bold";
             }
           
             bool Terminal:: hollow() const throw()

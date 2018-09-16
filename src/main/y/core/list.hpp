@@ -63,7 +63,12 @@ head = tail = node; size = 1
                     tail       = node;
                     ++size;
                 }
+            }
 
+            //! append node, syntactic helper
+            inline list_of & operator<<( NODE *node ) throw()
+            {
+                push_back(node); return *this;
             }
 
             //! prepend a NODE

@@ -102,8 +102,8 @@ namespace upsylon
                 //! true if one of the operand accepts
                 virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const;
 
-                virtual const char * __shape() const throw() { return "egg"; }
-                //virtual const char * __style() const throw() { return "dashed"; }
+                virtual const char * __shape() const throw() { return "oval"; }
+
                 //! true if one of the member is hollow
                 virtual bool hollow() const throw();
 

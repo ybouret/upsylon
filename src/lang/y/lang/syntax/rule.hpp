@@ -24,13 +24,14 @@ namespace upsylon
                 const string   name; //!< user's identifier
                 Rule          *next; //!< for list
                 Rule          *prev; //!< for list
-
+                const void    *data; //!< derived data for AST...
+                
                 virtual ~Rule()  throw(); //!< destructor
 
                 //! virtual accept method
                 virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const = 0;
 
-                //! if can accept NULL tree
+                //! if can accept and not grow!
                 virtual bool hollow() const throw() = 0;
 
 

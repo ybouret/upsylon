@@ -17,7 +17,8 @@ namespace upsylon
             uuid(t),
             name(id),
             next(0),
-            prev(0)
+            prev(0),
+            data(0)
             {
             }
 

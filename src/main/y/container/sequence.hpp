@@ -40,6 +40,9 @@ namespace upsylon
         //! remove first item
         virtual void pop_front() throw() = 0;
 
+        //! syntactic helper
+        inline sequence & operator<<( param_type args ) { push_back(args); return *this; }
+        
     protected:
         //! constructor
         explicit sequence() throw() : container() {}

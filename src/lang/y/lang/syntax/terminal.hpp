@@ -16,21 +16,22 @@ namespace upsylon
             class Terminal : public Rule
             {
             public:
-                //! syntax type
-                enum Type
+                //! class  identfier
+                static const uint32_t UUID = Y_FOURCC('T', 'E', 'R', 'M');
+
+                //! different attributes
+                enum Attribute
                 {
                     Standard, //!< keep content
                     Univocal, //!< alias for label
                     Semantic  //!< semantic only, discardable
                 };
 
-                //! class  identfier
-                static const uint32_t UUID = Y_FOURCC('T', 'E', 'R', 'M');
+                //! self attribute
+                const Attribute attr;
 
-                const Type type; //!< syntax type
-
-                explicit Terminal( const string &id, const Type attr=Standard); //!< initialize
-                virtual ~Terminal() throw();                                    //!< destructor
+                explicit Terminal( const string &id, const Attribute flag=Standard); //!< initialize
+                virtual ~Terminal() throw();                                         //!< destructor
 
                 //! accept if there is a lexeme with label==name
                 virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const;
