@@ -127,6 +127,18 @@ namespace upsylon
             Send( &x, 1, _, target, tag);
         }
 
+        //! Send array of integral types
+        template <typename T> inline
+        void Send( const array<T> &arr, const int target, const int tag )
+        {
+            static const MPI_Datatype _ = get_data_type_for<T>();
+            const size_t n = arr.size();
+            if(n>0)
+            {
+                Send(*arr,n,_,target,tag );
+            }
+        }
+
         //! MPI_Recv
         inline void Recv(void              *buffer,
                          const size_t       count,
@@ -149,6 +161,62 @@ namespace upsylon
             T x(0);
             Recv( &x, 1, _, source, tag);
             return x;
+        }
+
+        //! Recv array of integral types
+        template <typename T> inline
+        void Send( array<T> &arr, const int target, const int tag )
+        {
+            static const MPI_Datatype _ = get_data_type_for<T>();
+            const size_t n = arr.size();
+            if(n>0)
+            {
+                Recv(*arr,n,_,target,tag );
+            }
+        }
+
+        //! Sendrecv
+        inline void Sendrecv(const void        *sendbuf,
+                             const size_t       sendcount,
+                             const MPI_Datatype sendtype,
+                             const int          target,
+                             const int          sendtag,
+                             void              *recvbuf,
+                             const size_t       recvcount,
+                             const MPI_Datatype recvtype,
+                             const int          source,
+                             const int          recvtag)
+        {
+            const uint64_t mark = rt_clock::ticks();
+            MPI_Status status;
+            Y_MPI_CHECK(MPI_Sendrecv(sendbuf, sendcount, sendtype, target, sendtag,
+                                     recvbuf, recvcount, recvtype, source, recvtag,
+                                     MPI_COMM_WORLD, &status) );
+            comTicks += rt_clock::ticks() - mark;
+        }
+
+        //! integral send/recv
+        template <typename T,typename U>
+        inline void Sendrecv(const T &x, const int target, const int sendtag,
+                             U       &y, const int source, const int recvtag)
+        {
+            static const MPI_Datatype _t = get_data_type_for<T>();
+            static const MPI_Datatype _u = get_data_type_for<U>();
+            Sendrecv(&x,1,_t,target, sendtag,
+                     &y,1,_u,source, recvtag);
+        }
+
+        //! integral send/recv
+        template <typename T>
+        inline T  Sendrecv(const T &x,
+                           const int target, const int sendtag,
+                           const int source, const int recvtag)
+        {
+            static const MPI_Datatype _ = get_data_type_for<T>();
+            T y(0);
+            Sendrecv(&x,1,_,target, sendtag,
+                     &y,1,_,source, recvtag);
+            return y;
         }
 
         //______________________________________________________________________
@@ -177,6 +245,25 @@ namespace upsylon
             Bcast(&x,1,_,root);
         }
 
+
+        //! array of integral broadcast
+        template <typename T>
+        inline void Bcast(array<T> &arr,
+                          const int root)
+        {
+            static const MPI_Datatype _ = get_data_type_for<T>();
+            const size_t n = arr.size();
+            if(n>0)
+            {
+                Bcast(*arr,n,_,root);
+            }
+        }
+
+
+        //______________________________________________________________________
+        //
+        // I/O helpers
+        //______________________________________________________________________
 
         //! in order print message
         void print( FILE *fp, const char *fmt,... ) Y_PRINTF_CHECK(3,4);
