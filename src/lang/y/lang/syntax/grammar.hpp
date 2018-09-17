@@ -100,6 +100,14 @@ namespace upsylon
                 //! output as GraphViz
                 void GraphViz( const string &filename ) const;
 
+                //! check the grammar
+                /**
+                 -- has a top level, non hollow rule
+                 -- no undeclared rule
+                 -- no standalone rule
+                 */
+                void checkValidity() const;
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 class MetaRule

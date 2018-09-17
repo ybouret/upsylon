@@ -113,6 +113,9 @@ namespace upsylon
     }
 }
 
+
+
+
 #include "y/ios/graphviz.hpp"
 
 namespace upsylon
@@ -179,6 +182,90 @@ namespace upsylon
     }
 }
 
+#include "y/lang/syntax/joker.hpp"
+namespace upsylon
+{
+    namespace Lang
+    {
+        namespace Syntax
+        {
+
+
+            namespace
+            {
+                typedef map<string,int> visited_map;
+
+                static inline
+                void visit( const Rule *rule, visited_map &vmap, const char *g )
+                {
+                    assert(rule);
+                    const string &id     = *(rule->name);
+                    int          *pCount = vmap.search(id);
+                    if(!pCount)
+                    {
+                        throw exception("{%s} unregistered rule '%s'", g, *id);
+                    }
+                    int & count = *pCount;
+                    if(count>0)
+                    {
+                        return; // already visited
+                    }
+                    else
+                    {
+                        ++count;
+                        std::cerr << "..visit '" << id << "'" << std::endl;
+                        switch(rule->uuid)
+                        {
+                            case Terminal::UUID: // noting else to do!
+                                break;
+
+                            case Optional::UUID:
+                            case Repeating::UUID:
+                                assert(rule->data);
+                                visit( static_cast<const Rule *>(rule->data), vmap, g);
+                                break;
+
+                            case Aggregate::UUID:
+                            case Alternate::UUID:
+                                for( const Operand *op = static_cast<const Operand::List *>(rule->data)->head; op; op=op->next)
+                                {
+                                    visit( &(op->rule), vmap, g);
+                                }
+                                break;
+
+                            default:
+                                throw exception("{%s} found unexpected identifier for rule '%s'", g, *id);
+                        }
+                    }
+                }
+
+            }
+
+            void Grammar:: checkValidity() const
+            {
+                if(rules.size<=0) throw exception("{%s} no rules",**name);
+                const Rule *top = rules.head;
+                if(top->hollow()) throw exception("{%s} top level rule '%s' is hollow", **name, *(top->name) );
+                visited_map vmap(rules.size,as_capacity);
+                for(const Rule *r=top;r;r=r->next)
+                {
+                    if(!vmap.insert(*(r->name),0))
+                    {
+                        throw exception("{%s} unexpected failure to visit '%s'", **name, *(r->name));
+                    }
+                }
+                visit(top,vmap,**name);
+                for(visited_map::iterator i=vmap.begin();i!=vmap.end();++i)
+                {
+                    const string &id    = i.key();
+                    const int     count = *i;
+                    if(!count) throw exception("{%s} standalone rule '%s'", **name, *id);
+                }
+            }
+
+        }
+    }
+}
 
 
 

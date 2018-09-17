@@ -16,6 +16,7 @@ namespace upsylon
             Rule(t,id),
             rule(jk)
             {
+                data = &jk;
             }
             
 

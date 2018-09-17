@@ -80,7 +80,8 @@ Y_UTEST(grammar)
     G.top( code );
 
     G.GraphViz("gram.dot");
-
+    G.checkValidity();
+    
 
     if(argc>1&&0==strcmp(argv[1],"run"))
     {

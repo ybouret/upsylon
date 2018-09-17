@@ -44,6 +44,8 @@ namespace upsylon
             Rule(t,id),
             Operand::List()
             {
+                Operand::List &l = *this;
+                data = &l;
             }
 
             void Compound:: epilog( ios::ostream &fp ) const
