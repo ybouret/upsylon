@@ -25,7 +25,9 @@ namespace upsylon
         static const char *address( const void *addr ) throw();
 
         //! return the decimal value, -1 on error
-        static int to_decimal(const char h) throw();
+        static int  to_decimal(const char h) throw();
+        //! get the xdigit from last fourbits
+        static char digit(const unsigned fourBits);
     };
 
     //! convert a byte into a visible char

@@ -23,7 +23,8 @@ namespace
             Alt &value    = alt("value");
             value << term("string") << sole("null") << sole("true") << sole("false") << term("number","-?[:digit:]+");
 
-            const Rule &COMA   = mark(",",",");
+            const Rule &COMA   = mark(',');
+            
             Alt &jArray = alt("array");
             {
                 const Rule &LBRACK = mark("[","\\[");

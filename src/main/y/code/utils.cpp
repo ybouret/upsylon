@@ -108,6 +108,14 @@ namespace upsylon
         }
         return -1;
     }
+
+    char hexadecimal:: digit(const unsigned fourBits)
+    {
+        static const char xd[16] = {
+            '0', '1', '2', '3', '4', '5', '6', '7',
+            '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+        return xd[ fourBits & 0xf ];
+    }
     
     const char *visible_char[256] =
     {

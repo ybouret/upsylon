@@ -117,7 +117,7 @@ namespace upsylon
                 }
                 else
                 {
-                    fp("[label=\"%s\",shape=egg];\n",*RuleID);
+                    fp("[label=\"%s\",shape=house];\n",*RuleID);
                     for(const Node *sub = children.head;sub;sub=sub->next)
                     {
                         sub->viz(fp);

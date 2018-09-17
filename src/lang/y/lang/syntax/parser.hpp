@@ -4,6 +4,7 @@
 
 #include "y/lang/syntax/grammar.hpp"
 #include "y/lang/lexical/translator.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon
 {
@@ -70,6 +71,7 @@ namespace upsylon
                     return sole(rx,rx);
                 }
 
+
                 //! just a semantic marker
                 inline
                 const Rule & mark(const string &id, const string &rx )
@@ -82,6 +84,16 @@ namespace upsylon
                 const Rule & mark(const char *id, const char *rx)
                 {
                     const string _(id),__(rx); return mark(_,__);
+                }
+
+                //! make a single char mark
+                inline
+                const Rule & mark( const char C )
+                {
+                    const unsigned B     = C;
+                    const char     id[4] = { C, 0, 0, 0 };
+                    const char     rx[8] = { '\\', 'x', hexadecimal::digit(B>>4), hexadecimal::digit(B), 0 };
+                    return mark(id,rx);
                 }
 
                 //! lexical plugin, no lexeme production, 0 argument

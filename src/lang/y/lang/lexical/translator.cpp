@@ -62,7 +62,7 @@ dict()
             void Translator:: link(Scanner &scanner,
                                    Plugin  &plugin)
             {
-                std::cerr << "PLUGIN[" << scanner.label << "->" << plugin.label << "] on '" << plugin.trigger << "'" << std::endl;
+                std::cerr << "plug[" << scanner.label << "->" << plugin.label << "] on '" << plugin.trigger << "'" << std::endl;
                 
                 scanner.call(*(plugin.label),plugin.trigger, &plugin, & Plugin::Init );
             }
