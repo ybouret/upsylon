@@ -75,7 +75,7 @@ namespace
             root.endl("endl", "[:endl:]");
             root.drop("ws","[:blank:]");
 
-            //checkValidity();
+            checkValidity();
             GraphViz("json.dot");
 
         }
