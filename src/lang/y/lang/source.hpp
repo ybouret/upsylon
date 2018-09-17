@@ -43,10 +43,8 @@ namespace upsylon
             template <typename T>
             inline T read(const char *field=NULL)
             {
-                std::cerr << "Reading " << sizeof(T) << std::endl;
                 T ans(0);
-                return ans;
-                //input(&ans,sizeof(T),field);
+                input(&ans,sizeof(T),field);
                 return swap_be_as<T>(ans);
             }
 

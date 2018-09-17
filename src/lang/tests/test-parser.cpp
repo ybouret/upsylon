@@ -106,6 +106,7 @@ Y_UTEST(parser)
         {
             Source reload( Module::OpenFile("tree.bin") );
             auto_ptr<Syntax::Node> node = Syntax::Node::Load(reload,json);
+            node->GraphViz("tree2.dot");
         }
     }
     

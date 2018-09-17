@@ -279,12 +279,10 @@ namespace upsylon
                              const  Grammar &grammar)
             {
                 static const char fn[] = "Node::Load: ";
-                std::cerr << "Reading Rule Name" << std::endl;
                 const string ruleName = source.load_binary();
-                exit(0);
-
+                
                 std::cerr << "RuleName=" << ruleName << std::endl;
-                return NULL;
+                
 
                 const Rule  *ruleAddr = grammar.getRuleByName(ruleName);
 
@@ -304,6 +302,7 @@ namespace upsylon
                         {
                             Char *ch = source.get();
                             if(!ch) throw exception("%s: End Of Module while reading lexeme from rule '%s'", fn, *ruleName);
+                            lexeme->push_back(ch);
                         }
                     }
                     return Node::Create(rule,lexeme.yield());

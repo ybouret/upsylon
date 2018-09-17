@@ -132,6 +132,7 @@ namespace upsylon
                 else
                 {
                     *(p++) = ch->code;
+                    ++count;
                     delete ch;
                 }
             }
@@ -150,11 +151,7 @@ namespace upsylon
 
         string Source:: load_binary()
         {
-            std::cerr << "Reading String Size" << std::endl;
             const size_t n = read<uint32_t>("string size/32-bits");
-            std::cerr << "|_size=" << n << std::endl;
-            exit(0);
-            
             string ans(n,as_capacity);
             assert(ans.capacity()>=n);
             input( *ans, n, "string content");
