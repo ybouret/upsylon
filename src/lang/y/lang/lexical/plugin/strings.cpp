@@ -57,7 +57,7 @@ namespace upsylon
             void __String:: Forward(const Token &t)
             {
                 Collect(t);
-                std::cerr << "leave " << label << " with '" << content << "'" << std::endl;
+                //std::cerr << "leave " << label << " with '" << content << "'" << std::endl;
                 Lexeme *lx = new Lexeme(label);
                 lx->swap_with(content);
                 lexer.unget(lx);

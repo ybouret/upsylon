@@ -45,8 +45,8 @@ namespace upsylon
                 string id = r.name;
                 switch(nmin)
                 {
-                    case 0: id << '*'; break;
-                    case 1: id << '+'; break;
+                    case 0:  id << '*'; break;
+                    case 1:  id << '+'; break;
                     default: id << vformat(">=%u",unsigned(nmin)); break;
                 }
 

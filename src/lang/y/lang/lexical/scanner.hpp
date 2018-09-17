@@ -35,7 +35,7 @@ namespace upsylon
                                 const Motif       &ruleMotif,
                                 const CODE        &ruleEvent)
                 {
-                    std::cerr << "scan[" << label << "].add( '" << ruleLabel << "')" << std::endl;
+                    std::cerr << "..scan[" << label << "].add( '" << ruleLabel << "' )" << std::endl;
                     checkLabel(ruleLabel);
                     rules.push_back( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
@@ -95,7 +95,7 @@ namespace upsylon
                           OBJECT_POINTER  host,
                           METHOD_POINTER  meth)
                 {
-                    const string       id        = "jump@" + target;
+                    const string       id        = "->" + target;
                     const Origin       ruleLabel = new string(id);
                     const Motif        ruleMotif = Compile::RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);
@@ -172,7 +172,7 @@ namespace upsylon
                           OBJECT_POINTER  host,
                           METHOD_POINTER  meth)
                 {
-                    const string       id        = "quit_" + *label + "." + rx;
+                    const string       id        = "<=" + *label + "." + rx;
                     const Origin       ruleLabel = new string(id);
                     const Motif        ruleMotif = Compile::RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);

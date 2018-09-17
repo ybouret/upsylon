@@ -213,7 +213,7 @@ namespace upsylon
                     else
                     {
                         ++count;
-                        std::cerr << "..visit '" << id << "'" << std::endl;
+                        //std::cerr << "..visit '" << id << "'" << std::endl;
                         switch(rule->uuid)
                         {
                             case Terminal::UUID: // noting else to do!
