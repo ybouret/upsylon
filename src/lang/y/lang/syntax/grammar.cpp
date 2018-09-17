@@ -189,8 +189,6 @@ namespace upsylon
     {
         namespace Syntax
         {
-
-
             namespace
             {
                 typedef map<string,int> visited_map;
@@ -268,6 +266,20 @@ namespace upsylon
     }
 }
 
+namespace upsylon
+{
+    namespace Lang
+    {
+        namespace Syntax
+        {
+
+            Node *Load( ios::istream &fp, const Grammar &G)
+            {
+                
+            }
+        }
+    }
+}
 
 
 

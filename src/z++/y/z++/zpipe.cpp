@@ -19,11 +19,13 @@ namespace upsylon
 		
         static voidpf _zpipe_acquire( voidpf , uInt items, uInt size )
         {
+            Y_LOCK(memory::global::access);
             return calloc(items,size);
         }
 		
         static void   _zpipe_release( voidpf, voidpf address ) throw()
         {
+            Y_LOCK(memory::global::access);
             free( address );
         }
 		

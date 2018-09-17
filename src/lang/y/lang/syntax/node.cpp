@@ -151,7 +151,31 @@ namespace upsylon
 
             }
 
-
+            void Node:: save( ios::ostream &fp ) const
+            {
+                //! creator
+                fp.emit<uint32_t>(rule.name.size());
+                fp << rule.name;
+                
+                if(terminal)
+                {
+                    fp.write(0);
+                    fp.emit<uint32_t>( lexeme.size );
+                    for(const Char *ch=lexeme.head;ch;ch=ch->next)
+                    {
+                        fp.write(ch->code);
+                    }
+                }
+                else
+                {
+                    fp.write(1);
+                    fp.emit<uint32_t>( children.size );
+                    for(const Node *ch=children.head;ch;ch=ch->next)
+                    {
+                        ch->save(fp);
+                    }
+                }
+            }
         }
     }
 }

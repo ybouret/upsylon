@@ -98,6 +98,10 @@ Y_UTEST(parser)
         Source source( Module::OpenSTDIN() );
         auto_ptr<Syntax::Node> ast = json.parse(source);
         ast->GraphViz("tree.dot");
+        {
+            ios::ocstream fp("tree.bin");
+            ast->save(fp);
+        }
     }
     
 }

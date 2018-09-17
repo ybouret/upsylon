@@ -11,7 +11,8 @@ namespace upsylon
     {
         namespace Syntax
         {
-            class Rule; //!< forward
+            class Rule;    //!< forward declaration
+            class Grammar; //!< forward declaration
 
             //! a node of the AST
             class Node : public Object
@@ -78,6 +79,13 @@ namespace upsylon
 
                 //! return AST operations
                 static Node *AST( Node *node ) throw();
+
+                //! save to a binary form
+                void save( ios::ostream &fp ) const;
+
+                //! load from binary form and grammar
+                static Node *Load( ios::istream &fp, const Grammar &G);
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);

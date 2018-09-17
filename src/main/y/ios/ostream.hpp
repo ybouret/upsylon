@@ -33,7 +33,7 @@ namespace upsylon
                 assert(!(buffer==0&&buflen>0));
                 for(size_t i=0;i<buflen;++i) write(buffer[i]);
             }
-
+            
             //! flux for one char
             inline ostream & operator<<( const char C )
             {
