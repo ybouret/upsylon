@@ -44,7 +44,7 @@ namespace upsylon
                 switch(attr)
                 {
                     case Univocal: return "rounded";
-                    case Semantic: return "dashed";
+                    case Semantic: return "dotted";
                     default:
                         break;
                 }

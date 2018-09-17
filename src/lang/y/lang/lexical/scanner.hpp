@@ -35,6 +35,7 @@ namespace upsylon
                                 const Motif       &ruleMotif,
                                 const CODE        &ruleEvent)
                 {
+                    std::cerr << "Scanner[" << label << "].add( '" << ruleLabel << "')" << std::endl;
                     checkLabel(ruleLabel);
                     rules.push_back( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
@@ -124,6 +125,9 @@ namespace upsylon
                     const string _ = target; const string __ = rx; jump(_,__);
                 }
 
+                //! make the call label
+                static string CallLabel( const string &target );
+
                 //! construct a call
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 void call(const string   &target,
@@ -131,7 +135,7 @@ namespace upsylon
                           OBJECT_POINTER  host,
                           METHOD_POINTER  meth)
                 {
-                    const string       id        = "call_" + target;
+                    const string       id        = CallLabel(target);
                     const Origin       ruleLabel = new string(id);
                     const Motif        ruleMotif = Compile::RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);

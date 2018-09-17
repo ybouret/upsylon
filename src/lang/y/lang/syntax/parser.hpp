@@ -15,6 +15,9 @@ namespace upsylon
             class Parser : public Lexical::Translator, public Grammar
             {
             public:
+                typedef Syntax::Rule      Rule;    //!< alias
+                typedef Syntax::Aggregate Agg;     //!< alias
+                typedef Syntax::Alternate Alt;     //!< alias
                 explicit Parser(const string &id); //!< initialize
                 virtual ~Parser() throw();         //!< destructor
 
@@ -28,7 +31,7 @@ namespace upsylon
                     return __term(id,rx,Terminal::Standard);
                 }
 
-                //! a regular terminal linking to a lexical rule (a.k.a plugin)
+                //! a regular terminal linking to a plugin rule
                 const Rule & term( const string &id );
 
 
@@ -46,11 +49,25 @@ namespace upsylon
                     return __term(id,rx,Terminal::Univocal);
                 }
 
+                //! an univocal=one sole possible result with name=regexp
+                inline
+                const Rule & sole( const string &rx )
+                {
+                    return sole(rx,rx);
+                }
+
                 //! an univocal=one sole possible terminal
                 inline
                 const Rule & sole(const char *id, const char *rx)
                 {
                     const string _(id),__(rx); return sole(_,__);
+                }
+
+                //! an univocal=one sole possible result with name=regexp
+                inline
+                const Rule & sole( const char *rx )
+                {
+                    return sole(rx,rx);
                 }
 
                 //! just a semantic marker

@@ -76,12 +76,14 @@ namespace upsylon
 
             const Rule & Parser:: term(const string &id)
             {
-                if(root.getRuleByLabel(id)==NULL)
+                Grammar     &G      = *this;
+                const string toCall = Scanner::CallLabel(id);
+                
+                if(root.getRuleByLabel(toCall)==NULL)
                 {
-                    throw exception("no lexical rule '%s'", *id);
+                    throw exception("{%s} no lexical rule '%s'", **(G.name), *toCall);
                 }
 
-                Grammar    &G = *this;
                 const Rule *r = G.getRuleByName(id);
                 if(r)
                 {

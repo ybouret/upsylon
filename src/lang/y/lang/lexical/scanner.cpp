@@ -60,7 +60,12 @@ userDict(0)
                 return 0;
             }
 
-        }
+            string Scanner::CallLabel( const string &target )
+            {
+                return "call_" + target;
+            }
 
+
+        }
     }
 }

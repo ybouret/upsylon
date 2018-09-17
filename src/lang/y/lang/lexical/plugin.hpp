@@ -22,7 +22,7 @@ namespace upsylon
 
                 const string trigger;                 //!< triggering expression
                 virtual void Init(const Token &) = 0; //!< what do do when plugin is called
-
+                
             protected:
                 explicit Plugin(Translator &attached, const string &id, const char   *rx); //!< initialize
                 explicit Plugin(Translator &attacher, const string &id, const string &rx); //!< initialize
