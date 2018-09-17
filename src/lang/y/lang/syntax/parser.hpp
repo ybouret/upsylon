@@ -82,6 +82,20 @@ namespace upsylon
                     const string _(pluginName); hook<PLUGIN>(_);
                 }
 
+                //! lexical plugin, no lexeme production, 0 argument
+                template <typename PLUGIN> inline
+                void hook( const string &pluginName, const char *rx )
+                {
+                    Lexer &L = *this;
+                    L.hook<PLUGIN>(*L,pluginName,rx);
+                }
+
+                //! lexical plugin, no lexeme production
+                template <typename PLUGIN> inline
+                void hook( const char *pluginName, const char *rx )
+                {
+                    const string _(pluginName), __(rx); hook<PLUGIN>(_,__);
+                }
 
                 //! parse the source
                 inline Node *parse( Source &source )
