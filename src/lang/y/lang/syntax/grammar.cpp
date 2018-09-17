@@ -227,6 +227,7 @@ namespace upsylon
 
                             case Aggregate::UUID:
                             case Alternate::UUID:
+                                assert(rule->data);
                                 for( const Operand *op = static_cast<const Compound *>(rule->data)->head; op; op=op->next)
                                 {
                                     visit( &(op->rule), vmap, g);

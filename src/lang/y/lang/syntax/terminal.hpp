@@ -28,7 +28,7 @@ namespace upsylon
                 };
 
                 //! self attribute
-                const Attribute attribute;
+                const Attribute attr;
 
                 explicit Terminal( const string &id, const Attribute flag=Standard); //!< initialize
                 virtual ~Terminal() throw();                                         //!< destructor

@@ -17,7 +17,7 @@ namespace upsylon
             public:
                 virtual ~Joker() throw(); //!< destructor
 
-                virtual const char *__shape() const throw() { return "diamond"; }
+                virtual const char *__shape() const throw() { return "cylinder"; }
                 virtual void epilog( ios::ostream &fp ) const;
 
             protected:

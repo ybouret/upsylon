@@ -40,9 +40,10 @@ namespace upsylon
             {
             }
 
-            Compound:: Compound( const uint32_t t, const string &id ) :
+            Compound:: Compound( const uint32_t t, const string &id, const bool flag) :
             Rule(t,id),
-            Operand::List()
+            Operand::List(),
+            acting(flag)
             {
                 Compound *self = this;
                 data = self;
@@ -54,8 +55,21 @@ namespace upsylon
                 for(const Operand *op=head;op;op=op->next)
                 {
                     ++i;
-                    viz_id(fp); fp << " -> "; op->rule.viz_id(fp); fp(" [label=\"%u\"];\n",i);
+                    viz_id(fp); fp << " -> "; op->rule.viz_id(fp);
+                    if(size>1)
+                    {
+                        fp(" [label=\"%u\"];\n",i);
+                    }
+                    else
+                    {
+                        fp(";\n");
+                    }
                 }
+            }
+
+            void Compound:: setActing() throw()
+            {
+                (bool &)acting = true;
             }
 
         }
@@ -75,8 +89,8 @@ namespace upsylon
             {
             }
 
-            Aggregate:: Aggregate(  const string &id ) :
-            Compound(UUID,id)
+            Aggregate:: Aggregate(  const string &id, const bool flag) :
+            Compound(UUID,id,flag)
             {
             }
 
@@ -128,7 +142,7 @@ namespace upsylon
             }
 
             Alternate:: Alternate(  const string &id ) :
-            Compound(UUID,id)
+            Compound(UUID,id,true)
             {
             }
 

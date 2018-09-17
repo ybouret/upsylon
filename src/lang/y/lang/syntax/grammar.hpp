@@ -73,10 +73,10 @@ namespace upsylon
                 Rule & oneOrMore( const Rule &r ) { return repeating(r,1); }
 
                 //! new aggregate
-                inline Aggregate & agg( const string &id ) { return __add( new Aggregate(id) ); }
+                inline Aggregate & agg( const string &id, const bool acting=false) { return __add( new Aggregate(id,acting) ); }
 
                 //! new aggregate
-                inline Aggregate & agg( const char   *id ) { const string _(id); return agg(_); }
+                inline Aggregate & agg( const char   *id, const bool acting=false) { const string _(id); return agg(_,acting); }
 
                 //! new alternation
                 inline Alternate & alt( const string &id ) { return __add( new Alternate(id) ); }

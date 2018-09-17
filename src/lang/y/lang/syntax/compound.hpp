@@ -43,6 +43,10 @@ namespace upsylon
             class Compound : public Rule, public Operand::List
             {
             public:
+                const bool acting;
+
+                void setActing() throw();
+
                 //! destructor
                 virtual ~Compound() throw();
 
@@ -52,9 +56,10 @@ namespace upsylon
                 //! linking
                 virtual void epilog( ios::ostream &fp ) const;
 
+                virtual const char * __style() const throw() { return acting ? "dashed" : "solid"; }
             protected:
                 //! initialize
-                explicit Compound(const uint32_t t, const string &id);
+                explicit Compound(const uint32_t t, const string &id, const bool flag);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compound);
@@ -66,8 +71,9 @@ namespace upsylon
             public:
                 //! class identifier
                 static const uint32_t UUID = Y_FOURCC('A','G','G',' ');;
-                explicit Aggregate(const string &id); //!< initialize
-                virtual ~Aggregate() throw();         //!< destructor
+                
+                explicit Aggregate(const string &id, const bool); //!< initialize
+                virtual ~Aggregate() throw();                         //!< destructor
 
                 //! syntax helper
                 inline Aggregate & operator += ( const Rule &r ) { add(r); return *this; }
