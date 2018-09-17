@@ -32,7 +32,26 @@ namespace upsylon
             bool        active();                      //!< try to ensure one next char in iobuf
             const Char *peek();                        //!< copy of first char in iobuf
             const Module * operator*() const throw();  //!< access the module address
-            
+
+            //! read content
+            size_t try_input(void *buffer, const size_t buflen );
+
+            //! read full
+            void input(void *buffer,const size_t buflen,const char *field);
+
+            //! read integral field
+            template <typename T>
+            inline T read(const char *field=NULL)
+            {
+                std::cerr << "Reading " << sizeof(T) << std::endl;
+                T ans(0);
+                return ans;
+                //input(&ans,sizeof(T),field);
+                return swap_be_as<T>(ans);
+            }
+
+            string load_binary();
+
         private:
             Module::Pointer module;
             Char::List      iobuf;

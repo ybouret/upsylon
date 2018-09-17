@@ -150,13 +150,22 @@ namespace upsylon
                 ios::GraphViz::Render(fn,keepFile);
 
             }
+        }
+    }
+}
+
+#include "y/string/io.hpp"
+namespace upsylon
+{
+    namespace Lang
+    {
+        namespace Syntax
+        {
 
             void Node:: save( ios::ostream &fp ) const
             {
                 //! creator
-                fp.emit<uint32_t>(rule.name.size());
-                fp << rule.name;
-                
+                string_io::save_binary(fp,rule.name);
                 if(terminal)
                 {
                     fp.write(0);

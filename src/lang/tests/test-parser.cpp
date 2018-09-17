@@ -102,6 +102,11 @@ Y_UTEST(parser)
             ios::ocstream fp("tree.bin");
             ast->save(fp);
         }
+        if(true)
+        {
+            Source reload( Module::OpenFile("tree.bin") );
+            auto_ptr<Syntax::Node> node = Syntax::Node::Load(reload,json);
+        }
     }
     
 }

@@ -266,6 +266,8 @@ namespace upsylon
     }
 }
 
+
+#include "y/string/io.hpp"
 namespace upsylon
 {
     namespace Lang
@@ -273,13 +275,60 @@ namespace upsylon
         namespace Syntax
         {
 
-            Node *Load( ios::istream &fp, const Grammar &G)
+            Node *Node::Load(Source         &source,
+                             const  Grammar &grammar)
             {
-                
+                static const char fn[] = "Node::Load: ";
+                std::cerr << "Reading Rule Name" << std::endl;
+                const string ruleName = source.load_binary();
+                exit(0);
+
+                std::cerr << "RuleName=" << ruleName << std::endl;
+                return NULL;
+
+                const Rule  *ruleAddr = grammar.getRuleByName(ruleName);
+
+                if(!ruleAddr) throw exception("%s{%s} has no rule '%s'", fn, **(grammar.name),*ruleName);
+                const Rule &rule = *ruleAddr;
+
+                if(0==source.read<char>("node flag"))
+                {
+                    //__________________________________________________________
+                    //
+                    // terminal
+                    //__________________________________________________________
+                    auto_ptr<Lexeme> lexeme = new Lexeme( (*source)->origin );
+                    {
+                        const size_t nch = source.read<uint32_t>("#chars");
+                        for(size_t i=1;i<=nch;++i)
+                        {
+                            Char *ch = source.get();
+                            if(!ch) throw exception("%s: End Of Module while reading lexeme from rule '%s'", fn, *ruleName);
+                        }
+                    }
+                    return Node::Create(rule,lexeme.yield());
+                }
+                else
+                {
+                    //__________________________________________________________
+                    //
+                    // internal
+                    //__________________________________________________________
+                    auto_ptr<Node> node = Node::Create(rule);
+                    {
+                        const size_t nch = source.read<uint32_t>("#children");
+                        for(size_t i=1;i<=nch;++i)
+                        {
+                            node->children.push_back( Node::Load(source,grammar) );
+                        }
+                    }
+                    return node.yield();
+                }
+
             }
+
         }
     }
 }
-
 
 

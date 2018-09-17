@@ -112,7 +112,54 @@ namespace upsylon
 
         const Module * Source:: operator*() const throw()
         {
+            assert(module.is_valid());
             return & *module;
+        }
+
+
+        size_t Source:: try_input(void *buffer, const size_t buflen )
+        {
+            assert(!(buffer==NULL&&buflen>0));
+            size_t   count = 0;
+            uint8_t *p     = static_cast<uint8_t*>(buffer);
+            while(count<buflen)
+            {
+                Char *ch = get();
+                if(!ch)
+                {
+                    break;
+                }
+                else
+                {
+                    *(p++) = ch->code;
+                    delete ch;
+                }
+            }
+            return count;
+        }
+
+        void Source:: input(void *buffer,const size_t buflen,const char *field)
+        {
+            const size_t count = try_input(buffer,buflen);
+            if(count<buflen)
+            {
+                const char *id = field ? field : "user field";
+                throw exception("Source::input: missing #byte=%u for '%s",unsigned(buflen-count),id);
+            }
+        }
+
+        string Source:: load_binary()
+        {
+            std::cerr << "Reading String Size" << std::endl;
+            const size_t n = read<uint32_t>("string size/32-bits");
+            std::cerr << "|_size=" << n << std::endl;
+            exit(0);
+            
+            string ans(n,as_capacity);
+            assert(ans.capacity()>=n);
+            input( *ans, n, "string content");
+            ans.force(n);
+            return ans;
         }
 
 
