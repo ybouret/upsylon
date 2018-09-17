@@ -11,9 +11,9 @@ namespace upsylon
 
             Terminal:: Terminal(const string &id, const Attribute flag ) :
             Rule(UUID,id),
-            attr(flag)
+            attribute(flag)
             {
-                data = &attr;
+                data = &attribute;
             }
 
             bool Terminal:: accept( Y_LANG_SYNTAX_RULE_ARGS ) const
@@ -41,7 +41,7 @@ namespace upsylon
 
             const char * Terminal:: __style() const throw()
             {
-                switch(attr)
+                switch(attribute)
                 {
                     case Univocal: return "rounded";
                     case Semantic: return "dotted";
