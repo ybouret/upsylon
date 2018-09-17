@@ -21,35 +21,59 @@ namespace
             hook<Lexical::jString>("string");
 
             Alt &value    = alt("value");
-            value << term("string") << sole("null") << sole("true") << sole("false");
+            value << term("string") << sole("null") << sole("true") << sole("false") << term("number","-?[:digit:]+");
 
-
-            Alt &Array = alt("array");
+            const Rule &COMA   = mark(",",",");
+            Alt &jArray = alt("array");
             {
                 const Rule &LBRACK = mark("[","\\[");
                 const Rule &RBRACK = mark("]","\\]");
-                const Rule &COMA   = mark(",",",");
                 {
                     Agg &EmptyArray = agg("empty_array");
                     EmptyArray << LBRACK << RBRACK;
-                    Array << EmptyArray;
+                    jArray << EmptyArray;
                 }
                 {
                     Agg &HeavyArray = agg("heavy_array");
                     HeavyArray << LBRACK << value;
                     HeavyArray << zeroOrMore( agg("extra_value") << COMA << value );
                     HeavyArray << RBRACK;
-                    Array << HeavyArray;
+                    jArray << HeavyArray;
                 }
             }
-            value << Array;
-            json << Array;
+            value << jArray;
+
+            Alt &jObject = alt("object");
+            {
+                const Rule &LBRACE = mark("{","\\{");
+                const Rule &RBRACE = mark("}","\\}");
+                const Rule &COLUMN = mark(":",":");
+                {
+                    Agg &EmptyObject = agg("empty_object");
+                    EmptyObject << LBRACE << RBRACE;
+                    jObject << EmptyObject;
+                }
+                {
+                    Agg &HeavyObject = agg("heavy_object");
+                    HeavyObject << LBRACE;
+                    {
+                        Agg &jPair = agg("pair");
+                        jPair << term("string") << COLUMN << value;
+                        HeavyObject << jPair;
+                        HeavyObject << zeroOrMore( agg("extra_pair") << COMA << jPair );
+                    }
+                    HeavyObject << RBRACE;
+                    jObject << HeavyObject;
+                }
+            }
+
+            json << choice(jArray,jObject);
 
             // extra lexical rules
             root.endl("endl", "[:endl:]");
             root.drop("ws","[:blank:]");
 
-            checkValidity();
+            //checkValidity();
             GraphViz("json.dot");
 
         }
