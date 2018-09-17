@@ -1,5 +1,6 @@
 #include "y/mpi/mpi.hpp"
 #include "y/code/ilog2.hpp"
+#include <cstdarg>
 
 namespace upsylon
 {
@@ -139,6 +140,7 @@ namespace upsylon
     threadLevel(-1),
     comTicks(0),
     processorName(),
+    nodeName(),
     types(32,as_capacity)
     {
         //______________________________________________________________________
