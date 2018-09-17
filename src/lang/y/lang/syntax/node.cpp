@@ -126,7 +126,15 @@ namespace upsylon
                     for(const Node *sub = children.head;sub;sub=sub->next)
                     {
                         ++i;
-                        fp.viz(this); fp << " -> "; fp.viz(sub); fp("[label=\"%u\"];\n", i);
+                        fp.viz(this); fp << " -> "; fp.viz(sub);
+                        if(children.size>1)
+                        {
+                            fp("[label=\"%u\"];\n", i);
+                        }
+                        else
+                        {
+                            fp <<";\n";
+                        }
                     }
                 }
             }

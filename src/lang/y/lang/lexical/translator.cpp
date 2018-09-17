@@ -63,7 +63,6 @@ dict()
                                    Plugin  &plugin)
             {
                 std::cerr << "plug[" << scanner.label << "->" << plugin.label << "] on '" << plugin.trigger << "'" << std::endl;
-                
                 scanner.call(*(plugin.label),plugin.trigger, &plugin, & Plugin::Init );
             }
 

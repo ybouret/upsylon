@@ -67,7 +67,8 @@ namespace
                     jObject << HeavyObject;
                 }
             }
-
+            value << jObject;
+            
             json << choice(jArray,jObject);
 
             // extra lexical rules
