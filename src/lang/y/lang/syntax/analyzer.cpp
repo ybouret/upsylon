@@ -13,7 +13,8 @@ namespace upsylon
             {
             }
 
-            Analyzer:: Analyzer()
+            Analyzer:: Analyzer() :
+            level(0)
             {
             }
 

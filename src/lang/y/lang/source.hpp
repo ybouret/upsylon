@@ -15,7 +15,7 @@ namespace upsylon
         }
 
         //! convert Module into a source of tokens
-        class Source : public virtual Object, public ios::istream
+        class Source : public Object, public ios::istream
         {
         public:
             explicit Source(Module *m);  //!< initialize
