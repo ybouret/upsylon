@@ -56,7 +56,7 @@ namespace upsylon
 
 
             // map raster to bitmap
-            const uint32_t *p = raster();
+            const uint32_t *p = *raster;
             for(int j=0;j<h;++j)
             {
                 const uint32_t *q = &p[j*w];
@@ -104,7 +104,7 @@ namespace upsylon
             const unit_t w = bmp.w;
             const unit_t h = bmp.h;
             raster.startup(w*h);
-            uint32_t *p = raster();
+            uint32_t *p = *raster;
             for(unit_t j=0;j<h;++j)
             {
                 uint32_t *q = &p[j*w];

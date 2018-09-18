@@ -30,10 +30,10 @@ namespace upsylon
             }
 
             //! data access
-            inline T *       operator()(void) throw()       { return data; }
+            inline T *       operator*(void) throw()       { return data; }
 
             //! data access const
-            inline const T * operator()(void) const throw() { return data; }
+            inline const T * operator*(void) const throw() { return data; }
 
             const size_t size; //!< workspace
 

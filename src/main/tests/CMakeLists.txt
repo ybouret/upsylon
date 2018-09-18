@@ -1,3 +1,7 @@
+
+ADD_EXECUTABLE(test-mini-lzo ../y/codec/lzo/testmini.c)
+TARGET_LINK_Y(test-mini-lzo)
+
 FILE(GLOB srcs test-*.cpp)
 
 ADD_EXECUTABLE(test-main main.cpp ${srcs} support.hpp)
@@ -66,6 +70,7 @@ ADD_TEST(Tuple       test-main tuple)
 ADD_TEST(Release     test-main release)
 ADD_TEST(Base64      test-main base64 NULL)
 ADD_TEST(Spec        test-main spec)
+ADD_TEST(LZO         test-main lzo)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V

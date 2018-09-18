@@ -86,7 +86,7 @@ namespace upsylon
             const int    h   = GetHeight();
             raster.startup(w*h);
 
-            if( 1 != TIFFReadRGBAImage((TIFF*)handle, w, h, raster() ) )
+            if( 1 != TIFFReadRGBAImage((TIFF*)handle, w, h, *raster ) )
             {
                 throw imported::exception("TIFFReadRGBAImage","failure...");
             }
@@ -191,13 +191,13 @@ namespace upsylon
             const size_t out_scanline = TIFFScanlineSize(out);
             const size_t buf_scanline = max_of(usr_scanline,out_scanline);
             memory::global_buffer_of<unsigned char> tmpbuf(buf_scanline);
-            unsigned char *buf = tmpbuf();
+            unsigned char *buf = *tmpbuf;
 
             // We set the strip size of the file to be size of one row of pixels
             TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, TIFFDefaultStripSize(out,usr_scanline) );
 
             //Now writing image to the file one strip at a time
-            const uint32_t *p = raster();
+            const uint32_t *p = *raster;
             for(int row=0,top=h; row<h; ++row)
             {
                 --top;

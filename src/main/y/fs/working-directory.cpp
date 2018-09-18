@@ -39,7 +39,7 @@ namespace upsylon
         {
             memory::buffer_of<char,memory::pooled> buffer( length );
             Y_GIANT_LOCK();
-            const char   *wd = getcwd( buffer(), buffer.length() );
+            const char   *wd = getcwd( *buffer, buffer.length() );
             if( !wd )
             {
                 const int err = errno;

@@ -39,7 +39,7 @@ namespace
         {
             const size_t bytes = memory::slab<T>::bytes_for(count);
             memory::buffer_of<char,memory::global> buff(bytes);
-            memory::slab<T> S(buff(),bytes);
+            memory::slab<T> S(*buff,bytes);
             while( S.size( ) )
             {
                 T *addr = S.acquire();

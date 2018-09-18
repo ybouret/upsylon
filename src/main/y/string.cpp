@@ -16,7 +16,7 @@ namespace upsylon
     TRY:
         {
             memory::buffer_of<char,memory::global> databuf( n );
-            char  *buffer  = databuf();
+            char  *buffer  = *databuf;
             int    length  = int( databuf.size );
             if( length < 0 )
                 throw libc::exception( ERANGE, "string::vformat memory overflow");

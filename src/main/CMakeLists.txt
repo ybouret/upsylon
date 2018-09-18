@@ -123,6 +123,8 @@ SET(codec_srcs ${codec_decl} ${codec_code})
 SOURCE_GROUP( codec FILES ${codec_srcs} )
 INSTALL( FILES ${codec_decl} DESTINATION include/y/codec )
 
+SET(lzo_srcs y/codec/lzo/minilzo.c)
+SOURCE_GROUP( codec/lzo FILES ${lzo_srcs} )
 
 FILE(GLOB fft_decl y/fft/*.hpp)
 FILE(GLOB fft_code y/fft/*.cpp)
@@ -185,7 +187,7 @@ ${associative_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
 ${ios_srcs}
-${codec_srcs}
+${codec_srcs} ${lzo_srcs}
 ${fft_srcs}
 ${mpl_srcs}
 ${mpl_natural_srcs}
@@ -200,6 +202,7 @@ IF(FALSE)
   ADD_EXECUTABLE(nwsrt nwsrt.cpp)
   TARGET_LINK_Y(nwsrt)
 ENDIF()
+
 
 ADD_SUBDIRECTORY(tests)
 

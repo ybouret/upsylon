@@ -325,7 +325,7 @@ namespace upsylon
         TRY:
             {
                 memory::buffer_of<char,memory::pooled> databuf( n );
-                char  *buffer  = databuf();
+                char  *buffer  = *databuf;
                 int    length  = int( databuf.length() );
                 if( length < 0 )
                     throw libc::exception( ERANGE, "%s(...) memory overflow", fn);

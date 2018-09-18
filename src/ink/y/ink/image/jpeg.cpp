@@ -156,7 +156,7 @@ namespace upsylon
                 auto_ptr<Bitmap> bmp = new Bitmap(depth,width,height);
 
                 jsample_buffer jsbuff(cinfo.output_width * cinfo.output_components);
-                JSAMPLE       *buffer = jsbuff();
+                JSAMPLE       *buffer = *jsbuff;
 
                 //buflen = cinfo.output_width * cinfo.output_components;
                 //buffer = memory::global::instance().acquire_as<JSAMPLE>(buflen,_bufsz);
@@ -277,7 +277,7 @@ namespace upsylon
             try
             {
                 jsample_buffer jsbuff(bmp.w*3);
-                JSAMPLE       *buffer         = jsbuff();
+                JSAMPLE       *buffer         = *jsbuff;
                 JSAMPROW       row_pointer[1] = { buffer };
 
                 unit_t       j     = bmp.h - 1;
