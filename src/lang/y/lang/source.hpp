@@ -15,7 +15,7 @@ namespace upsylon
         }
 
         //! convert Module into a source of tokens
-        class Source : public Object
+        class Source : public virtual Object, public ios::istream
         {
         public:
             explicit Source(Module *m);  //!< initialize
@@ -33,21 +33,9 @@ namespace upsylon
             const Char *peek();                        //!< copy of first char in iobuf
             const Module * operator*() const throw();  //!< access the module address
 
-            //! read content
-            size_t try_input(void *buffer, const size_t buflen );
-
-            //! read full
-            void input(void *buffer,const size_t buflen,const char *field);
-
-            //! read integral field
-            template <typename T>
-            inline T read(const char *field=NULL)
-            {
-                T ans(0);
-                input(&ans,sizeof(T),field);
-                return swap_be_as<T>(ans);
-            }
-
+            virtual bool query( char &C ); //!< ios::istream interface
+            virtual void store( char  C ); //!< ios::istream interface
+            
             string load_binary();
 
         private:

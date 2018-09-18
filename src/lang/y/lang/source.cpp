@@ -1,6 +1,7 @@
 #include "y/lang/source.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/exception.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon
 {
@@ -117,44 +118,35 @@ namespace upsylon
         }
 
 
-        size_t Source:: try_input(void *buffer, const size_t buflen )
+        bool Source:: query( char &C )
         {
-            assert(!(buffer==NULL&&buflen>0));
-            size_t   count = 0;
-            uint8_t *p     = static_cast<uint8_t*>(buffer);
-            while(count<buflen)
+            Char *ch = get();
+            if(ch)
             {
-                Char *ch = get();
-                if(!ch)
-                {
-                    break;
-                }
-                else
-                {
-                    *(p++) = ch->code;
-                    ++count;
-                    delete ch;
-                }
+                C = ch->code;
+                delete ch;
+                return true;
             }
-            return count;
+            else
+            {
+                return false;
+            }
         }
 
-        void Source:: input(void *buffer,const size_t buflen,const char *field)
+        void Source:: store( char C )
         {
-            const size_t count = try_input(buffer,buflen);
-            if(count<buflen)
-            {
-                const char *id = field ? field : "user field";
-                throw exception("Source::input: missing #byte=%u for '%s",unsigned(buflen-count),id);
-            }
+            //Char *ch = new Char(C,*module);
+            throw exception("Lang::Source::store('%s') is forbidden", visible_char[uint8_t(C)]);
         }
+
+
 
         string Source:: load_binary()
         {
-            const size_t n = read<uint32_t>("string size/32-bits");
+            const size_t n = read<uint32_t>();
             string ans(n,as_capacity);
             assert(ans.capacity()>=n);
-            input( *ans, n, "string content");
+            input( *ans, n);
             ans.force(n);
             return ans;
         }

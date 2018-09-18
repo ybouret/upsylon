@@ -22,7 +22,7 @@ namespace upsylon
             virtual bool query( char &C ) = 0;
 
             //! unread a char
-            virtual void store( const char C ) = 0;
+            virtual void store( char C ) = 0;
 
             //! test at least one more char, default query/store
             virtual bool is_active();
