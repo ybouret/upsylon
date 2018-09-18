@@ -1,5 +1,7 @@
 MESSAGE( STATUS "")
+Y_SEPLINE()
 MESSAGE( STATUS "External Projects: preparing..." )
+Y_SEPLINE()
 MESSAGE( STATUS "")
 
 MESSAGE( STATUS "                   lua")
@@ -24,7 +26,9 @@ MESSAGE( STATUS "                   tiff")
 ADD_SUBDIRECTORY(y/tiff)
 
 MESSAGE( STATUS "")
+Y_SEPLINE()
 MESSAGE( STATUS "External Projects are prepared!")
+Y_SEPLINE()
 MESSAGE( STATUS "")
 
 ADD_CUSTOM_TARGET(ext 

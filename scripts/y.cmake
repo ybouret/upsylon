@@ -231,6 +231,10 @@ MACRO(TARGET_LINK_Y tgt)
 		IF( ${extra} STREQUAL "ink" )
 			LIST(APPEND ylibs "y-tiff;y-jpeg;y-jbig;y-png;y-z")
 		ENDIF()
+			
+		IF( ${extra} STREQUAL "lua++" )
+			LIST(APPEND ylibs "y-lua")
+		ENDIF()
 		
 		IF( ${extra} STREQUAL "chem" )
 			LIST(APPEND ylibs "y-m")
