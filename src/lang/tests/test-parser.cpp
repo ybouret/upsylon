@@ -21,7 +21,7 @@ namespace
             hook<Lexical::jString>("string");
 
             Alt &value    = alt("value");
-            value << term("string") << sole("null") << sole("true") << sole("false") << term("number","-?[:digit:]+");
+            value << term("string") << sole("null") << sole("true") << sole("false") << term("number","-?[:digit:]+(\\.[:digit:]*)?([eE]-?[:digit:]+)?");
 
             const Rule &COMA   = mark(',');
             

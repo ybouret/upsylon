@@ -26,6 +26,13 @@ namespace upsylon
                 if(!root->accept(tree,lexer,source))
                 {
                     // Syntax Error
+                    std::cerr << "Syntax Error Detected" << std::endl;
+                    const Lexeme::List &lexemes = lexer.found();
+                    for(const Lexeme *lx = lexemes.head; lx; lx=lx->next)
+                    {
+                        std::cerr << "found " << *lx << std::endl;
+                    }
+
                     throw exception("{%s} syntax error",**name);
                 }
 
