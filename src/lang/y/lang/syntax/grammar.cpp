@@ -293,7 +293,7 @@ namespace upsylon
             {
                 static const char fn[] = "Node::Load: ";
 
-                const string ruleName = source.load_binary();
+                const string ruleName = string_io::load_binary(source);
                 const Rule  *ruleAddr = grammar.getRuleByName(ruleName);
 
                 if(!ruleAddr) throw exception("%s{%s} has no rule '%s'", fn, **(grammar.name),*ruleName);

@@ -1,4 +1,5 @@
 #include "y/lang/syntax/parser.hpp"
+#include "y/lang/syntax/analyzer.hpp"
 #include "y/lang/lexical/plugin/comment.hpp"
 #include "y/lang/lexical/plugin/strings.hpp"
 
@@ -102,12 +103,17 @@ Y_UTEST(parser)
             ios::ocstream fp("tree.bin");
             ast->save(fp);
         }
+
         if(true)
         {
             Source reload( Module::OpenFile("tree.bin") );
             auto_ptr<Syntax::Node> node = Syntax::Node::Load(reload,json);
             node->GraphViz("tree2.dot");
         }
+
+        Syntax::Analyzer A;
+        A.walk(*ast);
+
     }
     
 }

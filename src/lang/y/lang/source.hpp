@@ -36,8 +36,7 @@ namespace upsylon
             virtual bool query( char &C ); //!< ios::istream interface
             virtual void store( char  C ); //!< ios::istream interface
             
-            string load_binary();
-
+            
         private:
             Module::Pointer module;
             Char::List      iobuf;

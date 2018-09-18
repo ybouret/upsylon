@@ -92,6 +92,7 @@ namespace upsylon
                     const string _(pluginName); hook<PLUGIN>(scanner,_,expr);
                 }
 
+                //! get the last matched lexeme
                 const Lexeme *last() const throw() { return cache.tail; }
 
             private:

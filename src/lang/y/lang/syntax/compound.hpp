@@ -43,9 +43,9 @@ namespace upsylon
             class Compound : public Rule, public Operand::List
             {
             public:
-                const bool acting;
+                const bool acting; //!< flag if the compound is an acting compound
 
-                void setActing() throw();
+                void setActing() throw(); //!< set acting flag to true
 
                 //! destructor
                 virtual ~Compound() throw();

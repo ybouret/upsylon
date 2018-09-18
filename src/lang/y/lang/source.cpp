@@ -140,7 +140,7 @@ namespace upsylon
         }
 
 
-
+#if 0
         string Source:: load_binary()
         {
             const size_t n = read<uint32_t>();
@@ -150,7 +150,8 @@ namespace upsylon
             ans.force(n);
             return ans;
         }
-
+#endif
+        
 
     }
 }

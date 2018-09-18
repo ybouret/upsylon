@@ -9,10 +9,11 @@
 
 namespace upsylon
 {
+    //! basic I/O for strings
     struct string_io
     {
-        static void   save_binary(ios::ostream &fp, const string &s);
-        static string load_binary(ios::istream &fp);
+        static void   save_binary(ios::ostream &fp, const string &s); //!< Length+Data
+        static string load_binary(ios::istream &fp); //!< from Length+Data
     };
 }
 
