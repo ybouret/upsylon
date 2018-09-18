@@ -21,7 +21,6 @@ namespace upsylon
             {
                 return realloc(ptr, nsize);
             }
-
         }
 
         State:: State() : L( lua_newstate(__luaAllocator,NULL) )
@@ -34,6 +33,17 @@ namespace upsylon
             lua_close(L);
             L=0;
         }
+
+        void State:: doFile( const string &filename )
+        {
+            Y_LUA_CHECK(luaL_dofile(L,*filename));
+        }
+
+        void State:: doString( const string &code )
+        {
+            Y_LUA_CHECK(luaL_dostring(L,*code));
+        }
+
     }
 
 }

@@ -3,7 +3,7 @@
 #define Y_PTR_INCLUDED 1
 
 #include "y/type/args.hpp"
-#include <iosfwd>
+#include <iostream>
 
 namespace upsylon
 {
