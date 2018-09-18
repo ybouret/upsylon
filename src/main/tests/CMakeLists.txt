@@ -1,6 +1,11 @@
 
 ADD_EXECUTABLE(test-mini-lzo ../y/codec/lzo/testmini.c)
 TARGET_LINK_Y(test-mini-lzo)
+ADD_CUSTOM_COMMAND(
+TARGET             test-mini-lzo
+POST_BUILD COMMAND test-mini-lzo
+COMMENT            "Testing miniLZO"
+)
 
 FILE(GLOB srcs test-*.cpp)
 
