@@ -9,6 +9,8 @@ namespace upsylon
         namespace Syntax
         {
 
+            
+
             Node * Grammar:: run(Lexer &lexer, Source &source)
             {
                 //______________________________________________________________
@@ -27,11 +29,35 @@ namespace upsylon
                 {
                     // Syntax Error
                     std::cerr << "Syntax Error Detected" << std::endl;
-                    const Lexeme::List &lexemes = lexer.found();
-                    for(const Lexeme *lx = lexemes.head; lx; lx=lx->next)
+                    string        err  = *((*source)->origin);
+                    const Lexeme *last = lexer.last();
+
+                    if(!last)
                     {
-                        std::cerr << "found " << *lx << std::endl;
+                        throw exception("%s is empty for {%s}", *err, **name);
                     }
+                    else
+                    {
+                        err += vformat(":%d:%d:",last->line(),last->column());
+                        err  << "unexpected " << *(last->label);
+                        if( isStandardTerminal(last) )
+                        {
+                            const string str = last->to_print();
+                            err << " '" << str << "'";
+                        }
+                        if(last->prev)
+                        {
+                            err << " after " << *(last->prev->label);
+                            if(isStandardTerminal(last->prev))
+                            {
+                                const string str = last->prev->to_print();
+                                err << " '" << str << "'";
+                            }
+                        }
+                        err << " for {" << *name << "}";
+                        throw exception("%s",*err);
+                    }
+
 
                     throw exception("{%s} syntax error",**name);
                 }

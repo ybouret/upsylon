@@ -99,7 +99,10 @@ namespace upsylon
             {
                 Node * subTree = Node::Create(*this);
 
+                //______________________________________________________________
+                //
                 // try to accept every operand
+                //______________________________________________________________
                 {
                     auto_ptr<Node> guard(subTree);
                     for(const Operand *op=head;op;op=op->next)
@@ -116,6 +119,7 @@ namespace upsylon
 
                 // success, subTree may be empty but never NULL!
                 Grow(tree,subTree);
+                //std::cerr << "..accepted " << name << std::endl;
                 return true;
             }
 
@@ -156,6 +160,7 @@ namespace upsylon
                     {
                         // success
                         if(tmp) Grow(tree,tmp);
+                        //std::cerr << "..accepted " << op->rule.name << " in " << name << std::endl;
                         return true;
                     }
                 }

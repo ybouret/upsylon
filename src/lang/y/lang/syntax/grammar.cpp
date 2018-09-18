@@ -109,6 +109,19 @@ namespace upsylon
             }
 
 
+            bool Grammar:: isStandardTerminal( const Lexeme *lx ) const throw()
+            {
+                assert(lx);
+                const Rule *r = getRuleByName( *(lx->label) );
+                if(!r) return false;
+                if(Terminal::UUID!=r->uuid) return false;
+                assert(r->data);
+                const Terminal::Attribute &attr = *static_cast<const Terminal::Attribute *>(r->data);
+                return (Terminal::Standard == attr);
+
+            }
+
+
         }
     }
 }

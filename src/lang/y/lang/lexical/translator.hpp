@@ -92,7 +92,7 @@ namespace upsylon
                     const string _(pluginName); hook<PLUGIN>(scanner,_,expr);
                 }
 
-                const Lexeme::List & found() const throw() { return cache; }
+                const Lexeme *last() const throw() { return cache.tail; }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Translator);

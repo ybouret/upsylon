@@ -24,6 +24,7 @@ namespace upsylon
                     if( *(lexeme->label) == name )
                     {
                         Grow(tree,Node::Create(*this,lexeme));
+                        //std::cerr << "..accepted " << name << std::endl;
                         return true;
                     }
                     else

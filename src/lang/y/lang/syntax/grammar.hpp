@@ -108,6 +108,9 @@ namespace upsylon
                  */
                 void checkValidity() const;
 
+                //! check if terminal
+                bool isStandardTerminal( const Lexeme *lx ) const throw();
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 class MetaRule

@@ -34,6 +34,7 @@ namespace upsylon
                 Node *node = NULL;
                 if( rule.accept(node,lexer,source) )
                 {
+                    //std::cerr << "...accepted optional " << rule.name << std::endl;
                     Grow(tree,node);
                 }
                 return true;
@@ -112,6 +113,12 @@ namespace upsylon
                     {
                         tree = subTree;
                     }
+#if 0
+                    if(count>0)
+                    {
+                        std::cerr << "..accepted " << name << std::endl;
+                    }
+#endif
                     return true;
                 }
                 else
