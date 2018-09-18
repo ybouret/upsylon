@@ -6,12 +6,19 @@
 
 namespace upsylon
 {
+    //! LZO wrapper
     class miniLZO : public singleton<miniLZO>
     {
     public:
+        const char *VersionString() const throw(); //!< lzo_version_string()
+        const char *VersionDate() const throw();   //!< lzo_version_date()
+
+        //! compress soruce
         string Compress( const string &source ) const;
-        const char *VersionString() const throw();
-        const char *VersionDate() const throw();
+
+        //! decompress source
+        string Decompress( const string &source ) const;
+        
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(miniLZO);
@@ -19,7 +26,7 @@ namespace upsylon
         explicit miniLZO();         //!< initialize the library
         virtual ~miniLZO() throw(); //!< destructor
     public:
-        static const at_exit::longevity life_time = memory::pooled::life_time - 8;
+        static const at_exit::longevity life_time = memory::pooled::life_time - 8; //!< life time for singleton
     };
 }
 
