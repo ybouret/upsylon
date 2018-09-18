@@ -23,8 +23,26 @@ namespace upsylon
             explicit State();
             virtual ~State() throw();
 
+            //! load file
             void doFile(   const string &filename );
-            void doString( const string &code     );
+
+            //! load code
+            inline
+            void doFile( const char *filename )
+            {
+                const string _(filename); doFile(_);
+            }
+
+            //! load string
+            void doString( const string &code );
+
+            //! load code
+            inline
+            void doString(const char *code)
+            {
+                const string _(code); doString(_);
+            }
+
 
         private:
             lua_State *L;
