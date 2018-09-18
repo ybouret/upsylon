@@ -12,7 +12,7 @@ namespace upsylon
     {
         
         //! Base Object
-        class Object : public object
+        class Object : public virtual object
         {
         public:
             explicit Object() throw(); //!< constructor
