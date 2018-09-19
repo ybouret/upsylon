@@ -15,8 +15,7 @@ namespace upsylon
             name(id),
             rules(),
             rdb(),
-            altID(0),
-            rule_name_max(0)
+            altID(0)
             {
             }
 
@@ -89,7 +88,7 @@ namespace upsylon
                     throw;
                 }
 
-                (size_t&)rule_name_max = max_of(rule_name_max,rule->name.size());
+                //(size_t&)rule_name_max = max_of(rule_name_max,rule->name.size());
             }
 
 

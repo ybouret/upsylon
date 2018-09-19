@@ -30,7 +30,8 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Analyzer);
                 void __walk( const Node *node );
-
+            public:
+                size_t aligned; //!< default is 20
             };
 
         }

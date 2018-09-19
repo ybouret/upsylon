@@ -14,7 +14,8 @@ namespace upsylon
             }
 
             Analyzer:: Analyzer() throw():
-            depth(0)
+            depth(0),
+            aligned(20)
             {
             }
 
@@ -22,7 +23,7 @@ namespace upsylon
             {
                 const string lvl = vformat("<%02d>",depth);
                 os << lvl;
-                for(int i=0;i<depth;++i) os << ' ' << ' ';
+                for(int i=0;i<2*depth;++i) os << '_';
                 return os;
             }
 
@@ -55,13 +56,19 @@ namespace upsylon
 
             void Analyzer:: onTerminal(const string &name, const string &data)
             {
-                space(std::cerr) << "push[" << name << "]='" << data << "'" << std::endl;
+                //space(std::cerr) << "push[" << name << "]='" << data << "'" << std::endl;
+                space(std::cerr) << "push " << name << " ";
+                for(size_t i=name.size()+depth*2;i<=aligned;++i) std::cerr << ' ';
+                std::cerr << "'" << data << "'" << std::endl;
             }
 
 
             void Analyzer:: onInternal(const string &name, const size_t size)
             {
-                space(std::cerr) << "call[" << name << "]/" << size << std::endl;
+                //space(std::cerr) << "call[" << name << "]/" << size << std::endl;
+                space(std::cerr) << "call " << name << "/" << size << std::endl;
+                //for(size_t i=name.size()+depth*2;i<=aligned;++i) std::cerr << ' ';
+                //std::cerr << "#" << size << std::endl;
             }
         }
     }
