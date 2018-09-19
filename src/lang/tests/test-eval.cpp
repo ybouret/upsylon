@@ -22,10 +22,10 @@ namespace
             RULE &NUM    = term("NUM", "[:digit:]+");
             ALT  &ATOM   = alt("atom");
 
-            AGG  &mulExpr = agg("mulExpr");
-            mulExpr << ATOM    << zeroOrMore( agg("extraMul",true) << term("MULOP","[*/]") << ATOM );
-            AGG &addExpr = agg("addExpr");
-            addExpr << mulExpr << zeroOrMore( agg("extraAdd",true) << term("ADDOP","[-+]") << mulExpr );
+            AGG  &mulExpr = design("mulExpr");
+            mulExpr << ATOM    << zeroOrMore( acting("extraMul") << term("MULOP","[*/]") << ATOM );
+            AGG &addExpr = design("addExpr");
+            addExpr << mulExpr << zeroOrMore( acting("extraAdd") << term("ADDOP","[-+]") << mulExpr );
 
 
             ATOM << ID << NUM;

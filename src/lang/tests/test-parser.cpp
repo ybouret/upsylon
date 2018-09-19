@@ -38,7 +38,7 @@ namespace
                 {
                     AGG &HeavyArray = agg("heavy_array");
                     HeavyArray << LBRACK << value;
-                    HeavyArray << zeroOrMore( agg("extra_value",true) << COMA << value );
+                    HeavyArray << zeroOrMore( acting("extra_value") << COMA << value );
                     HeavyArray << RBRACK;
                     jArray << HeavyArray;
                 }
@@ -62,7 +62,7 @@ namespace
                         AGG &jPair = agg("pair");
                         jPair << term("string") << COLUMN << value;
                         HeavyObject << jPair;
-                        HeavyObject << zeroOrMore( agg("extra_pair",true) << COMA << jPair );
+                        HeavyObject << zeroOrMore( acting("extra_pair") << COMA << jPair );
                     }
                     HeavyObject << RBRACE;
                     jObject << HeavyObject;

@@ -73,10 +73,22 @@ namespace upsylon
                 Rule & oneOrMore( const Rule &r ) { return repeating(r,1); }
 
                 //! new aggregate
-                inline Aggregate & agg( const string &id, const bool acting=false) { return __add( new Aggregate(id,acting) ); }
+                inline Aggregate & agg( const string &id, const Compound::Type flag=Compound::Normal) { return __add( new Aggregate(id,flag) ); }
 
                 //! new aggregate
-                inline Aggregate & agg( const char   *id, const bool acting=false) { const string _(id); return agg(_,acting); }
+                inline Aggregate & agg( const char   *id, const Compound::Type flag=Compound::Normal) { const string _(id); return agg(_,flag); }
+
+                //! new acting aggregate
+                inline Aggregate & acting(const string &id) { return agg(id,Compound::Acting); }
+
+                //! new acting aggregate
+                inline Aggregate & acting(const char   *id) { const string _(id); return acting(_); }
+
+                //! new acting aggregate
+                inline Aggregate & design(const string &id) { return agg(id,Compound::Design); }
+
+                //! new acting aggregate
+                inline Aggregate & design(const char   *id) { const string _(id); return design(_); }
 
                 //! new alternation
                 inline Alternate & alt( const string &id ) { return __add( new Alternate(id) ); }

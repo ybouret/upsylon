@@ -43,9 +43,17 @@ namespace upsylon
             class Compound : public Rule, public Operand::List
             {
             public:
-                const bool acting; //!< flag if the compound is an acting compound
+                enum Type
+                {
+                    Normal, //!< keep as is
+                    Acting, //!< temporary, merge all
+                    Design  //!< design only, merge if one child!
+                };
 
-                void setActing() throw(); //!< set acting flag to true
+                const Type type; //!< flag if the compound is an acting compound
+
+                void setActing() throw(); //!< set as Acting from Normal
+                void setDesign() throw(); //!< set as Design form Normal
 
                 //! destructor
                 virtual ~Compound() throw();
@@ -56,10 +64,20 @@ namespace upsylon
                 //! linking
                 virtual void epilog( ios::ostream &fp ) const;
 
-                virtual const char * __style() const throw() { return acting ? "dashed" : "solid"; }
+                virtual const char * __style() const throw()
+                {
+                    switch(type)
+                    {
+                        case Acting: return "dotted";
+                        case Design: return "rounded";
+                        default:
+                            break;
+                    }
+                    return "solid";
+                }
             protected:
                 //! initialize
-                explicit Compound(const uint32_t t, const string &id, const bool flag);
+                explicit Compound(const uint32_t t, const string &id, const Type flag);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compound);
@@ -72,8 +90,8 @@ namespace upsylon
                 //! class identifier
                 static const uint32_t UUID = Y_FOURCC('A','G','G',' ');;
                 
-                explicit Aggregate(const string &id, const bool); //!< initialize
-                virtual ~Aggregate() throw();                         //!< destructor
+                explicit Aggregate(const string &id, const Type = Normal);  //!< initialize
+                virtual ~Aggregate() throw();                      //!< destructor
 
                 //! syntax helper
                 inline Aggregate & operator += ( const Rule &r ) { add(r); return *this; }

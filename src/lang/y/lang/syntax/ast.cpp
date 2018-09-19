@@ -69,7 +69,7 @@ namespace upsylon
                                 // check if merging content for acting
                                 //______________________________________________
                                 assert(ch->rule.data);
-                                if( static_cast<const Compound *>(ch->rule.data)->acting )
+                                if( static_cast<const Compound *>(ch->rule.data)->type==Compound::Acting )
                                 {
                                     tmp.merge_back(ch->children);
                                     delete ch;

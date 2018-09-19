@@ -40,10 +40,10 @@ namespace upsylon
             {
             }
 
-            Compound:: Compound( const uint32_t t, const string &id, const bool flag) :
+            Compound:: Compound( const uint32_t t, const string &id, const Type flag) :
             Rule(t,id),
             Operand::List(),
-            acting(flag)
+            type(flag)
             {
                 Compound *self = this;
                 data = self;
@@ -69,7 +69,15 @@ namespace upsylon
 
             void Compound:: setActing() throw()
             {
-                (bool &)acting = true;
+                assert(Normal==type);
+                (Type &)type = Acting;
+            }
+
+
+            void Compound:: setDesign() throw()
+            {
+                assert(Normal==type);
+                (Type &)type = Design;
             }
 
         }
@@ -89,7 +97,7 @@ namespace upsylon
             {
             }
 
-            Aggregate:: Aggregate(  const string &id, const bool flag) :
+            Aggregate:: Aggregate(  const string &id, const Type flag) :
             Compound(UUID,id,flag)
             {
             }
@@ -146,7 +154,7 @@ namespace upsylon
             }
 
             Alternate:: Alternate(  const string &id ) :
-            Compound(UUID,id,true)
+            Compound(UUID,id,Acting)
             {
             }
 
