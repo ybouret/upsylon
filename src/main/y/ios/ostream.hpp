@@ -78,21 +78,24 @@ namespace upsylon
                 if(num_bits<=4)
                 {
                     // 0 extra bytes!
-                    //std::cerr << "emit_upack " << x << ", #bits=" << num_bits << "\t1 byte" << std::endl;
+                    std::cerr << "emit_upack " << x << ", #bits=" << num_bits << "\t1 byte" << std::endl;
                     write(last4shifted);
                 }
                 else
                 {
                     const size_t extra_bits  = num_bits - 4;
                     size_t       extra_bytes = Y_ROUND8(extra_bits)>>3; assert(extra_bytes<=8);
-                    //std::cerr << "emit_upack " << x << ", #bits=" << num_bits << "\t1+" << extra_bytes << std::endl;
+                    std::cerr << "emit_upack " << x << ", #bits=" << num_bits << "\t1+" << extra_bytes;
                     write( last4shifted | extra_bytes );
                     x >>= 4;
                     while(extra_bytes-->0)
                     {
-                        write( uint8_t(x&T(0xff)) );
+                        const uint8_t B = uint8_t(x&T(0xff)); std::cerr << ":" << int(B);
+                        write(B);
                         x >>= 8;
                     }
+                    assert(0==x);
+                    std::cerr << std::endl;
                 }
 
                 return *this;

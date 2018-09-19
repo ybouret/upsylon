@@ -46,12 +46,15 @@ namespace upsylon
             {
                 const size_t prolog      = read<uint8_t>();
                 size_t       extra_bytes = check_extra_bytes(prolog&0x0f,sizeof(T));
-                T            ans( (prolog&0xf0) >> 4 );
+                T            ans(0);
                 while( extra_bytes-- > 0 )
                 {
                     ans <<= 8;
                     ans  |= T( read<uint8_t>() );
+                    std::cerr << "tmp=" << ans << std::endl;
                 }
+                ans |= uint8_t((prolog&0xf0) >> 4);
+                std::cerr << "ans=" << ans << std::endl;
                 return ans;
             }
 
