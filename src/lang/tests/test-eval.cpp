@@ -16,6 +16,25 @@ namespace
     public:
         Eval() : Syntax::Parser("evaluator")
         {
+
+
+            RULE &ID     = term("ID", "[:alpha:]+");
+            RULE &NUM    = term("NUM", "[:digit:]+");
+            Alt  &ATOM   = alt("atom");
+
+            Agg  &mulExpr = agg("mulExpr");
+            mulExpr << ATOM    << zeroOrMore( agg("extraMul") << term("MULOP","[*/]") << ATOM );
+            Agg &addExpr = agg("addExpr");
+            addExpr << mulExpr << zeroOrMore( agg("extraAdd") << term("ADDOP","[-+]") << mulExpr );
+
+
+            ATOM << ID << NUM;
+            Agg &eval = agg("eval");
+            eval << zeroOrMore( agg("statement") << addExpr << mark(';'));
+            top(eval);
+
+            root.endl("endl","[:endl:]");
+            root.drop("ws","[:blank:]");
         }
 
         virtual ~Eval() throw()

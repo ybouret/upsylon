@@ -218,7 +218,7 @@ namespace upsylon
                 inline void endl(const string &id,const string &rx) { discard(id,rx,this,&Scanner::newline); }
                 //! helper for newline(id) on rx
                 inline void endl(const char   *id,const char   *rx) { const string _=id; const string __=rx; endl(_,__); }
-
+                
                 //! probe source
                 /**
                  - return NULL: if no event, EOF, otherwise control for translator

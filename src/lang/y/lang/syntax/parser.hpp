@@ -19,6 +19,7 @@ namespace upsylon
                 typedef intr_ptr<string,Parser> Pointer;
 
                 typedef Syntax::Rule      Rule;    //!< alias
+                typedef const Rule        RULE;    //!< alias
                 typedef Syntax::Aggregate Agg;     //!< alias
                 typedef Syntax::Alternate Alt;     //!< alias
                 explicit Parser(const string &id); //!< initialize

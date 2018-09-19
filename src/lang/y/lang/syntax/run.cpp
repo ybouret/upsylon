@@ -9,8 +9,6 @@ namespace upsylon
         namespace Syntax
         {
 
-            
-
             Node * Grammar:: run(Lexer &lexer, Source &source)
             {
                 //______________________________________________________________
