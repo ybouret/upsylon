@@ -10,7 +10,7 @@ Y_UTEST(regex)
 {
     Dictionary dict;
     dict("INT",Compile::RegExp("[:digit:]+"));
-
+    
     if(argc>1)
     {
         const string rx = argv[1];

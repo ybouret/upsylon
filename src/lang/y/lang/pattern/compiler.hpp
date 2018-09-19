@@ -8,11 +8,14 @@ namespace upsylon
 {
     namespace Lang
     {
+        class RXCompiler; //! forward declaration
+
         //! Compiling Regular Expressions
         struct Compile
         {
             //! compile a regular expression
             static Pattern *RegExp( const string &rx, const Dictionary *dict=NULL);
+            
             //! compile a regular expression
             inline
             static Pattern *RegExp(const char *rx, const Dictionary *dict=NULL)

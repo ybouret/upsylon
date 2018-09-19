@@ -45,6 +45,18 @@ namespace
 
 Y_UTEST(eval)
 {
+    Evaluator ev;
+
+    if(argc>1)
+    {
+        const string filename = argv[1];
+        if("NULL"==filename) return 0;
+        ev.compile( Module::OpenFile(filename) );
+    }
+    else
+    {
+        ev.compile( Module::OpenSTDIN() );
+    }
 }
 Y_UTEST_DONE()
 

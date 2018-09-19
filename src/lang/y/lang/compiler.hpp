@@ -9,6 +9,7 @@ namespace upsylon
 {
     namespace Lang
     {
+        
         class Compiler : public Syntax::Analyzer
         {
         public:
@@ -27,7 +28,7 @@ namespace upsylon
             const Origin name;
         };
 
-        
+
     }
 }
 

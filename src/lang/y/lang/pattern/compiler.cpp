@@ -26,7 +26,7 @@ namespace upsylon
 #define LBRACE     '{'
 #define RBRACE     '}'
 
-        class Compiler
+        class RXCompiler
         {
         public:
             const char       *curr;
@@ -34,13 +34,13 @@ namespace upsylon
             int               depth;
             const Dictionary *dict;
 
-            inline ~Compiler() throw() {}
+            inline ~RXCompiler() throw() {}
 
             //__________________________________________________________________
             //
             // initialize the compiler
             //__________________________________________________________________
-            inline  Compiler(const string &rx, const Dictionary *user_dict) :
+            inline  RXCompiler(const string &rx, const Dictionary *user_dict) :
             curr( *rx ),
             last( curr+rx.size() ),
             depth(0),
@@ -613,13 +613,12 @@ case 'f': return new Single('\f')
             }
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Compiler);
+            Y_DISABLE_COPY_AND_ASSIGN(RXCompiler);
         };
 
         Pattern * Compile::RegExp( const string &rx, const Dictionary *dict )
         {
-
-            Compiler cmp(rx,dict);
+            RXCompiler        cmp(rx,dict);
             auto_ptr<Pattern> p = cmp.sub();
             if(cmp.depth>0)
             {

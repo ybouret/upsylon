@@ -17,7 +17,7 @@ namespace upsylon
                 //
                 // Sanity check
                 //______________________________________________________________
-                if(rules.size<=0) throw exception("{%s} no rules", **name);
+                if(rules.size<=0) throw exception("{%s} has no rules", **name);
 
                 //______________________________________________________________
                 //
