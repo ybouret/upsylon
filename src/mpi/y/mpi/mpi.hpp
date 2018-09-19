@@ -9,7 +9,9 @@
 #include "y/associative/set.hpp"
 #include "y/sequence/array.hpp"
 
+
 #include <mpi.h>
+
 
 namespace upsylon
 {
@@ -68,13 +70,13 @@ namespace upsylon
         //
         // data and initialization
         //______________________________________________________________________
-        const int        size;     //!< MPI_COMM_WOLRD size
-        const int        rank;     //!< MPI_COMM_WORLD rank
-        const int        last;     //!< rank-1
-        const bool       parallel; //!< size>1
-        const bool       isHead;   //!< 0==rank
-        const bool       isTail;   //!< last==rank
-        const bool       isBulk;   //!< !(isHead) && !(isTail)
+        const int        size;          //!< MPI_COMM_WOLRD size
+        const int        rank;          //!< MPI_COMM_WORLD rank
+        const int        last;          //!< rank-1
+        const bool       parallel;      //!< size>1
+        const bool       isHead;        //!< 0==rank
+        const bool       isTail;        //!< last==rank
+        const bool       isBulk;        //!< !(isHead) && !(isTail)
         const int        threadLevel;   //!< current thread level
         uint64_t         comTicks;      //!< cumulative communication ticks
         const string     processorName; //!< the processor name
