@@ -5,6 +5,7 @@
 #include "y/ios/stream.hpp"
 #include "y/string.hpp"
 #include "y/os/endian.hpp"
+#include "y/os/static-check.hpp"
 
 namespace upsylon
 {
@@ -42,16 +43,16 @@ namespace upsylon
 
             //! read a packed unsigned
             template <typename T>
-            inline T read_upack()
+            inline T read_upack(size_t *shift=0)
             {
+                Y_STATIC_CHECK(sizeof(T)<=8,T_is_too_large);
                 uint8_t      store[8];
                 const size_t prolog      = read<uint8_t>();
                 size_t       extra_bytes = (prolog&0x0f);
-                //std::cerr << "read_upack #extra=" << extra_bytes << "|prolog=" << prolog;
+                if(shift)   *shift       = 1+extra_bytes;
                 for(size_t i=0;i<extra_bytes;++i)
                 {
                     store[i] = read<uint8_t>();
-                    //std::cerr << ":" << int(store[i]);
                 }
                 T            ans(0);
                 while(extra_bytes-->0)
@@ -63,7 +64,6 @@ namespace upsylon
                     const uint8_t B = uint8_t((prolog&0xf0) >> 4);
                     ans <<= 4;
                     ans |= B;
-                    //std::cerr << "=>" << ans << std::endl;
                 }
                 return ans;
             }
