@@ -67,6 +67,15 @@ namespace upsylon
                 return *this;
             }
 
+            //! emit compact unsigne
+            template <typename T>
+            ostream & emit_upack(const T x)
+            {
+                const unsigned nb = bytes_for(x);
+                
+                return *this;
+            }
+
         protected:
             //! constructor
             explicit ostream() throw();
