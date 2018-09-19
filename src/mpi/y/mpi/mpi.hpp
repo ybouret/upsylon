@@ -116,7 +116,7 @@ namespace upsylon
         {
             assert(!(0==buffer&&count>0));
             const uint64_t mark = rt_clock::ticks();
-            Y_MPI_CHECK(MPI_Send(buffer, count, type, target, tag, MPI_COMM_WORLD) );
+            Y_MPI_CHECK(MPI_Send((void*)buffer, count, type, target, tag, MPI_COMM_WORLD) );
             comTicks += rt_clock::ticks() - mark;
         }
 
@@ -191,8 +191,8 @@ namespace upsylon
         {
             const uint64_t mark = rt_clock::ticks();
             MPI_Status status;
-            Y_MPI_CHECK(MPI_Sendrecv(sendbuf, sendcount, sendtype, target, sendtag,
-                                     recvbuf, recvcount, recvtype, source, recvtag,
+            Y_MPI_CHECK(MPI_Sendrecv((void*)sendbuf, sendcount, sendtype, target, sendtag,
+                                     recvbuf,        recvcount, recvtype, source, recvtag,
                                      MPI_COMM_WORLD, &status) );
             comTicks += rt_clock::ticks() - mark;
         }

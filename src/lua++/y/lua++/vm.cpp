@@ -1,5 +1,5 @@
 #include "y/lua++/vm.hpp"
-
+#include <cstdlib>
 
 namespace upsylon
 {
