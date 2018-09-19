@@ -2,6 +2,8 @@
 #include "y/ios/osstream.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/ios/imstream.hpp"
+#include "y/ios/icstream.hpp"
 
 using namespace upsylon;
 
@@ -46,15 +48,25 @@ Y_UTEST(ostreams)
             std::cerr << "-- first 32" << std::endl;
             for(size_t i=0;i<=32;++i)
             {
-                ios::osstream fp(s);
-                fp.emit_upack(i);
-                op.emit_upack(i);
-                data << i;
+                s.clear();
+                {
+                    ios::osstream fp(s);
+                    fp.emit_upack(i);
+                    op.emit_upack(i);
+                    data << i;
+                }
+                {
+                    ios::imstream inp(s);
+                    const size_t j = inp.read_upack<size_t>();
+                    std::cerr << "i=" << i << " -> j=" << j << std::endl;
+                    Y_ASSERT(j==i);
+                }
             }
 
             std::cerr << "-- alea 16bits" << std::endl;
             for(size_t i=0;i<=4;++i)
             {
+                s.clear();
                 ios::osstream fp(s);
                 const uint16_t x = alea.partial<uint16_t>();
                 fp.emit_upack<uint64_t>(x);
@@ -65,6 +77,7 @@ Y_UTEST(ostreams)
             std::cerr << "-- alea 32bits" << std::endl;
             for(size_t i=0;i<=4;++i)
             {
+                s.clear();
                 ios::osstream fp(s);
                 const uint32_t x = alea.partial<uint32_t>();
                 fp.emit_upack<uint64_t>(x);
@@ -75,6 +88,7 @@ Y_UTEST(ostreams)
             std::cerr << "-- alea 64bits" << std::endl;
             for(size_t i=0;i<=4;++i)
             {
+                s.clear();
                 ios::osstream fp(s);
                 const uint64_t x = alea.partial<uint64_t>();
                 fp.emit_upack<uint64_t>(x);

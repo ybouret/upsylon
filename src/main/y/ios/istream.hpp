@@ -38,14 +38,30 @@ namespace upsylon
 
             //! get an integral type
             template <typename T>
-            T read() { T ans(0); input(&ans,sizeof(T)); return swap_be_as<T>(ans); }
-            
+            inline T read() { T ans(0); input(&ans,sizeof(T)); return swap_be_as<T>(ans); }
+
+            //! read a packed unsigned
+            template <typename T>
+            inline T read_upack()
+            {
+                const size_t prolog      = read<uint8_t>();
+                size_t       extra_bytes = check_extra_bytes(prolog&0x0f,sizeof(T));
+                T            ans( (prolog&0xf0) >> 4 );
+                while( extra_bytes-- > 0 )
+                {
+                    ans <<= 8;
+                    ans  |= T( read<uint8_t>() );
+                }
+                return ans;
+            }
+
         protected:
             //! constructor
             explicit istream() throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(istream);
+            size_t check_extra_bytes( const size_t extra_bytes, const size_t sz) const;
         };
 
         //! read line algorithm
