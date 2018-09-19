@@ -20,6 +20,12 @@ namespace upsylon
             {
             }
 
+            const string & Parser:: key() const throw()
+            {
+                return *label;
+            }
+
+
             const Rule & Parser:: __term( const string &id, const string &rx, const Terminal::Attribute attr)
             {
                 static const char fn[] = "Parser:terminal: ";

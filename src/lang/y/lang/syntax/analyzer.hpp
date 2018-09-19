@@ -23,7 +23,7 @@ namespace upsylon
                 virtual void onTerminal( const string &name, const string &data ); //!< terminal name and data
                 virtual void onInternal( const string &name, const size_t  size ); //!< internal name and children
 
-                int level; //!< internal level
+                int depth; //!< internal level
 
                 std::ostream & space( std::ostream &) const; //!< output helper
 

@@ -16,11 +16,16 @@ namespace upsylon
             class Parser : public Lexical::Translator, public Grammar
             {
             public:
+                typedef intr_ptr<string,Parser> Pointer;
+
                 typedef Syntax::Rule      Rule;    //!< alias
                 typedef Syntax::Aggregate Agg;     //!< alias
                 typedef Syntax::Alternate Alt;     //!< alias
                 explicit Parser(const string &id); //!< initialize
                 virtual ~Parser() throw();         //!< destructor
+
+                //! return the label==name as key
+                const string & key() const throw();
 
                 //! create a new terminal or recall previously created (MUST match)
                 const Rule & __term(const string &id, const string &rx, const Terminal::Attribute attr);

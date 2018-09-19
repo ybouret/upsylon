@@ -14,15 +14,15 @@ namespace upsylon
             }
 
             Analyzer:: Analyzer() :
-            level(0)
+            depth(0)
             {
             }
 
             std::ostream & Analyzer:: space( std::ostream &os ) const
             {
-                const string lvl = vformat("<%02d>",level);
+                const string lvl = vformat("<%02d>",depth);
                 os << lvl;
-                for(int i=0;i<level;++i) os << ' ' << ' ';
+                for(int i=0;i<depth;++i) os << ' ' << ' ';
                 return os;
             }
 
@@ -36,12 +36,12 @@ namespace upsylon
                 }
                 else
                 {
-                    ++level;
+                    ++depth;
                     for(const Node *sub=node->children.head;sub;sub=sub->next)
                     {
                         __walk(sub);
                     }
-                    --level;
+                    --depth;
                     onInternal(name,node->children.size);
                 }
 
@@ -49,7 +49,7 @@ namespace upsylon
 
             void Analyzer:: walk( const Node &root )
             {
-                level = 0;
+                depth = 0;
                 __walk( &root );
             }
 
