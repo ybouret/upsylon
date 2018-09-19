@@ -44,22 +44,26 @@ namespace upsylon
             template <typename T>
             inline T read_upack()
             {
+                uint8_t      store[8];
                 const size_t prolog      = read<uint8_t>();
                 size_t       extra_bytes = (prolog&0x0f);
-                std::cerr << "read_upack #extra=" << extra_bytes << "|prolog=" << prolog;
-                T            ans(0);
-                while( extra_bytes-- > 0 )
+                //std::cerr << "read_upack #extra=" << extra_bytes << "|prolog=" << prolog;
+                for(size_t i=0;i<extra_bytes;++i)
                 {
-                    const uint8_t B = read<uint8_t>();
+                    store[i] = read<uint8_t>();
+                    //std::cerr << ":" << int(store[i]);
+                }
+                T            ans(0);
+                while(extra_bytes-->0)
+                {
                     ans <<= 8;
-                    ans  |= B;
-                    std::cerr << ":" << int(B);
+                    ans |= store[extra_bytes];
                 }
                 {
                     const uint8_t B = uint8_t((prolog&0xf0) >> 4);
                     ans <<= 4;
                     ans |= B;
-                    std::cerr << "=>" << ans << std::endl;
+                    //std::cerr << "=>" << ans << std::endl;
                 }
                 return ans;
             }

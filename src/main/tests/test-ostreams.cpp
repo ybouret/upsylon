@@ -63,8 +63,9 @@ Y_UTEST(ostreams)
                 }
             }
 
+#define N 1000
             std::cerr << "-- alea 16bits" << std::endl;
-            for(size_t i=0;i<=4;++i)
+            for(size_t i=0;i<N;++i)
             {
                 s.clear();
                 ios::osstream fp(s);
@@ -81,7 +82,7 @@ Y_UTEST(ostreams)
             }
 
             std::cerr << "-- alea 32bits" << std::endl;
-            for(size_t i=0;i<=4;++i)
+            for(size_t i=0;i<N;++i)
             {
                 s.clear();
                 ios::osstream fp(s);
@@ -89,10 +90,16 @@ Y_UTEST(ostreams)
                 fp.emit_upack<uint64_t>(x);
                 op.emit_upack<uint64_t>(x);
                 data << x;
+                {
+                    ios::imstream inp(s);
+                    const uint32_t j = inp.read_upack<uint32_t>();
+                    std::cerr << "x=" << x << " -> j=" << j << std::endl;
+                    Y_ASSERT(j==x);
+                }
             }
 
             std::cerr << "-- alea 64bits" << std::endl;
-            for(size_t i=0;i<=4;++i)
+            for(size_t i=0;i<N;++i)
             {
                 s.clear();
                 ios::osstream fp(s);
@@ -100,11 +107,24 @@ Y_UTEST(ostreams)
                 fp.emit_upack<uint64_t>(x);
                 op.emit_upack<uint64_t>(x);
                 data << x;
+                {
+                    ios::imstream inp(s);
+                    const uint64_t j = inp.read_upack<uint64_t>();
+                    std::cerr << "x=" << x << " -> j=" << j << std::endl;
+                    Y_ASSERT(j==x);
+                }
             }
 
 
         }
-
+        {
+            ios::icstream fp("upack.dat");
+            for(size_t i=1;i<=data.size();++i)
+            {
+                const uint64_t loaded = fp.read_upack<uint64_t>();
+                Y_ASSERT(loaded==data[i]);
+            }
+        }
     }
 
 }

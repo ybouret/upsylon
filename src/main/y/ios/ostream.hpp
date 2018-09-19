@@ -75,28 +75,28 @@ namespace upsylon
                 Y_STATIC_CHECK(sizeof(T)<=8,T_is_too_large);
                 const size_t  num_bits     = bits_for(x); assert(num_bits<=64);
                 const uint8_t last4shifted = uint8_t(x&T(0x0f)) << 4;
-                std::cerr << "emit_upack " << x << ", #bits=" << num_bits << "|";
+                //std::cerr << "emit_upack " << x << ", #bits=" << num_bits << "|";
                 if(num_bits<=4)
                 {
                     // 0 extra bytes!
-                    std::cerr << "prolog=" << int(last4shifted) << std::endl;
+                    //std::cerr << "prolog=" << int(last4shifted) << std::endl;
                     write(last4shifted);
                 }
                 else
                 {
                     const size_t extra_bits  = num_bits - 4;
                     size_t       extra_bytes = Y_ROUND8(extra_bits)>>3; assert(extra_bytes<=8);
-                    std::cerr << "+" << extra_bytes << ",prolog=" << int(last4shifted | extra_bytes);
+                    //std::cerr << "+" << extra_bytes << ",prolog=" << int(last4shifted | extra_bytes);
                     write( last4shifted | extra_bytes );
                     x >>= 4;
                     while(extra_bytes-->0)
                     {
-                        const uint8_t B = uint8_t(x&T(0xff)); std::cerr << ":" << int(B);
+                        const uint8_t B = uint8_t(x&T(0xff)); //std::cerr << ":" << int(B);
                         write(B);
                         x >>= 8;
                     }
                     assert(0==x);
-                    std::cerr << std::endl;
+                    //std::cerr << std::endl;
                 }
 
                 return *this;
