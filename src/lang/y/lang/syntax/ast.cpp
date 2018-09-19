@@ -66,17 +66,24 @@ namespace upsylon
                             {
                                 //______________________________________________
                                 //
-                                // check if merging content for acting
+                                // check what to do with content
                                 //______________________________________________
                                 assert(ch->rule.data);
-                                if( static_cast<const Compound *>(ch->rule.data)->type==Compound::Acting )
+                                switch(static_cast<const Compound *>(ch->rule.data)->type)
                                 {
-                                    tmp.merge_back(ch->children);
-                                    delete ch;
-                                }
-                                else
-                                {
-                                    tmp << ch;
+                                    case Compound::Normal: tmp << ch; break;
+                                    case Compound::Acting: tmp.merge_back(ch->children); delete ch; break;
+                                    case Compound::Design:
+                                        if(ch->children.size<=1)
+                                        {
+                                            tmp.merge_back(ch->children);
+                                            delete ch;
+                                        }
+                                        else
+                                        {
+                                            tmp<<ch;
+                                        }
+                                        break;
                                 }
                             }
                             else

@@ -145,7 +145,9 @@ namespace upsylon
                 string        nextAltID();
 
                 static string MakeAltNameFrom( array<string> &names );
-
+                
+            public:
+                const size_t rule_name_max;
             };
         }
     }
