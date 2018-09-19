@@ -64,9 +64,11 @@ namespace upsylon
                 //! initialize
                 explicit Repeating(const string &id, const Rule &jk,const size_t n);
 
-                virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const; //!< true if >= nmin occurences
+                //! true if >= nmin occurences
+                virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const;
 
-                virtual bool hollow() const throw();  //!< true if nmin==0
+                //! true if nmin==0
+                virtual bool hollow() const throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Repeating);

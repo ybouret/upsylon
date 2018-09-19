@@ -1,6 +1,5 @@
 
-#include "y/lang/syntax/parser.hpp"
-#include "y/lang/syntax/analyzer.hpp"
+#include "y/lang/compiler.hpp"
 #include "y/lang/lexical/plugin/comment.hpp"
 #include "y/lang/lexical/plugin/strings.hpp"
 
@@ -15,16 +14,37 @@ namespace
     class Eval : public Syntax::Parser
     {
     public:
+        Eval() : Syntax::Parser("evaluator")
+        {
+        }
+
+        virtual ~Eval() throw()
+        {
+        }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Eval);
+    };
+
+    class Evaluator : public Compiler
+    {
+    public:
+        Evaluator() :  Compiler( new Eval()  )
+        {
+        }
+
+        virtual ~Evaluator() throw()
+        {
+        }
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Evaluator);
     };
 
 }
 
 Y_UTEST(eval)
 {
-
 }
 Y_UTEST_DONE()
 
