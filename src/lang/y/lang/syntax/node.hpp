@@ -87,9 +87,11 @@ namespace upsylon
                 static Node *Load(Source        &source,
                                   const Grammar &grammar);
 
+                //! hard copy for tree duplication
+                Node(const Node &other);
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Node);
+                Y_DISABLE_ASSIGN(Node);
                 void *impl;
                 explicit Node( const Rule &r, Lexeme *lx ) throw() ;
                 explicit Node( const Rule &r ) throw();

@@ -20,16 +20,16 @@ namespace
 
             RULE &ID     = term("ID", "[:alpha:]+");
             RULE &NUM    = term("NUM", "[:digit:]+");
-            Alt  &ATOM   = alt("atom");
+            ALT  &ATOM   = alt("atom");
 
-            Agg  &mulExpr = agg("mulExpr");
-            mulExpr << ATOM    << zeroOrMore( agg("extraMul") << term("MULOP","[*/]") << ATOM );
-            Agg &addExpr = agg("addExpr");
-            addExpr << mulExpr << zeroOrMore( agg("extraAdd") << term("ADDOP","[-+]") << mulExpr );
+            AGG  &mulExpr = agg("mulExpr");
+            mulExpr << ATOM    << zeroOrMore( agg("extraMul",true) << term("MULOP","[*/]") << ATOM );
+            AGG &addExpr = agg("addExpr");
+            addExpr << mulExpr << zeroOrMore( agg("extraAdd",true) << term("ADDOP","[-+]") << mulExpr );
 
 
             ATOM << ID << NUM;
-            Agg &eval = agg("eval");
+            AGG &eval = agg("eval");
             eval << zeroOrMore( agg("statement") << addExpr << mark(';'));
             top(eval);
 
@@ -66,16 +66,28 @@ Y_UTEST(eval)
 {
     Evaluator ev;
 
+    ev->GraphViz("eval.dot");
+
+
+    Module *module = 0;
     if(argc>1)
     {
         const string filename = argv[1];
         if("NULL"==filename) return 0;
-        ev.compile( Module::OpenFile(filename) );
+        module = Module::OpenFile(filename);
     }
     else
     {
-        ev.compile( Module::OpenSTDIN() );
+        module = Module::OpenSTDIN();
     }
+
+    ev.compile(module,Compiler::KeepAST|Compiler::KeepRaw);
+    assert(ev.ast.is_valid());
+    ev.ast->GraphViz("eval-ast.dot");
+    assert(ev->raw.is_valid());
+    ev->raw->GraphViz("eval-raw.dot");
+
+
 }
 Y_UTEST_DONE()
 

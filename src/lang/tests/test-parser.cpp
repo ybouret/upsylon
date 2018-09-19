@@ -16,27 +16,27 @@ namespace
     public:
         explicit myParser() : Syntax::Parser("JSON")
         {
-            Agg &json = agg("json");
+            AGG &json = agg("json");
 
             hook<Lexical::CXX_Comment>("C++ Comment");
             hook<Lexical::jString>("string");
 
-            Alt &value    = alt("value");
+            ALT &value    = alt("value");
             value << term("string") << sole("null") << sole("true") << sole("false") << term("number","-?[:digit:]+(\\.[:digit:]*)?([eE]-?[:digit:]+)?");
 
-            const Rule &COMA   = mark(',');
+            RULE &COMA   = mark(',');
             
-            Alt &jArray = alt("array");
+            ALT &jArray = alt("array");
             {
-                const Rule &LBRACK = mark("[","\\[");
-                const Rule &RBRACK = mark("]","\\]");
+                RULE &LBRACK = mark("[","\\[");
+                RULE &RBRACK = mark("]","\\]");
                 {
-                    Agg &EmptyArray = agg("empty_array");
+                    AGG &EmptyArray = agg("empty_array");
                     EmptyArray << LBRACK << RBRACK;
                     jArray << EmptyArray;
                 }
                 {
-                    Agg &HeavyArray = agg("heavy_array");
+                    AGG &HeavyArray = agg("heavy_array");
                     HeavyArray << LBRACK << value;
                     HeavyArray << zeroOrMore( agg("extra_value",true) << COMA << value );
                     HeavyArray << RBRACK;
@@ -45,21 +45,21 @@ namespace
             }
             value << jArray;
 
-            Alt &jObject = alt("object");
+            ALT &jObject = alt("object");
             {
                 const Rule &LBRACE = mark("{","\\{");
                 const Rule &RBRACE = mark("}","\\}");
                 const Rule &COLUMN = mark(":",":");
                 {
-                    Agg &EmptyObject = agg("empty_object");
+                    AGG &EmptyObject = agg("empty_object");
                     EmptyObject << LBRACE << RBRACE;
                     jObject << EmptyObject;
                 }
                 {
-                    Agg &HeavyObject = agg("heavy_object");
+                    AGG &HeavyObject = agg("heavy_object");
                     HeavyObject << LBRACE;
                     {
-                        Agg &jPair = agg("pair");
+                        AGG &jPair = agg("pair");
                         jPair << term("string") << COLUMN << value;
                         HeavyObject << jPair;
                         HeavyObject << zeroOrMore( agg("extra_pair",true) << COMA << jPair );

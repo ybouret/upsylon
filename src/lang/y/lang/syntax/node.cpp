@@ -59,6 +59,48 @@ namespace upsylon
             {
             }
 
+
+            static inline
+            void * __hard_copy( const Node &other )
+            {
+                if(other.terminal)
+                {
+                    return new Lexeme( other.lexeme );
+                }
+                else
+                {
+                    auto_ptr<Node::List> L = new Node::List();
+                    try
+                    {
+                        for(const Node *node = other.children.head;node;node=node->next)
+                        {
+                            L->push_back( new Node(*node) );
+                        }
+                    }
+                    catch(...)
+                    {
+                        while(L->size) delete L->pop_back();
+                        throw;
+                    }
+                    return L.yield();
+                }
+            }
+
+            Node:: Node(const Node &other) :
+            Object(),
+            next(0),prev(0),
+            terminal(other.terminal),
+            internal(other.internal),
+            impl( __hard_copy(other) ),
+            lexeme(   *static_cast<Lexeme *>(impl) ),
+            children( *static_cast<List   *>(impl) ),
+            rule(other.rule)
+            {
+
+            }
+
+
+
             Lexeme * Node:: YieldLexeme(Node *node) throw()
             {
                 assert(node);

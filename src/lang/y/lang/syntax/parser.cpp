@@ -16,7 +16,8 @@ namespace upsylon
             Parser:: Parser(const string &id) :
             Lexical::Translator(id),
             Grammar(label),
-            root( **static_cast<Lexer *>(this) )
+            root( **static_cast<Lexer *>(this) ),
+            raw(0)
             {
             }
 
@@ -24,6 +25,22 @@ namespace upsylon
             {
                 return *label;
             }
+
+
+            Node * Parser:: parse( Source &source, bool keepRaw)
+            {
+                raw = 0;
+                raw = run(*this,source); assert(raw.is_valid());
+                if(keepRaw)
+                {
+                    return Node::AST( new Node( *raw ) );
+                }
+                else
+                {
+                    return Node::AST( raw.yield()      );
+                }
+            }
+
 
 
             const Rule & Parser:: __term( const string &id, const string &rx, const Terminal::Attribute attr)

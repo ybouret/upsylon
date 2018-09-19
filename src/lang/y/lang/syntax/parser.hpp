@@ -16,12 +16,12 @@ namespace upsylon
             class Parser : public Lexical::Translator, public Grammar, public counted
             {
             public:
-                typedef intr_ptr<string,Parser> Pointer;
+                typedef intr_ptr<string,Parser> Pointer; //!< for compiler
+                typedef Syntax::Rule            Rule;    //!< alias
+                typedef const Rule              RULE;    //!< alias
+                typedef Syntax::Aggregate       AGG;     //!< alias
+                typedef Syntax::Alternate       ALT;     //!< alias
 
-                typedef Syntax::Rule      Rule;    //!< alias
-                typedef const Rule        RULE;    //!< alias
-                typedef Syntax::Aggregate Agg;     //!< alias
-                typedef Syntax::Alternate Alt;     //!< alias
                 explicit Parser(const string &id); //!< initialize
                 virtual ~Parser() throw();         //!< destructor
 
@@ -133,16 +133,15 @@ namespace upsylon
                 }
 
                 //! parse the source
-                inline Node *parse( Source &source )
-                {
-                    return Node::AST( run(*this,source) );
-                }
-
+                Node *parse( Source &source, bool keepRaw=true);
+                
             protected:
                 Scanner &root; //!< root scanner
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);
+            public:
+                auto_ptr<Node> raw; //!< last raw tree, if asked for
             };
         }
     }
