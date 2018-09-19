@@ -15,7 +15,7 @@ namespace upsylon
             class Analyzer : public Object
             {
             public:
-                explicit Analyzer();         //!< initialize
+                explicit Analyzer() throw(); //!< initialize
                 virtual ~Analyzer() throw(); //!< destructor
 
                 void walk( const Node &root ); //!< default walk

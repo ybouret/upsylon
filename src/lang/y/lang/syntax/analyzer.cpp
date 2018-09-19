@@ -13,7 +13,7 @@ namespace upsylon
             {
             }
 
-            Analyzer:: Analyzer() :
+            Analyzer:: Analyzer() throw():
             depth(0)
             {
             }

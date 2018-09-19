@@ -13,7 +13,7 @@ namespace upsylon
         namespace Syntax
         {
             //! a parser linking a Lexer and a Grammar
-            class Parser : public Lexical::Translator, public Grammar
+            class Parser : public Lexical::Translator, public Grammar, public counted
             {
             public:
                 typedef intr_ptr<string,Parser> Pointer;
