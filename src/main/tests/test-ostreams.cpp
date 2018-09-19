@@ -72,6 +72,12 @@ Y_UTEST(ostreams)
                 fp.emit_upack<uint64_t>(x);
                 op.emit_upack<uint64_t>(x);
                 data << x;
+                {
+                    ios::imstream inp(s);
+                    const uint16_t j = inp.read_upack<uint16_t>();
+                    std::cerr << "x=" << x << " -> j=" << j << std::endl;
+                    Y_ASSERT(j==x);
+                }
             }
 
             std::cerr << "-- alea 32bits" << std::endl;

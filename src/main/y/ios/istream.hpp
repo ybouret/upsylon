@@ -45,16 +45,22 @@ namespace upsylon
             inline T read_upack()
             {
                 const size_t prolog      = read<uint8_t>();
-                size_t       extra_bytes = check_extra_bytes(prolog&0x0f,sizeof(T));
+                size_t       extra_bytes = (prolog&0x0f);
+                std::cerr << "read_upack #extra=" << extra_bytes << "|prolog=" << prolog;
                 T            ans(0);
                 while( extra_bytes-- > 0 )
                 {
+                    const uint8_t B = read<uint8_t>();
                     ans <<= 8;
-                    ans  |= T( read<uint8_t>() );
-                    std::cerr << "tmp=" << ans << std::endl;
+                    ans  |= B;
+                    std::cerr << ":" << int(B);
                 }
-                ans |= uint8_t((prolog&0xf0) >> 4);
-                std::cerr << "ans=" << ans << std::endl;
+                {
+                    const uint8_t B = uint8_t((prolog&0xf0) >> 4);
+                    ans <<= 4;
+                    ans |= B;
+                    std::cerr << "=>" << ans << std::endl;
+                }
                 return ans;
             }
 
@@ -64,7 +70,6 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(istream);
-            size_t check_extra_bytes( const size_t extra_bytes, const size_t sz) const;
         };
 
         //! read line algorithm

@@ -66,14 +66,7 @@ namespace upsylon
             return ans;
         }
 
-        size_t istream:: check_extra_bytes( const size_t extra_bytes, const size_t sz) const
-        {
-            const size_t required=1+extra_bytes;
-            if(required>sz) throw libc::exception(EIO,"read_upack: too many bytes");
-            return extra_bytes;
-        }
-
-
+        
         bool istream:: gets( string &line )
         {
             line.clear();
