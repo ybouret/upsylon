@@ -17,7 +17,7 @@ namespace upsylon
         string Compress( const string &source ) const;
 
         //! decompress source
-        string Decompress( const string &source ) const;
+        string Decompress( const size_t size, const string &source ) const;
         
 
     private:

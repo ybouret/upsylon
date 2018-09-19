@@ -26,6 +26,8 @@ Y_UTEST(lzo)
             op.flush();
         }
         string target = LZO.Compress(source);
+        string second = LZO.Decompress(source.size(),target);
+
     }
 
 
