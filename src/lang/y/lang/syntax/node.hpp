@@ -81,7 +81,7 @@ namespace upsylon
                 static Node *AST( Node *node ) throw();
 
                 //! rewrite for operators
-                static Node *Rewrite(Node *node);
+                static Node *Rewrite(Node *node, const string &grammarName);
 
 
 

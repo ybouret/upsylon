@@ -4,7 +4,6 @@
 
 #include "y/lang/syntax/grammar.hpp"
 #include "y/lang/lexical/translator.hpp"
-#include "y/code/utils.hpp"
 
 namespace upsylon
 {
@@ -31,76 +30,149 @@ namespace upsylon
 
                 //! create a new terminal or recall previously created (MUST match)
                 Terminal & __term(const string &id, const string &rx, const Terminal::Attribute attr);
-                
+
+                //______________________________________________________________
+                //
+                // Regular/Plugin Terminal
+                //______________________________________________________________
+
                 //! a regular terminal
                 inline
-                Terminal & term( const string &id, const string &rx )
+                RULE & term( const string &id, const string &rx )
                 {
                     return __term(id,rx,Terminal::Standard);
                 }
 
                 //! a regular terminal linking to a plugin rule
-                Terminal & term( const string &id );
+                RULE & term( const string &id );
 
 
                 //! a regular terminal
                 inline
-                Terminal & term(const char *id, const char *rx)
+                RULE & term(const char *id, const char *rx)
                 {
                     const string _(id),__(rx); return term(_,__);
                 }
 
-                //! an univocal=one sole possible result
+                //! a regular terminal linking to a plugin rule
                 inline
-                Terminal & sole( const string &id, const string &rx)
+                RULE & term( const char *id ) { const string _(id); return term(_); }
+
+
+                //______________________________________________________________
+                //
+                // Univocal Terminal
+                //______________________________________________________________
+
+                //! an univocal=one sole possible interpretation
+                inline
+                RULE & sole( const string &id, const string &rx)
                 {
                     return __term(id,rx,Terminal::Univocal);
                 }
 
-                //! an univocal=one sole possible result with name=regexp
+                //! an univocal=one sole possible interpretation with name=rx
                 inline
-                Terminal & sole( const string &rx)
+                RULE & sole( const string &rx)
                 {
                     return sole(rx,rx);
                 }
 
                 //! an univocal=one sole possible terminal
                 inline
-                Terminal & sole(const char *id, const char *rx)
+                RULE & sole(const char *id, const char *rx)
                 {
                     const string _(id),__(rx); return sole(_,__);
                 }
 
-                //! an univocal=one sole possible result with name=regexp
+                //! an univocal=one sole possible result with name=rx
                 inline
-                Terminal & sole( const char *rx)
+                RULE & sole(const char *rx)
                 {
                     return sole(rx,rx);
                 }
 
+                //! an univocal char
+                inline
+                RULE & sole(const char C)
+                {
+                    make_id_and_rx_from(C);
+                    return sole(__id,__rx);
+                }
+
+
+                //______________________________________________________________
+                //
+                // Operator to rewrite AST
+                //______________________________________________________________
+
+                //! operator name/regexp
+                /**
+                 if already declared, then the isOperator is updated!!!
+                 */
+                inline
+                RULE & op( const string &id, const string &rx)
+                {
+                    return __term(id,rx,Terminal::Univocal).setOperator();
+                }
+
+                //! operator name/regexp
+                inline
+                RULE & op( const char *id, const char *rx)
+                {
+                    const string _(id);
+                    const string __(rx);
+                    return op(_,__);
+                }
+
+                //! operator name=regexp
+                inline
+                RULE & op( const string &rx)
+                {
+                    return op(rx,rx);
+                }
+
+                //! operator name=regexp
+                inline
+                RULE & op(const char *rx)
+                {
+                    return op(rx,rx);
+                }
+
+                //! one char
+                inline
+                RULE & op(const char C)
+                {
+                    make_id_and_rx_from(C);
+                    return op(__id,__rx);
+                }
+
+
+                //______________________________________________________________
+                //
+                // Semantic Terminal
+                //______________________________________________________________
 
                 //! just a semantic marker
                 inline
-                const Rule & mark(const string &id, const string &rx )
+                RULE & mark(const string &id, const string &rx )
                 {
                     return __term(id,rx,Terminal::Semantic);
                 }
 
                 //! just a semantic marker
                 inline
-                const Rule & mark(const char *id, const char *rx)
+                RULE & mark(const char *id, const char *rx)
                 {
                     const string _(id),__(rx); return mark(_,__);
                 }
 
                 //! make a single char mark
                 inline
-                const Rule & mark( const char C )
+                RULE & mark( const char C )
                 {
-                    const unsigned B     = C;
-                    const char     id[4] = { C, 0, 0, 0 };
-                    const char     rx[8] = { '\\', 'x', hexadecimal::digit(B>>4), hexadecimal::digit(B), 0 };
-                    return mark(id,rx);
+                    make_id_and_rx_from(C);
+                    return mark(__id,__rx);
                 }
 
                 //! lexical plugin, no lexeme production, 0 argument
@@ -141,6 +213,10 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);
+                char __id[4];
+                char __rx[8];
+                void make_id_and_rx_from(const char C) throw();
+
             public:
                 auto_ptr<Node> raw; //!< last raw tree, if asked for
             };

@@ -46,7 +46,7 @@ namespace upsylon
                 }
             }
 
-            const char * Terminal:: __style() const throw()
+            const char *  Terminal:: __style() const throw()
             {
                 switch(attr)
                 {
@@ -57,7 +57,13 @@ namespace upsylon
                 }
                 return "bold";
             }
-          
+
+            const char *  Terminal:: __shape() const throw()
+            {
+                if(isOperator) return "triangle";
+                return "box";
+            }
+
             bool Terminal:: hollow() const throw()
             {
                 return false;

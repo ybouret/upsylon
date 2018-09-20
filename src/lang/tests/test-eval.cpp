@@ -24,10 +24,10 @@ namespace
             atom << term("ID","[:alpha:]+") << term("INT","[:digit:]+");
 
             AGG & mulExpr = design("mulExpr");
-            mulExpr << atom << zeroOrMore( acting("extraMul") << term("mulOp","[*/]").setOperator() << atom );
+            mulExpr << atom << zeroOrMore( acting("extraMul") << choice( op('*'), op('/'), op('%') )  << atom );
 
             AGG & addExpr = design("addExpr");
-            addExpr << mulExpr << zeroOrMore( acting("extraAdd") << term("addOp","[-+]").setOperator() << mulExpr );
+            addExpr << mulExpr << zeroOrMore( acting("extraAdd") << choice( op('+'), op('-')) << mulExpr );
 
             atom << ( acting("group") << mark('(') << addExpr << mark (')') );
             statement << zeroOrMore( acting("expr") << addExpr << mark(';') );
@@ -36,7 +36,7 @@ namespace
             root.drop("ws","[:blank:]");
 
             checkValidity();
-            setVerbose(true);
+            //setVerbose(true);
         }
 
         virtual ~Eval() throw()

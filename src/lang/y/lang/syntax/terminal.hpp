@@ -47,7 +47,9 @@ namespace upsylon
                 //! depends on type
                 virtual const char * __style() const throw();
 
-                
+                //! depends on isOperator
+                virtual const char *  __shape() const throw();
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);
             };

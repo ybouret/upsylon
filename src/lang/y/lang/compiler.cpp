@@ -31,15 +31,15 @@ namespace upsylon
             cst = 0;
 
             {
-                std::cerr << "Parsing to AST" << std::endl;
-                auto_ptr<NODE> tmpAST = parser->parse(source, 0 != (flags&KeepRaw) );
+                auto_ptr<NODE> AST = parser->parse(source, 0 != (flags&KeepRaw) );
                 if(0!=(flags&KeepAST))
                 {
-                    ast = new NODE( *tmpAST );
+                    ast = new NODE( *AST );
                 }
-                std::cerr << "Rewriting" << std::endl;
-                cst = NODE::AST( NODE::Rewrite( tmpAST.yield() ) );
-                //cst = NODE::Rewrite( tmpAST.yield() );
+
+
+                cst = NODE::AST( NODE::Rewrite( &*AST, *(this->name)) );
+                AST.dismiss();
             }
             
 

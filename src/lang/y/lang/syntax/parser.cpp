@@ -1,6 +1,7 @@
 
 #include "y/lang/syntax/parser.hpp"
 #include "y/exception.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon
 {
@@ -19,6 +20,18 @@ namespace upsylon
             root( **static_cast<Lexer *>(this) ),
             raw(0)
             {
+            }
+
+            void Parser:: make_id_and_rx_from(const char C) throw()
+            {
+                const unsigned B = C;
+                memset(__id,0,sizeof(__id));
+                memset(__rx,0,sizeof(__rx));
+                __id[0] = C;
+                __rx[0] = '\\';
+                __rx[1] = 'x';
+                __rx[2] = hexadecimal::digit(B>>4);
+                __rx[3] = hexadecimal::digit(B);
             }
 
             const string & Parser:: key() const throw()
@@ -65,9 +78,7 @@ namespace upsylon
                     //----------------------------------------------------------
                     if( Terminal::UUID != rule->uuid ) throw exception("%s previous other syntax rule '%s'", fn, *id);
 
-                    //----------------------------------------------------------
-                    // todo: check attribute ?
-                    //----------------------------------------------------------
+
 
                     //----------------------------------------------------------
                     // check recorded into lexer as well
@@ -89,6 +100,13 @@ namespace upsylon
 
                     assert(rule->data);
                     const Terminal *t = static_cast<const Terminal *>(rule->data);
+
+                    //check attribute
+                    if(attr!=t->attr)
+                    {
+                        throw exception("%s '%s' gets a different attribute", fn, *id);
+                    }
+
                     return *(Terminal *)t;
                     
                 }
@@ -101,7 +119,7 @@ namespace upsylon
             }
 
 
-            Terminal & Parser:: term(const string &id)
+            Parser::RULE & Parser:: term(const string &id)
             {
                 Grammar     &G      = *this;
                 const string toCall = Scanner::CallLabel(id);
@@ -114,9 +132,7 @@ namespace upsylon
                 const Rule *r = G.getRuleByName(id);
                 if(r)
                 {
-                    assert(r->data);
-                    const Terminal *t = static_cast<const Terminal *>(r->data);
-                    return *(Terminal *)t;
+                    return *r;
                 }
                 else
                 {
