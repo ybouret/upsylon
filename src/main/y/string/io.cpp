@@ -6,13 +6,13 @@ namespace  upsylon
     void string_io:: save_binary(ios::ostream &fp,
                                  const string &s)
     {
-        fp.emit<uint32_t>(s.size());
+        fp.emit_upack<size_t>(s.size());
         fp << s;
     }
 
     string string_io:: load_binary(ios::istream &fp)
     {
-        size_t n = fp.read<uint32_t>();
+        size_t n = fp.read_upack<size_t>();
         string ans(n,as_capacity);
         while(n-->0)
         {

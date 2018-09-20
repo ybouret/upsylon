@@ -318,7 +318,7 @@ namespace upsylon
                     const Module    *module = *source;
                     auto_ptr<Lexeme> lexeme = new Lexeme( module->origin );
                     {
-                        const size_t nch = source.read<uint32_t>();
+                        const size_t nch = source.read_upack<size_t>();
                         for(size_t i=1;i<=nch;++i)
                         {
                             Char *ch = source.get();
@@ -336,7 +336,7 @@ namespace upsylon
                     //__________________________________________________________
                     auto_ptr<Node> node = Node::Create(rule);
                     {
-                        const size_t nch = source.read<uint32_t>();
+                        const size_t nch = source.read_upack<size_t>();
                         for(size_t i=1;i<=nch;++i)
                         {
                             node->children.push_back( Node::Load(source,grammar) );

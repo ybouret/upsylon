@@ -206,12 +206,13 @@ namespace upsylon
 
             void Node:: save( ios::ostream &fp ) const
             {
-                //! creator
+                //! creator name
                 string_io::save_binary(fp,rule.name);
+                // content
                 if(terminal)
                 {
                     fp.write(0);
-                    fp.emit<uint32_t>( lexeme.size );
+                    fp.emit_upack<size_t>( lexeme.size );
                     for(const Char *ch=lexeme.head;ch;ch=ch->next)
                     {
                         fp.write(ch->code);
@@ -220,7 +221,7 @@ namespace upsylon
                 else
                 {
                     fp.write(1);
-                    fp.emit<uint32_t>( children.size );
+                    fp.emit_upack( children.size );
                     for(const Node *ch=children.head;ch;ch=ch->next)
                     {
                         ch->save(fp);
