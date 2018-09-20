@@ -27,8 +27,9 @@ namespace upsylon
                     //
                     // recursive
                     //__________________________________________________________
-                    const bool    agg  = (Aggregate::UUID==node->rule.uuid);
-                    Node::List    &sub = node->children;
+                    // possible if aggregate or modified terminal!!!
+                    const bool     possible = (Aggregate::UUID==node->rule.uuid||Terminal::UUID==node->rule.uuid);
+                    Node::List    &sub      = node->children;
                     {
                         Node::List tmp;
                         while(sub.size)
@@ -62,7 +63,7 @@ namespace upsylon
                                         break;
                                 }
                             }
-                            else if( agg && Aggregate::UUID==ch->rule.uuid )
+                            else if( possible && Aggregate::UUID==ch->rule.uuid )
                             {
                                 //______________________________________________
                                 //

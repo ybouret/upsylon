@@ -38,7 +38,8 @@ namespace upsylon
                     ast = new NODE( *tmpAST );
                 }
                 std::cerr << "Rewriting" << std::endl;
-                cst = NODE::Rewrite( tmpAST.yield() );
+                cst = NODE::AST( NODE::Rewrite( tmpAST.yield() ) );
+                //cst = NODE::Rewrite( tmpAST.yield() );
             }
             
 

@@ -21,28 +21,50 @@ namespace upsylon
                 else
                 {
 
-                    Node::List &src = node->children;
-                    Node::List  tgt;
+                    Node::List &source = node->children;
+                    Node::List  target;
 
-                    while(src.size)
+                    try
                     {
-                        auto_ptr<Node> child  = Rewrite(src.pop_front());
-                        const Rule     &rule  = child->rule;
-                        if(Terminal::UUID == rule.uuid && static_cast<const Terminal *>(rule.data)->isOperator )
+
+                        while(source.size)
                         {
-                            std::cerr << "should make operator from " << child->lexeme << std::endl;
-                            auto_ptr<Node> parent = Node::Create(rule); // a funky terminal ID with content!
-                            
-                        }
-                        else
-                        {
+                            auto_ptr<Node> child  = Rewrite(source.pop_front());
+                            const Rule     &rule  = child->rule;
+                            if(Terminal::UUID == rule.uuid && static_cast<const Terminal *>(rule.data)->isOperator )
+                            {
+                                std::cerr << "should make operator from " << child->lexeme << std::endl;
+                                auto_ptr<Node> parent = Node::Create(rule); // a funky terminal ID with content!
+
+                                // get LHS operator
+                                if(target.tail)
+                                {
+                                    parent->children.push_front(target.pop_back());
+                                }
+
+                                // get RHS operator
+                                if(source.head)
+                                {
+                                    parent->children.push_back( Rewrite(source.pop_front()) );
+                                }
+
+                                // and replace
+                                target << parent.yield();
+                            }
+                            else
+                            {
+                                target << child.yield();
+                            }
 
                         }
 
-                        tgt << child.yield();
+                        source.swap_with(target);
                     }
-
-                    src.swap_with(tgt);
+                    catch(...)
+                    {
+                        while(target.size) delete target.pop_back();
+                        throw;
+                    }
 
                     return node;
                 }

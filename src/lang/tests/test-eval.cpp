@@ -24,7 +24,7 @@ namespace
             atom << term("ID","[:alpha:]+") << term("INT","[:digit:]+");
 
             AGG & mulExpr = design("mulExpr");
-            mulExpr << atom << zeroOrMore( acting("extraMul") << term("mulOp","[*/]") << atom );
+            mulExpr << atom << zeroOrMore( acting("extraMul") << term("mulOp","[*/]").setOperator() << atom );
 
             AGG & addExpr = design("addExpr");
             addExpr << mulExpr << zeroOrMore( acting("extraAdd") << term("addOp","[-+]").setOperator() << mulExpr );
@@ -88,7 +88,8 @@ Y_UTEST(eval)
     ev.ast->GraphViz("eval-ast.dot");
     assert(ev->raw.is_valid());
     ev->raw->GraphViz("eval-raw.dot");
-
+    assert(ev.cst.is_valid());
+    ev.cst->GraphViz("eval-cst.dot");
 
 }
 Y_UTEST_DONE()
