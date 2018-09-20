@@ -8,24 +8,34 @@ using namespace Lang;
 
 Y_UTEST(source)
 {
+
+    Module *module = NULL;
     if(argc>1)
     {
         const string filename = argv[1];
-        if(filename=="NULL") return 0;
-        
-        Source source( Module::OpenFile(argv[1]) );
+        if( "NULL" == filename )
         {
-            Token  content;
-            source.prefetch(4);
-
-            Char *ch = NULL;
-            while( NULL != (ch=source.get()) )
-            {
-                content.push_back(ch);
-            }
-            std::cerr << "#chars=" << content.size << std::endl;
-            source.ungetCopy(content);
+            return 0;
         }
+        module = Module::OpenFile(filename);
+    }
+    else
+    {
+        module = Module::OpenSTDIN();
+    }
+
+    Source source(module);
+    {
+        Token  content;
+        source.prefetch(4);
+
+        Char *ch = NULL;
+        while( NULL != (ch=source.get()) )
+        {
+            content.push_back(ch);
+        }
+        std::cerr << "#chars=" << content.size << std::endl;
+        source.ungetCopy(content);
         Token content_copy;
         {
             Char *ch = NULL;
@@ -35,5 +45,7 @@ Y_UTEST(source)
             }
         }
     }
+    
+
 }
 Y_UTEST_DONE()
