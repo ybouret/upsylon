@@ -43,6 +43,12 @@ namespace upsylon
                 const string _(code); doString(_);
             }
 
+            template <typename T>
+            T get( const string &id );
+
+            template <typename T>
+            inline T get(const char *id) { const string _(id); return get<T>(_); }
+
 
         private:
             lua_State *L;
