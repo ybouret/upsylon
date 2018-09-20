@@ -33,6 +33,7 @@ namespace upsylon
             }
             else
             {
+                std::cerr << "EOF " << origin << std::endl;
                 return NULL;
             }
         }
