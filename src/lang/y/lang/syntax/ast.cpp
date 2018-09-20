@@ -10,7 +10,7 @@ namespace upsylon
         {
 
 
-            Node * Node::AST(Node *node) throw()
+            Node * Node::AST(Node *node, bool *needRewrite) throw()
             {
                 assert(node);
                 if(node->terminal)
@@ -19,6 +19,10 @@ namespace upsylon
                     //
                     // left untouched, should be standard
                     //__________________________________________________________
+                    if(needRewrite&&node->rule.uuid==Terminal::UUID&&static_cast<const Terminal *>(node->rule.data)->isOperator)
+                    {
+                        *needRewrite=true;
+                    }
                     return node;
                 }
                 else
@@ -38,7 +42,7 @@ namespace upsylon
                             //
                             // apply AST to child
                             //__________________________________________________
-                            Node *ch = AST(sub.pop_front());
+                            Node *ch = AST(sub.pop_front(),needRewrite);
                             if(ch->terminal)
                             {
                                 //______________________________________________
@@ -47,6 +51,10 @@ namespace upsylon
                                 //______________________________________________
                                 const Rule      &rule = ch->rule; assert(rule.data);
                                 const Terminal  &term = *static_cast<const Terminal *>(rule.data);
+                                if(needRewrite&&term.isOperator)
+                                {
+                                    *needRewrite=true;
+                                }
                                 switch(term.attr)
                                 {
                                     case Terminal::Standard:

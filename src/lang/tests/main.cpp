@@ -12,6 +12,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(grammar);
     Y_UTEST(parser);
     Y_UTEST(eval);
+    Y_UTEST(json);
 
 }
 Y_UTEST_EXEC()

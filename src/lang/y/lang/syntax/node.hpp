@@ -78,7 +78,7 @@ namespace upsylon
                 static void BackTo( Lexical::Translator &lexer, Node *node ) throw();
 
                 //! return AST operations
-                static Node *AST( Node *node ) throw();
+                static Node *AST( Node *node, bool *needRewrite) throw();
 
                 //! rewrite for operators
                 static Node *Rewrite(Node *node, const string &grammarName);

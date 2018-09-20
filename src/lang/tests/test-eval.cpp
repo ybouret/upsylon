@@ -32,6 +32,8 @@ namespace
             atom << ( acting("group") << mark('(') << addExpr << mark (')') );
             statement << zeroOrMore( acting("expr") << addExpr << mark(';') );
 
+            hook<Lexical::CXX_Comment>("CXX Comments");
+            hook<Lexical::C_Comment>("C Comments");
             root.endl("endl","[:endl:]");
             root.drop("ws","[:blank:]");
 

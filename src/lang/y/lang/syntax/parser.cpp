@@ -40,17 +40,19 @@ namespace upsylon
             }
 
 
-            Node * Parser:: parse( Source &source, bool keepRaw)
+            Node * Parser:: parse(Source &source,
+                                  bool   &needRewrite,
+                                  bool    keepRaw)
             {
                 raw = 0;
                 raw = run(*this,source); assert(raw.is_valid());
                 if(keepRaw)
                 {
-                    return Node::AST( new Node( *raw ) );
+                    return Node::AST( new Node( *raw ), &needRewrite);
                 }
                 else
                 {
-                    return Node::AST( raw.yield()      );
+                    return Node::AST( raw.yield(), &needRewrite);
                 }
             }
 

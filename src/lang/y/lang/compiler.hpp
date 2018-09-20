@@ -37,7 +37,7 @@ namespace upsylon
         public:
             const Origin           name; //!< Grammar::name
             auto_ptr<NODE>         ast;  //!< last parsed AST
-            auto_ptr<NODE>         cst;
+            auto_ptr<NODE>         cst;  //!< after rewrite if needed
         };
 
 

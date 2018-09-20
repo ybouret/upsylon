@@ -93,7 +93,7 @@ Y_UTEST(grammar)
             Tree->GraphViz("tree.dot");
             {
                 Syntax::Node *tree = Tree.yield();
-                Tree = Syntax::Node::AST(tree);
+                Tree = Syntax::Node::AST(tree,NULL);
             }
             Tree->GraphViz("ast.dot");
         }

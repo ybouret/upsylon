@@ -1,5 +1,6 @@
 
 #include "y/lang/compiler.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -31,15 +32,27 @@ namespace upsylon
             cst = 0;
 
             {
-                auto_ptr<NODE> AST = parser->parse(source, 0 != (flags&KeepRaw) );
+                bool needRewrite = false;
+                auto_ptr<NODE> AST = parser->parse(source, needRewrite, 0 != (flags&KeepRaw) );
                 if(0!=(flags&KeepAST))
                 {
                     ast = new NODE( *AST );
                 }
 
-
-                cst = NODE::AST( NODE::Rewrite( &*AST, *(this->name)) );
-                AST.dismiss();
+                if(needRewrite)
+                {
+                    needRewrite = false;
+                    cst = NODE::AST( NODE::Rewrite( &*AST, *(this->name)), &needRewrite);
+                    if(needRewrite)
+                    {
+                        throw exception("{%s} still need to re-write tree!", **(parser->name));
+                    }
+                    AST.dismiss();
+                }
+                else
+                {
+                    cst = AST.yield();
+                }
             }
             
 
