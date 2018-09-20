@@ -21,7 +21,7 @@ namespace upsylon
 
             std::ostream & Analyzer:: space( std::ostream &os ) const
             {
-                const string lvl = vformat("<%02d>",depth);
+                const string lvl = vformat("%02d|",depth);
                 os << lvl;
                 for(int i=0;i<2*depth;++i) os << '_';
                 return os;
@@ -65,10 +65,7 @@ namespace upsylon
 
             void Analyzer:: onInternal(const string &name, const size_t size)
             {
-                //space(std::cerr) << "call[" << name << "]/" << size << std::endl;
                 space(std::cerr) << "call " << name << "/" << size << std::endl;
-                //for(size_t i=name.size()+depth*2;i<=aligned;++i) std::cerr << ' ';
-                //std::cerr << "#" << size << std::endl;
             }
         }
     }

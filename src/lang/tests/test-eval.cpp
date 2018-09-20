@@ -17,7 +17,9 @@ namespace
         Eval() : Syntax::Parser("evaluator")
         {
 
+            AGG &statement = agg("statement");
 
+#if 0
             RULE &ID     = term("ID", "[:alpha:]+");
             RULE &NUM    = term("NUM", "[:digit:]+");
             ALT  &ATOM   = alt("atom");
@@ -33,6 +35,21 @@ namespace
             AGG &eval = agg("eval");
             eval << zeroOrMore( agg("statement") << addExpr << mark(';'));
             top(eval);
+
+#endif
+
+            ALT & atom = alt("atom");
+
+            atom << term("ID","[:alpha:]+") << term("INT","[:digit:]+");
+
+            AGG & mulExpr = design("mulExpr");
+            mulExpr << atom << zeroOrMore( acting("extraMul") << term("mulOp","[*/]") << atom );
+
+            AGG & addExpr = design("addExpr");
+            addExpr << mulExpr << zeroOrMore( acting("extraAdd") << term("addOp","[-+]") << mulExpr );
+
+            atom << ( acting("group") << mark('(') << addExpr << mark (')') );
+            statement << zeroOrMore( acting("expr") << addExpr << mark(';') );
 
             root.endl("endl","[:endl:]");
             root.drop("ws","[:blank:]");
