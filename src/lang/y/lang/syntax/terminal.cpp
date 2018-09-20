@@ -11,7 +11,8 @@ namespace upsylon
 
             Terminal:: Terminal(const string &id, const Attribute flag ) :
             Rule(UUID,id),
-            attr(flag)
+            attr(flag),
+            isOperator(false)
             {
                 Terminal *self = this;
                 data = self;
@@ -61,6 +62,9 @@ namespace upsylon
             {
                 return false;
             }
+
+            
+            Terminal & Terminal::setOperator() throw() { isOperator=true; return *this; }
 
 
 

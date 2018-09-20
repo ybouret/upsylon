@@ -22,7 +22,7 @@ namespace upsylon
             //! destructor
             virtual ~Compiler() throw();
 
-            //! get the AST and walk it down
+            //! get the AST, rewrite it and walk it down
             void compile( Module *module, const unsigned flags = 0 );
 
             //! helper to access parser->raw
@@ -37,6 +37,7 @@ namespace upsylon
         public:
             const Origin           name; //!< Grammar::name
             auto_ptr<NODE>         ast;  //!< last parsed AST
+            auto_ptr<NODE>         cst;
         };
 
 

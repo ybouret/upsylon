@@ -34,46 +34,46 @@ namespace upsylon
                 
                 //! a regular terminal
                 inline
-                const Rule & term( const string &id, const string &rx )
+                Terminal & term( const string &id, const string &rx )
                 {
                     return __term(id,rx,Terminal::Standard);
                 }
 
                 //! a regular terminal linking to a plugin rule
-                const Rule & term( const string &id );
+                Terminal & term( const string &id );
 
 
                 //! a regular terminal
                 inline
-                const Rule & term(const char *id, const char *rx)
+                Terminal & term(const char *id, const char *rx)
                 {
                     const string _(id),__(rx); return term(_,__);
                 }
 
                 //! an univocal=one sole possible result
                 inline
-                const Rule & sole( const string &id, const string &rx)
+                Terminal & sole( const string &id, const string &rx)
                 {
                     return __term(id,rx,Terminal::Univocal);
                 }
 
                 //! an univocal=one sole possible result with name=regexp
                 inline
-                const Rule & sole( const string &rx)
+                Terminal & sole( const string &rx)
                 {
                     return sole(rx,rx);
                 }
 
                 //! an univocal=one sole possible terminal
                 inline
-                const Rule & sole(const char *id, const char *rx)
+                Terminal & sole(const char *id, const char *rx)
                 {
                     const string _(id),__(rx); return sole(_,__);
                 }
 
                 //! an univocal=one sole possible result with name=regexp
                 inline
-                const Rule & sole( const char *rx)
+                Terminal & sole( const char *rx)
                 {
                     return sole(rx,rx);
                 }
@@ -133,7 +133,7 @@ namespace upsylon
                     const string _(pluginName), __(rx); hook<PLUGIN>(_,__);
                 }
 
-                //! parse the source
+                //! parse the source to AST, without rewriting
                 Node *parse( Source &source, bool keepRaw=true);
                 
             protected:

@@ -101,7 +101,7 @@ namespace upsylon
             }
 
 
-            const Rule & Parser:: term(const string &id)
+            Terminal & Parser:: term(const string &id)
             {
                 Grammar     &G      = *this;
                 const string toCall = Scanner::CallLabel(id);
@@ -114,7 +114,9 @@ namespace upsylon
                 const Rule *r = G.getRuleByName(id);
                 if(r)
                 {
-                    return *r;
+                    assert(r->data);
+                    const Terminal *t = static_cast<const Terminal *>(r->data);
+                    return *(Terminal *)t;
                 }
                 else
                 {

@@ -25,15 +25,15 @@ namespace upsylon
                 {
                     Standard, //!< from a regular expression
                     Univocal, //!< univocal regular expression => discard content
-                    Semantic //!< semantic only => discard node
+                    Semantic  //!< semantic only => discard node
                 };
 
 
                 const Attribute attr;        //!< the role
-                bool            isOperator;  //!< for AST
+                bool            isOperator;  //!< for rewriting
 
                 //! set operator flag
-                inline Terminal & setOperator() throw() { isOperator=true; return *this; }
+                Terminal & setOperator() throw();
 
                 explicit Terminal( const string &id, const Attribute flag=Standard); //!< initialize, data=self
                 virtual ~Terminal() throw();                                         //!< destructor

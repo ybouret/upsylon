@@ -19,25 +19,6 @@ namespace
 
             AGG &statement = agg("statement");
 
-#if 0
-            RULE &ID     = term("ID", "[:alpha:]+");
-            RULE &NUM    = term("NUM", "[:digit:]+");
-            ALT  &ATOM   = alt("atom");
-
-            AGG  &mulExpr = design("mulExpr");
-            mulExpr << ATOM    << zeroOrMore( acting("extraMul") << term("MULOP","[*/]") << ATOM );
-            AGG &addExpr = design("addExpr");
-            addExpr << mulExpr << zeroOrMore( acting("extraAdd") << term("ADDOP","[-+]") << mulExpr );
-
-
-            ATOM << ID << NUM;
-            //ATOM << mark('(') << addExpr << mark(')');
-            AGG &eval = agg("eval");
-            eval << zeroOrMore( agg("statement") << addExpr << mark(';'));
-            top(eval);
-
-#endif
-
             ALT & atom = alt("atom");
 
             atom << term("ID","[:alpha:]+") << term("INT","[:digit:]+");
@@ -46,7 +27,7 @@ namespace
             mulExpr << atom << zeroOrMore( acting("extraMul") << term("mulOp","[*/]") << atom );
 
             AGG & addExpr = design("addExpr");
-            addExpr << mulExpr << zeroOrMore( acting("extraAdd") << term("addOp","[-+]") << mulExpr );
+            addExpr << mulExpr << zeroOrMore( acting("extraAdd") << term("addOp","[-+]").setOperator() << mulExpr );
 
             atom << ( acting("group") << mark('(') << addExpr << mark (')') );
             statement << zeroOrMore( acting("expr") << addExpr << mark(';') );
