@@ -49,6 +49,8 @@ namespace upsylon
                 //! run
                 Node *run(Lexer &lexer, Source &source);
 
+                //! propagate verbose to all rules
+                void  setVerbose( bool flag ) throw();
 
                 //______________________________________________________________
                 //

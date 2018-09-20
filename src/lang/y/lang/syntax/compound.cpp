@@ -106,19 +106,22 @@ namespace upsylon
             bool Aggregate:: accept( Y_LANG_SYNTAX_RULE_ARGS ) const
             {
                 Node * subTree = Node::Create(*this);
-
+                if(verbose) { display(std::cerr,depth,'?') << std::endl; }
                 //______________________________________________________________
                 //
                 // try to accept every operand
                 //______________________________________________________________
                 {
+                    ++depth;
                     auto_ptr<Node> guard(subTree);
                     for(const Operand *op=head;op;op=op->next)
                     {
-                        if(!op->rule.accept(subTree, lexer, source) )
+                        if(!op->rule.accept(subTree, lexer, source, depth) )
                         {
                             guard.dismiss();
                             Node::BackTo(lexer, subTree);
+                            --depth;
+                            if(verbose) { display(std::cerr,depth,'-') << std::endl; }
                             return false;
                         }
                     }
@@ -128,6 +131,8 @@ namespace upsylon
                 // success, subTree may be empty but never NULL!
                 Grow(tree,subTree);
                 //std::cerr << "..accepted " << name << std::endl;
+                --depth;
+                if(verbose) { display(std::cerr,depth,'+') << std::endl; }
                 return true;
             }
 
@@ -161,18 +166,25 @@ namespace upsylon
 
             bool Alternate:: accept( Y_LANG_SYNTAX_RULE_ARGS ) const
             {
+                if(verbose) { display(std::cerr,depth,'?') << std::endl; }
+                ++depth;
+
                 for(const Operand *op=head;op;op=op->next)
                 {
                     Node *tmp = NULL;
-                    if(op->rule.accept(tmp, lexer, source) )
+                    if(op->rule.accept(tmp, lexer, source, depth) )
                     {
                         // success
                         if(tmp) Grow(tree,tmp);
                         //std::cerr << "..accepted " << op->rule.name << " in " << name << std::endl;
+                        --depth;
+                        if(verbose) { display(std::cerr,depth,'+') << std::endl; }
                         return true;
                     }
                 }
 
+                --depth;
+                if(verbose) { display(std::cerr,depth,'-') << std::endl; }
                 return false;
             }
 

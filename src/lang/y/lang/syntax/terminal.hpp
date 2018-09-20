@@ -42,6 +42,7 @@ namespace upsylon
                 //! depends on type
                 virtual const char * __style() const throw();
 
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);
             };

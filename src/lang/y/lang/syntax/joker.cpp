@@ -31,11 +31,19 @@ namespace upsylon
 
             bool Optional:: accept( Y_LANG_SYNTAX_RULE_ARGS ) const
             {
+                if(verbose) { display(std::cerr,depth,'?') << std::endl; }
                 Node *node = NULL;
-                if( rule.accept(node,lexer,source) )
+                if( rule.accept(node,lexer,source,depth) )
                 {
                     //std::cerr << "...accepted optional " << rule.name << std::endl;
                     Grow(tree,node);
+                    --depth;
+                    if(verbose) { display(std::cerr,depth,'+') << "/found" << std::endl; }
+                }
+                else
+                {
+                    --depth;
+                    if(verbose) { display(std::cerr,depth,'+') << "/empty" << std::endl; }
                 }
                 return true;
             }
@@ -76,6 +84,9 @@ namespace upsylon
             
             bool Repeating:: accept( Y_LANG_SYNTAX_RULE_ARGS ) const
             {
+                if(verbose) { display(std::cerr,depth,'?') << std::endl; }
+                ++depth;
+
                 Node  *subTree = Node::Create(*this);
                 size_t count   = 0;
                 {
@@ -83,7 +94,7 @@ namespace upsylon
                     while(true)
                     {
                         Node *node = 0;
-                        if( rule.accept(node,lexer,source) )
+                        if( rule.accept(node,lexer,source,depth) )
                         {
                             Grow(subTree,node);
                             ++count;
@@ -113,18 +124,21 @@ namespace upsylon
                     {
                         tree = subTree;
                     }
-#if 0
-                    if(count>0)
+                    --depth;
+                    if(verbose)
                     {
-                        std::cerr << "..accepted " << name << std::endl;
+                        display(std::cerr,depth,'+') << '/';
+                        if(count>0) std::cerr << "found"; else std::cerr << "empty";
+                        std::cerr << std::endl;
                     }
-#endif
                     return true;
                 }
                 else
                 {
                     //failure
                     Node::BackTo(lexer,subTree);
+                    --depth;
+                    if(verbose) { display(std::cerr,depth,'-') << std::endl; }
                     return false;
                 }
 

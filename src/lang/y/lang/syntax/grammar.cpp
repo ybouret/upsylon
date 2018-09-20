@@ -19,6 +19,14 @@ namespace upsylon
             {
             }
 
+            void  Grammar:: setVerbose( bool flag ) throw()
+            {
+                for(Rule *rule=rules.head;rule;rule=rule->next)
+                {
+                    rule->verbose = flag;
+                }
+            }
+
 
             string Grammar:: nextAltID()
             {

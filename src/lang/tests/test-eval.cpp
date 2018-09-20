@@ -29,12 +29,16 @@ namespace
 
 
             ATOM << ID << NUM;
+            //ATOM << mark('(') << addExpr << mark(')');
             AGG &eval = agg("eval");
             eval << zeroOrMore( agg("statement") << addExpr << mark(';'));
             top(eval);
 
             root.endl("endl","[:endl:]");
             root.drop("ws","[:blank:]");
+
+            checkValidity();
+            setVerbose(true);
         }
 
         virtual ~Eval() throw()

@@ -12,7 +12,7 @@ namespace upsylon
         {
 
             //! arguments for accept proto
-#define Y_LANG_SYNTAX_RULE_ARGS Node * &tree, Lexical::Translator &lexer, Source &source
+#define Y_LANG_SYNTAX_RULE_ARGS Node * &tree, Lexical::Translator &lexer, Source &source, int &depth
 
             //! rule to accept lexeme(s)
             class Rule : public Object
@@ -20,12 +20,15 @@ namespace upsylon
             public:
                 typedef core::list_of_cpp<Rule> List; //!< alias
 
-                const uint32_t uuid; //!< class identifier
-                const string   name; //!< user's identifier
-                Rule          *next; //!< for list
-                Rule          *prev; //!< for list
-                const void    *data; //!< derived data for AST...
-                
+                const uint32_t uuid;    //!< class identifier
+                const string   name;    //!< user's identifier
+                Rule          *next;    //!< for list
+                Rule          *prev;    //!< for list
+                const void    *data;    //!< derived data for AST...
+                bool           verbose; //!< for output
+
+                std::ostream & display(std::ostream &os, const int depth, const char pfx ) const;
+
                 virtual ~Rule()  throw(); //!< destructor
 
                 //! virtual accept method
@@ -34,20 +37,10 @@ namespace upsylon
                 //! if can accept and not grow!
                 virtual bool hollow() const throw() = 0;
 
-
                 //! handling of new nodes
-                static inline void Grow( Node * &tree, Node *child ) throw()
-                {
-                    if(tree)
-                    {
-                        assert(tree->internal);
-                        tree->add(child);
-                    }
-                    else
-                    {
-                        tree = child;
-                    }
-                }
+                static  void Grow( Node * &tree, Node *child ) throw();
+
+
 
                 virtual const char *__shape() const throw(); //!< GraphViz node shape
                 virtual const char *__style() const throw(); //!< GraphViz node style

@@ -21,9 +21,10 @@ namespace upsylon
                 //
                 // try to probe rule
                 //______________________________________________________________
-                Rule *root = rules.head;
-                Node *tree = 0;
-                if(!root->accept(tree,lexer,source))
+                Rule *root  = rules.head;
+                Node *tree  = 0;
+                int   depth = 0;
+                if(!root->accept(tree,lexer,source,depth))
                 {
                     // Syntax Error
                     std::cerr << "Syntax Error Detected" << std::endl;

@@ -18,8 +18,22 @@ namespace upsylon
             name(id),
             next(0),
             prev(0),
-            data(0)
+            data(0),
+            verbose(false)
             {
+            }
+
+            void Rule:: Grow( Node * &tree, Node *child ) throw()
+            {
+                if(tree)
+                {
+                    assert(tree->internal);
+                    tree->add(child);
+                }
+                else
+                {
+                    tree = child;
+                }
             }
 
             
@@ -42,6 +56,14 @@ namespace upsylon
             {
                 
             }
+
+            std::ostream & Rule:: display(std::ostream &os, const int depth, const char pfx ) const
+            {
+                for(int i=0;i<2*depth;++i) os << ' ';
+                os << pfx << '<' << name << '>';
+                return os;
+            }
+
 
         }
     }
