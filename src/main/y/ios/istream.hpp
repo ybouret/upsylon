@@ -49,10 +49,11 @@ namespace upsylon
                 uint8_t      store[8];
                 const size_t prolog      = read<uint8_t>();
                 size_t       extra_bytes = (prolog&0x0f);
-                if(shift)   *shift       = 1+extra_bytes;
+                if(shift)   *shift       = 1;
                 for(size_t i=0;i<extra_bytes;++i)
                 {
                     store[i] = read<uint8_t>();
+                    if(shift) ++(*shift);
                 }
                 T            ans(0);
                 while(extra_bytes-->0)

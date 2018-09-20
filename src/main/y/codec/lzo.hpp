@@ -13,7 +13,7 @@ namespace upsylon
         const char *VersionString() const throw(); //!< lzo_version_string()
         const char *VersionDate() const throw();   //!< lzo_version_date()
 
-        //! compress soruce
+        //! compress source
         string Compress( const string &source ) const;
 
         //! decompress source

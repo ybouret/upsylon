@@ -50,7 +50,7 @@ lzo_align_t __LZO_MMODEL var [ ((size) + (sizeof(lzo_align_t) - 1)) / sizeof(lzo
             throw exception("LZO::Compress internal failure");
         }
         std::cerr << "Compressed " << IN_LEN << " into " << OUT_LEN << std::endl;
-
+        
         return string(*target,OUT_LEN);
     }
 
