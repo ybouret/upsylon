@@ -43,7 +43,7 @@ namespace upsylon
 
             //! read a packed unsigned
             template <typename T>
-            inline T read_upack(size_t *shift=0)
+            inline T read_upack(size_t *shift=NULL)
             {
                 Y_STATIC_CHECK(sizeof(T)<=8,T_is_too_large);
                 uint8_t      store[8];

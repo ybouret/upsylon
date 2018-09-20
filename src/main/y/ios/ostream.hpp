@@ -70,7 +70,7 @@ namespace upsylon
 
             //! emit compact unsigned
             template <typename T>
-            ostream & emit_upack(T x)
+            ostream & emit_upack(T x, size_t *shift=NULL)
             {
                 //______________________________________________________________
                 //
@@ -86,6 +86,7 @@ namespace upsylon
                     // 0 extra bytes!
                     //__________________________________________________________
                     write(last4shifted);
+                    if(shift) *shift = 1;
                 }
                 else
                 {
@@ -96,12 +97,14 @@ namespace upsylon
                     const size_t extra_bits  = num_bits - 4;
                     size_t       extra_bytes = Y_ROUND8(extra_bits)>>3; assert(extra_bytes<=8);
                     write( last4shifted | extra_bytes );
+                    if(shift) *shift = 1;
                     x >>= 4;
                     while(extra_bytes-->0)
                     {
                         const uint8_t B = uint8_t(x&T(0xff));
                         write(B);
                         x >>= 8;
+                        if(shift) ++(*shift);
                     }
                     assert(0==x);
                 }
