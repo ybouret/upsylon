@@ -44,7 +44,7 @@ namespace upsylon
 
         Char *Source:: get()
         {
-            return (iobuf.size) ? iobuf.pop_front() : module->get();
+            return (iobuf.size>0) ? iobuf.pop_front() : module->get();
         }
 
         void Source:: prefetch(size_t n)

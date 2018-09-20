@@ -34,21 +34,10 @@ namespace upsylon
         
         bool icstream:: query(char &C)
         {
-            if( 1 != fread( &C, 1, 1, *handle) )
-            {
-                if( feof(*handle) )
-                {
-                    return false;
-                }
-                throw libc::exception( EIO, "icstream::query()" );
-            }
-            else
-            {
-                return true;
-            }
-#if 0
             if( feof(*handle) )
+            {
                 return false;
+            }
             else
             {
                 if( 1 != fread( &C, 1, 1, *handle) )
@@ -64,7 +53,7 @@ namespace upsylon
                     return true;
                 }
             }
-#endif
+
         }
 
         void icstream:: store( char C )

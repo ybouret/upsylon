@@ -26,16 +26,18 @@ Y_UTEST(source)
 
     Source source(module);
     {
-        Token  content;
-        source.prefetch(4);
-
-        Char *ch = NULL;
-        while( NULL != (ch=source.get()) )
         {
-            content.push_back(ch);
+            Token  content;
+            source.prefetch(4);
+
+            Char *ch = NULL;
+            while( NULL != (ch=source.get()) )
+            {
+                content.push_back(ch);
+            }
+            std::cerr << "#chars_level1=" << content.size << std::endl;
+            source.ungetCopy(content);
         }
-        std::cerr << "#chars_level1=" << content.size << std::endl;
-        source.ungetCopy(content);
         Token content_copy;
         {
             Char *ch = NULL;
@@ -44,7 +46,7 @@ Y_UTEST(source)
                 content_copy.push_back(ch);
             }
         }
-        std::cerr << "#chars_level2=" << content.size << std::endl;
+        std::cerr << "#chars_level2=" << content_copy.size << std::endl;
 
     }
     
