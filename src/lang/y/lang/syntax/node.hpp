@@ -80,6 +80,11 @@ namespace upsylon
                 //! return AST operations
                 static Node *AST( Node *node ) throw();
 
+                //! rewrite for operators
+                static Node *Rewrite(Node *node);
+
+
+
                 //! save to a binary form
                 void save( ios::ostream &fp ) const;
 

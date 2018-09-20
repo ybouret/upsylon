@@ -58,7 +58,7 @@ namespace upsylon
                 //______________________________________________________________
 
                 //! a new terminal
-                inline Rule & terminal( const string &id, const Terminal::Attribute attr=Terminal::Standard ) { return __add( new Terminal(id,attr) ); }
+                inline Terminal & terminal( const string &id, const Terminal::Attribute attr=Terminal::Standard ) { return __add( new Terminal(id,attr) ); }
 
                 //! a new terminal
                 inline Rule & terminal( const char   *id, const Terminal::Attribute attr=Terminal::Standard ) { const string _(id); return terminal(_,attr); }

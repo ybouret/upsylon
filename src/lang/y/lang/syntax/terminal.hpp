@@ -17,21 +17,25 @@ namespace upsylon
             {
             public:
                 //! class  identfier
-                static const uint32_t UUID = Y_FOURCC('T', 'E', 'R', 'M');
-
-                //! different attributes
-                enum Attribute
-                {
-                    Standard, //!< keep content
-                    Univocal, //!< alias for label
-                    Semantic  //!< semantic only, discardable
-                };
-
-                //! self attribute
-                const Attribute attr;
+                static const uint32_t   UUID = Y_FOURCC('T', 'E', 'R', 'M');
                 
 
-                explicit Terminal( const string &id, const Attribute flag=Standard); //!< initialize
+                //! role of the content
+                enum Attribute
+                {
+                    Standard, //!< from a regular expression
+                    Univocal, //!< univocal regular expression => discard content
+                    Semantic //!< semantic only => discard node
+                };
+
+
+                const Attribute attr;        //!< the role
+                bool            isOperator;  //!< for AST
+
+                //! set operator flag
+                inline Terminal & setOperator() throw() { isOperator=true; return *this; }
+
+                explicit Terminal( const string &id, const Attribute flag=Standard); //!< initialize, data=self
                 virtual ~Terminal() throw();                                         //!< destructor
 
                 //! accept if there is a lexeme with label==name

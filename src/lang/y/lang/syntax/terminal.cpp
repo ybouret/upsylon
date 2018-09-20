@@ -13,7 +13,8 @@ namespace upsylon
             Rule(UUID,id),
             attr(flag)
             {
-                data = &attr;
+                Terminal *self = this;
+                data = self;
             }
 
             bool Terminal:: accept( Y_LANG_SYNTAX_RULE_ARGS ) const

@@ -24,9 +24,10 @@ namespace upsylon
                 const string   name;    //!< user's identifier
                 Rule          *next;    //!< for list
                 Rule          *prev;    //!< for list
-                const void    *data;    //!< derived data for AST...
+                const void    *data;    //!< helper data
                 bool           verbose; //!< for output
 
+                //! display for debugging
                 std::ostream & display(std::ostream &os, const int depth, const char pfx ) const;
 
                 virtual ~Rule()  throw(); //!< destructor
@@ -48,6 +49,7 @@ namespace upsylon
                 void         viz_id( ios::ostream &fp ) const; //!< fp.viz(this)
                 void         prolog( ios::ostream &fp ) const; //!< id+modifiers
                 virtual void epilog( ios::ostream &fp ) const; //!< linking
+                
 
             protected:
                 //! initialize

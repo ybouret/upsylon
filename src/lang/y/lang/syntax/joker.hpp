@@ -20,8 +20,9 @@ namespace upsylon
                 virtual const char *__shape() const throw() { return "cylinder"; }
                 virtual void epilog( ios::ostream &fp ) const;
 
+
             protected:
-                //! initialize
+                //! initialize, data=&jk
                 explicit Joker(const uint32_t t,
                                const string  &id,
                                const Rule    &jk);

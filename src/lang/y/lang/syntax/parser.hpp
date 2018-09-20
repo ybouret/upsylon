@@ -21,6 +21,7 @@ namespace upsylon
                 typedef const Rule              RULE;    //!< alias
                 typedef Syntax::Aggregate       AGG;     //!< alias
                 typedef Syntax::Alternate       ALT;     //!< alias
+                typedef Syntax::Terminal        TERM;    //!< alias
 
                 explicit Parser(const string &id); //!< initialize
                 virtual ~Parser() throw();         //!< destructor
@@ -29,8 +30,8 @@ namespace upsylon
                 const string & key() const throw();
 
                 //! create a new terminal or recall previously created (MUST match)
-                const Rule & __term(const string &id, const string &rx, const Terminal::Attribute attr);
-
+                Terminal & __term(const string &id, const string &rx, const Terminal::Attribute attr);
+                
                 //! a regular terminal
                 inline
                 const Rule & term( const string &id, const string &rx )
@@ -51,14 +52,14 @@ namespace upsylon
 
                 //! an univocal=one sole possible result
                 inline
-                const Rule & sole( const string &id, const string &rx )
+                const Rule & sole( const string &id, const string &rx)
                 {
                     return __term(id,rx,Terminal::Univocal);
                 }
 
                 //! an univocal=one sole possible result with name=regexp
                 inline
-                const Rule & sole( const string &rx )
+                const Rule & sole( const string &rx)
                 {
                     return sole(rx,rx);
                 }
@@ -72,7 +73,7 @@ namespace upsylon
 
                 //! an univocal=one sole possible result with name=regexp
                 inline
-                const Rule & sole( const char *rx )
+                const Rule & sole( const char *rx)
                 {
                     return sole(rx,rx);
                 }

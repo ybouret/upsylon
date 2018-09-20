@@ -44,9 +44,9 @@ namespace upsylon
                                 //
                                 // process terminal according to its attribute
                                 //______________________________________________
-                                const Rule               &rule = ch->rule; assert(rule.data);
-                                const Terminal::Attribute attr = *static_cast<const Terminal::Attribute *>(rule.data);
-                                switch(attr)
+                                const Rule      &rule = ch->rule; assert(rule.data);
+                                const Terminal  &term = *static_cast<const Terminal *>(rule.data);
+                                switch(term.attr)
                                 {
                                     case Terminal::Standard:
                                         tmp << ch;

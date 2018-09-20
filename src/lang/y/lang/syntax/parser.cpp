@@ -43,7 +43,9 @@ namespace upsylon
 
 
 
-            const Rule & Parser:: __term( const string &id, const string &rx, const Terminal::Attribute attr)
+            Terminal & Parser:: __term(const string &id,
+                                       const string &rx,
+                                       const Terminal::Attribute attr)
             {
                 static const char fn[] = "Parser:terminal: ";
                 Grammar &G = *this;
@@ -85,8 +87,10 @@ namespace upsylon
                         throw exception("%s '%s' compiles to different pattern", fn, *id);
                     }
 
-
-                    return *rule;
+                    assert(rule->data);
+                    const Terminal *t = static_cast<const Terminal *>(rule->data);
+                    return *(Terminal *)t;
+                    
                 }
                 else
                 {

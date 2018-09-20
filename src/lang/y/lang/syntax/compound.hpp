@@ -43,6 +43,7 @@ namespace upsylon
             class Compound : public Rule, public Operand::List
             {
             public:
+                //! role in grammar
                 enum Type
                 {
                     Normal, //!< keep as is
@@ -76,7 +77,7 @@ namespace upsylon
                     return "solid";
                 }
             protected:
-                //! initialize
+                //! initialize, data=self
                 explicit Compound(const uint32_t t, const string &id, const Type flag);
 
             private:

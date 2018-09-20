@@ -14,7 +14,7 @@ ADD_TEST(Scanner test-lang scanner NULL)
 ADD_TEST(Lex     test-lang lex     NULL)
 ADD_TEST(Grammar test-lang grammar)
 ADD_TEST(Parser  test-lang parser)
-ADD_TEST(Eval    test-labg eval NULL)
+ADD_TEST(Eval    test-lang eval NULL)
 
 ADD_CUSTOM_TARGET(utest-lang
 COMMAND ${CMAKE_CTEST_COMMAND} -V
