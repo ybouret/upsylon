@@ -42,4 +42,8 @@ ${syntax_srcs}
 )
 INSTALL( TARGETS y-lang ARCHIVE DESTINATION lib )
 
+ADD_EXECUTABLE(y-dynamo y/lang/dynamo/dynamo.cxx)
+TARGET_LINK_Y(y-dynamo lang)
+
+
 ADD_SUBDIRECTORY(tests)
