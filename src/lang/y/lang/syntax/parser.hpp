@@ -206,6 +206,37 @@ namespace upsylon
                     const string _(pluginName), __(rx); hook<PLUGIN>(_,__);
                 }
 
+                //! lexical plugin and associated terminal
+                template <typename PLUGIN> inline
+                RULE & plug(const string &id )
+                {
+                    hook<PLUGIN>(id);
+                    return term(id);
+                }
+
+                //! lexical plugin and associated terminal
+                template <typename PLUGIN> inline
+                RULE & plug(const char *id )
+                {
+                    const string _(id); return plug<PLUGIN>(_);
+                }
+
+                //! lexical plugin and associated terminal
+                template <typename PLUGIN> inline
+                RULE & plug(const string &id, const char *rx )
+                {
+                    hook<PLUGIN>(id,rx);
+                    return term(id);
+                }
+
+                //! lexical plugin and associated terminal
+                template <typename PLUGIN> inline
+                RULE & plug(const char *id, const char *rx )
+                {
+                    const string _(id); return plug<PLUGIN>(_,rx);
+
+                }
+
                 //! parse the source to AST, without rewriting
                 Node *parse( Source &source, bool keepRaw);
                 

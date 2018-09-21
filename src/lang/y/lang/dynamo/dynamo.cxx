@@ -22,7 +22,7 @@ public:
 
         AGG  &dynamo = agg("dynamo");
 
-        RULE &END   = mark(';');
+        RULE &END      = mark(';');
 
 
         //----------------------------------------------------------------------
@@ -34,16 +34,29 @@ public:
 
 
 
-#if 0
-        RULE &RuleID = term("RuleID", "[:word:]+");
+        //----------------------------------------------------------------------
+        //
+        // prepare rules
+        //
+        //----------------------------------------------------------------------
 
-        hook<Lexical::jString>("string");
-        RULE &STR   = term("string");
 
-        hook<Lexical::rString>("rstring");
-        RULE &RAW   = term("rstring");
-#endif
 
+        RULE &ID      = term("ID", "[:word:]+");
+        RULE &STRING  = plug<Lexical::jString>("STRING");
+        RULE &CHARS   = plug<Lexical::rString>("CHARS");
+        RULE &RAW     = ( design("RAW") << CHARS << optional( mark('^' ) ) );
+        RULE &COLUMN  = mark(':');
+
+        AGG &__RULE = agg("RULE");
+
+        __RULE << ID << COLUMN;
+        __RULE << oneOrMore( choice(STRING,ID,RAW) );
+        __RULE << END;
+
+        dynamo << oneOrMore(__RULE);
+
+        
 
         root.endl("endl","[:endl:]" );
         root.drop("ws",  "[:blank:]");
@@ -71,9 +84,17 @@ public:
 
 };
 
+#include "y/fs/local.hpp"
 
 Y_PROGRAM_START()
 {
+    vfs &fs = local_fs::instance();
+
+    fs.try_remove_file("dynamo.dot");
+    fs.try_remove_file("dynamo.png");
+    fs.try_remove_file("dynout.dot");
+    fs.try_remove_file("dynout.png");
+
     DynamoCompiler dynamo;
     dynamo->GraphViz("dynamo.dot");
 

@@ -37,8 +37,13 @@ namespace upsylon
                     }
                     else
                     {
-                        err += vformat(":%d:%d:",last->line(),last->column());
-                        err  << "unexpected " << *(last->label);
+                        err += vformat(":%d:%d: ",last->line(),last->column());
+                        err << "unexpected ";
+                        if(!source.active())
+                        {
+                            err << "final ";
+                        }
+                        err  << *(last->label);
                         if( isStandardTerminal(last) )
                         {
                             const string str = last->to_print();

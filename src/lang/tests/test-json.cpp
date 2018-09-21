@@ -18,8 +18,9 @@ namespace
             AGG &json = agg("json");
 
             ALT &value = alt("value");
-            hook<Lexical::jString>("string");
-            value << sole("null") << sole("true") << sole("false") << term("number","-?[:digit:]+(\\.[:digit:]*)?([eE]-?[:digit:]+)?") << term("string");
+           // hook<Lexical::jString>("string");
+            RULE &STRING = plug<Lexical::jString>("string");
+            value << sole("null") << sole("true") << sole("false") << term("number","-?[:digit:]+(\\.[:digit:]*)?([eE]-?[:digit:]+)?") << STRING;
 
             ALT &jArray = alt("array");
             {
