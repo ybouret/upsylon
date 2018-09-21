@@ -41,18 +41,18 @@ namespace upsylon
 
 
             Node * Parser:: parse(Source &source,
-                                  bool   &needRewrite,
                                   bool    keepRaw)
             {
                 raw = 0;
                 raw = run(*this,source); assert(raw.is_valid());
                 if(keepRaw)
                 {
-                    return Node::AST( new Node( *raw ), &needRewrite);
+                    return Node::Tree(new Node( *raw ),*name);
+                    //return Node::AST( new Node( *raw ), &needRewrite);
                 }
                 else
                 {
-                    return Node::AST( raw.yield(), &needRewrite);
+                    return Node::Tree(  raw.yield(),*name);
                 }
             }
 

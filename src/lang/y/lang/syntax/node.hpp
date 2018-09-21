@@ -19,7 +19,8 @@ namespace upsylon
             {
             public:
 
-                typedef core::list_of<Node> ListType; //!< base class
+                typedef core::list_of<Node>     ListType; //!< base class
+                typedef core::list_of_cpp<Node> SaveList; //!< for internal operation
 
                 //! for children nodes
                 class List : public Object, public ListType
@@ -77,12 +78,19 @@ namespace upsylon
                 //! return into lexer
                 static void BackTo( Lexical::Translator &lexer, Node *node ) throw();
 
+#if 0
                 //! return AST operations
                 static Node *AST( Node *node, bool *needRewrite) throw();
-
+#endif
+                
                 //! rewrite for operators
                 static Node *Rewrite(Node *node, const string &grammarName);
 
+                //! Reformat Tree from terminal properties
+                /**
+                 node is deleted upon failure
+                 */
+                static Node *Tree(Node *node, const string &g);
 
 
                 //! save to a binary form

@@ -85,13 +85,12 @@ Y_UTEST(eval)
         module = Module::OpenSTDIN();
     }
 
-    ev.compile(module,Compiler::KeepAST|Compiler::KeepRaw);
+    ev.compile(module,Compiler::KeepRaw);
     assert(ev.ast.is_valid());
     ev.ast->GraphViz("eval-ast.dot");
     assert(ev->raw.is_valid());
     ev->raw->GraphViz("eval-raw.dot");
-    assert(ev.cst.is_valid());
-    ev.cst->GraphViz("eval-cst.dot");
+    
 
 }
 Y_UTEST_DONE()

@@ -88,14 +88,9 @@ Y_UTEST(grammar)
         std::cerr << "running..." << std::endl;
         {
             Source source( Module::OpenSTDIN() );
-            auto_ptr<Syntax::Node> Tree = G.run(lexer,source);
+            auto_ptr<Syntax::Node> Tree = Syntax::Node::Tree(G.run(lexer,source),*G.name);
             assert(Tree.is_valid());
             Tree->GraphViz("tree.dot");
-            {
-                Syntax::Node *tree = Tree.yield();
-                Tree = Syntax::Node::AST(tree,NULL);
-            }
-            Tree->GraphViz("ast.dot");
         }
         std::cerr << "...done" << std::endl;
     }

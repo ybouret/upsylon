@@ -14,7 +14,6 @@ namespace upsylon
         {
         public:
             static const unsigned KeepRaw = 0x01; //!< will keep raw in parser
-            static const unsigned KeepAST = 0x02; //!< will keep ast in compiler
             typedef Syntax::Node  NODE;           //!< alias
 
             //! initialize
@@ -37,7 +36,6 @@ namespace upsylon
         public:
             const Origin           name; //!< Grammar::name
             auto_ptr<NODE>         ast;  //!< last parsed AST
-            auto_ptr<NODE>         cst;  //!< after rewrite if needed
         };
 
 

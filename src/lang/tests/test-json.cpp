@@ -99,8 +99,8 @@ Y_UTEST(json)
     }
 
     json.compile(module,0);
-    assert(json.cst.is_valid());
-    json.cst->GraphViz("json-cst.dot");
+    assert(json.ast.is_valid());
+    json.ast->GraphViz("json-ast.dot");
 }
 Y_UTEST_DONE()
 

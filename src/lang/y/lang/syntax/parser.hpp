@@ -207,7 +207,7 @@ namespace upsylon
                 }
 
                 //! parse the source to AST, without rewriting
-                Node *parse( Source &source, bool &needRewrite, bool keepRaw);
+                Node *parse( Source &source, bool keepRaw);
                 
             protected:
                 Scanner &root; //!< root scanner

@@ -14,8 +14,7 @@ namespace upsylon
         Syntax::Analyzer(),
         parser(p),
         name(parser->name),
-        ast(0),
-        cst(0)
+        ast(0)
         {
         }
 
@@ -29,34 +28,11 @@ namespace upsylon
             Source source(module);
             parser->reset();
             ast = 0;
-            cst = 0;
 
-            {
-                bool needRewrite = false;
-                auto_ptr<NODE> AST = parser->parse(source, needRewrite, 0 != (flags&KeepRaw) );
-                if(0!=(flags&KeepAST))
-                {
-                    ast = new NODE( *AST );
-                }
+            ast = parser->parse(source, true);
 
-                if(needRewrite)
-                {
-                    needRewrite = false;
-                    cst = NODE::AST( NODE::Rewrite( &*AST, *(this->name)), &needRewrite);
-                    if(needRewrite)
-                    {
-                        throw exception("{%s} still need to re-write tree!", **(parser->name));
-                    }
-                    AST.dismiss();
-                }
-                else
-                {
-                    cst = AST.yield();
-                }
-            }
-            
+            walk(*ast);
 
-            walk(*cst);
 
         }
 

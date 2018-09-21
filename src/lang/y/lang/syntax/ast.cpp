@@ -9,7 +9,7 @@ namespace upsylon
         namespace Syntax
         {
 
-
+#if 0
             Node * Node::AST(Node *node, bool *needRewrite) throw()
             {
                 assert(node);
@@ -109,7 +109,8 @@ namespace upsylon
                     return node;
                 }
             }
-
+#endif
+            
         }
 
     }

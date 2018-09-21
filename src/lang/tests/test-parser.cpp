@@ -97,8 +97,9 @@ Y_UTEST(parser)
     if(argc>1&&0==strcmp(argv[1],"run"))
     {
         Source source( Module::OpenSTDIN() );
-        bool rw = false;
-        auto_ptr<Syntax::Node> ast = json.parse(source,rw,false);
+
+        auto_ptr<Syntax::Node> ast = json.parse(source,true);
+        json.raw->GraphViz("traw.dot");
         ast->GraphViz("tree.dot");
         {
             ios::ocstream fp("tree.bin");

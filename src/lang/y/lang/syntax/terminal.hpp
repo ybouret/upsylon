@@ -37,6 +37,7 @@ namespace upsylon
 
                 explicit Terminal( const string &id, const Attribute flag=Standard); //!< initialize, data=self
                 virtual ~Terminal() throw();                                         //!< destructor
+                
 
                 //! accept if there is a lexeme with label==name
                 virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const;
