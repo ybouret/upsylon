@@ -58,8 +58,12 @@ namespace upsylon
             {
                 //space(std::cerr) << "push[" << name << "]='" << data << "'" << std::endl;
                 space(std::cerr) << "push " << name << " ";
-                for(size_t i=name.size()+depth*2;i<=aligned;++i) std::cerr << ' ';
-                std::cerr << "'" << data << "'" << std::endl;
+                if(data.size())
+                {
+                    for(size_t i=name.size()+depth*2;i<=aligned;++i) std::cerr << ' ';
+                    std::cerr << "'" << data << "'";
+                }
+                std::cerr << std::endl;
             }
 
 

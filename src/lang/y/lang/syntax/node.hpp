@@ -78,24 +78,11 @@ namespace upsylon
                 //! return into lexer
                 static void BackTo( Lexical::Translator &lexer, Node *node ) throw();
 
-#if 0
-                //! return AST operations
-                static Node *AST( Node *node, bool *needRewrite) throw();
-#endif
 
-#if 0
-                //! rewrite for operators
-                static Node *Rewrite(Node *node, const string &grammarName);
-#endif
-
-                //! Compact Treee
-                
-
-                //! Reformat Tree from terminal properties
-                /**
-                 node is deleted upon failure
-                 */
-                static Node *Tree(Node *node, const string &g);
+                //! Compact Tree according to aggregate properties
+                static Node *Compact( Node *node, bool &rewrite) throw();
+                //! Rewrite tree for operators, node is deleted upon failure
+                static Node *Rewrite( Node *node, const string &g);
 
 
                 //! save to a binary form

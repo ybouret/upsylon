@@ -15,12 +15,14 @@ namespace upsylon
             name(id),
             rules(),
             rdb(),
-            altID(0)
+            altID(0),
+            verbose(false)
             {
             }
 
             void  Grammar:: setVerbose( bool flag ) throw()
             {
+                verbose = flag;
                 for(Rule *rule=rules.head;rule;rule=rule->next)
                 {
                     rule->verbose = flag;

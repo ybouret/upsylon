@@ -82,13 +82,15 @@ Y_UTEST(grammar)
     G.GraphViz("gram.dot");
     G.checkValidity();
     
-
+    G.setVerbose(true);
+    
     if(argc>1&&0==strcmp(argv[1],"run"))
     {
         std::cerr << "running..." << std::endl;
         {
             Source source( Module::OpenSTDIN() );
-            auto_ptr<Syntax::Node> Tree = Syntax::Node::Tree(G.run(lexer,source),*G.name);
+            bool rw = false;
+            auto_ptr<Syntax::Node> Tree = Syntax::Node::Compact(G.run(lexer,source),rw);
             assert(Tree.is_valid());
             Tree->GraphViz("tree.dot");
         }

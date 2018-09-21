@@ -54,6 +54,7 @@ namespace
     public:
         Evaluator() :  Compiler( new Eval()  )
         {
+            parser->setVerbose(true);
         }
 
         virtual ~Evaluator() throw()
@@ -69,7 +70,6 @@ namespace
 Y_UTEST(eval)
 {
     Evaluator ev;
-
     ev->GraphViz("eval.dot");
 
 

@@ -10,115 +10,94 @@ namespace upsylon
         namespace Syntax
         {
 
-#if 0
-            static inline
-            bool is_valid_operator( const Terminal *term, const char *g )
+            Node * Node::Rewrite( Node *parent, const string &g)
             {
-                assert(term);
-                if(term->isOperator)
-                {
-                    switch (term->attr)
-                    {
-                        case Terminal::Standard:
-                            throw exception("{%s} standard terminal %s declared as operator, should be univocal",g, *(term->name));
-
-                        case Terminal::Univocal:
-                            //std::cerr << "..new parent from " << term->name << std::endl;
-                            break;
-
-                        case Terminal::Semantic:
-                            throw exception("{%s} unexpected semantic terminal %s declared as operator",g, *(term->name));
-                    }
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-
-            }
-
-            Node *Node:: Rewrite(Node *node, const string &g)
-            {
-                assert(node);
-
-                if( node->terminal )
+                assert(parent);
+                if(parent->terminal)
                 {
                     //__________________________________________________________
                     //
-                    // terminal, do not touch
+                    // simple terminal, left untouched
                     //__________________________________________________________
-                    return node;
+                    return parent;
                 }
                 else
                 {
-                    //__________________________________________________________
-                    //
-                    // recursively go over children
-                    //__________________________________________________________
-                    Node::List &source = node->children;
-                    Node::List  target;
-                    try
-                    {
+                    auto_ptr<Node>  guard(parent);
+                    Node::List     &source = parent->children;
+                    Node::SaveList  target;
 
-                        while(source.size)
+                    while(source.size)
+                    {
+                        auto_ptr<Node> child = Rewrite(source.pop_front(),g);
+                        if(child->terminal)
                         {
-                            auto_ptr<Node> child = 0;
+                            const Rule     &rule = child->rule; assert(Terminal::UUID==rule.uuid); assert(NULL!=rule.data);
+                            const Terminal &term = *static_cast<const Terminal *>(rule.data);
+                            switch (term.attr)
                             {
-                                auto_ptr<Node> guard( source.pop_front() );
-                                child  = Rewrite(&*guard,g);
-                                guard.dismiss();
+                                case Terminal::Standard:
+                                    if(term.isOperator) throw exception("{%s} standard terminal %s shouldn't be an operator (will loose content)", *g, *(term.name));
+                                    target.push_back( child.yield() );
+                                    break;
+
+                                case Terminal::Semantic:
+                                    throw exception("{%s} unexpected semantic terminal %s and Node::Rewrite!!",*g,*(term.name));
+                                    break;
+
+                                case Terminal::Univocal:
+                                    if(term.isOperator)
+                                    {
+                                        //--------------------------------------
+                                        // this is where the rewriting
+                                        // takes place: create an internal node
+                                        // with the terminal rule...
+                                        //--------------------------------------
+                                        auto_ptr<Node> op = Node::Create(term);
+
+                                        //--------------------------------------
+                                        // take the LHS argument
+                                        //--------------------------------------
+                                        if(target.tail)
+                                        {
+                                            op->children.push_front( target.pop_back() );
+                                        }
+
+                                        //--------------------------------------
+                                        // take the RHS argument
+                                        //--------------------------------------
+                                        if(source.head)
+                                        {
+                                            op->children.push_back( Rewrite(source.pop_front(),g) );
+                                        }
+
+                                        //--------------------------------------
+                                        // insert op
+                                        //--------------------------------------
+                                        target.push_back( op.yield() );
+
+                                        //--------------------------------------
+                                        // child will be deleted
+                                        //--------------------------------------
+                                    }
+                                    else
+                                    {
+                                        target.push_back(child.yield());
+                                    }
+                                    break;
                             }
-                            const Rule     &rule  = child->rule;
-                            if(Terminal::UUID == rule.uuid && is_valid_operator(static_cast<const Terminal *>(rule.data),*g) )
-                            {
-                                auto_ptr<Node> parent = Node::Create(rule); // a funky terminal ID with content!
-
-                                //______________________________________________
-                                //
-                                // get LHS operator
-                                //______________________________________________
-                                if(target.tail)
-                                {
-                                    parent->children.push_front(target.pop_back());
-                                }
-
-                                //______________________________________________
-                                //
-                                // get RHS operator
-                                //______________________________________________
-                                if(source.head)
-                                {
-                                    auto_ptr<Node> guard( source.pop_front() );
-                                    parent->children.push_back( Rewrite(&*guard,g) );
-                                    guard.dismiss();
-                                }
-
-                                //______________________________________________
-                                //
-                                // and replace
-                                //______________________________________________
-                                target << parent.yield();
-                            }
-                            else
-                            {
-                                target << child.yield();
-                            }
-
                         }
-
-                        source.swap_with(target);
-                    }
-                    catch(...)
-                    {
-                        while(target.size) delete target.pop_back();
-                        throw;
+                        else
+                        {
+                            target.push_back(child.yield());
+                        }
                     }
 
-                    return node;
+                    target.swap_with(source);
+                    return guard.yield();
                 }
             }
-#endif
+
             
         }
 

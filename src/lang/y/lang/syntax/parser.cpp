@@ -43,17 +43,50 @@ namespace upsylon
             Node * Parser:: parse(Source &source,
                                   bool    keepRaw)
             {
+                if(verbose) { std::cerr << "{" << name << "} Running..." << std::endl; }
+                //______________________________________________________________
+                //
+                // reset and get raw tree
+                //______________________________________________________________
                 raw = 0;
                 raw = run(*this,source); assert(raw.is_valid());
-                if(keepRaw)
+
+                //______________________________________________________________
+                //
+                // compact while detecting operators
+                //______________________________________________________________
+                if(verbose) { std::cerr << "{" << name << "} Compact Level-1" << std::endl; }
+                bool rewrite = false;
+                Node *ast = Node::Compact( keepRaw ? new Node(*raw) : raw.yield() , rewrite );
+                if( rewrite )
                 {
-                    return Node::Tree(new Node( *raw ),*name);
-                    //return Node::AST( new Node( *raw ), &needRewrite);
+                    //__________________________________________________________
+                    //
+                    // rewrite the tree according to detected operators
+                    //__________________________________________________________
+                    if(verbose) { std::cerr << "{" << name << "} Rewriting detected..." << std::endl; }
+                    ast     = Node::Rewrite(ast,*name);
+
+                    //__________________________________________________________
+                    //
+                    // recompact
+                    //__________________________________________________________
+                    rewrite = false;
+                    if(verbose) { std::cerr << "{" << name << "} Compact Level-2" << std::endl; }
+                    ast     = Node::Compact(ast,rewrite);
+                    if(rewrite)
+                    {
+                        delete ast;
+                        throw exception("{%s} unexpected persistent rewrite", **name );
+                    }
                 }
                 else
                 {
-                    return Node::Tree(  raw.yield(),*name);
+                    if(verbose) { std::cerr << "{" << name << "} No Rewrite" << std::endl; }
                 }
+
+                
+                return ast;
             }
 
 

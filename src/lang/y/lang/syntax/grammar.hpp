@@ -144,10 +144,12 @@ namespace upsylon
                 Rule::List    rules;
                 MetaRule::Set rdb;
                 unsigned      altID;
+
                 string        nextAltID();
 
                 static string MakeAltNameFrom( array<string> &names );
-                
+            protected:
+                bool          verbose;
             };
         }
     }

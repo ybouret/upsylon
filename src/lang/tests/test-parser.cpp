@@ -94,6 +94,7 @@ Y_UTEST(parser)
     fs.try_remove_file("tree.png");
 
     myParser json;
+    json.setVerbose(true);
     if(argc>1&&0==strcmp(argv[1],"run"))
     {
         Source source( Module::OpenSTDIN() );

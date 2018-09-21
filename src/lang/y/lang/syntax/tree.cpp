@@ -9,6 +9,7 @@ namespace upsylon
     {
         namespace Syntax
         {
+#if 0
             Node * Node:: Tree(Node *parent, const string &g)
             {
                 assert(parent);
@@ -162,6 +163,8 @@ namespace upsylon
                     return guard.yield();
                 }
             }
+#endif
+            
         }
     }
 
