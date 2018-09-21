@@ -5,7 +5,7 @@ using namespace upsylon;
 
 Y_UTEST(vm)
 {
-    Lua::State::Pointer vm = new Lua::State();
+    Lua::VM vm = new Lua::State();
     
 }
 Y_UTEST_DONE()

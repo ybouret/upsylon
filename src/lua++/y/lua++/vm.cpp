@@ -111,6 +111,37 @@ namespace upsylon
             return string(buf,len);
         }
 
+        template <>
+        void State::push<float>( const float &x )
+        {
+            lua_pushnumber(L, lua_Number(x) );
+        }
+
+        template <>
+        void State::push<double>( const double &x )
+        {
+            lua_pushnumber(L, lua_Number(x) );
+        }
+
+        template <>
+        void State::push<int>(const int &x )
+        {
+            lua_pushinteger(L, lua_Integer(x) );
+        }
+
+        template <>
+        void State::push<size_t>(const size_t &x )
+        {
+            // todo: check overflow
+            lua_pushinteger(L, lua_Integer(x) );
+        }
+
+        template <>
+        void State::push<string>(const string &s )
+        {
+            lua_pushlstring(L, *s, s.length() );
+        }
+
     }
 
 }

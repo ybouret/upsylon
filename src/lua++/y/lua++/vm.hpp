@@ -49,12 +49,17 @@ namespace upsylon
             template <typename T>
             inline T get(const char *id) { const string _(id); return get<T>(_); }
 
+            template <typename T>
+            void push( const T & );
+
+            lua_State * operator*() throw() { return L; }
 
         private:
             lua_State *L;
             Y_DISABLE_COPY_AND_ASSIGN(State);
         };
 
+        typedef State::Pointer VM;
     }
 
 }
