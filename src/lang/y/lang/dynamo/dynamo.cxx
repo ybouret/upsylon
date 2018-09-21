@@ -14,12 +14,26 @@ public:
 
     inline explicit DynamoParser() : Syntax::Parser( "Dynamo" )
     {
+        //----------------------------------------------------------------------
+        //
+        // top level rule
+        //
+        //----------------------------------------------------------------------
 
+        AGG  &dynamo = agg("dynamo");
+        RULE &RuleID = term("RuleID", "[:word:]+");
 
+        hook<Lexical::jString>("string");
+        RULE &STR   = term("string");
 
+        hook<Lexical::rString>("rstring");
+        RULE &RAW   = term("rstring");
+        
 
         root.endl("endl","[:endl:]" );
         root.drop("ws",  "[:blank:]");
+
+        checkValidity();
     }
 
 
@@ -46,7 +60,7 @@ public:
 Y_PROGRAM_START()
 {
     DynamoCompiler dynamo;
-    
+
 }
 Y_PROGRAM_END()
 
