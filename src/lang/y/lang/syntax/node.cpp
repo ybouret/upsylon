@@ -150,16 +150,16 @@ namespace upsylon
                     const string LexID = lexeme.to_print();
                     if(LexID.size()>0)
                     {
-                        fp("[label=\"%s='%s'\",shape=box,style=bold];\n",*RuleID,*LexID);
+                        fp("[label=\"%s='%s'\",shape=box,style=filled];\n",*RuleID,*LexID);
                     }
                     else
                     {
-                        fp("[label=\"%s\",shape=box,style=rounded];\n",*RuleID);
+                        fp("[label=\"%s\",shape=box,style=solid];\n",*RuleID);
                     }
                 }
                 else
                 {
-                    fp("[label=\"%s\",shape=house];\n",*RuleID);
+                    fp("[label=\"%s\",shape=house,style=filled];\n",*RuleID);
                     for(const Node *sub = children.head;sub;sub=sub->next)
                     {
                         sub->viz(fp);

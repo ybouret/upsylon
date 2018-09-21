@@ -69,7 +69,7 @@ namespace upsylon
 
             void Analyzer:: onInternal(const string &name, const size_t size)
             {
-                space(std::cerr) << "call $" << name << "#" << size << std::endl;
+                space(std::cerr) << "call <" << name << ">/" << size << std::endl;
             }
         }
     }
