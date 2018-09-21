@@ -76,6 +76,9 @@ Y_PROGRAM_START()
 {
     DynamoCompiler dynamo;
     dynamo->GraphViz("dynamo.dot");
+
+    dynamo.compile( Module::OpenSTDIN() );
+    dynamo.ast->GraphViz("dynout.dot");
 }
 Y_PROGRAM_END()
 
