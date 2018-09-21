@@ -30,7 +30,7 @@ public:
         // moduleID
         //
         //----------------------------------------------------------------------
-        dynamo << (acting("DeclModuleID") << term("ModuleID","[.][:word:]+") << END);
+        dynamo << (acting("DeclModule") << term("Module","[.][:word:]+") << END);
 
 
 

@@ -134,6 +134,7 @@ namespace upsylon
 #include "y/ios/ocstream.hpp"
 #include "y/ios/graphviz.hpp"
 #include "y/string/convert.hpp"
+#include "y/lang/syntax/terminal.hpp"
 
 namespace upsylon
 {
@@ -150,16 +151,21 @@ namespace upsylon
                     const string LexID = lexeme.to_print();
                     if(LexID.size()>0)
                     {
-                        fp("[label=\"%s='%s'\",shape=box,style=filled];\n",*RuleID,*LexID);
+                        fp("[label=\"%s='%s'\",shape=box,style=solid];\n",*RuleID,*LexID);
                     }
                     else
                     {
-                        fp("[label=\"%s\",shape=box,style=solid];\n",*RuleID);
+                        fp("[label=\"%s\",shape=box,style=rounded];\n",*RuleID);
                     }
                 }
                 else
                 {
-                    fp("[label=\"%s\",shape=house,style=filled];\n",*RuleID);
+                    const char *shp = "house";
+                    if(rule.uuid==Terminal::UUID)
+                    {
+                        shp = "triangle";
+                    }
+                    fp("[label=\"%s\",shape=%s,style=solid];\n",*RuleID,shp);
                     for(const Node *sub = children.head;sub;sub=sub->next)
                     {
                         sub->viz(fp);
