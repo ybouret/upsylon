@@ -28,7 +28,6 @@ namespace upsylon
                     Semantic  //!< semantic only => discard node
                 };
 
-
                 const Attribute attr;        //!< the role
                 bool            isOperator;  //!< for rewriting
 
