@@ -21,6 +21,20 @@ public:
         //----------------------------------------------------------------------
 
         AGG  &dynamo = agg("dynamo");
+
+        RULE &END   = mark(';');
+
+
+        //----------------------------------------------------------------------
+        //
+        // moduleID
+        //
+        //----------------------------------------------------------------------
+        dynamo << (acting("DeclModuleID") << term("ModuleID","[.][:word:]+") << END);
+
+
+
+#if 0
         RULE &RuleID = term("RuleID", "[:word:]+");
 
         hook<Lexical::jString>("string");
@@ -28,7 +42,8 @@ public:
 
         hook<Lexical::rString>("rstring");
         RULE &RAW   = term("rstring");
-        
+#endif
+
 
         root.endl("endl","[:endl:]" );
         root.drop("ws",  "[:blank:]");
@@ -60,7 +75,7 @@ public:
 Y_PROGRAM_START()
 {
     DynamoCompiler dynamo;
-
+    dynamo->GraphViz("dynamo.dot");
 }
 Y_PROGRAM_END()
 
