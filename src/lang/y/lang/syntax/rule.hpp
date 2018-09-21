@@ -41,8 +41,6 @@ namespace upsylon
                 //! handling of new nodes
                 static  void Grow( Node * &tree, Node *child ) throw();
 
-
-
                 virtual const char *__shape() const throw(); //!< GraphViz node shape
                 virtual const char *__style() const throw(); //!< GraphViz node style
 

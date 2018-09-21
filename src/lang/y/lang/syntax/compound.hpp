@@ -70,12 +70,12 @@ namespace upsylon
                 {
                     switch(type)
                     {
-                        case Acting: return "dotted";
-                        case Design: return "rounded";
+                        case Acting: return "rounded";
+                        case Design: return "solid";
                         default:
                             break;
                     }
-                    return "solid";
+                    return "filled";
                 }
             protected:
                 //! initialize, data=self
@@ -110,7 +110,7 @@ namespace upsylon
                  */
                 virtual bool hollow() const throw();
 
-                //! specific shpae
+                //! specific shape
                 virtual const char * __shape() const throw() { return "house"; }
 
             private:

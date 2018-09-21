@@ -19,7 +19,8 @@ namespace upsylon
                 virtual ~Joker() throw();
 
                 //! shape
-                virtual const char *__shape() const throw() { return "cylinder"; }
+                virtual const char *__shape() const throw() { return "diamond"; }
+                virtual const char *__style() const throw() { return "rounded"; }
 
                 //! link
                 virtual void epilog( ios::ostream &fp ) const;

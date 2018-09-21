@@ -50,12 +50,12 @@ namespace upsylon
             {
                 switch(attr)
                 {
-                    case Univocal: return "rounded";
-                    case Semantic: return "dotted";
+                    case Univocal: return "solid";
+                    case Semantic: return "rounded";
                     default:
                         break;
                 }
-                return "bold";
+                return Rule::__style();
             }
 
             const char *  Terminal:: __shape() const throw()

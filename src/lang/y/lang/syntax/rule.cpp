@@ -38,7 +38,7 @@ namespace upsylon
 
             
             const char * Rule:: __shape() const throw() { return "box"; }
-            const char * Rule:: __style() const throw() { return "solid"; }
+            const char * Rule:: __style() const throw() { return "filled"; }
 
             void Rule:: viz_id( ios::ostream &fp ) const
             {
