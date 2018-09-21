@@ -98,5 +98,20 @@ lzo_align_t __LZO_MMODEL var [ ((size) + (sizeof(lzo_align_t) - 1)) / sizeof(lzo
         return string(*target,tgt_len);
     }
 
+
+    void Decompress(void       *output, const size_t outlen,
+                    const void *input,  const size_t inlen)
+    {
+        const lzo_uint       src_len = inlen;
+        const unsigned char *src     = (const unsigned char*)input;
+        lzo_uint             tgt_len = outlen;
+        unsigned char       *tgt     = (unsigned char *)output;
+        lzo_uint             new_len = tgt_len;
+        if( LZO_E_OK != lzo1x_decompress(src, src_len, tgt, &new_len, NULL) || new_len != tgt_len )
+        {
+            throw exception("LZO::Decompress corrupted data");
+        }
+    }
+
 }
 

@@ -24,6 +24,11 @@ namespace upsylon
             Compress(fp, buff.ro(), buff.length());
         }
 
+        //! decompress in a buffer of size outlen
+        void Decompress(void       *output, const size_t outlen,
+                        const void *input,  const size_t inlen);
+
+
 
         //! compress source
         string Compress( const string &source ) const;
