@@ -68,7 +68,7 @@ namespace upsylon
                             assert(Terminal::UUID==child_rule.uuid);
                             switch( static_cast<const Terminal *>(child_data)->attr )
                             {
-                                case Terminal::Univocal: child->lexeme.clear();
+                                case Terminal::Univocal: child->lexeme.clear(); // FALLTHRU
                                 case Terminal::Standard: (target<<child); break;
                                 case Terminal::Semantic: delete child;    break;
                             }
