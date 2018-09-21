@@ -54,7 +54,7 @@ namespace
     public:
         Evaluator() :  Compiler( new Eval()  )
         {
-            parser->setVerbose(true);
+            //parser->setVerbose(true);
         }
 
         virtual ~Evaluator() throw()
@@ -85,7 +85,7 @@ Y_UTEST(eval)
         module = Module::OpenSTDIN();
     }
 
-    ev.compile(module,Compiler::KeepRaw);
+    ev.compile(module,true);
     assert(ev.ast.is_valid());
     ev.ast->GraphViz("eval-ast.dot");
     assert(ev->raw.is_valid());

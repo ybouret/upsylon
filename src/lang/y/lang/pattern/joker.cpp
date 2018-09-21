@@ -52,6 +52,14 @@ namespace upsylon
             return true;
         }
 
+        Pattern * Optional:: Create( Pattern *jk )
+        {
+            Motif guard(jk);
+            Pattern *p = new Optional(jk);
+            guard.dismiss();
+            return p;
+        }
+
     }
 }
 

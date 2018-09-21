@@ -41,27 +41,22 @@ namespace upsylon
             static const uint32_t UUID = Y_FOURCC('?',0,0,0); //!< 0x'?   '
             inline virtual ~Optional() throw() {}             //!< destructor
             //! create with memory management
-            static inline Pattern *Create( Pattern *jk )
-            {
-                Motif guard(jk);
-                Pattern *p = new Optional(jk);
-                guard.dismiss();
-                return p;
-            }
+            static  Pattern *Create( Pattern *jk );
+
             //! clone
             inline virtual Pattern *clone() const { return Create( motif->clone() ); }
+
             //! GraphViz
             virtual void __viz( ios::ostream &fp ) const;
+
             //! output
             virtual void write( ios::ostream &fp ) const;
+
             //! match
             virtual bool match( Token &tkn, Source &src) const;
+
             //! always true
-            inline
-            virtual bool weak() const throw()
-            {
-                return true;
-            }
+            inline virtual bool weak() const throw() { return true; }
 
         private:
             inline explicit Optional( Pattern *jk ) throw() : Joker(UUID,jk)
@@ -85,10 +80,13 @@ namespace upsylon
             
             //! clone
             inline virtual Pattern *clone() const { return Create( motif->clone(), nmin ); }
+
             //! GraphViz
             virtual void __viz( ios::ostream &fp ) const;
+
             //! output
             virtual void write( ios::ostream &fp ) const;
+
             //! match
             virtual bool match( Token &tkn, Source &src) const;
 
@@ -101,6 +99,7 @@ namespace upsylon
 
             //! '*'
             static inline Pattern *ZeroOrMore( Pattern *p ) { return Repeating::Create(p,0); }
+
             //! '+'
             static inline Pattern *OneOrMore( Pattern * p ) { return Repeating::Create(p,1); }
 
@@ -125,14 +124,19 @@ namespace upsylon
 
             //! destructor
             inline virtual ~Counting() throw() {}
+
             //! create with memory management
             static  Pattern *Create( Pattern *jk, const size_t n, const size_t m);
+
             //! clone
             inline virtual Pattern *clone() const { return Create( motif->clone(), nmin, nmax); }
+
             //! GraphViz
             virtual void __viz( ios::ostream &fp ) const;
+
             //! output
             virtual void write( ios::ostream &fp ) const;
+
             //! nmin<=0
             virtual bool weak() const throw()
             {

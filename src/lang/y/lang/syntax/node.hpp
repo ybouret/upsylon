@@ -20,7 +20,7 @@ namespace upsylon
             public:
 
                 typedef core::list_of<Node>     ListType; //!< base class
-                typedef core::list_of_cpp<Node> SaveList; //!< for internal operation
+                typedef core::list_of_cpp<Node> SaveList; //!< for internal operations
 
                 //! for children nodes
                 class List : public Object, public ListType
@@ -38,7 +38,8 @@ namespace upsylon
                 const bool terminal; //!< if is terminal
                 const bool internal; //!< !terminal
 
-                virtual ~Node() throw(); //!< destructor
+                //! destructor
+                virtual ~Node() throw();
 
                 //! create a terminal node
                 static inline Node *Create(const Rule &r, Lexeme *l)
@@ -81,10 +82,10 @@ namespace upsylon
 
                 //! Compact Tree according to aggregate properties
                 static Node *Compact( Node *node, bool &rewrite) throw();
+
                 //! Rewrite tree for operators, node is deleted upon failure
                 static Node *Rewrite( Node *node, const string &g);
-
-
+                
                 //! save to a binary form
                 void save( ios::ostream &fp ) const;
 

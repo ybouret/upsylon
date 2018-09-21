@@ -65,6 +65,7 @@ namespace upsylon
                 //! linking
                 virtual void epilog( ios::ostream &fp ) const;
 
+                //! specific style
                 virtual const char * __style() const throw()
                 {
                     switch(type)
@@ -102,10 +103,14 @@ namespace upsylon
                  if true, an empty sub-tree is added => not hollow!
                  */
                 virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const;
+
                 //! always create a sub-tree with its label, never hollow
+                /**
+                 But the tree can be empty.
+                 */
                 virtual bool hollow() const throw();
 
-
+                //! specific shpae
                 virtual const char * __shape() const throw() { return "house"; }
 
             private:

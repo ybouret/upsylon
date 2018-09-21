@@ -144,6 +144,7 @@ namespace upsylon
             public:
                 //!initialize
                 inline explicit OnJump(const string &l, const Action &a) : ControlEvent(Jump,a,l) {}
+
                 //!destructor
                 inline virtual ~OnJump() throw() {}
 
@@ -157,6 +158,7 @@ namespace upsylon
             public:
                 //!initialize
                 inline explicit OnBack(const Action &a) : ControlEvent(a) {}
+                
                 //!destructor
                 inline virtual ~OnBack() throw() {}
 

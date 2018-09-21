@@ -13,7 +13,6 @@ namespace upsylon
         class Compiler : public Syntax::Analyzer
         {
         public:
-            static const unsigned KeepRaw = 0x01; //!< will keep raw in parser
             typedef Syntax::Node  NODE;           //!< alias
 
             //! initialize
@@ -22,10 +21,13 @@ namespace upsylon
             virtual ~Compiler() throw();
 
             //! get the AST, rewrite it and walk it down
-            void compile( Module *module, const unsigned flags = 0 );
+            void compile( Module *module, bool keepRaw = false );
 
-            //! helper to access parser->raw
+            //! helper to access parser
             const Syntax::Parser * operator->() const throw();
+
+            //! helper to access parser
+            Syntax::Parser * operator->() throw();
 
         protected:
             Syntax::Parser::Pointer parser; //!< a compiled parser

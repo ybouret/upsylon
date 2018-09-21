@@ -8,7 +8,7 @@ namespace upsylon
 {
     namespace Lang
     {
-        //! full fledge class
+        //! full fledge class, a code and its position
         class Char : public CharInfo
         {
         public:

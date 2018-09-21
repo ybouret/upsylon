@@ -19,7 +19,7 @@ namespace upsylon
             //! list of operands
             Pattern::List operands;
 
-            //! syntactic helper
+            //! syntax helper
             template <typename PATTERN>
             inline PATTERN *add( PATTERN *p ) throw()
             {
@@ -42,6 +42,7 @@ namespace upsylon
 
             //!  matching exact string
             static inline Pattern *Equal(const char *s) { const string _ = s; return Equal(_); }
+
             //! one character of the string
             static inline Pattern *Among(const char *s) { const string _ = s; return Among(_); }
 
@@ -62,8 +63,6 @@ namespace upsylon
             //! link in graphviz
             void vizlink( ios::ostream &fp ) const;
 
-
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Logical);
         };
@@ -77,11 +76,15 @@ namespace upsylon
 
             //! destructor
             inline virtual ~AND() throw() {}
+
             //! initialize
             inline explicit AND() throw() : Logical(UUID) { Y_LANG_PATTERN_IS(AND); }
 
-            inline virtual Pattern *clone() const { return __clone( new AND() ); }  //!< clone
-            virtual void            __viz( ios::ostream &fp ) const;                //!< GraphViz
+            //! clone
+            inline virtual Pattern *clone() const { return __clone( new AND() ); }
+
+            //! GraphViz
+            virtual void            __viz( ios::ostream &fp ) const;
 
             //! must match all patterns
             virtual bool match( Token &tkn, Source &src ) const;
@@ -106,13 +109,16 @@ namespace upsylon
             //! initialize
             inline explicit OR() throw() : Logical(UUID) { Y_LANG_PATTERN_IS(OR); }
             //! clone
-            inline virtual Pattern *clone() const { return __clone( new OR() ); }   //!< clone
-            virtual void            __viz( ios::ostream &fp ) const;                //!< GraphViz
+            inline virtual Pattern *clone() const { return __clone( new OR() ); }
+
+            //! GraphViz
+            virtual void            __viz( ios::ostream &fp ) const;
 
             //! match first pattern
             virtual bool match( Token &tkn, Source &src ) const;
 
-            virtual bool weak() const throw(); //!< if one is weak
+            //! if one is weak
+            virtual bool weak() const throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OR);
@@ -128,7 +134,7 @@ namespace upsylon
             //! destructor
             inline virtual ~NONE() throw() {}
             //! initialize
-            inline explicit NONE() throw() : Logical(UUID) {Y_LANG_PATTERN_IS(NONE); }
+            inline explicit NONE() throw() : Logical(UUID) { Y_LANG_PATTERN_IS(NONE); }
             inline virtual Pattern *clone() const { return __clone( new NONE() ); } //!< clone
             virtual void            __viz( ios::ostream &fp ) const;                //!< GraphViz
 

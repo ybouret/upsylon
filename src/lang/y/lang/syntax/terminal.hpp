@@ -29,15 +29,17 @@ namespace upsylon
                 };
 
                 const Attribute attr;        //!< the role
-                bool            isOperator;  //!< for rewriting
+                bool            isOperator;  //!< for rewriting, only for univocal Terminal!
 
                 //! set operator flag
                 Terminal & setOperator() throw();
 
-                explicit Terminal( const string &id, const Attribute flag=Standard); //!< initialize, data=self
-                virtual ~Terminal() throw();                                         //!< destructor
-                
+                //! initialize, data=self
+                explicit Terminal( const string &id, const Attribute flag=Standard);
 
+                //! destructor
+                virtual ~Terminal() throw();
+                
                 //! accept if there is a lexeme with label==name
                 virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const;
 

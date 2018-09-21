@@ -20,6 +20,7 @@ namespace upsylon
             {
             public:
                 typedef intr_ptr<string,Scanner> Pointer; //!< for database
+
                 const Origin label; //!< used as shared label/key
 
 

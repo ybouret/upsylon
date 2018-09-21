@@ -40,7 +40,7 @@ namespace upsylon
                 //! reset curr to base and clean history
                 void    reset() throw();
 
-                //! unget an exctracted lexemes
+                //! unget an extracted lexeme
                 void    unget( Lexeme *lx ) throw();
 
                 //! unget a chain of extracted lexemes

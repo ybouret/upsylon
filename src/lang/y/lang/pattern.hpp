@@ -84,7 +84,7 @@ namespace upsylon
             //! human readable code
             string to_base64() const;
 
-            //! test equality
+            //! test equality (Single only...)
             static bool AreEqual(const Pattern &lhs, const Pattern &rhs) throw();
 
             //! remove multiple same patterns

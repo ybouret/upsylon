@@ -15,9 +15,13 @@ namespace upsylon
             class Joker : public Rule
             {
             public:
-                virtual ~Joker() throw(); //!< destructor
+                //! destructor
+                virtual ~Joker() throw();
 
+                //! shape
                 virtual const char *__shape() const throw() { return "cylinder"; }
+
+                //! link
                 virtual void epilog( ios::ostream &fp ) const;
 
 

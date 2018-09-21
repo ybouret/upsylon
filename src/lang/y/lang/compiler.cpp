@@ -23,17 +23,21 @@ namespace upsylon
             return & *parser;
         }
 
-        void Compiler:: compile( Module *module , const unsigned flags)
+        Syntax::Parser * Compiler:: operator->() throw()
+        {
+            return & *parser;
+        }
+
+
+        void Compiler:: compile( Module *module , bool keepRaw )
         {
             Source source(module);
             parser->reset();
             ast = 0;
 
-            ast = parser->parse(source, true);
+            ast = parser->parse(source,keepRaw);
 
             walk(*ast);
-
-
         }
 
 

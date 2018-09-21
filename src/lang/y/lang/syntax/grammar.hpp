@@ -25,7 +25,8 @@ namespace upsylon
                 // Setup API
                 //______________________________________________________________
                 explicit Grammar(const Origin &id); //!< initialize
-                virtual ~Grammar() throw();         //!< desctructor
+
+                virtual ~Grammar() throw();         //!< destructor
 
 
                 const Rule *top() const throw(); //!< get top rule, maybe NULL
@@ -40,13 +41,12 @@ namespace upsylon
                 const Rule * getRuleByName(const string &id) const;
 
                 //! rule look up
-                inline
-                const Rule * getRuleByName(const char   *id) const
+                inline const Rule * getRuleByName(const char   *id) const
                 {
                     const string _(id); return getRuleByName(_);
                 }
 
-                //! run
+                //! run by trying to accept first rule
                 Node *run(Lexer &lexer, Source &source);
 
                 //! propagate verbose to all rules
@@ -67,12 +67,10 @@ namespace upsylon
                 Rule & repeating( const Rule &r, const size_t nmin); //!< repeating >= nmin
 
                 //! '*'
-                inline
-                Rule & zeroOrMore( const Rule &r ) { return repeating(r,0); }
+                inline Rule & zeroOrMore( const Rule &r ) { return repeating(r,0); }
 
                 //! '+'
-                inline
-                Rule & oneOrMore( const Rule &r ) { return repeating(r,1); }
+                inline Rule & oneOrMore( const Rule &r ) { return repeating(r,1); }
 
                 //! new aggregate
                 inline Aggregate & agg( const string &id, const Compound::Type flag=Compound::Normal) { return __add( new Aggregate(id,flag) ); }
@@ -148,8 +146,9 @@ namespace upsylon
                 string        nextAltID();
 
                 static string MakeAltNameFrom( array<string> &names );
-            protected:
-                bool          verbose;
+                
+            public:
+                bool          verbose; //!< for verbose output/debugging
             };
         }
     }
