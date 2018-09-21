@@ -82,9 +82,14 @@ namespace upsylon
                 //! return AST operations
                 static Node *AST( Node *node, bool *needRewrite) throw();
 #endif
-                
+
+#if 0
                 //! rewrite for operators
                 static Node *Rewrite(Node *node, const string &grammarName);
+#endif
+
+                //! Compact Treee
+                
 
                 //! Reformat Tree from terminal properties
                 /**

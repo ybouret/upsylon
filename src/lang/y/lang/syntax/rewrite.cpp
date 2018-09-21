@@ -10,6 +10,7 @@ namespace upsylon
         namespace Syntax
         {
 
+#if 0
             static inline
             bool is_valid_operator( const Terminal *term, const char *g )
             {
@@ -117,7 +118,8 @@ namespace upsylon
                     return node;
                 }
             }
-
+#endif
+            
         }
 
     }
