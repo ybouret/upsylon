@@ -24,7 +24,7 @@ namespace upsylon
             static Pattern *word();   //!< \verbatim[a-zA-Z0-9_]\endverbatim
             static Pattern *endl();   //!< \verbatim\n|\r|\r\n\endverbatim
             static Pattern *dot();    //!< \verbatim^endl\endverbatim
-            static Pattern *core();   //!< core 7-bits string content
+            static Pattern *core();   //!< core 7-bits string content, minus " and '
         };
     }
 

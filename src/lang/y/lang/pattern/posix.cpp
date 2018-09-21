@@ -100,7 +100,8 @@ namespace upsylon
             auto_ptr<Logical> p = new OR();
             p->add( new Single(0x20)     );
             p->add( new Single(0x21)     );
-            p->add( new Range(0x23,0x5B) );
+            p->add( new Range(0x23,0x26) );
+            p->add( new Range(0x28,0x5B) );
             p->add( new Range(0x5D,0x7F) );
             return p.yield();
         }

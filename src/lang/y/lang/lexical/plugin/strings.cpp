@@ -19,6 +19,7 @@ namespace upsylon
             __String:: __String(Translator &tr, const string &id, const char *ch) : Plugin(tr,id,ch), content()
             {
                 assert(*label==id);
+                
                 const string esc_id = *label + ".escape";
                 const string esc_rx = "\\x5C";
                 Scanner     &esc = tr.decl(esc_id);
