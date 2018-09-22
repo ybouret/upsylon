@@ -47,6 +47,10 @@ namespace upsylon
             T get( const string &id );
 
             template <typename T>
+            T to(const int i);
+
+
+            template <typename T>
             inline T get(const char *id) { const string _(id); return get<T>(_); }
 
             template <typename T>

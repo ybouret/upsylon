@@ -27,6 +27,7 @@ namespace upsylon
 
         State:: State() : L( lua_newstate(__luaAllocator,NULL) )
         {
+            //std::cerr << "Opening Libs" << std::endl;
             luaL_openlibs(L);
         }
 
@@ -100,7 +101,7 @@ namespace upsylon
         template <>
         string State:: get<string>( const string &id )
         {
-            lua_settop(L,-1);
+            lua_settop(L,0);
             lua_getglobal(L,*id);
             if( !lua_isstring(L,-1) )
             {
@@ -140,6 +141,27 @@ namespace upsylon
         void State::push<string>(const string &s )
         {
             lua_pushlstring(L, *s, s.length() );
+        }
+
+
+        template < >
+        float State::to<float>(const int i)
+        {
+            if(!lua_isnumber(L,i))
+            {
+                throw exception("no float@%d",i);
+            }
+            return float( lua_tonumber(L, i) );
+        }
+
+        template < >
+        double State::to<double>(const int i)
+        {
+            if(!lua_isnumber(L,i))
+            {
+                throw exception("no double@%d",i);
+            }
+            return double( lua_tonumber(L, i) );
         }
 
     }

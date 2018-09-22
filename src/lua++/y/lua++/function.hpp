@@ -19,10 +19,12 @@ namespace upsylon
             const string name;
 
         protected:
-            VM vm;
+            VM         vm;
+            lua_State *L;
             explicit FunctionType(const string &, const VM &);
             FunctionType(const FunctionType &other);
             void pull();
+            void call( const int narg, const int nret);
 
         private:
             Y_DISABLE_ASSIGN(FunctionType);
@@ -40,6 +42,17 @@ namespace upsylon
             inline Function(const Function &other) : FunctionType(other) {}
 
             inline virtual ~Function() throw() {}
+
+            inline T operator()(const T x)
+            {
+                pull();
+                vm->push<T>(x);
+                call(1,1);
+                const T ans( vm->to<T>(-1) );
+                lua_pop(L,1);
+                return ans;
+            }
+
 
 
         private:
