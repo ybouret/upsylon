@@ -1,4 +1,4 @@
-#include "y/lang/dynamo/dynamo.hpp"
+#include "y/lang/dynamo/parser.hpp"
 #include "y/utest/run.hpp"
 #include "y/fs/local.hpp"
 
@@ -14,7 +14,7 @@ Y_UTEST(dyn)
     fs.try_remove_file("dynout.dot");
     fs.try_remove_file("dynout.png");
 
-    Lang::Dynamo::Parser    dynamo;
+    DynamoParser    dynamo;
 
     dynamo.GraphViz("dynamo.dot");
 

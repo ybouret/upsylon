@@ -1,5 +1,5 @@
 #include "y/program.hpp"
-#include "y/lang/dynamo/dynamo.hpp"
+#include "y/lang/dynamo/parser.hpp"
 #include "y/fs/local.hpp"
 
 using namespace upsylon;
@@ -13,7 +13,7 @@ Y_PROGRAM_START()
     fs.try_remove_file("dynout.dot");
     fs.try_remove_file("dynout.png");
 
-    Lang::Dynamo::Parser    dynamo;
+    Lang::DynamoParser    dynamo;
 
     dynamo.GraphViz("dynamo.dot");
 

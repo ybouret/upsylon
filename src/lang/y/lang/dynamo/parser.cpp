@@ -1,4 +1,4 @@
-#include "y/lang/dynamo/dynamo.hpp"
+#include "y/lang/dynamo/parser.hpp"
 #include "y/lang/lexical/plugin/comment.hpp"
 #include "y/lang/lexical/plugin/strings.hpp"
 
@@ -7,7 +7,8 @@ namespace upsylon
     namespace Lang
     {
 
-        Dynamo:: Parser:: Parser() : Syntax::Parser("Dynamo")
+        
+        DynamoParser:: DynamoParser() : Syntax::Parser("Dynamo")
         {
 
             //__________________________________________________________________
@@ -152,7 +153,7 @@ namespace upsylon
             dict.release();
         }
 
-        Dynamo:: Parser:: ~Parser() throw()
+        DynamoParser:: ~DynamoParser() throw()
         {
         }
 
@@ -161,24 +162,3 @@ namespace upsylon
     }
 }
 
-#if 0
-namespace upsylon
-{
-    namespace Lang
-    {
-
-        Dynamo:: Generator:: Generator() : Lang::Compiler( new Dynamo::Parser() )
-        {
-
-        }
-
-        Dynamo:: Generator:: ~Generator() throw()
-        {
-        }
-        
-
-
-    }
-
-}
-#endif
