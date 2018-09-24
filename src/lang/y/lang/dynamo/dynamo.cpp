@@ -22,10 +22,14 @@ namespace upsylon
             dict("TAIL","[:word:]*");
             dict("ID",  "{HEAD}{TAIL}").GraphViz("id.dot");
 
-            RULE &END    = mark(';');
-            RULE &COLON  = mark(':');
-            RULE &STRING = plug<Lexical::jString>("string");
-            RULE &CHARS  = plug<Lexical::rString>("chars");
+            RULE &END      = mark(';');
+            RULE &COLON    = mark(':');
+            RULE &CSTRING  = plug<Lexical::jString>("cstring");
+            RULE &RSTRING  = plug<Lexical::rString>("rstring");
+            // this is a trick: the rewrite will erase op_alias
+            // if the operator is detected...
+            RULE &OPERATOR = op('^');
+            RULE &OSTRING = (design("ostring") << RSTRING << optional(OPERATOR));
 
             //__________________________________________________________________
             //
@@ -38,16 +42,18 @@ namespace upsylon
             //__________________________________________________________________
             //
             //
-            // Then some syntax rules
+            // Then some Grammar rules
             //
             //__________________________________________________________________
-            AGG &__Rule = agg("Rule");
+            AGG &G = agg("G");
             {
+                RULE &G_ID  = term("G_ID","{ID}");
 
+                G <<  G_ID << COLON;
 
-                __Rule << term("RuleID","{ID}") << COLON;
+                G << OSTRING;
 
-                __Rule << END;
+                G << END;
 
             }
 
@@ -57,14 +63,14 @@ namespace upsylon
             // possible lexical instruction
             //
             //__________________________________________________________________
-            AGG &Lxr = agg("Lxr");
+            AGG &L = agg("L");
             {
-                Lxr << term("LxrID","@{ID}") << COLON;
-                Lxr << oneOrMore( choice(STRING,CHARS) );
-                Lxr << END;
+                L << term("L_ID","@{ID}") << COLON;
+                L << oneOrMore( choice(CSTRING,RSTRING) );
+                L << END;
             }
 
-            dynamo << zeroOrMore( choice(__Rule,Lxr) );
+            dynamo << zeroOrMore( choice(G,L) );
 
             //__________________________________________________________________
             //
@@ -77,6 +83,8 @@ namespace upsylon
             root.drop("[:blank:]");
             root.endl("[:endl:]");
 
+            checkValidity();
+            dict.release();
         }
 
         Dynamo:: Parser:: ~Parser() throw()
