@@ -45,7 +45,7 @@ namespace upsylon
             {
 
 
-                __Rule << term("ID","{ID}") << COLON;
+                __Rule << term("RuleID","{ID}") << COLON;
 
                 __Rule << END;
 
@@ -54,17 +54,17 @@ namespace upsylon
             //__________________________________________________________________
             //
             //
-            // possible plugins
+            // possible lexical instruction
             //
             //__________________________________________________________________
-            AGG &LXR = agg("Plugin");
+            AGG &Lxr = agg("Lxr");
             {
-                LXR << term("PluginID","@{ID}") << COLON;
-                LXR << oneOrMore( choice(STRING,CHARS) );
-                LXR << END;
+                Lxr << term("LxrID","@{ID}") << COLON;
+                Lxr << oneOrMore( choice(STRING,CHARS) );
+                Lxr << END;
             }
 
-            dynamo << zeroOrMore( choice(__Rule,LXR) );
+            dynamo << zeroOrMore( choice(__Rule,Lxr) );
 
             //__________________________________________________________________
             //
