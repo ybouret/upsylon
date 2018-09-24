@@ -23,8 +23,9 @@ namespace upsylon
                 template <typename T> static inline
                 T Compute( T x, const array<double> &aorg, const Variables &vars )
                 {
-                    const size_t n  = aorg.size(); assert(n==vars.size()); assert(n%3==0);
-                    const size_t ng = n/3;
+                    const size_t ng = vars.size()/3;
+                    assert(aorg.size()==vars.size());
+                    assert(ng*3==vars.size());
                     size_t j=0;
                     T      ans=0;
                     for(size_t i=1;i<=ng;++i)

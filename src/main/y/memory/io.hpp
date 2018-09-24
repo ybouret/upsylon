@@ -37,7 +37,20 @@ namespace upsylon
             {
                 return static_cast<ptrdiff_t>(cast<const char>(b)-cast<const char>(a));
             }
+
+            //! out of reach shift
+            static void *       __shift( void *addr,       const ptrdiff_t bytes) throw();
+            static const void * __shift( const void *addr, const ptrdiff_t bytes) throw();
+
+            //! translation
+            template <typename T> static inline
+            T *__prev( T *addr ) throw()
+            {
+                static const ptrdiff_t shft = -ptrdiff_t(sizeof(T));
+                return static_cast<T*>( __shift(addr,shft) );
+            }
         };
+
     }
 }
 
