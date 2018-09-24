@@ -26,7 +26,7 @@ namespace upsylon
             //
             // all starts with a module
             //__________________________________________________________________
-            dynamo << ( agg("Module") << term("ModuleID","[.]{ID}") << END);
+            dynamo << ( acting("Module") << term("ModuleID","[.]{ID}") << END);
 
 
             //__________________________________________________________________
@@ -49,6 +49,7 @@ namespace upsylon
     }
 }
 
+#if 0
 namespace upsylon
 {
     namespace Lang
@@ -68,4 +69,4 @@ namespace upsylon
     }
 
 }
-
+#endif

@@ -49,7 +49,7 @@ ${dynamo_srcs}
 )
 INSTALL( TARGETS y-lang ARCHIVE DESTINATION lib )
 
-ADD_EXECUTABLE(y-dynamo y/lang/dynamo/y-dynamo.cxx)
+ADD_EXECUTABLE(y-dynamo y/lang/dynamo/y-dynamo.cxx ../json/y/json/json.g)
 TARGET_LINK_Y(y-dynamo lang)
 
 

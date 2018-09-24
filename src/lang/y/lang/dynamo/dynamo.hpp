@@ -25,7 +25,7 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);
             };
 
-
+#if 0
             class Generator : public Lang::Compiler
             {
             public:
@@ -35,6 +35,7 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Generator);
             };
+#endif
         };
 
     }

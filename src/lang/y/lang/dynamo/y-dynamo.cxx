@@ -13,11 +13,18 @@ Y_PROGRAM_START()
     fs.try_remove_file("dynout.dot");
     fs.try_remove_file("dynout.png");
 
-    Lang::Dynamo::Generator dynamo;
-    dynamo->GraphViz("dynamo.dot");
+    Lang::Dynamo::Parser    dynamo;
 
-    dynamo.compile( Lang::Module::OpenSTDIN() );
-    dynamo.ast->GraphViz("dynout.dot");
+    dynamo.GraphViz("dynamo.dot");
+
+    auto_ptr<Lang::Syntax::Node> ast = 0;
+    {
+        Lang::Source source( Lang::Module::OpenSTDIN() );
+        ast = dynamo.parse(source,false);
+    }
+
+    ast->GraphViz("dynout.dot");
+
     
 
 }
