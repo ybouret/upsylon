@@ -33,16 +33,23 @@ SET(syntax_srcs ${syntax_decl} ${syntax_code})
 SOURCE_GROUP( lang/syntax FILES ${syntax_srcs} )
 INSTALL( FILES ${syntax_decl} DESTINATION include/y/lang/syntax )
 
+FILE(GLOB dynamo_decl y/lang/dynamo/*.hpp)
+FILE(GLOB dynamo_code y/lang/dynamo/*.cpp)
+SET(dynamo_srcs ${dynamo_decl} ${dynamo_code})
+SOURCE_GROUP( lang/dynamo FILES ${dynamo_srcs} )
+INSTALL( FILES ${dynamo_decl} DESTINATION include/y/lang/dynamo )
+
 ADD_LIBRARY(y-lang STATIC 
 ${main_srcs} 
 ${pattern_srcs}
 ${lexical_srcs}
 ${lexical_plugin_srcs}
 ${syntax_srcs}
+${dynamo_srcs}
 )
 INSTALL( TARGETS y-lang ARCHIVE DESTINATION lib )
 
-ADD_EXECUTABLE(y-dynamo y/lang/dynamo/dynamo.cxx)
+ADD_EXECUTABLE(y-dynamo y/lang/dynamo/y-dynamo.cxx)
 TARGET_LINK_Y(y-dynamo lang)
 
 

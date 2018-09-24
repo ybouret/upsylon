@@ -209,17 +209,30 @@ namespace upsylon
 
                 //! helper to emit ID on rx
                 inline void emit(const string &id,const string &rx) { forward(id,rx,this,&Scanner::nothing); }
+
                 //! helper to emit ID on rx
                 inline void emit(const char   *id,const char   *rx) { const string _=id; const string __=rx; emit(_,__); }
+
                 //! helper to drop ID on rx
                 inline void drop(const string &id,const string &rx) { discard(id,rx,this,&Scanner::nothing); }
+
                 //! helper to drop ID on rx
                 inline void drop(const char   *id,const char   *rx) { const string _=id; const string __=rx; drop(_,__); }
+
+                //! helper to drop rx on rx
+                inline void drop(const char *rx) { const string _(rx); drop(_,_); }
+
+
                 //! helper for newline(id) on rx
                 inline void endl(const string &id,const string &rx) { discard(id,rx,this,&Scanner::newline); }
+
                 //! helper for newline(id) on rx
                 inline void endl(const char   *id,const char   *rx) { const string _=id; const string __=rx; endl(_,__); }
+
+                //! helper for endl shortcut
+                inline void endl(const char *rx) { const string _(rx); endl(_,_); }
                 
+
                 //! probe source
                 /**
                  - return NULL: if no event, EOF, otherwise control for translator
