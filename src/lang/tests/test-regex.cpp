@@ -9,13 +9,13 @@ using namespace Lang;
 Y_UTEST(regex)
 {
     Dictionary dict;
-    dict("INT",Compile::RegExp("[:digit:]+"));
+    dict("INT","[:digit:]+");
     
     if(argc>1)
     {
         const string rx = argv[1];
         std::cerr << "Compiling '" << rx << "'" << std::endl;
-        auto_ptr<Pattern> p = Compile::RegExp(rx,&dict);
+        auto_ptr<Pattern> p = RegExp(rx,&dict);
         p->GraphViz("regex.dot");
         if(argc>2&&0==strcmp(argv[2],"scan"))
         {
