@@ -39,9 +39,6 @@ public:
         // prepare rules
         //
         //----------------------------------------------------------------------
-
-
-
         RULE &ID      = term("ID", "[:word:]+");
         RULE &STRING  = plug<Lexical::jString>("STRING");
         RULE &CHARS   = plug<Lexical::rString>("CHARS");
