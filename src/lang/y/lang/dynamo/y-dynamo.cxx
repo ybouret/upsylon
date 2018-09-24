@@ -25,6 +25,8 @@ Y_PROGRAM_START()
 
     ast->GraphViz("dynout.dot");
 
+    Lang::Syntax::Analyzer A;
+    A.walk( *ast );
     
 
 }

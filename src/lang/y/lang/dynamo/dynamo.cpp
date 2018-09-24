@@ -20,57 +20,122 @@ namespace upsylon
 
             dict("HEAD","[_[:alpha:]]");
             dict("TAIL","[:word:]*");
-            dict("ID",  "{HEAD}{TAIL}").GraphViz("id.dot");
+            dict("ID",  "{HEAD}{TAIL}");
 
             RULE &END      = mark(';');
             RULE &COLON    = mark(':');
-            RULE &CSTRING  = plug<Lexical::jString>("cstring");
-            RULE &RSTRING  = plug<Lexical::rString>("rstring");
-            // this is a trick: the rewrite will erase op_alias
-            // if the operator is detected...
-            RULE &OPERATOR = op('^');
-            RULE &OSTRING = (design("ostring") << RSTRING << optional(OPERATOR));
+            RULE &RX       = plug<Lexical::jString>("RX");
+            RULE &RS       = plug<Lexical::rString>("RS");
+            RULE &OS       = (acting("OS") << RS << optional( op('^') ));
+            RULE &ID       = term("ID","{ID}");
+            //__________________________________________________________________
+            //
+            //
+            // Module name declaration
+            //
+            //__________________________________________________________________
+            dynamo << (agg("M") << term("M_ID","\\.{ID}") << END );
+
 
             //__________________________________________________________________
             //
             //
-            // all starts with a module
-            //
-            //__________________________________________________________________
-            dynamo << ( acting("Module") << term("ModuleID","[.]{ID}") << END);
-
-            //__________________________________________________________________
-            //
-            //
-            // Then some Grammar rules
+            // Grammatical Rule
             //
             //__________________________________________________________________
             AGG &G = agg("G");
             {
-                RULE &G_ID  = term("G_ID","{ID}");
+                G << ID << COLON;
 
-                G <<  G_ID << COLON;
+                //______________________________________________________________
+                //
+                // rule content
+                //______________________________________________________________
+                {
 
-                G << OSTRING;
+                    //______________________________________________________
+                    //
+                    // an ATOM is a basic content
+                    //______________________________________________________
+                    ALT &ATOM = alt("ATOM");
+                    ATOM << ID << RX << OS;
+
+                    //______________________________________________________
+                    //
+                    // an ITEM is a modified ATOM or an ATOM
+                    //______________________________________________________
+                    ALT &ITEM = alt("ITEM");
+                    {
+                        ITEM << ( agg("OOM") << ATOM << sole('+'));
+                        ITEM << ( agg("ZOM") << ATOM << sole('*'));
+                        ITEM << ( agg("OPT") << ATOM << sole('?'));
+                        ITEM << ATOM;
+                    }
+
+                    //______________________________________________________
+                    //
+                    // a SUB rule is one or more item
+                    //______________________________________________________
+                    AGG &SUB = design("SUB");
+                    SUB <<  oneOrMore(ITEM);
+
+                    //______________________________________________________
+                    //
+                    // an ALT rule is the choice of different SUB rule
+                    //______________________________________________________
+                    AGG &CHX = design("CHX");
+                    CHX  << SUB  << zeroOrMore( acting("extras") << mark('|') << SUB );
+
+                    //______________________________________________________
+                    //
+                    // the add the GROUP possibility for an ATOM
+                    // GROUP is temporary only, a wrapper for ALT
+                    //______________________________________________________
+                    ATOM << ( acting("GROUP") << mark('(') << CHX << mark(')') );
+
+                    //______________________________________________________
+                    //
+                    // done
+                    //______________________________________________________
+                    G << CHX;
+
+                }
+
 
                 G << END;
-
             }
 
             //__________________________________________________________________
             //
             //
-            // possible lexical instruction
+            // Lexical Rule
             //
             //__________________________________________________________________
-            AGG &L = agg("L");
-            {
-                L << term("L_ID","@{ID}") << COLON;
-                L << oneOrMore( choice(CSTRING,RSTRING) );
-                L << END;
-            }
+            RULE &L_ID = term("L_ID","@{ID}");
+            AGG  &L    = agg("L");
+            L << L_ID << COLON << zeroOrMore( choice(RX,RS) ) << END;
 
-            dynamo << zeroOrMore( choice(G,L) );
+            //__________________________________________________________________
+            //
+            //
+            // Lexical Plugin
+            //
+            //__________________________________________________________________
+            AGG &P = agg("P");
+            P << L_ID << COLON << ID << END;
+
+            //__________________________________________________________________
+            //
+            //
+            // Alias Recognition
+            //
+            //__________________________________________________________________
+            RULE &A = agg("A") << ID << COLON << choice(RX,OS) << END;
+
+            ALT  &Entries = alt("Entries");
+            Entries << A << G << L << P;
+            dynamo  << G << zeroOrMore( Entries );
+
 
             //__________________________________________________________________
             //

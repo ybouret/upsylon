@@ -47,9 +47,9 @@ namespace
 
             ALT &jObject = alt("object");
             {
-                const Rule &LBRACE = mark("{","\\{");
-                const Rule &RBRACE = mark("}","\\}");
-                const Rule &COLUMN = mark(":",":");
+                const RULE &LBRACE = mark("{","\\{");
+                const RULE &RBRACE = mark("}","\\}");
+                const RULE &COLUMN = mark(":",":");
                 {
                     AGG &EmptyObject = agg("empty_object");
                     EmptyObject << LBRACE << RBRACE;
