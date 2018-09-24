@@ -62,12 +62,12 @@ namespace upsylon
             throw win32::exception( ::GetLastError(), "::GetCurrentDirectory()" );
         
         memory::buffer_of<char,memory::pooled> buffer( len+1 ); assert( buffer.length() > len );
-        const DWORD res = ::GetCurrentDirectory( len, buffer() );
+        const DWORD res = ::GetCurrentDirectory( len, *buffer );
         if( !res )
             throw win32::exception( ::GetLastError(), "::GetCurrentDirectory()" );
         if( res > len )
             throw exception( "CurrentDirectory changed!");
-        string ans( buffer() );
+        string ans( *buffer );
         return string( vfs::as_directory( ans ) );
 #endif
         

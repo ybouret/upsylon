@@ -59,7 +59,7 @@ namespace upsylon {
                     const size_t           len    = res-1;
                     const size_t           cnt    = res;
                     buffer_of<char,global> blk(cnt);
-                    char                  *buf    = blk();
+                    char                  *buf    = *blk;
                     const DWORD           res2    = ::GetEnvironmentVariable( &name[0], buf, res);
                     //std::cerr << "[res2] = " << unsigned(res2) << std::endl;
                     if(  res2 != len )
