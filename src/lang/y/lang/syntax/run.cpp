@@ -84,7 +84,7 @@ namespace upsylon
                 const Lexeme  *nlx = lexer.peek(source);
                 if( nlx )
                 {
-                    throw exception("{%s} unexpected extraneous <%s>", **name, **(nlx->label));
+                    throw exception("{%s} unexpected standalone/unfinished <%s>", **name, **(nlx->label));
                 }
 
                 return guard.yield();

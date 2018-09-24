@@ -12,7 +12,9 @@ namespace upsylon
 
             //__________________________________________________________________
             //
+            //
             // setup dynamo
+            //
             //__________________________________________________________________
             AGG &dynamo = agg("dynamo");
 
@@ -20,18 +22,55 @@ namespace upsylon
             dict("TAIL","[:word:]*");
             dict("ID",  "{HEAD}{TAIL}").GraphViz("id.dot");
 
-            RULE &END = mark(';');
+            RULE &END    = mark(';');
+            RULE &COLON  = mark(':');
+            RULE &STRING = plug<Lexical::jString>("string");
+            RULE &CHARS  = plug<Lexical::rString>("chars");
 
             //__________________________________________________________________
             //
+            //
             // all starts with a module
+            //
             //__________________________________________________________________
             dynamo << ( acting("Module") << term("ModuleID","[.]{ID}") << END);
 
+            //__________________________________________________________________
+            //
+            //
+            // Then some syntax rules
+            //
+            //__________________________________________________________________
+            AGG &__Rule = agg("Rule");
+            {
+
+
+                __Rule << term("ID","{ID}") << COLON;
+
+                __Rule << END;
+
+            }
 
             //__________________________________________________________________
             //
+            //
+            // possible plugins
+            //
+            //__________________________________________________________________
+            AGG &LXR = agg("Plugin");
+            {
+                LXR << term("PluginID","@{ID}") << COLON;
+                LXR << oneOrMore( choice(STRING,CHARS) );
+                LXR << END;
+            }
+
+            dynamo << zeroOrMore( choice(__Rule,LXR) );
+
+            //__________________________________________________________________
+            //
+            //
             // Extra Lexical Rules
+            //
             //__________________________________________________________________
             hook<Lexical::CXX_Comment>("Single Line Comment");
             hook<Lexical::C_Comment>(  "Multi-Lines Comment");
