@@ -76,7 +76,7 @@ namespace upsylon
             }
         }
 
-        void q_codec:: store(const char C)
+        void q_codec:: store(char C)
         {
             Q.push_front(C);
         }

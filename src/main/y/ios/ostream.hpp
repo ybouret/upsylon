@@ -96,7 +96,7 @@ namespace upsylon
                     //__________________________________________________________
                     const size_t extra_bits  = num_bits - 4;
                     size_t       extra_bytes = Y_ROUND8(extra_bits)>>3; assert(extra_bytes<=8);
-                    write( last4shifted | extra_bytes );
+                    write( char(last4shifted | extra_bytes) );
                     if(shift) *shift = 1;
                     x >>= 4;
                     while(extra_bytes-->0)

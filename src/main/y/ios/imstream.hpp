@@ -47,7 +47,7 @@ namespace upsylon
             }
 
             //! unread one char with checks
-            virtual void store( const char C );
+            virtual void store( char C );
 
         private:
             const char *curr;

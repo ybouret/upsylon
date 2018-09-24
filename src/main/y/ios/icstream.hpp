@@ -20,7 +20,7 @@ namespace upsylon
             virtual bool query( char &C );
 
             //! unread a char
-            virtual void store( const char C );
+            virtual void store( char C );
 
             //! constructor
             icstream(const string &filename);

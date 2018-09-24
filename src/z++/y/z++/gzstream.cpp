@@ -72,7 +72,7 @@ namespace upsylon
             }
         }
         
-        void igzstream:: store(const char C)
+        void igzstream:: store( char C)
         {
             const int ch  = uint8_t(C);
             const int res = gzungetc( ch, (gzFile)GZ );

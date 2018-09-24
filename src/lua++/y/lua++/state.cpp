@@ -93,7 +93,7 @@ namespace upsylon
             {
                 throw exception("%sno size_t '%s'",fn,*id);
             }
-            const int i = lua_tointeger(L,-1);
+            const int i = int(lua_tointeger(L,-1));
             if(i<0) throw exception("%s'%s' is negative (%d) for size_t",fn,*id,i);
             return size_t(i);
         }

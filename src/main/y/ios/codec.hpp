@@ -48,7 +48,7 @@ namespace upsylon
             virtual ~q_codec() throw();
 
             virtual bool query(char &C);
-            virtual void store(const char C);
+            virtual void store(char  C);
 
         protected:
             //! initialize

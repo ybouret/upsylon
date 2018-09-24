@@ -28,7 +28,7 @@ Y_UTEST(lzo)
                 content << C;
             }
         }
-        const size_t org = H.key<uint64_t>(content);
+        const uint64_t org = H.key<uint64_t>(content);
         std::cerr << "org=" << org << std::endl;
         {
             ios::ocstream fp("minilzo.bin");

@@ -6,7 +6,7 @@ namespace upsylon
 {
     namespace ios
     {
-        void imstream:: store(const char C)
+        void imstream:: store( char C)
         {
             static const char what[] = "imstream store failure";
             if(curr<=init)
