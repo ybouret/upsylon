@@ -237,7 +237,11 @@ MACRO(TARGET_LINK_Y tgt)
 		ENDIF()
 		
 		IF( ${extra} STREQUAL "chem" )
-			LIST(APPEND ylibs "y-m")
+			LIST(APPEND ylibs "y-m;y-lua++;y-lua")
+		ENDIF()
+		
+		IF( ${extra} STREQUAL "json" )
+			LIST(APPEND ylibs "y-lang")
 		ENDIF()
 		
 	ENDFOREACH()
