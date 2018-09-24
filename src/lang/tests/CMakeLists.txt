@@ -1,7 +1,8 @@
 INCLUDE_DIRECTORIES(../../main/tests)
 FILE(GLOB srcs test-*.cpp)
+FILE(GLOB data *.g)
 
-ADD_EXECUTABLE(test-lang main.cpp ${srcs})
+ADD_EXECUTABLE(test-lang main.cpp ${srcs} ${data})
 TARGET_LINK_Y(test-lang lang)
 
 ENABLE_TESTING()
@@ -15,6 +16,7 @@ ADD_TEST(Lex     test-lang lex     NULL)
 ADD_TEST(Grammar test-lang grammar)
 ADD_TEST(Parser  test-lang parser)
 ADD_TEST(Eval    test-lang eval NULL)
+ADD_TEST(Dyn     test-lang dyn)
 
 ADD_CUSTOM_TARGET(utest-lang
 COMMAND ${CMAKE_CTEST_COMMAND} -V
