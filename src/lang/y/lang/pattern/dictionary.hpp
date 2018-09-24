@@ -4,6 +4,7 @@
 
 #include "y/lang/pattern.hpp"
 #include "y/associative/map.hpp"
+
 namespace upsylon
 {
     namespace Lang
@@ -20,13 +21,22 @@ namespace upsylon
             virtual ~Dictionary() throw(); //!< destructor
 
             //! register the pattern
-            void operator()(const string &name, Pattern *p);
+            const Pattern &operator()(const string &name, Pattern *p);
 
             //! register the pattern
             inline
-            void operator()(const char   *name, Pattern *p)
+            const Pattern &operator()(const char   *name, Pattern *p)
             {
-                const string _ = name; (*this)(_,p);
+                const string _ = name; return (*this)(_,p);
+            }
+
+            //! with direct compilation
+            const Pattern &operator()(const string &name, const string &rx);
+
+            //! with direct compilation
+            const Pattern & operator()(const char *name, const char *rx)
+            {
+                const string _(name), __(rx); return (*this)(_,__);
             }
 
             //! get and clone pattern

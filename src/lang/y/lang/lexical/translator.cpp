@@ -28,6 +28,7 @@ dict()
                     if(!scanners.insert(p)) throw exception("[%s] cannot initialize scanners!!!", **label );
                 }
                 curr = base;
+                base->userDict = &dict;
             }
 
             Translator:: ~Translator() throw()

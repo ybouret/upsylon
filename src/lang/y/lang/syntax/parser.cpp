@@ -125,7 +125,7 @@ namespace upsylon
                     // check same pattern
                     //----------------------------------------------------------
                     const string lhs = l->motif->to_binary();
-                    const auto_ptr<const Pattern> q = Compile::RegExp(rx,S.userDict);
+                    const auto_ptr<const Pattern> q = RegExp(rx,S.userDict);
                     const string rhs = q->to_binary();
 
                     if( lhs != rhs )

@@ -49,7 +49,7 @@ namespace upsylon
                                     METHOD_POINTER  meth)
                 {
                     const Origin       ruleLabel = new string(id);
-                    const Motif        ruleMotif = Compile::RegExp(rx,userDict);
+                    const Motif        ruleMotif = RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);
                     const RegularCode  ruleEvent = new OnForward(ruleAction);
                     add(ruleLabel,ruleMotif,ruleEvent);
@@ -73,7 +73,7 @@ namespace upsylon
                                     METHOD_POINTER  meth)
                 {
                     const Origin       ruleLabel = new string(id);
-                    const Motif        ruleMotif = Compile::RegExp(rx,userDict);
+                    const Motif        ruleMotif = RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);
                     const RegularCode  ruleEvent = new OnDiscard(ruleAction);
                     add(ruleLabel,ruleMotif,ruleEvent);
@@ -98,7 +98,7 @@ namespace upsylon
                 {
                     const string       id        = "->" + target;
                     const Origin       ruleLabel = new string(id);
-                    const Motif        ruleMotif = Compile::RegExp(rx,userDict);
+                    const Motif        ruleMotif = RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);
                     const ControlCode  ruleEvent = new OnJump(target,ruleAction);
                     add(ruleLabel,ruleMotif,ruleEvent);
@@ -138,7 +138,7 @@ namespace upsylon
                 {
                     const string       id        = CallLabel(target);
                     const Origin       ruleLabel = new string(id);
-                    const Motif        ruleMotif = Compile::RegExp(rx,userDict);
+                    const Motif        ruleMotif = RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);
                     const ControlCode  ruleEvent = new OnCall(target,ruleAction);
                     add(ruleLabel,ruleMotif,ruleEvent);
@@ -175,7 +175,7 @@ namespace upsylon
                 {
                     const string       id        = "<=" + *label + "." + rx;
                     const Origin       ruleLabel = new string(id);
-                    const Motif        ruleMotif = Compile::RegExp(rx,userDict);
+                    const Motif        ruleMotif = RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);
                     const ControlCode  ruleEvent = new OnBack(ruleAction);
                     add(ruleLabel,ruleMotif,ruleEvent);

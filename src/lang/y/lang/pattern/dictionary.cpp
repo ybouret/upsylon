@@ -1,4 +1,4 @@
-#include "y/lang/pattern/dictionary.hpp"
+#include "y/lang/pattern/compiler.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon
@@ -13,7 +13,7 @@ namespace upsylon
         {
         }
 
-        void Dictionary:: operator()(const string &name, Pattern *p)
+        const Pattern & Dictionary:: operator()(const string &name, Pattern *p)
         {
             assert(p);
             std::cerr << "Inserting Pattern as '" << name << "'" << std::endl;
@@ -30,6 +30,7 @@ namespace upsylon
                 delete patterns.pop_back();
                 throw;
             }
+            return *p;
         }
 
         void Dictionary:: release() throw()
@@ -47,6 +48,12 @@ namespace upsylon
             }
             const Pattern &p = **ppP;
             return p.clone();
+        }
+
+
+        const Pattern & Dictionary:: operator()(const string &name, const string &rx)
+        {
+            return (*this)(name, RegExp(rx,this));
         }
 
 

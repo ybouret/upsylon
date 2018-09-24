@@ -616,7 +616,7 @@ case 'f': return new Single('\f')
             Y_DISABLE_COPY_AND_ASSIGN(RXCompiler);
         };
 
-        Pattern * Compile::RegExp( const string &rx, const Dictionary *dict )
+        Pattern * RegExp( const string &rx, const Dictionary *dict )
         {
             RXCompiler        cmp(rx,dict);
             auto_ptr<Pattern> p = cmp.sub();
