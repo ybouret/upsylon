@@ -1,4 +1,4 @@
-#include "y/lua++/vm.hpp"
+#include "y/lua++/state.hpp"
 #include <cstdlib>
 
 namespace upsylon

@@ -3,7 +3,7 @@
 #ifndef Y_LUA_FUNCTION_INCLUDED
 #define Y_LUA_FUNCTION_INCLUDED 1
 
-#include "y/lua++/vm.hpp"
+#include "y/lua++/state.hpp"
 
 namespace upsylon
 {
@@ -53,6 +53,16 @@ namespace upsylon
                 return ans;
             }
 
+            inline T operator()(const T x, const T y)
+            {
+                pull();
+                vm->push<T>(x);
+                vm->push<T>(y);
+                call(2,1);
+                const T ans( vm->to<T>(-1) );
+                lua_pop(L,1);
+                return ans;
+            }
 
 
         private:

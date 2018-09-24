@@ -9,7 +9,9 @@ Y_UTEST(vm)
 
     vm->doString("print(math.cos(0.1))");
     vm->doString("print(math.cos)");
-    vm->doString("function f(x) return math.cos(x) end");
+    vm->doString("function f(x)   return math.cos(x) end");
+    vm->doString("function g(x,y) return math.cos(x)+math.sin(y) end");
+
     //return 0;
 
     Lua::Function<double> f("f",vm);
@@ -17,6 +19,9 @@ Y_UTEST(vm)
     {
         std::cerr << "F(" << x << ")=" << f(x) << std::endl;
     }
+
+    Lua::Function<float> g("g",vm);
+    std::cerr << "g(0.1,0.1)=" << g(0.1f,0.1f) << std::endl;
 }
 Y_UTEST_DONE()
 
