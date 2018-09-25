@@ -32,8 +32,7 @@ Y_UTEST(dyn)
             {
                 module = Lang::Module::OpenFile(fn);
             }
-            Lang::Source source( module );
-            ast = dynamo.parser->parse(source,false);
+            ast = dynamo.format(module);
         }
 
         ast->GraphViz("dynout.dot");

@@ -5,14 +5,31 @@ namespace upsylon
 {
     namespace Lang
     {
-        string Token::to_string() const
+        string Token::to_string(const size_t nskip, const size_t ntrim) const
         {
-            string ans(size,as_capacity);
-            for(const Char *ch=head;ch;ch=ch->next)
+            const size_t ndrop = nskip+ntrim;
+            if(ndrop>=size)
             {
-                ans << char(ch->code);
+                return string();
             }
-            return ans;
+            else
+            {
+                const size_t n = size-ndrop;
+                string       ans(n,as_capacity);
+                const Char  *ch = head;
+
+                for(size_t i=0;i<nskip;++i)
+                {
+                    ch=ch->next;
+                }
+
+                for(size_t i=n;i>0;--i,ch=ch->next)
+                {
+                    ans << char(ch->code);
+                }
+
+                return ans;
+            }
         }
 
         string Token::to_print() const

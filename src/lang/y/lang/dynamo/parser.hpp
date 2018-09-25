@@ -19,6 +19,8 @@ namespace upsylon {
             //! destructor
             virtual ~DynamoParser() throw();
 
+            int includeDepth;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoParser);
         };

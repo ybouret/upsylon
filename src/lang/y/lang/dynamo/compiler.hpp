@@ -13,14 +13,18 @@ namespace upsylon
         class DynamoCompiler
         {
         public:
+            typedef Syntax::Node    Node;   //!< alias
             Syntax::Parser::Pointer parser; //!< shared parser
-            
+
             explicit DynamoCompiler();                      //!< initialize
             DynamoCompiler(const DynamoCompiler &) throw(); //!< shared copy
             virtual ~DynamoCompiler() throw();              //!< destructor
 
+            Node *format( Module *module );
+
         private:
             Y_DISABLE_ASSIGN(DynamoCompiler);
+            void processCommands( Node &dynamo );
         };
     }
 }
