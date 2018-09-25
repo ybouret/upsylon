@@ -2,7 +2,7 @@ INCLUDE_DIRECTORIES(../../main/tests)
 FILE(GLOB srcs test-*.cpp)
 FILE(GLOB data *.g)
 
-ADD_EXECUTABLE(test-lang main.cpp ${srcs} ${data})
+ADD_EXECUTABLE(test-lang main.cpp ${srcs} ${data} ../../json/y/json/json.g)
 TARGET_LINK_Y(test-lang lang)
 
 ENABLE_TESTING()

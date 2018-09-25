@@ -40,6 +40,8 @@ namespace upsylon
 
             //! out of reach shift
             static void *       __shift( void *addr,       const ptrdiff_t bytes) throw();
+            
+            //! out of reach shift, CONST
             static const void * __shift( const void *addr, const ptrdiff_t bytes) throw();
 
             //! translation

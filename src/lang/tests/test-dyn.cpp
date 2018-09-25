@@ -1,4 +1,4 @@
-#include "y/lang/dynamo/parser.hpp"
+#include "y/lang/dynamo/compiler.hpp"
 #include "y/utest/run.hpp"
 #include "y/fs/local.hpp"
 
@@ -14,16 +14,26 @@ Y_UTEST(dyn)
     fs.try_remove_file("dynout.dot");
     fs.try_remove_file("dynout.png");
 
-    DynamoParser    dynamo;
+    DynamoCompiler    dynamo;
 
-    dynamo.GraphViz("dynamo.dot");
+    dynamo.parser->GraphViz("dynamo.dot");
 
     if(argc>1)
     {
+        const string fn = argv[1];
         auto_ptr<Lang::Syntax::Node> ast = 0;
         {
-            Lang::Source source( Lang::Module::OpenFile(argv[1]) );
-            ast = dynamo.parse(source,false);
+            Lang::Module *module = 0;
+            if(fn=="run")
+            {
+                module = Lang::Module::OpenSTDIN();
+            }
+            else
+            {
+                module = Lang::Module::OpenFile(fn);
+            }
+            Lang::Source source( module );
+            ast = dynamo.parser->parse(source,false);
         }
 
         ast->GraphViz("dynout.dot");

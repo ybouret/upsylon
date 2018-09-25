@@ -14,7 +14,7 @@ namespace upsylon
             //__________________________________________________________________
             //
             //
-            // setup dynamo
+            // setup dynamo with terminals
             //
             //__________________________________________________________________
             AGG &dynamo = agg("dynamo");
@@ -35,7 +35,7 @@ namespace upsylon
             // Module name declaration
             //
             //__________________________________________________________________
-            dynamo << (agg("M") << term("M_ID","\\.{ID}") << END );
+            dynamo << (agg("Module") << term("ModuleID","\\.{ID}") << END );
 
 
             //__________________________________________________________________
@@ -44,9 +44,9 @@ namespace upsylon
             // Grammatical Rule
             //
             //__________________________________________________________________
-            AGG &G = agg("G");
+            AGG &__RULE = agg("RULE");
             {
-                G << ID << COLON;
+                __RULE  << ID << COLON;
 
                 //______________________________________________________________
                 //
@@ -67,43 +67,43 @@ namespace upsylon
                     //______________________________________________________
                     ALT &ITEM = alt("ITEM");
                     {
-                        ITEM << ( agg("OOM") << ATOM << sole('+'));
-                        ITEM << ( agg("ZOM") << ATOM << sole('*'));
-                        ITEM << ( agg("OPT") << ATOM << sole('?'));
+                        ITEM << ( agg("OOM") << ATOM << mark('+'));
+                        ITEM << ( agg("ZOM") << ATOM << mark('*'));
+                        ITEM << ( agg("OPT") << ATOM << mark('?'));
                         ITEM << ATOM;
                     }
 
                     //______________________________________________________
                     //
-                    // a SUB rule is one or more item
+                    // an __AGG rule is one or more item
                     //______________________________________________________
-                    AGG &SUB = design("SUB");
-                    SUB <<  oneOrMore(ITEM);
+                    AGG &__AGG = design("AGG");
+                    __AGG  <<  oneOrMore(ITEM);
 
                     //______________________________________________________
                     //
-                    // an ALT rule is the choice of different SUB rule
+                    // an __ALT rule is the choice of different __AGG rule
                     //______________________________________________________
-                    AGG &CHX = design("CHX");
-                    CHX  << SUB  << zeroOrMore( acting("extras") << mark('|') << SUB );
+                    AGG &__ALT = design("ALT");
+                    __ALT  << __AGG   << zeroOrMore( acting("extras") << mark('|') << __AGG  );
 
                     //______________________________________________________
                     //
                     // the add the GROUP possibility for an ATOM
                     // GROUP is temporary only, a wrapper for ALT
                     //______________________________________________________
-                    ATOM << ( acting("GROUP") << mark('(') << CHX << mark(')') );
+                    ATOM << ( acting("GROUP") << mark('(') << __ALT << mark(')') );
 
                     //______________________________________________________
                     //
                     // done
                     //______________________________________________________
-                    G << CHX;
+                    __RULE  << __ALT;
 
                 }
 
 
-                G << END;
+                __RULE  << END;
             }
 
             //__________________________________________________________________
@@ -113,8 +113,8 @@ namespace upsylon
             //
             //__________________________________________________________________
             RULE &L_ID = term("L_ID","@{ID}");
-            AGG  &L    = agg("L");
-            L << L_ID << COLON << zeroOrMore( choice(RX,RS) ) << END;
+            AGG  &LXR  = agg("LXR");
+            LXR << L_ID << COLON << zeroOrMore( choice(RX,RS) ) << END;
 
             //__________________________________________________________________
             //
@@ -122,8 +122,8 @@ namespace upsylon
             // Lexical Plugin
             //
             //__________________________________________________________________
-            AGG &P = agg("P");
-            P << L_ID << COLON << ID << END;
+            AGG &PLUGIN = agg("PLUGIN");
+            PLUGIN << L_ID << COLON << ID << END;
 
             //__________________________________________________________________
             //
@@ -131,11 +131,20 @@ namespace upsylon
             // Alias Recognition
             //
             //__________________________________________________________________
-            RULE &A = agg("A") << ID << COLON << choice(RX,OS) << END;
+            RULE &ALIAS = agg("ALIAS") << ID << COLON << choice(RX,OS) << END;
 
-            ALT  &Entries = alt("Entries");
-            Entries << A << G << L << P;
-            dynamo  << G << zeroOrMore( Entries );
+            //__________________________________________________________________
+            //
+            //
+            // command
+            //
+            //__________________________________________________________________
+            RULE &COMMAND = agg("COMMAND") << term("CMD","%{ID}") << zeroOrMore(choice(RX,RS));
+
+
+            ALT  &entries = alt("entries");
+            entries << ALIAS << __RULE  << LXR << PLUGIN << COMMAND;
+            dynamo  << zeroOrMore( entries );
 
 
             //__________________________________________________________________
