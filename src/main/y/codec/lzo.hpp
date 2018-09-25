@@ -4,6 +4,7 @@
 
 #include "y/string.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/ios/istream.hpp"
 
 namespace upsylon
 {
@@ -18,8 +19,7 @@ namespace upsylon
         void Compress( ios::ostream &fp, const void *data, const size_t size);
 
         //! compress block, emit_upack and output
-        inline
-        void Compress( ios::ostream &fp, const memory::ro_buffer &buff )
+        inline void Compress(ios::ostream &fp, const memory::ro_buffer &buff)
         {
             Compress(fp, buff.ro(), buff.length());
         }
@@ -29,13 +29,14 @@ namespace upsylon
                         const void *input,  const size_t inlen);
 
 
-
         //! compress source
         string Compress( const string &source ) const;
 
         //! decompress source
         string Decompress( const size_t size, const string &source ) const;
-        
+
+        //! decompress from input
+        string Decompress( ios::istream &fp ) const;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(miniLZO);

@@ -112,6 +112,7 @@ lzo_align_t __LZO_MMODEL var [ ((size) + (sizeof(lzo_align_t) - 1)) / sizeof(lzo
             throw exception("LZO::Decompress corrupted data");
         }
     }
+    
 
 }
 
