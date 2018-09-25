@@ -203,6 +203,8 @@ namespace upsylon
 }
 
 #include "y/string/io.hpp"
+#include "y/ios/osstream.hpp"
+
 namespace upsylon
 {
     namespace Lang
@@ -234,6 +236,17 @@ namespace upsylon
                     }
                 }
             }
+
+            string Node:: to_binary() const
+            {
+                string ans;
+                {
+                    ios::osstream fp(ans);
+                    save(fp);
+                }
+                return ans;
+            }
+
         }
     }
 }

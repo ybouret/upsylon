@@ -1,6 +1,7 @@
 #include "y/lang/dynamo/compiler.hpp"
 #include "y/utest/run.hpp"
 #include "y/fs/local.hpp"
+#include "y/codec/lzo.hpp"
 
 using namespace upsylon;
 using namespace Lang;
@@ -13,6 +14,9 @@ Y_UTEST(dyn)
     fs.try_remove_file("dynamo.png");
     fs.try_remove_file("dynout.dot");
     fs.try_remove_file("dynout.png");
+    fs.try_remove_file("dyn1.bin");
+    fs.try_remove_file("dyn2.bin");
+
 
     DynamoCompiler    dynamo;
 
@@ -37,8 +41,20 @@ Y_UTEST(dyn)
 
         ast->GraphViz("dynout.dot");
         {
-            ios::ocstream fp("dyn.bin");
+            ios::ocstream fp("dyn1.bin");
             ast->save(fp);
+        }
+
+        {
+            const string bst = ast->to_binary();
+            {
+                ios::ocstream fp("dyn2.bin");
+                fp << bst;
+            }
+            {
+                ios::ocstream fp("dyn3.bin");
+                miniLZO::instance().Compress(fp,bst);
+            }
         }
 
         Lang::Syntax::Analyzer A;

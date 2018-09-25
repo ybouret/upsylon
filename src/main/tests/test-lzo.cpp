@@ -19,6 +19,7 @@ Y_UTEST(lzo)
     if(argc>1&&0==strcmp("run",argv[1]))
     {
 
+
         vector<char> content(1024*1024,as_capacity);
         {
             ios::icstream fp( ios::cstdin );
@@ -34,24 +35,16 @@ Y_UTEST(lzo)
             ios::ocstream fp("minilzo.bin");
             LZO.Compress(fp,content);
         }
-        content.free();
+        content.release();
 
-
-#if 0
-        string source;
         {
-            ios::icstream fp( ios::cstdin );
-            ios::osstream op( source );
-            char C=0;
-            while(fp.query(C))
-            {
-                op.write(C);
-            }
-            op.flush();
+            ios::icstream fp("minilzo.bin");
+            const string loaded = LZO.Decompress(fp);
+            std::cerr << "#loaded=" << loaded.size() << std::endl;
+            const uint64_t lzh = H.key<uint64_t>(loaded);
+            std::cerr << "lzh=" << lzh << std::endl;
+            Y_CHECK(lzh==org);
         }
-        string target = LZO.Compress(source);
-        string second = LZO.Decompress(source.size(),target);
-#endif
 
     }
 

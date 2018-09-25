@@ -89,6 +89,9 @@ namespace upsylon
                 //! save to a binary form
                 void save( ios::ostream &fp ) const;
 
+                //! convert to binary string
+                string to_binary() const;
+
                 //! load from binary data
                 static Node *Load(Source        &source,
                                   const Grammar &grammar);

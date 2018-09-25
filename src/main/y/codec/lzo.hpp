@@ -26,15 +26,8 @@ namespace upsylon
 
         //! decompress in a buffer of size outlen
         void Decompress(void       *output, const size_t outlen,
-                        const void *input,  const size_t inlen);
-
-
-        //! compress source
-        string Compress( const string &source ) const;
-
-        //! decompress source
-        string Decompress( const size_t size, const string &source ) const;
-
+                        const void *input,  const size_t inlen) const;
+        
         //! decompress from input
         string Decompress( ios::istream &fp ) const;
 
