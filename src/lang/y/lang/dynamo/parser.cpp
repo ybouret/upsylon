@@ -13,7 +13,6 @@ namespace upsylon
         
         DynamoParser:: DynamoParser() :
         Syntax::Parser("Dynamo"),
-        depth(0),
         commands( YOCTO_MPERF_FOR(commands_kw) )
         {
 
@@ -41,7 +40,7 @@ namespace upsylon
             // Module name declaration
             //
             //__________________________________________________________________
-            dynamo << (agg("Module") << term("ModuleID","\\.{ID}") << END );
+            dynamo << (acting(".Module") << term("Module","\\.{ID}") << END );
 
 
             //__________________________________________________________________

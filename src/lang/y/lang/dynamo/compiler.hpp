@@ -18,13 +18,14 @@ namespace upsylon
 
             explicit DynamoCompiler();                      //!< initialize
             virtual ~DynamoCompiler() throw();              //!< destructor
-
-            Node *format( Module *module );
+            int   depth;
+            Node *process( Module *module );
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoCompiler);
-            //DynamoCompiler(const DynamoCompiler &) throw(); //!< shared copy
-            void processCommands( Node &dynamo );
+            void processCommands( Node &dynamo, const string &origin );
+            Node *format( Module *module );
+
         };
     }
 }

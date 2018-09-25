@@ -21,7 +21,6 @@ namespace upsylon {
             //! destructor
             virtual ~DynamoParser() throw();
 
-            int   depth;
             const hashing::mperf commands;
 
         private:
