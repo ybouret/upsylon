@@ -117,10 +117,8 @@ namespace upsylon
                     switch( htop(rid) )
                     {
                         case 0: assert(top_kw[0]==rid); assert("RULE"==rid);
-                            std::cerr << "+" << top_kw[0] << " " << getNodeName(*sub,"ID",0) <<  std::endl;
                             onRule(*sub);
                             target << sub.yield();
-                            
                             break;
 
                         case 1: assert(top_kw[1]==rid);assert("ALIAS"==rid);
@@ -128,11 +126,11 @@ namespace upsylon
                             break;
 
                         case 2: assert(top_kw[2]==rid);assert("LXR"==rid);
-                            std::cerr << "+" << top_kw[2] << " " << getNodeName(*sub,"L_ID",0) <<  std::endl;
+                            std::cerr << "+" << top_kw[2] << " " << getNodeName(*sub,"L_ID",1) <<  std::endl;
                             break;
 
                         case 3: assert(top_kw[3]==rid);assert("PLUGIN"==rid);
-                            std::cerr << "+" << top_kw[3] << " " << getNodeName(*sub,"L_ID",0) <<  std::endl;
+                            std::cerr << "+" << top_kw[3] << " " << getNodeName(*sub,"L_ID",1) <<  std::endl;
                             break;
 
                         default:
@@ -149,13 +147,13 @@ namespace upsylon
         void DynamoGenerator:: onRule( const Node &node )
         {
             const string name = getNodeName(node,"ID",0); // the rule name
-            Agg         &agg  = parser->agg(name);         // put in parser
-            const MetaAgg m(agg);                          // keep it for later
+            Agg         &agg  = parser->agg(name);        // put in parser
+            const MetaAgg m(agg);                         // keep it for later
             if( ! top.insert(m) )
             {
                 throw exception("{%s} unexpected multiple rule '%s'", **(parser->name), *name );
             }
-
+            std::cerr << "..Rule '" << name << "'" << std::endl;
         }
 
 
