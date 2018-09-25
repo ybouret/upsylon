@@ -20,8 +20,9 @@ namespace upsylon {
 
             //! destructor
             virtual ~DynamoParser() throw();
-            
-            hashing::mperf commands;
+
+            int   depth;
+            const hashing::mperf commands;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoParser);

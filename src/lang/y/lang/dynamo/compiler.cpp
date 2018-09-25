@@ -55,11 +55,24 @@ namespace upsylon
                     const Node::List &args = node->children; assert(args.size>0);
                     const Node       *curr = args.head;      assert(curr); assert(curr->terminal); assert("CMD"==curr->rule.name);
                     const Lexeme     &lxm  = curr->lexeme;
-                    const string      CMD  =lxm.to_string(1,0);
-                    std::cerr << "CMD=<" << CMD << ">" << std::endl;
+                    const string      CMD  = lxm.to_string(1,0);
 
                     switch( parser->commands(CMD) )
                     {
+                        case DynamoParser::include:
+                            std::cerr << "Processing include..." << std::endl;
+                            if(args.size!=2)
+                            {
+                                throw exception("%s:%d: include must have exactly one argument",lxm.origin(),lxm.line());
+                            }
+                            else
+                            {
+                                const Node *incl = curr->next;
+                                assert( "RX" == incl->rule.name || "RS" == incl->rule.name );
+                                const string filename = incl->lexeme.to_string(1,1);
+                                std::cerr << "Will Include <" << filename << ">" << std::endl;
+                            }
+                            break;
 
                         default:
                             throw exception("%s:%d unknown command '%s'", lxm.origin(), lxm.line(), *CMD);

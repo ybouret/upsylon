@@ -13,6 +13,7 @@ namespace upsylon
         
         DynamoParser:: DynamoParser() :
         Syntax::Parser("Dynamo"),
+        depth(0),
         commands( YOCTO_MPERF_FOR(commands_kw) )
         {
 

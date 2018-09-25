@@ -17,13 +17,13 @@ namespace upsylon
             arc_ptr<DynamoParser>   parser; //!< shared parser
 
             explicit DynamoCompiler();                      //!< initialize
-            DynamoCompiler(const DynamoCompiler &) throw(); //!< shared copy
             virtual ~DynamoCompiler() throw();              //!< destructor
 
             Node *format( Module *module );
 
         private:
-            Y_DISABLE_ASSIGN(DynamoCompiler);
+            Y_DISABLE_COPY_AND_ASSIGN(DynamoCompiler);
+            //DynamoCompiler(const DynamoCompiler &) throw(); //!< shared copy
             void processCommands( Node &dynamo );
         };
     }
