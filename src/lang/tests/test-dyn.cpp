@@ -16,7 +16,7 @@ Y_UTEST(dyn)
 
     DynamoCompiler    dynamo;
 
-    dynamo.parser->GraphViz("dynamo.dot");
+    dynamo.parser.GraphViz("dynamo.dot");
 
     if(argc>1)
     {

@@ -11,7 +11,7 @@ namespace upsylon
         }
 
         DynamoCompiler:: DynamoCompiler() :
-        parser( new DynamoParser() ),
+        parser(  ),
         depth( 0 )
         {
             
@@ -21,8 +21,8 @@ namespace upsylon
         {
             assert(module);
             Source source(module);
-            parser->reset();
-            auto_ptr<Node> ast = parser->parse(source,false);
+            parser.reset();
+            auto_ptr<Node> ast = parser.parse(source,false);
 
             processCommands(*ast,*(module->origin));
 
@@ -66,7 +66,7 @@ namespace upsylon
                     const Lexeme     &lxm  = curr->lexeme;
                     const string      CMD  = lxm.to_string(1,0);
 
-                    switch( parser->commands(CMD) )
+                    switch( parser.commands(CMD) )
                     {
                         case DynamoParser::include:
                             std::cerr << "Processing include..." << std::endl;

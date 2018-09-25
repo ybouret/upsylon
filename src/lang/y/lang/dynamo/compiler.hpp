@@ -13,16 +13,19 @@ namespace upsylon
         class DynamoCompiler
         {
         public:
-            typedef Syntax::Node    Node;   //!< alias
-            arc_ptr<DynamoParser>   parser; //!< shared parser
+            typedef Syntax::Node    Node;      //!< alias
+            DynamoParser            parser;    //!< per level parser
+            int                     depth;     //!< current depth
 
-            explicit DynamoCompiler();                      //!< initialize
-            virtual ~DynamoCompiler() throw();              //!< destructor
-            int   depth;
-            Node *process( Module *module );
+            explicit DynamoCompiler();         //!< initialize
+            virtual ~DynamoCompiler() throw(); //!< destructor
+
+            Node *process( Module *module );   //!< recursively parse grammar
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoCompiler);
+
             void processCommands( Node &dynamo, const string &origin );
             Node *format( Module *module );
 
