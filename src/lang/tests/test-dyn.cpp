@@ -37,6 +37,10 @@ Y_UTEST(dyn)
         }
 
         ast->GraphViz("dynout.dot");
+        {
+            ios::ocstream fp("dyn.bin");
+            ast->save(fp);
+        }
 
         Lang::Syntax::Analyzer A;
         A.walk( *ast );
