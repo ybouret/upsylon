@@ -50,10 +50,8 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
             typedef DynMeta<Syntax::Aggregate> MetaAgg;
-            //typedef DynMeta<Syntax::Rule>      MetaRule;
-
+            
             auto_ptr<Syntax::Parser>  parser;
-            //Node::SaveList            modules;
             set<string,MetaAgg>       top;
             hashing::mperf htop;
 
@@ -67,6 +65,7 @@ namespace upsylon
             //! extract node name
             string getNodeName( const Node &node, const char *label, const size_t nskip ) const;
 
+            void onRule( const Node &node );
 
             void collectSubModules( Node *node ) throw();
         };
