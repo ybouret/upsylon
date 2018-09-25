@@ -26,6 +26,7 @@ namespace upsylon
             const CharInfo & info() const;           //!< info for first token
             int              line() const throw();   //!< 0 if empty
             int              column() const throw(); //!< 0 if empty
+            const char      *origin() const throw(); //!< try to guess origin
         private:
             Y_DISABLE_ASSIGN(Lexeme);
 

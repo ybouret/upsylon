@@ -36,6 +36,17 @@ namespace upsylon
             return (head) ? head->column : 0;
         }
 
+        const char * Lexeme:: origin() const throw()
+        {
+            if(head)
+            {
+                return **(head->origin);
+            }
+            else
+            {
+                return "?";
+            }
+        }
 
     }
 }

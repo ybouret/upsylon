@@ -14,7 +14,7 @@ namespace upsylon
         {
         public:
             typedef Syntax::Node    Node;   //!< alias
-            Syntax::Parser::Pointer parser; //!< shared parser
+            arc_ptr<DynamoParser>   parser; //!< shared parser
 
             explicit DynamoCompiler();                      //!< initialize
             DynamoCompiler(const DynamoCompiler &) throw(); //!< shared copy
