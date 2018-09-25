@@ -51,6 +51,8 @@ namespace upsylon
             //! key for Library
             inline const string & key() const throw() { return name; }
 
+            friend std::ostream & operator<<(std::ostream &, const Species &);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);
         };

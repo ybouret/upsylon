@@ -13,7 +13,12 @@ namespace upsylon
         Object:: ~Object() throw()
         {
         }
-        
+
+        std::ostream & operator<<(std::ostream &os, const Species &sp)
+        {
+            os << '(' << sp.name << ',' << sp.z << ')';
+            return os;
+        }
     }
 
 }

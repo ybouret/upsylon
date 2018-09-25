@@ -1,0 +1,23 @@
+//~ \file
+#ifndef Y_CHEM_LUA_IO_INCLUDED
+#define Y_CHEM_LUA_IO_INCLUDED 1
+
+#include "y/chem/equilibria.hpp"
+#include "y/lua++/state.hpp"
+
+namespace upsylon
+{
+    namespace Chemical
+    {
+
+        struct __luaIO
+        {
+            static void add( Library &lib, Lua::State::Pointer &vm, const string &name );
+        };
+
+    }
+}
+
+
+#endif
+

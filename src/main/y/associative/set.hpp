@@ -98,7 +98,7 @@ namespace upsylon
             for( typename base_type::const_iterator j=s.begin();i<=n;++i,++j)
             {
                 os << *j;
-                if(i<n) os << ' ';
+                if(i<n) os << ',';
             }
             os << '}';
             return os;
