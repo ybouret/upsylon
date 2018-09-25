@@ -64,6 +64,7 @@ Y_UTEST(dyn)
         DynamoGenerator gen;
         auto_ptr<Lang::Syntax::Parser> parser = gen.create( *ast );
 
+        ast->GraphViz("dynclr.dot");
 
 
     }

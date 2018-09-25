@@ -14,14 +14,15 @@ namespace upsylon {
         class DynamoParser : public Syntax::Parser
         {
         public:
-            static const int include = 0;
+            static const int include = 0; //!< code for include
+            
             //! define the generator parser
             explicit DynamoParser();
 
             //! destructor
             virtual ~DynamoParser() throw();
 
-            const hashing::mperf commands;
+            const hashing::mperf commands; //!< to hash commands name: include,...
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoParser);

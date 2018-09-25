@@ -16,6 +16,8 @@ namespace upsylon
         commands( YOCTO_MPERF_FOR(commands_kw) )
         {
 
+            assert(include==commands("include"));
+
             //__________________________________________________________________
             //
             //
@@ -32,8 +34,7 @@ namespace upsylon
             RULE &COLON    = mark(':');
             RULE &RX       = plug<Lexical::jString>("RX");
             RULE &RS       = plug<Lexical::rString>("RS");
-            RULE &OS       = (acting("OS") << RS << optional( op('^') ));
-            //RULE &OS       = (agg("OP") << RS << ( sole('^') ));
+            RULE &OS       = (acting("OS") << RS << optional( op('^') )); //!< trick to detect operators
             RULE &ID       = term("ID","{ID}");
             //__________________________________________________________________
             //

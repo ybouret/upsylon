@@ -51,6 +51,7 @@ namespace upsylon
             //! key for Library
             inline const string & key() const throw() { return name; }
 
+            //! output for debug
             friend std::ostream & operator<<(std::ostream &, const Species &);
 
         private:

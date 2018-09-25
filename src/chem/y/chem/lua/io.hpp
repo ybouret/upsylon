@@ -10,8 +10,10 @@ namespace upsylon
     namespace Chemical
     {
 
+        //! I/O function to setup chemical systems with lua
         struct __luaIO
         {
+            //! append species in table 'name' to lib
             static void add( Library &lib, Lua::State::Pointer &vm, const string &name );
         };
 

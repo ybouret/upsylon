@@ -1,5 +1,6 @@
 
 #include "y/lang/dynamo/generator.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -7,8 +8,18 @@ namespace upsylon
     namespace Lang
     {
 
+        static const char *top_kw[] =
+        {
+            "RULE",
+            "ALIAS",
+            "LXR",
+            "PLUGIN"
+        };
+
+
         DynamoGenerator:: DynamoGenerator() :
-        parser(0)
+        parser(0),
+        htop( YOCTO_MPERF_FOR(top_kw) )
         {
         }
 
@@ -19,7 +30,7 @@ namespace upsylon
 
         Syntax::Parser * DynamoGenerator:: create( Node &dynamo )
         {
-            modules.clear();
+            //modules.clear();
             top.free();
             parser = 0;
             
@@ -45,6 +56,7 @@ namespace upsylon
             return node->lexeme.to_string(1,0);
         }
 
+#if 0
         void DynamoGenerator:: collectSubModules(Node *node) throw()
         {
             assert(node);
@@ -71,25 +83,62 @@ namespace upsylon
                 target.swap_with(source);
             }
         }
+#endif
 
-        void DynamoGenerator:: collectTopLevel(const Node *node)
+
+        string DynamoGenerator:: getNodeName( const Node &node, const char *label, const size_t nskip ) const
+        {
+            assert(parser.is_valid());
+            assert(node.internal);
+            assert(node.children.size>0);
+            const Node *head = node.children.head;
+            assert(head);
+            assert(head->terminal);
+
+            if(label != *(head->lexeme.label) )
+            {
+                throw exception("{%s} unexpected label '%s' for '%s'", ** (parser->name), **(head->lexeme.label), label );
+            }
+
+            return head->lexeme.to_string(nskip,0);
+        }
+
+
+        void DynamoGenerator:: collectTopLevel(Node *node)
         {
             if(node->internal)
             {
-                for(const Node *sub=node->children.head;sub;sub=sub->next)
+                Node::List    &source = node->children;
+                Node::SaveList target;
+                while(source.size)
                 {
-                    if(sub->rule.name=="RULE")
+                    auto_ptr<Node> sub = source.pop_front();
+                    const string   rid = sub->rule.name;
+                    switch( htop(rid) )
                     {
-                        std::cerr << "New Rule " << std::endl;
-                        assert(sub->internal);
-                        assert(sub->children.size>1);
-                        
-                    }
-                    else
-                    {
-                        collectTopLevel(sub);
+                        case 0: assert(top_kw[0]==rid); assert("RULE"==rid);
+                            std::cerr << "+" << top_kw[0] << " " << getNodeName(*sub,"ID",0) <<  std::endl;
+                            target << sub.yield();
+                            break;
+
+                        case 1: assert(top_kw[1]==rid);assert("ALIAS"==rid);
+                            std::cerr << "+" << top_kw[1] << " " << getNodeName(*sub,"ID",0) <<  std::endl;
+                            break;
+
+                        case 2: assert(top_kw[2]==rid);assert("LXR"==rid);
+                            std::cerr << "+" << top_kw[2] << " " << getNodeName(*sub,"L_ID",0) <<  std::endl;
+                            break;
+
+                        case 3: assert(top_kw[3]==rid);assert("PLUGIN"==rid);
+                            std::cerr << "+" << top_kw[3] << " " << getNodeName(*sub,"L_ID",0) <<  std::endl;
+                            break;
+
+                        default:
+                            collectTopLevel( & *sub );
+                            target << sub.yield();
                     }
                 }
+                source.swap_with(target);
             }
 
         }
