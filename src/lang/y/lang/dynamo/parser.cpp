@@ -33,6 +33,7 @@ namespace upsylon
             RULE &RX       = plug<Lexical::jString>("RX");
             RULE &RS       = plug<Lexical::rString>("RS");
             RULE &OS       = (acting("OS") << RS << optional( op('^') ));
+            //RULE &OS       = (agg("OP") << RS << ( sole('^') ));
             RULE &ID       = term("ID","{ID}");
             //__________________________________________________________________
             //

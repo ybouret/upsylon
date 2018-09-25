@@ -1,4 +1,5 @@
 #include "y/lang/dynamo/compiler.hpp"
+#include "y/lang/dynamo/generator.hpp"
 #include "y/utest/run.hpp"
 #include "y/fs/local.hpp"
 #include "y/codec/lzo.hpp"
@@ -59,6 +60,12 @@ Y_UTEST(dyn)
 
         Lang::Syntax::Analyzer A;
         A.walk( *ast );
+
+        DynamoGenerator gen;
+        auto_ptr<Lang::Syntax::Parser> parser = gen.create( *ast );
+
+
+
     }
 
 }
