@@ -138,7 +138,7 @@ namespace upsylon
             // Alias Recognition
             //
             //__________________________________________________________________
-            RULE &ALIAS = agg("ALIAS") << ID << COLON << choice(RX,OS) << END;
+            RULE &ALIAS = agg("ALIAS") << ID << COLON << choice(RX,OS,ID) << END;
 
             //__________________________________________________________________
             //
