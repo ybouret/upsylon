@@ -12,10 +12,18 @@ Y_UTEST(lua)
     {
         vm->doFile(argv[i]);
     }
+    vm->doString("print(\"species \",species)");
+    vm->doString("print(\"eqs     \",species)");
+    
     Library lib;
-    __luaIO::add(lib, vm, "species" );
+    __luaIO::add(lib,vm,"species" );
     std::cerr << "lib=#" << lib.size() << std::endl;
     std::cerr << lib << std::endl;
-    
+
+
+
+    Equilibria eqs;
+    //__luaIO::add(eqs,vm,"eqs",lib);
+
 }
 Y_UTEST_DONE()

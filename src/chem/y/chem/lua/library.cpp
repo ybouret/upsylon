@@ -9,7 +9,7 @@ namespace upsylon
         static inline
         void __load_species( Library &lib, lua_State *L, const char *id, const int count )
         {
-            std::cerr << "load species " << count << std::endl;
+            std::cerr << "load " << id << "#" << count << std::endl;
             if(!lua_istable(L,-1))
             {
                 throw exception("%s#%d is not a table", id, count);
@@ -36,15 +36,15 @@ namespace upsylon
                            const string        &name )
         {
             static const char fn[] = "__luaIO::add: ";
-
-            lua_State  *L  = **vm;
-            const char *id = *name;
+            lua_State  *L  = **vm;  assert(L);
+            const char *id = *name; assert(id);
             lua_settop(L,0);
             lua_getglobal(L,id);
             if( !lua_istable(L,-1) )
             {
                 throw exception("%s%s is not a table",fn,id);
             }
+
             //__________________________________________________________________
             //
             // loop on table items
@@ -52,7 +52,6 @@ namespace upsylon
             // stack now contains: -1 => table
             lua_pushnil(L);
             // stack now contains: -1 => nil; -2 => table
-            lua_pushnil(L);
             int count = 0;
             while( lua_next(L,-2) )
             {

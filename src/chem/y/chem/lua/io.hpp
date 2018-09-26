@@ -15,6 +15,13 @@ namespace upsylon
         {
             //! append species in table 'name' to lib
             static void add( Library &lib, Lua::State::Pointer &vm, const string &name );
+
+            //! append equilibria from table 'name' to eqs, using species from lib
+            static void add( Equilibria &eqs, Lua::State::Pointer &vm, const string &name, const Library &lib );
+
+
+           
+
         };
 
     }

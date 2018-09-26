@@ -39,11 +39,13 @@ namespace upsylon
 
         void State:: doFile( const string &filename )
         {
+            lua_settop(L,0);
             Y_LUA_CHECK(luaL_dofile(L,*filename));
         }
 
         void State:: doString( const string &code )
         {
+            lua_settop(L,0);
             Y_LUA_CHECK(luaL_dostring(L,*code));
         }
 
