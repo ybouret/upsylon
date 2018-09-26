@@ -166,6 +166,28 @@ namespace upsylon
             return double( lua_tonumber(L, i) );
         }
 
+        template < >
+        string State::to<string>(const int i)
+        {
+            if(!lua_isstring(L,i))
+            {
+                throw exception("no string@%d",i);
+            }
+            size_t      len = 0;
+            const char *ptr = lua_tolstring(L, i, &len);
+            return string(ptr,len);
+        }
+
+        template < >
+        int State::to<int>(const int i)
+        {
+            if(!lua_isinteger(L,i))
+            {
+                throw exception("no int@%d",i);
+            }
+            return int( lua_tointeger(L, i) );
+        }
+
     }
 
 }

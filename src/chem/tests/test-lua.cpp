@@ -23,7 +23,9 @@ Y_UTEST(lua)
 
 
     Equilibria eqs;
-    //__luaIO::add(eqs,vm,"eqs",lib);
+    __luaIO::add(eqs,vm,"eqs",lib);
+    std::cerr << "eqs=#" << eqs.size() << std::endl;
+    std::cerr << eqs << std::endl;
 
 }
 Y_UTEST_DONE()
