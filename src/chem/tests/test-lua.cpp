@@ -12,8 +12,6 @@ Y_UTEST(lua)
     {
         vm->doFile(argv[i]);
     }
-    vm->doString("print(\"species \",species)");
-    vm->doString("print(\"eqs     \",species)");
     
     Library lib;
     __luaIO::add(lib,vm,"species" );

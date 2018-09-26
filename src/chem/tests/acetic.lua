@@ -17,6 +17,3 @@ eqs =
     { "water", 10^(-14), { "H+",  1 }, { "HO-", 1 }  },
     { "acetic", "KA" ,   { "AH", -1 }, { "A-",  1 }, { "H+",1}  }
 };
-
-print("species",species);
-print("eqs",    eqs);
