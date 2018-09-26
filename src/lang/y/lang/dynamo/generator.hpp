@@ -79,9 +79,11 @@ namespace upsylon
             //! parse RX, RS, OP
             string nodeToRegExp(const Node &node, int &h) const;
 
+            //! convert a string node to a terminal/marker/operator
             void anyString(const string &label, const Node &node) ;
 
-
+            //! create a plugin based on name
+            void onPlugin( const Node &node );
 
 
             void collectSubModules( Node *node ) throw();

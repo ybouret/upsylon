@@ -190,7 +190,7 @@ namespace upsylon
                     const string _(pluginName); hook<PLUGIN>(_);
                 }
 
-                //! lexical plugin, no lexeme production, 0 argument
+                //! lexical plugin, no lexeme production, 1 argument
                 template <typename PLUGIN> inline
                 void hook( const string &pluginName, const char *rx )
                 {
@@ -198,12 +198,23 @@ namespace upsylon
                     L.hook<PLUGIN>(*L,pluginName,rx);
                 }
 
-                //! lexical plugin, no lexeme production
+                //! lexical plugin, no lexeme production, 1 argument
                 template <typename PLUGIN> inline
                 void hook( const char *pluginName, const char *rx )
                 {
-                    const string _(pluginName), __(rx); hook<PLUGIN>(_,__);
+                    const string _(pluginName); hook<PLUGIN>(_,rx);
                 }
+
+                //! lexical plugin, no lexeme production, 2 arguments
+                template <typename PLUGIN> inline
+                void hook( const string &pluginName, const char *rx_ini, const char *rx_end )
+                {
+                    Lexer &L = *this;
+                    L.hook<PLUGIN>(*L,pluginName,rx_ini,rx_end);
+                }
+
+
+
 
                 //! lexical plugin and associated terminal
                 template <typename PLUGIN> inline
