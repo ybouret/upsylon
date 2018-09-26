@@ -20,12 +20,25 @@ Y_UTEST(lua)
     std::cerr << "lib=#" << lib.size() << std::endl;
     std::cerr << lib << std::endl;
 
-
-
     Equilibria eqs;
     __luaIO::add(eqs,vm,"eqs",lib);
     std::cerr << "eqs=#" << eqs.size() << std::endl;
     std::cerr << eqs << std::endl;
+
+    eqs.compile_for(lib);
+
+    const size_t     M = eqs.M;
+    vector<double> C(M+2);
+
+    eqs.computeK(0);
+    if(eqs.normalize(C))
+    {
+        lib.display(std::cerr,C);
+    }
+    else
+    {
+        std::cerr << "Unable to normalize" << std::endl;
+    }
 
 }
 Y_UTEST_DONE()

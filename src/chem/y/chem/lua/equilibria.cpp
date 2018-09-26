@@ -95,9 +95,32 @@ namespace upsylon
             //------------------------------------------------------------------
             assert(lua_istable(L,-1));
             const size_t n = lua_rawlen(L,-1);
+            const char *eq = *(pEq->name);
             for(size_t i=3;i<=n;++i)
             {
+                const unsigned j = unsigned(i)-2;
+                if( LUA_TTABLE != lua_rawgeti(L,-1,i) )
+                {
+                    throw exception("%s#%u is not a table",eq,j);
+                }
+                // now we have the component on the stack
+                if( LUA_TSTRING != lua_rawgeti(L,-1, 1) )
+                {
+                    throw exception("%s#%u first item is not a string",eq,j);
+                }
+                const string component_name = vm->to<string>(-1);
+                lua_pop(L,1);
 
+                if( LUA_TNUMBER != lua_rawgeti(L,-1,2) )
+                {
+                    throw exception("%s#%u second item is not a number",eq,j);
+                }
+                const int component_coef = vm->to<int>(-1);
+                lua_pop(L,1);
+
+                pEq->add(lib[component_name],component_coef);
+                // remove the component
+                lua_pop(L,1);
             }
 
             //------------------------------------------------------------------
