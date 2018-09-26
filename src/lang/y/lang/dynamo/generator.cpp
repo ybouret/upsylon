@@ -144,7 +144,7 @@ namespace upsylon
                             break;
 
                         case 3: assert(top_kw[3]==rid);assert("PLUGIN"==rid);
-                            std::cerr << "+" << top_kw[3] << " " << getNodeName(*sub,"L_ID",1) <<  std::endl;
+                            onPlugin(*sub);
                             break;
 
                         default:
@@ -266,6 +266,23 @@ namespace upsylon
                         break;
                 }
             }
+
+        }
+
+        void DynamoGenerator:: onPlugin(const Node &node)
+        {
+            const string label = getNodeName(node,"L_ID",1);
+            std::cerr << "..PLUGIN <" << label << ">" << std::endl;
+            const Node *sub = node.children.tail;
+            assert(sub);
+            assert(sub->terminal);
+            assert(sub->rule.name=="ID");
+            const string pluginClass = sub->lexeme.to_string();
+            std::cerr << "  |_$" << pluginClass << std::endl;
+
+            // TODO: plugin factory, maybe...
+            
+
 
         }
 
