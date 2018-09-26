@@ -1,4 +1,4 @@
 .common;
 
-@drop : "[:blank:]";
+@drop : ' ' "\t";
 @endl : "[:endl:]";

@@ -16,10 +16,24 @@ namespace upsylon
             "PLUGIN"
         };
 
+        static const char *str_kw[] =
+        {
+            "RX",
+            "RS",
+            "^"
+        };
+
+        static const char *lxr_kw[] =
+        {
+            "drop",
+            "endl"
+        };
 
         DynamoGenerator:: DynamoGenerator() :
         parser(0),
-        htop( YOCTO_MPERF_FOR(top_kw) )
+        htop( YOCTO_MPERF_FOR(top_kw) ),
+        hstr( YOCTO_MPERF_FOR(str_kw) ),
+        hlxr( YOCTO_MPERF_FOR(lxr_kw) )
         {
         }
 
@@ -122,11 +136,11 @@ namespace upsylon
                             break;
 
                         case 1: assert(top_kw[1]==rid);assert("ALIAS"==rid);
-                            std::cerr << "+" << top_kw[1] << " " << getNodeName(*sub,"ID",0) <<  std::endl;
+                            onAlias(*sub);
                             break;
 
                         case 2: assert(top_kw[2]==rid);assert("LXR"==rid);
-                            std::cerr << "+" << top_kw[2] << " " << getNodeName(*sub,"L_ID",1) <<  std::endl;
+                            onLxr(*sub);
                             break;
 
                         case 3: assert(top_kw[3]==rid);assert("PLUGIN"==rid);
@@ -154,6 +168,105 @@ namespace upsylon
                 throw exception("{%s} unexpected multiple rule '%s'", **(parser->name), *name );
             }
             std::cerr << "..Rule '" << name << "'" << std::endl;
+        }
+
+
+        void DynamoGenerator:: onAlias( const Node &node )
+        {
+            const string label = getNodeName(node,"ID",0); // the rule name
+            std::cerr << "..Alias '" << label << "'" << std::endl;
+            assert(node.children.size==2);
+            const Node    *content = node.children.tail; assert(content);
+            anyString(label,*content);
+        }
+
+
+        string DynamoGenerator:: nodeToRegExp(const Node &node, int &h) const
+        {
+            const string &name = node.rule.name;
+            switch( (h=hstr(name)) )
+            {
+                    //----------------------------------------------------------
+                    // extract a regular expression
+                    //----------------------------------------------------------
+                case 0: assert("RX"==name); return  node.lexeme.to_string(1,1);
+
+                    //----------------------------------------------------------
+                    // extract a raw string and make it to a regular expression
+                    //----------------------------------------------------------
+                case 1: assert("RS"==name); { const string rs =node.lexeme.to_string(1,1); return StringToRegExp(rs); }
+
+                    //----------------------------------------------------------
+                    // extract a raw string and make it to a regular expression
+                    // will be made an operator
+                    //----------------------------------------------------------
+                case 2: assert("^" ==name); {
+                    assert(node.children.size==1);
+                    const Node *sub = node.children.head;
+                    assert(sub);
+                    assert(sub->terminal);
+                    assert(sub->rule.name=="RS");
+                    const string rs = sub->lexeme.to_string(1,1);
+                    return StringToRegExp(rs); }
+                default:
+                    break;
+            }
+            throw exception("{%s} invalid string class '%s'", **(parser->name), *name);
+
+        }
+
+        void DynamoGenerator:: anyString(const string &label, const Node &node)
+        {
+            const string &name = node.rule.name;
+            int           h    = -1;
+            const string  rx   = nodeToRegExp(node,h);
+
+            switch(h)
+            {
+                case 0: std::cerr << "  |_compile <" << rx << "> as " << label << std::endl;
+                    (void)parser->term(label,rx);
+                    break;
+
+                case 1: std::cerr << "  |_compile <" << rx << "> as semantic marker" << std::endl;
+                    (void) parser->sole(label,rx);
+                    break;
+
+                case 2:
+                    std::cerr << "  |_compile <" << rx << "> as operator" << std::endl;
+                    (void) parser->op(label,rx);
+                    break;
+
+                default:
+                    throw exception("{%s} invalid alias kind '%s'", **(parser->name), *name);
+            }
+        }
+
+
+        void DynamoGenerator:: onLxr( const Node &node )
+        {
+            const string label = getNodeName(node,"L_ID",1);
+            std::cerr << "..LXR <" << label << ">" << std::endl;
+            const int   kind = hlxr(label);
+            if(kind<0) throw exception("{%s} invalid lexical rule type '%s'", **(parser->name), *label);
+            const Node *sub  = node.children.head;
+            for(sub=sub->next;sub;sub=sub->next)
+            {
+                assert(sub->terminal);
+                int          h  = -1;
+                const string rx = nodeToRegExp(*sub,h);
+                std::cerr << "  |_" << rx << std::endl;
+                switch(kind)
+                {
+                    case 0: assert("drop"==label);
+                        parser->root.drop(rx,rx);
+                        break;
+
+                    case 1: assert("endl"==label);
+                        parser->root.endl(rx,rx);
+                        break;
+                }
+            }
+
         }
 
 

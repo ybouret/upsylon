@@ -19,6 +19,10 @@ namespace upsylon
         {
             const string _ = rx; return RegExp(_,dict);
         }
+
+        //! convert a string to a regular expression
+        string StringToRegExp(const string &s);
+        
     }
 }
 

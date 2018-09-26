@@ -40,7 +40,7 @@ namespace upsylon
             };
 
 
-            //! CXX comment prototup
+            //! CXX comment prototype
             class CXX_Comment : public EndOfLineComment
             {
             public:
@@ -52,13 +52,29 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(CXX_Comment);
             };
 
-            //! C multilines comment
-            class C_Comment : public Comment
+            //! Multiple Lines Comment
+            class MultiLinesComment : public Comment
             {
             public:
-                inline
-                virtual ~C_Comment() throw() {}                      //!< destructor
-                explicit C_Comment(Translator &t, const string &id); //!< initialize
+                const string closing;
+                inline virtual ~MultiLinesComment() throw() {} //!< destructor
+                inline explicit MultiLinesComment(Translator &t, const string &id, const char   *rx_ini, const char   *rx_end) : Comment(t,id,rx_ini), closing(rx_end) { fill(); }
+                inline explicit MultiLinesComment(Translator &t, const string &id, const string &rx_ini, const string &rx_end) : Comment(t,id,rx_ini), closing(rx_end) { fill(); }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(MultiLinesComment);
+                void fill();
+            };
+
+            //! C multilines comment
+            class C_Comment : public MultiLinesComment
+            {
+            public:
+                //! destructor
+                inline virtual ~C_Comment() throw() {}
+                
+                //! initialize
+                inline explicit C_Comment(Translator &t, const string &id) : MultiLinesComment(t,id,init,quit) {}
                 
             private:
                 static const char init[];

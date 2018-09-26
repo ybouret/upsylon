@@ -53,19 +53,36 @@ namespace upsylon
             
             auto_ptr<Syntax::Parser>  parser;
             set<string,MetaAgg>       top;
-            hashing::mperf htop;
-
+            hashing::mperf            htop;
+            hashing::mperf            hstr;
+            hashing::mperf            hlxr;
+            
 
             //! extract name from dynamo.children.head->lexeeme
             string getModuleName( const Node &dynamo ) const;
 
-            //! collect top level rules and aliases
+            //! collect top level rules, compile alias, lxr and plugins
             void collectTopLevel( Node *node );
 
-            //! extract node name
+            //! extract node name, must match label and skip chars from string
             string getNodeName( const Node &node, const char *label, const size_t nskip ) const;
 
+            //! create a rule
             void onRule( const Node &node );
+
+            //! create an alias
+            void onAlias( const Node &node );
+
+            //! create a lexical rule
+            void onLxr( const Node &node );
+
+            //! parse RX, RS, OP
+            string nodeToRegExp(const Node &node, int &h) const;
+
+            void anyString(const string &label, const Node &node) ;
+
+
+
 
             void collectSubModules( Node *node ) throw();
         };

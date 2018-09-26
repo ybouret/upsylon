@@ -627,5 +627,21 @@ case 'f': return new Single('\f')
             return p.yield();
         }
 
+
+        string StringToRegExp(const string &s)
+        {
+            const size_t n = s.size();
+            string ans(n*4,as_capacity);
+            for(size_t i=0;i<n;++i)
+            {
+                const uint8_t B = s[i];
+                ans << '\\';
+                ans << 'x';
+                ans << hexadecimal::digit(B>>4);
+                ans << hexadecimal::digit(B);
+            }
+            return ans;
+        }
+
     }
 }
