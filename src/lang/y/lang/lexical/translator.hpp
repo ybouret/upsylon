@@ -92,6 +92,18 @@ namespace upsylon
                     const string _(pluginName); hook<PLUGIN>(scanner,_,expr);
                 }
 
+
+                //! PLUGIN with two arguments
+                template <typename PLUGIN>
+                inline void hook( Scanner &scanner, const string &pluginName, const char *rxInit, const char *rxQuit)
+                {
+                    Plugin::Pointer *p = plugins.search( pluginName );
+                    if(p)
+                        link(scanner,**p);
+                    else
+                        link(scanner,enroll_plugin( new PLUGIN(*this,pluginName,rxInit,rxQuit) ) );
+                }
+
                 //! get the last matched lexeme
                 const Lexeme *last() const throw() { return cache.tail; }
 

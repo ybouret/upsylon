@@ -12,7 +12,7 @@ MINUS : '-';
 ID  : "[:alpha:]+";
 INT : "[:digit:]+";
 
-@comment: ;
-
+@comment: '//';
+@comment: '/*' '*/';
 %include 'lex.g'
 //%include "lex.g"

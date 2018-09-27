@@ -58,7 +58,8 @@ namespace upsylon
             hashing::mperf            htop;
             hashing::mperf            hstr;
             hashing::mperf            hlxr;
-
+            int                       icom; //!< index for comment
+            
             //! extract name from dynamo.children.head->lexeeme
             string getModuleName( const Node &dynamo ) const;
 
@@ -96,7 +97,8 @@ namespace upsylon
 
             void collectSubModules( Node *node ) throw();
 
-            std::ostream & indent() const;
+            std::ostream & indent() const; //!< indent for verbose
+            string getCommentLabel();
         };
 
 

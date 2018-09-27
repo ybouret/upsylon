@@ -2,6 +2,8 @@
 #include "y/lang/dynamo/generator.hpp"
 #include "y/exception.hpp"
 #include "y/lang/lexical/plugin/strings.hpp"
+#include "y/lang/lexical/plugin/comment.hpp"
+
 namespace upsylon
 {
 
@@ -122,10 +124,21 @@ namespace upsylon
                 case 2: assert("comment"==label);
                     switch(node.children.size) {
                         case 2: // 1+One Expression => EndOfLine
-                            break;
+                        {
+                            const string comName = getCommentLabel();
+                            const string trigger = getNodeRegExp(*(sub->next));
+                            if(verbose) { indent() << "End Of Line Comment '" << comName << "' with trigger='" << trigger << "'" << std::endl;}
+                            parser->hook<Lexical::EndOfLineComment>(comName,*trigger);
+                        } break;
 
                         case 3: //1+Two Expressions => MultiLines
-                            break;
+                        {
+                            const string comName = getCommentLabel();
+                            const string rx_init = getNodeRegExp(*(sub->next));
+                            const string rx_quit = getNodeRegExp(*(sub->next->next));
+                            if(verbose) { indent() << "Multiple Line Comment '" << comName << "' with init='" << rx_init << "' and quit='" << rx_quit << "'" << std::endl; }
+                            parser->hook<Lexical::MultiLinesComment>(comName,*rx_init,*rx_quit);
+                        } break;
 
                         default:
                             throw exception("{%s} <%s> must have 1 or 2 arguments, found %u", **(parser->name), *label, unsigned(node.children.size-1) );

@@ -37,14 +37,15 @@ namespace upsylon
         level(0),
         htop( YOCTO_MPERF_FOR(top_kw) ),
         hstr( YOCTO_MPERF_FOR(str_kw) ),
-        hlxr( YOCTO_MPERF_FOR(lxr_kw) )
+        hlxr( YOCTO_MPERF_FOR(lxr_kw) ),
+        icom(0)
         {
         }
 
         std::ostream & DynamoGenerator:: indent() const
         {
-            std::cerr << "|_";
-            for(int i=0;i<level;++i) std::cerr << "__";
+            std::cerr << "| ";
+            for(int i=0;i<level;++i) std::cerr << "  ";
             return std::cerr;
         }
 
@@ -61,13 +62,21 @@ namespace upsylon
             parser  = 0;
             level   = 0;
             verbose = flag;
+            icom    = 0;
 
             const string parserName = getModuleName(dynamo);
-            if(verbose) { indent() << "creating parser {" << parserName << "}" << std::endl; }
+            if(verbose)
+            {
+                indent() << "_______________" << std::endl;
+                indent() << std::endl;
+                indent() << "creating parser {" << parserName << "}" << std::endl;
+            }
             parser = new Syntax::Parser(parserName);
-
             collectTopLevel( &dynamo );
-
+            if(verbose)
+            {
+                indent() << "_______________" << std::endl << std::endl;
+            }
             parser->GraphViz("parser.dot");
             return parser.yield();
         }
@@ -213,7 +222,13 @@ namespace upsylon
         }
 
 
-       
+        string DynamoGenerator:: getCommentLabel()
+        {
+            assert(parser.is_valid());
+            ++icom;
+            return *(parser->name) + vformat(".comment#%d",icom);
+        }
+
 
     }
 
