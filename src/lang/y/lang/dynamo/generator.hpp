@@ -7,6 +7,7 @@
 #include "y/associative/set.hpp"
 #include "y/hashing/mph.hpp"
 #include "y/sequence/pipe.hpp"
+#include "y/ptr/intr.hpp"
 
 namespace upsylon
 {
@@ -52,29 +53,39 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
-            typedef DynMeta<Syntax::Aggregate>           MetaAgg;
-            typedef key_hasher<string,hashing::fnv>      KeyHasher;
-            typedef memory::pooled                       Memory;
-            typedef set<string,MetaAgg,KeyHasher,Memory> TopRules;
-
             class Symbol : public CountedObject
             {
             public:
+                typedef intr_ptr<string,Symbol> Pointer;
+                const string name;
+                const Origin from;
+                inline explicit Symbol(const string &n, const Origin &m ) : name(n), from(m) {}
+                inline virtual ~Symbol() throw() {}
+                inline const string & key() const throw() { return name; }
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Symbol);
             };
 
+            typedef DynMeta<Syntax::Aggregate>                   MetaAgg;
+            typedef key_hasher<string,hashing::fnv>              KeyHasher;
+            typedef memory::pooled                               Memory;
+            typedef set<string,MetaAgg,KeyHasher,Memory>         TopRules;
+            typedef set<string,Symbol::Pointer,KeyHasher,Memory> Symbols;
 
-            auto_ptr<Syntax::Parser>  parser;  //!< currently built parser
-            bool                      verbose; //!< verbose flag
-            TopRules                  top;     //!< rules to be filled
-            int                       level;   //!< for tree walking
-            hashing::mperf            htop;    //!< RULE, ALIAS, LXR, PLUGIN
-            hashing::mperf            hstr;    //!< RX, RS, ^
-            hashing::mperf            hlxr;    //!< drop,endl,comment
-            int                       icom;    //!< index for comment
-            lstack<string>            modules; //!< stack of visited modules
 
+
+            auto_ptr<Syntax::Parser>  parser;    //!< currently built parser
+            bool                      verbose;   //!< verbose flag
+            TopRules                  top;       //!< rules to be filled
+            int                       level;     //!< for tree walking
+            hashing::mperf            htop;      //!< RULE, ALIAS, LXR, PLUGIN
+            hashing::mperf            hstr;      //!< RX, RS, ^
+            hashing::mperf            hlxr;      //!< drop,endl,comment
+            int                       icom;      //!< index for comment
+            lstack<Origin>            modules;   //!< stack of visited modules
+            Symbols                   terminals; //!< database of terminals
+            Symbols                   internals; //!< database of internals
+            
             //! extract name from dynamo.children.head->lexeeme
             string getModuleName( const Node &dynamo ) const;
 

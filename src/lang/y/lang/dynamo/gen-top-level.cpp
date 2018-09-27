@@ -24,7 +24,8 @@ namespace upsylon
             {
                 enterModule = true;
                 const string moduleName = getModuleName(*node);
-                modules.push(moduleName);
+                const Origin moduleOrgn = new string(moduleName);
+                modules.push(moduleOrgn);
                 indent() << " (+) stack: " << modules << std::endl;
             }
             if(node->internal)
