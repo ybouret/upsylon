@@ -31,6 +31,7 @@ namespace upsylon
 
         DynamoGenerator:: DynamoGenerator() :
         parser(0),
+        top(8,as_capacity),
         htop( YOCTO_MPERF_FOR(top_kw) ),
         hstr( YOCTO_MPERF_FOR(str_kw) ),
         hlxr( YOCTO_MPERF_FOR(lxr_kw) )
