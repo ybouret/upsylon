@@ -26,7 +26,8 @@ namespace upsylon
         static const char *lxr_kw[] =
         {
             "drop",
-            "endl"
+            "endl",
+            "comment"
         };
 
         DynamoGenerator:: DynamoGenerator():
@@ -42,8 +43,8 @@ namespace upsylon
 
         std::ostream & DynamoGenerator:: indent() const
         {
-            std::cerr << "#### ";
-            for(int i=0;i<level;++i) std::cerr << "  ";
+            std::cerr << "|_";
+            for(int i=0;i<level;++i) std::cerr << "__";
             return std::cerr;
         }
 

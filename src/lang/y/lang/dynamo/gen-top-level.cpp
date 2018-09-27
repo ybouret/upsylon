@@ -71,7 +71,7 @@ namespace upsylon
             {
                 throw exception("{%s} unexpected multiple rule '%s'", **(parser->name), *name );
             }
-            if(verbose) { indent() << "..RULE    <" << name << ">" << std::endl; }
+            if(verbose) { indent() << "RULE    <" << name << ">" << std::endl; }
         }
 
         //----------------------------------------------------------------------
@@ -82,7 +82,7 @@ namespace upsylon
         void DynamoGenerator:: onAlias( const Node &node )
         {
             const string label = getNodeName(node,"ID",0); // the alias ;bel
-            if(verbose) { indent() << "..ALIAS   <" << label << ">" << std::endl; }
+            if(verbose) { indent() << "ALIAS   <" << label << ">" << std::endl; }
             assert(node.children.size==2);
             const Node    *content = node.children.tail; assert(content);
             createSpecificTerminal(label,*content);
@@ -96,27 +96,33 @@ namespace upsylon
         void DynamoGenerator:: onLxr( const Node &node )
         {
             const string label = getNodeName(node,"L_ID",1);
-            if(verbose) { indent() << "..LXR     <" << label << ">" << std::endl; }
+            if(verbose) { indent() << "LXR     <" << label << ">" << std::endl; }
             const int   kind = hlxr(label);
             if(kind<0) throw exception("{%s} invalid lexical rule type '%s'", **(parser->name), *label);
             const Node *sub  = node.children.head;
-            for(sub=sub->next;sub;sub=sub->next)
+
+            switch(kind)
             {
-                assert(sub->terminal);
-                int          h  = -1;
-                const string rx = nodeToRegExp(*sub,h);
-                switch(kind)
-                {
-                    case 0: assert("drop"==label);
+                case 0: assert("drop"==label);
+                    for(sub=sub->next;sub;sub=sub->next)
+                    {
+                        const string rx = getNodeRegExp(*sub);
                         parser->root.drop(rx,rx);
-                        break;
+                    }
+                    break;
 
-                    case 1: assert("endl"==label);
+                case 1: assert("endl"==label);
+                    for(sub=sub->next;sub;sub=sub->next)
+                    {
+                        const string rx = getNodeRegExp(*sub);
                         parser->root.endl(rx,rx);
-                        break;
-                }
-            }
+                    }
+                    break;
 
+                case 2: assert("comment"==label);
+
+                    break;
+            }
         }
 
 
@@ -128,7 +134,7 @@ namespace upsylon
         void DynamoGenerator:: onPlugin(const Node &node)
         {
             const string label = getNodeName(node,"L_ID",1);
-            if(verbose) { indent()  << "..PLUGIN  <" << label << ">" << std::endl; }
+            if(verbose) { indent()  << "PLUGIN  <" << label << ">" << std::endl; }
             const Node *sub = node.children.tail;
             assert(sub);
             assert(sub->terminal);

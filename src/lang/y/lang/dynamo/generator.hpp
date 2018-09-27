@@ -80,6 +80,13 @@ namespace upsylon
             //! parse RX, RS, OP
             string nodeToRegExp(const Node &node, int &h) const;
 
+            //! without trace
+            inline string getNodeRegExp(const Node &node) const
+            {
+                int h=-1;
+                return nodeToRegExp(node,h);
+            }
+
             //! convert a string node to a terminal/marker/operator
             void createSpecificTerminal(const string &label, const Node &node) ;
 
