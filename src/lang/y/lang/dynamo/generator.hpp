@@ -42,7 +42,7 @@ namespace upsylon
             virtual ~DynamoGenerator() throw();
 
             //! from top-level
-            Syntax::Parser *create( Node &dynamo );
+            Syntax::Parser *create( Node &dynamo, const bool flag=false );
 
 
 
@@ -52,11 +52,12 @@ namespace upsylon
             typedef DynMeta<Syntax::Aggregate> MetaAgg;
             
             auto_ptr<Syntax::Parser>  parser;
+            bool                      verbose;
             set<string,MetaAgg>       top;
+            int                       level; //!< for tree walking
             hashing::mperf            htop;
             hashing::mperf            hstr;
             hashing::mperf            hlxr;
-            
 
             //! extract name from dynamo.children.head->lexeeme
             string getModuleName( const Node &dynamo ) const;
@@ -80,13 +81,15 @@ namespace upsylon
             string nodeToRegExp(const Node &node, int &h) const;
 
             //! convert a string node to a terminal/marker/operator
-            void anyString(const string &label, const Node &node) ;
+            void createSpecificTerminal(const string &label, const Node &node) ;
 
             //! create a plugin based on name
             void onPlugin( const Node &node );
 
 
             void collectSubModules( Node *node ) throw();
+
+            std::ostream & indent() const;
         };
 
 
