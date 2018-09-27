@@ -3,6 +3,7 @@
 #define Y_LANG_PATTERN_MATCHING 1
 
 #include "y/lang/pattern/compiler.hpp"
+#include "y/container/sequence.hpp"
 
 namespace upsylon
 {
@@ -18,7 +19,7 @@ namespace upsylon
 
             bool exactly( const string &s );
             bool partly(const string &s);
-
+            void find( sequence<Token> &, const string &s );
             
 
         private:

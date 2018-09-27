@@ -1,6 +1,7 @@
 #include "y/lang/pattern/matching.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/icstream.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace upsylon;
 
@@ -12,6 +13,7 @@ Y_UTEST(matching)
         Lang::Matching match(argv[1]);
         string         line;
         ios::icstream  fp( ios::cstdin );
+        vector<Lang::Token> tokens;
         while( (std::cerr << "> ").flush(), fp.gets(line) )
         {
 
@@ -32,6 +34,9 @@ Y_UTEST(matching)
             {
                 std::cerr << "-partly" << std::endl;
             }
+
+            match.find(tokens,line);
+            std::cerr << "all=" << tokens << std::endl;
         }
     }
 }

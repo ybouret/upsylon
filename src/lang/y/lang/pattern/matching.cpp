@@ -47,5 +47,30 @@ namespace upsylon
             return true;
         }
 
+        void Matching:: find( sequence<Token> &seq, const string &s )
+        {
+            clear();
+            seq.free();
+            Source source( Module::OpenData(s,s) );
+            while( true )
+            {
+                if(motif->match(*this,source))
+                {
+                    {
+                        const Token empty;
+                        seq.push_back(empty);
+                    }
+                    seq.back().swap_with(*this);
+                }
+                else
+                {
+                    if(!source.active()) return;
+                    source.skip();
+                }
+
+            }
+        }
+
+
     }
 }
