@@ -111,6 +111,9 @@ namespace upsylon
             //! boot a solution, K must be computed
             bool boot( array<double> &C, const Boot::Loader &loader );
 
+            //! mix some solutons, K must be computed
+            bool mix( array<double> &Cout, const array<double> &CA, const double WA, const array<double> &CB, const double WB);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
         };
