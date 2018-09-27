@@ -42,6 +42,7 @@ namespace upsylon
 
         std::ostream & DynamoGenerator:: indent() const
         {
+            std::cerr << " (*) ";
             for(int i=0;i<level;++i) std::cerr << "  ";
             return std::cerr;
         }
@@ -61,7 +62,7 @@ namespace upsylon
             verbose = flag;
 
             const string parserName = getModuleName(dynamo);
-            std::cerr << "..creating Parser '" << parserName << "'" << std::endl;
+            if(verbose) { indent() << "creating parser {" << parserName << "}" << std::endl; }
             parser = new Syntax::Parser(parserName);
 
             collectTopLevel( &dynamo );
@@ -143,12 +144,20 @@ namespace upsylon
                     //----------------------------------------------------------
                     // extract a regular expression
                     //----------------------------------------------------------
-                case 0: assert("RX"==name); return  node.lexeme.to_string(1,1);
+                case 0: assert("RX"==name);
+                    if(verbose) { indent() << "@regular expression from STD <" << node.lexeme << ">" << std::endl; }
+                    return node.lexeme.to_string(1,1);
 
                     //----------------------------------------------------------
                     // extract a raw string and make it to a regular expression
                     //----------------------------------------------------------
-                case 1: assert("RS"==name); { const string rs =node.lexeme.to_string(1,1); return StringToRegExp(rs); }
+                case 1: assert("RS"==name);
+                {
+                    if(verbose) { indent() << "@regular expression from RAW <" << node.lexeme << ">" << std::endl; }
+                    const string rs = node.lexeme.to_string(1,1);
+                    return StringToRegExp(rs);
+
+                }
 
                     //----------------------------------------------------------
                     // extract a raw string and make it to a regular expression
@@ -160,8 +169,13 @@ namespace upsylon
                     assert(sub);
                     assert(sub->terminal);
                     assert(sub->rule.name=="RS");
+                    if(verbose) { indent() << "@regular expression from OP  <" << sub->lexeme << ">" << std::endl; }
                     const string rs = sub->lexeme.to_string(1,1);
                     return StringToRegExp(rs); }
+
+                    //----------------------------------------------------------
+                    // unexpected
+                    //----------------------------------------------------------
                 default:
                     break;
             }
@@ -177,16 +191,18 @@ namespace upsylon
 
             switch(h)
             {
-                case 0: std::cerr << "  |_compile <" << rx << "> as " << label << std::endl;
+                case 0:
+                    if(verbose) { indent() << "@--> compile <" << rx << ">/term" << std::endl; }
                     (void)parser->term(label,rx);
                     break;
 
-                case 1: std::cerr << "  |_compile <" << rx << "> as semantic marker" << std::endl;
+                case 1:
+                    if(verbose) { indent() << "@--> compile <" << rx << ">/sole" << std::endl; }
                     (void) parser->sole(label,rx);
                     break;
 
                 case 2:
-                    std::cerr << "  |_compile <" << rx << "> as operator" << std::endl;
+                    if(verbose) { indent() << "@--> compile <" << rx << ">/op" << std::endl; }
                     (void) parser->op(label,rx);
                     break;
 

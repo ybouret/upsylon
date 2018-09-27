@@ -70,7 +70,7 @@ namespace upsylon
             {
                 throw exception("{%s} unexpected multiple rule '%s'", **(parser->name), *name );
             }
-            std::cerr << "..Rule '" << name << "'" << std::endl;
+            if(verbose) { indent() << "..RULE    <" << name << ">" << std::endl; }
         }
 
         //----------------------------------------------------------------------
@@ -80,8 +80,8 @@ namespace upsylon
         //----------------------------------------------------------------------
         void DynamoGenerator:: onAlias( const Node &node )
         {
-            const string label = getNodeName(node,"ID",0); // the rule name
-            std::cerr << "..Alias '" << label << "'" << std::endl;
+            const string label = getNodeName(node,"ID",0); // the alias ;bel
+            if(verbose) { indent() << "..ALIAS   <" << label << ">" << std::endl; }
             assert(node.children.size==2);
             const Node    *content = node.children.tail; assert(content);
             createSpecificTerminal(label,*content);
@@ -95,7 +95,7 @@ namespace upsylon
         void DynamoGenerator:: onLxr( const Node &node )
         {
             const string label = getNodeName(node,"L_ID",1);
-            std::cerr << "..LXR <" << label << ">" << std::endl;
+            if(verbose) { indent() << "..LXR     <" << label << ">" << std::endl; }
             const int   kind = hlxr(label);
             if(kind<0) throw exception("{%s} invalid lexical rule type '%s'", **(parser->name), *label);
             const Node *sub  = node.children.head;
@@ -104,7 +104,6 @@ namespace upsylon
                 assert(sub->terminal);
                 int          h  = -1;
                 const string rx = nodeToRegExp(*sub,h);
-                std::cerr << "  |_" << rx << std::endl;
                 switch(kind)
                 {
                     case 0: assert("drop"==label);
@@ -128,13 +127,13 @@ namespace upsylon
         void DynamoGenerator:: onPlugin(const Node &node)
         {
             const string label = getNodeName(node,"L_ID",1);
-            std::cerr << "..PLUGIN <" << label << ">" << std::endl;
+            if(verbose) { indent()  << "..PLUGIN <" << label << ">" << std::endl; }
             const Node *sub = node.children.tail;
             assert(sub);
             assert(sub->terminal);
             assert(sub->rule.name=="ID");
             const string pluginClass = sub->lexeme.to_string();
-            std::cerr << "  |_$" << pluginClass << std::endl;
+            if(verbose) { indent() << "  |_[" << pluginClass << "]" << std::endl; }
 
             // TODO: plugin factory, maybe...
 
