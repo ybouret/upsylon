@@ -36,6 +36,7 @@ Y_UTEST_INIT(100)
     Y_UTEST(slots);
     Y_UTEST(env);
     Y_UTEST(sequence);
+    Y_UTEST(pipe);
     Y_UTEST(arrays);
     Y_UTEST(dyadic);
     Y_UTEST(endian);
