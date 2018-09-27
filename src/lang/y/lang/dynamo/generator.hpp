@@ -4,9 +4,9 @@
 #define Y_LANG_DYNAMO_GENERATOR_INCLUDED 1
 
 #include "y/lang/syntax/parser.hpp"
-#include "y/associative/map.hpp"
 #include "y/associative/set.hpp"
 #include "y/hashing/mph.hpp"
+#include "y/sequence/pipe.hpp"
 
 namespace upsylon
 {
@@ -50,17 +50,21 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
-            typedef DynMeta<Syntax::Aggregate> MetaAgg;
-            
-            auto_ptr<Syntax::Parser>  parser;
-            bool                      verbose;
-            set<string,MetaAgg>       top;
-            int                       level; //!< for tree walking
-            hashing::mperf            htop;
-            hashing::mperf            hstr;
-            hashing::mperf            hlxr;
-            int                       icom; //!< index for comment
-            
+            typedef DynMeta<Syntax::Aggregate>           MetaAgg;
+            typedef key_hasher<string,hashing::fnv>      KeyHasher;
+            typedef memory::pooled                       Memory;
+            typedef set<string,MetaAgg,KeyHasher,Memory> TopRules;
+
+            auto_ptr<Syntax::Parser>  parser;  //!< currently built parser
+            bool                      verbose; //!< verbose flag
+            TopRules                  top;     //!< rules to be filled
+            int                       level;   //!< for tree walking
+            hashing::mperf            htop;    //!< RULE, ALIAS, LXR, PLUGIN
+            hashing::mperf            hstr;    //!< RX, RS, ^
+            hashing::mperf            hlxr;    //!< drop,endl,comment
+            int                       icom;    //!< index for comment
+            lstack<string>            modules; //!< stack of visited modules
+
             //! extract name from dynamo.children.head->lexeeme
             string getModuleName( const Node &dynamo ) const;
 
@@ -95,10 +99,10 @@ namespace upsylon
             //! create a plugin based on name
             void onPlugin( const Node &node );
 
+            //! indent for verbose
+            std::ostream & indent() const;
 
-            void collectSubModules( Node *node ) throw();
-
-            std::ostream & indent() const; //!< indent for verbose
+            //! build a comment label from icom and parser name
             string getCommentLabel();
         };
 

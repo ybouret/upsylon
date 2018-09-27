@@ -38,7 +38,8 @@ namespace upsylon
         htop( YOCTO_MPERF_FOR(top_kw) ),
         hstr( YOCTO_MPERF_FOR(str_kw) ),
         hlxr( YOCTO_MPERF_FOR(lxr_kw) ),
-        icom(0)
+        icom(0),
+        modules(4,as_capacity)
         {
         }
 
@@ -57,12 +58,12 @@ namespace upsylon
 
         Syntax::Parser * DynamoGenerator:: create( Node &dynamo, const bool flag )
         {
-            //modules.clear();
             top.free();
             parser  = 0;
             level   = 0;
             verbose = flag;
             icom    = 0;
+            modules.free();
 
             const string parserName = getModuleName(dynamo);
             if(verbose)
@@ -71,6 +72,7 @@ namespace upsylon
                 indent() << std::endl;
                 indent() << "creating parser {" << parserName << "}" << std::endl;
             }
+            modules.push( parserName );
             parser = new Syntax::Parser(parserName);
             collectTopLevel( &dynamo );
             if(verbose)
@@ -93,35 +95,6 @@ namespace upsylon
             return node->lexeme.to_string(1,0);
         }
 
-#if 0
-        void DynamoGenerator:: collectSubModules(Node *node) throw()
-        {
-            assert(node);
-            if(node->terminal)
-            {
-                return;
-            }
-            else
-            {
-                Node::List &source = node->children;
-                Node::List  target;
-                while(source.size)
-                {
-                    Node *sub = source.pop_front();
-                    if(sub->rule.name=="dynamo")
-                    {
-                        modules << sub;
-                    }
-                    else
-                    {
-                        target << sub;
-                    }
-                }
-                target.swap_with(source);
-            }
-        }
-#endif
-
 
         string DynamoGenerator:: getNodeName( const Node &node, const char *label, const size_t nskip ) const
         {
@@ -140,11 +113,6 @@ namespace upsylon
             }
             return head->lexeme.to_string(nskip,0);
         }
-
-
-
-
-
 
         string DynamoGenerator:: nodeToRegExp(const Node &node, int &h) const
         {
