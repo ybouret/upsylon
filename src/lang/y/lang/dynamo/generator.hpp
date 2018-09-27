@@ -29,6 +29,8 @@ namespace upsylon
             Y_DISABLE_ASSIGN(DynMeta);
         };
 
+
+
         //! Generate a parser from a Dynamo compiled AST
         class DynamoGenerator
         {
@@ -54,6 +56,14 @@ namespace upsylon
             typedef key_hasher<string,hashing::fnv>      KeyHasher;
             typedef memory::pooled                       Memory;
             typedef set<string,MetaAgg,KeyHasher,Memory> TopRules;
+
+            class Symbol : public CountedObject
+            {
+            public:
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Symbol);
+            };
+
 
             auto_ptr<Syntax::Parser>  parser;  //!< currently built parser
             bool                      verbose; //!< verbose flag

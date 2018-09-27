@@ -19,6 +19,14 @@ namespace upsylon
         {
             assert(node);
             if(verbose) { indent() << "<" << node->rule.name << ">" << std::endl; }
+            bool enterModule = false;
+            if(node->rule.name == "dynamo" )
+            {
+                enterModule = true;
+                const string moduleName = getModuleName(*node);
+                modules.push(moduleName);
+                indent() << " (+) stack: " << modules << std::endl;
+            }
             if(node->internal)
             {
                 Node::List    &source = node->children;
@@ -55,6 +63,13 @@ namespace upsylon
                 }
                 source.swap_with(target);
             }
+            if(enterModule)
+            {
+                assert(modules.size()>0);
+                modules.pop();
+                indent() << " (-) stack => " << modules << std::endl;
+            }
+
             //if(verbose) { indent() << "<" << node->rule.name << "/>" << std::endl; }
         }
 

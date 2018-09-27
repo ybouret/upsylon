@@ -72,7 +72,6 @@ namespace upsylon
                 indent() << std::endl;
                 indent() << "creating parser {" << parserName << "}" << std::endl;
             }
-            modules.push( parserName );
             parser = new Syntax::Parser(parserName);
             collectTopLevel( &dynamo );
             if(verbose)
