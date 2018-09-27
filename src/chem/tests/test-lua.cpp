@@ -38,5 +38,9 @@ Y_UTEST(lua)
         std::cerr << "Unable to normalize" << std::endl;
     }
 
+    Boot::Loader ld;
+    __luaIO::add(ld,vm,"ini",lib);
+    std::cerr << ld << std::endl;
+
 }
 Y_UTEST_DONE()

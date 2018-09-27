@@ -19,8 +19,10 @@ namespace upsylon
             //! append equilibria from table 'name' to eqs, using species from lib
             static void add( Equilibria &eqs, Lua::State::Pointer &vm, const string &name, const Library &lib );
 
+            
+            //! append constraints from table 'name' to eqs, using species from lib
+            static void add( Boot::Loader &loader, Lua::State::Pointer &vm, const string &name, Library &lib );
 
-           
 
         };
 
