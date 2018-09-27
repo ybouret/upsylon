@@ -120,7 +120,16 @@ namespace upsylon
                     break;
 
                 case 2: assert("comment"==label);
+                    switch(node.children.size) {
+                        case 2: // 1+One Expression => EndOfLine
+                            break;
 
+                        case 3: //1+Two Expressions => MultiLines
+                            break;
+
+                        default:
+                            throw exception("{%s} <%s> must have 1 or 2 arguments, found %u", **(parser->name), *label, unsigned(node.children.size-1) );
+                    }
                     break;
             }
         }
