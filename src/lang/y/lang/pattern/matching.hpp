@@ -9,17 +9,18 @@ namespace upsylon
 {
     namespace Lang
     {
+        //! matching a pattern against a string
         class Matching : public Token
         {
         public:
-            virtual ~Matching() throw();
-            Matching( Pattern *p ) throw();
-            Matching( const string &rx, const Dictionary *dict=NULL);
-            Matching( const char   *rx, const Dictionary *dict=NULL);
+            virtual ~Matching() throw();    //!< destructor
+            Matching( Pattern *p ) throw(); //!< initialize with a compiled pattern
+            Matching( const string &rx, const Dictionary *dict=NULL); //!< init with regular expression
+            Matching( const char   *rx, const Dictionary *dict=NULL); //!< init with regulat expresiion
 
-            bool exactly( const string &s );
-            bool partly(const string &s);
-            void find( sequence<Token> &, const string &s );
+            bool exactly( const string &s );                 //!< the string must entirely match the pattern
+            bool partly(const string &s);                    //!< the string must partly match the pattern
+            void find( sequence<Token> &, const string &s ); //!< find all consecutive, non overlapping occurences
             
 
         private:

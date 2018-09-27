@@ -56,9 +56,15 @@ namespace upsylon
             class MultiLinesComment : public Comment
             {
             public:
-                const string closing;
-                inline virtual ~MultiLinesComment() throw() {} //!< destructor
+                const string closing; //!< the closing pattern expression
+
+                //! destructor
+                inline virtual ~MultiLinesComment() throw() {}
+
+                //! initialize
                 inline explicit MultiLinesComment(Translator &t, const string &id, const char   *rx_ini, const char   *rx_end) : Comment(t,id,rx_ini), closing(rx_end) { fill(); }
+
+                //! initialize
                 inline explicit MultiLinesComment(Translator &t, const string &id, const string &rx_ini, const string &rx_end) : Comment(t,id,rx_ini), closing(rx_end) { fill(); }
 
             private:

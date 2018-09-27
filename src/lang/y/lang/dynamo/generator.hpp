@@ -14,15 +14,16 @@ namespace upsylon
     namespace Lang
     {
 
+        //! hold reference to some objects with a 'name' field
         template <typename T>
         class DynMeta
         {
         public:
-            T &ref;
-            inline  DynMeta( T &r ) throw() : ref(r) {}
-            inline ~DynMeta() throw() {}
-            inline  DynMeta(const DynMeta &other) throw() : ref(other.ref) {}
-            inline const string &key() const throw() { return ref.name; }
+            T &ref;                                                           //!< the reference
+            inline  DynMeta( T &r ) throw() : ref(r) {}                       //!< initialize
+            inline ~DynMeta() throw() {}                                      //!< destructor
+            inline  DynMeta(const DynMeta &other) throw() : ref(other.ref) {} //!< copy
+            inline const string &key() const throw() { return ref.name; }     //!< return the name field
 
         private:
             Y_DISABLE_ASSIGN(DynMeta);
