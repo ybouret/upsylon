@@ -35,5 +35,17 @@ namespace upsylon
             }
         }
 
+        bool Matching:: partly(const string &s)
+        {
+            clear();
+            Source source( Module::OpenData(s,s) );
+            while( ! motif->match(*this,source) )
+            {
+                if(!source.active()) return false;
+                source.skip();
+            }
+            return true;
+        }
+
     }
 }

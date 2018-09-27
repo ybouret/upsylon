@@ -14,6 +14,7 @@ Y_UTEST(matching)
         ios::icstream  fp( ios::cstdin );
         while( (std::cerr << "> ").flush(), fp.gets(line) )
         {
+
             if(match.exactly(line))
             {
                 std::cerr << "+exact: " << match << std::endl;
@@ -21,6 +22,15 @@ Y_UTEST(matching)
             else
             {
                 std::cerr << "-exact" << std::endl;
+            }
+
+            if(match.partly(line))
+            {
+                std::cerr << "+partly: " << match << std::endl;
+            }
+            else
+            {
+                std::cerr << "-partly" << std::endl;
             }
         }
     }
