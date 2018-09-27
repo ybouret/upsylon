@@ -42,7 +42,7 @@ namespace upsylon
 
         std::ostream & DynamoGenerator:: indent() const
         {
-            std::cerr << " (*) ";
+            std::cerr << "#### ";
             for(int i=0;i<level;++i) std::cerr << "  ";
             return std::cerr;
         }

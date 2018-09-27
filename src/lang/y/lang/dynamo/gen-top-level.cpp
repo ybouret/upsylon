@@ -1,7 +1,7 @@
 
 #include "y/lang/dynamo/generator.hpp"
 #include "y/exception.hpp"
-
+#include "y/lang/lexical/plugin/strings.hpp"
 namespace upsylon
 {
 
@@ -53,6 +53,7 @@ namespace upsylon
                 }
                 source.swap_with(target);
             }
+            //if(verbose) { indent() << "<" << node->rule.name << "/>" << std::endl; }
         }
 
 
@@ -127,16 +128,25 @@ namespace upsylon
         void DynamoGenerator:: onPlugin(const Node &node)
         {
             const string label = getNodeName(node,"L_ID",1);
-            if(verbose) { indent()  << "..PLUGIN <" << label << ">" << std::endl; }
+            if(verbose) { indent()  << "..PLUGIN  <" << label << ">" << std::endl; }
             const Node *sub = node.children.tail;
             assert(sub);
             assert(sub->terminal);
             assert(sub->rule.name=="ID");
             const string pluginClass = sub->lexeme.to_string();
-            if(verbose) { indent() << "  |_[" << pluginClass << "]" << std::endl; }
+            if(verbose) { indent() << "  \\_[" << pluginClass << "]" << std::endl; }
 
             // TODO: plugin factory, maybe...
+            if( "jstring" == pluginClass )
+            {
+                // create the plugin
+                parser->hook<Lexical::jString>(label);
+                // associate the terminal
+                parser->term(label);
+                return;
+            }
 
+            throw exception("{%s} unknown plugin 'class %s'", **(parser->name), *pluginClass);
 
 
         }
