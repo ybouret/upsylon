@@ -70,8 +70,6 @@ namespace upsylon
                 modules.pop();
                 indent() << " (-) stack => " << modules << std::endl;
             }
-
-            //if(verbose) { indent() << "<" << node->rule.name << "/>" << std::endl; }
         }
 
 
@@ -90,6 +88,12 @@ namespace upsylon
                 throw exception("{%s} unexpected multiple rule '%s'", **(parser->name), *name );
             }
             if(verbose) { indent() << "RULE    <" << name << ">" << std::endl; }
+            assert(modules.size()>0);
+            const Symbol::Pointer sym = new Symbol(name,modules.peek());
+            if(!internals.insert(sym))
+            {
+                throw exception("{%s} unexpected multiple internal '%s'", **(parser->name), *name );
+            }
         }
 
         //----------------------------------------------------------------------

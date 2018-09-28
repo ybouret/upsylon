@@ -62,6 +62,11 @@ namespace upsylon
                 inline explicit Symbol(const string &n, const Origin &m ) : name(n), from(m) {}
                 inline virtual ~Symbol() throw() {}
                 inline const string & key() const throw() { return name; }
+                inline friend std::ostream & operator<<( std::ostream &os, const Symbol &sym )
+                {
+                    os << sym.from << '_' << sym.name;
+                    return os;
+                }
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Symbol);
             };

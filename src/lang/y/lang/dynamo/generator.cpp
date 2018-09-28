@@ -79,6 +79,7 @@ namespace upsylon
                 indent() << "_______________" << std::endl << std::endl;
             }
             parser->GraphViz("parser.dot");
+            std::cerr << "internals : " << internals << std::endl;
             return parser.yield();
         }
 
