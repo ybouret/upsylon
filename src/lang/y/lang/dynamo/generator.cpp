@@ -95,7 +95,11 @@ namespace upsylon
             topLevel( &dynamo );
             modules.free();
             assert(0==level);
-
+            if(verbose)
+            {
+                indent() << std::endl;
+                indent() << "Setup " << parserName << std::endl;
+            }
             walkDown(&dynamo);
 
             if(verbose)

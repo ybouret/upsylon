@@ -25,7 +25,7 @@ namespace upsylon
                     // found a top rule
                     //__________________________________________________________
                     const string name = getNodeName(*node,"ID", 0);
-                    if(verbose) { indent() << "-> setup " << name << std::endl;}
+                    if(verbose) { indent() << "|_" << name << std::endl;}
                     Syntax::Rule *top = (Syntax::Rule *)(parser->getRuleByName(name));
                     if(!top)
                     {
@@ -39,7 +39,7 @@ namespace upsylon
                     assert( Syntax::Aggregate::UUID == top->uuid || Syntax::Alternate::UUID == top->uuid );
                     assert( NULL != top->data );
                     Syntax::Compound &members = *(Syntax::Compound *)(top->data);
-                    
+                    fill(members,node->children.tail);
 
                 }
                 else
@@ -57,7 +57,9 @@ namespace upsylon
 
         void DynamoGenerator:: fill( Syntax::Compound &members, const Node *node )
         {
-
+            assert(node!=NULL);
+            const string name = node->rule.name;
+            if(verbose) { indent() << " |_" << name << std::endl; }
         }
 
     }
