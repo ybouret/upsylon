@@ -77,7 +77,8 @@ namespace upsylon
             static const int isOOM = 3; //!< hsyn("OOM")
             static const int isOPT = 4; //!< hsyn("OPT")
             static const int isID  = 5; //!< hsyn("ID"), for poorly designed grammar
-            
+
+        protected:
             //__________________________________________________________________
             //
             //
@@ -149,7 +150,11 @@ namespace upsylon
             void walkDown( const Node *node );
 
             //! fill members of the compound from node
-            void fill( Syntax::Compound &members, const Node *node );
+            void fill( Syntax::Compound &compound, const Node *node );
+            
+            //! create a new rule
+            const Syntax::Rule & createFrom( const Node *node );
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);

@@ -25,7 +25,8 @@ namespace upsylon
                     // found a top rule
                     //__________________________________________________________
                     const string name = getNodeName(*node,"ID", 0);
-                    if(verbose) { indent() << "|_" << name << std::endl;}
+                    if(verbose) { indent() << "|_<" << name << ">" << std::endl;}
+
                     Syntax::Rule *top = (Syntax::Rule *)(parser->getRuleByName(name));
                     if(!top)
                     {
@@ -38,8 +39,32 @@ namespace upsylon
                     //__________________________________________________________
                     assert( Syntax::Aggregate::UUID == top->uuid || Syntax::Alternate::UUID == top->uuid );
                     assert( NULL != top->data );
-                    Syntax::Compound &members = *(Syntax::Compound *)(top->data);
-                    fill(members,node->children.tail);
+                    Syntax::Compound &compound = *(Syntax::Compound *)(top->data);
+                    assert(node->internal);
+                    assert(node->children.size==2);
+                    assert(node->children.tail);
+                    const Node   *subNode = node->children.tail;
+                    fill(compound,subNode);
+#if 0
+                    switch( subKind )
+                    {
+                        case isAGG:
+                        case isALT:
+                            fill(compound,subNode);
+                            break;
+
+                        case isZOM:
+                        case isOOM:
+                        case isOPT:
+                        case isID:
+                            fill(compound,subNode);
+                            break;
+
+                        default:
+                            throw exception("{%s} invalid content '%s' for top level rule '%s'", **(parser->name), *name, *subName);
+                    }
+#endif
+
 
                 }
                 else
@@ -54,20 +79,43 @@ namespace upsylon
 
         }
 
-
-        void DynamoGenerator:: fill( Syntax::Compound &members, const Node *node )
+        void DynamoGenerator:: fill( Syntax::Compound &members, const Node *parent )
         {
-            assert(node!=NULL);
-            const string name = node->rule.name;
-            if(verbose) { indent() << " |_" << name << std::endl; }
-            const int    kind = hsyn(name);
-            switch(kind)
+            assert(parent!=NULL);
+            ++level;
+            const string &parentName = parent->rule.name;
+            const int     parentKind = hsyn(parentName);
+            if(verbose) { indent() << "|_fill from <" << parent->rule.name << ">" << std::endl; }
+            switch(parentKind)
             {
+                case isALT:
+                case isAGG:
+                    break;
 
+                case isID: {
+                    assert(parent->terminal);
+                    const string linkName = parent->lexeme.to_string();
+                    if(verbose) { indent() << parentName << "->" << linkName << std::endl; }
+                    const Syntax::Rule *r = parser->getRuleByName(linkName);
+                    if(!r)
+                    {
+                        throw exception("{%s} in '%s', rule '%s' doesn't exist!!!", **(parser->name), *parentName, *linkName );
+                    }
+                    members.add(*r);
+                } break;
+                    
                 default:
-                    throw exception("{%s} rule '%s' not handled", **(parser->name), *name);
+                    indent() << parentName << " not implemented" << std::endl;
             }
+            --level;
+
         }
+#if 0
+        const Syntax::Rule & DynamoGenerator:: createFrom( const Node *node )
+        {
+
+        }
+#endif
 
     }
 
