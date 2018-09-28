@@ -10,14 +10,17 @@ namespace upsylon
 {
     namespace Chemical
     {
-        typedef math::ODE::DriverCK<double>::Type IntegratorType;
 
-        class Integrator : public IntegratorType
+        class Integrator
         {
         public:
+            typedef math::ODE::DriverCK<double>::Type Driver;
+
             explicit Integrator();
             virtual ~Integrator() throw();
-            
+
+            Driver driver;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Integrator);
         };

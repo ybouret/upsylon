@@ -7,7 +7,7 @@ namespace upsylon
     {
         Integrator:: ~Integrator() throw() {}
 
-        Integrator:: Integrator() : IntegratorType()
+        Integrator:: Integrator() : driver()
         {
         }
         
