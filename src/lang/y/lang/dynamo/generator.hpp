@@ -147,6 +147,8 @@ namespace upsylon
             //! walk down to link and create remaining rules
             void walkDown( const Node *node );
 
+            //! fill members of the compound from node
+            void fill( Syntax::Compound &members, const Node *node );
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);

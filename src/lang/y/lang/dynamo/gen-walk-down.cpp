@@ -54,6 +54,12 @@ namespace upsylon
 
         }
 
+
+        void DynamoGenerator:: fill( Syntax::Compound &members, const Node *node )
+        {
+
+        }
+
     }
 
 }
