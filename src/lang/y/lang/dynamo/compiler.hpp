@@ -28,7 +28,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(DynamoCompiler);
             static const int include = 0;
 
-            hashing::mperf commands; //!< include
+            const hashing::mperf commands; //!< include
 
             void  processCommands( Node &dynamo, const string &origin );
             Node *format( Module *module );
