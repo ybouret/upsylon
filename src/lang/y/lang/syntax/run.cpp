@@ -84,7 +84,8 @@ namespace upsylon
                 const Lexeme  *nlx = lexer.peek(source);
                 if( nlx )
                 {
-                    throw exception("{%s} unexpected standalone/unfinished <%s>", **name, **(nlx->label));
+                    const string nxt = nlx->to_print();
+                    throw exception("{%s} unexpected standalone/unfinished <%s> after '%s'", **name, **(nlx->label), *nxt);
                 }
 
                 return guard.yield();

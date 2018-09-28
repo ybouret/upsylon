@@ -3,7 +3,7 @@
 add  : mult ( (PLUS|MINUS) mult)* ; // left association
 //mult : pow ('*'^ pow)* ; // left association
 //pow  : atom ('^'^ pow)? ; // right association
-mult   : atom ('*' atom)*;
+mult   : atom ( ('*'|'/'^) atom)*;
 atom   : ID | INT | '(' add ')' ; // recursion
 
 PLUS  : '+'^;

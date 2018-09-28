@@ -90,6 +90,13 @@ namespace upsylon
             {
                 case isALT:
                 case isAGG:
+                    assert(parent->internal);
+                    ++level;
+                    for(const Node *child=parent->children.head;child;child=child->next)
+                    {
+                        members.add( createFrom(child) );
+                    }
+                    --level;
                     break;
 
                 case isID: {
@@ -103,19 +110,22 @@ namespace upsylon
                     }
                     members.add(*r);
                 } break;
-                    
+
                 default:
                     indent() << parentName << " not implemented" << std::endl;
             }
             --level;
 
         }
-#if 0
+
         const Syntax::Rule & DynamoGenerator:: createFrom( const Node *node )
         {
+            const string &name = node->rule.name;
+            std::cerr << "Creating rule from " << name << std::endl;
 
+            throw exception("not implemented");
         }
-#endif
+
 
     }
 
