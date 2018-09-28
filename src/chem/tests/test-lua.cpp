@@ -29,6 +29,7 @@ Y_UTEST(lua)
     vector<double> C(M+2);
 
     eqs.computeK(0);
+
     if(eqs.normalize(C))
     {
         lib.display(std::cerr,C);
@@ -42,5 +43,15 @@ Y_UTEST(lua)
     __luaIO::add(ld,vm,"ini",lib);
     std::cerr << ld << std::endl;
 
+    std::cerr << "Booting..." << std::endl;
+    if( eqs.boot(C,ld) )
+    {
+        lib.display(std::cerr,C);
+    }
+    else
+    {
+        std::cerr << "Unable to boot" << std::endl;
+    }
+    
 }
 Y_UTEST_DONE()

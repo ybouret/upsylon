@@ -115,7 +115,7 @@ namespace upsylon
                 //
                 // Pojection
                 //______________________________________________________________
-                std::cerr << "C0=" << C0 << std::endl;
+                //std::cerr << "C0=" << C0 << std::endl;
                 // U = PC-L;
                 for(size_t i=Nc;i>0;--i)
                 {
@@ -138,7 +138,7 @@ namespace upsylon
                     return false;
                 }
 
-                std::cerr << "C1=" << C1 << std::endl;
+                //std::cerr << "C1=" << C1 << std::endl;
 
                 for(size_t j=M;j>0;--j)
                 {
