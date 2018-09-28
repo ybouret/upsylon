@@ -70,6 +70,8 @@ namespace upsylon
             //! write concentrations only
             ios::ostream & xprint( ios::ostream &fp, const array<double> &a ) const;
 
+
+            //! return -log10([H+]) or -1 if does not exists
             double pH( const array<double> &a ) const;
 
         private:
