@@ -70,17 +70,20 @@ Y_UTEST(lua)
             lib.display(std::cerr,C1);
             vector<double> C(M);
 
+            const double vmax = vm->get<double>("vmax");
+
             const double V0 = 10;
             const double dV = V0/100.0;
             ios::ocstream fp("output.dat");
             fp("#V1 pH"); lib.header(fp) << "\n";
-            for(double V1=0;V1<=2*V0;V1+=dV)
+            for(double V1=0;V1<=vmax*V0;V1+=dV)
             {
                 const double Vtot = V1 + V0;
+                (std::cerr << '.').flush();
                 eqs.mix(C, C0, V0/Vtot, C1, V1/Vtot);
                 fp("%.15g %.15g",V1, lib.pH(C) ); lib.xprint(fp,C) << "\n";
             }
-
+            std::cerr << std::endl;
 
         }
         else
