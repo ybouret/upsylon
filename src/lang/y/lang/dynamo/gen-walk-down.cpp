@@ -16,9 +16,17 @@ namespace upsylon
             {
                 if(verbose) { indent() << "@walk " << node->rule.name << std::endl; }
                 ++level;
-                for(const Node *child = node->children.head; child; child=child->next )
+                if("RULE"==node->rule.name)
                 {
-                    walkDown(child);
+                    const string name = getNodeName(*node,"ID", 0);
+                    if(verbose) { indent() << "-> setup " << name << std::endl;}
+                }
+                else
+                {
+                    for(const Node *child = node->children.head; child; child=child->next )
+                    {
+                        walkDown(child);
+                    }
                 }
                 --level;
             }
