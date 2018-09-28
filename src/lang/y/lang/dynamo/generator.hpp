@@ -75,7 +75,8 @@ namespace upsylon
             static const int isZOM = 2; //!< hsyn("ZOM")
             static const int isOOM = 3; //!< hsyn("OOM")
             static const int isOPT = 4; //!< hsyn("OPT")
-
+            static const int isID  = 5; //!< hsyn("ID"), for poorly designed grammar
+            
             //__________________________________________________________________
             //
             //
@@ -144,7 +145,7 @@ namespace upsylon
             //__________________________________________________________________
 
             //! walk down to link and create remaining rules
-            void walkDown( Node *node );
+            void walkDown( const Node *node );
 
 
         private:

@@ -36,27 +36,30 @@ namespace upsylon
             "ALT",
             "ZOM",
             "OOM",
-            "OPT"
+            "OPT",
+            "ID"
         };
 
 #define Y_DYN_CHECK(RULE) assert( hsyn(#RULE) == is##RULE )
         DynamoGenerator:: DynamoGenerator():
         parser(0),
         verbose(false),
-        //top(8,as_capacity),
         level(0),
         htop( YOCTO_MPERF_FOR(top_kw) ),
         hsyn( YOCTO_MPERF_FOR(syn_kw) ),
         hstr( YOCTO_MPERF_FOR(str_kw) ),
         hlxr( YOCTO_MPERF_FOR(lxr_kw) ),
         icom(0),
-        modules(4,as_capacity)
+        modules(),
+        terminals(),
+        internals()
         {
             Y_DYN_CHECK(AGG);
             Y_DYN_CHECK(ALT);
             Y_DYN_CHECK(ZOM);
             Y_DYN_CHECK(OOM);
             Y_DYN_CHECK(OPT);
+            Y_DYN_CHECK(ID);
         }
 
         std::ostream & DynamoGenerator:: indent() const
@@ -91,7 +94,10 @@ namespace upsylon
             parser = new Syntax::Parser(parserName);
             topLevel( &dynamo );
             modules.free();
-            
+            assert(0==level);
+
+            walkDown(&dynamo);
+
             if(verbose)
             {
                 indent() << std::endl;

@@ -97,6 +97,7 @@ namespace upsylon
                 case isOOM:
                 case isZOM:
                 case isOPT:
+                case isID:
                     parser->acting(name);
                     break;
 
