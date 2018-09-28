@@ -52,7 +52,6 @@ namespace upsylon
         //! remove an item
         inline void pop() throw() { assert(this->size()>0); _pop( int2type<TYPE>() ); }
 
-
     private:
         Y_DISABLE_ASSIGN(pipe);
         inline type       & _peek( int2type<FIFO> ) throw()       { return this->front(); }
@@ -69,7 +68,7 @@ namespace upsylon
     class queue : public pipe< list<T>, FIFO >
     {
     public:
-        typedef pipe< list<T>, FIFO > queue_type;
+        typedef pipe< list<T>, FIFO > queue_type; //!< alias
 
         //! destructor
         inline virtual ~queue() throw() {}
@@ -93,7 +92,7 @@ namespace upsylon
     class vstack : public pipe< vector<T,ALLOCATOR>, LIFO >
     {
     public:
-        typedef pipe< vector<T,ALLOCATOR>, LIFO > stack_type;
+        typedef pipe< vector<T,ALLOCATOR>, LIFO > stack_type; //!< alias
 
         //! destructor
         inline virtual ~vstack() throw() {}
@@ -116,7 +115,7 @@ namespace upsylon
     class lstack : public pipe< list<T>, LIFO >
     {
     public:
-        typedef pipe< list<T>, LIFO > stack_type;
+        typedef pipe< list<T>, LIFO > stack_type; //!< alias
 
         //! destructor
         inline virtual ~lstack() throw() {}
