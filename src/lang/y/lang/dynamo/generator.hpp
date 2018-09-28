@@ -5,9 +5,9 @@
 
 #include "y/lang/syntax/parser.hpp"
 #include "y/associative/set.hpp"
-#include "y/hashing/mph.hpp"
 #include "y/sequence/pipe.hpp"
 #include "y/ptr/intr.hpp"
+#include "y/hashing/mph.hpp"
 
 namespace upsylon
 {
@@ -20,7 +20,8 @@ namespace upsylon
         class DynamoGenerator
         {
         public:
-            typedef Syntax::Node       Node; //!< alias
+            typedef Syntax::Node         Node; //!< alias
+            typedef const hashing::mperf MPH;  //!< alias
 
             //! initialize
             explicit DynamoGenerator();
@@ -61,10 +62,10 @@ namespace upsylon
             auto_ptr<Syntax::Parser>  parser;    //!< currently built parser
             bool                      verbose;   //!< verbose flag
             int                       level;     //!< for tree walking
-            hashing::mperf            htop;      //!< RULE, ALIAS, LXR, PLUGIN
-            hashing::mperf            hsyn;      //!< AGG, ALT, OOM, ZOM, OPT
-            hashing::mperf            hstr;      //!< RX, RS, ^
-            hashing::mperf            hlxr;      //!< drop,endl,comment
+            MPH                       htop;      //!< RULE, ALIAS, LXR, PLUGIN
+            MPH                       hsyn;      //!< AGG, ALT, OOM, ZOM, OPT
+            MPH                       hstr;      //!< RX, RS, ^
+            MPH                       hlxr;      //!< drop,endl,comment
             int                       icom;      //!< index for comment
             lstack<Origin>            modules;   //!< stack of visited modules
             Symbols                   terminals; //!< database of terminals
