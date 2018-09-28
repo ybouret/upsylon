@@ -83,13 +83,17 @@ namespace upsylon
                 const string sp_name = vm->to<string>(-1);
                 lua_pop(L,1); // remove the species name
 
-                // get the species weight
-                if( LUA_TNUMBER != lua_rawgeti(L,-1,2) )
+
+                int sp_weight = 1;
+                switch(lua_rawgeti(L,-1,2))
                 {
-                    throw exception("%s#%d constraint item#%u second item is not a string",id,count,j);
+                    case LUA_TNIL:    break;
+                    case LUA_TNUMBER: sp_weight = vm->to<int>(-1); break;
+                    default:
+                         throw exception("%s#%d constraint item#%u second item is not a number",id,count,j);
                 }
-                const int sp_weight = vm->to<int>(-1);
                 lua_pop(L,1); // remove the weight
+
 
                 cc.add( lib[sp_name],sp_weight );
 

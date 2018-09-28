@@ -49,6 +49,14 @@ namespace upsylon
             Y_LUA_CHECK(luaL_dostring(L,*code));
         }
 
+
+        bool State:: exists( const string &name )
+        {
+            lua_settop(L,0);
+            lua_getglobal(L,*name);
+            return LUA_TNIL != lua_type(L,-1);
+        }
+
         template <>
         double State:: get<double>( const string &id )
         {

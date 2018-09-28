@@ -58,6 +58,11 @@ namespace upsylon
 
             lua_State * operator*() throw() { return L; }
 
+            bool exists( const string &name );
+
+            inline
+            bool exists( const char   *name) { const string _(name); return exists(_); }
+
         private:
             lua_State *L;
             Y_DISABLE_COPY_AND_ASSIGN(State);

@@ -10,7 +10,7 @@ namespace upsylon
             assert(Cout.size()>=M);
             assert(CA.size()  >=M);
             assert(CB.size()  >=M);
-            for(size_t i=N;i>0;--i)
+            for(size_t i=M;i>0;--i)
             {
                 Cout[i] = WA * CA[i] + WB * CB[i];
             }

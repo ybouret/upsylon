@@ -5,6 +5,7 @@
 #include "y/chem/species.hpp"
 #include "y/associative/set.hpp"
 #include "y/sequence/array.hpp"
+#include "y/ios/ostream.hpp"
 
 namespace upsylon
 {
@@ -63,7 +64,16 @@ namespace upsylon
                 const string _ = id; return (*this)[_];
             }
 
+            //! write species
+             ios::ostream & header( ios::ostream &fp ) const;
+
+            //! write concentrations only
+            ios::ostream & xprint( ios::ostream &fp, const array<double> &a ) const;
+
+            double pH( const array<double> &a ) const;
+
         private:
+            const string protonID; //!< "H+"
             Y_DISABLE_ASSIGN(Library);
         };
 

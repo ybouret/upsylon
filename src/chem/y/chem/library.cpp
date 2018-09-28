@@ -2,13 +2,18 @@
 #include "y/chem/library.hpp"
 #include "y/exception.hpp"
 
+#include <cmath>
+
 namespace upsylon
 {
     namespace Chemical
     {
         Library:: ~Library() throw() {}
 
-        Library:: Library(size_t n) : Object(), LibraryType(n,as_capacity)
+        Library:: Library(size_t n) :
+        Object(),
+        LibraryType(n,as_capacity),
+        protonID("H+")
         {
         }
 
@@ -55,6 +60,33 @@ namespace upsylon
             if(!pp) throw exception("no species '%s'",*id);
             Species::Pointer q = *pp;
             return *q;
+        }
+
+        ios::ostream & Library:: header( ios::ostream &fp ) const
+        {
+            for(const_iterator i=begin();i!=end();++i)
+            {
+                const Species &sp = (**i);
+                fp(" \"[%s]\"", *sp.name);
+            }
+            return fp;
+        }
+
+        ios::ostream & Library:: xprint( ios::ostream &fp, const array<double> &C ) const
+        {
+            const size_t M = this->size();
+            for(size_t i=1;i<=M;++i)
+            {
+                fp(" %.15g", C[i]);
+            }
+            return fp;
+        }
+
+
+        double  Library:: pH( const array<double> &a ) const
+        {
+            const Species::Pointer *pp = search(protonID);
+            return (pp) ? -log10( a[ (**pp).indx ] ) : -1.0;
         }
 
     }
