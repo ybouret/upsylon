@@ -66,6 +66,9 @@ Y_UTEST(dyn)
 
         ast->GraphViz("dynclr.dot");
 
+        std::cerr << "sizeof(DynamoParser)    = " << sizeof(DynamoParser)    << std::endl;
+        std::cerr << "sizeof(DynamoCompiler)  = " << sizeof(DynamoCompiler)  << std::endl;
+        std::cerr << "sizeof(DynamoGenerator) = " << sizeof(DynamoGenerator) << std::endl;
 
     }
 

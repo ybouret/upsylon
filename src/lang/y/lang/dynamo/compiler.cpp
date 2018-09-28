@@ -52,8 +52,6 @@ namespace upsylon
                 auto_ptr<Node> node = source.pop_front();
                 if(node->rule.name=="COMMAND")
                 {
-                    std::cerr << "Found Command!" << std::endl;
-
                     //__________________________________________________________
                     //
                     //

@@ -30,17 +30,33 @@ namespace upsylon
             "comment"
         };
 
+        static const char *syn_kw[] =
+        {
+            "AGG",
+            "ALT",
+            "ZOM",
+            "OOM",
+            "OPT"
+        };
+
+#define Y_DYN_CHECK(RULE) assert( hsyn(#RULE) == is##RULE )
         DynamoGenerator:: DynamoGenerator():
         parser(0),
         verbose(false),
-        top(8,as_capacity),
+        //top(8,as_capacity),
         level(0),
         htop( YOCTO_MPERF_FOR(top_kw) ),
+        hsyn( YOCTO_MPERF_FOR(syn_kw) ),
         hstr( YOCTO_MPERF_FOR(str_kw) ),
         hlxr( YOCTO_MPERF_FOR(lxr_kw) ),
         icom(0),
         modules(4,as_capacity)
         {
+            Y_DYN_CHECK(AGG);
+            Y_DYN_CHECK(ALT);
+            Y_DYN_CHECK(ZOM);
+            Y_DYN_CHECK(OOM);
+            Y_DYN_CHECK(OPT);
         }
 
         std::ostream & DynamoGenerator:: indent() const
@@ -58,7 +74,7 @@ namespace upsylon
 
         Syntax::Parser * DynamoGenerator:: create( Node &dynamo, const bool flag )
         {
-            top.free();
+            //top.free();
             parser  = 0;
             level   = 0;
             verbose = flag;
@@ -74,12 +90,16 @@ namespace upsylon
             }
             parser = new Syntax::Parser(parserName);
             collectTopLevel( &dynamo );
+            modules.free();
+            
             if(verbose)
             {
+                indent() << "internals : " << internals << std::endl;
+                indent() << "terminals : " << terminals << std::endl;
                 indent() << "_______________" << std::endl << std::endl;
             }
+
             parser->GraphViz("parser.dot");
-            std::cerr << "internals : " << internals << std::endl;
             return parser.yield();
         }
 
@@ -113,6 +133,35 @@ namespace upsylon
             }
             return head->lexeme.to_string(nskip,0);
         }
+
+        int   DynamoGenerator:: getRuleKind( const Node &node ) const
+        {
+            // a little sanity check
+            assert(parser.is_valid());
+            assert(node.internal);
+            assert(node.children.size==2);
+            assert(node.children.tail);
+            const string &kind_ID = node.children.tail->rule.name;
+            if(verbose) { indent() << "\\_[" << kind_ID << "]" << std::endl; }
+            const int h = hsyn(kind_ID);
+            return h;
+        }
+
+        void  DynamoGenerator:: newSymbol( Symbols &target, const string &name)
+        {
+            assert(parser.is_valid());
+            if(modules.size()<=0)
+            {
+                throw exception("{%s} no parsed dynamo module before '%s'", **(parser->name), *name);
+            }
+            const Symbol::Pointer p = new Symbol(name,modules.peek());
+            if(!target.insert(p))
+            {
+                throw exception("{%s} multiple symbol '%s'",**(parser->name), *name);
+            }
+        }
+
+
 
         string DynamoGenerator:: nodeToRegExp(const Node &node, int &h) const
         {
@@ -187,6 +236,7 @@ namespace upsylon
                 default:
                     throw exception("{%s} invalid alias kind '%s'", **(parser->name), *name);
             }
+            newTerminal(label);
         }
 
 

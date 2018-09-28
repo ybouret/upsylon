@@ -80,20 +80,30 @@ namespace upsylon
         //----------------------------------------------------------------------
         void DynamoGenerator:: onRule( const Node &node )
         {
-            const string name = getNodeName(node,"ID",0); // the rule name
-            Agg         &agg  = parser->agg(name);        // put in parser
-            const MetaAgg m(agg);                         // keep it for later
-            if( ! top.insert(m) )
-            {
-                throw exception("{%s} unexpected multiple rule '%s'", **(parser->name), *name );
-            }
+            const string name = getNodeName(node,"ID",0);
             if(verbose) { indent() << "RULE    <" << name << ">" << std::endl; }
-            assert(modules.size()>0);
-            const Symbol::Pointer sym = new Symbol(name,modules.peek());
-            if(!internals.insert(sym))
+
+            switch( getRuleKind(node) )
             {
-                throw exception("{%s} unexpected multiple internal '%s'", **(parser->name), *name );
+                case isAGG:
+                    parser->agg(name);
+                    newInternal(name);
+                    break;
+
+                case isALT:
+                    parser->alt(name);
+                    break;
+
+                case isOOM:
+                case isZOM:
+                case isOPT:
+                    parser->acting(name);
+                    break;
+
+                default:
+                    throw exception("{%s} unexpected rule kind  '%s'", **(parser->name), *name );
             }
+            
         }
 
         //----------------------------------------------------------------------
@@ -183,6 +193,8 @@ namespace upsylon
             assert(sub->rule.name=="ID");
             const string pluginClass = sub->lexeme.to_string();
             if(verbose) { indent() << "  \\_[" << pluginClass << "]" << std::endl; }
+
+            newTerminal(label);
 
             // TODO: plugin factory, maybe...
             if( "jstring" == pluginClass )

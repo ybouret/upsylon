@@ -15,22 +15,6 @@ namespace upsylon
     namespace Lang
     {
 
-        //! hold reference to some objects with a 'name' field
-        template <typename T>
-        class DynMeta
-        {
-        public:
-            T &ref;                                                           //!< the reference
-            inline  DynMeta( T &r ) throw() : ref(r) {}                       //!< initialize
-            inline ~DynMeta() throw() {}                                      //!< destructor
-            inline  DynMeta(const DynMeta &other) throw() : ref(other.ref) {} //!< copy
-            inline const string &key() const throw() { return ref.name; }     //!< return the name field
-
-        private:
-            Y_DISABLE_ASSIGN(DynMeta);
-        };
-
-
 
         //! Generate a parser from a Dynamo compiled AST
         class DynamoGenerator
@@ -53,6 +37,8 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
+
+            //! symbols to collect
             class Symbol : public CountedObject
             {
             public:
@@ -71,27 +57,33 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Symbol);
             };
 
-            typedef DynMeta<Syntax::Aggregate>                   MetaAgg;
+            
             typedef key_hasher<string,hashing::fnv>              KeyHasher;
             typedef memory::pooled                               Memory;
-            typedef set<string,MetaAgg,KeyHasher,Memory>         TopRules;
             typedef set<string,Symbol::Pointer,KeyHasher,Memory> Symbols;
 
 
 
             auto_ptr<Syntax::Parser>  parser;    //!< currently built parser
             bool                      verbose;   //!< verbose flag
-            TopRules                  top;       //!< rules to be filled
             int                       level;     //!< for tree walking
             hashing::mperf            htop;      //!< RULE, ALIAS, LXR, PLUGIN
+            hashing::mperf            hsyn;      //!< AGG, ALT, OOM, ZOM, OPT
             hashing::mperf            hstr;      //!< RX, RS, ^
             hashing::mperf            hlxr;      //!< drop,endl,comment
             int                       icom;      //!< index for comment
             lstack<Origin>            modules;   //!< stack of visited modules
             Symbols                   terminals; //!< database of terminals
             Symbols                   internals; //!< database of internals
-            
-            //! extract name from dynamo.children.head->lexeeme
+
+            static const int isAGG = 0;
+            static const int isALT = 1;
+            static const int isZOM = 2;
+            static const int isOOM = 3;
+            static const int isOPT = 4;
+
+
+            //! extract name from dynamo.children.head->lexeme
             string getModuleName( const Node &dynamo ) const;
 
             //! collect top level rules, compile alias, lxr and plugins
@@ -99,6 +91,18 @@ namespace upsylon
 
             //! extract node name, must match label and skip chars from string
             string getNodeName( const Node &node, const char *label, const size_t nskip ) const;
+
+            //! extract the kind of rule
+            int   getRuleKind( const Node &node ) const;
+
+            //! create and register a new symbol
+            void  newSymbol(Symbols &target, const string &name);
+
+            //! new internal
+            inline void newInternal(const string &name) { newSymbol(internals,name); }
+
+            //! new terminal
+            inline void newTerminal(const string &name) { newSymbol(terminals,name); }
 
             //! create a rule
             void onRule( const Node &node );
