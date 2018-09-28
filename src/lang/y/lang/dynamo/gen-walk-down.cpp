@@ -34,7 +34,7 @@ namespace upsylon
 
                     //__________________________________________________________
                     //
-                    // get the compound rule
+                    // get the compound rule that was created
                     //__________________________________________________________
                     assert( Syntax::Aggregate::UUID == top->uuid || Syntax::Alternate::UUID == top->uuid );
                     assert( NULL != top->data );
@@ -60,6 +60,13 @@ namespace upsylon
             assert(node!=NULL);
             const string name = node->rule.name;
             if(verbose) { indent() << " |_" << name << std::endl; }
+            const int    kind = hsyn(name);
+            switch(kind)
+            {
+
+                default:
+                    throw exception("{%s} rule '%s' not handled", **(parser->name), *name);
+            }
         }
 
     }
