@@ -3,6 +3,7 @@
 #define Y_LANG_DYNAMO_COMPILER_INCLUDED 1
 
 #include "y/lang/dynamo/parser.hpp"
+#include "y/hashing/mph.hpp"
 
 namespace upsylon
 {
@@ -25,10 +26,12 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoCompiler);
+            static const int include = 0;
 
-            void processCommands( Node &dynamo, const string &origin );
+            hashing::mperf commands; //!< include
+
+            void  processCommands( Node &dynamo, const string &origin );
             Node *format( Module *module );
-
         };
     }
 }

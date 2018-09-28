@@ -10,9 +10,16 @@ namespace upsylon
         {
         }
 
+
+        static const char *commands_kw[] =
+        {
+            "include"
+        };
+
         DynamoCompiler:: DynamoCompiler() :
         parser(  ),
-        depth( 0 )
+        depth( 0 ),
+        commands( YOCTO_MPERF_FOR(commands_kw) )
         {
             
         }
@@ -64,10 +71,9 @@ namespace upsylon
                     const Lexeme     &lxm  = curr->lexeme;
                     const string      CMD  = lxm.to_string(1,0);
 
-                    switch( parser.commands(CMD) )
+                    switch( commands(CMD) )
                     {
-                        case DynamoParser::include:
-                            std::cerr << "Processing include..." << std::endl;
+                        case include:
                             if(args.size!=2)
                             {
                                 throw exception("%s:%d: include must have exactly one argument",lxm.origin(),lxm.line());
@@ -77,7 +83,6 @@ namespace upsylon
                                 const Node *incl = curr->next;
                                 assert( "RX" == incl->rule.name || "RS" == incl->rule.name );
                                 const string filename = vfs::get_file_dir(origin) + incl->lexeme.to_string(1,1);
-                                std::cerr << "..include '" << filename << "'" << std::endl;
                                 ++depth;
                                 target << format( Module::OpenFile(filename) );
                                 --depth;

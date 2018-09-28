@@ -21,7 +21,6 @@ namespace upsylon
         {
         public:
             typedef Syntax::Node       Node; //!< alias
-            typedef Syntax::Aggregate  Agg;  //!< alias
 
             //! initialize
             explicit DynamoGenerator();
@@ -33,34 +32,29 @@ namespace upsylon
             Syntax::Parser *create( Node &dynamo, const bool flag=false );
 
 
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
-
-            //! symbols to collect
+            //! symbols to collect internal/terminals
             class Symbol : public CountedObject
             {
             public:
-                typedef intr_ptr<string,Symbol> Pointer;
-                const string name;
-                const Origin from;
-                inline explicit Symbol(const string &n, const Origin &m ) : name(n), from(m) {}
-                inline virtual ~Symbol() throw() {}
-                inline const string & key() const throw() { return name; }
+                typedef intr_ptr<string,Symbol> Pointer; //!< alias
+                const string name; //!< identifier
+                const Origin from; //!< from module
+                inline explicit Symbol(const string &n, const Origin &m ) : name(n), from(m) {} //!< initialize
+                inline virtual ~Symbol() throw() {}                                             //!< destructor
+                inline const string & key() const throw() { return name; }                      //!< for set
+
+                //! verbose output
                 inline friend std::ostream & operator<<( std::ostream &os, const Symbol &sym )
-                {
-                    os << sym.from << '_' << sym.name;
-                    return os;
-                }
+                { return (os << sym.from << '_' << sym.name); }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Symbol);
             };
 
             
-            typedef key_hasher<string,hashing::fnv>              KeyHasher;
-            typedef memory::pooled                               Memory;
-            typedef set<string,Symbol::Pointer,KeyHasher,Memory> Symbols;
+            typedef key_hasher<string,hashing::fnv>              KeyHasher; //!< hash strings
+            typedef memory::pooled                               Memory;    //!< internal memory
+            typedef set<string,Symbol::Pointer,KeyHasher,Memory> Symbols;   //!< table of symbols
 
 
 
@@ -76,20 +70,27 @@ namespace upsylon
             Symbols                   terminals; //!< database of terminals
             Symbols                   internals; //!< database of internals
 
-            static const int isAGG = 0;
-            static const int isALT = 1;
-            static const int isZOM = 2;
-            static const int isOOM = 3;
-            static const int isOPT = 4;
+            static const int isAGG = 0; //!< hsyn("AGG")
+            static const int isALT = 1; //!< hsyn("ALT")
+            static const int isZOM = 2; //!< hsyn("ZOM")
+            static const int isOOM = 3; //!< hsyn("OOM")
+            static const int isOPT = 4; //!< hsyn("OPT")
+
+            //__________________________________________________________________
+            //
+            //
+            // first pass functions
+            //
+            //__________________________________________________________________
 
 
             //! extract name from dynamo.children.head->lexeme
             string getModuleName( const Node &dynamo ) const;
 
             //! collect top level rules, compile alias, lxr and plugins
-            void collectTopLevel( Node *node );
+            void topLevel( Node *node );
 
-            //! extract node name, must match label and skip chars from string
+            //! extract node name, must match label, and skip chars from string
             string getNodeName( const Node &node, const char *label, const size_t nskip ) const;
 
             //! extract the kind of rule
@@ -134,6 +135,20 @@ namespace upsylon
 
             //! build a comment label from icom and parser name
             string getCommentLabel();
+
+            //__________________________________________________________________
+            //
+            //
+            // second pass functions
+            //
+            //__________________________________________________________________
+
+            //! walk down to link and create remaining rules
+            void walkDown( Node *node );
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
         };
 
 

@@ -15,7 +15,7 @@ namespace upsylon
         // recursive top level rules build up
         //
         //----------------------------------------------------------------------
-        void DynamoGenerator:: collectTopLevel(Node *node)
+        void DynamoGenerator:: topLevel(Node *node)
         {
             assert(node);
             if(verbose) { indent() << "<" << node->rule.name << ">" << std::endl; }
@@ -57,7 +57,7 @@ namespace upsylon
 
                         default:
                             ++level;
-                            collectTopLevel( & *sub );
+                            topLevel( & *sub );
                             --level;
                             target << sub.yield();
                     }

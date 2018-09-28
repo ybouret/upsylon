@@ -6,17 +6,18 @@ namespace upsylon
 {
     namespace Lang
     {
+#if 0
         static const char *commands_kw[] =
         {
             "include"
         };
+#endif
         
         DynamoParser:: DynamoParser() :
-        Syntax::Parser("Dynamo"),
-        commands( YOCTO_MPERF_FOR(commands_kw) )
+        Syntax::Parser("Dynamo") //,commands( YOCTO_MPERF_FOR(commands_kw) )
         {
 
-            assert(include==commands("include"));
+            //assert(include==commands("include"));
 
             //__________________________________________________________________
             //

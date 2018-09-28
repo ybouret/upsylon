@@ -89,11 +89,12 @@ namespace upsylon
                 indent() << "creating parser {" << parserName << "}" << std::endl;
             }
             parser = new Syntax::Parser(parserName);
-            collectTopLevel( &dynamo );
+            topLevel( &dynamo );
             modules.free();
             
             if(verbose)
             {
+                indent() << std::endl;
                 indent() << "internals : " << internals << std::endl;
                 indent() << "terminals : " << terminals << std::endl;
                 indent() << "_______________" << std::endl << std::endl;
