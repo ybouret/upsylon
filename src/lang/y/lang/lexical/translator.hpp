@@ -54,6 +54,9 @@ namespace upsylon
 
                 //! check if there is a next lexeme
                 const Lexeme *peek(Source &source);
+                
+                //! get the last matched lexeme
+                const Lexeme *last() const throw() { return cache.tail; }
 
 
                 //! no args PLUGIN constructor
@@ -104,8 +107,6 @@ namespace upsylon
                         link(scanner,enroll_plugin( new PLUGIN(*this,pluginName,rxInit,rxQuit) ) );
                 }
 
-                //! get the last matched lexeme
-                const Lexeme *last() const throw() { return cache.tail; }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Translator);

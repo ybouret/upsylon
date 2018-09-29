@@ -27,7 +27,6 @@ namespace upsylon
                 if(!root->accept(tree,lexer,source,depth))
                 {
                     // Syntax Error
-                    std::cerr << "Syntax Error Detected" << std::endl;
                     string        err  = *((*source)->origin);
                     const Lexeme *last = lexer.last();
 
@@ -63,7 +62,7 @@ namespace upsylon
                     }
 
 
-                    throw exception("{%s} syntax error",**name);
+                    throw exception("{%s} unknown syntax error",**name);
                 }
 
                 //______________________________________________________________
@@ -73,7 +72,7 @@ namespace upsylon
                 if(!tree)
                 {
                     // shouldn't accept check accept empty...
-                    throw exception("{%s} is weak, found no syntax tree",**name);
+                    throw exception("{%s} is weak, found no syntax tree in '%s'",**name,**((*source)->origin));
                 }
 
                 //______________________________________________________________
@@ -81,11 +80,23 @@ namespace upsylon
                 // check status
                 //______________________________________________________________
                 auto_ptr<Node> guard(tree);
-                const Lexeme  *nlx = lexer.peek(source);
-                if( nlx )
+                const Lexeme  *curr = lexer.peek(source);
+                if( curr )
                 {
-                    const string nxt = nlx->to_print();
-                    throw exception("{%s} unexpected standalone/unfinished <%s> after '%s'", **name, **(nlx->label), *nxt);
+                    string        err  = *((*source)->origin);
+                    const string  currToken = curr->to_print();
+                    const Lexeme *last      = lexer.last();
+                    if(last&&last!=curr)
+                    {
+                        err += vformat(":%d:%d: ",last->line(),last->column());
+                        const string lastToken = last->to_print();
+                        throw exception("%sunexpected '%s' after '%s' for {%s}", *err, *lastToken, *currToken, **name );
+                    }
+                    else
+                    {
+                        err += vformat(":%d:%d: ",curr->line(),curr->column());
+                        throw exception("%sunexpected '%s' for {%s}", *err, *currToken, **name);
+                    }
                 }
 
                 return guard.yield();
