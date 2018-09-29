@@ -74,36 +74,31 @@ namespace upsylon
                     ++level;
                     for(const Node *child=parent->children.head;child;child=child->next)
                     {
-                        members.add( createFrom(child) );
+                        members.add( createFrom(child,hsyn(child->rule.name)) );
                     }
                     --level;
                     break;
 
-                case isID: {
-                    assert(parent->terminal);
-                    const string linkName = parent->lexeme.to_string();
-                    if(verbose) { indent() << parentName << "->" << linkName << std::endl; }
-                    const Syntax::Rule *r = parser->getRuleByName(linkName);
-                    if(!r)
-                    {
-                        throw exception("{%s} in '%s', rule '%s' doesn't exist!!!", **(parser->name), *parentName, *linkName );
-                    }
-                    members.add(*r);
-                } break;
-
+                    
                 default:
-                    indent() << parentName << " not implemented" << std::endl;
+                    members.add( createFrom(parent,parentKind) );
             }
             --level;
 
         }
 
-        const Syntax::Rule & DynamoGenerator:: createFrom( const Node *node )
+        const Syntax::Rule & DynamoGenerator:: createFrom(const Node *node,
+                                                          const int   kind )
         {
             const string &name = node->rule.name;
-            std::cerr << "Creating rule from " << name << std::endl;
+            assert( hsyn(name) == kind );
+            if(verbose) { indent() << "createFrom(" << name << ")" << std::endl; }
 
-            throw exception("not implemented");
+            switch(kind)
+            {
+                default:
+                    throw exception("{%s} createFrom('%s') not implemented", **(parser->name), *name );
+            }
         }
 
 

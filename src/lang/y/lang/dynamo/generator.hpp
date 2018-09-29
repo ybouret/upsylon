@@ -63,7 +63,7 @@ namespace upsylon
             bool                      verbose;   //!< verbose flag
             int                       level;     //!< for tree walking
             MPH                       htop;      //!< RULE, ALIAS, LXR, PLUGIN
-            MPH                       hsyn;      //!< AGG, ALT, OOM, ZOM, OPT
+            MPH                       hsyn;      //!< AGG, ALT, OOM, ZOM, OPT, ID, RX, RS, CARET
             MPH                       hstr;      //!< RX, RS, ^
             MPH                       hlxr;      //!< drop,endl,comment
             int                       icom;      //!< index for comment
@@ -156,7 +156,7 @@ namespace upsylon
             void fill( Syntax::Compound &compound, const Node *node );
             
             //! create a new rule
-            const Syntax::Rule & createFrom( const Node *node );
+            const Syntax::Rule & createFrom( const Node *node, const int kind );
             
 
         private:

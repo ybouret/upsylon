@@ -62,6 +62,8 @@ Y_UTEST(dyn)
         A.walk( *ast );
 
         DynamoGenerator gen;
+        //gen.hsyn.GraphViz("hsyn.dot");
+
         auto_ptr<Lang::Syntax::Parser> parser = gen.create( *ast, true );
 
         ast->GraphViz("dynclr.dot");
