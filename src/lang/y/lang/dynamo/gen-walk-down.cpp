@@ -96,6 +96,48 @@ namespace upsylon
 
             switch(kind)
             {
+
+
+                case isID:
+                {
+                    assert(node->terminal);
+                    const string        id = node->lexeme.to_string();
+                    const Syntax::Rule *r  = parser->getRuleByName(id);
+                    if(!r)
+                    {
+                        throw exception("{%s} requires undefined rule '%s'", **(parser->name), *id);
+                    }
+                    return *r;
+                }
+
+                case isZOM:
+                {
+                    assert(node->internal);
+                    assert(1==node->children.size);
+                    const Node *child = node->children.head;
+                    return parser->zeroOrMore( createFrom(child,hsyn(child->rule.name)) );
+                }
+
+                case isOOM:
+                {
+                    assert(node->internal);
+                    assert(1==node->children.size);
+                    const Node *child = node->children.head;
+                    return parser->oneOrMore( createFrom(child,hsyn(child->rule.name)) );
+                }
+
+                case isOPT:
+                {
+                    assert(node->internal);
+                    assert(1==node->children.size);
+                    const Node *child = node->children.head;
+                    return parser->optional( createFrom(child,hsyn(child->rule.name)) );
+                }
+
+
+                case isAGG:
+                    if(verbose) { indent() << "->new AGG" << std::endl; }
+
                 default:
                     throw exception("{%s} createFrom('%s') not implemented", **(parser->name), *name );
             }
