@@ -45,27 +45,7 @@ namespace upsylon
                     assert(node->children.tail);
                     const Node   *subNode = node->children.tail;
                     fill(compound,subNode);
-#if 0
-                    switch( subKind )
-                    {
-                        case isAGG:
-                        case isALT:
-                            fill(compound,subNode);
-                            break;
-
-                        case isZOM:
-                        case isOOM:
-                        case isOPT:
-                        case isID:
-                            fill(compound,subNode);
-                            break;
-
-                        default:
-                            throw exception("{%s} invalid content '%s' for top level rule '%s'", **(parser->name), *name, *subName);
-                    }
-#endif
-
-
+                    
                 }
                 else
                 {

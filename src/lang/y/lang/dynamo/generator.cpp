@@ -37,7 +37,11 @@ namespace upsylon
             "ZOM",
             "OOM",
             "OPT",
-            "ID"
+            "ID",
+
+            "RX",
+            "RS",
+            "^"
         };
 
 #define Y_DYN_CHECK(RULE) assert( hsyn(#RULE) == is##RULE )
@@ -60,6 +64,9 @@ namespace upsylon
             Y_DYN_CHECK(OOM);
             Y_DYN_CHECK(OPT);
             Y_DYN_CHECK(ID);
+            Y_DYN_CHECK(RX);
+            Y_DYN_CHECK(RS);
+            assert(hsyn("^")==CARET);
         }
 
         std::ostream & DynamoGenerator:: indent() const

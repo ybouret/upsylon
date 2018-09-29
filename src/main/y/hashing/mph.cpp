@@ -258,6 +258,7 @@ namespace upsylon
 }
 
 #include "y/ios/ocstream.hpp"
+#include "y/ios/graphviz.hpp"
 
 namespace upsylon
 {
@@ -271,6 +272,10 @@ namespace upsylon
                 fp << "digraph G{\n";
                 root->viz(fp);
                 fp << "}\n";
+            }
+
+            {
+                ios::GraphViz::Render(filename);
             }
 
         }

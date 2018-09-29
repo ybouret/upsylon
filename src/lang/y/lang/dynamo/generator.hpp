@@ -76,7 +76,10 @@ namespace upsylon
             static const int isZOM = 2; //!< hsyn("ZOM")
             static const int isOOM = 3; //!< hsyn("OOM")
             static const int isOPT = 4; //!< hsyn("OPT")
-            static const int isID  = 5; //!< hsyn("ID"), for poorly designed grammar
+            static const int isID  = 5; //!< hsyn("ID"),
+            static const int isRX  = 6; //!< hsyn("RX")
+            static const int isRS  = 7; //!< hsyn("RX")
+            static const int CARET = 8; //!< hsyn("RX")
 
         protected:
             //__________________________________________________________________
