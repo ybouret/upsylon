@@ -119,6 +119,7 @@ namespace upsylon {
         bool         is_dir( const string &path ) const throw();
         //! try to remove a file
         void         try_remove_file( const string &path) throw();
+        
         //! remove file matching filter in dirname
         template <typename ACCEPT>
         inline void remove_files( const string &dirname, ACCEPT &to_remove )

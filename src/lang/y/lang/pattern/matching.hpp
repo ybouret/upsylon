@@ -27,6 +27,22 @@ namespace upsylon
             const arc_ptr<const Pattern> motif;
             Y_DISABLE_COPY_AND_ASSIGN(Matching);
         };
+
+        //! wrapper to easy matching
+        class MatchString : public Matching
+        {
+        public:
+            //! initialize
+            inline explicit MatchString(const char *rx) : Matching(rx,0) {}
+            //! destructor
+            inline virtual ~MatchString() throw() {}
+
+            inline bool operator()( const string &s ) { return exactly(s); }
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(MatchString);
+        };
+
     }
 }
 
