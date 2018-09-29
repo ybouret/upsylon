@@ -136,7 +136,38 @@ namespace upsylon
 
 
                 case isAGG:
+                {
                     if(verbose) { indent() << "->new AGG" << std::endl; }
+                    Syntax::Compound &sub = parser->agg(Syntax::Compound::Design);
+                    fill(sub,node);
+                    return sub;
+                }
+
+                case isALT:
+                {
+                    if(verbose) { indent() << "->new alt" << std::endl; }
+                    Syntax::Compound &sub = parser->alt();
+                    fill(sub,node);
+                    return sub;
+                }
+
+                case isRX:
+                case isRS:
+                case CARET:
+                {
+                    int          h  = -1;
+                    const string rx = nodeToRegExp(*node,h);
+                    switch(h)
+                    {
+                        case 0: assert("RX"==node->rule.name); break;
+                        case 1: assert("RS"==node->rule.name); return parser->sole(rx);
+
+                        case 2: assert("^"==node->rule.name);  break;
+
+                        default:
+                            break;
+                    }
+                }
 
                 default:
                     throw exception("{%s} createFrom('%s') not implemented", **(parser->name), *name );

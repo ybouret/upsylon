@@ -36,6 +36,11 @@ namespace upsylon
                 return ans;
             }
 
+            string Grammar:: nextAggID()
+            {
+                const string ans = vformat("agg#%u",++aggID);
+                return ans;
+            }
 
 
             const Rule & Grammar:: choice(const Rule &a1, const Rule &a2)

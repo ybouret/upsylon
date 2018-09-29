@@ -54,7 +54,15 @@ namespace upsylon
 
                 //______________________________________________________________
                 //
+                //
                 // Building API
+                //
+                //______________________________________________________________
+
+
+                //______________________________________________________________
+                //
+                // terminal
                 //______________________________________________________________
 
                 //! a new terminal
@@ -62,6 +70,12 @@ namespace upsylon
 
                 //! a new terminal
                 inline Rule & terminal( const char   *id, const Terminal::Attribute attr=Terminal::Standard ) { const string _(id); return terminal(_,attr); }
+
+                //______________________________________________________________
+                //
+                // jokers
+                //______________________________________________________________
+
 
                 Rule & optional( const Rule &r );                    //!< optional rule
                 Rule & repeating( const Rule &r, const size_t nmin); //!< repeating >= nmin
@@ -72,11 +86,19 @@ namespace upsylon
                 //! '+'
                 inline Rule & oneOrMore( const Rule &r ) { return repeating(r,1); }
 
+                //______________________________________________________________
+                //
+                // aggregates
+                //______________________________________________________________
+
                 //! new aggregate
                 inline Aggregate & agg( const string &id, const Compound::Type flag=Compound::Normal) { return __add( new Aggregate(id,flag) ); }
 
                 //! new aggregate
                 inline Aggregate & agg( const char   *id, const Compound::Type flag=Compound::Normal) { const string _(id); return agg(_,flag); }
+
+                //! new automatic aggregate
+                inline Aggregate & agg(const Compound::Type flag=Compound::Normal) { const string id = nextAggID(); return agg(id,flag); }
 
                 //! new acting aggregate
                 inline Aggregate & acting(const string &id) { return agg(id,Compound::Acting); }
@@ -89,6 +111,11 @@ namespace upsylon
 
                 //! new acting aggregate
                 inline Aggregate & design(const char   *id) { const string _(id); return design(_); }
+
+                //______________________________________________________________
+                //
+                // alternates
+                //______________________________________________________________
 
                 //! new alternation
                 inline Alternate & alt( const string &id ) { return __add( new Alternate(id) ); }
@@ -105,6 +132,10 @@ namespace upsylon
                 //! choice
                 const Rule & choice(const Rule &a1, const Rule &a2, const Rule &a3);
 
+                //______________________________________________________________
+                //
+                // helpers
+                //______________________________________________________________
 
                 //! check the rule belongs to the grammar
                 bool  owns( const Rule &r ) const throw();
@@ -142,9 +173,11 @@ namespace upsylon
                 Rule::List    rules;
                 MetaRule::Set rdb;
                 unsigned      altID;
+                unsigned      aggID;
 
                 string        nextAltID();
-
+                string        nextAggID();
+                
                 static string MakeAltNameFrom( array<string> &names );
                 
             public:

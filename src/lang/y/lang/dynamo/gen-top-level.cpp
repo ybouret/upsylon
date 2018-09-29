@@ -101,6 +101,9 @@ namespace upsylon
                     parser->acting(name);
                     break;
 
+                case CARET:
+                    throw exception("{%s} misplaced '^' operator sign: use alias or grouping", **(parser->name) );
+                    
                 default:
                     throw exception("{%s} unexpected top-level rule '%s'", **(parser->name), *name );
             }
