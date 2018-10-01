@@ -7,8 +7,7 @@ namespace upsylon
     {
         Integrator:: ~Integrator() throw() {}
 
-        Integrator:: Integrator() :
-        driver(),
+        Integrator:: Integrator() : Driver(),
         damped(this, & Integrator::computeDamped),
         normal(this, & Integrator::computeNormal),
         pEqs(0),
@@ -53,7 +52,7 @@ namespace upsylon
             try
             {
                 double h = min_of<double>(dt_max,t1-t0);
-                driver(damped,C,t0,t1,h,&normal);
+                (*this)(damped,C,t0,t1,h,&normal);
                 pKin = 0;
                 pEqs = 0;
             }

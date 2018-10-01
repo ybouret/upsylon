@@ -75,7 +75,7 @@ Y_UTEST(kinetics)
     lib.display(std::cerr,schema.C);
 
     Kinetics kin( &schema, & Schema::injection );
-    intg.driver.start(M);
+    intg.start(M);
 
     const double dt     = 1;
     const double dt_max = 0.01;

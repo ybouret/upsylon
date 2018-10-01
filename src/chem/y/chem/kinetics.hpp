@@ -12,18 +12,17 @@ namespace upsylon
     {
 
         typedef math::ODE::Field<double>::Equation Kinetics;
+        typedef math::ODE::DriverCK<double>::Type  Driver;
 
-        class Integrator
+        class Integrator : public Driver
         {
         public:
-            typedef math::ODE::DriverCK<double>::Type   Driver;
             typedef math::ODE::Field<double>::Callback  Callback;
 
             explicit Integrator();
             virtual ~Integrator() throw();
 
-            Driver driver;
-
+            
             void solve(array<double> &C,
                        const double  t0,
                        const double  t1,
