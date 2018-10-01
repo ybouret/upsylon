@@ -11,6 +11,8 @@ namespace upsylon
     namespace Chemical
     {
 
+        typedef math::ODE::Field<double>::Equation Kinetics;
+
         class Integrator
         {
         public:
@@ -21,8 +23,20 @@ namespace upsylon
 
             Driver driver;
 
+            void solve(array<double> &C,
+                       const double  t0,
+                       const double  t1,
+                       const double  dt_max,
+                       Kinetics     &kinetics,
+                       Equilibria   &eqs);
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Integrator);
+            Kinetics damped;
+            void computeDamped( array<double> &dCdt, double t, const array<double> &C );
+            Equilibria *pEqs;
+            Kinetics   *pKin;
         };
 
     }
