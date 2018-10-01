@@ -16,7 +16,8 @@ namespace upsylon
         class Integrator
         {
         public:
-            typedef math::ODE::DriverCK<double>::Type Driver;
+            typedef math::ODE::DriverCK<double>::Type   Driver;
+            typedef math::ODE::Field<double>::Callback  Callback;
 
             explicit Integrator();
             virtual ~Integrator() throw();
@@ -34,7 +35,10 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Integrator);
             Kinetics damped;
+            Callback normal;
+            
             void computeDamped( array<double> &dCdt, double t, const array<double> &C );
+            void computeNormal( array<double> &C, double t);
             Equilibria *pEqs;
             Kinetics   *pKin;
         };
