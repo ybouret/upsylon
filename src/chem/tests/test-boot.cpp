@@ -58,7 +58,33 @@ Y_UTEST(boot)
 
     cs.computeK(0.0);
     std::cerr << "Nu=" << cs.Nu << std::endl;
-    cs.boot(C,loader);
+    if(cs.boot(C,loader))
+    {
+        lib.display(std::cerr,C);
+
+        vector<double> delta(cs.M);
+        for(size_t iter=1;iter<=4;++iter)
+        {
+            for(size_t j=cs.M;j>0;--j)
+            {
+                delta[j] = alea.symm<double>();
+            }
+            std::cerr << "delta0=" << delta << std::endl;
+            if(!cs.damp(delta,C))
+            {
+                throw exception("unexpected damp failure!!!");
+            }
+            std::cerr << "delta1=" << delta << std::endl;
+
+
+        }
+    }
+    else
+    {
+        std::cerr << "couldn't boot" << std::endl;
+    }
+
+
 
 }
 Y_UTEST_DONE()

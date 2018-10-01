@@ -114,6 +114,9 @@ namespace upsylon
             //! mix some solutons, K must be computed
             bool mix( array<double> &Cout, const array<double> &CA, const double WA, const array<double> &CB, const double WB);
 
+            //! damp the imposed delta, assuming that K is computed!
+            bool damp( array<double> &delta, const array<double> &C );
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
         };
