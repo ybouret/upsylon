@@ -62,6 +62,11 @@ namespace upsylon
             auto_ptr<Syntax::Parser>  parser;    //!< currently built parser
             bool                      verbose;   //!< verbose flag
             int                       level;     //!< for tree walking
+
+            //! indent for verbose
+            std::ostream & indent() const;
+
+#if 0
             MPH                       htop;      //!< RULE, ALIAS, LXR, PLUGIN
             MPH                       hsyn;      //!< AGG, ALT, OOM, ZOM, OPT, ID, RX, RS, CARET
             MPH                       hstr;      //!< RX, RS, ^
@@ -80,8 +85,12 @@ namespace upsylon
             static const int isRX  = 6; //!< hsyn("RX")
             static const int isRS  = 7; //!< hsyn("RS")
             static const int CARET = 8; //!< hsyn("^")
+#endif
+
+
 
         protected:
+#if 0
             //__________________________________________________________________
             //
             //
@@ -136,8 +145,7 @@ namespace upsylon
             //! create a plugin based on name
             void onPlugin( const Node &node );
 
-            //! indent for verbose
-            std::ostream & indent() const;
+
 
             //! build a comment label from icom and parser name
             string getCommentLabel();
@@ -157,7 +165,7 @@ namespace upsylon
             
             //! create a new rule
             const Syntax::Rule & createFrom( const Node *node, const int kind );
-            
+#endif
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);

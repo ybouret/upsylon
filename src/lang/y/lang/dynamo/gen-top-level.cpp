@@ -10,6 +10,7 @@ namespace upsylon
     namespace Lang
     {
 
+#if 0
         //----------------------------------------------------------------------
         //
         // recursive top level rules build up
@@ -223,7 +224,8 @@ namespace upsylon
 
 
         }
-
+#endif
+        
     }
 
 }

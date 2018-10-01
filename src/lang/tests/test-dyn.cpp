@@ -23,6 +23,8 @@ Y_UTEST(dyn)
 
     dynamo.parser.GraphViz("dynamo.dot");
 
+    return 0;
+
     if(argc>1)
     {
         const string fn = argv[1];
@@ -62,12 +64,13 @@ Y_UTEST(dyn)
         A.walk( *ast );
 
         DynamoGenerator gen;
-        //gen.hsyn.GraphViz("hsyn.dot");
 
+#if 0
         auto_ptr<Lang::Syntax::Parser> parser = gen.create( *ast, true );
 
         ast->GraphViz("dynclr.dot");
-
+#endif
+        
         std::cerr << "sizeof(DynamoParser)    = " << sizeof(DynamoParser)    << std::endl;
         std::cerr << "sizeof(DynamoCompiler)  = " << sizeof(DynamoCompiler)  << std::endl;
         std::cerr << "sizeof(DynamoGenerator) = " << sizeof(DynamoGenerator) << std::endl;

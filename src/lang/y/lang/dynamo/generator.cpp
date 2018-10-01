@@ -8,6 +8,7 @@ namespace upsylon
     namespace Lang
     {
 
+#if 0
         static const char *top_kw[] =
         {
             "RULE",
@@ -43,12 +44,16 @@ namespace upsylon
             "RS",
             "^"
         };
+#endif
+
 
 #define Y_DYN_CHECK(RULE) assert( hsyn(#RULE) == is##RULE )
         DynamoGenerator:: DynamoGenerator():
         parser(0),
         verbose(false),
-        level(0),
+        level(0)
+#if 0
+        ,
         htop( YOCTO_MPERF_FOR(top_kw) ),
         hsyn( YOCTO_MPERF_FOR(syn_kw) ),
         hstr( YOCTO_MPERF_FOR(str_kw) ),
@@ -57,7 +62,9 @@ namespace upsylon
         modules(),
         terminals(),
         internals()
+#endif
         {
+#if 0
             Y_DYN_CHECK(AGG);
             Y_DYN_CHECK(ALT);
             Y_DYN_CHECK(ZOM);
@@ -67,6 +74,7 @@ namespace upsylon
             Y_DYN_CHECK(RX);
             Y_DYN_CHECK(RS);
             assert(hsyn("^")==CARET);
+#endif
         }
 
         std::ostream & DynamoGenerator:: indent() const
@@ -82,6 +90,7 @@ namespace upsylon
 
         }
 
+#if 0
         Syntax::Parser * DynamoGenerator:: create( Node &dynamo, const bool flag )
         {
             //top.free();
@@ -265,7 +274,8 @@ namespace upsylon
             return *(parser->name) + vformat(".comment#%d",icom);
         }
 
-
+#endif
+        
     }
 
 }

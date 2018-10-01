@@ -6,7 +6,8 @@ namespace upsylon
 
     namespace Lang
     {
-        
+
+#if 0
         void DynamoGenerator:: walkDown( const Node *node )
         {
             assert(node);
@@ -174,7 +175,8 @@ namespace upsylon
             }
         }
 
-
+#endif
+        
     }
 
 }
