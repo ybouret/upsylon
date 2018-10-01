@@ -35,7 +35,7 @@ namespace upsylon
             RULE &COLON    = mark(':');
             RULE &RX       = plug<Lexical::jString>("RX");
             RULE &RS       = plug<Lexical::rString>("RS");
-            RULE &OS       = (acting("OS") << RS << optional( op('^') )); //!< trick to detect operators
+            RULE &OS       = (agg("OS") << RS <<  mark('^')); //!< trick to detect operators
             RULE &ID       = term("ID","{ID}");
             //__________________________________________________________________
             //
@@ -67,7 +67,7 @@ namespace upsylon
                     // an ATOM is a basic content
                     //______________________________________________________
                     ALT &ATOM = alt("ATOM");
-                    ATOM << ID << RX << OS;
+                    ATOM << ID << RX << OS << RS;
 
                     //______________________________________________________
                     //
@@ -140,7 +140,7 @@ namespace upsylon
             // Alias Recognition
             //
             //__________________________________________________________________
-            RULE &ALIAS = agg("ALIAS") << ID << COLON << choice(RX,OS) << END;
+            RULE &ALIAS = agg("ALIAS") << ID << COLON << choice(RX,OS,RS) << END;
 
             //__________________________________________________________________
             //

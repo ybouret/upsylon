@@ -23,7 +23,6 @@ Y_UTEST(dyn)
 
     dynamo.parser.GraphViz("dynamo.dot");
 
-    return 0;
 
     if(argc>1)
     {
