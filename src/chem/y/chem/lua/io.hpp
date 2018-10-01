@@ -23,6 +23,14 @@ namespace upsylon
             //! append constraints from table 'name' to eqs, using species from lib
             static void add( Boot::Loader &loader, Lua::State::Pointer &vm, const string &name, Library &lib );
 
+            //! inline boot, assuming constants are computed
+            static inline
+            bool boot( array<double> &C, Lua::State::Pointer &vm, const string &name, Equilibria &eqs, Library &lib )
+            {
+                Boot::Loader ld;
+                add(ld,vm,name,lib);
+                return eqs.boot(C,ld);
+            }
 
         };
 
