@@ -1,12 +1,13 @@
 #include "y/chem/kinetics.hpp"
 #include "y/chem/lua/io.hpp"
-
+#include "y/math/kernel/tao.hpp"
 #include "y/utest/run.hpp"
 using namespace upsylon;
 using namespace Chemical;
 
 
 namespace {
+    using namespace math;
 
     class Schema
     {
@@ -16,6 +17,16 @@ namespace {
         inline Schema(const size_t M) : C(M)
         {
 
+        }
+
+        inline void injection( array<double> &dCdt, double t, const array<double> & )
+        {
+
+            tao::_ld(dCdt,0);
+            if(t>=0&&t<=60)
+            {
+                tao::mulset(dCdt,0.01,C);
+            }
         }
 
     private:
@@ -60,6 +71,18 @@ Y_UTEST(kinetics)
     }
     std::cerr << "C1:" << std::endl;
     lib.display(std::cerr,schema.C);
+
+    Kinetics kin( &schema, & Schema::injection );
+    intg.driver.start(M);
+
+    const double dt     = 1;
+    const double dt_max = 0.01;
+    for(double t=0;t<=90;t+=dt)
+    {
+        (std::cerr << '.').flush();
+        intg.solve(C0,t,t+dt,dt_max,kin,eqs);
+    }
+    std::cerr << std::endl;
 
 }
 Y_UTEST_DONE()
