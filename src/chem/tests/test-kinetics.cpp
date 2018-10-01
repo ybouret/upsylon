@@ -2,6 +2,8 @@
 #include "y/chem/lua/io.hpp"
 #include "y/math/kernel/tao.hpp"
 #include "y/utest/run.hpp"
+#include "y/ios/ocstream.hpp"
+
 using namespace upsylon;
 using namespace Chemical;
 
@@ -23,7 +25,7 @@ namespace {
         {
 
             tao::_ld(dCdt,0);
-            if(t>=0&&t<=60)
+            if(t>=0&&t<=120)
             {
                 tao::mulset(dCdt,0.01,C);
             }
@@ -77,13 +79,18 @@ Y_UTEST(kinetics)
 
     const double dt     = 1;
     const double dt_max = 0.01;
-    for(double t=0;t<=90;t+=dt)
     {
-        (std::cerr << '.').flush();
-        intg.solve(C0,t,t+dt,dt_max,kin,eqs);
+        ios::ocstream fp("kin.dat");
+        fp("#t pH"); lib.header(fp) << "\n";
+        fp("0 %.15g", lib.pH(C0)); lib.xprint(fp,C0) << "\n";
+        for(double t=0;t<=180;t+=dt)
+        {
+            (std::cerr << '.').flush();
+            intg.solve(C0,t,t+dt,dt_max,kin,eqs);
+            fp("%g %.15g", t+dt, lib.pH(C0)); lib.xprint(fp,C0) << "\n";
+        }
+        std::cerr << std::endl;
     }
-    std::cerr << std::endl;
-
 }
 Y_UTEST_DONE()
 
