@@ -112,27 +112,27 @@ Y_UTEST(lsf)
 
 
 
-    Fit::Samples<double> SS;
-    SS.variables << "t0" << "slope1" << "slope2";
-    std::cerr << "SS.variables =" << SS.variables << std::endl;
+    Fit::Samples<double> SSf;
+    SSf.variables << "t0" << "slope1" << "slope2";
+    std::cerr << "SS.variables =" << SSf.variables << std::endl;
     vector<double> aa(3);
 
 
-    double &start = SS.variables(aa,"t0");
-    double &diff1 = SS.variables(aa,"slope1");
-    double &diff2 = SS.variables(aa,"slope2");
+    double &start = SSf.variables(aa,"t0");
+    double &diff1 = SSf.variables(aa,"slope1");
+    double &diff2 = SSf.variables(aa,"slope2");
 
     start = INI_T0;
     diff1 = slope1;
     diff2 = slope2;
 
 
-    Fit::Sample<double>  &SS1 = SS.add(t1,x1,z1);
-    SS1.variables("t0")("slope",SS.variables["slope1"]);
+    Fit::Sample<double>  &SS1 = SSf.add(t1,x1,z1);
+    SS1.variables("t0")("slope",SSf.variables["slope1"]);
     std::cerr << "SS1.variables=" << SS1.variables << std::endl;
 
-    Fit::Sample<double>  &SS2 = SS.add(t2,x2,z2);
-    SS2.variables("t0")("slope",SS.variables["slope2"]);
+    Fit::Sample<double>  &SS2 = SSf.add(t2,x2,z2);
+    SS2.variables("t0")("slope",SSf.variables["slope2"]);
     std::cerr << "SS2.variables=" << SS2.variables << std::endl;
 
 
@@ -148,7 +148,7 @@ Y_UTEST(lsf)
     Y_CHECK( fabs(D21-DD21)<=0 );
     Y_CHECK( fabs(D22-DD22)<=0 );
 
-    const double DD2 = SS.computeD2(F,aa);
+    const double DD2 = SSf.computeD2(F,aa);
     std::cerr << "DD2=" << DD2 << std::endl;
 
     vector<bool>   used(2,true);
@@ -182,15 +182,15 @@ Y_UTEST(lsf)
     std::cerr << "Fit 1&2" << std::endl;
     aerr.make(3,0);
     used.make(3,true);
-    if(ls.fit(SS,F,aa,aerr,used))
+    if(ls.fit(SSf,F,aa,aerr,used))
     {
-        SS.variables.diplay(std::cerr,aa,aerr,"\t\t");
+        SSf.variables.diplay(std::cerr,aa,aerr,"\t\t");
         save("fit1b.dat",t1,z1);
         save("fit2b.dat",t2,z2);
     }
     else
     {
-        std::cerr << "SS failure" <<std::endl;
+        std::cerr << "SSf failure" <<std::endl;
     }
 
     
