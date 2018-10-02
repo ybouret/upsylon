@@ -9,12 +9,13 @@ namespace upsylon
 
         void DynamoGenerator:: walkDown( const Node &dynamo )
         {
-            if(verbose) {
+            if(verbose)
+            {
                 indent() << std::endl;
                 indent() << "walking down {" << parser->name << "}" << std::endl;
                 indent() << std::endl;
             }
-
+            
             assert("dynamo"==dynamo.rule.name);
             assert(dynamo.internal);
             for(const Node *node=dynamo.children.head;node;node=node->next)
@@ -32,8 +33,9 @@ namespace upsylon
                 }
                 --level;
             }
-            
-            if(verbose) {
+
+            if(verbose)
+            {
                 indent() << std::endl;
             }
         }
