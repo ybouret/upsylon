@@ -1,4 +1,3 @@
-
 #include "y/lang/dynamo/generator.hpp"
 #include "y/lang/lexical/plugin/strings.hpp"
 #include "y/lang/lexical/plugin/comment.hpp"
@@ -43,6 +42,7 @@ namespace upsylon
 
                     case 2: assert("LXR"  ==rid);
                         // process and remove
+                        onLxr(*sub);
                         break;
 
                     case 3: assert("PLUGIN"==rid);

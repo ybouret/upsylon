@@ -77,6 +77,13 @@ namespace upsylon
             "OS"
         };
 
+        const char * DynamoGenerator:: klxr[] =
+        {
+            "drop",
+            "endl",
+            "comment"
+        };
+
 
         
         DynamoGenerator:: DynamoGenerator():
@@ -84,7 +91,8 @@ namespace upsylon
         verbose(false),
         level(0),
         htop( YOCTO_MPERF_FOR(ktop) ),
-        hstr( YOCTO_MPERF_FOR(kstr) )
+        hstr( YOCTO_MPERF_FOR(kstr) ),
+        hlxr( YOCTO_MPERF_FOR(klxr) )
         {
 
         }

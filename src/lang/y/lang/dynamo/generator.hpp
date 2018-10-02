@@ -93,7 +93,10 @@ namespace upsylon
             static const char   *ktop[]; //!< "RULE", "ALIAS", "LXR", "PLUGIN"
             const hashing::mperf htop;   //!< hashing ktop
             static const char   *kstr[]; //!< "RX", "RS", "OS"
-            const hashing::mperf hstr;   //!<  hashing kstr
+            const hashing::mperf hstr;   //!< hashing kstr
+            static const char   *klxr[]; //!< "drop", "endl", "comment"
+            const hashing::mperf hlxr;   //!< hashing klxr
+
             Symbols              terminals;
 
             //! initialize
@@ -120,7 +123,9 @@ namespace upsylon
 
             //! create an alias
             void onAlias( const Node &node );
-            
+
+            //! check lexical helpers
+            void onLxr( const Node &node );
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
