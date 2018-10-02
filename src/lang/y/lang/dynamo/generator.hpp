@@ -127,8 +127,11 @@ namespace upsylon
             //! check lexical helpers
             void onLxr( const Node &node );
 
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
+            string LxrToRX(const Node *sub,const string &lxr, string &label) const;
         };
 
 
