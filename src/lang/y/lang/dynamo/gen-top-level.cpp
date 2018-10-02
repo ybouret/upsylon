@@ -76,11 +76,16 @@ namespace upsylon
         {
             static const char fn[] = "Alias";
 
-            // get the terminal name
+            // local sanity check
+            Y_DYNAMO_CHECK(parser.is_valid());
             Y_DYNAMO_CHECK(alias.internal);
             Y_DYNAMO_CHECK(alias.children.size==2);
             Y_DYNAMO_CHECK(alias.children.head);
             Y_DYNAMO_CHECK(alias.children.head->terminal);
+            Y_DYNAMO_CHECK(modules.size()>0);
+
+            // get the terminal name
+
             const string label = alias.children.head->lexeme.to_string();
             if(verbose) { indent() << "--> Alias <" << label << ">" << std::endl; }
 
@@ -93,14 +98,25 @@ namespace upsylon
             {
                 case 0: assert("RX"==contentName); {
                     Y_DYNAMO_CHECK(content->terminal);
-                    const string rx=content->lexeme.to_string(1,1);
-                    if(verbose) { indent() << " |_RX=\"" << rx << "\"" << std::endl; }
+                    const string rx = content->lexeme.to_string(1,1);  if(verbose) { indent() << " |_RX=\"" << rx << "\"" << std::endl; }
+                    const Rule  &r  = parser->term(label,rx);
+                    const Symbol s  = new _Symbol(rx,label,r,modules.peek());
+                    if(!terminals.insert(s))
+                    {
+                        throw Exception(fn,"{%s} multiple terminals \"%s\" from regular expression",**(parser->name),*rx);
+                    }
                 } break;
 
                 case 1: assert("RS"==contentName); {
                     Y_DYNAMO_CHECK(content->terminal);
-                    const string rs=content->lexeme.to_string(1,1);
-                    if(verbose) { indent() << " |_RS=\"" << rs << "\"" << std::endl; }
+                    const string rs = content->lexeme.to_string(1,1);
+                    const string rx = StringToRegExp(rs);               if(verbose) { indent() << " |_RS='" << rs << "' => \"" << rx << "\"" << std::endl; }
+                    const Rule  &r  = parser->sole(label,rx);
+                    const Symbol s  = new _Symbol(rs,label,r,modules.peek());
+                    if(!terminals.insert(s))
+                    {
+                        throw Exception(fn,"{%s} multiple terminals \"%s\" from raw string",**(parser->name),*rs);
+                    }
                 } break;
 
                 case 2: assert("OS"==contentName); {
@@ -109,8 +125,14 @@ namespace upsylon
                     Y_DYNAMO_CHECK(content->children.head);
                     Y_DYNAMO_CHECK(content->children.head->terminal);
                     Y_DYNAMO_CHECK(content->children.head->rule.name=="RS");
-                    const string os=content->children.head->lexeme.to_string(1,1);
-                    if(verbose) { indent() << " |_OS=\"" << os << "\"" << std::endl; }
+                    const string os = content->children.head->lexeme.to_string(1,1);
+                    const string rx = StringToRegExp(os);               if(verbose) { indent() << " |_OS='" << os << "' => \"" << rx << "\"" << std::endl; }
+                    const Rule  &r  = parser->op(label,rx);
+                    const Symbol s  = new _Symbol(os,label,r,modules.peek());
+                    if(!terminals.insert(s))
+                    {
+                        throw Exception(fn,"{%s} multiple terminals \"%s\" from operator",**(parser->name),*os);
+                    }
                 }   break;
 
                 default:

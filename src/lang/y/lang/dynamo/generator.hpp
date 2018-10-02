@@ -16,21 +16,28 @@ namespace upsylon
     namespace Lang
     {
 
+        //! for internal run-time consistency checks
 #define Y_DYNAMO_CHECK(CODE) do { if( !(CODE) ) throw Exception(fn,"%s","FAILED " #CODE); } while(false)
 
         //! Generate a parser from a Dynamo compiled AST
         class DynamoGenerator
         {
         public:
-            typedef Syntax::Node         Node; //!< alias
+            typedef Syntax::Node                    Node; //!< alias
+            typedef Syntax::Rule                    Rule; //!< alias
+            typedef key_hasher<string,hashing::fnv> KeyHasher; //!< hash strings
+            typedef memory::pooled                  Memory;    //!< internal memory
 
+
+
+            //! internal exception
             class Exception : public exception
             {
             public:
-                virtual ~Exception() throw();
-                explicit Exception(const char *fn,const char *fmt,...) throw() Y_PRINTF_CHECK(3,4);
+                virtual ~Exception() throw();             //!< destructor
+                explicit Exception(const char *fn,const char *fmt,...) throw() Y_PRINTF_CHECK(3,4); //!< format
                 virtual const char *what() const throw(); //!< return internal _what
-                Exception( const Exception &) throw();
+                Exception( const Exception &) throw();    //!< copy
 
             private:
                 Y_DISABLE_ASSIGN(Exception);
@@ -38,18 +45,40 @@ namespace upsylon
             };
 
 
-            //! initialize
-            explicit DynamoGenerator();
 
-            //! destructor
-            virtual ~DynamoGenerator() throw();
 
-            
+            //! symbol for linking and emission
+            class _Symbol : public CountedObject
+            {
+            public:
+                typedef intr_ptr<string,_Symbol> Pointer; //!< alias
+                const string        expr;   //!< parser's string
+                const string        name;   //!< terminal's name
+                const Rule         &rule;   //!< created rule
+                const Origin        module; //!< syntax module
 
-            
-            typedef key_hasher<string,hashing::fnv>              KeyHasher; //!< hash strings
-            typedef memory::pooled                               Memory;    //!< internal memory
-           // typedef set<string,Symbol::Pointer,KeyHasher,Memory> Symbols;   //!< table of symbols
+                //! initialize
+                inline _Symbol(const string &data,
+                               const string &id,
+                               const Rule   &r,
+                               const Origin &from ) : expr(data), name(id), rule(r), module(from) {}
+
+                //! desctructor
+                inline virtual ~_Symbol() throw() {}
+
+                //! for intr_ptr
+                inline const string &key() const throw() { return expr; }
+
+                inline friend std::ostream & operator<<( std::ostream &os, const _Symbol &s )
+                {
+                    os << s.module << '_' << s.name << '=' << '<' << s.expr << '>';
+                    return os;
+                }
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(_Symbol);
+            };
+            typedef _Symbol::Pointer Symbol;
+            typedef set<string,Symbol,KeyHasher,Memory> Symbols;
 
 
 
@@ -65,7 +94,15 @@ namespace upsylon
             const hashing::mperf htop;   //!< hashing ktop
             static const char   *kstr[]; //!< "RX", "RS", "OS"
             const hashing::mperf hstr;   //!<  hashing kstr
+            Symbols              terminals;
 
+            //! initialize
+            explicit DynamoGenerator();
+
+            //! destructor
+            virtual ~DynamoGenerator() throw();
+
+            //! create the parser
             Syntax::Parser *create( Node &dynamo, const bool verbose_flag=false);
 
             //__________________________________________________________________

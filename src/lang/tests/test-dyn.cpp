@@ -66,6 +66,8 @@ Y_UTEST(dyn)
         auto_ptr<Lang::Syntax::Parser> parser = gen.create( *ast, true );
         ast->GraphViz("dynclr.dot");
 
+        parser->GraphViz("parser.dot");
+
         std::cerr << "sizeof(DynamoParser)    = " << sizeof(DynamoParser)    << std::endl;
         std::cerr << "sizeof(DynamoCompiler)  = " << sizeof(DynamoCompiler)  << std::endl;
         std::cerr << "sizeof(DynamoGenerator) = " << sizeof(DynamoGenerator) << std::endl;

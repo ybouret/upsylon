@@ -132,6 +132,8 @@ namespace upsylon
             parser = new Syntax::Parser( parserName );
             topLevel(dynamo);
 
+            if(verbose) { indent() << "terminals=" << terminals << std::endl; }
+
             return parser.yield();
         }
 
