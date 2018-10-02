@@ -16,6 +16,30 @@ namespace upsylon
     namespace Lang
     {
 
+        template <typename RULE_TYPE>
+        class DynamoSymbol : public CountedObject
+        {
+        public:
+            inline virtual ~DynamoSymbol() throw() {}
+            const RULE_TYPE &rule;
+            const Origin     module;
+
+            inline std::ostream & display( std::ostream &os ) const
+            {
+                os << module << '_' << rule.name;
+                return os;
+            }
+
+        protected:
+            explicit DynamoSymbol( const RULE_TYPE &r, const Origin &o ) throw() :
+            rule(r), module(o)
+            {
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(DynamoSymbol);
+        };
+
         //! for internal run-time consistency checks
 #define Y_DYNAMO_CHECK(CODE) do { if( !(CODE) ) throw Exception(fn,"%s","FAILED " #CODE); } while(false)
 
@@ -47,40 +71,67 @@ namespace upsylon
 
 
 
-            //! symbol for linking and emission
-            class _Symbol : public CountedObject
+
+            //! symbol for linking and emission of terminals
+            class _Terminal : public DynamoSymbol<Syntax::Rule>
             {
             public:
-                typedef intr_ptr<string,_Symbol> Pointer; //!< alias
+                typedef intr_ptr<string,_Terminal> Pointer; //!< alias
+
                 const string        expr;   //!< parser's string
-                const string        name;   //!< terminal's name
-                const Rule         &rule;   //!< created rule
-                const Origin        module; //!< syntax module
 
                 //! initialize
-                inline _Symbol(const string &data,
-                               const string &id,
-                               const Rule   &r,
-                               const Origin &from) : expr(data), name(id), rule(r), module(from) {}
+                inline _Terminal(const string &data,
+                                 const Rule   &r,
+                                 const Origin &from) :
+                DynamoSymbol<Syntax::Rule>(r,from),
+                expr(data) {}
 
-                //! desctructor
-                inline virtual ~_Symbol() throw() {}
+                //! destructor
+                inline virtual ~_Terminal() throw() {}
 
                 //! for intr_ptr
                 inline const string &key() const throw() { return expr; }
 
-                inline friend std::ostream & operator<<( std::ostream &os, const _Symbol &s )
+                inline friend std::ostream & operator<<( std::ostream &os, const _Terminal &s )
                 {
-                    os << s.module << '_' << s.name << '(' << s.expr << ')';
+                    s.display(os) << '(' << s.expr << ')';
                     return os;
                 }
                 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(_Symbol);
+                Y_DISABLE_COPY_AND_ASSIGN(_Terminal);
             };
-            typedef _Symbol::Pointer Symbol;
-            typedef set<string,Symbol,KeyHasher,Memory> Symbols;
+            typedef _Terminal::Pointer Terminal; //!< alias
+            typedef set<string,Terminal,KeyHasher,Memory> Terminals; //!< database of terminals
 
+            class _Internal : public DynamoSymbol<Syntax::Compound>
+            {
+            public:
+                typedef intr_ptr<string,_Internal> Pointer; //!< alias
+
+                //! destructor
+                inline virtual ~_Internal() throw() {}
+
+                //! initialize
+                inline explicit _Internal( const Syntax::Compound &r, const Origin &from ) throw() :
+                DynamoSymbol<Syntax::Compound>(r,from)
+                {
+                }
+
+                inline const string &key() const throw() { return rule.name; }
+
+                inline friend std::ostream & operator<<( std::ostream &os, const _Internal &s )
+                {
+                    return s.display(os);
+                }
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(_Internal);
+            };
+            typedef _Internal::Pointer Internal;                     //!< alias
+            typedef set<string,Internal,KeyHasher,Memory> Internals; //!< database of internals
 
 
             auto_ptr<Syntax::Parser>  parser;    //!< currently built parser
@@ -99,8 +150,19 @@ namespace upsylon
             const hashing::mperf hlxr;   //!< hashing klxr
             static const char   *ksyn[]; //!< "AGG", "ALT", "OOM", "ZOM", "OPT", "ID"...
             const hashing::mperf hsyn;   //!< hashing ksyn
+            
+            Terminals            terminals;
+            Internals            internals;
+            
+            static const int IS_AGG = 0;
+            static const int IS_ALT = 1;
+            static const int IS_OOM = 2;
+            static const int IS_OPT = 3;
+            static const int IS_ZOM = 4;
+            static const int IS_ID  = 5;
+            static const int IS_RS  = 6;
+            static const int IS_OS  = 7;
 
-            Symbols              terminals;
 
             //! initialize
             explicit DynamoGenerator();

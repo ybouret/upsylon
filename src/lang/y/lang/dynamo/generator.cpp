@@ -93,19 +93,27 @@ namespace upsylon
             "ZOM",
             "ID",
             "RS",
-            "RX",
             "OS"
         };
-        
+
+#define Y_DYNAMO_SYN(LABEL) assert( hsyn(#LABEL)==IS_##LABEL )
         DynamoGenerator:: DynamoGenerator():
         parser(0),
         verbose(false),
         level(0),
         htop( YOCTO_MPERF_FOR(ktop) ),
         hstr( YOCTO_MPERF_FOR(kstr) ),
-        hlxr( YOCTO_MPERF_FOR(klxr) )
+        hlxr( YOCTO_MPERF_FOR(klxr) ),
+        hsyn( YOCTO_MPERF_FOR(ksyn) )
         {
-
+            Y_DYNAMO_SYN(AGG);
+            Y_DYNAMO_SYN(ALT);
+            Y_DYNAMO_SYN(OOM);
+            Y_DYNAMO_SYN(OPT);
+            Y_DYNAMO_SYN(ZOM);
+            Y_DYNAMO_SYN(ID);
+            Y_DYNAMO_SYN(RS);
+            Y_DYNAMO_SYN(OS);
         }
 
         std::ostream & DynamoGenerator:: indent() const
@@ -152,6 +160,7 @@ namespace upsylon
             topLevel(dynamo);
 
             if(verbose) { indent() << "terminals=" << terminals << std::endl; }
+            if(verbose) { indent() << "internals=" << internals << std::endl; }
 
             return parser.yield();
         }
