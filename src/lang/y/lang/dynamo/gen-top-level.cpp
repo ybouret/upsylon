@@ -24,7 +24,7 @@ namespace upsylon
             ++level;
 
             Y_DYNAMO_CHECK(dynamo.children.size>0);
-            Node::List    &source = dynamo.children; delete source.pop_front();
+            Node::List    &source = dynamo.children; //delete source.pop_front();
             Node::SaveList target;
             while(source.size)
             {
@@ -56,7 +56,7 @@ namespace upsylon
                         break;
 
                     default:
-                        throw Exception(fn,"unexpected top level <%s>", *rid);
+                          target << sub.yield();
                 }
             }
             source.swap_with(target);
