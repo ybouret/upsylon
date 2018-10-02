@@ -37,6 +37,7 @@ namespace upsylon
             //! destructor
             inline virtual ~MatchString() throw() {}
 
+            //! functionoid call
             inline bool operator()( const string &s ) { return exactly(s); }
             
         private:

@@ -103,7 +103,8 @@ namespace upsylon
 
         public:
             const size_t nodes; //!< nodes in use
-            void GraphViz( const string &filename ) const; //!< output GraphViz code
+            void GraphViz( const string &filename ) const; //!< output GraphViz and render
+            //! output GrapViz and render
             inline void
             GraphViz(const char *filename) const
             {

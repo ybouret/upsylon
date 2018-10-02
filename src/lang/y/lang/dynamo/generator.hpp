@@ -15,15 +15,16 @@ namespace upsylon
 
     namespace Lang
     {
-
+        //! base class to stor symbols
         template <typename RULE_TYPE>
         class DynamoSymbol : public CountedObject
         {
         public:
-            inline virtual ~DynamoSymbol() throw() {}
-            const RULE_TYPE &rule;
-            const Origin     module;
+            inline virtual ~DynamoSymbol() throw() {} //!< destructor
+            const RULE_TYPE &rule;   //!< reference to a Syntax Rule
+            const Origin     module; //!< with its origun
 
+            //! display Module_name
             inline std::ostream & display( std::ostream &os ) const
             {
                 os << module << '_' << rule.name;
@@ -31,6 +32,7 @@ namespace upsylon
             }
 
         protected:
+            //! initialize
             explicit DynamoSymbol( const RULE_TYPE &r, const Origin &o ) throw() :
             rule(r), module(o)
             {
@@ -59,7 +61,8 @@ namespace upsylon
             {
             public:
                 virtual ~Exception() throw();             //!< destructor
-                explicit Exception(const char *fn,const char *fmt,...) throw() Y_PRINTF_CHECK(3,4); //!< format
+                //! format
+                explicit Exception(const char *fn,const char *fmt,...) throw() Y_PRINTF_CHECK(3,4);
                 virtual const char *what() const throw(); //!< return internal _what
                 Exception( const Exception &) throw();    //!< copy
 
@@ -78,7 +81,7 @@ namespace upsylon
             public:
                 typedef intr_ptr<string,_Terminal> Pointer; //!< alias
 
-                const string        expr;   //!< parser's string
+                const string expr;   //!< parser's string
 
                 //! initialize
                 inline _Terminal(const string &data,
@@ -93,6 +96,7 @@ namespace upsylon
                 //! for intr_ptr
                 inline const string &key() const throw() { return expr; }
 
+                //! output with expr
                 inline friend std::ostream & operator<<( std::ostream &os, const _Terminal &s )
                 {
                     s.display(os) << '(' << s.expr << ')';
@@ -105,6 +109,7 @@ namespace upsylon
             typedef _Terminal::Pointer Terminal; //!< alias
             typedef set<string,Terminal,KeyHasher,Memory> Terminals; //!< database of terminals
 
+            //! internal symbol
             class _Internal : public DynamoSymbol<Syntax::Compound>
             {
             public:
@@ -119,8 +124,10 @@ namespace upsylon
                 {
                 }
 
+                //! for database
                 inline const string &key() const throw() { return rule.name; }
 
+                //! display
                 inline friend std::ostream & operator<<( std::ostream &os, const _Internal &s )
                 {
                     return s.display(os);
@@ -151,17 +158,17 @@ namespace upsylon
             static const char   *ksyn[]; //!< "AGG", "ALT", "OOM", "ZOM", "OPT", "ID"...
             const hashing::mperf hsyn;   //!< hashing ksyn
             
-            Terminals            terminals;
-            Internals            internals;
+            Terminals            terminals; //!< table of accessible terminals
+            Internals            internals; //!< table of accessible internals
             
-            static const int IS_AGG = 0;
-            static const int IS_ALT = 1;
-            static const int IS_OOM = 2;
-            static const int IS_OPT = 3;
-            static const int IS_ZOM = 4;
-            static const int IS_ID  = 5;
-            static const int IS_RS  = 6;
-            static const int IS_OS  = 7;
+            static const int IS_AGG = 0; //!< hsyn("AGG")
+            static const int IS_ALT = 1; //!< hsyn("ALT")
+            static const int IS_OOM = 2; //!< hsyn("OOM")
+            static const int IS_OPT = 3; //!< hsyn("OPT")
+            static const int IS_ZOM = 4; //!< hsyn("ZOM")
+            static const int IS_ID  = 5; //!< hsyn("ID")
+            static const int IS_RS  = 6; //!< hsyn("RS")
+            static const int IS_OS  = 7; //!< hsyn("OS")
 
 
             //! initialize
