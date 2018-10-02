@@ -24,6 +24,7 @@ namespace upsylon
             const Node *pluginTermNode = plg.children.head;
             Y_DYNAMO_CHECK(pluginTermNode!=NULL);
             Y_DYNAMO_CHECK(pluginTermNode->terminal);
+            Y_DYNAMO_CHECK(pluginTermNode->rule.name=="L_ID");
             const string pluginTerm = pluginTermNode->lexeme.to_string(1,0);
 
             //------------------------------------------------------------------
@@ -32,6 +33,7 @@ namespace upsylon
             const Node *pluginNameNode = plg.children.tail;
             Y_DYNAMO_CHECK(pluginNameNode!=NULL);
             Y_DYNAMO_CHECK(pluginNameNode!=pluginTermNode);
+            Y_DYNAMO_CHECK(pluginNameNode->rule.name=="ID");
             const string pluginName = pluginNameNode->lexeme.to_string(0,0);
 
 

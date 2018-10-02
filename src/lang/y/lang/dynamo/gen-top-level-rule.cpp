@@ -8,20 +8,34 @@ namespace upsylon
         {
             static const char fn[] = "Rule";
 
-
+            //------------------------------------------------------------------
+            //
+            // get the rule name
+            //
+            //------------------------------------------------------------------
 
             Y_DYNAMO_CHECK(rule.internal);
             Y_DYNAMO_CHECK(rule.rule.name=="RULE");
             Y_DYNAMO_CHECK(rule.children.size==2);
-
             Y_DYNAMO_CHECK(rule.children.head);
             Y_DYNAMO_CHECK(rule.children.head->terminal);
             Y_DYNAMO_CHECK(rule.children.head->rule.name=="ID");
             const string ruleName = rule.children.head->lexeme.to_string();
 
+            //------------------------------------------------------------------
+            //
+            // get the rule kind
+            //
+            //------------------------------------------------------------------
             Y_DYNAMO_CHECK(rule.children.tail);
+            Y_DYNAMO_CHECK(rule.children.tail!=rule.children.head);
             const string ruleKind = rule.children.tail->rule.name;
 
+            //------------------------------------------------------------------
+            //
+            // create the top-level compound
+            //
+            //------------------------------------------------------------------
             if(verbose) { indent() << "--> Rule <" << ruleName << ">/" << ruleKind << std::endl; }
 
             Syntax::Compound *global = 0;
