@@ -64,10 +64,11 @@ namespace upsylon
 
                     //______________________________________________________
                     //
-                    // an ATOM is a basic content
+                    // an ATOM is a basic content, starting
+                    // with OS/RS, no RX
                     //______________________________________________________
                     ALT &ATOM = alt("ATOM");
-                    ATOM << ID << RX << OS << RS;
+                    ATOM << ID << OS << RS;
 
                     //______________________________________________________
                     //
