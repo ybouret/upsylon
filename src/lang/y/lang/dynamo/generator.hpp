@@ -21,7 +21,7 @@ namespace upsylon
         {
         public:
             inline virtual ~DynamoSymbol() throw() {} //!< destructor
-            const RULE_TYPE &rule;   //!< reference to a Syntax Rule
+            RULE_TYPE       &rule;   //!< reference to a Syntax Rule
             const Origin     module; //!< with its origun
 
             //! display Module_name
@@ -33,7 +33,7 @@ namespace upsylon
 
         protected:
             //! initialize
-            explicit DynamoSymbol( const RULE_TYPE &r, const Origin &o ) throw() :
+            explicit DynamoSymbol( RULE_TYPE &r, const Origin &o ) throw() :
             rule(r), module(o)
             {
             }
@@ -71,9 +71,10 @@ namespace upsylon
 
 
             //! symbol for linking and emission of terminals
-            class _Terminal : public DynamoSymbol<Syntax::Rule>
+            class _Terminal : public DynamoSymbol<const Syntax::Rule>
             {
             public:
+                typedef DynamoSymbol<const Syntax::Rule> BaseType;
                 typedef intr_ptr<string,_Terminal> Pointer; //!< alias
 
                 const string expr;   //!< parser's string
@@ -82,7 +83,7 @@ namespace upsylon
                 inline _Terminal(const string &data,
                                  const Rule   &r,
                                  const Origin &from) :
-                DynamoSymbol<Syntax::Rule>(r,from),
+                BaseType(r,from),
                 expr(data) {}
 
                 //! destructor
@@ -108,14 +109,15 @@ namespace upsylon
             class _Internal : public DynamoSymbol<Syntax::Compound>
             {
             public:
+                typedef DynamoSymbol<Syntax::Compound> BaseType;
                 typedef intr_ptr<string,_Internal> Pointer; //!< alias
 
                 //! destructor
                 inline virtual ~_Internal() throw() {}
 
                 //! initialize
-                inline explicit _Internal( const Syntax::Compound &r, const Origin &from ) throw() :
-                DynamoSymbol<Syntax::Compound>(r,from)
+                inline explicit _Internal( Syntax::Compound &r, const Origin &from ) throw() :
+                BaseType(r,from)
                 {
                 }
 
@@ -207,7 +209,11 @@ namespace upsylon
             // second pass functions
             //
             //__________________________________________________________________
+            //! walk down from top
             void walkDown( const Node &dynamo );
+
+            //! recursive fill
+            void fill( Syntax::Compound &content, const Node *parent );
 
 
         private:

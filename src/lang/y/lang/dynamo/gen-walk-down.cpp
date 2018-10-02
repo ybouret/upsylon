@@ -9,18 +9,32 @@ namespace upsylon
 
         void DynamoGenerator:: walkDown( const Node &dynamo )
         {
+            static const char fn[] = "walkDown";
             if(verbose)
             {
                 indent() << std::endl;
                 indent() << "walking down {" << parser->name << "}" << std::endl;
                 indent() << std::endl;
             }
-            
+
             assert("dynamo"==dynamo.rule.name);
             assert(dynamo.internal);
+
+            //__________________________________________________________________
+            //
+            //
+            // Loop over top-level rules
+            //
+            //__________________________________________________________________
+
             for(const Node *node=dynamo.children.head;node;node=node->next)
             {
                 ++level;
+
+                //______________________________________________________________
+                //
+                // get the rule name
+                //______________________________________________________________
                 assert("RULE"==node->rule.name);
                 assert(node->internal);
                 assert(node->children.size==2);
@@ -31,6 +45,20 @@ namespace upsylon
                 {
                     indent() << "..building <" << ruleName << ">" << std::endl;
                 }
+
+                //______________________________________________________________
+                //
+                // get the rule content
+                //______________________________________________________________
+                const Rule *rule = parser->getRuleByName(ruleName);
+                if(!rule)
+                {
+                    throw Exception(fn,"{%s} unexpected missing <%s>", **(parser->name), *ruleName);
+                }
+                assert(Syntax::Aggregate::UUID==rule->uuid||Syntax::Alternate::UUID==rule->uuid);
+                assert(rule->data);
+                Syntax::Compound &content = *(Syntax::Compound *)(rule->data);
+                fill(content,node->children.tail);
                 --level;
             }
 
@@ -38,6 +66,13 @@ namespace upsylon
             {
                 indent() << std::endl;
             }
+        }
+
+
+        void DynamoGenerator:: fill(Syntax::Compound &content, const Node *parent)
+        {
+            assert(parser->owns(content));
+            assert(parent);
         }
 
 #if 0
