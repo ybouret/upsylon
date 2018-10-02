@@ -22,6 +22,8 @@ Y_UTEST(dyn)
     DynamoCompiler    dynamo;
 
     dynamo.parser.GraphViz("dynamo.dot");
+    
+    throw DynamoGenerator::Exception("Hello","at %s",__FILE__);
 
 
     if(argc>1)
@@ -63,7 +65,6 @@ Y_UTEST(dyn)
         A.walk( *ast );
 
         DynamoGenerator gen;
-
 #if 0
         auto_ptr<Lang::Syntax::Parser> parser = gen.create( *ast, true );
 

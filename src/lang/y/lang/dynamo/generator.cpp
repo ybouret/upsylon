@@ -1,6 +1,7 @@
 
 #include "y/lang/dynamo/generator.hpp"
 #include "y/exception.hpp"
+#include <cstdarg>
 
 namespace upsylon
 {
@@ -8,14 +9,59 @@ namespace upsylon
     namespace Lang
     {
 
-#if 0
-        static const char *top_kw[] =
+
+        DynamoGenerator:: Exception:: ~Exception() throw()
         {
-            "RULE",
-            "ALIAS",
-            "LXR",
-            "PLUGIN"
-        };
+        }
+
+        DynamoGenerator:: Exception:: Exception( const Exception &other ) throw() :
+        exception(other),
+        _what()
+        {
+            memcpy(_what,other._what,sizeof(_what));
+        }
+
+        const char * DynamoGenerator:: Exception:: what() const throw()
+        {
+            return _what;
+        }
+
+        DynamoGenerator:: Exception:: Exception( const char *fn, const char *fmt, ... ) throw() :
+        exception(),
+        _what()
+        {
+            static const size_t wmx   = sizeof(_what)-1;
+
+            static const char   pfx[] = "Dynamo.";
+            static const size_t len   = sizeof(pfx)-1;
+
+            memset(_what,0,sizeof(_what));
+            
+            size_t i=0;
+            while(i<=wmx&&i<len)
+            {
+                _what[i] = pfx[i];
+                ++i;
+            }
+
+            {
+                const size_t len = length_of(fn);
+                for(size_t j=0;j<len;++j)
+                {
+                    if(i>wmx) break;
+                    _what[i++] = fn[j];
+                }
+            }
+
+
+            va_list ap;
+            va_start(ap,fmt);
+            format(fmt,&ap);
+        }
+
+
+
+#if 0
 
         static const char *str_kw[] =
         {
@@ -46,35 +92,23 @@ namespace upsylon
         };
 #endif
 
+        const char * DynamoGenerator:: ktop[] =
+        {
+            "RULE",
+            "ALIAS",
+            "LXR",
+            "PLUGIN"
+        };
 
-#define Y_DYN_CHECK(RULE) assert( hsyn(#RULE) == is##RULE )
+
+        
         DynamoGenerator:: DynamoGenerator():
         parser(0),
         verbose(false),
-        level(0)
-#if 0
-        ,
-        htop( YOCTO_MPERF_FOR(top_kw) ),
-        hsyn( YOCTO_MPERF_FOR(syn_kw) ),
-        hstr( YOCTO_MPERF_FOR(str_kw) ),
-        hlxr( YOCTO_MPERF_FOR(lxr_kw) ),
-        icom(0),
-        modules(),
-        terminals(),
-        internals()
-#endif
+        level(0),
+        htop( YOCTO_MPERF_FOR(ktop) )
         {
-#if 0
-            Y_DYN_CHECK(AGG);
-            Y_DYN_CHECK(ALT);
-            Y_DYN_CHECK(ZOM);
-            Y_DYN_CHECK(OOM);
-            Y_DYN_CHECK(OPT);
-            Y_DYN_CHECK(ID);
-            Y_DYN_CHECK(RX);
-            Y_DYN_CHECK(RS);
-            assert(hsyn("^")==CARET);
-#endif
+
         }
 
         std::ostream & DynamoGenerator:: indent() const
@@ -88,6 +122,34 @@ namespace upsylon
         DynamoGenerator:: ~DynamoGenerator() throw()
         {
 
+        }
+
+
+        Syntax::Parser * DynamoGenerator:: create( Node *dynamo, const bool verbose_flag)
+        {
+            //__________________________________________________________________
+            //
+            // initialize internal data
+            //__________________________________________________________________
+            assert(dynamo);
+            parser  = 0;
+            verbose = verbose_flag;
+            modules.free();
+
+            if(verbose)
+            {
+
+            }
+
+            //__________________________________________________________________
+            //
+            // create an empty parser
+            //__________________________________________________________________
+            
+
+
+
+            return parser.yield();
         }
 
 #if 0

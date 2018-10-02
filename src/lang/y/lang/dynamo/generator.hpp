@@ -8,6 +8,7 @@
 #include "y/sequence/pipe.hpp"
 #include "y/ptr/intr.hpp"
 #include "y/hashing/mph.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -21,6 +22,20 @@ namespace upsylon
         {
         public:
             typedef Syntax::Node         Node; //!< alias
+
+            class Exception : public exception
+            {
+            public:
+                virtual ~Exception() throw();
+                explicit Exception(const char *fn,const char *fmt,...) throw() Y_PRINTF_CHECK(3,4);
+                virtual const char *what() const throw(); //!< return internal _what
+                Exception( const Exception &) throw();
+
+            private:
+                Y_DISABLE_ASSIGN(Exception);
+                char _what[64];
+            };
+
 
             //! initialize
             explicit DynamoGenerator();
@@ -61,30 +76,26 @@ namespace upsylon
             auto_ptr<Syntax::Parser>  parser;    //!< currently built parser
             bool                      verbose;   //!< verbose flag
             int                       level;     //!< for tree walking
+            lstack<const Origin>      modules;   //!< stack of travelled modules
 
             //! indent for verbose
             std::ostream & indent() const;
 
-#if 0
-            MPH                       htop;      //!< RULE, ALIAS, LXR, PLUGIN
-            MPH                       hsyn;      //!< AGG, ALT, OOM, ZOM, OPT, ID, RX, RS, CARET
-            MPH                       hstr;      //!< RX, RS, ^
-            MPH                       hlxr;      //!< drop,endl,comment
-            int                       icom;      //!< index for comment
-            lstack<Origin>            modules;   //!< stack of visited modules
-            Symbols                   terminals; //!< database of terminals
-            Symbols                   internals; //!< database of internals
+            static const char   *ktop[]; //!< "RULE", "ALIAS", "LXR", "PLUGIN"
+            const hashing::mperf htop;   //!< hashing ktop
+            
 
-            static const int isAGG = 0; //!< hsyn("AGG")
-            static const int isALT = 1; //!< hsyn("ALT")
-            static const int isZOM = 2; //!< hsyn("ZOM")
-            static const int isOOM = 3; //!< hsyn("OOM")
-            static const int isOPT = 4; //!< hsyn("OPT")
-            static const int isID  = 5; //!< hsyn("ID"),
-            static const int isRX  = 6; //!< hsyn("RX")
-            static const int isRS  = 7; //!< hsyn("RS")
-            static const int CARET = 8; //!< hsyn("^")
-#endif
+            Syntax::Parser *create( Node *dynamo, const bool verbose_flag=false);
+
+            //__________________________________________________________________
+            //
+            //
+            // first pass functions
+            //
+            //__________________________________________________________________
+
+            //! get module name and push it on modules
+            const string &getModuleOriginFrom( const Node *dynamo );
 
 
 
