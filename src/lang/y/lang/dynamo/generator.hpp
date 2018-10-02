@@ -46,29 +46,10 @@ namespace upsylon
 
             
 
-            //! symbols to collect internal/terminals
-            class Symbol : public CountedObject
-            {
-            public:
-                typedef intr_ptr<string,Symbol> Pointer; //!< alias
-                const string name; //!< identifier
-                const Origin from; //!< from module
-                inline explicit Symbol(const string &n, const Origin &m ) : name(n), from(m) {} //!< initialize
-                inline virtual ~Symbol() throw() {}                                             //!< destructor
-                inline const string & key() const throw() { return name; }                      //!< for set
-
-                //! verbose output
-                inline friend std::ostream & operator<<( std::ostream &os, const Symbol &sym )
-                { return (os << sym.from << '_' << sym.name); }
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Symbol);
-            };
-
             
             typedef key_hasher<string,hashing::fnv>              KeyHasher; //!< hash strings
             typedef memory::pooled                               Memory;    //!< internal memory
-            typedef set<string,Symbol::Pointer,KeyHasher,Memory> Symbols;   //!< table of symbols
+           // typedef set<string,Symbol::Pointer,KeyHasher,Memory> Symbols;   //!< table of symbols
 
 
 
@@ -82,7 +63,8 @@ namespace upsylon
 
             static const char   *ktop[]; //!< "RULE", "ALIAS", "LXR", "PLUGIN"
             const hashing::mperf htop;   //!< hashing ktop
-            
+            static const char   *kstr[]; //!< "RX", "RS", "OS"
+            const hashing::mperf hstr;   //!<  hashing kstr
 
             Syntax::Parser *create( Node &dynamo, const bool verbose_flag=false);
 
@@ -99,84 +81,9 @@ namespace upsylon
             //! create top level structure
             void topLevel( Node &dynamo );
 
-
-        protected:
-#if 0
-            //__________________________________________________________________
-            //
-            //
-            // first pass functions
-            //
-            //__________________________________________________________________
-
-
-            //! extract name from dynamo.children.head->lexeme
-            string getModuleName( const Node &dynamo ) const;
-
-            //! collect top level rules, compile alias, lxr and plugins
-            void topLevel( Node *node );
-
-            //! extract node name, must match label, and skip chars from string
-            string getNodeName( const Node &node, const char *label, const size_t nskip ) const;
-
-            //! extract the kind of rule
-            int   getRuleKind( const Node &node ) const;
-
-            //! create and register a new symbol
-            void  newSymbol(Symbols &target, const string &name);
-
-            //! new internal
-            inline void newInternal(const string &name) { newSymbol(internals,name); }
-
-            //! new terminal
-            inline void newTerminal(const string &name) { newSymbol(terminals,name); }
-
-            //! create a rule
-            void onRule( const Node &node );
-
             //! create an alias
             void onAlias( const Node &node );
-
-            //! create a lexical rule
-            void onLxr( const Node &node );
-
-            //! parse RX, RS, OP
-            string nodeToRegExp(const Node &node, int &h) const;
-
-            //! without trace
-            inline string getNodeRegExp(const Node &node) const
-            {
-                int h=-1;
-                return nodeToRegExp(node,h);
-            }
-
-            //! convert a string node to a terminal/marker/operator
-            void createSpecificTerminal(const string &label, const Node &node) ;
-
-            //! create a plugin based on name
-            void onPlugin( const Node &node );
-
-
-
-            //! build a comment label from icom and parser name
-            string getCommentLabel();
-
-            //__________________________________________________________________
-            //
-            //
-            // second pass functions
-            //
-            //__________________________________________________________________
-
-            //! walk down to link and create remaining rules
-            void walkDown( const Node *node );
-
-            //! fill members of the compound from node
-            void fill( Syntax::Compound &compound, const Node *node );
             
-            //! create a new rule
-            const Syntax::Rule & createFrom( const Node *node, const int kind );
-#endif
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
