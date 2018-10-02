@@ -54,8 +54,6 @@ namespace upsylon
             typedef key_hasher<string,hashing::fnv> KeyHasher; //!< hash strings
             typedef memory::pooled                  Memory;    //!< internal memory
 
-
-
             //! internal exception
             class Exception : public exception
             {
@@ -70,9 +68,6 @@ namespace upsylon
                 Y_DISABLE_ASSIGN(Exception);
                 char _what[64];
             };
-
-
-
 
 
             //! symbol for linking and emission of terminals
@@ -204,6 +199,16 @@ namespace upsylon
 
             //! check rule
             void onRule( const Node &node );
+
+
+            //__________________________________________________________________
+            //
+            //
+            // second pass functions
+            //
+            //__________________________________________________________________
+            void walkDown( const Node &dynamo );
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);

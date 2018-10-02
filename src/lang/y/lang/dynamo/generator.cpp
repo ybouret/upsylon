@@ -157,10 +157,25 @@ namespace upsylon
                 indent() << "creating parser {" << parserName << "}" << std::endl;
             }
             parser = new Syntax::Parser( parserName );
+
+            //__________________________________________________________________
+            //
+            // create top level structure
+            //__________________________________________________________________
             topLevel(dynamo);
+
+            //__________________________________________________________________
+            //
+            // linking 
+            //__________________________________________________________________
+            walkDown(dynamo);
+
+
 
             if(verbose) { indent() << "terminals=" << terminals << std::endl; }
             if(verbose) { indent() << "internals=" << internals << std::endl; }
+
+
 
             return parser.yield();
         }

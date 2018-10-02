@@ -7,6 +7,37 @@ namespace upsylon
     namespace Lang
     {
 
+        void DynamoGenerator:: walkDown( const Node &dynamo )
+        {
+            if(verbose) {
+                indent() << std::endl;
+                indent() << "walking down {" << parser->name << "}" << std::endl;
+                indent() << std::endl;
+            }
+
+            assert("dynamo"==dynamo.rule.name);
+            assert(dynamo.internal);
+            for(const Node *node=dynamo.children.head;node;node=node->next)
+            {
+                ++level;
+                assert("RULE"==node->rule.name);
+                assert(node->internal);
+                assert(node->children.size==2);
+                assert(node->children.head->terminal);
+                assert(node->children.head->rule.name=="ID");
+                const string ruleName = node->children.head->lexeme.to_string();
+                if(verbose)
+                {
+                    indent() << "..building <" << ruleName << ">" << std::endl;
+                }
+                --level;
+            }
+            
+            if(verbose) {
+                indent() << std::endl;
+            }
+        }
+
 #if 0
         void DynamoGenerator:: walkDown( const Node *node )
         {
