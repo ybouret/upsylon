@@ -97,7 +97,8 @@ namespace upsylon
             "RULE",
             "ALIAS",
             "LXR",
-            "PLUGIN"
+            "PLUGIN",
+            "dynamo"
         };
 
 
@@ -125,32 +126,80 @@ namespace upsylon
         }
 
 
-        Syntax::Parser * DynamoGenerator:: create( Node *dynamo, const bool verbose_flag)
+        Syntax::Parser * DynamoGenerator:: create( Node &dynamo, const bool verbose_flag)
         {
+            static const char fn[] = "create";
             //__________________________________________________________________
             //
             // initialize internal data
             //__________________________________________________________________
-            assert(dynamo);
             parser  = 0;
             verbose = verbose_flag;
+            level   = 0;
             modules.free();
 
             if(verbose)
             {
-
+                indent() << "Dynamo." << fn << std::endl;
             }
 
             //__________________________________________________________________
             //
             // create an empty parser
             //__________________________________________________________________
-            
-
-
+            const string parserName = getModuleName(dynamo);
+            if(verbose)
+            {
+                indent() << "creating parser {" << parserName << "}" << std::endl;
+            }
+            parser = new Syntax::Parser( parserName );
+            topLevel(dynamo);
 
             return parser.yield();
         }
+
+        string DynamoGenerator:: getModuleName(const Node &dynamo) const
+        {
+            static const char fn[] = "getModuleName";
+            Y_DYNAMO_CHECK(dynamo.internal);
+            Y_DYNAMO_CHECK(dynamo.children.size>1);
+            Y_DYNAMO_CHECK(dynamo.children.head);
+            Y_DYNAMO_CHECK(dynamo.children.head->terminal);
+            Y_DYNAMO_CHECK(dynamo.children.head->rule.name=="Module");
+            return dynamo.children.head->lexeme.to_string(1,0);
+        }
+
+#if 0
+        void DynamoGenerator:: enterModule( const Node &dynamo )
+        {
+            static const char fn[] = "enterModule";
+            Y_DYNAMO_CHECK(dynamo.internal);
+            Y_DYNAMO_CHECK(dynamo.children.size>1);
+            Y_DYNAMO_CHECK(dynamo.children.head);
+            Y_DYNAMO_CHECK(dynamo.children.head->terminal);
+            Y_DYNAMO_CHECK(dynamo.children.head->rule.name=="Module");
+            const string id = dynamo.children.head->lexeme.to_string(1,0);
+            ++level;
+            if(verbose)
+            {
+                indent() << "entering [" << id << "]" << std::endl;
+            }
+            const Origin org = new string(id);
+            modules.push(org);
+
+        }
+
+        void DynamoGenerator:: leaveModule() throw()
+        {
+            assert(modules.size()>0);
+            if(verbose)
+            {
+                indent() << "leaving [" << modules.peek() << "]" << std::endl;
+            }
+            --level;
+            modules.pop();
+        }
+#endif
 
 #if 0
         Syntax::Parser * DynamoGenerator:: create( Node &dynamo, const bool flag )

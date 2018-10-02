@@ -16,6 +16,7 @@ namespace upsylon
     namespace Lang
     {
 
+#define Y_DYNAMO_CHECK(CODE) do { if( !(CODE) ) throw Exception(fn,"%s","FAILED " #CODE); } while(false)
 
         //! Generate a parser from a Dynamo compiled AST
         class DynamoGenerator
@@ -43,9 +44,7 @@ namespace upsylon
             //! destructor
             virtual ~DynamoGenerator() throw();
 
-            //! from top-level
-            Syntax::Parser *create( Node &dynamo, const bool flag=false );
-
+            
 
             //! symbols to collect internal/terminals
             class Symbol : public CountedObject
@@ -85,7 +84,7 @@ namespace upsylon
             const hashing::mperf htop;   //!< hashing ktop
             
 
-            Syntax::Parser *create( Node *dynamo, const bool verbose_flag=false);
+            Syntax::Parser *create( Node &dynamo, const bool verbose_flag=false);
 
             //__________________________________________________________________
             //
@@ -94,9 +93,11 @@ namespace upsylon
             //
             //__________________________________________________________________
 
-            //! get module name and push it on modules
-            const string &getModuleOriginFrom( const Node *dynamo );
-
+            //! get module name and push it on modules, increase level
+            string getModuleName(const Node &dynamo ) const;
+            
+            //! create top level structure
+            void topLevel( Node &dynamo );
 
 
         protected:
