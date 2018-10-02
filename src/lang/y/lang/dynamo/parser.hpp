@@ -10,11 +10,14 @@ namespace upsylon {
     {
 
         //! Dynamic Grammar Parser
+        /**
+         create an AST from the internal grammar,
+         to be passed on to DynamoCompiler for includes
+         */
         class DynamoParser : public Syntax::Parser
         {
         public:
-            //static const int include = 0; //!< code for include
-            
+
             //! define the generator parser
             explicit DynamoParser();
 

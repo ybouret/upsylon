@@ -21,7 +21,6 @@ namespace upsylon
         {
         public:
             typedef Syntax::Node         Node; //!< alias
-            typedef const hashing::mperf MPH;  //!< alias
 
             //! initialize
             explicit DynamoGenerator();

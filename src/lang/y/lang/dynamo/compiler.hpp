@@ -10,6 +10,8 @@ namespace upsylon
     namespace Lang
     {
 
+        typedef const hashing::mperf MPH;  //!< alias
+
         //! post process the AST from DynamoParser
         class DynamoCompiler
         {
@@ -27,8 +29,7 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoCompiler);
             static const int include = 0;
-
-            const hashing::mperf commands; //!< include
+            MPH commands; //!< include
 
             void  processCommands( Node &dynamo, const string &origin );
             Node *format( Module *module );
