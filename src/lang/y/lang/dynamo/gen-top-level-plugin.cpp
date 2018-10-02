@@ -44,6 +44,12 @@ namespace upsylon
                 goto FINALIZE;
             }
 
+            if(pluginName=="rstring")
+            {
+                rule = & parser->plug<Lexical::rString>(pluginTerm);
+                goto FINALIZE;
+            }
+
             throw Exception(fn,"{%s} unhandled plugin<%s>", **(parser->name), *pluginName);
 
         FINALIZE:
