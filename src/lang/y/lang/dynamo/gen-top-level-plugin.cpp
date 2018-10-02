@@ -55,8 +55,8 @@ namespace upsylon
         FINALIZE:
             Y_DYNAMO_CHECK(rule!=NULL);
             Y_DYNAMO_CHECK(modules.size()>0);
-
-            const Symbol s = new _Symbol(pluginName,pluginTerm,*rule,modules.peek());
+            const string data = '$' + pluginName;
+            const Symbol s    = new _Symbol(data,pluginTerm,*rule,modules.peek());
             if(!terminals.insert(s))
             {
                 throw Exception(fn,"{%s} unexpected failure to register plugin<%s>", **(parser->name), *pluginName);

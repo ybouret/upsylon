@@ -61,7 +61,7 @@ namespace upsylon
                 inline _Symbol(const string &data,
                                const string &id,
                                const Rule   &r,
-                               const Origin &from ) : expr(data), name(id), rule(r), module(from) {}
+                               const Origin &from) : expr(data), name(id), rule(r), module(from) {}
 
                 //! desctructor
                 inline virtual ~_Symbol() throw() {}
@@ -71,9 +71,10 @@ namespace upsylon
 
                 inline friend std::ostream & operator<<( std::ostream &os, const _Symbol &s )
                 {
-                    os << s.module << '_' << s.name << '=' << '<' << s.expr << '>';
+                    os << s.module << '_' << s.name << '(' << s.expr << ')';
                     return os;
                 }
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(_Symbol);
             };
@@ -96,6 +97,8 @@ namespace upsylon
             const hashing::mperf hstr;   //!< hashing kstr
             static const char   *klxr[]; //!< "drop", "endl", "comment"
             const hashing::mperf hlxr;   //!< hashing klxr
+            static const char   *ksyn[]; //!< "AGG", "ALT", "OOM", "ZOM", "OPT", "ID"...
+            const hashing::mperf hsyn;   //!< hashing ksyn
 
             Symbols              terminals;
 
@@ -130,6 +133,8 @@ namespace upsylon
             //! check plugin
             void onPlugin( const Node &node );
 
+            //! check rule
+            void onRule( const Node &node );
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);

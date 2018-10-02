@@ -32,6 +32,7 @@ namespace upsylon
                 {
                     case 0: assert("RULE"==rid);
                         // process and keep
+                        onRule(*sub);
                         target << sub.yield();
                         break;
 

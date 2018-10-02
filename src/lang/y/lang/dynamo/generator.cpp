@@ -84,7 +84,18 @@ namespace upsylon
             "comment"
         };
 
-
+        const char * DynamoGenerator:: ksyn[] =
+        {
+            "AGG",
+            "ALT",
+            "OOM",
+            "OPT",
+            "ZOM",
+            "ID",
+            "RS",
+            "RX",
+            "OS"
+        };
         
         DynamoGenerator:: DynamoGenerator():
         parser(0),
