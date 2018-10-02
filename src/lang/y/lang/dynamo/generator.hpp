@@ -127,6 +127,8 @@ namespace upsylon
             //! check lexical helpers
             void onLxr( const Node &node );
 
+            //! check plugin
+            void onPlugin( const Node &node );
 
 
         private:

@@ -46,7 +46,7 @@ namespace upsylon
                         break;
 
                     case 3: assert("PLUGIN"==rid);
-                        //process and remove
+                        onPlugin(*sub);
                         break;
 
                     case 4: assert("dynamo"==rid);
