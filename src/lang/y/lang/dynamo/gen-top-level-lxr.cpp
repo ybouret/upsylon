@@ -55,6 +55,10 @@ namespace upsylon
 
             switch( hlxr(identifier) )
             {
+                    //__________________________________________________________
+                    //
+                    // drop
+                    //__________________________________________________________
                 case 0: assert("drop"==identifier); {
                     for( const Node *sub = content->next;sub;sub=sub->next)
                     {
@@ -64,6 +68,10 @@ namespace upsylon
                     }
                 } break;
 
+                    //__________________________________________________________
+                    //
+                    // endl
+                    //__________________________________________________________
                 case 1: assert("endl"==identifier); {
                     for( const Node *sub = content->next;sub;sub=sub->next)
                     {
@@ -73,7 +81,42 @@ namespace upsylon
                     }
                 } break;
 
+                    //__________________________________________________________
+                    //
+                    // comments
+                    //__________________________________________________________
                 case 2: assert("comment"==identifier); {
+                    switch(lxr.children.size)
+                    {
+                            //--------------------------------------------------
+                            // 1+1 string => End Of Line Comment
+                            //--------------------------------------------------
+                        case 2: {
+                            string       id;
+                            const string rx = LxrToRX(content->next,identifier,id);
+                            if(verbose) { indent() << "\\__End Of Line Comment" << std::endl; }
+                            const string commentName = *(parser->name) + ".COM." << id ;
+                            parser->hook<Lexical::EndOfLineComment>(commentName,*rx);
+                        } break;
+
+                            //--------------------------------------------------
+                            // 1+2 strings => Multi Line Comment
+                            //--------------------------------------------------
+                        case 3: {
+                            string       id1;
+                            const string rx1 = LxrToRX(content->next,identifier,id1);
+                            string       id2;
+                            const string rx2 = LxrToRX(content->next->next,identifier,id2);
+                            if(verbose) { indent() << "\\__Multi Lines Comment" << std::endl; }
+                            const string commentName = *(parser->name) + ".COM." << id1 << "." << id2 ;
+                            parser->hook<Lexical::MultiLinesComment>(commentName,*rx1,*rx2);
+                        } break;
+
+                        default:
+                            throw Exception(fn,"{%s} comment must have 1 or 2 strings", **(parser->name));
+
+                    }
+
 
                 } break;
 
