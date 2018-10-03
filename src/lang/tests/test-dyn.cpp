@@ -42,6 +42,8 @@ Y_UTEST(dyn)
         }
 
         ast->GraphViz("dynout.dot");
+
+#if 0
         {
             ios::ocstream fp("dyn1.bin");
             ast->save(fp);
@@ -58,13 +60,16 @@ Y_UTEST(dyn)
                 miniLZO::instance().Compress(fp,bst);
             }
         }
+#endif
 
-        Lang::Syntax::Analyzer A;
-        A.walk( *ast );
+
 
         DynamoGenerator gen;
         auto_ptr<Lang::Syntax::Parser> parser = gen.create( *ast, true );
         ast->GraphViz("dynclr.dot");
+
+        // Lang::Syntax::Analyzer A;
+        // A.walk( *ast );
 
         parser->GraphViz("parser.dot");
 
