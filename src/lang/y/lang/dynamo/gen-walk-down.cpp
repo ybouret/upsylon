@@ -156,7 +156,7 @@ namespace upsylon
                     //----------------------------------------------------------
                     // a new(?) string
                     //----------------------------------------------------------
-                    assert(node->terminal);
+                    Y_DYNAMO_CHECK(node->terminal);
                     const string rs = node->lexeme.to_string(1,1);
                     return getRuleFromString(rs,false);
                 }
@@ -166,7 +166,23 @@ namespace upsylon
                     //----------------------------------------------------------
                     // a new(?) string operator
                     //----------------------------------------------------------
+                    Y_DYNAMO_CHECK(node->internal);
+                    Y_DYNAMO_CHECK(node->children.size==1);
+                    Y_DYNAMO_CHECK(node->children.head);
+                    const Node *RS = node->children.head;
+                    Y_DYNAMO_CHECK( hsyn(RS->rule.name)==IS_RS );
+                    Y_DYNAMO_CHECK(RS->terminal);
+                    const string rs = node->lexeme.to_string(1,1);
                     break;
+                }
+
+                case IS_RX:
+                {
+                    //----------------------------------------------------------
+                    // a new(?) regexp terminal
+                    //----------------------------------------------------------
+                    const string rx = node->lexeme.to_string(1,1);
+                    return getRuleFromRegExp(rx);
                 }
 
 #define Y_DYNGEN_CREATE(LABEL,METHOD) case IS_##LABEL: do {\
@@ -188,18 +204,41 @@ return parser->METHOD(createRule(node->children.head, hsyn( node->children.head-
 
         const Syntax::Rule & DynamoGenerator:: getRuleFromString( const string &rs, const bool isOp )
         {
-            static const char fn[] = "getRuleFrom";
+            static const char fn[] = "getRuleFromString";
+
             if(verbose) { indent() << "  |_internal string '" << rs << "'" << std::endl; }
             const Terminal *ppTerm = terminals.search(rs);
+
             if(ppTerm)
             {
+                //______________________________________________________________
+                //
+                // found the same registered raw string
+                //______________________________________________________________
                 if(verbose) { indent() << "  |_already declared!" << std::endl; }
-                const Syntax::Rule &rule = (**ppTerm).rule;
-                // TODO: operator promotion
+                const Syntax::Rule &rule = (**ppTerm).rule; assert(Syntax::Terminal::UUID==rule.uuid);
+
+                //--------------------------------------------------------------
+                // check operator level
+                //--------------------------------------------------------------
+                if(isOp)
+                {
+                    assert(rule.data);
+                    const Syntax::Terminal *t = static_cast<const Syntax::Terminal *>(rule.data);
+                    if(!t->isOperator)
+                    {
+                        if(verbose) { indent() << "  |_operator promotion!" << std::endl; }
+                        (bool&)(t->isOperator) = true;
+                    }
+                }
                 return rule;
             }
             else
             {
+                //______________________________________________________________
+                //
+                // create it
+                //______________________________________________________________
                 const string &id = rs;
                 const string  rx = StringToRegExp(rs);
                 if(verbose) { indent() << "  |_creating from \"" << rx << "\"" << std::endl; }
@@ -212,6 +251,34 @@ return parser->METHOD(createRule(node->children.head, hsyn( node->children.head-
                 return rule;
             }
         }
+
+        const Syntax::Rule & DynamoGenerator:: getRuleFromRegExp( const string &rx )
+        {
+            static const char fn[] = "getRuleFromRegExp";
+            if(verbose) { indent() << "  |_internal regexp '" << rx << "'" << std::endl; }
+            const Terminal *ppTerm = terminals.search(rx);
+            if(ppTerm)
+            {
+                if(verbose) { indent() << "  |_already declared!" << std::endl; }
+                const Syntax::Rule &rule = (**ppTerm).rule;
+                return rule;
+            }
+            else
+            {
+                const string &id = rx;
+                if(verbose) { indent() << "  |_creating from \"" << rx << "\"" << std::endl; }
+                const Syntax::Rule &rule = parser->term(id,rx);
+                const Terminal      sym  = new _Terminal(rx,rule,parser->name,true);
+                if(!terminals.insert(sym))
+                {
+                    throw Exception(fn,"{%s} unexpected failed registration of '%s'", **(parser->name), *rx);
+                }
+                return rule;
+            }
+
+
+        }
+
 
     }
 

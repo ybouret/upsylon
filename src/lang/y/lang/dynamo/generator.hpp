@@ -163,7 +163,7 @@ namespace upsylon
             static const int IS_ID  = 5; //!< hsyn("ID")
             static const int IS_RS  = 6; //!< hsyn("RS")
             static const int IS_OS  = 7; //!< hsyn("OS")
-
+            static const int IS_RX  = 8; //!< hsyn("RX")
 
             //! initialize
             explicit DynamoGenerator();
@@ -218,13 +218,14 @@ namespace upsylon
             void fill( Syntax::Compound &content, const Node *parent );
 
             //! creating a rule
-            const Syntax::Rule &createRule(const Node   *node,
+            const Syntax::Rule & createRule(const Node   *node,
                                            const int     h);
 
-            const Syntax::Rule &getRuleID(const char *fn, const Node *node) const;
+            const Syntax::Rule & getRuleID(const char *fn, const Node *node) const;
 
-            const Syntax::Rule &getRuleFromString( const string &rs, const bool isOp );
+            const Syntax::Rule & getRuleFromString( const string &rs, const bool isOp );
 
+            const Syntax::Rule & getRuleFromRegExp( const string &rx );
 
         };
 

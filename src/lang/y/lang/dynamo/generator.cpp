@@ -93,7 +93,8 @@ namespace upsylon
             "ZOM",
             "ID",
             "RS",
-            "OS"
+            "OS",
+            "RX"
         };
 
 #define Y_DYNAMO_SYN(LABEL) assert( hsyn(#LABEL)==IS_##LABEL )
@@ -117,6 +118,7 @@ namespace upsylon
             Y_DYNAMO_SYN(ID);
             Y_DYNAMO_SYN(RS);
             Y_DYNAMO_SYN(OS);
+            Y_DYNAMO_SYN(RX);
         }
 
         std::ostream & DynamoGenerator:: indent() const

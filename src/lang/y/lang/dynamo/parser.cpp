@@ -65,10 +65,10 @@ namespace upsylon
                     //______________________________________________________
                     //
                     // an ATOM is a basic content, starting
-                    // with OS/RS, no RX
+                    // with OS/RS, or RX (would make an implicit terminal)
                     //______________________________________________________
                     ALT &ATOM = alt("ATOM");
-                    ATOM << ID << OS << RS;
+                    ATOM << ID << OS << RS << RX;
 
                     //______________________________________________________
                     //

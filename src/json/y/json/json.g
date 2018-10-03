@@ -24,5 +24,5 @@ pair : string ':' value;
 
 number : "[:digit:]+";
 
-value  : string | number | 'true' | 'false' | 'null' | object | array;
+value  : string | number | "true" | 'false' | 'null' | object | array;
 
