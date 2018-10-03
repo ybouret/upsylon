@@ -101,10 +101,13 @@ namespace upsylon
         parser(0),
         verbose(false),
         level(0),
+        modules(),
         htop( YOCTO_MPERF_FOR(ktop) ),
         hstr( YOCTO_MPERF_FOR(kstr) ),
         hlxr( YOCTO_MPERF_FOR(klxr) ),
-        hsyn( YOCTO_MPERF_FOR(ksyn) )
+        hsyn( YOCTO_MPERF_FOR(ksyn) ),
+        terminals(),
+        internals()
         {
             Y_DYNAMO_SYN(AGG);
             Y_DYNAMO_SYN(ALT);

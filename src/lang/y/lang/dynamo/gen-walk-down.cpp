@@ -166,6 +166,9 @@ namespace upsylon
 
                 case IS_RS:
                 {
+                    //----------------------------------------------------------
+                    // a new(?) string
+                    //----------------------------------------------------------
                     assert(node->terminal);
                     const string rs = node->lexeme.to_string(1,1);
                     std::cerr << "Need to work with <" << rs << ">" << std::endl;
