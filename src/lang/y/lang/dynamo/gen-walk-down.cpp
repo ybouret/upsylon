@@ -154,10 +154,32 @@ namespace upsylon
                     return sub;
                 }
 
+                case IS_AGG: {
+                    //----------------------------------------------------------
+                    // a new aggregate
+                    //----------------------------------------------------------
+                    Syntax::Compound &sub = parser->agg();
+                    if(verbose) { indent() << "  |_ALT '" << sub.name << "'" << std::endl; }
+                    fill(sub,node);
+                    return sub;
+                }
+
+                case IS_RS:
+                {
+                    assert(node->terminal);
+                    const string rs = node->lexeme.to_string(1,1);
+                    std::cerr << "Need to work with <" << rs << ">" << std::endl;
+                }
+
+                case IS_OS:
+                {
+
+                }
+
                 default:
                     break;
             }
-            throw Exception(fn,"Not implemented");
+            throw Exception(fn,"createRule(%s) Not implemented", *nodeName);
         }
 
         
