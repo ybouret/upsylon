@@ -93,6 +93,9 @@ namespace upsylon
             {
                 case IS_AGG:
                 case IS_ALT:
+                case IS_OOM:
+                case IS_ZOM:
+                case IS_OPT:
                     //__________________________________________________________
                     //
                     // already created: parse children
@@ -101,28 +104,11 @@ namespace upsylon
                     ++level;
                     for(const Node *child=parent->children.head;child;child=child->next)
                     {
-                        content.add( createRule(child) );
+                        content.add( createRule(child,hsyn(child->rule.name)) );
                     }
                     --level;
                     break;
 
-                case IS_ZOM:
-                    assert(parent->internal);
-                    assert(1==parent->children.size);
-                    content.add( parser->zeroOrMore( createRule(parent->children.head) ) );
-                    break;
-
-                case IS_OOM:
-                    assert(parent->internal);
-                    assert(1==parent->children.size);
-                    content.add( parser->oneOrMore( createRule(parent->children.head) ) );
-                    break;
-
-                case IS_OPT:
-                    assert(parent->internal);
-                    assert(1==parent->children.size);
-                    content.add( parser->optional( createRule(parent->children.head) ) );
-                    break;
 
                 case IS_ID:
                     content.add( getRuleID(fn,parent) );
@@ -134,17 +120,17 @@ namespace upsylon
             --level;
         }
 
-        const Syntax::Rule & DynamoGenerator:: createRule(const Node *node)
+        const Syntax::Rule & DynamoGenerator:: createRule(const Node   *node,
+                                                          const int     h)
         {
             static const char fn[] = "createRule";
-            assert(node);
-            const string &nodeName = node->rule.name;
-            if(verbose) { indent() << "\\_" << fn << "(" << nodeName << ")" << std::endl; }
-            switch( hsyn(nodeName) )
+            if(verbose) { indent() << "\\_" << fn << "(" << node->rule.name << ")" << std::endl; }
+            switch( h )
             {
                 case IS_ID: return getRuleID(fn,node);
 
-                case IS_ALT: {
+                case IS_ALT:
+                {
                     //----------------------------------------------------------
                     // a new alternation
                     //----------------------------------------------------------
@@ -154,7 +140,8 @@ namespace upsylon
                     return sub;
                 }
 
-                case IS_AGG: {
+                case IS_AGG:
+                {
                     //----------------------------------------------------------
                     // a new aggregate
                     //----------------------------------------------------------
@@ -171,21 +158,61 @@ namespace upsylon
                     //----------------------------------------------------------
                     assert(node->terminal);
                     const string rs = node->lexeme.to_string(1,1);
-                    std::cerr << "Need to work with <" << rs << ">" << std::endl;
+                    return getRuleFromString(rs,false);
                 }
 
                 case IS_OS:
                 {
-
+                    //----------------------------------------------------------
+                    // a new(?) string operator
+                    //----------------------------------------------------------
+                    break;
                 }
+
+#define Y_DYNGEN_CREATE(LABEL,METHOD) case IS_##LABEL: do {\
+assert(node->internal);\
+assert(1==node->children.size);\
+assert(0!=node->children.head);\
+return parser->METHOD(createRule(node->children.head, hsyn( node->children.head->rule.name ) ) ); } while(false)
+
+                    Y_DYNGEN_CREATE(OOM,oneOrMore);
+                    Y_DYNGEN_CREATE(OPT,optional);
+                    Y_DYNGEN_CREATE(ZOM,zeroOrMore);
+
 
                 default:
                     break;
             }
-            throw Exception(fn,"createRule(%s) Not implemented", *nodeName);
+            throw Exception(fn,"createRule(%s) Not implemented", *node->rule.name);
         }
 
-        
+        const Syntax::Rule & DynamoGenerator:: getRuleFromString( const string &rs, const bool isOp )
+        {
+            static const char fn[] = "getRuleFrom";
+            if(verbose) { indent() << "  |_internal string '" << rs << "'" << std::endl; }
+            const Terminal *ppTerm = terminals.search(rs);
+            if(ppTerm)
+            {
+                if(verbose) { indent() << "  |_already declared!" << std::endl; }
+                const Syntax::Rule &rule = (**ppTerm).rule;
+                // TODO: operator promotion
+                return rule;
+            }
+            else
+            {
+                const string &id = rs;
+                const string  rx = StringToRegExp(rs);
+                if(verbose) { indent() << "  |_creating from \"" << rx << "\"" << std::endl; }
+                const Syntax::Rule &rule = isOp ? parser->op(id,rx) : parser->sole(id,rx);
+                const Terminal sym = new _Terminal(rs,rule,parser->name,false);
+                if(!terminals.insert(sym))
+                {
+                    throw Exception(fn,"{%s} unexpected failed registration of '%s'", **(parser->name), *rs);
+                }
+                return rule;
+            }
+        }
+
     }
 
 }

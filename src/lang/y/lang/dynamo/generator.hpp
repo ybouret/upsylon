@@ -74,13 +74,15 @@ namespace upsylon
                 typedef DynamoSymbol<const Syntax::Rule> BaseType; //!< alias
                 typedef intr_ptr<string,_Terminal>       Pointer;  //!< alias
 
-                const string expr;   //!< parser's string as key
+                const string expr;    //!< parser's string as key
+                const bool   visible; //!< public terminal, to analyze
 
                 //! initialize
                 inline _Terminal(const string &data,
                                  const Rule   &r,
-                                 const Origin &from) :
-                BaseType(r,from), expr(data) {}
+                                 const Origin &from,
+                                 const bool    flag=true) :
+                BaseType(r,from), expr(data), visible(flag) {}
 
                 //! destructor
                 inline virtual ~_Terminal() throw() {}
@@ -91,6 +93,7 @@ namespace upsylon
                 //! output with expr
                 inline friend std::ostream & operator<<( std::ostream &os, const _Terminal &s )
                 {
+                    if(!s.visible) os << '!';
                     return (s.display(os) << '(' << s.expr << ')');
                 }
                 
@@ -215,9 +218,13 @@ namespace upsylon
             void fill( Syntax::Compound &content, const Node *parent );
 
             //! creating a rule
-            const Syntax::Rule &createRule(const Node *node);
+            const Syntax::Rule &createRule(const Node   *node,
+                                           const int     h);
 
             const Syntax::Rule &getRuleID(const char *fn, const Node *node) const;
+
+            const Syntax::Rule &getRuleFromString( const string &rs, const bool isOp );
+
 
         };
 
