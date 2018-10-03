@@ -69,7 +69,16 @@ namespace upsylon
         }
 
 
-    
+        const Syntax::Rule & DynamoGenerator:: getRuleID(const char *fn, const Node *node) const
+        {
+            assert(node->terminal);
+            const string        id = node->lexeme.to_string();
+            const Syntax::Rule *r  = parser->getRuleByName(id);
+            if(verbose) { indent() << "  |_ID='" << id << "'" << std::endl; }
+            if(!r) throw Exception(fn,"{%s} '%s' was not declared", **(parser->name), *id);
+            return *r;
+        }
+
 
         void DynamoGenerator:: fill(Syntax::Compound &content, const Node *parent)
         {
@@ -116,9 +125,8 @@ namespace upsylon
                     break;
 
                 case IS_ID:
-                    assert(parent->terminal);
-                    
-                    //break;
+                    content.add( getRuleID(fn,parent) );
+                    break;
 
                 default:
                     throw Exception(fn,"{%s} unhandled creation of '%s'", **(parser->name), *parentName);
@@ -134,18 +142,8 @@ namespace upsylon
             if(verbose) { indent() << "\\_" << fn << "(" << nodeName << ")" << std::endl; }
             switch( hsyn(nodeName) )
             {
-                case IS_ID: {
-                    //----------------------------------------------------------
-                    // the rule must exists
-                    //----------------------------------------------------------
-                    assert(node->terminal);
-                    const string        id = node->lexeme.to_string();
-                    const Syntax::Rule *r  = parser->getRuleByName(id);
-                    if(verbose) { indent() << "  |_ID='" << id << "'" << std::endl; }
-                    if(!r) throw Exception(fn,"{%s} '%s' was not declared", **(parser->name), *id);
-                    return *r;
-                }
-
+                case IS_ID: return getRuleID(fn,node);
+                    
                 case IS_ALT: {
                     //----------------------------------------------------------
                     // a new alternation

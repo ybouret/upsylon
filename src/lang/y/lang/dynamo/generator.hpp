@@ -206,15 +206,19 @@ namespace upsylon
             //! walk down from top
             void walkDown( const Node &dynamo );
 
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
+            string LxrToRX(const Node *sub,const string &lxr, string &label) const;
             //! recursive fill
             void fill( Syntax::Compound &content, const Node *parent );
 
             //! creating a rule
             const Syntax::Rule &createRule(const Node *node);
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
-            string LxrToRX(const Node *sub,const string &lxr, string &label) const;
+            const Syntax::Rule &getRuleID(const char *fn, const Node *node) const;
+
         };
 
 
