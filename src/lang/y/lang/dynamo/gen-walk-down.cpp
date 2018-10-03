@@ -78,7 +78,7 @@ namespace upsylon
             assert(parent);
             ++level;
             const string &parentName = parent->rule.name;
-            if(verbose) { indent() << "\\_filling@<" << parentName << ">" << std::endl; }
+            if(verbose) { indent() << "\\_" << fn << "@<" << parentName << ">" << std::endl; }
 
             switch( hsyn(parentName) )
             {
@@ -92,7 +92,7 @@ namespace upsylon
                     ++level;
                     for(const Node *child=parent->children.head;child;child=child->next)
                     {
-                        if(verbose) { indent() << "\\_" << child->rule.name << std::endl; }
+                        content.add( createRule(child) );
                     }
                     --level;
                 default:;
@@ -102,9 +102,28 @@ namespace upsylon
 
         const Syntax::Rule & DynamoGenerator:: createRule(const Node *node)
         {
+            static const char fn[] = "createRule";
             assert(node);
+            const string &nodeName = node->rule.name;
+            if(verbose) { indent() << "\\_" << fn << "(" << nodeName << ")" << std::endl; }
+            switch( hsyn(nodeName) )
+            {
+                case IS_ID: {
+                    //----------------------------------------------------------
+                    // the rule must exists
+                    //----------------------------------------------------------
+                    assert(node->terminal);
+                    const string        id = node->lexeme.to_string();
+                    const Syntax::Rule *r = parser->getRuleByName(id);
+                    if(verbose) { indent() << "  |_ID='" << id << "'" << std::endl; }
+                    if(!r) throw Exception(fn,"{%s} '%s' was not declared", **(parser->name), *id);
+                    return *r;
+                } break;
 
-            throw exception("Not implemented");
+                default:
+                    break;
+            }
+            throw Exception(fn,"Not implemented");
         }
 
 #if 0
