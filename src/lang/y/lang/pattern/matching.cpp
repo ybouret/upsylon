@@ -21,6 +21,13 @@ namespace upsylon
         {
         }
 
+        Matching:: Matching(const Matching &other) throw() :
+        Token(),
+        motif( other.motif )
+        {
+        }
+
+
         bool Matching:: exactly(const string &s)
         {
             clear();

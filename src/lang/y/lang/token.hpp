@@ -16,7 +16,7 @@ namespace upsylon
         {
         public:
             //! constructor
-            inline Token() : Object(), Char::List() {}
+            inline Token() throw() : Object(), Char::List() {}
 
             //! desctructor
             inline virtual ~Token() throw()

@@ -17,6 +17,7 @@ namespace upsylon
             Matching( Pattern *p ) throw(); //!< initialize with a compiled pattern
             Matching( const string &rx, const Dictionary *dict=NULL); //!< init with regular expression
             Matching( const char   *rx, const Dictionary *dict=NULL); //!< init with regulat expresiion
+            Matching(const Matching &other) throw();
 
             bool exactly( const string &s );                 //!< the string must entirely match the pattern
             bool partly(const string &s);                    //!< the string must partly match the pattern
@@ -25,7 +26,7 @@ namespace upsylon
 
         private:
             const arc_ptr<const Pattern> motif;
-            Y_DISABLE_COPY_AND_ASSIGN(Matching);
+            Y_DISABLE_ASSIGN(Matching);
         };
 
         //! wrapper to easy matching
@@ -34,14 +35,18 @@ namespace upsylon
         public:
             //! initialize
             inline explicit MatchString(const char *rx) : Matching(rx,0) {}
+
             //! destructor
             inline virtual ~MatchString() throw() {}
 
+            //! copy
+            inline MatchString(const MatchString &other) throw() : Matching(other) {}
+            
             //! functionoid call
             inline bool operator()( const string &s ) { return exactly(s); }
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(MatchString);
+            Y_DISABLE_ASSIGN(MatchString);
         };
 
     }
