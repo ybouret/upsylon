@@ -15,7 +15,7 @@ namespace upsylon
 
     namespace Lang
     {
-        //! base class to stor symbols
+        //! base class to store symbols
         template <typename RULE_TYPE>
         class DynamoSymbol : public CountedObject
         {
@@ -27,16 +27,13 @@ namespace upsylon
             //! display Module_name
             inline std::ostream & display( std::ostream &os ) const
             {
-                os << module << '_' << rule.name;
-                return os;
+                return (os << module << '_' << rule.name);
             }
 
         protected:
             //! initialize
-            explicit DynamoSymbol( RULE_TYPE &r, const Origin &o ) throw() :
-            rule(r), module(o)
-            {
-            }
+            explicit DynamoSymbol(RULE_TYPE &r, const Origin &o) throw() :
+            rule(r), module(o) {}
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoSymbol);
@@ -58,9 +55,9 @@ namespace upsylon
             class Exception : public exception
             {
             public:
-                virtual ~Exception() throw();             //!< destructor
                 //! format
                 explicit Exception(const char *fn,const char *fmt,...) throw() Y_PRINTF_CHECK(3,4);
+                virtual ~Exception() throw();             //!< destructor
                 virtual const char *what() const throw(); //!< return internal _what
                 Exception( const Exception &) throw();    //!< copy
 
@@ -74,17 +71,16 @@ namespace upsylon
             class _Terminal : public DynamoSymbol<const Syntax::Rule>
             {
             public:
-                typedef DynamoSymbol<const Syntax::Rule> BaseType;
-                typedef intr_ptr<string,_Terminal> Pointer; //!< alias
+                typedef DynamoSymbol<const Syntax::Rule> BaseType; //!< alias
+                typedef intr_ptr<string,_Terminal>       Pointer;  //!< alias
 
-                const string expr;   //!< parser's string
+                const string expr;   //!< parser's string as key
 
                 //! initialize
                 inline _Terminal(const string &data,
                                  const Rule   &r,
                                  const Origin &from) :
-                BaseType(r,from),
-                expr(data) {}
+                BaseType(r,from), expr(data) {}
 
                 //! destructor
                 inline virtual ~_Terminal() throw() {}
@@ -95,8 +91,7 @@ namespace upsylon
                 //! output with expr
                 inline friend std::ostream & operator<<( std::ostream &os, const _Terminal &s )
                 {
-                    s.display(os) << '(' << s.expr << ')';
-                    return os;
+                    return (s.display(os) << '(' << s.expr << ')');
                 }
                 
             private:
@@ -116,10 +111,9 @@ namespace upsylon
                 inline virtual ~_Internal() throw() {}
 
                 //! initialize
-                inline explicit _Internal( Syntax::Compound &r, const Origin &from ) throw() :
-                BaseType(r,from)
-                {
-                }
+                inline explicit _Internal(Syntax::Compound &r,
+                                          const Origin     &from) throw() :
+                BaseType(r,from) {}
 
                 //! for database
                 inline const string &key() const throw() { return rule.name; }
@@ -134,7 +128,7 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(_Internal);
             };
-            typedef _Internal::Pointer Internal;                     //!< alias
+            typedef _Internal::Pointer                    Internal;  //!< alias
             typedef set<string,Internal,KeyHasher,Memory> Internals; //!< database of internals
 
 
@@ -215,6 +209,8 @@ namespace upsylon
             //! recursive fill
             void fill( Syntax::Compound &content, const Node *parent );
 
+            //! creating a rule
+            const Syntax::Rule &createRule(const Node *node);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);

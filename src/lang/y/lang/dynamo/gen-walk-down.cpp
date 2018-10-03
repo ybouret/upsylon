@@ -43,7 +43,7 @@ namespace upsylon
                 const string ruleName = node->children.head->lexeme.to_string();
                 if(verbose)
                 {
-                    indent() << "..building <" << ruleName << ">" << std::endl;
+                    indent() << "--> building <" << ruleName << ">" << std::endl;
                 }
 
                 //______________________________________________________________
@@ -69,10 +69,42 @@ namespace upsylon
         }
 
 
+    
+
         void DynamoGenerator:: fill(Syntax::Compound &content, const Node *parent)
         {
+            static const char fn[] = "fill";
             assert(parser->owns(content));
             assert(parent);
+            ++level;
+            const string &parentName = parent->rule.name;
+            if(verbose) { indent() << "\\_filling@<" << parentName << ">" << std::endl; }
+
+            switch( hsyn(parentName) )
+            {
+                case IS_AGG:
+                case IS_ALT:
+                    //__________________________________________________________
+                    //
+                    // already created: parse children
+                    //__________________________________________________________
+                    assert(parent->internal);
+                    ++level;
+                    for(const Node *child=parent->children.head;child;child=child->next)
+                    {
+                        if(verbose) { indent() << "\\_" << child->rule.name << std::endl; }
+                    }
+                    --level;
+                default:;
+            }
+            --level;
+        }
+
+        const Syntax::Rule & DynamoGenerator:: createRule(const Node *node)
+        {
+            assert(node);
+
+            throw exception("Not implemented");
         }
 
 #if 0
