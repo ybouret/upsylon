@@ -95,7 +95,33 @@ namespace upsylon
                         content.add( createRule(child) );
                     }
                     --level;
-                default:;
+                    break;
+
+                case IS_ZOM:
+                    assert(parent->internal);
+                    assert(1==parent->children.size);
+                    content.add( parser->zeroOrMore( createRule(parent->children.head) ) );
+                    break;
+
+                case IS_OOM:
+                    assert(parent->internal);
+                    assert(1==parent->children.size);
+                    content.add( parser->oneOrMore( createRule(parent->children.head) ) );
+                    break;
+
+                case IS_OPT:
+                    assert(parent->internal);
+                    assert(1==parent->children.size);
+                    content.add( parser->optional( createRule(parent->children.head) ) );
+                    break;
+
+                case IS_ID:
+                    assert(parent->terminal);
+                    
+                    //break;
+
+                default:
+                    throw Exception(fn,"{%s} unhandled creation of '%s'", **(parser->name), *parentName);
             }
             --level;
         }
@@ -114,11 +140,21 @@ namespace upsylon
                     //----------------------------------------------------------
                     assert(node->terminal);
                     const string        id = node->lexeme.to_string();
-                    const Syntax::Rule *r = parser->getRuleByName(id);
+                    const Syntax::Rule *r  = parser->getRuleByName(id);
                     if(verbose) { indent() << "  |_ID='" << id << "'" << std::endl; }
                     if(!r) throw Exception(fn,"{%s} '%s' was not declared", **(parser->name), *id);
                     return *r;
-                } break;
+                }
+
+                case IS_ALT: {
+                    //----------------------------------------------------------
+                    // a new alternation
+                    //----------------------------------------------------------
+                    Syntax::Compound &sub = parser->alt();
+                    if(verbose) { indent() << "  |_ALT '" << sub.name << "'" << std::endl; }
+                    fill(sub,node);
+                    return sub;
+                }
 
                 default:
                     break;

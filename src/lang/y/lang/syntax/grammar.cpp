@@ -16,6 +16,7 @@ namespace upsylon
             rules(),
             rdb(),
             altID(0),
+            aggID(0),
             verbose(false)
             {
             }
