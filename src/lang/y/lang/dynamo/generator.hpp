@@ -32,8 +32,7 @@ namespace upsylon
 
         protected:
             //! initialize
-            explicit DynamoSymbol(RULE_TYPE &r, const Origin &o) throw() :
-            rule(r), module(o) {}
+            explicit inline DynamoSymbol(RULE_TYPE &r, const Origin &o) throw() : rule(r), module(o) {}
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoSymbol);
@@ -206,6 +205,7 @@ namespace upsylon
             // second pass functions
             //
             //__________________________________________________________________
+
             //! walk down from top
             void walkDown( const Node &dynamo );
 
@@ -222,10 +222,13 @@ namespace upsylon
             const Syntax::Rule & createRule(const Node   *node,
                                            const int     h);
 
+            //! query a previously create rule
             const Syntax::Rule & getRuleID(const char *fn, const Node *node) const;
 
+            //! query of create a rule from a raw/string, with the operator flg
             const Syntax::Rule & getRuleFromString( const string &rs, const bool isOp );
 
+            //! create a new visible terminal from a regexp
             const Syntax::Rule & getRuleFromRegExp( const string &rx );
 
         };
