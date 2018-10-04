@@ -210,7 +210,7 @@ namespace upsylon
             void walkDown( const Node &dynamo );
 
 
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
             string LxrToRX(const Node *sub,const string &lxr, string &label) const;

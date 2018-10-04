@@ -181,7 +181,6 @@ namespace upsylon
             if(verbose) { indent() << "internals=" << internals << std::endl; }
 
 
-
             return parser.yield();
         }
 
