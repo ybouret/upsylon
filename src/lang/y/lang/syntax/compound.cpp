@@ -80,6 +80,11 @@ namespace upsylon
                 (Type &)type = Design;
             }
 
+            bool Rule:: isCompound() const throw()
+            {
+                return Aggregate::UUID == uuid || Alternate::UUID == uuid;
+            }
+
         }
 
     }

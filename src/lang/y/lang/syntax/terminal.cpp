@@ -72,6 +72,10 @@ namespace upsylon
             
             Terminal & Terminal::setOperator() throw() { isOperator=true; return *this; }
 
+            bool Rule:: isTerminal() const throw()
+            {
+                return Terminal::UUID == uuid;
+            }
 
 
         }

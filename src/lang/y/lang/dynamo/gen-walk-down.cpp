@@ -35,11 +35,11 @@ namespace upsylon
                 //
                 // get the rule name
                 //______________________________________________________________
-                assert("RULE"==node->rule.name);
-                assert(node->internal);
-                assert(node->children.size==2);
-                assert(node->children.head->terminal);
-                assert(node->children.head->rule.name=="ID");
+                Y_DYNAMO_CHECK("RULE"==node->rule.name);
+                Y_DYNAMO_CHECK(node->internal);
+                Y_DYNAMO_CHECK(node->children.size==2);
+                Y_DYNAMO_CHECK(node->children.head->terminal);
+                Y_DYNAMO_CHECK(node->children.head->rule.name=="ID");
                 const string ruleName = node->children.head->lexeme.to_string();
                 if(verbose)
                 {
@@ -55,7 +55,7 @@ namespace upsylon
                 {
                     throw Exception(fn,"{%s} unexpected missing <%s>", **(parser->name), *ruleName);
                 }
-                assert(Syntax::Aggregate::UUID==rule->uuid||Syntax::Alternate::UUID==rule->uuid);
+                Y_DYNAMO_CHECK(rule->isCompound());
                 assert(rule->data);
                 Syntax::Compound &content = *(Syntax::Compound *)(rule->data);
                 fill(content,node->children.tail);
@@ -115,7 +115,7 @@ namespace upsylon
                     break;
 
                 default:
-                    throw Exception(fn,"{%s} unhandled creation of '%s'", **(parser->name), *parentName);
+                    throw Exception(fn,"{%s} unexpected creation of '%s'", **(parser->name), *parentName);
             }
             --level;
         }
@@ -127,7 +127,13 @@ namespace upsylon
             if(verbose) { indent() << "\\_" << fn << "(" << node->rule.name << ")" << std::endl; }
             switch( h )
             {
-                case IS_ID: return getRuleID(fn,node);
+                case IS_ID:
+                {
+                    //----------------------------------------------------------
+                    // rule must have been created before
+                    //----------------------------------------------------------
+                    return getRuleID(fn,node);
+                }
 
                 case IS_ALT:
                 {
@@ -172,8 +178,8 @@ namespace upsylon
                     const Node *RS = node->children.head;
                     Y_DYNAMO_CHECK( hsyn(RS->rule.name)==IS_RS );
                     Y_DYNAMO_CHECK(RS->terminal);
-                    const string rs = node->lexeme.to_string(1,1);
-                    break;
+                    const string rs = RS->lexeme.to_string(1,1);
+                    return getRuleFromString(rs,true);
                 }
 
                 case IS_RX:
@@ -186,9 +192,9 @@ namespace upsylon
                 }
 
 #define Y_DYNGEN_CREATE(LABEL,METHOD) case IS_##LABEL: do {\
-assert(node->internal);\
-assert(1==node->children.size);\
-assert(0!=node->children.head);\
+Y_DYNAMO_CHECK(node->internal);        \
+Y_DYNAMO_CHECK(1==node->children.size);\
+Y_DYNAMO_CHECK(0!=node->children.head);\
 return parser->METHOD(createRule(node->children.head, hsyn( node->children.head->rule.name ) ) ); } while(false)
 
                     Y_DYNGEN_CREATE(OOM,oneOrMore);
@@ -216,7 +222,8 @@ return parser->METHOD(createRule(node->children.head, hsyn( node->children.head-
                 // found the same registered raw string
                 //______________________________________________________________
                 if(verbose) { indent() << "  |_already declared!" << std::endl; }
-                const Syntax::Rule &rule = (**ppTerm).rule; assert(Syntax::Terminal::UUID==rule.uuid);
+                const Syntax::Rule &rule = (**ppTerm).rule;
+                Y_DYNAMO_CHECK(rule.isTerminal());
 
                 //--------------------------------------------------------------
                 // check operator level

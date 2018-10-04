@@ -47,7 +47,10 @@ namespace upsylon
                 void         viz_id( ios::ostream &fp ) const; //!< fp.viz(this)
                 void         prolog( ios::ostream &fp ) const; //!< id+modifiers
                 virtual void epilog( ios::ostream &fp ) const; //!< linking
-                
+
+                bool isTerminal() const throw();
+                bool isCompound() const throw();
+
 
             protected:
                 //! initialize
