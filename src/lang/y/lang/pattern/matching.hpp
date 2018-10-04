@@ -17,7 +17,7 @@ namespace upsylon
             Matching( Pattern *p ) throw(); //!< initialize with a compiled pattern
             Matching( const string &rx, const Dictionary *dict=NULL); //!< init with regular expression
             Matching( const char   *rx, const Dictionary *dict=NULL); //!< init with regulat expresiion
-            Matching(const Matching &other) throw();
+            Matching(const Matching &other) throw();                  //!< share the pattern
 
             bool exactly( const string &s );                 //!< the string must entirely match the pattern
             bool partly(const string &s);                    //!< the string must partly match the pattern

@@ -107,8 +107,8 @@ namespace upsylon
             class _Internal : public DynamoSymbol<Syntax::Compound>
             {
             public:
-                typedef DynamoSymbol<Syntax::Compound> BaseType;
-                typedef intr_ptr<string,_Internal> Pointer; //!< alias
+                typedef DynamoSymbol<Syntax::Compound> BaseType; //!< alias
+                typedef intr_ptr<string,_Internal>     Pointer;  //!< alias
 
                 //! destructor
                 inline virtual ~_Internal() throw() {}
