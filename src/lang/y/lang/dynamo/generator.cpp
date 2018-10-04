@@ -146,7 +146,9 @@ namespace upsylon
             verbose = verbose_flag;
             level   = 0;
             modules.free();
-
+            internals.free();
+            terminals.free();
+            
             if(verbose) { indent() << "Dynamo." << fn << std::endl; }
 
             //__________________________________________________________________

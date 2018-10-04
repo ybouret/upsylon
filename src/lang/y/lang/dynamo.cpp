@@ -8,31 +8,99 @@ namespace upsylon
     namespace Lang
     {
 
+        namespace
+        {
+            class DynamoServer : public singleton<DynamoServer>
+            {
+            public:
+                DynamoCompiler & Compiler()
+                {
+                    Y_LOCK(access);
+                    if(!C.is_valid()) C = new DynamoCompiler();
+                    return *C;
+                }
+
+                DynamoGenerator & Generator()
+                {
+                    Y_LOCK(access);
+                    if(!G.is_valid()) G = new DynamoGenerator();
+                    return *G;
+                }
+
+                inline void Init()
+                {
+                    try
+                    {
+                        (void) Compiler();
+                        (void) Generator();
+                    }
+                    catch(...)
+                    {
+                        Quit();
+                        throw;
+                    }
+                }
+
+                inline void Quit() throw()
+                {
+                    G=0;
+                    C=0;
+                }
+
+
+                Syntax::Node * process( Module *module )
+                {
+                    Y_LOCK(access);
+                    return Compiler().process(module);
+                }
+
+                Syntax::Parser *create( Syntax::Node *dynamo, const bool verbose )
+                {
+                    auto_ptr<Syntax::Node> guard(dynamo);
+                    Y_LOCK(access);
+                    assert(C.is_valid());
+                    return Generator().create(*dynamo,verbose);
+                }
+
+            private:
+                auto_ptr<DynamoCompiler>  C;
+                auto_ptr<DynamoGenerator> G;
+                friend class singleton<DynamoServer>;
+
+                explicit DynamoServer() throw() : C(0), G(0)
+                {
+                }
+
+                virtual ~DynamoServer() throw()
+                {
+                }
+
+                static const at_exit::longevity life_time = memory::pooled::life_time-10;
+
+            };
+        }
+
         Syntax::Parser * Dynamo:: FromSource(const string &filename, const bool verbose)
         {
-            DynamoCompiler         dynCompiler;
-            auto_ptr<Syntax::Node> dynamo  = dynCompiler.process( Module::OpenFile(filename) );
-            DynamoGenerator        dynGenerator;
-            return dynGenerator.create(*dynamo,verbose);
+            static DynamoServer &dynamo = DynamoServer::instance();
+            return dynamo.create( dynamo.process( Module::OpenFile(filename) ), verbose);
         }
 
         Syntax::Parser * Dynamo:: FromBinary(const string &filename, const bool verbose)
         {
-            DynamoParser           dynParser;
             Source                 source( Module::OpenFile(filename) );
-            auto_ptr<Syntax::Node> dynamo  = Syntax::Node::Load(source,dynParser);
-            DynamoGenerator        dynGenerator;
-            return dynGenerator.create(*dynamo,verbose);
+            static DynamoServer   &dynamo = DynamoServer::instance();
+
+            return dynamo.create(Syntax::Node::Load(source,dynamo.Compiler().parser),verbose);
         }
 
 
         Syntax::Parser * Dynamo:: FromBinary(const char *name, const char *data, const size_t size,const bool verbose)
         {
-            DynamoParser           dynParser;
+            static DynamoServer   &dynamo = DynamoServer::instance();
             Source                 source( Module::OpenData(name,data,size) );
-            auto_ptr<Syntax::Node> dynamo  = Syntax::Node::Load(source,dynParser);
-            DynamoGenerator        dynGenerator;
-            return dynGenerator.create(*dynamo,verbose);
+
+            return dynamo.create(Syntax::Node::Load(source,dynamo.Compiler().parser),verbose);
         }
 
         Syntax::Parser * Dynamo:: Load(const string &filename, const FormatType type, const bool verbose)
@@ -47,66 +115,18 @@ namespace upsylon
 
         string Dynamo:: Compile(const string &filename)
         {
-            DynamoCompiler         dynCompiler;
-            auto_ptr<Syntax::Node> dynamo  = dynCompiler.process( Module::OpenFile(filename) );
-            return dynamo->to_binary();
+            static DynamoServer   &dynamo = DynamoServer::instance();
+            auto_ptr<Syntax::Node> node   = dynamo.process( Module::OpenFile(filename) );
+            return node->to_binary();
         }
 
-#if 0
-        Syntax::Node * Dynamo:: CompileAST( const string &filename )
-        {
-            std::cerr << "-- CompileAST from '" << filename << "'" << std::endl;
-            DynamoCompiler dynCompiler;
-            return dynCompiler.process( Module::OpenFile(filename) );
-        }
-
-        Syntax::Node * Dynamo:: RebuildAST( const string &filename )
-        {
-            std::cerr << "-- RebuildAST from '" << filename << "'" << std::endl;
-            DynamoParser   grammar;
-            Source         source( Module::OpenFile(filename) );
-            return Syntax::Node::Load(source,grammar);
-        }
-
-
-        Syntax::Node * Dynamo:: LoadAST(const string &filename, const FormatType type)
-        {
-            std::cerr << "-- Loading AST" << std::endl;
-            switch(type)
-            {
-                case SourceFile: return CompileAST(filename);
-                case BinaryFile: return RebuildAST(filename);
-            }
-            throw exception("Dynamo.LoadAST(unexpected FormatType)");
-        }
-
-        Syntax::Node * Dynamo:: RebuildAST( const char *name, const char *data, const size_t size)
-        {
-            DynamoParser   grammar;
-            Source         source( Module::OpenData(name,data,size) );
-            return Syntax::Node::Load(source,grammar);
-        }
-
-        Syntax::Parser * Dynamo::CreateFrom( Syntax::Node *ast, const bool verbose )
-        {
-            assert(ast);
-            std::cerr << "-- Creating Parser from AST" << std::endl;
-
-            auto_ptr<Syntax::Node> dynamo(ast);
-            {
-                std::cerr << "-- Saving..." << std::endl;
-                ast->GraphViz("dynast.dot");
-                std::cerr << "-- ...done" << std::endl;
-            }
-            DynamoGenerator        dyn;
-            return dyn.create(*dynamo,verbose);
-        }
-#endif
 
         Dynamo:: ~Dynamo() throw()
         {
         }
 
+
+        
 
     }
 }
