@@ -2,21 +2,41 @@
 #include "y/lang/pattern/basic.hpp"
 #include "y/lang/pattern/logic.hpp"
 #include "y/lang/pattern/joker.hpp"
+#include "y/ios/imstream.hpp"
 
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
 using namespace Lang;
 
+namespace
+{
+    static inline void test_io( const Pattern &p )
+    {
+        const string bin = p.to_binary();
+
+        auto_ptr<Pattern> q = 0;
+        {
+            ios::imstream fp(bin);
+            q = Pattern::Load(fp);
+            
+        }
+    }
+}
+
 Y_UTEST(pattern)
 {
     auto_ptr<Pattern> p = new Any1();
     p->GraphViz("any1.dot");
+    test_io(*p);
+
     p = new Single('\\');
     p->GraphViz("single.dot");
+    test_io(*p);
 
     p = new Range('a','z');
     p->GraphViz("range.dot");
+    test_io(*p);
 
     auto_ptr<Logical> q = new AND();
     q->add(new Single('a'));
@@ -29,6 +49,7 @@ Y_UTEST(pattern)
     }
     q->add(new Single('p'));
     q->GraphViz("and.dot");
+    test_io(*q);
 
     q = new AND();
     q->add( Optional ::Create( new Single('A') )    );
@@ -37,7 +58,7 @@ Y_UTEST(pattern)
     q->add( Repeating::Create( new Single('D'), 2 ) );
     q->add( Counting ::Create( new Single('E'),0,5) );
     q->GraphViz("jk.dot");
-
+    test_io(*q);
 
 }
 Y_UTEST_DONE()

@@ -12,7 +12,7 @@ namespace upsylon
         static inline Pattern *__load( Logical *l, ios::istream &fp )
         {
             auto_ptr<Logical> q = l;
-            const size_t      n = fp.read<uint32_t>();
+            const size_t      n = fp.read_upack<size_t>();
             for(size_t i=1;i<=n;++i)
             {
                 q->add( Pattern::Load(fp) );
@@ -51,11 +51,11 @@ namespace upsylon
                     //__________________________________________________________
                 case Optional :: UUID: return Optional::Create( Pattern::Load(fp) );
                 case Repeating:: UUID: {
-                    const uint32_t nmin = fp.read<uint32_t>();
+                    const uint32_t nmin = fp.read_upack<size_t>();
                     return Repeating::Create(Pattern::Load(fp),nmin); }
                 case Counting:: UUID: {
-                    const uint32_t nmin = fp.read<uint32_t>();
-                    const uint32_t nmax = fp.read<uint32_t>();
+                    const uint32_t nmin = fp.read_upack<size_t>();
+                    const uint32_t nmax = fp.read_upack<size_t>();
                     return Counting::Create(Pattern::Load(fp),nmin,nmax); }
 
                 default:
