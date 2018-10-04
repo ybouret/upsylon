@@ -16,7 +16,7 @@ namespace upsylon
         const Pattern & Dictionary:: operator()(const string &name, Pattern *p)
         {
             assert(p);
-            std::cerr << "Inserting Pattern as '" << name << "'" << std::endl;
+            //std::cerr << "Inserting Pattern as '" << name << "'" << std::endl;
             patterns.push_back(p);
             try
             {

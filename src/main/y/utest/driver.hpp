@@ -103,7 +103,7 @@ namespace upsylon
                     const proc_type *proc = search( name );
                     if( !proc )
                     {
-                        std::cerr << "-- unknown test '" << name << "'" << std::endl;
+                        std::cerr << "-- I don't know how to '" << name << "'" << std::endl;
                         return -1;
                     }
                     try

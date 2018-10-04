@@ -147,10 +147,7 @@ namespace upsylon
             level   = 0;
             modules.free();
 
-            if(verbose)
-            {
-                indent() << "Dynamo." << fn << std::endl;
-            }
+            if(verbose) { indent() << "Dynamo." << fn << std::endl; }
 
             //__________________________________________________________________
             //
@@ -187,6 +184,7 @@ namespace upsylon
         string DynamoGenerator:: getModuleName(const Node &dynamo) const
         {
             static const char fn[] = "getModuleName";
+            if(verbose) { indent() << "Dynamo." << fn << std::endl; }
             Y_DYNAMO_CHECK(dynamo.internal);
             Y_DYNAMO_CHECK(dynamo.children.size>1);
             Y_DYNAMO_CHECK(dynamo.children.head);

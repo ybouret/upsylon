@@ -15,6 +15,6 @@ Y_UTEST_INIT(16)
     Y_UTEST(eval);
     Y_UTEST(json);
     Y_UTEST(dyn);
-
+    Y_UTEST(gen);
 }
 Y_UTEST_EXEC()

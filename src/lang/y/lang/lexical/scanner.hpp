@@ -36,7 +36,7 @@ namespace upsylon
                                 const Motif       &ruleMotif,
                                 const CODE        &ruleEvent)
                 {
-                    std::cerr << "\\_scan[" << label << "].add( '" << ruleLabel << "' )" << std::endl;
+                    std::cerr << "@scan[" << label << "].add( '" << ruleLabel << "' )" << std::endl;
                     checkLabel(ruleLabel);
                     rules.push_back( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
