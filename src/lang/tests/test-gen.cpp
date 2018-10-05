@@ -44,6 +44,7 @@ Y_UTEST(gen)
                 m = Module:: OpenFile(src);
             }
             compiler.compile(m);
+            compiler.ast->GraphViz( *(compiler->name)+"_ast.dot" );
         }
     }
 }
