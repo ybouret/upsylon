@@ -251,7 +251,7 @@ namespace upsylon
 
             public:
                 const Dictionary *userDict; //!< validity must be checked by user
-                bool              verbose;
+                bool              verbose;  //!< to check build up of the scanner
             };
 
         }

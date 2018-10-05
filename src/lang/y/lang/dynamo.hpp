@@ -8,21 +8,27 @@ namespace upsylon
     namespace Lang
     {
 
+        //! generate a compiler for the given grammar/compiled grammar
         class Dynamo : public Compiler
         {
         public:
+            //! input format
             enum FormatType
             {
-                SourceFile,
-                BinaryFile
+                SourceFile, //!< a valid grammar
+                BinaryFile  //!< a compiled grammar
             };
 
+            //! load from source grammar
             static Syntax::Parser *FromSource(const string &filename, const bool verbose=false);
+            //! load from compiled grammar
             static Syntax::Parser *FromBinary(const string &filename, const bool verbose=false);
+            //! load from compiled grammar in memory chunk
             static Syntax::Parser *FromBinary(const char   *name, const char *data, const size_t size, const bool verbose=false);
+            //! dispatch calls
             static Syntax::Parser *Load( const string &filename, const FormatType type, const bool verbose=false);
+            //! compile a grammar into its binary form
             static string          Compile(const string &filename);
-
 
             //! destructor
             virtual ~Dynamo() throw();

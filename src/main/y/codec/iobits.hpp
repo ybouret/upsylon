@@ -68,7 +68,7 @@ namespace upsylon
         explicit iobits() throw(); //!< initialize
         virtual ~iobits() throw(); //!< destructor
         
-        iobit::pool pool; //!< interbal pool of bits
+        iobit::pool pool; //!< internal pool of bits
 
         //! query a new bit
         inline iobit *query( const bool flag )

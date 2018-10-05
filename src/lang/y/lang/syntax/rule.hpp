@@ -48,8 +48,8 @@ namespace upsylon
                 void         prolog( ios::ostream &fp ) const; //!< id+modifiers
                 virtual void epilog( ios::ostream &fp ) const; //!< linking
 
-                bool isTerminal() const throw();
-                bool isCompound() const throw();
+                bool isTerminal() const throw(); //!< check uuid
+                bool isCompound() const throw(); //!< check uuid
 
 
             protected:
