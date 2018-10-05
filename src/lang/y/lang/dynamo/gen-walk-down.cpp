@@ -249,7 +249,7 @@ return parser->METHOD(createRule(node->children.head, hsyn( node->children.head-
                 const string &id = rs;
                 const string  rx = StringToRegExp(rs);
                 if(verbose) { indent() << "  |_creating from \"" << rx << "\"" << std::endl; }
-                const Syntax::Rule &rule = isOp ? parser->op(id,rx) : parser->sole(id,rx);
+                const Syntax::Rule &rule = isOp ? parser->op(id,rx) : parser->mark(id,rx);
                 const Terminal sym = new _Terminal(rs,rule,parser->name,false);
                 if(!terminals.insert(sym))
                 {

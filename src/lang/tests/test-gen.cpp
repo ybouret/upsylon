@@ -30,6 +30,7 @@ Y_UTEST(gen)
             }
         }
 
+        compiler->GraphViz( *(compiler->name)+".dot" );
         if(argc>2)
         {
             const string src = argv[2];
