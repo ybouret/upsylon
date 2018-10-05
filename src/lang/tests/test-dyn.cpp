@@ -73,11 +73,12 @@ Y_UTEST(dyn)
 
         parser->GraphViz("parser.dot");
 
-        std::cerr << "sizeof(DynamoParser)    = " << sizeof(DynamoParser)    << std::endl;
-        std::cerr << "sizeof(DynamoCompiler)  = " << sizeof(DynamoCompiler)  << std::endl;
-        std::cerr << "sizeof(DynamoGenerator) = " << sizeof(DynamoGenerator) << std::endl;
+
 
     }
+    std::cerr << "sizeof(DynamoParser)    = " << sizeof(DynamoParser)    << std::endl;
+    std::cerr << "sizeof(DynamoCompiler)  = " << sizeof(DynamoCompiler)  << std::endl;
+    std::cerr << "sizeof(DynamoGenerator) = " << sizeof(DynamoGenerator) << std::endl;
 
 }
 Y_UTEST_DONE()

@@ -20,8 +20,14 @@ Y_UTEST(gen)
             {
                 ios::ocstream fp(savename); fp << bin;
             }
-            Dynamo compiler2(savename,Dynamo::BinaryFile,false);
-            Dynamo compiler3(*savename,*bin,bin.size(),false);
+            {
+                std::cerr << "Reloading from Binary File" << std::endl;
+                Dynamo compiler2(savename,Dynamo::BinaryFile,false);
+            }
+            {
+                std::cerr << "Reloading from Binary Data" << std::endl;
+                Dynamo compiler3(*savename,*bin,bin.size(),false);
+            }
         }
     }
 }

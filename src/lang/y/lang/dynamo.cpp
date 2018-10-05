@@ -13,62 +13,34 @@ namespace upsylon
             class DynamoServer : public singleton<DynamoServer>
             {
             public:
-                DynamoCompiler & Compiler()
-                {
-                    Y_LOCK(access);
-                    if(!C.is_valid()) C = new DynamoCompiler();
-                    return *C;
-                }
+                DynamoCompiler  compiler;
+                DynamoParser   &parser;
+                DynamoGenerator generator;
 
-                DynamoGenerator & Generator()
-                {
-                    Y_LOCK(access);
-                    if(!G.is_valid()) G = new DynamoGenerator();
-                    return *G;
-                }
 
-                inline void Init()
-                {
-                    try
-                    {
-                        (void) Compiler();
-                        (void) Generator();
-                    }
-                    catch(...)
-                    {
-                        Quit();
-                        throw;
-                    }
-                }
-
-                inline void Quit() throw()
-                {
-                    G=0;
-                    C=0;
-                }
 
 
                 Syntax::Node * process( Module *module )
                 {
                     Y_LOCK(access);
-                    return Compiler().process(module);
+                    return compiler.process(module);
                 }
 
                 Syntax::Parser *create( Syntax::Node *dynamo, const bool verbose )
                 {
                     auto_ptr<Syntax::Node> guard(dynamo);
                     Y_LOCK(access);
-                    assert(C.is_valid());
-                    return Generator().create(*dynamo,verbose);
+                    return generator.create(*dynamo,verbose);
                 }
 
             private:
-                auto_ptr<DynamoCompiler>  C;
-                auto_ptr<DynamoGenerator> G;
+
                 friend class singleton<DynamoServer>;
 
-                explicit DynamoServer() throw() : C(0), G(0)
+                explicit DynamoServer() throw() :
+                compiler(), parser( compiler.parser ), generator()
                 {
+                    std::cerr << "DynamoServer#reserved=" << reserved() << std::endl;
                 }
 
                 virtual ~DynamoServer() throw()
@@ -91,7 +63,7 @@ namespace upsylon
             Source                 source( Module::OpenFile(filename) );
             static DynamoServer   &dynamo = DynamoServer::instance();
 
-            return dynamo.create(Syntax::Node::Load(source,dynamo.Compiler().parser),verbose);
+            return dynamo.create(Syntax::Node::Load(source,dynamo.parser),verbose);
         }
 
 
@@ -100,7 +72,7 @@ namespace upsylon
             static DynamoServer   &dynamo = DynamoServer::instance();
             Source                 source( Module::OpenData(name,data,size) );
 
-            return dynamo.create(Syntax::Node::Load(source,dynamo.Compiler().parser),verbose);
+            return dynamo.create(Syntax::Node::Load(source,dynamo.parser),verbose);
         }
 
         Syntax::Parser * Dynamo:: Load(const string &filename, const FormatType type, const bool verbose)

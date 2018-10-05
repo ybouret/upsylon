@@ -161,7 +161,8 @@ namespace upsylon
                 indent() << "creating parser {" << parserName << "}" << std::endl;
             }
             parser = new Syntax::Parser( parserName );
-
+            parser->root.verbose = verbose;
+            
             //__________________________________________________________________
             //
             // create top level structure

@@ -36,7 +36,7 @@ namespace upsylon
                                 const Motif       &ruleMotif,
                                 const CODE        &ruleEvent)
                 {
-                    std::cerr << "@scan[" << label << "].add( '" << ruleLabel << "' )" << std::endl;
+                    if(verbose) { std::cerr << "@scan[" << label << "].add( '" << ruleLabel << "' )" << std::endl; }
                     checkLabel(ruleLabel);
                     rules.push_back( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
@@ -251,6 +251,7 @@ namespace upsylon
 
             public:
                 const Dictionary *userDict; //!< validity must be checked by user
+                bool              verbose;
             };
 
         }

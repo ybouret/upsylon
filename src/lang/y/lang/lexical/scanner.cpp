@@ -12,7 +12,8 @@ namespace upsylon
 label(ID),                      \
 rules(),                        \
 probed(0),                      \
-userDict(0)
+userDict(0),                    \
+verbose(false)
 
             Scanner:: Scanner( const string &id ) :
             Y_LANG_SCANNER_CTOR(new string(id))

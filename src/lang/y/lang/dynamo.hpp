@@ -34,7 +34,7 @@ namespace upsylon
             Compiler( Load(filename,type,verbose) )
             {
             }
-
+            
             //! create a compiler from a binary data chunk
             inline explicit Dynamo(const char  *name,
                                    const char  *data,

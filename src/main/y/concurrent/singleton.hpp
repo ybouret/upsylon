@@ -43,6 +43,7 @@ namespace upsylon
                     {
                         at_exit::perform( __release, T::life_time);
                         register_ = false;
+                        reserved_ = sizeof(location_);
                     }
 
                     //----------------------------------------------------------
@@ -81,6 +82,13 @@ namespace upsylon
             (void) instance();
         }
 
+        //! bytes for instance storage
+        inline size_t reserved() const throw()
+        {
+            return reserved_;
+        }
+
+
     protected:
         inline explicit singleton() throw() {}
         inline virtual ~singleton() throw() {}
@@ -89,6 +97,7 @@ namespace upsylon
         Y_DISABLE_COPY_AND_ASSIGN(singleton);
 
         static volatile T *instance_; //!< not NULL if created
+        static size_t      reserved_; //!< sizeof(instance)
 
         //! register in at_exit
         static void __release() throw()
@@ -112,6 +121,7 @@ namespace upsylon
 
     template <typename T> volatile T *      singleton<T>::instance_ = 0;
     template <typename T> concurrent::mutex singleton<T>::access;
+    template <typename T> size_t            singleton<T>::reserved_ = 0;
 }
 
 #endif
