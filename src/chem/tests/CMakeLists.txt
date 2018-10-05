@@ -18,7 +18,7 @@ ADD_TEST(BootAB      test-chem bootAB)
 ADD_TEST(Lua:Sample  test-chem lua ${HERE}/sample.lua)
 ADD_TEST(Lua:Acetic  test-chem lua ${HERE}/acetic.lua)
 ADD_TEST(Lua:Citric  test-chem lua ${HERE}/citric.lua)
-ADD_TEST(Kinetics    test-chem kinetics)
+ADD_TEST(Kinetics    test-chem kinetics ${HERE}/acetic.lua)
 
 ADD_CUSTOM_TARGET(utest-chem
 COMMAND ${CMAKE_CTEST_COMMAND} -V
