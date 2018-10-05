@@ -149,10 +149,10 @@ namespace upsylon
                 case IS_AGG:
                 {
                     //----------------------------------------------------------
-                    // a new aggregate
+                    // a new aggregate, temporary, so acting...
                     //----------------------------------------------------------
-                    Syntax::Compound &sub = parser->agg();
-                    if(verbose) { indent() << "  |_ALT '" << sub.name << "'" << std::endl; }
+                    Syntax::Compound &sub = parser->agg(Syntax::Compound::Acting);
+                    if(verbose) { indent() << "  |_AGG '" << sub.name << "'" << std::endl; }
                     fill(sub,node);
                     return sub;
                 }
