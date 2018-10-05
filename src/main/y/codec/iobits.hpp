@@ -9,16 +9,17 @@
 namespace upsylon
 {
 
-
+    //! dynamic bit
     struct iobit
     {
-        iobit  *next;
-        iobit  *prev;
-        bool    code;
+        iobit  *next; //!< for list/pool
+        iobit  *prev; //!< for list
+        bool    code; //!< boolean value
 
-        typedef core::list_of<iobit> list_type;
-        typedef core::pool_of<iobit> pool_type;
+        typedef core::list_of<iobit> list_type; //!< alias
+        typedef core::pool_of<iobit> pool_type; //!< alias
 
+        //! compact memory allocation
         inline static iobit * create( bool flag )
         {
             iobit *b = object::acquire1<iobit>();
@@ -26,30 +27,34 @@ namespace upsylon
             return b;
         }
 
+        //! compact memory deallocation
         inline static void destroy( iobit *b ) throw()
         {
             assert(b);
             object::release1(b);
         }
 
+        //! C++ list of bits
         class list : public list_type
         {
         public:
-            inline explicit list() throw() : list_type() {}
-            inline virtual ~list() throw() { clear(); }
-            inline void     clear() throw() { while(size) destroy( pop_back() ); }
+            inline explicit list() throw() : list_type() {} //!< initialize
+            inline virtual ~list() throw() { clear(); }     //!< destructor
+            inline void     clear() throw() { while(size) destroy( pop_back() ); } //!< special release
         private:
             Y_DISABLE_COPY_AND_ASSIGN(list);
         };
 
+        //! C++ pool of bits
         class pool : public pool_type
         {
         public:
-            inline explicit pool() throw() : pool_type() {}
-            inline virtual ~pool() throw() { clear(); }
-            inline void clear() throw() { while(size) destroy( query() ); }
-            inline void keep(const size_t nmax) throw() { while(size>nmax) destroy(query()); }
-            inline void reserve(size_t n) { while(n-->0) store(object::acquire1<iobit>()); }
+            inline explicit pool() throw() : pool_type() {} //!< initialize
+            inline virtual ~pool() throw() { clear(); }     //!< destructor
+
+            inline void clear() throw() { while(size) destroy( query() ); }                    //!< special release
+            inline void keep(const size_t nmax) throw() { while(size>nmax) destroy(query()); } //!< keep at most some bits
+            inline void reserve(size_t n) { while(n-->0) store(object::acquire1<iobit>()); }   //!< reserve extra bits
         private:
             Y_DISABLE_COPY_AND_ASSIGN(pool);
         };
@@ -60,11 +65,12 @@ namespace upsylon
     class iobits : public iobit::list
     {
     public:
-        explicit iobits() throw();
-        virtual ~iobits() throw();
+        explicit iobits() throw(); //!< initialize
+        virtual ~iobits() throw(); //!< destructor
         
-        iobit::pool pool;
+        iobit::pool pool; //!< interbal pool of bits
 
+        //! query a new bit
         inline iobit *query( const bool flag )
         {
             if( pool.size )
@@ -79,14 +85,52 @@ namespace upsylon
             }
         }
 
-        inline void push( const bool flag ) { push_back( query(flag) ); }
+        //! push a new bit at the back of the list
+        inline void push(const bool flag)   { push_back( query(flag) ); }
+
+        //! peek the bit at the front of the list
         inline bool peek() const throw()    { assert(size>0); return head->code; }
-        inline void free() throw()
+
+        //! pop the bit at the front of the list
+        inline bool pop() throw()
         {
-            while(size) pool.store( pop_back() );
+            assert(size>0);
+            return pool.store(pop_front())->code;
+        }
+        
+        //! free the current content
+        inline void free() throw() { while(size) pool.store( pop_back() ); }
+
+
+        //! pushing unsigned integrals
+        void push(const uint64_t value,
+                  const size_t   nbits);
+
+        //! pushing full integral types
+        template <typename T>
+        inline void push_full( const T value ) { push(value,8*sizeof(T)); }
+
+        //! pop unsigned integral
+        template <typename T>
+        inline T pop( size_t nbits ) throw()
+        {
+            assert(nbits<=8*sizeof(T)); assert(nbits<=size);
+            T ans = 0;
+            while(nbits-->0)
+            {
+                { (ans <<= 1); }
+                if( pop() ) { ans |= 1;}
+            }
+            return ans;
         }
 
+        //! pop full integral
+        template <typename T>
+        inline  T pop_full() throw() { return pop<T>(sizeof(T)*8); }
 
+        //! table of individual bits
+        static const uint64_t ibits[64];
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(iobits);
     };
