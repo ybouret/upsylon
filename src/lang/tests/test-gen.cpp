@@ -16,7 +16,7 @@ Y_UTEST(gen)
         std::cerr << "Dynamo for '" << compiler->name << "'" << std::endl;
         {
             const string savename = *(compiler->name)+".bin";
-            const string bin      = Dynamo::Compile(filename);
+            const string bin      = Dynamo::ToBinary(filename);
             {
                 ios::ocstream fp(savename); fp << bin;
             }
@@ -28,6 +28,21 @@ Y_UTEST(gen)
                 std::cerr << "Reloading from Binary Data" << std::endl;
                 Dynamo compiler3(*savename,*bin,bin.size(),false);
             }
+        }
+
+        if(argc>2)
+        {
+            const string src = argv[2];
+            Module      *m   = 0;
+            if(src == "run")
+            {
+                m = Module:: OpenSTDIN();
+            }
+            else
+            {
+                m = Module:: OpenFile(src);
+            }
+            compiler.compile(m);
         }
     }
 }

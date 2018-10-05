@@ -28,7 +28,7 @@ namespace upsylon
             //! dispatch calls
             static Syntax::Parser *Load( const string &filename, const FormatType type, const bool verbose=false);
             //! compile a grammar into its binary form
-            static string          Compile(const string &filename);
+            static string          ToBinary(const string &filename);
 
             //! destructor
             virtual ~Dynamo() throw();

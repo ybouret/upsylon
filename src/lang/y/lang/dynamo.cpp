@@ -85,7 +85,7 @@ namespace upsylon
             throw exception("Dynamo.Load(unexpected FormatType)");
         }
 
-        string Dynamo:: Compile(const string &filename)
+        string Dynamo:: ToBinary(const string &filename)
         {
             static DynamoServer   &dynamo = DynamoServer::instance();
             auto_ptr<Syntax::Node> node   = dynamo.process( Module::OpenFile(filename) );
