@@ -69,6 +69,7 @@ Y_UTEST_INIT(100)
     Y_UTEST(u64);
     Y_UTEST(spec);
     Y_UTEST(lzo);
+    Y_UTEST(iobits);
 }
 Y_UTEST_EXEC()
 

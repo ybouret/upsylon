@@ -77,6 +77,7 @@ ADD_TEST(Release     test-main release)
 ADD_TEST(Base64      test-main base64 NULL)
 ADD_TEST(Spec        test-main spec)
 ADD_TEST(LZO         test-main lzo)
+ADD_TEST(IObits      test-main iobits)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V
