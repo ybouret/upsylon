@@ -71,7 +71,8 @@ Y_UTEST_INIT(100)
     Y_UTEST(lzo);
     Y_UTEST(iobits);
     Y_UTEST(mtf);
-    
+    Y_UTEST(asf);
+
 }
 Y_UTEST_EXEC()
 
