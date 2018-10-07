@@ -79,6 +79,8 @@ ADD_TEST(Spec        test-main spec)
 ADD_TEST(LZO         test-main lzo)
 ADD_TEST(IObits      test-main iobits)
 ADD_TEST(MTF         test-main  mtf)
+ADD_TEST(Delta       test-main  delta)
+ADD_TEST(ASF         test-main  asf)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V
