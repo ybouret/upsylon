@@ -3,7 +3,7 @@
 
 namespace upsylon
 {
-    iobits:: iobits() throw() : iobit::list()
+    iobits:: iobits() throw() : iobit::list(), pool()
     {
     }
 
