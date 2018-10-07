@@ -16,6 +16,17 @@ namespace upsylon
         static const CodeType  EOS        = NYT+1;          //!< End Of Stream
         static const size_t    ALPHABET_SIZE = NUM_CHARS+2; //!< chars+controls
 
+        struct Char;
+
+        struct Node
+        {
+            Node       *parent;
+            Node       *left;
+            Node       *right;
+            FreqType    freq;
+            const Char *ch;
+        };
+
         //! alphabet node
         struct Char
         {
@@ -25,6 +36,14 @@ namespace upsylon
             FreqType  freq;
             typedef core::list_of<Char> List;
             const char *text() const throw();
+        };
+
+        struct Range
+        {
+            const Char *head;
+            const Char *tail;
+            size_t      size;
+            void split( Range &HEAD, Range &TAIL ) const throw();
         };
 
         class Alphabet
@@ -38,15 +57,19 @@ namespace upsylon
             Char::List active;
             Char      &nyt;
             Char      &eos;
+            Node       nodes[1024];
 
             void display(std::ostream &os) const;
 
             void add(const char C) throw();
 
 
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
             void init() throw();
+            void build_tree() throw();
         };
     };
 }

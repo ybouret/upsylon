@@ -35,7 +35,8 @@ namespace upsylon
     chars(),
     active(),
     nyt( chars[NYT] ),
-    eos( chars[EOS] )
+    eos( chars[EOS] ),
+    nodes()
     {
         for(size_t i=0;i<ALPHABET_SIZE;++i)
         {
@@ -105,6 +106,23 @@ namespace upsylon
         }
     }
 
+#if 0
+    void ASF::Range:: split( Range &HEAD, Range &TAIL ) const throw()
+    {
+
+
+    }
+#endif
+
+    void ASF::Alphabet:: build_tree() throw()
+    {
+#if 0
+        const Range full = { active.head, active.tail, active.size };
+        Range       HEAD = { 0,0,0 };
+        Range       TAIL = { 0,0,0 };
+        full.split(HEAD,TAIL);
+#endif
+    }
 
 }
 
