@@ -41,8 +41,12 @@ namespace upsylon
 
             void display(std::ostream &os) const;
 
+            void add(const char C) throw();
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
+            void init() throw();
         };
     };
 }
