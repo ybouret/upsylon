@@ -181,6 +181,13 @@ namespace upsylon
             if(verbose) { indent() << "internals=" << internals << std::endl; }
 
 
+            //__________________________________________________________________
+            //
+            // checking validity
+            //__________________________________________________________________
+            if(verbose) { indent() << "checking validity of " << parserName; }
+            parser->checkValidity();
+
             return parser.yield();
         }
 
