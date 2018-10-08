@@ -106,22 +106,35 @@ namespace upsylon
         }
     }
 
-#if 0
-    void ASF::Range:: split( Range &HEAD, Range &TAIL ) const throw()
+    void ASF:: Alphabet:: split(Node        *source,
+                                const Char  *head,
+                                const Char  *tail,
+                                const size_t size,
+                                size_t      &inode ) throw()
     {
-
-
+        assert(source); assert(head); assert(tail); assert(size>0);
+        if(size<=1)
+        {
+            assert(tail==head);
+            source->ch = head;
+        }
+        else
+        {
+            source->left  = &nodes[inode++];
+            source->right = &nodes[inode++];
+            const Char *L_head = head;
+            const Char *R_tail = tail;
+            size_t      L_size = 1;
+            size_t      R_size = 1;
+            exit(0);
+        }
     }
-#endif
 
     void ASF::Alphabet:: build_tree() throw()
     {
-#if 0
-        const Range full = { active.head, active.tail, active.size };
-        Range       HEAD = { 0,0,0 };
-        Range       TAIL = { 0,0,0 };
-        full.split(HEAD,TAIL);
-#endif
+        size_t inode = 0;
+        Node  *root  = & nodes[inode++];
+        split(root,active.head,active.tail,active.size,inode);
     }
 
 }

@@ -37,15 +37,7 @@ namespace upsylon
             typedef core::list_of<Char> List;
             const char *text() const throw();
         };
-
-        struct Range
-        {
-            const Char *head;
-            const Char *tail;
-            size_t      size;
-            void split( Range &HEAD, Range &TAIL ) const throw();
-        };
-
+        
         class Alphabet
         {
         public:
@@ -70,6 +62,8 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
             void init() throw();
             void build_tree() throw();
+            void split( Node *source, const Char *head, const Char *tail, const size_t size, size_t &inode) throw();
+            
         };
     };
 }
