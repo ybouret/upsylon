@@ -6,15 +6,16 @@
 
 namespace upsylon
 {
+    //! delta encoding method
     class delta_encoding
     {
     public:
-        explicit delta_encoding() throw();
-        virtual ~delta_encoding() throw();
-        void reset() throw();
+        explicit delta_encoding() throw(); //!< initialize
+        virtual ~delta_encoding() throw(); //!< desctructor
+        void reset() throw();              //!< reset
 
-        uint8_t encode(uint8_t);
-        uint8_t decode(uint8_t);
+        uint8_t encode(uint8_t);           //!< encode a byte
+        uint8_t decode(uint8_t);           //!< decode a byte
 
     private:
         uint8_t last;

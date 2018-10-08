@@ -42,7 +42,7 @@ namespace upsylon
 
     ASF::Alphabet:: Alphabet():
     active(),
-    count(0),
+    used(0),
     chars(0),
     nodes(0),
     nyt(0),
@@ -80,7 +80,7 @@ namespace upsylon
         eos->freq = 1;
         active.push_back(nyt);
         active.push_back(eos);
-        count = 0;
+        used = 0;
         build_tree();
     }
 
@@ -210,10 +210,10 @@ namespace upsylon
         Char *ch = &chars[ uint8_t(C) ]; assert(ch->byte==uint8_t(C));
         if(ch->freq<=0)
         {
-            assert(count<NUM_CHARS);
+            assert(used<NUM_CHARS);
 
             // a new char
-            if(count>0)
+            if(used>0)
             {
                 io.push(nyt->code,nyt->bits);
             }
@@ -227,7 +227,7 @@ namespace upsylon
                 assert(1==ch->freq);
                 active.towards_head(ch);
             }
-            ++count;
+            ++used;
         }
         else
         {
@@ -247,13 +247,50 @@ namespace upsylon
 
     void ASF:: Alphabet:: encode_eos(iobits &io) const
     {
-        if(count>0)
+        if(used>0)
         {
             io.push(eos->code, eos->bits);
             io.zpad();
         }
     }
 
+
+    ASF:: Encoder:: Encoder() :
+    ios::q_codec(),
+    io(),
+    alpha()
+    {
+    }
+
+    ASF:: Encoder:: ~Encoder() throw()
+    {
+    }
+
+    void ASF:: Encoder:: reset() throw()
+    {
+        alpha.reset();
+        io.free();
+        Q.free();
+    }
+
+    void ASF:: Encoder:: write(char C)
+    {
+        alpha.encode(io,C);
+        while( io.size >= 8 )
+        {
+            Q.push_back( io.pop_full<uint8_t>() );
+        }
+    }
+
+    void ASF:: Encoder:: flush()
+    {
+        alpha.encode_eos(io);
+        while( io.size >= 8 )
+        {
+            Q.push_back( io.pop_full<uint8_t>() );
+        }
+        assert(0==io.size);
+    }
 
 }
 

@@ -7,6 +7,9 @@ using namespace upsylon;
 
 Y_UTEST(asf)
 {
+    ASF::Encoder  enc;
+
+#if 0
     ASF::Alphabet alpha;
     alpha.display(std::cerr);
     //alpha.GraphViz("asf0.dot");
@@ -14,10 +17,14 @@ Y_UTEST(asf)
 
     size_t ibytes=0;
     size_t obytes=0;
+#endif
     if( argc>1 && 0 == strcmp("run",argv[1]))
     {
         ios::icstream fp( ios::cstdin );
         ios::ocstream os( "asf.bin" );
+        enc.filter(os,fp);
+        
+#if 0
         char C = 0;
         while( fp.query(C) )
         {
@@ -46,6 +53,7 @@ Y_UTEST(asf)
             const double ratio = (100.0 * obytes)/ibytes;
             std::cerr << "is " << ratio << "% of original" << std::endl;
         }
+#endif
     }
 
 
