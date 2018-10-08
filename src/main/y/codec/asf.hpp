@@ -13,7 +13,7 @@ namespace upsylon
     {
         typedef      size_t    CodeType;  //!< alias
         typedef      size_t    FreqType;  //!< alias
-        static const size_t    NUM_CHARS     = 0xff;           //!< symbols an alphabet
+        static const size_t    NUM_CHARS     = 0x100;           //!< symbols an alphabet
         static const CodeType  NYT           = NUM_CHARS;      //!< Not Yet Transmitted
         static const CodeType  EOS           = NYT+1;          //!< End Of Stream
         static const size_t    ALPHABET_SIZE = NUM_CHARS+2; //!< chars+controls

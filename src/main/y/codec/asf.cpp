@@ -228,6 +228,10 @@ namespace upsylon
                 active.towards_head(ch);
             }
             ++used;
+            if(used>=NUM_CHARS)
+            {
+                active.unlink(nyt);
+            }
         }
         else
         {
