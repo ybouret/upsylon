@@ -172,33 +172,7 @@ namespace upsylon
         Node  *root  = getNode(inode);
         split(root,active.head,active.tail,active.size,inode);
     }
-#if 0
-    void ASF:: Alphabet:: add(const char C) throw()
-    {
-        Char         *ch = &chars[ uint8_t(C) ]; assert(ch->byte==uint8_t(C));
-        if(ch->freq<=0)
-        {
-            assert(!active.owns(ch));
-            ch->freq++;
-            active.push_back(ch);
-            while(ch->prev&&ch->prev->freq<=1)
-            {
-                assert(1==ch->freq);
-                active.towards_head(ch);
-            }
-        }
-        else
-        {
-            ch->freq++;
-            while(ch->prev&&ch->prev->freq<=ch->freq)
-            {
-                assert(1<ch->freq);
-                active.towards_head(ch);
-            }
-        }
-        build_tree();
-    }
-#endif
+
 
     void ASF:: Alphabet:: encode(iobits &io, const char C)
     {
@@ -222,14 +196,17 @@ namespace upsylon
                 assert(1==ch->freq);
                 active.towards_head(ch);
             }
+
+            // check how many used char, to discard NYT
             ++used;
             if(used>=NUM_CHARS)
             {
-                active.unlink(nyt);
+                (void) active.unlink(nyt);
             }
         }
         else
         {
+            assert(used>0);
             // a used char
             io.push(ch->code,ch->bits);
 
@@ -244,13 +221,50 @@ namespace upsylon
         build_tree();
     }
 
-    void ASF:: Alphabet:: encode_eos(iobits &io) const
+    void ASF:: Alphabet:: update(const char C) throw()
+    {
+        Char *ch = &chars[ uint8_t(C) ]; assert(ch->byte==uint8_t(C));
+        if(ch->freq<=0)
+        {
+            assert(used<NUM_CHARS);
+            // update list
+            ch->freq++;
+            active.push_back(ch);
+            while(ch->prev&&ch->prev->freq<=1)
+            {
+                assert(1==ch->freq);
+                active.towards_head(ch);
+            }
+
+            // check how many used char, to discard NYT
+            ++used;
+            if(used>=NUM_CHARS)
+            {
+                (void) active.unlink(nyt);
+            }
+        }
+        else
+        {
+            // update list
+            ch->freq++;
+            while(ch->prev&&ch->prev->freq<=ch->freq)
+            {
+                assert(1<ch->freq);
+                active.towards_head(ch);
+            }
+        }
+        build_tree();
+    }
+
+
+    void ASF:: Alphabet:: flush(iobits &io) const
     {
         if(used>0)
         {
             io.push(eos->code, eos->bits);
             io.zpad();
         }
+        assert(0==io.size%8);
     }
 
 }
@@ -287,7 +301,7 @@ namespace upsylon
 
     void ASF:: Encoder:: flush()
     {
-        alpha.encode_eos(io);
+        alpha.flush(io);
         while( io.size >= 8 )
         {
             Q.push_back( io.pop_full<uint8_t>() );
@@ -306,7 +320,7 @@ namespace upsylon
 
     ASF::Decoder:: Decoder() :
     ios::q_codec(),
-    status( wait_for_byte ),
+    status( wait_for8 ),
     current(0),
     io(),
     alpha()
@@ -318,7 +332,7 @@ namespace upsylon
         alpha.reset();
         io.free();
         Q.free();
-        status  = wait_for_byte;
+        status  = wait_for8;
         current = 0;
         
     }
@@ -334,13 +348,65 @@ namespace upsylon
         process();
     }
 
+    
     void ASF:: Decoder:: process()
     {
+    PROCESS:
         switch(status)
         {
-            case wait_for_byte:
+            case wait_for8:
                 assert(current==NULL);
-                break;
+                if(io.size<8)
+                {
+                    return;
+                }
+                else
+                {
+                    const char C = io.pop_full<uint8_t>();
+                    alpha.update(C);
+                    Q.push_back(C);
+                    status  = wait_for1;
+                    current = alpha.nodes;
+                    goto PROCESS;
+                }
+
+            case wait_for1:
+                assert(current!=NULL);
+                if(io.size<=0)
+                {
+                    return;
+                }
+                else
+                {
+                    current = io.pop() ? current->right : current->left;
+                    if(current->ch)
+                    {
+                        const CodeType byte = current->ch->byte;
+                        switch(byte)
+                        {
+                            case NYT:
+                                // a new char is coming
+                                current = NULL;
+                                status  = wait_for8;
+                                break;
+
+                            case EOS:
+                                // drop garbage and continue wait_for1
+                                io.drop();
+                                current = alpha.nodes;
+                                break;
+
+                            default:
+                                assert(byte<NUM_CHARS);
+                                // emit decoded and continue wait_for1
+                                alpha.update(byte);
+                                Q.push_back(byte);
+                                current = alpha.nodes;
+                                break;
+                        }
+                    }
+                    goto PROCESS;
+                }
         }
     }
 

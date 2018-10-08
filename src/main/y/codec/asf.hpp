@@ -63,9 +63,7 @@ namespace upsylon
             //! display current encodig
             void display(std::ostream &os) const;
 
-            //  generic add char
-            // void add(const char C) throw();
-
+            
             //! build the tree
             void build_tree() throw();
 
@@ -76,7 +74,10 @@ namespace upsylon
             void encode(iobits &io, const char C);
 
             //! emit eos and pad to byte
-            void encode_eos(iobits &io) const;
+            void flush(iobits &io) const;
+
+            //! update upon add
+            void update(const char C) throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
@@ -118,7 +119,8 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Decoder);
             enum Status
             {
-                wait_for_byte
+                wait_for8,
+                wait_for1
             };
             Status      status;
             const Node *current;

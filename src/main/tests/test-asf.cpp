@@ -2,60 +2,75 @@
 #include "y/utest/run.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/ios/imstream.hpp"
+#include "y/ios/osstream.hpp"
+#include "y/hashing/sha1.hpp"
 
 using namespace upsylon;
 
 Y_UTEST(asf)
 {
     ASF::Encoder  enc;
+    ASF::Decoder  dec;
 
-#if 0
-    ASF::Alphabet alpha;
-    alpha.display(std::cerr);
-    //alpha.GraphViz("asf0.dot");
-    iobits io;
 
-    size_t ibytes=0;
-    size_t obytes=0;
-#endif
+
     if( argc>1 && 0 == strcmp("run",argv[1]))
     {
-        ios::icstream fp( ios::cstdin );
-        ios::ocstream os( "asf.bin" );
-        enc.filter(os,fp);
-        
-#if 0
-        char C = 0;
-        while( fp.query(C) )
+        enc.reset();
         {
-            ++ibytes;
-            alpha.encode(io,C);
-            while(io.size>=8)
+            ios::icstream fp( ios::cstdin );
+            ios::ocstream os( "asf_encoded.bin" );
+            enc.filter(os,fp);
+        }
+        dec.reset();
+        {
+            ios::icstream fp( "asf_encoded.bin" );
+            ios::ocstream os( "asf_decoded.bin" );
+            dec.filter(os,fp);
+        }
+    }
+    else
+    {
+        hashing::sha1 H;
+        string source;
+        string target;
+        string decode;
+        for(size_t iter=0;iter<8;++iter)
+        {
+            source.clear();
+            for(size_t j=1+alea.leq(4);j>0;--j)
             {
-                os.write( io.pop_full<uint8_t>() );
-                ++obytes;
-                if(0==(obytes%16384))
+                for(size_t i=0;i<256;++i)
                 {
-                    std::cerr << '.'; std::cerr.flush();
+                    source << char(i);
                 }
             }
 
-        }
-        alpha.encode_eos(io); assert(0==io.size%8);
-        while(io.size>=8)
-        {
-            os.write( io.pop_full<uint8_t>() );
-            ++obytes;
-        }
-        std::cerr << "bytes: " << ibytes << " => " << obytes << std::endl;
-        if(ibytes>0)
-        {
-            const double ratio = (100.0 * obytes)/ibytes;
-            std::cerr << "is " << ratio << "% of original" << std::endl;
-        }
-#endif
-    }
+            alea.shuffle(*source,source.size());
+            const uint64_t H0 = H.key<uint64_t>(source);
+            enc.reset();
+            target.clear();
+            {
+                ios::imstream input(source);
+                ios::osstream output(target);
+                enc.filter(output,input);
+            }
 
+            std::cerr << source.size() << " -> " << target.size() << "/" << H0 << std::endl;
+            dec.reset();
+            decode.clear();
+            {
+                ios::imstream input(target);
+                ios::osstream output(decode);
+                dec.filter(output,input);
+            }
+            const uint64_t H1 = H.key<uint64_t>(decode);
+            std::cerr << target.size() << " -> " << decode.size() << "/" << H1 << std::endl;
+            Y_ASSERT(H0==H1);
+        }
+    }
 
 }
 Y_UTEST_DONE()

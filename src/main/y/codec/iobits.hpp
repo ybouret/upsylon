@@ -102,7 +102,10 @@ namespace upsylon
         inline void free() throw() { while(size) pool.store( pop_back() ); }
 
         //! pad with 0 to next byte
-        inline void zpad() { while(size&0x7) push(false); }
+        inline void zpad() { while(0!=(size%8)) push(false); }
+
+        //! drop until aligned
+        inline void drop() throw() { while(0!=(size%8)) (void) pool.store( pop_front() ); }
 
         //! pushing unsigned integrals
         void push(const uint64_t value,
