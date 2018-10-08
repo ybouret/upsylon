@@ -130,7 +130,11 @@ namespace upsylon
 
         //! table of individual bits
         static const uint64_t ibits[64];
-        
+
+        static std::ostream & display(std::ostream & os,
+                                      const uint64_t value,
+                                      const size_t   nbits);
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(iobits);
     };

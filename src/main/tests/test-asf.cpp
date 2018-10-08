@@ -8,6 +8,8 @@ Y_UTEST(asf)
 {
     ASF::Alphabet alpha;
     alpha.display(std::cerr);
+    alpha.GraphViz("asf0.dot");
+
 
     {
         ios::icstream fp( ios::cstdin );
@@ -18,7 +20,9 @@ Y_UTEST(asf)
             {
                 alpha.add(line[i]);
             }
+            alpha.build_tree();
             alpha.display(std::cerr);
+            alpha.GraphViz("asf1.dot");
         }
 
     }

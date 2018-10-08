@@ -33,6 +33,21 @@ namespace upsylon
             push( 0 != ( value & ibits[ibit] ) );
         }
     }
+
+
+    std::ostream & iobits::display(std::ostream & os,
+                                   const uint64_t value,
+                                   const size_t   nbits)
+    {
+        assert(nbits<=8*sizeof(uint64_t));
+        size_t ibit = nbits;
+        while(ibit-->0)
+        {
+            const bool tst = ( 0 != ( value & ibits[ibit] ) );
+            os << ( tst ? '1' : '0');
+        }
+        return os;
+    }
 }
 
 
