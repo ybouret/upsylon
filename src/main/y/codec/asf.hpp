@@ -63,8 +63,8 @@ namespace upsylon
             //! display current encodig
             void display(std::ostream &os) const;
 
-            //! generic add char
-            void add(const char C) throw();
+            //  generic add char
+            // void add(const char C) throw();
 
             //! build the tree
             void build_tree() throw();
@@ -101,6 +101,30 @@ namespace upsylon
             iobits   io;
             Alphabet alpha;
             Y_DISABLE_COPY_AND_ASSIGN(Encoder);
+        };
+
+        //! decoder
+        class Decoder : public ios::q_codec
+        {
+        public:
+            explicit Decoder();
+            virtual ~Decoder() throw();
+
+            virtual void reset() throw(); //!< reset/free all
+            virtual void flush();         //!< emit EOS
+            virtual void write( char C ); //!< emit/update tree
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Decoder);
+            enum Status
+            {
+                wait_for_byte
+            };
+            Status      status;
+            const Node *current;
+            iobits      io;
+            Alphabet    alpha;
+            void        process();
         };
 
 

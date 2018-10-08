@@ -50,9 +50,6 @@ namespace upsylon
     wlen(__asf_bytes),
     wksp(memory::global::instance().acquire(wlen))
     {
-        std::cerr << "bytes_for_chars=" <<  __asf_bytes_for_chars << std::endl;
-        std::cerr << "bytes_for_nodes=" <<  __asf_bytes_for_nodes << std::endl;
-        std::cerr << "workspace_size =" << wlen << std::endl;
         chars = memory::io::cast<Char>(wksp);
         nodes = memory::io::cast<Node>(wksp,__asf_bytes_for_chars);
         nyt   = chars+NYT;
@@ -153,7 +150,6 @@ namespace upsylon
 
             {
                 Node *node = source->left = getNode(inode);
-                //node->parent  = source;
                 node->bits    = new_bits;
                 node->code    = new_code;
                 split(node,head,L_tail,L_size,inode);
@@ -161,7 +157,6 @@ namespace upsylon
 
             {
                 Node *node = source->right = getNode(inode);
-                //node->parent = source;
                 node->bits = new_bits;
                 node->code = new_code|1;
                 split(node,R_head,tail,size-L_size,inode);
@@ -177,7 +172,7 @@ namespace upsylon
         Node  *root  = getNode(inode);
         split(root,active.head,active.tail,active.size,inode);
     }
-
+#if 0
     void ASF:: Alphabet:: add(const char C) throw()
     {
         Char         *ch = &chars[ uint8_t(C) ]; assert(ch->byte==uint8_t(C));
@@ -203,7 +198,7 @@ namespace upsylon
         }
         build_tree();
     }
-
+#endif
 
     void ASF:: Alphabet:: encode(iobits &io, const char C)
     {
@@ -258,6 +253,10 @@ namespace upsylon
         }
     }
 
+}
+
+namespace upsylon
+{
 
     ASF:: Encoder:: Encoder() :
     ios::q_codec(),
@@ -294,6 +293,55 @@ namespace upsylon
             Q.push_back( io.pop_full<uint8_t>() );
         }
         assert(0==io.size);
+    }
+
+}
+
+
+namespace upsylon
+{
+    ASF::Decoder:: ~Decoder() throw()
+    {
+    }
+
+    ASF::Decoder:: Decoder() :
+    ios::q_codec(),
+    status( wait_for_byte ),
+    current(0),
+    io(),
+    alpha()
+    {
+    }
+
+    void ASF::Decoder:: reset() throw()
+    {
+        alpha.reset();
+        io.free();
+        Q.free();
+        status  = wait_for_byte;
+        current = 0;
+        
+    }
+
+    void ASF:: Decoder:: flush()
+    {
+        // should do nothing
+    }
+
+    void ASF::Decoder:: write(char C)
+    {
+        io.push_full<uint8_t>(C);
+        process();
+    }
+
+    void ASF:: Decoder:: process()
+    {
+        switch(status)
+        {
+            case wait_for_byte:
+                assert(current==NULL);
+                break;
+        }
     }
 
 }
