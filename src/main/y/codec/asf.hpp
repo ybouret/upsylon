@@ -17,7 +17,6 @@ namespace upsylon
         static const CodeType  NYT           = NUM_CHARS;      //!< Not Yet Transmitted
         static const CodeType  EOS           = NYT+1;          //!< End Of Stream
         static const size_t    ALPHABET_SIZE = NUM_CHARS+2; //!< chars+controls
-
         struct Char;
 
         struct Node
@@ -48,15 +47,16 @@ namespace upsylon
         class Alphabet
         {
         public:
-            Alphabet() throw();
+            Alphabet();
             ~Alphabet() throw();
 
             void       reset() throw();
-            Char       chars[ALPHABET_SIZE];
             Char::List active;
-            Char      &nyt;
-            Char      &eos;
-            Node       nodes[514];
+            bool       first;
+            Char      *chars;
+            Node      *nodes;
+            Char      *nyt;
+            Char      *eos;
 
             void display(std::ostream &os) const;
 
@@ -64,8 +64,14 @@ namespace upsylon
             void build_tree() throw();
             void GraphViz(const string &filename) const;
 
+            //! emit char, update model
+            void encode(iobits &io, const char C);
+            void encode_eos(iobits &io) const; //!< emit eos and pad to byte
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
+            size_t wlen;
+            void  *wksp;
             bool split( Node *source, const Char *head, const Char *tail, const size_t size, size_t &inode) throw();
             Node *getNode( size_t &inode );
         };

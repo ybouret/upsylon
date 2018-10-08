@@ -1,6 +1,7 @@
 #include "y/codec/asf.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/icstream.hpp"
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 
@@ -9,23 +10,34 @@ Y_UTEST(asf)
     ASF::Alphabet alpha;
     alpha.display(std::cerr);
     alpha.GraphViz("asf0.dot");
+    iobits io;
 
-
+    size_t ibytes=0;
+    size_t obytes=0;
+    if( argc>1 && 0 == strcmp("run",argv[1]))
     {
         ios::icstream fp( ios::cstdin );
-        string line;
-        while( (std::cerr << "> ").flush(), fp.gets(line) )
+        ios::ocstream os( "asf.bin" );
+        char C = 0;
+        while( fp.query(C) )
         {
-            for(size_t i=0;i<line.size();++i)
+            ++ibytes;
+            alpha.encode(io,C);
+            while(io.size>=8)
             {
-                alpha.add(line[i]);
+                os.write( io.pop_full<uint8_t>() );
+                ++obytes;
             }
-            alpha.build_tree();
-            alpha.display(std::cerr);
-            alpha.GraphViz("asf1.dot");
         }
-
+        alpha.encode_eos(io); assert(0==io.size%8);
+        while(io.size>=8)
+        {
+            os.write( io.pop_full<uint8_t>() );
+            ++obytes;
+        }
+        std::cerr << "bytes: " << ibytes << " => " << obytes << std::endl;
     }
+
 
 }
 Y_UTEST_DONE()

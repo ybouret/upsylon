@@ -2,6 +2,7 @@
 #include "y/codec/asf.hpp"
 #include "y/code/utils.hpp"
 #include "y/type/bzset.hpp"
+#include "y/memory/io.hpp"
 
 namespace upsylon
 {
@@ -30,18 +31,32 @@ namespace upsylon
     ASF::Alphabet:: ~Alphabet() throw()
     {
         active.reset();
+        memory::global::location().release(wksp,wlen);
     }
 
-    ASF::Alphabet:: Alphabet() throw() :
-    chars(),
-    active(),
-    nyt( chars[NYT] ),
-    eos( chars[EOS] ),
-    nodes()
-    {
-        std::cerr << "Alphabet::sizeof(chars)=" << sizeof(chars) << "/" << sizeof(Char) << std::endl;
-        std::cerr << "Alphabet::sizeof(nodes)=" << sizeof(nodes) << "/" << sizeof(Node) << std::endl;
+    static const size_t __asf_bytes_for_chars_  = sizeof(ASF::Char) * ASF::ALPHABET_SIZE;
+    static const size_t __asf_bytes_for_chars  = Y_MEMALIGN(__asf_bytes_for_chars_);
+    static const size_t __asf_bytes_for_nodes_ = (2*ASF::ALPHABET_SIZE-1) * sizeof(ASF::Node);
+    static const size_t __asf_bytes_for_nodes  = Y_MEMALIGN(__asf_bytes_for_nodes_);
+    static const size_t __asf_bytes            = __asf_bytes_for_chars + __asf_bytes_for_nodes;
 
+    ASF::Alphabet:: Alphabet():
+    active(),
+    first(true),
+    chars(0),
+    nodes(0),
+    nyt(0),
+    eos(0),
+    wlen(__asf_bytes),
+    wksp(memory::global::instance().acquire(wlen))
+    {
+        std::cerr << "bytes_for_chars=" <<  __asf_bytes_for_chars << std::endl;
+        std::cerr << "bytes_for_nodes=" <<  __asf_bytes_for_nodes << std::endl;
+        std::cerr << "workspace_size =" << wlen << std::endl;
+        chars = memory::io::cast<Char>(wksp);
+        nodes = memory::io::cast<Node>(wksp,__asf_bytes_for_chars);
+        nyt   = chars+NYT;
+        eos   = chars+EOS;
         reset();
     }
 
@@ -61,10 +76,11 @@ namespace upsylon
             ch->bits = 8;
             ch->freq = 0;
         }
-        nyt.freq = 1;
-        eos.freq = 1;
-        active.push_back(&nyt);
-        active.push_back(&eos);
+        nyt->freq = 1;
+        eos->freq = 1;
+        active.push_back(nyt);
+        active.push_back(eos);
+        first = true;
         build_tree();
     }
 
@@ -78,30 +94,6 @@ namespace upsylon
     }
 
 
-    void ASF:: Alphabet:: add(const char C) throw()
-    {
-        Char         *ch = &chars[ uint8_t(C) ]; assert(ch->byte==uint8_t(C));
-        if(ch->freq<=0)
-        {
-            assert(!active.owns(ch));
-            ch->freq++;
-            active.push_back(ch);
-            while(ch->prev&&ch->prev->freq<=1)
-            {
-                assert(1==ch->freq);
-                active.towards_head(ch);
-            }
-        }
-        else
-        {
-            ch->freq++;
-            while(ch->prev&&ch->prev->freq<=ch->freq)
-            {
-                assert(1<ch->freq);
-                active.towards_head(ch);
-            }
-        }
-    }
 
 
     ASF::Node *ASF:: Alphabet::  getNode( size_t &inode )
@@ -181,12 +173,91 @@ namespace upsylon
 
     void ASF::Alphabet:: build_tree() throw()
     {
-        std::cerr << "Build Tree..." << std::endl;
         size_t inode = 0;
         Node  *root  = getNode(inode);
         split(root,active.head,active.tail,active.size,inode);
-        std::cerr << "inode=" << inode << "/#active=" << active.size << std::endl;
     }
+
+    void ASF:: Alphabet:: add(const char C) throw()
+    {
+        Char         *ch = &chars[ uint8_t(C) ]; assert(ch->byte==uint8_t(C));
+        if(ch->freq<=0)
+        {
+            assert(!active.owns(ch));
+            ch->freq++;
+            active.push_back(ch);
+            while(ch->prev&&ch->prev->freq<=1)
+            {
+                assert(1==ch->freq);
+                active.towards_head(ch);
+            }
+        }
+        else
+        {
+            ch->freq++;
+            while(ch->prev&&ch->prev->freq<=ch->freq)
+            {
+                assert(1<ch->freq);
+                active.towards_head(ch);
+            }
+        }
+        build_tree();
+    }
+
+
+    void ASF:: Alphabet:: encode(iobits &io, const char C)
+    {
+        Char *ch = &chars[ uint8_t(C) ]; assert(ch->byte==uint8_t(C));
+        if(ch->freq<=0)
+        {
+            assert(!active.owns(ch));
+
+            // a new char
+            if(first)
+            {
+                first = false;
+            }
+            else
+            {
+                io.push(nyt->code,nyt->bits);
+            }
+            io.push(ch->code,ch->bits);
+
+            // update list
+            ch->freq++;
+            active.push_back(ch);
+            while(ch->prev&&ch->prev->freq<=1)
+            {
+                assert(1==ch->freq);
+                active.towards_head(ch);
+            }
+        }
+        else
+        {
+            // a used char
+            assert(active.owns(ch));
+            io.push(ch->code,ch->bits);
+
+            // update list
+            ch->freq++;
+            while(ch->prev&&ch->prev->freq<=ch->freq)
+            {
+                assert(1<ch->freq);
+                active.towards_head(ch);
+            }
+        }
+        build_tree();
+    }
+
+    void ASF:: Alphabet:: encode_eos(iobits &io) const
+    {
+        if(!first)
+        {
+            io.push(eos->code, eos->bits);
+            io.zpad();
+        }
+    }
+
 
 }
 

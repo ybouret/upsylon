@@ -101,6 +101,8 @@ namespace upsylon
         //! free the current content
         inline void free() throw() { while(size) pool.store( pop_back() ); }
 
+        //! pad with 0 to next byte
+        inline void zpad() { while(size&0x7) push(false); }
 
         //! pushing unsigned integrals
         void push(const uint64_t value,
