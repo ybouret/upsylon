@@ -42,7 +42,7 @@ namespace upsylon
 
     ASF::Alphabet:: Alphabet():
     active(),
-    used(0),
+    in_use(0),
     chars(0),
     nodes(0),
     nyt(0),
@@ -77,7 +77,7 @@ namespace upsylon
         eos->freq = 1;
         active.push_back(nyt);
         active.push_back(eos);
-        used = 0;
+        in_use = 0;
         build_tree();
     }
 
@@ -176,19 +176,27 @@ namespace upsylon
 
     void ASF:: Alphabet:: encode(iobits &io, const char C)
     {
+        //----------------------------------------------------------------------
+        // get the corresponding char
+        //----------------------------------------------------------------------
         Char *ch = &chars[ uint8_t(C) ]; assert(ch->byte==uint8_t(C));
         if(ch->freq<=0)
         {
-            assert(used<NUM_CHARS);
+            
+            assert(in_use<NUM_CHARS);
 
-            // a new char
-            if(used>0)
+            //------------------------------------------------------------------
+            // a new char to use
+            //------------------------------------------------------------------
+            if(in_use>0)
             {
                 io.push(nyt->code,nyt->bits);
             }
             io.push(ch->code,ch->bits);
 
+            //------------------------------------------------------------------
             // update list
+            //------------------------------------------------------------------
             ch->freq++;
             active.push_back(ch);
             while(ch->prev&&ch->prev->freq<=1)
@@ -197,20 +205,26 @@ namespace upsylon
                 active.towards_head(ch);
             }
 
+            //------------------------------------------------------------------
             // check how many used char, to discard NYT
-            ++used;
-            if(used>=NUM_CHARS)
+            //------------------------------------------------------------------
+            ++in_use;
+            if(in_use>=NUM_CHARS)
             {
                 (void) active.unlink(nyt);
             }
         }
         else
         {
-            assert(used>0);
+            assert(in_use>0);
+            //------------------------------------------------------------------
             // a used char
+            //------------------------------------------------------------------
             io.push(ch->code,ch->bits);
 
+            //------------------------------------------------------------------
             // update list
+            //------------------------------------------------------------------
             ch->freq++;
             while(ch->prev&&ch->prev->freq<=ch->freq)
             {
@@ -223,11 +237,16 @@ namespace upsylon
 
     void ASF:: Alphabet:: update(const char C) throw()
     {
+        //----------------------------------------------------------------------
+        // get the corresponding Char
+        //----------------------------------------------------------------------
         Char *ch = &chars[ uint8_t(C) ]; assert(ch->byte==uint8_t(C));
         if(ch->freq<=0)
         {
-            assert(used<NUM_CHARS);
+            assert(in_use<NUM_CHARS);
+            //------------------------------------------------------------------
             // update list
+            //------------------------------------------------------------------
             ch->freq++;
             active.push_back(ch);
             while(ch->prev&&ch->prev->freq<=1)
@@ -236,16 +255,20 @@ namespace upsylon
                 active.towards_head(ch);
             }
 
+            //------------------------------------------------------------------
             // check how many used char, to discard NYT
-            ++used;
-            if(used>=NUM_CHARS)
+            //------------------------------------------------------------------
+            ++in_use;
+            if(in_use>=NUM_CHARS)
             {
                 (void) active.unlink(nyt);
             }
         }
         else
         {
+            //------------------------------------------------------------------
             // update list
+            //------------------------------------------------------------------
             ch->freq++;
             while(ch->prev&&ch->prev->freq<=ch->freq)
             {
@@ -259,9 +282,9 @@ namespace upsylon
 
     void ASF:: Alphabet:: flush(iobits &io) const
     {
-        if(used>0)
+        if(in_use>0)
         {
-            io.push(eos->code, eos->bits);
+            io.push(eos->code,eos->bits);
             io.zpad();
         }
         assert(0==io.size%8);
@@ -354,7 +377,9 @@ namespace upsylon
     PROCESS:
         switch(status)
         {
-            case wait_for8:
+                //--------------------------------------------------------------
+            case wait_for8: // waiting for a new byte
+                //--------------------------------------------------------------
                 assert(current==NULL);
                 if(io.size<8)
                 {
@@ -370,7 +395,9 @@ namespace upsylon
                     goto PROCESS;
                 }
 
-            case wait_for1:
+                //--------------------------------------------------------------
+            case wait_for1: // waiting for a new bit to walk down the tree
+                //--------------------------------------------------------------
                 assert(current!=NULL);
                 if(io.size<=0)
                 {

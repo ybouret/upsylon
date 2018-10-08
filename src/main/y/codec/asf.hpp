@@ -11,12 +11,14 @@ namespace upsylon
     //! adaptive Shannon-Fano
     struct ASF
     {
+
         typedef      size_t    CodeType;  //!< alias
         typedef      size_t    FreqType;  //!< alias
-        static const size_t    NUM_CHARS     = 0x100;           //!< symbols an alphabet
-        static const CodeType  NYT           = NUM_CHARS;      //!< Not Yet Transmitted
-        static const CodeType  EOS           = NYT+1;          //!< End Of Stream
+        static const size_t    NUM_CHARS     = 0x100;       //!< symbols an alphabet
+        static const CodeType  NYT           = NUM_CHARS;   //!< Not Yet Transmitted
+        static const CodeType  EOS           = NYT+1;       //!< End Of Stream
         static const size_t    ALPHABET_SIZE = NUM_CHARS+2; //!< chars+controls
+
         struct Char; //!< forward declaration
 
         //! for building the tree
@@ -49,21 +51,20 @@ namespace upsylon
         class Alphabet
         {
         public:
-            Alphabet(); //!< initialize
-            ~Alphabet() throw(); //!< destructor
-
+            Alphabet();                 //!< initialize
+            ~Alphabet() throw();        //!< destructor
             void       reset() throw(); //!< setup all
+
             Char::List active; //!< chars in use
-            size_t     used;   //!< used char, bookeeping 0..256
+            size_t     in_use; //!< used char, bookeeping 0..256
             Char      *chars;  //!< memory for chars
             Node      *nodes;  //!< memory for nodes
             Char      *nyt;    //!< Not Yet Transmitterd char
-            Char      *eos;    //!< End of Stream char
+            Char      *eos;    //!< End Of Stream char
 
             //! display current encodig
             void display(std::ostream &os) const;
 
-            
             //! build the tree
             void build_tree() throw();
 
@@ -76,14 +77,14 @@ namespace upsylon
             //! emit eos and pad to byte
             void flush(iobits &io) const;
 
-            //! update upon add
+            //! update model
             void update(const char C) throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
             size_t wlen;
             void  *wksp;
-            bool split( Node *source, const Char *head, const Char *tail, const size_t size, size_t &inode) throw();
+            bool  split( Node *source, const Char *head, const Char *tail, const size_t size, size_t &inode) throw();
             Node *getNode( size_t &inode );
         };
 
@@ -108,8 +109,8 @@ namespace upsylon
         class Decoder : public ios::q_codec
         {
         public:
-            explicit Decoder();
-            virtual ~Decoder() throw();
+            explicit Decoder();           //! initialize
+            virtual ~Decoder() throw();   //! destructor
 
             virtual void reset() throw(); //!< reset/free all
             virtual void flush();         //!< emit EOS
