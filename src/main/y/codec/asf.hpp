@@ -52,7 +52,7 @@ namespace upsylon
 
             void       reset() throw();
             Char::List active;
-            bool       first;
+            size_t     count;
             Char      *chars;
             Node      *nodes;
             Char      *nyt;

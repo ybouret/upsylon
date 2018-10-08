@@ -9,7 +9,7 @@ Y_UTEST(asf)
 {
     ASF::Alphabet alpha;
     alpha.display(std::cerr);
-    alpha.GraphViz("asf0.dot");
+    //alpha.GraphViz("asf0.dot");
     iobits io;
 
     size_t ibytes=0;
@@ -27,7 +27,12 @@ Y_UTEST(asf)
             {
                 os.write( io.pop_full<uint8_t>() );
                 ++obytes;
+                if(0==(obytes%16384))
+                {
+                    std::cerr << '.'; std::cerr.flush();
+                }
             }
+
         }
         alpha.encode_eos(io); assert(0==io.size%8);
         while(io.size>=8)
@@ -36,6 +41,11 @@ Y_UTEST(asf)
             ++obytes;
         }
         std::cerr << "bytes: " << ibytes << " => " << obytes << std::endl;
+        if(ibytes>0)
+        {
+            const double ratio = (100.0 * obytes)/ibytes;
+            std::cerr << "is " << ratio << "% of original" << std::endl;
+        }
     }
 
 

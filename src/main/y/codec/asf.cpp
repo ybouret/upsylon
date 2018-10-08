@@ -42,7 +42,7 @@ namespace upsylon
 
     ASF::Alphabet:: Alphabet():
     active(),
-    first(true),
+    count(0),
     chars(0),
     nodes(0),
     nyt(0),
@@ -80,7 +80,7 @@ namespace upsylon
         eos->freq = 1;
         active.push_back(nyt);
         active.push_back(eos);
-        first = true;
+        count = 0;
         build_tree();
     }
 
@@ -210,14 +210,10 @@ namespace upsylon
         Char *ch = &chars[ uint8_t(C) ]; assert(ch->byte==uint8_t(C));
         if(ch->freq<=0)
         {
-            assert(!active.owns(ch));
+            assert(count<NUM_CHARS);
 
             // a new char
-            if(first)
-            {
-                first = false;
-            }
-            else
+            if(count>0)
             {
                 io.push(nyt->code,nyt->bits);
             }
@@ -231,11 +227,11 @@ namespace upsylon
                 assert(1==ch->freq);
                 active.towards_head(ch);
             }
+            ++count;
         }
         else
         {
             // a used char
-            assert(active.owns(ch));
             io.push(ch->code,ch->bits);
 
             // update list
@@ -251,7 +247,7 @@ namespace upsylon
 
     void ASF:: Alphabet:: encode_eos(iobits &io) const
     {
-        if(!first)
+        if(count>0)
         {
             io.push(eos->code, eos->bits);
             io.zpad();
