@@ -2,6 +2,7 @@
 #define Y_LANG_DYNAMO_INCLUDED 1
 
 #include "y/lang/compiler.hpp"
+#include "y/hashing/sha1.hpp"
 
 namespace upsylon
 {
@@ -51,7 +52,26 @@ namespace upsylon
 
             }
 
-            
+            template <typename HASH_FUNCTION>
+            class Hasher
+            {
+            public:
+                inline explicit Hasher() throw() : H() {}
+                inline virtual ~Hasher() throw()  {}
+                inline int32_t  operator()(const string &s) throw()
+                {
+                    const uint32_t u = H.template key<uint32_t>(s);
+                    const int32_t  h = int32_t(u&0x7fffffff); assert(h>=0);
+                    return h;
+                }
+
+                HASH_FUNCTION H;
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Hasher);
+            };
+
+            typedef Hasher<hashing::sha1> Hash31;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Dynamo);
         };

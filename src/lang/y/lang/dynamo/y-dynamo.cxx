@@ -1,4 +1,5 @@
 #include "y/program.hpp"
+#include "y/lang/dynamo.hpp"h
 #include "y/lang/dynamo/generator.hpp"
 #include "y/lang/dynamo/compiler.hpp"
 #include "y/ios/bin2dat.hpp"
@@ -11,7 +12,6 @@ using namespace Lang;
 
 namespace
 {
-#if 1
     static inline void make_cpp( string &name )
     {
         for(size_t i=0;i<name.size();++i)
@@ -21,14 +21,25 @@ namespace
             name[i] = '_';
         }
     }
-#endif
 
-#if 1
+
+    static inline
+    void emit_def(ios::ostream   &fp,
+                  const string   &s,
+                  const uint32_t  v,
+                  const size_t    max_len)
+    {
+        fp("#define ");
+        fp << s;
+        for(size_t j=s.size();j<=max_len;++j) fp << ' ';
+        fp("0x%08x\n", v);
+    }
+
     static inline void format_def(ios::ostream          &fp,
                                   const string          &name,
                                   const array<string>   &def,
-                                  const array<unsigned> &hid,
-                                  const size_t           terms)
+                                  const array<int32_t> &hid,
+                                  const size_t          terms)
     {
         const size_t n = def.size();
         assert(terms<=n);
@@ -42,25 +53,16 @@ namespace
         fp << "// TERMINALS for <" << name << ">\n";
         for(size_t i=1;i<=terms;++i)
         {
-            const string &s = def[i];
-            fp("#define ");
-            fp << s;
-            for(size_t j=s.size();j<=max_len;++j) fp << ' ';
-            fp("0x%08x\n", hid[i]);
+            emit_def(fp,def[i],hid[i],max_len);
         }
         fp << '\n';
         fp << "// INTERNALS for <" << name << ">\n";
         for(size_t i=terms+1;i<=n;++i)
         {
-            const string &s = def[i];
-            fp("#define ");
-            fp << s;
-            for(size_t j=s.size();j<=max_len;++j) fp << ' ';
-            fp("0x%08x\n", hid[i]);
+            emit_def(fp,def[i],hid[i],max_len);
         }
 
     }
-#endif
 }
 
 Y_PROGRAM_START()
@@ -99,11 +101,11 @@ Y_PROGRAM_START()
         //______________________________________________________________________
         vector<string>   def;
         vector<string>   sym;
-        vector<unsigned> hid;
+        vector<int32_t>  hid;
         
         size_t         terms = 0;
-        unsigned       index = 0;
         hashing::mperf table;
+        Dynamo::Hash31 h31;
 
         for( DynamoGenerator::Terminals::iterator i=dynGenerator.terminals.begin(); i != dynGenerator.terminals.end(); ++i)
         {
@@ -113,7 +115,7 @@ Y_PROGRAM_START()
                 const string &tName = t.rule.name;               // that will appear in analyzer
                 string        sName = *(t.module) + '_' + tName; // that will be used for definitions
                 make_cpp(sName);
-                table.insert(tName,index++);
+                table.insert(tName,h31(tName));
 
                 def << sName;
                 sym << tName;
@@ -128,7 +130,7 @@ Y_PROGRAM_START()
             const string &iName = c.rule.name;
             string        sName = *(c.module) + '_' + iName; //
             make_cpp(sName);
-            table.insert(iName,(index++)<<16);
+            table.insert(iName,h31(iName));
             def << sName;
             sym << iName;
             hid << table(iName);
@@ -181,100 +183,6 @@ Y_PROGRAM_START()
             ios::ocstream fp(grammarDef);
             format_def(fp,*(parser->name),def,hid,terms);
         }
-
-
-#if 0
-
-        //______________________________________________________________________
-        //
-        // saving the binary data
-        //______________________________________________________________________
-        {
-            const string grammarBin = grammarAST->to_binary();
-            string       grammarInc = grammarFile; vfs::change_extension(grammarInc, "inc");
-            std::cerr << "-- saving into '" << grammarInc << "'" << std::endl;
-            fs.try_remove_file(grammarInc);
-            {
-                ios::ocstream fp(grammarInc);
-                ios::bin2dat  b2d(16);
-                b2d.write(fp,grammarBin);
-            }
-        }
-
-        auto_ptr<Syntax::Parser> parser = dynGenerator.create(*grammarAST);
-        parser->GraphViz("dynout.dot");
-        std::cerr << "Terminals: " << dynGenerator.terminals << std::endl;
-        std::cerr << "Internals: " << dynGenerator.internals << std::endl;
-
-        //______________________________________________________________________
-        //
-        // create the definitions
-        //______________________________________________________________________
-        {
-            string       grammarDef = grammarFile; vfs::change_extension(grammarDef, "def");
-            std::cerr << "-- saving into '" << grammarDef << "'" << std::endl;
-            hashing::mperf table;
-            int            index=0;
-
-            vector<string> def;
-            vector<string> sym;
-            vector<int>    hid;
-            size_t         terms = 0;
-            for( DynamoGenerator::Terminals::iterator i=dynGenerator.terminals.begin(); i != dynGenerator.terminals.end(); ++i)
-            {
-                const DynamoGenerator::_Terminal &t = **i;
-                if(t.visible)
-                {
-                    const string &tName = t.rule.name;               // that will appear in analyzer
-                    string        sName = *(t.module) + '_' + tName; //
-                    make_cpp(sName);
-                    table.insert(tName,index++);
-                    def << sName;
-                    sym << tName;
-                    hid << table(tName);
-                    ++terms;
-                }
-            }
-
-
-            for( DynamoGenerator::Internals::iterator i=dynGenerator.internals.begin(); i != dynGenerator.internals.end(); ++i)
-            {
-                const DynamoGenerator::_Internal &c = **i;
-                const string &iName = c.rule.name;
-                string        sName = *(c.module) + '_' + iName; //
-                make_cpp(sName);
-                table.insert(iName,(index++) );
-                def << sName;
-                sym << iName;
-                hid << table(iName);
-            }
-
-            {
-                ios::ocstream fp( ios::cstderr );
-                format_def(fp,def,hid,terms);
-            }
-
-            string mph_data;
-            {
-                ios::osstream fp(mph_data);
-                const size_t n = sym.size();
-                fp.emit_upack(n);
-                for(size_t i=1;i<=n;++i)
-                {
-                    string_io::save_binary(fp,sym[i]);
-                }
-            }
-
-            {
-                const hashing::mperf mph( mph_data.ro(), mph_data.length() );
-                for(size_t i=sym.size();i>0;--i)
-                {
-                    const string &s = sym[i];
-                    if( mph(s) != hid[i] ) throw exception("invalid rehashing of '%s'", *s);
-                }
-            }
-        }
-#endif
 
     }
 
