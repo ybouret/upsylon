@@ -45,7 +45,7 @@ namespace upsylon
             //! construct using a database of C strings
             explicit mperf(const char **words,const size_t count);
 
-            //! construct using a set of binary strings
+            //! construct using a set of binary strings+unsigned code
             explicit mperf(const void *data,const size_t size);
 
             virtual ~mperf() throw();  //!< delete root

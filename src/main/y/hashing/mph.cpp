@@ -129,8 +129,9 @@ namespace upsylon
                 const size_t  n = fp.read_upack<size_t>();
                 for(size_t i=0;i<n;++i)
                 {
-                    const string word = string_io::load_binary(fp);
-                    insert( word, (int)i );
+                    const string   word = string_io::load_binary(fp);
+                    const unsigned code = fp.read_upack<unsigned>();
+                    insert( word, (int)code );
                 }
             }
             optimize();

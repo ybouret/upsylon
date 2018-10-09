@@ -38,6 +38,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(DynamoSymbol);
         };
 
+        
         //! for internal run-time consistency checks
 #define Y_DYNAMO_CHECK(CODE) do { if( !(CODE) ) throw Exception(fn,"%s","FAILED " #CODE); } while(false)
 
