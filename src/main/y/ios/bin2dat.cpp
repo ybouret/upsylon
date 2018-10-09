@@ -46,7 +46,7 @@ namespace upsylon
                 {
                     fp << "     ";
                 }
-                if(count<width)
+                if(isLast)
                 {
                     fp << "  ";
                 }

@@ -216,11 +216,13 @@ namespace upsylon
             {
                 //! creator name
                 string_io::save_binary(fp,rule.name);
+                //std::cerr << "-- saving <" << rule.name << ">" << std::endl;
                 // content
                 if(terminal)
                 {
                     fp.write(0);
                     fp.emit_upack<size_t>( lexeme.size );
+                    //std::cerr << "    |_" << lexeme << std::endl;
                     for(const Char *ch=lexeme.head;ch;ch=ch->next)
                     {
                         fp.write(ch->code);

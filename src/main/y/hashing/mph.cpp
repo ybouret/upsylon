@@ -85,6 +85,8 @@ namespace upsylon
 }
 
 #include <iostream>
+#include "y/ios/imstream.hpp"
+#include "y/string/io.hpp"
 
 namespace upsylon
 {
@@ -112,6 +114,24 @@ namespace upsylon
             {
                 const char *word = words[i];
                 insert( word,(int)i);
+            }
+            optimize();
+        }
+
+        mperf:: mperf(const void *data,const size_t size) :
+        root( new node_type(0) ),
+        nodes( 1 )
+        {
+            assert( !(NULL==data&&size>0) );
+            if(size>0)
+            {
+                ios::imstream fp(data,size);
+                const size_t  n = fp.read_upack<size_t>();
+                for(size_t i=0;i<n;++i)
+                {
+                    const string word = string_io::load_binary(fp);
+                    insert( word, (int)i );
+                }
             }
             optimize();
         }
