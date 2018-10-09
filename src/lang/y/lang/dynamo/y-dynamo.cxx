@@ -1,5 +1,5 @@
 #include "y/program.hpp"
-#include "y/lang/dynamo.hpp"h
+#include "y/lang/dynamo.hpp"
 #include "y/lang/dynamo/generator.hpp"
 #include "y/lang/dynamo/compiler.hpp"
 #include "y/ios/bin2dat.hpp"
