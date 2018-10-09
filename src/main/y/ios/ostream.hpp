@@ -25,7 +25,7 @@ namespace upsylon
             virtual void flush()         = 0;
 
             //! printf style, may be superseeded
-            virtual void operator()(const char *fmt,...) Y_PRINTF_CHECK(2,3);
+            virtual ostream & operator()(const char *fmt,...) Y_PRINTF_CHECK(2,3);
 
 
             //! output large buffer
@@ -111,6 +111,37 @@ namespace upsylon
 
                 return *this;
             }
+
+            //! repeat a char
+            inline ostream & repeat( size_t sz, const char C)
+            {
+                while(sz-->0) write(C);
+                return *this;
+            }
+
+            //! pad something for alignement
+            inline ostream & align(const char  *buffer,
+                                   const size_t buflen,
+                                   const size_t aligned, const char C=' ')
+            {
+                assert(!(0==buffer&&buflen>0));
+                for(size_t i=0;i<buflen;++i)       write(buffer[i]);
+                for(size_t i=buflen;i<aligned;++i) write(C);
+                return *this;
+            }
+
+            //! pad text
+            inline ostream & align(const char *text,const size_t aligned,const char C=' ')
+            {
+                return align(text,length_of(text),aligned,C);
+            }
+
+            //! pad text
+            inline ostream & align(const string &s,const size_t aligned,const char C=' ')
+            {
+                return align(*s,s.size(),aligned,C);
+            }
+
 
         protected:
             //! constructor

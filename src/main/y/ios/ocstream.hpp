@@ -36,7 +36,7 @@ namespace upsylon
             virtual void flush();
 
             //! direct formatting
-            virtual void operator()(const char *fmt,...) Y_PRINTF_CHECK(2,3);
+            virtual ostream & operator()(const char *fmt,...) Y_PRINTF_CHECK(2,3);
 
             //! overwrite
             static void overwrite(const string &filename);

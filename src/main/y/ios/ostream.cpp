@@ -14,7 +14,7 @@ namespace upsylon
         ostream::  ostream() throw() {}
 
 
-        void ostream:: operator()(const char *fmt,...)
+        ostream & ostream:: operator()(const char *fmt,...)
         {
             assert(fmt);
             size_t n = 32;
@@ -35,7 +35,7 @@ namespace upsylon
                 if( success )
                 {
                     output( buffer, length_of(buffer) );
-                    return;
+                    return *this;
                 }
                 n <<= 1;
             }

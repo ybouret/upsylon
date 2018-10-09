@@ -29,10 +29,7 @@ namespace
                   const uint32_t  v,
                   const size_t    max_len)
     {
-        fp("#define ");
-        fp << s;
-        for(size_t j=s.size();j<=max_len;++j) fp << ' ';
-        fp("0x%08x\n", v);
+        fp("#define ").align(s,max_len)(" 0x%08x\n", v);
     }
 
     static inline void format_def(ios::ostream          &fp,
@@ -184,6 +181,16 @@ Y_PROGRAM_START()
             format_def(fp,*(parser->name),def,hid,terms);
         }
 
+        //______________________________________________________________________
+        //
+        // emit code generator
+        //______________________________________________________________________
+        {
+            string       grammarInc = grammarFile; vfs::change_extension(grammarInc, "inc");
+            std::cerr << "-- saving into '" << grammarInc << "'" << std::endl;
+            ios::ocstream fp(grammarInc);
+
+        }
     }
 
 

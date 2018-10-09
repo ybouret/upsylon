@@ -49,7 +49,7 @@ namespace upsylon
         }
 
 
-        void ocstream:: operator()(const char *format,...)
+        ostream & ocstream:: operator()(const char *format,...)
         {
             assert(format);
             va_list args;
@@ -58,6 +58,7 @@ namespace upsylon
             va_end (args);
             if( ferror(*handle) != 0 )
                 throw libc::exception( EIO, "ocstream('%s',...)", format );
+            return *this;
         }
 
         void ocstream:: overwrite( const string &filename )
