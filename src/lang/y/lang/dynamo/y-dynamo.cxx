@@ -11,6 +11,7 @@ using namespace Lang;
 
 namespace
 {
+#if 0
     static inline void make_cpp( string &name )
     {
         for(size_t i=0;i<name.size();++i)
@@ -20,7 +21,9 @@ namespace
             name[i] = '_';
         }
     }
+#endif
 
+#if 0
     static inline void format_def(ios::ostream        &fp,
                                   const array<string> &def,
                                   const array<int>    &hid,
@@ -54,7 +57,7 @@ namespace
         }
 
     }
-
+#endif
 }
 
 Y_PROGRAM_START()
@@ -74,6 +77,7 @@ Y_PROGRAM_START()
         auto_ptr<Syntax::Node>   grammarAST  = dynCompiler.process( Module::OpenFile(grammarFile) );
         grammarAST->GraphViz("dynast.dot");
 
+#if 0
         //______________________________________________________________________
         //
         // saving the binary data
@@ -163,7 +167,7 @@ Y_PROGRAM_START()
                 }
             }
         }
-
+#endif
 
     }
 
