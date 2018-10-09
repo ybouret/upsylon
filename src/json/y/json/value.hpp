@@ -6,10 +6,10 @@
 namespace upsylon
 {
 
-    struct JSON
+    namespace JSON
     {
         
-    };
+    }
 
 }
 

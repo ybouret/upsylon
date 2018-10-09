@@ -51,7 +51,7 @@ namespace upsylon
             return new Module(org,inp);
         }
 
-        Module * Module:: OpenData( const string &name, const char *data, const size_t size)
+        Module * Module:: OpenData( const string &name, const void *data, const size_t size)
         {
             const Origin org = new string(name);
             const Input  inp = new ios::imstream( data, size );

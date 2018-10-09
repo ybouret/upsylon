@@ -67,7 +67,7 @@ namespace upsylon
         }
 
 
-        Syntax::Parser * Dynamo:: FromBinary(const char *name, const char *data, const size_t size,const bool verbose)
+        Syntax::Parser * Dynamo:: FromBinary(const char *name, const void *data, const size_t size,const bool verbose)
         {
             static DynamoServer   &dynamo = DynamoServer::instance();
             Source                 source( Module::OpenData(name,data,size) );

@@ -22,44 +22,54 @@ namespace
         }
     }
 
-
-    static inline
-    void emit_def(ios::ostream   &fp,
-                  const string   &s,
-                  const uint32_t  v,
-                  const size_t    max_len)
-    {
-        fp("#define ").align(s,max_len)(" 0x%08x\n", v);
-    }
-
     static inline void format_def(ios::ostream          &fp,
-                                  const string          &name,
                                   const array<string>   &def,
-                                  const array<int32_t> &hid,
-                                  const size_t          terms)
+                                  const array<int32_t>  &hid)
     {
         const size_t n = def.size();
-        assert(terms<=n);
-        fp << '\n';
         size_t max_len = 0;
         for(size_t i=n;i>0;--i)
         {
             max_len = max_of<size_t>(max_len,def[i].size());
         }
 
-        fp << "// TERMINALS for <" << name << ">\n";
-        for(size_t i=1;i<=terms;++i)
+        for(size_t i=1;i<=n;++i)
         {
-            emit_def(fp,def[i],hid[i],max_len);
+            fp("#define ").align(def[i],max_len)(" 0x%08x\n", hid[i]);
         }
-        fp << '\n';
-        fp << "// INTERNALS for <" << name << ">\n";
-        for(size_t i=terms+1;i<=n;++i)
+    }
+
+    static inline
+    string compile_mph(const array<string>  &sym,
+                       const array<int32_t> &hid)
+    {
+        string           ans;
+        ios::osstream    fp(ans);
+        const size_t     n = sym.size();
+
+        fp.emit_upack(n);
+        for(size_t i=1;i<=n;++i)
         {
-            emit_def(fp,def[i],hid[i],max_len);
+            string_io::save_binary(fp,sym[i]);
+            fp.emit_upack( unsigned(hid[i]) );
         }
 
+        return ans;
     }
+
+    static inline
+    void emit_table(ios::ostream &fp,
+                    const string &name,
+                    const string &data,
+                    ios::bin2dat &b2d)
+    {
+        fp << "static const unsigned char " << name << "[";
+        fp("%u",unsigned(data.size())) << "]={\n";
+        b2d.reset();
+        b2d.write(fp,data);
+        fp << "};\n\n";
+    }
+
 }
 
 Y_PROGRAM_START()
@@ -94,15 +104,14 @@ Y_PROGRAM_START()
 
         //______________________________________________________________________
         //
-        // get definitions for terminals and internals
+        // get definitions for terminals
         //______________________________________________________________________
-        vector<string>   def;
-        vector<string>   sym;
-        vector<int32_t>  hid;
-        
-        size_t         terms = 0;
-        hashing::mperf table;
         Dynamo::Hash31 h31;
+
+        vector<string>   terminal_def;
+        vector<string>   terminal_sym;
+        vector<int32_t>  terminal_hid;
+        hashing::mperf   hTerminal;
 
         for( DynamoGenerator::Terminals::iterator i=dynGenerator.terminals.begin(); i != dynGenerator.terminals.end(); ++i)
         {
@@ -112,60 +121,59 @@ Y_PROGRAM_START()
                 const string &tName = t.rule.name;               // that will appear in analyzer
                 string        sName = *(t.module) + '_' + tName; // that will be used for definitions
                 make_cpp(sName);
-                table.insert(tName,h31(tName));
+                hTerminal.insert(tName,h31(tName));
 
-                def << sName;
-                sym << tName;
-                hid << table(tName);
-                ++terms;
+                terminal_def << sName;
+                terminal_sym << tName;
+                terminal_hid << hTerminal(tName);
             }
         }
 
+        for(size_t i=terminal_sym.size();i>0;--i)
+        {
+            if( hTerminal( terminal_sym[i] ) != terminal_hid[i] ) throw exception("mismatch terminal '%s' level-1", *terminal_sym[i]);
+        }
+
+        const string terminal_mph = compile_mph(terminal_sym,terminal_hid);
+        {
+            const hashing::mperf table(terminal_mph.ro(),terminal_mph.length());
+            for(size_t i=terminal_sym.size();i>0;--i)
+            {
+                if( table( terminal_sym[i] ) != terminal_hid[i] ) throw exception("mismatch terminal '%s' level-2", *terminal_sym[i]);
+            }
+        }
+        //______________________________________________________________________
+        //
+        // get definitions for internals
+        //______________________________________________________________________
+        vector<string>  internal_def;
+        vector<string>  internal_sym;
+        vector<int32_t> internal_hid;
+        hashing::mperf  hInternal;
         for( DynamoGenerator::Internals::iterator i=dynGenerator.internals.begin(); i != dynGenerator.internals.end(); ++i)
         {
             const DynamoGenerator::_Internal &c = **i;
             const string &iName = c.rule.name;
             string        sName = *(c.module) + '_' + iName; //
             make_cpp(sName);
-            table.insert(iName,h31(iName));
-            def << sName;
-            sym << iName;
-            hid << table(iName);
+            hInternal.insert(iName,h31(iName));
+
+            internal_def << sName;
+            internal_sym << iName;
+            internal_hid << hInternal(iName);
         }
 
-        table.optimize();
-        for(size_t i=sym.size();i>0;--i)
+        for(size_t i=internal_sym.size();i>0;--i)
         {
-            const string &s = sym[i];
-            if( table(s) != int(hid[i]) ) throw exception("mismatch code for '%s', level-1", *s);
+            if( hInternal( internal_sym[i] ) != internal_hid[i] ) throw exception("mismatch internal '%s' level-1", *internal_sym[i]);
         }
 
-        //______________________________________________________________________
-        //
-        // create symbol hash table data
-        //______________________________________________________________________
-        string tdata;
+        const string internal_mph = compile_mph(internal_sym,internal_hid);
         {
-            ios::osstream fp(tdata);
-            const size_t  ns = sym.size();
-            fp.emit_upack(ns);
-            for(size_t i=1;i<=ns;++i)
+            const hashing::mperf table(internal_mph.ro(),internal_mph.length());
+            for(size_t i=internal_sym.size();i>0;--i)
             {
-                string_io::save_binary(fp,sym[i]);
-                fp.emit_upack(hid[i]);
-            }
-        }
-
-        //______________________________________________________________________
-        //
-        // checking table
-        //______________________________________________________________________
-        {
-            const hashing::mperf mph( tdata.ro(), tdata.length() );
-            for(size_t i=sym.size();i>0;--i)
-            {
-                const string &s = sym[i];
-                if( mph(s) != int(hid[i]) ) throw exception("mismatch code for '%s', level-2", *s);
+                if( table( internal_sym[i] ) != internal_hid[i] ) throw exception("mismatch internal '%s' level-2", *internal_sym[i]);
             }
         }
 
@@ -174,11 +182,23 @@ Y_PROGRAM_START()
         //
         // emit definitions
         //______________________________________________________________________
+        const string  name = *(parser->name);
         {
             string       grammarDef = grammarFile; vfs::change_extension(grammarDef, "def");
             std::cerr << "-- saving into '" << grammarDef << "'" << std::endl;
             ios::ocstream fp(grammarDef);
-            format_def(fp,*(parser->name),def,hid,terms);
+            const size_t  nsep = 17 + name.size();
+            (fp << '/' << '/').repeat(nsep, '-')<<'\n';
+            fp << "// TERMINALS for {" << name << "}\n";
+            (fp << '/' << '/').repeat(nsep, '-')<<'\n';
+            format_def(fp,terminal_def,terminal_hid);
+            fp << '\n';
+
+            (fp << '/' << '/').repeat(nsep, '-')<<'\n';
+            fp << "// INTERNALS for {" << name << "}\n";
+            (fp << '/' << '/').repeat(nsep, '-')<<'\n';
+            format_def(fp,internal_def,internal_hid);
+            fp << '\n';
         }
 
         //______________________________________________________________________
@@ -186,10 +206,28 @@ Y_PROGRAM_START()
         // emit code generator
         //______________________________________________________________________
         {
+            ios::bin2dat b2d(16);
             string       grammarInc = grammarFile; vfs::change_extension(grammarInc, "inc");
             std::cerr << "-- saving into '" << grammarInc << "'" << std::endl;
             ios::ocstream fp(grammarInc);
 
+            // save the grammar
+            {
+                const string table_name = name + "_grammar";
+                emit_table(fp, table_name, grammarBin, b2d);
+            }
+
+            // save the terminals table data
+            {
+                const string table_name = name + "_terminals";
+                emit_table(fp, table_name, terminal_mph, b2d);
+            }
+
+            // save the internals table data
+            {
+                const string table_name = name + "_internals";
+                emit_table(fp, table_name, internal_mph, b2d);
+            }
         }
     }
 

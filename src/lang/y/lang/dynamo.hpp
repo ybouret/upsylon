@@ -25,7 +25,7 @@ namespace upsylon
             //! load from compiled grammar
             static Syntax::Parser *FromBinary(const string &filename, const bool verbose=false);
             //! load from compiled grammar in memory chunk
-            static Syntax::Parser *FromBinary(const char   *name, const char *data, const size_t size, const bool verbose=false);
+            static Syntax::Parser *FromBinary(const char   *name, const void *data, const size_t size, const bool verbose=false);
             //! dispatch calls
             static Syntax::Parser *Load( const string &filename, const FormatType type, const bool verbose=false);
             //! compile a grammar into its binary form
@@ -44,7 +44,7 @@ namespace upsylon
             
             //! create a compiler from a binary data chunk
             inline explicit Dynamo(const char  *name,
-                                   const char  *data,
+                                   const void  *data,
                                    const size_t size,
                                    const bool   verbose=false) :
             Compiler( FromBinary(name,data,size,verbose ) )
@@ -52,12 +52,14 @@ namespace upsylon
 
             }
 
+            //! hasher for integer values
             template <typename HASH_FUNCTION>
             class Hasher
             {
             public:
-                inline explicit Hasher() throw() : H() {}
-                inline virtual ~Hasher() throw()  {}
+                inline explicit Hasher() throw() : H() {} //!< initialize
+                inline virtual ~Hasher() throw()  {}      //!< destructor
+                //! get a signed value on 31 bits
                 inline int32_t  operator()(const string &s) throw()
                 {
                     const uint32_t u = H.template key<uint32_t>(s);
@@ -65,12 +67,13 @@ namespace upsylon
                     return h;
                 }
 
-                HASH_FUNCTION H;
+                HASH_FUNCTION H; //!< a hash function
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Hasher);
             };
 
-            typedef Hasher<hashing::sha1> Hash31;
+            typedef Hasher<hashing::sha1> Hash31; //!< default hash31
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Dynamo);

@@ -27,11 +27,11 @@ namespace upsylon
             static Module *OpenFile(const char   *filename) { const string _(filename); return OpenFile(_); }
 
             //! open data stream
-            static Module *OpenData( const string &name, const char *data, const size_t size);
+            static Module *OpenData( const string &name, const void *data, const size_t size);
 
             //! open data stream
             inline
-            static Module *OpenData( const char *name, const char *data, const size_t size)
+            static Module *OpenData( const char *name, const void *data, const size_t size)
             {
                 const string _(name); return OpenData(_,data,size);
             }
