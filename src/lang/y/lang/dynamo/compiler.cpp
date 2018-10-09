@@ -73,7 +73,7 @@ namespace upsylon
 
                     switch( commands(CMD) )
                     {
-                        case include:
+                        case Include:
                             if(args.size!=2)
                             {
                                 throw exception("%s:%d: include must have exactly one argument",lxm.origin(),lxm.line());

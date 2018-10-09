@@ -74,6 +74,7 @@ Y_UTEST_INIT(100)
     Y_UTEST(delta);
     Y_UTEST(asf);
     Y_UTEST(local_file);
+    Y_UTEST(bin2dat);
 }
 Y_UTEST_EXEC()
 
