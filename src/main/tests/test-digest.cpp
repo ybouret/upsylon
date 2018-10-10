@@ -30,12 +30,17 @@ namespace {
 
 Y_UTEST(digest)
 {
-    for(size_t sz=1;sz<=3;++sz)
+    for(size_t sz=1;sz<=8;++sz)
     {
         digest d(sz);
         do_test(d);
     }
-    
+
+    digest d1 = digest::hexadecimal("A");    std::cerr << "d1=" << d1 << std::endl;
+    digest d2 = digest::hexadecimal("AB");   std::cerr << "d2=" << d2 << std::endl;
+    digest d3 = digest::hexadecimal("ABC");  std::cerr << "d3=" << d3 << std::endl;
+    digest d4 = digest::hexadecimal("ABCD"); std::cerr << "d4=" << d4 << std::endl;
+
 }
 Y_UTEST_DONE()
 

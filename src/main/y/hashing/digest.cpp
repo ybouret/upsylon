@@ -1,8 +1,10 @@
 #include "y/hashing/digest.hpp"
 #include "y/code/utils.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
+
 
     static inline
     uint8_t * __digest_acquire( size_t &blen )
@@ -58,8 +60,14 @@ byte( __digest_acquire(blen) )
 
     std::ostream & digest:: display( std::ostream &os ) const
     {
+#if 0
         size_t i=size;
         while(i-->0)
+        {
+            os << hexadecimal::lowercase[ byte[i] ];
+        }
+#endif
+        for(size_t i=0;i<size;++i)
         {
             os << hexadecimal::lowercase[ byte[i] ];
         }
@@ -90,12 +98,59 @@ byte( __digest_acquire(blen) )
         }
         return *this;
     }
+
+    static inline
+    uint8_t __digest_hex2dec(const char c)
+    {
+        const int value = hexadecimal::to_decimal(c);
+        if(value<0) throw exception("digest::hexadecimal(invalid char '%s')", visible_char[ uint8_t(c) ]);
+        return uint8_t(value);
+    }
+
+    static inline uint8_t __digest_word(const char * &text)
+    {
+        assert(text);
+        const uint8_t hi = __digest_hex2dec(*(text++));
+        const uint8_t lo = __digest_hex2dec(*(text++));
+        return (hi<<4) | lo;
+    }
+
+    digest digest:: hexadecimal(const char *text)
+    {
+        const size_t len = length_of(text);
+        if(len&0x1)
+        {
+            size_t w = (len+1)>>1;
+            digest d(w);
+            d[0] = __digest_hex2dec(text[0]);
+            ++text;
+            size_t i=1;
+            for(--w;w>0;--w,++i)
+            {
+                d[i] = __digest_word(text);
+            }
+            return d;
+        }
+        else
+        {
+            size_t w = len>>1;
+            digest d(w);
+            size_t i=0;
+            for(;w>0;--w,++i)
+            {
+                d[i] = __digest_word(text);
+            }
+            return d;
+        }
+    }
 }
+
 
 #include "y/randomized/bits.hpp"
 
 namespace upsylon
 {
+
     void digest:: rand() throw()
     {
         static randomized::bits & ran = randomized::bits::crypto();
@@ -105,5 +160,4 @@ namespace upsylon
             byte[i] = ran.full<uint8_t>();
         }
     }
-
 }

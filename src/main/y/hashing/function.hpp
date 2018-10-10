@@ -3,7 +3,7 @@
 #define Y_HASHING_FUNCTION_INCLUDED 1
 
 
-#include "y/ptr/counted.hpp"
+#include "y/hashing/digest.hpp"
 #include "y/ptr/arc.hpp"
 
 namespace upsylon
@@ -59,7 +59,30 @@ namespace upsylon
 			
             //!this->get( output.rw(), output.length() )
             void out( memory::rw_buffer &output ) throw();
-            
+
+            //! get a digest after a set/run
+            digest md();
+
+            //! get a digest of a buffer
+            inline digest md( const void *buffer, size_t buflen)
+            {
+                set(); run(buffer,buflen); return md();
+            }
+
+            //! get a digest of a buffer
+            inline digest md(const memory::ro_buffer &buffer)
+            {
+                return md( buffer.ro(), buffer.length() );
+            }
+
+            //! get a digest of a text
+            inline digest md(const char *text)
+            {
+                return md( text, length_of(text) );
+            }
+
+
+
             
 		protected:
             //! initialize function length and window

@@ -58,6 +58,14 @@ namespace upsylon
             get( output.rw(), output.length() );
         }
 
+
+        digest function::md()
+        {
+            digest ans( length );
+            out(ans);
+            return ans;
+        }
+
 	}
 
 }

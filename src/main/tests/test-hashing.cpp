@@ -58,7 +58,7 @@ namespace
         std::cerr << H.name() << std::endl;
         double speed = 0;
         Y_TIMINGS(speed,1,for(size_t i=arr.size();i>0;--i) (void) H.key<uint32_t>(arr[i]));
-        std::cerr << "\t|_speed=" << speed << std::endl;
+        std::cerr << "\t|_speed=" << speed/1e6 << " Mops/s" << std::endl;
     }
 
 }
@@ -113,10 +113,28 @@ Y_UTEST(hashing)
 
     key_hasher<string>               skh_default;
     key_hasher<string,hashing::sha1> skh_crypto;
-    const string s = "Hello, World!";
+    const string s = "Hello, World";
     std::cerr << "default=" << skh_default(s) << std::endl;
     std::cerr << "crypto =" << skh_crypto(s)  << std::endl;
 
+    digest d(8);
+    for(size_t i=1;i<=phash.size();++i)
+    {
+        hashing::function &H = *phash[i];
+        H.set();
+        H(s);
+        H.out(d);
+
+        H.set();
+        H(s);
+        const digest D = H.md();
+        std::cerr << d << "@" << H.name() << " =>\t" << D << std::endl;
+
+
+    }
+
 }
 Y_UTEST_DONE()
+
+
 
