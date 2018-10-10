@@ -1,5 +1,5 @@
 #include "y/json/compiler.hpp"
-#include "y/lang/dynamo.hpp"
+#include "y/lang/dynamox.hpp"
 
 namespace upsylon
 {
@@ -11,7 +11,7 @@ namespace upsylon
 
     namespace JSON
     {
-        class Compiler : public Lang::Dynamo, public singleton<Compiler>
+        class Compiler : public Lang::DynamoX, public singleton<Compiler>
         {
         public:
             Value value;
@@ -21,12 +21,19 @@ namespace upsylon
                 // initialize
                 // value = nill
                 compile(module);
+            }
 
+            void onTerminal( const string &name, const string &data )
+            {
+                Analyzer::onTerminal(name,data);
+                space(std::cerr) << "code = 0x" << std::hex << terminalHash(name) << std::dec << std::endl;
+                //std::cerr << "Terminal..." << std::endl;
             }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
-            explicit Compiler() : Lang::Dynamo( "JSON_grammar", JSON_grammar, sizeof(JSON_grammar) ),
+            explicit Compiler() :
+            Lang::DynamoX( Y_DYNAMOX(JSON) ),
             value()
             {
             }

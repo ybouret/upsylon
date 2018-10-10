@@ -17,6 +17,7 @@ namespace upsylon
 
             //! initialize
             explicit Compiler(Syntax::Parser *p) throw();
+            
             //! destructor
             virtual ~Compiler() throw();
 
