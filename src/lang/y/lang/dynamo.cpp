@@ -47,7 +47,8 @@ namespace upsylon
                 {
                 }
 
-                static const at_exit::longevity life_time = memory::pooled::life_time-10;
+            public:
+                static const at_exit::longevity life_time = Dynamo::ServerLifeTime;
 
             };
         }

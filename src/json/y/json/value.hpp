@@ -8,7 +8,18 @@ namespace upsylon
 
     namespace JSON
     {
-        
+        enum ValueType
+        {
+            isNull
+        };
+
+        class Value
+        {
+        public:
+            
+
+
+        };
     }
 
 }
