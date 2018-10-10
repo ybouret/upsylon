@@ -13,8 +13,8 @@ using namespace Lang;
 template <typename HF>
 static inline void check( const array<string> &words )
 {
-    Dynamo::Hasher<HF> H;
-    std::cerr << "checking with " << H.H.name() << std::endl;
+    DynamoHasherWith<HF> H;
+    std::cerr << "checking with " << H.id << std::endl;
     const size_t n = words.size();
     vector<int32_t> hashs(n,0);
     for(size_t i=n;i>0;--i)
@@ -37,7 +37,7 @@ static inline void check( const array<string> &words )
     }
     if(collisions)
         std::cerr << std::endl;
-    std::cerr << H.H.name() << ": " << collisions << std::endl;
+    std::cerr << H.id << ": " << collisions << std::endl;
 
 }
 
