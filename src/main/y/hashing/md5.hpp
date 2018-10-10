@@ -11,6 +11,7 @@ namespace upsylon
 		/* RFC 1321 */
 		namespace RFC1321
 		{
+            //! context to compute MD5
 			struct MD5_CTX
 			{
 				uint32_t      state[4];        /*!< state (ABCD) */
@@ -19,10 +20,11 @@ namespace upsylon
 			};
 		}
 
+        //! MD5
 		class md5 : public function
 		{
 		public:
-			Y_HASHING_FUNCTION_DECL(md5,16,64);
+			Y_HASHING_FUNCTION_DECL(md5,16,64); //!< specs
 
 		private:
 			RFC1321::MD5_CTX ctx;

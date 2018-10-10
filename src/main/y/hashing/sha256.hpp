@@ -8,7 +8,7 @@ namespace upsylon
 {
 	namespace hashing
 	{
-
+        //! context for sha256/224
 		typedef struct 
 		{
 			uint32_t      total[2];     /*!< number of bytes processed  */
@@ -17,21 +17,23 @@ namespace upsylon
 			int           is224;        /*!< false => SHA-256, else SHA-224 */
 		} SHA256_CTX;
 		
-		
+
+        //! SHA-256
 		class sha256 : public function
 		{
 		public:
-			Y_HASHING_FUNCTION_DECL(sha256,32,64);
+			Y_HASHING_FUNCTION_DECL(sha256,32,64); //!< specs
 			
 		private:
 			SHA256_CTX ctx;
 			Y_DISABLE_COPY_AND_ASSIGN(sha256);
 		};
-		
+
+        //! SHA-224
 		class sha224 : public function
 		{
 		public:
-			Y_HASHING_FUNCTION_DECL(sha224,28,64);
+			Y_HASHING_FUNCTION_DECL(sha224,28,64); //!< specs
 			
 		private:
 			SHA256_CTX ctx;

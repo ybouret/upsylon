@@ -10,12 +10,12 @@ namespace upsylon
 {
     namespace hashing
     {
-        
+        //! RipeMD 160
         class rmd160 : public function
 		{
 		public:
-			Y_HASHING_FUNCTION_DECL(rmd160,20,64);
-			static const size_t RMDsize=160;
+			Y_HASHING_FUNCTION_DECL(rmd160,20,64); //!< specs
+			static const size_t RMDsize=160; //!< bits
             
             
 		private:

@@ -10,12 +10,12 @@ namespace upsylon
 {
     namespace hashing
     {
-        
+        //! RipeMD-128
         class rmd128 : public function
 		{
 		public:
-			Y_HASHING_FUNCTION_DECL(rmd128,16,64);
-			static const size_t RMDsize=128;
+			Y_HASHING_FUNCTION_DECL(rmd128,16,64); //!< specs
+			static const size_t RMDsize=128;       //!< 128 bits
             
             
 		private:

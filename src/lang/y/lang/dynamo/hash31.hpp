@@ -1,6 +1,6 @@
 //! \file
 #ifndef Y_DYNAMO_HASH31_INCLUDED
-#define Y_DYNAMO_HASH32_INCLUDED 1
+#define Y_DYNAMO_HASH31_INCLUDED 1
 
 #include "y/hashing/function.hpp"
 #include "y/lang/types.hpp"
@@ -13,10 +13,11 @@ namespace  upsylon
     namespace Lang
     {
 
+        //! 31 bits hasher
         class DynamoHasher
         {
         public:
-            const string id;
+            const string id; //!< underlying hash function name
 
             virtual ~DynamoHasher() throw(); //!< destructor
             const string & key() const throw(); //!< id
@@ -30,7 +31,7 @@ namespace  upsylon
             }
 
         protected:
-            explicit DynamoHasher(const char *);
+            explicit DynamoHasher(const char *); //!< setup
 
         private:
             virtual hashing::function & hfn() throw() = 0;

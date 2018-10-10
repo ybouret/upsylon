@@ -55,6 +55,7 @@ namespace upsylon
             
             typedef DynamoHasherWith<hashing::sha1> Hash31; //!< default hash31
 
+            //! life time for internal singleton
             static const at_exit::longevity ServerLifeTime = memory::pooled::life_time - 8;
 
         private:

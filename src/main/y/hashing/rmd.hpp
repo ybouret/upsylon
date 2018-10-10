@@ -15,8 +15,8 @@ namespace upsylon
         class rmd
         {
         public:
-            rmd() throw();
-            ~rmd() throw();
+            rmd() throw();  //!< setup
+            ~rmd() throw(); //!< destructor
             
           
             //! reset all fields
@@ -33,11 +33,12 @@ namespace upsylon
             
             //! assemble the last block
             const uint8_t *flush() throw();
-            
+
+            //! internal length
             const size_t   length;
             
-            uint32_t lswlen() const throw();
-            uint32_t mswlen() const throw();
+            uint32_t lswlen() const throw(); //!< least significant word len
+            uint32_t mswlen() const throw(); //!<  most signigicant word len
             
         private:
             size_t   nx;

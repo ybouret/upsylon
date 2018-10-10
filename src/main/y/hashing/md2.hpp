@@ -11,6 +11,7 @@ namespace upsylon
         /* RFC 1319 */
         namespace RFC1319
         {
+            //! context for MD2
             struct MD2_CTX
             {
                 uint8_t      state[16];    /*!< state                      */
@@ -20,10 +21,11 @@ namespace upsylon
             };
         }
 
+        //! MD2
         class md2 : public function
         {
         public:
-            Y_HASHING_FUNCTION_DECL(md2,16,48);
+            Y_HASHING_FUNCTION_DECL(md2,16,48); //!< specs
 
         private:
             RFC1319::MD2_CTX ctx;
