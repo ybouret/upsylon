@@ -8,6 +8,15 @@
 #include "y/hashing/sfh.hpp"
 #include "y/hashing/sha1.hpp"
 
+#include "y/hashing/md2.hpp"
+#include "y/hashing/md4.hpp"
+#include "y/hashing/md5.hpp"
+#include "y/hashing/rmd128.hpp"
+#include "y/hashing/rmd160.hpp"
+#include "y/hashing/sha256.hpp"
+#include "y/hashing/sha512.hpp"
+
+
 #include "y/utest/run.hpp"
 
 #include "y/sequence/vector.hpp"
@@ -52,9 +61,8 @@ namespace
         std::cerr << "\t|_speed=" << speed << std::endl;
     }
 
-
-
 }
+
 Y_UTEST(hashing)
 {
     vector< hashing::function::pointer > phash;
@@ -68,6 +76,16 @@ Y_UTEST(hashing)
     __REGISTER(pjw);
     __REGISTER(sfh);
     __REGISTER(sha1);
+    __REGISTER(md2);
+    __REGISTER(md4);
+    __REGISTER(md5);
+    __REGISTER(rmd128);
+    __REGISTER(rmd160);
+    __REGISTER(sha224);
+    __REGISTER(sha256);
+    __REGISTER(sha384);
+    __REGISTER(sha512);
+
     for(size_t i=1;i<=phash.size();++i)
     {
         std::cerr << phash[i]->name() << std::endl;
