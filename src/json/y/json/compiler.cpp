@@ -23,11 +23,10 @@ namespace upsylon
                 compile(module);
             }
 
-            void onTerminal( const string &name, const string &data )
+            void onTerminal( const Lang::Lexeme &data )
             {
-                Analyzer::onTerminal(name,data);
-                space(std::cerr) << "code = 0x" << std::hex << terminalHash(name) << std::dec << std::endl;
-                //std::cerr << "Terminal..." << std::endl;
+                Analyzer::onTerminal(data);
+                space(std::cerr) << "code = 0x" << std::hex << terminalHash(*data.label) << std::dec << std::endl;
             }
 
         private:

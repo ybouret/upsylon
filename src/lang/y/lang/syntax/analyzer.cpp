@@ -32,8 +32,8 @@ namespace upsylon
                 const string &name = node->rule.name;
                 if(node->terminal)
                 {
-                    const string data = node->lexeme.to_string();
-                    onTerminal(name,data);
+                    //const string data = node->lexeme.to_string();
+                    onTerminal(node->lexeme);
                 }
                 else
                 {
@@ -54,13 +54,12 @@ namespace upsylon
                 __walk( &root );
             }
 
-            void Analyzer:: onTerminal(const string &name, const string &data)
+            void Analyzer:: onTerminal(const Lexeme &data)
             {
-                //space(std::cerr) << "push[" << name << "]='" << data << "'" << std::endl;
-                space(std::cerr) << "push " << name << " ";
-                if(data.size())
+                space(std::cerr) << "push " << data.label << " ";
+                if(data.size)
                 {
-                    for(size_t i=name.size()+depth*2;i<=aligned;++i) std::cerr << ' ';
+                    for(size_t i=data.label->size()+depth*2;i<=aligned;++i) std::cerr << ' ';
                     std::cerr << "<" << data << ">";
                 }
                 std::cerr << std::endl;

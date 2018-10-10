@@ -19,7 +19,10 @@ namespace upsylon
             __String:: __String(Translator &tr, const string &id, const char *ch) : Plugin(tr,id,ch), content()
             {
                 assert(*label==id);
+
+                assert(trigger.size()>0);
                 
+
                 const string esc_id = *label + ".escape";
                 const string esc_rx = "\\x5C";
                 Scanner     &esc = tr.decl(esc_id);
@@ -30,6 +33,22 @@ namespace upsylon
 
                 // core collect
                 discard("core", "[:core:]", this, & __String::Collect );
+                //std::cerr << "__String.trigger=<" << trigger << ">" << std::endl;
+
+                if(trigger=="\\x22")
+                {
+                    //std::cerr << "Accepting \x27" << std::endl;
+                    discard("quote","\\x27",this, & __String::Collect);
+                }
+
+                if(trigger=="\\x27")
+                {
+                    //std::cerr << "Accepting \x22" << std::endl;
+                    discard("quote","\\x22",this, & __String::Collect);
+                }
+
+
+
                 call(hex_id,hex_rx);
                 call(esc_id,esc_rx);
                 back(trigger,this,& __String::Forward);

@@ -20,7 +20,7 @@ namespace upsylon
 
                 void walk( const Node &root ); //!< default walk
 
-                virtual void onTerminal( const string &name, const string &data ); //!< terminal name and data
+                virtual void onTerminal( const Lexeme &data ); //!< terminal data
                 virtual void onInternal( const string &name, const size_t  size ); //!< internal name and children
 
                 int depth; //!< internal level
