@@ -81,6 +81,7 @@ ADD_TEST(IObits      test-main iobits)
 ADD_TEST(MTF         test-main  mtf)
 ADD_TEST(Delta       test-main  delta)
 ADD_TEST(ASF         test-main  asf)
+ADD_TEST(Digest      test-main  digest)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V
