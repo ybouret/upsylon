@@ -158,6 +158,11 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
         value(v)
         {}
         
+        _Pair:: _Pair( const string &l) :
+        label(l),
+        value()
+        {}
+        
         _Pair:: ~_Pair() throw()
         {
         }
@@ -222,6 +227,21 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
             Value &v = add(label,NullType);
             v.swap_with(tmp);
             return v.as<String>();
+        }
+
+        void Value:: display(std::ostream &os, int ) const
+        {
+            switch (type)
+            {
+                case IsNull:  os << "null"; break;
+                case IsTrue:  os << "true"; break;
+                case IsFalse: os << "false"; break;
+                case IsNumber: os << as<Number>(); break;
+                case IsString: os << as<String>(); break;
+                case IsArray:  os << "ARRAY";      break;
+                case IsObject: os << "OBJECT";     break;
+                //default: break;
+            }
         }
 
         

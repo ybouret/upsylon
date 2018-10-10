@@ -68,6 +68,14 @@ namespace upsylon
 
             inline const char *typeName() const throw() { return ValueTypeText(type); }
             
+            void display(std::ostream &os, int depth=0) const;
+            
+            inline friend std::ostream & operator<<( std::ostream &os, const Value v)
+            {
+                v.display(os,0);
+                return os;
+            }
+            
         private:
             void *impl;
         };
@@ -110,6 +118,7 @@ namespace upsylon
             
             virtual ~_Pair() throw();
             explicit _Pair(const string &l,const Value &);
+            explicit _Pair(const string &l);
             const string & key() const throw();
             
         private:
