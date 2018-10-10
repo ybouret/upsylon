@@ -22,7 +22,7 @@ namespace  upsylon
             const string & key() const throw(); //!< id
 
             //! get a signed value on 31 bits
-            inline int32_t  operator()(const string &s) throw()
+            inline int32_t  operator[](const string &s) throw()
             {
                 const uint32_t u = hfn().key<uint32_t>(s);
                 const int32_t  h = int32_t(u&0x7fffffff); assert(h>=0);

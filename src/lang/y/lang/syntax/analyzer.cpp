@@ -61,7 +61,7 @@ namespace upsylon
                 if(data.size())
                 {
                     for(size_t i=name.size()+depth*2;i<=aligned;++i) std::cerr << ' ';
-                    std::cerr << "'" << data << "'";
+                    std::cerr << "<" << data << ">";
                 }
                 std::cerr << std::endl;
             }

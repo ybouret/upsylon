@@ -121,7 +121,7 @@ Y_PROGRAM_START()
                 const string &tName = t.rule.name;               // that will appear in analyzer
                 string        sName = *(t.module) + '_' + tName; // that will be used for definitions
                 make_cpp(sName);
-                hTerminal.insert(tName,h31(tName));
+                hTerminal.insert(tName,h31[tName]);
 
                 terminal_def << sName;
                 terminal_sym << tName;
@@ -156,7 +156,7 @@ Y_PROGRAM_START()
             const string &iName = c.rule.name;
             string        sName = *(c.module) + '_' + iName; //
             make_cpp(sName);
-            hInternal.insert(iName,h31(iName));
+            hInternal.insert(iName,h31[iName]);
 
             internal_def << sName;
             internal_sym << iName;

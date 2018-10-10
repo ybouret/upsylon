@@ -19,7 +19,7 @@ static inline void check( const array<string> &words )
     vector<int32_t> hashs(n,0);
     for(size_t i=n;i>0;--i)
     {
-        hashs[i] = H(words[i]);
+        hashs[i] = H[ words[i] ];
     }
     size_t collisions = 0;
     for(size_t i=1;i<n;++i)
