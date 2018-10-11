@@ -10,8 +10,9 @@ namespace upsylon
                          const void  *terminals_data,
                          const size_t terminals_size,
                          const void  *internals_data,
-                         const size_t internals_size) :
-        Dynamo(data_name,data_addr,data_size),
+                         const size_t internals_size,
+                         const bool   verbose) :
+        Dynamo(data_name,data_addr,data_size,verbose),
         terminalHash(terminals_data,terminals_size),
         internalHash(internals_data,internals_size)
         {

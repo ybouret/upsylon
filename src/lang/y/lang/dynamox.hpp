@@ -29,7 +29,8 @@ NAME##_internals, sizeof(NAME##_internals)
                              const void  *terminals_data,
                              const size_t terminals_size,
                              const void  *internals_data,
-                             const size_t internals_size);
+                             const size_t internals_size,
+                             const bool   verbose=false);
 
             const hashing::mperf terminalHash; //!< hash table for terminals
             const hashing::mperf internalHash; //!< hash table for internals

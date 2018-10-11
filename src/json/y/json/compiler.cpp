@@ -159,8 +159,8 @@ namespace upsylon
 
 
 
-        Compiler:: Compiler() :
-        Lang::DynamoX( Y_DYNAMOX(JSON) ),
+        Compiler:: Compiler(const bool verbose) :
+        Lang::DynamoX( Y_DYNAMOX(JSON), verbose ),
         vstack(),
         pstack(),
         verbose(false)

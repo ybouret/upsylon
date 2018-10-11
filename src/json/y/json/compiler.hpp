@@ -13,7 +13,7 @@ namespace upsylon
         class Compiler : public Lang::DynamoX
         {
         public:
-            explicit Compiler();         //!< setup
+            explicit Compiler(const bool verbose=false);         //!< setup
             virtual ~Compiler() throw(); //!< desctructor
 
             //! load value entry point
