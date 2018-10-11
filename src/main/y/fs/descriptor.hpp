@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_FS_DESCRIPTOR_INCLUDED
 #define Y_FS_DESCRIPTOR_INCLUDED 1
 
@@ -15,13 +16,14 @@ namespace upsylon
 {
     namespace ios
     {
+        //! file descriptor basics
         struct descriptor
         {
-            typedef Y_FD      type;
-            static type       invalid() throw();
-            static void       get( type handle, void       *data, size_t size, size_t &done );
-            static void       put( type handle, const void *data, size_t size, size_t &done );
-            static error_type close(type handle) throw();
+            typedef Y_FD      type;              //!< alias
+            static type       invalid() throw(); //!< invalid for OS
+            static void       get( type handle, void       *data, size_t size, size_t &done ); //!< get data
+            static void       put( type handle, const void *data, size_t size, size_t &done ); //!< put data
+            static error_type close(type handle) throw(); //!< close descriptor
         };
     }
 }

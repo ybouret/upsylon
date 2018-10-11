@@ -27,7 +27,6 @@ namespace upsylon
             //
             //__________________________________________________________________
 
-            bool first = true;
             for(const Node *node=dynamo.children.head;node;node=node->next)
             {
                 ++level;
@@ -82,7 +81,6 @@ namespace upsylon
 
 
                 --level;
-                first = false;
             }
 
             if(verbose)
