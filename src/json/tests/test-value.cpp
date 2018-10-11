@@ -1,5 +1,6 @@
 #include "y/json/compiler.hpp"
 #include "y/utest/run.hpp"
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 using namespace Lang;
@@ -33,7 +34,9 @@ Y_UTEST(value)
         JSON::Value  j;
         Module      *module   = (filename=="run") ? Module::OpenSTDIN() : Module::OpenFile(filename);
         json.load(j,module);
-        std::cerr << j << std::endl;
+        ios::ocstream fp( ios::cstderr );
+        j.display(fp) << '\n';
+        
     }
 
 }

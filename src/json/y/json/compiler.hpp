@@ -9,19 +9,20 @@ namespace upsylon
 {
     namespace JSON
     {
+        //! Create a JSON value
         class Compiler : public Lang::DynamoX
         {
         public:
-            explicit Compiler();
-            virtual ~Compiler() throw();
-            
-            void  load( Value &v, Lang::Module *module, const bool verbose_flag=false);
+            explicit Compiler();         //!< setup
+            virtual ~Compiler() throw(); //!< desctructor
 
+            //! load value entry point
+            void  load( Value &v, Lang::Module *module, const bool verbose_flag=false);
+            
+        private:
             virtual void onTerminal(const Lang::Lexeme &data );
             virtual void onInternal(const string &name, const size_t size);
 
-
-        private:
             Array        vstack;
             vector<Pair> pstack;
             bool         verbose;

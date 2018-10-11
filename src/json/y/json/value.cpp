@@ -184,11 +184,11 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
         }
         
         Object::  Object() throw() : _Object() {}
-       
+
         Object:: ~Object() throw() {}
         
         Object:: Object( const Object &other ) : dynamic(), _Object(other) {}
-       
+
         Value &Object:: add(const string &label, const Value &v)
         {
             Pair p = new _Pair(label,v);
@@ -240,21 +240,41 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
             return v.as<String>();
         }
 
-        void Value:: display(std::ostream &os, int level) const
+    }
+
+}
+
+
+#include "y/string/io.hpp"
+
+namespace upsylon
+{
+
+    namespace JSON
+    {
+
+        static inline void __emit_string( ios::ostream &os, const String &s )
+        {
+            static const char quotes = '"';
+            string_io::write_C(os << quotes,s) << quotes;
+        }
+
+        ios::ostream & Value:: display(ios::ostream &os, int level) const
         {
             switch (type)
             {
                 case IsNull:  os << "null"; break;
                 case IsTrue:  os << "true"; break;
                 case IsFalse: os << "false"; break;
-                case IsNumber: os << as<Number>(); break;
-                case IsString: os << '"' << as<String>() << '"';  break;
+                case IsNumber: os("%.15g",as<Number>()); break;
+                case IsString: __emit_string(os,as<String>());  break;
                 case IsArray:  as<Array>( ).display(os,level);  break;
                 case IsObject: as<Object>().display(os,level);  break;
             }
+            return os;
         }
 
-        void Array:: display( std::ostream &os, int level) const
+        void Array:: display( ios::ostream &os, int level) const
         {
             os << '[';
             for(size_t i=1;i<=size();++i)
@@ -268,7 +288,7 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
             os << ']';
         }
 
-        void Object:: display( std::ostream &os, int level) const
+        void Object:: display( ios::ostream &os, int level) const
         {
             os  << '{';
             const size_t n = size();
@@ -276,8 +296,9 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
             for(const_iterator i=begin();j<=n;++i,++j)
             {
                 const Pair &p = *i;
-                os << '"' << p->label << '"' << ' ' << ':' << ' ';
-                p->value.display(os,level);
+                __emit_string(os,p->label);
+                os << ' ' << ':' << ' ';
+                (void) p->value.display(os,level);
                 if(j<n)
                 {
                     os << ',' << ' ';

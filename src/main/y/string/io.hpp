@@ -14,6 +14,7 @@ namespace upsylon
     {
         static void   save_binary(ios::ostream &fp, const string &s); //!< Length+Data
         static string load_binary(ios::istream &fp); //!< from Length+Data
+        static ios::ostream & write_C(ios::ostream &fp, const string &s); //!< encode as C-string
     };
 }
 
