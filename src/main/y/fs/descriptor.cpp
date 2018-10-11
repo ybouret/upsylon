@@ -19,7 +19,7 @@ namespace upsylon
 
         error_type descriptor::close(type handle) throw()
         {
-            YOCTO_GIANT_LOCK();
+            Y_GIANT_LOCK();
             if( ! ::CloseHandle( handle ) )
             {
                 return ::GetLastError();
