@@ -15,10 +15,6 @@ namespace upsylon
         terminalHash(terminals_data,terminals_size),
         internalHash(internals_data,internals_size)
         {
-            std::cerr << name << std::endl;
-            std::cerr << " #terminalsNode=" << terminalHash.nodes << std::endl;
-            std::cerr << " #internalsNode=" << internalHash.nodes << std::endl;
-
         }
 
         DynamoX:: ~DynamoX() throw()

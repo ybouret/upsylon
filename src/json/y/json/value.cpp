@@ -145,8 +145,19 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
         Array::  Array() throw() : _Array() {}
         Array:: ~Array() throw() {}
         
-        Array:: Array(const Array &other) : _Array(other) {}
-        
+        Array:: Array(const Array &other) : dynamic(), _Array(other) {}
+
+        Array:: Array(const size_t n) : _Array(n,as_capacity)
+        {
+            nil(n);
+        }
+
+        void Array:: nil(const size_t n)
+        {
+            const Value tmp;
+            make(n,tmp);
+        }
+
         Array  & Array:: push( const ArrayType_t  &_) { const Value tmp(_); push_back(tmp); return back().as<Array>();  }
         Object & Array:: push( const ObjectType_t &_) { const Value tmp(_); push_back(tmp); return back().as<Object>(); }
         Number & Array:: push( const Number        _) { const Value tmp(_); push_back(tmp); return back().as<Number>(); }
@@ -176,7 +187,7 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
        
         Object:: ~Object() throw() {}
         
-        Object:: Object( const Object &other ) : _Object(other) {}
+        Object:: Object( const Object &other ) : dynamic(), _Object(other) {}
        
         Value &Object:: add(const string &label, const Value &v)
         {
@@ -229,7 +240,7 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
             return v.as<String>();
         }
 
-        void Value:: display(std::ostream &os, int ) const
+        void Value:: display(std::ostream &os, int level) const
         {
             switch (type)
             {
@@ -237,13 +248,43 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
                 case IsTrue:  os << "true"; break;
                 case IsFalse: os << "false"; break;
                 case IsNumber: os << as<Number>(); break;
-                case IsString: os << as<String>(); break;
-                case IsArray:  os << "ARRAY";      break;
-                case IsObject: os << "OBJECT";     break;
-                //default: break;
+                case IsString: os << '"' << as<String>() << '"';  break;
+                case IsArray:  as<Array>( ).display(os,level);  break;
+                case IsObject: as<Object>().display(os,level);  break;
             }
         }
 
-        
+        void Array:: display( std::ostream &os, int level) const
+        {
+            os << '[';
+            for(size_t i=1;i<=size();++i)
+            {
+                (*this)[i].display(os,level);
+                if(i<size())
+                {
+                    os << ',' << ' ';
+                }
+            }
+            os << ']';
+        }
+
+        void Object:: display( std::ostream &os, int level) const
+        {
+            os  << '{';
+            const size_t n = size();
+            size_t       j = 1;
+            for(const_iterator i=begin();j<=n;++i,++j)
+            {
+                const Pair &p = *i;
+                os << '"' << p->label << '"' << ' ' << ':' << ' ';
+                p->value.display(os,level);
+                if(j<n)
+                {
+                    os << ',' << ' ';
+                }
+            }
+            os << '}';
+        }
+
     }
 }

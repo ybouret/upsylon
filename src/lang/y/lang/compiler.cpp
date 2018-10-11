@@ -34,9 +34,7 @@ namespace upsylon
             Source source(module);
             parser->reset();
             ast = 0;
-
             ast = parser->parse(source,keepRaw);
-
             walk(*ast);
         }
 

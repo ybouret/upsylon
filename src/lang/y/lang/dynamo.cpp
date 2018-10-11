@@ -17,9 +17,6 @@ namespace upsylon
                 DynamoParser   &parser;
                 DynamoGenerator generator;
 
-
-
-
                 Syntax::Node * process( Module *module )
                 {
                     Y_LOCK(access);
@@ -40,7 +37,7 @@ namespace upsylon
                 explicit DynamoServer() throw() :
                 compiler(), parser( compiler.parser ), generator()
                 {
-                    std::cerr << "DynamoServer#reserved=" << reserved() << std::endl;
+                    //std::cerr << "DynamoServer#reserved=" << reserved() << std::endl;
                 }
 
                 virtual ~DynamoServer() throw()
@@ -97,9 +94,6 @@ namespace upsylon
         Dynamo:: ~Dynamo() throw()
         {
         }
-
-
-        
 
     }
 }

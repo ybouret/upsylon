@@ -88,21 +88,27 @@ namespace upsylon
         public:
             explicit Array() throw();
             virtual ~Array() throw();
+            explicit Array(const size_t n); //!< array of n NULL
+            void     nil(const size_t n);
             Array(const Array &);
             
-            inline void   push( const Value &v ) { push_back(v);  }
-            inline size_t length() const throw() { return size(); }
-            inline void   pop()    throw()       { pop_back();    }
-            
+            inline void   push( const Value &v )  { push_back(v);  }
+            inline size_t length() const throw()  { return size(); }
+            inline void   pop()    throw()        { pop_back();    }
+            inline void   pop( Value &v ) throw() { v.swap_with(back()); pop_back(); }
+            inline void   _push(Value &v)         { push(NullType); back().swap_with(v); }
+
             inline void   push( const NullType_t  &_) { const Value tmp(_); push_back(tmp); }
             inline void   push( const TrueType_t  &_) { const Value tmp(_); push_back(tmp); }
             inline void   push( const FalseType_t &_) { const Value tmp(_); push_back(tmp); }
-            Array  &push( const ArrayType_t  &);
-            Object &push( const ObjectType_t &);
-            Number &push( const Number x);
-            String &push( const String &);
-            String &push( const char   *);
-            
+            Array        &push( const ArrayType_t  &);
+            Object       &push( const ObjectType_t &);
+            Number       &push( const Number x);
+            String       &push( const String &);
+            String       &push( const char   *);
+
+            void display( std::ostream &os, int depth=0) const;
+
         private:
             Y_DISABLE_ASSIGN(Array);
         };
@@ -154,9 +160,16 @@ namespace upsylon
             Object        &add(const string &label, const ObjectType_t  &);
             inline Object &add(const char   *label, const ObjectType_t  &_) { const string __(label); return add(__,_); }
             
-            Number &add(const string &label, const Number);
-            String &add(const string &label, const String&);
-            String &add(const string &label, const char  *);
+            Number        &add(const string &label, const Number);
+            inline Number &add(const char *label, const Number __) { const string _(label); return add(_,__); }
+
+            String        &add(const string &label, const String&);
+            inline String &add(const char   *label, const String &__) { const string _(label); return add(_,__); }
+
+            String        &add(const string &label, const char  *);
+            inline String &add(const char   *label, const char *__) { const string _(label); return add(_,__); }
+
+            void display( std::ostream &os, int depth=0) const;
 
         private:
             Y_DISABLE_ASSIGN(Object);

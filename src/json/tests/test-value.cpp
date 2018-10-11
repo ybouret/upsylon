@@ -26,12 +26,14 @@ Y_UTEST(value)
         }
     }
 
+    JSON::Compiler json;
     if( argc > 1 )
     {
         const string filename = argv[1];
         JSON::Value  j;
         Module      *module   = (filename=="run") ? Module::OpenSTDIN() : Module::OpenFile(filename);
-        JSON::Load::From(module,j);
+        json.load(j,module);
+        std::cerr << j << std::endl;
     }
 
 }

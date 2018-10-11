@@ -126,6 +126,9 @@ namespace upsylon
         template <typename COMPARE_KEYS>
         inline void sort_keys( COMPARE_KEYS &compare_keys ) { table.sort_by_keys(compare_keys); }
 
+        //! reverse order of internal nodes
+        inline void reverse() throw() { table.chain.reverse(); }
+
     protected:
         table_type table; //!< handle low level operations
         
