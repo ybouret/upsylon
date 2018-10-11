@@ -4,11 +4,20 @@
 
 #include "y/ios/cfile.hpp"
 
+
 namespace upsylon
 {
     namespace ios
     {
-        
+        class local_file
+        {
+        public:
+           
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(local_file);
+        };
+
     }
 }
 
