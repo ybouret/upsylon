@@ -187,7 +187,7 @@ namespace upsylon
             //
             // checking validity
             //__________________________________________________________________
-            if(verbose) { indent() << "checking validity of " << parserName; }
+            if(verbose) { indent() << "checking validity of {" << parserName << "}" << std::endl; }
             parser->checkValidity();
 
             return parser.yield();

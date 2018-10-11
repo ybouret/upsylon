@@ -58,8 +58,29 @@ namespace upsylon
                 }
                 Y_DYNAMO_CHECK(rule->isCompound());
                 assert(rule->data);
-                Syntax::Compound &content = *(Syntax::Compound *)(rule->data);
-                fill(content,node->children.tail);
+                Syntax::Compound   &content = *(Syntax::Compound *)(rule->data);
+
+                //______________________________________________________________
+                //
+                // get the rule parent node
+                //______________________________________________________________
+                const Syntax::Node *parent  = node->children.tail;
+                const int           p_code = hsyn(parent->rule.name);
+                std::cerr << "parent=" << parent->rule.name << "/code=" << p_code << std::endl;
+                switch(p_code)
+                {
+                        // AGG and ALT are already created
+                    case IS_AGG:
+                    case IS_ALT:
+                        fill(content,parent,p_code);
+                        break;
+
+                    default:
+                        content.add( createRule(parent,p_code) );
+                        break;
+                }
+
+
                 --level;
                 first = false;
             }
@@ -83,16 +104,17 @@ namespace upsylon
 
 
         void DynamoGenerator:: fill(Syntax::Compound &content,
-                                    const Node       *parent)
+                                    const Node       *parent,
+                                    const int         p_code)
         {
             static const char fn[] = "fill";
             assert(parser->owns(content));
             assert(parent);
+            assert(hsyn(parent->rule.name)==p_code);
             ++level;
-            const string &parentName = parent->rule.name;
-            if(verbose) { indent() << "\\_" << fn << "@<" << parentName << ">" << std::endl; }
+            if(verbose) { indent() << "\\_" << fn << "@<" << parent->rule.name << ">" << std::endl; }
 
-            switch( hsyn(parentName) )
+            switch(p_code)
             {
                 case IS_AGG:
                 case IS_ALT:
@@ -118,7 +140,7 @@ namespace upsylon
                     break;
 
                 default:
-                    throw Exception(fn,"{%s} unexpected creation of '%s'", **(parser->name), *parentName);
+                    throw Exception(fn,"{%s} unexpected creation of '%s'", **(parser->name), *(parent->rule.name) );
             }
             --level;
         }
@@ -145,7 +167,7 @@ namespace upsylon
                     //----------------------------------------------------------
                     Syntax::Compound &sub = parser->alt();
                     if(verbose) { indent() << "  |_ALT '" << sub.name << "'" << std::endl; }
-                    fill(sub,node);
+                    fill(sub,node,hsyn(node->rule.name));
                     return sub;
                 }
 
@@ -156,7 +178,7 @@ namespace upsylon
                     //----------------------------------------------------------
                     Syntax::Compound &sub = parser->agg(Syntax::Compound::Acting);
                     if(verbose) { indent() << "  |_AGG '" << sub.name << "'" << std::endl; }
-                    fill(sub,node);
+                    fill(sub,node,hsyn(node->rule.name));
                     return sub;
                 }
 

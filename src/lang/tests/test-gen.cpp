@@ -14,6 +14,7 @@ Y_UTEST(gen)
         const string      filename = argv[1];
         Dynamo            compiler(filename,Dynamo::SourceFile,true);
         std::cerr << "Dynamo for '" << compiler->name << "'" << std::endl;
+        if(false)
         {
             const string savename = *(compiler->name)+".bin";
             const string bin      = Dynamo::ToBinary(filename);

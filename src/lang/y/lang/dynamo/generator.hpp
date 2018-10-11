@@ -218,7 +218,7 @@ namespace upsylon
             string LxrToRX(const Node *sub,const string &lxr, string &label) const;
 
             //! recursive fill
-            void fill( Syntax::Compound &content, const Node *parent );
+            void fill( Syntax::Compound &content, const Node *parent, const int p_code );
 
             //! creating a rule
             const Syntax::Rule & createRule(const Node   *node,
