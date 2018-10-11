@@ -176,9 +176,37 @@ namespace upsylon
             //__________________________________________________________________
             walkDown(dynamo);
             
-            if(verbose) { indent() << "terminals=" << terminals << std::endl; }
-            if(verbose) { indent() << "internals=" << internals << std::endl; }
+            if(verbose) {
+                indent() << "____________________________________" << std::endl;
+                indent() << std::endl;
+                indent() << " (*) visible terminals=" << std::endl;
 
+                for( Terminals::iterator i=terminals.begin();i!=terminals.end();++i)
+                {
+                    const _Terminal &t = **i;
+                    if(!t.visible) continue;
+                    indent() << "                      |_<" << t << ">" << std::endl;
+                }
+                indent() << " (*) hidden  terminals=" << std::endl;
+                for( Terminals::iterator i=terminals.begin();i!=terminals.end();++i)
+                {
+                    const _Terminal &t = **i;
+                    if(t.visible) continue;
+                    indent() << "                      |_<" << t << ">" << std::endl;
+                }
+                indent() << " (*) parsed  internals=" << std::endl;
+                for( Internals::iterator i=internals.begin();i!=internals.end();++i)
+                {
+                    const _Internal &c = **i;
+                    indent() << "                      |_<" << c << ">" << std::endl;
+                }
+                indent() << "____________________________________" << std::endl;
+            }
+
+            //__________________________________________________________________
+            //
+            // checking if normal compound are in fact acting/design
+            //__________________________________________________________________
             finalize();
 
          

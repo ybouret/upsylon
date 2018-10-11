@@ -94,7 +94,7 @@ namespace upsylon
                 inline friend std::ostream & operator<<( std::ostream &os, const _Terminal &s )
                 {
                     if(!s.visible) os << '!';
-                    return (s.display(os) << '(' << s.expr << ')');
+                    return (s.display(os) << '/' << s.expr );
                 }
                 
             private:

@@ -1,5 +1,5 @@
 
-.List;
+.list;
 
 lists    : list*;
 

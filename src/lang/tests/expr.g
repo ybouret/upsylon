@@ -1,4 +1,4 @@
-.EXPR;
+.expr;
 
 code: (assign | show)*;
 

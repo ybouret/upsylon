@@ -39,27 +39,30 @@ namespace upsylon
             if(verbose) { indent() << "--> Rule <" << ruleName << ">/" << ruleKind << std::endl; }
 
             Syntax::Compound *global = 0;
-            //const bool first = (terminals.size() <= 0);
-            switch( hsyn(ruleKind) )
+            const bool first = (parser->top() == 0);
+            const int  rcode = hsyn(ruleKind);
+            switch( rcode )
             {
                 case IS_AGG:
                     global = & parser->agg(ruleName);
                     break;
 
                 case IS_ALT:
-                    (void) parser->alt(ruleName);
+                    (void)  parser->alt(ruleName);
                     break;
 
                 case IS_OOM:
                 case IS_ZOM:
                 case IS_OPT:
                 case IS_ID: // not efficient...
-                    (void) parser->acting(ruleName);
+                    global = & parser->acting(ruleName);
+                    if(!first) global=0;
                     break;
 
                 default:
                     throw Exception(fn,"{%s} unhandled rule kind '%s'", **(parser->name), *ruleKind );
             }
+
 
             if(global)
             {

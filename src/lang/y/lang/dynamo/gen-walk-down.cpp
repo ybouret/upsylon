@@ -66,15 +66,15 @@ namespace upsylon
                 //______________________________________________________________
                 const Syntax::Node *parent  = node->children.tail;
                 const int           p_code = hsyn(parent->rule.name);
-                std::cerr << "parent=" << parent->rule.name << "/code=" << p_code << std::endl;
                 switch(p_code)
                 {
-                        // AGG and ALT are already created
+                        // AGG and ALT are already created => forward
                     case IS_AGG:
                     case IS_ALT:
                         fill(content,parent,p_code);
                         break;
 
+                        // need to fill parent
                     default:
                         content.add( createRule(parent,p_code) );
                         break;
