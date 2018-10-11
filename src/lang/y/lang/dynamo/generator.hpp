@@ -210,8 +210,9 @@ namespace upsylon
             //! walk down from top
             void walkDown( const Node &dynamo );
 
+            //! upgrade top level compounds
+            void finalize() throw();
 
-            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
             string LxrToRX(const Node *sub,const string &lxr, string &label) const;

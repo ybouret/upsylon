@@ -175,11 +175,12 @@ namespace upsylon
             //__________________________________________________________________
             walkDown(dynamo);
 
-
-
             if(verbose) { indent() << "terminals=" << terminals << std::endl; }
             if(verbose) { indent() << "internals=" << internals << std::endl; }
 
+            finalize();
+
+         
 
             //__________________________________________________________________
             //
