@@ -27,6 +27,7 @@ namespace upsylon
             //
             //__________________________________________________________________
 
+            bool first = true;
             for(const Node *node=dynamo.children.head;node;node=node->next)
             {
                 ++level;
@@ -60,6 +61,7 @@ namespace upsylon
                 Syntax::Compound &content = *(Syntax::Compound *)(rule->data);
                 fill(content,node->children.tail);
                 --level;
+                first = false;
             }
 
             if(verbose)

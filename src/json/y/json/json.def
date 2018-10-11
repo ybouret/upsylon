@@ -10,8 +10,11 @@
 //---------------------
 // INTERNALS for {JSON}
 //---------------------
+#define JSON_json         0x6e7ed905
+#define JSON_array        0x21c1ed19
 #define JSON_empty_array  0x5225d5bf
 #define JSON_heavy_array  0x788de577
+#define JSON_object       0x7c301516
 #define JSON_empty_object 0x72a357d6
 #define JSON_heavy_object 0x461e4d77
 #define JSON_pair         0x456c1620

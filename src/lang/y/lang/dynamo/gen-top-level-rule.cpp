@@ -39,7 +39,7 @@ namespace upsylon
             if(verbose) { indent() << "--> Rule <" << ruleName << ">/" << ruleKind << std::endl; }
 
             Syntax::Compound *global = 0;
-            
+            //const bool first = (terminals.size() <= 0);
             switch( hsyn(ruleKind) )
             {
                 case IS_AGG:
@@ -56,7 +56,6 @@ namespace upsylon
                 case IS_ID: // not efficient...
                     (void) parser->acting(ruleName);
                     break;
-
 
                 default:
                     throw Exception(fn,"{%s} unhandled rule kind '%s'", **(parser->name), *ruleKind );

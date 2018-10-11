@@ -8,6 +8,7 @@ namespace upsylon
     namespace Lang
     {
 
+        
         void DynamoGenerator:: finalize() throw()
         {
             //__________________________________________________________________
@@ -19,12 +20,19 @@ namespace upsylon
             for( Internals::iterator i=internals.begin(); i != internals.end(); ++i)
             {
                 Syntax::Compound &r = (**i).rule;
-                if(verbose) { indent() << "..<" << r.name << ">" << std::endl; }
                 if(r.type!=Syntax::Compound::Normal) continue; // already altered
-                if(verbose) { indent() << "  \\_checking..." << std::endl; }
+                check_top_level(r);
             }
             --level;
         }
+
+
+        void DynamoGenerator:: check_top_level( Syntax::Compound &r ) throw()
+        {
+            assert(Syntax::Compound::Normal==r.type);
+            if(verbose) { indent() << "..checking internal <" << r.name << ">" << std::endl; }
+        }
+
 
     }
 

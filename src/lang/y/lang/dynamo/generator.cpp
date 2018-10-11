@@ -168,13 +168,14 @@ namespace upsylon
             // create top level structure
             //__________________________________________________________________
             topLevel(dynamo);
+            dynamo.GraphViz("dynout.dot");
 
             //__________________________________________________________________
             //
             // linking 
             //__________________________________________________________________
             walkDown(dynamo);
-
+            
             if(verbose) { indent() << "terminals=" << terminals << std::endl; }
             if(verbose) { indent() << "internals=" << internals << std::endl; }
 

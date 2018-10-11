@@ -233,6 +233,10 @@ namespace upsylon
             //! create a new visible terminal from a regexp
             const Syntax::Rule & getRuleFromRegExp( const string &rx );
 
+
+            //! checking a top-level compound
+            void check_top_level( Syntax::Compound &r ) throw();
+
         };
 
 
