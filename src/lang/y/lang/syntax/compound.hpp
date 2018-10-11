@@ -113,6 +113,11 @@ namespace upsylon
                 //! specific shape
                 virtual const char * __shape() const throw() { return "house"; }
 
+                virtual const char *typeName() const throw()
+                {
+                    return "Aggregate";
+                }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);
             };
@@ -137,6 +142,11 @@ namespace upsylon
                 //! true if one of the member is hollow
                 virtual bool hollow() const throw();
 
+                virtual const char *typeName() const throw()
+                {
+                    return "Alternate";
+                }
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alternate);
             };

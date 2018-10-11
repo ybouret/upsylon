@@ -38,6 +38,9 @@ namespace upsylon
                 //! if can accept and not grow!
                 virtual bool hollow() const throw() = 0;
 
+                //! get a textual ID
+                virtual const char *typeName() const throw() = 0;
+
                 //! handling of new nodes
                 static  void Grow( Node * &tree, Node *child ) throw();
 
@@ -51,7 +54,7 @@ namespace upsylon
                 bool isTerminal() const throw(); //!< check uuid
                 bool isCompound() const throw(); //!< check uuid
 
-
+                
             protected:
                 //! initialize
                 explicit Rule(const uint32_t t,const string &id);

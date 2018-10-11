@@ -49,7 +49,10 @@ namespace upsylon
                 explicit Optional(const string &id, const Rule &jk);  //!< initialize
                 virtual bool accept( Y_LANG_SYNTAX_RULE_ARGS ) const; //!< always true
                 virtual bool hollow() const throw();                  //!< true
-
+                virtual const char *typeName() const throw()
+                {
+                    return "Optional";
+                }
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Optional);
             };
@@ -76,6 +79,17 @@ namespace upsylon
                 //! true if nmin==0
                 virtual bool hollow() const throw();
 
+                virtual const char *typeName() const throw()
+                {
+                    switch(nmin)
+                    {
+                        case 0: return "ZeroOrMore";
+                        case 1 : return "OneOrMore";
+                        default:
+                            break;
+                    }
+                    return "Repeating";
+                }
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Repeating);
             };

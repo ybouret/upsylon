@@ -30,7 +30,17 @@ namespace upsylon
         void DynamoGenerator:: check_top_level( Syntax::Compound &r ) throw()
         {
             assert(Syntax::Compound::Normal==r.type);
-            if(verbose) { indent() << "..checking internal <" << r.name << ">" << std::endl; }
+            if(verbose) {
+                indent() << "..checking internal <" << r.name << ">" << std::endl;
+                indent() << "  \\__@" << r.typeName() << std::endl;
+            }
+            for( Syntax::Operand *sub=r.head;sub;sub=sub->next)
+            {
+                if(verbose)
+                {
+                    indent() << "   |-" << sub->rule.typeName() << " / <" << sub->rule.name << ">"<< std::endl;
+                }
+            }
         }
 
 

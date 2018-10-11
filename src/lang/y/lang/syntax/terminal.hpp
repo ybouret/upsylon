@@ -52,6 +52,16 @@ namespace upsylon
                 //! depends on isOperator
                 virtual const char *  __shape() const throw();
 
+                virtual const char *typeName() const throw()
+                {
+                    switch(attr)
+                    {
+                        case Standard: return "Terminal.Standard";
+                        case Univocal: return ( isOperator ? "Terminal.Operator" : "Terminal.Univocal" );
+                        case Semantic: return "Terminal.Semantic";
+                    }
+                    return "Terminal.Unexpected";
+                }
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);
             };
