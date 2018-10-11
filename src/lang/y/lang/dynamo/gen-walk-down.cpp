@@ -82,7 +82,8 @@ namespace upsylon
         }
 
 
-        void DynamoGenerator:: fill(Syntax::Compound &content, const Node *parent)
+        void DynamoGenerator:: fill(Syntax::Compound &content,
+                                    const Node       *parent)
         {
             static const char fn[] = "fill";
             assert(parser->owns(content));
