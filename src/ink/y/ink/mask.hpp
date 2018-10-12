@@ -13,7 +13,8 @@ namespace upsylon
         class MetaVertex
         {
         public:
-            const Vertex *vtx;
+            const Vertex *vtx; //!< pointer to handled vertex
+
             //! setup
             inline  MetaVertex(const Vertex *v) throw() : vtx(v) { assert(vtx); }
             //! cleanup
@@ -23,21 +24,25 @@ namespace upsylon
             //! copy
             inline MetaVertex(const MetaVertex &other) throw() : vtx(other.vtx) { assert(vtx); }
 
+            //! dedicated key hasher
             template <typename HashFunction>
             class Hasher
             {
             public:
-                inline  Hasher() throw() : hfn() {}
-                inline ~Hasher() throw() {}
-                HashFunction hfn;
-                inline size_t operator()( const coord &key ) throw()
+                inline  Hasher() throw() : hfn() {} //!< setup
+                inline ~Hasher() throw() {}         //!< destructor
+                HashFunction hfn;                   //!< hashing function
+
+                //! hash integral coordinate
+                inline size_t operator()( const coord &q ) throw()
                 {
                     size_t h = 0;
                     hfn.set();
-                    hfn.run(&key,sizeof(key));
+                    hfn.run(&q,sizeof(q));
                     hfn.get(&h,sizeof(h));
                     return h;
                 }
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Hasher);
             };
