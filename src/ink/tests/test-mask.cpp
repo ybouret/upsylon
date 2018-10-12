@@ -86,10 +86,18 @@ Y_UTEST(mask)
         msk2.append(new_unit(),new_unit());
     }
     std::cerr << "#msk2=" << msk2.size() << std::endl;
+    const Mask msk0 = msk1;
 
     msk1.__and(msk2);
     std::cerr << "msk1|=msk2 => " << msk1.size() << std::endl;
 
+    msk1 = msk0;
+    msk1.__or(msk2);
+    std::cerr << "msk1&=msk2 => " << msk1.size() << std::endl;
+
+    msk1 = msk0;
+    msk1.__xor(msk2);
+    std::cerr << "msk1^=msk2 => " << msk1.size() << std::endl;
 
 }
 Y_UTEST_DONE()

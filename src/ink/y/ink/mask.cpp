@@ -138,6 +138,23 @@ namespace upsylon
             return list.head;
         }
 
+        Mask & Mask:: operator=( const Mask &other )
+        {
+            if(this!=&other)
+            {
+                free();
+                ensure(other.size());
+                for(const Vertex *v=other.head();v;v=v->next)
+                {
+                    if(!append(v->position))
+                    {
+                        throw exception("Ink.Mask= failure");
+                    }
+                }
+            }
+            return *this;
+        }
+
 
         Mask & Mask:: __or( const Mask &other )
         {
@@ -204,7 +221,7 @@ namespace upsylon
 
                 while(to_append.size)
                 {
-                    if( ! remove( to_append.tail->position ) )
+                    if( ! append( to_append.tail->position ) )
                     {
                         throw exception("Ink.Mask.__xor append failure");
                     }

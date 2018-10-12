@@ -62,6 +62,7 @@ namespace upsylon
             explicit Mask();          //!< setup
             virtual ~Mask() throw();  //!< desctructor
             Mask( const Mask &other); //!< hard copy
+            Mask & operator=( const Mask & );
 
             virtual size_t size() const throw();      //!< dict.size(), list.size
             virtual size_t capacity() const throw();  //!< dict.capacity(), list.size+pool.size
@@ -85,9 +86,8 @@ namespace upsylon
             Mask & __or(  const Mask &other ); //!< logical OR
             Mask & __and( const Mask &other ); //!< logical AND
             Mask & __xor( const Mask &other ); //!< logical XOR
-
+            
         private:
-            Y_DISABLE_ASSIGN(Mask);
             Vertex::List         list;
             MetaDict             dict;
             mutable Vertex::Pool pool;
