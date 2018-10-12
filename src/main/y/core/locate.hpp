@@ -93,6 +93,7 @@ namespace upsylon
 
         }
 
+        //! combine low-level locate and high level insert_at
         template <typename T,typename VECTOR,typename COMPARE>
         bool insert_sorted( const T &lhs, VECTOR &vec, COMPARE &compare )
         {
