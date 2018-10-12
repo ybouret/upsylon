@@ -23,7 +23,7 @@ namespace upsylon
             inline Vertex(const Vertex &other) throw() : Object(), position(other.position), next(0), prev(0) {}
 
 
-            typedef core::list_of_cpp<Vertex> List; //!< list of vertices
+            typedef core::list_of_cpp<Vertex> List;     //!< list of vertices
             typedef core::pool_of_cpp<Vertex> PoolType; //!< pool of vertices
 
             //! a pool to reuse vertices

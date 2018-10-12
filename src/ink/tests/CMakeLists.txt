@@ -14,7 +14,7 @@ ADD_TEST(Blur    test-ink blur)
 ADD_TEST(Hist    test-ink hist)
 ADD_TEST(Blob    test-ink blob)
 ADD_TEST(Edges   test-ink edges)
-
+ADD_TEST(Mask    test-ink mask)
 
 ADD_CUSTOM_TARGET(utest-ink
 COMMAND ${CMAKE_CTEST_COMMAND} -V

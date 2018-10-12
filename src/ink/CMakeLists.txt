@@ -42,6 +42,12 @@ SET(stencil_srcs ${stencil_decl} ${stencil_code})
 SOURCE_GROUP( stencil FILES ${stencil_srcs} )
 INSTALL( FILES ${stencil_decl} DESTINATION include/y/ink/stencil )
 
+FILE(GLOB draw_decl y/ink/draw/*.hpp)
+FILE(GLOB draw_code y/ink/draw/*.cpp)
+SET(draw_srcs ${draw_decl} ${draw_code})
+SOURCE_GROUP( draw FILES ${draw_srcs} )
+INSTALL( FILES ${draw_decl} DESTINATION include/y/ink/draw )
+
 ADD_LIBRARY(y-ink STATIC 
 ${main_srcs} 
 ${color_srcs} 
@@ -49,6 +55,7 @@ ${image_srcs}
 ${ops_srcs}
 ${ops_filter_srcs}
 ${stencil_srcs}
+${draw_srcs}
 )
 INSTALL( TARGETS y-ink ARCHIVE DESTINATION lib )
 
