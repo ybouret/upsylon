@@ -57,7 +57,18 @@ namespace upsylon
                 item_[i] = a;
             }
         }
-        
+
+        //! reverse
+        inline void reverse() throw()
+        {
+            size_t lo=1;
+            size_t up=size_;
+            for(size_t i=size_>>1;i>0;--i)
+            {
+                bswap(item_[lo++],item_[up--]);
+            }
+        }
+
     protected:
         mutable_type *item_; //!< item_[1..size()]
         size_t        size_; //!< size()

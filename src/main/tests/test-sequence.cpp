@@ -90,6 +90,19 @@ namespace
                 }
             }
         }
+
+        {
+            SEQ seq;
+            for(size_t i=1+alea.leq(20);i>0;--i)
+            {
+                typename SEQ::const_type args = support::get<typename SEQ::mutable_type>();
+                seq.push_back(args);
+            }
+            std::cerr << "org=" << seq << std::endl;
+            seq.reverse();
+            std::cerr << "rev=" << seq << std::endl;
+
+        }
     }
 
     static inline void do_capa(size_t n)

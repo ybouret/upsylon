@@ -193,7 +193,11 @@ namespace upsylon
             nodes.merge_back(target);
         }
 
-
+        //! reverse
+        inline void reverse() throw()
+        {
+            nodes.reverse();
+        }
 
 
     private:
