@@ -11,10 +11,23 @@ namespace
     {
         return 50 - int(alea.leq(100));
     }
+
+    template <typename T>
+    static inline void check_sorted(const array<T> &data )
+    {
+        for(size_t i=1;i<data.size();++i)
+        {
+            if(!(data[i]<data[i+1]))
+            {
+                std::cerr << "data[" << i << "]=" << data[i] << ", data[" << i+1 << "]=" << data[i+1] << std::endl;
+                throw exception("not sorted ");
+            }
+        }
+    }
 }
 Y_UTEST(locate)
 {
-    vector<int> data(1024,as_capacity);
+    vector<int> data;
     for(size_t iter=0;iter<1024;++iter)
     {
         std::cerr << std::endl;
@@ -37,7 +50,7 @@ Y_UTEST(locate)
         }
 
         // then find where to insert some items
-        for(size_t i=alea.leq(10)+1;i>0;--i)
+        for(size_t i=alea.leq(50)+1;i>0;--i)
         {
             const int lhs = new_data();
             size_t    idx = 0;
@@ -52,8 +65,27 @@ Y_UTEST(locate)
             else
             {
                 std::cerr << "Not Found, index=" << idx << std::endl;
+                data.insert_at(idx,lhs);
+                std::cerr << "data=" << data << std::endl;
+                check_sorted(data);
             }
         }
+
+        data.free();
+        int collisions = 0;
+        for(size_t i=alea.leq(50)+1;i>0;--i)
+        {
+            const int lhs = new_data();
+            if(!core::insert_sorted(lhs,data,comparison::increasing<int>))
+            {
+                ++collisions;
+            }
+            else
+            {
+                std::cerr << "srt=" << data << std::endl;
+            }
+        }
+        std::cerr << "#collisions=" << collisions << std::endl;
 
     }
 }

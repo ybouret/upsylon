@@ -92,6 +92,21 @@ namespace upsylon
             }
 
         }
+
+        template <typename T,typename VECTOR,typename COMPARE>
+        bool insert_sorted( const T &lhs, VECTOR &vec, COMPARE &compare )
+        {
+            size_t idx = 0;
+            if( locate(lhs,*vec,vec.size(),compare,idx) )
+            {
+                return false;
+            }
+            else
+            {
+                vec.insert_at(++idx,lhs);
+                return true;
+            }
+        }
     }
 }
 

@@ -299,6 +299,48 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
             memmove( static_cast<void *>(this->addr_), static_cast<const void *>(this->addr_+1), --(this->size_) * sizeof(T) );
         }
 
+        //! specific method
+        inline void insert_at( const size_t idx, param_type args )
+        {
+            size_t &sz = this->size_;
+            if(idx<=1)
+            {
+                push_front(args);
+            }
+            else if(idx>sz)
+            {
+                push_back(args);
+            }
+            else
+            {
+                assert(idx>1);
+                assert(idx<=sz);
+                if(this->is_filled())
+                {
+                    //std::cerr << "insert_at[" << idx << "] but filled" << std::endl;
+                    vector        temp( container::next_capacity(maxi_), as_capacity );
+                    mutable_type *source = & temp.item_[idx];
+                    new (source) type(args);
+                    ++sz;
+                    memcpy( temp.addr_,  this->addr_,      (idx-1) *sizeof(type));
+                    memcpy( source+1,   &this->item_[idx], (sz-idx)*sizeof(type));
+                    temp.size_  = sz;;
+                    sz          = 0;
+                    swap_with(temp);
+                }
+                else
+                {
+                    //std::cerr << "insert_at[" << idx << "] with space" << std::endl;
+                    mutable_type *source = & this->item_[idx];
+                    mutable_type *target = source+1;
+                    ++sz;
+                    const size_t  block  = (sz-idx)*sizeof(type);
+                    memmove(target,source,block);
+                    try { new (source) type(args); } catch(...) { memmove(source,target,block); throw; }
+                }
+            }
+        }
+
     private:
         size_t             maxi_;
         size_t             bytes;
