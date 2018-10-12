@@ -9,7 +9,7 @@
 #include "y/associative/set.hpp"
 #include "y/sequence/array.hpp"
 
-
+#define OMPI_SKIP_MPICXX 1
 #include <mpi.h>
 
 
