@@ -9,12 +9,12 @@ namespace upsylon
         {
         }
 
-        Mask:: Mask() : list(), dict(), pool()
+        Mask:: Mask() : container(), list(), dict(), pool()
         {
 
         }
 
-        Mask:: Mask(const Mask &other) : list(), dict( other.size(), as_capacity ), pool()
+        Mask:: Mask(const Mask &other) : dynamic(), container(), list(), dict( other.size(), as_capacity ), pool()
         {
             match_capacities();
             for( const Vertex *v = other.head(); v; v=v->next )
