@@ -24,6 +24,7 @@ Y_UTEST(locate)
             size_t  idx = 0;
             int    *ptr = core::locate( data[i], *data, n, comparison::increasing<int>, idx );
             Y_ASSERT(ptr==&data[i]);
+            Y_ASSERT(idx==i-1);
         }
     }
 }
