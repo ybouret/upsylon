@@ -17,7 +17,6 @@ namespace upsylon
         template <typename T,typename U,typename COMPARE>
         T *locate( const U &lhs, T *arr, const size_t num, COMPARE &compare, size_t &idx )
         {
-           // std::cerr << "Looking for " << lhs << std::endl;
             if(num<=0)
             {
                 idx = 0;
@@ -27,18 +26,52 @@ namespace upsylon
             {
                 assert(NULL!=arr);
                 size_t jlo = 0;
-                size_t jup = num-1;
+                {
+                    T           *addr  = arr;
+                    const int    icmp  = compare(lhs,*addr);
+                    if(icmp<0)
+                    {
+                        idx=0;
+                        return NULL;
+                    }
+                    else if(0==icmp)
+                    {
+                        idx=0;
+                        return addr;
+                    }
+                    else
+                    {
+                        ++jlo;
+                    }
+                }
+                size_t jup = num;
+                {
+                    T        *addr = &arr[ --jup ];
+                    const int icmp = compare(lhs,*addr);
+                    if(0<icmp)
+                    {
+                        idx=num;
+                        return NULL;
+                    }
+                    else if(0==icmp)
+                    {
+                        idx=jup;
+                        return addr;
+                    }
+                    else
+                    {
+                        --jup;
+                    }
+                }
+
                 while(jlo<=jup)
                 {
-                    //std::cerr << "  --- in [" << jlo << ".." << jup << "]" << std::endl;
                     const size_t jmid = (jlo+jup)>>1;
                     T           *addr  = arr+jmid;
                     const int    icmp  = compare(lhs,*addr);
-                    //std::cerr << "  ..compare with " << *addr << "@" << jmid << " -> " << icmp << std::endl;
                     if(icmp<0)
                     {
                         jup = jmid-1;
-                        //std::cerr << "   \\_decrease@" << jup << std::endl;
                     }
                     else
                     {
@@ -53,10 +86,11 @@ namespace upsylon
                             return addr;
                         }
                     }
-                    //std::cerr << "  now in [" << jlo << ".." << jup << "]" << std::endl;
                 }
+                idx = jlo; assert(compare(lhs,arr[idx])<0);
+                return NULL;
             }
-            return NULL;
+
         }
     }
 }
