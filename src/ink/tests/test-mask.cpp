@@ -33,7 +33,7 @@ namespace
         const double speed = (n / rtc(tmx))/1e6;
         std::cerr << "speed=" << speed << " Mops" << std::endl;
         unique(h);
-        const size_t m = h.size();
+        const size_t m           = h.size();
         const size_t collisions = n-m;
         std::cerr << "collisions : " << collisions << " / " << n << std::endl;
     }
