@@ -3,7 +3,8 @@
 #define Y_INK_MASK_INCLUDED 1
 
 #include "y/ink/vertex.hpp"
-#include "y/hashing/sfh.hpp"
+#include "y/hashing/fnv.hpp"
+#include "y/associative/set.hpp"
 
 namespace upsylon
 {
@@ -13,10 +14,10 @@ namespace upsylon
         class MetaVertex
         {
         public:
-            const Vertex *vtx; //!< pointer to handled vertex
+            Vertex *vtx; //!< pointer to handled vertex
 
             //! setup
-            inline  MetaVertex(const Vertex *v) throw() : vtx(v) { assert(vtx); }
+            inline  MetaVertex( Vertex *v) throw() : vtx(v) { assert(vtx); }
             //! cleanup
             inline ~MetaVertex() throw() {}
             //! key is coordinate
@@ -49,6 +50,47 @@ namespace upsylon
 
         private:
             Y_DISABLE_ASSIGN(MetaVertex);
+        };
+
+        //! a Mask is a set of unique vertices
+        class Mask : public container
+        {
+        public:
+            typedef MetaVertex::Hasher<hashing::fnv> MetaHasher; //!< hasher for MetaVertex
+            typedef set<coord,MetaVertex,MetaHasher> MetaDict;   //!< dedicated set
+            
+            explicit Mask();          //!< setup
+            virtual ~Mask() throw();  //!< desctructor
+            Mask( const Mask &other); //!< hard copy
+
+            virtual size_t size() const throw();      //!< dict.size(), list.size
+            virtual size_t capacity() const throw();  //!< dict.capacity(), list.size+pool.size
+            virtual void   free() throw();            //!< dict.free(), pool.store_all(list)
+            virtual void   release() throw();         //!< container: release all memory
+            virtual void   reserve( size_t n);        //!< container:reserve
+
+            const Vertex  *head() const throw(); //!< list.head
+            bool append( const coord );          //!< append a coordinate, false if already registerded
+            bool remove( const coord ) throw();  //!< try remove
+
+            void  match_capacities() const; //!< adjust pool size
+            bool  try_match_capacities() const throw(); //!< try to adjust pool size
+
+            //! append wrapper
+            inline bool append( const unit_t x, const unit_t y) { return append( coord(x,y) ); }
+
+            //! test if has a coordinate
+            inline bool has( const coord q ) const throw() { return 0 != dict.search(q); }
+
+            Mask & __or(  const Mask &other ); //!< logical OR
+            Mask & __and( const Mask &other ); //!< logical AND
+            Mask & __xor( const Mask &other ); //!< logical XOR
+
+        private:
+            Y_DISABLE_ASSIGN(Mask);
+            Vertex::List         list;
+            MetaDict             dict;
+            mutable Vertex::Pool pool;
         };
     }
 }

@@ -74,8 +74,10 @@ namespace upsylon
             const NODE  *n = table.template search_node<KEY>(k,h, &s);
             if(n)
             {
+                assert(s);
                 NODE *node = (NODE *)n;
-                // TODO: move to front ?
+                // move to front for subsequent access
+                s->move_to_front(node);
                 return &(node->data);
             }
             else
@@ -117,6 +119,9 @@ namespace upsylon
                 return false;
             }
         }
+
+        //! ensure no key
+        inline void no( param_key_type k ) throw() { (void) remove(k); }
 
         //! sort internal nodes by data
         template <typename COMPARE_DATA>

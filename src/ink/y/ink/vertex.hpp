@@ -48,6 +48,12 @@ namespace upsylon
                     }
                 }
 
+                //! store all list content
+                void store_all( List &l ) throw()
+                {
+                    while( l.size ) { store( l.pop_back() ); }
+                }
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Pool);

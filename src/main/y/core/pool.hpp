@@ -77,8 +77,6 @@ namespace upsylon
                 swap_with(tmp);
             }
 
-
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(pool_of);
         };
