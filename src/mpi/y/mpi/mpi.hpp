@@ -8,6 +8,7 @@
 #include "y/type/spec.hpp"
 #include "y/associative/set.hpp"
 #include "y/sequence/array.hpp"
+#include <cstdio>
 
 #define OMPI_SKIP_MPICXX 1
 #include <mpi.h>
