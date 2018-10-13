@@ -202,7 +202,7 @@ namespace upsylon
         {
             static const char fn[] = "jpeg::save";
             Y_GIANT_LOCK();
-
+            (void) options;
             ios::ocstream fp(filename,false);
             
             struct jpeg_compress_struct cinfo;

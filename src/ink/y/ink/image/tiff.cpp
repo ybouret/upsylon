@@ -99,7 +99,7 @@ namespace upsylon
         {
             // open file
             O_TIFF tiff(filename);
-
+            (void)options;
             // prepare raster
             const unit_t w = bmp.w;
             const unit_t h = bmp.h;
