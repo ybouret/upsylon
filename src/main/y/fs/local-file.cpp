@@ -71,7 +71,8 @@ namespace upsylon
         local_file:: local_file( const ios::cstdin_t  & ) :
         handle( descriptor::invalid()  ),
         access( readable ),
-        type( is_stdin )
+        type( is_stdin ),
+        status(NULL)
         {
 #if defined(Y_BSD)
             handle = STDIN_FILENO;
@@ -85,7 +86,8 @@ namespace upsylon
         local_file:: local_file( const ios::cstdout_t  & ) :
         handle( descriptor::invalid()  ),
         access( writable ),
-        type( is_stdout )
+        type( is_stdout ),
+        status(NULL)
         {
 #if defined(Y_BSD)
             handle = STDOUT_FILENO;
@@ -99,7 +101,8 @@ namespace upsylon
         local_file:: local_file( const ios::cstderr_t  & ) :
         handle( descriptor::invalid()  ),
         access( writable ),
-        type( is_stdout )
+        type( is_stdout ),
+        status(NULL)
         {
 #if defined(Y_BSD)
             handle = STDERR_FILENO;
