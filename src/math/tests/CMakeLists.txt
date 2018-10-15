@@ -30,6 +30,8 @@ ADD_TEST(FitConic   test-m fit_conic)
 ADD_TEST(Bracket    test-m bracket)
 ADD_TEST(Minimize   test-m min)
 ADD_TEST(LSF        test-m lsf)
+ADD_TEST(LSF:Gauss  test-m lsf_gauss)
+ADD_TEST(LSF:Poly   test-m lsf_poly)
 
 
 ADD_CUSTOM_TARGET(utest-m

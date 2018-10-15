@@ -28,6 +28,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(min);
     Y_UTEST(lsf);
     Y_UTEST(fit_gauss);
+    Y_UTEST(fit_poly);
 
 }
 Y_UTEST_EXEC()
