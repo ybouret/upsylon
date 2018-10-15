@@ -15,13 +15,13 @@ namespace upsylon
         class orstream : public ostream, public local_file
         {
         public:
-            explicit orstream( const string &filename, bool append=false);
-            explicit orstream( const char   *filename, bool append=false);
-            orstream( ios::cstdout_t & );
-            orstream( ios::cstderr_t & );
-            virtual ~orstream() throw();
-            virtual void write(char C);
-            virtual void flush();
+            explicit orstream( const string &filename, bool append=false); //!< open a file
+            explicit orstream( const char   *filename, bool append=false); //!< open a file
+            orstream( ios::cstdout_t & ); //!< map to stdout
+            orstream( ios::cstderr_t & ); //!< map to stderr
+            virtual ~orstream() throw();  //!< destruct
+            virtual void write(char C);   //!< ostream:write
+            virtual void flush();         //!< ostream:flus
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(orstream);

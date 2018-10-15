@@ -10,16 +10,21 @@ namespace upsylon
 {
     namespace ios
     {
-
+        //! input raw stream
         class irstream : public istream, public local_file
         {
         public:
+            //! open a file stream
             explicit irstream(const string &filename, const offset_t shift=0);
+
+            //! open a file stream
             explicit irstream(const char   *filename, const offset_t shift=0);
+
+            //! desctructor
             virtual ~irstream() throw();
 
-            virtual bool query(char &C);
-            virtual void store(char  C);
+            virtual bool query(char &C); //!< get one char
+            virtual void store(char  C); //!< go back one char, no check
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(irstream);

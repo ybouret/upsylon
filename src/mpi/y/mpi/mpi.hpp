@@ -10,6 +10,7 @@
 #include "y/sequence/array.hpp"
 #include <cstdio>
 
+//! avoir C++ from OpenMPI
 #define OMPI_SKIP_MPICXX 1
 #include <mpi.h>
 

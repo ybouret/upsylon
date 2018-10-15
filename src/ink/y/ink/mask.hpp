@@ -59,10 +59,10 @@ namespace upsylon
             typedef MetaVertex::Hasher<hashing::fnv> MetaHasher; //!< hasher for MetaVertex
             typedef set<coord,MetaVertex,MetaHasher> MetaDict;   //!< dedicated set
             
-            explicit Mask();          //!< setup
-            virtual ~Mask() throw();  //!< desctructor
-            Mask( const Mask &other); //!< hard copy
-            Mask & operator=( const Mask & );
+            explicit Mask();                  //!< setup
+            virtual ~Mask() throw();          //!< desctructor
+            Mask( const Mask &other);         //!< hard copy
+            Mask & operator=( const Mask & ); //!< assign
 
             virtual size_t size() const throw();      //!< dict.size(), list.size
             virtual size_t capacity() const throw();  //!< dict.capacity(), list.size+pool.size
