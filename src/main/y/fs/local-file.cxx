@@ -19,7 +19,7 @@ switch( mode )
         flags |= O_RDONLY;
 #endif
 
-#if defined(YOCTO_WIN)
+#if defined(Y_WIN)
         dwDesiredAccess        = GENERIC_READ;
         dwCreationDisposition  = OPEN_EXISTING;
         dwFlagsAndAttributes  |= FILE_FLAG_SEQUENTIAL_SCAN;
@@ -32,7 +32,7 @@ switch( mode )
         flags |= O_WRONLY | O_CREAT ;
 #endif
 
-#if defined(YOCTO_WIN)
+#if defined(Y_WIN)
         dwDesiredAccess       = GENERIC_WRITE;
         dwCreationDisposition = OPEN_ALWAYS;
         /* dwFlagsAndAttributes |=0; */
@@ -58,7 +58,7 @@ switch( mode )
         flags |= O_WRONLY | O_CREAT | O_TRUNC;
 #endif
 
-#if defined(YOCTO_WIN)
+#if defined(Y_WIN)
         dwDesiredAccess       = GENERIC_WRITE;
         dwCreationDisposition = CREATE_ALWAYS;
         /*dwFlagsAndAttributes |=0;*/
@@ -120,7 +120,7 @@ handle = CreateFile( TEXT(*filename),
                     NULL);
 if(  descriptor::invalid() == handle )
 {
-    throw win32:: exception( ::GetLastError(), "::CreateFile('%s')", filename.c_str() );
+    throw win32:: exception( ::GetLastError(), "::CreateFile('%s')", *filename );
 }
 #endif
 
