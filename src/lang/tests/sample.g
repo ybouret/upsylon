@@ -1,7 +1,12 @@
 .sample;
 
+words : ('+'^  word)*;
+word: "[:word:]+";
+
+/*
 words: word*;
 word : "[:word:]+";
+*/
 
 /*
 main : (a b) | c;
