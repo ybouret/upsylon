@@ -67,14 +67,7 @@ namespace upsylon
                 {
                     if(lower==extend_cyclic)
                     {
-                        T ans = 0;
-                        while(i<=0)
-                        {
-                            ans -= dX;
-                            i   += N;
-                        }
-                        assert(i<=N);
-                        return ans + X[i];
+                        return X12 - getX(2-i);
                     }
                     else
                     {
@@ -85,14 +78,14 @@ namespace upsylon
                 {
                     if(upper==extend_cyclic)
                     {
-                        T ans = 0;
+                        T ans = X1;
+                        ++i;
                         while(i>N)
                         {
+                            ans += dX;
                             i-=N;
-                            ans+=dX;
                         }
-                        assert(i>0);
-                        return ans + X[i];
+                        return ans + (X[i]-X[1]);
                     }
                     else
                     {
