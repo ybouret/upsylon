@@ -32,6 +32,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(linear);
     Y_UTEST(spline);
     Y_UTEST(extend);
+    Y_UTEST(smooth);
 
 }
 Y_UTEST_EXEC()

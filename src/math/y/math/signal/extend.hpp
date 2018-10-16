@@ -3,6 +3,7 @@
 #define Y_MATH_SIGNAL_EXTEND_INCLUDED 1
 
 #include "y/sequence/array.hpp"
+#include "y/type/point2d.hpp"
 
 namespace upsylon
 {
@@ -25,6 +26,9 @@ namespace upsylon
             const extend_boundary lower; //!< how to extend lower bound
             const extend_boundary upper; //!< how to extend upper bound
 
+            //! return signed size of currently handled data
+            inline unit_t ssize() const throw() { assert(X.size()==Y.size()); return unit_t(X.size()); }
+            
         private:
             const array<T>       &X;
             const array<T>       &Y;
@@ -124,10 +128,14 @@ namespace upsylon
                 }
             }
 
-
+            //! destructor
             inline virtual ~extend() throw() {}
 
-
+            //! get the points
+            inline point2d<double> operator()(unit_t i) const
+            {
+                return point2d<double>( getX(i), getY(i) );
+            }
             
 
         private:
