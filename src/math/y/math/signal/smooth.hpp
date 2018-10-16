@@ -29,6 +29,7 @@ namespace upsylon
 
             //! setup
             explicit smooth(const size_t deg) :
+            points(),
             order(deg),
             coefs(order+1),
             origin(0,0)
