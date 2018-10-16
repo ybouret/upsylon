@@ -38,8 +38,8 @@ Y_UTEST(extend)
     }
 
     {
-        const unit_t  ilo = 0; //-2*unit_t(X.size());
-        const unit_t  ihi = X.size()+1; //-ilo;
+        const unit_t  ilo = -2*unit_t(X.size());
+        const unit_t  ihi = -ilo;
         ios::ocstream fp("xtend.dat");
         math::extend<double>  xconstant(X,Y,math::extend_constant,math::extend_constant);
         math::extend<double>  xeven(X,Y,math::extend_even,math::extend_even);
