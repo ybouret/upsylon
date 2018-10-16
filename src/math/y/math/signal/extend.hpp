@@ -115,7 +115,7 @@ namespace upsylon
                 {
                     switch(upper)
                     {
-                        case extend_cyclic:   while(i>N) i-=N; return Y[i];
+                        case extend_cyclic:   ++i; while(i>N) i-=N; return Y[i];
                         case extend_even:     return getY(N2-i);
                         case extend_odd :     return YN2 - getY(N2-i);
                         default: break;
