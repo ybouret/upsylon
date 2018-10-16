@@ -9,8 +9,10 @@ namespace upsylon
 
     namespace math
     {
+        //! polynomial ops
         struct polynomial
         {
+            //! fast evaluation
             template <typename T> static inline
             T eval( const T X, const array<T> &a ) throw()
             {

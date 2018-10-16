@@ -8,6 +8,7 @@ namespace upsylon
     namespace math
     {
 
+        //! linear operations
         struct linear
         {
             //! linear interpolation, assuming sorted X
