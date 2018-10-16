@@ -4,6 +4,7 @@
 #define Y_MATH_FIT_POLYNOMIAL_INCLUDED 1
 
 #include "y/math/fit/samples.hpp"
+#include "y/math/polynomial.hpp"
 #include "y/type/utils.hpp"
 
 namespace upsylon
@@ -22,17 +23,9 @@ namespace upsylon
 
                 //! compute the sum of unerlying gaussians
                 template <typename T> static inline
-                T Compute( T x, const array<double> &aorg, const Variables &vars )
+                T Compute( T x, const array<double> &aorg, const Variables & )
                 {
-                    assert( aorg.size() == vars.size() );
-                    T ans = 0;
-                    for(size_t i=vars.size();i>0;)
-                    {
-                        const T a = aorg[i];
-                        --i;
-                        ans += a * ipower(x,i);
-                    }
-                    return ans;
+                    return polynomial::eval(x,aorg);
                 }
 
                 //! initialize with moments using simple sample
@@ -59,7 +52,7 @@ namespace upsylon
                         T r = 0;
                         for(size_t l=N;l>0;--l)
                         {
-                            r += sample.Y[l] * ipower(sample.X[l],i-1);
+                            r += sample.Y[l] * ipower(sample.X[l],im);
                         }
                         aorg[i] = r;
                     }

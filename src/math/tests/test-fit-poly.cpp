@@ -34,18 +34,58 @@ Y_UTEST(fit_poly)
     }
 
     Fit::Type<double>::CFunction f = Fit::Polynomial::Compute<double>;
-    Fit::Type<double>::Function F(f);
-    Fit::LeastSquares<double>   ls(true);
+    Fit::Type<double>::Function  F(f);
+    Fit::LeastSquares<double>    ls(false);
+
 
     matrix<double> Z(4,N);
+    matrix<double> Zf(Z.rows,N);
     for(size_t n=1;n<=Z.rows;++n)
     {
-        Fit::Sample<double> sample(X,Y,Z[n]);
-        vector<double> aorg(n);
+        Fit::Sample<double> sample(X,Y,Zf[n]);
+        Fit::Polynomial::Create(sample.variables,n);
+        vector<double>      aorg(n);
+        vector<double>      aerr(n);
+        vector<bool>        used(n,true);
         Fit::Polynomial::Initialize(aorg,sample);
         std::cerr << "aorg=" << aorg << std::endl;
+        for(size_t i=1;i<=N;++i)
+        {
+            Z[n][i] = polynomial::eval(X[i],aorg);
+        }
+        if( !ls.fit(sample,F,aorg,aerr,used) )
+        {
+            throw exception("Couldn't poly-fit n=%u", unsigned(n));
+        }
+        sample.variables.diplay(std::cerr,aorg,aerr);
+        
     }
-    
+
+    {
+        ios::ocstream fp("poly0.dat");
+        for(size_t i=1;i<=N;++i)
+        {
+            fp("%g",X[i]);
+            for(size_t j=1;j<=Z.rows;++j)
+            {
+                fp(" %g", Z[j][i]);
+            }
+            fp << "\n";
+        }
+    }
+
+    {
+        ios::ocstream fp("poly1.dat");
+        for(size_t i=1;i<=N;++i)
+        {
+            fp("%g",X[i]);
+            for(size_t j=1;j<=Z.rows;++j)
+            {
+                fp(" %g", Zf[j][i]);
+            }
+            fp << "\n";
+        }
+    }
 }
 Y_UTEST_DONE()
 
