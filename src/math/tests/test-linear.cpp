@@ -14,8 +14,8 @@ Y_UTEST(linear)
 
     {
         ios::ocstream fp("lindat.dat");
-        double x = 0.2 * alea.symm<double>();
-        for(size_t n=10+alea.leq(30);n>0;--n)
+        double x = 0.4 * alea.symm<double>();
+        for(size_t n=10+alea.leq(150);n>0;--n)
         {
             x += 0.2 * alea.to<double>();
             X << x;
@@ -31,6 +31,10 @@ Y_UTEST(linear)
             fp("%g %g\n",x,math::linear::eval(x,X,Y));
         }
     }
+
+    vector<double> xh;
+    math::linear::zfind<double>(xh,0.5,X,Y);
+    std::cerr << "xh=" << xh << std::endl;
 }
 Y_UTEST_DONE()
 

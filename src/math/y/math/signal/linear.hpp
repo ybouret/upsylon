@@ -2,6 +2,8 @@
 #define Y_MATH_SIGNAL_LINEAR_INCLUDED 1
 
 #include "y/sequence/array.hpp"
+#include "y/container/sequence.hpp"
+#include "y/math/types.hpp"
 
 namespace upsylon
 {
@@ -53,8 +55,36 @@ namespace upsylon
                         }
                     }
                 }
-
             }
+
+            //! find intercepting values
+            template <typename T> static inline
+            void zfind( sequence<T> &xx, const T yy, const array<double> &X, const array<double> &Y)
+            {
+                assert(X.size()==Y.size());
+                const size_t n = X.size();
+                xx.free();
+                for(size_t i=1,ip=2;i<n;++i,++ip)
+                {
+                    const T y0 = Y[i];
+                    const T y1 = Y[ip];
+                    T ylo = y0;
+                    T yhi = y1;
+                    if( yhi<ylo ) cswap(ylo,yhi);
+                    if(yy>=ylo&&yy<=yhi)
+                    {
+                        const T x0 = X[i];
+                        const T x1 = X[ip];
+                        const T dy = y1-y0;
+                        const T x  = ( fabs(dy)>0 ) ? x0 + ((yy-y0)*(x1-x0))/dy : (x0+x1)/2;
+                        if( xx.size()<=0 || x>xx.back() )
+                        {
+                            xx << x;
+                        }
+                    }
+                }
+            }
+
         };
 
     }
