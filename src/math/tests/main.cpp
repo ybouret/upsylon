@@ -31,6 +31,8 @@ Y_UTEST_INIT(64)
     Y_UTEST(fit_poly);
     Y_UTEST(linear);
     Y_UTEST(spline);
+    Y_UTEST(extend);
+
 }
 Y_UTEST_EXEC()
 
