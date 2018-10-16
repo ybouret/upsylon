@@ -32,7 +32,7 @@ ADD_TEST(Minimize   test-m min)
 ADD_TEST(LSF        test-m lsf)
 ADD_TEST(LSF:Gauss  test-m lsf_gauss)
 ADD_TEST(LSF:Poly   test-m lsf_poly)
-
+ADD_TEST(Lienar     test-m linear)
 
 ADD_CUSTOM_TARGET(utest-m
 COMMAND ${CMAKE_CTEST_COMMAND} -V

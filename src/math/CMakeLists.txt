@@ -56,6 +56,12 @@ SET(opt_srcs ${opt_decl} ${opt_copt})
 SOURCE_GROUP( opt FILES ${opt_srcs} )
 INSTALL( FILES ${opt_decl} DESTINATION include/y/math/opt )
 
+FILE(GLOB signal_decl y/math/signal/*.hpp)
+FILE(GLOB signal_csignal y/math/signal/*.cpp)
+SET(signal_srcs ${signal_decl} ${signal_csignal})
+SOURCE_GROUP( signal FILES ${signal_srcs} )
+INSTALL( FILES ${signal_decl} DESTINATION include/y/math/signal )
+
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
 ${kernel_srcs}
@@ -64,6 +70,7 @@ ${fcn_srcs}
 ${ode_srcs} ${ode_expl_srcs} ${ode_impl_srcs}
 ${fit_srcs}
 ${opt_srcs}
+${signal_srcs}
 )
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
 
