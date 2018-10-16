@@ -16,15 +16,15 @@ Y_UTEST(extend)
     vector<double> Y;
 
     X << 0;
-    Y << cos(X.back());
+    Y << cos(X.back())-0.1;
 
     X << math::numeric<double>::two_pi;
-    Y << cos(X.back());
+    Y << cos(X.back())-0.1;
 
     for(size_t i=1+alea.leq(20);i>0;--i)
     {
         X << math::numeric<double>::two_pi * alea.to<double>();
-        Y << cos(X.back());
+        Y << cos(X.back())-0.1;
     }
 
     hsort(X,Y,comparison::increasing<double>);
@@ -38,18 +38,48 @@ Y_UTEST(extend)
     }
 
     {
-        const unit_t ilo = -2*unit_t(X.size());
-        const unit_t ihi = -ilo;
+        const unit_t  ilo = 0; //-2*unit_t(X.size());
+        const unit_t  ihi = X.size()+1; //-ilo;
         ios::ocstream fp("xtend.dat");
         math::extend<double>  xconstant(X,Y,math::extend_constant,math::extend_constant);
+        math::extend<double>  xeven(X,Y,math::extend_even,math::extend_even);
+        math::extend<double>  xodd(X,Y,math::extend_odd,math::extend_odd);
         math::extend<double>  xcyclic(X,Y,math::extend_cyclic,math::extend_cyclic);
 
-        for(unit_t i=ilo;i<=ihi;++i)
         {
-            fp("%g %g",  xconstant.getX(i),  xconstant.getY(i) );
-            fp(" %g %g", xcyclic.getX(i),    xcyclic.getY(i)   );
-            fp << "\n";
+            ios::ocstream fp("xconst.dat");
+            for(unit_t i=ilo;i<=ihi;++i)
+            {
+                fp("%g %g\n",  xconstant.getX(i),  xconstant.getY(i) );
+            }
         }
+
+        {
+            ios::ocstream fp("xeven.dat");
+            for(unit_t i=ilo;i<=ihi;++i)
+            {
+                fp("%g %g\n",  xeven.getX(i),  xeven.getY(i) );
+            }
+        }
+
+        {
+            ios::ocstream fp("xodd.dat");
+            for(unit_t i=ilo;i<=ihi;++i)
+            {
+                fp("%g %g\n",  xodd.getX(i),  xodd.getY(i) );
+            }
+        }
+
+
+        {
+            ios::ocstream fp("xcyclic.dat");
+            for(unit_t i=ilo;i<=ihi;++i)
+            {
+                fp("%g %g\n",  xcyclic.getX(i),  xcyclic.getY(i) );
+            }
+        }
+
+        
     }
 
 

@@ -35,6 +35,8 @@ namespace upsylon
             const T               X12;
             const T               Y1;
             const T               YN;
+            const T               Y12;
+            const T               YN2;
         public:
 
             //! prepare data
@@ -51,7 +53,9 @@ namespace upsylon
             XN2(XN+XN),
             X12(X1+X1),
             Y1( Y[1] ),
-            YN( Y[N] )
+            YN( Y[N] ),
+            Y12( Y1+Y1 ),
+            YN2( YN+YN )
             {
                 assert(XX.size()==YY.size());
             }
@@ -61,7 +65,7 @@ namespace upsylon
                 assert( X.size() == size_t(N) );
                 if(i<=0)
                 {
-                    if(extend_cyclic)
+                    if(lower==extend_cyclic)
                     {
                         T ans = 0;
                         while(i<=0)
@@ -79,7 +83,7 @@ namespace upsylon
                 }
                 else if( i>N )
                 {
-                    if(extend_cyclic)
+                    if(upper==extend_cyclic)
                     {
                         T ans = 0;
                         while(i>N)
@@ -108,6 +112,8 @@ namespace upsylon
                     switch(lower)
                     {
                         case extend_cyclic:   while(i<=0) i+=N; return Y[i];
+                        case extend_even:     return getY(2-i);
+                        case extend_odd:      return Y12-getY(2-i);
                         default: break;
                     }
                     return Y1;
@@ -117,6 +123,8 @@ namespace upsylon
                     switch(upper)
                     {
                         case extend_cyclic:   while(i>N) i-=N; return Y[i];
+                        case extend_even:     return getY(N2-i);
+                        case extend_odd :     return YN2 - getY(N2-i);
                         default: break;
                     }
                     return YN;
