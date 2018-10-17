@@ -15,7 +15,11 @@ namespace upsylon
             //
             // searching for design rules
             //__________________________________________________________________
-            if(verbose) { indent() << "Finalizing top-level internals" << std::endl; }
+            if(verbose) {
+                indent() << std::endl;
+                indent() << "---> Finalizing Top-Level Internals" << std::endl;
+            }
+
             ++level;
             for( Internals::iterator i=internals.begin(); i != internals.end(); ++i)
             {
@@ -24,6 +28,11 @@ namespace upsylon
                 check_top_level(r);
             }
             --level;
+
+            if(verbose) {
+                indent() << "---> done" << std::endl;
+                indent() << std::endl;
+            }
         }
 
 

@@ -31,7 +31,7 @@ namespace upsylon
         //! assign
         inline point3d  & operator=( const point3d p ) { x=p.x;y=p.y;z=p.z;return *this; }
         //! in place addition
-        inline point3d & operator+=( const point3d p ) { x+=p.x; y+=p.y; return *this; }
+        inline point3d & operator+=( const point3d p ) { x+=p.x; y+=p.y; z+=p.z; return *this; }
         //! unary +
         inline point3d   operator+() { return point3d(x,y,z); }
         //! addition

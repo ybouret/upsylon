@@ -4,6 +4,7 @@
 
 #include "y/mpl/rational.hpp"
 #include "y/type/complex.hpp"
+#include "y/type/point3d.hpp"
 #include "y/alea.hpp"
 
 using namespace upsylon;
@@ -84,6 +85,30 @@ namespace {
     inline complex<double> support:: get< complex<double> >()
     {
         return complex<double>( get<double>(), get<double>() );
+    }
+
+    template <>
+    inline point2d<float> support:: get< point2d<float> >()
+    {
+        return alea.on_circle< float,point2d >();
+    }
+
+    template <>
+    inline point2d<double> support:: get< point2d<double> >()
+    {
+        return alea.on_circle< double,point2d >();
+    }
+
+    template <>
+    inline point3d<float> support:: get< point3d<float> >()
+    {
+        return alea.on_sphere< float,point3d >();
+    }
+
+    template <>
+    inline point3d<double> support:: get< point3d<double> >()
+    {
+        return alea.on_sphere< double,point3d >();
     }
 
     

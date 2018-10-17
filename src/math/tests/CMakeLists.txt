@@ -36,6 +36,7 @@ ADD_TEST(Linear     test-m linear)
 ADD_TEST(Spline     test-m spline)
 ADD_TEST(Extend     test-m extend)
 ADD_TEST(Smooth     test-m smooth)
+ADD_TEST(BSplines   test-m bspl)
 
 ADD_CUSTOM_TARGET(utest-m
 COMMAND ${CMAKE_CTEST_COMMAND} -V

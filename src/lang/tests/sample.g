@@ -1,8 +1,13 @@
 .sample;
 
-words : ('+'^  word)*;
+
+words : "@"? word;
 word: "[:word:]+";
 
+/*
+words : ('+'^  word)*;
+word: "[:word:]+";
+*/
 /*
 words: word*;
 word : "[:word:]+";

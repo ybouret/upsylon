@@ -232,6 +232,7 @@ namespace upsylon
             template <typename T>
             void on_sphere(T &x, T &y, T&z ) throw()
             {
+                static const T one(1);
                 while(true)
                 {
                     const T x1 = symm<T>();
@@ -239,10 +240,10 @@ namespace upsylon
                     const T x12 = x1*x1;
                     const T x22 = x2*x2;
                     const T ssq = x12+x22;
-                    if(ssq<1)
+                    if(ssq<one)
                     {
-                        const T del = 1-ssq;
-                        const T fac = sqrt(1-ssq);
+                        const T del = one-ssq;
+                        const T fac = sqrt(one-ssq);
                         z = del-ssq;
                         const T hx  = x1 * fac;
                         const T hy  = x2 * fac;
