@@ -1,0 +1,54 @@
+\documentclass[aps]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{mathptmx}
+\usepackage{xfrac}
+
+\newcommand{\mychem}[1]{\mathtt{#1}}
+\newcommand{\myconc}[1]{\left\lbrack{#1}\right\rbrack}
+
+
+\begin{document}
+
+\title{Spectro}
+\maketitle
+
+\section{Chemistry}
+
+We have a probe
+\begin{equation}
+	\alpha \xrightleftharpoons{} \beta + h, \;\; K = \dfrac{\myconc{\beta}\cdot h}{ \myconc{\alpha} }
+\end{equation}
+and an absorbance
+\begin{equation}
+	A = L \left( \epsilon_\alpha \myconc{\alpha}  + \epsilon_\beta \myconc{\beta} \right)
+\end{equation}
+For a local concentration $C_0$ in probe and a given $h$,
+\begin{equation}
+	 \myconc{\alpha}  = C_0 \dfrac{h}{K+h},\; \myconc{\beta} = C_0 \dfrac{K}{K+h}
+\end{equation}
+
+\section{Calibration}
+\begin{itemize}
+\item For $h\gg K$, 
+\begin{equation}
+	A^+ \simeq L C_0 \epsilon_\alpha.
+\end{equation}
+\item For $h\ll K$,
+\begin{equation}
+		A^- \simeq L C_0 \epsilon_\beta.
+\end{equation}
+\end{itemize}
+so that
+\begin{equation}
+	A \simeq A^+ \dfrac{h}{K+h} + A^- \dfrac{K}{K+h}
+\end{equation}
+then
+\begin{equation}
+	h \simeq K \dfrac{A^--A}{A-A^+} \; \Leftrightarrow \; pH = pK + \log \left( \dfrac{A^+-A}{A-A^-}\right) 
+\end{equation}
+
+\end{document}
