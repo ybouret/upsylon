@@ -1,6 +1,6 @@
 //! \file
 #ifndef Y_B_SPLINES_INCLUDED
-#define T_B_SPLINES_INCLUDED 1
+#define Y_B_SPLINES_INCLUDED 1
 
 #include "y/sequence/array.hpp"
 #include "y/type/utils.hpp"
