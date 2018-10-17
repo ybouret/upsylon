@@ -2,9 +2,10 @@
 #ifndef Y_B_SPLINES_INCLUDED
 #define Y_B_SPLINES_INCLUDED 1
 
-#include "y/sequence/array.hpp"
+#include "y/sequence/vector.hpp"
 #include "y/type/utils.hpp"
-#include "y/math/types.hpp"
+#include "y/math/fcn/derivative.hpp"
+#include "y/math/fcn/integrate.hpp"
 
 namespace upsylon
 {
@@ -17,6 +18,7 @@ namespace upsylon
         template <typename T,typename U>
         inline U Cubic_Bsplines( T x, const array<U> &points ) throw()
         {
+            assert(points.size()>0);
             static const T one(1);
             static const T six(6);
             static const T four(4);
@@ -57,6 +59,88 @@ namespace upsylon
             b2 * points[clamp<unit_t>(1,start_cv+3,num_points)] +
             b3 * points[clamp<unit_t>(1,start_cv+4,num_points)];
         }
+
+        //! Cubic B-Spline approximation of a set of vertices
+        template<
+        typename T,
+        template <class> class VTX,
+        typename ALLOCATOR = memory::global>
+        class CubicApproximation : public vector< VTX<T>, ALLOCATOR>
+        {
+        public:
+            Y_DECL_ARGS(T,type);                             //!< alias
+            typedef VTX<type>                     vertex;    //!< alias
+            typedef vector<vertex,ALLOCATOR>      base_type; //!< alias
+            typedef typename numeric<T>::function func_type; //!< alias
+            static const size_t                   DIM = sizeof(vertex)/sizeof(type); //!< dimension
+
+            //! setup
+            inline explicit CubicApproximation(const size_t n=0) :
+            base_type(n,as_capacity),
+            idim(0),
+            proj(this, & CubicApproximation::Proj ),
+            dlen(this, & CubicApproximation::speed ),
+            drvs()
+            {}
+
+            //! destructor
+            inline virtual ~CubicApproximation() throw() {}
+
+            //! compute the b-spline value
+            inline vertex operator()( const T u ) const throw()
+            {
+                return Cubic_Bsplines(u,*this);
+            }
+
+            //! compute the derivative per dimensions
+            inline vertex tangent(const T u) const
+            {
+                // optimal step for u around 0.5
+                static const T h_opt = __pow(numeric<T>::epsilon,T(1.0)/T(3.0))*T(0.5);
+                vertex q;
+                type *p = (type *)&q;
+                for(idim=0;idim<DIM;++idim)
+                {
+                    p[idim] = drvs.diff(proj,u,h_opt);
+                }
+                return q;
+            }
+
+            //! get local speed 
+            inline T speed( const T u ) const
+            {
+                const vertex v = tangent(u);
+                const type  *p = (const type *)&v;
+                T ans = square_of(p[0]);
+                for(size_t j=1;j<DIM;++j) ans += square_of(p[j]);
+                return sqrt_of(ans);
+            }
+
+            //! get local length
+            inline T arc_length(const T a, const T b ) const
+            {
+                return integrate::compute(dlen, a, b,
+                                         numeric<T>::sqrt_ftol);
+            }
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(CubicApproximation);
+            mutable size_t    idim; //!< for dimension derivative
+            mutable func_type proj; //!< coordinate idim
+            mutable func_type dlen; //!< speed as function
+
+            inline T Proj( const T u ) const throw()
+            {
+                assert(idim<DIM);
+                const vertex v = (*this)(u);
+                const type  *p = (const type *)&v;
+                return p[idim];
+            }
+        public:
+            mutable derivative<T> drvs; //!< needed to compute tangent and length
+
+        };
     }
 }
 
