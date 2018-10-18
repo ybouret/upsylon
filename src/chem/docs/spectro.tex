@@ -79,13 +79,13 @@ We get
 		} \end{equation}
 
 \begin{equation}
-		\epsilon_\beta K = 
+		\epsilon_\beta  = 
 		\dfrac
 		{
 			h^+(K+h^-) \tilde{A}^- - h^-(K+h^+) \tilde{A}^+ 
 		}
 		{
-			\left(h^+ - h^-\right)
+			K\left(h^+ - h^-\right)
 		}
 \end{equation}
 
@@ -98,8 +98,41 @@ Then
 \end{equation}
 and the correct expression is
 \begin{equation}
-	\dfrac{h}{K} =  \dfrac{\epsilon_\beta - \tilde{A}}{\tilde{A}-\epsilon_\alpha}
+	\dfrac{h}{K} 
+	=  \dfrac{\epsilon_\beta - \tilde{A}}{\tilde{A}-\epsilon_\alpha}
 \end{equation}
-
+becoming
+\begin{equation}
+pH = pK + \log\left[
+\dfrac{\epsilon_\alpha - \tilde{A}
+}
+{
+\tilde{A}-\epsilon_\beta
+}
+\right] = pK + 
+\log\left[ 
+\dfrac{A'_{+}-A}{A-A'_{-}}
+\right]
+\end{equation}
+with
+\begin{equation}
+	A'_{+} = \dfrac
+		{
+		(K+h^+) {A}^+ - (K+h^-) {A}^-
+		}
+		{
+		h^+ - h^-
+		} 
+\end{equation}
+and
+\begin{equation}
+A'_{-} =	\dfrac
+		{
+			h^+(K+h^-) {A}^- - h^-(K+h^+) {A}^+ 
+		}
+		{
+			K\left(h^+ - h^-\right)
+		}
+\end{equation}
 
 \end{document}
