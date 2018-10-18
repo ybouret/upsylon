@@ -8,6 +8,8 @@
 #include "y/sequence/list.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/exception.hpp"
+#include "y/ptr/arc.hpp"
+#include "y/associative/map.hpp"
 
 namespace upsylon
 {
@@ -20,18 +22,24 @@ namespace upsylon
         {
         public:
 
-            typedef point2d<T>       point_type; //!< alias
-            typedef list<point_type> point_list; //!< alias
-            point_list       points; //!< collected points
-            const size_t     order;  //!< fit order
-            const size_t     coefs;  //!< order+1
-            const point_type origin; //!< (0,0)
+            typedef matrix<T>              matrix_type; //!< alias
+            typedef arc_ptr<matrix_type>   matrix_ptr;  //!< alias
+            typedef map<size_t,matrix_ptr> matrix_map;  //!< alias
+            typedef point2d<T>             point_type;  //!< alias
+            typedef list<point_type>       point_list;  //!< alias
+
+            point_list       points;   //!< collected points
+            const size_t     order;    //!< fit order
+            const size_t     coefs;    //!< order+1
+            matrix_map       matrices; //!< store data
+            const point_type origin;   //!< (0,0)
 
             //! setup
             explicit smooth(const size_t deg) :
             points(),
             order(deg),
             coefs(order+1),
+            matrices(),
             origin(0,0)
             {
             }
@@ -103,8 +111,10 @@ namespace upsylon
                 const bool   has_drvs = (nc>1);
 
                 //! polynomial fit
-                matrix<double> mu(nc,nc);
-                array<double>  &a = mu.r_aux2;
+                matrix_type    &mu = get_matrix(nc);
+                array<double>  &a  = mu.r_aux2;
+                mu.ld(0);
+                a.ld(0);
 
                 size_t ii=np;
                 for( typename point_list::iterator it=points.begin();ii>0;--ii,++it)
@@ -144,6 +154,25 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(smooth);
+            matrix_type & get_matrix(const size_t n)
+            {
+                assert(n>0);
+                matrix_ptr *ppM = matrices.search(n);
+                if(!ppM)
+                {
+                    //std::cerr << "-- new matrix #" << n << std::endl;
+                    matrix_ptr pM = new matrix_type(n,n);
+                    if(!matrices.insert(n,pM))
+                    {
+                        throw exception("smooth: unexpected matrix insert failure for #%u",unsigned(n));
+                    }
+                    return *pM;
+                }
+                else
+                {
+                    return **ppM;
+                }
+            }
         };
 
     }

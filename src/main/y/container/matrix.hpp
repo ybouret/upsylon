@@ -3,6 +3,7 @@
 #define Y_MATRIX_INCLUDED 1
 
 #include "y/sequence/array.hpp"
+#include "y/ptr/counted.hpp"
 #include <cstdlib>
 
 namespace upsylon
@@ -14,7 +15,7 @@ namespace upsylon
     extern const matrix_transpose_t matrix_transpose;
 
     //! data for matrix layout, whith enough space for alebra
-    class matrix_data : public object
+    class matrix_data : public counted_object
     {
     public:
         const size_t rows;            //!< number of rows
