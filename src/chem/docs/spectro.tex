@@ -51,4 +51,55 @@ then
 	h \simeq K \dfrac{A^--A}{A-A^+} \; \Leftrightarrow \; pH = pK + \log \left( \dfrac{A^+-A}{A-A^-}\right) 
 \end{equation}
 
+\section{Calybration}
+
+\begin{itemize}
+\item For $h\gg K$, 
+\begin{equation}
+	A^+ \simeq \dfrac{L C_0}{K+h^+} \left( \epsilon_\alpha h^+ + \epsilon_b K\right).
+\end{equation}
+\item For $h\ll K$,
+\begin{equation}
+	A^- \simeq \dfrac{L C_0}{K+h^-} \left( \epsilon_\alpha h^- + \epsilon_b K\right).
+\end{equation}
+\end{itemize}
+Using
+$$
+	\tilde{A} = \dfrac{A}{L C_0}
+$$
+We get
+\begin{equation}
+		\epsilon_\alpha = 
+		\dfrac
+		{
+		(K+h^+) \tilde{A}^+ - (K+h^-) \tilde{A}^-
+		}
+		{
+		h^+ - h^-
+		} \end{equation}
+
+\begin{equation}
+		\epsilon_\beta K = 
+		\dfrac
+		{
+			h^+(K+h^-) \tilde{A}^- - h^-(K+h^+) \tilde{A}^+ 
+		}
+		{
+			\left(h^+ - h^-\right)
+		}
+\end{equation}
+
+Then
+\begin{equation}
+	\tilde{A} = \dfrac{1}{K+h}
+	 \left[ 
+	 \epsilon_\alpha h + \epsilon_\beta K 
+	 \right]
+\end{equation}
+and the correct expression is
+\begin{equation}
+	\dfrac{h}{K} =  \dfrac{\epsilon_\beta - \tilde{A}}{\tilde{A}-\epsilon_\alpha}
+\end{equation}
+
+
 \end{document}
