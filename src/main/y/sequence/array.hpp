@@ -52,7 +52,7 @@ namespace upsylon
         //! load same value
         inline void ld( param_type a )
         {
-            for(size_t i=1;i<=size_;++i)
+            for(size_t i=size_;i>0;--i)
             {
                 item_[i] = a;
             }
@@ -68,6 +68,7 @@ namespace upsylon
                 bswap(item_[lo++],item_[up--]);
             }
         }
+
 
     protected:
         mutable_type *item_; //!< item_[1..size()]

@@ -341,6 +341,8 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
             }
         }
 
+     
+
     private:
         size_t             maxi_;
         size_t             bytes;

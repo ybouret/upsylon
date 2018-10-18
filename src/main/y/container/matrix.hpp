@@ -262,7 +262,7 @@ namespace upsylon
         }
 
         //! load value
-        void ld( param_type value )
+        inline void ld( param_type value )
         {
             mutable_type *p = memory::io::cast<T>(workspace,data_offset);
             for(size_t i=0;i<items;++i)

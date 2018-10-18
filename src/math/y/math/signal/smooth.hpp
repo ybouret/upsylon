@@ -104,7 +104,7 @@ namespace upsylon
 
                 //! polynomial fit
                 matrix<double> mu(nc,nc);
-                vector<double> a(nc);
+                array<double>  &a = mu.r_aux2;
 
                 size_t ii=np;
                 for( typename point_list::iterator it=points.begin();ii>0;--ii,++it)
