@@ -12,7 +12,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(bootAB);
     Y_UTEST(lua);
     Y_UTEST(kinetics);
-
+    Y_UTEST(fluo);
 }
 Y_UTEST_EXEC()
 

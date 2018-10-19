@@ -1,0 +1,95 @@
+\documentclass[aps]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{mathptmx}
+\usepackage{xfrac}
+
+\newcommand{\mychem}[1]{\mathtt{#1}}
+\newcommand{\myconc}[1]{\left\lbrack{#1}\right\rbrack}
+\newcommand{\plus}{\mychem{+}}
+\newcommand{\proton}{\mychem{H}^\plus}
+
+\begin{document}
+
+\title{Spectro}
+\maketitle
+
+\section{Chemistry}
+
+We have a probe
+\begin{equation}
+	\alpha \xrightleftharpoons{} \beta + \proton, \;\; K = \dfrac{\myconc{\beta}\myconc{\proton}}{ \myconc{\alpha} }
+\end{equation}
+the intensity emitted from a volume $V$ is expressed as
+\begin{equation}
+	I = V \left( \Phi_\alpha \myconc{\alpha}  + \Phi_\beta \myconc{\beta} \right)
+\end{equation}
+For a local concentration $C_0$ in probe and a given $h=\myconc{\proton}$,
+\begin{equation}
+	 \myconc{\alpha}  = C_0 \dfrac{h}{K+h},\; \myconc{\beta} = C_0 \dfrac{K}{K+h}
+\end{equation}
+
+\section{Calibration}
+We take two calibration pHs as far as possible from the measuring zone, let's say $h=a$ and $h=b$, so that
+\begin{equation}
+\left\lbrace
+\displaystyle
+\begin{array}{rcl}
+	I_a & = & V C_0 \left[  \Phi_\alpha \dfrac{a}{K+a} + \Phi_\beta \dfrac{K}{K+a}\right]\\
+	\\
+	I_b & = & V C_0 \left[  \Phi_\alpha \dfrac{b}{K+b} + \Phi_\beta \dfrac{K}{K+b}\right]\\
+\end{array}
+\right.
+\end{equation}
+and using $J_x=I_x/(VC_0)$ we are left with
+\begin{equation}
+\left\lbrace
+\displaystyle
+	\begin{array}{rcl}
+	a \Phi_\alpha + K \Phi_\beta & = & J_a(K+a)\\
+	\\
+	b \Phi_\alpha + K \Phi_\beta & = & J_b(K+b)\\
+	\end{array}
+\right.
+\end{equation}
+Leading to
+\begin{equation}
+\left\lbrace
+\displaystyle
+	\begin{array}{rcl}
+	\Phi_\alpha & = & \dfrac{J_a(K+a)-J_b(K+b)}{a-b}\\
+	\\
+	\Phi_\beta & = & \dfrac{aJ_b(K+b)-bJ_a(K+a)}{K(a-b)}\\
+	\end{array}
+\right.
+\end{equation}
+
+\section{Retrieving pH from Intensity}
+We get
+\begin{equation}
+	J = \dfrac{1}{K+h} \left[ h \Phi_\alpha + K \Phi_\beta \right]
+\end{equation}
+so that
+\begin{equation}
+	h = K \left( \dfrac{\Phi_\beta-J}{J-\Phi_\alpha} \right)
+\end{equation}
+and
+\begin{equation}
+	pH = pK + \log \left( \dfrac{\Phi'_\alpha-I}{I-\Phi'_\beta}\right)
+\end{equation}
+with
+\begin{equation}
+	\left\lbrace
+\displaystyle
+	\begin{array}{rcl}
+	\Phi'_\alpha & = & \dfrac{I_a(K+a)-I_b(K+b)}{a-b}\\
+	\\
+	\Phi'_\beta & = & \dfrac{aI_b(K+b)-bI_a(K+a)}{K(a-b)}\\
+	\end{array}
+\right.
+\end{equation}
+
+\end{document}
