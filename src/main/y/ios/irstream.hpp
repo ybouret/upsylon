@@ -32,10 +32,7 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(irstream);
             int             cache;
-            io_buffer       iobuf;
-            uint8_t        *curr;
-            const uint8_t  *last;
-            //bool            _eof;
+            
         };
     }
 }

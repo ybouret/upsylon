@@ -10,10 +10,8 @@ namespace upsylon
         irstream:: ~irstream() throw() {}
 
 #define Y_IRSTREAM()           \
-cache(-1),                     \
-iobuf(),                       \
-curr(iobuf.data),              \
-last(curr)
+cache(-1)                      \
+
 
         irstream:: irstream(const string &filename,const offset_t shift) :
         local_file(filename,readable),
@@ -41,7 +39,7 @@ last(curr)
         {
             if(cache>=0)
             {
-                //std::cerr << "-- cached" << std::endl;
+                std::cerr << "-- cached" << std::endl;
                 assert(cache<=0xff);
                 C     =  char(uint8_t(cache));
                 cache = -1;
@@ -49,29 +47,14 @@ last(curr)
             }
             else
             {
-                if(curr>=last)
-                {
-                    // try to reload
-                    //std::cerr << "-- reloading" << std::endl;
-                    last=curr=iobuf.data;
-                    size_t done=0;
-                    descriptor::get( handle, iobuf.data, iobuf.size, done);
-                    //std::cerr << "-- reloaded " << done << std::endl;
-                    if(!done)
-                    {
-                        return false;
-                    }
-                    last = curr+done;
-                }
-                assert(curr<last);
-                C = *(curr++);
-                return true;
+                size_t done = 0;
+                descriptor::get(handle, &C, 1, done);
+                return 1==done;
             }
         }
 
         void irstream:: store(char C)
         {
-            //seek(-1,from_cur);
             if(cache>0)
             {
                 throw exception("unsupported multiple irstream.store");

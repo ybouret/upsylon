@@ -18,51 +18,81 @@
 \maketitle
 
 \section{Chemistry}
-
 We have a probe
 \begin{equation}
 	\alpha \xrightleftharpoons{} \beta + \proton, \;\; K = \dfrac{\myconc{\beta}\myconc{\proton}}{ \myconc{\alpha} }
 \end{equation}
-the intensity emitted from a volume $V$ is expressed as
+with a total (local) concentration 
 \begin{equation}
-	I = V \left( \Phi_\alpha \myconc{\alpha}  + \Phi_\beta \myconc{\beta} \right)
+C_0 = \myconc{\alpha} + \myconc{\beta}.
 \end{equation}
-For a local concentration $C_0$ in probe and a given $h=\myconc{\proton}$,
+The intensity emitted from a volume $V$ for a wavelength $\lambda$ is expressed as
 \begin{equation}
-	 \myconc{\alpha}  = C_0 \dfrac{h}{K+h},\; \myconc{\beta} = C_0 \dfrac{K}{K+h}
+	I(\lambda) = V \left( \phi_\alpha(\lambda) \myconc{\alpha}  + \phi_\beta(\lambda) \myconc{\beta} \right).
 \end{equation}
+The isobestic wavelength $\lambda_{iso}$  is such that 
+\begin{equation}
+	\phi_\alpha(\lambda_{iso}) \simeq \phi_\beta(\lambda_{iso}) \simeq \phi_{iso}
+\end{equation}
+and
+\begin{equation}
+	I_{iso} = V  \phi_{iso} C_0
+\end{equation}
+is independent of the pH value.
 
+For a local concentration $C_0$ in probe and a given $h=\myconc{\proton}$ we get
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	 \myconc{\alpha}  & = & C_0 \dfrac{h}{K+h}\\
+	 \\
+	 \myconc{\beta}   & = & C_0 \dfrac{K}{K+h}\\
+\end{array}
+\right.
+\end{equation}
+hence defining
+\begin{equation}
+	F = \dfrac{I(\lambda)}{I_{iso}} = \Phi_\alpha \dfrac{h}{K+h} + \Phi_\beta \dfrac{K}{K+h}
+\end{equation}
+with $\Phi_x = \phi_x/\phi_{iso}$.
 \section{Calibration}
-We take two calibration pHs as far as possible from the measuring zone, let's say $h=a$ and $h=b$, so that
+\noindent We need to estimate $\Phi_\alpha$ and $\Phi_\beta$, so we need two independent values of $F$.\\
+We take two calibration pHs as far as possible from the measuring zone, let's say $h=a$ (for acid) and $h=b$ (for base), so that
 \begin{equation}
 \left\lbrace
 \displaystyle
 \begin{array}{rcl}
-	I_a & = & V C_0 \left[  \Phi_\alpha \dfrac{a}{K+a} + \Phi_\beta \dfrac{K}{K+a}\right]\\
+	F_a & = &  \left[  \Phi_\alpha \dfrac{a}{K+a} + \Phi_\beta \dfrac{K}{K+a}\right]\\
 	\\
-	I_b & = & V C_0 \left[  \Phi_\alpha \dfrac{b}{K+b} + \Phi_\beta \dfrac{K}{K+b}\right]\\
+	F_b & = & \left[  \Phi_\alpha \dfrac{b}{K+b} + \Phi_\beta \dfrac{K}{K+b}\right]\\
 \end{array}
 \right.
 \end{equation}
-and using $J_x=I_x/(VC_0)$ we are left with
+We note that 
+\begin{equation}
+	\min\left(\Phi_\alpha,\Phi_\beta\right) < F  < \max\left(\Phi_\alpha,\Phi_\beta\right)
+\end{equation}
+since $\Phi_\alpha$ is the most acid ratio and $\Phi_\beta$ is the most basic ratio.
+
+We need to solve
 \begin{equation}
 \left\lbrace
 \displaystyle
 	\begin{array}{rcl}
-	a \Phi_\alpha + K \Phi_\beta & = & J_a(K+a)\\
+	a \Phi_\alpha + K \Phi_\beta & = & F_a(K+a)\\
 	\\
-	b \Phi_\alpha + K \Phi_\beta & = & J_b(K+b)\\
+	b \Phi_\alpha + K \Phi_\beta & = & F_b(K+b)\\
 	\end{array}
 \right.
 \end{equation}
-Leading to
+leading to
 \begin{equation}
 \left\lbrace
 \displaystyle
 	\begin{array}{rcl}
-	\Phi_\alpha & = & \dfrac{J_a(K+a)-J_b(K+b)}{a-b}\\
+	\Phi_\alpha & = & \dfrac{F_a(K+a)-F_b(K+b)}{a-b}\\
 	\\
-	\Phi_\beta & = & \dfrac{aJ_b(K+b)-bJ_a(K+a)}{K(a-b)}\\
+	\Phi_\beta & = & \dfrac{aF_b(K+b)-bF_a(K+a)}{K(a-b)}\\
 	\end{array}
 \right.
 \end{equation}
@@ -70,26 +100,24 @@ Leading to
 \section{Retrieving pH from Intensity}
 We get
 \begin{equation}
-	J = \dfrac{1}{K+h} \left[ h \Phi_\alpha + K \Phi_\beta \right]
+	F = \dfrac{1}{K+h} \left[ h \Phi_\alpha + K \Phi_\beta \right]
 \end{equation}
 so that
 \begin{equation}
-	h = K \left( \dfrac{\Phi_\beta-J}{J-\Phi_\alpha} \right)
+	h = K \left( \dfrac{\Phi_\beta-F}{F-\Phi_\alpha} \right)
 \end{equation}
 and
 \begin{equation}
-	pH = pK + \log \left( \dfrac{\Phi'_\alpha-I}{I-\Phi'_\beta}\right)
+	pH = pK + \log \left( \dfrac{\Phi_\alpha-F}{F-\Phi_\beta}\right) = pK + \log \left( \dfrac{F-\Phi_\alpha}{\Phi_\beta-F}\right)
 \end{equation}
-with
-\begin{equation}
-	\left\lbrace
-\displaystyle
-	\begin{array}{rcl}
-	\Phi'_\alpha & = & \dfrac{I_a(K+a)-I_b(K+b)}{a-b}\\
-	\\
-	\Phi'_\beta & = & \dfrac{aI_b(K+b)-bI_a(K+a)}{K(a-b)}\\
-	\end{array}
-\right.
-\end{equation}
+\begin{itemize}
+\item Since, theoretically, there cannot be any value of $F$ exceeding $\Phi_\alpha$ or $\Phi_\beta$, this formula holds for the whole set or experimental ratios $F$.
+\item But to have the most precise values of $\Phi_{\alpha,\beta}$, one need to have the greatest possible $a-b$. 
+\item For exemple, if $\Phi_\alpha>\Phi_\beta$ then $F_a>F_b$, leading to $\Phi_\alpha>F_a$ and $\Phi_\beta<F_b$, and vice versa if $\Phi_\alpha<\Phi_\beta$. 
+So, from any experimental data within the whole calibration, the pH is always defined !
+\end{itemize}
+
+
+
 
 \end{document}

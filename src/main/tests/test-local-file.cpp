@@ -11,20 +11,43 @@ Y_UTEST(local_file)
         ios::offset_t header1 = 0;
         ios::offset_t header2 = 0;
 
+        std::cerr << "Write Level-1" << std::endl;
         {
             ios::orstream fp("ors.dat");
             fp << "Hello";
             header1 = fp.tell();
+            fp.flush();
         }
 
+        std::cerr << "Write Level-2" << std::endl;
         {
             ios::orstream fp("ors.dat",true);
             fp << ",World!";
             header2 = fp.tell();
             const string phrase = "password";
             string_io::save_binary(fp,phrase);
+            fp.flush();
         }
 
+        std::cerr << "Reading Level-1." << std::endl;
+        {
+            ios::irstream fp("ors.dat",0);
+            char   C = 0;
+            while( fp.query(C) )
+            {
+                if(C>=' '&&C<126)
+                {
+                    std::cerr << C;
+                }
+                else
+                {
+                    std::cerr << ".";
+                }
+            }
+            std::cerr << std::endl;
+        }
+
+        std::cerr << "Reading Level-2" << std::endl;
         {
             ios::irstream fp("ors.dat",0);
             char   C = 0;

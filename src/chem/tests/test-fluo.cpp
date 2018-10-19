@@ -53,18 +53,26 @@ namespace  {
 
 Y_UTEST(fluo)
 {
-    const double pK  = 4+4*alea.to<double>();
-    const double pHa = 2+2*alea.to<double>();
-    const double pHb = 7+2*alea.to<double>();
+    //const double pK  = 4+4*alea.to<double>();
+    const double pK = 6.98;
+    //const double pHa = 2+2*alea.to<double>();
+    const double pHa = 5;
+    //const double pHb = 8+2*alea.to<double>();
+    const double pHb = 8;
     const double Ia  = alea.to<double>();
     const double Ib  = 5+5*alea.to<double>();
     Fluo         fluo(pK,pHa,Ia,pHb,Ib);
+
+    const double dI  = Ib-Ia;
+    const double Ilo = Ia - 0.05 * dI;
+    const double Iup = Ib + 0.05 * dI;
+
     {
-        const size_t M = 1000;
+        const size_t M = 100;
         ios::ocstream fp("fluo.dat");
         for(size_t i=0;i<=M;++i)
         {
-            const double I = Ia + ((Ib-Ia)*i)/M;
+            const double I = Ilo + ((Iup-Ilo)*i)/M;
             fp("%g %g %g %g %g\n",I,fluo.pH(I),pHa,pHb,pK);
         }
     }
