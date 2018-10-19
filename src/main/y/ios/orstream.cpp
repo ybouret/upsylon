@@ -60,7 +60,25 @@ last(curr+iobuf.size)
 
         void orstream:: flush()
         {
-            
+            uint8_t *addr = iobuf.data;
+            size_t   todo = curr-iobuf.data;
+            size_t   done = 0;
+
+            try
+            {
+                do
+                {
+                    descriptor::put(handle,addr,todo,done);
+
+                    todo -= done;
+                    addr += done;
+                }
+                while(todo);
+            }
+            catch(...)
+            {
+                throw;
+            }
         }
 
     }
