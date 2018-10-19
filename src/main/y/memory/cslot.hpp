@@ -77,8 +77,10 @@ namespace upsylon
             }
 
 
-        private:
+        protected:
             void        *data;
+            
+        private:
             Y_DISABLE_COPY_AND_ASSIGN(cslot);
 
 

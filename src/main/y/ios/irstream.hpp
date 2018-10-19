@@ -20,6 +20,9 @@ namespace upsylon
             //! open a file stream
             explicit irstream(const char   *filename, const offset_t shift=0);
 
+            //! map from cstdin
+            explicit irstream( const ios::cstdin_t & );
+
             //! desctructor
             virtual ~irstream() throw();
 
@@ -28,6 +31,11 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(irstream);
+            int             cache;
+            io_buffer       iobuf;
+            uint8_t        *curr;
+            const uint8_t  *last;
+            //bool            _eof;
         };
     }
 }

@@ -4,6 +4,7 @@
 
 #include "y/ios/cfile.hpp"
 #include "y/fs/descriptor.hpp"
+#include "y/memory/cslot.hpp"
 
 namespace upsylon
 {
@@ -73,6 +74,17 @@ namespace upsylon
             const type_t   type;     //!< core type
             error_type    *status;   //!< to store status is not NULL
 
+            class io_buffer
+            {
+            public:
+                inline  io_buffer() : size(BUFSIZ), data(0), c( BUFSIZ ) { data = & c.get<uint8_t>(); }
+                inline ~io_buffer() throw() {}
+                
+                const size_t size;
+                uint8_t     *data;
+            private:
+                memory::cslot<memory::global> c;
+            };
             
 
         };
