@@ -214,33 +214,6 @@ namespace upsylon
         }
 
 
-        ////////////////////////////////////////////////////////////////////////
-        local_file:: io_buffer:: io_buffer(size_t n) :
-        stream_buffer( max_of<size_t>(BUFSIZ,n) )
-        {
-        }
-
-        local_file:: io_buffer:: ~io_buffer() throw()
-        {
-        }
-
-        bool local_file:: io_buffer::load( handle_t fd )
-        {
-            curr = head;
-            last = head;
-            size_t done = 0;
-            descriptor::get(fd, curr, maxi, done);
-            if(done>0)
-            {
-                last += done;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
     }
 
 }

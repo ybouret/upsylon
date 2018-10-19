@@ -4,7 +4,6 @@
 
 #include "y/ios/cfile.hpp"
 #include "y/fs/descriptor.hpp"
-#include "y/ios/stream-buffer.hpp"
 
 namespace upsylon
 {
@@ -74,18 +73,7 @@ namespace upsylon
             const type_t   type;     //!< core type
             error_type    *status;   //!< to store status is not NULL
 
-            class io_buffer : public stream_buffer
-            {
-            public:
-                explicit io_buffer(size_t n=0);
-                virtual ~io_buffer() throw();
-
-                bool load( handle_t fd );
-                void save( handle_t fd );
-                
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(io_buffer);
-            };
+            
 
         };
 
