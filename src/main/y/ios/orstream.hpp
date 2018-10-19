@@ -21,10 +21,13 @@ namespace upsylon
             orstream( ios::cstderr_t & ); //!< map to stderr
             virtual ~orstream() throw();  //!< destruct
             virtual void write(char C);   //!< ostream:write
-            virtual void flush();         //!< ostream:flus
+            virtual void flush();         //!< ostream:flush
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(orstream);
+            io_buffer      iobuf;
+            uint8_t       *curr;
+            const uint8_t *last;
         };
 
     }
