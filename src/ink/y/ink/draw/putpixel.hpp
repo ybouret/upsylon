@@ -10,8 +10,10 @@ namespace upsylon
     {
         namespace Draw
         {
+            //! put pixel operators
             struct PutPixel
             {
+                //! copy function
                 template <typename T>
                 class Copy
                 {
@@ -33,6 +35,33 @@ namespace upsylon
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Copy);
+                };
+
+
+                //! blend function
+                template <typename T>
+                class Blend
+                {
+                public:
+                    const T       color;
+                    const uint8_t alpha;
+                    
+                    inline Blend(const T &C, const uint8_t A) : color(C), alpha(A)
+                    {
+                    }
+
+                    inline ~Blend() throw()
+                    {
+                    }
+
+                    inline void operator()(Pixmap<T> &pxm, const coord &q)
+                    {
+                        assert(pxm.has(q));
+                        pxm[q] = Pixel<T>::Blend(color,pxm[q],alpha);
+                    }
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Blend);
                 };
             };
         }

@@ -12,8 +12,10 @@ namespace upsylon
         namespace Draw
         {
 
+            //! macro for hline loop
 #define Y_INK_DRAW_HLINE(X) const coord q(X,y0); proc(pxm,q)
 
+            //! clipped hline
             template <typename T,typename PROC>
             inline void __HLine(Pixmap<T>   &pxm,
                                 const unit_t x0,
@@ -27,6 +29,7 @@ namespace upsylon
                 Y_LOOP_FUNC_(x1-x0+1,Y_INK_DRAW_HLINE,x0);
             }
 
+            //! clipping hline
             template <typename T,typename PROC>
             inline void _HLine(Pixmap<T>   &pxm,
                                unit_t       x0,
@@ -40,6 +43,7 @@ namespace upsylon
                 __HLine(pxm,max_of<unit_t>(x0,0),y0,min_of<unit_t>(x1,pxm.upper.x),proc);
             }
 
+            //! colored hline
             template <typename T>
             inline void HLine(Pixmap<T>   &pxm,
                               unit_t       x0,
@@ -50,6 +54,21 @@ namespace upsylon
                 PutPixel::Copy<T> proc(color);
                 _HLine(pxm,x0,y0,x1,proc);
             }
+
+            //! blended colored hline
+            template <typename T>
+            inline void HLine(Pixmap<T>    &pxm,
+                              unit_t        x0,
+                              unit_t        y0,
+                              unit_t        x1,
+                              const T       color,
+                              const uint8_t alpha)
+            {
+                PutPixel::Blend<T> proc(color,alpha);
+                _HLine(pxm,x0,y0,x1,proc);
+            }
+
+            
 
         }
 
