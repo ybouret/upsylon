@@ -21,12 +21,9 @@ namespace upsylon
                                 const unit_t x1,
                                 PROC        &proc)
             {
-                assert(x0>=0);
-                assert(x0<pxm.w);
-                assert(x1>=x0);
-                assert(x1<pxm.w);
-                assert(y0>=0);
-                assert(y0<pxm.h);
+                assert( pxm.has( coord(x0,y0) ) );
+                assert( pxm.has( coord(x1,y0) ) );
+                assert(x0<=x1);
                 Y_LOOP_FUNC_(x1-x0+1,Y_INK_DRAW_HLINE,x0);
             }
 
@@ -37,9 +34,9 @@ namespace upsylon
                                unit_t       x1,
                                PROC        &proc)
             {
-                if(y0<0||y0>=pxm.h) return;
+                if(y0<0||y0>pxm.upper.y) return;
                 if(x1<x0) cswap(x0,x1);
-                if(x0>=pxm.w||x1<0) return;
+                if(x0>pxm.upper.x||x1<0) return;
                 __HLine(pxm,max_of<unit_t>(x0,0),y0,min_of<unit_t>(x1,pxm.upper.x),proc);
             }
 
