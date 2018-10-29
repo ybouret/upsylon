@@ -3,6 +3,7 @@
 #define Y_INK_DRAW_PUTPIXEL_INCLUDED 1
 
 #include "y/ink/pixmaps.hpp"
+#include "y/ink/mask.hpp"
 
 namespace upsylon
 {
@@ -18,15 +19,11 @@ namespace upsylon
                 class Copy
                 {
                 public:
-                    const T color;
-                    inline Copy(const T &C) : color(C)
-                    {
-                    }
+                    const T color;                          //!< color to be set
+                    inline  Copy(const T &C) : color(C) { } //!< setup
+                    inline ~Copy() throw() {}               //!< destructor
 
-                    inline ~Copy() throw()
-                    {
-                    }
-
+                    //! set pixel
                     inline void operator()(Pixmap<T> &pxm, const coord &q)
                     {
                         assert(pxm.has(q));
@@ -43,17 +40,14 @@ namespace upsylon
                 class Blend
                 {
                 public:
-                    const T       color;
-                    const uint8_t alpha;
-                    
-                    inline Blend(const T &C, const uint8_t A) : color(C), alpha(A)
-                    {
-                    }
+                    const T       color; //!< color to be set
+                    const uint8_t alpha; //!< with this alpha level
 
-                    inline ~Blend() throw()
-                    {
-                    }
+                    //! setup
+                    inline  Blend(const T &C, const uint8_t A) : color(C), alpha(A) {}
+                    inline ~Blend() throw() {} //!< destructor
 
+                    //! replace pixel
                     inline void operator()(Pixmap<T> &pxm, const coord &q)
                     {
                         assert(pxm.has(q));
@@ -63,11 +57,45 @@ namespace upsylon
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Blend);
                 };
+
+                //! register points into a mask
+                class Register
+                {
+                public:
+                    Mask &mask; //!< the target mask
+
+                    inline Register( Mask &target ) : mask(target) {} //!< setuyp
+                    inline ~Register() throw() {} //!< destrcutor
+
+                    //! append/overwrite coordinate
+                    inline void operator()(Bitmap &, const coord &q)
+                    {
+                        (void) mask.append(q);
+                    }
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Register);
+                };
             };
         }
     }
 
 }
+
+namespace upsylon
+{
+    namespace Ink
+    {
+        namespace Draw
+        {
+
+        }
+
+    }
+
+}
+
+
 
 #endif
 

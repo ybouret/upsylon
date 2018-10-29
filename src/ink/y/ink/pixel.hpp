@@ -21,7 +21,7 @@ namespace upsylon
             static        bool IsZero(const T &C);                       //!< test if is zero pixel
             static        T    Average(T *arr, const size_t num);        //!< average of pixels
             static        int  Compare(const T &lhs, const T &rhs);      //!< comparison
-            static        T    Blend(const T &fg, const T &bg, const uint8_t alpha); //! blend fg over bg with alpha
+            static        T    Blend(const T &fg, const T &bg, const uint8_t alpha); //!< blend fg over bg with alpha
             
             //! median value
             static inline T    Median(T *arr,const size_t num)

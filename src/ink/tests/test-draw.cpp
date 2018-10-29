@@ -32,21 +32,31 @@ Y_UTEST(draw)
             const unit_t x0 = gen_unit();
             const unit_t x1 = gen_unit();
             const unit_t y0 = gen_unit();
+            const unit_t y1 = gen_unit();
 
             Draw::HLine(img3,x0,y0,x1,c3);
             Draw::HLine(img1,x0,y0,x1,c1);
             Draw::HLine(imgf,x0,y0,x1,cf);
+
+            Draw::VLine(img3,x0,y0,y1,c3);
+            Draw::VLine(img1,x0,y0,y1,c1);
+            Draw::VLine(imgf,x0,y0,y1,cf);
         }
 
         {
             const unit_t  x0    = gen_unit();
             const unit_t  x1    = gen_unit();
             const unit_t  y0    = gen_unit();
+            const unit_t  y1    = gen_unit();
             const uint8_t alpha = alea.full<uint8_t>();
-            //std::cerr << "alpha=" << int(alpha) << std::endl;
+
             Draw::HLine(img3,x0,y0,x1,c3,alpha);
             Draw::HLine(img1,x0,y0,x1,c1,alpha);
             Draw::HLine(imgf,x0,y0,x1,cf,alpha);
+
+            Draw::VLine(img3,x0,y0,y1,c3,alpha);
+            Draw::VLine(img1,x0,y0,y1,c1,alpha);
+            Draw::VLine(imgf,x0,y0,y1,cf,alpha);
         }
 
 
