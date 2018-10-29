@@ -51,7 +51,7 @@ namespace upsylon
             local_file( const ios::cstdout_t & );                               //!< map to stdout
 
             offset_t seek( offset_t delta, whence_t whence ); //!< move descriptor
-            offset_t tell(); //!< current position
+            offset_t tell();   //!< current position
             void     rewind(); //!< go back to start of file
             void     unwind(); //!< go to end of file
             size_t   length(); //!< return length
