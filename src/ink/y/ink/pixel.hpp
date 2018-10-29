@@ -21,7 +21,8 @@ namespace upsylon
             static        bool IsZero(const T &C);                       //!< test if is zero pixel
             static        T    Average(T *arr, const size_t num);        //!< average of pixels
             static        int  Compare(const T &lhs, const T &rhs);      //!< comparison
-
+            static        T    Blend(const T &fg, const T &bg, const uint8_t alpha); //! blend fg over bg with alpha
+            
             //! median value
             static inline T    Median(T *arr,const size_t num)
             {
@@ -91,7 +92,7 @@ namespace upsylon
 #define _Y_PIXEL_DECL(TYPE,FIELD) extern template const TYPE upsylon::Ink::Pixel<TYPE>::FIELD
 
 //! declare all external template fields
-#define Y_PIXEL_DECL(T) \
+#define Y_PIXEL_DECL(T)  \
 _Y_PIXEL_DECL(T,Zero);   \
 _Y_PIXEL_DECL(T,Opaque)
 

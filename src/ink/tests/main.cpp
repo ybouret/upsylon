@@ -13,6 +13,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(blob);
     Y_UTEST(edges);
     Y_UTEST(mask);
+    Y_UTEST(draw);
 }
 Y_UTEST_EXEC()
 

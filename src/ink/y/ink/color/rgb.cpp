@@ -59,6 +59,21 @@ namespace upsylon
             return (int(lhs.r)+int(lhs.g)+int(lhs.b))-(int(rhs.r)+int(rhs.g)+int(rhs.b));
         }
 
+#define __Y_BLEND(FIELD) uint8_t( (unsigned(fg.FIELD) * F + unsigned(bg.FIELD) * B)>>8 )
+
+        template <>
+        RGB Pixel<RGB>::Blend( const RGB &fg, const RGB &bg, const uint8_t alpha )
+        {
+            switch(alpha)
+            {
+                case 0:    return bg;
+                case 0xff: return fg;
+                default: break;
+            }
+            const unsigned F = alpha;
+            const unsigned B = 255-F;
+            return RGB( __Y_BLEND(r), __Y_BLEND(g), __Y_BLEND(b) );
+        }
     }
 }
 

@@ -7,19 +7,19 @@ namespace upsylon
 {
     namespace Ink
     {
-        template <> const uint8_t  Pixel<uint8_t>::Opaque  = 0xff;
-        template <> const uint16_t Pixel<uint16_t>::Opaque = 0xffff;
-        template <> const uint32_t Pixel<uint32_t>::Opaque = 0xffffffff;
-        template <> const float    Pixel<float>::Opaque    = 1.0f;
-        template <> const double   Pixel<double>::Opaque   = 1.0;
+        template <> const uint8_t  Pixel<uint8_t>::  Opaque = 0xff;
+        template <> const uint16_t Pixel<uint16_t>:: Opaque = 0xffff;
+        template <> const uint32_t Pixel<uint32_t>:: Opaque = 0xffffffff;
+        template <> const float    Pixel<float>::    Opaque = 1.0f;
+        template <> const double   Pixel<double>::   Opaque = 1.0;
 
         template <> const cplx     Pixel<cplx>::Zero(0,0);
 
-        template <> const uint8_t  Pixel<uint8_t>::Zero  = 0;
-        template <> const uint16_t Pixel<uint16_t>::Zero = 0;
-        template <> const uint32_t Pixel<uint32_t>::Zero = 0;
-        template <> const float    Pixel<float>::Zero    = 0.0f;
-        template <> const double   Pixel<double>::Zero   = 0.0;
+        template <> const uint8_t  Pixel<uint8_t>::  Zero  = 0;
+        template <> const uint16_t Pixel<uint16_t>:: Zero = 0;
+        template <> const uint32_t Pixel<uint32_t>:: Zero = 0;
+        template <> const float    Pixel<float>::    Zero = 0.0f;
+        template <> const double   Pixel<double>::   Zero = 0.0;
 
         template <> uint8_t  Pixel<uint8_t>::Inverse(const uint8_t &x) { return 0xff-x; }
         template <> float    Pixel<float>  ::Inverse(const float   &x) { return 1.0f-x; }
@@ -61,6 +61,22 @@ namespace upsylon
             return comparison::increasing(lhs,rhs);
         }
 
+        template <> float Pixel<float>::Blend(const float &fg, const float &bg, const uint8_t alpha)
+        {
+            return fg * Crux::u_float[alpha] + bg * Crux::u_float[0xff-alpha];
+        }
+
+        template <> uint8_t Pixel<uint8_t>:: Blend( const uint8_t &fg, const uint8_t &bg, const uint8_t alpha)
+        {
+            switch(alpha)
+            {
+                case 0:    return bg;
+                case 0xff: return fg;
+                default: break;
+            }
+            const unsigned u = unsigned(fg) * alpha + unsigned(bg) * (0xff-alpha);
+            return u>>8;
+        }
 
     }
 }
