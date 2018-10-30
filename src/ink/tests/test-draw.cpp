@@ -112,6 +112,46 @@ Y_UTEST(draw)
 
         }
 
+        {
+            const unit_t xc = gen_unit();
+            const unit_t yc = gen_unit();
+            const unit_t r  = unit_t( alea.leq(300) );
+            const uint8_t alpha = alea.full<uint8_t>();
+            Draw::Circle(img3, xc, yc, r, c3,alpha);
+            Draw::Circle(img1, xc, yc, r, c1,alpha);
+            Draw::Circle(imgf, xc, yc, r, cf,alpha);
+
+            Draw::Circle(imgb, xc, yc, r, mask);
+
+        }
+
+
+        {
+            const unit_t xc = gen_unit();
+            const unit_t yc = gen_unit();
+            const unit_t r  = unit_t( alea.leq(100) );
+            Draw::Disk(img3, xc, yc, r, c3);
+            Draw::Disk(img1, xc, yc, r, c1);
+            Draw::Disk(imgf, xc, yc, r, cf);
+
+            Draw::Disk(imgb, xc, yc, r, mask);
+
+        }
+
+        {
+            const unit_t xc = gen_unit();
+            const unit_t yc = gen_unit();
+            const unit_t r  = unit_t( alea.leq(100) );
+            const uint8_t alpha = alea.full<uint8_t>();
+            Draw::Disk(img3, xc, yc, r, c3,alpha);
+            Draw::Disk(img1, xc, yc, r, c1,alpha);
+            Draw::Disk(imgf, xc, yc, r, cf,alpha);
+
+            Draw::Disk(imgb, xc, yc, r, mask);
+
+        }
+
+
 
 
     }
