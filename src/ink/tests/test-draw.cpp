@@ -27,7 +27,7 @@ Y_UTEST(draw)
     mask.reserve(w*h);
     Pixmap<uint8_t> imgb(w,h);
 
-    for(size_t iter=0;iter<100;++iter)
+    for(size_t iter=0;iter<20;++iter)
     {
         const RGB     c3 = NamedColor::Fetch(1+alea.leq(NamedColor::Count));
         const uint8_t c1 = RGBtoByte(c3);
@@ -151,7 +151,34 @@ Y_UTEST(draw)
 
         }
 
+        {
+            const unit_t x0 = gen_unit();
+            const unit_t x1 = gen_unit();
+            const unit_t y0 = gen_unit();
+            const unit_t y1 = gen_unit();
 
+            Draw::Fill(img3,x0,y0,x1,y1,c3);
+            Draw::Fill(img1,x0,y0,x1,y1,c1);
+            Draw::Fill(imgf,x0,y0,x1,y1,cf);
+
+            Draw::Fill(imgb,x0,y0,x1,y1,mask);
+
+        }
+
+        {
+            const unit_t x0 = gen_unit();
+            const unit_t x1 = gen_unit();
+            const unit_t y0 = gen_unit();
+            const unit_t y1 = gen_unit();
+            const uint8_t alpha = alea.full<uint8_t>();
+
+            Draw::Fill(img3,x0,y0,x1,y1,c3,alpha);
+            Draw::Fill(img1,x0,y0,x1,y1,c1,alpha);
+            Draw::Fill(imgf,x0,y0,x1,y1,cf,alpha);
+
+            Draw::Fill(imgb,x0,y0,x1,y1,mask);
+
+        }
 
 
     }

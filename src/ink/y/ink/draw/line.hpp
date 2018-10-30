@@ -268,5 +268,81 @@ namespace upsylon
 
 }
 
+
+
+namespace upsylon
+{
+    namespace Ink
+    {
+        namespace Draw
+        {
+
+            //! fill a box with given diagonal
+            template <typename T,typename PROC>
+            inline void _Fill(Pixmap<T>    &img,
+                              unit_t        x0,
+                              unit_t        y0,
+                              unit_t        x1,
+                              unit_t        y1,
+                              PROC         &proc)
+            {
+                if( Clip::Accept(x0,y0,x1,y1,img) )
+                {
+                    if(x1<x0) cswap(x0,x1);
+                    if(y1<y0) cswap(y0,y1);
+                    assert(y0<=y1);
+                    assert(x0<=x1);
+                    while(y0<=y1)
+                    {
+                        __HLine(img,x0,y0,x1,proc);
+                        ++y0;
+                    }
+                }
+            }
+
+            //! fill a colored box
+            template <typename T>
+            inline void Fill(Pixmap<T>    &img,
+                             const unit_t  x0,
+                             const unit_t  y0,
+                             const unit_t  x1,
+                             const unit_t  y1,
+                             const T       color)
+            {
+                PutPixel::Copy<T> proc(color);
+                _Fill(img,x0,y0,x1,y1,proc);
+            }
+
+            //! fill a colored/alpha box
+            template <typename T>
+            inline void Fill(Pixmap<T>    &img,
+                             const unit_t  x0,
+                             const unit_t  y0,
+                             const unit_t  x1,
+                             const unit_t  y1,
+                             const T       color,
+                             const uint8_t alpha)
+            {
+                PutPixel::Blend<T> proc(color,alpha);
+                _Fill(img,x0,y0,x1,y1,proc);
+            }
+
+            //! mask of a box
+            template <typename T>
+            inline void Fill(Pixmap<T>    &img,
+                             const unit_t  x0,
+                             const unit_t  y0,
+                             const unit_t  x1,
+                             const unit_t  y1,
+                             Mask         &mask)
+            {
+                PutPixel::Register proc(mask);
+                _Fill(img,x0,y0,x1,y1,proc);
+            }
+
+        }
+    }
+}
+
 #endif
 
