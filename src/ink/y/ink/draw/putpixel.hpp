@@ -82,18 +82,7 @@ namespace upsylon
 
 }
 
-namespace upsylon
-{
-    namespace Ink
-    {
-        namespace Draw
-        {
 
-        }
-
-    }
-
-}
 
 
 

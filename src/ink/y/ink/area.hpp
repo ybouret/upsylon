@@ -73,11 +73,18 @@ namespace upsylon
                 return (c.x>=lower.x) && (c.y>=lower.y) && (c.x<=upper.x) && (c.y<=upper.y);
             }
 
+            //! test if coordinate is inside
+            inline bool has( const unit_t x, const unit_t y ) const throw()
+            {
+                return (x>=lower.x) && (y>=lower.y) && (x<=upper.x) && (y<=upper.y);
+            }
+
             //! test if contains a sub-area
             inline bool contains(const Area &sub) const throw()
             {
                 return has(sub.lower) && has(sub.upper);
             }
+
 
             //! output info
             inline friend std::ostream & operator<<( std::ostream &os, const Area &a )

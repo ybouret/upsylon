@@ -59,6 +59,31 @@ Y_UTEST(draw)
             Draw::VLine(imgf,x0,y0,y1,cf,alpha);
         }
 
+        {
+            const unit_t x0 = gen_unit();
+            const unit_t x1 = gen_unit();
+            const unit_t y0 = gen_unit();
+            const unit_t y1 = gen_unit();
+
+            Draw::Line(img3,x0,y0,x1,y1,c3);
+            Draw::Line(img1,x0,y0,x1,y1,c1);
+            Draw::Line(imgf,x0,y0,x1,y1,cf);
+
+        }
+
+        {
+            const unit_t x0 = gen_unit();
+            const unit_t x1 = gen_unit();
+            const unit_t y0 = gen_unit();
+            const unit_t y1 = gen_unit();
+            const uint8_t alpha = alea.full<uint8_t>();
+
+            Draw::Line(img3,x0,y0,x1,y1,c3,alpha);
+            Draw::Line(img1,x0,y0,x1,y1,c1,alpha);
+            Draw::Line(imgf,x0,y0,x1,y1,cf,alpha);
+
+        }
+
 
     }
     img.save("img3.png",img3,NULL);
