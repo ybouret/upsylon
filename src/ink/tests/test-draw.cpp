@@ -22,6 +22,10 @@ Y_UTEST(draw)
     Pixmap<float>   imgf(w,h);
     Pixmap<uint8_t> img1(w,h);
     Pixmap<RGB>     img3(w,h);
+    Mask            mask;
+    mask.reserve(w*h);
+    Pixmap<uint8_t> imgb(w,h);
+
     for(size_t iter=0;iter<100;++iter)
     {
         const RGB     c3 = NamedColor::Fetch(1+alea.leq(NamedColor::Count));
@@ -41,6 +45,10 @@ Y_UTEST(draw)
             Draw::VLine(img3,x0,y0,y1,c3);
             Draw::VLine(img1,x0,y0,y1,c1);
             Draw::VLine(imgf,x0,y0,y1,cf);
+
+            Draw::HLine(imgb,x0,y0,x1,mask);
+            Draw::VLine(imgb,x0,y0,y1,mask);
+
         }
 
         {
@@ -57,6 +65,9 @@ Y_UTEST(draw)
             Draw::VLine(img3,x0,y0,y1,c3,alpha);
             Draw::VLine(img1,x0,y0,y1,c1,alpha);
             Draw::VLine(imgf,x0,y0,y1,cf,alpha);
+
+            Draw::HLine(imgb,x0,y0,x1,mask);
+            Draw::VLine(imgb,x0,y0,y1,mask);
         }
 
         {
@@ -68,6 +79,8 @@ Y_UTEST(draw)
             Draw::Line(img3,x0,y0,x1,y1,c3);
             Draw::Line(img1,x0,y0,x1,y1,c1);
             Draw::Line(imgf,x0,y0,x1,y1,cf);
+
+            Draw::Line(imgb,x0,y0,x1,y1,mask);
 
         }
 
@@ -82,6 +95,8 @@ Y_UTEST(draw)
             Draw::Line(img1,x0,y0,x1,y1,c1,alpha);
             Draw::Line(imgf,x0,y0,x1,y1,cf,alpha);
 
+            Draw::Line(imgb,x0,y0,x1,y1,mask);
+
         }
 
 
@@ -89,6 +104,12 @@ Y_UTEST(draw)
     img.save("img3.png",img3,NULL);
     img.save("img1.png",img1,NULL);
     img.save("imgf.png",imgf,NULL);
+    std::cerr << "#mask=" << mask.size() << std::endl;
+    for(const Vertex *v = mask.head(); v; v=v->next )
+    {
+        imgb[v->position] = alea.range<uint8_t>(128,255);
+    }
+    img.save("imgb.png",imgb,NULL);
 
 }
 Y_UTEST_DONE()

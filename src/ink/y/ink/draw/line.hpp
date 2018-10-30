@@ -158,7 +158,7 @@ namespace upsylon
                               Mask         &mask)
             {
                 PutPixel::Register proc(mask);
-                _Vline(bmp,x0,y0,y1,proc);
+                _VLine(bmp,x0,y0,y1,proc);
             }
         }
 
@@ -245,7 +245,7 @@ namespace upsylon
                 PutPixel::Blend<T> proc(color,alpha);
                 _Line(img,x0,y0,x1,y1,proc);
             }
-            
+
             //! a line with a given color/alpha
             template <typename T>
             inline void Line(Pixmap<T>    &img,
