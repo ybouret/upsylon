@@ -85,7 +85,7 @@ namespace upsylon
             }
         }
 
-        void  Mask:: reserve(size_t n)
+        void  Mask:: reserve(const size_t n)
         {
             dict.reserve(n);
             match_capacities();

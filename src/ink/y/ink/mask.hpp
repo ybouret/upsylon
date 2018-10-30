@@ -68,7 +68,7 @@ namespace upsylon
             virtual size_t capacity() const throw();  //!< dict.capacity(), list.size+pool.size
             virtual void   free() throw();            //!< dict.free(), pool.store_all(list)
             virtual void   release() throw();         //!< container: release all memory
-            virtual void   reserve( size_t n);        //!< container:reserve
+            virtual void   reserve( const size_t n);  //!< container:reserve
 
             const Vertex  *head() const throw(); //!< list.head
             bool append( const coord );          //!< append a coordinate, false if already registerded
