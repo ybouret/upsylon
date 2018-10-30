@@ -25,6 +25,9 @@ ADD_SUBDIRECTORY(y/jpeg)
 MESSAGE( STATUS "                   tiff")
 ADD_SUBDIRECTORY(y/tiff)
 
+MESSAGE( STATUS "                   sqlite")
+ADD_SUBDIRECTORY(y/sqlite)
+
 MESSAGE( STATUS "")
 Y_SEPLINE()
 MESSAGE( STATUS "External Projects are prepared!")
@@ -40,6 +43,7 @@ y-png  utest-png
 y-jpeg utest-jpeg
 y-tiff 
 y-lua  utest-lua
+y-sqlite3
 COMMENT "External Projects are now tested!!!")
 
 
