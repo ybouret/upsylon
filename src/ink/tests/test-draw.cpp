@@ -1,4 +1,5 @@
 #include "y/ink/draw/line.hpp"
+#include "y/ink/draw/circle.hpp"
 #include "y/ink/color/named-colors.hpp"
 #include "y/ink/image.hpp"
 #include "y/utest/run.hpp"
@@ -99,6 +100,19 @@ Y_UTEST(draw)
 
         }
 
+        {
+            const unit_t xc = gen_unit();
+            const unit_t yc = gen_unit();
+            const unit_t r  = unit_t( alea.leq(300) );
+            Draw::Circle(img3, xc, yc, r, c3);
+            Draw::Circle(img1, xc, yc, r, c1);
+            Draw::Circle(imgf, xc, yc, r, cf);
+
+            Draw::Circle(imgb, xc, yc, r, mask);
+
+        }
+
+
 
     }
     img.save("img3.png",img3,NULL);
@@ -107,7 +121,7 @@ Y_UTEST(draw)
     std::cerr << "#mask=" << mask.size() << std::endl;
     for(const Vertex *v = mask.head(); v; v=v->next )
     {
-        imgb[v->position] = alea.range<uint8_t>(128,255);
+        imgb[v->position] = alea.range<uint8_t>(64,255);
     }
     img.save("imgb.png",imgb,NULL);
 
