@@ -12,3 +12,7 @@ TARGET_LINK_LIBRARIES(y_sqlite y-sqlite3)
 IF(Y_LINUX)
 	TARGET_LINK_LIBRARIES(y_sqlite dl pthread)
 ENDIF()
+
+IF(Y_FREEBSD)
+	TARGET_LINK_LIBRARIES(y_sqlite pthread)
+ENDIF()
