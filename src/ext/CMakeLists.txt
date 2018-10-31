@@ -28,6 +28,9 @@ ADD_SUBDIRECTORY(y/tiff)
 MESSAGE( STATUS "                   sqlite")
 ADD_SUBDIRECTORY(y/sqlite)
 
+#MESSAGE( STATUS "                   freetype")
+#ADD_SUBDIRECTORY(y/freetype)
+
 MESSAGE( STATUS "")
 Y_SEPLINE()
 MESSAGE( STATUS "External Projects are prepared!")
