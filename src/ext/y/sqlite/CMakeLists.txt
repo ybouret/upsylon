@@ -1,6 +1,8 @@
 PROJECT(sqlite3 C)
 
-#ADD_DEFINITIONS()
+IF(Y_SOLARIS)
+ADD_DEFINITIONS(-std=c99)
+ENDIF()
 
 ADD_LIBRARY(y-sqlite3 STATIC sqlite3.c)
 
