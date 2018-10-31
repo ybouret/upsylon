@@ -9,4 +9,6 @@ INSTALL( TARGETS y-sqlite3 ARCHIVE DESTINATION lib )
 
 ADD_EXECUTABLE(y_sqlite shell.c)
 TARGET_LINK_LIBRARIES(y_sqlite y-sqlite3)
-
+IF(Y_LINUX)
+	TARGET_LINK_LIBRARIES(y_sqlite dl pthread)
+ENDIF()
