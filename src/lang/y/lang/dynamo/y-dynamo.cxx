@@ -93,14 +93,14 @@ Y_PROGRAM_START()
         const string             grammarFile = argv[1];
         auto_ptr<Syntax::Node>   grammarAST  = dynCompiler.process( Module::OpenFile(grammarFile) );
         const string             grammarBin  = grammarAST->to_binary();
-        grammarAST->GraphViz("grammar.dot");
+        //grammarAST->GraphViz("grammar.dot");
 
         //______________________________________________________________________
         //
         // generate a valid parser
         //______________________________________________________________________
         auto_ptr<Syntax::Parser> parser = dynGenerator.create(*grammarAST);
-        parser->GraphViz("parser.dot");
+        //parser->GraphViz("parser.dot");
 
         //______________________________________________________________________
         //
