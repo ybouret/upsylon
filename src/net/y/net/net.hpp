@@ -15,6 +15,11 @@ namespace upsylon
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(net);
+            explicit net();
+            virtual ~net() throw();
+
+        public:
+            
         };
     }
 }

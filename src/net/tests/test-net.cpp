@@ -1,4 +1,4 @@
-#include "y/net/network.hpp"
+#include "y/net/net.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
