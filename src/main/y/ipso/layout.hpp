@@ -37,16 +37,19 @@ namespace upsylon
             layout(DIMENSIONS),
             lower(lo),
             upper(up),
-            width(lo)
+            width(lo),
+            pitch(lo)
             {
                 size_t  &n = (size_t  &)items;
                 coord1D *l = (coord1D *)&lower;
                 coord1D *u = (coord1D *)&upper;
                 coord1D *w = (coord1D *)&width;
+                coord1D *p = (coord1D *)&pitch;
                 n=1;
                 for(size_t dim=0;dim<DIMENSIONS;++dim)
                 {
                     if(l[dim]>u[dim]) cswap(l[dim],u[dim]);
+                    p[dim] = n;
                     n *= ( w[dim] = (u[dim]+1-l[dim]));
                 }
             }
@@ -54,6 +57,7 @@ namespace upsylon
             const COORD lower; //!< lower coordinate
             const COORD upper; //!< upper coordinate
             const COORD width; //!< width
+            const COORD pitch; //!< 1 x xy
 
             //! test content
             inline bool has( const COORD q) const throw()
@@ -64,6 +68,23 @@ namespace upsylon
                     if(p<coord_of(lower,i)||p>coord_of(upper,i)) return false;
                 }
                 return true;
+            }
+
+            //! test containts sub layout
+            inline bool contains(const layout_of &sub ) const throw()
+            {
+                return has(sub.lower) && has(sub.upper);
+            }
+
+            //! index of a coordinate
+            inline coord1D index_of(const COORD q) const throw()
+            {
+                coord1D ans = coord_of(q,0)-coord_of(lower,0);
+                for(size_t dim=1;dim<DIMENSIONS;++dim)
+                {
+                    ans += (coord_of(q,dim)-coord_of(lower,dim))*coord_of(pitch,dim);
+                }
+                return ans;
             }
 
             //! display
