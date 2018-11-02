@@ -84,6 +84,7 @@ ADD_TEST(ASF         test-main  asf)
 ADD_TEST(Digest      test-main  digest)
 ADD_TEST(Locate      test-main  locate)
 ADD_TEST(Ppty        test-main  ppty)
+ADD_TEST(ipso        test-main  ipso)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V

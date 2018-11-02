@@ -78,6 +78,7 @@ Y_UTEST_INIT(100)
     Y_UTEST(digest);
     Y_UTEST(locate);
     Y_UTEST(ppty);
+    Y_UTEST(ipso);
 }
 Y_UTEST_EXEC()
 

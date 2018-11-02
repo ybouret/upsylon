@@ -166,6 +166,12 @@ SET(fs_srcs ${fs_decl} ${fs_code})
 SOURCE_GROUP( fs FILES ${fs_srcs} )
 INSTALL( FILES ${fs_decl} DESTINATION include/y/fs )
 
+FILE(GLOB ipso_decl y/ipso/*.hpp)
+FILE(GLOB ipso_code y/ipso/*.cpp)
+SET(ipso_srcs ${ipso_decl} ${ipso_code})
+SOURCE_GROUP( ipso FILES ${ipso_srcs} )
+INSTALL( FILES ${ipso_decl} DESTINATION include/y/ipso )
+
 
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
@@ -194,6 +200,7 @@ ${mpl_natural_srcs}
 ${math_srcs}
 ${functor_srcs}
 ${fs_srcs}
+${ipso_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
