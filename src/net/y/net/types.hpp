@@ -18,16 +18,16 @@ namespace upsylon
     class net128_t
     {
     public:
-        net128_t() throw();
-        ~net128_t() throw();
-        net128_t( const net128_t & ) throw();
-        net128_t &operator=( const net128_t & ) throw();
+        net128_t() throw();                              //!< set to 0
+        ~net128_t() throw();                             //!< cleanup
+        net128_t( const net128_t & ) throw();            //!< copy
+        net128_t &operator=( const net128_t & ) throw(); //!< assign
+        net128_t( const uint8_t buf[16] ) throw();       //!< manual setup
 
-        net128_t( const uint8_t buf[16] ) throw();
+        uint8_t h[16]; //!< content
 
-        uint8_t h[16];
+        //! display
         friend std::ostream & operator<< ( std::ostream &, const net128_t & );
-
     };
 
     namespace net

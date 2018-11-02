@@ -8,13 +8,14 @@ namespace upsylon
 {
     namespace ipso
     {
+        //! layout base class
         class layout
         {
         public:
             virtual ~layout() throw();                  //!< destructor
             explicit layout(const size_t dims) throw(); //!< initialize
             layout(const layout &) throw();             //!< copy
-\
+
             const size_t dimensions;     //!< dimensions
             const size_t items;          //!< number of items in layout
 
@@ -22,12 +23,16 @@ namespace upsylon
             Y_DISABLE_ASSIGN(layout);
         };
 
+        //! layout for a given coordinate
         template <typename COORD>
         class layout_of : public layout
         {
         public:
-            static const size_t DIMENSIONS = dim_of<COORD>::value;
-            inline virtual ~layout_of() throw() {}
+            static const size_t DIMENSIONS = dim_of<COORD>::value; //!< number of dimensions
+
+            inline virtual ~layout_of() throw() {} //!< desctructor
+
+            //! initialize
             inline explicit layout_of( const COORD lo, const COORD up) throw() :
             layout(DIMENSIONS),
             lower(lo),
@@ -46,10 +51,22 @@ namespace upsylon
                 }
             }
 
-            const COORD lower;
-            const COORD upper;
-            const COORD width;
+            const COORD lower; //!< lower coordinate
+            const COORD upper; //!< upper coordinate
+            const COORD width; //!< width
 
+            //! test content
+            inline bool has( const COORD q) const throw()
+            {
+                for(size_t i=0;i<DIMENSIONS;++i)
+                {
+                    const coord1D p = coord_of(q,i);
+                    if(p<coord_of(lower,i)||p>coord_of(upper,i)) return false;
+                }
+                return true;
+            }
+
+            //! display
             inline friend std::ostream & operator<<(std::ostream &os, const layout_of &L )
             {
                 os << '{' << L.lower << '-' << '>' << L.upper << ' ' << ':'  << ' ' << L.items << '}';
@@ -60,9 +77,9 @@ namespace upsylon
             Y_DISABLE_ASSIGN(layout_of);
         };
 
-        typedef layout_of<coord1D> layout1D;
-        typedef layout_of<coord2D> layout2D;
-        typedef layout_of<coord3D> layout3D;
+        typedef layout_of<coord1D> layout1D; //!< alias
+        typedef layout_of<coord2D> layout2D; //!< alias
+        typedef layout_of<coord3D> layout3D; //!< alias
 
 
     }
