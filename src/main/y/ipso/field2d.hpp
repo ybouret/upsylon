@@ -10,7 +10,7 @@ namespace upsylon
     {
 
         //! wrapper for constructor
-#define Y_IPSO_FIELD2D_CTOR() layout_type(L), field<T>(id), rows(0)
+#define Y_IPSO_FIELD2D_CTOR() layout_type(L), field<T>(id), row_layout(lower.x,upper.x), rows(0)
 
         //! field in 2D
         template <typename T>
@@ -20,7 +20,7 @@ namespace upsylon
             Y_DECL_ARGS(T,type);            //!< aliases
             typedef layout2D   layout_type; //!< alias
             typedef field1D<T> row_type;    //!< alias
-
+            const layout1D     row_layout;  //!< 1D layout for for
             //! setup
             inline explicit field2D( const string &id, const layout_type &L, void *dataEntry=0, void *rowsEntry=0) :
             Y_IPSO_FIELD2D_CTOR() { setup(dataEntry,rowsEntry); }
@@ -108,14 +108,13 @@ namespace upsylon
                 assert(this->entry);
                 assert(rows);
                 rows -= lower.y;
-                const layout1D sub(lower.x,upper.x);
                 mutable_type  *p = (mutable_type *)(this->entry);
                 for(coord1D j=lower.y;j<=upper.y;++j)
                 {
                     try
                     {
                         const string id = this->name + vformat("[%ld]", long(j) );
-                        new (rows+j) row_type(id,sub,p);
+                        new (rows+j) row_type(id,row_layout,p);
                         p += width.x;
                     }
                     catch(...)

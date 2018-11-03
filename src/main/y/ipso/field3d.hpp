@@ -10,17 +10,18 @@ namespace upsylon
     {
 
         //! wrapper for constructor
-#define Y_IPSO_FIELD3D_CTOR() layout_type(L), field<T>(id), slices(0)
+#define Y_IPSO_FIELD3D_CTOR() layout_type(L), field<T>(id), slice_layout( lower.xy(), upper.xy()), slices(0)
 
         //! field in 3D
         template <typename T>
         class field3D : public layout3D, public field<T>
         {
         public:
-            Y_DECL_ARGS(T,type);            //!< aliases
-            typedef layout3D   layout_type; //!< alias
-            typedef field1D<T> row_type;    //!< alias
-            typedef field2D<T> slice_type;  //!< alias
+            Y_DECL_ARGS(T,type);             //!< aliases
+            typedef layout3D   layout_type;  //!< alias
+            typedef field1D<T> row_type;     //!< alias
+            typedef field2D<T> slice_type;   //!< alias
+            const   layout2D   slice_layout; //!< layout2D for slice
 
             //! setup
             inline explicit field3D( const string &id, const layout_type &L) :
@@ -33,12 +34,27 @@ namespace upsylon
             //! desctructor
             inline virtual ~field3D() throw()
             {
-
+                for(coord1D k=upper.z;k>=lower.z;--k)
+                {
+                    destruct( &slices[k] );
+                }
                 this->__release(items);
             }
 
             //! number of held items
             virtual size_t size() const throw() { return items; }
+
+            //! access
+            inline slice_type & operator[](const coord1D k) throw()
+            {
+                assert(k>=lower.z);assert(k<=upper.z);assert(slices);return slices[k];
+            }
+
+            //! access, const
+            inline const slice_type & operator[](const coord1D k) const throw()
+            {
+                assert(k>=lower.z);assert(k<=upper.z);assert(slices);return slices[k];
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(field3D);
@@ -65,13 +81,33 @@ namespace upsylon
                 mutable_type *d = static_cast<mutable_type *>( memory::io::__shift(this->workspace,data_offset)   );
                 row_type     *r = static_cast<row_type     *>( memory::io::__shift(this->workspace,rows_offset)   );
                 slices          = static_cast<slice_type   *>( memory::io::__shift(this->workspace,slices_offset) );
+                slices -= lower.z;
 
                 // create data
                 this->entry = d;
                 this->__make(items);
-                
-                const layout2D sub( lower.xy(), upper.xy() );
 
+                // create slices
+                const size_t items_per_slice = slice_layout.items;
+                for(coord1D k=lower.z;k<=upper.z;++k)
+                {
+                    try
+                    {
+                        const string id = this->name + vformat("[%ld]",long(k));
+                        new (slices+k) slice_type(id,slice_layout,d,r);
+                        d += items_per_slice;
+                        r += rows_per_slice;
+                    }
+                    catch(...)
+                    {
+                        while(--k>lower.z)
+                        {
+                            destruct( &slices[k] );
+                        }
+                        this->__release(items);
+                        throw;
+                    }
+                }
 
             }
         };

@@ -6,9 +6,16 @@ using namespace upsylon;
 
 namespace
 {
+    template <typename FIELD>
+    static inline void show_info( const FIELD &F )
+    {
+        std::cerr << F.name << ": bytes=" << F.bytes << "/reserved=" << F.reserved() << " for " << F.size() << " items" << " in " << F.DIMENSIONS << "D" << std::endl;
+    }
+
     template <typename T>
     static inline void fill( ipso::field1D<T> &F )
     {
+        show_info(F);
         for(ipso::coord1D i=F.lower;i<=F.upper;++i)
         {
             F[i] = support::get<T>();
@@ -18,7 +25,7 @@ namespace
     template <typename T>
     static inline void fill( ipso::field2D<T> &F )
     {
-
+        show_info(F);
         for(ipso::coord1D j=F.lower.y;j<=F.upper.y;++j)
         {
             for(ipso::coord1D i=F.lower.x;i<=F.upper.x;++i)
@@ -27,11 +34,29 @@ namespace
             }
         }
     }
+
+
+
+    template <typename T>
+    static inline void fill( ipso::field3D<T> &F )
+    {
+        show_info(F);
+        for(ipso::coord1D k=F.lower.z;k<=F.upper.z;++k)
+        {
+            for(ipso::coord1D j=F.lower.y;j<=F.upper.y;++j)
+            {
+                for(ipso::coord1D i=F.lower.x;i<=F.upper.x;++i)
+                {
+                    F[k][j][i] = support::get<T>();
+                }
+            }
+        }
+    }
 }
 
 Y_UTEST(ipso)
 {
-    for(size_t iter=0;iter<100;++iter)
+    for(size_t iter=0;iter<10;++iter)
     {
         const unit_t x1 = ipso::coord1D( alea.leq(100) ) - 50;
         const unit_t x2 = ipso::coord1D( alea.leq(100) ) - 50;
@@ -110,8 +135,12 @@ Y_UTEST(ipso)
 
         {
             ipso::field3D<double> f3d("dbl",L3);
-            
+            ipso::field3D<string> f3s("str",L3);
+
+            fill(f3d);
+            fill(f3s);
         }
+        std::cerr << std::endl;
     }
 
 }

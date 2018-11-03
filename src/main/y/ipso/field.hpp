@@ -31,6 +31,9 @@ namespace upsylon
             //! held items
             virtual  size_t size() const throw() = 0;
 
+            //! private memory
+            inline size_t reserved() const throw() { return allocated; }
+            
         protected:
             //! setup
             inline explicit field(const string &id) : Y_IPSO_FIELD_CTOR() {}
@@ -45,6 +48,7 @@ namespace upsylon
             inline void allocate()
             {
                 assert(allocated);
+                assert(!workspace);
                 workspace = memory::global::instance().acquire(allocated);
             }
 
