@@ -1,4 +1,4 @@
-
+//! \file
 #ifndef Y_LANG_DYNAMOX_INCLUDED
 #define Y_LANG_DYNAMOX_INCLUDED 1
 

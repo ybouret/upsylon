@@ -65,7 +65,10 @@ namespace upsylon
             inline void setup( void *dataEntry, void *rowsEntry )
             {
                 (size_t &)(this->bytes) = sizeof(T) * this->items;
-                //! linking data
+                //______________________________________________________________
+                //
+                // linking data
+                //______________________________________________________________
                 if(dataEntry)
                 {
                     assert(rowsEntry);
@@ -131,6 +134,7 @@ namespace upsylon
                     }
                 }
             }
+            
         };
 
     }

@@ -64,7 +64,11 @@ namespace upsylon
             {
                 (size_t &)(this->bytes)        = items * sizeof(T);
 
+                //______________________________________________________________
+                //
                 // get memory requirement
+                //______________________________________________________________
+
                 const size_t    num_slices     = width.z;
                 const size_t    rows_per_slice = width.y;
                 const size_t    num_rows       = num_slices*rows_per_slice;
@@ -83,11 +87,17 @@ namespace upsylon
                 slices          = static_cast<slice_type   *>( memory::io::__shift(this->workspace,slices_offset) );
                 slices -= lower.z;
 
+                //______________________________________________________________
+                //
                 // create data
+                //______________________________________________________________
                 this->entry = d;
                 this->__make(items);
 
+                //______________________________________________________________
+                //
                 // create slices
+                //______________________________________________________________
                 const size_t items_per_slice = slice_layout.items;
                 for(coord1D k=lower.z;k<=upper.z;++k)
                 {

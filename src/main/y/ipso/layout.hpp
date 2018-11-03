@@ -90,7 +90,7 @@ namespace upsylon
             //! display
             inline friend std::ostream & operator<<(std::ostream &os, const layout_of &L )
             {
-                os << '{' << L.lower << '-' << '>' << L.upper << ' ' << ':'  << ' ' << L.items << '}';
+                os << '{' << L.lower << '-' << '>' << L.upper << ' ' << ':'  << ' ' << L.items << '=' << L.width << '}';
                 return os;
             }
 
