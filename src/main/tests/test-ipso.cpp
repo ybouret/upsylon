@@ -1,11 +1,11 @@
-#include "y/ipso/layout.hpp"
+#include "y/ipso/field1d.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
 
 Y_UTEST(ipso)
 {
-    for(size_t iter=0;iter<10;++iter)
+    for(size_t iter=0;iter<100;++iter)
     {
         const unit_t x1 = ipso::coord1D( alea.leq(100) ) - 50;
         const unit_t x2 = ipso::coord1D( alea.leq(100) ) - 50;
@@ -62,6 +62,12 @@ Y_UTEST(ipso)
             }
         }
 
+
+        {
+            ipso::field1D<double> f1d("double",L1);
+            ipso::field1D<int>    f1i("int",L1);
+            ipso::field1D<string> f1s("str",L1);
+        }
 
     }
 
