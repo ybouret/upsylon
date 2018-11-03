@@ -1,4 +1,4 @@
-//! file
+//! \file
 #ifndef Y_INK_VERTEX_INCLUDED
 #define Y_INK_VERTEX_INCLUDED 1
 

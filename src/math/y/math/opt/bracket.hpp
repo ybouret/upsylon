@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_OPT_BRACKET_INCLUDED
 #define Y_OPT_BRACKET_INCLUDED 1
 

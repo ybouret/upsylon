@@ -1,4 +1,4 @@
-//! file
+//! \file
 #ifndef Y_CHEM_BOOT_INCLUDED
 #define Y_CHEM_BOOT_INCLUDED 1
 

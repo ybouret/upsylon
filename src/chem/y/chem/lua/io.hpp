@@ -1,4 +1,4 @@
-//~ \file
+//! \file
 #ifndef Y_CHEM_LUA_IO_INCLUDED
 #define Y_CHEM_LUA_IO_INCLUDED 1
 
