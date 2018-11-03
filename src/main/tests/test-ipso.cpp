@@ -101,9 +101,11 @@ Y_UTEST(ipso)
 
         {
             ipso::field2D<double> f2d("dbl",L2);
+            ipso::field2D<int>    f2i("int",L2);
             ipso::field2D<string> f2s("str",L2);
             fill(f2d);
             fill(f2s);
+            fill(f2i);
         }
     }
 
