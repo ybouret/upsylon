@@ -9,8 +9,10 @@ namespace upsylon
     namespace ipso
     {
 
+        //! wrapper for constructor
 #define Y_IPSO_FIELD1D_CTOR() layout_type(L), field<T>(id), shift(0)
 
+        //! field in 1D
         template <typename T>
         class field1D : public layout1D, public field<T>
         {
@@ -18,9 +20,11 @@ namespace upsylon
             Y_DECL_ARGS(T,type);          //!< aliases
             typedef layout1D layout_type; //!< alias
 
+            //! setup
             inline explicit field1D( const string &id, const layout_type &L, void *data=0) :
             Y_IPSO_FIELD1D_CTOR() { setup(data); }
 
+            //!setup
             inline explicit field1D( const char *id, const layout_type &L, void *data=0) :
             Y_IPSO_FIELD1D_CTOR() { setup(data); }
 
@@ -48,7 +52,6 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(field1D);
             mutable_type *shift;
-
 
             inline void setup(void *data)
             {

@@ -9,14 +9,15 @@ namespace upsylon
 {
     namespace ipso
     {
-
+        //! wrapper for field constructor
 #define Y_IPSO_FIELD_CTOR() name(id), entry(0), bytes(0), allocated(0), workspace(0)
+
         //! field base class
         template <typename T>
         class field
         {
         public:
-            Y_DECL_ARGS(T,type);
+            Y_DECL_ARGS(T,type); //!< aliases
             const string name;   //!< indentifier
             type        *entry;  //!< entry of the linear part
             const size_t bytes;  //!< local bytes, based on items
@@ -28,7 +29,10 @@ namespace upsylon
             inline const string & key() const throw() { return name; }
 
         protected:
+            //! setup
             inline explicit field(const string &id) : Y_IPSO_FIELD_CTOR() {}
+            
+            //! setup
             inline explicit field(const char   *id) : Y_IPSO_FIELD_CTOR() {}
 
             size_t allocated; //!< if owns local memory
