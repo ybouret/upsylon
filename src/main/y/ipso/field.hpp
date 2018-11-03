@@ -28,6 +28,9 @@ namespace upsylon
             //! for database if needed
             inline const string & key() const throw() { return name; }
 
+            //! held items
+            virtual  size_t size() const throw() = 0;
+
         protected:
             //! setup
             inline explicit field(const string &id) : Y_IPSO_FIELD_CTOR() {}
@@ -37,6 +40,13 @@ namespace upsylon
 
             size_t allocated; //!< if owns local memory
             void  *workspace; //!< the local data
+
+            //! allocate required memory
+            inline void allocate()
+            {
+                assert(allocated);
+                workspace = memory::global::instance().acquire(allocated);
+            }
 
             //! try to build items if field is allocated
             inline void   __make(const size_t items)

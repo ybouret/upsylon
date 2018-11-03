@@ -49,6 +49,9 @@ namespace upsylon
                 assert(i>=lower); assert(i<=upper); return shift[i];
             }
 
+            //! number of held items
+            virtual  size_t size() const throw() { return items; }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(field1D);
             mutable_type *shift;
@@ -59,7 +62,7 @@ namespace upsylon
                 if( !(this->workspace=data) )
                 {
                     this->allocated = this->bytes;
-                    this->workspace = memory::global::instance().acquire(this->allocated);
+                    this->allocate();
                 }
                 assert(this->workspace);
                 this->entry = static_cast<type *>(this->workspace);

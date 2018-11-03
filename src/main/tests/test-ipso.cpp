@@ -1,7 +1,33 @@
-#include "y/ipso/field1d.hpp"
+#include "y/ipso/field2d.hpp"
 #include "y/utest/run.hpp"
+#include "support.hpp"
 
 using namespace upsylon;
+
+namespace
+{
+    template <typename T>
+    static inline void fill( ipso::field1D<T> &F )
+    {
+        for(ipso::coord1D i=F.lower;i<=F.upper;++i)
+        {
+            F[i] = support::get<T>();
+        }
+    }
+
+    template <typename T>
+    static inline void fill( ipso::field2D<T> &F )
+    {
+
+        for(ipso::coord1D j=F.lower.y;j<=F.upper.y;++j)
+        {
+            for(ipso::coord1D i=F.lower.x;i<=F.upper.x;++i)
+            {
+                F[j][i] = support::get<T>();
+            }
+        }
+    }
+}
 
 Y_UTEST(ipso)
 {
@@ -64,11 +90,21 @@ Y_UTEST(ipso)
 
 
         {
-            ipso::field1D<double> f1d("double",L1);
+            ipso::field1D<double> f1d("dbl",L1);
             ipso::field1D<int>    f1i("int",L1);
             ipso::field1D<string> f1s("str",L1);
+
+            fill(f1d);
+            fill(f1i);
+            fill(f1s);
         }
 
+        {
+            ipso::field2D<double> f2d("dbl",L2);
+            ipso::field2D<string> f2s("str",L2);
+            fill(f2d);
+            fill(f2s);
+        }
     }
 
 }
