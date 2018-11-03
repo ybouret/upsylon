@@ -21,6 +21,48 @@ Y_UTEST(ipso)
         std::cerr << "L2=" << L2 << std::endl;
         std::cerr << "L3=" << L3 << std::endl;
 
+
+        {
+            ipso::coord1D j=0;
+            for(ipso::coord1D i=L1.lower;i<=L1.upper;++i,++j)
+            {
+                const ipso::coord1D idx = L1.index_of(i);
+                Y_ASSERT(j==idx);
+            }
+        }
+
+        {
+            ipso::coord1D count=0;
+            for(ipso::coord1D j=L2.lower.y;j<=L2.upper.y;++j)
+            {
+                for(ipso::coord1D i=L2.lower.x;i<=L2.upper.x;++i)
+                {
+                    const ipso::coord2D q(i,j);
+                    const ipso::coord1D idx = L2.index_of(q);
+                    Y_ASSERT(count==idx);
+                    ++count;
+                }
+            }
+        }
+
+        {
+            ipso::coord1D count=0;
+            for(ipso::coord1D k=L3.lower.z;k<=L3.upper.z;++k)
+            {
+                for(ipso::coord1D j=L3.lower.y;j<=L3.upper.y;++j)
+                {
+                    for(ipso::coord1D i=L3.lower.x;i<=L3.upper.x;++i)
+                    {
+                        const ipso::coord3D q(i,j,k);
+                        const ipso::coord1D idx = L3.index_of(q);
+                        Y_ASSERT(count==idx);
+                        ++count;
+                    }
+                }
+            }
+        }
+
+
     }
 
 }
