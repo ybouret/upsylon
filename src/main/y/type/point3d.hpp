@@ -73,6 +73,8 @@ namespace upsylon
         //! decrease all by 1
         inline point3d & dec() throw() { --x; --y; --z; return *this; }
 
+        //! get xy
+        inline point2d<T> xy() const throw() { return point2d<T>(x,y); }
     };
 }
 

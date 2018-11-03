@@ -107,6 +107,11 @@ Y_UTEST(ipso)
             fill(f2s);
             fill(f2i);
         }
+
+        {
+            ipso::field3D<double> f3d("dbl",L3);
+            
+        }
     }
 
 }

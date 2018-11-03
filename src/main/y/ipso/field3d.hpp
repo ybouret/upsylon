@@ -33,6 +33,8 @@ namespace upsylon
             //! desctructor
             inline virtual ~field3D() throw()
             {
+
+                this->__release(items);
             }
 
             //! number of held items
@@ -44,7 +46,33 @@ namespace upsylon
 
             void setup()
             {
+                (size_t &)(this->bytes)        = items * sizeof(T);
+
+                // get memory requirement
+                const size_t    num_slices     = width.z;
+                const size_t    rows_per_slice = width.y;
+                const size_t    num_rows       = num_slices*rows_per_slice;
+
+                const size_t    data_offset    = 0;
+                const size_t    data_length    = this->bytes;
+                const size_t    rows_offset    = memory::align(data_offset+data_length);
+                const size_t    rows_length    = num_rows  * sizeof(row_type);
+                const size_t    slices_offset  = memory::align(rows_offset+rows_length);
+                const size_t    slices_length  = num_slices * sizeof(slice_type);
+                this->allocated = memory::align(slices_offset+slices_length);
+                this->allocate();
+
+                mutable_type *d = static_cast<mutable_type *>( memory::io::__shift(this->workspace,data_offset)   );
+                row_type     *r = static_cast<row_type     *>( memory::io::__shift(this->workspace,rows_offset)   );
+                slices          = static_cast<slice_type   *>( memory::io::__shift(this->workspace,slices_offset) );
+
+                // create data
+                this->entry = d;
+                this->__make(items);
                 
+                const layout2D sub( lower.xy(), upper.xy() );
+
+
             }
         };
 
