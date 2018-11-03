@@ -109,12 +109,14 @@ namespace upsylon
                 assert(rows);
                 rows -= lower.y;
                 const layout1D sub(lower.x,upper.x);
+                mutable_type  *p = (mutable_type *)(this->entry);
                 for(coord1D j=lower.y;j<=upper.y;++j)
                 {
                     try
                     {
                         const string id = this->name + vformat("[%ld]", long(j) );
-                        new (rows+j) row_type(id,sub);
+                        new (rows+j) row_type(id,sub,p);
+                        p += width.x;
                     }
                     catch(...)
                     {
