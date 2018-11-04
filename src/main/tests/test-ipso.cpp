@@ -122,6 +122,10 @@ Y_UTEST(ipso)
             fill(f1d);
             fill(f1i);
             fill(f1s);
+
+            f1d.ld( 1.0 );
+            f1i.ld( 1 );
+
         }
 
         {
@@ -131,6 +135,9 @@ Y_UTEST(ipso)
             fill(f2d);
             fill(f2s);
             fill(f2i);
+
+            f2d.ld( 2.0 );
+            f2i.ld( 2   );
         }
 
         {
@@ -139,6 +146,8 @@ Y_UTEST(ipso)
 
             fill(f3d);
             fill(f3s);
+            f3d.ld( 3 );
+
         }
         std::cerr << std::endl;
     }

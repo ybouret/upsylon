@@ -33,7 +33,15 @@ namespace upsylon
 
             //! private memory
             inline size_t reserved() const throw() { return allocated; }
-            
+
+            //! load same items
+            inline void ld( param_type args )
+            {
+                assert(entry);
+                const size_t n = size();
+                for(size_t i=0;i<n;++i) entry[i] = args;
+            }
+
         protected:
             //! setup
             inline explicit field(const string &id) : Y_IPSO_FIELD_CTOR() {}
