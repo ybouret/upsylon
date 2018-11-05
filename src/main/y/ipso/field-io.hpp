@@ -11,6 +11,7 @@ namespace upsylon
 {
     namespace ipso
     {
+        //! I/O fields operations
         struct field_io
         {
             //! collect indices from a sub layout
@@ -70,6 +71,7 @@ namespace upsylon
                 query(target,source,seq.begin(),seq.size());
             }
 
+            //! store n items in target from source
             template <typename ITERATOR,typename T>
             static inline void store(field<T>        &target,
                                      const uint8_t * &source,
@@ -88,6 +90,7 @@ namespace upsylon
                 }
             }
 
+            //! store items from source into target
             template <typename SEQUENCE,typename T>
             static inline void store(field<T>        &target,
                                      const uint8_t * &source,

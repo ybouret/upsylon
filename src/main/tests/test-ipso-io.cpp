@@ -190,7 +190,7 @@ Y_UTEST(ipso_io)
             field1D<float>  G("f1f",L1);
             io_for(F,G);
         }
-        
+
         const unit_t y1 = ipso::coord1D( alea.leq(100) ) - 50;
         const unit_t y2 = ipso::coord1D( alea.leq(100) ) - 50;
         ipso::layout_of<ipso::coord2D> L2( ipso::coord2D(x1,y1), ipso::coord2D(x2,y2) );
