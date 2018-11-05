@@ -9,6 +9,7 @@ namespace upsylon
 {
     namespace ipso
     {
+        //! base class for fields
         class field_info
         {
         public:
@@ -20,11 +21,11 @@ namespace upsylon
 
             virtual void        *address() throw()       = 0; //!< address of first item
             virtual const void  *address() const throw() = 0; //!< address of first item
-            virtual  size_t size() const throw()         = 0; //!< held items
+            virtual  size_t      size() const throw()    = 0; //!< held items
 
         protected:
-            explicit field_info(const string &id, const size_t sz);
-            explicit field_info(const char   *id, const size_t sz);
+            explicit field_info(const string &id, const size_t sz); //!< setup
+            explicit field_info(const char   *id, const size_t sz); //!< setup
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(field_info);
