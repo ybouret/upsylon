@@ -1,6 +1,6 @@
 
 #include "y/ipso/field3d.hpp"
-#include "y/ipso/field-io.hpp"
+#include "y/ipso/ghost.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/sequence/vector.hpp"
@@ -84,12 +84,13 @@ namespace
         Y_ASSERT(hash_of(G)==g0);
 
         {
-            const uint8_t *p = blk.data;
+            uint8_t *p = blk.data;
             field_io::store(F,p,indices);
             field_io::store(G,p,indices);
         }
         Y_ASSERT(hash_of(F)==f0);
         Y_ASSERT(hash_of(G)==g0);
+
     }
 
 
@@ -117,6 +118,11 @@ namespace
 
             field_io::collect(idx,F,sub);
             __io_for(F,G,idx);
+
+            ghost gh(F,sub,sizeof(T)+sizeof(U)+2);
+            gh.init();
+            gh.query(F);
+            gh.query(G);
         }
     }
 

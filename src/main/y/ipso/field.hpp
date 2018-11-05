@@ -9,6 +9,8 @@ namespace upsylon
 {
     namespace ipso
     {
+        class ghost;
+
         //! base class for fields
         class field_info
         {
@@ -22,6 +24,7 @@ namespace upsylon
             virtual void        *address() throw()       = 0; //!< address of first item
             virtual const void  *address() const throw() = 0; //!< address of first item
             virtual  size_t      size() const throw()    = 0; //!< held items
+
 
         protected:
             explicit field_info(const string &id, const size_t sz); //!< setup
@@ -70,6 +73,9 @@ namespace upsylon
             {
                 return (idx>=0) && (idx<=static_cast<ptrdiff_t>(size()));
             }
+
+            void save_into( ghost & ) const throw();
+            void load_from( ghost & ) throw();
 
         protected:
             //! setup
