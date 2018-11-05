@@ -31,6 +31,7 @@ namespace upsylon
             //! initialize curr
             void init() throw();
 
+            //! query data from field
             template <typename T>
             inline size_t query( const field<T> &F ) throw()
             {
@@ -42,6 +43,7 @@ namespace upsylon
                 return iobytes;
             }
 
+            //! store loaded data info field
             template <typename T>
             inline void store( field<T> &F ) throw()
             {

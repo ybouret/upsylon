@@ -9,7 +9,7 @@ namespace upsylon
 {
     namespace ipso
     {
-        class ghost;
+        class ghost; //!< forward declaration
 
         //! base class for fields
         class field_info
@@ -74,7 +74,10 @@ namespace upsylon
                 return (idx>=0) && (idx<=static_cast<ptrdiff_t>(size()));
             }
 
+            //! data to ghost
             void save_into( ghost & ) const throw();
+
+            //! data from ghost
             void load_from( ghost & ) throw();
 
         protected:

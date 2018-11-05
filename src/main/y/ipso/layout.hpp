@@ -3,6 +3,7 @@
 #define Y_IPSO_LAYOUT_INCLUDED 1
 
 #include "y/ipso/types.hpp"
+#include "y/randomized/bits.hpp"
 
 namespace upsylon
 {
@@ -98,6 +99,22 @@ namespace upsylon
             inline bool same_metrics_than( const layout_of &other ) const throw()
             {
                 return (lower==other.lower)  && (upper==other.upper);
+            }
+
+            //! random coordinate inside layout
+            inline COORD rand( randomized::bits &b ) const throw()
+            {
+                COORD    ans;
+
+                const coord1D *l = (const coord1D *)&lower;
+                const coord1D *u = (const coord1D *)&upper;
+                coord1D       *r = (coord1D *)&ans;
+                for(size_t i=0;i<DIMENSIONS;++i)
+                {
+                    r[i] = b.range<coord1D>(l[i],u[i]);
+                }
+                
+                return ans;
             }
 
         private:
