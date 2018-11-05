@@ -31,6 +31,7 @@ namespace upsylon
             //! initialize curr
             void init() throw();
 
+#if 0
             //! query data from field
             template <typename T>
             inline size_t query( const field<T> &F ) throw()
@@ -52,7 +53,7 @@ namespace upsylon
                 assert(data+sizeof(T)*indices.size() <= static_cast<uint8_t *>(workspace)+allocated );
                 field_io::store(F,data,indices);
             }
-
+#endif
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ghost);

@@ -77,16 +77,22 @@ namespace
         const size_t g0 = hash_of(G);
         {
             uint8_t *p =  blk.data;
-            field_io::query(p,F,indices);
-            field_io::query(p,G,indices);
+            field_io::query(p,F.entry,F.item_size,indices);
+            field_io::query(p,G.entry,G.item_size,indices);
         }
         Y_ASSERT(hash_of(F)==f0);
         Y_ASSERT(hash_of(G)==g0);
 
+        for(typename SEQUENCE::const_iterator i=indices.begin();i!=indices.end();++i)
+        {
+            memset( F.entry+*i,0,sizeof(T) );
+            memset( G.entry+*i,0,sizeof(U) );
+        }
+
         {
             uint8_t *p = blk.data;
-            field_io::store(F,p,indices);
-            field_io::store(G,p,indices);
+            field_io::store(p,F.entry,F.item_size,indices);
+            field_io::store(p,G.entry,G.item_size,indices);
         }
         Y_ASSERT(hash_of(F)==f0);
         Y_ASSERT(hash_of(G)==g0);
@@ -119,10 +125,12 @@ namespace
             field_io::collect(idx,F,sub);
             __io_for(F,G,idx);
 
-            ghost gh(F,sub,sizeof(T)+sizeof(U)+2);
-            gh.init();
-            gh.query(F);
-            gh.query(G);
+            /*
+             ghost gh(F,sub,sizeof(T)+sizeof(U)+2);
+             gh.init();
+             gh.query(F);
+             gh.query(G);
+             */
         }
     }
 

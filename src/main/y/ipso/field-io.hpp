@@ -42,7 +42,60 @@ namespace upsylon
                 unique(indices);
             }
 
+            template <typename ITERATOR>
+            static inline void query(uint8_t *   & target,
+                                     const void  * source,
+                                     const size_t  bytes_per_item,
+                                     ITERATOR      it,
+                                     size_t        n) throw()
+            {
+                assert(target); assert(source); assert(bytes_per_item);
+                const uint8_t *q = static_cast<const uint8_t *>(source);
+                while(n--)
+                {
+                    const coord1D idx = *it;++it;
+                    memcpy( target, &q[idx*bytes_per_item], bytes_per_item );
+                    target += bytes_per_item;
+                }
+            }
 
+            template <typename SEQUENCE>
+            static inline void query(uint8_t *   & target,
+                                     const void  * source,
+                                     const size_t  bytes_per_item,
+                                     const SEQUENCE &indices) throw()
+            {
+                query(target,source,bytes_per_item,indices.begin(),indices.size());
+            }
+
+
+            template <typename ITERATOR>
+            static inline void store(uint8_t   * & target,
+                                     void     *    source,
+                                     const size_t  bytes_per_item,
+                                     ITERATOR      it,
+                                     size_t        n) throw()
+            {
+                assert(target); assert(source); assert(bytes_per_item);
+                uint8_t *q = static_cast<uint8_t *>(source);
+                while(n--)
+                {
+                    const coord1D idx = *it;++it;
+                    memcpy(  &q[idx*bytes_per_item], target, bytes_per_item );
+                    target += bytes_per_item;
+                }
+            }
+
+            template <typename SEQUENCE>
+            static inline void store(uint8_t   * & target,
+                                     void     *    source,
+                                     const size_t  bytes_per_item,
+                                     const SEQUENCE &indices) throw()
+            {
+                store(target,source,bytes_per_item,indices.begin(),indices.size());
+            }
+
+#if 0
             //! query n items , target bytes >= n*sizeof(T)
             template <typename ITERATOR,typename T>
             static inline void query(uint8_t *      &target,
@@ -98,7 +151,7 @@ namespace upsylon
             {
                 store(target,source,seq.begin(),seq.size());
             }
-
+#endif
             
         };
     }
