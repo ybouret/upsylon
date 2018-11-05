@@ -9,18 +9,37 @@ namespace upsylon
 {
     namespace ipso
     {
+        class field_info
+        {
+        public:
+            const string name;        //!< identifier
+            const size_t item_size;   //!< sizeof one item
+            const size_t bytes;       //!< local linear bytes
+
+            virtual ~field_info() throw(); //!< destructor
+
+            virtual void        *address() throw()       = 0; //!< address of first item
+            virtual const void  *address() const throw() = 0; //!< address of first item
+            virtual  size_t size() const throw()         = 0; //!< held items
+
+        protected:
+            explicit field_info(const string &id, const size_t sz);
+            explicit field_info(const char   *id, const size_t sz);
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(field_info);
+        };
+
         //! wrapper for field constructor
-#define Y_IPSO_FIELD_CTOR() name(id), entry(0), bytes(0), allocated(0), workspace(0)
+#define Y_IPSO_FIELD_CTOR() field_info(id,sizeof(T)), entry(0), allocated(0), workspace(0)
 
         //! field base class
         template <typename T>
-        class field
+        class field : public field_info
         {
         public:
             Y_DECL_ARGS(T,type); //!< aliases
-            const string name;   //!< indentifier
             type        *entry;  //!< entry of the linear part
-            const size_t bytes;  //!< local bytes, based on items
 
             //! destructor
             inline virtual ~field() throw() {}
@@ -28,11 +47,14 @@ namespace upsylon
             //! for database if needed
             inline const string & key() const throw() { return name; }
 
-            //! held items
-            virtual  size_t size() const throw() = 0;
-
             //! private memory
             inline size_t reserved() const throw() { return allocated; }
+
+            //! field_info : address
+            inline virtual void *address() throw() { return entry; }
+
+            //! field_info : address, const
+            inline virtual const void *address() const throw() { return entry; }
 
             //! load same items
             inline void ld( param_type args )
@@ -40,6 +62,12 @@ namespace upsylon
                 assert(entry);
                 const size_t n = size();
                 for(size_t i=0;i<n;++i) entry[i] = args;
+            }
+
+            //! debug function to check indices
+            inline bool is_acceptable( const coord1D idx ) const throw()
+            {
+                return (idx>=0) && (idx<=static_cast<ptrdiff_t>(size()));
             }
 
         protected:
