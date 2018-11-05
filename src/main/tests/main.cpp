@@ -79,6 +79,7 @@ Y_UTEST_INIT(100)
     Y_UTEST(locate);
     Y_UTEST(ppty);
     Y_UTEST(ipso);
+    Y_UTEST(ipso_io);
 }
 Y_UTEST_EXEC()
 

@@ -75,6 +75,18 @@ namespace upsylon
 
         //! get xy
         inline point2d<T> xy() const throw() { return point2d<T>(x,y); }
+
+        //! equality
+        inline friend bool operator==( const point3d &lhs, const point3d &rhs )
+        {
+            return (lhs.x==rhs.x) && (lhs.y==rhs.y) && (lhs.z==rhs.z);
+        }
+
+        //! different
+        inline friend bool operator!=( const point3d &lhs, const point3d &rhs )
+        {
+            return (lhs.x!=rhs.x) || (lhs.y!=rhs.y) || (lhs.z!=rhs.z);
+        }
     };
 }
 

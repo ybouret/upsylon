@@ -94,6 +94,12 @@ namespace upsylon
                 return os;
             }
 
+            //! test equality
+            inline bool same_metrics_than( const layout_of &other ) const throw()
+            {
+                return (lower==other.lower)  && (upper==other.upper);
+            }
+
         private:
             Y_DISABLE_ASSIGN(layout_of);
         };

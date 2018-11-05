@@ -5,9 +5,9 @@ namespace upsylon
     namespace ipso
     {
         template <>
-        void field_io:: collect<layout1D>(sequence<coord1D> &indices,
-                                          const layout1D    &full,
-                                          const layout1D    &sub )
+        void field_io:: __collect<layout1D>(sequence<coord1D> &indices,
+                                            const layout1D    &full,
+                                            const layout1D    &sub )
         {
             assert( full.contains(sub) );
             for(coord1D i=sub.lower;i<=sub.upper;++i)
@@ -17,9 +17,9 @@ namespace upsylon
         }
 
         template <>
-        void field_io:: collect<layout2D>(sequence<coord1D> &indices,
-                                          const layout2D    &full,
-                                          const layout2D    &sub )
+        void field_io:: __collect<layout2D>(sequence<coord1D> &indices,
+                                            const layout2D    &full,
+                                            const layout2D    &sub )
         {
             assert( full.contains(sub) );
             for( coord1D j=sub.lower.y; j<=sub.upper.y;++j)
@@ -33,9 +33,9 @@ namespace upsylon
         }
 
         template <>
-        void field_io:: collect<layout3D>(sequence<coord1D> &indices,
-                                          const layout3D    &full,
-                                          const layout3D    &sub )
+        void field_io:: __collect<layout3D>(sequence<coord1D> &indices,
+                                            const layout3D    &full,
+                                            const layout3D    &sub )
         {
             assert( full.contains(sub) );
             for( coord1D k=sub.lower.z; k<=sub.upper.z;++k)
