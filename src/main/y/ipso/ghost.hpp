@@ -31,29 +31,17 @@ namespace upsylon
             //! initialize curr
             void init() throw();
 
-#if 0
-            //! query data from field
-            template <typename T>
-            inline size_t query( const field<T> &F ) throw()
+            //! query data from a field
+            void query( const field_info &F ) throw()
             {
                 assert(allocated);
                 assert(data);
-                const size_t iobytes = sizeof(T)*indices.size();
-                assert( data + iobytes  <= static_cast<uint8_t *>(workspace)+allocated );
-                field_io::query(data,F,indices);
-                return iobytes;
+                assert( data + F.item_size * indices.size() <= static_cast<uint8_t *>(workspace)+allocated );
+                field_io::query(data,F.address(),F.item_size,indices);
             }
 
-            //! store loaded data info field
-            template <typename T>
-            inline void store( field<T> &F ) throw()
-            {
-                assert(allocated);
-                assert(data);
-                assert(data+sizeof(T)*indices.size() <= static_cast<uint8_t *>(workspace)+allocated );
-                field_io::store(F,data,indices);
-            }
-#endif
+            // store loaded data info field
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ghost);
@@ -67,20 +55,6 @@ namespace upsylon
 
         };
 
-#if 0
-        template <typename T>
-        void field<T>:: save_into( ghost &gh ) const throw()
-        {
-            gh.query(*this);
-        }
-
-        template <typename T>
-        void field<T>:: load_from( ghost &gh ) throw()
-        {
-            gh.store(*this);
-        }
-#endif
-        
 
     }
 }

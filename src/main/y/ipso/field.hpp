@@ -73,14 +73,7 @@ namespace upsylon
             {
                 return (idx>=0) && (idx<=static_cast<ptrdiff_t>(size()));
             }
-
-#if 0
-            //! data to ghost
-            void save_into( ghost & ) const throw();
-
-            //! data from ghost
-            void load_from( ghost & ) throw();
-#endif
+            
             
         protected:
             //! setup
