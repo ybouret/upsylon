@@ -66,6 +66,7 @@ namespace upsylon
 
         };
 
+#if 0
         template <typename T>
         void field<T>:: save_into( ghost &gh ) const throw()
         {
@@ -77,7 +78,8 @@ namespace upsylon
         {
             gh.store(*this);
         }
-
+#endif
+        
 
     }
 }
