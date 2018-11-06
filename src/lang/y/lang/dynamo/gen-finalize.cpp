@@ -1,6 +1,8 @@
 
 #include "y/lang/dynamo/generator.hpp"
-#include "y/exception.hpp"
+#include "y/lang/syntax/joker.hpp"
+
+//#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -39,11 +41,35 @@ namespace upsylon
         void DynamoGenerator:: check_top_level( Syntax::Compound &r ) throw()
         {
             assert(Syntax::Compound::Normal==r.type);
-            if(verbose) {
+            if(verbose)
+            {
                 indent() << "..checking internal <" << r.name << ">" << std::endl;
                 indent() << "  \\__@" << r.typeName() << std::endl;
+                indent() << "   \\__#=" << r.size << std::endl;
+            }
+            if(2!=r.size)
+            {
+                return;
             }
 
+            if(r.tail->rule.uuid == Syntax::Repeating::UUID )
+            {
+                const Syntax::Repeating *pRep = dynamic_cast<const Syntax::Repeating *>( & (r.tail->rule) );
+                if(!pRep)
+                {
+                    throw exception("unexpected dynamic cast failure for Syntax::Repeating");
+                }
+                if(0==pRep->nmin)
+                {
+                    if(verbose)
+                    {
+                        indent() << "    \\__set as design!!!" << std::endl;
+                    }
+                    //r.setDesign();
+                }
+            }
+
+#if 0
             const Rule *producing = 0;
 
             for( Syntax::Operand *sub=r.head;sub;sub=sub->next)
@@ -95,7 +121,7 @@ namespace upsylon
                 }
                 //r.setDesign();
             }
-
+#endif
 
         }
 

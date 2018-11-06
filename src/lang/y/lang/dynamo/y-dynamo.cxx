@@ -74,18 +74,19 @@ namespace
 
 Y_PROGRAM_START()
 {
-    vfs            &fs = local_fs::instance();
+    //vfs            &fs = local_fs::instance();
     DynamoCompiler  dynCompiler;
     DynamoGenerator dynGenerator;
 
 
     if(argc>1)
     {
+#if 0
         fs.try_remove_file("grammar.dot");
         fs.try_remove_file("grammar.png");
         fs.try_remove_file("parser.dot");
         fs.try_remove_file("parser.png");
-
+#endif
         //______________________________________________________________________
         //
         // load the full processed AST
