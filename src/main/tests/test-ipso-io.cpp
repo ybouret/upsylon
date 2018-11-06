@@ -128,10 +128,10 @@ namespace
             __io_for(F,G,idx);
 
 
-             ghost gh(F,sub,sizeof(T)+sizeof(U)+2);
-             gh.init();
-             gh.query(F);
-             gh.query(G);
+            ghost gh(F,sub,sizeof(T)+sizeof(U)+2);
+            gh.init();
+            gh.query(F);
+            gh.query(G);
 
             gh.init();
             gh.store(F);

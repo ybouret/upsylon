@@ -24,7 +24,7 @@ workspace( NULL )
 
 #define Y_IPSO_SETUP() do {           \
 field_io::collect(indices, full, sub);\
-workspace = memory::global::instance().acquire(allocated=block_size*indices.size());\
+ensure( block_size );                 \
 } while(false)
 
         ghost:: ghost( const layout1D &full, const layout1D &sub, const size_t block_size ) :
