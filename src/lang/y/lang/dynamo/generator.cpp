@@ -168,7 +168,7 @@ namespace upsylon
             // create top level structure
             //__________________________________________________________________
             topLevel(dynamo);
-            dynamo.GraphViz("dynout.dot");
+            //dynamo.GraphViz("dynout.dot");
 
             //__________________________________________________________________
             //
