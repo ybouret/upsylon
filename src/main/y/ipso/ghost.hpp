@@ -32,16 +32,10 @@ namespace upsylon
             void init() throw();
 
             //! query data from a field
-            void query( const field_info &F ) throw()
-            {
-                assert(allocated);
-                assert(data);
-                assert( data + F.item_size * indices.size() <= static_cast<uint8_t *>(workspace)+allocated );
-                field_io::query(data,F.address(),F.item_size,indices);
-            }
+            void query( const field_info &F ) throw();
 
             // store loaded data info field
-            
+            void store( field_info &F ) throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ghost);

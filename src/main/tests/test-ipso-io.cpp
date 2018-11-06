@@ -97,6 +97,8 @@ namespace
         Y_ASSERT(hash_of(F)==f0);
         Y_ASSERT(hash_of(G)==g0);
 
+
+
     }
 
 
@@ -125,12 +127,16 @@ namespace
             field_io::collect(idx,F,sub);
             __io_for(F,G,idx);
 
-            /*
+
              ghost gh(F,sub,sizeof(T)+sizeof(U)+2);
              gh.init();
              gh.query(F);
              gh.query(G);
-             */
+
+            gh.init();
+            gh.store(F);
+            gh.store(G);
+
         }
     }
 

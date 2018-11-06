@@ -62,5 +62,23 @@ workspace = memory::global::instance().acquire(allocated=block_size*indices.size
         {
             data = static_cast<uint8_t *>(workspace);
         }
+
+        void ghost:: query( const field_info &F ) throw()
+        {
+            assert(allocated);
+            assert(data);
+            assert( data + F.item_size * indices.size() <= static_cast<uint8_t *>(workspace)+allocated );
+            field_io::query(data,F.address(),F.item_size,indices);
+        }
+
+        void ghost:: store( field_info &F ) throw()
+        {
+            assert(allocated);
+            assert(data);
+            assert( data + F.item_size * indices.size() <= static_cast<uint8_t *>(workspace)+allocated );
+            field_io::store(data, F.address(), F.item_size, indices);
+        }
+
+
     }
 }
