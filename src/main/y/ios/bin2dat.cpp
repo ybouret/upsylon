@@ -50,10 +50,10 @@ namespace upsylon
                 {
                     fp << "  ";
                 }
-                fp << " /* ";
+                fp << " // |";
                 fp << human;
                 for(size_t i=count;i<width;++i) fp << ' ';
-                fp << " */\n";
+                fp << "|\n";
                 reset();
             }
         }

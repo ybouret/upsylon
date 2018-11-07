@@ -198,7 +198,7 @@ namespace upsylon
                 for( Internals::iterator i=internals.begin();i!=internals.end();++i)
                 {
                     const _Internal &c = **i;
-                    indent() << "                      |_<" << c << ">" << std::endl;
+                    indent() << "                      |_<" << c << ">\t/" << c.rule.roleName() << std::endl;
                 }
                 indent() << "____________________________________" << std::endl;
             }

@@ -77,6 +77,19 @@ namespace upsylon
                     }
                     return "filled";
                 }
+
+                //! specific role
+                inline const char *roleName() const throw()
+                {
+                    switch(type)
+                    {
+                        case Acting: return "Acting";
+                        case Design: return "Design";
+                        default:
+                            break;
+                    }
+                    return "Normal";
+                }
             protected:
                 //! initialize, data=self
                 explicit Compound(const uint32_t t, const string &id, const Type flag);

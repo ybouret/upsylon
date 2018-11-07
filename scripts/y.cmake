@@ -244,6 +244,10 @@ MACRO(TARGET_LINK_Y tgt)
 			LIST(APPEND ylibs "y-lang")
 		ENDIF()
 		
+		IF( ${extra} STREQUAL "seem" )
+			LIST(APPEND ylibs "y-lang")
+		ENDIF()
+		
 		IF( ${extra} STREQUAL "net" )
 			IF( Y_GNU AND WIN32)
 			LIST(APPEND ylibs "ws2_32")
