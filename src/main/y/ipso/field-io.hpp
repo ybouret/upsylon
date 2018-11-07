@@ -42,6 +42,7 @@ namespace upsylon
                 unique(indices);
             }
 
+            //! low level query binary data from source
             template <typename ITERATOR>
             static inline void query(uint8_t *   & target,
                                      const void  * source,
@@ -59,6 +60,7 @@ namespace upsylon
                 }
             }
 
+            //! wrapper for any sequence of indices
             template <typename SEQUENCE>
             static inline void query(uint8_t *   & target,
                                      const void  * source,
@@ -69,6 +71,7 @@ namespace upsylon
             }
 
 
+            //! low level store binary data into source
             template <typename ITERATOR>
             static inline void store(uint8_t   * & target,
                                      void     *    source,
@@ -86,6 +89,7 @@ namespace upsylon
                 }
             }
 
+            //! wrapper for any sequence of indices
             template <typename SEQUENCE>
             static inline void store(uint8_t   * & target,
                                      void     *    source,

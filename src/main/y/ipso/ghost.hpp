@@ -34,7 +34,7 @@ namespace upsylon
             //! query data from a field
             void query( const field_info &F ) throw();
 
-            // store loaded data info field
+            //! store loaded data info field
             void store( field_info &F ) throw();
 
         private:

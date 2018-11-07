@@ -8,11 +8,12 @@ namespace upsylon
 {
     namespace SEEM
     {
+        //! create a compiler for SEEM
         class Compiler : public Lang::DynamoX
         {
         public:
-            explicit Compiler(const bool verbose=false);         //!< setup
-            virtual ~Compiler() throw(); //!< desctructor
+            explicit Compiler(const bool verbose=false);  //!< setup
+            virtual ~Compiler() throw();                  //!< destructor
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
