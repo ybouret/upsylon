@@ -35,7 +35,7 @@ namespace upsylon
             RULE &COLON    = mark(':');
             RULE &RX       = plug<Lexical::jString>("RX");
             RULE &RS       = plug<Lexical::rString>("RS");
-            RULE &OS       = (agg("OS") << RS <<  mark('^')); //!< trick to detect operators
+            RULE &OS       = (agg("OS") << RS <<  mark('^'));
             RULE &ID       = term("ID","{ID}");
             //__________________________________________________________________
             //
@@ -54,7 +54,7 @@ namespace upsylon
             //__________________________________________________________________
             AGG &__RULE = agg("RULE");
             {
-                __RULE  << ID << COLON;
+                __RULE  << ID << optional( sole('!') ) << COLON;
 
                 //______________________________________________________________
                 //

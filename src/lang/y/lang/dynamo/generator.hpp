@@ -211,7 +211,7 @@ namespace upsylon
             void walkDown( const Node &dynamo );
 
             //! upgrade top level compounds
-            void finalize() throw();
+            //void finalize() throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
@@ -222,7 +222,7 @@ namespace upsylon
 
             //! creating a rule
             const Syntax::Rule & createRule(const Node   *node,
-                                           const int     h);
+                                            const int     h);
 
             //! query a previously create rule
             const Syntax::Rule & getRuleID(const char *fn, const Node *node) const;

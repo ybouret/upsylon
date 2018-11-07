@@ -37,7 +37,7 @@ namespace upsylon
                 //______________________________________________________________
                 Y_DYNAMO_CHECK("RULE"==node->rule.name);
                 Y_DYNAMO_CHECK(node->internal);
-                Y_DYNAMO_CHECK(node->children.size==2);
+                Y_DYNAMO_CHECK(node->children.size==2||node->children.size==3);
                 Y_DYNAMO_CHECK(node->children.head->terminal);
                 Y_DYNAMO_CHECK(node->children.head->rule.name=="ID");
                 const string ruleName = node->children.head->lexeme.to_string();
