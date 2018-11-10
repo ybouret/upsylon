@@ -31,7 +31,7 @@ namespace upsylon
             //! initialize curr
             void init() throw();
 
-            //! query data from a field
+            //! query and append data from a field
             void query( const field_info &F ) throw();
 
             //! store loaded data info field
