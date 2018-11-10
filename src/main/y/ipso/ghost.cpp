@@ -54,6 +54,8 @@ ensure( block_size );                 \
                 __release();
                 allocated = required;
                 workspace = memory::global::instance().acquire(allocated);
+                head = tail = static_cast<uint8_t*>(workspace);
+                last        = static_cast<uint8_t*>(workspace)+allocated;
             }
         }
 

@@ -40,7 +40,9 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ghost);
             uint8_t       *data;
-
+            uint8_t       *head; //!< first readable byte
+            uint8_t       *tail; //!< first writable byte
+            const uint8_t *last; //!< workspace+allocated
             indices_type   indices;
             size_t         allocated;
             void          *workspace;
