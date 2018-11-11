@@ -129,11 +129,11 @@ namespace
 
 
             ghost gh(F,sub,sizeof(T)+sizeof(U)+2);
-            gh.init();
+            gh.initialize();
             gh.query(F);
             gh.query(G);
 
-            gh.init();
+            //gh.init();
             gh.store(F);
             gh.store(G);
 

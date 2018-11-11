@@ -12,7 +12,7 @@ namespace upsylon
     {
 
         //! a ghost for I/O
-        class ghost
+        class ghost : public counted_object
         {
         public:
             typedef vector<coord1D>           indices_type; //!< alias
@@ -28,8 +28,8 @@ namespace upsylon
             //! memory change
             void ensure( const size_t block_size );
 
-            //! initialize curr
-            void init() throw();
+            //! initialize to read fields
+            void initialize() throw();
 
             //! query and append data from a field
             void query( const field_info &F ) throw();
@@ -37,9 +37,14 @@ namespace upsylon
             //! store loaded data info field
             void store( field_info &F ) throw();
 
+            //! available bytes to write
+            size_t writable() const throw();
+
+            //! availabel byte to read
+            size_t readable() const throw();
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ghost);
-            uint8_t       *data;
             uint8_t       *head; //!< first readable byte
             uint8_t       *tail; //!< first writable byte
             const uint8_t *last; //!< workspace+allocated

@@ -14,10 +14,17 @@ namespace upsylon
         {
             memory::global::location().release(workspace,allocated);
         }
-        
+
+
+
+#define Y_IPSO_GHOST_CHECK() \
+assert(allocated); assert(head); assert(tail); assert(last); assert(workspace); \
+assert(head<=tail);assert(tail<=last); assert(head>=(uint8_t*)workspace)
 
 #define Y_IPSO_GHOST_CTOR()        \
-data(0),                           \
+head(0),\
+tail(0),\
+last(0),\
 indices( sub.items, as_capacity ), \
 allocated( 0 ),                    \
 workspace( NULL )
@@ -45,6 +52,31 @@ ensure( block_size );                 \
             Y_IPSO_SETUP();
         }
 
+        size_t ghost:: writable() const throw()
+        {
+            if(allocated)
+            {
+                Y_IPSO_GHOST_CHECK();
+                return static_cast<size_t>(last-tail);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        size_t ghost:: readable() const throw()
+        {
+            if(allocated)
+            {
+                Y_IPSO_GHOST_CHECK();
+                return static_cast<size_t>(tail-head);
+            }
+            else
+            {
+                return 0;
+            }
+        }
 
         void ghost:: ensure( const size_t block_size )
         {
@@ -60,25 +92,24 @@ ensure( block_size );                 \
         }
 
 
-        void ghost:: init() throw()
+        void ghost:: initialize() throw()
         {
-            data = static_cast<uint8_t *>(workspace);
+            assert(allocated);
+            head = tail = static_cast<uint8_t*>(workspace);
         }
 
         void ghost:: query( const field_info &F ) throw()
         {
-            assert(allocated);
-            assert(data);
-            assert( data + F.item_size * indices.size() <= static_cast<uint8_t *>(workspace)+allocated );
-            field_io::query(data,F.address(),F.item_size,indices);
+            Y_IPSO_GHOST_CHECK();
+            assert( writable() >= F.item_size * indices.size() );
+            field_io::query(tail, F.address(), F.item_size,indices);
         }
 
         void ghost:: store( field_info &F ) throw()
         {
-            assert(allocated);
-            assert(data);
-            assert( data + F.item_size * indices.size() <= static_cast<uint8_t *>(workspace)+allocated );
-            field_io::store(data, F.address(), F.item_size, indices);
+            Y_IPSO_GHOST_CHECK();
+            assert( readable() >= F.item_size * indices.size() );
+            field_io::store(head, F.address(), F.item_size, indices);
         }
 
 
