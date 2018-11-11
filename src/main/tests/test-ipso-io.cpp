@@ -130,12 +130,11 @@ namespace
 
             ghost gh(F,sub,sizeof(T)+sizeof(U)+2);
             gh.initialize();
-            gh.query(F);
-            gh.query(G);
-
-            //gh.init();
-            gh.store(F);
-            gh.store(G);
+            gh.query_from(F);
+            gh.query_from(G);
+            std::cerr << "ghost.readable=" << gh.readable() << std::endl;
+            gh.store_into(F);
+            gh.store_into(G);
 
         }
     }
@@ -163,6 +162,14 @@ namespace
 
             field_io::collect(idx,F,sub);
             __io_for(F,G,idx);
+
+            ghost gh(F,sub,sizeof(T)+sizeof(U)+2);
+            gh.initialize();
+            gh.query_from(F);
+            gh.query_from(G);
+            std::cerr << "ghost.readable=" << gh.readable() << std::endl;
+            gh.store_into(F);
+            gh.store_into(G);
         }
     }
 
@@ -192,6 +199,14 @@ namespace
 
             field_io::collect(idx,F,sub);
             __io_for(F,G,idx);
+
+            ghost gh(F,sub,sizeof(T)+sizeof(U)+2);
+            gh.initialize();
+            gh.query_from(F);
+            gh.query_from(G);
+            std::cerr << "ghost.readable=" << gh.readable() << std::endl;
+            gh.store_into(F);
+            gh.store_into(G);
         }
     }
 

@@ -98,14 +98,14 @@ ensure( block_size );                 \
             head = tail = static_cast<uint8_t*>(workspace);
         }
 
-        void ghost:: query( const field_info &F ) throw()
+        void ghost:: query_from( const field_info &F ) throw()
         {
             Y_IPSO_GHOST_CHECK();
             assert( writable() >= F.item_size * indices.size() );
             field_io::query(tail, F.address(), F.item_size,indices);
         }
 
-        void ghost:: store( field_info &F ) throw()
+        void ghost:: store_into( field_info &F ) throw()
         {
             Y_IPSO_GHOST_CHECK();
             assert( readable() >= F.item_size * indices.size() );

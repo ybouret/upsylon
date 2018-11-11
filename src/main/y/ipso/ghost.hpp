@@ -25,6 +25,7 @@ namespace upsylon
             explicit ghost(const layout3D &full, const layout3D &sub, const size_t block_size=0);
             //!destructors
             virtual ~ghost() throw();
+            
             //! memory change
             void ensure( const size_t block_size );
 
@@ -32,10 +33,10 @@ namespace upsylon
             void initialize() throw();
 
             //! query and append data from a field
-            void query( const field_info &F ) throw();
+            void query_from( const field_info &F ) throw();
 
             //! store loaded data info field
-            void store( field_info &F ) throw();
+            void store_into( field_info &F ) throw();
 
             //! available bytes to write
             size_t writable() const throw();
