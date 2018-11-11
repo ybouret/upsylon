@@ -36,7 +36,20 @@ namespace upsylon
     {
         core::bswap<sizeof(T)>(&a,&b);
     }
+
+    //! local byte swap
+#define Y_MSWAP(I) const uint8_t tmp = P[I]; P[I] = Q[I]; Q[I] = tmp
+
+    inline void mswap( void *p, void *q, const size_t size ) throw()
+    {
+        assert(size>0);
+        uint8_t *P = static_cast<uint8_t *>(p);
+        uint8_t *Q = static_cast<uint8_t *>(q);
+        Y_LOOP_FUNC_(size,Y_MSWAP,0);
+    }
     
+#undef Y_MSWAP
+
     //! memory reversal
     inline void mreverse( void *addr, const size_t size ) throw()
     {

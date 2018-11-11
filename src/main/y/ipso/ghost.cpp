@@ -1,5 +1,6 @@
 
 #include "y/ipso/ghost.hpp"
+#include "y/core/loop.hpp"
 
 namespace upsylon
 {
@@ -113,6 +114,18 @@ ensure( block_size );                 \
             field_io::store(head, F.address(), F.item_size, indices);
         }
 
+#define Y_IPSO_GHOST_XCH(I) mswap(p+A[I]*w,p+B[I]*w,w)
 
+        void ghost::exchange( field_info &F, const ghost &a, const ghost &b ) throw()
+        {
+            assert(a.indices.size()==b.indices.size());
+            assert(a.indices.size()>0);
+            assert(a.peer==b.peer);
+            const coord1D *A = *a.indices;
+            const coord1D *B = *b.indices;
+            uint8_t       *p = static_cast<uint8_t *>(F.address());
+            const size_t   w = F.item_size;
+            Y_LOOP_FUNC_(a.indices.size(),Y_IPSO_GHOST_XCH,0);
+        }
     }
 }

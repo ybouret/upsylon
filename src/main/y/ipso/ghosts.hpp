@@ -12,8 +12,9 @@ namespace upsylon
         class ghosts
         {
         public:
-            ghost source;
-            ghost target;
+            ghost source; //!< 'inner' zone, read and send
+            ghost target; //!< 'outer' zone, recieve and write
+
             virtual ~ghosts() throw();
 
             template <typename LAYOUT>
@@ -29,7 +30,9 @@ namespace upsylon
 
             }
 
+            void ensure( const size_t block_size );
 
+            void local_exchange( field_info &F ) const throw();
 
 
         private:

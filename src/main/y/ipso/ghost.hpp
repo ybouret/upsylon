@@ -41,10 +41,13 @@ namespace upsylon
             //! available bytes to write
             size_t writable() const throw();
 
-            //! availabel byte to read
+            //! available byte to read
             size_t readable() const throw();
 
             const int peer; //!< MPI style peer
+
+            static  void exchange( field_info &F, const ghost &a, const ghost &b ) throw();
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ghost);
             uint8_t       *head; //!< first readable byte

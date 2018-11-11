@@ -86,6 +86,7 @@ ADD_TEST(Locate      test-main  locate)
 ADD_TEST(Ppty        test-main  ppty)
 ADD_TEST(ipso        test-main  ipso)
 ADD_TEST(ipso_io     test-main  ipso_io)
+ADD_TEST(ipso_gh     test-main  ipso_gh)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V
