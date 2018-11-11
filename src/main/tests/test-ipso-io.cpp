@@ -128,7 +128,7 @@ namespace
             __io_for(F,G,idx);
 
 
-            ghost gh(F,sub,sizeof(T)+sizeof(U)+2);
+            ghost gh(0,F,sub,sizeof(T)+sizeof(U)+2);
             gh.initialize();
             gh.query_from(F);
             gh.query_from(G);
@@ -163,7 +163,7 @@ namespace
             field_io::collect(idx,F,sub);
             __io_for(F,G,idx);
 
-            ghost gh(F,sub,sizeof(T)+sizeof(U)+2);
+            ghost gh(0,F,sub,sizeof(T)+sizeof(U)+2);
             gh.initialize();
             gh.query_from(F);
             gh.query_from(G);
@@ -200,7 +200,7 @@ namespace
             field_io::collect(idx,F,sub);
             __io_for(F,G,idx);
 
-            ghost gh(F,sub,sizeof(T)+sizeof(U)+2);
+            ghost gh(0,F,sub,sizeof(T)+sizeof(U)+2);
             gh.initialize();
             gh.query_from(F);
             gh.query_from(G);

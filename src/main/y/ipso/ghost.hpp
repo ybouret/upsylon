@@ -18,11 +18,11 @@ namespace upsylon
             typedef vector<coord1D>           indices_type; //!< alias
 
             //! setup1D
-            explicit ghost(const layout1D &full, const layout1D &sub, const size_t block_size=0);
+            explicit ghost(const int id, const layout1D &full, const layout1D &sub,const size_t block_size=0);
             //! setup2D
-            explicit ghost(const layout2D &full, const layout2D &sub, const size_t block_size=0);
+            explicit ghost(const int id, const layout2D &full, const layout2D &sub, const size_t block_size=0);
             //! setup3D
-            explicit ghost(const layout3D &full, const layout3D &sub, const size_t block_size=0);
+            explicit ghost(const int id, const layout3D &full, const layout3D &sub, const size_t block_size=0);
             //!destructors
             virtual ~ghost() throw();
             
@@ -44,6 +44,7 @@ namespace upsylon
             //! availabel byte to read
             size_t readable() const throw();
 
+            const int peer; //!< MPI style peer
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ghost);
             uint8_t       *head; //!< first readable byte
