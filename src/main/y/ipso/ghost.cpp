@@ -32,7 +32,7 @@ allocated( 0 ),                    \
 workspace( NULL )
 
 #define Y_IPSO_SETUP() do {           \
-field_io::collect(indices, full, sub);\
+field_io::collect( (indices_type &)indices, full, sub);\
 ensure( block_size );                 \
 } while(false)
 
@@ -114,6 +114,7 @@ ensure( block_size );                 \
             field_io::store(head, F.address(), F.item_size, indices);
         }
 
+#if 0
 #define Y_IPSO_GHOST_XCH(I) mswap(p+A[I]*w,p+B[I]*w,w)
 
         void ghost::exchange( field_info &F, const ghost &a, const ghost &b ) throw()
@@ -127,5 +128,7 @@ ensure( block_size );                 \
             const size_t   w = F.item_size;
             Y_LOOP_FUNC_(a.indices.size(),Y_IPSO_GHOST_XCH,0);
         }
+#endif
+        
     }
 }

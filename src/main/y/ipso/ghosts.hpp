@@ -32,8 +32,8 @@ namespace upsylon
 
             void ensure( const size_t block_size );
 
-            //! directly write into target date from source
-            void local_exchange( field_info &F ) const throw();
+            //! directly exchange data
+            static void exchange( const ghosts &a, const ghosts &b, field_info &F ) throw();
 
 
         private:

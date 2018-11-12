@@ -11,6 +11,7 @@ namespace upsylon
     namespace ipso
     {
 
+
         //! a ghost for I/O
         class ghost : public counted_object
         {
@@ -45,15 +46,15 @@ namespace upsylon
             size_t readable() const throw();
 
             const int peer; //!< MPI style peer
-
-            static  void exchange( field_info &F, const ghost &a, const ghost &b ) throw();
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ghost);
             uint8_t       *head; //!< first readable byte
             uint8_t       *tail; //!< first writable byte
             const uint8_t *last; //!< workspace+allocated
-            indices_type   indices;
+        public:
+            const indices_type   indices;
+        private:
             size_t         allocated;
             void          *workspace;
 
