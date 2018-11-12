@@ -32,6 +32,7 @@ namespace upsylon
 
             void ensure( const size_t block_size );
 
+            //! directly write into target date from source
             void local_exchange( field_info &F ) const throw();
 
 
