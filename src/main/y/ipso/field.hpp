@@ -12,7 +12,7 @@ namespace upsylon
         class ghost; //!< forward declaration
 
         //! base class for fields
-        class field_info
+        class field_info : public counted_object
         {
         public:
             const string name;        //!< identifier
@@ -25,6 +25,7 @@ namespace upsylon
             virtual const void  *address() const throw() = 0; //!< address of first item
             virtual  size_t      size() const throw()    = 0; //!< held items
 
+            const string & key() const throw();
 
         protected:
             explicit field_info(const string &id, const size_t sz); //!< setup

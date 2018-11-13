@@ -24,5 +24,7 @@ namespace upsylon
             assert(item_size>0);
         }
 
+        const string & field_info:: key() const throw() { return name; }
+
     }
 }
