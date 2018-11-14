@@ -81,6 +81,7 @@ Y_UTEST_INIT(100)
     Y_UTEST(ipso);
     Y_UTEST(ipso_io);
     Y_UTEST(ipso_gh);
+    Y_UTEST(progress);
 }
 Y_UTEST_EXEC()
 
