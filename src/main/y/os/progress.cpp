@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstring>
 #include <cstdio>
+#include <iostream>
 
 namespace upsylon
 {
@@ -76,5 +77,20 @@ namespace upsylon
         }
 
     }
+
+    std::ostream & progress:: display( std::ostream &os ) const
+    {
+        static const char sym[] = { '-', '\\', '|', '/' };
+        os << '[' << sym[++counter%sizeof(sym)] << ']';
+        char fmt[16];
+        snprintf(fmt,15," %6.2f%%",percent);
+        os << fmt;
+        format(fmt,done);
+        os << " in" << fmt << " | ETA";
+        format(fmt,left);
+        os << fmt;
+        return os;
+    }
+
 
 }

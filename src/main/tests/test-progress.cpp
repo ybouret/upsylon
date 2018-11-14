@@ -27,9 +27,11 @@ Y_UTEST(progress)
     {
         chrono.sleep( 0.01 * alea.to<double>() );
         bar.update(i,iter_max);
-        std::cerr << "Done: " << bar.done << std::endl;
-        std::cerr << "Left: " << bar.left << std::endl;
+        //std::cerr << "Done: " << bar.done << std::endl;
+        //std::cerr << "Left: " << bar.left << std::endl;
+        bar.display(std::cerr) << '\r';
     }
+    std::cerr << std::endl;
 
 }
 Y_UTEST_DONE()

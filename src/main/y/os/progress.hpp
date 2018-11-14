@@ -3,6 +3,7 @@
 #define Y_OS_PROGRESS_INCLUDE 1
 
 #include "y/os/rt-clock.hpp"
+#include <iosfwd>
 
 namespace upsylon
 {
@@ -28,6 +29,8 @@ namespace upsylon
         //! fmt size >= format_size!
         static void format(char *fmt, const double tmx );
 
+        std::ostream &display( std::ostream & ) const;
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(progress);
         uint64_t mark;
@@ -37,6 +40,7 @@ namespace upsylon
         const double percent;
         const double done;
         const double left;
+        mutable unsigned counter;
     };
 }
 
