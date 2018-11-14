@@ -1,6 +1,7 @@
 #include "y/os/progress.hpp"
 #include "y/utest/run.hpp"
 #include "y/os/wtime.hpp"
+#include <cstdio>
 
 using namespace upsylon;
 
