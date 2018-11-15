@@ -37,9 +37,9 @@ namespace upsylon
         uint64_t bips;
 
     public:
-        const double percent;
-        const double done;
-        const double left;
+        const double     percent;
+        const double     done;
+        const double     left;
         mutable unsigned counter;
     };
 }

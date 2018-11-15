@@ -14,7 +14,8 @@ namespace upsylon
     bips(0),
     percent(0),
     done(0),
-    left(0)
+    left(0),
+    counter(0)
     {
     }
 
