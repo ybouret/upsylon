@@ -25,7 +25,7 @@ namespace upsylon
             virtual const void  *address() const throw() = 0; //!< address of first item
             virtual  size_t      size() const throw()    = 0; //!< held items
 
-            const string & key() const throw();
+            const string & key() const throw(); //!< for fields
 
         protected:
             explicit field_info(const string &id, const size_t sz); //!< setup

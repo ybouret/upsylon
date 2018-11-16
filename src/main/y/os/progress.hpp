@@ -1,25 +1,27 @@
 //! \file
 #ifndef Y_OS_PROGRESS_INCLUDED
-#define Y_OS_PROGRESS_INCLUDE 1
+#define Y_OS_PROGRESS_INCLUDED 1
 
 #include "y/os/rt-clock.hpp"
 #include <iosfwd>
 
 namespace upsylon
 {
+    //! compute progress timings
     class progress : public rt_clock
     {
     public:
-        static const size_t max_days    = 99;
-        static const size_t max_seconds = max_days * 24 * 60 * 60;
-        static const size_t format_size = 16;
+        static const size_t max_days    = 99; //!< days limit
+        static const size_t max_seconds = max_days * 24 * 60 * 60; //!< seconds limit
+        static const size_t format_size = 16; //!< char[format_size] for output
 
-        explicit progress();
-        virtual ~progress() throw();
+        explicit progress();         //!< setup
+        virtual ~progress() throw(); //!< destructor
 
-        void start() throw();
-        void update(  double ratio );
+        void start() throw();        //!< initialize timer
+        void update(double ratio);   //!< update predictions 0<=ratio<=1
 
+        //! wrapper to update
         template <typename T>
         void update( const T num, const T max )
         {
@@ -29,6 +31,7 @@ namespace upsylon
         //! fmt size >= format_size!
         static void format(char *fmt, const double tmx );
 
+        //! output
         std::ostream &display( std::ostream & ) const;
 
     private:
@@ -37,10 +40,10 @@ namespace upsylon
         uint64_t bips;
 
     public:
-        const double     percent;
-        const double     done;
-        const double     left;
-        mutable unsigned counter;
+        const double     percent; //!< 0..100
+        const double     done;    //!< ellapsed time so far
+        const double     left;    //!< time needed to finish
+        mutable unsigned counter; //!< counter for display
     };
 }
 

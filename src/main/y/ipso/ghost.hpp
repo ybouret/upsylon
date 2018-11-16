@@ -53,7 +53,7 @@ namespace upsylon
             uint8_t       *tail; //!< first writable byte
             const uint8_t *last; //!< workspace+allocated
         public:
-            const indices_type   indices;
+            const indices_type   indices; //!< relative indices to address data
         private:
             size_t         allocated;
             void          *workspace;

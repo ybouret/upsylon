@@ -40,6 +40,7 @@ namespace upsylon
     //! local byte swap
 #define Y_MSWAP(I) const uint8_t tmp = P[I]; P[I] = Q[I]; Q[I] = tmp
 
+    //! any memory swap
     inline void mswap( void *p, void *q, const size_t size ) throw()
     {
         assert(size>0);

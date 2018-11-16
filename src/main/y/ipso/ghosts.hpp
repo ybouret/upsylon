@@ -9,14 +9,16 @@ namespace upsylon
     namespace ipso
     {
 
+        //! a pair of ghosts
         class ghosts
         {
         public:
             ghost source; //!< 'inner' zone, read and send
             ghost target; //!< 'outer' zone, recieve and write
 
-            virtual ~ghosts() throw();
+            virtual ~ghosts() throw(); //!< destructor
 
+            //! setup both ghosts
             template <typename LAYOUT>
             inline ghosts(const LAYOUT &parted_layout,
                           const int     source_peer,
@@ -30,6 +32,7 @@ namespace upsylon
 
             }
 
+            //! prepare memory
             void ensure( const size_t block_size );
 
             //! directly exchange data
