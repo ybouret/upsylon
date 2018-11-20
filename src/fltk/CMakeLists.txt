@@ -14,6 +14,8 @@ INSTALL( FILES ${main_decl} DESTINATION include/y/fltk )
 
 
 ADD_LIBRARY(y-fltk STATIC ${main_srcs})
+INSTALL( TARGETS y-fltk ARCHIVE DESTINATION lib )
+
 ADD_SUBDIRECTORY(tests)
 
 ENDIF()
