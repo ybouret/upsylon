@@ -54,3 +54,5 @@ MESSAGE( STATUS "Scanning C++ Wrapping Libraries" )
 Y_SEPLINE()
 MESSAGE(STATUS "")
 
+ADD_SUBDIRECTORY(fltk)
+

@@ -1,4 +1,4 @@
-PROJECT(mpi CXX)
+PROJECT(y-mpi CXX)
 
 INCLUDE_DIRECTORIES(. ../main)
 INCLUDE(../../scripts/mpi.cmake)
