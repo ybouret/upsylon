@@ -21,26 +21,57 @@ namespace upsylon
         }
         
         const string & Curve:: key() const throw() { return name; }
+
+
+        Point Curve:: getMin() const
+        {
+            const size_t n = size();
+            if(n<=0) throw exception("FLTK::Curve: no points to getMin");
+
+            const array<Point> &self = *this;
+            Point ans = self[1];
+            for(size_t i=n;i>1;--i)
+            {
+                ans = Point::min_of(ans,self[i]);
+            }
+            return ans;
+
+        }
+
+        Point Curve:: getMax() const
+        {
+            const size_t n = size();
+            if(n<=0) throw exception("FLTK::Curve: no points to getMax");
+
+            const array<Point> &self = *this;
+            Point ans = self[1];
+            for(size_t i=n;i>1;--i)
+            {
+                ans = Point::max_of(ans,self[i]);
+            }
+            return ans;
+        }
+
+
         
-        
-        Curves:: Curves() throw() : Curve::DB()
+        Curves:: Curves() throw() : Curve::Set()
         {}
         
         
         Curves:: ~Curves() throw()
         {
         }
-    
-        Curve & Curves:: operator[]( const string &id ) 
+
+        Curve & Curves:: operator[]( const string &id )
         {
-            Curve::Ptr *ppC = search(id);
+            Curve::Pointer *ppC = search(id);
             if( ppC )
             {
                 return **ppC;
             }
-            else 
+            else
             {
-                Curve::Ptr p( new Curve(id) );
+                Curve::Pointer p( new Curve(id) );
                 if( ! insert(p) )
                     throw exception("Curves.insert('%s') unexpected failure!!!", *id );
                 return *p;
@@ -55,7 +86,7 @@ namespace upsylon
         
         const Curve & Curves:: operator[]( const string &id ) const
         {
-            const Curve::Ptr *ppC = search(id);
+            const Curve::Pointer *ppC = search(id);
             if( !ppC )
             {
                 throw exception("no Curves['%s']",*id );
@@ -68,7 +99,38 @@ namespace upsylon
             const string id = name;
             return (*this)[id];
         }
-        
+
+
+        Point Curves:: getMin() const
+        {
+            if( size() <= 0 )
+            {
+                throw exception("FLTK::Curves empty for getMin()");
+            }
+            const_iterator i   = begin();
+            Point          ans = (**i).getMin();
+            while( ++i != end() )
+            {
+                ans = Point::min_of(ans,(**i).getMin());
+            }
+            return ans;
+        }
+
+        Point Curves:: getMax() const
+        {
+            if( size() <= 0 )
+            {
+                throw exception("FLTK::Curves empty for getMax()");
+            }
+            const_iterator i   = begin();
+            Point          ans = (**i).getMin();
+            while( ++i != end() )
+            {
+                ans = Point::max_of(ans,(**i).getMax());
+            }
+            return ans;
+        }
+
         
     }
 }

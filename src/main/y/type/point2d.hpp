@@ -98,6 +98,22 @@ namespace upsylon
             return (lhs.x!=rhs.x) || (lhs.y!=rhs.y);
         }
 
+        //! min of coordinates
+        static inline point2d min_of( point2d lhs, const point2d rhs ) throw()
+        {
+            if(rhs.x<lhs.x) lhs.x = rhs.x;
+            if(rhs.y<lhs.y) lhs.y = rhs.y;
+            return lhs;
+        }
+
+        //! min of coordinates
+        static inline point2d max_of( point2d lhs, const point2d rhs ) throw()
+        {
+            if(rhs.x>lhs.x) lhs.x = rhs.x;
+            if(rhs.y>lhs.y) lhs.y = rhs.y;
+            return lhs;
+        }
+
     };
 
 }

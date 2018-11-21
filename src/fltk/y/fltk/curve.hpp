@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_FLTK_CURVE_INCLUDED
 #define Y_FLTK_CURVE_INCLUDED 1
 
@@ -16,9 +17,10 @@ namespace upsylon
     namespace FLTK 
     {
         
-        typedef point2d<double>   Point;
-        typedef vector<Point>     Points;
-        
+        typedef point2d<double>   Point;   //!< alias
+        typedef vector<Point>     Points;  //!< alias
+
+        //! named points+color
         class Curve : public Points, public counted
         {
         public:
@@ -30,27 +32,31 @@ namespace upsylon
             Fl_Color     color;
             
             const string &key() const throw();
-            typedef intr_ptr<string,Curve>      Ptr;
-            typedef set<string,Curve::Ptr>      DB;
-            
+            typedef intr_ptr<string,Curve>      Pointer;
+            typedef set<string,Curve::Pointer>  Set;
+
+            Point getMin() const;
+            Point getMax() const;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Curve);
         };
         
-        
-        class Curves : public Curve::DB
+        //! a set of named curves
+        class Curves : public Curve::Set
         {
         public:
-            explicit Curves() throw();
-            virtual ~Curves() throw();
+            explicit Curves() throw(); //!< setup
+            virtual ~Curves() throw(); //!< desctructor
             
-            Curve & operator[]( const string &id ); //!< existing or create
-            const Curve & operator[]( const string &id ) const; //! must exist
+            Curve &       operator[]( const string &id );       //!< existing or create
+            const Curve & operator[]( const string &id ) const; //!< must exist
             
-            Curve & operator[]( const char * );
-            const Curve & operator[]( const char *) const;
-            
-            
+            Curve &       operator[]( const char * );       //!< alias: get existing or create
+            const Curve & operator[]( const char *) const;  //!< alias: must exist
+
+            Point getMin() const;
+            Point getMax() const;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Curves);
         };
