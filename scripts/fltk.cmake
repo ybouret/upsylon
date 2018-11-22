@@ -12,6 +12,10 @@ MESSAGE( STATUS "Adding FTLK support" )
 ########################################################################
 SET(FLTK_FOUND OFF)
 
+IF(MSVC)
+
+ELSE(MSVC)
+
 SET(FLTK_BIN $ENV{FLTK_BIN} CACHE STRING "Override fltk-config location" )
 IF( "" STREQUAL "${FLTK_BIN}" )
 	
@@ -143,3 +147,4 @@ ENDMACRO(FLUID_UIC)
 
 ENDIF(FLTK_FOUND)
 
+ENDIF(MSVC)
