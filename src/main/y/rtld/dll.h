@@ -15,7 +15,7 @@
 
 #if defined(Y_WIN)
 #include <windows.h>
-#define Y_DLL_API  WINAPI
+//#define Y_DLL_API  WINAPI
 
 #if defined(Y_IMPORT)
 #define Y_DLL_SPEC __declspec(dllimport)
@@ -25,7 +25,7 @@
 
 #else
 
-#define Y_DLL_API  __cdecl
+//#define Y_DLL_API  _cdecl
 #define Y_DLL_SPEC
 
 #endif

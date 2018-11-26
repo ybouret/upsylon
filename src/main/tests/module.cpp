@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-Y_DLL double Y_DLL_API  Sin( double x )
+Y_DLL double Sin( double x )
 {
     return sin(x);
 }
