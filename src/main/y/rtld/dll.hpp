@@ -6,7 +6,7 @@
 #define Y_IMPORT 1
 #endif
 
-#include "y/rtld/export.h"
+#include "y/rtld/dll.h"
 #include "y/string.hpp"
 
 namespace upsylon

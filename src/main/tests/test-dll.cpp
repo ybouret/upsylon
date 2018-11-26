@@ -3,7 +3,7 @@
 
 using namespace upsylon;
 
-typedef double (*func)(double);
+typedef double (Y_DLL_API *func)(double);
 
 Y_UTEST(dll)
 {
