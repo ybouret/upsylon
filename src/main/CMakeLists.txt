@@ -8,7 +8,7 @@ SET(main_srcs ${main_decl} ${main_code})
 SOURCE_GROUP( main FILES ${main_srcs} )
 INSTALL( FILES ${main_decl} DESTINATION include/y )
 
-FILE(GLOB os_decl y/os/*.hpp)
+FILE(GLOB os_decl y/os/*.h*)
 FILE(GLOB os_code y/os/*.cpp)
 SET(os_srcs ${os_decl} ${os_code})
 SOURCE_GROUP( os FILES ${os_srcs} )
@@ -172,6 +172,12 @@ SET(ipso_srcs ${ipso_decl} ${ipso_code})
 SOURCE_GROUP( ipso FILES ${ipso_srcs} )
 INSTALL( FILES ${ipso_decl} DESTINATION include/y/ipso )
 
+FILE(GLOB rtld_decl y/rtld/*.h*)
+FILE(GLOB rtld_code y/rtld/*.cpp)
+SET(rtld_srcs ${rtld_decl} ${rtld_code})
+SOURCE_GROUP( rtld FILES ${rtld_srcs} )
+INSTALL( FILES ${rtld_decl} DESTINATION include/y/rtld )
+
 
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
@@ -201,6 +207,7 @@ ${math_srcs}
 ${functor_srcs}
 ${fs_srcs}
 ${ipso_srcs}
+${rtld_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )

@@ -12,6 +12,10 @@ FILE(GLOB srcs test-*.cpp)
 ADD_EXECUTABLE(test-main main.cpp ${srcs} support.hpp)
 TARGET_LINK_Y(test-main)
 
+ADD_LIBRARY(module MODULE module.cpp)
+
+
+
 ENABLE_TESTING()
 ADD_TEST(Platform    test-main platform)
 ADD_TEST(Types       test-main types)
