@@ -5,6 +5,12 @@
 #include "y/os/setup.h"
 
 
+#if defined(__cplusplus)
+#define Y_EXPORT extern "C"
+#else
+#define Y_EXPORT
+#endif
+
 
 #if defined(Y_WIN)
 

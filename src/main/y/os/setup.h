@@ -112,5 +112,13 @@ typedef __int64 int64_t;
 #    error "no STDINT"
 #endif
 
+#if defined(__cplusplus)
+#include <cstddef>
+#include <cassert>
+#else
+#include <stddef.h>
+#include <assert.h>
+#endif
+
 #endif
 

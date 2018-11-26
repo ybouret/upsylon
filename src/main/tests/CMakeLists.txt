@@ -15,7 +15,6 @@ TARGET_LINK_Y(test-main)
 ADD_LIBRARY(module MODULE module.cpp)
 
 
-
 ENABLE_TESTING()
 ADD_TEST(Platform    test-main platform)
 ADD_TEST(Types       test-main types)
@@ -92,6 +91,7 @@ ADD_TEST(ipso        test-main  ipso)
 ADD_TEST(ipso_io     test-main  ipso_io)
 ADD_TEST(ipso_gh     test-main  ipso_gh)
 ADD_TEST(progress    test-main  progress)
+ADD_TEST(NAME dll COMMAND test-main dll $<TARGET_FILE:module>)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V
