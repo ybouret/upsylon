@@ -3,7 +3,7 @@
 #include <cmath>
 
 Y_EXPORT
-double Sin( double x )
+double Y_DLL_API  Sin( double x )
 {
     return sin(x);
 }
