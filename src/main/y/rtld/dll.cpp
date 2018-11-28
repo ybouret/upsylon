@@ -14,7 +14,12 @@ namespace upsylon
         {
             Y_GIANT_LOCK();
 #if defined(Y_WIN)
-
+			HMODULE h = ::LoadLibrary(id);
+			if (!h)
+			{
+				throw win32::exception(::GetLastError(),"LoadLibrary");
+			}
+			return (void *)h;
 #else
             void   *h = dlopen(id,RTLD_NOW);
             if( !h )
@@ -29,7 +34,7 @@ namespace upsylon
         {
             assert(h);
 #if defined(Y_WIN)
-
+			::FreeLibrary((HMODULE)h);
 #else
             (void) dlclose(h);
 #endif
@@ -45,6 +50,7 @@ namespace upsylon
         if(--(*pcount)<=0)
         {
             __rtld_quit(handle);
+			handle = 0;
             object::release1(pcount);
         }
     }
@@ -94,7 +100,7 @@ namespace upsylon
     void * dll:: load( const string &symbol ) throw()
     {
 #if defined(Y_WIN)
-
+		return (void *)(::GetProcAddress((HMODULE)handle, *symbol));
 #else
         return dlsym(handle,*symbol);
 #endif
