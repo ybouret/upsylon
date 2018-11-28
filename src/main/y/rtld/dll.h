@@ -11,26 +11,50 @@
 #endif
 
 
-
-
 #if defined(Y_WIN)
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-//#define Y_DLL_API  WINAPI
-
-#if defined(Y_IMPORT)
-#define Y_DLL_SPEC __declspec(dllimport)
-#else
+#define Y_DLL_API  __cdecl
 #define Y_DLL_SPEC __declspec(dllexport)
 #endif
 
-#else
-
-//#define Y_DLL_API  _cdecl
+#if defined(Y_BSD)
+#define Y_DLL_API
 #define Y_DLL_SPEC
+#endif
+
+#define Y_EXPORT Y_DLL_EXTERN Y_DLL_SPEC
+
+//______________________________________________________________________________
+//
+// Specific Module Init/Quit
+//______________________________________________________________________________
+
+#if defined(Y_BSD)
+
+#define Y_DLL_SETUP(ON_INIT,ON_QUIT) \
+__attribute__((constructor)) void OnInit() { ON_INIT(); } \
+__attribute__((destructor))  void OnQuit() { ON_QUIT(); }
 
 #endif
 
-#define Y_DLL Y_DLL_EXTERN Y_DLL_SPEC
+#if defined(Y_WIN)
+
+#define Y_DLL_SETUP(ON_INIT,ON_QUIT) \
+extern "C" BOOL WINAPI DllMain(HINSTANCE hinstDLL,DWORD fdwReason,LPVOID)\
+{\
+(void)hinstDLL;\
+switch( fdwReason )\
+{\
+case DLL_PROCESS_ATTACH: ON_INIT(); break;\
+case DLL_THREAD_ATTACH:  ON_INIT(); break;\
+case DLL_THREAD_DETACH:  ON_QUIT(); break;\
+case DLL_PROCESS_DETACH: ON_QUIT(); break;\
+}\
+return TRUE;\
+}
+
+#endif
 
 
 #endif

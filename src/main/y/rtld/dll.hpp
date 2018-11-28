@@ -2,10 +2,6 @@
 #ifndef Y_RTLD_DLL_INCLUDED
 #define Y_RTLD_DLL_INCLUDED 1
 
-#if !defined(Y_IMPORT)
-#define Y_IMPORT 1
-#endif
-
 #include "y/rtld/dll.h"
 #include "y/string.hpp"
 
