@@ -19,12 +19,12 @@ namespace upsylon
             const string name;               //!< its name
 
         protected:
-            VM         vm;
-            lua_State *L;
-            explicit FunctionType(const string &, const VM &);
-            FunctionType(const FunctionType &other);
-            void pull();
-            void call( const int narg, const int nret);
+            VM         vm; //!< shared lua_State
+            lua_State *L;  //!< the lua_State
+            explicit FunctionType(const string &, const VM &); //!< setup
+            FunctionType(const FunctionType &other);           //!< copy
+            void pull();                                       //!< pull the function by its name
+            void call( const int narg, const int nret);        //!< execute the function
 
         private:
             Y_DISABLE_ASSIGN(FunctionType);

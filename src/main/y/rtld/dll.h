@@ -23,7 +23,11 @@
 #define Y_DLL_SPEC
 #endif
 
+//! export function
 #define Y_EXPORT Y_DLL_EXTERN Y_DLL_SPEC
+
+//! export data
+#define Y_SHARED Y_DLL_SPEC
 
 //______________________________________________________________________________
 //
