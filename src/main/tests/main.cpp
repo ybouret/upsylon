@@ -83,6 +83,7 @@ Y_UTEST_INIT(100)
     Y_UTEST(ipso_gh);
     Y_UTEST(progress);
     Y_UTEST(dll);
+    Y_UTEST(timings);
 }
 Y_UTEST_EXEC()
 
