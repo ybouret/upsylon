@@ -78,9 +78,12 @@ namespace upsylon
                     assert(aerr.size()==aorg.size());
                     assert(used.size()==aorg.size());
                     const size_t nvar = aorg.size();
+
                     //__________________________________________________________
                     //
+                    //
                     // initialize
+                    //
                     //__________________________________________________________
                     if(verbose) { std::cerr << "[LSF] initialize" << std::endl; }
                     if(nvar<=0)
@@ -105,7 +108,9 @@ namespace upsylon
                     {
                         //______________________________________________________
                         //
+                        //
                         // start cycle: normalize alpha
+                        //
                         //______________________________________________________
                         Y_LSF_OUT(std::cerr << "[LSF] D2=" << D2 << "@" << aorg << std::endl);
                         for(size_t i=nvar;i>0;--i)
@@ -128,7 +133,9 @@ namespace upsylon
 
                         //______________________________________________________
                         //
+                        //
                         // compute curvature if possible, using current lam
+                        //
                         //______________________________________________________
                     FIND_STEP:
                         if( !compute_curvature() )
@@ -160,6 +167,7 @@ namespace upsylon
                         if(D2_try>=D2)
                         {
                             Y_LSF_OUT(std::cerr << "[LSF] local minimum" << std::endl);
+                            
                             //__________________________________________________
                             //
                             // test variable convergence
@@ -197,7 +205,7 @@ namespace upsylon
                         //______________________________________________________
                         tao::set(aorg,atry);
                         const T D2_err = __fabs(D2 - D2_try);
-                        if( D2_err <= numeric<T>::ftol * D2 )
+                        if( D2_err <= numeric<T>::sqrt_ftol * D2 )
                         {
                             Y_LSF_OUT(std::cerr << "[LSF] least squares convergence" << std::endl);
                             goto CONVERGED;

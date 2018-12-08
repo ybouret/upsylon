@@ -151,7 +151,16 @@ namespace upsylon
                                     Gradient          &grad,
                                     const array<bool> &used) = 0;
 
+                //! add Sum of Squared Errors (SSE) and Sum of Square Residuals (SSR) and Degrees of Freedom
+                virtual void add_SSE_SSR( T &SSE, T &SSR ) const = 0;
 
+                //! compute R2 after a D2 is computed
+                inline T computeR2() const
+                {
+                    T SSE=0, SSR=0;
+                    add_SSE_SSR(SSE,SSR);
+                    return SSR/(SSR+SSE+numeric<T>::tiny);
+                }
 
             protected:
                 //! initialize
@@ -201,11 +210,42 @@ namespace upsylon
                 {}
 
                 //! X.size()
-                virtual size_t count() const throw()
+                virtual inline size_t count() const throw()
                 {
                     assert(X.size()==Y.size());
                     assert(X.size()==Yf.size());
                     return X.size();
+                }
+
+                //! implementation for one sample
+                virtual inline void add_SSE_SSR( T &SSE, T &SSR ) const
+                {
+                    assert(X.size()==Y.size());
+                    assert(X.size()==Yf.size());
+                    assert(X.size()>0);
+
+                    const size_t n = X.size();
+
+                    // first passs
+                    T ybar=0;
+                    T sse =0;
+                    for(size_t i=n;i>0;--i)
+                    {
+                        const T Yi = Y[i];
+                        ybar += Yi;
+                        sse  += square_of(Yf[i]-Yi);
+                    }
+
+                    // second pass
+                    ybar/=n;
+                    T ssr=0;
+                    for(size_t i=n;i>0;--i)
+                    {
+                        ssr += square_of(Yf[i]-ybar);
+                    }
+
+                    SSE += sse;
+                    SSR += ssr;
                 }
 
                 //! compute D2 only
@@ -316,6 +356,15 @@ namespace upsylon
                     return ans;
                 }
 
+                //! gathet from samples
+                virtual inline void add_SSE_SSR( T &SSE, T &SSR ) const
+                {
+                    const typename Sample<T>::Collection &self = *this;
+                    for(size_t k=self.size();k>0;--k)
+                    {
+                        self[k]->add_SSE_SSR(SSE,SSR);
+                    }
+                }
 
                 //! create and append a new sample
                 Sample<T> & add(const Array &userX,
