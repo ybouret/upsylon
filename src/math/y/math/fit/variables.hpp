@@ -123,10 +123,13 @@ namespace upsylon
 
                 //! create a global variable
                 inline Variables & operator()(const string &name) { return create_global(name); }
+
                 //! create a global variable
                 inline Variables & operator()(const char   *name) { return create_global(name); }
+
                 //! create a local variable
                 Variables        & operator()(const string &name, const Variable::Pointer &link);
+
                 //! create a local variable
                 inline Variables & operator()(const char   *name, const Variable::Pointer &link)
                 {
@@ -164,6 +167,31 @@ namespace upsylon
                     const Variables &self = *this;
                     return arr[ self[name]->check_index(arr.size()) ];
                 }
+
+                //! boolean helpers, set true
+                inline void on( array<bool> &flags, const string &id ) const
+                {
+                    (*this)(flags,id) = true;
+                }
+
+                //! boolean helpers, set true
+                inline void on( array<bool> &flags, const char *id ) const
+                {
+                    (*this)(flags,id) = true;
+                }
+
+                //! boolean helpers, set false
+                inline void off( array<bool> &flags, const string &id ) const
+                {
+                    (*this)(flags,id) = false;
+                }
+
+                //! boolean helpers, set false
+                inline void off( array<bool> &flags, const char *id ) const
+                {
+                    (*this)(flags,id) = false;
+                }
+
 
                 //! get max(name.size())
                 size_t get_max_name_size() const throw();

@@ -2,7 +2,7 @@
 #ifndef Y_SORT_INDEX_INCLUDED
 #define Y_SORT_INDEX_INCLUDED 1
 
-#include "y/sequence/array.hpp"
+#include "y/sequence/vector.hpp"
 #include "y/comparison.hpp"
 
 namespace upsylon
@@ -63,6 +63,20 @@ namespace upsylon
                 assert(indices[i]>0);
                 assert(indices[i]<=target.size());
                 target[i] = source[indices[i]];
+            }
+        }
+
+        //! with the help of local memory
+        template <typename T> static inline
+        void rank( array<T> &arr, const array<size_t> &idx )
+        {
+            assert(arr.size()==idx.size());
+            const size_t num = arr.size();
+            vector<T>    tmp(num);
+            rank(tmp,arr,idx);
+            for(size_t i=num;i>0;--i)
+            {
+                bswap(tmp[i],arr[i]);
             }
         }
 

@@ -186,7 +186,7 @@ namespace upsylon
                             if(!increase_lambda())
                             {
                                 Y_LSF_OUT(std::cerr << "[LSF] spurious parameters" << std::endl);
-                                return false;
+                                goto CONVERGED; // local minimum...
                             }
                             goto FIND_STEP;
                         }
