@@ -68,6 +68,10 @@ namespace upsylon
                         a[j][i]=(a[jm][i]*fac-a[jm][im])/(fac-T(1));
                         fac=CON2*fac;
                         const T errt=max_of<T>(__fabs(a[j][i]-a[jm][i]),__fabs(a[j][i]-a[jm][im]));
+                        if(!(errt>=0))
+                        {
+                            throw libc::exception(EDOM, "invalid derivative @%.15g", double(x));
+                        }
                         if( ini || (errt<=err) )
                         {
                             err = errt;
