@@ -23,7 +23,7 @@ namespace upsylon
             //! map from cstdin
             explicit irstream( const ios::cstdin_t & );
 
-            //! desctructor
+            //! destructor
             virtual ~irstream() throw();
 
             virtual bool query(char &C); //!< get one char

@@ -84,6 +84,7 @@ Y_UTEST_INIT(100)
     Y_UTEST(progress);
     Y_UTEST(dll);
     Y_UTEST(timings);
+    Y_UTEST(ichannel);
 }
 Y_UTEST_EXEC()
 

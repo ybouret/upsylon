@@ -20,6 +20,11 @@ namespace upsylon
     {
         static const char fn[] = "ios::local_file";
 
+        descriptor::type  local_file:: operator*() throw()
+        {
+            return handle;
+        }
+
         local_file:: ~local_file() throw()
         {
             switch(type)

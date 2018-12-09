@@ -9,6 +9,7 @@ namespace upsylon
 {
     namespace ios
     {
+
         enum
         {
             readable = 0x01, //!< readable bit
@@ -61,6 +62,8 @@ namespace upsylon
             //! helper
             inline bool is_writable() const throw() { return 0 != ( access & writable); }
 
+            //! access operator, copy of handle
+            descriptor::type operator*() throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(local_file);
@@ -68,6 +71,7 @@ namespace upsylon
         protected:
             local_file( handle_t user_handle, size_t user_access ) throw(); //!< for pipe creation..
             handle_t       handle;   //!< the file descriptor
+            
         public:
             const unsigned access;   //!< readable/writable
             const type_t   type;     //!< core type
