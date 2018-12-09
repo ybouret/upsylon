@@ -96,6 +96,15 @@ namespace upsylon
             }
         }
 
+        //! comparison by decreasing absolute value
+        template <typename T> static inline
+        int decreasing_abs( const T &lhs, const T &rhs )
+        {
+            const T al = (lhs<0?-lhs:lhs);
+            const T ar = (rhs<0?-rhs:rhs);
+            return decreasing<T>(al,ar);
+        }
+
     private:
         template <typename T> static inline
         int __lexicographic(const T     *small_data,

@@ -34,6 +34,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(extend);
     Y_UTEST(smooth);
     Y_UTEST(bspl);
+    Y_UTEST(stat);
 }
 Y_UTEST_EXEC()
 
