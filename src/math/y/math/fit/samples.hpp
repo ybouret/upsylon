@@ -7,6 +7,7 @@
 #include "y/math/kernel/lu.hpp"
 #include "y/math/kernel/tao.hpp"
 #include "y/math/fcn/derivative.hpp"
+#include "y/math/stat/metrics.hpp"
 
 namespace upsylon
 {
@@ -162,6 +163,10 @@ namespace upsylon
                     return SSR/(SSR+SSE+numeric<T>::tiny);
                 }
 
+                //! compute correlation
+                virtual T computeCorr( correlation<T> &corr ) const = 0;
+
+
             protected:
                 //! initialize
                 inline explicit SampleType(const size_t nvar_max) :
@@ -307,6 +312,17 @@ namespace upsylon
                     return ans;
                 }
 
+                //! correlation from fitted and source data
+                virtual T computeCorr( correlation<T> &corr ) const
+                {
+                    corr.free();
+                    for(size_t i=X.size();i>0;--i)
+                    {
+                        corr.add( Y[i], Yf[i] );
+                    }
+                    return corr.compute();
+                }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Sample);
             };
@@ -356,7 +372,7 @@ namespace upsylon
                     return ans;
                 }
 
-                //! gathet from samples
+                //! gather from samples
                 virtual inline void add_SSE_SSR( T &SSE, T &SSR ) const
                 {
                     const typename Sample<T>::Collection &self = *this;
@@ -364,6 +380,22 @@ namespace upsylon
                     {
                         self[k]->add_SSE_SSR(SSE,SSR);
                     }
+                }
+
+                //! gather from all samples and get global correlation
+                virtual T computeCorr( correlation<T> &corr ) const
+                {
+                    const typename Sample<T>::Collection &self = *this;
+                    corr.free();
+                    for(size_t k=self.size();k>0;--k)
+                    {
+                        const Sample<T> &sample = *self[k];
+                        for(size_t i=sample.X.size();i>0;--i)
+                        {
+                            corr.add( sample.Y[i], sample.Yf[i] );
+                        }
+                    }
+                    return corr.compute();
                 }
 
                 //! create and append a new sample

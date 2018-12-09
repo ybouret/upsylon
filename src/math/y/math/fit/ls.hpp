@@ -95,7 +95,7 @@ namespace upsylon
                     aerr.ld(0);
                     this->acquire(nvar);
                     alpha.make(nvar,nvar);
-                    curv.make(nvar,nvar);
+                    curv. make(nvar,nvar);
 
                     p   = -4;
                     compute_lam();

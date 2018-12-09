@@ -127,6 +127,8 @@ Y_UTEST(lsf)
     diff2 = slope2;
 
 
+    correlation<double> corr;
+
     Fit::Sample<double>  &SS1 = SSf.add(t1,x1,z1);
     SS1.variables("t0")("slope",SSf.variables["slope1"]);
     std::cerr << "SS1.variables=" << SS1.variables << std::endl;
@@ -162,6 +164,9 @@ Y_UTEST(lsf)
     {
         S1.variables.diplay(std::cerr,a1,aerr,"\t\t");
         save("fit1.dat",t1,z1);
+        std::cerr << "\t\t\tS1.R2   =" << S1.computeR2() << std::endl;
+        std::cerr << "\t\t\tS1.corr =" << S1.computeCorr(corr) << std::endl;
+
     }
     else
     {
@@ -173,6 +178,8 @@ Y_UTEST(lsf)
     {
         S2.variables.diplay(std::cerr,a2,aerr,"\t\t");
         save("fit2.dat",t2,z2);
+        std::cerr << "\t\t\tS2.R2   =" << S2.computeR2() << std::endl;
+        std::cerr << "\t\t\tS2.corr =" << S2.computeCorr(corr) << std::endl;
     }
     else
     {
@@ -187,6 +194,9 @@ Y_UTEST(lsf)
         SSf.variables.diplay(std::cerr,aa,aerr,"\t\t");
         save("fit1b.dat",t1,z1);
         save("fit2b.dat",t2,z2);
+        std::cerr << "\t\t\tSSf.R2  =" << SSf.computeR2() << std::endl;
+        std::cerr << "\t\t\tS2.corr =" << SSf.computeCorr(corr) << std::endl;
+
     }
     else
     {
