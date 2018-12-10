@@ -69,6 +69,12 @@ namespace upsylon
             return __average_of(seq.begin(), seq.size(), pSig);
         }
 
+        template <typename T> inline
+        T average_of( const array<T> &arr, T *pSig=0)
+        {
+            return __average_of( arr(), arr.size(), pSig);
+        }
+
 
 
         template <typename T, typename ITERATOR>

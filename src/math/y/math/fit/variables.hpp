@@ -222,7 +222,7 @@ namespace upsylon
 
                 //! display named values of array
                 template <typename T> inline
-                void diplay(std::ostream &os, const array<T> &arr,const char *pfx=NULL) const
+                void display(std::ostream &os, const array<T> &arr,const char *pfx=NULL) const
                 {
                     const size_t sz = get_max_name_size();
                     for(const_iterator i=begin();i!=end();++i)
@@ -248,7 +248,7 @@ namespace upsylon
 
                 //! display named values and errors
                 template <typename T> inline
-                void diplay(std::ostream &os, const array<T> &aorg, const array<T> &aerr, const char *pfx=NULL) const
+                void display(std::ostream &os, const array<T> &aorg, const array<T> &aerr, const char *pfx=NULL) const
                 {
                     const size_t sz = get_max_name_size();
                     const size_t nv = this->size();

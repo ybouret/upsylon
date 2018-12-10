@@ -57,7 +57,7 @@ Y_UTEST(fit_poly)
         {
             throw exception("Couldn't poly-fit n=%u", unsigned(n));
         }
-        sample.variables.diplay(std::cerr,aorg,aerr);
+        sample.variables.display(std::cerr,aorg,aerr);
         
     }
 
