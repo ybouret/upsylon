@@ -35,18 +35,18 @@ namespace upsylon
         {
         }
 
-        ichannel:: ichannel(const string &filename,
+        ichannel:: ichannel(const string        &filename,
                             const bulk::pointer &buff,
-                            const offset_t shift ) :
+                            const offset_t       shift ) :
         Y_ICHANNEL_CTOR(),
         fp(filename,readable)
         {
             (void) fp.seek(shift,from_set);
         }
 
-        ichannel:: ichannel(const char *filename,
+        ichannel:: ichannel(const char          *filename,
                             const bulk::pointer &buff,
-                            const offset_t shift ) :
+                            const offset_t       shift ) :
         Y_ICHANNEL_CTOR(),
         fp(filename,readable)
         {
