@@ -16,11 +16,11 @@ namespace upsylon
     {
 
         template <typename T, typename ITERATOR>
-        T __average_of( ITERATOR it, const size_t n, T *pSig)
+        T __average_of( ITERATOR it, const size_t n, T *pSdev)
         {
-            if(pSig)
+            if(pSdev)
             {
-                *pSig=0;
+                *pSdev=0;
             }
 
             if(n>0)
@@ -37,7 +37,7 @@ namespace upsylon
                     ave += tmp[i];
                 }
                 ave /= n;
-                if(pSig)
+                if(pSdev)
                 {
                     if(n>1)
                     {
@@ -51,8 +51,8 @@ namespace upsylon
                         {
                             sig += tmp[i];
                         }
-                        sig   = sqrt_of(sig)/(n-1);
-                        *pSig = sig;
+                        sig    = sqrt_of(sig)/(n-1);
+                        *pSdev = sig;
                     }
                 }
                 return ave;
@@ -68,6 +68,56 @@ namespace upsylon
         {
             return __average_of(seq.begin(), seq.size(), pSig);
         }
+
+
+
+        template <typename T, typename ITERATOR>
+        T __median_of( ITERATOR it, const size_t n, T *pAdev)
+        {
+            if(pAdev)
+            {
+                *pAdev=0;
+            }
+            if(n>0)
+            {
+                vector<T> tmp(n);
+                for(size_t i=1;i<=n;++i,++it)
+                {
+                    tmp[i] = *it;
+                }
+                hsort(tmp,comparison::increasing<T>);
+                const size_t nh = (n>>1);
+                const T      m  = ( (n&1) != 0 ) ? tmp[nh+1] : (tmp[nh]+tmp[nh+1])/T(2);
+
+                if(pAdev)
+                {
+                    for(size_t i=n;i>0;--i)
+                    {
+                        tmp[i] = abs_of(tmp[i]-m);
+                    }
+                    hsort(tmp,comparison::decreasing<T>);
+                    T adev = 0;
+                    for(size_t i=n;i>0;--i)
+                    {
+                        adev += tmp[i];
+                    }
+                    *pAdev = adev/n;
+                }
+                return m;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        template <typename SEQ> inline
+        typename SEQ::type median_of( const SEQ &seq, typename SEQ::type *pAdev=0)
+        {
+            return __median_of(seq.begin(), seq.size(), pAdev);
+        }
+
+
 
         //! compute Pearson's correlation coefficient
         template <typename T>
