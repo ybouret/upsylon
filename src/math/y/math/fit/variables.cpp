@@ -72,6 +72,7 @@ namespace upsylon
     }
 }
 
+
 namespace upsylon
 {
     namespace math
@@ -133,6 +134,7 @@ namespace upsylon
                 return sz;
             }
 
+            
         }
 
     }

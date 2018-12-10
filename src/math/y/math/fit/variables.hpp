@@ -7,6 +7,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/ptr/intr.hpp"
 #include "y/math/types.hpp"
+#include "y/string/tokenizer.hpp"
 
 namespace upsylon
 {
@@ -168,30 +169,56 @@ namespace upsylon
                     return arr[ self[name]->check_index(arr.size()) ];
                 }
 
+                
+
+
+
+                static inline bool is_colon( const char C )  { return ':' == C; }
+
+                //! load same value in a list of colon separated variables
+                template <typename T>
+                inline void ld( array<T> &arr, const string &id, typename type_traits<T>::parameter_type value ) const
+                {
+                    tokenizer<char>  tknz(id);
+                    const Variables &self = *this;
+                    const size_t     nvar = arr.size();
+                    while( tknz.next(is_colon) )
+                    {
+                        const string var_name( tknz.token(), tknz.units() );
+                        arr[ self[var_name]->check_index(nvar) ] = value;
+                    }
+                }
+
+                //! load same value in a list of colon separated variables
+                template <typename T>
+                inline void ld( array<T> &arr, const char *id, typename type_traits<T>::parameter_type value ) const
+                {
+                    const string _(id); ld<T>(arr,_,value);
+                }
+
                 //! boolean helpers, set true
                 inline void on( array<bool> &flags, const string &id ) const
                 {
-                    (*this)(flags,id) = true;
+                    ld<bool>(flags,id,true);
                 }
 
                 //! boolean helpers, set true
                 inline void on( array<bool> &flags, const char *id ) const
                 {
-                    (*this)(flags,id) = true;
+                    ld<bool>(flags,id,true);
                 }
 
                 //! boolean helpers, set false
                 inline void off( array<bool> &flags, const string &id ) const
                 {
-                    (*this)(flags,id) = false;
+                    ld<bool>(flags,id,false);
                 }
 
                 //! boolean helpers, set false
                 inline void off( array<bool> &flags, const char *id ) const
                 {
-                    (*this)(flags,id) = false;
+                    ld<bool>(flags,id,false);
                 }
-
 
                 //! get max(name.size())
                 size_t get_max_name_size() const throw();
