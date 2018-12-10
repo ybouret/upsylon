@@ -165,7 +165,7 @@ Y_UTEST(lsf)
         S1.variables.diplay(std::cerr,a1,aerr,"\t\t");
         save("fit1.dat",t1,z1);
         std::cerr << "\t\t\tS1.R2   =" << S1.computeR2() << std::endl;
-        std::cerr << "\t\t\tS1.corr =" << S1.computeCorr(corr) << std::endl;
+        std::cerr << "\t\t\tS1.corr =" << S1.compute_correlation(corr) << std::endl;
 
     }
     else
@@ -179,7 +179,7 @@ Y_UTEST(lsf)
         S2.variables.diplay(std::cerr,a2,aerr,"\t\t");
         save("fit2.dat",t2,z2);
         std::cerr << "\t\t\tS2.R2   =" << S2.computeR2() << std::endl;
-        std::cerr << "\t\t\tS2.corr =" << S2.computeCorr(corr) << std::endl;
+        std::cerr << "\t\t\tS2.corr =" << S2.compute_correlation(corr) << std::endl;
     }
     else
     {
@@ -195,7 +195,7 @@ Y_UTEST(lsf)
         save("fit1b.dat",t1,z1);
         save("fit2b.dat",t2,z2);
         std::cerr << "\t\t\tSSf.R2  =" << SSf.computeR2() << std::endl;
-        std::cerr << "\t\t\tS2.corr =" << SSf.computeCorr(corr) << std::endl;
+        std::cerr << "\t\t\tS2.corr =" << SSf.compute_correlation(corr) << std::endl;
 
     }
     else

@@ -78,11 +78,12 @@ namespace upsylon
                     assert(aerr.size()==aorg.size());
                     assert(used.size()==aorg.size());
                     const size_t nvar = aorg.size();
+                    aerr.ld(0);
 
                     //__________________________________________________________
                     //
                     //
-                    // initialize
+                    // initialize dynamic data and lambda
                     //
                     //__________________________________________________________
                     if(verbose) { std::cerr << "[LSF] initialize" << std::endl; }
@@ -92,7 +93,6 @@ namespace upsylon
                         return true;
                     }
 
-                    aerr.ld(0);
                     this->acquire(nvar);
                     alpha.make(nvar,nvar);
                     curv. make(nvar,nvar);
@@ -246,7 +246,7 @@ namespace upsylon
                     }
                     else if(nprm==ndat)
                     {
-                        Y_LSF_OUT(std::cerr<< "[LSF] no degree of freedom: interpolarion"<<std::endl);
+                        Y_LSF_OUT(std::cerr<< "[LSF] no degree of freedom: interpolation"<<std::endl);
                         aerr.ld(0);
                         return true;
                     }

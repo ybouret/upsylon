@@ -164,7 +164,7 @@ namespace upsylon
                 }
 
                 //! compute correlation
-                virtual T computeCorr( correlation<T> &corr ) const = 0;
+                virtual T compute_correlation( correlation<T> &corr ) const = 0;
 
 
             protected:
@@ -313,7 +313,7 @@ namespace upsylon
                 }
 
                 //! correlation from fitted and source data
-                virtual T computeCorr( correlation<T> &corr ) const
+                virtual T compute_correlation( correlation<T> &corr ) const
                 {
                     corr.free();
                     for(size_t i=X.size();i>0;--i)
@@ -383,7 +383,7 @@ namespace upsylon
                 }
 
                 //! gather from all samples and get global correlation
-                virtual T computeCorr( correlation<T> &corr ) const
+                virtual T compute_correlation( correlation<T> &corr ) const
                 {
                     const typename Sample<T>::Collection &self = *this;
                     corr.free();
