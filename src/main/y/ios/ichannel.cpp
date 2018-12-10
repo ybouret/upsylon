@@ -22,6 +22,9 @@ namespace upsylon
 
 }
 
+#include <cstdio>
+#include <cerrno>
+
 namespace upsylon
 {
     namespace ios
