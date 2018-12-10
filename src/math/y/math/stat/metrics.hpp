@@ -14,6 +14,61 @@ namespace upsylon
 {
     namespace math
     {
+
+        template <typename T, typename ITERATOR>
+        T __average_of( ITERATOR it, const size_t n, T *pSig)
+        {
+            if(pSig)
+            {
+                *pSig=0;
+            }
+
+            if(n>0)
+            {
+                vector<T> tmp(n);
+                for(size_t i=1;i<=n;++i,++it)
+                {
+                    tmp[i] = *it;
+                }
+                hsort(tmp,comparison::decreasing_abs<T>);
+                T ave = 0;
+                for(size_t i=n;i>0;--i)
+                {
+                    ave += tmp[i];
+                }
+                ave /= n;
+                if(pSig)
+                {
+                    if(n>1)
+                    {
+                        for(size_t i=n;i>0;--i)
+                        {
+                            tmp[i] = square_of(tmp[i]-ave);
+                        }
+                        hsort(tmp,comparison::decreasing<T>);
+                        T sig = 0;
+                        for(size_t i=n;i>0;--i)
+                        {
+                            sig += tmp[i];
+                        }
+                        sig   = sqrt_of(sig)/(n-1);
+                        *pSig = sig;
+                    }
+                }
+                return ave;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        template <typename SEQ> inline
+        typename SEQ::type average_of( const SEQ &seq, typename SEQ::type *pSig=0)
+        {
+            return __average_of(seq.begin(), seq.size(), pSig);
+        }
+
         //! compute Pearson's correlation coefficient
         template <typename T>
         class correlation : public list< point2d<T> >

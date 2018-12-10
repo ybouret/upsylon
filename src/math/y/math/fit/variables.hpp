@@ -168,10 +168,7 @@ namespace upsylon
                     const Variables &self = *this;
                     return arr[ self[name]->check_index(arr.size()) ];
                 }
-
                 
-
-
                 //! used to parse variables list
                 static inline bool is_colon( const char C )  { return ':' == C; }
 
