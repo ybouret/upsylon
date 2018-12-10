@@ -172,7 +172,7 @@ namespace upsylon
                 
 
 
-
+                //! used to parse variables list
                 static inline bool is_colon( const char C )  { return ':' == C; }
 
                 //! load same value in a list of colon separated variables

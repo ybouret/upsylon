@@ -14,17 +14,18 @@ namespace upsylon
 {
     namespace math
     {
-
+        //! compute Pearson's correlation coefficient
         template <typename T>
         class correlation : public list< point2d<T> >
         {
         public:
-            typedef point2d<T>    point_t;
-            typedef list<point_t> list_type;
+            typedef point2d<T>    point_t;   //!< alias for (x,y)
+            typedef list<point_t> list_type; //!< alias for base class
 
             inline explicit correlation() : list_type() {} //!< initialize
             inline virtual ~correlation() throw()       {} //!< destructor
 
+            //! add a new point to internal format
             template <typename U,typename V>
             inline void add( U u, V v)
             {
@@ -32,6 +33,7 @@ namespace upsylon
                 this->push_back(p);
             }
 
+            //! compute the coefficient
             inline T compute() const
             {
                 const size_t n = this->size();

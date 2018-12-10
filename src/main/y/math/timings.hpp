@@ -9,6 +9,7 @@ namespace upsylon
     namespace math
     {
 
+        //! computing different timings value for simulations
         struct timings
         {
             //! integer*10^exponent <= a
@@ -55,7 +56,8 @@ namespace upsylon
                 t_run = iter*dt;
                 return iter;
             }
-            
+
+            //! one call setup
             template <typename T> static inline
             size_t setup(T      &t_run,
                          T      &dt,

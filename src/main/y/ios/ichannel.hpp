@@ -17,12 +17,12 @@ namespace upsylon
         class bulk : public counted_object
         {
         public:
-            typedef arc_ptr<bulk> pointer;
+            typedef arc_ptr<bulk> pointer; //!< alias
 
-            size_t size;
-            char  *addr;
-            explicit bulk(const size_t n);
-            virtual ~bulk() throw();
+            size_t size; //!< available bytes
+            char  *addr; //!< first available bytes
+            explicit bulk(const size_t n); //!< make size>=n
+            virtual ~bulk() throw();       //!< destructor
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bulk);
