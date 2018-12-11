@@ -93,6 +93,13 @@ ADD_TEST(ipso_gh     test-main  ipso_gh)
 ADD_TEST(progress    test-main  progress)
 ADD_TEST(NAME dll COMMAND test-main dll $<TARGET_FILE:module>)
 
+ADD_TEST(Token    test-main  token)
+ADD_TEST(Source   test-main  source NULL)
+ADD_TEST(Pattern  test-main  pattern)
+ADD_TEST(Posix    test-main  posix)
+ADD_TEST(RegEx    test-main  regex)
+ADD_TEST(Matching test-main  matching)
+
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V
 DEPENDS test-main)

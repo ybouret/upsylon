@@ -8,12 +8,7 @@ TARGET_LINK_Y(test-lang lang)
 SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
 
 ENABLE_TESTING()
-ADD_TEST(Token    test-lang token)
-ADD_TEST(Source   test-lang source NULL)
-ADD_TEST(Pattern  test-lang pattern)
-ADD_TEST(Posix    test-lang posix)
-ADD_TEST(RegEx    test-lang regex)
-ADD_TEST(Matching test-lang matching)
+
 ADD_TEST(Scanner  test-lang scanner NULL)
 ADD_TEST(Lex      test-lang lex     NULL)
 ADD_TEST(Grammar  test-lang grammar)

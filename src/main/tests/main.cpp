@@ -85,6 +85,14 @@ Y_UTEST_INIT(100)
     Y_UTEST(dll);
     Y_UTEST(timings);
     Y_UTEST(ichannel);
+
+    Y_UTEST(token);
+    Y_UTEST(source);
+    Y_UTEST(pattern);
+    Y_UTEST(posix);
+    Y_UTEST(regex);
+    Y_UTEST(matching);
+    
 }
 Y_UTEST_EXEC()
 
