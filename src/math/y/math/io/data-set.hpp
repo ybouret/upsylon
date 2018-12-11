@@ -4,7 +4,7 @@
 
 #include "y/associative/map.hpp"
 #include "y/container/sequence.hpp"
-#include "y/ios/istream.hpp"
+#include "y/ios/icstream.hpp"
 #include "y/exception.hpp"
 #include "y/string/tokenizer.hpp"
 #include "y/string/convert.hpp"
@@ -95,6 +95,20 @@ namespace upsylon
                     }
                     ++iline;
                 }
+            }
+
+            //! load using file name
+            inline void load( const string &filename,const size_t skip=0, const size_t nmax=0)
+            {
+                ios::icstream fp(filename);
+                load(fp,skip,nmax);
+            }
+
+            //! load using file name
+            inline void load( const char *filename,const size_t skip=0, const size_t nmax=0)
+            {
+                const string _(filename);
+                load(_,skip,nmax);
             }
 
         private:
