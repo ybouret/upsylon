@@ -9,11 +9,11 @@ SOURCE_GROUP( lang FILES ${main_srcs} )
 INSTALL( FILES ${main_decl} DESTINATION include/y/lang )
 
 
-FILE(GLOB pattern_decl y/lang/pattern/*.hpp)
-FILE(GLOB pattern_code y/lang/pattern/*.cpp)
-SET(pattern_srcs ${pattern_decl} ${pattern_code})
-SOURCE_GROUP( lang/pattern FILES ${pattern_srcs} )
-INSTALL( FILES ${pattern_decl} DESTINATION include/y/lang/pattern )
+#FILE(GLOB pattern_decl y/lang/pattern/*.hpp)
+#FILE(GLOB pattern_code y/lang/pattern/*.cpp)
+#SET(pattern_srcs ${pattern_decl} ${pattern_code})
+#SOURCE_GROUP( lang/pattern FILES ${pattern_srcs} )
+#INSTALL( FILES ${pattern_decl} DESTINATION include/y/lang/pattern )
 
 FILE(GLOB lexical_decl y/lang/lexical/*.hpp)
 FILE(GLOB lexical_code y/lang/lexical/*.cpp)
@@ -41,7 +41,6 @@ INSTALL( FILES ${dynamo_decl} DESTINATION include/y/lang/dynamo )
 
 ADD_LIBRARY(y-lang STATIC 
 ${main_srcs} 
-${pattern_srcs}
 ${lexical_srcs}
 ${lexical_plugin_srcs}
 ${syntax_srcs}

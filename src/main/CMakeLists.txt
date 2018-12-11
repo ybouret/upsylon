@@ -186,7 +186,7 @@ INSTALL( FILES ${lang_decl} DESTINATION include/y/lang )
 
 FILE(GLOB lang_pattern_decl y/lang/pattern/*.hpp)
 FILE(GLOB lang_pattern_code y/lang/pattern/*.cpp)
-SET(lang_pattern/srcs ${lang_pattern_decl} ${lang_pattern_code})
+SET(lang_pattern_srcs ${lang_pattern_decl} ${lang_pattern_code})
 SOURCE_GROUP( lang/pattern FILES ${lang_pattern_srcs} )
 INSTALL( FILES ${lang_pattern_decl} DESTINATION include/y/lang/pattern )
 
