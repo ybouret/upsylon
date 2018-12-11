@@ -87,18 +87,20 @@ ADD_TEST(ASF         test-main  asf)
 ADD_TEST(Digest      test-main  digest)
 ADD_TEST(Locate      test-main  locate)
 ADD_TEST(Ppty        test-main  ppty)
-ADD_TEST(ipso        test-main  ipso)
-ADD_TEST(ipso_io     test-main  ipso_io)
-ADD_TEST(ipso_gh     test-main  ipso_gh)
-ADD_TEST(progress    test-main  progress)
+ADD_TEST(Progress    test-main  progress)
+
 ADD_TEST(NAME dll COMMAND test-main dll $<TARGET_FILE:module>)
 
-ADD_TEST(Token    test-main  token)
-ADD_TEST(Source   test-main  source NULL)
-ADD_TEST(Pattern  test-main  pattern)
-ADD_TEST(Posix    test-main  posix)
-ADD_TEST(RegEx    test-main  regex)
-ADD_TEST(Matching test-main  matching)
+ADD_TEST(ipso:main   test-main  ipso)
+ADD_TEST(ipso:io     test-main  ipso_io)
+ADD_TEST(ipso:gh     test-main  ipso_gh)
+
+ADD_TEST(Lang:Token    test-main  token)
+ADD_TEST(Lang:Source   test-main  source NULL)
+ADD_TEST(Lang:Pattern  test-main  pattern)
+ADD_TEST(Lang:Posix    test-main  posix)
+ADD_TEST(Lang:RegEx    test-main  regex)
+ADD_TEST(Lang:Matching test-main  matching)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V
