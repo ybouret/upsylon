@@ -39,13 +39,13 @@ MESSAGE( STATUS "")
 
 ADD_CUSTOM_TARGET(ext 
 DEPENDS 
-y-z    utest-z
-y-jbig utest-jbig
-y-bz2  utest-bz2
-y-png  utest-png
-y-jpeg utest-jpeg
+y-z       utest-z
+y-jbig    utest-jbig
+y-bz2     utest-bz2
+y-png     utest-png
+y-jpeg    utest-jpeg
 y-tiff 
-y-lua  utest-lua
+y-lua     utest-lua
 y-sqlite3 y_sqlite
 COMMENT "External Projects are now tested!!!")
 

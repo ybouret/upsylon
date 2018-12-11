@@ -35,4 +35,5 @@ ADD_TEST(Sieve   y_lua ${LUA_TESTS_DIR}/sieve.lua)
  
 ADD_CUSTOM_TARGET(utest-lua
 COMMAND ${CMAKE_CTEST_COMMAND} -V
-DEPENDS y_lua)
+DEPENDS y_lua
+COMMENT "Testing lua")
