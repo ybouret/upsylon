@@ -1,7 +1,9 @@
 FIND_PACKAGE(MPI)
 
 IF(MPI_FOUND)
-  
+  #avoid some problem with whitespaces
+  CMAKE_POLICY(SET CMP0004 OLD)
+
   INCLUDE_DIRECTORIES(${MPI_INCLUDE_PATH})
 
 	#compatibility layer with MS MPI
