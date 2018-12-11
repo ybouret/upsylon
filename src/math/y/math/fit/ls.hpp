@@ -86,24 +86,38 @@ namespace upsylon
                     // initialize dynamic data and lambda
                     //
                     //__________________________________________________________
-                    if(verbose) { std::cerr << "[LSF] initialize" << std::endl; }
+                    Y_LSF_OUT(std::cerr << "[LSF] initialize" << std::endl);
+
+                    //----------------------------------------------------------
+                    // check space size
+                    //----------------------------------------------------------
                     if(nvar<=0)
                     {
                         Y_LSF_OUT(std::cerr << "[LSF] no variables" << std::endl);
                         return true;
                     }
 
-                    this->acquire(nvar);
-                    alpha.make(nvar,nvar);
-                    curv. make(nvar,nvar);
+                    //----------------------------------------------------------
+                    // check space size
+                    //----------------------------------------------------------
+                    this->acquire(nvar);   // vectors
+                    alpha.make(nvar,nvar); // jacobian
+                    curv. make(nvar,nvar); // curvature
 
+                    //----------------------------------------------------------
+                    // initial step damping
+                    //----------------------------------------------------------
                     p   = -4;
                     compute_lam();
                     Y_LSF_OUT(std::cerr << "[LSF] initial lambda=" << lam << "/p=" << p << std::endl);
 
+                    //----------------------------------------------------------
+                    // full initial metrics
+                    //----------------------------------------------------------
                     alpha.ld(0);
                     beta.ld(0);
                     T D2 = sample.computeD2(F,aorg,beta,alpha,grad,used);
+
                     while(true)
                     {
                         //______________________________________________________
@@ -112,7 +126,7 @@ namespace upsylon
                         // start cycle: normalize alpha
                         //
                         //______________________________________________________
-                        Y_LSF_OUT(std::cerr << "[LSF] D2=" << D2 << "@" << aorg << std::endl);
+                        Y_LSF_OUT(std::cerr << "[LSF] D2=" << D2 << " @" << aorg << std::endl);
                         for(size_t i=nvar;i>0;--i)
                         {
                             if(used[i])
@@ -125,6 +139,7 @@ namespace upsylon
                             else
                             {
                                 alpha[i][i] = 1; // for a null gradient
+                                beta[i]     = 0; // mandatory
                             }
                         }
                         Y_LSF_OUT(std::cerr << "[LSF] descent and jacobian" << std::endl;

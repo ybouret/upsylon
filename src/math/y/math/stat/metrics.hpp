@@ -15,6 +15,7 @@ namespace upsylon
     namespace math
     {
 
+        //! low level average computation
         template <typename T, typename ITERATOR>
         T __average_of( ITERATOR it, const size_t n, T *pSdev)
         {
@@ -63,12 +64,14 @@ namespace upsylon
             }
         }
 
+        //! average for sequence with iterator
         template <typename SEQ> inline
         typename SEQ::type average_of( const SEQ &seq, typename SEQ::type *pSig=0)
         {
             return __average_of(seq.begin(), seq.size(), pSig);
         }
 
+        //! average for array
         template <typename T> inline
         T average_of( const array<T> &arr, T *pSig=0)
         {
@@ -76,7 +79,7 @@ namespace upsylon
         }
 
 
-
+        //! low level median computation
         template <typename T, typename ITERATOR>
         T __median_of( ITERATOR it, const size_t n, T *pAdev)
         {
@@ -117,13 +120,19 @@ namespace upsylon
             }
         }
 
+        //! median computation for sequence with iterator
         template <typename SEQ> inline
         typename SEQ::type median_of( const SEQ &seq, typename SEQ::type *pAdev=0)
         {
             return __median_of(seq.begin(), seq.size(), pAdev);
         }
 
-
+        //! median for array
+        template <typename T> inline
+        T median_of( const array<T> &arr, T *pAdev=0)
+        {
+            return __median_of( arr(), arr.size(), pAdev);
+        }
 
         //! compute Pearson's correlation coefficient
         template <typename T>
