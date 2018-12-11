@@ -178,6 +178,17 @@ SET(rtld_srcs ${rtld_decl} ${rtld_code})
 SOURCE_GROUP( rtld FILES ${rtld_srcs} )
 INSTALL( FILES ${rtld_decl} DESTINATION include/y/rtld )
 
+FILE(GLOB lang_decl y/lang/*.hpp)
+FILE(GLOB lang_code y/lang/*.cpp)
+SET(lang_srcs ${lang_decl} ${lang_code})
+SOURCE_GROUP( lang FILES ${lang_srcs} )
+INSTALL( FILES ${lang_decl} DESTINATION include/y/lang )
+
+FILE(GLOB lang_pattern_decl y/lang/pattern/*.hpp)
+FILE(GLOB lang_pattern_code y/lang/pattern/*.cpp)
+SET(lang_pattern/srcs ${lang_pattern_decl} ${lang_pattern_code})
+SOURCE_GROUP( lang/pattern FILES ${lang_pattern_srcs} )
+INSTALL( FILES ${lang_pattern_decl} DESTINATION include/y/lang/pattern )
 
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
@@ -208,6 +219,7 @@ ${functor_srcs}
 ${fs_srcs}
 ${ipso_srcs}
 ${rtld_srcs}
+${lang_srcs} ${lang_pattern_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
