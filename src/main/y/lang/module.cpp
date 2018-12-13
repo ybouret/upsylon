@@ -9,7 +9,7 @@ namespace upsylon
         Module:: ~Module() throw() {}
 
 
-        Module:: Module( const Origin &org, const Input &inp ) :
+        Module:: Module( const Tag &org, const Input &inp ) :
         CharInfo(org,1,1),
         input(inp)
         {
@@ -39,21 +39,21 @@ namespace upsylon
 
         Module * Module:: OpenSTDIN()
         {
-            const Origin org = new string("STDIN");
+            const Tag    org = new string("STDIN");
             const Input  inp = new ios::icstream( ios::cstdin );
             return new Module(org,inp);
         }
 
         Module * Module:: OpenFile( const string &filename )
         {
-            const Origin org = new string(filename);
+            const Tag    org = new string(filename);
             const Input  inp = new ios::icstream(filename);
             return new Module(org,inp);
         }
 
         Module * Module:: OpenData( const string &name, const void *data, const size_t size)
         {
-            const Origin org = new string(name);
+            const Tag    org = new string(name);
             const Input  inp = new ios::imstream( data, size );
             return new Module(org,inp);
         }

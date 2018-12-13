@@ -13,7 +13,7 @@ namespace upsylon
             }
 
 
-            Rule:: Rule(const Origin      &ruleLabel,
+            Rule:: Rule(const Tag         &ruleLabel,
                         const Motif       &ruleMotif,
                         const RegularCode &ruleEvent) :
             Object(),
@@ -27,7 +27,7 @@ namespace upsylon
                 checkMotif();
             }
 
-            Rule:: Rule(const Origin      &ruleLabel,
+            Rule:: Rule(const Tag         &ruleLabel,
                         const Motif       &ruleMotif,
                         const ControlCode &ruleEvent) :
             next(0),

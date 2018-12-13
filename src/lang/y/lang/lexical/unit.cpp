@@ -9,7 +9,7 @@ namespace upsylon
         {
         }
 
-        Lexeme:: Lexeme(const Origin &ruleLabel) :
+        Lexeme:: Lexeme(const Tag &ruleLabel) :
         Token(), next(0), prev(0), label(ruleLabel)
         {
         }

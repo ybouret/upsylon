@@ -7,7 +7,7 @@ namespace upsylon
     {
         CharInfo:: ~CharInfo() throw() {}
 
-        CharInfo:: CharInfo(const Origin &org, const int l, const int c) throw() :
+        CharInfo:: CharInfo(const Tag &org, const int l, const int c) throw() :
         Object(),
         origin(org),
         line(l),

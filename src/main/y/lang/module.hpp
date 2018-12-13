@@ -53,7 +53,7 @@ namespace upsylon
         private:
             Input          input;
             Y_DISABLE_COPY_AND_ASSIGN(Module);
-            explicit Module( const Origin &org, const Input &inp );
+            explicit Module( const Tag &org, const Input &inp );
 
 
         };

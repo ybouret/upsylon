@@ -18,13 +18,13 @@ namespace upsylon
             public:
                 typedef vector<string,memory::pooled> Strings; //!< internally used
 
-                const Origin name; //!< shared name
+                const Tag name; //!< shared name
                 
                 //______________________________________________________________
                 //
                 // Setup API
                 //______________________________________________________________
-                explicit Grammar(const Origin &id); //!< initialize
+                explicit Grammar(const Tag &id); //!< initialize
 
                 virtual ~Grammar() throw();         //!< destructor
 

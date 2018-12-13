@@ -37,7 +37,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
             
         public:
-            const Origin           name; //!< Grammar::name
+            const Tag              name; //!< Grammar::name
             auto_ptr<NODE>         ast;  //!< last parsed AST
         };
 

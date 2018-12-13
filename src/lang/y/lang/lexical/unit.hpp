@@ -17,10 +17,10 @@ namespace upsylon
 
             Lexeme        *next;  //!< for list
             Lexeme        *prev;  //!< for list
-            const Origin   label; //!< rule label
+            const Tag      label; //!< rule label
 
 
-            explicit Lexeme(const Origin &ruleLabel);//!< initialize
+            explicit Lexeme(const Tag &ruleLabel);//!< initialize
             Lexeme(const Lexeme &other);             //!<copy content and label
             virtual ~Lexeme() throw();               //! destructor
             const CharInfo & info() const;           //!< info for first token

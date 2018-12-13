@@ -57,7 +57,7 @@ Y_UTEST(grammar)
     fs.try_remove_file("tree.dot");
     fs.try_remove_file("tree.png");
 
-    const Origin    gID = new string("grammar");
+    const Tag       gID = new string("grammar");
     myLex           lexer;
     Syntax::Grammar G(gID);
 
