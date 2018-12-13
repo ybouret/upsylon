@@ -176,7 +176,7 @@ namespace upsylon
 
                 Rule                 *next;   //!< for List
                 Rule                 *prev;   //!< for List
-                const Origin          label;  //!< identifier
+                const Tag             label;  //!< identifier
                 const Motif           motif;  //!< matching pattern
                 const void           *handle; //!< regular/control event address
                 const Event::Pointer  event;  //!< shared event
@@ -184,12 +184,12 @@ namespace upsylon
                 virtual ~Rule() throw(); //!< destructor
 
                 //! setup a rule based on a regular event
-                explicit Rule(const Origin      &ruleLabel,
+                explicit Rule(const Tag         &ruleLabel,
                               const Motif       &ruleMotif,
                               const RegularCode &ruleEvent);
 
                 //! setup a rule based on a control event
-                explicit Rule(const Origin      &ruleLabel,
+                explicit Rule(const Tag         &ruleLabel,
                               const Motif       &ruleMotif,
                               const ControlCode &ruleEvent);
             private:

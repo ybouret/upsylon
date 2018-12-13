@@ -22,7 +22,7 @@ namespace upsylon
         public:
             inline virtual ~DynamoSymbol() throw() {} //!< destructor
             RULE_TYPE       &rule;   //!< reference to a Syntax Rule
-            const Origin     module; //!< with its origun
+            const Tag        module; //!< with its origun
 
             //! display Module_name
             inline std::ostream & display( std::ostream &os ) const
@@ -32,7 +32,7 @@ namespace upsylon
 
         protected:
             //! initialize
-            explicit inline DynamoSymbol(RULE_TYPE &r, const Origin &o) throw() : rule(r), module(o) {}
+            explicit inline DynamoSymbol(RULE_TYPE &r, const Tag &o) throw() : rule(r), module(o) {}
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoSymbol);
@@ -80,7 +80,7 @@ namespace upsylon
                 //! initialize
                 inline _Terminal(const string &data,
                                  const Rule   &r,
-                                 const Origin &from,
+                                 const Tag    &from,
                                  const bool    flag=true) :
                 BaseType(r,from), expr(data), visible(flag) {}
 
@@ -115,7 +115,7 @@ namespace upsylon
 
                 //! initialize
                 inline explicit _Internal(Syntax::Compound &r,
-                                          const Origin     &from) throw() :
+                                          const Tag        &from) throw() :
                 BaseType(r,from) {}
 
                 //! for database
@@ -138,7 +138,7 @@ namespace upsylon
             auto_ptr<Syntax::Parser>  parser;    //!< currently built parser
             bool                      verbose;   //!< verbose flag
             int                       level;     //!< for tree walking
-            lstack<const Origin>      modules;   //!< stack of travelled modules
+            lstack<const Tag>         modules;   //!< stack of travelled modules
 
             //! indent for verbose
             std::ostream & indent() const;

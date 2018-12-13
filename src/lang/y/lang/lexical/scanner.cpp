@@ -26,7 +26,7 @@ verbose(false)
             {
             }
 
-            Scanner:: Scanner( const Origin &id ) throw() :
+            Scanner:: Scanner( const Tag &id ) throw() :
             Y_LANG_SCANNER_CTOR(id)
             {
             }
@@ -38,7 +38,7 @@ verbose(false)
 
             Scanner:: ~Scanner() throw() {}
 
-            void Scanner:: checkLabel(const Origin &ruleLabel) const
+            void Scanner:: checkLabel(const Tag &ruleLabel) const
             {
                 for(const Rule *r = rules.head; r; r=r->next )
                 {

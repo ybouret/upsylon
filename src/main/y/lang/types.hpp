@@ -32,8 +32,8 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(CountedObject);
         };
 
-        //! to identify a source/module
-        typedef arc_ptr<const string> Origin;
+        //! to identify a shared source/module
+        typedef arc_ptr<const string> Tag;
         
         //! shared input
         typedef arc_ptr<ios::istream> Input;

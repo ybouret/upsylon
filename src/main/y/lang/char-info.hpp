@@ -15,12 +15,12 @@ namespace upsylon
         public:
             virtual ~CharInfo() throw();
 
-            const Origin origin;  //!< origin
+            const Tag    origin;  //!< origin
             const int    line;    //!< line in stamp
             const int    column;  //!< column in stamp
 
             //! initialize
-            explicit CharInfo(const Origin &org, const int l=0, const int c=0) throw();
+            explicit CharInfo(const Tag &org, const int l=0, const int c=0) throw();
 
             //! copy
             CharInfo( const CharInfo &other ) throw();

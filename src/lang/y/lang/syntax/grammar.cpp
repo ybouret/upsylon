@@ -11,7 +11,7 @@ namespace upsylon
             Grammar:: ~Grammar() throw() {}
 
 
-            Grammar:: Grammar(const Origin &id) :
+            Grammar:: Grammar(const Tag &id) :
             name(id),
             rules(),
             rdb(),

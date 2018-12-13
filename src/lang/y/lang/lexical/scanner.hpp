@@ -21,18 +21,18 @@ namespace upsylon
             public:
                 typedef intr_ptr<string,Scanner> Pointer; //!< for database
 
-                const Origin label; //!< used as shared label/key
+                const Tag label; //!< used as shared label/key
 
 
                 virtual ~Scanner() throw();                 //!< destructor
                 explicit Scanner(const string &id);         //!< initialize
                 explicit Scanner(const char   *id);         //!< initialize
-                explicit Scanner(const Origin &id) throw(); //!< initialize
+                explicit Scanner(const Tag    &id) throw(); //!< initialize
                 const string & key() const throw();         //!< for database
 
                 //! construct a new rule
                 template <typename CODE>
-                inline void add(const Origin      &ruleLabel,
+                inline void add(const Tag         &ruleLabel,
                                 const Motif       &ruleMotif,
                                 const CODE        &ruleEvent)
                 {
@@ -48,7 +48,7 @@ namespace upsylon
                                     OBJECT_POINTER  host,
                                     METHOD_POINTER  meth)
                 {
-                    const Origin       ruleLabel = new string(id);
+                    const Tag          ruleLabel = new string(id);
                     const Motif        ruleMotif = RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);
                     const RegularCode  ruleEvent = new OnForward(ruleAction);
@@ -72,7 +72,7 @@ namespace upsylon
                                     OBJECT_POINTER  host,
                                     METHOD_POINTER  meth)
                 {
-                    const Origin       ruleLabel = new string(id);
+                    const Tag          ruleLabel = new string(id);
                     const Motif        ruleMotif = RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);
                     const RegularCode  ruleEvent = new OnDiscard(ruleAction);
@@ -97,7 +97,7 @@ namespace upsylon
                           METHOD_POINTER  meth)
                 {
                     const string       id        = "->" + target;
-                    const Origin       ruleLabel = new string(id);
+                    const Tag          ruleLabel = new string(id);
                     const Motif        ruleMotif = RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);
                     const ControlCode  ruleEvent = new OnJump(target,ruleAction);
@@ -137,7 +137,7 @@ namespace upsylon
                           METHOD_POINTER  meth)
                 {
                     const string       id        = CallLabel(target);
-                    const Origin       ruleLabel = new string(id);
+                    const Tag          ruleLabel = new string(id);
                     const Motif        ruleMotif = RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);
                     const ControlCode  ruleEvent = new OnCall(target,ruleAction);
@@ -174,7 +174,7 @@ namespace upsylon
                           METHOD_POINTER  meth)
                 {
                     const string       id        = "<=" + *label + "." + rx;
-                    const Origin       ruleLabel = new string(id);
+                    const Tag          ruleLabel = new string(id);
                     const Motif        ruleMotif = RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);
                     const ControlCode  ruleEvent = new OnBack(ruleAction);
@@ -247,7 +247,7 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
                 Rule::List    rules;
                 const Module *probed;
-                void checkLabel(const Origin &ruleLabel) const;
+                void checkLabel(const Tag &ruleLabel) const;
 
             public:
                 const Dictionary *userDict; //!< validity must be checked by user

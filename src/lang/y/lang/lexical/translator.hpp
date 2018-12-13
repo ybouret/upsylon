@@ -19,7 +19,7 @@ namespace upsylon
                 typedef Lexical::Scanner             Scanner;  //!< alias
                 typedef set<string,Scanner::Pointer> DataBase; //!< database of scanners
                 typedef set<string,Plugin::Pointer>  Plugins;  //!< database of plugins
-                const Origin label;                            //!< shared label
+                const Tag  label;                              //!< shared label
                 
                 //! destructor
                 virtual ~Translator() throw();
