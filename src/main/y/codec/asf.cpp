@@ -426,8 +426,11 @@ namespace upsylon
                             default:
                                 assert(byte<NUM_CHARS);
                                 // emit decoded and continue wait_for1
-                                alpha.update(byte);
-                                Q.push_back(byte);
+								{
+									const uint8_t b = uint8_t(byte);
+									alpha.update(b);
+									Q.push_back(b);
+								}
                                 current = alpha.nodes;
                                 break;
                         }

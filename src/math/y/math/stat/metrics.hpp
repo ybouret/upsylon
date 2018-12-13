@@ -182,7 +182,7 @@ namespace upsylon
                             bar.x += x[i];
                             bar.y += y[i];
                         }
-                        bar /= n;
+                        bar /= T(n);
                     }
                     // second pass, compute individual terms
                     vector<T> xy(n);

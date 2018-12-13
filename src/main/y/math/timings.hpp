@@ -39,7 +39,7 @@ namespace upsylon
                 assert(dt>0);
                 dt = round_floor(dt);
                 if(dt_save<=dt) { dt_save=dt; }
-                const size_t count = max_of<size_t>( __anint(dt_save/dt), 1 );
+                const size_t count = max_of<size_t>( size_t(__anint(dt_save/dt)), 1 );
                 dt_save = count*dt;
                 return count;
             }

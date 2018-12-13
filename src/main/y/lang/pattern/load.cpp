@@ -51,11 +51,11 @@ namespace upsylon
                     //__________________________________________________________
                 case Optional :: UUID: return Optional::Create( Pattern::Load(fp) );
                 case Repeating:: UUID: {
-                    const uint32_t nmin = fp.read_upack<size_t>();
+                    const size_t nmin = fp.read_upack<size_t>();
                     return Repeating::Create(Pattern::Load(fp),nmin); }
                 case Counting:: UUID: {
-                    const uint32_t nmin = fp.read_upack<size_t>();
-                    const uint32_t nmax = fp.read_upack<size_t>();
+                    const size_t nmin = fp.read_upack<size_t>();
+                    const size_t nmax = fp.read_upack<size_t>();
                     return Counting::Create(Pattern::Load(fp),nmin,nmax); }
 
                 default:

@@ -219,7 +219,7 @@ d += temp1; h = temp1 + temp2;              \
 			left = ctx->total[0] & 0x3F;
 			fill = 64 - left;
 			
-			ctx->total[0] += ilen;
+			ctx->total[0] += uint32_t(ilen);
 			ctx->total[0] &= 0xFFFFFFFF;
 			
 			if( ctx->total[0] < ilen )
