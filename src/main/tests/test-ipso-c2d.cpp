@@ -54,6 +54,15 @@ Y_UTEST(ipso_c2d)
         }
         ipso::contour2d::scan(d, 1, n, 1, n, x, y, z, linecb,&fp);
 
+        ipso::contour2d::iso_segments segs;
+
+        segs.ld(d, 1, n, 1, n, x, y, z);
+        std::cerr << "#segs=" << segs.size() << std::endl;
+        for(ipso::contour2d::iso_segments::iterator i=segs.begin();i!=segs.end();++i)
+        {
+            const ipso::contour2d::segments &seg = **i;
+            std::cerr << "seg@index" << seg.indx << " : " << seg.size << std::endl;
+        }
     }
 }
 Y_UTEST_DONE()

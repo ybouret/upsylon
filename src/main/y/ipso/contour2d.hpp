@@ -5,6 +5,10 @@
 #include "y/sequence/array.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/point2d.hpp"
+#include "y/ptr/counted.hpp"
+#include "y/ptr/intr.hpp"
+#include "y/associative/set.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -216,7 +220,10 @@ namespace upsylon
 #undef xsect
             }
 
+            //! point for segment
             typedef point2d<double> point;
+
+            //! segment=two points
             class segment : public object
             {
             public:
@@ -224,20 +231,91 @@ namespace upsylon
                 segment *prev;
                 const point a;
                 const point b;
+
                 inline explicit segment( const point _a, const point _b) throw() : next(0), prev(0), a(_a), b(_b) {}
                 inline virtual ~segment() throw() {}
+                inline void swap() const throw() { cswap(a,b); }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(segment);
             };
 
-            typedef core::list_of<segment> __segments;
-            class segments : public __segments, public object
+            //! base class for segments
+            typedef core::list_of_cpp<segment> segments_type;
+
+            //! list of segments
+            class segments : public segments_type, public counted_object
             {
             public:
+                typedef intr_ptr<size_t,segments>   pointer;
+                typedef set<size_t,pointer>         database;
+
                 const size_t indx;
-                inline explicit segments( const size_t id ) throw() : __segments(), object(), indx(id) {}
+                const double level;
+                inline explicit segments( const size_t id, const double value) throw() :
+                segments_type(), counted_object(), indx(id), level(value) {}
                 inline virtual ~segments() throw() {}
-                
+                inline const size_t & key() const throw() { return indx; }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(segments);
+            };
+
+            class iso_segments : public segments::database
+            {
+            public:
+                inline explicit iso_segments(size_t n=0) : segments::database(n,as_capacity) {}
+                inline virtual ~iso_segments() throw() {}
+
+                template<
+                typename FIELD,
+                typename ARRAY
+                >  inline
+                void ld(const FIELD         &d,
+                        const unit_t         ilb,
+                        const unit_t         iub,
+                        const unit_t         jlb,
+                        const unit_t         jub,
+                        const ARRAY         &x,
+                        const ARRAY         &y,
+                        const array<double> &z)
+                {
+                    scan<FIELD,ARRAY>(d,ilb,iub,jlb,jub,x,y,z, cb, this );
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(iso_segments);
+                static inline void cb(double x1,
+                                      double y1,
+                                      double x2,
+                                      double y2,
+                                      double level,
+                                      size_t indx,
+                                      void  *args)
+                {
+                    const point   a(x1,y1);
+                    const point   b(x2,y2);
+                    iso_segments &self = *static_cast<iso_segments*>(args);
+                    segments     *pSeg = 0;
+                    {
+                        segments::pointer *ppSeg = self.search(indx);
+                        if(ppSeg)
+                        {
+                            pSeg = & **ppSeg;
+                        }
+                        else
+                        {
+                            pSeg = new segments(indx,level);
+                            const segments::pointer q = pSeg;
+                            if(!self.insert(q))
+                            {
+                                throw exception("unexpected failure to insert segments#%u", unsigned(indx) );
+                            }
+                        }
+                    }
+                    assert(pSeg);
+                    pSeg->push_back( new segment(a,b) );
+                }
             };
 
         };
