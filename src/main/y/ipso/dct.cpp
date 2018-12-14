@@ -81,6 +81,33 @@ namespace upsylon
         {
         }
 
+
+        void CommonDCT:: reverse(Table &pix, const Table &dct) throw()
+        {
+            const size_t N = w;
+            const size_t M = h;
+            for(size_t y=0;y<M;++y)
+            {
+                for(size_t x=0;x<N;++x)
+                {
+
+                    double q = 0;
+                    for(size_t j=0;j<M;++j)
+                    {
+                        const double Cyj    = YCOS[y][j];
+                        for(size_t i=0;i<N;++i)
+                        {
+                            const double Cxi    = XCOS[x][i];
+                            const double weight = LAMBDA[j][i] * Cxi * Cyj;
+                            q += dct[j][i] * weight;
+                        }
+                    }
+                    pix[y][x] = q;
+                }
+            }
+
+        }
+
         SquareDCT:: SquareDCT(const unit_t W) :
         DCT(W,W),
         COS( "COS", W,W)
@@ -113,6 +140,30 @@ namespace upsylon
 
         SquareDCT:: ~SquareDCT() throw()
         {
+        }
+
+        void SquareDCT:: reverse(Table &pix, const Table &dct) throw()
+        {
+            const size_t N = w;
+            for(size_t y=0;y<N;++y)
+            {
+                for(size_t x=0;x<N;++x)
+                {
+                    double q = 0;
+                    for(size_t j=0;j<N;++j)
+                    {
+                        const double Cyj    = COS[y][j];
+                        for(size_t i=0;i<N;++i)
+                        {
+                            const double Cxi    = COS[x][i];
+                            const double weight = LAMBDA[j][i] * Cxi * Cyj;
+                            q += dct[j][i] * weight;
+                        }
+                    }
+                    pix[y][x] = q;
+                }
+            }
+
         }
 
     }

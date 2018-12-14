@@ -61,6 +61,8 @@ namespace upsylon
                 }
             }
 
+            void reverse(Table &pix, const Table &dct) throw();
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(CommonDCT);
             Table XCOS;
@@ -101,6 +103,9 @@ namespace upsylon
                     }
                 }
             }
+
+            void reverse(Table &pix, const Table &dct) throw();
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SquareDCT);
             Table COS;
