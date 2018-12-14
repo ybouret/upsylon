@@ -11,8 +11,10 @@ namespace upsylon
     namespace ipso
     {
 
+        //! algorithm to find 2d contour segments
         struct contour2d
         {
+            //! called upon matching segment
             typedef void (*callback)(double x1,
                                      double y1,
                                      double x2,
@@ -21,8 +23,8 @@ namespace upsylon
                                      size_t indx,
                                      void *args);
 
-            /** a contour algorithm
-             d               ! matrix of data to contour
+            /** a low-level contour algorithm
+             d               ! matrix/field of data to contour
              ilb,iub,jlb,jub ! index bounds of data matrix
              x               ! data matrix column coordinates
              y               ! data matrix row coordinates
@@ -44,33 +46,35 @@ namespace upsylon
                       void                *args
                       )
             {
+
 #define xsect(p1,p2) (h[p2]*xh[p1]-h[p1]*xh[p2])/(h[p2]-h[p1])
 #define ysect(p1,p2) (h[p2]*yh[p1]-h[p1]*yh[p2])/(h[p2]-h[p1])
-                int m3,case_value;
-                double x1=0,x2=0,y1=0,y2=0;
-                double h[5];
-                int    sh[5];
-                double xh[5],yh[5];
+
+                double h[5]  = { 0 };
+                int    sh[5] = { 0 };
+                double xh[5] = { 0 };
+                double yh[5] = { 0 };
                 static const unit_t im[4] = {0,1,1,0};
                 static const unit_t jm[4] = {0,0,1,1};
-                static const int    castab[3][3][3] =
+                static const int    ic[3][3][3] =
                 {
                     { {0,0,8},{0,2,5},{7,6,9} },
                     { {0,3,4},{1,3,1},{4,3,0} },
                     { {9,6,7},{5,2,0},{8,0,0} }
                 };
-                double temp1,temp2;
 
                 const size_t nc  = z.size();
                 const double zlo = z[1];
-                const double zhi = z[nc];
-                for(unit_t j=(jub-1);j>=jlb;--j)
+                const double zhi = z[nc]; assert(zhi>=zlo);
+                for(unit_t j=jlb;j<jub;++j)
                 {
                     for(unit_t i=ilb;i<iub;++i)
                     {
-                        temp1 = min_of<double>(d[i][j],d[i][j+1]);
-                        temp2 = min_of<double>(d[i+1][j],d[i+1][j+1]);
+                        // min value
+                        double       temp1 = min_of<double>(d[i][j],d[i][j+1]);
+                        double       temp2 = min_of<double>(d[i+1][j],d[i+1][j+1]);
                         const double dmin  = min_of(temp1,temp2);
+                        // max value
                         temp1 = max_of<double>(d[i][j],d[i][j+1]);
                         temp2 = max_of<double>(d[i+1][j],d[i+1][j+1]);
                         const double dmax  = max_of(temp1,temp2);
@@ -78,7 +82,8 @@ namespace upsylon
                         {
                             continue;
                         }
-                        for(size_t k=1;k<=nc;k++)
+                        // scan levels
+                        for(size_t k=nc;k>0;--k)
                         {
                             const double level = z[k];
                             if ( level<dmin || level>dmax )
@@ -134,18 +139,12 @@ namespace upsylon
                             for(int m=1;m<=4;m++) {
                                 const int m1 = m;
                                 const int m2 = 0;
-                                if (m != 4)
-                                {
-                                    m3 = m + 1;
-                                }
-                                else
-                                {
-                                    m3 = 1;
-                                }
-                                m3 = (m!=4) ? (m+1) : 1;
-                                if ((case_value = castab[sh[m1]+1][sh[m2]+1][sh[m3]+1]) == 0)
+                                const int m3 = (m!=4) ? (m+1) : 1;
+                                const int iv = ic[sh[m1]+1][sh[m2]+1][sh[m3]+1];
+                                if (0==iv)
                                     continue;
-                                switch (case_value) {
+                                double x1=0,x2=0,y1=0,y2=0;
+                                switch (iv) {
                                     case 1: /* Line between vertices 1 and 2 */
                                         x1 = xh[m1];
                                         y1 = yh[m1];
@@ -204,7 +203,7 @@ namespace upsylon
                                         break;
                                 }
 
-                                /* Finally draw the line */
+                                /* Finally 'draw' the line */
                                 if(proc)
                                 {
                                     proc(x1,y1,x2,y2,level,k,args);
@@ -213,7 +212,33 @@ namespace upsylon
                         } /* k - contour */
                     } /* i */
                 } /* j */
+#undef ysect
+#undef xsect
             }
+
+            typedef point2d<double> point;
+            class segment : public object
+            {
+            public:
+                segment *next;
+                segment *prev;
+                const point a;
+                const point b;
+                inline explicit segment( const point _a, const point _b) throw() : next(0), prev(0), a(_a), b(_b) {}
+                inline virtual ~segment() throw() {}
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(segment);
+            };
+
+            typedef core::list_of<segment> __segments;
+            class segments : public __segments, public object
+            {
+            public:
+                const size_t indx;
+                inline explicit segments( const size_t id ) throw() : __segments(), object(), indx(id) {}
+                inline virtual ~segments() throw() {}
+                
+            };
 
         };
 
