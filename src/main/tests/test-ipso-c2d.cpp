@@ -7,10 +7,13 @@
 using namespace upsylon;
 static inline
 void linecb(double x1,double y1,double x2,double y2,
-            double level, void *args)
+            double level,
+            size_t indx,
+            void *args)
 {
     assert(args);
     (void)level;
+    (void)indx;
     ios::ostream &fp = *static_cast<ios::ocstream *>(args);
     fp("%g %g\n%g %g\n\n",x1,y1,x2,y2);
 }

@@ -13,7 +13,13 @@ namespace upsylon
 
         struct contour2d
         {
-            typedef void (*callback)(double x1, double y1, double x2, double y2, double level, void *args);
+            typedef void (*callback)(double x1,
+                                     double y1,
+                                     double x2,
+                                     double y2,
+                                     double level,
+                                     size_t indx,
+                                     void *args);
 
             /** a contour algorithm
              d               ! matrix of data to contour
@@ -201,7 +207,7 @@ namespace upsylon
                                 /* Finally draw the line */
                                 if(proc)
                                 {
-                                    proc(x1,y1,x2,y2,level,args);
+                                    proc(x1,y1,x2,y2,level,k,args);
                                 }
                             } /* m */
                         } /* k - contour */
