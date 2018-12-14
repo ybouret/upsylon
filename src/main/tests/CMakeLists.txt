@@ -94,6 +94,7 @@ ADD_TEST(NAME dll COMMAND test-main dll $<TARGET_FILE:module>)
 ADD_TEST(ipso:main   test-main  ipso)
 ADD_TEST(ipso:io     test-main  ipso_io)
 ADD_TEST(ipso:gh     test-main  ipso_gh)
+ADD_TEST(ipso:dct    test-main  ipso_dct)
 
 ADD_TEST(Lang:Token    test-main  token)
 ADD_TEST(Lang:Source   test-main  source NULL)

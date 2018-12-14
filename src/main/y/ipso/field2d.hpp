@@ -29,6 +29,16 @@ namespace upsylon
             inline explicit field2D( const char *id, const layout_type &L, void *dataEntry=0, void *rowsEntry=0) :
             Y_IPSO_FIELD2D_CTOR() { setup(dataEntry,rowsEntry); }
 
+            //!setup helper
+            inline explicit field2D(const char *id, const coord1D W, const coord1D H ) :
+            layout_type( coord2D(0,0), coord2D(W,H) ),
+            field<T>(id),
+            row_layout(lower.x,upper.x),
+            rows(0)
+            {
+                setup(0,0);
+            }
+
             //! destructor
             inline virtual ~field2D() throw()
             {

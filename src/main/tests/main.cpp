@@ -78,9 +78,12 @@ Y_UTEST_INIT(100)
     Y_UTEST(digest);
     Y_UTEST(locate);
     Y_UTEST(ppty);
+
     Y_UTEST(ipso);
     Y_UTEST(ipso_io);
     Y_UTEST(ipso_gh);
+    Y_UTEST(ipso_dct);
+
     Y_UTEST(progress);
     Y_UTEST(dll);
     Y_UTEST(timings);

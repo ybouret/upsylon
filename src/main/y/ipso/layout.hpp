@@ -60,6 +60,16 @@ namespace upsylon
             const COORD width; //!< width
             const COORD pitch; //!< 1 x xy
 
+            layout_of( const layout_of &other ) throw() :
+            layout(other),
+            lower( other.lower ),
+            upper( other.upper ),
+            width( other.width ),
+            pitch( other.pitch )
+            {
+            }
+
+
             //! test content
             inline bool has( const COORD q) const throw()
             {
