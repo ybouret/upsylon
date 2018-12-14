@@ -1,4 +1,5 @@
 #include "y/ipso/dct.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -9,7 +10,16 @@ namespace upsylon
         {
         }
 
+        static inline unit_t __check( const unit_t X, const char *id )
+        {
+            assert(id);
+            if(X<=0) throw exception("invalid DCT  %s=%d", id, int(X));
+            return X;
+        }
+
         DCT:: DCT(const unit_t W, const unit_t H) :
+        w(__check(W,"W") ),
+        h(__check(H,"H") ),
         LAMBDA("LAMBDA",W,H)
         {
         }
