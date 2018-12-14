@@ -249,14 +249,18 @@ namespace upsylon
             public:
                 typedef intr_ptr<size_t,segments>   pointer;
                 typedef set<size_t,pointer>         database;
+                typedef core::list_of_cpp<segments> list_type;
 
                 const size_t indx;
                 const double level;
+                segments    *next;
+                segments    *prev;
                 inline explicit segments( const size_t id, const double value) throw() :
-                segments_type(), counted_object(), indx(id), level(value) {}
+                segments_type(), counted_object(), indx(id), level(value), next(0), prev(0) {}
+
                 inline virtual ~segments() throw() {}
                 inline const size_t & key() const throw() { return indx; }
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(segments);
             };
