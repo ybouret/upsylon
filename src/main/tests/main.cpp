@@ -83,6 +83,7 @@ Y_UTEST_INIT(100)
     Y_UTEST(ipso_io);
     Y_UTEST(ipso_gh);
     Y_UTEST(ipso_dct);
+    Y_UTEST(ipso_c2d);
 
     Y_UTEST(progress);
     Y_UTEST(dll);

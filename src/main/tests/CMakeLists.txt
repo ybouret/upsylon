@@ -95,6 +95,7 @@ ADD_TEST(ipso:main   test-main  ipso)
 ADD_TEST(ipso:io     test-main  ipso_io)
 ADD_TEST(ipso:gh     test-main  ipso_gh)
 ADD_TEST(ipso:dct    test-main  ipso_dct)
+ADD_TEST(ipso:c2d    test-main  ipso_c2d)
 
 ADD_TEST(Lang:Token    test-main  token)
 ADD_TEST(Lang:Source   test-main  source NULL)
