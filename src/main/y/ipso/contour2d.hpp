@@ -260,7 +260,29 @@ namespace upsylon
 
                 inline virtual ~segments() throw() {}
                 inline const size_t & key() const throw() { return indx; }
-                
+
+                void split( list_type &L )
+                {
+                    L.clear();
+                    while( size )
+                    {
+                        const point a = tail->a;
+                        const point b = tail->b;
+                        bool linked = false;
+                        for( segments *segs = L.head; segs; segs=segs->next )
+                        {
+
+                        }
+                        if(!linked)
+                        {
+                            segments *segs = new segments(indx,level);
+                            L.push_back(segs);
+                            segs->push_back( pop_back() );
+                        }
+                        // else continue
+                    }
+                }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(segments);
             };
