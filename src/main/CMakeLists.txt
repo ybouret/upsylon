@@ -190,6 +190,12 @@ SET(lang_pattern_srcs ${lang_pattern_decl} ${lang_pattern_code})
 SOURCE_GROUP( lang/pattern FILES ${lang_pattern_srcs} )
 INSTALL( FILES ${lang_pattern_decl} DESTINATION include/y/lang/pattern )
 
+FILE(GLOB geometry_decl y/geometry/*.hpp)
+FILE(GLOB geometry_code y/geometry/*.cpp)
+SET(geometry_srcs ${geometry_decl} ${geometry_code})
+SOURCE_GROUP( geometry FILES ${geometry_srcs} )
+INSTALL( FILES ${geometry_decl} DESTINATION include/y/geometry )
+
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
 ${os_srcs}
@@ -220,6 +226,7 @@ ${fs_srcs}
 ${ipso_srcs}
 ${rtld_srcs}
 ${lang_srcs} ${lang_pattern_srcs}
+${geometry_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )

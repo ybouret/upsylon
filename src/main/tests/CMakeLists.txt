@@ -104,6 +104,8 @@ ADD_TEST(Lang:Posix    test-main  posix)
 ADD_TEST(Lang:RegEx    test-main  regex)
 ADD_TEST(Lang:Matching test-main  matching)
 
+ADD_TEST(geom:c2d test-main geom_c2d)
+
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V
 DEPENDS test-main)
