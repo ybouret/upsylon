@@ -134,6 +134,20 @@ namespace upsylon
         //! reverse order of internal nodes
         inline void reverse() throw() { table.chain.reverse(); }
 
+        //! fetch by index in 0..size-1
+        inline type & fetch( const size_t idx ) throw()
+        {
+            assert(idx<this->size());
+            return table.chain.fetch(idx)->addr->data;
+        }
+
+        //! fetch by index in 0..size-1
+        inline const_type & fetch( const size_t idx ) const throw()
+        {
+            assert(idx<this->size());
+            return table.chain.fetch(idx)->addr->data;
+        }
+
     protected:
         table_type table; //!< handle low level operations
         

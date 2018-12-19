@@ -77,6 +77,36 @@ namespace upsylon
             typedef intr_ptr<identifier,unique_point>                shared_point;
             typedef set<identifier,shared_point,identifier::hasher>  database;
 
+            class segment : public object
+            {
+            public:
+                segment           *next;
+                segment           *prev;
+                const shared_point a;
+                const shared_point b;
+
+                inline explicit segment( const shared_point &A, const shared_point &B ) throw() : next(0), prev(0), a(A), b(B) {}
+                inline virtual ~segment() throw() {}
+
+                typedef core::list_of_cpp<segment> list_type;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(segment);
+            };
+
+
+            class segments : public segment::list_type
+            {
+            public:
+                const size_t indx;
+                explicit segments( const size_t id ) throw() : segment::list_type(), indx(id) {}
+                virtual ~segments() throw() {}
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(segments);
+            };
+
+
 
 #if 0
             //! a low-level contour algorithm

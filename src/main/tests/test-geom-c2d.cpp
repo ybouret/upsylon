@@ -24,6 +24,20 @@ Y_UTEST(geom_c2d)
         }
     }
     std::cerr << "#points=" << pdb.size() << std::endl;
+
+    contour2d::segments segs(0);
+    for(size_t i=10+alea.leq(100);i>0;--i)
+    {
+        const contour2d::shared_point A = pdb.fetch( alea.lt( pdb.size() ) );
+        const contour2d::shared_point B = pdb.fetch( alea.lt( pdb.size() ) );
+        segs.push_back( new contour2d::segment(A,B) );
+    }
+
+    std::cerr << "segs=" << segs.size << std::endl;
+
+    pdb.release();
+
+
 }
 Y_UTEST_DONE()
 
