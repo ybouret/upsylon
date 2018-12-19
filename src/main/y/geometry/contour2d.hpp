@@ -4,26 +4,85 @@
 
 #include "y/type/point2d.hpp"
 #include "y/type/ints.hpp"
+#include "y/associative/set.hpp"
+#include "y/ptr/intr.hpp"
 
 namespace upsylon
 {
     namespace geometry
     {
 
+        //! data structure for 2d contour scanning
         struct contour2d
         {
 
-            typedef point2d<double> point; //!< alias
-            typedef uint32_t        res_t; //!< resolution
-            static  const res_t     res_max = limit_of<res_t>::maximum;
-            typedef point2d<res_t>  vertex;
+            typedef point2d<double>     point;      //!< point physical coordinate
+            typedef uint32_t            resolution; //!< point resolution type insite it's square
+            static  const resolution    resolution_max = limit_of<resolution>::maximum; //!< top max [0..1] with [0..resolution_max]
+            typedef point2d<unit_t>     coordinate; //!< (lower)coordinate of a square
+            typedef point2d<resolution> offset;     //!< point.x = x[coordinate.x] + (x[coordinate.x+1] - x[coordinate.x]) * offset.x / resolution_max
+
+
+            //! unique point identifier
+            class   identifier
+            {
+            public:
+                const coordinate coord;
+                const offset     delta;
+                inline  identifier( const coordinate &c, const offset &d ) throw() : coord(c), delta(d) {}
+                inline ~identifier() throw() {}
+                inline  identifier(const identifier &other) throw() : coord(other.coord), delta(other.delta) {}
+                inline  friend bool operator==( const identifier &lhs, const identifier &rhs) throw()
+                {
+                    return (lhs.coord==rhs.coord) && (lhs.delta==rhs.delta);
+                }
+                typedef hashing::fnv hash_function;
+
+                class hasher
+                {
+                public:
+                    inline  hasher() throw() : h() {}
+                    inline ~hasher() throw() {}
+                    inline size_t operator()( const identifier &id ) throw()
+                    {
+                        h.set();
+                        h.run(&id.coord,sizeof(coordinate));
+                        h.run(&id.delta,sizeof(offset));
+                        return h.key<size_t>();
+                    }
+
+                    hash_function h;
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(hasher);
+                };
+
+            private:
+                Y_DISABLE_ASSIGN(identifier);
+            };
+
+            class unique_point : public counted_object
+            {
+            public:
+                const identifier uid;
+                const point      pos;
+
+                inline  unique_point( const identifier &i, const point &p ) throw() : uid(i), pos(p) {}
+                inline ~unique_point() throw() {}
+
+                const identifier & key() const throw() { return uid; }
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(unique_point);
+            };
+
+            typedef intr_ptr<identifier,unique_point>                shared_point;
+            typedef set<identifier,shared_point,identifier::hasher>  database;
 
 
 #if 0
             //! a low-level contour algorithm
             /**
              d               ! matrix/field of data to contour
-             ilb,iub,jlb,jub ! index bounds of data matrix
+             ilb,iub,jlb,jub ! index bounds of data matrix[j][i]
              x               ! data matrix column coordinates
              y               ! data matrix row coordinates
              z               ! contour levels in increasing order, nc=z.size()
