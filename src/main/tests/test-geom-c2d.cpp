@@ -6,7 +6,7 @@ using namespace geometry;
 
 Y_UTEST(geom_c2d)
 {
-    contour2d::database pdb;
+    contour2d::shared_point_db pdb;
 
     pdb.free();
 

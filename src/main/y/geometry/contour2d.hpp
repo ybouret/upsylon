@@ -6,6 +6,7 @@
 #include "y/type/ints.hpp"
 #include "y/associative/set.hpp"
 #include "y/ptr/intr.hpp"
+#include "y/ptr/auto.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon
@@ -102,7 +103,7 @@ namespace upsylon
             };
 
             typedef intr_ptr<identifier,unique_point>                shared_point;
-            typedef set<identifier,shared_point,identifier::hasher>  database;
+            typedef set<identifier,shared_point,identifier::hasher>  shared_point_db;
 
             class segment : public object
             {
@@ -122,28 +123,62 @@ namespace upsylon
             };
 
 
-            class segments : public segment::list_type
+            class segments : public segment::list_type, public counted_object
             {
             public:
+
                 const size_t indx;
                 explicit segments( const size_t id ) throw() : segment::list_type(), indx(id) {}
                 virtual ~segments() throw() {}
-                
+
+                const size_t & key() const throw() { return indx; }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(segments);
             };
 
+            typedef intr_ptr<size_t,segments>   shared_segments;
+            typedef set<size_t,shared_segments> shared_segments_set;
+
+            class shared_segments_db : public shared_segments_set
+            {
+            public:
+                explicit shared_segments_db(const size_t n=0) : shared_segments_set(n,as_capacity) {}
+                virtual ~shared_segments_db() throw() {}
+
+                void make( const size_t indx, const shared_point &A, const shared_point &B )
+                {
+                    auto_ptr<segment> seg  = new segment(A,B);
+                    shared_segments  *ppS  = search(indx);
+                    if(ppS)
+                    {
+                        (**ppS).push_back(seg.yield());
+                    }
+                    else
+                    {
+                        segments *S = new segments(indx);
+                        {
+                            const shared_segments q = S;
+                            if(!insert(q)) throw exception("failure to insert new segmensts");
+                        }
+                        S->push_back(seg.yield());
+                    }
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(shared_segments_db);
+            };
 
 
             class unique_point_dispatcher
             {
             public:
-                database         &pdb;
+                shared_point_db  &pdb;
                 const coordinate  coord;
                 const point       lower;
                 const point       upper;
 
-                explicit unique_point_dispatcher(database         &_pdb,
+                explicit unique_point_dispatcher(shared_point_db  &_pdb,
                                                  const coordinate &_coord,
                                                  const point      &_lower,
                                                  const point      &_upper) :
@@ -205,7 +240,8 @@ namespace upsylon
             typename FIELD,
             typename ARRAY
             > static inline
-            void scan(const FIELD         &d,
+            void scan(shared_segments_db  &ss,
+                      const FIELD         &d,
                       const unit_t         ilb,
                       const unit_t         iub,
                       const unit_t         jlb,
@@ -213,7 +249,7 @@ namespace upsylon
                       const ARRAY         &x,
                       const ARRAY         &y,
                       const array<double> &z,
-                      database            &pdb
+                      shared_point_db     &pdb
                       )
             {
                 static const size_t tri[4][2] =
