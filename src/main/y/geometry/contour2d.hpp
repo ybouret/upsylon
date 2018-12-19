@@ -19,7 +19,7 @@ namespace upsylon
             typedef point2d<res_t>  vertex;
 
 
-
+#if 0
             //! a low-level contour algorithm
             /**
              d               ! matrix/field of data to contour
@@ -100,6 +100,7 @@ namespace upsylon
                     }
                 }
             }
+#endif
 
         };
 
