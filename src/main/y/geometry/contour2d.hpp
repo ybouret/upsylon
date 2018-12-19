@@ -6,6 +6,7 @@
 #include "y/type/ints.hpp"
 #include "y/associative/set.hpp"
 #include "y/ptr/intr.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -22,7 +23,33 @@ namespace upsylon
             typedef point2d<unit_t>     coordinate; //!< (lower)coordinate of a square
             typedef point2d<resolution> offset;     //!< point.x = x[coordinate.x] + (x[coordinate.x+1] - x[coordinate.x]) * offset.x / resolution_max
 
+            static const unsigned       sign_bits     = 2;
+            static const unsigned       sign_shift0   = 0*sign_bits;
+            static const unsigned       sign_shift1   = 1*sign_bits;
+            static const unsigned       sign_shift2   = 2*sign_bits;
+            static const unsigned       sign_zero     = 0x00;
+            static const unsigned       sign_positive = 0x01;
+            static const unsigned       sign_negative = 0x02;
 
+            static const unsigned zzz0 = sign_zero     << sign_shift0;
+            static const unsigned pos0 = sign_positive << sign_shift0;
+            static const unsigned neg0 = sign_negative << sign_shift0;
+
+            static const unsigned zzz1 = sign_zero     << sign_shift1;
+            static const unsigned pos1 = sign_positive << sign_shift1;
+            static const unsigned neg1 = sign_negative << sign_shift1;
+
+            static const unsigned zzz2 = sign_zero     << sign_shift2;
+            static const unsigned pos2 = sign_positive << sign_shift2;
+            static const unsigned neg2 = sign_negative << sign_shift2;
+
+            static inline
+            unsigned sign_flag( const double value ) throw()
+            {
+                if(value<0)      return sign_negative;
+                else if(value>0) return sign_positive;
+                else             return sign_zero;
+            }
             //! unique point identifier
             class   identifier
             {
@@ -108,7 +135,64 @@ namespace upsylon
 
 
 
-#if 0
+            class unique_point_dispatcher
+            {
+            public:
+                database         &pdb;
+                const coordinate  coord;
+                const point       lower;
+                const point       upper;
+
+                explicit unique_point_dispatcher(database         &_pdb,
+                                                 const coordinate &_coord,
+                                                 const point      &_lower,
+                                                 const point      &_upper) :
+                pdb( _pdb ), coord( _coord ), lower( _lower ), upper( _upper )
+                {
+
+                }
+
+                ~unique_point_dispatcher() throw()
+                {
+                }
+
+                inline
+                offset compute_offset(const point &p) const throw()
+                {
+                    static const double fac = resolution_max;
+                    const double     ox = floor( fac*(p.x-lower.x)/(upper.x-lower.x) + 0.5 );
+                    const double     oy = floor( fac*(p.y-lower.y)/(upper.y-lower.y) + 0.5 );
+                    const resolution rx = resolution(ox);
+                    const resolution ry = resolution(oy);
+                    return offset(rx,ry);
+                }
+
+                unique_point *operator()( const point &p )
+                {
+                    const offset      delta = compute_offset(p);
+                    const identifier  ident(coord,delta);
+                    shared_point     *shpp  = pdb.search(ident);
+                    if(shpp)
+                    {
+                        return & (**shpp);
+                    }
+                    else
+                    {
+                        unique_point      *pp  = new unique_point(ident,p);
+                        const shared_point shp = pp;
+                        if(!pdb.insert(shp))
+                        {
+                            throw exception("unexpected insert failure");
+                        }
+                        return pp;
+                    }
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(unique_point_dispatcher);
+            };
+
+
             //! a low-level contour algorithm
             /**
              d               ! matrix/field of data to contour
@@ -128,19 +212,26 @@ namespace upsylon
                       const unit_t         jub,
                       const ARRAY         &x,
                       const ARRAY         &y,
-                      const array<double> &z
+                      const array<double> &z,
+                      database            &pdb
                       )
             {
+                static const size_t tri[4][2] =
+                {
+                    {1,2},
+                    {2,3},
+                    {3,4},
+                    {4,1}
+                };
 
-                static const vertex v0(res_max>>1,res_max>>1);
-                static const vertex v1(0,0);
-                static const vertex v2(0,res_max);
-                static const vertex v3(res_max,res_max);
-                static const vertex v4(res_max,0);
-                double              f[5] = {0,0,0,0,0};
-                double              g[5] = {0,0,0,0,0};
-
+                double g[5] = {0,0,0,0,0}; // global fields value
+                double f[5] = {0,0,0,0,0}; // local fields value
+                //--------------------------------------------------------------
+                //
                 // initialize
+                //
+                //--------------------------------------------------------------
+                pdb.free();
                 const size_t nc  = z.size();
                 if(nc<=0)
                 {
@@ -154,42 +245,99 @@ namespace upsylon
                     assert(z[i]<=z[i+1]);
                 }
 #endif
+                //--------------------------------------------------------------
+                //
+                // loop over mesh
+                //
+                //--------------------------------------------------------------
                 for(unit_t j0=jlb,j1=jlb+1;j0<jub;++j0,++j1)
                 {
                     const double y0=y[j0];
                     const double y1=y[j1];
                     for(unit_t i0=ilb,i1=i0+1;i0<iub;++i0,++i1)
                     {
-                        // load global field
-                        double dmin = (f[1]=d[j0][i0]),      dmax=dmin;
-                        dmin =  min_of(f[2]=d[j1][i0],dmin); dmax=max_of(dmax,f[2]);
-                        dmin =  min_of(f[3]=d[j1][i1],dmin); dmax=max_of(dmax,f[3]);
-                        dmin =  min_of(f[4]=d[j0][i1],dmin); dmax=max_of(dmax,f[4]);
-
-                        // get rid of trivial case
-                        if(dmin<zlo||dmax>zhi)
-                        {
-                            continue; // no possible intersection
-                        }
                         const double x0 = x[i0];
                         const double x1 = x[i1];
 
-                        
+                        //------------------------------------------------------
+                        // load global field
+                        //------------------------------------------------------
+                        double dmin = (g[1]=double(d[j0][i0])),      dmax=dmin;
+                        dmin = min_of( g[2]=double(d[j0][i1]),dmin); dmax=max_of(dmax,g[2]);
+                        dmin = min_of( g[3]=double(d[j1][i1]),dmin); dmax=max_of(dmax,g[3]);
+                        dmin = min_of( g[4]=double(d[j1][i0]),dmin); dmax=max_of(dmax,g[4]);
+                        if(dmin<zlo||dmax>zhi)
+                        {
+                            continue;
+                        }
+
+                        //------------------------------------------------------
+                        // global coordinates
+                        //------------------------------------------------------
+                        const point lower = point(x0,y0);
+                        const point upper = point(x1,y1);
+                        const point vtx[5] =
+                        {
+                            point(0.5*(x0+x1),0.5*(y0+y1)),
+                            lower,
+                            point(x1,y0),
+                            upper,
+                            point(x0,y1)
+                        };
+                        const coordinate        coord(i0,j0);
+                        unique_point_dispatcher mgr(pdb,coord,lower,upper);
+
+                        //------------------------------------------------------
                         // loop over levels
+                        //------------------------------------------------------
                         for(size_t k=nc;k>0;--k)
                         {
-                            // build the local field
                             const double zk = z[k];
-                            g[1] = f[1]-zk;
-                            g[2] = f[2]-zk;
-                            g[3] = f[3]-zk;
-                            g[4] = f[4]-zk;
-                            g[0] = 0.25*(g[1]+g[2]+g[3]+g[4]);
+                            f[1] = g[1] - zk;
+                            f[2] = g[2] - zk;
+                            f[3] = g[3] - zk;
+                            f[4] = g[4] - zk;
+                            f[0] = 0.25*(g[1]+g[2]+g[3]+g[4]);
+                            //--------------------------------------------------
+                            // loop over triangles
+                            //--------------------------------------------------
+                            for(size_t l=0;l<4;++l)
+                            {
+                                //----------------------------------------------
+                                // get indices
+                                //----------------------------------------------
+                                static const size_t m0 = 0;
+                                const size_t        m1 = tri[l][0];
+                                const size_t        m2 = tri[l][1];
+
+                                //----------------------------------------------
+                                // get real coordinates
+                                //----------------------------------------------
+                                const point    p0    = vtx[m0];
+                                const point    p1    = vtx[m1];
+                                const point    p2    = vtx[m2];
+                                const double   f0    = f[m0];
+                                const double   f1    = f[m1];
+                                const double   f2    = f[m2];
+                                const unsigned flags = (sign_flag(f0) << sign_shift0) | (sign_flag(f1)<<sign_shift1) | (sign_flag(f2)<<sign_shift2);
+                                switch(flags)
+                                {
+                                    case zzz0|zzz1|zzz2: {
+                                        const shared_point sp0 = mgr(p0);
+                                        const shared_point sp1 = mgr(p1);
+                                        const shared_point sp2 = mgr(p2);
+                                    } break;
+
+                                    default:
+                                        break;
+                                }
+                            }
                         }
+
+
                     }
                 }
             }
-#endif
 
         };
 
