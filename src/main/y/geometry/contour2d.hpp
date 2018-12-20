@@ -230,7 +230,7 @@ namespace upsylon
 
             //! a low-level contour algorithm
             /**
-             d               ! matrix/field of data to contour
+             data            !  matrix/field of data to contour
              ilb,iub,jlb,jub ! index bounds of data matrix[j][i]
              x               ! data matrix column coordinates
              y               ! data matrix row coordinates
@@ -240,8 +240,8 @@ namespace upsylon
             typename FIELD,
             typename ARRAY
             > static inline
-            void scan(shared_segments_db  &ss,
-                      const FIELD         &d,
+            void scan(shared_segments_db  &sdb,
+                      const FIELD         &data,
                       const unit_t         ilb,
                       const unit_t         iub,
                       const unit_t         jlb,
@@ -290,18 +290,19 @@ namespace upsylon
                 {
                     const double y0=y[j0];
                     const double y1=y[j1];
+                    const double ymid = 0.5*(y0+y1);
                     for(unit_t i0=ilb,i1=i0+1;i0<iub;++i0,++i1)
                     {
                         const double x0 = x[i0];
                         const double x1 = x[i1];
 
                         //------------------------------------------------------
-                        // load global field
+                        // load global data
                         //------------------------------------------------------
-                        double dmin = (g[1]=double(d[j0][i0])),      dmax=dmin;
-                        dmin = min_of( g[2]=double(d[j0][i1]),dmin); dmax=max_of(dmax,g[2]);
-                        dmin = min_of( g[3]=double(d[j1][i1]),dmin); dmax=max_of(dmax,g[3]);
-                        dmin = min_of( g[4]=double(d[j1][i0]),dmin); dmax=max_of(dmax,g[4]);
+                        double dmin = (g[1]=double(data[j0][i0])),      dmax=dmin;
+                        dmin = min_of( g[2]=double(data[j0][i1]),dmin); dmax=max_of(dmax,g[2]);
+                        dmin = min_of( g[3]=double(data[j1][i1]),dmin); dmax=max_of(dmax,g[3]);
+                        dmin = min_of( g[4]=double(data[j1][i0]),dmin); dmax=max_of(dmax,g[4]);
                         if(dmin<zlo||dmax>zhi)
                         {
                             continue;
@@ -314,7 +315,7 @@ namespace upsylon
                         const point upper = point(x1,y1);
                         const point vtx[5] =
                         {
-                            point(0.5*(x0+x1),0.5*(y0+y1)),
+                            point(0.5*(x0+x1),ymid),
                             lower,
                             point(x1,y0),
                             upper,
@@ -362,6 +363,9 @@ namespace upsylon
                                         const shared_point sp0 = mgr(p0);
                                         const shared_point sp1 = mgr(p1);
                                         const shared_point sp2 = mgr(p2);
+                                        sdb.make(k,sp0,sp1);
+                                        sdb.make(k,sp1,sp2);
+                                        sdb.make(k,sp2,sp0);
                                     } break;
 
                                     default:
