@@ -54,19 +54,23 @@ Y_UTEST(geom_c2d)
             const double xx2 = X[i]-0.2;
             const double r1 = math::__hypotenuse(yy,xx1);
             const double r2 = math::__hypotenuse(yy,xx2);
-            const double V  = 1.0/(r1+0.1)-1.0/(r2+0.2);
+            const double V  = 1.0/(r1+0.1)-1.0/(r2+0.1);
             M[j][i] = V;
         }
     }
 
     vector<double> z(3);
-    z[1] = -1;
+    z[1] = -0.1;
     z[2] = 0;
-    z[3] = 1;
+    z[3] = 0.1;
+
+    pdb.release();
 
     contour2d::shared_segments_db sdb;
     contour2d::scan(sdb, M, 1, nx, 1, ny, X, Y, z, pdb);
 
+    std::cerr << "#unique_points=" << pdb.size() << std::endl;
+    std::cerr << "#contours     =" << sdb.size() << std::endl;
 
 }
 Y_UTEST_DONE()

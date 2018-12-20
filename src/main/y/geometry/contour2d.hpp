@@ -147,8 +147,10 @@ namespace upsylon
                 explicit shared_segments_db(const size_t n=0) : shared_segments_set(n,as_capacity) {}
                 virtual ~shared_segments_db() throw() {}
 
-                void make( const size_t indx, const shared_point &A, const shared_point &B )
+                void make( const size_t indx, unique_point *pA, unique_point *pB )
                 {
+                    const shared_point A(pA);
+                    const shared_point B(pB);
                     auto_ptr<segment> seg  = new segment(A,B);
                     shared_segments  *ppS  = search(indx);
                     if(ppS)
@@ -203,7 +205,7 @@ namespace upsylon
                     return offset(rx,ry);
                 }
 
-                unique_point *operator()( const point &p )
+                unique_point *operator()( const point p )
                 {
                     const offset      delta = compute_offset(p);
                     const identifier  ident(coord,delta);
@@ -221,6 +223,26 @@ namespace upsylon
                             throw exception("unexpected insert failure");
                         }
                         return pp;
+                    }
+                }
+
+                unique_point * operator()(const point &pa,
+                                          const double va,
+                                          const point &pb,
+                                          const double vb )
+                {
+                    assert(va*vb<=0);
+                    const double  den = vb-va;
+                    if(fabs(den)<=0)
+                    {
+                        const point q( 0.5*(pa.x+pb.x), 0.5*(pa.y+pb.y) );
+                        return (*this)(q);
+                    }
+                    else
+                    {
+                        const double  lam = -va / (vb-va);
+                        const point   q( pa.x + lam*(pb.x-pa.x), pa.y+lam*(pb.y-pa.y) );
+                        return (*this)(q);
                     }
                 }
 
@@ -366,18 +388,23 @@ namespace upsylon
                                     case neg0|neg1|neg2: // f2<0 : do nothing +1
                                         break;
                                     case neg0|neg1|zzz2: // f2=0
+                                        (void) mgr(p2); // register f2, no segment
                                         break;
                                     case neg0|neg1|pos2: // f2>0
+                                        sdb.make(k,mgr(p0,f0,p2,f2),mgr(p1,f1,p2,f2));
                                         break;
 
                                         //======================================
                                         // f0<0 | f1=0
                                         //======================================
                                     case neg0|zzz1|neg2: // f2<0
+                                        (void) mgr(p1);
                                         break;
                                     case neg0|zzz1|zzz2: // f2=0
+                                        sdb.make(k, mgr(p1), mgr(p2) );
                                         break;
                                     case neg0|zzz1|pos2: // f2>0
+                                        sdb.make(l,mgr(p1),mgr(p0,f0,p2,f2));
                                         break;
 
                                         //======================================
