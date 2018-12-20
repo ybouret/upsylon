@@ -40,8 +40,8 @@ Y_UTEST(geom_c2d)
 
     pdb.release();
 
-    const size_t   nx=50;
-    const size_t   ny=60;
+    const size_t   nx=60;
+    const size_t   ny=80;
     matrix<double> M(ny,nx);
     vector<double> X(nx), Y(ny);
     for(size_t j=1;j<=ny;++j)
@@ -65,9 +65,13 @@ Y_UTEST(geom_c2d)
     //z[2] =  0;
     //z[3] =  2;
 
+    z.push_back(-5);
     z.push_back(-2);
+    z.push_back(-0.1);
     z.push_back(0);
+    z.push_back(0.1);
     z.push_back(2);
+    z.push_back(5);
 
     pdb.release();
     std::cerr << "Contours for z=" << z << std::endl;
