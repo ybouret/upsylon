@@ -8,6 +8,7 @@
 #include "y/ptr/intr.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/exception.hpp"
+#include <iostream>
 
 namespace upsylon
 {
@@ -359,19 +360,71 @@ namespace upsylon
                                 const unsigned flags = (sign_flag(f0) << sign_shift0) | (sign_flag(f1)<<sign_shift1) | (sign_flag(f2)<<sign_shift2);
                                 switch(flags)
                                 {
-#if 0
-                                    case zzz0|zzz1|zzz2: {
-                                        const shared_point sp0 = mgr(p0);
-                                        const shared_point sp1 = mgr(p1);
-                                        const shared_point sp2 = mgr(p2);
-                                        sdb.make(k,sp0,sp1);
-                                        sdb.make(k,sp1,sp2);
-                                        sdb.make(k,sp2,sp0);
-                                    } break;
-#endif
-                                        
-                                    default:
-                                        break;
+                                        //======================================
+                                        // f0<0 | f1<0
+                                        //======================================
+                                    case neg0|neg1|neg2: break;
+                                    case neg0|neg1|zzz2: break;
+                                    case neg0|neg1|pos2: break;
+
+                                        //======================================
+                                        // f0<0 | f1=0
+                                        //======================================
+                                    case neg0|zzz1|neg2: break;
+                                    case neg0|zzz1|zzz2: break;
+                                    case neg0|zzz1|pos2: break;
+
+                                        //======================================
+                                        // f0<0 | f1>0
+                                        //======================================
+                                    case neg0|pos1|neg2: break;
+                                    case neg0|pos1|zzz2: break;
+                                    case neg0|pos1|pos2: break;
+
+                                        //======================================
+                                        // f0=0 | f1<0
+                                        //======================================
+                                    case zzz0|neg1|neg2: break;
+                                    case zzz0|neg1|zzz2: break;
+                                    case zzz0|neg1|pos2: break;
+
+                                        //======================================
+                                        // f0=0 | f1=0
+                                        //======================================
+                                    case zzz0|zzz1|neg2: break;
+                                    case zzz0|zzz1|zzz2: break;
+                                    case zzz0|zzz1|pos2: break;
+
+                                        //======================================
+                                        // f0=0 | f1>0
+                                        //======================================
+                                    case zzz0|pos1|neg2: break;
+                                    case zzz0|pos1|zzz2: break;
+                                    case zzz0|pos1|pos2: break;
+
+                                        //======================================
+                                        // f0>0 | f1<0
+                                        //======================================
+                                    case pos0|neg1|neg2: break;
+                                    case pos0|neg1|zzz2: break;
+                                    case pos0|neg1|pos2: break;
+
+                                        //======================================
+                                        // f0>0 | f1=0
+                                        //======================================
+                                    case pos0|zzz1|neg2: break;
+                                    case pos0|zzz1|zzz2: break;
+                                    case pos0|zzz1|pos2: break;
+
+                                        //======================================
+                                        // f0>0 | f1>0
+                                        //======================================
+                                    case pos0|pos1|neg2: break;
+                                    case pos0|pos1|zzz2: break;
+                                    case pos0|pos1|pos2: break;
+
+
+                                    default: break;
                                 }
                             }
                         }
