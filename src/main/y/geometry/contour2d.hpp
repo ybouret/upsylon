@@ -363,65 +363,92 @@ namespace upsylon
                                         //======================================
                                         // f0<0 | f1<0
                                         //======================================
-                                    case neg0|neg1|neg2: break;
-                                    case neg0|neg1|zzz2: break;
-                                    case neg0|neg1|pos2: break;
+                                    case neg0|neg1|neg2: // f2<0 : do nothing +1
+                                        break;
+                                    case neg0|neg1|zzz2: // f2=0
+                                        break;
+                                    case neg0|neg1|pos2: // f2>0
+                                        break;
 
                                         //======================================
                                         // f0<0 | f1=0
                                         //======================================
-                                    case neg0|zzz1|neg2: break;
-                                    case neg0|zzz1|zzz2: break;
-                                    case neg0|zzz1|pos2: break;
+                                    case neg0|zzz1|neg2: // f2<0
+                                        break;
+                                    case neg0|zzz1|zzz2: // f2=0
+                                        break;
+                                    case neg0|zzz1|pos2: // f2>0
+                                        break;
 
                                         //======================================
                                         // f0<0 | f1>0
                                         //======================================
-                                    case neg0|pos1|neg2: break;
-                                    case neg0|pos1|zzz2: break;
-                                    case neg0|pos1|pos2: break;
+                                    case neg0|pos1|neg2: // f2<0
+                                        break;
+                                    case neg0|pos1|zzz2: // f2=0
+                                        break;
+                                    case neg0|pos1|pos2: // f2>0
+                                        break;
 
                                         //======================================
                                         // f0=0 | f1<0
                                         //======================================
-                                    case zzz0|neg1|neg2: break;
-                                    case zzz0|neg1|zzz2: break;
-                                    case zzz0|neg1|pos2: break;
+                                    case zzz0|neg1|neg2: // f2<0
+                                        break;
+                                    case zzz0|neg1|zzz2: // f2=0
+                                        break;
+                                    case zzz0|neg1|pos2: // f2>0
+                                        break;
 
                                         //======================================
                                         // f0=0 | f1=0
                                         //======================================
-                                    case zzz0|zzz1|neg2: break;
-                                    case zzz0|zzz1|zzz2: break;
-                                    case zzz0|zzz1|pos2: break;
+                                    case zzz0|zzz1|neg2: // f2<0
+                                        break;
+                                    case zzz0|zzz1|zzz2: // f2=0 : do nothing, degenerate
+                                        break;
+                                    case zzz0|zzz1|pos2: // f2>0
+                                        break;
 
                                         //======================================
                                         // f0=0 | f1>0
                                         //======================================
-                                    case zzz0|pos1|neg2: break;
-                                    case zzz0|pos1|zzz2: break;
-                                    case zzz0|pos1|pos2: break;
+                                    case zzz0|pos1|neg2: // f2<0
+                                        break;
+                                    case zzz0|pos1|zzz2: // f2=0
+                                        break;
+                                    case zzz0|pos1|pos2: // f2>0
+                                        break;
 
                                         //======================================
                                         // f0>0 | f1<0
                                         //======================================
-                                    case pos0|neg1|neg2: break;
-                                    case pos0|neg1|zzz2: break;
-                                    case pos0|neg1|pos2: break;
+                                    case pos0|neg1|neg2: // f2<0
+                                        break;
+                                    case pos0|neg1|zzz2: // f2=0
+                                        break;
+                                    case pos0|neg1|pos2: // f2>0
+                                        break;
 
                                         //======================================
                                         // f0>0 | f1=0
                                         //======================================
-                                    case pos0|zzz1|neg2: break;
-                                    case pos0|zzz1|zzz2: break;
-                                    case pos0|zzz1|pos2: break;
+                                    case pos0|zzz1|neg2: // f2<0
+                                        break;
+                                    case pos0|zzz1|zzz2: // f2=0
+                                        break;
+                                    case pos0|zzz1|pos2: // f2>0
+                                        break;
 
                                         //======================================
                                         // f0>0 | f1>0
                                         //======================================
-                                    case pos0|pos1|neg2: break;
-                                    case pos0|pos1|zzz2: break;
-                                    case pos0|pos1|pos2: break;
+                                    case pos0|pos1|neg2: // f2<0
+                                        break;
+                                    case pos0|pos1|zzz2: // f2=0
+                                        break;
+                                    case pos0|pos1|pos2: // f2>0 do nothing
+                                        break;
 
 
                                     default: break;
