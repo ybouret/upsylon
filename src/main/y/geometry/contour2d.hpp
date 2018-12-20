@@ -359,6 +359,7 @@ namespace upsylon
                                 const unsigned flags = (sign_flag(f0) << sign_shift0) | (sign_flag(f1)<<sign_shift1) | (sign_flag(f2)<<sign_shift2);
                                 switch(flags)
                                 {
+#if 0
                                     case zzz0|zzz1|zzz2: {
                                         const shared_point sp0 = mgr(p0);
                                         const shared_point sp1 = mgr(p1);
@@ -367,7 +368,8 @@ namespace upsylon
                                         sdb.make(k,sp1,sp2);
                                         sdb.make(k,sp2,sp0);
                                     } break;
-
+#endif
+                                        
                                     default:
                                         break;
                                 }
