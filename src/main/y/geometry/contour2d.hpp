@@ -326,7 +326,7 @@ namespace upsylon
                         dmin = min_of( g[2]=double(data[j0][i1]),dmin); dmax=max_of(dmax,g[2]);
                         dmin = min_of( g[3]=double(data[j1][i1]),dmin); dmax=max_of(dmax,g[3]);
                         dmin = min_of( g[4]=double(data[j1][i0]),dmin); dmax=max_of(dmax,g[4]);
-                        if(dmin<zlo||dmax>zhi)
+                        if(dmax<zlo||dmin>zhi)
                         {
                             continue;
                         }
@@ -357,7 +357,7 @@ namespace upsylon
                             f[2] = g[2] - zk;
                             f[3] = g[3] - zk;
                             f[4] = g[4] - zk;
-                            f[0] = 0.25*(g[1]+g[2]+g[3]+g[4]);
+                            f[0] = 0.25*(f[1]+f[2]+f[3]+f[4]);
                             //--------------------------------------------------
                             // loop over triangles
                             //--------------------------------------------------
@@ -380,103 +380,61 @@ namespace upsylon
                                 const double   f1    = f[m1];
                                 const double   f2    = f[m2];
                                 const unsigned flags = (sign_flag(f0) << sign_shift0) | (sign_flag(f1)<<sign_shift1) | (sign_flag(f2)<<sign_shift2);
+                                //std::cerr << sign_flag(f0) << "|" << sign_flag(f1) << "|" << sign_flag(f2) << std::endl;
+
+                                //----------------------------------------------
+                                //
+                                // there are nine symetrical possibilities
+                                //----------------------------------------------
                                 switch(flags)
                                 {
-                                        //======================================
-                                        // f0<0 | f1<0
-                                        //======================================
-                                    case neg0|neg1|neg2: // f2<0 : do nothing +1
-                                        break;
-                                    case neg0|neg1|zzz2: // f2=0
-                                        (void) mgr(p2); // register f2, no segment
-                                        break;
-                                    case neg0|neg1|pos2: // f2>0
-                                        sdb.make(k,mgr(p0,f0,p2,f2),mgr(p1,f1,p2,f2));
+                                        // intercepting
+                                    case neg0|pos1|pos2:
+                                    case pos0|neg1|neg2:
+                                        sdb.make(k, mgr(p0,f0,p1,f1), mgr(p0,f0,p2,f2));
                                         break;
 
-                                        //======================================
-                                        // f0<0 | f1=0
-                                        //======================================
-                                    case neg0|zzz1|neg2: // f2<0
-                                        (void) mgr(p1);
-                                        break;
-                                    case neg0|zzz1|zzz2: // f2=0
-                                        sdb.make(k, mgr(p1), mgr(p2) );
-                                        break;
-                                    case neg0|zzz1|pos2: // f2>0
-                                        sdb.make(l,mgr(p1),mgr(p0,f0,p2,f2));
+                                    case neg0|pos1|neg2:
+                                    case pos0|neg1|pos2:
+                                        sdb.make(k, mgr(p0,f0,p1,f1), mgr(p1,f1,p2,f2) );
                                         break;
 
-                                        //======================================
-                                        // f0<0 | f1>0
-                                        //======================================
-                                    case neg0|pos1|neg2: // f2<0
-                                        break;
-                                    case neg0|pos1|zzz2: // f2=0
-                                        break;
-                                    case neg0|pos1|pos2: // f2>0
+                                    case neg0|neg1|pos2:
+                                    case pos0|pos1|neg2:
+                                        sdb.make(k, mgr(p0,f0,p2,f2), mgr(p1,f1,p2,f2) );
                                         break;
 
-                                        //======================================
-                                        // f0=0 | f1<0
-                                        //======================================
-                                    case zzz0|neg1|neg2: // f2<0
-                                        break;
-                                    case zzz0|neg1|zzz2: // f2=0
-                                        break;
-                                    case zzz0|neg1|pos2: // f2>0
+                                        // vertex+intercep
+                                    case zzz0|pos1|neg2:
+                                    case zzz0|neg1|pos2:
+                                        sdb.make(k,mgr(p0),mgr(p1,f1,p2,f2));
                                         break;
 
-                                        //======================================
-                                        // f0=0 | f1=0
-                                        //======================================
-                                    case zzz0|zzz1|neg2: // f2<0
-                                        break;
-                                    case zzz0|zzz1|zzz2: // f2=0 : do nothing, degenerate
-                                        break;
-                                    case zzz0|zzz1|pos2: // f2>0
+                                    case pos0|zzz1|neg2:
+                                    case neg0|zzz1|pos2:
+                                        sdb.make(k,mgr(p1),mgr(p0,f0,p2,f2));
                                         break;
 
-                                        //======================================
-                                        // f0=0 | f1>0
-                                        //======================================
-                                    case zzz0|pos1|neg2: // f2<0
-                                        break;
-                                    case zzz0|pos1|zzz2: // f2=0
-                                        break;
-                                    case zzz0|pos1|pos2: // f2>0
+                                    case pos0|neg1|zzz2:
+                                    case neg0|pos1|zzz2:
+                                        sdb.make(k,mgr(p2), mgr(p1,f1,p2,f2));
                                         break;
 
-                                        //======================================
-                                        // f0>0 | f1<0
-                                        //======================================
-                                    case pos0|neg1|neg2: // f2<0
-                                        break;
-                                    case pos0|neg1|zzz2: // f2=0
-                                        break;
-                                    case pos0|neg1|pos2: // f2>0
+                                        // one of the vertices
+                                    case zzz0|zzz1|pos2:
+                                    case zzz0|zzz1|neg2:
+                                        sdb.make(k,mgr(p0),mgr(p1));
                                         break;
 
-                                        //======================================
-                                        // f0>0 | f1=0
-                                        //======================================
-                                    case pos0|zzz1|neg2: // f2<0
-                                        break;
-                                    case pos0|zzz1|zzz2: // f2=0
-                                        break;
-                                    case pos0|zzz1|pos2: // f2>0
+                                    case neg0|zzz1|zzz2:
+                                    case pos0|zzz1|zzz2:
+                                        sdb.make(k,mgr(p1),mgr(p2));
                                         break;
 
-                                        //======================================
-                                        // f0>0 | f1>0
-                                        //======================================
-                                    case pos0|pos1|neg2: // f2<0
+                                    case zzz0|neg1|zzz2:
+                                    case zzz0|pos1|zzz2:
+                                        sdb.make(k,mgr(p0),mgr(p2));
                                         break;
-                                    case pos0|pos1|zzz2: // f2=0
-                                        break;
-                                    case pos0|pos1|pos2: // f2>0 do nothing
-                                        break;
-
 
                                     default: break;
                                 }

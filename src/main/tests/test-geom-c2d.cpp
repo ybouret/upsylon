@@ -3,6 +3,7 @@
 #include "y/ipso/field2d.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 using namespace geometry;
@@ -39,8 +40,8 @@ Y_UTEST(geom_c2d)
 
     pdb.release();
 
-    const size_t   nx=20;
-    const size_t   ny=30;
+    const size_t   nx=50;
+    const size_t   ny=60;
     matrix<double> M(ny,nx);
     vector<double> X(nx), Y(ny);
     for(size_t j=1;j<=ny;++j)
@@ -59,19 +60,39 @@ Y_UTEST(geom_c2d)
         }
     }
 
-    vector<double> z(3);
-    z[1] = -0.1;
-    z[2] = 0;
-    z[3] = 0.1;
+    vector<double> z(16,as_capacity);
+    //z[1] = -2;
+    //z[2] =  0;
+    //z[3] =  2;
+
+    z.push_back(-2);
+    z.push_back(0);
+    z.push_back(2);
 
     pdb.release();
-
+    std::cerr << "Contours for z=" << z << std::endl;
     contour2d::shared_segments_db sdb;
     contour2d::scan(sdb, M, 1, nx, 1, ny, X, Y, z, pdb);
 
     std::cerr << "#unique_points=" << pdb.size() << std::endl;
     std::cerr << "#contours     =" << sdb.size() << std::endl;
 
+    {
+        ios::ocstream fp("c2d.dat");
+        for(contour2d::shared_segments_db::iterator i=sdb.begin();i!=sdb.end();++i)
+        {
+            const contour2d::segments &S = **i;
+            std::cerr << "Segment@level=" << z[S.indx] << ": " << S.size;
+            for( const contour2d::segment *s = S.head; s;s=s->next )
+            {
+                const contour2d::unique_point &a = *(s->a), &b = *(s->b);
+                //std::cerr << " " << a.pos << "->" << b.pos << std::endl;
+                fp("%g %g\n",   a.pos.x,a.pos.y);
+                fp("%g %g\n\n", b.pos.x,b.pos.y);
+            }
+            std::cerr << std::endl;
+        }
+    }
 }
 Y_UTEST_DONE()
 
