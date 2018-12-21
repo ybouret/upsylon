@@ -60,6 +60,7 @@ namespace upsylon
             const COORD width; //!< width
             const COORD pitch; //!< 1 x xy
 
+            //! copy
             layout_of( const layout_of &other ) throw() :
             layout(other),
             lower( other.lower ),

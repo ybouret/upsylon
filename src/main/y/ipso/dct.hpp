@@ -8,28 +8,36 @@ namespace upsylon
 {
     namespace ipso
     {
+        //! Discret Cosine Transform base class
         class DCT
         {
         public:
-            typedef field2D<double> Table;
+            typedef field2D<double> Table; //!< alias to store internal data
 
-            virtual ~DCT() throw();
-            const unit_t w;
-            const unit_t h;
+            virtual ~DCT() throw(); //!< cleanup
+
+            const unit_t w; //!< width
+            const unit_t h; //!< height
+
+            //! reverse transform interface
+            virtual void reverse(Table &pix, const Table &dct) throw() =0;
+
         protected:
-            explicit DCT( const unit_t W, const unit_t H);
-            Table LAMBDA;
+            explicit DCT( const unit_t W, const unit_t H); //!< setup
+            Table LAMBDA; //!< internal cosines
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DCT);
         };
 
+        //! rectangular DCT
         class CommonDCT : public DCT
         {
         public:
-            virtual ~CommonDCT() throw();
-            explicit CommonDCT(const unit_t W,const unit_t H);
+            virtual ~CommonDCT() throw(); //!< cleanup
+            explicit CommonDCT(const unit_t W,const unit_t H); //!< setup
 
+            //! forward transform
             template <typename TABLE>
             void forward(Table           &tgt,
                          const TABLE     &src,
@@ -61,7 +69,8 @@ namespace upsylon
                 }
             }
 
-            void reverse(Table &pix, const Table &dct) throw();
+            //! reverse transform
+            virtual void reverse(Table &pix, const Table &dct) throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(CommonDCT);
@@ -69,12 +78,14 @@ namespace upsylon
             Table YCOS;
         };
 
+        //! optimized DCT for squared layout
         class SquareDCT : public DCT
         {
         public:
-            virtual ~SquareDCT() throw();
-            explicit SquareDCT(const unit_t W);
+            virtual ~SquareDCT() throw();       //!< cleanup
+            explicit SquareDCT(const unit_t W); //!< setup
 
+            //! forward transform
             template <typename TABLE>
             void forward(Table         &tgt,
                          const TABLE   &src,
@@ -104,7 +115,8 @@ namespace upsylon
                 }
             }
 
-            void reverse(Table &pix, const Table &dct) throw();
+            //! reverse transform
+            virtual void reverse(Table &pix, const Table &dct) throw();
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SquareDCT);

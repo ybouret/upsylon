@@ -54,6 +54,7 @@ Y_UTEST(ipso_c2d)
         }
         ipso::contour2d::scan(d, 1, n, 1, n, x, y, z, linecb,&fp);
 
+#if 0
         ipso::contour2d::iso_segments segs;
 
         segs.ld(d, 1, n, 1, n, x, y, z);
@@ -63,6 +64,7 @@ Y_UTEST(ipso_c2d)
             const ipso::contour2d::segments &seg = **i;
             std::cerr << "seg@index" << seg.indx << " : " << seg.size << std::endl;
         }
+#endif
     }
 }
 Y_UTEST_DONE()

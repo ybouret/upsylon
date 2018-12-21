@@ -27,6 +27,11 @@ namespace upsylon
                                      size_t indx,
                                      void *args);
 
+            //! x intercept
+#define xsect(p1,p2) (h[p2]*xh[p1]-h[p1]*xh[p2])/(h[p2]-h[p1])
+            //! y intercept
+#define ysect(p1,p2) (h[p2]*yh[p1]-h[p1]*yh[p2])/(h[p2]-h[p1])
+
             /** a low-level contour algorithm
              d               ! matrix/field of data to contour
              ilb,iub,jlb,jub ! index bounds of data matrix
@@ -51,8 +56,7 @@ namespace upsylon
                       )
             {
 
-#define xsect(p1,p2) (h[p2]*xh[p1]-h[p1]*xh[p2])/(h[p2]-h[p1])
-#define ysect(p1,p2) (h[p2]*yh[p1]-h[p1]*yh[p2])/(h[p2]-h[p1])
+
 
                 double h[5]  = { 0 };
                 int    sh[5] = { 0 };
@@ -220,6 +224,7 @@ namespace upsylon
 #undef xsect
             }
 
+#if 0
             //! point for segment
             typedef point2d<double> point;
 
@@ -343,7 +348,8 @@ namespace upsylon
                     pSeg->push_back( new segment(a,b) );
                 }
             };
-
+#endif
+            
         };
 
     }

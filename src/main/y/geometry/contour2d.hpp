@@ -25,62 +25,56 @@ namespace upsylon
             typedef point2d<unit_t>     coordinate; //!< (lower)coordinate of a square
             typedef point2d<resolution> offset;     //!< point.x = x[coordinate.x] + (x[coordinate.x+1] - x[coordinate.x]) * offset.x / resolution_max
 
-            static const unsigned       sign_bits     = 2;
-            static const unsigned       sign_shift0   = 0*sign_bits;
-            static const unsigned       sign_shift1   = 1*sign_bits;
-            static const unsigned       sign_shift2   = 2*sign_bits;
-            static const unsigned       sign_zero     = 0x00;
-            static const unsigned       sign_positive = 0x01;
-            static const unsigned       sign_negative = 0x02;
+            static const unsigned       sign_bits     = 2;           //!< bits to encode sign
+            static const unsigned       sign_shift0   = 0*sign_bits; //!< shift for vertex 0
+            static const unsigned       sign_shift1   = 1*sign_bits; //!< shift for vertex 1
+            static const unsigned       sign_shift2   = 2*sign_bits; //!< shift for vertex 2
+            static const unsigned       sign_zero     = 0x00;        //!< encoding 0
+            static const unsigned       sign_positive = 0x01;        //!< encoding >0
+            static const unsigned       sign_negative = 0x02;        //!< encoding <0
 
-            static const unsigned zzz0 = sign_zero     << sign_shift0;
-            static const unsigned pos0 = sign_positive << sign_shift0;
-            static const unsigned neg0 = sign_negative << sign_shift0;
+            static const unsigned zzz0 = sign_zero     << sign_shift0; //!< f0=0
+            static const unsigned pos0 = sign_positive << sign_shift0; //!< f0>0
+            static const unsigned neg0 = sign_negative << sign_shift0; //!< f0<0
 
-            static const unsigned zzz1 = sign_zero     << sign_shift1;
-            static const unsigned pos1 = sign_positive << sign_shift1;
-            static const unsigned neg1 = sign_negative << sign_shift1;
+            static const unsigned zzz1 = sign_zero     << sign_shift1; //!< f1=0
+            static const unsigned pos1 = sign_positive << sign_shift1; //!< f1>0
+            static const unsigned neg1 = sign_negative << sign_shift1; //!< f1<0
 
-            static const unsigned zzz2 = sign_zero     << sign_shift2;
-            static const unsigned pos2 = sign_positive << sign_shift2;
-            static const unsigned neg2 = sign_negative << sign_shift2;
+            static const unsigned zzz2 = sign_zero     << sign_shift2; //!< f2=0
+            static const unsigned pos2 = sign_positive << sign_shift2; //!< f2>0
+            static const unsigned neg2 = sign_negative << sign_shift2; //!< f2<0
 
-            static inline
-            unsigned sign_flag( const double value ) throw()
-            {
-                if(value<0)      return sign_negative;
-                else if(value>0) return sign_positive;
-                else             return sign_zero;
-            }
+            //! return an unshifted flag
+            static unsigned sign_flag( const double value ) throw();
+
             //! unique point identifier
             class   identifier
             {
             public:
-                const coordinate coord;
-                const offset     delta;
-                inline  identifier( const coordinate &c, const offset &d ) throw() : coord(c), delta(d) {}
-                inline ~identifier() throw() {}
-                inline  identifier(const identifier &other) throw() : coord(other.coord), delta(other.delta) {}
-                inline  friend bool operator==( const identifier &lhs, const identifier &rhs) throw()
-                {
-                    return (lhs.coord==rhs.coord) && (lhs.delta==rhs.delta);
-                }
-                typedef hashing::fnv hash_function;
+                typedef hashing::fnv hash_function; //!< internal hashing function
 
+                const coordinate coord; //!< coordinate on global grid
+                const offset     delta; //!< offset on local grid
+
+                explicit identifier( const coordinate &c, const offset &d ) throw(); //!< setup
+                virtual ~identifier() throw();                                       //!< cleanup
+                identifier(const identifier &other) throw();                         //!< copy fields
+
+                //! test equality
+                friend bool operator==( const identifier &lhs, const identifier &rhs) throw();
+
+                //! hasher class for set
                 class hasher
                 {
                 public:
-                    inline  hasher() throw() : h() {}
-                    inline ~hasher() throw() {}
-                    inline size_t operator()( const identifier &id ) throw()
-                    {
-                        h.set();
-                        h.run(&id.coord,sizeof(coordinate));
-                        h.run(&id.delta,sizeof(offset));
-                        return h.key<size_t>();
-                    }
+                    hash_function h; //!< used to hash identifier fields
 
-                    hash_function h;
+                    hasher() throw();  //!< setup
+                    ~hasher() throw(); //!< cleanup
+                    //! get the key from identifier
+                    size_t operator()( const identifier &id ) throw();
+
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(hasher);
                 };
@@ -89,64 +83,75 @@ namespace upsylon
                 Y_DISABLE_ASSIGN(identifier);
             };
 
+            //! a unique point based on its identifier
             class unique_point : public counted_object
             {
             public:
-                const identifier uid;
-                const point      pos;
+                const identifier uid; //!< unique ID
+                const point      pos; //!< unique position
 
-                inline  unique_point( const identifier &i, const point &p ) throw() : uid(i), pos(p) {}
-                inline ~unique_point() throw() {}
+                //! setup
+                explicit unique_point( const identifier &i, const point &p ) throw() ;
+                //! cleanup
+                virtual ~unique_point() throw();
 
-                const identifier & key() const throw() { return uid; }
+                //! identifier as key
+                const identifier & key() const throw();
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(unique_point);
             };
 
-            typedef intr_ptr<identifier,unique_point>                shared_point;
-            typedef set<identifier,shared_point,identifier::hasher>  shared_point_db;
+            typedef intr_ptr<identifier,unique_point>                shared_point;      //!< alias
+            typedef set<identifier,shared_point,identifier::hasher>  shared_point_db;   //!< alias
 
+            //! a segment between two unique points
             class segment : public object
             {
             public:
-                segment           *next;
-                segment           *prev;
-                const shared_point a;
-                const shared_point b;
+                typedef core::list_of_cpp<segment> list_type; //!< alias
 
-                inline explicit segment( const shared_point &A, const shared_point &B ) throw() : next(0), prev(0), a(A), b(B) {}
-                inline virtual ~segment() throw() {}
+                segment           *next; //!< for list
+                segment           *prev; //!< for list
+                const shared_point a;    //!< first point
+                const shared_point b;    //!< second point
 
-                typedef core::list_of_cpp<segment> list_type;
+                //! setup
+                explicit segment( const shared_point &A, const shared_point &B ) throw();
+                virtual ~segment() throw(); //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(segment);
             };
 
-
+            //! segments are a list of indivual segment
             class segments : public segment::list_type, public counted_object
             {
             public:
+                const size_t indx; //!< index in iso levels
 
-                const size_t indx;
-                explicit segments( const size_t id ) throw() : segment::list_type(), indx(id) {}
-                virtual ~segments() throw() {}
+                explicit segments( const size_t id ) throw(); //!< setup
+                virtual ~segments() throw();                  //!< cleanup
 
-                const size_t & key() const throw() { return indx; }
+                const size_t & key() const throw(); //!< index as key
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(segments);
             };
 
-            typedef intr_ptr<size_t,segments>   shared_segments;
-            typedef set<size_t,shared_segments> shared_segments_set;
+            typedef intr_ptr<size_t,segments>   shared_segments;     //!< alias
+            typedef set<size_t,shared_segments> shared_segments_set; //!< alias
 
+            //! database of shared segements
             class shared_segments_db : public shared_segments_set
             {
             public:
+                //! setup
                 explicit shared_segments_db(const size_t n=0) : shared_segments_set(n,as_capacity) {}
+                //! cleanup
                 virtual ~shared_segments_db() throw() {}
 
+                //! create a segment and add it to a checked set of segments
                 void make( const size_t indx, unique_point *pA, unique_point *pB )
                 {
                     const shared_point A(pA);
@@ -173,14 +178,16 @@ namespace upsylon
             };
 
 
+            //! utility class to compute identifiers
             class unique_point_dispatcher
             {
             public:
-                shared_point_db  &pdb;
-                const coordinate  coord;
-                const point       lower;
-                const point       upper;
+                shared_point_db  &pdb;       //!< points database
+                const coordinate  coord;     //!< shared lower indices
+                const point       lower;     //!< real lower values
+                const point       upper;     //!< real upper values
 
+                //! setup
                 explicit unique_point_dispatcher(shared_point_db  &_pdb,
                                                  const coordinate &_coord,
                                                  const point      &_lower,
@@ -190,10 +197,12 @@ namespace upsylon
 
                 }
 
+                //! cleanup
                 ~unique_point_dispatcher() throw()
                 {
                 }
 
+                //! compute offset based on resolution
                 inline
                 offset compute_offset(const point &p) const throw()
                 {
@@ -205,6 +214,7 @@ namespace upsylon
                     return offset(rx,ry);
                 }
 
+                //! check/create the point into database
                 unique_point *operator()( const point p )
                 {
                     const offset      delta = compute_offset(p);
@@ -226,6 +236,7 @@ namespace upsylon
                     }
                 }
 
+                //! check/create the interpolated point into database
                 unique_point * operator()(const point &pa,
                                           const double va,
                                           const point &pb,
