@@ -74,12 +74,15 @@ namespace upsylon
 
         // segments
         contour2d:: segments:: segments(const size_t id) throw() :
-        segment::list_type(), indx(id)
+        segment::list_type(),
+        indx(id)
         {}
 
         contour2d:: segments:: ~segments() throw() {}
 
         const size_t & contour2d:: segments:: key() const throw() { return indx; }
+
+        
     }
 }
 

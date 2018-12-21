@@ -8,6 +8,8 @@
 #include "y/ptr/intr.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/exception.hpp"
+#include "y/sequence/list.hpp"
+
 #include <iostream>
 
 namespace upsylon
@@ -48,6 +50,21 @@ namespace upsylon
             //! return an unshifted flag
             static unsigned sign_flag( const double value ) throw();
 
+            class iso_line : public list<point>, public counted
+            {
+            public:
+                iso_line *next;
+                iso_line *prev;
+                explicit iso_line() throw() : next(0), prev(0) {}
+                virtual ~iso_line() throw() {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(iso_line);
+            };
+
+            typedef core::list_of_cpp<iso_line> ios_lines;
+
+
             //! unique point identifier
             class   identifier
             {
@@ -82,6 +99,8 @@ namespace upsylon
             private:
                 Y_DISABLE_ASSIGN(identifier);
             };
+
+
 
             //! a unique point based on its identifier
             class unique_point : public counted_object
@@ -130,11 +149,14 @@ namespace upsylon
             public:
                 const size_t indx; //!< index in iso levels
 
+
                 explicit segments( const size_t id ) throw(); //!< setup
                 virtual ~segments() throw();                  //!< cleanup
 
                 const size_t & key() const throw(); //!< index as key
 
+                void build_connected( ios_lines &iso );
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(segments);
             };
