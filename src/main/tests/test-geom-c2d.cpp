@@ -86,7 +86,7 @@ Y_UTEST(geom_c2d)
         for(contour2d::shared_segments_db::iterator i=sdb.begin();i!=sdb.end();++i)
         {
             const contour2d::segments &S = **i;
-            std::cerr << "Segment@level=" << z[S.indx] << ": " << S.size;
+            std::cerr << "Segment[" << S.indx << "].size= " << S.size << "\t@" << z[S.indx];
             for( const contour2d::segment *s = S.head; s;s=s->next )
             {
                 const contour2d::unique_point &a = *(s->a), &b = *(s->b);
@@ -97,6 +97,21 @@ Y_UTEST(geom_c2d)
             std::cerr << std::endl;
         }
     }
+
+    {
+        std::cerr << "Building IsoLines" << std::endl;
+        for(contour2d::shared_segments_db::iterator i=sdb.begin();i!=sdb.end();++i)
+        {
+            const contour2d::segments &S = **i;
+            std::cerr << "Segment[" << S.indx << "].size= " << S.size << "\t@" << z[S.indx] << std::endl;
+            contour2d::iso_lines       lines;
+            S.build_connected(lines);
+            std::cerr << "#isoLines=" << lines.size << std::endl;
+
+        }
+
+    }
+
 }
 Y_UTEST_DONE()
 

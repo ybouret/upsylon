@@ -69,6 +69,9 @@ namespace upsylon
                 //! test equality
                 friend bool operator==( const identifier &lhs, const identifier &rhs) throw();
 
+                //! test difference
+                friend bool operator!=( const identifier &lhs, const identifier &rhs) throw();
+
                 //! hasher class for set
                 class hasher
                 {
@@ -83,6 +86,12 @@ namespace upsylon
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(hasher);
                 };
+
+                inline friend std::ostream & operator<<( std::ostream &os, const identifier &id )
+                {
+                    os << "[" << id.coord.x << "+" << id.delta.x << ":" << id.coord.y << "+" << id.delta.y << "]";
+                    return os;
+                }
 
             private:
                 Y_DISABLE_ASSIGN(identifier);
@@ -142,12 +151,12 @@ namespace upsylon
                 iso_line *prev;
                 explicit iso_line() throw() : next(0), prev(0) {}
                 virtual ~iso_line() throw() {}
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(iso_line);
             };
 
-            typedef core::list_of_cpp<iso_line> ios_lines;
+            typedef core::list_of_cpp<iso_line> iso_lines;
 
             //! segments are a list of indivual segment belonging to the same level
             class segments : public segment::list_type, public counted_object
@@ -160,7 +169,7 @@ namespace upsylon
 
                 const size_t & key() const throw(); //!< index as key
 
-                void build_connected( ios_lines &iso ) const;
+                void build_connected( iso_lines &iso ) const;
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(segments);
@@ -181,6 +190,12 @@ namespace upsylon
                 //! create a segment and add it to a checked set of segments
                 void make( const size_t indx, unique_point *pA, unique_point *pB )
                 {
+                    std::cerr << "make with " << pA->uid << " and " << pB->uid << std::endl;
+                    if(pA->uid==pB->uid)
+                    {
+                        return; // same points for the given resolution
+                    }
+                    assert(pA->uid!=pB->uid);
                     const shared_point A(pA);
                     const shared_point B(pB);
                     auto_ptr<segment> seg  = new segment(A,B);
@@ -194,7 +209,7 @@ namespace upsylon
                         segments *S = new segments(indx);
                         {
                             const shared_segments q = S;
-                            if(!insert(q)) throw exception("failure to insert new segmensts");
+                            if(!insert(q)) throw exception("failure to insert new segments[%u]",unsigned(indx));
                         }
                         S->push_back(seg.yield());
                     }

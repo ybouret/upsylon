@@ -33,6 +33,11 @@ namespace upsylon
             return (lhs.coord==rhs.coord) && (lhs.delta==rhs.delta);
         }
 
+        bool operator!=( const contour2d::identifier &lhs, const contour2d::identifier &rhs) throw()
+        {
+            return (lhs.coord!=rhs.coord) || (lhs.delta!=rhs.delta);
+        }
+
         // identifier::hasher
         contour2d:: identifier:: hasher:: hasher() throw() : h()
         {
@@ -67,6 +72,7 @@ namespace upsylon
         contour2d:: segment:: segment( const shared_point &A, const shared_point &B ) throw() :
         next(0), prev(0), a(A), b(B)
         {
+            assert(a->uid!=b->uid);
         }
 
         contour2d:: segment:: ~segment() throw()
@@ -82,13 +88,77 @@ namespace upsylon
 
         const size_t & contour2d:: segments:: key() const throw() { return indx; }
 
-        void contour2d::segments:: build_connected( ios_lines &iso ) const
+        void contour2d::segments:: build_connected( iso_lines &iso ) const
         {
+
             iso.clear();
             for(const segment *s = head; s; s=s->next )
             {
-                
+                const shared_point &a     = s->a;
+                const shared_point &b     = s->b;
+                bool                found = false;
+                assert(a->uid!=b->uid);
+                const identifier    A     = a->uid;
+                const identifier    B     = b->uid;
+
+                for(iso_line *line = iso.head; line; line=line->next )
+                {
+                    const shared_point_node *p = line->head;
+                    const identifier         P = p->data->uid;
+                    const shared_point_node *q = line->tail;
+                    const identifier         Q = q->data->uid;
+
+                    if(A==P)
+                    {
+                        if(B!=Q)
+                        {
+                            line->push_front( new shared_point_node(b) );
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if(A==Q)
+                    {
+                        if(B!=P)
+                        {
+                            line->push_back( new  shared_point_node(b) );
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if(B==P)
+                    {
+                        if(A!=Q)
+                        {
+                            line->push_front( new shared_point_node(a) );
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if(B==Q)
+                    {
+                        if(A!=P)
+                        {
+                            line->push_back( new shared_point_node(a) );
+                            found = true;
+                            break;
+                        }
+                    }
+
+                }
+
+                if(!found)
+                {
+                    iso_line *line = new iso_line();
+                    iso.push_back(line);
+                    line->push_back( new shared_point_node(a) );
+                    line->push_back( new shared_point_node(b) );
+                }
             }
+
 
         }
 
