@@ -155,13 +155,12 @@ namespace upsylon
             public:
                 const size_t indx; //!< index in iso levels
 
-
                 explicit segments( const size_t id ) throw(); //!< setup
                 virtual ~segments() throw();                  //!< cleanup
 
                 const size_t & key() const throw(); //!< index as key
 
-                void build_connected( ios_lines &iso );
+                void build_connected( ios_lines &iso ) const;
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(segments);
