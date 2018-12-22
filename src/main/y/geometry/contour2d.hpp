@@ -8,7 +8,7 @@
 #include "y/ptr/intr.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/exception.hpp"
-#include "y/sequence/list.hpp"
+#include "y/core/node.hpp"
 
 #include <iostream>
 
@@ -50,19 +50,7 @@ namespace upsylon
             //! return an unshifted flag
             static unsigned sign_flag( const double value ) throw();
 
-            class iso_line : public list<point>, public counted
-            {
-            public:
-                iso_line *next;
-                iso_line *prev;
-                explicit iso_line() throw() : next(0), prev(0) {}
-                virtual ~iso_line() throw() {}
 
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(iso_line);
-            };
-
-            typedef core::list_of_cpp<iso_line> ios_lines;
 
 
             //! unique point identifier
@@ -143,7 +131,25 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(segment);
             };
 
-            //! segments are a list of indivual segment
+
+            typedef core::node_of<const shared_point>    shared_point_node; //!< dynamic node of shared_point
+            typedef core::list_of_cpp<shared_point_node> shared_point_list; //!< alias
+
+            class iso_line : public shared_point_list, public object
+            {
+            public:
+                iso_line *next;
+                iso_line *prev;
+                explicit iso_line() throw() : next(0), prev(0) {}
+                virtual ~iso_line() throw() {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(iso_line);
+            };
+
+            typedef core::list_of_cpp<iso_line> ios_lines;
+
+            //! segments are a list of indivual segment belonging to the same level
             class segments : public segment::list_type, public counted_object
             {
             public:

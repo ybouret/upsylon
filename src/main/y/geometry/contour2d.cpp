@@ -82,6 +82,13 @@ namespace upsylon
 
         const size_t & contour2d:: segments:: key() const throw() { return indx; }
 
+        void contour2d::segments:: build_connected( ios_lines &iso )
+        {
+            iso.clear();
+            
+
+        }
+
         
     }
 }
