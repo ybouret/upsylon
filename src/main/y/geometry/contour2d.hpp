@@ -3,6 +3,10 @@
 #define Y_GEOMETRY_CONTOUR2D_INCLUDED 1
 
 #include "y/type/point2d.hpp"
+#include "y/ptr/intr.hpp"
+#include "y/ptr/counted.hpp"
+#include "y/associative/set.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -272,6 +276,73 @@ namespace upsylon
         private:
             static point    zfind(const point &pa, const double va,
                                   const point &pb, const double vb) throw();
+
+        public:
+
+            class level_set : public counted_object
+            {
+            public:
+                typedef intr_ptr<size_t,level_set> pointer;
+                typedef set<size_t,pointer>        database;
+
+                const size_t index; //!< from original guess, is the key
+                const size_t  & key() const throw() { return index; }
+
+                explicit level_set(const size_t idx) throw() : index(idx) {}
+                virtual ~level_set() throw() {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(level_set);
+            };
+
+            class level_sets : public level_set::database
+            {
+            public:
+                explicit level_sets(const size_t n=0) : level_set::database(n,as_capacity) {}
+                virtual ~level_sets() throw() {}
+
+                //! get level set with on the fly creation
+                level_set & operator[](const size_t idx)
+                {
+                    level_set::pointer *ppls = search(idx);
+                    if(ppls)
+                    {
+                        return **ppls;
+                    }
+                    else
+                    {
+                        level_set *pls = new level_set(idx);
+                        const level_set::pointer q = pls;
+                        if(!insert(q))
+                        {
+                            throw exception("unexpected muliple level-set#%u",unsigned(idx));
+                        }
+                        return *pls;
+                    }
+                }
+
+                static
+                void call(double x0,
+                          double y0,
+                          double x1,
+                          double y1,
+                          size_t idx,
+                          double,
+                          void *args)
+                {
+                    assert(args);
+                    level_sets &self = *static_cast<level_sets*>(args);
+                    level_set  &ls   = self[idx];
+                    (void)ls;
+                    const point a(x0,y0);
+                    const point b(x1,y1);
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(level_sets);
+            };
+
+
         };
 
     }

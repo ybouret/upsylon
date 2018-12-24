@@ -64,6 +64,14 @@ Y_UTEST(geom_c2d)
 
     std::cerr << "plot 'c2d.dat' with lines linecolor variable" << std::endl;
 
+    {
+        contour2d::level_sets iso( z.size() );
+        std::cerr << "#iso=" << iso.size() << std::endl;
+        contour2d::scan( M, 1, nx, 1, ny, X, Y, z, contour2d::level_sets::call, &iso );
+        std::cerr << "#iso=" << iso.size() << std::endl;
+        
+    }
+
 
 }
 Y_UTEST_DONE()
