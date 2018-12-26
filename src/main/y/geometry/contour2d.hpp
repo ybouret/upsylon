@@ -331,6 +331,23 @@ namespace upsylon
                 //! for callback
                 static void call(double,double,double,double,size_t,double,void*);
 
+                //! cleanup and scan field, with level ordering
+                template< typename FIELD, typename ARRAY>  inline
+                void build(const FIELD         &data,
+                           const unit_t         ilb,
+                           const unit_t         iub,
+                           const unit_t         jlb,
+                           const unit_t         jub,
+                           const ARRAY         &x,
+                           const ARRAY         &y,
+                           const array<double> &z)
+                {
+                    free();
+                    ensure( z.size() );
+                    scan(data, ilb, iub, jlb, jub, x, y, z, call, this);
+                    sort_keys( comparison::increasing<size_t> );
+                }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(level_sets);
             };
