@@ -69,7 +69,11 @@ Y_UTEST(geom_c2d)
         std::cerr << "#iso=" << iso.size() << std::endl;
         contour2d::scan( M, 1, nx, 1, ny, X, Y, z, contour2d::level_sets::call, &iso );
         std::cerr << "#iso=" << iso.size() << std::endl;
-        
+        for(contour2d::level_sets::iterator i=iso.begin(); i!=iso.end(); ++i)
+        {
+            const contour2d::level_set &ls = **i;
+            std::cerr << "iso[" << ls.index << "] : " << ls.size << std::endl;
+        }
     }
 
 
