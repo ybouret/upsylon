@@ -31,7 +31,7 @@ namespace upsylon
             // virtual interface
             //__________________________________________________________________
 
-            //! desctructor
+            //! destructor
             virtual ~Pattern() throw();
 
             //! clone

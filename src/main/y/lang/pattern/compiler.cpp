@@ -14,7 +14,7 @@ namespace upsylon
     namespace Lang
     {
 
-        static const char fn[] = "Lang::RegEx: ";
+        static const char fn[] = "Lang::RegExp: ";
 
 #define LPAREN     '('
 #define RPAREN     ')'
@@ -274,7 +274,7 @@ namespace upsylon
                     std::cerr << "smax=" << smax << "/#" << lmax << std::endl;
                     if(lmax>0)
                     {
-                        nmax = string_convert::to<size_t>(smax,"Lang::RegEx::Range.nmax");
+                        nmax = string_convert::to<size_t>(smax,"Lang::RegExp::Range.nmax");
                         std::cerr << "nmax=" << nmax << std::endl;
                     }
                 }
@@ -289,7 +289,7 @@ namespace upsylon
                 if(lmin>0)
                 {
                     // smin has a value
-                    const size_t nmin = string_convert::to<size_t>(smin,"Lang::RegEx::Range.nmin");
+                    const size_t nmin = string_convert::to<size_t>(smin,"Lang::RegExp::Range.nmin");
                     std::cerr << "nmin=" << nmin << std::endl;
                     if(lmax>0)
                     {
