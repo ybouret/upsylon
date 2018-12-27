@@ -63,7 +63,7 @@ namespace upsylon
             //! emit GraphViz node
             void viz( ios::ostream &os ) const; //!< tag+__viz
 
-            //! get GraphViz style
+            //! get GraphViz style for __viz if needed
             const char *vizStyle() const throw();
 
             //! write a directed graph
