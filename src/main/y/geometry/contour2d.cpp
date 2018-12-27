@@ -17,8 +17,13 @@ namespace upsylon
                                             const point &pb, const double vb) throw()
         {
             assert(va*vb<=0);
-            const double num = -va;
-            const double den = vb-va;
+            double num = -va;
+            double den = vb-va;
+            if(den<0)
+            {
+                num = -num;
+                den = -den;
+            }
             const double lam = num/den;
             return point( pa.x + lam * (pb.x-pa.x), pa.y + lam * (pb.y-pa.y) );
         }
