@@ -82,7 +82,9 @@ namespace upsylon
     std::ostream & progress:: display( std::ostream &os ) const
     {
         static const char sym[] = { '-', '\\', '|', '/' };
-        os << '[' << sym[++counter%sizeof(sym)] << ']';
+        char C =sym[++counter%sizeof(sym)];
+        if(left<=0) C='*';
+        os << '[' << C << ']';
         char fmt[16];
         snprintf(fmt,15," %6.2f%%",percent);
         os << fmt;
