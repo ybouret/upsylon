@@ -12,6 +12,7 @@ namespace upsylon
     {
         namespace kernel
         {
+#define Y_INTG_RAW 0
             //! summation for trapeze rule
             template <typename T, typename FUNC, const size_t n>
             struct dyadic_sum
@@ -37,7 +38,7 @@ namespace upsylon
                 }
             };
 
-            //! trapezoidal integration
+            //! trapezoidal integration, n>=2 for n=1 means full interval
             template <typename T,typename FUNC,const size_t n>
             static inline T  trpz(const T  s,
                                   const T  a,
@@ -48,7 +49,11 @@ namespace upsylon
                 const T             delta = w/iter;
                 const T             start = a + T(0.5) * delta;
                 const T             sum   = kernel::dyadic_sum<T,FUNC,iter>::compute(F, start,delta);
+#if 1 == Y_INTG_RAW
                 return T(0.5)*(s+(w*sum)/iter);
+#else
+                return T(0.5)*(s+(sum)/iter);
+#endif
             }
 
         }
@@ -61,16 +66,25 @@ namespace upsylon
             //! prolog of quad step
 #define Y_INTG_PROLOG(N)                    \
 st = kernel::trpz<T,FUNC,N>(st,a,w,F);      \
-s = ( T(4.0) * st - old_st )/T(3.0)
+s  = ( T(4.0) * st - old_st )/T(3.0)
 
             //! epilog for quad step
 #define Y_INTG_EPILOG()                     \
 old_st  = st;                               \
 old_s   = s
             //! check convergence in quad step
-#define Y_INTG_CHECK()                      \
-if( __fabs(s-old_s) <= __fabs( ftol * s ) ) \
-return true
+#if 1 == Y_INTG_RAW
+#define Y_INTG_CHECK() \
+if( __fabs(s-old_s) <=__fabs( ftol *old_s ) ) { \
+return true;\
+}
+#else
+#define Y_INTG_CHECK() \
+if( __fabs(s-old_s) <=__fabs( ftol *old_s ) ) { \
+s *= w;     \
+return true;\
+}
+#endif
             //! warm up step
 #define Y_INTG_FAST(N)                      \
 Y_INTG_PROLOG(N);                           \
@@ -79,7 +93,7 @@ Y_INTG_EPILOG()
             //! convergence checking step
 #define Y_INTG_TEST(N)                      \
 Y_INTG_PROLOG(N);                           \
-Y_INTG_CHECK();                             \
+Y_INTG_CHECK()                              \
 Y_INTG_EPILOG()
 
             //! Simpson's quadrature
@@ -87,9 +101,16 @@ Y_INTG_EPILOG()
             bool quad( T &s, FUNC &F, const T a, const T b, const T ftol )
             {
                 const T w       = b-a;
+                // initialize summ with trapezes
+#if 1 == Y_INTG_RAW
                 T       st      = T(0.5) * w * (F(b)+F(a));
-                T       old_st  = st;
+#else
+                T       st      = T(0.5) *  (F(b)+F(a));
+#endif
                 s               = st;
+
+                // previous values
+                T       old_st  = st;
                 T       old_s   = s;
 
 
@@ -103,7 +124,14 @@ Y_INTG_EPILOG()
                 Y_INTG_TEST(8);  // +64:  129 evals
                 Y_INTG_TEST(9);  // +128: 257 evals
                 Y_INTG_TEST(10); // +256: 513 evals
-                Y_INTG_TEST(11); // +512: 1025 evals
+                Y_INTG_PROLOG(11);// +512: 1025 evals
+                Y_INTG_CHECK();
+
+                {
+                    const T err       = __fabs(s-old_s);       \
+                    const T threshold = __fabs( ftol *old_s ); \
+                    fprintf( stderr, "s=%.15g/old_s=%.15g: err=%.15g | thr=%.15g on [%.15g:%.15g]\n", s, old_s, err, threshold,a,b);
+                }
 
                 return false;
             }
@@ -117,9 +145,11 @@ Y_INTG_EPILOG()
                 T       sum;  //!< local sum
                 range  *next; //!< for list/pool
                 range  *prev; //!< for list
+
                 //! constructor
                 inline explicit range(const T a,const T b) throw() :
                 ini(a), end(b), sum(0), next(0), prev(0) {}
+
                 //! destructor
                 inline virtual ~range() throw() {}
 
@@ -129,23 +159,29 @@ Y_INTG_EPILOG()
 
             //! adaptive computation
             template <typename T,typename FUNC> static inline
-            T compute( FUNC &F, const T a, const T b, const T ftol )
+            T compute( FUNC &F, const T a, const T b, const T ftol, size_t *user_count=0 )
             {
                 core::pool_of_cpp< range<T> > todo;
                 core::list_of_cpp< range<T> > done;
+                size_t                        self_count = 0;
+                size_t                       &count = (user_count!=NULL?*user_count:self_count);
+
                 todo.store( new range<T>(a,b) );
+                ++count;
                 while(todo.size>0)
                 {
                     auto_ptr< range<T> > curr = todo.query();
                     if( quad(curr->sum,F,curr->ini,curr->end,ftol) )
                     {
+                        std::cerr << "count=" << count << " for [" << a << ":" << b << "]" << std::endl;
                         done.push_back( curr.yield() );
                     }
                     else
                     {
                         const T mid = (curr->ini+curr->end)/2;
-                        todo.store( new range<T>(mid,curr->end) );
-                        todo.store( new range<T>(curr->ini,mid) );
+                        todo.store( new range<T>(mid,curr->end) ); ++count;
+                        todo.store( new range<T>(curr->ini,mid) ); ++count;
+                        std::cerr << "count=" << count << " for [" << a << ":" << b << "]" << ", mid=" << mid << std::endl;
                     }
                 }
                 assert(done.size>0);
@@ -156,6 +192,50 @@ Y_INTG_EPILOG()
                     delete done.pop_front();
                 }
                 return sum;
+            }
+
+            template <typename T, typename FUNCXY>
+            struct fxy2fx
+            {
+                T       x;
+                FUNCXY *pfxy;
+
+                inline T operator()( T y )
+                {
+                    assert(pfxy);
+                    return (*pfxy)(x,y);
+                }
+            };
+
+            template <typename T, typename FUNCXY, typename BOUNDARY>
+            struct fxy_call
+            {
+                FUNCXY   *pfxy;
+                BOUNDARY *plower_y;
+                BOUNDARY *pupper_y;
+                T         ftol;
+                size_t   *user_count;
+
+                inline T operator()( T x )
+                {
+                    assert(pfxy);
+                    assert(plower_y);
+                    assert(pupper_y);
+                    fxy2fx<T,FUNCXY> fy  = { x, pfxy };
+                    const T          ylo = (*plower_y)(x);
+                    const T          yup = (*pupper_y)(x);
+                    const T          tmp = compute(fy,ylo,yup,ftol,user_count);
+                    //std::cerr << "\t @x=" << x << " -> [" << ylo << ":" << yup << "]" << " : " << tmp << std::endl;
+                    return tmp;
+                }
+            };
+
+            template <typename T, typename FUNCXY, typename BOUNDARY>
+            static inline T compute2( FUNCXY &fxy, const T lower_x, const T upper_x, BOUNDARY &lower_y, BOUNDARY &upper_y, const T ftol )
+            {
+                size_t count = 0;
+                fxy_call<T,FUNCXY,BOUNDARY> fx = { &fxy, &lower_y, &upper_y, ftol, &count };
+                return compute(fx,lower_x,upper_x,ftol,&count);
             }
 
         };
