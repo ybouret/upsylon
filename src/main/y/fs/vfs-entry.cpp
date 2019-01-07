@@ -78,7 +78,25 @@ namespace upsylon {
             return (extension!=0) && (strcmp(ext,extension) == 0);
         }
     }
-    
+
+    const char * vfs::entry:: get_attr_text(const attribute a) throw()
+    {
+        switch (a) {
+            case no_ent: return "no entry";
+            case is_dir: return "directory";
+            case is_reg: return "regular";
+            case is_unk: return "unknown";
+            default:
+                break;
+        }
+        return "unexpected";
+    }
+
+    const char * vfs::entry:: attr2text() const throw()
+    {
+        return get_attr_text(attr);
+    }
+
 #if 0
     void vfs:: foreach_in( const string &dirname,  vfs::entry::callback &on_entry ) const
     {

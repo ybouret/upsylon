@@ -28,6 +28,8 @@ namespace upsylon {
             static const attribute is_dir = 2; //!< directory
             static const attribute is_unk = 4; //!< unknown
 
+            static const char *get_attr_text(const attribute a) throw();
+
             //! build entry
             explicit entry( const string &vfs_path, const vfs &vfs_from );
             //! destructor
@@ -39,8 +41,9 @@ namespace upsylon {
             const char      *cstr;      //!< full path, low-level
             const char      *base_name; //!< base name
             const char      *extension; //!< extension, may be null
-            const bool       link;      //!< if recognized as long
+            const bool       link;      //!< if recognized as symbolic link
             const attribute  attr;      //!< the attribute
+            const char      *attr2text() const throw();
 
             //! callback to act on entries
             typedef functor<bool,TL1(const entry &)> callback;

@@ -81,9 +81,15 @@ namespace upsylon
 
     std::ostream & progress:: display( std::ostream &os ) const
     {
+        // running wheel selection
         static const char sym[] = { '-', '\\', '|', '/' };
-        char C =sym[++counter%sizeof(sym)];
-        if(left<=0) C='*';
+        char C = sym[++counter%sizeof(sym)];
+        if(left<=0)
+        {
+            C='*';
+        }
+
+        // constant length output
         os << '[' << C << ']';
         char fmt[16];
         snprintf(fmt,15," %6.2f%%",percent);
