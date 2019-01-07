@@ -82,10 +82,10 @@ namespace upsylon {
     const char * vfs::entry:: get_attr_text(const attribute a) throw()
     {
         switch (a) {
-            case no_ent: return "no entry";
+            case no_ent: return "no  entry";
             case is_dir: return "directory";
-            case is_reg: return "regular";
-            case is_unk: return "unknown";
+            case is_reg: return " regular ";
+            case is_unk: return " unknown ";
             default:
                 break;
         }

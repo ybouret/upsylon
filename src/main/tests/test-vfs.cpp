@@ -4,6 +4,14 @@
 
 using namespace upsylon;
 
+namespace
+{
+    static inline void display( const string &str, const size_t extend )
+    {
+        std::cerr << str; for(size_t i=str.size();i<extend;++i) std::cerr << ' ';
+    }
+
+}
 Y_UTEST(vfs)
 {
     vfs & fs = local_fs::instance();
@@ -29,7 +37,7 @@ Y_UTEST(vfs)
                 max_nlen = nlen;
             }
 
-#if 1
+#if 0
             std::cerr << ep->path << " | " << ep->base_name;
             std::cerr << " | link=" << ep->link;
             std::cerr << " | attr=" << ep->attr << "/" << ep->attr2text();
@@ -37,8 +45,18 @@ Y_UTEST(vfs)
             std::cerr << std::endl;
 #endif
         }
+
         std::cerr << "#entries=" << entries.size() << std::endl;
         // format output
+        for(list<vfs::entry>::iterator ep=entries.begin(); ep != entries.end(); ++ep )
+        {
+            display(ep->path,max_plen); std:: cerr << '|';
+            display(ep->base_name,max_nlen);
+            std::cerr << " | link=" << ep->link;
+            std::cerr << " | attr=" << ep->attr << "/" << ep->attr2text();
+            if(ep->extension) { std::cerr << " [" << ep->extension << "]"; }
+            std::cerr << std::endl;
+        }
     }
 }
 Y_UTEST_DONE()
