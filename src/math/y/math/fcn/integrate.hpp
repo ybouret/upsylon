@@ -5,6 +5,7 @@
 #include "y/math/types.hpp"
 #include "y/core/pool.hpp"
 #include "y/ptr/auto.hpp"
+#include <cstdlib>
 
 namespace upsylon
 {
@@ -12,7 +13,6 @@ namespace upsylon
     {
         namespace kernel
         {
-#define Y_INTG_RAW 0
             //! summation for trapeze rule
             template <typename T, typename FUNC, const size_t n>
             struct dyadic_sum
@@ -49,12 +49,42 @@ namespace upsylon
                 const T             delta = w/iter;
                 const T             start = a + T(0.5) * delta;
                 const T             sum   = kernel::dyadic_sum<T,FUNC,iter>::compute(F, start,delta);
-#if 1 == Y_INTG_RAW
                 return T(0.5)*(s+(w*sum)/iter);
-#else
-                return T(0.5)*(s+(sum)/iter);
-#endif
             }
+
+            template <typename T>
+            static inline int cmp_incr_abs( const void *lhs, const void *rhs)
+            {
+                assert(lhs); assert(rhs);
+                const T L = abs_of( *static_cast<const T *>(lhs) );
+                const T R = abs_of( *static_cast<const T *>(rhs) );
+                return ( (L<R) ? -1 : ( (R<L) ? 1 : 0 ) );
+            }
+
+            template <typename T,typename FUNC,const size_t n>
+            static inline T trapezoidal(const T s,
+                                        const T a,
+                                        const T w,
+                                        FUNC  & F)
+            {
+                static const size_t iter  = 1 << (n-2);
+                T                   value[iter];
+                const T             delta = w/iter;
+                T                   x     = a + T(0.5) * delta;
+                for(size_t j=0;j<iter;++j,x+=delta)
+                {
+                    value[j] = F(x);
+                }
+                qsort(value,iter,sizeof(T),cmp_incr_abs<T>);
+                T sum = 0;
+                for(size_t j=0;j<iter;++j)
+                {
+                    sum += value[j];
+                }
+                return T(0.5)*(s+(w*sum)/iter);
+            }
+
+
 
         }
 
@@ -63,9 +93,12 @@ namespace upsylon
         {
 
 
+#define Y_INTG_KERNEL trpz
+//#define Y_INTG_KERNEL trapezoidal
+
             //! prolog of quad step
 #define Y_INTG_PROLOG(N)                    \
-st = kernel::trpz<T,FUNC,N>(st,a,w,F);      \
+st = kernel::Y_INTG_KERNEL<T,FUNC,N>(st,a,w,F);      \
 s  = ( T(4.0) * st - old_st )/T(3.0)
 
             //! epilog for quad step
@@ -73,18 +106,11 @@ s  = ( T(4.0) * st - old_st )/T(3.0)
 old_st  = st;                               \
 old_s   = s
             //! check convergence in quad step
-#if 1 == Y_INTG_RAW
 #define Y_INTG_CHECK() \
 if( __fabs(s-old_s) <=__fabs( ftol *old_s ) ) { \
 return true;\
 }
-#else
-#define Y_INTG_CHECK() \
-if( __fabs(s-old_s) <=__fabs( ftol *old_s ) ) { \
-s *= w;     \
-return true;\
-}
-#endif
+
             //! warm up step
 #define Y_INTG_FAST(N)                      \
 Y_INTG_PROLOG(N);                           \
@@ -101,12 +127,8 @@ Y_INTG_EPILOG()
             bool quad( T &s, FUNC &F, const T a, const T b, const T ftol )
             {
                 const T w       = b-a;
-                // initialize summ with trapezes
-#if 1 == Y_INTG_RAW
+                // initialize sum with trapezoidal
                 T       st      = T(0.5) * w * (F(b)+F(a));
-#else
-                T       st      = T(0.5) *  (F(b)+F(a));
-#endif
                 s               = st;
 
                 // previous values
@@ -173,7 +195,7 @@ Y_INTG_EPILOG()
                     auto_ptr< range<T> > curr = todo.query();
                     if( quad(curr->sum,F,curr->ini,curr->end,ftol) )
                     {
-                        std::cerr << "count=" << count << " for [" << a << ":" << b << "]" << std::endl;
+                        std::cerr << "[*] count=" << count << " for [" << curr->ini << ":" << curr->end << "]" << std::endl;
                         done.push_back( curr.yield() );
                     }
                     else
@@ -181,7 +203,7 @@ Y_INTG_EPILOG()
                         const T mid = (curr->ini+curr->end)/2;
                         todo.store( new range<T>(mid,curr->end) ); ++count;
                         todo.store( new range<T>(curr->ini,mid) ); ++count;
-                        std::cerr << "count=" << count << " for [" << a << ":" << b << "]" << ", mid=" << mid << std::endl;
+                        std::cerr << "[+] count=" << count << " for [" << curr->ini << ":" << curr->end << "]" << ", mid=" << mid << std::endl;
                     }
                 }
                 assert(done.size>0);

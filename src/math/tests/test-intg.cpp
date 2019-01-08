@@ -104,9 +104,10 @@ Y_UTEST(intg)
     //return 0;
     
     std::cerr << "multi-dimensional integral" << std::endl;
-    const double area = integrate::compute2(just1,-1.0,1.0,lower_y,upper_y,0.5*1e-5);
+    const double area = integrate::compute2(just1,-1.0,1.0,lower_y,upper_y,0.8*1e-5);
     std::cerr << "area=" << area << "/" << numeric<double>::pi << std::endl;
 
+    //return 0;
     const double mu1 = integrate::compute2(radius,-1.0,1.0,lower_y,upper_y,0.8*1e-5);
     std::cerr << "mu1=" << mu1 << "/" << (2*numeric<double>::pi/3) << std::endl;
 
