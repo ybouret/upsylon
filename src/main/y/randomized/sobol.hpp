@@ -10,25 +10,23 @@ namespace upsylon
     namespace randomized
     {
 
+        //! a Sobol's sequence
         class sobol
         {
         public:
-            static const size_t    MAXBIT = 30;
-            static const size_t    MAXDIM = 6;
+            static const size_t    MAXBIT = 30; //!< max bits
+            static const size_t    MAXDIM = 6;  //!< max dims
 
 
+            //! setup
             explicit sobol() throw();
 
+            //! initialize
             void reset() throw();
 
             //! compute Sobol vector x[0..n-1]
             void compute( const size_t n, double *x );
-
-            template <typename T>
-            void load( T &tgt )
-            {
-                compute( sizeof(T)/sizeof(double), (double *) &tgt );
-            }
+            
 
             //! compute Sobol vector x[0..n-1]
             void compute( array<double> &x );

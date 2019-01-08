@@ -92,7 +92,7 @@ namespace upsylon
         struct integrate
         {
 
-
+//! the integration routine
 #define Y_INTG_KERNEL trpz
 //#define Y_INTG_KERNEL trapezoidal
 
@@ -216,12 +216,14 @@ Y_INTG_EPILOG()
                 return sum;
             }
 
+            //! binder first wrapper
             template <typename T, typename FUNCXY>
             struct fxy2fx
             {
-                T       x;
-                FUNCXY *pfxy;
+                T       x;     //!< position
+                FUNCXY *pfxy;  //!< pointer
 
+                //! call
                 inline T operator()( T y )
                 {
                     assert(pfxy);
@@ -229,15 +231,17 @@ Y_INTG_EPILOG()
                 }
             };
 
+            //! integration between boundaries
             template <typename T, typename FUNCXY, typename BOUNDARY>
             struct fxy_call
             {
-                FUNCXY   *pfxy;
-                BOUNDARY *plower_y;
-                BOUNDARY *pupper_y;
-                T         ftol;
-                size_t   *user_count;
+                FUNCXY   *pfxy;       //!< 2D function pointer
+                BOUNDARY *plower_y;   //!< 1D lower boundary pointer
+                BOUNDARY *pupper_y;   //!< 1D upper boundary pointer
+                T         ftol;       //!< fractional tolerance
+                size_t   *user_count; //!< user count for calls
 
+                //! call
                 inline T operator()( T x )
                 {
                     assert(pfxy);
@@ -252,6 +256,7 @@ Y_INTG_EPILOG()
                 }
             };
 
+            //! 2D integrator
             template <typename T, typename FUNCXY, typename BOUNDARY>
             static inline T compute2( FUNCXY &fxy, const T lower_x, const T upper_x, BOUNDARY &lower_y, BOUNDARY &upper_y, const T ftol )
             {

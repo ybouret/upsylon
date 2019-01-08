@@ -28,12 +28,15 @@ namespace upsylon {
             static const attribute is_dir = 2; //!< directory
             static const attribute is_unk = 4; //!< unknown
 
+            //! convert attribute to human readable text
             static const char *get_attr_text(const attribute a) throw();
 
             //! build entry
             explicit entry( const string &vfs_path, const vfs &vfs_from );
+
             //! destructor
             virtual ~entry() throw();
+
             //! copy
             entry( const entry &other );
             
@@ -43,7 +46,7 @@ namespace upsylon {
             const char      *extension; //!< extension, may be null
             const bool       link;      //!< if recognized as symbolic link
             const attribute  attr;      //!< the attribute
-            const char      *attr2text() const throw();
+            const char      *attr2text() const throw(); //!< the human readable attribute
 
             //! callback to act on entries
             typedef functor<bool,TL1(const entry &)> callback;
