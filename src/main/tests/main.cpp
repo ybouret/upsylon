@@ -89,6 +89,8 @@ Y_UTEST_INIT(100)
     Y_UTEST(dll);
     Y_UTEST(timings);
     Y_UTEST(ichannel);
+    Y_UTEST(sobol);
+
 
     Y_UTEST(token);
     Y_UTEST(source);

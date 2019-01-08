@@ -88,6 +88,7 @@ ADD_TEST(Digest      test-main  digest)
 ADD_TEST(Locate      test-main  locate)
 ADD_TEST(Ppty        test-main  ppty)
 ADD_TEST(Progress    test-main  progress)
+ADD_TEST(Sobol       test-main  sobol)
 
 ADD_TEST(NAME dll COMMAND test-main dll $<TARGET_FILE:module>)
 
