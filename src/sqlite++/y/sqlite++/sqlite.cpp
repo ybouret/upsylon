@@ -7,6 +7,7 @@ namespace upsylon
 {
     namespace SQLite
     {
+        ////////////////////////////////////////////////////////////////////////
         DataBase:: ~DataBase() throw()
         {
             assert(impl);
@@ -57,6 +58,48 @@ namespace upsylon
         {
             const string _(filename);
             impl = OpenDataBase(_,how);
+        }
+
+
+        ////////////////////////////////////////////////////////////////////////
+        Statement:: ~Statement() throw()
+        {
+            assert(impl);
+            const int err = sqlite3_finalize(static_cast<sqlite3_stmt*>(impl));
+            if( err != SQLITE_OK )
+            {
+
+            }
+            impl = 0;
+        }
+
+        static inline
+        sqlite3_stmt *Prepare( DB &target, const string &sql )
+        {
+            sqlite3 *db = static_cast<sqlite3*>(**target);
+            const char   *zsql = *sql;
+            const int     nsql = sql.size();
+            sqlite3_stmt *stmt = 0;
+            const int err = sqlite3_prepare_v2(db, zsql, nsql, &stmt, NULL);
+            if( err != SQLITE_OK )
+            {
+                throw exception("sqlite3_open_v2: [%s] for '%s'", sqlite3_errstr(err), zsql);
+            }
+            return stmt;
+        }
+
+        Statement:: Statement( const DB &target, const string &sql ) :
+        db(target),
+        impl( Prepare(db,sql) )
+        {
+        }
+
+        Statement:: Statement( const DB &target, const char *sql ) :
+        db(target),
+        impl(0)
+        {
+            const string _(sql);
+            impl = Prepare(db,_);
         }
 
 
