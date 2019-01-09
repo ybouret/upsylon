@@ -35,9 +35,11 @@ namespace upsylon
 
         typedef arc_ptr<DataBase> DB;
 
-        class Statement
+        class Statement : public counted_object
         {
         public:
+            typedef arc_ptr<Statement> Pointer;
+            
             explicit Statement( const DB &target, const string &sql );
             explicit Statement( const DB &target, const char   *sql );
             virtual ~Statement() throw();
@@ -46,6 +48,7 @@ namespace upsylon
             DB    db;
             void *impl;
         };
+
 
     }
 }

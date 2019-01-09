@@ -5,5 +5,5 @@ TARGET_LINK_Y( test-sqlite++ sqlite++ sqlite3)
 
 ENABLE_TESTING()
 
-ADD_TEST(sql test-sqlite++ sql)
+ADD_TEST(sql test-sqlite++ sql ${CMAKE_CURRENT_SOURCE_DIR}/chinook.db)
 
