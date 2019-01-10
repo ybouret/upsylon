@@ -273,7 +273,9 @@ MACRO(TARGET_LINK_Y tgt)
 	ENDIF()
 	
 	IF(NOT WIN32)
-		TARGET_LINK_LIBRARIES(${tgt} dl)
+		IF(NOT Y_OPENBSD)
+			TARGET_LINK_LIBRARIES(${tgt} dl)
+		ENDIF()
 	ENDIF()
 	
 	#specific flags
