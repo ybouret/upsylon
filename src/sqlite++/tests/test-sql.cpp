@@ -3,6 +3,24 @@
 
 using namespace upsylon;
 
+namespace
+{
+    static inline
+    int echo(void *,int nc,char **values,char **)
+    {
+        //std::cerr << "#cols=" << nc << std::endl;
+        for(int i=0;i<nc;++i)
+        {
+            const char *value = values[i];
+            if(value!=NULL)
+            {
+                std::cerr << value << "|";
+            }
+        }
+        std::cerr << std::endl;
+        return 0;
+    }
+}
 Y_UTEST(sql)
 {
     {
@@ -13,9 +31,9 @@ Y_UTEST(sql)
     if(argc>1)
     {
         std::cerr << "Open DB R/O" << std::endl;
-        SQLite::DB db = new SQLite::DataBase(argv[1],SQLite::OpenReadOnly);
-        std::cerr << "Preparing statement" << std::endl;
-        SQLite::Statement st( db, "SELECT * FROM tracks;" );
+        SQLite::DataBase db(argv[1],SQLite::OpenReadOnly);
+        db.execute("SELECT * FROM tracks;",echo,NULL);
+
     }
 }
 Y_UTEST_DONE()

@@ -60,7 +60,34 @@ namespace upsylon
             impl = OpenDataBase(_,how);
         }
 
+        void DataBase:: execute(const string &sql,
+                                int (*callback)(void*,int,char**,char**),
+                                void *callargs)
+        {
+            assert(callback);
+            char *errmsg = 0;
+            try
+            {
+                const int err = sqlite3_exec(static_cast<sqlite3 *>(impl),
+                                             *sql,
+                                             callback,
+                                             callargs,
+                                             &errmsg);
+                if( err != SQLITE_OK )
+                {
+                    const char *msg = errmsg ? errmsg : "unknown";
+                    throw exception("sqlite3_exec : [%s] for '%s'",msg,*sql);
+                }
+                sqlite3_free(errmsg);
+            }
+            catch(...)
+            {
+                sqlite3_free(errmsg);
+                throw;
+            }
+        }
 
+#if 0
         ////////////////////////////////////////////////////////////////////////
         Statement:: ~Statement() throw()
         {
@@ -101,7 +128,7 @@ namespace upsylon
             const string _(sql);
             impl = Prepare(db,_);
         }
-
+#endif
 
     }
 }

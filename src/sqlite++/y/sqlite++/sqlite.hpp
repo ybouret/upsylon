@@ -28,27 +28,17 @@ namespace upsylon
             void *       operator*() throw()       { return impl; }
             const void * operator*() const throw() { return impl; }
 
+            //! low level sqlite3_exec
+            void execute(const string &sql,
+                         int (*callback)(void*,int,char**,char**),
+                         void *callargs);
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DataBase);
             void *impl;
         };
-
-        typedef arc_ptr<DataBase> DB;
-
-        class Statement : public counted_object
-        {
-        public:
-            typedef arc_ptr<Statement> Pointer;
-            
-            explicit Statement( const DB &target, const string &sql );
-            explicit Statement( const DB &target, const char   *sql );
-            virtual ~Statement() throw();
-
-        private:
-            DB    db;
-            void *impl;
-        };
-
+        
 
     }
 }
