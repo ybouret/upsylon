@@ -184,10 +184,10 @@ namespace upsylon
                             //--------------------------------------------------
                             // loop over triangles
                             //--------------------------------------------------
-                            static const size_t m0 = 0;
-                            const point         p0 = vtx[m0];
-                            const double        f0 = f[m0];
-                            const unsigned      s0 = (sign_flag(f0) << sign_shift0);
+                            static const size_t m0   = 0;
+                            const point         p0   = vtx[m0];
+                            const double        f0   = f[m0];
+                            const unsigned      s0   = (sign_flag(f0) << sign_shift0);
                             for(size_t l=0;l<4;++l)
                             {
                                 //----------------------------------------------
@@ -195,7 +195,7 @@ namespace upsylon
                                 //----------------------------------------------
                                 const size_t        m1 = tri[l][0];
                                 const size_t        m2 = tri[l][1];
-
+                                
                                 //----------------------------------------------
                                 // get real coordinates
                                 //----------------------------------------------
@@ -216,7 +216,8 @@ namespace upsylon
                                         // intercepting
                                     case neg0|pos1|pos2:
                                     case pos0|neg1|neg2:
-                                        cb( zfind(p0,f0,p1,f1), zfind(p0,f0,p2,f2));
+                                        cb(zfind(p0,f0,p1,f1),
+                                           zfind(p0,f0,p2,f2));
                                         break;
 
                                     case neg0|pos1|neg2:
@@ -350,6 +351,7 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(level_sets);
+
             };
 
 
