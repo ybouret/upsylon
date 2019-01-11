@@ -1,6 +1,6 @@
 PROJECT(sqlite3 C)
 
-IF(Y_SOLARIS)
+IF(Y_SUNOS)
 ADD_DEFINITIONS(-std=c99)
 ENDIF()
 
