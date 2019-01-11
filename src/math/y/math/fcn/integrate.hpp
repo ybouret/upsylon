@@ -149,12 +149,14 @@ Y_INTG_EPILOG()
                 Y_INTG_PROLOG(11);// +512: 1025 evals
                 Y_INTG_CHECK();
 
+#if 0
                 {
                     const T err       = __fabs(s-old_s);       \
                     const T threshold = __fabs( ftol *old_s ); \
                     fprintf( stderr, "s=%.15g/old_s=%.15g: err=%.15g | thr=%.15g on [%.15g:%.15g]\n", s, old_s, err, threshold,a,b);
                 }
-
+#endif
+                
                 return false;
             }
 
@@ -195,7 +197,7 @@ Y_INTG_EPILOG()
                     auto_ptr< range<T> > curr = todo.query();
                     if( quad(curr->sum,F,curr->ini,curr->end,ftol) )
                     {
-                        std::cerr << "[*] count=" << count << " for [" << curr->ini << ":" << curr->end << "]" << std::endl;
+                        //std::cerr << "[*] count=" << count << " for [" << curr->ini << ":" << curr->end << "]" << std::endl;
                         done.push_back( curr.yield() );
                     }
                     else
@@ -203,7 +205,7 @@ Y_INTG_EPILOG()
                         const T mid = (curr->ini+curr->end)/2;
                         todo.store( new range<T>(mid,curr->end) ); ++count;
                         todo.store( new range<T>(curr->ini,mid) ); ++count;
-                        std::cerr << "[+] count=" << count << " for [" << curr->ini << ":" << curr->end << "]" << ", mid=" << mid << std::endl;
+                        //std::cerr << "[+] count=" << count << " for [" << curr->ini << ":" << curr->end << "]" << ", mid=" << mid << std::endl;
                     }
                 }
                 assert(done.size>0);
