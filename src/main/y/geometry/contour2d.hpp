@@ -16,7 +16,102 @@ namespace upsylon
         struct contour2d
         {
 
+            class identifier
+            {
+            public:
+                const unit_t   i;
+                const unit_t   j;
+                const unsigned p; //! on 5 bits
+
+                explicit identifier(const unit_t ii, const unit_t jj, const unsigned pp) throw() : i(ii), j(jj), p(pp) {}
+
+                virtual ~identifier() throw() {}
+
+                identifier(const identifier &other) throw() : i(other.i), j(other.j), p(other.p) {}
+
+                friend bool operator==( const identifier &lhs, const identifier &rhs) throw()
+                {
+                    return lhs.i == rhs.i && lhs.j == rhs.j && lhs.p == rhs.p;
+                }
+
+                typedef hashing::fnv hashing_function;
+                class hasher
+                {
+                public:
+                    hashing_function H;
+                    inline hasher() throw() : H() {}
+                    inline ~hasher() throw() {}
+                    inline size_t operator()( const identifier &id ) throw()
+                    {
+                        H.set();
+                        H.run_type(id.i);
+                        H.run_type(id.j);
+                        H.run_type(id.p);
+                        return H.key<size_t>();
+                    }
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(hasher);
+                };
+
+            private:
+                Y_DISABLE_ASSIGN(identifier);
+            };
+
             typedef point2d<double>     point;      //!< point physical coordinate
+
+            class unique_point : public counted_object
+            {
+            public:
+                const identifier id;
+                const point      r;
+                explicit unique_point(const identifier &who, const point &coord ) throw() : id(who), r(coord) {}
+                virtual ~unique_point() throw() {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(unique_point);
+            };
+
+
+
+            typedef intr_ptr<identifier,unique_point>               shared_point;
+
+            class segment : public object
+            {
+            public:
+                segment *next;
+                segment *prev;
+
+                const shared_point a;
+                const shared_point b;
+
+                segment( const shared_point &A, const shared_point &B) throw() :
+                next(0), prev(0), a(A), b(B) {}
+                virtual ~segment() throw() {}
+
+                typedef core::list_of_cpp<segment> list;
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(segment);
+            };
+
+
+            typedef set<identifier,shared_point,identifier::hasher> shared_points; //!< amongst one level
+
+            class shared_points_db : public shared_points, public counted
+            {
+            public:
+                const size_t   index; //!< index in levels
+                const size_t & key() const throw() { return index; }
+
+                segment::list segments;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(shared_points_db);
+            };
+
+
             //! callback upon a found segment
             typedef void              (*callback)(double x0, double y0, double x1, double y1, size_t idx, double lvl, void *args);
 
@@ -279,6 +374,7 @@ namespace upsylon
                                   const point &pb, const double vb) throw();
 
         public:
+#if 0
             //! a basic segment
             class segment : public object
             {
@@ -353,7 +449,7 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(level_sets);
 
             };
-
+#endif
 
         };
 

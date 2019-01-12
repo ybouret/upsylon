@@ -29,7 +29,7 @@ namespace upsylon
         }
 
         ////////////////////////////////////////////////////////////////////////
-
+#if 0
         contour2d:: segment:: segment(const point &_, const point &__) throw() :
         next(0), prev(0), a(_), b(__)
         {}
@@ -96,7 +96,8 @@ namespace upsylon
             return **ppls;
         }
 
-
+#endif
+        
     }
 }
 
