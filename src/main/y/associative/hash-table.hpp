@@ -226,7 +226,7 @@ namespace upsylon
                 {
                     slot_type &s = slot[h&smask];
                     pSlot        = &s;
-                    for(const NODE *node=s.head;node!=0;node=node->next)
+                    for(const Node *node=s.head;node!=0;node=node->next)
                     {
                         if( (h==node->hkey) && (k==node->key()) )
                         {
