@@ -68,7 +68,7 @@ namespace upsylon
         const iso2d::identifier & iso2d::unique_point:: key() const throw() { return tag; }
 
 
-        //
+        /*
         iso2d:: segment:: segment(const shared_point &A, const shared_point &B) throw() :
         next(0),
         prev(0),
@@ -76,6 +76,7 @@ namespace upsylon
         b(B)
         {
         }
+		*/
 
         iso2d:: segment:: ~segment() throw()
         {

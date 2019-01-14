@@ -126,7 +126,7 @@ namespace upsylon
                 segment           *prev;
                 const shared_point a;
                 const shared_point b;
-                explicit segment(const shared_point &A, const shared_point &B) throw();
+                //explicit segment(const shared_point &A, const shared_point &B) throw();
                 explicit segment(unique_point       *pa, unique_point     *pb) throw() :
                 next(0), prev(0), a(pa), b(pb)
                 {
@@ -161,10 +161,10 @@ namespace upsylon
                     shared_point    *psp = search(tag);
                     if( 0!=psp )
                     {
-                        assert(tag== (**psp).tag);
                         shared_point &sp = *psp;
                         unique_point &up = *sp;
                         assert( object::is_block(&up) );
+						assert( tag == up.tag );
                         return &up;
                     }
                     else
@@ -173,6 +173,7 @@ namespace upsylon
                         const shared_point sp = up; assert(tag==sp->tag);
                         if(!insert(sp)) throw exception("unexpected multiple iso2d::vertex @(%d,%d,+%u)!",int(i), int(j), p);
                         assert( object::is_block(up) );
+                        assert( search(tag) );
                         return up;
                     }
                 }
@@ -353,8 +354,9 @@ namespace upsylon
                         {
                             const double  zk   = z[k];
                             const double  f[5] = { g[0]-zk, g[1]-zk, g[2]-zk, g[3]-zk, g[4]-zk };
-                            shared_points &db  = *lvl[k];
-
+                            shared_points &db       = *lvl[k];
+							segment::list &segments = db.segments;
+							
                             //--------------------------------------------------
                             // loop over triangles
                             //--------------------------------------------------
@@ -422,8 +424,15 @@ namespace upsylon
                                         // p0 - (p1/p2)
                                     case zzz0|pos1|neg2:
                                     case zzz0|neg1|pos2:
-                                        std::cerr << "p0-(p1/p2)" << std::endl;
-                                        db.segments.push_back( new segment( db(i0,j0,q0,p0), db(i0,j0,q1,p1,f1,q2,p2,f2) ) );
+                                        //std::cerr << "p0-(p1/p2)" << std::endl;
+                                        {
+											unique_point *a = db(i0,j0,q0,p0);             assert( db.search(a->tag) );
+											unique_point *b = db(i0,j0,q1,p1,f1,q2,p2,f2); assert(db.search(b->tag));
+											segments.push_back( new segment(a,b) );
+											vector<identifier> keys;
+											db.collect_keys(keys);
+											std::cerr << "keys=" << keys << std::endl;
+										}
                                         //cb(p0,zfind(p1,f1,p2,f2));
                                         break;
 
@@ -446,21 +455,21 @@ namespace upsylon
                                         // p0-p1
                                     case zzz0|zzz1|pos2:
                                     case zzz0|zzz1|neg2:
-                                        std::cerr << "p0-p1" << std::endl;
+                                        //std::cerr << "p0-p1" << std::endl;
                                         db.segments.push_back( new segment(db(i0,j0,q0,p0),db(i0,j0,q0,p0)) );
                                         break;
 
                                         // p1-p2
                                     case neg0|zzz1|zzz2:
                                     case pos0|zzz1|zzz2:
-                                        std::cerr << "p1-p2" << std::endl;
+                                        //std::cerr << "p1-p2" << std::endl;
                                         db.segments.push_back( new segment(db(i0,j0,q1,p1),db(i0,j0,q2,p2)) );
                                         break;
 
                                         // p0-p2
                                     case zzz0|neg1|zzz2:
                                     case zzz0|pos1|zzz2:
-                                        std::cerr << "p0-p2" << std::endl;
+                                        //std::cerr << "p0-p2" << std::endl;
                                         db.segments.push_back( new segment(db(i0,j0,q0,p0),db(i0,j0,q2,p2)) );
                                         break;
 
