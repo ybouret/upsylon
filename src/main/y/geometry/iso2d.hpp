@@ -4,6 +4,8 @@
 
 #include "y/type/point2d.hpp"
 #include "y/associative/set.hpp"
+#include "y/ptr/arc.hpp"
+#include "y/ptr/intr.hpp"
 
 namespace upsylon
 {
@@ -29,6 +31,8 @@ namespace upsylon
          */
         struct iso2d
         {
+            typedef point2d<double> vertex;
+
             //__________________________________________________________________
             //
             // iso level is on a vertex
@@ -54,17 +58,80 @@ namespace upsylon
             static const unsigned edge23  = (vertex2|vertex3);
             static const unsigned edge34  = (vertex3|vertex4);
 
-
+            //! identifier for a point of an iso level
             class identifier
             {
             public:
                 const unit_t   i; //!< index of the square
                 const unit_t   j; //!< index of the square
-                const unsigned p; //!< flag of
+                const unsigned p; //!< position within the square
 
+                identifier(const unit_t ii, const unit_t jj, const unsigned pp) throw();
+                identifier(const identifier &other) throw();
+                ~identifier() throw();
+
+                friend bool operator==(const identifier &lhs, const identifier &rhs) throw()
+                {
+                    return (lhs.i == rhs.i) && (lhs.j == rhs.j) && (lhs.p == rhs.p);
+                }
+            private:
+                Y_DISABLE_ASSIGN(identifier);
+            public:
+                class hasher
+                {
+                public:
+                    hashing::fnv H;
+                    hasher() throw();
+                    ~hasher() throw();
+                    size_t operator()(const identifier &id) throw();
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(hasher);
+                };
             };
 
+            //! a unique point is an identifier and its position
+            class unique_point : public counted_object
+            {
+            public:
+                const identifier tag; //!< logical  identifier
+                const vertex     vtx; //!< physical position
 
+                explicit unique_point(const identifier &id, const vertex &v) throw();
+                virtual ~unique_point() throw();
+                inline const identifier & key() const throw() { return tag; }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(unique_point);
+            };
+
+            typedef intr_ptr<identifier,unique_point>               shared_point;
+            typedef set<identifier,shared_point,identifier::hasher> unique_points;
+
+            class segment : public object
+            {
+            public:
+                typedef core::list_of_cpp<segment> list;
+                segment           *next;
+                segment           *prev;
+                const shared_point a;
+                const shared_point b;
+                explicit segment(const shared_point &A, const shared_point &B) throw();
+                virtual ~segment() throw();
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(segment);
+            };
+
+            class shared_points : public unique_points, public counted
+            {
+            public:
+                explicit shared_points() throw() {}
+                virtual ~shared_points() throw() {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(shared_points);
+            };
 
         };
 
