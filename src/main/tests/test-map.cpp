@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/sequence/list.hpp"
 
 using namespace upsylon;
 
@@ -80,6 +81,23 @@ namespace
 
             tmp = db;
         }
+
+        {
+            std::cerr << "Collecting Keys:" << std::endl;
+            vector<KEY> vkeys;
+            list<KEY>   lkeys;
+            db.collect_keys(vkeys);
+            db.collect_keys(lkeys);
+        }
+
+        {
+            std::cerr << "Collecting HashKeys:" << std::endl;
+            vector<size_t> vkeys;
+            list<size_t>   lkeys;
+            db.collect_hash_keys(vkeys);
+            db.collect_hash_keys(lkeys);
+        }
+
 
         for(size_t i=1;i<=keys.size();++i)
         {

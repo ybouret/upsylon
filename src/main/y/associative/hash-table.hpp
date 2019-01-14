@@ -265,7 +265,7 @@ namespace upsylon
                 merging<meta_node>::sort(chain,__compare_node_keys<COMPARE_KEYS>, (void*)&compare_keys);
             }
 
-
+            
         private:
             Y_DISABLE_ASSIGN(hash_table);
             void   *buffer;

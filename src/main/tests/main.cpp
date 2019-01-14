@@ -99,7 +99,8 @@ Y_UTEST_INIT(100)
     Y_UTEST(regex);
     Y_UTEST(matching);
 
-    Y_UTEST(geom_c2d);    
+    Y_UTEST(geom_c2d);
+    Y_UTEST(geom_iso2d);
 }
 Y_UTEST_EXEC()
 

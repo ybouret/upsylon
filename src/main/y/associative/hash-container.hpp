@@ -148,6 +148,26 @@ namespace upsylon
             return table.chain.fetch(idx)->addr->data;
         }
 
+        //! collect all the keys
+        template <typename SEQUENCE>
+        void collect_keys( SEQUENCE &keys ) const
+        {
+            for(const meta_node *node=table.chain.head;node;node=node->next)
+            {
+                keys.push_back(node->addr->key());
+            }
+        }
+
+        //! collect the hash keys
+        template <typename SEQUENCE>
+        void collect_hash_keys( SEQUENCE &hash_keys ) const
+        {
+            for(const meta_node *node=table.chain.head;node;node=node->next)
+            {
+                hash_keys.push_back(node->addr->hkey);
+            }
+        }
+
     protected:
         table_type table; //!< handle low level operations
         
