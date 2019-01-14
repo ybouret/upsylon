@@ -294,6 +294,20 @@ namespace upsylon {
 
     namespace memory
     {
+
+        bool  arena:: owns(const void *p) const throw()
+        {
+            assert(p);
+            for(const chunk *ch=chunks.head;ch;ch=ch->next)
+            {
+                if(ch->owns(p))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         ////////////////////////////////////////////////////////////////////////
         //
         // arena release

@@ -46,6 +46,7 @@ Y_UTEST(arena)
             alea.shuffle(blk,n);
             for(size_t i=0;i<n;++i)
             {
+                Y_ASSERT( A.owns(blk[i].addr) );
                 A.release(blk[i].addr);
             }
         }

@@ -168,6 +168,24 @@ namespace upsylon
             slot.move_to_front(releasing);
             releasing->release(p);
         }
+
+        bool   blocks:: owns(const void *p, const size_t block_size) const throw()
+        {
+            assert(p);
+            assert(block_size);
+            arena_list &slot = htable[ block_size & table_mask ];
+            for(arena *a=slot.head;a;a=a->next)
+            {
+                if(block_size==a->block_size)
+                {
+                    // found possible releasing arena
+                    return a->owns(p);
+                }
+            }
+            return false;
+        }
+
+
     }
 
 }

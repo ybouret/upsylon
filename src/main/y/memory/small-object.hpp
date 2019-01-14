@@ -95,6 +95,31 @@ namespace upsylon
                 p = 0;
             }
 
+            //! test a small object was allocated
+            template <typename T>
+            static bool is_block( const T *addr )  throw()
+            {
+                if(addr)
+                {
+                    if(provider::exists())
+                    {
+                        // something was allocated!
+                        static provider &mgr = provider::location();
+                        return mgr.owns(addr,sizeof(T));
+                    }
+                    else
+                    {
+                        // nothing was allocated by blocks
+                        return false;
+                    }
+                }
+                else
+                {
+                    // failsafe
+                    return false;
+                }
+            }
+
         private:
             class provider : public singleton<provider>
             {
@@ -129,6 +154,14 @@ namespace upsylon
                         static global &big = global::location();
                         big.__free(p,block_size);
                     }
+                }
+
+                inline bool owns( const void *p, const size_t block_size ) throw()
+                {
+                    Y_LOCK(this->access);
+                    assert(p);
+                    assert(block_size>0);
+                    return blk.owns(p,block_size);
                 }
 
             private:

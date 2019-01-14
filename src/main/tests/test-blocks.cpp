@@ -49,6 +49,7 @@ Y_UTEST(blocks)
             alea.shuffle(blk,n);
             for(size_t i=0;i<n;++i)
             {
+                Y_ASSERT( B.owns(blk[i].addr,blk[i].size) );
                 B.release(blk[i].addr,blk[i].size);
             }
             std::cerr << B.num_pages() << "," << B.num_arenas() << "/";

@@ -42,6 +42,9 @@ namespace upsylon
             //! release a previously allocated block
             void  release(void *p) throw();
 
+            //! check ownership
+            bool  owns(const void *p) const throw();
+
         private:
             //! memory page for chunks mapping
             struct page

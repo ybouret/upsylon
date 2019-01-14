@@ -58,6 +58,7 @@ namespace upsylon
         tag(id),
         vtx(v)
         {
+            std::cerr << "new tag@" << tag << std::endl;
         }
 
         iso2d:: unique_point :: ~unique_point() throw()

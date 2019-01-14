@@ -55,6 +55,7 @@ namespace
             for(size_t i=0;i<nblock;++i)
             {
                 memset( blk[i].addr, alea.full<uint8_t>(), block_size);
+                Y_ASSERT(ch.owns(blk[i].addr));
                 ch.release( blk[i].addr );
             }
 

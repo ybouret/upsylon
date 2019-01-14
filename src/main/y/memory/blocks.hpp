@@ -29,9 +29,10 @@ namespace upsylon
             const size_t chunk_size;  //!< the common chunk_size
             const size_t table_mask;  //!< the htable size - 1
             
-            void * acquire(const size_t block_size); //!< aquire n>0 byte
+            void * acquire(const size_t block_size);                   //!< aquire n>0 byte
             void   release(void *p, const size_t block_size ) throw(); //!< release a previously allocated bloc_size
-            
+            bool   owns(const void *p, const size_t block_size) const throw(); //!< check ownership
+
         private:
             struct page
             {

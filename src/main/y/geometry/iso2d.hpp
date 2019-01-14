@@ -128,7 +128,12 @@ namespace upsylon
                 const shared_point b;
                 explicit segment(const shared_point &A, const shared_point &B) throw();
                 explicit segment(unique_point       *pa, unique_point     *pb) throw() :
-                next(0), prev(0), a(pa), b(pb) {}
+                next(0), prev(0), a(pa), b(pb)
+                {
+                    std::cerr << "new segment..." << std::endl;
+                    assert(a->refcount()>1); assert( object::is_block(pa) );
+                    assert(b->refcount()>1); assert( object::is_block(pb) );
+                }
 
                 virtual ~segment() throw();
 
@@ -153,20 +158,21 @@ namespace upsylon
                 unique_point * operator()( const unit_t i, const unit_t j, const unsigned p, const vertex &fallback)
                 {
                     const identifier tag(i,j,p);
-                   // std::cerr << "look up " << tag << std::endl;
                     shared_point    *psp = search(tag);
-                    if( psp )
+                    if( 0!=psp )
                     {
                         assert(tag== (**psp).tag);
-                        //return & (**psp);
-                        return (*psp).unsafe();
+                        shared_point &sp = *psp;
+                        unique_point &up = *sp;
+                        assert( object::is_block(&up) );
+                        return &up;
                     }
                     else
                     {
                         unique_point      *up = new unique_point(tag,fallback);
                         const shared_point sp = up; assert(tag==sp->tag);
                         if(!insert(sp)) throw exception("unexpected multiple iso2d::vertex @(%d,%d,+%u)!",int(i), int(j), p);
-                        //std::cerr << "#ref=" << sp->refcount() << std::endl;
+                        assert( object::is_block(up) );
                         return up;
                     }
                 }
@@ -181,7 +187,10 @@ namespace upsylon
                     shared_point *psp = search(tag);
                     if( psp )
                     {
-                        return (*psp).unsafe();
+                        assert(tag== (**psp).tag);
+                        shared_point &sp = *psp;
+                        unique_point &up = *sp;
+                        return &up;
                     }
                     else
                     {
@@ -267,7 +276,11 @@ namespace upsylon
                     assert(z[i]<=z[i+1]);
                 }
 #endif
-                if(nc<=0) return;
+                if(nc<=0)
+                {
+                    lvl.free();
+                    return;
+                }
 
                 //--------------------------------------------------------------
                 //
@@ -279,11 +292,13 @@ namespace upsylon
                 {
                     lvl.pop_back();
                 }
-                while(lvl.size()<=nc)
+                while(lvl.size()<nc)
                 {
                     const level _ = new shared_points();
                     lvl.push_back( _ );
                 }
+                std::cerr << "#levels=" << lvl.size() << "/" << nc << std::endl;
+                assert(nc==lvl.size());
                 for(size_t k=nc;k>0;--k)
                 {
                     lvl[k]->free();
@@ -338,8 +353,7 @@ namespace upsylon
                         {
                             const double  zk   = z[k];
                             const double  f[5] = { g[0]-zk, g[1]-zk, g[2]-zk, g[3]-zk, g[4]-zk };
-                            shared_points &db  = *lvl[nc];
-
+                            shared_points &db  = *lvl[k];
 
                             //--------------------------------------------------
                             // loop over triangles
@@ -408,6 +422,7 @@ namespace upsylon
                                         // p0 - (p1/p2)
                                     case zzz0|pos1|neg2:
                                     case zzz0|neg1|pos2:
+                                        std::cerr << "p0-(p1/p2)" << std::endl;
                                         db.segments.push_back( new segment( db(i0,j0,q0,p0), db(i0,j0,q1,p1,f1,q2,p2,f2) ) );
                                         //cb(p0,zfind(p1,f1,p2,f2));
                                         break;
@@ -431,18 +446,21 @@ namespace upsylon
                                         // p0-p1
                                     case zzz0|zzz1|pos2:
                                     case zzz0|zzz1|neg2:
+                                        std::cerr << "p0-p1" << std::endl;
                                         db.segments.push_back( new segment(db(i0,j0,q0,p0),db(i0,j0,q0,p0)) );
                                         break;
 
                                         // p1-p2
                                     case neg0|zzz1|zzz2:
                                     case pos0|zzz1|zzz2:
+                                        std::cerr << "p1-p2" << std::endl;
                                         db.segments.push_back( new segment(db(i0,j0,q1,p1),db(i0,j0,q2,p2)) );
                                         break;
 
                                         // p0-p2
                                     case zzz0|neg1|zzz2:
                                     case zzz0|pos1|zzz2:
+                                        std::cerr << "p0-p2" << std::endl;
                                         db.segments.push_back( new segment(db(i0,j0,q0,p0),db(i0,j0,q2,p2)) );
                                         break;
 
