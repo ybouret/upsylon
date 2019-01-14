@@ -81,7 +81,7 @@ namespace upsylon
         }
 
         //
-        iso2d:: shared_points:: shared_points() throw() {}
+        iso2d:: shared_points:: shared_points() throw(): segments() {}
 
         iso2d:: shared_points:: ~shared_points() throw() {}
 

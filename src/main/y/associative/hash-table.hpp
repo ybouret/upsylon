@@ -127,7 +127,7 @@ namespace upsylon
                         typename type_traits<T>::parameter_type   node_data)
             {
                 slot_type *pSlot = 0;
-                if( search_node<KEY>(node_key,node_hkey,&pSlot) )
+                if( search_node<KEY>(node_key,node_hkey,pSlot) )
                 {
                     //__________________________________________________________
                     //
@@ -219,13 +219,13 @@ namespace upsylon
             template <typename KEY>
             const NODE *search_node(typename type_traits<KEY>::parameter_type k,
                                     const size_t                              h,
-                                    slot_type                               **ppSlot ) const throw()
+                                    slot_type                               * &pSlot ) const throw()
             {
-                assert(ppSlot);
-                assert(! *ppSlot);
-                if(slot)
+                assert(0==pSlot);
+                if(0!=slot)
                 {
-                    slot_type &s = * (*ppSlot= &slot[h&smask]);
+		    slot_type &s = slot[h&smask];
+		    pSlot        = &s;
                     for(const NODE *node=s.head;node!=0;node=node->next)
                     {
                         if( (h==node->hkey) && (k==node->key()) )
