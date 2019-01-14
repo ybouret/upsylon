@@ -45,22 +45,7 @@ namespace upsylon
             static const unsigned vertex2 = 0x01<<2; //!< bit 3
             static const unsigned vertex3 = 0x01<<3; //!< bit 4
             static const unsigned vertex4 = 0x01<<4; //!< bit 5
-
-            //__________________________________________________________________
-            //
-            // iso level is on an edge
-            //__________________________________________________________________
-            static const unsigned edge01  = (vertex0|vertex1);
-            static const unsigned edge02  = (vertex0|vertex2);
-            static const unsigned edge03  = (vertex0|vertex3);
-            static const unsigned edge04  = (vertex0|vertex4);
-
-            static const unsigned edge12  = (vertex1|vertex2);
-            static const unsigned edge14  = (vertex1|vertex4);
-
-            static const unsigned edge23  = (vertex2|vertex3);
-            static const unsigned edge34  = (vertex3|vertex4);
-
+            
             //! identifier for a point of an iso level
             class identifier
             {
@@ -151,9 +136,10 @@ namespace upsylon
                 virtual ~shared_points() throw();
 
                 segment::list segments;
+                unit_t        i,j;
 
                 //! get one point or create it from fallback
-                unique_point * operator()( const unit_t i, const unit_t j, const unsigned p, const vertex &fallback)
+                unique_point * operator()(const unsigned p, const vertex &fallback)
                 {
                     const identifier tag(i,j,p);
                     shared_point    *psp = search(tag);
@@ -171,9 +157,7 @@ namespace upsylon
                 }
 
                 //! get one point or create it from two points
-                unique_point * operator()(const unit_t   i,
-                                          const unit_t   j,
-                                          const unsigned q0, const vertex &p0, const double v0,
+                unique_point * operator()(const unsigned q0, const vertex &p0, const double v0,
                                           const unsigned q1, const vertex &p1, const double v1)
                 {
                     const identifier tag(i,j,q0|q1);
@@ -344,16 +328,18 @@ namespace upsylon
                         for(size_t k=nc;k>0;--k)
                         {
                             const double  zk   = z[k];
-                            const double  f[5] = { g[0]-zk, g[1]-zk, g[2]-zk, g[3]-zk, g[4]-zk };
+                            const double  f[5] = { 0, g[1]-zk, g[2]-zk, g[3]-zk, g[4]-zk };
                             shared_points &db       = *lvl[k];
 							segment::list &segments = db.segments;
-							
+                            db.i = i0;
+                            db.j = j0;
+
                             //--------------------------------------------------
                             // loop over triangles
                             //--------------------------------------------------
                             static const size_t m0   = 0;
                             const vertex        p0   = vtx[m0];
-                            const double        f0   = f[m0];
+                            const double        f0   = 0.25*(f[1]+f[2]+f[3]+f[4]);
                             const unsigned      q0   = 0x01<<m0;
                             const unsigned      s0   = (sign_flag(f0) << sign_shift0);
                             for(size_t l=0;l<4;++l)
@@ -388,22 +374,23 @@ namespace upsylon
                                         // intercepting two edges
                                         //
                                         //--------------------------------------
-
+                                        // (p0/p1) - (p0/p2)
                                     case neg0|pos1|pos2:
                                     case pos0|neg1|neg2:
-                                    {
+                                        segments.push_back( new segment(db(q0,p0,f0,q1,p1,f1),db(q0,p0,f0,q2,p2,f2)) );
+                                        break;
 
-                                        //cb(zfind(p0,f0,p1,f1), zfind(p0,f0,p2,f2));
-                                    } break;
-
+                                        // (p0/p1) - (p1/p2)
                                     case neg0|pos1|neg2:
                                     case pos0|neg1|pos2:
+                                        segments.push_back( new segment(db(q0,p0,f0,q1,p1,f1),db(q1,p1,f1,q2,p2,f2)) );
                                         //cb( zfind(p0,f0,p1,f1), zfind(p1,f1,p2,f2) );
                                         break;
 
+                                        // (p0/p2) - (p1/p2)
                                     case neg0|neg1|pos2:
                                     case pos0|pos1|neg2:
-                                        //cb( zfind(p0,f0,p2,f2), zfind(p1,f1,p2,f2) );
+                                        segments.push_back( new segment(db(q0,p0,f0,q2,p2,f2),db(q1,p1,f1,q2,p2,f2)) );
                                         break;
 
                                         //--------------------------------------
@@ -415,19 +402,19 @@ namespace upsylon
                                         // p0 - (p1/p2)
                                     case zzz0|pos1|neg2:
                                     case zzz0|neg1|pos2:
-                                        //std::cerr << "p0-(p1/p2)" << std::endl;
-                                        segments.push_back( new segment(db(i0,j0,q0,p0),db(i0,j0,q1,p1,f1,q2,p2,f2)) );
-                                        //cb(p0,zfind(p1,f1,p2,f2));
+                                        segments.push_back( new segment(db(q0,p0),db(q1,p1,f1,q2,p2,f2)) );
                                         break;
 
+                                        // p1 - (p0/p2)
                                     case pos0|zzz1|neg2:
                                     case neg0|zzz1|pos2:
-                                        //cb(p1,zfind(p0,f0,p2,f2));
+                                        segments.push_back( new segment(db(q1,p1),db(q0,p0,f0,q2,p2,f2)) );
                                         break;
 
+                                        // p2 - (p0/p1)
                                     case pos0|neg1|zzz2:
                                     case neg0|pos1|zzz2:
-                                        //cb(p2,zfind(p1,f1,p2,f2));
+                                        segments.push_back( new segment(db(q2,p2),db(q0,p0,f0,q1,p1,f1)) );
                                         break;
 
                                         //--------------------------------------
@@ -439,22 +426,19 @@ namespace upsylon
                                         // p0-p1
                                     case zzz0|zzz1|pos2:
                                     case zzz0|zzz1|neg2:
-                                        //std::cerr << "p0-p1" << std::endl;
-                                        db.segments.push_back( new segment(db(i0,j0,q0,p0),db(i0,j0,q0,p0)) );
+                                        db.segments.push_back( new segment(db(q0,p0),db(q0,p0)) );
                                         break;
 
                                         // p1-p2
                                     case neg0|zzz1|zzz2:
                                     case pos0|zzz1|zzz2:
-                                        //std::cerr << "p1-p2" << std::endl;
-                                        db.segments.push_back( new segment(db(i0,j0,q1,p1),db(i0,j0,q2,p2)) );
+                                        db.segments.push_back( new segment(db(q1,p1),db(q2,p2)) );
                                         break;
 
                                         // p0-p2
                                     case zzz0|neg1|zzz2:
                                     case zzz0|pos1|zzz2:
-                                        //std::cerr << "p0-p2" << std::endl;
-                                        db.segments.push_back( new segment(db(i0,j0,q0,p0),db(i0,j0,q2,p2)) );
+                                        db.segments.push_back( new segment(db(q0,p0),db(q2,p2)) );
                                         break;
 
                                     default:

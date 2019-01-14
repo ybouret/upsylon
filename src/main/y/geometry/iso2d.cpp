@@ -50,7 +50,6 @@ namespace upsylon
             H.run_type(id.j);
             H.run_type(id.p);
             const size_t ans = H.key<size_t>();
-            //std::cerr << "H(" << id.i << "," << id.j << "," << id.p << ")=" << ans << std::endl;
             return ans;
         }
 
@@ -61,7 +60,6 @@ namespace upsylon
         vtx(v)
         {
             assert(tag==id);
-            //std::cerr << "new tag@" << tag << std::endl;
         }
 
         iso2d:: unique_point :: ~unique_point() throw()
@@ -71,15 +69,7 @@ namespace upsylon
         const iso2d::identifier & iso2d::unique_point:: key() const throw() { return tag; }
 
 
-        /*
-        iso2d:: segment:: segment(const shared_point &A, const shared_point &B) throw() :
-        next(0),
-        prev(0),
-        a(A),
-        b(B)
-        {
-        }
-		*/
+        
 
         iso2d:: segment:: ~segment() throw()
         {

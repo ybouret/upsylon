@@ -62,17 +62,31 @@ Y_UTEST(geom_iso2d)
 
     std::cerr << "Contours for z=" << z << std::endl;
     {
-        //ios::ocstream fp("iso2d.dat");
+        ios::ocstream fpp("iso2dp.dat");
+        ios::ocstream fps("iso2ds.dat");
+
         iso2d::levels L;
         iso2d::scan( L, M, 1, nx, 1, ny, X, Y, z);
         std::cerr << "#L=" << L.size() << std::endl;
         for(size_t i=1;i<=L.size();++i)
         {
-            std::cerr << "#L[" << i << "]=" << L[i]->size() << std::endl;
+            std::cerr << "#L[" << i << "]=" << L[i]->size() << "/segments=" << L[i]->segments.size << std::endl;
+            for( const iso2d::segment *s = L[i]->segments.head;s;s=s->next)
+            {
+                fps("%g %g %u\n",   s->a->vtx.x, s->a->vtx.y, unsigned(i));
+                fps("%g %g %u\n\n", s->b->vtx.x, s->b->vtx.y, unsigned(i));
+            }
+
+            for( iso2d::shared_points::iterator j=L[i]->begin(); j!= L[i]->end(); ++j)
+            {
+                const iso2d::unique_point &p = **j;
+                fpp("%g %g %u\n",p.vtx.x, p.vtx.y, unsigned(i));
+            }
+
         }
     }
 
-    //std::cerr << "plot 'iso2d.dat' with lines linecolor variable" << std::endl;
+    std::cerr << "plot 'iso2ds.dat' with lines linecolor variable" << std::endl;
 
 }
 Y_UTEST_DONE()
