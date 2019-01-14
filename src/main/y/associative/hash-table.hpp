@@ -321,10 +321,6 @@ namespace upsylon
                     items = n;
                     assert(nodes.capacity()>=n);
                     assert(metas.capacity()>=n);
-                    for(size_t i=0;i<slots;++i)
-                    {
-                        new (slot+i) slot_type();
-                    }
                 }
             }
         };
