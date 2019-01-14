@@ -159,7 +159,7 @@ namespace upsylon
                     {
                         assert(tag== (**psp).tag);
                         //return & (**psp);
-                        return (*psp).operator->();
+                        return (*psp).unsafe();
                     }
                     else
                     {
@@ -181,7 +181,7 @@ namespace upsylon
                     shared_point *psp = search(tag);
                     if( psp )
                     {
-                        return (*psp).operator->();
+                        return (*psp).unsafe();
                     }
                     else
                     {

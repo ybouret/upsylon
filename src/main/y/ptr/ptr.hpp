@@ -45,6 +45,9 @@ namespace upsylon
             return os;
         }
 
+        inline type *       unsafe() throw()       { return pointee; }
+        inline const_type * unsafe() const throw() { return pointee; }
+
     protected:
         pointee_type pointee; //!< internal pointer
 
