@@ -4,6 +4,29 @@ namespace upsylon
 {
     namespace geometry
     {
+
+        unsigned iso2d:: sign_flag( const double value ) throw()
+        {
+            if(value<0)      return sign_negative;
+            else if(value>0) return sign_positive;
+            else             return sign_zero;
+        }
+
+        iso2d::vertex   iso2d::zfind(const vertex &pa, const double va,
+                                     const vertex &pb, const double vb) throw()
+        {
+            assert(va*vb<=0);
+            double num = -va;
+            double den = vb-va;
+            if(den<0)
+            {
+                num = -num;
+                den = -den;
+            }
+            const double lam = num/den;
+            return vertex( pa.x + lam * (pb.x-pa.x), pa.y + lam * (pb.y-pa.y) );
+        }
+
         //
         iso2d:: identifier:: identifier(const unit_t ii, const unit_t jj, const unsigned pp) throw() :
         i(ii), j(jj), p(pp) {}
@@ -41,6 +64,9 @@ namespace upsylon
         {
         }
 
+        const iso2d::identifier & iso2d::unique_point:: key() const throw() { return tag; }
+
+
         //
         iso2d:: segment:: segment(const shared_point &A, const shared_point &B) throw() :
         next(0),
@@ -53,7 +79,11 @@ namespace upsylon
         iso2d:: segment:: ~segment() throw()
         {
         }
-        
+
+        //
+        iso2d:: shared_points:: shared_points() throw() {}
+
+        iso2d:: shared_points:: ~shared_points() throw() {}
 
     }
 
