@@ -8,7 +8,7 @@ using namespace geometry;
 
 Y_UTEST(geom_iso2d)
 {
-    if(false)
+    if(true)
     {
         iso2d::shared_points db;
         for(size_t iter=10+alea.leq(100);iter>0;--iter)

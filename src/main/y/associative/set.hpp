@@ -53,15 +53,15 @@ namespace upsylon
     typename T,
     typename KEY_HASHER = key_hasher<KEY>,
     typename ALLOCATOR  = memory::global >
-    class set : public hash_container<KEY,T, core::set_node<KEY,T> >
+    class set : public hash_container<KEY,T, core::set_node<KEY,T>, KEY_HASHER, ALLOCATOR >
     {
     public:
         Y_DECL_ARGS(KEY,key_type); //!< key alias
         Y_DECL_ARGS(T,type);       //!< alias
 
-        typedef core::set_node<KEY,T>           node_type; //!< internal node
-        typedef hash_container<KEY,T,node_type> base_type; //!< base type alias
-        typedef typename base_type::meta_node   meta_node; //!< meta node alias
+        typedef core::set_node<KEY,T>                                 node_type; //!< internal node
+        typedef hash_container<KEY,T,node_type,KEY_HASHER, ALLOCATOR> base_type; //!< base type alias
+        typedef typename base_type::meta_node                         meta_node; //!< meta node alias
 
         //! default constructor
         inline explicit set() throw() : base_type() {}

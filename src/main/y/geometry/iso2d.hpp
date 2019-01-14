@@ -126,11 +126,9 @@ namespace upsylon
                 segment           *prev;
                 const shared_point a;
                 const shared_point b;
-                //explicit segment(const shared_point &A, const shared_point &B) throw();
                 explicit segment(unique_point       *pa, unique_point     *pb) throw() :
                 next(0), prev(0), a(pa), b(pb)
                 {
-                    std::cerr << "new segment..." << std::endl;
                     assert(a->refcount()>1); assert( object::is_block(pa) );
                     assert(b->refcount()>1); assert( object::is_block(pb) );
                 }
@@ -161,19 +159,13 @@ namespace upsylon
                     shared_point    *psp = search(tag);
                     if( 0!=psp )
                     {
-                        shared_point &sp = *psp;
-                        unique_point &up = *sp;
-                        assert( object::is_block(&up) );
-						assert( tag == up.tag );
-                        return &up;
+                        return & **psp;
                     }
                     else
                     {
                         unique_point      *up = new unique_point(tag,fallback);
                         const shared_point sp = up; assert(tag==sp->tag);
                         if(!insert(sp)) throw exception("unexpected multiple iso2d::vertex @(%d,%d,+%u)!",int(i), int(j), p);
-                        assert( object::is_block(up) );
-                        assert( search(tag) );
                         return up;
                     }
                 }
@@ -298,7 +290,6 @@ namespace upsylon
                     const level _ = new shared_points();
                     lvl.push_back( _ );
                 }
-                std::cerr << "#levels=" << lvl.size() << "/" << nc << std::endl;
                 assert(nc==lvl.size());
                 for(size_t k=nc;k>0;--k)
                 {
@@ -425,14 +416,7 @@ namespace upsylon
                                     case zzz0|pos1|neg2:
                                     case zzz0|neg1|pos2:
                                         //std::cerr << "p0-(p1/p2)" << std::endl;
-                                        {
-											unique_point *a = db(i0,j0,q0,p0);             assert( db.search(a->tag) );
-											unique_point *b = db(i0,j0,q1,p1,f1,q2,p2,f2); assert(db.search(b->tag));
-											segments.push_back( new segment(a,b) );
-											vector<identifier> keys;
-											db.collect_keys(keys);
-											std::cerr << "keys=" << keys << std::endl;
-										}
+                                        segments.push_back( new segment(db(i0,j0,q0,p0),db(i0,j0,q1,p1,f1,q2,p2,f2)) );
                                         //cb(p0,zfind(p1,f1,p2,f2));
                                         break;
 

@@ -40,7 +40,7 @@ namespace upsylon
         {}
 
         //
-        iso2d:: identifier:: hasher::  hasher() throw() : H() {}
+        iso2d:: identifier:: hasher::  hasher() throw() : H() {  }
         iso2d:: identifier:: hasher:: ~hasher() throw() {}
 
         size_t iso2d:: identifier:: hasher:: operator()(const identifier &id) throw()
@@ -49,7 +49,9 @@ namespace upsylon
             H.run_type(id.i);
             H.run_type(id.j);
             H.run_type(id.p);
-            return H.key<size_t>();
+            const size_t ans = H.key<size_t>();
+            //std::cerr << "H(" << id.i << "," << id.j << "," << id.p << ")=" << ans << std::endl;
+            return ans;
         }
 
         //
@@ -58,7 +60,8 @@ namespace upsylon
         tag(id),
         vtx(v)
         {
-            std::cerr << "new tag@" << tag << std::endl;
+            assert(tag==id);
+            //std::cerr << "new tag@" << tag << std::endl;
         }
 
         iso2d:: unique_point :: ~unique_point() throw()
