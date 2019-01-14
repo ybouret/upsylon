@@ -224,8 +224,8 @@ namespace upsylon
                 assert(0==pSlot);
                 if(0!=slot)
                 {
-		    slot_type &s = slot[h&smask];
-		    pSlot        = &s;
+                    slot_type &s = slot[h&smask];
+                    pSlot        = &s;
                     for(const NODE *node=s.head;node!=0;node=node->next)
                     {
                         if( (h==node->hkey) && (k==node->key()) )

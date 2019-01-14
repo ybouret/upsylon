@@ -71,7 +71,7 @@ namespace upsylon
         {
             slot_type   *s = 0;
             const size_t h = hash(k);
-            const NODE  *n = table.template search_node<KEY>(k,h, s);
+            const NODE  *n = table.template search_node<KEY>(k,h,s);
             if(n)
             {
                 assert(s);
@@ -91,7 +91,7 @@ namespace upsylon
         {
             slot_type   *s = 0;
             const size_t h = hash(k);
-            const NODE  *n = table.template search_node<KEY>(k,h, s);
+            const NODE  *n = table.template search_node<KEY>(k,h,s);
             if(n)
             {
                 return &(n->data);
@@ -107,7 +107,7 @@ namespace upsylon
         {
             slot_type   *s = 0;
             const size_t h = hash(k);
-            const NODE  *n = table.template search_node<KEY>(k,h, s);
+            const NODE  *n = table.template search_node<KEY>(k,h,s);
             if(n)
             {
                 assert(s); assert(s->owns(n));
