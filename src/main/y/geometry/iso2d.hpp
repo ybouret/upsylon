@@ -8,7 +8,6 @@
 #include "y/ptr/intr.hpp"
 #include "y/sequence/vector.hpp"
 
-#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -51,50 +50,17 @@ namespace upsylon
                 const unit_t   j;
                 const unsigned q;
 
-                coordinate(const unit_t ii, const unit_t jj, const unsigned qq) throw() : i(ii), j(jj), q(qq) { assert(q<=1); }
-                ~coordinate() throw() {}
-                coordinate(const coordinate &other) throw() : i(other.i), j(other.j), q(other.q) {}
+                coordinate(const unit_t ii, const unit_t jj, const unsigned qq) throw();
 
-                friend bool operator==( const coordinate &lhs, const coordinate &rhs) throw()
-                {
-                    return (lhs.i==rhs.i) && (lhs.j==rhs.j) && (lhs.q==rhs.q);
-                }
+                ~coordinate() throw();
 
-                static int compare(const coordinate &lhs, const coordinate &rhs) throw()
-                {
-                    if(lhs.i<rhs.i)
-                    {
-                        return -1;
-                    }
-                    else if(rhs.i<lhs.i)
-                    {
-                        return 1;
-                    }
-                    else
-                    {
-                        assert(lhs.i==rhs.i);
-                        if(lhs.j<rhs.j)
-                        {
-                            return -1;
-                        }
-                        else if(rhs.j<lhs.j)
-                        {
-                            return 1;
-                        }
-                        else
-                        {
-                            assert(rhs.j==lhs.j);
-                            return (lhs.q<rhs.q) ? -1 : ( (rhs.q<lhs.q) ? 1:0 );
-                        }
-                    }
-                }
+                coordinate(const coordinate &other) throw() ;
 
-                void run( hashing::function &H ) const throw()
-                {
-                    H.run_type(i);
-                    H.run_type(j);
-                    H.run_type(q);
-                }
+                friend bool operator==( const coordinate &lhs, const coordinate &rhs) throw();
+
+                static int compare(const coordinate &lhs, const coordinate &rhs) throw();
+
+                void run( hashing::function &H ) const throw();
 
             private:
                 Y_DISABLE_ASSIGN(coordinate);
@@ -107,25 +73,15 @@ namespace upsylon
                 const coordinate lower;
                 const coordinate upper;
 
-                edge_label( const coordinate &only ) throw() : lower(only), upper(only) {}
-                edge_label( const coordinate &a, const coordinate &b) throw() : lower(a), upper(b)
-                {
-                    if(coordinate::compare(lower,upper)>0) mswap( (void*)&lower, (void*)&upper, sizeof(coordinate) );
-                }
+                edge_label( const coordinate &only ) throw();
 
-                edge_label(const edge_label &other) throw() : lower(other.lower), upper(other.upper) {}
+                edge_label( const coordinate &a, const coordinate &b) throw() ;
 
-                void run( hashing::function &H ) const throw()
-                {
-                    lower.run(H);
-                    upper.run(H);
-                }
+                edge_label(const edge_label &other) throw();
 
-                friend bool operator==(const edge_label &lhs, const edge_label &rhs) throw()
-                {
-                    return (lhs.lower==rhs.lower) && (lhs.upper==rhs.upper);
-                }
+                void run( hashing::function &H ) const throw();
 
+                friend bool operator==(const edge_label &lhs, const edge_label &rhs) throw();
 
             private:
                 Y_DISABLE_ASSIGN(edge_label);
@@ -135,21 +91,14 @@ namespace upsylon
                 {
                 public:
                     hashing::fnv H;
-                    hasher() throw() : H() {}
-                    ~hasher() throw() {}
-                    size_t operator()(const edge_label &id) throw()
-                    {
-                        H.set();
-                        id.run(H);
-                        return H.key<size_t>();
-                    }
+                    hasher() throw();
+                    ~hasher() throw();
+                    size_t operator()(const edge_label &id) throw();
+
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(hasher);
                 };
             };
-
-
-
 
             //! a unique point is an identifier and its position
             class unique_point : public counted_object
@@ -177,13 +126,7 @@ namespace upsylon
                 segment           *prev;
                 const shared_point a;
                 const shared_point b;
-                explicit segment(unique_point       *pa, unique_point     *pb) throw() :
-                next(0), prev(0), a(pa), b(pb)
-                {
-                    assert(a->refcount()>1); assert( object::is_block(pa) );
-                    assert(b->refcount()>1); assert( object::is_block(pb) );
-                }
-
+                explicit segment(unique_point *pa, unique_point *pb) throw() ;
                 virtual ~segment() throw();
 
             private:
@@ -204,47 +147,12 @@ namespace upsylon
                 segment::list segments;
 
                 //! get one point or create it from fallback
-                unique_point * operator()(const coordinate &c, const vertex &fallback)
-                {
-                    const edge_label tag(c);
-                    shared_point *psp = search(tag);
-                    if(psp)
-                    {
-                        return & **psp;
-                    }
-                    else
-                    {
-                        unique_point      *up = new unique_point(tag,fallback);
-                        const shared_point sp = up; assert(tag==sp->tag);
-                        if(!insert(sp)) throw exception("unexpected multiple iso2d::vertex @(%d,%d,+%u)!",int(c.i), int(c.j), c.q);
-                        return up;
-                    }
-                }
-
+                unique_point * operator()(const coordinate &c, const vertex &fallback);
 
 
                 //! get one point or create it from two points
                 unique_point * operator()(const coordinate &c0, const vertex &p0, const double v0,
-                                          const coordinate &c1, const vertex &p1, const double v1)
-                {
-                    const edge_label tag(c0,c1);
-                    shared_point *psp = search(tag);
-                    if( psp )
-                    {
-                        return & **psp;
-                    }
-                    else
-                    {
-                        const vertex       vv = zfind(p0, v0, p1, v1);
-                        unique_point      *up = new unique_point(tag,vv);
-                        const shared_point sp = up;
-                        if(!insert(sp)) throw exception("unexpected multiple iso2d::vertex @(%d,%d,+%u)-(%d,%d,+%u)!",
-                                                        int(tag.lower.i), int(tag.lower.j), tag.lower.q,
-                                                        int(tag.upper.i), int(tag.upper.j), tag.upper.q
-                                                        );
-                        return up;
-                    }
-                }
+                                          const coordinate &c1, const vertex &p1, const double v1);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(shared_points);
