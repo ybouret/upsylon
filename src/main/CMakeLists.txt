@@ -190,6 +190,19 @@ SET(lang_pattern_srcs ${lang_pattern_decl} ${lang_pattern_code})
 SOURCE_GROUP( lang/pattern FILES ${lang_pattern_srcs} )
 INSTALL( FILES ${lang_pattern_decl} DESTINATION include/y/lang/pattern )
 
+FILE(GLOB lang_lexical_decl y/lang/lexical/*.hpp)
+FILE(GLOB lang_lexical_code y/lang/lexical/*.cpp)
+SET(lang_lexical_srcs ${lang_lexical_decl} ${lang_lexical_code})
+SOURCE_GROUP( lang/lexical FILES ${lang_lexical_srcs} )
+INSTALL( FILES ${lang_lexical_decl} DESTINATION include/y/lang/lexical )
+
+FILE(GLOB lexical_plugin_decl y/lang/lexical/plugin/*.hpp)
+FILE(GLOB lexical_plugin_code y/lang/lexical/plugin/*.cpp)
+SET(lexical_plugin_srcs ${lexical_plugin_decl} ${lexical_plugin_code})
+SOURCE_GROUP( lang/lexical/plugin FILES ${lexical_plugin_srcs} )
+INSTALL( FILES ${lexical_plugin_decl} DESTINATION include/y/lang/lexical/plugin )
+
+
 FILE(GLOB geometry_decl y/geometry/*.hpp)
 FILE(GLOB geometry_code y/geometry/*.cpp)
 SET(geometry_srcs ${geometry_decl} ${geometry_code})
@@ -225,7 +238,7 @@ ${functor_srcs}
 ${fs_srcs}
 ${ipso_srcs}
 ${rtld_srcs}
-${lang_srcs} ${lang_pattern_srcs}
+${lang_srcs} ${lang_pattern_srcs} ${lang_lexical_srcs} ${lexical_plugin_srcs}
 ${geometry_srcs}
 )
  

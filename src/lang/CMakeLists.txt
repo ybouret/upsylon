@@ -15,17 +15,17 @@ INSTALL( FILES ${main_decl} DESTINATION include/y/lang )
 #SOURCE_GROUP( lang/pattern FILES ${pattern_srcs} )
 #INSTALL( FILES ${pattern_decl} DESTINATION include/y/lang/pattern )
 
-FILE(GLOB lexical_decl y/lang/lexical/*.hpp)
-FILE(GLOB lexical_code y/lang/lexical/*.cpp)
-SET(lexical_srcs ${lexical_decl} ${lexical_code})
-SOURCE_GROUP( lang/lexical FILES ${lexical_srcs} )
-INSTALL( FILES ${lexical_decl} DESTINATION include/y/lang/lexical )
+#FILE(GLOB lexical_decl y/lang/lexical/*.hpp)
+#FILE(GLOB lexical_code y/lang/lexical/*.cpp)
+#SET(lexical_srcs ${lexical_decl} ${lexical_code})
+#SOURCE_GROUP( lang/lexical FILES ${lexical_srcs} )
+#INSTALL( FILES ${lexical_decl} DESTINATION include/y/lang/lexical )
 
-FILE(GLOB lexical_plugin_decl y/lang/lexical/plugin/*.hpp)
-FILE(GLOB lexical_plugin_code y/lang/lexical/plugin/*.cpp)
-SET(lexical_plugin_srcs ${lexical_plugin_decl} ${lexical_plugin_code})
-SOURCE_GROUP( lang/lexical/plugin FILES ${lexical_plugin_srcs} )
-INSTALL( FILES ${lexical_plugin_decl} DESTINATION include/y/lang/lexical/plugin )
+#FILE(GLOB lexical_plugin_decl y/lang/lexical/plugin/*.hpp)
+#FILE(GLOB lexical_plugin_code y/lang/lexical/plugin/*.cpp)
+#SET(lexical_plugin_srcs ${lexical_plugin_decl} ${lexical_plugin_code})
+#SOURCE_GROUP( lang/lexical/plugin FILES ${lexical_plugin_srcs} )
+#INSTALL( FILES ${lexical_plugin_decl} DESTINATION include/y/lang/lexical/plugin )
 
 FILE(GLOB syntax_decl y/lang/syntax/*.hpp)
 FILE(GLOB syntax_code y/lang/syntax/*.cpp)
@@ -41,8 +41,8 @@ INSTALL( FILES ${dynamo_decl} DESTINATION include/y/lang/dynamo )
 
 ADD_LIBRARY(y-lang STATIC 
 ${main_srcs} 
-${lexical_srcs}
-${lexical_plugin_srcs}
+#${lexical_srcs}
+#${lexical_plugin_srcs}
 ${syntax_srcs}
 ${dynamo_srcs}
 )
