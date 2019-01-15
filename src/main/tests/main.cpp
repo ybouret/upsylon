@@ -101,7 +101,6 @@ Y_UTEST_INIT(100)
     Y_UTEST(scanner);
     Y_UTEST(lex);
     
-    Y_UTEST(geom_c2d);
     Y_UTEST(geom_iso2d);
 }
 Y_UTEST_EXEC()
