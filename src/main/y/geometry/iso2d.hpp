@@ -40,12 +40,116 @@ namespace upsylon
             //
             // iso level is on a vertex
             //__________________________________________________________________
-            static const unsigned vertex0 = 0x01<<0; //!< bit 1
-            static const unsigned vertex1 = 0x01<<1; //!< bit 2
-            static const unsigned vertex2 = 0x01<<2; //!< bit 3
-            static const unsigned vertex3 = 0x01<<3; //!< bit 4
-            static const unsigned vertex4 = 0x01<<4; //!< bit 5
-            
+            static const unsigned full = 0x00;
+            static const unsigned half = 0x01;
+
+            //! logical vertex coordinate
+            class coordinate
+            {
+            public:
+                const unit_t   i;
+                const unit_t   j;
+                const unsigned q;
+
+                coordinate(const unit_t ii, const unit_t jj, const unsigned qq) throw() : i(ii), j(jj), q(qq) { assert(q<=1); }
+                ~coordinate() throw() {}
+                coordinate(const coordinate &other) throw() : i(other.i), j(other.j), q(other.q) {}
+
+                friend bool operator==( const coordinate &lhs, const coordinate &rhs) throw()
+                {
+                    return (lhs.i==rhs.i) && (lhs.j==rhs.j) && (lhs.q==rhs.q);
+                }
+
+                static int compare(const coordinate &lhs, const coordinate &rhs) throw()
+                {
+                    if(lhs.i<rhs.i)
+                    {
+                        return -1;
+                    }
+                    else if(rhs.i<lhs.i)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        assert(lhs.i==rhs.i);
+                        if(lhs.j<rhs.j)
+                        {
+                            return -1;
+                        }
+                        else if(rhs.j<lhs.j)
+                        {
+                            return 1;
+                        }
+                        else
+                        {
+                            assert(rhs.j==lhs.j);
+                            return (lhs.q<rhs.q) ? -1 : ( (rhs.q<lhs.q) ? 1:0 );
+                        }
+                    }
+                }
+
+                void run( hashing::function &H ) const throw()
+                {
+                    H.run_type(i);
+                    H.run_type(j);
+                    H.run_type(q);
+                }
+
+            private:
+                Y_DISABLE_ASSIGN(coordinate);
+            };
+
+            //! ordered pair of coordinates
+            class edge_label
+            {
+            public:
+                const coordinate lower;
+                const coordinate upper;
+
+                edge_label( const coordinate &only ) throw() : lower(only), upper(only) {}
+                edge_label( const coordinate &a, const coordinate &b) throw() : lower(a), upper(b)
+                {
+                    if(coordinate::compare(lower,upper)>0) mswap( (void*)&lower, (void*)&upper, sizeof(coordinate) );
+                }
+
+                edge_label(const edge_label &other) throw() : lower(other.lower), upper(other.upper) {}
+
+                void run( hashing::function &H ) const throw()
+                {
+                    lower.run(H);
+                    upper.run(H);
+                }
+
+                friend bool operator==(const edge_label &lhs, const edge_label &rhs) throw()
+                {
+                    return (lhs.lower==rhs.lower) && (lhs.upper==rhs.upper);
+                }
+
+
+            private:
+                Y_DISABLE_ASSIGN(edge_label);
+
+            public:
+                class hasher
+                {
+                public:
+                    hashing::fnv H;
+                    hasher() throw() : H() {}
+                    ~hasher() throw() {}
+                    size_t operator()(const edge_label &id) throw()
+                    {
+                        H.set();
+                        id.run(H);
+                        return H.key<size_t>();
+                    }
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(hasher);
+                };
+            };
+
+
+
             //! identifier for a point of an iso level
             class identifier
             {
@@ -322,6 +426,15 @@ namespace upsylon
                             vertex(x0,y1)
                         };
 
+                        const coordinate coord[5] =
+                        {
+                            coordinate(i0,j0,half),
+                            coordinate(i0,j0,full),
+                            coordinate(i1,j0,full),
+                            coordinate(i1,j1,full),
+                            coordinate(i0,j1,full)
+                        };
+
                         //------------------------------------------------------
                         // loop over levels
                         //------------------------------------------------------
@@ -342,6 +455,7 @@ namespace upsylon
                             const double        f0   = 0.25*(f[1]+f[2]+f[3]+f[4]);
                             const unsigned      q0   = 0x01<<m0;
                             const unsigned      s0   = (sign_flag(f0) << sign_shift0);
+                            const coordinate    c0   = coord[m0];
                             for(size_t l=0;l<4;++l)
                             {
                                 //----------------------------------------------
@@ -351,7 +465,9 @@ namespace upsylon
                                 const size_t        m2 = tri[l][1];
                                 const unsigned      q1 = 0x01 << m1;
                                 const unsigned      q2 = 0x01 << m2;
-                                
+                                const coordinate    c1 = coord[m1];
+                                const coordinate    c2 = coord[m2];
+
                                 //----------------------------------------------
                                 // get real coordinates
                                 //----------------------------------------------
@@ -384,7 +500,6 @@ namespace upsylon
                                     case neg0|pos1|neg2:
                                     case pos0|neg1|pos2:
                                         segments.push_back( new segment(db(q0,p0,f0,q1,p1,f1),db(q1,p1,f1,q2,p2,f2)) );
-                                        //cb( zfind(p0,f0,p1,f1), zfind(p1,f1,p2,f2) );
                                         break;
 
                                         // (p0/p2) - (p1/p2)

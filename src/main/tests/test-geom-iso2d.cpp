@@ -8,6 +8,27 @@ using namespace geometry;
 
 Y_UTEST(geom_iso2d)
 {
+    {
+        for(size_t iter=10+alea.leq(100);iter>0;--iter)
+        {
+            const iso2d::coordinate c1(100 - unit_t( alea.leq(200) ),100 - unit_t( alea.leq(200) ), alea.choice() ? 1 : 0);
+            const iso2d::coordinate c2(100 - unit_t( alea.leq(200) ),100 - unit_t( alea.leq(200) ), alea.choice() ? 1 : 0);
+
+            Y_ASSERT(c1==c1);
+            Y_ASSERT(c2==c2);
+
+            const iso2d::edge_label a(c1,c1);
+            const iso2d::edge_label b(c1,c2);
+            const iso2d::edge_label c(c2,c1);
+            Y_ASSERT(b==c);
+            iso2d::edge_label::hasher H;
+            Y_ASSERT( H(b) == H(c) );
+
+
+        }
+    }
+
+#if 0
     if(true)
     {
         iso2d::shared_points db;
@@ -28,6 +49,7 @@ Y_UTEST(geom_iso2d)
         std::cerr << "#unique_point=" << db.size() << std::endl;
 
     }
+#endif
 
     const size_t   nx=60;
     const size_t   ny=80;
@@ -60,6 +82,8 @@ Y_UTEST(geom_iso2d)
     z.push_back(2);
     z.push_back(5);
 
+    return 0;
+    
     std::cerr << "Contours for z=" << z << std::endl;
     {
         ios::ocstream fpp("iso2dp.dat");
