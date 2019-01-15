@@ -27,6 +27,7 @@ namespace upsylon
             return vertex( pa.x + lam * (pb.x-pa.x), pa.y + lam * (pb.y-pa.y) );
         }
 
+#if 0
         //
         iso2d:: identifier:: identifier(const unit_t ii, const unit_t jj, const unsigned pp) throw() :
         i(ii), j(jj), p(pp) {}
@@ -52,9 +53,10 @@ namespace upsylon
             const size_t ans = H.key<size_t>();
             return ans;
         }
+#endif
 
         //
-        iso2d:: unique_point :: unique_point(const identifier &id,
+        iso2d:: unique_point :: unique_point(const edge_label &id,
                                              const vertex     &v) throw() :
         tag(id),
         vtx(v)
@@ -66,7 +68,7 @@ namespace upsylon
         {
         }
 
-        const iso2d::identifier & iso2d::unique_point:: key() const throw() { return tag; }
+        const iso2d::edge_label & iso2d::unique_point:: key() const throw() { return tag; }
 
 
         

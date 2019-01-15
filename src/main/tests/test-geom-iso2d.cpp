@@ -82,8 +82,7 @@ Y_UTEST(geom_iso2d)
     z.push_back(2);
     z.push_back(5);
 
-    return 0;
-    
+
     std::cerr << "Contours for z=" << z << std::endl;
     {
         ios::ocstream fpp("iso2dp.dat");
@@ -97,14 +96,14 @@ Y_UTEST(geom_iso2d)
             std::cerr << "#L[" << i << "]=" << L[i]->size() << "/segments=" << L[i]->segments.size << std::endl;
             for( const iso2d::segment *s = L[i]->segments.head;s;s=s->next)
             {
-                fps("%g %g %u\n",   s->a->vtx.x, s->a->vtx.y, unsigned(i));
-                fps("%g %g %u\n\n", s->b->vtx.x, s->b->vtx.y, unsigned(i));
+                fps("%g %g %u 0x%x\n",   s->a->vtx.x, s->a->vtx.y, unsigned(i), unsigned(L[i]->hash(s->a->tag)) );
+                fps("%g %g %u 0x%x\n\n", s->b->vtx.x, s->b->vtx.y, unsigned(i), unsigned(L[i]->hash(s->b->tag)) );
             }
 
             for( iso2d::shared_points::iterator j=L[i]->begin(); j!= L[i]->end(); ++j)
             {
                 const iso2d::unique_point &p = **j;
-                fpp("%g %g %u\n",p.vtx.x, p.vtx.y, unsigned(i));
+                fpp("%g %g %u 0x%08x\n",p.vtx.x, p.vtx.y, unsigned(i), unsigned(L[i]->hash(p.tag)) );
             }
 
         }

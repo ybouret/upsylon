@@ -150,62 +150,24 @@ namespace upsylon
 
 
 
-            //! identifier for a point of an iso level
-            class identifier
-            {
-            public:
-                const unit_t   i; //!< index of the square
-                const unit_t   j; //!< index of the square
-                const unsigned p; //!< position within the square
-
-                identifier(const unit_t ii, const unit_t jj, const unsigned pp) throw();
-                identifier(const identifier &other) throw();
-                ~identifier() throw();
-
-                friend bool operator==(const identifier &lhs, const identifier &rhs) throw()
-                {
-                    return (lhs.i==rhs.i) && (lhs.j==rhs.j) && (lhs.p==rhs.p);
-                }
-
-                inline friend std::ostream & operator<<( std::ostream &os, const identifier &id )
-                {
-                    os << "[" << id.i << "," << id.j << "@" << id.p << "]";
-                    return os;
-                }
-
-            private:
-                Y_DISABLE_ASSIGN(identifier);
-            public:
-                class hasher
-                {
-                public:
-                    hashing::fnv H;
-                    hasher() throw();
-                    ~hasher() throw();
-                    size_t operator()(const identifier &id) throw();
-
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(hasher);
-                };
-            };
 
             //! a unique point is an identifier and its position
             class unique_point : public counted_object
             {
             public:
-                const identifier tag; //!< logical  identifier
+                const edge_label tag; //!< logical  identifier
                 const vertex     vtx; //!< physical position
 
-                explicit unique_point(const identifier &id, const vertex &v) throw();
+                explicit unique_point(const edge_label &id, const vertex &v) throw();
                 virtual ~unique_point() throw();
-                const identifier & key() const throw();
+                const edge_label & key() const throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(unique_point);
             };
 
-            typedef intr_ptr<identifier,unique_point>               shared_point;
-            typedef set<identifier,shared_point,identifier::hasher> unique_points;
+            typedef intr_ptr<edge_label,unique_point>               shared_point;
+            typedef set<edge_label,shared_point,edge_label::hasher> unique_points;
 
             class segment : public object
             {
@@ -240,14 +202,13 @@ namespace upsylon
                 virtual ~shared_points() throw();
 
                 segment::list segments;
-                unit_t        i,j;
 
                 //! get one point or create it from fallback
-                unique_point * operator()(const unsigned p, const vertex &fallback)
+                unique_point * operator()(const coordinate &c, const vertex &fallback)
                 {
-                    const identifier tag(i,j,p);
-                    shared_point    *psp = search(tag);
-                    if( 0!=psp )
+                    const edge_label tag(c);
+                    shared_point *psp = search(tag);
+                    if(psp)
                     {
                         return & **psp;
                     }
@@ -255,30 +216,32 @@ namespace upsylon
                     {
                         unique_point      *up = new unique_point(tag,fallback);
                         const shared_point sp = up; assert(tag==sp->tag);
-                        if(!insert(sp)) throw exception("unexpected multiple iso2d::vertex @(%d,%d,+%u)!",int(i), int(j), p);
+                        if(!insert(sp)) throw exception("unexpected multiple iso2d::vertex @(%d,%d,+%u)!",int(c.i), int(c.j), c.q);
                         return up;
                     }
                 }
 
+
+
                 //! get one point or create it from two points
-                unique_point * operator()(const unsigned q0, const vertex &p0, const double v0,
-                                          const unsigned q1, const vertex &p1, const double v1)
+                unique_point * operator()(const coordinate &c0, const vertex &p0, const double v0,
+                                          const coordinate &c1, const vertex &p1, const double v1)
                 {
-                    const identifier tag(i,j,q0|q1);
+                    const edge_label tag(c0,c1);
                     shared_point *psp = search(tag);
                     if( psp )
                     {
-                        assert(tag== (**psp).tag);
-                        shared_point &sp = *psp;
-                        unique_point &up = *sp;
-                        return &up;
+                        return & **psp;
                     }
                     else
                     {
                         const vertex       vv = zfind(p0, v0, p1, v1);
                         unique_point      *up = new unique_point(tag,vv);
                         const shared_point sp = up;
-                        if(!insert(sp)) throw exception("unexpected multiple iso2d::vertex @(%d,%d,+%u,+%u)!", int(i), int(j), q0,q1);
+                        if(!insert(sp)) throw exception("unexpected multiple iso2d::vertex @(%d,%d,+%u)-(%d,%d,+%u)!",
+                                                        int(tag.lower.i), int(tag.lower.j), tag.lower.q,
+                                                        int(tag.upper.i), int(tag.upper.j), tag.upper.q
+                                                        );
                         return up;
                     }
                 }
@@ -444,8 +407,6 @@ namespace upsylon
                             const double  f[5] = { 0, g[1]-zk, g[2]-zk, g[3]-zk, g[4]-zk };
                             shared_points &db       = *lvl[k];
 							segment::list &segments = db.segments;
-                            db.i = i0;
-                            db.j = j0;
 
                             //--------------------------------------------------
                             // loop over triangles
@@ -453,7 +414,6 @@ namespace upsylon
                             static const size_t m0   = 0;
                             const vertex        p0   = vtx[m0];
                             const double        f0   = 0.25*(f[1]+f[2]+f[3]+f[4]);
-                            const unsigned      q0   = 0x01<<m0;
                             const unsigned      s0   = (sign_flag(f0) << sign_shift0);
                             const coordinate    c0   = coord[m0];
                             for(size_t l=0;l<4;++l)
@@ -463,8 +423,6 @@ namespace upsylon
                                 //----------------------------------------------
                                 const size_t        m1 = tri[l][0];
                                 const size_t        m2 = tri[l][1];
-                                const unsigned      q1 = 0x01 << m1;
-                                const unsigned      q2 = 0x01 << m2;
                                 const coordinate    c1 = coord[m1];
                                 const coordinate    c2 = coord[m2];
 
@@ -493,19 +451,19 @@ namespace upsylon
                                         // (p0/p1) - (p0/p2)
                                     case neg0|pos1|pos2:
                                     case pos0|neg1|neg2:
-                                        segments.push_back( new segment(db(q0,p0,f0,q1,p1,f1),db(q0,p0,f0,q2,p2,f2)) );
+                                        segments.push_back( new segment(db(c0,p0,f0,c1,p1,f1),db(c0,p0,f0,c2,p2,f2)) );
                                         break;
 
                                         // (p0/p1) - (p1/p2)
                                     case neg0|pos1|neg2:
                                     case pos0|neg1|pos2:
-                                        segments.push_back( new segment(db(q0,p0,f0,q1,p1,f1),db(q1,p1,f1,q2,p2,f2)) );
+                                        segments.push_back( new segment(db(c0,p0,f0,c1,p1,f1),db(c1,p1,f1,c2,p2,f2)) );
                                         break;
 
                                         // (p0/p2) - (p1/p2)
                                     case neg0|neg1|pos2:
                                     case pos0|pos1|neg2:
-                                        segments.push_back( new segment(db(q0,p0,f0,q2,p2,f2),db(q1,p1,f1,q2,p2,f2)) );
+                                        segments.push_back( new segment(db(c0,p0,f0,c2,p2,f2),db(c1,p1,f1,c2,p2,f2)) );
                                         break;
 
                                         //--------------------------------------
@@ -517,19 +475,19 @@ namespace upsylon
                                         // p0 - (p1/p2)
                                     case zzz0|pos1|neg2:
                                     case zzz0|neg1|pos2:
-                                        segments.push_back( new segment(db(q0,p0),db(q1,p1,f1,q2,p2,f2)) );
+                                        segments.push_back( new segment(db(c0,p0),db(c1,p1,f1,c2,p2,f2)) );
                                         break;
 
                                         // p1 - (p0/p2)
                                     case pos0|zzz1|neg2:
                                     case neg0|zzz1|pos2:
-                                        segments.push_back( new segment(db(q1,p1),db(q0,p0,f0,q2,p2,f2)) );
+                                        segments.push_back( new segment(db(c1,p1),db(c0,p0,f0,c2,p2,f2)) );
                                         break;
 
                                         // p2 - (p0/p1)
                                     case pos0|neg1|zzz2:
                                     case neg0|pos1|zzz2:
-                                        segments.push_back( new segment(db(q2,p2),db(q0,p0,f0,q1,p1,f1)) );
+                                        segments.push_back( new segment(db(c2,p2),db(c0,p0,f0,c1,p1,f1)) );
                                         break;
 
                                         //--------------------------------------
@@ -541,19 +499,19 @@ namespace upsylon
                                         // p0-p1
                                     case zzz0|zzz1|pos2:
                                     case zzz0|zzz1|neg2:
-                                        db.segments.push_back( new segment(db(q0,p0),db(q0,p0)) );
+                                        segments.push_back( new segment(db(c0,p0),db(c1,p1)) );
                                         break;
 
                                         // p1-p2
                                     case neg0|zzz1|zzz2:
                                     case pos0|zzz1|zzz2:
-                                        db.segments.push_back( new segment(db(q1,p1),db(q2,p2)) );
+                                        segments.push_back( new segment(db(c1,p1),db(c2,p2)) );
                                         break;
 
                                         // p0-p2
                                     case zzz0|neg1|zzz2:
                                     case zzz0|pos1|zzz2:
-                                        db.segments.push_back( new segment(db(q0,p0),db(q2,p2)) );
+                                        segments.push_back( new segment(db(c0,p0),db(c2,p2)) );
                                         break;
 
                                     default:
