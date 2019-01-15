@@ -112,12 +112,16 @@ Y_UTEST(geom_iso2d)
     {
         vector<double> z;
         z.push_back(4);
+        z.push_back(5);
         z.push_back(6);
         z.push_back(8);
 
         iso2d::levels L;
         iso2d::scan( L, M, 1, nx, 1, ny, X, Y, z);
         std::cerr << "#L=" << L.size() << std::endl;
+
+        iso2d::lines Lines;
+
         ios::ocstream fps("multi2d.dat");
         for(size_t i=1;i<=L.size();++i)
         {
@@ -129,6 +133,22 @@ Y_UTEST(geom_iso2d)
                 fps("%g %g %u #0x%x\n\n", s->b->vtx.x, s->b->vtx.y, unsigned(i), unsigned(L[i]->hash(s->b->tag)) );
             }
 
+            Lines.connect(L[i]->segments);
+            std::cerr << "#Lines=" << Lines.size << std::endl;
+            {
+                const string  filename = "line" + vformat("%g",z[i]) + ".dat";
+                ios::ocstream fp(filename);
+                unsigned count=1;
+                for(const iso2d::line *l = Lines.head; l; l=l->next, ++count)
+                {
+                    fp << "#\n";
+                    for(const iso2d::point *p = l->head;p;p=p->next)
+                    {
+                        fp("%g %g %u\n", (*p)->vtx.x, (*p)->vtx.y, count);
+                    }
+                    fp << "\n";
+                }
+            }
         }
 
     }

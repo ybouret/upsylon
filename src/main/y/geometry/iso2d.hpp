@@ -462,6 +462,53 @@ namespace upsylon
 
             }
             
+            //! a linked shared_point
+            class point : public object, public shared_point
+            {
+            public:
+                typedef core::list_of_cpp<point> list; //!< alias
+
+                point *next; //!< for list
+                point *prev; //!< for list
+
+                //! setup
+                point(const shared_point &p) throw();
+
+                //! destructor
+                virtual ~point() throw();
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(point);
+            };
+
+            //! a list of points
+            class line : public object, public point::list
+            {
+            public:
+                typedef core::list_of_cpp<line> list; //!< alias
+                line *next; //!< for list
+                line *prev; //!< for list
+
+                explicit line() throw(); //!< setup
+                virtual ~line() throw(); //!< setup
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(line);
+            };
+
+            //! a set of lines from a set of segments
+            class lines : public line::list
+            {
+            public:
+                explicit lines() throw();
+                virtual ~lines() throw();
+
+                //! connect segments into connected line
+                void connect( const segment::list &segments );
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(lines);
+            };
 
         };
 

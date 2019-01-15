@@ -45,6 +45,17 @@ namespace upsylon
             return os;
         }
 
+        //! testing equality
+        inline friend bool operator==( const ptr<T> &lhs, const ptr<T> &rhs) throw()
+        {
+            return (lhs.pointee==rhs.pointee);
+        }
+
+        //! testing difference
+        inline friend bool operator!=( const ptr<T> &lhs, const ptr<T> &rhs) throw()
+        {
+            return (lhs.pointee!=rhs.pointee);
+        }
         
     protected:
         pointee_type pointee; //!< internal pointer
