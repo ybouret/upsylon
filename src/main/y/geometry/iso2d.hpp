@@ -1,3 +1,4 @@
+//! \file
 #ifndef Y_GEOMETRY_ISO2D_INCLUDED
 #define Y_GEOMETRY_ISO2D_INCLUDED 1
 
@@ -33,33 +34,39 @@ namespace upsylon
          */
         struct iso2d
         {
-            typedef point2d<double> vertex;
+            typedef point2d<double> vertex; //!< alias
 
             //__________________________________________________________________
             //
             // iso level is on a vertex
             //__________________________________________________________________
-            static const unsigned full = 0x00;
-            static const unsigned half = 0x01;
+            static const unsigned full = 0x00; //!< for full coordinate
+            static const unsigned half = 0x01; //!< for half coordinate
 
             //! logical vertex coordinate
             class coordinate
             {
             public:
-                const unit_t   i;
-                const unit_t   j;
-                const unsigned q;
+                const unit_t   i; //!< i index of the data
+                const unit_t   j; //!< j index if the data
+                const unsigned q; //!< full|half
 
+                //! setup
                 coordinate(const unit_t ii, const unit_t jj, const unsigned qq) throw();
 
+                //! desctructor
                 ~coordinate() throw();
 
+                //! copy
                 coordinate(const coordinate &other) throw() ;
 
+                //! test equality
                 friend bool operator==( const coordinate &lhs, const coordinate &rhs) throw();
 
+                //! lexicographic compariston
                 static int compare(const coordinate &lhs, const coordinate &rhs) throw();
 
+                //! update hash function value
                 void run( hashing::function &H ) const throw();
 
             private:
@@ -70,30 +77,36 @@ namespace upsylon
             class edge_label
             {
             public:
-                const coordinate lower;
-                const coordinate upper;
+                const coordinate lower; //!< lexicographic lower
+                const coordinate upper; //!< lexicographic upper
 
+                //! lower=upper=only
                 edge_label( const coordinate &only ) throw();
 
+                //! setup and order
                 edge_label( const coordinate &a, const coordinate &b) throw() ;
 
+                //! copy
                 edge_label(const edge_label &other) throw();
 
+                //! update hash function
                 void run( hashing::function &H ) const throw();
 
+                //! equality of lower and upper for both
                 friend bool operator==(const edge_label &lhs, const edge_label &rhs) throw();
 
             private:
                 Y_DISABLE_ASSIGN(edge_label);
 
             public:
+                //! specialized hasher
                 class hasher
                 {
                 public:
-                    hashing::fnv H;
-                    hasher() throw();
-                    ~hasher() throw();
-                    size_t operator()(const edge_label &id) throw();
+                    hashing::fnv H;     //!< internal hash functon
+                    hasher() throw();   //!< setup
+                    ~hasher() throw();  //!< destruct
+                    size_t operator()(const edge_label &) throw(); //!< compute hash key
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(hasher);
@@ -107,26 +120,36 @@ namespace upsylon
                 const edge_label tag; //!< logical  identifier
                 const vertex     vtx; //!< physical position
 
+                //!setup
                 explicit unique_point(const edge_label &id, const vertex &v) throw();
+
+                //! desctructor
                 virtual ~unique_point() throw();
+
+                //! get the key for set
                 const edge_label & key() const throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(unique_point);
             };
 
-            typedef intr_ptr<edge_label,unique_point>               shared_point;
-            typedef set<edge_label,shared_point,edge_label::hasher> unique_points;
+            typedef intr_ptr<edge_label,unique_point>               shared_point;  //!< alias
+            typedef set<edge_label,shared_point,edge_label::hasher> unique_points; //!< alias
 
+            //! a segment connecting two shared points
             class segment : public object
             {
             public:
-                typedef core::list_of_cpp<segment> list;
-                segment           *next;
-                segment           *prev;
-                const shared_point a;
-                const shared_point b;
+                typedef core::list_of_cpp<segment> list; //!< alias
+                segment           *next; //!< for list
+                segment           *prev; //!< for list
+                const shared_point a;    //!< point from an iso-level
+                const shared_point b;    //!< point from an iso-level
+
+                //! setup
                 explicit segment(unique_point *pa, unique_point *pb) throw() ;
+
+                //! dersctructor
                 virtual ~segment() throw();
 
             private:
@@ -138,13 +161,14 @@ namespace upsylon
             static vertex   zfind(const vertex &pa, const double va,
                                   const vertex &pb, const double vb) throw();
 
+            //! database of points/segments for a given level value
             class shared_points : public unique_points, public counted
             {
             public:
-                explicit shared_points() throw();
-                virtual ~shared_points() throw();
+                explicit shared_points() throw(); //!< setup
+                virtual ~shared_points() throw(); //!< destructor
 
-                segment::list segments;
+                segment::list segments; //!< segments built from unique points
 
                 //! get one point or create it from fallback
                 unique_point * operator()(const coordinate &c, const vertex &fallback);
@@ -158,8 +182,8 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(shared_points);
             };
 
-            typedef arc_ptr<shared_points> level;
-            typedef vector<level>          levels;
+            typedef arc_ptr<shared_points> level;   //!< alias
+            typedef vector<level>          levels;  //!< alias
 
 
 
