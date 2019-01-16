@@ -6,6 +6,12 @@
 using namespace upsylon;
 using namespace geometry;
 
+namespace
+{
+    typedef iso2d::vertex vertex;
+
+}
+
 Y_UTEST(geom_iso2d)
 {
     if(true)
@@ -123,6 +129,7 @@ Y_UTEST(geom_iso2d)
         iso2d::lines Lines;
 
         ios::ocstream fps("multi2d.dat");
+        vector<vertex> curve;
         for(size_t i=1;i<=L.size();++i)
         {
             std::cerr << "@z=" << z[i] << std::endl;
@@ -141,6 +148,8 @@ Y_UTEST(geom_iso2d)
                 unsigned count=1;
                 for(const iso2d::line *l = Lines.head; l; l=l->next, ++count)
                 {
+                    l->compile_to(curve);
+                    std::cerr << "line#" << count << ": size=" << l->size << "/" << curve.size() << std::endl;
                     fp << "#\n";
                     for(const iso2d::point *p = l->head;p;p=p->next)
                     {

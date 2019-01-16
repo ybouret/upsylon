@@ -392,6 +392,16 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(lines);
             };
 
+            template <typename SEQUENCE_PTR>
+            static inline void compile( sequence<SEQUENCE_PTR> &output,
+                                       const levels            &input)
+            {
+                const size_t n = input.size();
+                output.free();
+                output.ensure(n);
+                
+            }
+
         };
 
     }
