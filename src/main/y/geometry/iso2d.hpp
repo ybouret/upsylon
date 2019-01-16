@@ -385,23 +385,47 @@ namespace upsylon
                 explicit lines() throw();
                 virtual ~lines() throw();
 
-                //! connect segments into connected line
+                //! convert segments into connected line
                 void connect( const segment::list &segments );
-                
+
+                //! generic conversion to a sequence of smart pointer to vertices
+                template <typename CURVE_PTR>
+                inline void compile_to( sequence<CURVE_PTR> &curves ) const
+                {
+                    curves.free();
+                    curves.ensure(size);
+                    for(const line *l=head;l;l=l->next)
+                    {
+                        typename CURVE_PTR::mutable_type *curve = new typename CURVE_PTR::mutable_type();
+                        {
+                            const CURVE_PTR ptr(curve);
+                            curves.push_back(ptr);
+                        }
+                        l->compile_to(*curve);
+                    }
+                }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(lines);
             };
 
+#if 0
             template <typename SEQUENCE_PTR>
-            static inline void compile( sequence<SEQUENCE_PTR> &output,
+            static inline void compile(sequence<SEQUENCE_PTR>  &output,
                                        const levels            &input)
             {
                 const size_t n = input.size();
                 output.free();
                 output.ensure(n);
-                
+                for(size_t i=1;i<=n;++i)
+                {
+                    const shared_points &db = *input[i];
+                    lines                il;
+                    il.connect(db.segments);
+                }
             }
-
+#endif
+            
         };
 
     }

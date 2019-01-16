@@ -2,6 +2,8 @@
 #include "y/utest/run.hpp"
 #include "y/container/matrix.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/ptr/shared.hpp"
+#include "y/sequence/list.hpp"
 
 using namespace upsylon;
 using namespace geometry;
@@ -145,17 +147,29 @@ Y_UTEST(geom_iso2d)
             {
                 const string  filename = "line" + vformat("%g",z[i]) + ".dat";
                 ios::ocstream fp(filename);
-                unsigned count=1;
-                for(const iso2d::line *l = Lines.head; l; l=l->next, ++count)
                 {
-                    l->compile_to(curve);
-                    std::cerr << "line#" << count << ": size=" << l->size << "/" << curve.size() << std::endl;
-                    fp << "#\n";
-                    for(const iso2d::point *p = l->head;p;p=p->next)
+                    unsigned count=1;
+                    for(const iso2d::line *l = Lines.head; l; l=l->next, ++count)
                     {
-                        fp("%g %g %u\n", (*p)->vtx.x, (*p)->vtx.y, count);
+                        l->compile_to(curve);
+                        std::cerr << "|_\t->line#" << count << ": size=" << l->size << "/" << curve.size() << std::endl;
+                        fp << "#\n";
+                        for(const iso2d::point *p = l->head;p;p=p->next)
+                        {
+                            fp("%g %g %u\n", (*p)->vtx.x, (*p)->vtx.y, count);
+                        }
+                        fp << "\n";
                     }
-                    fp << "\n";
+                }
+            }
+            {
+                list< shared_ptr< vector<vertex> > > curves;
+                Lines.compile_to(curves);
+                std::cerr << "|_#curves=" << curves.size() << std::endl;
+                for(size_t i=1;i<=curves.size();++i)
+                {
+                    shared_ptr< vector<vertex> > &c = curves[i];
+                    std::cerr << "  |_curve#" << i << " : " << c->size() << std::endl;
                 }
             }
         }
