@@ -28,6 +28,15 @@ namespace upsylon
             return vertex( pa.x + lam * (pb.x-pa.x), pa.y + lam * (pb.y-pa.y) );
         }
 
+    }
+
+}
+
+namespace upsylon
+{
+    namespace geometry
+    {
+
 
         //
         iso2d:: coordinate::  coordinate(const unit_t ii, const unit_t jj, const unsigned qq) throw() : i(ii), j(jj), q(qq) { assert(q<=1); }
@@ -81,6 +90,15 @@ namespace upsylon
             H.run_type(q);
         }
 
+    }
+
+}
+
+namespace upsylon
+{
+    namespace geometry
+    {
+
         //
         iso2d:: edge_label:: edge_label( const coordinate &only ) throw() : lower(only), upper(only) {}
 
@@ -115,6 +133,15 @@ namespace upsylon
             return H.key<size_t>();
         }
 
+    }
+
+}
+
+namespace upsylon
+{
+    namespace geometry
+    {
+
         //
         iso2d:: unique_point :: unique_point(const edge_label &id,
                                              const vertex     &v) throw() :
@@ -130,6 +157,14 @@ namespace upsylon
 
         const iso2d::edge_label & iso2d::unique_point:: key() const throw() { return tag; }
 
+    }
+
+}
+
+namespace upsylon
+{
+    namespace geometry
+    {
 
         //
         iso2d:: segment:: segment(unique_point       *pa, unique_point     *pb) throw() :
@@ -143,6 +178,15 @@ namespace upsylon
         {
         }
 
+    }
+
+}
+
+namespace upsylon
+{
+    namespace geometry
+    {
+
         //
         iso2d:: shared_points:: shared_points() throw(): segments() {}
 
@@ -150,7 +194,7 @@ namespace upsylon
 
 
         iso2d::unique_point * iso2d::shared_points:: operator()(const coordinate &c,
-                                                                 const vertex     &fallback)
+                                                                const vertex     &fallback)
         {
             const edge_label tag(c);
             shared_point *psp = search(tag);
@@ -189,17 +233,51 @@ namespace upsylon
             }
         }
 
+    }
+
+}
+
+namespace upsylon
+{
+    namespace geometry
+    {
+
         //
         iso2d:: point:: point(const shared_point &p) throw() : shared_point(p), next(0), prev(0) {}
 
         iso2d:: point:: ~point() throw() {}
 
+    }
 
+}
+
+namespace upsylon
+{
+    namespace geometry
+    {
         //
         iso2d:: line:: line() throw() : object(), point::list(), next(0), prev(0) {}
 
         iso2d:: line:: ~line() throw() {}
 
+        void iso2d:: line:: compile_to( sequence<vertex> &vertices ) const
+        {
+            vertices.free();
+            vertices.ensure(size);
+            for(const point *p=head;p;p=p->next)
+            {
+                vertices.push_front( (*p)->vtx );
+            }
+        }
+
+    }
+
+}
+
+namespace upsylon
+{
+    namespace geometry
+    {
         //
         iso2d:: lines:: ~lines() throw()
         {
