@@ -9,7 +9,6 @@
 #include "y/ptr/intr.hpp"
 #include "y/sequence/vector.hpp"
 
-
 namespace upsylon
 {
     namespace geometry
@@ -396,12 +395,12 @@ namespace upsylon
                     curves.ensure(size);
                     for(const line *l=head;l;l=l->next)
                     {
-                        typename CURVE_PTR::mutable_type *curve = new typename CURVE_PTR::mutable_type();
+                        typename CURVE_PTR::mutable_type *c = new typename CURVE_PTR::mutable_type();
                         {
-                            const CURVE_PTR ptr(curve);
+                            const CURVE_PTR ptr(c);
                             curves.push_back(ptr);
                         }
-                        l->compile_to(*curve);
+                        l->compile_to(*c);
                     }
                 }
 
@@ -409,10 +408,37 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(lines);
             };
 
-#if 0
-            template <typename SEQUENCE_PTR>
-            static inline void compile(sequence<SEQUENCE_PTR>  &output,
-                                       const levels            &input)
+            typedef vector<vertex> curve_type; //!< base class for curve
+
+            //! a curve, to be pointee
+            class curve : public curve_type, public counted
+            {
+            public:
+                typedef arc_ptr<curve> pointer;
+                explicit curve() throw() : curve_type() {}
+                virtual ~curve() throw() {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(curve);
+            };
+
+            typedef vector<curve::pointer> curves_type; //!< base class for curves
+            class curves : public curves_type, public counted
+            {
+            public:
+                typedef arc_ptr<curves> pointer;
+
+                explicit curves() throw() : curves_type() {}
+                virtual ~curves() throw() {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(curves);
+            };
+
+            typedef vector<curves::pointer> level_set;
+
+            static void convert(level_set    &output,
+                                const levels &input)
             {
                 const size_t n = input.size();
                 output.free();
@@ -422,9 +448,16 @@ namespace upsylon
                     const shared_points &db = *input[i];
                     lines                il;
                     il.connect(db.segments);
+                    curves *curves_ptr = new curves();
+                    {
+                        const curves::pointer tmp(curves_ptr);
+                        output.push_back(tmp);
+                    }
+                    il.compile_to(*curves_ptr);
                 }
             }
-#endif
+
+
             
         };
 
