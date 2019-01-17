@@ -6,15 +6,15 @@ namespace upsylon
     namespace geometry
     {
 
-        unsigned iso2d:: sign_flag( const double value ) throw()
+        unsigned Iso2d:: sign_flag( const double value ) throw()
         {
             if(value<0)      return sign_negative;
             else if(value>0) return sign_positive;
             else             return sign_zero;
         }
 
-        iso2d::vertex   iso2d::zfind(const vertex &pa, const double va,
-                                     const vertex &pb, const double vb) throw()
+        Iso2d::Vertex   Iso2d::zfind(const Vertex &pa, const double va,
+                                     const Vertex &pb, const double vb) throw()
         {
             assert(va*vb<=0);
             double num = -va;
@@ -25,7 +25,7 @@ namespace upsylon
                 den = -den;
             }
             const double lam = num/den;
-            return vertex( pa.x + lam * (pb.x-pa.x), pa.y + lam * (pb.y-pa.y) );
+            return Vertex( pa.x + lam * (pb.x-pa.x), pa.y + lam * (pb.y-pa.y) );
         }
 
     }
@@ -39,22 +39,22 @@ namespace upsylon
 
 
         //
-        iso2d:: coordinate::  coordinate(const unit_t ii, const unit_t jj, const unsigned qq) throw() : i(ii), j(jj), q(qq) { assert(q<=1); }
+        Iso2d:: Coordinate::  Coordinate(const unit_t ii, const unit_t jj, const unsigned qq) throw() : i(ii), j(jj), q(qq) { assert(q<=1); }
 
-        iso2d:: coordinate:: ~coordinate() throw()
+        Iso2d:: Coordinate:: ~Coordinate() throw()
         {
         }
 
-        iso2d:: coordinate:: coordinate(const coordinate &other) throw() :
+        Iso2d:: Coordinate:: Coordinate(const Coordinate &other) throw() :
         i(other.i), j(other.j), q(other.q) {}
 
-        bool operator==( const iso2d::coordinate &lhs, const iso2d::coordinate &rhs) throw()
+        bool operator==( const Iso2d::Coordinate &lhs, const Iso2d::Coordinate &rhs) throw()
         {
             return (lhs.i==rhs.i) && (lhs.j==rhs.j) && (lhs.q==rhs.q);
         }
 
 
-        int iso2d::coordinate:: compare(const coordinate &lhs, const coordinate &rhs) throw()
+        int Iso2d::Coordinate:: compare(const Coordinate &lhs, const Coordinate &rhs) throw()
         {
             if(lhs.i<rhs.i)
             {
@@ -83,7 +83,7 @@ namespace upsylon
             }
         }
 
-        void iso2d:: coordinate:: run( hashing::function &H ) const throw()
+        void Iso2d:: Coordinate:: run( hashing::function &H ) const throw()
         {
             H.run_type(i);
             H.run_type(j);
@@ -100,33 +100,33 @@ namespace upsylon
     {
 
         //
-        iso2d:: edge_label:: edge_label( const coordinate &only ) throw() : lower(only), upper(only) {}
+        Iso2d:: EdgeLabel:: EdgeLabel( const Coordinate &only ) throw() : lower(only), upper(only) {}
 
-        iso2d:: edge_label:: edge_label( const coordinate &a, const coordinate &b) throw() : lower(a), upper(b)
+        Iso2d:: EdgeLabel:: EdgeLabel( const Coordinate &a, const Coordinate &b) throw() : lower(a), upper(b)
         {
-            if(coordinate::compare(lower,upper)>0) mswap( (void*)&lower, (void*)&upper, sizeof(coordinate) );
+            if(Coordinate::compare(lower,upper)>0) mswap( (void*)&lower, (void*)&upper, sizeof(Coordinate) );
         }
 
-        iso2d:: edge_label:: edge_label(const edge_label &other) throw() : lower(other.lower), upper(other.upper) {}
+        Iso2d:: EdgeLabel:: EdgeLabel(const EdgeLabel &other) throw() : lower(other.lower), upper(other.upper) {}
 
 
-        void iso2d:: edge_label:: run( hashing::function &H ) const throw()
+        void Iso2d:: EdgeLabel:: run( hashing::function &H ) const throw()
         {
             lower.run(H);
             upper.run(H);
         }
 
-        bool operator==(const iso2d::edge_label &lhs, const iso2d::edge_label &rhs) throw()
+        bool operator==(const Iso2d::EdgeLabel &lhs, const Iso2d::EdgeLabel &rhs) throw()
         {
             return (lhs.lower==rhs.lower) && (lhs.upper==rhs.upper);
         }
 
         //
-        iso2d:: edge_label:: hasher:: hasher() throw() : H() {}
+        Iso2d:: EdgeLabel:: Hasher:: Hasher() throw() : H() {}
 
-        iso2d:: edge_label:: hasher:: ~hasher() throw()  {}
+        Iso2d:: EdgeLabel:: Hasher:: ~Hasher() throw()  {}
 
-        size_t iso2d:: edge_label:: hasher:: operator()( const edge_label &id) throw()
+        size_t Iso2d:: EdgeLabel:: Hasher:: operator()( const EdgeLabel &id) throw()
         {
             H.set();
             id.run(H);
@@ -143,19 +143,19 @@ namespace upsylon
     {
 
         //
-        iso2d:: unique_point :: unique_point(const edge_label &id,
-                                             const vertex     &v) throw() :
+        Iso2d:: UniquePoint :: UniquePoint(const EdgeLabel  &id,
+                                           const Vertex     &v) throw() :
         tag(id),
         vtx(v)
         {
             assert(tag==id);
         }
 
-        iso2d:: unique_point :: ~unique_point() throw()
+        Iso2d:: UniquePoint :: ~UniquePoint() throw()
         {
         }
 
-        const iso2d::edge_label & iso2d::unique_point:: key() const throw() { return tag; }
+        const Iso2d::EdgeLabel & Iso2d::UniquePoint:: key() const throw() { return tag; }
 
     }
 
@@ -167,14 +167,14 @@ namespace upsylon
     {
 
         //
-        iso2d:: segment:: segment(unique_point       *pa, unique_point     *pb) throw() :
+        Iso2d:: Segment:: Segment(UniquePoint       *pa, UniquePoint     *pb) throw() :
         next(0), prev(0), a(pa), b(pb)
         {
             assert(a->refcount()>1); assert( object::is_block(pa) );
             assert(b->refcount()>1); assert( object::is_block(pb) );
         }
 
-        iso2d:: segment:: ~segment() throw()
+        Iso2d:: Segment:: ~Segment() throw()
         {
         }
 
@@ -188,44 +188,44 @@ namespace upsylon
     {
 
         //
-        iso2d:: shared_points:: shared_points() throw(): segments() {}
+        Iso2d:: SharedPoints:: SharedPoints() throw(): segments() {}
 
-        iso2d:: shared_points:: ~shared_points() throw() {}
+        Iso2d:: SharedPoints:: ~SharedPoints() throw() {}
 
 
-        iso2d::unique_point * iso2d::shared_points:: operator()(const coordinate &c,
-                                                                const vertex     &fallback)
+        Iso2d::UniquePoint * Iso2d::SharedPoints:: operator()(const Coordinate &c,
+                                                               const Vertex     &fallback)
         {
-            const edge_label tag(c);
-            shared_point *psp = search(tag);
+            const EdgeLabel tag(c);
+            SharedPoint     *psp = search(tag);
             if(psp)
             {
                 return & **psp;
             }
             else
             {
-                unique_point      *up = new unique_point(tag,fallback);
-                const shared_point sp = up; assert(tag==sp->tag);
-                if(!insert(sp)) throw exception("unexpected multiple iso2d::vertex @(%d,%d,+%u)!",int(c.i), int(c.j), c.q);
+                UniquePoint       *up = new UniquePoint(tag,fallback);
+                const SharedPoint  sp = up; assert(tag==sp->tag);
+                if(!insert(sp)) throw exception("unexpected multiple Iso2d::vertex @(%d,%d,+%u)!",int(c.i), int(c.j), c.q);
                 return up;
             }
         }
 
-        iso2d::unique_point * iso2d::shared_points:: operator()(const coordinate &c0, const vertex &p0, const double v0,
-                                                                const coordinate &c1, const vertex &p1, const double v1)
+        Iso2d::UniquePoint * Iso2d::SharedPoints:: operator()(const Coordinate &c0, const Vertex &p0, const double v0,
+                                                                const Coordinate &c1, const Vertex &p1, const double v1)
         {
-            const edge_label tag(c0,c1);
-            shared_point *psp = search(tag);
+            const EdgeLabel tag(c0,c1);
+            SharedPoint    *psp = search(tag);
             if( psp )
             {
                 return & **psp;
             }
             else
             {
-                const vertex       vv = zfind(p0, v0, p1, v1);
-                unique_point      *up = new unique_point(tag,vv);
-                const shared_point sp = up;
-                if(!insert(sp)) throw exception("unexpected multiple iso2d::vertex @(%d,%d,+%u)-(%d,%d,+%u)!",
+                const Vertex       vv = zfind(p0, v0, p1, v1);
+                UniquePoint       *up = new UniquePoint(tag,vv);
+                const SharedPoint  sp = up;
+                if(!insert(sp)) throw exception("unexpected multiple Iso2d::vertex @(%d,%d,+%u)-(%d,%d,+%u)!",
                                                 int(tag.lower.i), int(tag.lower.j), tag.lower.q,
                                                 int(tag.upper.i), int(tag.upper.j), tag.upper.q
                                                 );
@@ -243,9 +243,9 @@ namespace upsylon
     {
 
         //
-        iso2d:: point:: point(const shared_point &p) throw() : shared_point(p), next(0), prev(0) {}
+        Iso2d:: Point:: Point(const SharedPoint &p) throw() : SharedPoint(p), next(0), prev(0) {}
 
-        iso2d:: point:: ~point() throw() {}
+        Iso2d:: Point:: ~Point() throw() {}
 
     }
 
@@ -256,15 +256,15 @@ namespace upsylon
     namespace geometry
     {
         //
-        iso2d:: line:: line() throw() : object(), point::list(), next(0), prev(0) {}
+        Iso2d:: Line:: Line() throw() : object(), Points(), next(0), prev(0) {}
 
-        iso2d:: line:: ~line() throw() {}
+        Iso2d:: Line:: ~Line() throw() {}
 
-        void iso2d:: line:: compile_to( sequence<vertex> &vertices ) const
+        void Iso2d:: Line:: compile_to( sequence<Vertex> &vertices ) const
         {
             vertices.free();
             vertices.ensure(size);
-            for(const point *p=head;p;p=p->next)
+            for(const Point *p=head;p;p=p->next)
             {
                 vertices.push_front( (*p)->vtx );
             }
@@ -279,57 +279,57 @@ namespace upsylon
     namespace geometry
     {
         //
-        iso2d:: lines:: ~lines() throw()
+        Iso2d:: Lines:: ~Lines() throw()
         {
         }
 
-        iso2d:: lines:: lines() throw() : line::list()
+        Iso2d:: Lines:: Lines() throw() : Line::list()
         {
         }
 
-        void iso2d:: lines:: connect(const segment::list &segments)
+        void Iso2d:: Lines:: connect(const Segments &segments)
         {
             clear();
             // loop over all segments
-            for(const segment *seg=segments.head;seg;seg=seg->next)
+            for(const Segment *seg=segments.head;seg;seg=seg->next)
             {
                 // find if one end of the segment matches a line
-                const shared_point &a = seg->a;
-                const shared_point &b = seg->b;
+                const SharedPoint &a = seg->a;
+                const SharedPoint &b = seg->b;
                 bool found = false;
-                for(line *l=head;l;l=l->next)
+                for(Line *l=head;l;l=l->next)
                 {
                     assert(l->size>0);
                     // check growing@head
                     {
-                        const shared_point &p = *(l->head);
+                        const SharedPoint &p = *(l->head);
                         if(a==p)
                         {
                             found = true;
-                            l->push_front( new point(b) );
+                            l->push_front( new Point(b) );
                             break;
                         }
                         if(b==p)
                         {
                             found = true;
-                            l->push_front( new point(a) );
+                            l->push_front( new Point(a) );
                             break;
                         }
                     }
 
                     // check growing@tail
                     {
-                        const shared_point &p = *(l->tail);
+                        const SharedPoint &p = *(l->tail);
                         if(a==p)
                         {
                             found = true;
-                            l->push_back( new point(b) );
+                            l->push_back( new Point(b) );
                             break;
                         }
                         if(b==p)
                         {
                             found = true;
-                            l->push_back( new point(a) );
+                            l->push_back( new Point(a) );
                             break;
                         }
                     }
@@ -339,17 +339,17 @@ namespace upsylon
                 if(found)
                 {
                     // try to merge
-                    lines temp;
+                    Lines temp;
                     while(size)
                     {
-                        line *l      = pop_front();
+                        Line *l      = pop_front();
                         bool  merged = false;
-                        const shared_point &l_head = *(l->head);
-                        const shared_point &l_tail = *(l->tail);
-                        for(line *k=head;k;k=k->next)
+                        const SharedPoint &l_head = *(l->head);
+                        const SharedPoint &l_tail = *(l->tail);
+                        for(Line *k=head;k;k=k->next)
                         {
-                            const shared_point &k_head = *(k->head);
-                            const shared_point &k_tail = *(k->tail);
+                            const SharedPoint &k_head = *(k->head);
+                            const SharedPoint &k_tail = *(k->tail);
 
                             if(k_tail==l_head)
                             {
@@ -408,10 +408,10 @@ namespace upsylon
                 else
                 {
                     // create a new line
-                    line *l = new line();
+                    Line *l = new Line();
                     push_back(l);
-                    l->push_back( new point(a) );
-                    l->push_back( new point(b) );
+                    l->push_back( new Point(a) );
+                    l->push_back( new Point(b) );
                 }
 
             }
@@ -419,6 +419,54 @@ namespace upsylon
     }
 
 }
+
+namespace upsylon
+{
+    namespace geometry
+    {
+
+        Iso2d:: Curve::  Curve() throw() : CurveType() {}
+        Iso2d:: Curve:: ~Curve() throw() {}
+
+    }
+}
+
+namespace upsylon
+{
+    namespace geometry
+    {
+
+        Iso2d:: Curves::  Curves() throw() : CurvesType() {}
+        Iso2d:: Curves:: ~Curves() throw() {}
+    }
+}
+
+namespace upsylon
+{
+    namespace geometry
+    {
+        void Iso2d:: convert(LevelSet     &output,
+                             const Levels &input)
+        {
+            const size_t n = input.size();
+            output.free();
+            output.ensure(n);
+            for(size_t i=1;i<=n;++i)
+            {
+                const SharedPoints  &db = *input[i];
+                Lines                Lines;
+                Lines.connect(db.segments);
+                Curves *curves_ptr = new Curves();
+                {
+                    const Curves::Pointer tmp(curves_ptr);
+                    output.push_back(tmp);
+                }
+                Lines.compile_to(*curves_ptr);
+            }
+        }
+    }
+}
+
 
 
 

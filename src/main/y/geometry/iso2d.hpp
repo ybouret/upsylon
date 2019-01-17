@@ -28,22 +28,22 @@ namespace upsylon
          1@(i ,j   )-----2@(i+1,j  )
 
          For a given level, a matching value can be found on a vertex or
-         on within an edge, which defines a set of unique coordinates
+         on within an edge, which defines a set of unique Coordinates
          for any point of the isoline
          */
-        struct iso2d
+        struct Iso2d
         {
-            typedef point2d<double> vertex; //!< alias
-
+            typedef point2d<double> Vertex;    //!< alias
+            typedef memory::pooled  Allocator; //!< for some levels, medium sized
             //__________________________________________________________________
             //
             // iso level is on a vertex
             //__________________________________________________________________
-            static const unsigned full = 0x00; //!< for full coordinate
-            static const unsigned half = 0x01; //!< for half coordinate
+            static const unsigned Full = 0x00; //!< for full Coordinate
+            static const unsigned Half = 0x01; //!< for half Coordinate
 
-            //! logical vertex coordinate
-            class coordinate
+            //! logical vertex Coordinate
+            class Coordinate
             {
             public:
                 const unit_t   i; //!< i index of the data
@@ -51,138 +51,139 @@ namespace upsylon
                 const unsigned q; //!< full|half
 
                 //! setup
-                coordinate(const unit_t ii, const unit_t jj, const unsigned qq) throw();
+                Coordinate(const unit_t ii, const unit_t jj, const unsigned qq) throw();
 
                 //! desctructor
-                ~coordinate() throw();
+                ~Coordinate() throw();
 
                 //! copy
-                coordinate(const coordinate &other) throw() ;
+                Coordinate(const Coordinate &other) throw() ;
 
                 //! test equality
-                friend bool operator==( const coordinate &lhs, const coordinate &rhs) throw();
+                friend bool operator==( const Coordinate &lhs, const Coordinate &rhs) throw();
 
                 //! lexicographic compariston
-                static int compare(const coordinate &lhs, const coordinate &rhs) throw();
+                static int compare(const Coordinate &lhs, const Coordinate &rhs) throw();
 
                 //! update hash function value
                 void run( hashing::function &H ) const throw();
 
             private:
-                Y_DISABLE_ASSIGN(coordinate);
+                Y_DISABLE_ASSIGN(Coordinate);
             };
 
-            //! ordered pair of coordinates
-            class edge_label
+            //! ordered pair of Coordinates
+            class EdgeLabel
             {
             public:
-                const coordinate lower; //!< lexicographic lower
-                const coordinate upper; //!< lexicographic upper
+                const Coordinate lower; //!< lexicographic lower
+                const Coordinate upper; //!< lexicographic upper
 
                 //! lower=upper=only
-                edge_label( const coordinate &only ) throw();
+                EdgeLabel( const Coordinate &only ) throw();
 
                 //! setup and order
-                edge_label( const coordinate &a, const coordinate &b) throw() ;
+                EdgeLabel( const Coordinate &a, const Coordinate &b) throw() ;
 
                 //! copy
-                edge_label(const edge_label &other) throw();
+                EdgeLabel(const EdgeLabel &other) throw();
 
                 //! update hash function
                 void run( hashing::function &H ) const throw();
 
                 //! equality of lower and upper for both
-                friend bool operator==(const edge_label &lhs, const edge_label &rhs) throw();
+                friend bool operator==(const EdgeLabel &lhs, const EdgeLabel &rhs) throw();
 
             private:
-                Y_DISABLE_ASSIGN(edge_label);
+                Y_DISABLE_ASSIGN(EdgeLabel);
 
             public:
                 //! specialized hasher
-                class hasher
+                class Hasher
                 {
                 public:
                     hashing::fnv H;     //!< internal hash functon
-                    hasher() throw();   //!< setup
-                    ~hasher() throw();  //!< destruct
-                    size_t operator()(const edge_label &) throw(); //!< compute hash key
+                    Hasher() throw();   //!< setup
+                    ~Hasher() throw();  //!< destruct
+                    size_t operator()(const EdgeLabel &) throw(); //!< compute hash key
 
                 private:
-                    Y_DISABLE_COPY_AND_ASSIGN(hasher);
+                    Y_DISABLE_COPY_AND_ASSIGN(Hasher);
                 };
             };
 
             //! a unique point is an identifier and its position
-            class unique_point : public counted_object
+            class UniquePoint : public counted_object
             {
             public:
-                const edge_label tag; //!< logical  identifier
-                const vertex     vtx; //!< physical position
+                const EdgeLabel  tag; //!< logical  identifier
+                const Vertex     vtx; //!< physical position
 
                 //!setup
-                explicit unique_point(const edge_label &id, const vertex &v) throw();
+                explicit UniquePoint(const EdgeLabel &id, const Vertex &v) throw();
 
                 //! desctructor
-                virtual ~unique_point() throw();
+                virtual ~UniquePoint() throw();
 
                 //! get the key for set
-                const edge_label & key() const throw();
+                const EdgeLabel & key() const throw();
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(unique_point);
+                Y_DISABLE_COPY_AND_ASSIGN(UniquePoint);
             };
 
-            typedef intr_ptr<edge_label,unique_point>               shared_point;  //!< alias
-            typedef set<edge_label,shared_point,edge_label::hasher> unique_points; //!< alias
+            typedef intr_ptr<EdgeLabel,UniquePoint>                SharedPoint;  //!< alias
+            typedef set<EdgeLabel,SharedPoint,EdgeLabel::Hasher>   UniquePoints; //!< alias
 
             //! a segment connecting two shared points
-            class segment : public object
+            class Segment : public object
             {
             public:
-                typedef core::list_of_cpp<segment> list; //!< alias
-                segment           *next; //!< for list
-                segment           *prev; //!< for list
-                const shared_point a;    //!< point from an iso-level
-                const shared_point b;    //!< point from an iso-level
+                Segment          *next; //!< for list
+                Segment          *prev; //!< for list
+                const SharedPoint a;    //!< point from an iso-level
+                const SharedPoint b;    //!< point from an iso-level
 
                 //! setup
-                explicit segment(unique_point *pa, unique_point *pb) throw() ;
+                explicit Segment(UniquePoint *pa, UniquePoint *pb) throw() ;
 
                 //! dersctructor
-                virtual ~segment() throw();
+                virtual ~Segment() throw();
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(segment);
+                Y_DISABLE_COPY_AND_ASSIGN(Segment);
             };
+
+            typedef core::list_of_cpp<Segment> Segments; //!< alias
 
 
             //! return the position where the field vanished, va*vb<0
-            static vertex   zfind(const vertex &pa, const double va,
-                                  const vertex &pb, const double vb) throw();
+            static Vertex   zfind(const Vertex &pa, const double va,
+                                  const Vertex &pb, const double vb) throw();
 
             //! database of points/segments for a given level value
-            class shared_points : public unique_points, public counted
+            class SharedPoints : public UniquePoints, public counted
             {
             public:
-                explicit shared_points() throw(); //!< setup
-                virtual ~shared_points() throw(); //!< destructor
+                explicit SharedPoints() throw(); //!< setup
+                virtual ~SharedPoints() throw(); //!< destructor
 
-                segment::list segments; //!< segments built from unique points
+                Segments segments; //!< segments built from unique points
 
                 //! get one point or create it from fallback
-                unique_point * operator()(const coordinate &c, const vertex &fallback);
+                UniquePoint * operator()(const Coordinate &c, const Vertex &fallback);
 
 
                 //! get one point or create it from two points
-                unique_point * operator()(const coordinate &c0, const vertex &p0, const double v0,
-                                          const coordinate &c1, const vertex &p1, const double v1);
+                UniquePoint * operator()(const Coordinate &c0, const Vertex &p0, const double v0,
+                                         const Coordinate &c1, const Vertex &p1, const double v1);
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(shared_points);
+                Y_DISABLE_COPY_AND_ASSIGN(SharedPoints);
             };
 
-            typedef arc_ptr<shared_points> level;   //!< alias
-            typedef vector<level>          levels;  //!< alias
+            typedef arc_ptr<SharedPoints>   Level;   //!< alias
+            typedef vector<Level,Allocator> Levels;  //!< alias
 
 
 
@@ -213,15 +214,15 @@ namespace upsylon
             /**
              data            !  matrix/field of data to contour
              ilb,iub,jlb,jub ! index bounds of data matrix[j][i]
-             x               ! data matrix column coordinates
-             y               ! data matrix row coordinates
+             x               ! data matrix column Coordinates
+             y               ! data matrix row Coordinates
              z               ! contour levels in INCREASING order, nc=z.size()
              */
             template<
             typename FIELD,
             typename ARRAY
             > static inline
-            void scan(levels              &lvl,
+            void Scan(Levels              &levels,
                       const FIELD         &data,
                       const unit_t         ilb,
                       const unit_t         iub,
@@ -243,7 +244,7 @@ namespace upsylon
 #endif
                 if(nc<=0)
                 {
-                    lvl.free();
+                    levels.free();
                     return;
                 }
 
@@ -252,20 +253,20 @@ namespace upsylon
                 // prepare levels
                 //
                 //--------------------------------------------------------------
-                lvl.ensure(nc);
-                while(lvl.size()>nc)
+                levels.ensure(nc);
+                while(levels.size()>nc)
                 {
-                    lvl.pop_back();
+                    levels.pop_back();
                 }
-                while(lvl.size()<nc)
+                while(levels.size()<nc)
                 {
-                    const level _ = new shared_points();
-                    lvl.push_back( _ );
+                    const Level _ = new SharedPoints();
+                    levels.push_back( _ );
                 }
-                assert(nc==lvl.size());
+                assert(nc==levels.size());
                 for(size_t k=nc;k>0;--k)
                 {
-                    lvl[k]->free();
+                    levels[k]->free();
                 }
                 const double zlo = z[1];
                 const double zhi = z[nc];
@@ -299,30 +300,30 @@ namespace upsylon
                         }
 
                         //------------------------------------------------------
-                        // global coordinates
+                        // global Coordinates
                         //------------------------------------------------------
-                        const vertex vtx[5] =
+                        const Vertex vtx[5] =
                         {
-                            vertex(0.5*(x0+x1),ymid),
-                            vertex(x0,y0),
-                            vertex(x1,y0),
-                            vertex(x1,y1),
-                            vertex(x0,y1)
+                            Vertex(0.5*(x0+x1),ymid),
+                            Vertex(x0,y0),
+                            Vertex(x1,y0),
+                            Vertex(x1,y1),
+                            Vertex(x0,y1)
                         };
 
-                        const coordinate coord[5] =
+                        const Coordinate coord[5] =
                         {
-                            coordinate(i0,j0,half),
-                            coordinate(i0,j0,full),
-                            coordinate(i1,j0,full),
-                            coordinate(i1,j1,full),
-                            coordinate(i0,j1,full)
+                            Coordinate(i0,j0,Half),
+                            Coordinate(i0,j0,Full),
+                            Coordinate(i1,j0,Full),
+                            Coordinate(i1,j1,Full),
+                            Coordinate(i0,j1,Full)
                         };
 
                         //------------------------------------------------------
                         // loop over levels
                         //------------------------------------------------------
-                        __scan(lvl, g, vtx, coord, z);
+                        scan_triangles(levels, g, vtx, coord, z);
                     }
                     
                 }
@@ -331,61 +332,62 @@ namespace upsylon
             }
 
         private:
-            static void __scan(levels             &lvl,
-                               const double       *g,
-                               const vertex       *vtx,
-                               const coordinate   *coord,
-                               const array<double> &z);
+            static void scan_triangles(Levels             &lvl,
+                                       const double       *g,
+                                       const Vertex       *vtx,
+                                       const Coordinate   *coord,
+                                       const array<double> &z);
 
 
 
         public:
             //! a linked shared_point
-            class point : public object, public shared_point
+            class Point : public object, public SharedPoint
             {
             public:
-                typedef core::list_of_cpp<point> list; //!< alias
 
-                point *next; //!< for list
-                point *prev; //!< for list
+                Point *next; //!< for list
+                Point *prev; //!< for list
 
                 //! setup
-                point(const shared_point &p) throw();
+                Point(const SharedPoint &p) throw();
 
                 //! destructor
-                virtual ~point() throw();
+                virtual ~Point() throw();
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(point);
+                Y_DISABLE_COPY_AND_ASSIGN(Point);
             };
 
+            typedef core::list_of_cpp<Point> Points; //!< alias
+
             //! a list of points
-            class line : public object, public point::list
+            class Line : public object, public Points
             {
             public:
-                typedef core::list_of_cpp<line> list; //!< alias
-                line *next; //!< for list
-                line *prev; //!< for list
+                typedef core::list_of_cpp<Line> list; //!< alias
+                Line *next; //!< for list
+                Line *prev; //!< for list
 
-                explicit line() throw(); //!< setup
-                virtual ~line() throw(); //!< setup
+                explicit Line() throw(); //!< setup
+                virtual ~Line() throw(); //!< setup
 
                 //! push back to vertices, with free() before
-                void compile_to( sequence<vertex> &vertices ) const;
+                void compile_to( sequence<Vertex> &vertices ) const;
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(line);
+                Y_DISABLE_COPY_AND_ASSIGN(Line);
             };
 
             //! a set of lines from a set of segments
-            class lines : public line::list
+            class Lines : public Line::list
             {
             public:
-                explicit lines() throw();
-                virtual ~lines() throw();
+                explicit Lines() throw();
+                virtual ~Lines() throw();
 
                 //! convert segments into connected line
-                void connect( const segment::list &segments );
+                void connect( const Segments &segments );
 
                 //! generic conversion to a sequence of smart pointer to vertices
                 template <typename CURVE_PTR>
@@ -393,7 +395,7 @@ namespace upsylon
                 {
                     curves.free();
                     curves.ensure(size);
-                    for(const line *l=head;l;l=l->next)
+                    for(const Line *l=head;l;l=l->next)
                     {
                         typename CURVE_PTR::mutable_type *c = new typename CURVE_PTR::mutable_type();
                         {
@@ -405,60 +407,72 @@ namespace upsylon
                 }
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(lines);
+                Y_DISABLE_COPY_AND_ASSIGN(Lines);
             };
 
-            typedef vector<vertex> curve_type; //!< base class for curve
+            typedef vector<Vertex> CurveType; //!< base class for curve
 
             //! a curve, to be pointee
-            class curve : public curve_type, public counted
+            class Curve : public CurveType, public counted
             {
             public:
-                typedef arc_ptr<curve> pointer;
-                explicit curve() throw() : curve_type() {}
-                virtual ~curve() throw() {}
+                typedef arc_ptr<Curve> Pointer; //!< alias for dynamic curves
+                explicit Curve() throw();       //!< setup
+                virtual ~Curve() throw();       //!< destructor
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(curve);
+                Y_DISABLE_COPY_AND_ASSIGN(Curve);
             };
 
-            typedef vector<curve::pointer> curves_type; //!< base class for curves
-            class curves : public curves_type, public counted
+            typedef vector<Curve::Pointer,Allocator> CurvesType; //!< base class for curves
+
+            //! a collection of curves for the same value
+            class Curves : public CurvesType, public counted
             {
             public:
-                typedef arc_ptr<curves> pointer;
-
-                explicit curves() throw() : curves_type() {}
-                virtual ~curves() throw() {}
+                typedef arc_ptr<Curves> Pointer; //!< alias for dynamic level set
+                explicit Curves() throw();       //!< setup
+                virtual ~Curves() throw();       //!< desctructor
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(curves);
+                Y_DISABLE_COPY_AND_ASSIGN(Curves);
             };
 
-            typedef vector<curves::pointer> level_set;
+            typedef vector<Curves::Pointer,Allocator> LevelSet; //!< alias
 
-            static void convert(level_set    &output,
-                                const levels &input)
+            //! convert a database of different levels into a level_set
+            static void convert(LevelSet     &output,
+                                const Levels &input);
+
+            //! a low-level contour algorithm
+            /**
+             data            !  matrix/field of data to contour
+             ilb,iub,jlb,jub ! index bounds of data matrix[j][i]
+             x               ! data matrix column Coordinates
+             y               ! data matrix row Coordinates
+             z               ! contour levels in INCREASING order, nc=z.size()
+             */
+            template<
+            typename FIELD,
+            typename ARRAY
+            > static inline
+            void Build(LevelSet           &ls,
+                       const FIELD        &data,
+                       const unit_t        ilb,
+                       const unit_t        iub,
+                       const unit_t        jlb,
+                       const unit_t        jub,
+                       const ARRAY         &x,
+                       const ARRAY         &y,
+                       const array<double> &z
+                       )
             {
-                const size_t n = input.size();
-                output.free();
-                output.ensure(n);
-                for(size_t i=1;i<=n;++i)
-                {
-                    const shared_points &db = *input[i];
-                    lines                il;
-                    il.connect(db.segments);
-                    curves *curves_ptr = new curves();
-                    {
-                        const curves::pointer tmp(curves_ptr);
-                        output.push_back(tmp);
-                    }
-                    il.compile_to(*curves_ptr);
-                }
+                // first pass: builds temporary levels
+                Levels levels;
+                Scan(levels, data, ilb, iub, jlb, jub, x, y, z);
+                convert(ls,levels);
             }
 
-
-            
         };
 
     }
