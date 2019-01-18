@@ -80,7 +80,6 @@ namespace upsylon
         //! default C-style init
         inline array(type *p, const size_t n) throw() :
         dynamic(), memory::ro_buffer(),
-        //item_( ((mutable_type*)p)-1 ),
         item_( memory::io::__prev( (mutable_type *)p) ),
         size_( n )
         {

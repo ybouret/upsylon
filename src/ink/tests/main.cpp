@@ -14,6 +14,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(edges);
     Y_UTEST(mask);
     Y_UTEST(draw);
+    Y_UTEST(iso);
 }
 Y_UTEST_EXEC()
 
