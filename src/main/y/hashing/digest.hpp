@@ -13,7 +13,7 @@ namespace upsylon
     {
     public:
 
-        explicit digest( const size_t n );            //!< a zero digest with n bytes
+        explicit digest( const size_t n, const uint8_t b=0 ); //!< a zero digest with n bytes equal to b
         digest( const digest & );                     //!< copy
         virtual ~digest() throw();                    //!< destructor
         digest & operator=( const digest & ) throw(); //!< assign WITH TRUNCATION
@@ -36,15 +36,56 @@ namespace upsylon
         }
 
         //! set hexadecimal value
-        static digest hexadecimal(const char *text);
-        
+        static digest hex(const char *txt, const size_t len);
+        static digest hex(const char *text);
+        static digest hex( const string &);
+
         //! randomize the value
         void rand() throw();
 
         const size_t size; //!< number of bytes
+
+        //! compare byte-wise result
+        friend bool operator==( const digest &lhs, const digest &rhs) throw();
+
+        //! compare to hexadecimal value
+        inline bool equals_hex(const char   *txt, const size_t len) const
+        {
+            const digest &lhs = *this;
+            const digest  rhs = hex(txt,len);
+            return lhs==rhs;
+        }
+
+        inline bool equals_hex(const char   *s) const
+        {
+            const digest &lhs = *this;
+            const digest  rhs = hex(s);
+            return lhs==rhs;
+        }
+
+        inline bool equals_hex(const string &s) const
+        {
+            const digest &lhs = *this;
+            const digest &rhs = hex(s);
+            return lhs==rhs;
+        }
+
+        //! test against hexadecimal value
+        inline friend bool operator==(const digest &lhs, const char *txt) { return lhs.equals_hex(txt); }
+
+        //! test against hexadecimal value
+        inline friend bool operator==(const char *txt,  const digest &rhs) { return rhs.equals_hex(txt); }
+
+        //! testing against hexadecimal value
+        inline friend bool operator==(const digest &lhs, const string &txt) { return lhs.equals_hex(txt); }
+
+        //! testing against hexadecimal value
+        inline friend bool operator==(const string &txt,  const digest &rhs) { return rhs.equals_hex(txt); }
+
     private:
         size_t   blen;
         uint8_t *byte;
+
     };
 
 }

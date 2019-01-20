@@ -32,9 +32,10 @@ size(SZ),                      \
 blen(size),                    \
 byte( __digest_acquire(blen) )
 
-    digest:: digest( const size_t n ) :
+    digest:: digest( const size_t n, const uint8_t b) :
     Y_DIGEST_CTOR(n)
     {
+        memset(byte,b,size);
     }
 
     digest:: ~digest() throw()
@@ -115,19 +116,19 @@ byte( __digest_acquire(blen) )
         return (hi<<4) | lo;
     }
 
-    digest digest:: hexadecimal(const char *text)
+    digest digest:: hex(const char *txt, const size_t len)
     {
-        const size_t len = length_of(text);
+        assert(!(0==txt&&len>0));
         if(len&0x1)
         {
             size_t w = (len+1)>>1;
             digest d(w);
-            d[0] = __digest_hex2dec(text[0]);
-            ++text;
+            d[0] = __digest_hex2dec(txt[0]);
+            ++txt;
             size_t i=1;
             for(--w;w>0;--w,++i)
             {
-                d[i] = __digest_word(text);
+                d[i] = __digest_word(txt);
             }
             return d;
         }
@@ -138,11 +139,43 @@ byte( __digest_acquire(blen) )
             size_t i=0;
             for(;w>0;--w,++i)
             {
-                d[i] = __digest_word(text);
+                d[i] = __digest_word(txt);
             }
             return d;
         }
     }
+
+    digest digest:: hex(const char *text)
+    {
+        return hex(text,length_of(text));
+    }
+
+    digest digest::hex( const string &s )
+    {
+        return hex(*s,s.size());
+    }
+    
+
+    bool operator==( const digest &lhs, const digest &rhs) throw()
+    {
+        if(lhs.size==rhs.size)
+        {
+            for(size_t i=0;i<lhs.size;++i)
+            {
+                if(lhs[i]!=rhs[i]) return false;
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
+  
+
+    
 }
 
 

@@ -59,7 +59,10 @@ ADD_TEST(Complex     test-main complex)
 ADD_TEST(MPN         test-main mpn)
 ADD_TEST(MPZ         test-main mpz)
 ADD_TEST(MPZ         test-main mpq)
+
 ADD_TEST(hashing     test-main hashing)
+ADD_TEST(hmac        test-main hmac)
+
 ADD_TEST(ostreams    test-main ostreams)
 ADD_TEST(istreams    test-main istreams)
 ADD_TEST(xbitrev     test-main xbitrev 0.0)

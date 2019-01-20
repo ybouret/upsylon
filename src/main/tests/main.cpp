@@ -49,6 +49,7 @@ Y_UTEST_INIT(100)
     Y_UTEST(mpz);
     Y_UTEST(mpq);
     Y_UTEST(hashing);
+    Y_UTEST(hmac);
     Y_UTEST(ostreams);
     Y_UTEST(istreams);
     Y_UTEST(fft);
