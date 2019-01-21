@@ -36,10 +36,25 @@ Y_UTEST(digest)
         do_test(d);
     }
 
-    digest d1 = digest::hex("A");    std::cerr << "d1=" << d1 << std::endl;
-    digest d2 = digest::hex("AB");   std::cerr << "d2=" << d2 << std::endl;
-    digest d3 = digest::hex("ABC");  std::cerr << "d3=" << d3 << std::endl;
-    digest d4 = digest::hex("ABCD"); std::cerr << "d4=" << d4 << std::endl;
+    {
+        digest d1 = digest::hex("A");    std::cerr << "d1=" << d1 << std::endl;
+        digest d2 = digest::hex("AB");   std::cerr << "d2=" << d2 << std::endl;
+        digest d3 = digest::hex("ABC");  std::cerr << "d3=" << d3 << std::endl;
+        digest d4 = digest::hex("ABCD"); std::cerr << "d4=" << d4 << std::endl;
+    }
+
+    {
+        digest d1(1);
+        for(size_t i=0;i<10;++i)
+        {
+            d1[0] = 0xff;
+            std::cerr << "d1=" << d1 << std::endl;
+            d1._inc(i);
+            std::cerr << "d1=" << d1 << std::endl;
+            std::cerr << std::endl;
+        }
+
+    }
 
 }
 Y_UTEST_DONE()

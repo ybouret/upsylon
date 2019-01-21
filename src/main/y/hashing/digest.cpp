@@ -84,7 +84,7 @@ byte( __digest_acquire(blen) )
 
     digest & digest:: operator=( const digest &other ) throw()
     {
-        if( this!=&other)
+        if(this!=&other)
         {
             if(size<=other.size)
             {
@@ -99,6 +99,27 @@ byte( __digest_acquire(blen) )
         }
         return *this;
     }
+
+    digest & digest:: operator=( const memory::ro_buffer &other) throw()
+    {
+        const memory::ro_buffer &self = *this;
+        if( &self != &other )
+        {
+            const size_t olen = other.length();
+            if(size<=olen)
+            {
+                memcpy(byte,other.ro(),size);
+            }
+            else
+            {
+                memcpy(byte,other.ro(),olen);
+                memset(byte+olen,0,size-olen);
+            }
+        }
+        return *this;
+    }
+
+
 
     static inline
     uint8_t __digest_hex2dec(const char c)
@@ -172,6 +193,46 @@ byte( __digest_acquire(blen) )
         }
     }
 
+    void digest:: _xor( const digest &other ) throw()
+    {
+        assert(size==other.size);
+        for(size_t i=0;i<size;++i)
+        {
+            byte[i] ^= other.byte[i];
+        }
+    }
+
+
+    void digest:: _xor( const digest &lhs, const digest &rhs) throw()
+    {
+        assert(size==lhs.size);
+        assert(size==rhs.size);
+        for(size_t i=0;i<size;++i)
+        {
+            byte[i] = lhs.byte[i] ^ rhs.byte[i];
+        }
+    }
+
+    void digest:: _swp( digest &other ) throw()
+    {
+        assert(size==other.size);
+        for(size_t i=0;i<size;++i)
+        {
+            cswap(byte[i],other.byte[i]);
+        }
+    }
+
+    void digest:: _inc(const uint8_t delta) throw()
+    {
+        unsigned sum = delta;
+        for(size_t i=0;i<size;++i)
+        {
+            sum    += byte[i];
+            byte[i] = (sum&0xff);
+            sum >>= 8;
+        }
+       //std::cerr << "[sum=" << sum << "]" << std::endl;
+    }
 
   
 
