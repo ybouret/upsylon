@@ -204,14 +204,20 @@ maxi_ = items-1
             }
 
             //! standard display
-            void std_display(std::ostream &) const;
+            std::ostream & std_display(std::ostream &) const;
 
             //! display operator
             inline friend std::ostream & operator<<( std::ostream &os, const string &s )
             {
-                s.std_display(os);
-                return os;
+                return s.std_display(os);
             }
+
+            //! visible chars
+            std::ostream & display_visible(std::ostream &) const;
+
+            //! printable chars
+            std::ostream & display_printable(std::ostream &s) const;
+
 
             //! access operator
             inline T       & operator[](const size_t indx) throw()       { assert(indx<size_);  return addr_[indx]; }

@@ -181,7 +181,7 @@ namespace upsylon
         const char block_cipher_factory::name[] = "bc_factory";
         
         block_cipher_factory:: block_cipher_factory() :
-        db()
+        db(16,as_capacity)
         {
             
 #define Y_BCF(ID) declare(#ID,ID)

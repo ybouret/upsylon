@@ -4,7 +4,6 @@
 
 #include "y/crypto/bc/operating-block-cipher.hpp"
 #include "y/associative/map.hpp"
-//#include "yocto/threading/singleton.hpp"
 
 namespace upsylon
 {

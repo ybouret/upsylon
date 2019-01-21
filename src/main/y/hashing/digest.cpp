@@ -234,7 +234,12 @@ byte( __digest_acquire(blen) )
        //std::cerr << "[sum=" << sum << "]" << std::endl;
     }
 
-  
+    void digest:: _set( const digest &other ) throw()
+    {
+        assert(size==other.size);
+        memcpy(byte,other.byte,size);
+    }
+
 
     
 }
