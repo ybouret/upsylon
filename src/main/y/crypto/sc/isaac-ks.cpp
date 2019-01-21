@@ -6,21 +6,21 @@ namespace upsylon
     namespace crypto
     {
         
-        isaac_key_stream:: ~isaac_key_stream() throw()
+        isaac_ks:: ~isaac_ks() throw()
         {
         }
         
-        isaac_key_stream:: isaac_key_stream( const memory::ro_buffer &key ) throw() :
+        isaac_ks:: isaac_ks( const memory::ro_buffer &key ) throw() :
         isaac_( key )
         {
         }
         
-        void isaac_key_stream:: schedule( const memory::ro_buffer &key ) throw()
+        void isaac_ks:: schedule( const memory::ro_buffer &key ) throw()
         {
             isaac_.reset( key );
         }
         
-        uint8_t isaac_key_stream:: call() throw()
+        uint8_t isaac_ks:: call() throw()
         {
             return uint8_t(isaac_.rand32());
         }

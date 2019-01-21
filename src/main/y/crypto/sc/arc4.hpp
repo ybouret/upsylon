@@ -2,14 +2,14 @@
 #ifndef Y_ARC4_INCLUDED
 #define Y_ARC4_INCLUDED 1
 
-#include "y/string.hpp"
+#include "y/crypto/sc/kstream.hpp"
 
 namespace upsylon
 {
 	
 	namespace crypto
 	{
-		class arc4
+        class arc4 : public kstream
 		{
 		public:
 			explicit arc4( const memory::ro_buffer &key ) throw();

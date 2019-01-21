@@ -3,6 +3,7 @@
 #define Y_CRYPTO_ISAAC_INCLUDED 1
 
 #include "y/randomized/isaac.hpp"
+#include "y/crypto/sc/kstream.hpp"
 
 namespace upsylon
 {
@@ -10,17 +11,17 @@ namespace upsylon
 	namespace crypto
 	{
 		
-		class isaac_key_stream 
+        class isaac_ks : public kstream
 		{
 		public:
-			virtual ~isaac_key_stream() throw();
-			explicit isaac_key_stream( const memory::ro_buffer & ) throw();
+			virtual ~isaac_ks() throw();
+			explicit isaac_ks( const memory::ro_buffer & ) throw();
 			
 			virtual void      schedule( const memory::ro_buffer & ) throw();
 			virtual uint8_t   call() throw();
 			
 		private:
-			Y_DISABLE_COPY_AND_ASSIGN(isaac_key_stream);
+			Y_DISABLE_COPY_AND_ASSIGN(isaac_ks);
 			randomized::isaac<8> isaac_;
 		};
 		
