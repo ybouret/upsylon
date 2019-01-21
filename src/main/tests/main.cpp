@@ -103,6 +103,9 @@ Y_UTEST_INIT(100)
     Y_UTEST(lex);
     
     Y_UTEST(geom_iso2d);
+
+    Y_UTEST(kr_bc);
+    Y_UTEST(kr_sc);
 }
 Y_UTEST_EXEC()
 

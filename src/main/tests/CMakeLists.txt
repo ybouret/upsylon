@@ -62,6 +62,8 @@ ADD_TEST(MPZ         test-main mpq)
 
 ADD_TEST(hashing     test-main hashing)
 ADD_TEST(hmac        test-main hmac)
+ADD_TEST(kr_sc       test-main kr_sc)
+ADD_TEST(kr_bc       test-main kr_bc)
 
 ADD_TEST(ostreams    test-main ostreams)
 ADD_TEST(istreams    test-main istreams)

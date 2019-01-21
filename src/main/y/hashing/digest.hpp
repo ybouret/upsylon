@@ -17,7 +17,7 @@ namespace upsylon
         digest( const digest & );                     //!< copy
         virtual ~digest() throw();                    //!< destructor
         digest & operator=( const digest & ) throw(); //!< assign WITH TRUNCATION
-
+        digest & operator=( const memory::ro_buffer &) throw(); //!< assign WITH TRUNCATION
 
         void ldz() throw();                         //!< set to zero
         virtual const void *ro()     const throw(); //!< byte
@@ -81,6 +81,21 @@ namespace upsylon
 
         //! testing against hexadecimal value
         inline friend bool operator==(const string &txt,  const digest &rhs) { return rhs.equals_hex(txt); }
+
+        //! set value, assuming same size
+        void _set( const digest &other ) throw();
+
+        //! byte-wise XOR, assuming same sizes
+        void _xor( const digest &other ) throw();
+
+        //! byte-size set to lhs XOR rhs, assuming same sizes
+        void _xor( const digest &lhs, const digest &rhs ) throw();
+
+        //! byte-wyse swap, assuming same sizes
+        void _swp( digest &other ) throw();
+
+        //! increase, with overflow
+        void _inc( const uint8_t delta ) throw();
 
     private:
         size_t   blen;

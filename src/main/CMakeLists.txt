@@ -209,6 +209,18 @@ SET(geometry_srcs ${geometry_decl} ${geometry_code})
 SOURCE_GROUP( geometry FILES ${geometry_srcs} )
 INSTALL( FILES ${geometry_decl} DESTINATION include/y/geometry )
 
+FILE(GLOB kr_sc_decl y/crypto/sc/*.hpp)
+FILE(GLOB kr_sc_code y/crypto/sc/*.cpp)
+SET(kr_sc_srcs ${kr_sc_decl} ${kr_sc_code})
+SOURCE_GROUP( kr/sc FILES ${kr_sc_srcs} )
+INSTALL( FILES ${kr_sc_decl} DESTINATION include/y/kr/sc )
+
+FILE(GLOB kr_bc_decl y/crypto/bc/*.hpp)
+FILE(GLOB kr_bc_code y/crypto/bc/*.cpp)
+SET(kr_bc_srcs ${kr_bc_decl} ${kr_bc_code})
+SOURCE_GROUP( kr/bc FILES ${kr_bc_srcs} )
+INSTALL( FILES ${kr_bc_decl} DESTINATION include/y/kr/bc )
+
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
 ${os_srcs}
@@ -240,6 +252,7 @@ ${ipso_srcs}
 ${rtld_srcs}
 ${lang_srcs} ${lang_pattern_srcs} ${lang_lexical_srcs} ${lexical_plugin_srcs}
 ${geometry_srcs}
+${kr_sc_srcs} ${kr_bc_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
