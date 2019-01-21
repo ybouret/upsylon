@@ -103,11 +103,25 @@ virtual void set() throw();\
 virtual void run( const void *buf, size_t len ) throw();\
 virtual void get( void *output, size_t outlen ) throw()
 
-        
 	}
 	
-	
-	
+    template <typename HFN>
+    inline digest checksum( const void *buffer, size_t buflen)
+    {
+        HFN H; return H.md(buffer,buflen);
+    }
+
+    template <typename HFN>
+    inline digest checksum( const memory::ro_buffer &data )
+    {
+        HFN H; return H.md(data);
+    }
+
+    template <typename HFN>
+    inline digest checksum(const char *text)
+    {
+        HFN H; return H.md(text);
+    }
 }
 
 

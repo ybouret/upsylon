@@ -106,6 +106,7 @@ Y_UTEST_INIT(100)
 
     Y_UTEST(kr_bc);
     Y_UTEST(kr_sc);
+    Y_UTEST(uuid);
 }
 Y_UTEST_EXEC()
 

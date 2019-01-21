@@ -113,6 +113,7 @@ ADD_TEST(Lang:Scanner  test-main scanner NULL)
 ADD_TEST(Lang:Lex      test-main lex     NULL)
 
 ADD_TEST(geom:iso2d test-main geom_iso2d)
+ADD_TEST(uuid       test-main uuid)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -V
