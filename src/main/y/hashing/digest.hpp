@@ -37,7 +37,11 @@ namespace upsylon
 
         //! set hexadecimal value
         static digest hex(const char *txt, const size_t len);
+
+        //! set hexadecimal value
         static digest hex(const char *text);
+
+        //! set hexadecimal value
         static digest hex( const string &);
 
         //! randomize the value
@@ -56,6 +60,7 @@ namespace upsylon
             return lhs==rhs;
         }
 
+        //! compare to hexadecimal value
         inline bool equals_hex(const char   *s) const
         {
             const digest &lhs = *this;
@@ -63,6 +68,7 @@ namespace upsylon
             return lhs==rhs;
         }
 
+        //! compare to hexadecimal value
         inline bool equals_hex(const string &s) const
         {
             const digest &lhs = *this;

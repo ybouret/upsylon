@@ -7,12 +7,13 @@
 namespace upsylon {
     
     namespace crypto {
-        
+
+        //! using gray codes
         template <typename T>
         struct gray
         {
-            static T encode( T n ) throw();
-            static T decode( T n ) throw();
+            static T encode( T n ) throw(); //!< gray forward
+            static T decode( T n ) throw(); //!< gray reverse
         };
         
     }

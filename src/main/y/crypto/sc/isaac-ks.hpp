@@ -10,14 +10,20 @@ namespace upsylon
 	
 	namespace crypto
 	{
-		
+		//! ISAAC kstream
         class isaac_ks : public kstream
 		{
 		public:
+            //! desctructor
 			virtual ~isaac_ks() throw();
+
+            //! setup
 			explicit isaac_ks( const memory::ro_buffer & ) throw();
-			
+
+            //! reset
 			virtual void      schedule( const memory::ro_buffer & ) throw();
+
+            //! next byte
 			virtual uint8_t   call() throw();
 			
 		private:

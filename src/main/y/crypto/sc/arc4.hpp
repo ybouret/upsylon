@@ -9,13 +9,21 @@ namespace upsylon
 	
 	namespace crypto
 	{
+
+        //! Alledged RC4
         class arc4 : public kstream
 		{
 		public:
+            //! setup
 			explicit arc4( const memory::ro_buffer &key ) throw();
+
+            //! cleanup
 			virtual ~arc4() throw();
-			
+
+            //! reset with a given key
 			virtual void     schedule( const memory::ro_buffer &key ) throw();
+
+            //! next byte
 			virtual uint8_t  call() throw();
 			
 		private:

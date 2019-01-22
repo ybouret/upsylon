@@ -9,14 +9,15 @@ namespace upsylon
 {
     namespace Ink
     {
-
+        //! find Iso Lines for an area
         class Iso : public Area
         {
         public:
-            //! prepare data for a given area
-            explicit Iso( const Area &area );
-            virtual ~Iso() throw();
 
+            explicit Iso( const Area &area ); //!< setup
+            virtual ~Iso() throw();           //!< desctructor
+
+            //! build level sets from an integral pixmap
             template <typename PIXMAP>
             void scan( const PIXMAP &pxm, const array<double> &z)
             {
@@ -37,7 +38,7 @@ namespace upsylon
             geometry::Iso2d::Levels db;
 
         public:
-            geometry::Iso2d::LevelSet levels;
+            geometry::Iso2d::LevelSet levels; //!< level set workspace
         };
     }
 }

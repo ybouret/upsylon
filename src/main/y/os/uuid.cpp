@@ -2,6 +2,7 @@
 #include "y/hashing/sha1.hpp"
 #include "y/code/utils.hpp"
 #include "y/randomized/bits.hpp"
+#include "y/os/rt-clock.hpp"
 
 namespace upsylon
 {
@@ -19,6 +20,10 @@ namespace upsylon
 
         {
             randomized::bits & b = randomized::bits::crypto();
+            {
+                const uint64_t mark = rt_clock::ticks();
+                H.run_type(mark);
+            }
             for(size_t i=BYTES;i>0;--i)
             {
                 const uint32_t dw = b.next32();
