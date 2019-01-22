@@ -9,10 +9,11 @@ namespace upsylon
 {
     namespace crypto
     {
+        //! stream of keyed bytes
         class kstream
         {
         public:
-            virtual ~kstream() throw(); //!< desctructor
+            virtual ~kstream() throw(); //!< destructor
 
             //! schedule internal contexts
             virtual void    schedule( const memory::ro_buffer &key ) throw() = 0;

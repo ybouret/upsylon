@@ -9,7 +9,7 @@ namespace upsylon {
         }
 
 
-        void operating_block_cipher:: crypt_flush( void *output, const void *input, const std::size_t len ) throw()
+        void operating_block_cipher:: crypt_flush( void *output, const void *input, const size_t len ) throw()
         {
             assert(len<this->size());
 
@@ -17,10 +17,10 @@ namespace upsylon {
             {
 
                 //-- build mask with residual cipher
-                rc_.crypt( R_.rw(), Cp_.ro() );
+                rc_->crypt( R_.rw(), Cp_.ro() );
 
                 //-- emit message
-                uint8_t       *tgt = (uint8_t *)output;
+                uint8_t       *tgt = (uint8_t       *)output;
                 const uint8_t *src = (const uint8_t *)input;
                 const uint8_t *msk = &R_[0];
                 for( size_t i=len;i>0;--i)
@@ -32,19 +32,29 @@ namespace upsylon {
 
         }
 
-        operating_block_cipher:: operating_block_cipher( block_cipher &bcph, block_cipher &rcph, const  memory::ro_buffer &IV ) :
+        operating_block_cipher:: operating_block_cipher(const char   *way,
+                                                        const pointer &bcph,
+                                                        const pointer &rcph,
+                                                        const memory::ro_buffer &IV ) :
+        block_cipher(""),
         bc_( bcph ),
         rc_( rcph ),
-        size_( bc_.size() ),
+        size_( bc_->size() ),
         P_(   size_, 0 ),
         C_(   size_, 0 ),
         Pp_(  size_, 0 ),
         Cp_(  size_, 0 ),
         R_(   size_, 0 )
         {
-            assert( bc_.size() == rc_.size() );
+            assert( bc_->size() == rc_->size() );
             Pp_ = IV; // truncate
             Cp_ = IV; // truncate
+            string _ = way;
+            _ += '-';
+            _ += bc_->name;
+            _ += '-';
+            _ += rc_->name;
+            cswap(name,_);
         }
         
 
@@ -62,12 +72,14 @@ namespace upsylon {
             Cp_ = IV;
         }
 
+#if 0
         void operating_block_cipher:: scramble( void *buf, size_t len ) throw()
         {
             assert( !(buf==NULL&&len>0) );
             this->crypt_block(buf,buf,len);
         }
-
+#endif
+        
         void operating_block_cipher:: crypt_block( void *output, const void *input, const std::size_t length ) throw()
         {
 

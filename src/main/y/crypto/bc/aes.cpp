@@ -489,7 +489,7 @@ RT3[ ( Y0 >> 24 ) & 0xFF ];    \
         /*
          * AES block encryption
          */
-        void aes::encrypt( aes::context  *ctx,
+        void aes::encrypt(aes::context  *ctx,
                           void          *target,
                           const void    *source ) throw()
         {
@@ -546,7 +546,7 @@ RT3[ ( Y0 >> 24 ) & 0xFF ];    \
         /*
          * AES block decryption
          */
-        void aes::decrypt( aes::context  *ctx,
+        void aes::decrypt(aes::context  *ctx,
                           void          *target,
                           const void    *source ) throw()
         {
@@ -715,15 +715,19 @@ RT3[ ( Y0 >> 24 ) & 0xFF ];    \
 
 
 
-        aes:: ~aes() throw() {
+        aes:: ~aes() throw()
+        {
             memset( &ctx_, 0, sizeof(aes::context) );
         }
 
-        aes:: aes( const char *id, const block_cipher::action mode ) throw() :
-        name_( id ),
+        aes:: aes( const char *depth, const block_cipher::action mode ) :
+        block_cipher(""),
         ctx_(),
         run_( mode == encrypting ? aes::encrypt : aes::decrypt )
         {
+            assert(depth);
+            const string _ = vformat("AES%s-%s",depth, action_text(mode) );
+            cswap(_,name);
         }
 
         size_t aes:: size() const throw()
@@ -739,19 +743,19 @@ RT3[ ( Y0 >> 24 ) & 0xFF ];    \
         namespace aes128
         {
 
-            encrypter:: encrypter( const memory::ro_buffer &key ) throw() :
-            aes( "AES128-ENC", block_cipher::encrypting )
+            encrypter:: encrypter( const memory::ro_buffer &k ) :
+            aes( "128", block_cipher::encrypting )
             {
-                aes128_encrypt_set( &ctx_, key.ro(), key.length() );
+                aes128_encrypt_set( &ctx_, k.ro(), k.length() );
             }
 
             encrypter:: ~encrypter() throw() {}
 
 
-            decrypter:: decrypter( const memory::ro_buffer &key ) throw() :
-            aes( "AES128-DEC", block_cipher::decrypting )
+            decrypter:: decrypter( const memory::ro_buffer &k ) :
+            aes( "128", block_cipher::decrypting )
             {
-                aes128_decrypt_set( &ctx_, key.ro(), key.length() );
+                aes128_decrypt_set( &ctx_, k.ro(), k.length() );
             }
 
             decrypter:: ~decrypter() throw() {}
@@ -761,19 +765,19 @@ RT3[ ( Y0 >> 24 ) & 0xFF ];    \
         namespace aes192
         {
 
-            encrypter:: encrypter( const memory::ro_buffer &key ) throw() :
-            aes( "AES192-ENC", block_cipher::encrypting )
+            encrypter:: encrypter( const memory::ro_buffer &k ) :
+            aes( "192", block_cipher::encrypting )
             {
-                aes192_encrypt_set( &ctx_, key.ro(), key.length() );
+                aes192_encrypt_set( &ctx_, k.ro(), k.length() );
             }
 
             encrypter:: ~encrypter() throw() {}
 
 
-            decrypter:: decrypter( const memory::ro_buffer &key ) throw() :
-            aes( "AES192-DEC", block_cipher::decrypting )
+            decrypter:: decrypter( const memory::ro_buffer &k ) :
+            aes( "192", block_cipher::decrypting )
             {
-                aes192_decrypt_set( &ctx_, key.ro(), key.length() );
+                aes192_decrypt_set( &ctx_, k.ro(), k.length() );
             }
 
             decrypter:: ~decrypter() throw() {}
@@ -783,19 +787,19 @@ RT3[ ( Y0 >> 24 ) & 0xFF ];    \
         namespace aes256
         {
 
-            encrypter:: encrypter( const memory::ro_buffer &key ) throw() :
-            aes( "AES256-ENC", block_cipher::encrypting )
+            encrypter:: encrypter( const memory::ro_buffer &k )  :
+            aes( "256", block_cipher::encrypting )
             {
-                aes256_encrypt_set( &ctx_, key.ro(), key.length() );
+                aes256_encrypt_set( &ctx_, k.ro(), k.length() );
             }
 
             encrypter:: ~encrypter() throw() {}
 
 
-            decrypter:: decrypter( const memory::ro_buffer &key ) throw() :
-            aes( "AES256-DEC", block_cipher::decrypting )
+            decrypter:: decrypter( const memory::ro_buffer &k ) :
+            aes( "256", block_cipher::decrypting )
             {
-                aes256_decrypt_set( &ctx_, key.ro(), key.length() );
+                aes256_decrypt_set( &ctx_, k.ro(), k.length() );
             }
 
             decrypter:: ~decrypter() throw() {}

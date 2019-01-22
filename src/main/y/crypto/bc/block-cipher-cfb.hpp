@@ -16,7 +16,7 @@ namespace upsylon {
             class encrypter : public operating_block_cipher
             {
             public:
-                explicit encrypter( block_cipher &bc, const memory::ro_buffer &iv);
+                explicit encrypter( const pointer &bc, const memory::ro_buffer &iv);
                 virtual ~encrypter() throw();
 
                 virtual void        crypt( void *output, const void *input ) throw();
@@ -29,7 +29,7 @@ namespace upsylon {
             class decrypter : public operating_block_cipher
             {
             public:
-                explicit decrypter( block_cipher &bc, const memory::ro_buffer &iv );
+                explicit decrypter( const pointer &bc, const memory::ro_buffer &iv );
                 virtual ~decrypter() throw();
 
                 virtual void        crypt( void *output, const void *input ) throw();

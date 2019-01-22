@@ -12,7 +12,7 @@ namespace upsylon
 {
     namespace crypto
     {
-        
+#if 0
         block_cipher_factory:: ~block_cipher_factory() throw()
         {
         }
@@ -231,5 +231,7 @@ namespace upsylon
             creator proc = *hook; assert(proc);
             return proc(e,d,iv);
         }
+#endif
+        
     }
 }

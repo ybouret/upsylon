@@ -26,15 +26,18 @@ namespace upsylon {
 			void crypt_block( void *output, const void *input, const size_t len ) throw();
 			
 			//! blender interface
-			virtual void scramble( void *buffer, size_t length ) throw();
+			//virtual void scramble( void *buffer, size_t length ) throw();
 			virtual void schedule( const memory::ro_buffer &IV ) throw();
 			
 						
 		protected:
-			explicit operating_block_cipher( block_cipher &bcph, block_cipher &rcph, const memory::ro_buffer &IV );
+			explicit operating_block_cipher(const char              *way,
+                                            const pointer           &bcph,
+                                            const pointer           &rcph,
+                                            const memory::ro_buffer &IV );
 
-			block_cipher     &bc_;   //!< full block cipher
-			block_cipher     &rc_;   //!< residual bock cipher
+			pointer           bc_;   //!< full block cipher
+			pointer           rc_;   //!< residual bock cipher
 			const size_t      size_; //!< common size
 			digest            P_;    //!< Plain[i]
 			digest            C_;    //!< Crypt[i]

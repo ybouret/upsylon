@@ -20,6 +20,9 @@ namespace
         crypto::block_cipher::pointer dec = new DECRYPTER(key);
         Y_ASSERT(enc->size()==dec->size());
         std::cerr << "block_size=" << enc->size() << std::endl;
+        std::cerr << "   Encrypt=" << enc->name   << std::endl;
+        std::cerr << "   Decrypt=" << dec->name   << std::endl;
+
         const size_t n = enc->size();
         string       P(n,as_capacity), C(n,as_capacity), D(n,as_capacity);
         for(size_t i=0;i<n;++i)

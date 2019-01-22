@@ -15,7 +15,7 @@ namespace upsylon {
             class encrypter : public operating_block_cipher
             {
             public:
-                explicit encrypter( block_cipher &bcph, const memory::ro_buffer &iv);
+                explicit encrypter( const pointer &bcph, const memory::ro_buffer &iv);
                 virtual ~encrypter() throw();
 
                 virtual void        crypt( void *output, const void *input ) throw();
@@ -23,14 +23,13 @@ namespace upsylon {
 
             private:
                 digest           CTR_;
-                encrypter( const encrypter &);
-                encrypter&operator=( const encrypter & );
+                Y_DISABLE_COPY_AND_ASSIGN(encrypter);
             };
 
             //! \f$  P_i = E_K(CTR_{i-1}) \oplus C_i, CTR_{i} = CTR_{i-1}+1, CTR_0 = IV \f$
             class decrypter : public operating_block_cipher {
             public:
-                explicit decrypter( block_cipher &bcph, const memory::ro_buffer &iv );
+                explicit decrypter( const pointer &bcph, const memory::ro_buffer &iv );
                 virtual ~decrypter() throw();
 
                 virtual void        crypt( void *output, const void *input ) throw();
@@ -38,8 +37,8 @@ namespace upsylon {
 
             private:
                 digest         CTR_;
-                decrypter( const decrypter &);
-                decrypter&operator=( const decrypter & );
+                Y_DISABLE_COPY_AND_ASSIGN(decrypter);
+
             };
 
 

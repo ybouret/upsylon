@@ -15,27 +15,26 @@ namespace upsylon {
             //! \f$ C_i = E_K( P_i \oplus P_{i-1} \oplus C_{i-1}), P_0 \oplus C_0 = IV \f$
             class encrypter : public operating_block_cipher {
             public:
-                explicit encrypter( block_cipher &bc, const memory::ro_buffer &iv);
+                explicit encrypter( const pointer &bc, const memory::ro_buffer &iv);
                 virtual ~encrypter() throw();
 
                 virtual void        crypt( void *output, const void *input ) throw();
 
             private:
-                encrypter( const encrypter &);
-                encrypter&operator=( const encrypter & );
+                Y_DISABLE_COPY_AND_ASSIGN(encrypter);
             };
 
             //! \f$ P_i = D_K(C_i) \oplus P_{i-1} \oplus C_{i-1}, P_0 \oplus C_0=IV \f$
             class decrypter : public operating_block_cipher {
             public:
-                explicit decrypter( block_cipher &bc , block_cipher &rc, const memory::ro_buffer &iv );
+                explicit decrypter( const pointer &bc , const pointer &rc, const memory::ro_buffer &iv );
                 virtual ~decrypter() throw();
 
                 virtual void        crypt( void *output, const void *input ) throw();
 
             private:
-                decrypter( const decrypter &);
-                decrypter&operator=( const decrypter & );
+                Y_DISABLE_COPY_AND_ASSIGN(decrypter);
+
             };
 
 

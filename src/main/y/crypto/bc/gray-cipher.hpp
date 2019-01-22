@@ -13,33 +13,44 @@ namespace upsylon
     namespace crypto
     {
 
+        //! cipher built upon gray codes
         template <
         const size_t               BITS,
         const block_cipher::action MODE
         >
         class gray_cipher : public block_cipher {
         public:
-            static  const    size_t BYTES = BITS/8;
-            typedef typename unsigned_int<BYTES>::type unit_type;
+            static  const    size_t BYTES = BITS/8; //!< 1,2,4,8
+            typedef typename unsigned_int<BYTES>::type unit_type; //!< alias
 
-            explicit gray_cipher( const memory::ro_buffer &key ) throw() :
+            //! setup
+            explicit gray_cipher( const memory::ro_buffer &k ) throw() :
+            block_cipher(""),
             mask_(0)
             {
+                const string _ = vformat("GRAY%u-%s",8*unsigned(sizeof(unit_type)), action_text(MODE) );
+                cswap(_,name);
                 //-- truncated key, padded with 0
                 uint8_t *m = (uint8_t *)(void *)&mask_;
                 for( size_t i=0; i < BYTES; ++i )
-                    m[i] = key.get_byte(i);
+                    m[i] = k.get_byte(i);
 
             }
 
-            virtual ~gray_cipher() throw() {
+            //! cleanup
+            virtual ~gray_cipher() throw()
+            {
+                mask_ = 0;
             }
 
 
-            virtual size_t size() const throw() {
+            //! block size
+            virtual size_t size() const throw()
+            {
                 return sizeof( unit_type );
             }
 
+            //! [en|de]crypt
             virtual void crypt( void *output, const void *input ) throw() {
                 crypt( output, input, int2type<MODE>() );
             }

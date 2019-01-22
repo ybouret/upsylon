@@ -29,8 +29,7 @@ namespace upsylon {
 
         protected:
             //! setup
-            explicit aes(const char *, const block_cipher::action mode) throw();
-            const char *name_; //!< identifier
+            explicit aes(const char *depth, const block_cipher::action mode);
             aes::context ctx_; //!< internal context
 
         private:
@@ -50,7 +49,7 @@ namespace upsylon {
             {
             public:
                 //! setup
-                explicit encrypter( const memory::ro_buffer &key ) throw();
+                explicit encrypter( const memory::ro_buffer &k );
 
                 //! desctructor
                 virtual ~encrypter() throw();
@@ -64,7 +63,7 @@ namespace upsylon {
             {
             public:
                 //! setup
-                explicit decrypter( const memory::ro_buffer &key ) throw();
+                explicit decrypter( const memory::ro_buffer &k );
 
                 //! desctructor
                 virtual ~decrypter() throw();
@@ -83,7 +82,7 @@ namespace upsylon {
             {
             public:
                 //! setup
-                explicit encrypter( const memory::ro_buffer &key ) throw();
+                explicit encrypter( const memory::ro_buffer &k );
 
                 //! destructor
                 virtual ~encrypter() throw();
@@ -97,7 +96,7 @@ namespace upsylon {
             {
             public:
                 //! setup
-                explicit decrypter( const memory::ro_buffer &key ) throw();
+                explicit decrypter( const memory::ro_buffer &k );
 
                 //! destructor
                 virtual ~decrypter() throw();
@@ -115,7 +114,7 @@ namespace upsylon {
             {
             public:
                 //! setup
-                explicit encrypter( const memory::ro_buffer &key ) throw();
+                explicit encrypter( const memory::ro_buffer &k );
 
                 //! destructor
                 virtual ~encrypter() throw();
@@ -129,7 +128,7 @@ namespace upsylon {
             {
             public:
                 //! setup
-                explicit decrypter( const memory::ro_buffer &key ) throw();
+                explicit decrypter( const memory::ro_buffer &k );
 
                 //! destructor
                 virtual ~decrypter() throw();
