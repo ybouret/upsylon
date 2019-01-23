@@ -50,6 +50,9 @@ namespace
         check(rf);
         check(sd);
         check(sf);
+        vector<uint16_t> arr(5);
+        ran.fill(*arr, arr.size() * sizeof(uint16_t) );
+        std::cerr << "arr=" << arr << std::endl;
     }
 }
 

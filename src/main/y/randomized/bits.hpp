@@ -292,6 +292,10 @@ namespace upsylon
                 return VTX<T>(x,y,z);
             }
 
+            //! fill random bytes
+            void fill( void *data, const size_t size ) throw();
+
+
         protected:
             //! sets span and auxiliary values
             explicit bits(const uint32_t maxValue) throw();

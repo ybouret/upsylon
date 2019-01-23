@@ -253,7 +253,7 @@ namespace upsylon
     void digest:: rand() throw()
     {
         static randomized::bits & ran = randomized::bits::crypto();
-
+        Y_LOCK( randomized::bits::access() );
         for(size_t i=0;i<size;++i)
         {
             byte[i] = ran.full<uint8_t>();
