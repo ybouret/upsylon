@@ -30,7 +30,7 @@ namespace upsylon
 
             void initialize_crypt() throw();  //!< set last crypt to encrypter(last_plain)
             void initialize_plain() throw();  //!< set last plain to decrypter(last_crypt)
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(operating);
         };

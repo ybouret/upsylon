@@ -55,7 +55,10 @@ namespace upsylon
             memcpy( last_plain.rw(), output, block_size );
         }
 
-
+        void operating::initialize_crypt() throw()
+        {
+        }
+        
 
     }
 }
