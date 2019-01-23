@@ -30,6 +30,7 @@ namespace upsylon
         last_crypt( block_size ),
         workspace(  block_size )
         {
+            std::cerr << "operating " << encrypter->name << "<->" << decrypter->name << std::endl;
             // checking
             encrypter->crypt(last_crypt.rw(),last_plain.ro());
             decrypter->crypt(workspace.rw(), last_crypt.ro());
@@ -57,6 +58,12 @@ namespace upsylon
 
         void operating::initialize_crypt() throw()
         {
+            encrypter->crypt( last_crypt.rw(), last_plain.ro() );
+        }
+
+        void operating::initialize_plain() throw()
+        {
+            decrypter->crypt(last_plain.rw(), last_crypt.ro() );
         }
         
 

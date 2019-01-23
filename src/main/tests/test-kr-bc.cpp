@@ -4,6 +4,7 @@
 #include "y/crypto/bc/teac.hpp"
 #include "y/crypto/bc/gray-cipher.hpp"
 
+#include "y/crypto/bc/operating.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/os/uuid.hpp"
@@ -37,7 +38,12 @@ namespace
         std::cerr << "C="; C.display_printable(std::cerr) << std::endl;
         std::cerr << "D=" << D << std::endl;
         Y_CHECK(P==D);
+
+        std::cerr << "Creating OP" << std::endl;
+        crypto::operating op(enc,dec);
         std::cerr << std::endl;
+        
+
     }
 }
 
