@@ -31,7 +31,18 @@ namespace upsylon
 
             //! last_plain = decrypt( last_crypt )
             void sync_plain() throw();
-            
+
+            //! last_plain = data
+            void save_plain( const void *data ) throw();
+
+            //! last_crypt = data
+            void save_crypt( const void *data ) throw();
+
+            //! initialize last_plain = 0, last_crypt=encrypt(last_plain)
+            void intialize() throw();
+
+            //! initialize with IV, with truncation
+            void initialize( const digest &IV ) throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ciphers);

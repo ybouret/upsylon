@@ -2,35 +2,30 @@
 #ifndef Y_CRYPTO_BC_OPERATING_INCLUDED
 #define Y_CRYPTO_BC_OPERATING_INCLUDED 1
 
-#include "y/crypto/bc/block-cipher.hpp"
+#include "y/crypto/bc/ciphers.hpp"
 
 namespace upsylon
 {
     namespace crypto
     {
+        //! use block ciphers to manage operating modes
         class operating
         {
         public:
-            explicit operating( const block_cipher::pointer &e, const block_cipher::pointer &d);
-            virtual ~operating() throw();
+            virtual ~operating() throw(); //!< destructor
 
-            //! encrypt block and synchronize last_[plain|crypt]
-            void encrypt_block( void *output, const void *input ) throw();
+            //! the operating mode for a cipher
+            virtual void write_block( ciphers &c, void *output, const void *input ) throw() = 0;
 
-            //! decrypt block and synchronize last_[plain|crypt]
-            void decrypt_block( void *output, const void *input ) throw();
+            //! use ciphers flush
+            void         flush_block( ciphers &c, void *output, const void *input, const size_t length ) throw();
+
+            //! encode a whole chunk, for any length
+            void         write( ciphers &c, void *output, const void *input, size_t length ) throw();
 
         protected:
-            block_cipher::pointer encrypter;  //!< encrypter
-            block_cipher::pointer decrypter;  //!< decrypter of encrypter
-            const size_t          block_size; //!< common block size
-            digest                last_plain; //!< last plain block
-            digest                last_crypt; //!< last crypt block
-            digest                workspace;  //!< a workspace
+            explicit operating() throw(); //!< setup
 
-            void initialize_crypt() throw();  //!< set last crypt to encrypter(last_plain)
-            void initialize_plain() throw();  //!< set last plain to decrypter(last_crypt)
-            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(operating);
         };

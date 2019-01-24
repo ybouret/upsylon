@@ -10,62 +10,37 @@ namespace upsylon
         {
         }
 
-        static inline
-        size_t check_sizes(const block_cipher::pointer &lhs, const block_cipher::pointer &rhs )
+
+        operating:: operating( ) throw()
         {
-            const size_t lsz = lhs->size();
-            const size_t rsz = rhs->size();
-            if(lsz!=rsz)
+
+        }
+
+        void operating:: flush_block(ciphers    &c,
+                                     void       *output,
+                                     const void *input,
+                                     const size_t length ) throw()
+        {
+            c.flush(output,input,length);
+        }
+
+        void operating:: write( ciphers &c, void *output, const void *input, size_t length ) throw()
+        {
+            assert( !(0==output&&length>0) );
+            assert( !(0==input &&length>0) );
+
+            const size_t   blk = c.block_size;
+            const uint8_t *src = static_cast<const uint8_t *>(input);
+            uint8_t       *tgt = static_cast<uint8_t       *>(output);
+            while(length>=blk)
             {
-                throw exception("crypto::operating sizes mismatch: (#%s=%u) != (#%s=%u)", *(lhs->name), unsigned(lsz), *(rhs->name), unsigned(rsz) );
+                write_block(c,tgt,src);
+                tgt    += blk;
+                src    += blk;
+                length -= blk;
             }
-            return lsz;
+            flush_block(c,tgt,src,length);
         }
-
-        operating:: operating( const block_cipher::pointer &e, const block_cipher::pointer &d) :
-        encrypter(e),
-        decrypter(d),
-        block_size( check_sizes(encrypter,decrypter) ),
-        last_plain( block_size ),
-        last_crypt( block_size ),
-        workspace(  block_size )
-        {
-            std::cerr << "operating " << encrypter->name << "<->" << decrypter->name << std::endl;
-            // checking
-            encrypter->crypt(last_crypt.rw(),last_plain.ro());
-            decrypter->crypt(workspace.rw(), last_crypt.ro());
-            if( !(workspace==last_plain) )
-            {
-                throw exception("crypto::operating mismatching '%s' and '%s'", *(encrypter->name), *(decrypter->name) );
-            }
-        }
-
-        void operating:: encrypt_block(void *output, const void *input) throw()
-        {
-            assert(output); assert(input);
-            memcpy( last_plain.rw(), input,  block_size );
-            encrypter->crypt(output,input);
-            memcpy( last_crypt.rw(), output, block_size );
-        }
-
-        void operating:: decrypt_block(void *output, const void *input) throw()
-        {
-            assert(output); assert(input);
-            memcpy( last_crypt.rw(), input,  block_size );
-            decrypter->crypt(output,input);
-            memcpy( last_plain.rw(), output, block_size );
-        }
-
-        void operating::initialize_crypt() throw()
-        {
-            encrypter->crypt( last_crypt.rw(), last_plain.ro() );
-        }
-
-        void operating::initialize_plain() throw()
-        {
-            decrypter->crypt(last_plain.rw(), last_crypt.ro() );
-        }
-        
 
     }
 }

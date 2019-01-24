@@ -49,6 +49,19 @@ namespace upsylon
             decrypter->crypt( last_plain.rw(), last_crypt.ro() );
         }
 
+        void ciphers:: save_plain(const void *data) throw()
+        {
+            assert(data);
+            memcpy(last_plain.rw(),data,block_size);
+        }
+
+        void ciphers:: save_crypt(const void *data) throw()
+        {
+            assert(data);
+            memcpy(last_crypt.rw(),data,block_size);
+        }
+
+
         void ciphers:: flush( void *output, const void *input, const size_t length ) throw()
         {
             assert( !(0==output&&length>0) );
@@ -75,6 +88,19 @@ namespace upsylon
             }
             encrypter->crypt(last_crypt.rw(), last_plain.ro() );
         }
+
+        void ciphers:: intialize() throw()
+        {
+            last_plain.ldz();
+            sync_crypt();
+        }
+
+        void ciphers:: initialize(const digest &IV) throw()
+        {
+            last_plain = IV;
+            sync_crypt();
+        }
+
 
     }
 }
