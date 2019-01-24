@@ -4,11 +4,13 @@
 #include "y/crypto/bc/teac.hpp"
 #include "y/crypto/bc/gray-cipher.hpp"
 
-#include "y/crypto/bc/operating.hpp"
+#include "y/crypto/bc/ecb.hpp"
+#include "y/crypto/bc/cbc.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/os/uuid.hpp"
 #include "y/memory/buffers.hpp"
+#include "y/hashing/sha1.hpp"
 
 using namespace upsylon;
 
@@ -86,7 +88,45 @@ namespace
             }
         }
         std::cerr << std::endl;
-        
+
+        digest IV(c->block_size);
+        IV.rand();
+        std::cerr << "Testing Operating with IV=" << IV << std::endl;
+
+        hashing::sha1 H;
+
+        for(size_t length=0;length<=1000;++length)
+        {
+            memory::global_buffer_of<char> ini(length);
+            memory::global_buffer_of<char> enc(length);
+            memory::global_buffer_of<char> dec(length);
+
+            // ECB
+            {
+                crypto::ecb::encrypter e;
+                c->initialize(IV);
+                e.write( *c, *enc, *ini, length);
+            }
+
+            {
+                crypto::ecb::decrypter d;
+                c->initialize(IV);
+                d.write(*c,*dec,*enc,length);
+            }
+
+            {
+                const digest Hini = H.md(ini);
+                const digest Hend = H.md(dec);
+                Y_ASSERT(Hini==Hend);
+            }
+
+            
+
+        }
+        std::cerr << std::endl;
+
+
+
 
     }
 

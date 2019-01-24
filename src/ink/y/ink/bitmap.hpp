@@ -99,6 +99,15 @@ namespace upsylon
                 return H.key<T>();
             }
 
+            inline void zset() throw()
+            {
+                const size_t n = scanline;
+                for(size_t j=0;j<h;++j)
+                {
+                    memset((static_cast<row_layout *>(rows)+j)->p,0,n);
+                }
+            }
+
         private:
             Y_DISABLE_ASSIGN(Bitmap);
             //! layout of a pixmap row

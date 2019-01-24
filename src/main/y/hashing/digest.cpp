@@ -193,6 +193,23 @@ byte( __digest_acquire(blen) )
         }
     }
 
+    bool operator!=( const digest &lhs, const digest &rhs) throw()
+    {
+        if(lhs.size==rhs.size)
+        {
+            for(size_t i=0;i<lhs.size;++i)
+            {
+                if(lhs[i]!=rhs[i]) return true;
+            }
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+
     void digest:: _xor( const digest &other ) throw()
     {
         assert(size==other.size);

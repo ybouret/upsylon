@@ -13,8 +13,8 @@ namespace upsylon
         //! crypt functions
         struct Crypt
         {
-            static void Run( Bitmap &tgt, const Bitmap &src, crypto::kstream &ks ) throw();
-
+            static void Run( Bitmap &tgt, const Bitmap &src, crypto::kstream   &ks ) throw();
+            static void Run( Bitmap &tgt, const Bitmap &src, crypto::operating &op, crypto::ciphers &c );
         };
 
     }

@@ -52,6 +52,10 @@ namespace upsylon
         //! compare byte-wise result
         friend bool operator==( const digest &lhs, const digest &rhs) throw();
 
+        //! compare byte-wise result
+        friend bool operator!=( const digest &lhs, const digest &rhs) throw();
+
+
         //! compare to hexadecimal value
         inline bool equals_hex(const char   *txt, const size_t len) const
         {

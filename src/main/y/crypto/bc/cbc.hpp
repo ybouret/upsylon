@@ -17,7 +17,6 @@ namespace upsylon
             public:
                 explicit encrypter();
                 virtual ~encrypter() throw();
-
                 
                 virtual void write_block( ciphers &c, void *output, const void *input ) throw();
 
