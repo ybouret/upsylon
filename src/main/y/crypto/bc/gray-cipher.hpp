@@ -4,7 +4,7 @@
 #include "y/crypto/bc/gray.hpp"
 #include "y/os/endian.hpp"
 #include "y/type/ints.hpp"
-#include "y/crypto/bc/block-cipher.hpp"
+#include "y/crypto/bc/ciphers.hpp"
 #include "y/code/ilog2.hpp"
 
 namespace upsylon
@@ -80,25 +80,49 @@ namespace upsylon
         };
 
 
-        namespace gray8 {
+        struct gray8 {
             typedef gray_cipher<8,block_cipher::encrypting> encrypter;
             typedef gray_cipher<8,block_cipher::decrypting> decrypter;
-        }
+            static inline ciphers *create( const memory::ro_buffer &k )
+            {
+                const block_cipher::pointer enc = new encrypter(k);
+                const block_cipher::pointer dec = new decrypter(k);
+                return new ciphers(enc,dec);
+            }
+        };
 
-        namespace gray16 {
+        struct gray16 {
             typedef gray_cipher<16,block_cipher::encrypting> encrypter;
             typedef gray_cipher<16,block_cipher::decrypting> decrypter;
-        }
+            static inline ciphers *create( const memory::ro_buffer &k )
+            {
+                const block_cipher::pointer enc = new encrypter(k);
+                const block_cipher::pointer dec = new decrypter(k);
+                return new ciphers(enc,dec);
+            }
+        };
 
-        namespace gray32 {
+        struct gray32 {
             typedef gray_cipher<32,block_cipher::encrypting> encrypter;
             typedef gray_cipher<32,block_cipher::decrypting> decrypter;
-        }
+            static inline ciphers *create( const memory::ro_buffer &k )
+            {
+                const block_cipher::pointer enc = new encrypter(k);
+                const block_cipher::pointer dec = new decrypter(k);
+                return new ciphers(enc,dec);
+            }
+        };
 
-        namespace gray64 {
+        struct gray64 {
             typedef gray_cipher<64,block_cipher::encrypting> encrypter;
             typedef gray_cipher<64,block_cipher::decrypting> decrypter;
-        }
+            static inline ciphers *create( const memory::ro_buffer &k )
+            {
+                const block_cipher::pointer enc = new encrypter(k);
+                const block_cipher::pointer dec = new decrypter(k);
+                return new ciphers(enc,dec);
+            }
+        };
 
 
 

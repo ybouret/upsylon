@@ -8,6 +8,7 @@
 
 #include "y/utest/run.hpp"
 #include "y/os/uuid.hpp"
+#include "y/memory/buffers.hpp"
 
 using namespace upsylon;
 
@@ -38,13 +39,57 @@ namespace
         std::cerr << "C="; C.display_printable(std::cerr) << std::endl;
         std::cerr << "D=" << D << std::endl;
         Y_CHECK(P==D);
+    }
 
-        std::cerr << "Creating OP" << std::endl;
-        crypto::operating op(enc,dec);
+    static inline
+    void test_ciphers( crypto::ciphers *cph )
+    {
+        crypto::ciphers::pointer c(cph);
+        std::cerr << "[" << c->encrypter->name << "<->" << c->decrypter->name << "]" << std::endl;
+        digest P( c->block_size );
+        digest C( c->block_size );
+
+
+        size_t count = 0;
+        for(size_t iter=1;iter<4;++iter)
+        {
+            alea.fill( c->last_plain.rw(), c->block_size );
+            c->sync_crypt();
+
+            string ini(c->block_size,as_capacity);
+            string enc(c->block_size,as_capacity);
+            string dec(c->block_size,as_capacity);
+
+            for(size_t length=0;length<c->block_size-1;++length)
+            {
+                std::cerr << '.';
+                // save state
+                P = c->last_plain;
+                C = c->last_crypt;
+
+                ini.clear(); enc.clear(); dec.clear();
+                for(size_t i=0;i<length;++i)
+                {
+                    ini += alea.range('A','Z');
+                    enc += '\0';
+                    dec += '\0';
+                }
+
+                c->flush(*enc,*ini,length);
+
+                // restor state
+                c->last_plain = P;
+                c->last_crypt = C;
+                c->flush(*dec,*enc,length);
+                Y_ASSERT(dec==ini);
+                if(0==(++count%64)) std::cerr << std::endl;
+            }
+        }
         std::cerr << std::endl;
         
 
     }
+
 }
 
 Y_UTEST(kr_bc)
@@ -59,6 +104,21 @@ Y_UTEST(kr_bc)
     test_cipher<crypto::gray16::encrypter,crypto::gray16::decrypter>();
     test_cipher<crypto::gray32::encrypter,crypto::gray32::decrypter>();
     test_cipher<crypto::gray64::encrypter,crypto::gray64::decrypter>();
+
+    {
+        std::cerr << "-- Testing ciphers" << std::endl;
+        const uuid key;
+        test_ciphers( crypto::aes128::create(key) );
+        test_ciphers( crypto::aes192::create(key) );
+        test_ciphers( crypto::aes256::create(key) );
+        test_ciphers( crypto::teac_of<128>::create(key) );
+        test_ciphers( crypto::teac_of<1024>::create(key) );
+        test_ciphers( crypto::gray8 ::create(key) );
+        test_ciphers( crypto::gray16::create(key) );
+        test_ciphers( crypto::gray32::create(key) );
+        test_ciphers( crypto::gray64::create(key) );
+
+    }
 
     
 }

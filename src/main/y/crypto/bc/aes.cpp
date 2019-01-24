@@ -740,73 +740,85 @@ RT3[ ( Y0 >> 24 ) & 0xFF ];    \
         }
 
 
-        namespace aes128
+
+
+        aes128:: encrypter:: encrypter( const memory::ro_buffer &k ) :
+        aes( "128", block_cipher::encrypting )
         {
-
-            encrypter:: encrypter( const memory::ro_buffer &k ) :
-            aes( "128", block_cipher::encrypting )
-            {
-                aes128_encrypt_set( &ctx_, k.ro(), k.length() );
-            }
-
-            encrypter:: ~encrypter() throw() {}
-
-
-            decrypter:: decrypter( const memory::ro_buffer &k ) :
-            aes( "128", block_cipher::decrypting )
-            {
-                aes128_decrypt_set( &ctx_, k.ro(), k.length() );
-            }
-
-            decrypter:: ~decrypter() throw() {}
-
+            aes128_encrypt_set( &ctx_, k.ro(), k.length() );
         }
 
-        namespace aes192
+        aes128::encrypter:: ~encrypter() throw() {}
+
+
+        aes128::decrypter:: decrypter( const memory::ro_buffer &k ) :
+        aes( "128", block_cipher::decrypting )
         {
-
-            encrypter:: encrypter( const memory::ro_buffer &k ) :
-            aes( "192", block_cipher::encrypting )
-            {
-                aes192_encrypt_set( &ctx_, k.ro(), k.length() );
-            }
-
-            encrypter:: ~encrypter() throw() {}
-
-
-            decrypter:: decrypter( const memory::ro_buffer &k ) :
-            aes( "192", block_cipher::decrypting )
-            {
-                aes192_decrypt_set( &ctx_, k.ro(), k.length() );
-            }
-
-            decrypter:: ~decrypter() throw() {}
-
+            aes128_decrypt_set( &ctx_, k.ro(), k.length() );
         }
 
-        namespace aes256
+        aes128:: decrypter:: ~decrypter() throw() {}
+
+        ciphers * aes128:: create( const memory::ro_buffer &k )
         {
-
-            encrypter:: encrypter( const memory::ro_buffer &k )  :
-            aes( "256", block_cipher::encrypting )
-            {
-                aes256_encrypt_set( &ctx_, k.ro(), k.length() );
-            }
-
-            encrypter:: ~encrypter() throw() {}
+            const block_cipher::pointer enc = new encrypter(k);
+            const block_cipher::pointer dec = new decrypter(k);
+            return new ciphers(enc,dec);
+        }
+        
 
 
-            decrypter:: decrypter( const memory::ro_buffer &k ) :
-            aes( "256", block_cipher::decrypting )
-            {
-                aes256_decrypt_set( &ctx_, k.ro(), k.length() );
-            }
 
-            decrypter:: ~decrypter() throw() {}
+        aes192:: encrypter:: encrypter( const memory::ro_buffer &k ) :
+        aes( "192", block_cipher::encrypting )
+        {
+            aes192_encrypt_set( &ctx_, k.ro(), k.length() );
+        }
 
+        aes192::encrypter:: ~encrypter() throw() {}
+
+
+        aes192::decrypter:: decrypter( const memory::ro_buffer &k ) :
+        aes( "192", block_cipher::decrypting )
+        {
+            aes192_decrypt_set( &ctx_, k.ro(), k.length() );
+        }
+
+        aes192::decrypter:: ~decrypter() throw() {}
+
+        ciphers *aes192:: create( const memory::ro_buffer &k )
+        {
+            const block_cipher::pointer enc = new encrypter(k);
+            const block_cipher::pointer dec = new decrypter(k);
+            return new ciphers(enc,dec);
         }
 
 
+        aes256:: encrypter:: encrypter( const memory::ro_buffer &k )  :
+        aes( "256", block_cipher::encrypting )
+        {
+            aes256_encrypt_set( &ctx_, k.ro(), k.length() );
+        }
+
+        aes256:: encrypter:: ~encrypter() throw() {}
+
+
+        aes256:: decrypter:: decrypter( const memory::ro_buffer &k ) :
+        aes( "256", block_cipher::decrypting )
+        {
+            aes256_decrypt_set( &ctx_, k.ro(), k.length() );
+        }
+
+        aes256:: decrypter:: ~decrypter() throw() {}
+
+
+
+        ciphers *aes256:: create( const memory::ro_buffer &k )
+        {
+            const block_cipher::pointer enc = new encrypter(k);
+            const block_cipher::pointer dec = new decrypter(k);
+            return new ciphers(enc,dec);
+        }
 
     } // crypto
 

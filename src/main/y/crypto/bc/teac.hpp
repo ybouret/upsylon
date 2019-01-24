@@ -2,7 +2,7 @@
 #ifndef Y_TEAC_INCLUDED
 #define Y_TEAC_INCLUDED 1
 
-#include "y/crypto/bc/block-cipher.hpp"
+#include "y/crypto/bc/ciphers.hpp"
 #include "y/crypto/bc/tea.hpp"
 #include <cstring>
 
@@ -91,6 +91,14 @@ namespace upsylon {
 		{
 			typedef teac<BITS,block_cipher::encrypting> encrypter; //!< alias
 			typedef teac<BITS,block_cipher::decrypting> decrypter; //!< alias
+            //! create ciphers
+            static inline
+            ciphers *create( const memory::ro_buffer &k )
+            {
+                const block_cipher::pointer enc = new encrypter(k);
+                const block_cipher::pointer dec = new decrypter(k);
+                return new ciphers(enc,dec);
+            }
 		};
 		
 		

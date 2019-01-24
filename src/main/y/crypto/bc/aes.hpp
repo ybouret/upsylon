@@ -2,7 +2,7 @@
 #ifndef Y_CRYPTO_BC_AES_INCLUDED
 #define Y_CRYPTO_BC_AES_INCLUDED 1
 
-#include "y/crypto/bc/block-cipher.hpp"
+#include "y/crypto/bc/ciphers.hpp"
 
 
 namespace upsylon {
@@ -42,7 +42,7 @@ namespace upsylon {
 
 
 
-        namespace aes128 {
+        struct aes128 {
 
             //! AES-128 encrypt
             class encrypter : public aes
@@ -72,10 +72,12 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(decrypter);
             };
 
-        }
+            static ciphers *create( const memory::ro_buffer &k );
+
+        };
 
 
-        namespace aes192 {
+        struct aes192 {
 
             //! AES-192 encrypt
             class encrypter : public aes
@@ -105,9 +107,11 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(decrypter);
             };
 
-        }
+            static ciphers *create( const memory::ro_buffer &k );
 
-        namespace aes256 {
+        };
+
+        struct aes256 {
 
             //! AES-256 encrypt
             class encrypter : public aes
@@ -136,8 +140,11 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(decrypter);
             };
+            
+            static ciphers *create( const memory::ro_buffer &k );
 
-        }
+        };
+
 
     }
 
