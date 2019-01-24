@@ -17,6 +17,7 @@ ADD_TEST(Edges   test-ink edges)
 ADD_TEST(Mask    test-ink mask)
 ADD_TEST(Draw    test-ink draw)
 ADD_TEST(Iso     test-ink iso)
+ADD_TEST(Kr      test-ink kr)
 
 ADD_CUSTOM_TARGET(utest-ink
 COMMAND ${CMAKE_CTEST_COMMAND} -V
