@@ -6,6 +6,7 @@
 
 #include "y/crypto/bc/ecb.hpp"
 #include "y/crypto/bc/cbc.hpp"
+#include "y/crypto/bc/ctr.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/os/uuid.hpp"
@@ -133,6 +134,7 @@ namespace
 
             test_op<crypto::ecb>(IV,*c,ini,enc,dec);
             test_op<crypto::cbc>(IV,*c,ini,enc,dec);
+            test_op<crypto::ctr>(IV,*c,ini,enc,dec);
 
         }
         std::cerr << std::endl;

@@ -31,6 +31,9 @@ namespace upsylon
         //! check validity
         inline bool is_valid() const throw() { return 0!=pointee; }
 
+        //! check validity
+        inline bool is_empty() const throw() { return 0==pointee; }
+
         //! output forwarding
         inline friend std::ostream & operator<<( std::ostream &os, const ptr &p )
         {
