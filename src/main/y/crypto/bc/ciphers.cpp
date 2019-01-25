@@ -95,12 +95,17 @@ namespace upsylon
             sync_crypt();
         }
 
-        void ciphers:: initialize(const digest &IV) throw()
+        void ciphers:: initialize_plain(const digest &IV) throw()
         {
             last_plain = IV;
             sync_crypt();
         }
 
+        void ciphers:: initialize_crypt(const digest &IV) throw()
+        {
+            last_crypt = IV;
+            sync_plain();
+        }
 
     }
 }

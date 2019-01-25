@@ -104,13 +104,13 @@ namespace
             // ECB
             {
                 crypto::ecb::encrypter e;
-                c->initialize(IV);
+                c->initialize_plain(IV);
                 e.write( *c, *enc, *ini, length);
             }
 
             {
                 crypto::ecb::decrypter d;
-                c->initialize(IV);
+                c->initialize_plain(IV);
                 d.write(*c,*dec,*enc,length);
             }
 

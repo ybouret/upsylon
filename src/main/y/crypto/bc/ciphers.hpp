@@ -42,8 +42,9 @@ namespace upsylon
             void intialize() throw();
 
             //! initialize with IV, with truncation
-            void initialize( const digest &IV ) throw();
-
+            void initialize_plain( const digest &IV ) throw();
+            void initialize_crypt( const digest &IV ) throw();
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ciphers);
             void build_flush_mask(const size_t length) throw();
