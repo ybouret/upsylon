@@ -21,7 +21,7 @@ namespace upsylon
 
             bool exactly( const string &s );                 //!< the string must entirely match the pattern
             bool partly(const string &s);                    //!< the string must partly match the pattern
-            void find( sequence<Token> &, const string &s ); //!< find all consecutive, non overlapping occurences
+            void find( sequence<Token> &, const string &s ); //!< free and find all consecutive, non overlapping occurences
             
 
         private:
@@ -34,7 +34,10 @@ namespace upsylon
         {
         public:
             //! initialize
-            inline explicit MatchString(const char *rx) : Matching(rx,0) {}
+            inline explicit MatchString(const char   *rx) : Matching(rx,0) {}
+
+            //! initialize
+            inline explicit MatchString(const string &rx) : Matching(rx,0) {}
 
             //! destructor
             inline virtual ~MatchString() throw() {}
@@ -44,7 +47,10 @@ namespace upsylon
             
             //! functionoid call
             inline bool operator()( const string &s ) { return exactly(s); }
-            
+
+            //! find all occurences
+            inline size_t operator()( sequence<Token> &m, const string &s ) { find(m,s); return m.size();  }
+
         private:
             Y_DISABLE_ASSIGN(MatchString);
         };
