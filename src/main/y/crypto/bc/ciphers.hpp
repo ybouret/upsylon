@@ -22,6 +22,7 @@ namespace upsylon
             const size_t          block_size;
             digest                last_plain;
             digest                last_crypt;
+            digest                temporary;
 
             //! flushing
             void flush( void *output, const void *input, const size_t length ) throw();
@@ -33,10 +34,17 @@ namespace upsylon
             void sync_plain() throw();
 
             //! last_plain = data
-            void save_plain( const void *data ) throw();
+            void load_plain( const void *data ) throw();
 
             //! last_crypt = data
-            void save_crypt( const void *data ) throw();
+            void load_crypt( const void *data ) throw();
+
+            //! temporary = data
+            void load_temp_( const void *data) throw();
+
+            //! data = last_plain
+            void send_plain( void *data ) const throw();
+
 
             //! initialize last_plain = 0, last_crypt=encrypt(last_plain)
             void intialize() throw();

@@ -14,6 +14,9 @@ namespace upsylon
         public:
             virtual ~operating() throw(); //!< destructor
 
+            //! initialize with IV
+            virtual void initialize( ciphers &c, const digest &IV ) throw() = 0;
+            
             //! the operating mode for a cipher
             virtual void write_block( ciphers &c, void *output, const void *input ) throw() = 0;
 

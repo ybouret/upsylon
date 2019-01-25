@@ -7,6 +7,8 @@ namespace upsylon
 {
     namespace crypto
     {
+        const char ecb::name[] = "ECB";
+
         ecb::encrypter:: encrypter() : operating()
         {
         }
@@ -17,11 +19,15 @@ namespace upsylon
 
         void ecb:: encrypter:: write_block( ciphers &c, void *output, const void *input ) throw()
         {
-            c.save_plain(input);
+            c.load_plain(input);
             c.encrypter->crypt(output,input);
-            c.save_crypt(output);
+            c.load_crypt(output);
         }
 
+        void ecb::encrypter:: initialize( ciphers &c, const digest &IV ) throw()
+        {
+            c.initialize_plain(IV);
+        }
 
     }
 }
@@ -41,11 +47,15 @@ namespace upsylon
 
         void ecb:: decrypter:: write_block( ciphers &c, void *output, const void *input ) throw()
         {
-            c.save_crypt(input);
+            c.load_crypt(input);
             c.decrypter->crypt(output,input);
-            c.save_plain(output);
+            c.load_plain(output);
         }
 
+        void ecb:: decrypter:: initialize( ciphers &c, const digest &IV ) throw()
+        {
+            c.initialize_plain(IV);
+        }
 
     }
 }

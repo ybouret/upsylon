@@ -43,6 +43,37 @@ namespace
         Y_CHECK(P==D);
     }
 
+    template <typename OP>
+    static inline void test_op(const digest    &IV,
+                               crypto::ciphers &c,
+                               const memory::ro_buffer &ini,
+                               memory::rw_buffer       &enc,
+                               memory::rw_buffer       &dec)
+    {
+        assert(enc.length()==ini.length());
+        assert(dec.length()==ini.length());
+
+        hashing::sha1 H;
+        const size_t length = ini.length();
+        {
+            typename OP::encrypter e;
+            e.initialize(c,IV);
+            e.write(c, enc.rw(), ini.ro(), length);
+        }
+
+        {
+            typename OP::decrypter d;
+            d.initialize(c,IV);
+            d.write(c, dec.rw(), enc.ro(),length);
+        }
+
+        {
+            const digest Hini = H.md(ini);
+            const digest Hend = H.md(dec);
+            Y_ASSERT(Hini==Hend);
+        }
+    }
+
     static inline
     void test_ciphers( crypto::ciphers *cph )
     {
@@ -93,7 +124,6 @@ namespace
         IV.rand();
         std::cerr << "Testing Operating with IV=" << IV << std::endl;
 
-        hashing::sha1 H;
 
         for(size_t length=0;length<=1000;++length)
         {
@@ -101,26 +131,8 @@ namespace
             memory::global_buffer_of<char> enc(length);
             memory::global_buffer_of<char> dec(length);
 
-            // ECB
-            {
-                crypto::ecb::encrypter e;
-                c->initialize_plain(IV);
-                e.write( *c, *enc, *ini, length);
-            }
-
-            {
-                crypto::ecb::decrypter d;
-                c->initialize_plain(IV);
-                d.write(*c,*dec,*enc,length);
-            }
-
-            {
-                const digest Hini = H.md(ini);
-                const digest Hend = H.md(dec);
-                Y_ASSERT(Hini==Hend);
-            }
-
-            
+            test_op<crypto::ecb>(IV,*c,ini,enc,dec);
+            test_op<crypto::cbc>(IV,*c,ini,enc,dec);
 
         }
         std::cerr << std::endl;

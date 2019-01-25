@@ -29,7 +29,8 @@ namespace upsylon
         decrypter(dec),
         block_size(check_sizes(encrypter,decrypter)),
         last_plain(block_size),
-        last_crypt(block_size)
+        last_crypt(block_size),
+        temporary(block_size)
         {
             encrypter->crypt( last_crypt.rw(), last_plain.ro());
             decrypter->crypt( last_plain.rw(), last_crypt.ro());
@@ -49,16 +50,29 @@ namespace upsylon
             decrypter->crypt( last_plain.rw(), last_crypt.ro() );
         }
 
-        void ciphers:: save_plain(const void *data) throw()
+        void ciphers:: load_plain(const void *data) throw()
         {
             assert(data);
             memcpy(last_plain.rw(),data,block_size);
         }
 
-        void ciphers:: save_crypt(const void *data) throw()
+        void  ciphers::  send_plain( void *data ) const throw()
+        {
+            assert(data);
+            memcpy( data, last_plain.ro(), block_size);
+        }
+
+
+        void ciphers:: load_crypt(const void *data) throw()
         {
             assert(data);
             memcpy(last_crypt.rw(),data,block_size);
+        }
+
+        void ciphers:: load_temp_( const void *data) throw()
+        {
+            assert(data);
+            memcpy(temporary.rw(),data,block_size);
         }
 
 

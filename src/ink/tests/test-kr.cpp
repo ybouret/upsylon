@@ -7,6 +7,7 @@
 #include "y/crypto/sc/arc4.hpp"
 #include "y/crypto/bc/aes.hpp"
 #include "y/crypto/bc/ecb.hpp"
+#include "y/crypto/bc/cbc.hpp"
 
 #include "y/os/uuid.hpp"
 
@@ -36,22 +37,42 @@ Y_UTEST(kr)
         Crypt::Run(dec,enc,ks);
         img.save("dec_sc.png",dec,NULL);
 
+        crypto::ciphers::pointer cph = crypto::aes128::create(key);
+        const digest             IV  = checksum<hashing::sha1>(key);
+        crypto::ciphers         &c   = *cph;
 
         enc.zset();
         {
-            crypto::ciphers::pointer cph = crypto::aes128::create(key);
-            crypto::ecb::encrypter   ECB_ENC;
-            Crypt::Run(enc,ini, ECB_ENC,*cph);
+            crypto::ecb::encrypter   kr;
+            kr.initialize(c,IV);
+            Crypt::Run(enc,ini, kr,c);
             img.save("enc_ecb.png",enc,NULL);
 
         }
 
         dec.zset();
         {
-            crypto::ciphers::pointer cph = crypto::aes128::create(key);
-            crypto::ecb::decrypter   ECB_DEC;
-            Crypt::Run(dec,enc, ECB_DEC,*cph);
+            crypto::ecb::decrypter   kr;
+            kr.initialize(c,IV);
+            Crypt::Run(dec,enc, kr,c);
             img.save("dec_ecb.png",dec,NULL);
+        }
+
+        enc.zset();
+        {
+            crypto::cbc::encrypter   kr;
+            kr.initialize(c,IV);
+            Crypt::Run(enc,ini, kr,c);
+            img.save("enc_cbc.png",enc,NULL);
+
+        }
+
+        dec.zset();
+        {
+            crypto::cbc::decrypter   kr;
+            kr.initialize(c,IV);
+            Crypt::Run(dec,enc, kr,c);
+            img.save("dec_cbc.png",dec,NULL);
         }
 
 

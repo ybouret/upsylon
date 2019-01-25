@@ -12,12 +12,18 @@ namespace upsylon
 
         struct ecb
         {
+            static const char name[];
+            
             class encrypter : public operating
             {
             public:
                 explicit encrypter();
                 virtual ~encrypter() throw();
 
+                //! last_plain = IV, last_crypt=E(IV)
+                virtual void initialize( ciphers &c, const digest &IV ) throw();
+
+                //! \f$ C_i = E( P_i ) \f$
                 virtual void write_block( ciphers &c, void *output, const void *input ) throw();
 
             private:
@@ -30,10 +36,15 @@ namespace upsylon
                 explicit decrypter();
                 virtual ~decrypter() throw();
 
+                //! last_plain = IV, last_crypt=E(IV)
+                virtual void initialize( ciphers &c, const digest &IV ) throw();
+
+                //! \f$ P_i = D( C_i ) \f$
                 virtual void write_block( ciphers &c, void *output, const void *input ) throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(decrypter);
+                
             };
 
         };
