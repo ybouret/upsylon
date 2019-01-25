@@ -45,12 +45,16 @@ namespace upsylon
             //! data = last_plain
             void send_plain( void *data ) const throw();
 
+            //! data = last_crypt
+            void send_crypt( void *data ) const throw();
 
             //! initialize last_plain = 0, last_crypt=encrypt(last_plain)
             void intialize() throw();
 
             //! initialize with IV, with truncation
             void initialize_plain( const digest &IV ) throw();
+
+            //! initialize IV, with truncation
             void initialize_crypt( const digest &IV ) throw();
             
         private:

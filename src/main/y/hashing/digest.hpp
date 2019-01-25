@@ -107,6 +107,9 @@ namespace upsylon
         //! increase, with overflow
         void _inc( const uint8_t delta ) throw();
 
+        //! increase by on
+        void _inc() throw();
+
     private:
         size_t   blen;
         uint8_t *byte;

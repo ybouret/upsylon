@@ -29,6 +29,7 @@ namespace upsylon
                 auto_ptr<digest> crypted;
 
                 void make( const size_t block_size );
+                void next( ciphers &c ) throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(context);

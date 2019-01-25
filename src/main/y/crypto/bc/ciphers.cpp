@@ -62,6 +62,13 @@ namespace upsylon
             memcpy( data, last_plain.ro(), block_size);
         }
 
+        void  ciphers::  send_crypt( void *data ) const throw()
+        {
+            assert(data);
+            memcpy( data, last_crypt.ro(), block_size);
+        }
+
+
 
         void ciphers:: load_crypt(const void *data) throw()
         {

@@ -53,6 +53,18 @@ namespace upsylon
             c.last_plain.ldz();
             c.last_crypt = *crypted;
         }
+
+        void  ctr::context:: next( ciphers &c ) throw()
+        {
+            assert(counter.is_valid());
+            assert(crypted.is_valid());
+            assert(counter->size==crypted->size);
+            
+            counter->_inc();
+            c.encrypter->crypt(crypted->rw(),counter->ro());
+
+        }
+
         
     }
 
@@ -74,9 +86,10 @@ namespace upsylon
 
         void ctr:: encrypter:: write_block( ciphers &c, void *output, const void *input ) throw()
         {
-            assert(counter.is_valid());
-            assert(crypted.is_valid());
-            assert(counter->size==crypted->size);
+            next(c);
+            c.load_plain(input);
+            c.last_crypt._xor(c.last_plain,*crypted);
+            c.send_crypt(output);
         }
 
         void ctr::encrypter:: initialize( ciphers &c, const digest &IV )
@@ -102,10 +115,10 @@ namespace upsylon
 
         void ctr:: decrypter:: write_block( ciphers &c, void *output, const void *input ) throw()
         {
-            assert(counter.is_valid());
-            assert(crypted.is_valid());
-            assert(counter->size==crypted->size);
-            
+            next(c);
+            c.load_crypt(input);
+            c.last_plain._xor(c.last_crypt,*crypted);
+            c.send_plain(output);
         }
 
         void ctr:: decrypter:: initialize( ciphers &c, const digest &IV )

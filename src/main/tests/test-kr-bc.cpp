@@ -123,9 +123,9 @@ namespace
 
         digest IV(c->block_size);
         IV.rand();
+
         std::cerr << "Testing Operating with IV=" << IV << std::endl;
-
-
+        
         for(size_t length=0;length<=1000;++length)
         {
             memory::global_buffer_of<char> ini(length);
@@ -138,7 +138,7 @@ namespace
 
         }
         std::cerr << std::endl;
-
+        std::cerr << std::endl;
 
 
 

@@ -248,8 +248,13 @@ byte( __digest_acquire(blen) )
             byte[i] = (sum&0xff);
             sum >>= 8;
         }
-       //std::cerr << "[sum=" << sum << "]" << std::endl;
     }
+
+    void digest:: _inc() throw()
+    {
+        _inc(1);
+    }
+
 
     void digest:: _set( const digest &other ) throw()
     {
