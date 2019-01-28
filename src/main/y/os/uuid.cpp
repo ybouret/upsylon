@@ -35,6 +35,7 @@ namespace upsylon
     }
 
     uuid:: uuid( const uuid &other ) throw() :
+    memory::ro_buffer(),
     byte()
     {
         memcpy(byte,other.byte,sizeof(byte));

@@ -45,7 +45,7 @@ Y_UTEST(digest)
 
     {
         digest d1(1);
-        for(size_t i=0;i<10;++i)
+        for(uint8_t i=0;i<10;++i)
         {
             d1[0] = 0xff;
             std::cerr << "d1=" << d1 << std::endl;
