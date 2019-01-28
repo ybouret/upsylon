@@ -13,7 +13,10 @@ namespace upsylon
         //! crypt functions
         struct Crypt
         {
+            //! run a stream cipher
             static void Run( Bitmap &tgt, const Bitmap &src, crypto::kstream   &ks ) throw();
+
+            //! run an initialized operating cipher with block ciphers
             static void Run( Bitmap &tgt, const Bitmap &src, crypto::operating &op, crypto::ciphers &c );
         };
 

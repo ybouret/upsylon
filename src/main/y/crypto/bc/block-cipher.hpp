@@ -22,20 +22,21 @@ namespace upsylon
                 encrypting, //!< standard forward way
                 decrypting  //!< standard reverse way
             };
-            static const char *action_text( const action a) throw();
+
+            static const char *action_text( const action a) throw(); //!< action to text
 
             //! destructor
             virtual ~block_cipher() throw();
 
-            const string          name;
+            const string          name; //!< identifier
             virtual size_t        size() const throw() = 0; //!< block size
             virtual void          crypt( void *output, const void *input ) throw() = 0; //!< blocks of this->size() !
 
-            const string & key() const throw(); //!< for associative
+            const string & key() const throw(); //!< for associative container
 
         protected:
-            explicit block_cipher(const char   *id);
-            explicit block_cipher(const string &id);
+            explicit block_cipher(const char   *id); //!< setup with name=id
+            explicit block_cipher(const string &id); //!< setup with name=id
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(block_cipher);

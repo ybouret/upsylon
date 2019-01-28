@@ -41,7 +41,7 @@ namespace upsylon {
         };
 
 
-
+        //! AES 128 bits
         struct aes128 {
 
             //! AES-128 encrypt
@@ -72,11 +72,13 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(decrypter);
             };
 
+            //! return corresponding ciphers
             static ciphers *create( const memory::ro_buffer &k );
 
         };
 
 
+        //! AES 192 bits
         struct aes192 {
 
             //! AES-192 encrypt
@@ -107,10 +109,12 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(decrypter);
             };
 
+            //! return corresponding ciphers
             static ciphers *create( const memory::ro_buffer &k );
 
         };
 
+        //! AES 256 bits
         struct aes256 {
 
             //! AES-256 encrypt
@@ -140,7 +144,8 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(decrypter);
             };
-            
+
+            //! return corresponding ciphers
             static ciphers *create( const memory::ro_buffer &k );
 
         };

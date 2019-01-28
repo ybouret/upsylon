@@ -9,20 +9,23 @@ namespace upsylon
     namespace crypto
     {
 
+        //! pair of ciphers with internal plain/crypted block
         class ciphers : public counted_object
         {
         public:
-            typedef arc_ptr<ciphers> pointer;
+            typedef arc_ptr<ciphers> pointer; //!< alias
 
-            virtual ~ciphers() throw();
+            virtual ~ciphers() throw(); //!< destructor
+
+            //! setup
             explicit ciphers( const block_cipher::pointer &enc, const block_cipher::pointer &dec);
 
-            block_cipher::pointer encrypter;
-            block_cipher::pointer decrypter;
-            const size_t          block_size;
-            digest                last_plain;
-            digest                last_crypt;
-            digest                temporary;
+            block_cipher::pointer encrypter;    //!< an encrypter
+            block_cipher::pointer decrypter;    //!< associated decrypter
+            const size_t          block_size;   //!< common block size
+            digest                last_plain;   //!< last plain block
+            digest                last_crypt;   //!< last crypt block
+            digest                temporary;    //!< temporary block
 
             //! flushing
             void flush( void *output, const void *input, const size_t length ) throw();

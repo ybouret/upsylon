@@ -9,16 +9,16 @@ namespace upsylon
     namespace crypto
     {
         //! Electronic Code Book
-
         struct ecb
         {
-            static const char name[];
-            
+            static const char name[]; //!< "ECB"
+
+            //! encrypter
             class encrypter : public operating
             {
             public:
-                explicit encrypter();
-                virtual ~encrypter() throw();
+                explicit encrypter();         //!< setup
+                virtual ~encrypter() throw(); //!< desctructor
 
                 //! last_plain = IV, last_crypt=E(IV)
                 virtual void initialize( ciphers &c, const digest &IV ) throw();
@@ -30,11 +30,12 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(encrypter);
             };
 
+            //! decrypter
             class decrypter : public operating
             {
             public:
-                explicit decrypter();
-                virtual ~decrypter() throw();
+                explicit decrypter();         //!< setup
+                virtual ~decrypter() throw(); //!< desctructor
 
                 //! last_plain = IV, last_crypt=E(IV)
                 virtual void initialize( ciphers &c, const digest &IV ) throw();

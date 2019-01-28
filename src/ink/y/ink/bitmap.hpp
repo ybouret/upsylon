@@ -99,6 +99,7 @@ namespace upsylon
                 return H.key<T>();
             }
 
+            //! force all rows to zero
             inline void zset() throw()
             {
                 const size_t n = scanline;

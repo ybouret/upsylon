@@ -81,3 +81,19 @@ namespace upsylon
 
     }
 }
+
+namespace upsylon
+{
+    namespace Lang
+    {
+        MatchString::  MatchString(const char   *rx) : Matching(rx,0) {}
+        MatchString::  MatchString(const string &rx) : Matching(rx,0) {}
+        MatchString:: ~MatchString() throw() {}
+        MatchString::  MatchString(const MatchString &other) throw() : Matching(other) {}
+
+        bool MatchString::  operator()( const string &s ) { return exactly(s); }
+
+        size_t MatchString:: operator()( sequence<Token> &m, const string &s ) { find(m,s); return m.size();  }
+    }
+}
+

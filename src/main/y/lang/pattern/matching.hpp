@@ -34,22 +34,22 @@ namespace upsylon
         {
         public:
             //! initialize
-            inline explicit MatchString(const char   *rx) : Matching(rx,0) {}
+            MatchString(const char   *rx);
 
             //! initialize
-            inline explicit MatchString(const string &rx) : Matching(rx,0) {}
+            MatchString(const string &rx);
 
             //! destructor
-            inline virtual ~MatchString() throw() {}
+            virtual ~MatchString() throw();
 
             //! copy
-            inline MatchString(const MatchString &other) throw() : Matching(other) {}
+            MatchString(const MatchString &other) throw();
             
             //! functionoid call
-            inline bool operator()( const string &s ) { return exactly(s); }
+            bool operator()( const string &s );
 
             //! find all occurences
-            inline size_t operator()( sequence<Token> &m, const string &s ) { find(m,s); return m.size();  }
+            size_t operator()( sequence<Token> &m, const string &s );
 
         private:
             Y_DISABLE_ASSIGN(MatchString);

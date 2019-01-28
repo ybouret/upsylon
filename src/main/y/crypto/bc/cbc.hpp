@@ -11,13 +11,14 @@ namespace upsylon
         //! Cipher Block Chaining
         struct cbc
         {
-            static const char name[];
+            static const char name[]; //!< "CBC"
 
+            //! encrypter
             class encrypter : public operating
             {
             public:
-                explicit encrypter();
-                virtual ~encrypter() throw();
+                explicit encrypter();         //!< setup
+                virtual ~encrypter() throw(); //!< destructor
 
                 //! \f$ C_0=IV \f$
                 virtual void initialize( ciphers &c, const digest &IV ) throw();
@@ -29,11 +30,12 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(encrypter);
             };
 
+            //! decrypter
             class decrypter : public operating
             {
             public:
-                explicit decrypter();
-                virtual ~decrypter() throw();
+                explicit decrypter();         //!< setup
+                virtual ~decrypter() throw(); //!< desctructor
 
                 //! \f$ C_0=IV \f$
                 virtual void initialize( ciphers &c, const digest &IV ) throw();

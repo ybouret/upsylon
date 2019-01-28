@@ -80,9 +80,12 @@ namespace upsylon
         };
 
 
+        //! Gray code on 8 bits
         struct gray8 {
-            typedef gray_cipher<8,block_cipher::encrypting> encrypter;
-            typedef gray_cipher<8,block_cipher::decrypting> decrypter;
+            typedef gray_cipher<8,block_cipher::encrypting> encrypter; //!< alias
+            typedef gray_cipher<8,block_cipher::decrypting> decrypter; //!< alias
+
+            //! create specialized ciphers
             static inline ciphers *create( const memory::ro_buffer &k )
             {
                 const block_cipher::pointer enc = new encrypter(k);
@@ -91,9 +94,12 @@ namespace upsylon
             }
         };
 
+        //! Gray code on 16 bits
         struct gray16 {
-            typedef gray_cipher<16,block_cipher::encrypting> encrypter;
-            typedef gray_cipher<16,block_cipher::decrypting> decrypter;
+            typedef gray_cipher<16,block_cipher::encrypting> encrypter; //!< alias
+            typedef gray_cipher<16,block_cipher::decrypting> decrypter; //!< alias
+
+            //! create specialized ciphers
             static inline ciphers *create( const memory::ro_buffer &k )
             {
                 const block_cipher::pointer enc = new encrypter(k);
@@ -102,9 +108,12 @@ namespace upsylon
             }
         };
 
+        //! Gray code on 32 bits
         struct gray32 {
-            typedef gray_cipher<32,block_cipher::encrypting> encrypter;
-            typedef gray_cipher<32,block_cipher::decrypting> decrypter;
+            typedef gray_cipher<32,block_cipher::encrypting> encrypter; //!< alias
+            typedef gray_cipher<32,block_cipher::decrypting> decrypter; //!< alias
+
+            //! create specialized ciphers
             static inline ciphers *create( const memory::ro_buffer &k )
             {
                 const block_cipher::pointer enc = new encrypter(k);
@@ -113,9 +122,12 @@ namespace upsylon
             }
         };
 
+        //! Gray code on 64 bits
         struct gray64 {
-            typedef gray_cipher<64,block_cipher::encrypting> encrypter;
-            typedef gray_cipher<64,block_cipher::decrypting> decrypter;
+            typedef gray_cipher<64,block_cipher::encrypting> encrypter; //!< alias
+            typedef gray_cipher<64,block_cipher::decrypting> decrypter; //!< alias
+
+            //! create specialized ciphers
             static inline ciphers *create( const memory::ro_buffer &k )
             {
                 const block_cipher::pointer enc = new encrypter(k);
