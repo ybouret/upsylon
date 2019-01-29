@@ -23,6 +23,7 @@ namespace upsylon {
                 virtual ~VectorsInfo() throw();     //!< destructor
                 const string & key() const throw(); //!< for database
 
+                //! throw an exception upon multiple vectors name
                 static void MultipleVectorsException(const string &);
 
             protected:
