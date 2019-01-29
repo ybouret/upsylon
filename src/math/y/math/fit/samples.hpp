@@ -23,7 +23,7 @@ namespace upsylon
             class SampleInfo : public counted_object
             {
             public:
-                Variables variables; //!< local or global variables
+                Variables variables;           //!< local or global variables
                 virtual ~SampleInfo() throw(); //!< destructor
 
                 virtual size_t count() const throw() = 0; //!< number of points
