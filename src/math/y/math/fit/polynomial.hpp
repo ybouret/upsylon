@@ -62,9 +62,8 @@ namespace upsylon
                     }
                     LU::solve(mu,aorg);
                 }
-
             };
-
+            
         }
     }
 }
