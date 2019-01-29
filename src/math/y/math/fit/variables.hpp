@@ -130,22 +130,22 @@ namespace upsylon
                 //! create a global variable
                 inline Variables & operator()(const char   *name) { return create_global(name); }
 
-                //! create a local variable
+                //! create a local variable linking to a global variable link
                 Variables        & operator()(const string &name, const Variable::Pointer &link);
 
-                //! create a local variable from a global variable
+                //! create a local variable from a global variable with the same name
                 Variables        & operator()(const string &name, const Variables &global);
 
-                //! create a local variable
+                //! create a local variable linking to a global variable link
                 inline Variables & operator()(const char   *name, const Variable::Pointer &link)
                 {
-                    const string __name = name; return (*this)(__name,link);
+                    const string _(name); return (*this)(_,link);
                 }
 
-                //! create a local variable
+                //! create a local variable from a global variable with the same name
                 inline Variables & operator()(const char   *name, const Variables &global)
                 {
-                    const string __name = name; return (*this)(__name,global);
+                    const string _(name); return (*this)(_,global);
                 }
 
                 //! access named variables
