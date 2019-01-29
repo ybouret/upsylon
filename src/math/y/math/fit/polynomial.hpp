@@ -69,11 +69,11 @@ namespace upsylon
 
                 //! fit using polynomial evaluation
                 template <typename T> static inline
-                void FitWith(LeastSquares<T> &LS,
-                             array<T>        &aorg,
-                             array<T>        &aerr,
-                             array<bool>     &used,
-                             Sample<T>       &sample)
+                void FitWith(LeastSquares<T>   &LS,
+                             array<T>          &aorg,
+                             array<T>          &aerr,
+                             const array<bool> &used,
+                             Sample<T>         &sample)
                 {
                     Create(sample.variables,aorg.size());
                     Initialize(aorg,sample);
@@ -83,6 +83,21 @@ namespace upsylon
                     {
                         throw exception("Fit::Polynomial::Unexpected Algebraic Failure");
                     }
+                }
+
+                //! compute the slope with the its error
+                template <typename T> static inline
+                T LinearSlopeOf( Sample<T> &sample, LeastSquares<T> &LS, T *slope_err )
+                {
+                    T    coeff[2] = {0,0};
+                    T    coerr[2] = {0,0};
+                    bool cused[2] = {false, true};
+                    lightweight_array<T>    aorg(coeff,2);
+                    lightweight_array<T>    aerr(coerr,2);
+                    lightweight_array<bool> used(cused,2);
+                    FitWith(LS,aorg,aerr,used,sample);
+                    if(slope_err) *slope_err = aerr[2];
+                    return aorg[1];
                 }
 
             };
