@@ -323,6 +323,28 @@ namespace upsylon
                     return corr.compute();
                 }
 
+                //! compute the apparent slope of data in case of linear case
+                inline T slope() const throw()
+                {
+                    T sum_x2 = 0;
+                    T sum_xy = 0;
+                    for(size_t i=X.size();i>0;--i)
+                    {
+                        const T x = X[i];
+                        sum_x2 += square_of(x);
+                        sum_xy += Y[i] * x;
+                    }
+                    if(sum_x2<=0)
+                    {
+                        return 0;
+                    }
+                    else
+                    {
+                        return sum_xy/sum_x2;
+                    }
+
+                }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Sample);
             };
