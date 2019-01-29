@@ -1,5 +1,6 @@
 #include "y/math/fit/variables.hpp"
 #include "y/exception.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon
 {
@@ -109,9 +110,14 @@ namespace upsylon
             const Variable::Pointer & Variables:: operator[](const string &name) const
             {
                 const Variable::Pointer *ppVar = search(name);
-                if(!ppVar) throw exception("no Variables['%s']", *name);
+                if(!ppVar)
+                {
+                    throw exception("no ['%s'] amongst %u variable%s", *name, unsigned(size()), plural_s(size()));
+                }
                 return *ppVar;
             }
+
+
 
             Variables & Variables:: operator()(const string &name, const Variable::Pointer &link)
             {
@@ -122,6 +128,13 @@ namespace upsylon
                 }
                 return *this;
             }
+
+            Variables        &  Variables:: operator()(const string &name, const Variables &global)
+            {
+                const Variable::Pointer &link = global[name];
+                return (*this)(name,link);
+            }
+
 
             size_t Variables:: get_max_name_size() const throw()
             {
