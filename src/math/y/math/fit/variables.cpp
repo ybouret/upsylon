@@ -107,6 +107,17 @@ namespace upsylon
                 return *this;
             }
 
+            Variables & Variables:: create_global(const char *name)
+            {
+                const string _(name); return create_global(_);
+            }
+
+            Variables & Variables:: operator<<( const string &name) { return create_global(name); }
+
+            Variables & Variables:: operator<<( const char *name) { return create_global(name); }
+
+
+
             const Variable::Pointer & Variables:: operator[](const string &name) const
             {
                 const Variable::Pointer *ppVar = search(name);
@@ -117,7 +128,15 @@ namespace upsylon
                 return *ppVar;
             }
 
+            const Variable::Pointer & Variables:: operator[](const char *name) const
+            {
+                const string _ = name; return (*this)[_];
 
+            }
+
+            Variables & Variables:: operator()(const string &name) { return create_global(name); }
+
+            Variables & Variables:: operator()(const char   *name) { return create_global(name); }
 
             Variables & Variables:: operator()(const string &name, const Variable::Pointer &link)
             {
@@ -147,7 +166,16 @@ namespace upsylon
                 return sz;
             }
 
-            
+            Variables & Variables:: operator()(const char   *name, const Variable::Pointer &link)
+            {
+                const string _(name); return (*this)(_,link);
+            }
+
+            Variables & Variables:: operator()(const char   *name, const Variables &global)
+            {
+                const string _(name); return (*this)(_,global);
+            }
+
         }
 
     }

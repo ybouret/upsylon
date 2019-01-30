@@ -102,51 +102,39 @@ namespace upsylon
 
                 //! create a global variable, assigning current size+1 as index
                 Variables        & create_global(const string &name);
+
                 //! create a global variable, wrapper
-                inline Variables & create_global(const char *name)
-                {
-                    const string __name = name;
-                    return create_global(__name);
-                }
+                Variables & create_global(const char *name);
 
                 //! quick create a global variable
-                inline Variables & operator<<( const string &name) { return create_global(name); }
+                Variables & operator<<( const string &name);
 
                 //! quick create a global variable
-                inline Variables & operator<<( const char   *name) { return create_global(name); }
+                Variables & operator<<( const char   *name);
 
                 //! access
                 const Variable::Pointer & operator[](const string &name) const;
                 
                 //! access
-                inline const Variable::Pointer & operator[](const char *name) const
-                {
-                    const string _ = name; return (*this)[_];
-                }
+                const Variable::Pointer & operator[](const char *name) const;
 
                 //! create a global variable
-                inline Variables & operator()(const string &name) { return create_global(name); }
+                Variables & operator()(const string &name);
 
                 //! create a global variable
-                inline Variables & operator()(const char   *name) { return create_global(name); }
+                Variables & operator()(const char   *name);
 
                 //! create a local variable linking to a global variable link
-                Variables        & operator()(const string &name, const Variable::Pointer &link);
+                Variables  & operator()(const string &name, const Variable::Pointer &link);
 
                 //! create a local variable from a global variable with the same name
                 Variables        & operator()(const string &name, const Variables &global);
 
                 //! create a local variable linking to a global variable link
-                inline Variables & operator()(const char   *name, const Variable::Pointer &link)
-                {
-                    const string _(name); return (*this)(_,link);
-                }
+                Variables & operator()(const char   *name, const Variable::Pointer &link);
 
                 //! create a local variable from a global variable with the same name
-                inline Variables & operator()(const char   *name, const Variables &global)
-                {
-                    const string _(name); return (*this)(_,global);
-                }
+                Variables & operator()(const char   *name, const Variables &global);
 
                 //! access named variables
                 template <typename T>
@@ -185,7 +173,9 @@ namespace upsylon
 
                 //! load same value in a list of colon separated variables
                 template <typename T>
-                inline void ld( array<T> &arr, const string &id, typename type_traits<T>::parameter_type value ) const
+                inline void ld(array<T>     &arr,
+                               const string &id,
+                               typename type_traits<T>::parameter_type value ) const
                 {
                     tokenizer<char>  tknz(id);
                     const Variables &self = *this;
@@ -199,7 +189,9 @@ namespace upsylon
 
                 //! load same value in a list of colon separated variables
                 template <typename T>
-                inline void ld( array<T> &arr, const char *id, typename type_traits<T>::parameter_type value ) const
+                inline void ld( array<T>  &arr,
+                               const char *id,
+                               typename type_traits<T>::parameter_type value ) const
                 {
                     const string _(id); ld<T>(arr,_,value);
                 }
