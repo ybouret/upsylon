@@ -67,6 +67,11 @@ namespace upsylon
             fp.flush();
         }
 
+        void ocstream:: overwrite( const char *filename)
+        {
+            const string _(filename); overwrite(_);
+        }
+
         void ocstream:: echo(const string &filename, const char *format,...)
         {
             ios::ocstream fp(filename,true);
@@ -78,6 +83,20 @@ namespace upsylon
             if( ferror(*fp.handle) != 0 )
                 throw libc::exception( EIO, "ocstream::echo('%s',...)", *filename );
         }
+
+        void ocstream:: echo(const char *filename, const char *format,...)
+        {
+            const string _(filename);
+            ios::ocstream fp(_,true);
+            assert(format);
+            va_list args;
+            va_start(args, format);
+            vfprintf(*fp.handle, format, args);
+            va_end (args);
+            if( ferror(*fp.handle) != 0 )
+                throw libc::exception( EIO, "ocstream::echo('%s',...)", *_ );
+        }
+
 
 
         FILE * ocstream:: operator*() throw()

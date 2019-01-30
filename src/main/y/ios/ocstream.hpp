@@ -41,8 +41,14 @@ namespace upsylon
             //! overwrite
             static void overwrite(const string &filename);
 
-            //! echo
+            //! overwrite
+            static void overwrite(const char *filename);
+
+            //! echo append
             static void echo(const string &filename, const char *fmt,...) Y_PRINTF_CHECK(2,3);
+
+            //! echo append
+            static void echo(const char   *filename, const char *fmt,...) Y_PRINTF_CHECK(2,3);
 
             //! transitive file handle
             FILE * operator*() throw();
