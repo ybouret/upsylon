@@ -44,9 +44,14 @@ namespace upsylon
                 return os;
             }
 
-            string to_string(const size_t nskip=0, const size_t ntrim=0) const; //!< convert to string
-            string to_print()  const; //!< convert to printable string
-            void   viz( ios::ostream &fp ) const; //!< write content as GraphViz
+            //! convert to string with skipped and trimmed possibility
+            string to_string(const size_t nskip=0, const size_t ntrim=0) const;
+
+            //! convert to printable string
+            string to_print()  const;
+
+            //! write content as GraphViz
+            void   viz( ios::ostream &fp ) const;
 
 
         };

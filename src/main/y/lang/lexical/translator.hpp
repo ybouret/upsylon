@@ -16,7 +16,6 @@ namespace upsylon
             class Translator : public Object
             {
             public:
-                typedef Lexical::Scanner             Scanner;  //!< alias
                 typedef set<string,Scanner::Pointer> DataBase; //!< database of scanners
                 typedef set<string,Plugin::Pointer>  Plugins;  //!< database of plugins
                 const Tag  label;                              //!< shared label

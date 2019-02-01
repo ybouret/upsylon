@@ -16,8 +16,8 @@ namespace upsylon
             virtual ~CharInfo() throw();
 
             const Tag    origin;  //!< origin
-            const int    line;    //!< line in stamp
-            const int    column;  //!< column in stamp
+            const int    line;    //!< line  in origin
+            const int    column;  //!< column origin
 
             //! initialize
             explicit CharInfo(const Tag &org, const int l=0, const int c=0) throw();

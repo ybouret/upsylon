@@ -22,7 +22,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Object);
         };
 
-        //! base object for reference counting
+        //! Base Object for reference counting
         class CountedObject : public Object, public counted
         {
         public:
