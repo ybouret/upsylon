@@ -8,6 +8,54 @@ namespace upsylon
     {
         namespace Lexical
         {
+            Event:: ~Event() throw() {}
+            Event:: Event(const Type t, const Action &a) : type(t), action(a) {}
+
+            //
+            RegularEvent:: ~RegularEvent() throw() {}
+            RegularEvent:: RegularEvent(const Type t, const Action &a) : Event(Regular,a), type(t) {}
+
+            //
+            OnForward:: OnForward(const Action &a) : RegularEvent(Forward,a) {}
+            OnForward:: ~OnForward() throw()  {}
+
+            //
+            OnDiscard:: OnDiscard(const Action &a) : RegularEvent(Discard,a) {}
+            OnDiscard:: ~OnDiscard() throw() {}
+
+            //
+            ControlEvent:: ~ControlEvent() throw() {}
+
+            ControlEvent:: ControlEvent(const Type    t,
+                                        const Action &a,
+                                        const string &l) : Event(Control,a), type(t), label(l)
+            { assert(Back!=type); }
+
+            ControlEvent:: ControlEvent(const Action &a) : Event(Control,a), type(Back), label() {}
+
+            //
+            OnCall::  OnCall(const string &l, const Action &a) : ControlEvent(Call,a,l) {}
+            OnCall:: ~OnCall() throw() {}
+
+            //
+            OnJump:: OnJump(const string &l, const Action &a) : ControlEvent(Jump,a,l) {}
+            OnJump:: ~OnJump() throw() {}
+
+            //
+            OnBack:: OnBack(const Action &a) : ControlEvent(a) {}
+            OnBack:: ~OnBack() throw() {}
+
+        }
+    }
+}
+
+
+namespace upsylon
+{
+    namespace Lang
+    {
+        namespace Lexical
+        {
             Rule:: ~Rule() throw()
             {
             }

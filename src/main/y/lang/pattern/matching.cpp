@@ -54,7 +54,7 @@ namespace upsylon
             return true;
         }
 
-        void Matching:: find( sequence<Token> &seq, const string &s )
+        size_t Matching:: find( sequence<Token> &seq, const string &s )
         {
             clear();
             seq.free();
@@ -71,11 +71,12 @@ namespace upsylon
                 }
                 else
                 {
-                    if(!source.active()) return;
+                    if(!source.active()) break;
                     source.skip();
                 }
 
             }
+            return seq.size();
         }
 
 
@@ -93,7 +94,7 @@ namespace upsylon
 
         bool MatchString::  operator()( const string &s ) { return exactly(s); }
 
-        size_t MatchString:: operator()( sequence<Token> &m, const string &s ) { find(m,s); return m.size();  }
+        size_t MatchString:: operator()( sequence<Token> &m, const string &s ) { return find(m,s); }
     }
 }
 

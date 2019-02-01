@@ -35,8 +35,8 @@ Y_UTEST(matching)
                 std::cerr << "-partly" << std::endl;
             }
 
-            match.find(tokens,line);
-            std::cerr << "all=" << tokens << std::endl;
+            const size_t n = match.find(tokens,line);
+            std::cerr << "all#" << n << "=" << tokens << std::endl;
         }
     }
 }

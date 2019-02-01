@@ -21,9 +21,8 @@ namespace upsylon
 
             bool exactly( const string &s );                 //!< the string must entirely match the pattern
             bool partly(const string &s);                    //!< the string must partly match the pattern
-            void find( sequence<Token> &, const string &s ); //!< free and find all consecutive, non overlapping occurences
+            size_t find( sequence<Token> &, const string &s ); //!< free and find all consecutive, non overlapping occurences
             
-
         private:
             const arc_ptr<const Pattern> motif;
             Y_DISABLE_ASSIGN(Matching);

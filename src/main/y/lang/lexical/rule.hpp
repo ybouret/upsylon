@@ -24,7 +24,7 @@ namespace upsylon
                 enum Type
                 {
                     Regular, //!< for lexeme production
-                    Control  //!< for translator control;
+                    Control  //!< for translator control
                 };
 
                 typedef arc_ptr<Event> Pointer; //!< shared pointer
@@ -33,11 +33,11 @@ namespace upsylon
                 mutable Action action; //!< action to be taken
                 
                 //! destructor
-                inline virtual ~Event() throw() {}
+                virtual ~Event() throw();
 
             protected:
                 //! initialize
-                inline Event(const Type t, const Action &a) : type(t), action(a) {}
+                explicit Event(const Type t, const Action &a);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Event);
@@ -56,11 +56,11 @@ namespace upsylon
                 const Type type; //!< category of regular event
 
                 //! destructor
-                inline virtual ~RegularEvent() throw() {}
+                virtual ~RegularEvent() throw();
 
             protected:
                 //! initialize
-                inline explicit RegularEvent(const Type t, const Action &a) : Event(Regular,a), type(t) {}
+                explicit RegularEvent(const Type t, const Action &a);
 
             private:
                 Y_DISABLE_ASSIGN(RegularEvent);
@@ -73,9 +73,10 @@ namespace upsylon
             {
             public:
                 //! initialize
-                inline explicit OnForward(const Action &a) : RegularEvent(Forward,a) {}
+                explicit OnForward(const Action &a);
+
                 //! destructor
-                inline virtual ~OnForward() throw() {}
+                virtual ~OnForward() throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OnForward);
@@ -86,9 +87,10 @@ namespace upsylon
             {
             public:
                 //! initialize
-                inline explicit OnDiscard(const Action &a) : RegularEvent(Discard,a) {}
+                explicit OnDiscard(const Action &a);
+
                 //! desctructor
-                inline virtual ~OnDiscard() throw() {}
+                virtual ~OnDiscard() throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OnDiscard);
@@ -108,15 +110,16 @@ namespace upsylon
                 const Type   type;  //!< category of control event
                 const string label; //!< sub scanner to call, empty for back
 
+                virtual ~ControlEvent() throw();
+
             protected:
                 //! initialize call/jump
-                ControlEvent(const Type    t,
-                             const Action &a,
-                             const string &l) :
-                Event(Control,a), type(t), label(l) { assert(Back!=type); }
+                explicit  ControlEvent(const Type    t,
+                                       const Action &a,
+                                       const string &l);
 
                 //! initialize for back
-                ControlEvent(const Action &a) : Event(Control,a), type(Back), label() {}
+                explicit ControlEvent(const Action &a);
 
 
             private:
@@ -130,9 +133,10 @@ namespace upsylon
             {
             public:
                 //!initialize
-                inline explicit OnCall(const string &l, const Action &a) : ControlEvent(Call,a,l) {}
+                explicit OnCall(const string &l, const Action &a);
+
                 //!destructor
-                inline virtual ~OnCall() throw() {}
+                virtual ~OnCall() throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OnCall);
@@ -143,10 +147,10 @@ namespace upsylon
             {
             public:
                 //!initialize
-                inline explicit OnJump(const string &l, const Action &a) : ControlEvent(Jump,a,l) {}
+                explicit OnJump(const string &l, const Action &a);
 
                 //!destructor
-                inline virtual ~OnJump() throw() {}
+                virtual ~OnJump() throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OnJump);
@@ -156,11 +160,11 @@ namespace upsylon
             class OnBack : public ControlEvent
             {
             public:
-                //!initialize
-                inline explicit OnBack(const Action &a) : ControlEvent(a) {}
+                //! initialize
+                explicit OnBack(const Action &a);
                 
-                //!destructor
-                inline virtual ~OnBack() throw() {}
+                //! destructor
+                virtual ~OnBack() throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OnBack);
