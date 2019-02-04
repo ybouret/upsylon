@@ -12,7 +12,10 @@ namespace upsylon
         {
             class Translator; //!< forward declaration
 
-            //! plugin API
+            //! plugin API: a dedicated scanner
+            /**
+             
+             */
             class Plugin : public Scanner
             {
             public:

@@ -149,6 +149,12 @@ namespace upsylon
                 static string CallLabel( const string &target );
 
                 //! construct a call
+                /**
+                 upon recognition of rx=token, host.method(token) is called
+                 and another target scanner is set as active,
+                 and the current scanner is pushed onto the history stack.
+                 Then the source will be probed again.
+                 */
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 void call(const string   &target,
                           const string   &rx,
@@ -163,7 +169,7 @@ namespace upsylon
                     add(ruleLabel,ruleMotif,ruleEvent);
                 }
 
-                //! construct a  call
+                //! construct a  call, wrapper
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 inline void call(const char     *target,
                                  const char     *rx,
@@ -179,20 +185,27 @@ namespace upsylon
                     call(target,rx,this,&Scanner::nothing);
                 }
 
-                //! just call to target on a regular expression
+                //! just call to target on a regular expression, wrapper
                 inline void call(const char *target, const char *rx)
                 {
                     const string _ = target; const string __ = rx; call(_,__);
                 }
 
 
-                //! construct a back
+                static  string BackLabel( const string &l, const string &rx );
+
+                //! construct a come back rule
+                /**
+                 upon recognition of rx=token, host.method(token) is called
+                 and the last scanner in history if set as active.
+                 The the source will be probed again.
+                 */
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 void back(const string   &rx,
                           OBJECT_POINTER  host,
                           METHOD_POINTER  meth)
                 {
-                    const string       id        = "<=" + *label + "." + rx;
+                    const string       id        = BackLabel(*label,rx);
                     const Tag          ruleLabel = new string(id);
                     const Motif        ruleMotif = RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);
@@ -200,7 +213,7 @@ namespace upsylon
                     add(ruleLabel,ruleMotif,ruleEvent);
                 }
 
-                //! construct a back
+                //! construct a come back, wrapper
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 inline void back(const char     *rx,
                                  OBJECT_POINTER  host,
@@ -222,35 +235,35 @@ namespace upsylon
                 }
 
                 //! do nothing
-                inline void nothing( const Token &) throw() {}
+                void nothing( const Token &) throw();
+
                 //! newline of the probed source
-                inline void newline(const Token &) throw() { if(probed) probed->newLine(); }
+                void newline(const Token &) throw();
 
                 //! helper to emit ID on rx
-                inline void emit(const string &id,const string &rx) { forward(id,rx,this,&Scanner::nothing); }
+                void emit(const string &id,const string &rx);
 
                 //! helper to emit ID on rx
-                inline void emit(const char   *id,const char   *rx) { const string _=id; const string __=rx; emit(_,__); }
+                void emit(const char   *id,const char   *rx);
 
                 //! helper to drop ID on rx
-                inline void drop(const string &id,const string &rx) { discard(id,rx,this,&Scanner::nothing); }
+                void drop(const string &id,const string &rx);
 
                 //! helper to drop ID on rx
-                inline void drop(const char   *id,const char   *rx) { const string _=id; const string __=rx; drop(_,__); }
+                void drop(const char   *id,const char   *rx);
 
                 //! helper to drop rx on rx
-                inline void drop(const char *rx) { const string _(rx); drop(_,_); }
+                void drop(const char *rx);
 
 
                 //! helper for newline(id) on rx
-                inline void endl(const string &id,const string &rx) { discard(id,rx,this,&Scanner::newline); }
+                void endl(const string &id,const string &rx);
 
                 //! helper for newline(id) on rx
-                inline void endl(const char   *id,const char   *rx) { const string _=id; const string __=rx; endl(_,__); }
+                void endl(const char   *id,const char   *rx);
 
                 //! helper for endl shortcut
-                inline void endl(const char *rx) { const string _(rx); endl(_,_); }
-                
+                void endl(const char *rx);
 
                 //! probe source
                 /**
