@@ -74,7 +74,7 @@ namespace upsylon
             S -= M * 60;
             assert(D*86400+H*3600+M*60+S==S0);
             assert(D<=max_days);
-            snprintf(fmt,16," %02uD%02u:%02u:%02u.%02u", D, H, M, S, c);
+            snprintf(fmt,format_size-1," %02uD%02u:%02u:%02u.%02u", D, H, M, S, c);
         }
 
     }

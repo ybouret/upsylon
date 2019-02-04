@@ -44,6 +44,24 @@ namespace upsylon
             //! out of reach shift, CONST
             static const void * __shift( const void *addr, const ptrdiff_t bytes) throw();
 
+            //! out of reach address
+            static void * __addr( void *addr ) throw();
+
+            //! out of reac address, CONST
+            static const void *__addr(const void *addr) throw();
+
+            template <typename T>
+            static inline T *__force(void *addr) throw()
+            {
+                return static_cast<T *>( __addr(addr) );
+            }
+
+            template <typename T>
+            static inline const T *__force(const void *addr) throw()
+            {
+                return static_cast<const T *>( __addr(addr) );
+            }
+
             //! translation
             template <typename T> static inline
             T *__prev( T *addr ) throw()

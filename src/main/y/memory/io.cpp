@@ -15,5 +15,17 @@ namespace upsylon
             const char *p = static_cast<const char *>(addr);
             return          static_cast<const void *>(p+bytes);
         }
+
+        void * io::__addr( void *addr ) throw()
+        {
+            return addr;
+        }
+
+        const void * io::__addr( const void *addr ) throw()
+        {
+            return addr;
+        }
+        
+
     }
 }

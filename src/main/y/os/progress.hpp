@@ -13,7 +13,7 @@ namespace upsylon
     public:
         static const size_t max_days    = 99; //!< days limit
         static const size_t max_seconds = max_days * 24 * 60 * 60; //!< seconds limit
-        static const size_t format_size = 16; //!< char[format_size] for output
+        static const size_t format_size = 32; //!< char[format_size] for output
 
         explicit progress();         //!< setup
         virtual ~progress() throw(); //!< destructor
