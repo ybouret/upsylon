@@ -14,7 +14,8 @@ namespace upsylon
 
             //! plugin API: a dedicated scanner
             /**
-             
+             a plugin is a reusable dedicated scanner that will create a lexeme
+             with its identifier inside a translator
              */
             class Plugin : public Scanner
             {

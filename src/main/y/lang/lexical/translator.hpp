@@ -33,9 +33,8 @@ namespace upsylon
                 //! create, register and return a new scanner
                 Scanner & decl(const string &id);
 
-                //! create, register and return a new scanner
-                inline
-                Scanner & decl(const char *id) { const string _(id); return decl(_); }
+                //! create, register and return a new scanner, wrapper
+                Scanner & decl(const char *id);
 
                 //! reset curr to base and clean history
                 void    reset() throw();
@@ -56,7 +55,7 @@ namespace upsylon
                 const Lexeme *peek(Source &source);
                 
                 //! get the last matched lexeme
-                const Lexeme *last() const throw() { return cache.tail; }
+                const Lexeme *last() const throw();
 
 
                 //! no args PLUGIN constructor
@@ -70,7 +69,7 @@ namespace upsylon
                         link(scanner,enroll_plugin( new PLUGIN(*this,pluginName) ) );
                 }
 
-                //! no args PLUGIN constructor
+                //! no args PLUGIN constructor, wrapper
                 template <typename PLUGIN>
                 inline void hook( Scanner &scanner, const char *pluginName )
                 {

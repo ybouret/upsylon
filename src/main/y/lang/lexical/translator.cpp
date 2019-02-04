@@ -55,7 +55,15 @@ dict()
                 {
                     throw exception("[%s] multiple plugin [%s]", **label, **(p->label) );
                 }
-                enroll(plg);
+                try
+                {
+                    enroll(plg);
+                }
+                catch(...)
+                {
+                    plugins.no(*(p->label));
+                    throw;
+                }
                 return *plg;
             }
 
@@ -73,6 +81,10 @@ dict()
                 enroll(s);
                 return *s;
             }
+
+            Scanner & Translator:: decl(const char *id)
+            { const string _(id); return decl(_); }
+
 
 
             void Translator:: reset() throw()
@@ -135,7 +147,9 @@ dict()
                     return NULL;
                 }
             }
-            
+
+            const Lexeme * Translator:: last() const throw() { return cache.tail; }
+
 
         }
     }
@@ -194,7 +208,6 @@ namespace upsylon
                             switch(msg->type)
                             {
                                 case ControlEvent::Call: history.append(curr); // FALLTHRU
-
                                 case ControlEvent::Jump: {
                                     Scanner::Pointer *ppScanner = scanners.search(msg->label);
                                     if(!ppScanner) throw exception("[%s] jump/call to undeclared [%s]", **(curr->label), *(msg->label) );

@@ -124,6 +124,7 @@ namespace upsylon
                             {
                                     //------------------------------------------
                                 case RegularEvent::Forward: { // make a lexeme!
+                                    //------------------------------------------
                                     Lexeme *lx = new Lexeme(bestRule->label);
                                     lx->swap_with(bestData);
                                     return lx;
