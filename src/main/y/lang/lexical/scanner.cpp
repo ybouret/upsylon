@@ -61,6 +61,11 @@ verbose(false)
                 return 0;
             }
 
+            string Scanner::JumpLabel( const string &target )
+            {
+                return "->" + target;
+            }
+
             string Scanner::CallLabel( const string &target )
             {
                 return "=>" + target;

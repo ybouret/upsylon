@@ -16,6 +16,9 @@ namespace upsylon
             typedef const ControlEvent *Message; //!< alias for probe
 
             //! simple 'Flex' scanner
+            /**
+             Events are triggeres upong pattern recognition
+             */
             class Scanner : public CountedObject
             {
             public:
@@ -23,18 +26,17 @@ namespace upsylon
 
                 const Tag label; //!< used as shared label/key
 
-
                 virtual ~Scanner() throw();                 //!< destructor
                 explicit Scanner(const string &id);         //!< initialize
                 explicit Scanner(const char   *id);         //!< initialize
                 explicit Scanner(const Tag    &id) throw(); //!< initialize
                 const string & key() const throw();         //!< for database
 
-                //! construct a new rule
-                template <typename CODE>
+                //! construct a new rule, for any EVENT
+                template <typename EVENT>
                 inline void add(const Tag         &ruleLabel,
                                 const Motif       &ruleMotif,
-                                const CODE        &ruleEvent)
+                                const EVENT       &ruleEvent)
                 {
                     if(verbose) { std::cerr << "@scan[" << label << "].add( '" << ruleLabel << "' )" << std::endl; }
                     checkLabel(ruleLabel);
@@ -42,6 +44,10 @@ namespace upsylon
                 }
 
                 //! construct a forwading rule
+                /**
+                 upon recognition or rx=token, host.meth(token) is called
+                 and the token will be emitted as a regular lexeme
+                 */
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 inline void forward(const string   &id,
                                     const string   &rx,
@@ -55,7 +61,7 @@ namespace upsylon
                     add(ruleLabel,ruleMotif,ruleEvent);
                 }
 
-                //! construct a forwarding rule
+                //! construct a forwarding rule, wrapper
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 inline void forward(const char     *id,
                                     const char     *rx,
@@ -66,6 +72,10 @@ namespace upsylon
                 }
 
                 //! construct a discarding rule
+                /**
+                 upon recognition or rx=token, host.meth(token) is called
+                 and the token is discarded, and the source is probed again
+                 */
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 inline void discard(const string   &id,
                                     const string   &rx,
@@ -79,7 +89,7 @@ namespace upsylon
                     add(ruleLabel,ruleMotif,ruleEvent);
                 }
 
-                //! construct a discarding rule
+                //! construct a discarding rule, wrapper
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 inline void discard(const char     *id,
                                     const char     *rx,
@@ -89,14 +99,23 @@ namespace upsylon
                     const string _ = id; const string __ = rx; discard(_,__,host,meth);
                 }
 
+                //! make a jump label to target
+                static string JumpLabel( const string &target );
+
                 //! construct a jump
+                /**
+                 upon recognition of rx=token, host.method(token) is called
+                 and another target scanner is set as active,
+                 without memory of the calling scanner.
+                 Then the source will be probed again.
+                 */
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 void jump(const string   &target,
                           const string   &rx,
                           OBJECT_POINTER  host,
                           METHOD_POINTER  meth)
                 {
-                    const string       id        = "->" + target;
+                    const string       id        = JumpLabel(target);
                     const Tag          ruleLabel = new string(id);
                     const Motif        ruleMotif = RegExp(rx,userDict);
                     const Action       ruleAction(host,meth);
@@ -104,7 +123,7 @@ namespace upsylon
                     add(ruleLabel,ruleMotif,ruleEvent);
                 }
 
-                //! construct a jump
+                //! construct a jump, wrapper
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 inline void jump(const char     *target,
                                  const char     *rx,

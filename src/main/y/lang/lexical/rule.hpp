@@ -23,8 +23,8 @@ namespace upsylon
                 //! type of event
                 enum Type
                 {
-                    Regular, //!< for lexeme production
-                    Control  //!< for translator control
+                    Regular, //!< for lexeme production  (Forward/Discard)
+                    Control  //!< for translator control (Jump/Call/Back)
                 };
 
                 typedef arc_ptr<Event> Pointer; //!< shared pointer
@@ -169,9 +169,7 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OnBack);
             };
-
-
-
+            
             //! lexical rule motif->action
             class Rule : public Object
             {
