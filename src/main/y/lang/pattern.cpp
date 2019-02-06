@@ -53,7 +53,7 @@ namespace upsylon
         string Pattern:: to_binary() const
         {
             string           ans;
-            ios::osstream fp(ans);
+            ios::osstream    fp(ans);
             write(fp);
             return ans;
         }

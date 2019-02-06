@@ -26,11 +26,8 @@ namespace upsylon
             //! utility : reset/write/read
             string to_string( const void *data, const size_t size );
 
-            //! utility to encode a buffer
-            inline string to_string( const memory::ro_buffer &buff )
-            {
-                return to_string( buff.ro(), buff.length() );
-            }
+            //! utility to encode a buffer, wrapper
+            string to_string( const memory::ro_buffer &buff );
 
         protected:
             //! initialize

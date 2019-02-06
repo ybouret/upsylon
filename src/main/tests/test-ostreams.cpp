@@ -58,7 +58,7 @@ Y_UTEST(ostreams)
                 {
                     ios::imstream inp(s);
                     const size_t j = inp.read_upack<size_t>();
-                    std::cerr << "i=" << i << " -> j=" << j << std::endl;
+                    std::cerr << "\ti=" << i << " -> j=" << j << std::endl;
                     Y_ASSERT(j==i);
                 }
             }
@@ -76,7 +76,7 @@ Y_UTEST(ostreams)
                 {
                     ios::imstream inp(s);
                     const uint16_t j = inp.read_upack<uint16_t>();
-                    std::cerr << "x=" << x << " -> j=" << j << std::endl;
+                    std::cerr << "\tx=" << x << " -> j=" << j << std::endl;
                     Y_ASSERT(j==x);
                 }
             }
@@ -93,7 +93,7 @@ Y_UTEST(ostreams)
                 {
                     ios::imstream inp(s);
                     const uint32_t j = inp.read_upack<uint32_t>();
-                    std::cerr << "x=" << x << " -> j=" << j << std::endl;
+                    std::cerr << "\tx=" << x << " -> j=" << j << std::endl;
                     Y_ASSERT(j==x);
                 }
             }
@@ -110,7 +110,7 @@ Y_UTEST(ostreams)
                 {
                     ios::imstream inp(s);
                     const uint64_t j = inp.read_upack<uint64_t>();
-                    std::cerr << "x=" << x << " -> j=" << j << std::endl;
+                    std::cerr << "\tx=" << x << " -> j=" << j << std::endl;
                     Y_ASSERT(j==x);
                 }
             }
@@ -118,6 +118,7 @@ Y_UTEST(ostreams)
 
         }
         {
+            std::cerr << "Reading Upacked..." << std::endl;
             ios::icstream fp("upack.dat");
             for(size_t i=1;i<=data.size();++i)
             {

@@ -52,6 +52,11 @@ namespace upsylon
             return ans;
         }
 
+        string codec:: to_string( const memory::ro_buffer &buff )
+        {
+            return to_string( buff.ro(), buff.length() );
+        }
+
 
         //////////
 
