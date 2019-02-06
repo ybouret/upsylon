@@ -20,6 +20,7 @@ namespace
                 emit("int","[:digit:]+");
                 emit("dbl","[:digit:]+\\.[:digit:]*");
                 drop("blanks","[:blank:]+");
+                drop("sep",";");
                 endl("endl","[:endl:]");
             }
         }
