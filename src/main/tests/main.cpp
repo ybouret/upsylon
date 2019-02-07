@@ -27,6 +27,7 @@ Y_UTEST_INIT(100)
     Y_UTEST(cslot);
     Y_UTEST(string);
     Y_UTEST(string_convert);
+    Y_UTEST(tmpname);
     Y_UTEST(tokenizer);
     Y_UTEST(nugget);
     Y_UTEST(nuggets);
