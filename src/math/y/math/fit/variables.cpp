@@ -154,6 +154,18 @@ namespace upsylon
                 return (*this)(name,link);
             }
 
+            Variables & Variables:: operator()(const string &prefix, Variables &global, const size_t index)
+            {
+                const string global_name = prefix + vformat( "_%lu", static_cast<unsigned long>(index) );
+                global << global_name;
+                return (*this)(prefix,global[global_name]);
+            }
+
+            Variables & Variables:: operator()(const char *prefix, Variables &global, const size_t index)
+            {
+                const string _(prefix);
+                return (*this)(_,global,index);
+            }
 
             size_t Variables:: get_max_name_size() const throw()
             {

@@ -136,6 +136,13 @@ namespace upsylon
                 //! create a local variable from a global variable with the same name
                 Variables & operator()(const char   *name, const Variables &global);
 
+                //! create "prefix" in this local variables, and "prefix#index" for global
+                Variables & operator()(const string &prefix, Variables &global, const size_t index);
+
+                //!create "prefix" in this local variables, and "prefix_index" for global, wrapper
+                Variables & operator()(const char *prefix, Variables &global, const size_t index);
+
+
                 //! access named variables
                 template <typename T>
                 inline T & operator()( array<T> &arr, const string &name ) const
