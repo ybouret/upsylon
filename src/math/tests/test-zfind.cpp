@@ -28,6 +28,11 @@ Y_UTEST(zfind)
         {
             std::cerr << "couldn't find zero" << std::endl;
         }
+        const double x1 = zfind::run1(F,0.0,2.0);
+        std::cerr << "x1=" << x1 << std::endl;
+        const double x2 = zfind::run2(0.11,F,0.0,2.0);
+        std::cerr << "x2=" << x2 << std::endl;
+
     }
 }
 Y_UTEST_DONE()

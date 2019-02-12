@@ -4,7 +4,6 @@
 
 #include "y/math/types.hpp"
 #include "y/math/triplet.hpp"
-#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -45,8 +44,7 @@ namespace upsylon
             static inline
             bool run( FUNC &F, triplet<T> &x, triplet<T> &f )
             {
-
-                T w = __fabs(x.c-x.a);
+                T w = __fabs( x.c-x.a);
                 while(true)
                 {
                     f.b = F( (x.b = T(0.5)*(x.a+x.c) ) );
@@ -90,6 +88,44 @@ namespace upsylon
                     if(new_w>=w) return true;
                     w = new_w;
                 }
+            }
+
+            //! wrapper
+            template <
+            typename T,
+            typename FUNC>
+            struct __call
+            {
+                T     value; //!< the value to find
+                FUNC *pfunc; //!< function
+
+                //! call wrapping
+                inline T operator()(const T x)
+                {
+                    assert(pfunc);
+                    return (*pfunc)(x)-value;
+                }
+            };
+
+            //! throw exception on error
+            static void throw_not_bracketed();
+
+            //! return x such that F(x) approx 0
+            template <typename T,typename FUNC> static inline
+            T run1( FUNC &F, const T a, const T b)
+            {
+                triplet<T> x = { a,0,b };
+                triplet<T> f = { F(x.a), 0, F(x.c) };
+                if(!run(F,x,f)) throw_not_bracketed();
+                return x.b;
+            }
+
+            //! return x such that F(x) approx value
+            template <typename T,typename FUNC> static inline
+            T run2( const T value, FUNC &F, const T a, const T b)
+            {
+                __call<T,FUNC> Z = { value, &F };
+                return run1<T, __call<T,FUNC> >(Z,a,b);
             }
 
 
