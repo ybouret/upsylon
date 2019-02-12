@@ -47,15 +47,17 @@ namespace upsylon
             //! out of reach address
             static void * __addr( void *addr ) throw();
 
-            //! out of reac address, CONST
+            //! out of reach address, CONST
             static const void *__addr(const void *addr) throw();
 
+            //! out of reached forced cast
             template <typename T>
             static inline T *__force(void *addr) throw()
             {
                 return static_cast<T *>( __addr(addr) );
             }
 
+            //! out of reached forced cast, CONST
             template <typename T>
             static inline const T *__force(const void *addr) throw()
             {

@@ -6,7 +6,7 @@
 
 namespace upsylon
 {
-    string temporary_name(const size_t length=8);
+    string temporary_name(const size_t length=8); //!< make a random temporary file name
 }
 
 #endif

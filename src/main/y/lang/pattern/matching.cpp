@@ -1,5 +1,6 @@
 
 #include "y/lang/pattern/matching.hpp"
+#include "y/sequence/vector.hpp"
 
 namespace upsylon
 {
@@ -77,6 +78,20 @@ namespace upsylon
 
             }
             return seq.size();
+        }
+
+        const Token * Matching:: first_in(const string &s)
+        {
+            vector<Token,memory::pooled> l;
+            if( find(l,s) > 0 )
+            {
+                this->swap_with(l.front());
+                return this;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
 

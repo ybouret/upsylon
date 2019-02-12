@@ -4,6 +4,7 @@
 
 #include "y/lang/pattern/compiler.hpp"
 #include "y/container/sequence.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon
 {
@@ -16,13 +17,14 @@ namespace upsylon
             virtual ~Matching() throw();    //!< destructor
             Matching( Pattern *p ) throw(); //!< initialize with a compiled pattern
             Matching( const string &rx, const Dictionary *dict=NULL); //!< init with regular expression
-            Matching( const char   *rx, const Dictionary *dict=NULL); //!< init with regulat expresiion
+            Matching( const char   *rx, const Dictionary *dict=NULL); //!< init with regular expresiion
             Matching(const Matching &other) throw();                  //!< share the pattern
 
-            bool exactly( const string &s );                 //!< the string must entirely match the pattern
-            bool partly(const string &s);                    //!< the string must partly match the pattern
-            size_t find( sequence<Token> &, const string &s ); //!< free and find all consecutive, non overlapping occurences
-            
+            bool         exactly( const string &s );                 //!< the string must entirely match the pattern
+            bool         partly(const string &s);                    //!< the string must partly   match the pattern
+            size_t       find( sequence<Token> &, const string &s ); //!< free and find all consecutive, non overlapping occurences
+            const Token *first_in(const string &s);                  //!< first in string, NULL if none
+
         private:
             const arc_ptr<const Pattern> motif;
             Y_DISABLE_ASSIGN(Matching);
@@ -32,17 +34,10 @@ namespace upsylon
         class MatchString : public Matching
         {
         public:
-            //! initialize
-            MatchString(const char   *rx);
-
-            //! initialize
-            MatchString(const string &rx);
-
-            //! destructor
-            virtual ~MatchString() throw();
-
-            //! copy
-            MatchString(const MatchString &other) throw();
+            MatchString(const char   *rx);             //!< initialize
+            MatchString(const string &rx);             //!< initialize
+            virtual ~MatchString() throw();            //!< destructor
+            MatchString(const MatchString &) throw();  //!< copy
             
             //! functionoid call
             bool operator()( const string &s );

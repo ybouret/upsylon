@@ -192,13 +192,14 @@ namespace upsylon
                 }
 
 
+                //! create a BackLabel from the label and the regular expression
                 static  string BackLabel( const string &l, const string &rx );
 
                 //! construct a come back rule
                 /**
                  upon recognition of rx=token, host.method(token) is called
                  and the last scanner in history if set as active.
-                 The the source will be probed again.
+                 Then the source will be probed again.
                  */
                 template <typename OBJECT_POINTER, typename METHOD_POINTER>
                 void back(const string   &rx,
