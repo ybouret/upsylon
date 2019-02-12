@@ -37,6 +37,16 @@ Y_UTEST(matching)
 
             const size_t n = match.find(tokens,line);
             std::cerr << "all#" << n << "=" << tokens << std::endl;
+
+            const Lang::Token *ptkn = match.first_in(line);
+            if(ptkn)
+            {
+                std::cerr << "first_in=" << *ptkn << std::endl;
+            }
+            else
+            {
+                std::cerr << "no first_in" << std::endl;
+            }
         }
     }
 }
