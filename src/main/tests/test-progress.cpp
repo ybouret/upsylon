@@ -7,6 +7,7 @@ using namespace upsylon;
 
 Y_UTEST(progress)
 {
+    std::cerr << "-- format..." << std::endl;
     char fmt[progress::format_size];
     for(size_t iter=0;iter<10;++iter)
     {
@@ -19,6 +20,7 @@ Y_UTEST(progress)
         std::cerr << "'"  << fmt << "'" << std::endl;
     }
 
+    std::cerr << "-- progres..." << std::endl;
     progress bar;
     wtime    chrono;
 

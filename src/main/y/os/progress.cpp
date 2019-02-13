@@ -83,7 +83,8 @@ namespace upsylon
     {
         // running wheel selection
         static const char sym[] = { '-', '\\', '|', '/' };
-        char C = sym[++counter%sizeof(sym)];
+
+        char C = sym[(++counter)%sizeof(sym)];
         if(left<=0)
         {
             C='*';
@@ -91,7 +92,7 @@ namespace upsylon
 
         // constant length output
         os << '[' << C << ']';
-        char fmt[16];
+        char fmt[format_size];
         snprintf(fmt,15," %6.2f%%",percent);
         os << fmt;
         format(fmt,done);
