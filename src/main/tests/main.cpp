@@ -1,6 +1,6 @@
 #include "y/utest/driver.hpp"
 
-Y_UTEST_INIT(100)
+Y_UTEST_INIT(128)
 {
     Y_UTEST(platform);
     Y_UTEST(types);
@@ -56,6 +56,7 @@ Y_UTEST_INIT(100)
     Y_UTEST(fft);
     Y_UTEST(sort);
     Y_UTEST(unique);
+    Y_UTEST(maintain);
     Y_UTEST(associative);
     Y_UTEST(map);
     Y_UTEST(set);
