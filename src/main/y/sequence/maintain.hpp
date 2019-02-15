@@ -33,6 +33,18 @@ namespace upsylon
             }
         }
 
+        //! wrapper for sequences of data
+        template <
+        typename SEQUENCE,
+        typename KEEP_PROC> static inline
+        void build_indices(sequence<size_t> &indices,
+                           const SEQUENCE   &data,
+                           KEEP_PROC        &keep,
+                           const bool        flag)
+        {
+            build_indices(indices,data.begin(),data.size(),keep,flag);
+        }
+
         //! rearrange array to keep (in same order) valid indices first
         template <
         typename T,
