@@ -117,22 +117,12 @@ namespace upsylon
                 {
                     const double   mu = wr[i];
                     array<double> &U  = ev[i];
+                    std::cerr << "mu=" << mu << std::endl;
+                    tao::mul(wi,M0,U);
+                    tao::mulset(q,mu,U);
+                    std::cerr << "\tMU  = " << wi << std::endl;
+                    std::cerr << "\tmuU = "  << q << std::endl;
                     std::cerr << std::endl;
-                    std::cerr << "mu=" << mu << ", U=" << U << std::endl;
-                    tao::mul(wi,C,U);
-                    const double UCU = tao::dot<double>(U,wi);
-                    std::cerr << "UCU=" << UCU << std::endl;
-                    if(UCU>0)
-                    {
-                        std::cerr << "\t#possible..." << std::endl;
-                        tao::mulset(q,1.0/sqrt(UCU),U);
-                        std::cerr << "\tq=" << q << std::endl;
-                        tao::mul(wi,C,q);
-                        std::cerr << "\t\tqCq=" << tao::dot<double>(q,wi) << std::endl;
-                        tao::mul(wi,S,q);
-                        std::cerr << "\t\tqSq=" << tao::dot<double>(q,wi) << std::endl;
-                    }
-
                 }
                 exit(0);
 
