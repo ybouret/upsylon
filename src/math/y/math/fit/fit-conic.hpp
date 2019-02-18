@@ -74,8 +74,9 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Conic);
                 vector<double> sums;
+            protected:
                 matrix<double> C; //!< 6x6 matrix
-                double         v; //!< constraint value : A'*C*A=v
+            private:
                 matrix<double> S; //!< symetric weights matrix
                 matrix<double> M; //!< inv(S)*C
                 matrix<double> M0;
@@ -86,7 +87,7 @@ namespace upsylon
                 array<double>  &wi;  //!< imaginary part of eigenvalues
             public:
                 array<double>  &q; //!< conic parameters
-
+                const matrix<double> &constraint() const throw();
             };
 
         }

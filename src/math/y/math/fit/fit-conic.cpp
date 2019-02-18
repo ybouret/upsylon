@@ -19,7 +19,6 @@ namespace upsylon
             Shape2D(21),
             sums(count),
             C(6,6),
-            v(0),
             S(6,6),
             M(6,6),
             M0(6,6),
@@ -31,7 +30,6 @@ namespace upsylon
 
                 {
                     C[1][1] = C[2][2] = C[3][3] = 1;
-                    v=1;
                 }
             }
 
@@ -108,47 +106,40 @@ namespace upsylon
                 std::cerr << "wr=" << wr << std::endl;
                 std::cerr << "wi=" << wi << std::endl;
 
-
-
+                //______________________________________________________________
+                //
+                // find the eigenvectors, values are ordered
+                //
+                //______________________________________________________________
                 matrix<double> ev(nr,6);
                 diagonalize::eigv(ev,M0,wr);
-                std::cerr << "ev=" << ev << std::endl;
-                for(size_t i=1;i<=nr;++i)
+
+                for(size_t i=nr;i>0;--i)
                 {
-                    const double   mu = wr[i];
+                    const double mu = wr[i];
+                    std::cerr << "trying " << mu << std::endl;
+                    if(mu<=0) continue;
+
                     array<double> &U  = ev[i];
-                    std::cerr << "mu=" << mu << std::endl;
-                    tao::mul(wi,M0,U);
-                    tao::mulset(q,mu,U);
-                    std::cerr << "\tMU  = " << wi << std::endl;
-                    std::cerr << "\tmuU = "  << q << std::endl;
-                    std::cerr << std::endl;
+                    tao::mul(wi,C,U);
+                    const double UCU = tao::dot<double>(U,wi);
+                    std::cerr << "\tUCU=" << UCU << std::endl;
+                    if(UCU<=0) continue;
+                    tao::mulset(q,1.0/sqrt(UCU),U);
+                    std::cerr << "conic=" << q << std::endl;
+                    return true;
                 }
-                exit(0);
+                
+                return false;
 
-#if 0
-                const double inv_lam = wr[nr];
-                if(inv_lam<=0)
-                {
-                    std::cerr << "Negative Highest Eigenvalue" << std::endl;
-                }
-                std::cerr << "lambda=1/" << inv_lam << std::endl;
-                matrix<double> ev(nr,6);
-                diagonalize::eigv(ev,M0,wr);
-                array<double> &U = ev[nr];
-                std::cerr << "U=" << U << std::endl;
-                tao::mul(wi,C,U);
-                const double UCU = tao::dot<double>(U,wi);
-                std::cerr << "UCU=" << UCU << std::endl;
-                if(UCU<=0)
-                {
-                    return false;
-                }
-                tao::mulset(q,1.0/sqrt(UCU),U);
-                std::cerr << "conic=" << q << std::endl;
-                return true;
-#endif
+
             }
+
+            const matrix<double> & Conic:: constraint() const throw()
+            {
+                return C;
+            }
+
 
         }
 

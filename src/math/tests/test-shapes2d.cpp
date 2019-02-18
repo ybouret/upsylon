@@ -1,5 +1,5 @@
 #include "y/math/fit/fit-circle.hpp"
-#include "y/math/fit/fit-conic.hpp"
+#include "y/math/fit/fit-ellipse.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/list.hpp"
 #include "y/ios/ocstream.hpp"
@@ -63,20 +63,51 @@ Y_UTEST(fit_conic)
     const double ra = 1 + double(alea.leq(100));
     const double rb = 1 + double(alea.leq(100));
     const point2d<double> center( 10 * alea.symm<double>(), 10 * alea.symm<double>() );
-    for(size_t n=10;n>0;--n)
+    std::cerr << "center=" << center << std::endl;
     {
-        const double theta = numeric<double>::two_pi * alea.to<double>();
-        point2d<double> p( ra * cos(theta), rb*sin(theta) );
-        // rotation
-        p += center;
-        const point           P( unit_t(p.x), unit_t(p.y) );
-        points.push_back(P);
+        ios::ocstream fp("conic-points.dat");
+        for(size_t n=10;n>0;--n)
+        {
+            const double theta = numeric<double>::two_pi * alea.to<double>();
+            point2d<double> p( ra * cos(theta), rb*sin(theta) );
+            // rotation
+
+            // translation
+            p += center;
+            const point           P( unit_t(p.x), unit_t(p.y) );
+            points.push_back(P);
+            fp("%g %g\n", double(points.back().x), double(points.back().y));
+        }
     }
 
-    Fit::Conic fc;
-    fc.compute(points.begin(),points.size());
-    
+    {
+        std::cerr << "Generic Conic..." << std::endl;
+        Fit::Conic fc;
+        std::cerr << "Constraint=" << fc.constraint() << std::endl;
+        if(fc.compute(points.begin(),points.size()))
+        {
+            //std::cerr << "Conic Success" << std::endl;
+        }
+        else
+        {
+            //std::cerr << "Conic Failure" << std::endl;
+        }
 
-}
-Y_UTEST_DONE()
+    }
+
+    {
+        std::cerr << "Ellipse..." << std::endl;
+        Fit::Ellipse fc;
+        std::cerr << "Constraint=" << fc.constraint() << std::endl;
+        if( fc.compute(points.begin(),points.size()) )
+        {
+
+            point2d<double> cc;
+            fc.factorize(cc);
+
+        }
+    }
+
+    }
+    Y_UTEST_DONE()
 
