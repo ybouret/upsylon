@@ -1,8 +1,8 @@
-all: lsf.pdf
+all: lsf.pdf shapes.pdf
 
 %.pdf:%.tex
 	pdflatex $< && pdflatex $<
 
 clean:
-	rm -f *.aux *.log *.synctex.gz lsf.pdf
+	rm -f *.aux *.log *.synctex.gz lsf.pdf shapes.pdf
 

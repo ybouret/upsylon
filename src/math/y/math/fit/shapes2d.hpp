@@ -22,7 +22,7 @@ namespace upsylon
                 //! destructor
                 virtual ~Shape2D() throw();
 
-
+                
             protected:
                 explicit Shape2D(const size_t num_arrays); //!< memory for num_arrays
 

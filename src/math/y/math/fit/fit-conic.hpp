@@ -74,16 +74,16 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Conic);
                 vector<double> sums;
-                matrix<double> C;
+                matrix<double> C; //!< 6x6 matrix
                 double         v; //!< constraint value : A'*C*A=v
-                matrix<double> S; //!< symetric weigts matrix
+                matrix<double> S; //!< symetric weights matrix
                 matrix<double> M; //!< inv(S)*C
                 matrix<double> M0;
 
                 bool __compute();
                 Arrays          prv;
-                array<double>  &wr;
-                array<double>  &wi;
+                array<double>  &wr;  //!< real part      of eigenvalues
+                array<double>  &wi;  //!< imaginary part of eigenvalues
             public:
                 array<double>  &q; //!< conic parameters
 
