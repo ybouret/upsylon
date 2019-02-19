@@ -62,6 +62,9 @@ Y_UTEST(fit_conic)
     const double rb = 1 + double(alea.leq(100));
     const point2d<double> center( 10 * alea.symm<double>(), 10 * alea.symm<double>() );
     std::cerr << "center=" << center << std::endl;
+    std::cerr << "ra    =" << ra     << std::endl;
+    std::cerr << "rb    =" << rb     << std::endl;
+
     {
         ios::ocstream fp("conic-points.dat");
         const double phi = alea.to<double>() * numeric<double>::pi;
@@ -105,8 +108,18 @@ Y_UTEST(fit_conic)
         if( fc.compute(points.begin(),points.size()) )
         {
             std::cerr << "q=" << fc.q << std::endl;
-            point2d<double> cc;
-            fc.factorize(cc);
+            fc.factorize();
+            std::cerr << "rotation=" << fc.rotation() << std::endl;
+
+            ios::ocstream fp("ellipse.dat");
+            for(double a=0; a<= 6.3; a += 0.01 )
+            {
+                point2d<double> p( fc.radii.x * cos(a), fc.radii.y * sin(a) );
+                p = p.mul_by(fc.rotation());
+                p += fc.center;
+                fp("%g %g\n", p.x, p.y );
+            }
+
         }
         else
         {

@@ -272,6 +272,16 @@ namespace upsylon
             }
         }
 
+        //! take the opposite when possible value
+        inline void neg() throw()
+        {
+            mutable_type *p = memory::io::cast<T>(workspace,data_offset);
+            for(size_t i=0;i<items;++i)
+            {
+                p[i] = -p[i];
+            }
+        }
+
         //! load values
         inline void diag(param_type diag_value,
                          param_type extra_value)
