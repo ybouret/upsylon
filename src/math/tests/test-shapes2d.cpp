@@ -5,6 +5,7 @@
 #include "y/ios/ocstream.hpp"
 #include "y/math/types.hpp"
 #include "y/math/kernel/tao.hpp"
+#include "y/math/trigconv.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -64,10 +65,10 @@ Y_UTEST(fit_conic)
     std::cerr << "center=" << center << std::endl;
     std::cerr << "ra    =" << ra     << std::endl;
     std::cerr << "rb    =" << rb     << std::endl;
+    const double phi = alea.to<double>() * numeric<double>::pi;
 
     {
         ios::ocstream fp("conic-points.dat");
-        const double phi = alea.to<double>() * numeric<double>::pi;
         matrix<double> R(2,2);
         R[1][1] = R[2][2] = cos(phi);
         R[1][2] = -(R[2][1] = sin(phi));
@@ -109,8 +110,10 @@ Y_UTEST(fit_conic)
         {
             std::cerr << "q=" << fc.q << std::endl;
             fc.factorize();
-            std::cerr << "rotation=" << fc.rotation() << std::endl;
-
+            const matrix<double> &R = fc.rotation();
+            std::cerr << "rotation=" << R << std::endl;
+            const double angle = __angle_of(R[1][1], R[2][1]);
+            std::cerr << "angle=" << rad2deg(angle) << " / phi=" << rad2deg(phi) << ", delta=" << rad2deg(__fabs(angle-phi)) << std::endl;
             ios::ocstream fp("ellipse.dat");
             for(double a=0; a<= 6.3; a += 0.01 )
             {

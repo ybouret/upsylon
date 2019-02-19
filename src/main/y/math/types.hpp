@@ -160,6 +160,11 @@ namespace upsylon
                 return (absb <= 0.0 ? 0.0 : absb*sqrt(1.0+square_of(absa/absb)));
             }
         }
+
+        float  __angle_of(float  c,float  s) throw(); //!< c=cos(phi), s=sin(phi)
+        double __angle_of(double c,double s) throw(); //!< c=cos(phi), s=sin(phi)
+
+
     }
     
 }
