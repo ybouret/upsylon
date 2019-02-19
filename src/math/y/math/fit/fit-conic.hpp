@@ -53,7 +53,7 @@ namespace upsylon
                             for(size_t i=6;i>0;--i)
                             {
                                 const size_t *ip  = p[i];
-                                const double  ixy = ipower(X,ip[0])*ipower(X,ip[1]);
+                                const double  ixy = ipower(X,ip[0])*ipower(Y,ip[1]);
                                 for(size_t j=i;j>0;--j)
                                 {
                                     const size_t *jp  = p[j];
@@ -86,8 +86,7 @@ namespace upsylon
                 array<double>  &wr;  //!< real part      of eigenvalues
                 array<double>  &wi;  //!< imaginary part of eigenvalues
             public:
-                array<double>  &q; //!< conic parameters
-                const matrix<double> &constraint() const throw();
+                array<double>  &q;   //!< conic parameters
             };
 
         }

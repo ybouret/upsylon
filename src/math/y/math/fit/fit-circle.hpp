@@ -18,7 +18,7 @@ namespace upsylon
                 explicit Circle();         //!< initialize
                 virtual ~Circle() throw(); //!< destructor
 
-                //! construct arrays and perform computation
+                //! construct arrays then perform computation
                 template <typename ITERATOR>
                 bool compute( ITERATOR curr, const size_t n)
                 {
@@ -28,11 +28,11 @@ namespace upsylon
                         acquire(n);
                         for(size_t i=n;i>0;--i,++curr)
                         {
-                            const double X = double( (*curr).x );
-                            const double Y = double( (*curr).y );
+                            const double X  = double( (*curr).x );
+                            const double Y  = double( (*curr).y );
                             const double X2 = X*X;
                             const double Y2 = Y*Y;
-                            const double Z = X2+Y2;
+                            const double Z  = X2+Y2;
                             x[i]  = X;
                             y[i]  = Y;
                             x2[i] = X2;
@@ -46,7 +46,7 @@ namespace upsylon
                     }
                     else
                     {
-                        return true;
+                        return false; // no points
                     }
                 }
 

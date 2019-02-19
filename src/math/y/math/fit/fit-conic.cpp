@@ -27,10 +27,7 @@ namespace upsylon
             wi( prv.next() ),
             q(  prv.next() )
             {
-
-                {
-                    C[1][1] = C[2][2] = C[3][3] = 1;
-                }
+                C[1][1] = C[2][2] = C[3][3] = 1;
             }
 
             bool Conic:: __compute()
@@ -55,19 +52,19 @@ namespace upsylon
                 // dispatch into S matrix
                 //
                 //______________________________________________________________
-                size_t l=0;
                 S.ld(0);
-                for(size_t i=6;i>0;--i)
                 {
-                    for(size_t j=i;j>0;--j)
+                    size_t l=0;
+                    for(size_t i=6;i>0;--i)
                     {
-                        S[i][j] = S[j][i] = sums[++l];
+                        for(size_t j=i;j>0;--j)
+                        {
+                            S[i][j] = S[j][i] = sums[++l];
+                        }
                     }
                 }
-                std::cerr << "S=" << S << std::endl;
                 if( !LU::build(S) )
                 {
-                    std::cerr << "Singular Distribution" << std::endl;
                     return false;
                 }
 
@@ -76,13 +73,8 @@ namespace upsylon
                 // compute M=inv(S)*C and save it into M0
                 //
                 //______________________________________________________________
-                std::cerr << "C=" << C << std::endl;
                 M.assign(C);
-
-
                 LU::solve(S,M);
-                std::cerr << "M=" << M << std::endl;
-
                 M0.assign(M);
 
                 //______________________________________________________________
@@ -93,18 +85,13 @@ namespace upsylon
                 size_t nr = 0;
                 if(!diagonalize::eig(M,wr,wi,nr))
                 {
-                    std::cerr << "Couldn't Diagonalize M" << std::endl;
-                    return false;
+                    return false; // not possible
                 }
 
                 if(nr<=0)
                 {
-                    std::cerr << "No Real EigenValue" << std::endl;
-                    return false;
+                    return false; // no real eigenvalue
                 }
-
-                std::cerr << "wr=" << wr << std::endl;
-                std::cerr << "wi=" << wi << std::endl;
 
                 //______________________________________________________________
                 //
@@ -117,29 +104,25 @@ namespace upsylon
                 for(size_t i=nr;i>0;--i)
                 {
                     const double mu = wr[i];
-                    std::cerr << "trying " << mu << std::endl;
                     if(mu<=0) continue;
 
                     array<double> &U  = ev[i];
                     tao::mul(wi,C,U);
                     const double UCU = tao::dot<double>(U,wi);
-                    std::cerr << "\tUCU=" << UCU << std::endl;
                     if(UCU<=0) continue;
                     tao::mulset(q,1.0/sqrt(UCU),U);
-                    std::cerr << "conic=" << q << std::endl;
                     return true;
                 }
-                
+
+                //______________________________________________________________
+                //
+                // no matching vector...
+                //
+                //______________________________________________________________
                 return false;
-
-
             }
 
-            const matrix<double> & Conic:: constraint() const throw()
-            {
-                return C;
-            }
-
+            
 
         }
 

@@ -114,6 +114,30 @@ namespace upsylon
             return lhs;
         }
 
+        //! dimension as size
+        inline size_t size() const throw() { return 2; }
+
+        //! access as a C++ array
+        inline type & operator[](size_t index) throw()
+        {
+            assert(index>=1); assert(index<=2);
+            return *(((&x)-1) + index);
+        }
+
+        //! const access as a C++ array
+        inline const_type & operator[](size_t index) const throw()
+        {
+            assert(index>=1); assert(index<=2);
+            return *(((&x)-1) + index);
+        }
+
+        template <typename MATRIX>
+        inline point2d mul_by( const MATRIX &M ) const
+        {
+            return point2d(x * static_cast<const_type>(M[1][1]) + y * static_cast<const_type>(M[1][2]),
+                           x * static_cast<const_type>(M[2][1]) + y * static_cast<const_type>(M[2][2]));
+        }
+
     };
 
 }

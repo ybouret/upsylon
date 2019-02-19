@@ -4,6 +4,7 @@
 #include "y/sequence/list.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/math/types.hpp"
+#include "y/math/kernel/tao.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -29,8 +30,10 @@ Y_UTEST(fit_circle)
     }
 
     Fit::Circle fc;
-    if(fc.compute(points.begin(),points.size()))
+
+    if( fc.compute(points.begin(),points.size()) )
     {
+
         std::cerr << "Fitted " << r << "@" << center << " to " << fc.radius << "@" << fc.xc << "," << fc.yc << std::endl;
         {
             ios::ocstream fp("circle-points.dat");
@@ -48,11 +51,6 @@ Y_UTEST(fit_circle)
             }
         }
     }
-    else
-    {
-        std::cerr << "Singular Distribution!!!" << std::endl;
-    }
-
 
 }
 Y_UTEST_DONE()
@@ -66,31 +64,37 @@ Y_UTEST(fit_conic)
     std::cerr << "center=" << center << std::endl;
     {
         ios::ocstream fp("conic-points.dat");
+        const double phi = alea.to<double>() * numeric<double>::pi;
+        matrix<double> R(2,2);
+        R[1][1] = R[2][2] = cos(phi);
+        R[1][2] = -(R[2][1] = sin(phi));
+        std::cerr << "phi=" << phi << std::endl;
+        std::cerr << "R  =" << R   << std::endl;
         for(size_t n=10;n>0;--n)
         {
             const double theta = numeric<double>::two_pi * alea.to<double>();
-            point2d<double> p( ra * cos(theta), rb*sin(theta) );
+            point2d<double> q( ra * cos(theta), rb*sin(theta) );
             // rotation
-
+            point2d<double> p = q.mul_by(R);
             // translation
             p += center;
             const point           P( unit_t(p.x), unit_t(p.y) );
             points.push_back(P);
-            fp("%g %g\n", double(points.back().x), double(points.back().y));
+            fp("%g %g\n", center.x, center.y);
+            fp("%g %g\n\n", double(points.back().x), double(points.back().y));
         }
     }
 
     {
         std::cerr << "Generic Conic..." << std::endl;
         Fit::Conic fc;
-        std::cerr << "Constraint=" << fc.constraint() << std::endl;
         if(fc.compute(points.begin(),points.size()))
         {
-            //std::cerr << "Conic Success" << std::endl;
+            std::cerr << "q=" << fc.q << std::endl;
         }
         else
         {
-            //std::cerr << "Conic Failure" << std::endl;
+            std::cerr << "failure" << std::endl;
         }
 
     }
@@ -98,13 +102,15 @@ Y_UTEST(fit_conic)
     {
         std::cerr << "Ellipse..." << std::endl;
         Fit::Ellipse fc;
-        std::cerr << "Constraint=" << fc.constraint() << std::endl;
         if( fc.compute(points.begin(),points.size()) )
         {
-
+            std::cerr << "q=" << fc.q << std::endl;
             point2d<double> cc;
             fc.factorize(cc);
-
+        }
+        else
+        {
+            std::cerr << "failure" << std::endl;
         }
     }
 

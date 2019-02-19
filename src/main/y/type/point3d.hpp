@@ -87,6 +87,23 @@ namespace upsylon
         {
             return (lhs.x!=rhs.x) || (lhs.y!=rhs.y) || (lhs.z!=rhs.z);
         }
+
+        //! dimension as size
+        inline size_t size() const throw() { return 3; }
+
+        //! access as a C++ array
+        inline type & operator[](size_t index) throw()
+        {
+            assert(index>=1); assert(index<=3);
+            return *(((&x)-1) + index);
+        }
+
+        //! const access as a C++ array
+        inline const_type & operator[](size_t index) const throw()
+        {
+            assert(index>=1); assert(index<=3);
+            return *(((&x)-1) + index);
+        }
     };
 }
 
