@@ -67,7 +67,7 @@ namespace upsylon
                     {
                         a[j][i]=(a[jm][i]*fac-a[jm][im])/(fac-T(1));
                         fac=CON2*fac;
-                        const T errt=max_of<T>(__fabs(a[j][i]-a[jm][i]),__fabs(a[j][i]-a[jm][im]));
+                        const T errt=max_of<T>(fabs_of(a[j][i]-a[jm][i]),fabs_of(a[j][i]-a[jm][im]));
                         if(!(errt>=0))
                         {
                             throw libc::exception(EDOM, "invalid derivative @%.15g", double(x));
@@ -81,7 +81,7 @@ namespace upsylon
                     }
                     assert(!ini);
                     assert(err>=0);
-                    if(__fabs(a[i][i]-a[im][im]) >= (err+err) ) break; // higher order error increases
+                    if(fabs_of(a[i][i]-a[im][im]) >= (err+err) ) break; // higher order error increases
                 }
                 return ans;
             }
@@ -96,7 +96,7 @@ namespace upsylon
                 T err  = 0;
                 T dFdx = diff(f,x,h,err);
                 // try to decrease h
-                while(err>max_ftol*__fabs(dFdx) )
+                while(err>max_ftol*fabs_of(dFdx) )
                 {
                     T       new_err  = 0;
                     const T new_dFdx = diff(f,x,h/=CON,new_err);
@@ -133,7 +133,7 @@ namespace upsylon
                     {
                         a[j][i]=(a[jm][i]*fac-a[jm][im])/(fac-T(1));
                         fac=CON2*fac;
-                        const T errt=max_of<T>(__fabs(a[j][i]-a[jm][i]),__fabs(a[j][i]-a[jm][im]));
+                        const T errt=max_of<T>(fabs_of(a[j][i]-a[jm][i]),fabs_of(a[j][i]-a[jm][im]));
                         if( ini || (errt<=err) )
                         {
                             err = errt;
@@ -143,7 +143,7 @@ namespace upsylon
                     }
                     assert(!ini);
                     assert(err>=0);
-                    if(__fabs(a[i][i]-a[im][im]) >= (err+err) ) break; // higher order error increases
+                    if(fabs_of(a[i][i]-a[im][im]) >= (err+err) ) break; // higher order error increases
                 }
                 return ans;
             }
@@ -159,7 +159,7 @@ namespace upsylon
                 T       err    = 0;
                 T       d2Fdx2 = diff2(f0,f,x,h,err);
                 // try to decrease h
-                while(err>max_ftol*__fabs(d2Fdx2) )
+                while(err>max_ftol*fabs_of(d2Fdx2) )
                 {
                     T       new_err  = 0;
                     const T new_d2Fdx2 = diff2(f0,f,x,h/=CON,new_err);

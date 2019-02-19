@@ -61,7 +61,7 @@ namespace upsylon
                     T sm = 0;
                     for(size_t ip=1;ip<n;++ip) {
                         for(size_t iq=ip+1;iq<=n; ++iq)
-                            sm += __fabs(a[ip][iq]);
+                            sm += fabs_of(a[ip][iq]);
                     }
                     if (sm <= numeric<T>::minimum )
                     {
@@ -76,25 +76,25 @@ namespace upsylon
                     {
                         for(size_t iq=ip+1;iq<=n;++iq)
                         {
-                            T g=T(100) * __fabs(a[ip][iq]);
-                            if ( (iter>min_iter) && almost_equal( __fabs(d[ip])+g, __fabs(d[ip]))
-                                && almost_equal( __fabs(d[iq])+g, __fabs(d[iq])) )
+                            T g=T(100) * fabs_of(a[ip][iq]);
+                            if ( (iter>min_iter) && almost_equal( fabs_of(d[ip])+g, fabs_of(d[ip]))
+                                && almost_equal( fabs_of(d[iq])+g, fabs_of(d[iq])) )
                             {
                                 a[ip][iq]=T(0.0);
                             }
                             else
-                                if (__fabs(a[ip][iq]) > tresh)
+                                if (fabs_of(a[ip][iq]) > tresh)
                                 {
                                     T h = d[iq]-d[ip];
                                     T t = 0;
-                                    if ( almost_equal(__fabs(h)+g,__fabs(h)) )
+                                    if ( almost_equal(fabs_of(h)+g,fabs_of(h)) )
                                     {
                                         t=(a[ip][iq])/h;
                                     }
                                     else
                                     {
                                         const T theta=T(0.5)*h/(a[ip][iq]);
-                                        t=T(1.0)/(__fabs(theta)+sqrt_of(T(1.0)+theta*theta));
+                                        t=T(1.0)/(fabs_of(theta)+sqrt_of(T(1.0)+theta*theta));
                                         if (theta < T(0.0))
                                             t = -t;
                                     }
@@ -187,7 +187,7 @@ namespace upsylon
                     T      p = d[k];
                     for (size_t j=i+1;j<=n;j++)
                     {
-                        if( __fabs(d[j]) >= __fabs(p) )
+                        if( fabs_of(d[j]) >= fabs_of(p) )
                         {
                             p=(d[k=j]);
                         }

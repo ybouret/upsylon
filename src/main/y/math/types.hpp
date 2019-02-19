@@ -65,24 +65,22 @@ namespace upsylon
         inline float  sqrt_of( const float  f ) throw() { return sqrtf(f); } //!< sqrt
         inline double sqrt_of( const double f ) throw() { return sqrt(f);  } //!< sqrt
         
-        inline float  __fabs( const float  f ) throw() { return fabsf(f); }       //!< fabs
-        inline double __fabs( const double f ) throw() { return fabs(f);  }       //!< fabs
-        inline unit_t __fabs( const unit_t f ) throw() { return (f<0) ? -f : f; } //!< fabs
-        inline float  __fabs( const complex<float>  c) throw() { return max_of(fabsf(c.re),fabsf(c.im)); } //!< fabs
-        inline double __fabs( const complex<double> c) throw() { return max_of(fabs(c.re),fabs(c.im));   } //!< fabs
+        inline float  fabs_of( const float  f ) throw() { return fabsf(f); }       //!< fabs
+        inline double fabs_of( const double f ) throw() { return fabs(f);  }       //!< fabs
+        inline unit_t fabs_of( const unit_t f ) throw() { return (f<0) ? -f : f; } //!< fabs
+
         
         //! return the signed value of a w.r.t the sign of b
         template <typename T, typename U>
         inline T __sgn(T a, U b) throw()
         {
-            return (b >= 0) ? __fabs(a) : -__fabs(a);
+            return (b >= 0) ? fabs_of(a) : -fabs_of(a);
         }
         
         template <typename T>
         inline T      __id(const T &f) { return f; } //!< identity operator
         
-        template <typename T>
-        inline typename real_for<T>::type __abs( const T &f ) { return __fabs(f); } //!< absolute value operator
+
         
         inline float  __pow( const float  x, const float  p) throw() { return powf(x,p); } //!< pow
         inline double __pow( const double x, const double p) throw() { return pow(x,p); }  //!< pow
@@ -128,14 +126,14 @@ namespace upsylon
         static inline bool almost_equal( const T X, const T Y) throw()
         {
             static T fac = T(0.5) * numeric<T>::epsilon;
-            return ( __fabs(X-Y) <= fac * ( __fabs(X) + __fabs(Y) ) );
+            return ( fabs_of(X-Y) <= fac * ( fabs_of(X) + fabs_of(Y) ) );
         }
         
         //! hypothenuse withouth underflow or overflowe
         inline float __hypotenuse( float a, float b) throw()
         {
-            const float absa=__fabs(a);
-            const float absb=__fabs(b);
+            const float absa=fabsf(a);
+            const float absb=fabsf(b);
             if (absa > absb)
             {
                 return absa*sqrtf(1.0f+square_of(absb/absa));
@@ -149,8 +147,8 @@ namespace upsylon
         //! hypothenuse withouth underflow or overflowe
         inline double __hypotenuse( double a, double b) throw()
         {
-            const double absa=__fabs(a);
-            const double absb=__fabs(b);
+            const double absa=fabs(a);
+            const double absb=fabs(b);
             if (absa > absb)
             {
                 return absa*sqrt(1.0+square_of(absb/absa));
@@ -160,6 +158,11 @@ namespace upsylon
                 return (absb <= 0.0 ? 0.0 : absb*sqrt(1.0+square_of(absa/absb)));
             }
         }
+        inline float  fabs_of( const complex<float>  c) throw() { return __hypotenuse(c.re,c.im);  } //!< fabs
+        inline double fabs_of( const complex<double> c) throw() { return __hypotenuse(c.re,c.im);  } //!< fabs
+
+        template <typename T>
+        inline typename real_for<T>::type __abs( const T &f ) { return fabs_of(f); } //!< absolute value operator
 
         float  __angle_of(float  c,float  s) throw(); //!< c=cos(phi), s=sin(phi)
         double __angle_of(double c,double s) throw(); //!< c=cos(phi), s=sin(phi)

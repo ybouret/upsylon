@@ -190,8 +190,8 @@ namespace upsylon
                             bool converged = true;
                             for(size_t i=nvar;i>0;--i)
                             {
-                                const T da = __fabs(aorg[i]-atry[i]);
-                                if( da > numeric<T>::ftol * __fabs(aorg[i]))
+                                const T da = fabs_of(aorg[i]-atry[i]);
+                                if( da > numeric<T>::ftol * fabs_of(aorg[i]))
                                 {
                                     converged = false;
                                     break;
@@ -219,7 +219,7 @@ namespace upsylon
                         // successfull step: update and test convergence
                         //______________________________________________________
                         tao::set(aorg,atry);
-                        const T D2_err = __fabs(D2 - D2_try);
+                        const T D2_err = fabs_of(D2 - D2_try);
                         if( D2_err <= numeric<T>::sqrt_ftol * D2 )
                         {
                             Y_LSF_OUT(std::cerr << "[LSF] least squares convergence" << std::endl);

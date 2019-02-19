@@ -52,7 +52,7 @@ namespace upsylon
                     assert(x.is_ordered());
 
                     const T delta = x.c - x.a;
-                    if( __fabs(delta) <= 0 )
+                    if( fabs_of(delta) <= 0 )
                     {
                         f.a = f.b = f.c;
                         x.a = x.b = x.c;

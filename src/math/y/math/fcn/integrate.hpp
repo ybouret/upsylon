@@ -107,7 +107,7 @@ old_st  = st;                               \
 old_s   = s
             //! check convergence in quad step
 #define Y_INTG_CHECK() \
-if( __fabs(s-old_s) <=__fabs( ftol *old_s ) ) { \
+if( fabs_of(s-old_s) <= fabs_of( ftol *old_s ) ) { \
 return true;\
 }
 

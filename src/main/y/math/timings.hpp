@@ -50,7 +50,7 @@ namespace upsylon
             {
                 assert(dt>0);
                 assert(every>0);
-                size_t iter = size_t( __ceil(__fabs(t_run/dt) ) );
+                size_t iter = size_t( __ceil(fabs_of(t_run/dt) ) );
                 if(iter<every) { iter=every; }
                 while( 0 != (iter%every) ) ++iter;
                 t_run = iter*dt;

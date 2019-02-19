@@ -106,7 +106,7 @@ namespace upsylon
                 mutable_type vmax = 0;
                 for( typename SEQUENCE::iterator i=seq.begin(); i != seq.end(); ++i, ++n )
                 {
-                    const_type tmp = __fabs(*i);
+                    const_type tmp = fabs_of(*i);
                     if(tmp>vmax) vmax=tmp;
                 }
                 const_type tol = numeric<type>::epsilon * type(n) * vmax;
@@ -114,7 +114,7 @@ namespace upsylon
                 for( typename SEQUENCE::iterator i=seq.begin(); i != seq.end(); ++i )
                 {
                     type &v = *i;
-                    if( __fabs(v) <= tol )
+                    if( fabs_of(v) <= tol )
                     {
                         (mutable_type&)v = 0;
                         ++ker;
@@ -136,7 +136,7 @@ namespace upsylon
                 mutable_type vmax = 0;
                 for( typename SEQUENCE::iterator i=seq.begin(); i != seq.end(); ++i, ++n )
                 {
-                    const_type tmp = __fabs(*i);
+                    const_type tmp = fabs_of(*i);
                     if(tmp>vmax) vmax=tmp;
                 }
                 const_type tol = numeric<type>::epsilon * type(n) * vmax;
@@ -144,7 +144,7 @@ namespace upsylon
                 for( typename SEQUENCE::iterator i=seq.begin(); i != seq.end(); ++i )
                 {
                     type &v = *i;
-                    if( __fabs(v) <= tol )
+                    if( fabs_of(v) <= tol )
                     {
                         (mutable_type&)v = 0;
                         ++ker;
@@ -171,7 +171,7 @@ namespace upsylon
                     const T *a    = *A;
                     for(size_t i=A.items;i>0;--i)
                     {
-                        const T Atmp = __fabs(*(a++));
+                        const T Atmp = fabs_of(*(a++));
                         if(Atmp>Amax)
                         {
                             Amax=Atmp;
@@ -184,7 +184,7 @@ namespace upsylon
                     for(size_t i=A.items;i>0;--i)
                     {
                         T &v = *(a++);
-                        if( __fabs(v) <= tol )
+                        if( fabs_of(v) <= tol )
                         {
                             v=0;
                         }
@@ -206,7 +206,7 @@ namespace upsylon
                     for( typename SEQUENCE::iterator i=seq.begin(); i != seq.end(); ++i,++j)
                     {
                         const_type temp = *i;
-                        const_type vtmp = __fabs(temp);
+                        const_type vtmp = fabs_of(temp);
                         if(vtmp>vmax) vmax=vtmp;
                         v.push_back(vtmp);
                         I.push_back(j);

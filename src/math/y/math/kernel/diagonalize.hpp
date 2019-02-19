@@ -45,11 +45,11 @@ namespace upsylon
                         {
                             T r=0,c=0;
                             for (size_t j=1;j<=n;j++)
-                            if (j != i)
-                            {
-                                c += __fabs(a[j][i]);
-                                r += __fabs(a[i][j]);
-                            }
+                                if (j != i)
+                                {
+                                    c += fabs_of(a[j][i]);
+                                    r += fabs_of(a[i][j]);
+                                }
                             if( (c>0) && (r>0) )
                             {
                                 T g=r/RADIX;
@@ -102,7 +102,7 @@ namespace upsylon
                             // find the pivot
                             //----------------------------------------------------------
                             const T tmp = a[j][r];
-                            if(__fabs(tmp)>__fabs(piv))
+                            if(fabs_of(tmp)>fabs_of(piv))
                             {
                                 piv = tmp;
                                 s   = j;
@@ -111,7 +111,7 @@ namespace upsylon
                         if( s != m )
                         {
                             //std::cerr << "\t#SWAP(" << s << "," << m << ")" <<  "/pivot=" << piv << std::endl;
-                            assert(__fabs(piv)>0);
+                            assert(fabs_of(piv)>0);
                             //----------------------------------------------------------
                             // First similarity transform: exchange colums/rows
                             //----------------------------------------------------------
@@ -120,7 +120,7 @@ namespace upsylon
                             //----------------------------------------------------------
                             // Second similarity transform
                             //----------------------------------------------------------
-                            assert( __fabs(piv-a[m][m-1]) <= 0 );
+                            assert( fabs_of(piv-a[m][m-1]) <= 0 );
                             for(size_t i=m+1;i<=n;++i)
                             {
                                 const T factor = a[i][r] / piv;
@@ -144,7 +144,7 @@ namespace upsylon
                     for(size_t j=n;j>0;--j)
                     {
                         for(size_t i=j+2;i<=n;++i)
-                        a[i][j] = 0;
+                            a[i][j] = 0;
                     }
                 }
                 
@@ -176,8 +176,8 @@ namespace upsylon
                     nr    = 0;
                     anorm = 0;
                     for (i=1;i<=n;i++)
-                    for (j=max_of<size_t>(i-1,1);j<=n;j++)
-                    anorm += __fabs(a[i][j]);
+                        for (j=max_of<size_t>(i-1,1);j<=n;j++)
+                            anorm += fabs_of(a[i][j]);
                     nn=n;
                     t=0;
                     while(nn>=1)
@@ -187,11 +187,11 @@ namespace upsylon
                         {
                             for (l=nn;l>=2;l--)
                             {
-                                s=__fabs(a[l-1][l-1])+__fabs(a[l][l]);
+                                s=fabs_of(a[l-1][l-1])+fabs_of(a[l][l]);
                                 if (s <= 0)
-                                s=anorm;
-                                if ((T)(__fabs(a[l][l-1]) + s) == s)
-                                break;
+                                    s=anorm;
+                                if ((T)(fabs_of(a[l][l-1]) + s) == s)
+                                    break;
                             }
                             x=a[nn][nn];
                             if (l == nn)
@@ -211,14 +211,14 @@ namespace upsylon
                                 {
                                     p=T(0.5)*(y-x);
                                     q=p*p+w;
-                                    z=sqrt_of(__fabs(q));
+                                    z=sqrt_of(fabs_of(q));
                                     x += t;
                                     if (q >= 0)
                                     {
                                         z=p+__sgn(z,p);
                                         wr[ir+1]=wr[ir]=x+z;
-                                        if( __fabs(z)>0 )
-                                        wr[ir]=x-w/z;
+                                        if( fabs_of(z)>0 )
+                                            wr[ir]=x-w/z;
                                         //std::cerr << "#EIG: real pair: " << wr[ir] << ", " << wr[ir+1] << ", x=" << x << ", w=" << w << ", z=" << z << ", p=" << p << ", sq=" << Sqrt(Fabs(q)) << std::endl;
                                         wi[ir+1]=wi[ir]=0;
                                         ir += 2;
@@ -242,8 +242,8 @@ namespace upsylon
                                     {
                                         t += x;
                                         for (i=1;i<=nn;i++)
-                                        a[i][i] -= x;
-                                        s=__fabs(a[nn][nn-1])+__fabs(a[nn-1][nn-2]);
+                                            a[i][i] -= x;
+                                        s=fabs_of(a[nn][nn-1])+fabs_of(a[nn-1][nn-2]);
                                         y=x= T(0.75)*s;
                                         w = -T(0.4375)*s*s;
                                     }
@@ -256,7 +256,7 @@ namespace upsylon
                                         p=(r*s-w)/a[m+1][m]+a[m][m+1];
                                         q=a[m+1][m+1]-z-r-s;
                                         r=a[m+2][m+1];
-                                        s=__fabs(p)+__fabs(q)+__fabs(r);
+                                        s=fabs_of(p)+fabs_of(q)+fabs_of(r);
                                         p /= s;
                                         q /= s;
                                         r /= s;
@@ -264,8 +264,8 @@ namespace upsylon
                                         {
                                             break;
                                         }
-                                        u=__fabs(a[m][m-1])*(__fabs(q)+__fabs(r));
-                                        v=__fabs(p)*(__fabs(a[m-1][m-1])+__fabs(z)+__fabs(a[m+1][m+1]));
+                                        u=fabs_of(a[m][m-1])*(fabs_of(q)+fabs_of(r));
+                                        v=fabs_of(p)*(fabs_of(a[m-1][m-1])+fabs_of(z)+fabs_of(a[m+1][m+1]));
                                         if ((T)(u+v) == v)
                                         {
                                             break;
@@ -275,7 +275,7 @@ namespace upsylon
                                     {
                                         a[i][i-2]=0;
                                         if (i != (m+2))
-                                        a[i][i-3]=0;
+                                            a[i][i-3]=0;
                                     }
                                     for (k=m;k<=nn-1;k++)
                                     {
@@ -285,19 +285,19 @@ namespace upsylon
                                             q=a[k+1][k-1];
                                             r=0;
                                             if (k != (nn-1)) r=a[k+2][k-1];
-                                            if ( (x=__fabs(p)+__fabs(q)+__fabs(r))>0 )
+                                            if ( (x=fabs_of(p)+fabs_of(q)+fabs_of(r))>0 )
                                             {
                                                 p /= x;
                                                 q /= x;
                                                 r /= x;
                                             }
                                         }
-                                        if( __fabs(s=__sgn(sqrt_of(p*p+q*q+r*r),p)) > 0 )
+                                        if( fabs_of(s=__sgn(sqrt_of(p*p+q*q+r*r),p)) > 0 )
                                         {
                                             if (k == m)
                                             {
                                                 if (l != m)
-                                                a[k][k-1] = -a[k][k-1];
+                                                    a[k][k-1] = -a[k][k-1];
                                             }
                                             else
                                             {
@@ -358,8 +358,8 @@ namespace upsylon
             template <typename T> static inline
             int __compare_fabs(const T lhs, const T rhs) throw()
             {
-                const T L = __fabs(lhs);
-                const T R = __fabs(rhs);
+                const T L = fabs_of(lhs);
+                const T R = fabs_of(rhs);
                 return comparison::increasing(L,R);
             }
             
@@ -457,7 +457,7 @@ namespace upsylon
                         wr[iv] = tau;
                         array<T> &vec = ev[iv];
                         const size_t j = J[k]; assert(j>0); assert(j<=n);
-                        assert(__fabs(W[j])<=0);
+                        assert(fabs_of(W[j])<=0);
                         for(size_t i=n;i>0;--i)
                         {
                             vec[i] = V[i][j];

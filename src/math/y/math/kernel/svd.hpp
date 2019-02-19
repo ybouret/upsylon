@@ -44,7 +44,7 @@ namespace upsylon
                     {
                         for(k=i;k<=m;++k)
                         {
-                            scale += __fabs(a[k][i]);
+                            scale += fabs_of(a[k][i]);
                         }
                         if(scale>0)
                         {
@@ -74,7 +74,7 @@ namespace upsylon
                     {
                         for(k=l;k<=n;++k)
                         {
-                            scale += __fabs(a[i][k]);
+                            scale += fabs_of(a[i][k]);
                         }
                         if (scale>0)
                         {
@@ -99,13 +99,13 @@ namespace upsylon
                                 a[i][k] *= scale;
                         }
                     }
-                    anorm = max_of<T>(anorm,(__fabs(w[i])+__fabs(rv1[i])));
+                    anorm = max_of<T>(anorm,(fabs_of(w[i])+fabs_of(rv1[i])));
                 }
                 for(size_t i=n;i>=1;--i)
                 {
                     if (i<n)
                     {
-                        if(__fabs(g)>0)
+                        if(fabs_of(g)>0)
                         {
                             for(size_t j=l;j<=n;++j)
                                 v[j][i]=(a[i][j]/a[i][l])/g;
@@ -131,7 +131,7 @@ namespace upsylon
                     g=w[i];
                     for(size_t j=l;j<=n;j++)
                         a[i][j]=0.0;
-                    if(__fabs(g)>0)
+                    if(fabs_of(g)>0)
                     {
                         g=T(1)/g;
                         for(size_t j=l;j<=n;j++)
@@ -160,12 +160,12 @@ namespace upsylon
                             nm=l-1;
                             
                             /* Note that rv1[1] is always zero. */
-                            if ((T)(__fabs(rv1[l])+anorm) == anorm)
+                            if ((T)(fabs_of(rv1[l])+anorm) == anorm)
                             {
                                 flag=0;
                                 break;
                             }
-                            if ((T)(__fabs(w[nm])+anorm) == anorm) break;
+                            if ((T)(fabs_of(w[nm])+anorm) == anorm) break;
                         }
                         if (flag)
                         {
@@ -174,7 +174,7 @@ namespace upsylon
                             for(size_t i=l;i<=k;i++) {
                                 f=s*rv1[i];
                                 rv1[i]=c*rv1[i];
-                                if ((T)(__fabs(f)+anorm) == anorm) break;
+                                if ((T)(fabs_of(f)+anorm) == anorm) break;
                                 g=w[i];
                                 h=__hypotenuse(f,g);
                                 w[i]=h;
@@ -284,7 +284,7 @@ namespace upsylon
                 array<T> &tmp = u.c_aux1;
                 for(size_t j=n;j>0;--j) {
                     T s=0;
-                    if( __fabs(w[j])>0 )
+                    if( fabs_of(w[j])>0 )
                     {
                         for(size_t i=m;i>0;--i) s += u[i][j]*b[i];
                         s /= w[j];

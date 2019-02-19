@@ -55,7 +55,7 @@ namespace upsylon
 
                     for( size_t j=n;j>0;--j)
                     {
-                        const scalar_type tmp = __fabs( a_i[j] );
+                        const scalar_type tmp = fabs_of( a_i[j] );
                         if (tmp>piv)
                         {
                             piv = tmp;
@@ -97,7 +97,7 @@ namespace upsylon
                         }
                         a_i[j]=sum;
 
-                        const scalar_type tmp = scal[i]*__fabs(sum);
+                        const scalar_type tmp = scal[i]*fabs_of(sum);
                         if( tmp >= piv )
                         {
                             piv  = tmp;
@@ -118,7 +118,7 @@ namespace upsylon
 
                     indx[j]=imax;
 
-                    if( __fabs(a[j][j]) <= amin )
+                    if( fabs_of(a[j][j]) <= amin )
                     {
                         return false; //!< singular or ill-conditioned matrix
                     }

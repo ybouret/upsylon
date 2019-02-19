@@ -45,7 +45,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // initialize
                 //--------------------------------------------------------------
-                real_t h = x2 < x1 ? -__fabs(h1) : __fabs(h1);
+                real_t h = x2 < x1 ? -fabs_of(h1) : fabs_of(h1);
                 real_t x = x1;
                 for( size_t i=n;i>0;--i) y[i] = ystart[i];
                 
