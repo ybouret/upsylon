@@ -93,7 +93,7 @@ namespace upsylon
                 assert(f.b<=f.a);
                 assert(f.b<=f.c);
 
-                T dx_prev = __fabs(x.c-x.a);
+                T dx_prev = fabs_of(x.c-x.a);
                 for(;;)
                 {
                     //__________________________________________________________
@@ -111,8 +111,8 @@ namespace upsylon
                     // check convergence on values
                     //__________________________________________________________
                     {
-                        const T df = max_of(__fabs(f.c-f.b),__fabs(f.a-f.b));
-                        const T ff = ftol * __fabs(f.b);
+                        const T df = max_of(fabs_of(f.c-f.b),fabs_of(f.a-f.b));
+                        const T ff = ftol * fabs_of(f.b);
                         if(df<=ff) break;
                     }
 
@@ -121,8 +121,8 @@ namespace upsylon
                     // check convergence on interval
                     //__________________________________________________________
                     {
-                        const T dx = __fabs(x.c-x.a);
-                        const T xx = xtol * __fabs(x.b);
+                        const T dx = fabs_of(x.c-x.a);
+                        const T xx = xtol * fabs_of(x.b);
                         if(dx<=xx||dx>=dx_prev) break;
                         dx_prev = dx;
                     }

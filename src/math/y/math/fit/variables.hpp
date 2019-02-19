@@ -252,7 +252,7 @@ namespace upsylon
                 static inline
                 T compute_relative_error( const T aorg, const T aerr ) throw()
                 {
-                    const T ratio = (__fabs(aerr)+numeric<T>::tiny)/(__fabs(aorg)+numeric<T>::tiny);
+                    const T ratio = (fabs_of(aerr)+numeric<T>::tiny)/(fabs_of(aorg)+numeric<T>::tiny);
                     return 100 * ratio;
                 }
 

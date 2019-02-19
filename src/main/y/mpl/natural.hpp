@@ -581,7 +581,7 @@ static inline natural __##CALL(const uint8_t *l, const size_t nl, const uint8_t 
     typedef mpl::natural   mpn; //!< alias
     namespace math
     {
-        inline mpn __fabs(const mpn &u) { return u;   } //!< overloaded __fabs function
+        inline mpn fabs_of(const mpn &u) { return u;   } //!< overloaded __fabs function
         inline mpn __mod2(const mpn &u) { return u*u; } //!< overloaded __mod2 function
     }
 
