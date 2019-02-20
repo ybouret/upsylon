@@ -16,6 +16,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(draw);
     Y_UTEST(iso);
     Y_UTEST(kr);
+    Y_UTEST(crop);
 }
 Y_UTEST_EXEC()
 

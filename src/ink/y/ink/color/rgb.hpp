@@ -29,6 +29,11 @@ namespace upsylon
             //! assign
             inline  rgb & operator=( const rgb &other) throw() { r=other.r; g=other.g; b=other.b; return *this; }
 
+            friend inline std::ostream & operator<<( std::ostream &os, const rgb &c )
+            {
+                os<< '(' << double(c.r) << ',' << double(c.g) << ',' << double(c.b) << ')';
+                return os;
+            }
         };
 
         //! packed r,g,b,a value
