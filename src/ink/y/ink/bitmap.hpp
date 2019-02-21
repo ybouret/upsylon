@@ -38,6 +38,9 @@ namespace upsylon
             //! memory_is_shared bitmap, same layouts
             explicit Bitmap( Bitmap *bmp );
 
+            //! memory_is_shared bitmap, sub bitmap
+            explicit Bitmap( Bitmap *bmp, const Area &sub );
+
             //! memory from user
             explicit Bitmap(const void  *data,
                             const size_t D,
@@ -85,6 +88,7 @@ namespace upsylon
 
             //! hard copy
             void copy(const Bitmap &other) throw();
+            
             //! hard copy with tiles
             void copy(const Bitmap &other, Engine &E);
 

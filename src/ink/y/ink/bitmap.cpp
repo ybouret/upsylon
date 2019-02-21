@@ -45,12 +45,17 @@ namespace upsylon
 
             allocate();
         }
-        
-        static inline Bitmap *__check(Bitmap *bmp)
-        {
-            return bmp;
+
+        namespace {
+
+            static inline Bitmap *__check(Bitmap *bmp)
+            {
+                if(!bmp) throw exception("Bitmap(NULL)");
+                return bmp;
+            }
         }
-        
+
+
         Bitmap:: Bitmap( Bitmap *bmp ) :
         Area( *__check(bmp) ),
         entry( bmp->entry   ),
@@ -71,14 +76,50 @@ namespace upsylon
             }
             catch(...)
             {
-                if(shared->liberate())
-                {
-                    delete shared;
-                }
+                if( shared->liberate() ) delete shared;
                 throw;
             }
         }
-        
+
+
+
+        Bitmap:: Bitmap(Bitmap     *bmp,
+                        const Area &sub ) :
+        Area( coord(0,0), sub.w, sub.h),
+        entry(NULL),
+        rows(0),
+        depth(0),
+        scanline(0),
+        stride(0),
+        bytes(0),
+        shared( bmp ),
+        private_memory(0),
+        private_length(0),
+        model(memory_is_shared)
+        {
+            if(!bmp) throw exception("SubBitmap(NULL)");
+            shared->withhold();
+            const Bitmap &src = *shared;
+            try
+            {
+                if(!src.contains(sub)) throw exception("SubBitmap bigger than source");
+
+                entry = (void *)( src.get(sub.lower.x,sub.lower.y) );
+                (size_t &)depth    = src.depth;
+                (size_t &)scanline = w * depth;
+                (size_t &)stride   = src.stride;
+                (size_t &)bytes    = pixels * depth;
+                allocate_rows_only();
+            }
+            catch(...)
+            {
+                if( shared->liberate() ) delete shared;
+                throw;
+            }
+        }
+
+
+
         Bitmap:: Bitmap(const void  *data,
                         const size_t D,
                         const size_t W,

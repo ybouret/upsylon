@@ -19,6 +19,7 @@ ADD_TEST(Draw    test-ink draw)
 ADD_TEST(Iso     test-ink iso)
 ADD_TEST(Kr      test-ink kr)
 ADD_TEST(Crop    test-ink crop)
+ADD_TEST(Sub     test-ink sub)
 
 ADD_CUSTOM_TARGET(utest-ink
 COMMAND ${CMAKE_CTEST_COMMAND} -V

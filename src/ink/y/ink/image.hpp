@@ -52,33 +52,57 @@ namespace upsylon
             //
             //==================================================================
 
-
             //! load a floating point grey scale bitmap
+            inline Bitmap * __loadf(const string &filename, const void *options) const
+            {
+                put_gsf proc;
+                return load(filename,sizeof(float),proc,options);
+            }
+
+            //! make a shared PixmapF
             inline PixmapF loadf(const string &filename, const void *options) const
             {
                 put_gsf proc;
-                return PixmapF(load(filename,sizeof(float),proc,options));
+                return PixmapF(__loadf(filename,options));
             }
 
             //! load a 8-bits grey-scale bitmap
-            inline Pixmap1 load1(const string &filename, const void *options) const
+            inline Bitmap * __load1(const string &filename, const void *options) const
             {
                 put_gs1 proc;
-                return Pixmap1(load(filename,sizeof(uint8_t),proc,options));
+                return  load(filename,sizeof(uint8_t),proc,options);
+            }
+
+            //! make a shared Pixmap1
+            inline Pixmap1 load1(const string &filename, const void *options) const
+            {
+                return Pixmap1(__load1(filename,options));
             }
 
             //! load an rgb bitmap
-            inline Pixmap3 load3(const string &filename, const void *options) const
+            inline Bitmap * __load3(const string &filename, const void *options) const
             {
                 put_rgb proc;
-                return Pixmap3(load(filename,sizeof(RGB),proc,options));
+                return  load(filename,sizeof(RGB),proc,options);
+            }
+
+            //! make a shared Pixmap3
+            inline Pixmap3 load3(const string &filename, const void *options) const
+            {
+                return Pixmap3(__load3(filename,options) );
             }
 
             //! load an rgba bitmap
-            inline Pixmap4 load4(const string &filename, const void *options) const
+            inline Bitmap * __load4(const string &filename, const void *options) const
             {
                 put_rgba proc;
-                return Pixmap4(load(filename,sizeof(RGBA),proc,options));
+                return load(filename,sizeof(RGBA),proc,options);
+            }
+
+            //! make a shared Pixmap4
+            inline Pixmap4 load4(const string &filename, const void *options) const
+            {
+                return Pixmap4(__load4(filename,options));
             }
 
             //==================================================================

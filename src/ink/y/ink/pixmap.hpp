@@ -45,13 +45,20 @@ namespace upsylon
                 assert(sizeof(type)==depth);
             }
 
-            //! shared pixmap with compatible size
+            //! shared pixmap with compatible depth
             inline explicit Pixmap( Bitmap *bmp ) :
-            Bitmap(bmp), Y_PIXMAP_SIGNED_METRICS()
+            Bitmap( check_bitmap_depth(bmp) ), Y_PIXMAP_SIGNED_METRICS()
             {
-                if(depth!=sizeof(T)) throw exception("pixmap: incompatible depths!!!");
+
             }
 
+            //! shared sub-pixmap with compatible depth
+            inline explicit Pixmap( Bitmap *bmp, const Area &sub ) :
+            Bitmap( check_bitmap_depth(bmp), sub ), Y_PIXMAP_SIGNED_METRICS()
+            {
+
+            }
+            
             //! copy, relying on bitmap
             Pixmap(const Pixmap &other) :
             Bitmap(other), Y_PIXMAP_SIGNED_METRICS()
@@ -124,6 +131,12 @@ namespace upsylon
 
         private:
             Y_DISABLE_ASSIGN(Pixmap);
+            static inline Bitmap *check_bitmap_depth(Bitmap *bmp)
+            {
+                if(!bmp) throw exception("Pixmap(NULL)");
+                if(bmp->depth!=sizeof(T)) throw exception("Pixmap.depth=%u!=bitmap.depth=%u",unsigned( sizeof(T) ), unsigned(bmp->depth) );
+                return bmp;
+            }
         };
     }
 }
