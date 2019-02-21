@@ -31,7 +31,7 @@ namespace upsylon
             typedef map<size_t,column>  colmap; //!< [index:column] map
 
             //! constructor, reserve a little memory
-            inline explicit data_set() : columns(4,as_capacity) {}
+            inline explicit data_set(size_t n=2) : columns(n,as_capacity) {}
             //! destructor
             inline virtual ~data_set() throw() {}
             //! link a column index to a columnx
@@ -53,7 +53,7 @@ namespace upsylon
                 }
             }
 
-            //! load data from input stream, 
+            //! load data from input stream,
             inline void load( ios::istream &fp, const size_t skip=0, const size_t nmax=0)
             {
                 // preparing columns, order by increasing index
@@ -110,6 +110,35 @@ namespace upsylon
                 const string _(filename);
                 load(_,skip,nmax);
             }
+
+            //! wrapper to load X/Y quickly
+            static inline
+            void loadXY(const string &filename,
+                        const size_t  ix,
+                        sequence<T>  &X,
+                        const size_t  iy,
+                        sequence<T>  &Y,
+                        const size_t skip=0, const size_t nmax=0)
+            {
+                data_set<T> ds(2);
+                ds.use(ix,X);
+                ds.use(iy,Y);
+                ds.load(filename,skip,nmax);
+            }
+
+            //! wrapper to load X/Y quickly
+            static inline
+            void loadXY(const char   *filename,
+                        const size_t  ix,
+                        sequence<T>  &X,
+                        const size_t  iy,
+                        sequence<T>  &Y,
+                        const size_t skip=0, const size_t nmax=0)
+            {
+                const string _(filename);
+                loadXY(_,ix,X,iy,Y,skip,nmax);
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(data_set);
