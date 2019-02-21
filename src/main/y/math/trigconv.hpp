@@ -10,6 +10,7 @@ namespace upsylon
     namespace math
     {
 
+        //! radians to degrees conversion
         template <typename T>
         inline T rad2deg( const T angle_rad ) throw()
         {
@@ -18,6 +19,7 @@ namespace upsylon
             return (full_deg*angle_rad)/full_rad;
         }
 
+        //! degrees to radians conversion
         template <typename T>
         inline T deg2rad( const T angle_deg ) throw()
         {

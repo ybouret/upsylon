@@ -131,6 +131,7 @@ namespace upsylon
             return *(((&x)-1) + index);
         }
 
+        //! transform the 2D point with a matrix-like object
         template <typename MATRIX>
         inline point2d mul_by( const MATRIX &M ) const
         {

@@ -22,13 +22,17 @@ namespace upsylon
 
             //! constructor
             inline  rgb( param_type R=0, param_type G=0, param_type B=0) throw() : r(R), g(G), b(B) {}
+
             //! destructor
             inline ~rgb() throw() {}
+
             //! copy
             inline  rgb(const rgb &other) throw() : r(other.r), g(other.g), b(other.b) {}
+
             //! assign
             inline  rgb & operator=( const rgb &other) throw() { r=other.r; g=other.g; b=other.b; return *this; }
 
+            //! display with cast to double
             friend inline std::ostream & operator<<( std::ostream &os, const rgb &c )
             {
                 os<< '(' << double(c.r) << ',' << double(c.g) << ',' << double(c.b) << ')';

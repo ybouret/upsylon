@@ -20,11 +20,12 @@ namespace upsylon
                 explicit Ellipse();         //!< set internal constraint
                 virtual ~Ellipse() throw(); //!< destructor
 
+                //! convert the conic vector q into center+radii+rotation matrix
                 void factorize();
 
-                point2d<double> center; //!< computed center
-                point2d<double> radii;  //!< computed radii, radii.x >= radii.y
-                const matrix<double> &rotation() const throw();
+                point2d<double>       center; //!< computed center
+                point2d<double>       radii;  //!< computed radii, radii.x >= radii.y
+                const matrix<double> &rotation() const throw(); //!< computed rotation matrix
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Ellipse);
