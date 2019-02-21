@@ -27,7 +27,7 @@ namespace upsylon
             class Row
             {
             public:
-                type        *p; //!< first iterm of the wrow
+                type        *p; //!< first iterm of the row
                 const size_t w; //!< row width
                 //! item access
                 inline type       & operator[](const size_t x) throw()       { assert(x<w); assert(p); return p[x]; }
@@ -59,16 +59,14 @@ namespace upsylon
 
             }
             
-            //! copy, relying on bitmap
+            //! hard copy, relying on bitmap
             Pixmap(const Pixmap &other) :
             Bitmap(other), Y_PIXMAP_SIGNED_METRICS()
             {
             }
 
             //! destructor
-            inline virtual ~Pixmap() throw()
-            {
-            }
+            inline virtual ~Pixmap() throw() {}
 
             //! row access from bitmap rows
             inline Row &       operator[](const size_t y) throw()       { assert(y<h); return *(static_cast<Row *>(rows)+y); }
@@ -77,7 +75,7 @@ namespace upsylon
             inline const Row & operator[](const size_t y) const throw() { assert(y<h); return *(static_cast<Row *>(rows)+y); }
 
             //! access by coordinate
-            inline type & operator[]( const coord p) throw() { assert(this->has(p)); return (*this)[p.y][p.x]; }
+            inline type & operator[]( const coord p) throw()            { assert(this->has(p)); return (*this)[p.y][p.x]; }
 
             //! access by coordinate
             inline const_type & operator[]( const coord p) const throw() { assert(this->has(p)); return (*this)[p.y][p.x]; }
@@ -134,7 +132,14 @@ namespace upsylon
             static inline Bitmap *check_bitmap_depth(Bitmap *bmp)
             {
                 if(!bmp) throw exception("Pixmap(NULL)");
-                if(bmp->depth!=sizeof(T)) throw exception("Pixmap.depth=%u!=bitmap.depth=%u",unsigned( sizeof(T) ), unsigned(bmp->depth) );
+
+                const size_t d = bmp->depth;
+                if(d!=sizeof(T))
+                {
+                    if(bmp->liberate()) delete bmp;
+                    throw exception("Pixmap.depth=%u!=bitmap.depth=%u",unsigned( sizeof(T) ), unsigned(d) );
+                }
+
                 return bmp;
             }
         };
