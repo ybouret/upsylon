@@ -120,7 +120,7 @@ namespace upsylon
         template <
         typename DATA_SEQ,
         typename INDX_SEQ> static inline
-        void strip( DATA_SEQ &data, INDX_SEQ &indx )
+        void keep( DATA_SEQ &data, INDX_SEQ &indx )
         {
             assert(indx.size()<=data.size());
             rearrange(data, indx.begin(), indx.size() );

@@ -33,7 +33,7 @@ void do_maintain( SEQUENCE &strings )
         list<size_t> indices;
         maintain::build_indices(indices, strings.begin(), strings.size(), keep_short_string, false);
         std::cerr << "indices  =" << indices << std::endl;
-        maintain::strip(strings,indices);
+        maintain::keep(strings,indices);
         std::cerr << "stripped =" << strings << std::endl;
     }
 
@@ -53,7 +53,7 @@ void do_maintain( SEQUENCE &strings )
         vector<size_t> indices;
         maintain::build_indices(indices, strings.begin(), strings.size(), keep_short_string, true);
         std::cerr << "indices  =" << indices << std::endl;
-        maintain::strip(strings,indices);
+        maintain::keep(strings,indices);
         std::cerr << "stripped =" << strings << std::endl;
     }
 
