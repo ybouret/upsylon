@@ -113,30 +113,32 @@ namespace upsylon
 
             //! wrapper to load X/Y quickly
             static inline
-            void loadXY(const string &filename,
-                        const size_t  ix,
-                        sequence<T>  &X,
-                        const size_t  iy,
-                        sequence<T>  &Y,
-                        const size_t skip=0, const size_t nmax=0)
+            size_t loadXY(const string &filename,
+                          const size_t  ix,
+                          sequence<T>  &X,
+                          const size_t  iy,
+                          sequence<T>  &Y,
+                          const size_t skip=0, const size_t nmax=0)
             {
                 data_set<T> ds(2);
                 ds.use(ix,X);
                 ds.use(iy,Y);
                 ds.load(filename,skip,nmax);
+                assert( X.size() == Y.size() );
+                return X.size();
             }
 
             //! wrapper to load X/Y quickly
             static inline
-            void loadXY(const char   *filename,
-                        const size_t  ix,
-                        sequence<T>  &X,
-                        const size_t  iy,
-                        sequence<T>  &Y,
-                        const size_t skip=0, const size_t nmax=0)
+            size_t loadXY(const char   *filename,
+                          const size_t  ix,
+                          sequence<T>  &X,
+                          const size_t  iy,
+                          sequence<T>  &Y,
+                          const size_t skip=0, const size_t nmax=0)
             {
                 const string _(filename);
-                loadXY(_,ix,X,iy,Y,skip,nmax);
+                return loadXY(_,ix,X,iy,Y,skip,nmax);
             }
 
 

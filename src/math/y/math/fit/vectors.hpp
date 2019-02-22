@@ -68,6 +68,12 @@ namespace upsylon {
                     Yf.make( Y.size(), 0);
                 }
 
+                //! test
+                inline bool AreValid() const throw()
+                {
+                    return (X.size()==Y.size()) && (X.size()==Yf.size());
+                }
+
                 //! make a new sample
                 inline Sample<T> & add_to( Samples<T> &samples, const size_t nvar_max=0)
                 {
