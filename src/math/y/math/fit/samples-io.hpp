@@ -13,9 +13,11 @@ namespace upsylon
         namespace Fit
         {
 
+            //! wrappers to simplify I/O of samples
             struct IO
             {
 
+                //! load X/Y and prepare Yf
                 template <typename T> static inline
                 size_t Load(const string    &filename,
                             const size_t    ix,
@@ -33,7 +35,7 @@ namespace upsylon
                     return n;
                 }
 
-
+                //! wrappper
                 template <typename T> static inline
                 size_t Load(const char *    filename,
                             const size_t    ix,
@@ -48,6 +50,7 @@ namespace upsylon
                     return Load<T>(_,ix,X,iy,Y,Yf,skip,nmax);
                 }
 
+                //! load a set of vectors
                 template <typename T> static inline
                 size_t Load(const string    &filename,
                             Vectors<T>     &vecs,
@@ -59,6 +62,7 @@ namespace upsylon
                     return Load<T>(filename,ix,vecs.X,iy,vecs.Y,vecs.Yf,skip,nmax);
                 }
 
+                //! load a set of vectors, wrapper
                 template <typename T> static inline
                 size_t Load(const char     *filename,
                             Vectors<T>     &vecs,

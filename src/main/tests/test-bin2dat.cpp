@@ -8,16 +8,19 @@ using namespace upsylon;
 
 Y_UTEST(bin2dat)
 {
-    size_t w = 16;
-    ios::icstream inp( ios::cstdin  );
-    ios::ocstream out( ios::cstdout );
-    char C=0;
-    ios::bin2dat  b2d(w);
-    while(inp.query(C))
+    if(argc>1&& 0==strcmp("run",argv[1]))
     {
-        b2d.write(out,C,false);
+        size_t w = 16;
+        ios::icstream inp( ios::cstdin  );
+        ios::ocstream out( ios::cstdout );
+        char C=0;
+        ios::bin2dat  b2d(w);
+        while(inp.query(C))
+        {
+            b2d.write(out,C,false);
+        }
+        b2d.write(out,0,true);
     }
-    b2d.write(out,0,true);
 }
 Y_UTEST_DONE()
 
