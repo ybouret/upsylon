@@ -90,11 +90,12 @@ namespace upsylon
             {
                 if( argc <= 1)
                 {
-                    std::cerr << "List of Tests in " << argv[0] << std::endl;
+                    std::cerr << "List of #Tests=" << num_ << " in " << argv[0] << std::endl;
                     for( size_t i=0; i < num_; ++i )
                     {
                         std::cout << "--  " << reg_[i].name << std::endl;
                     }
+                    std::cerr << "End of #Tests=" << num_ << " in " << argv[0] << std::endl;
                     return 1;
                 }
                 else
