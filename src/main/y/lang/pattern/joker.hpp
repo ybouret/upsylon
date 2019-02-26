@@ -16,19 +16,13 @@ namespace upsylon
         {
         public:
             typedef auto_ptr<Pattern> Motif; //!< alias
-            inline virtual ~Joker() throw() {}     //!< destructor
-
-            void optimize() throw(); //!< call optimize on the motif
-
-
+            virtual ~Joker() throw();        //!< destructor
+            void optimize() throw();         //!< call optimize on the motif
 
         protected:
-            //! initialize
-            explicit Joker(const uint32_t id, Pattern *jk) throw();
-            const Motif motif; //!< the motif
-
-            //! create a directed link
-            void vizlink( ios::ostream &fp ) const;
+            const Motif motif;                                      //!< the motif
+            explicit Joker(const uint32_t id, Pattern *jk) throw(); //!< initialize
+            void vizlink( ios::ostream &fp ) const;                 //!< create a directed link
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Joker);
@@ -38,7 +32,7 @@ namespace upsylon
         class Optional : public Joker
         {
         public:
-            static const uint32_t UUID = Y_FOURCC('?',0,0,0); //!< 0x'?   '
+            static const uint32_t UUID = Y_FOURCC('?',0,0,0); //!< [0x?000]
             inline virtual ~Optional() throw() {}             //!< destructor
             //! create with memory management
             static  Pattern *Create( Pattern *jk );

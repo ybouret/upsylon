@@ -627,6 +627,10 @@ case 'f': return new Single('\f')
             return p.yield();
         }
 
+        Pattern *RegExp(const char *rx, const Dictionary *dict)
+        {
+            const string _ = rx; return RegExp(_,dict);
+        }
 
         string StringToRegExp(const string &s)
         {

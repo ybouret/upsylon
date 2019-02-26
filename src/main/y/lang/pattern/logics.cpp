@@ -31,6 +31,8 @@ namespace upsylon
             return p.yield();
         }
 
+        Pattern * Logical::Equal(const char *s) { const string _ = s; return Equal(_); }
+
         Pattern * Logical:: Among(const string &s)
         {
             auto_ptr<Logical> p = new OR();
@@ -39,6 +41,8 @@ namespace upsylon
             __fill(p->operands,*s,n);
             return p.yield();
         }
+
+        Pattern * Logical:: Among(const char *s) { const string _ = s; return Among(_); }
 
     }
 

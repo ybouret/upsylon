@@ -6,6 +6,8 @@ namespace upsylon
 {
     namespace Lang
     {
+        Joker:: ~Joker() throw() {}
+
         Joker:: Joker(const uint32_t id, Pattern *jk ) throw() :
         Pattern(id),
         motif(jk)

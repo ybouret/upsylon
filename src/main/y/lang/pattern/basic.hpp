@@ -8,7 +8,7 @@ namespace upsylon
 {
     namespace Lang
     {
-        //! Matching One char
+        //! Matching One char interface
         class Match1 : public Pattern
         {
         public:
@@ -17,7 +17,7 @@ namespace upsylon
             //! common match function
             virtual bool match( Token &tkn, Source &src ) const;
 
-            //! false
+            //! false, always one char is returned
             virtual bool          weak() const throw() { return false; }
 
         protected:
@@ -34,18 +34,13 @@ namespace upsylon
         {
         public:
             static const uint32_t UUID = Y_FOURCC('A', 'N', 'Y', '1'); //!< 0xANY1
-            inline virtual ~Any1() throw() {}                          //!< destructor
-            //! constructor
-            inline explicit Any1() throw() : Match1(UUID)
-            {
-                Y_LANG_PATTERN_IS(Any1);
-            }
 
-            inline virtual  Any1 *clone() const { return new Any1(); } //!< clone
-            virtual void          __viz( ios::ostream &fp ) const;     //!< GraphViz
-            virtual void          write( ios::ostream &fp ) const;     //!< output
+            inline virtual ~Any1() throw() {}                                          //!< destructor
+            inline explicit Any1() throw() : Match1(UUID) { Y_LANG_PATTERN_IS(Any1); } //!< constructor
+            inline virtual  Any1 *clone() const { return new Any1(); }                 //!< clone
+            virtual void          __viz( ios::ostream &fp ) const;                     //!< GraphViz
+            virtual void          write( ios::ostream &fp ) const;                     //!< output [0xANY1] (+4)
 
-            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Any1);
             inline virtual bool accept_byte( const uint8_t ) const throw()
@@ -62,16 +57,11 @@ namespace upsylon
             const uint8_t         code;                                //!< the matching code
 
             //! initialize
-            inline explicit Single(const uint8_t c) throw() : Match1(UUID), code(c)
-            {
-                Y_LANG_PATTERN_IS(Single);
-            }
-            //! destructor
-            inline virtual ~Single() throw() {}
-
-            inline virtual Single *clone() const { return new Single(code); } //!< output
+            inline explicit Single(const uint8_t c) throw() : Match1(UUID), code(c)  { Y_LANG_PATTERN_IS(Single); }
+            inline virtual ~Single() throw() {}                               //!< destructor
+            inline virtual Single *clone() const { return new Single(code); } //!< clone
             virtual void           __viz( ios::ostream &fp ) const;           //!< GraphViz
-            virtual void           write( ios::ostream &fp ) const;           //!< output
+            virtual void           write( ios::ostream &fp ) const;           //!< output [0xSNGL] [code] (+5)
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Single);
@@ -86,8 +76,8 @@ namespace upsylon
         {
         public:
             static const uint32_t UUID = Y_FOURCC('R','N','G','E');  //!< 0xRNGE
-            const uint8_t         lower;                             //!<  lower code
-            const uint8_t         upper;                             //!<  lower code
+            const uint8_t         lower;                             //!< lower code
+            const uint8_t         upper;                             //!< lower code
 
             //! intialize
             inline explicit Range(const uint8_t lo, const uint8_t up) throw() : Match1(UUID), lower(lo), upper(up)
@@ -95,12 +85,11 @@ namespace upsylon
                 Y_LANG_PATTERN_IS(Range);
                 if(upper<lower) cswap(lower,upper);
             }
-            //! destructor
-            inline virtual ~Range() throw() {}
 
+            inline virtual ~Range() throw() {}                                       //!< destructor
             inline virtual Pattern *clone() const { return new Range(lower,upper); } //!< clone
             virtual void            __viz( ios::ostream &fp ) const;                 //!< GraphViz
-            virtual void            write( ios::ostream &fp ) const;                 //!< output
+            virtual void            write( ios::ostream &fp ) const;                 //!< output [0xRNGE] [lower] [upper] (+6)
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Range);

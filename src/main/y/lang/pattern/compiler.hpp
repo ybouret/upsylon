@@ -8,17 +8,13 @@ namespace upsylon
 {
     namespace Lang
     {
-        class RXCompiler; //! forward declaration
+        class RXCompiler; //!< forward declaration to avoid class collision
 
         //! compile a regular expression
         Pattern *RegExp( const string &rx, const Dictionary *dict=NULL);
 
-        //! compile a regular expression
-        inline
-        Pattern *RegExp(const char *rx, const Dictionary *dict=NULL)
-        {
-            const string _ = rx; return RegExp(_,dict);
-        }
+        //! compile a regular expression, wrapper
+        Pattern *RegExp(const char *rx, const Dictionary *dict=NULL);
 
         //! convert a string to a regular expression
         string StringToRegExp(const string &s);

@@ -4,6 +4,16 @@ namespace upsylon
 {
     namespace Lang
     {
+        Logical:: ~Logical() throw()
+        {
+        }
+        
+        Pattern * Logical:: __clone( Logical *l ) const
+        {
+            auto_ptr<Logical> p = l;
+            p->operands.merge_back_copy(operands);
+            return p.yield();
+        }
 
         void Logical:: vizlink(ios::ostream &fp) const
         {
