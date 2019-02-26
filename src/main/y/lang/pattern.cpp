@@ -50,6 +50,9 @@ namespace upsylon
             ios::GraphViz::Render(fn,keepFile);
         }
 
+        void Pattern:: GraphViz( const char   *fn, bool keepFile) const
+        { const string _ = fn; GraphViz(_,keepFile); }
+
         string Pattern:: to_binary() const
         {
             string           ans;
