@@ -28,8 +28,8 @@ namespace upsylon
                 virtual void Init(const Token &) = 0; //!< what do do when plugin is called
                 
             protected:
-                explicit Plugin(Translator &attached, const string &id, const char   *rx); //!< initialize
-                explicit Plugin(Translator &attacher, const string &id, const string &rx); //!< initialize
+                explicit Plugin(Translator &attached, const string &id, const char   *rx, const bool isVerbose); //!< initialize
+                explicit Plugin(Translator &attacher, const string &id, const string &rx, const bool isVerbose); //!< initialize
 
                 Translator &lexer; //!< lexer to store a compiled lexeme
 

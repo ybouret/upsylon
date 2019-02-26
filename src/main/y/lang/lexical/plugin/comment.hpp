@@ -19,8 +19,8 @@ namespace upsylon
                 inline virtual void Init(const Token &) {} //!< do nothing on Init
 
             protected:
-                inline explicit Comment(Translator &t, const string &id, const char   *rx) : Plugin(t,id,rx) {} //!< initialize
-                inline explicit Comment(Translator &t, const string &id, const string &rx) : Plugin(t,id,rx) {} //!< initialize
+                inline explicit Comment(Translator &t, const string &id, const char   *rx, const bool v) : Plugin(t,id,rx,v) {} //!< initialize
+                inline explicit Comment(Translator &t, const string &id, const string &rx, const bool v) : Plugin(t,id,rx,v) {} //!< initialize
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Comment);
@@ -31,8 +31,8 @@ namespace upsylon
             {
             public:
                 inline virtual ~EndOfLineComment() throw() {} //!< desctructor
-                inline explicit EndOfLineComment(Translator &t, const string &id, const char   *rx) : Comment(t,id,rx) { setup(); } //!< initialize
-                inline explicit EndOfLineComment(Translator &t, const string &id, const string &rx) : Comment(t,id,rx) { setup(); } //!< initialize
+                inline explicit EndOfLineComment(Translator &t, const string &id, const char   *rx, const bool v) : Comment(t,id,rx,v) { setup(); } //!< initialize
+                inline explicit EndOfLineComment(Translator &t, const string &id, const string &rx, const bool v) : Comment(t,id,rx,v) { setup(); } //!< initialize
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(EndOfLineComment);
@@ -45,7 +45,7 @@ namespace upsylon
             {
             public:
                 inline virtual ~CXX_Comment() throw() {} //!< desctructor
-                inline explicit CXX_Comment(Translator &t, const string &id) : EndOfLineComment(t,id,init) {} //!< initialzie
+                inline explicit CXX_Comment(Translator &t, const string &id, const bool v) : EndOfLineComment(t,id,init,v) {} //!< initialzie
 
             private:
                 static const char init[];
@@ -62,10 +62,10 @@ namespace upsylon
                 inline virtual ~MultiLinesComment() throw() {}
 
                 //! initialize
-                inline explicit MultiLinesComment(Translator &t, const string &id, const char   *rx_ini, const char   *rx_end) : Comment(t,id,rx_ini), closing(rx_end) { fill(); }
+                inline explicit MultiLinesComment(Translator &t, const string &id, const char   *rx_ini, const char   *rx_end, const bool v) : Comment(t,id,rx_ini,v), closing(rx_end) { fill(); }
 
                 //! initialize
-                inline explicit MultiLinesComment(Translator &t, const string &id, const string &rx_ini, const string &rx_end) : Comment(t,id,rx_ini), closing(rx_end) { fill(); }
+                inline explicit MultiLinesComment(Translator &t, const string &id, const string &rx_ini, const string &rx_end, const bool v) : Comment(t,id,rx_ini,v), closing(rx_end) { fill(); }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MultiLinesComment);
@@ -80,7 +80,7 @@ namespace upsylon
                 inline virtual ~C_Comment() throw() {}
                 
                 //! initialize
-                inline explicit C_Comment(Translator &t, const string &id) : MultiLinesComment(t,id,init,quit) {}
+                inline explicit C_Comment(Translator &t, const string &id, const bool v) : MultiLinesComment(t,id,init,quit,v) {}
                 
             private:
                 static const char init[];

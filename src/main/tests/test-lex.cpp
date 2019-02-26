@@ -41,6 +41,9 @@ namespace
             COM2.back("-->", this, &myLex::COM2_Leave);
             COM2.drop("any",".");
             COM2.endl("endl","[:endl:]");
+
+            hook<Lexical::MultiLinesComment>(root,"XMLCom", "<--", "-->");
+
         }
 
         virtual ~myLex() throw()

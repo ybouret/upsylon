@@ -66,7 +66,7 @@ namespace upsylon
                     if(p)
                         link(scanner,**p);
                     else
-                        link(scanner,enroll_plugin( new PLUGIN(*this,pluginName) ) );
+                        link(scanner,enroll_plugin( new PLUGIN(*this,pluginName,(**this).verbose) ) );
                 }
 
                 //! no args PLUGIN constructor, wrapper
@@ -84,7 +84,7 @@ namespace upsylon
                     if(p)
                         link(scanner,**p);
                     else
-                        link(scanner,enroll_plugin( new PLUGIN(*this,pluginName,expr) ) );
+                        link(scanner,enroll_plugin( new PLUGIN(*this,pluginName,expr,(**this).verbose) ) );
                 }
 
                 //! PLUGIN with one argument
@@ -103,7 +103,7 @@ namespace upsylon
                     if(p)
                         link(scanner,**p);
                     else
-                        link(scanner,enroll_plugin( new PLUGIN(*this,pluginName,rxInit,rxQuit) ) );
+                        link(scanner,enroll_plugin( new PLUGIN(*this,pluginName,rxInit,rxQuit,(**this).verbose) ) );
                 }
 
                 //! PLUGIN with two arguments

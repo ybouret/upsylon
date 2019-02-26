@@ -52,26 +52,7 @@ namespace upsylon
             const char C_Comment:: init[] = "/\\*";
             const char C_Comment:: quit[] = "\\*/";
 
-#if 0
-            C_Comment:: C_Comment(Translator &t, const string &id) :
-            {
-#if 0
-                {
-                    const string drop_id = *label + ".drop";
-                    const string drop_rx = ".";
-                    drop(drop_id,drop_rx);
-                }
 
-                {
-                    const string endl_id = *label + ".endl";
-                    const string endl_rx = "[:endl:]";
-                    endl(endl_id,endl_rx);
-                }
-
-                back(quit);
-#endif
-            }
-#endif
           
 
         }

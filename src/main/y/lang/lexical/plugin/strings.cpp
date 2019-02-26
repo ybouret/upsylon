@@ -16,7 +16,7 @@ namespace upsylon
             }
 
 
-            __String:: __String(Translator &tr, const string &id, const char *ch) : Plugin(tr,id,ch), content()
+            __String:: __String(Translator &tr, const string &id, const char *ch, const bool v) : Plugin(tr,id,ch,v), content()
             {
                 assert(*label==id);
 
@@ -133,7 +133,7 @@ namespace upsylon
             }
 
 
-            jString:: jString(Translator &t, const string &id) : __String(t, id,"\\x22")
+            jString:: jString(Translator &t, const string &id, const bool v) : __String(t, id,"\\x22",v)
             {
 
             }
@@ -155,7 +155,7 @@ namespace upsylon
             }
 
 
-            rString:: rString(Translator &t, const string &id) : __String(t, id,"\\x27")
+            rString:: rString(Translator &t, const string &id, const bool v) : __String(t, id,"\\x27",v)
             {
 
             }
