@@ -90,7 +90,9 @@ namespace upsylon
         > static inline
         void rearrange( list<T> &L, INDEX_ITERATOR ii, const size_t ni )
         {
+#if !defined(NDEBUG)
             const size_t na = L.size();
+#endif
             typename list<T>::nodes_list source,good,bad;
             L.__send_all(source); assert(source.size==na);
             size_t                 ia = 1;
