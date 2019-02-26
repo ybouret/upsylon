@@ -17,7 +17,9 @@ namespace
     public:
         explicit myLex() : Lexical::Translator("myLex")
         {
+
             Lexical::Scanner &root = **this;
+            root.verbose = true;
             root.emit("id","[:alpha:]+");
             root.emit("int","[:digit:]+");
             root.drop("blanks","[:blank:]+");

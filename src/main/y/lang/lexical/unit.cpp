@@ -10,12 +10,12 @@ namespace upsylon
         }
 
         Lexeme:: Lexeme(const Tag &ruleLabel) :
-        Token(), next(0), prev(0), label(ruleLabel)
+        Token(),Base(),label(ruleLabel)
         {
         }
 
         Lexeme:: Lexeme(const Lexeme &other):
-        Token(other), next(0), prev(0), label(other.label)
+        Token(other), Base(), label(other.label)
         {}
 
         const CharInfo & Lexeme:: info() const

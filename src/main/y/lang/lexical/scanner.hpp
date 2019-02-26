@@ -27,19 +27,20 @@ namespace upsylon
                 const Tag label; //!< used as shared label/key
 
                 virtual ~Scanner() throw();                 //!< destructor
-                explicit Scanner(const string &id);         //!< initialize
-                explicit Scanner(const char   *id);         //!< initialize
-                explicit Scanner(const Tag    &id) throw(); //!< initialize
+                explicit Scanner(const string &id);         //!< initialize, create a label
+                explicit Scanner(const char   *id);         //!< initialize, create a label
+                explicit Scanner(const Tag    &id) throw(); //!< initialize, shared label
                 const string & key() const throw();         //!< for database
 
-                //! construct a new rule, for any EVENT
+                //! construct a new rule, for any EVENT, and a Motif that must NOT be weak
                 template <typename EVENT>
                 inline void add(const Tag         &ruleLabel,
                                 const Motif       &ruleMotif,
                                 const EVENT       &ruleEvent)
                 {
-                    if(verbose) { std::cerr << "@scan[" << label << "].add( '" << ruleLabel << "' )" << std::endl; }
+                    if(verbose) emitLabel(ruleLabel);
                     checkLabel(ruleLabel);
+                    checkMotif(ruleLabel,ruleMotif);
                     rules.push_back( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
 
@@ -224,19 +225,13 @@ namespace upsylon
                 }
 
                 //! return without any further ado
-                inline void back(const string &rx)
-                {
-                    back(rx,this,&Scanner::nothing);
-                }
+                inline void back(const string &rx) { back(rx,this,&Scanner::nothing); }
 
                 //! return without any further ado
-                inline void back(const char *rx)
-                {
-                    const string _(rx); back(_);
-                }
+                inline void back(const char *rx) { const string _(rx); back(_); }
 
                 //! do nothing
-                void nothing( const Token &) throw();
+                void nothing(const Token &) throw();
 
                 //! newline of the probed source
                 void newline(const Token &) throw();
@@ -255,7 +250,6 @@ namespace upsylon
 
                 //! helper to drop rx on rx
                 void drop(const char *rx);
-
 
                 //! helper for newline(id) on rx
                 void endl(const string &id,const string &rx);
@@ -281,6 +275,8 @@ namespace upsylon
                 Rule::List    rules;
                 const Module *probed;
                 void checkLabel(const Tag &ruleLabel) const;
+                void checkMotif(const Tag &ruleLabel ,const Motif &ruleMotif) const;
+                void emitLabel(const Tag &ruleLabel) const;
 
             public:
                 const Dictionary *userDict; //!< validity must be checked by user

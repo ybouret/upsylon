@@ -38,6 +38,12 @@ verbose(false)
 
             Scanner:: ~Scanner() throw() {}
 
+            void Scanner:: emitLabel(const Tag &ruleLabel) const
+            {
+                std::cerr << "@scan[" << label << "].add( '" << ruleLabel << "' )" << std::endl;
+            }
+
+
             void Scanner:: checkLabel(const Tag &ruleLabel) const
             {
                 for(const Rule *r = rules.head; r; r=r->next )
@@ -46,6 +52,14 @@ verbose(false)
                     {
                         throw exception("[%s] multiple rule '%s'",**label,**ruleLabel);
                     }
+                }
+            }
+
+            void Scanner:: checkMotif(const Tag &ruleLabel ,const Motif &ruleMotif) const
+            {
+                if( ruleMotif->weak() )
+                {
+                    throw exception("[%s] weak expression for rule '%s'", **label, **ruleLabel);
                 }
             }
 

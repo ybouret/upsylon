@@ -106,6 +106,14 @@ namespace upsylon
                         link(scanner,enroll_plugin( new PLUGIN(*this,pluginName,rxInit,rxQuit) ) );
                 }
 
+                //! PLUGIN with two arguments
+                template <typename PLUGIN>
+                inline void hook( Scanner &scanner, const char *pluginName, const char *rxInit, const char *rxQuit)
+                {
+                    const string _(pluginName); return hook<PLUGIN>(scanner,_,rxInit,rxQuit);
+                }
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Translator);
@@ -122,8 +130,6 @@ namespace upsylon
                 void    enroll( Scanner *s );         //!< insert into scanners
                 Plugin &enroll_plugin( Plugin *plg ); //!< insert into plugins AND scanners
                 void    link(Scanner &, Plugin & );   //!< scanner calls plugin upon trigger
-
-
 
             public:
                 Dictionary dict; //!< shared dictionary, set as userDict for registers scanners
