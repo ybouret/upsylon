@@ -38,9 +38,16 @@ verbose(false)
 
             Scanner:: ~Scanner() throw() {}
 
+            std::ostream  & Scanner:: indent( std::ostream &os) const
+            {
+                os << ' ';
+                return os;
+            }
+
+
             void Scanner:: emitLabel(const Tag &ruleLabel) const
             {
-                std::cerr << "@scan[" << label << "].add( '" << ruleLabel << "' )" << std::endl;
+                indent(std::cerr) << "@scan[" << label << "].add( '" << ruleLabel << "' )" << std::endl;
             }
 
 

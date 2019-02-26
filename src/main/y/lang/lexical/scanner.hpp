@@ -281,6 +281,9 @@ namespace upsylon
             public:
                 const Dictionary *userDict; //!< validity must be checked by user
                 bool              verbose;  //!< to check build up of the scanner
+                
+                //! indent using depth
+                std::ostream     &indent( std::ostream &) const;
             };
 
         }

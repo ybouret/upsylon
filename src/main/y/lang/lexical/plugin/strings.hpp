@@ -22,7 +22,7 @@ namespace upsylon
                 
             protected:
                 //! initialize with return type=id, and delimiter=ch
-                explicit __String(Translator &tr,const string &id, const char *ch, const bool v);
+                explicit __String(Translator &tr,const string &id, const char *ch);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(__String);
@@ -37,8 +37,8 @@ namespace upsylon
             class jString : public __String
             {
             public:
-                explicit jString(Translator &,const string &id, const bool v); //!< initialize
-                virtual ~jString() throw();                                    //!< destructor
+                explicit jString(Translator &,const string &id); //!< initialize
+                virtual ~jString() throw();                      //!< destructor
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(jString);
@@ -49,8 +49,8 @@ namespace upsylon
             class rString : public __String
             {
             public:
-                explicit rString(Translator &,const string &id, const bool v); //!< initialize
-                virtual ~rString() throw();                                    //!< destructor
+                explicit rString(Translator &,const string &id); //!< initialize
+                virtual ~rString() throw();                      //!< destructor
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(rString);

@@ -71,7 +71,7 @@ dict()
             void Translator:: link(Scanner &scanner,
                                    Plugin  &plugin)
             {
-                if(scanner.verbose) { std::cerr << "@plug[" << scanner.label << "-->" << plugin.label << "] on '" << plugin.trigger << "'" << std::endl; }
+                if(scanner.verbose) { scanner.indent(std::cerr) << "@plug[" << scanner.label << "-->" << plugin.label << "] on '" << plugin.trigger << "'" << std::endl; }
                 scanner.call(*(plugin.label),plugin.trigger, &plugin, & Plugin::Init );
             }
 
@@ -79,6 +79,7 @@ dict()
             {
                 Scanner *s = new Scanner(id);
                 enroll(s);
+                s->verbose = (**this).verbose;
                 return *s;
             }
 

@@ -1,4 +1,4 @@
-#include "y/lang/lexical/plugin.hpp"
+#include "y/lang/lexical/translator.hpp"
 
 namespace upsylon
 {
@@ -10,20 +10,20 @@ namespace upsylon
             {
             }
 
-            Plugin:: Plugin(Translator &t, const string &id, const char *rx, const bool isVerbose) :
+            Plugin:: Plugin(Translator &t, const string &id, const char *rx) :
             Scanner(id),
             trigger(rx),
             lexer(t)
             {
-                verbose = isVerbose;
+                verbose=(*t).verbose;
             }
 
-            Plugin:: Plugin(Translator &t,const string &id, const string &rx,const bool isVerbose) :
+            Plugin:: Plugin(Translator &t,const string &id, const string &rx) :
             Scanner(id),
             trigger(rx),
             lexer(t)
             {
-                verbose=isVerbose;
+                verbose=(*t).verbose;
             }
 
             
