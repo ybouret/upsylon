@@ -35,17 +35,17 @@ namespace upsylon
             virtual void     __viz( ios::ostream &fp ) const = 0;       //!< GraphViz appearance
             virtual void     write( ios::ostream &fp ) const = 0;       //!< binary output
             virtual bool     weak() const throw() = 0;                  //!< a pattern is weak if it matches an empty expression
-            virtual bool     match( Token &tkn, Source &src) const = 0; //! try to match
+            virtual bool     match( Token &tkn, Source &src) const = 0; //!< try to match
 
             //__________________________________________________________________
             //
             // non virtual interface
             //__________________________________________________________________
             void        tag( ios::ostream &os ) const;                          //!< emit its address for GraphViz
-            void        link( const Pattern *p, ios::ostream  &os ) const;      //! create a directed link between 'this' and 'p' for GraphViz
+            void        link( const Pattern *p, ios::ostream  &os ) const;      //!< create a directed link between 'this' and 'p' for GraphViz
             void        viz( ios::ostream &os ) const;                          //!< emit tag+__viz as a GraphViz node
             const char *vizStyle() const throw();                               //!< get GraphViz style for __viz if needed, based on weak()
-            void        GraphViz( const string &fn, bool keepFile=false) const; //! write a directed graph
+            void        GraphViz( const string &fn, bool keepFile=false) const; //!< write a directed graph
             void        GraphViz( const char   *fn, bool keepFile=false) const; //!< write a directed graph, wrapper
             string      to_binary() const;                                      //!< use write() to get a binary code
             string      to_base64() const;                                      //!< human readable from to_binary()
@@ -54,10 +54,10 @@ namespace upsylon
             //
             // static interface
             //__________________________________________________________________
-            static Pattern *Load( ios::istream &fp );       //!< load from an input stream
-            static Pattern *Optimize( Pattern *p ) throw(); //!< optimize pattern
-            static bool     AreEqual(const Pattern &lhs, const Pattern &rhs) throw(); //! test equality (Single only!!)
-            static void     NoMultiple( List &ops ) throw();  //! remove multiple same patterns in a list of operands
+            static Pattern *Load( ios::istream &fp );                                 //!< load from an input stream
+            static Pattern *Optimize( Pattern *p ) throw();                           //!< optimize pattern
+            static bool     AreEqual(const Pattern &lhs, const Pattern &rhs) throw(); //!< test equality (Single only!!)
+            static void     NoMultiple( List &ops ) throw();                          //!< remove multiple same patterns in a list of operands
 
         protected:
             explicit Pattern(const uint32_t id)  throw();  //!< build pattern with a given ID

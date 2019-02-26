@@ -54,7 +54,7 @@ namespace upsylon
         class AND : public Logical
         {
         public:
-            static const uint32_t UUID = Y_FOURCC(' ','&', '&', ' ' ); //! [0x && ]
+            static const uint32_t UUID = Y_FOURCC(' ','&', '&', ' ' ); //!< [0x && ]
 
             inline virtual ~AND() throw() {}                                           //!< destructor
             inline explicit AND() throw() : Logical(UUID) { Y_LANG_PATTERN_IS(AND); }  //!< initialize
@@ -88,7 +88,7 @@ namespace upsylon
         class NONE : public Logical
         {
         public:
-            static const uint32_t UUID = Y_FOURCC(' ','!', '!', ' ' ); //! [0x !! ]
+            static const uint32_t UUID = Y_FOURCC(' ','!', '!', ' ' ); //!< [0x !! ]
 
             inline virtual ~NONE() throw() {}                                           //!< destructor
             inline explicit NONE() throw() : Logical(UUID) { Y_LANG_PATTERN_IS(NONE); } //!< initialize
