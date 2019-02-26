@@ -11,7 +11,7 @@ namespace upsylon
         xy( area.w+area.h, 0.0 ),
         X( &xy[1] ),
         Y( X+area.w ),
-	db(),
+        db(),
         levels()
         {
             double *p = &xy[1];
