@@ -22,7 +22,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Object);
         };
 
-        //! Base Object for reference counting
+        //! Base Reference Counted Object
         class CountedObject : public Object, public counted
         {
         public:
@@ -32,7 +32,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(CountedObject);
         };
 
-        //! to identify a shared source/module
+        //! to identify a shared class with the same tag
         typedef arc_ptr<const string> Tag;
         
         //! shared input

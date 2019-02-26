@@ -51,6 +51,8 @@ namespace upsylon
             return new Module(org,inp);
         }
 
+        Module * Module:: OpenFile(const char   *filename) { const string _(filename); return OpenFile(_); }
+
         Module * Module:: OpenData( const string &name, const void *data, const size_t size)
         {
             const Tag    org = new string(name);
@@ -58,5 +60,19 @@ namespace upsylon
             return new Module(org,inp);
         }
 
+        Module * Module:: OpenData( const char *name, const void *data, const size_t size)
+        {
+            const string _(name); return OpenData(_,data,size);
+        }
+
+        Module * Module:: OpenData(const string &name, const memory::ro_buffer &buff)
+        {
+            return OpenData(name, (char *)buff.ro(), buff.length() );
+        }
+
+        Module * Module:: OpenData(const char *name, const memory::ro_buffer &buff)
+        {
+            return OpenData(name, (char *)buff.ro(), buff.length() );
+        }
     }
 }

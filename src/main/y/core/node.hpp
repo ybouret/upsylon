@@ -36,6 +36,21 @@ namespace upsylon
             Y_DISABLE_ASSIGN(node_of);
         };
 
+        //! minimal class to give node properties to another class
+        template <typename T>
+        class inode
+        {
+        public:
+            Y_DECL_ARGS(T,type); //!< alias
+            mutable_type *next;  //!< mutable object for a list
+            mutable_type *prev;  //!< mutable object for a list
+
+            inline explicit inode() throw() : next(0), prev(0) {} //!< initialize
+            inline virtual ~inode() throw() {}                    //!< destructor
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(inode);
+        };
     }
 }
 

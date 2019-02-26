@@ -9,7 +9,7 @@ namespace upsylon
     namespace Lang
     {
 
-        //! will convert input char into Char
+        //! convert an istream of 'char' into a strean of tagged 'Char'
         class Module : public CharInfo, public counted
         {
         public:
@@ -19,36 +19,22 @@ namespace upsylon
             Char *get();                     //!< convert char into Char
             void  newLine() const throw();   //!< if user recognizes a new line
 
-            static Module        *OpenSTDIN();                       //!< stdin
-            static Module        *OpenFile(const string &filename ); //!< regular file
+            //__________________________________________________________________
+            //
+            // opening files
+            //__________________________________________________________________
+            static Module *OpenSTDIN();                       //!< open stdin
+            static Module *OpenFile(const string &filename ); //!< open a regular file
+            static Module *OpenFile(const char   *filename);  //!< open a regular file
 
-            //! regular file
-            inline
-            static Module *OpenFile(const char   *filename) { const string _(filename); return OpenFile(_); }
-
-            //! open data stream
-            static Module *OpenData( const string &name, const void *data, const size_t size);
-
-            //! open data stream
-            inline
-            static Module *OpenData( const char *name, const void *data, const size_t size)
-            {
-                const string _(name); return OpenData(_,data,size);
-            }
-
-            //! data
-            inline
-            static Module *OpenData(const string &name, const memory::ro_buffer &buff)
-            {
-                return OpenData(name, (char *)buff.ro(), buff.length() );
-            }
-
-            //! data
-            inline
-            static Module *OpenData(const char *name, const memory::ro_buffer &buff)
-            {
-                return OpenData(name, (char *)buff.ro(), buff.length() );
-            }
+            //__________________________________________________________________
+            //
+            // opening data streams
+            //__________________________________________________________________
+            static Module *OpenData( const string &name, const void *data, const size_t size);  //!< open a data stream, create a tag 'name'
+            static Module *OpenData( const char   *name, const void *data, const size_t size);  //!< open a data stream, create a tag 'name'
+            static Module *OpenData( const string &name, const memory::ro_buffer &buff);        //!< open a data stream, create a tag 'name'
+            static Module *OpenData(const char *name, const memory::ro_buffer &buff);           //!< open a data stream, create a tag 'name'
 
         private:
             Input          input;

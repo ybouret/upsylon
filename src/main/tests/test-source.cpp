@@ -47,7 +47,7 @@ Y_UTEST(source)
             }
         }
         std::cerr << "#chars_level2=" << content_copy.size << std::endl;
-
+        std::cerr << "content=" << content_copy << std::endl;
     }
     
 

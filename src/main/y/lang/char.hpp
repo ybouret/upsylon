@@ -3,29 +3,28 @@
 #define Y_LANG_CHAR_INCLUDED 1
 
 #include "y/lang/char-info.hpp"
+#include "y/core/node.hpp"
 
 namespace upsylon
 {
     namespace Lang
     {
+
         //! full fledge class, a code and its position
-        class Char : public CharInfo
+        class Char : public CharInfo, public core::inode<Char>
         {
         public:
+            typedef core::inode<Char>       Base; //!< alias
             typedef core::list_of_cpp<Char> List; //!< list for I/O or buffer
 
-            Char   *next; //!< for list
-            Char   *prev; //!< for list
             uint8_t code; //!< current char value
 
             //! constructor
-            inline          Char(const uint8_t c, const CharInfo &info) throw() : CharInfo(info), next(0), prev(0), code(c) {}
-
+            inline explicit Char(const uint8_t c, const CharInfo &info) throw() : CharInfo(info), Base(), code(c) {}
             //! destructor
             inline virtual ~Char() throw() {}
-
             //! copy
-            inline          Char(const Char &other) throw() : CharInfo(other), next(0), prev(0), code(other.code) {}
+            inline Char(const Char &other) throw() : CharInfo(other), Base(), code(other.code) {}
 
         private:
             Y_DISABLE_ASSIGN(Char);

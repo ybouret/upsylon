@@ -9,23 +9,23 @@ namespace upsylon
     namespace Lang
     {
 
-        //! origin and position of a Char
+        //! origin and position of a Character
         class CharInfo : public Object
         {
         public:
             virtual ~CharInfo() throw();
 
-            const Tag    origin;  //!< origin
+            const Tag    origin;  //!< origin from Module
             const int    line;    //!< line  in origin
             const int    column;  //!< column origin
 
             //! initialize
-            explicit CharInfo(const Tag &org, const int l=0, const int c=0) throw();
+            explicit CharInfo(const Tag &org, const int l, const int c) throw();
 
-            //! copy
+            //! no-throw copy
             CharInfo( const CharInfo &other ) throw();
 
-            //! assign
+            //! no-throw assign by copy/swap
             CharInfo & operator=( const CharInfo &other ) throw();
 
             //! no throw swap

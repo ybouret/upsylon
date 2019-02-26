@@ -9,17 +9,13 @@ namespace upsylon
 {
     namespace Lang
     {
-        namespace Lexical
-        {
-            class Scanner;
-        }
 
         //! convert Module into a source of tokens
         class Source : public Object, public ios::istream
         {
         public:
             explicit Source(Module *m);  //!< initialize
-            virtual ~Source() throw();   //!< desctructor, excess token are poured in cached
+            virtual ~Source() throw();   //!< destructor
 
             Char       *get();                         //!< get next Char
             void        unget( Char *ch ) throw();     //!< unget a Char
