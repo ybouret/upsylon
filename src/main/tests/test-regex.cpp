@@ -17,9 +17,22 @@ Y_UTEST(regex)
         std::cerr << "Compiling '" << rx << "'" << std::endl;
         auto_ptr<Pattern> p = RegExp(rx,&dict);
         p->GraphViz("regex.dot");
+        if(p->weak())
+        {
+            std::cerr << "this is a weak regular expression" << std::endl;
+        }
+        else
+        {
+            std::cerr << "this is a full regular expression" << std::endl;
+        }
         if(argc>2&&0==strcmp(argv[2],"scan"))
         {
 
+            if(p->weak())
+            {
+                throw exception("I do not accept weak patterns for this test!");
+            }
+            
             string        line;
             ios::icstream fp( ios::cstdin );
             while( std::cerr << "> ", fp.gets(line) )
@@ -31,6 +44,7 @@ Y_UTEST(regex)
                     if(p->match(tkn,src))
                     {
                         std::cerr << "'" << tkn << "'";
+
                     }
                     else
                     {
