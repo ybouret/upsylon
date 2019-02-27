@@ -28,16 +28,28 @@ namespace upsylon
                 // virtual interface
                 //______________________________________________________________
 
-                virtual Node * clone() const = 0;
+                virtual Node *      clone() const         = 0;
+                virtual const void *inner() const throw() = 0;
                 virtual ~Node() throw();
+
+                //______________________________________________________________
+                //
+                // non-virtual interface
+                //______________________________________________________________
+                Lexeme       &lexeme() throw();
+                const Lexeme &lexeme() const throw();
+                List         &children() throw();
+                const List   &children() const throw();
 
                 //______________________________________________________________
                 //
                 // static interface
                 //______________________________________________________________
-                static Node * Create(const Rule &r, Lexeme *l);   //! create a new terminal node
-                static Node * Create(const Rule &r);              //! create a new internal node
+                static Node * Create(const Rule &r, Lexeme *l);   //!< create a new terminal node
+                static Node * Create(const Rule &r);              //!< create a new internal node
+                static void   Grow( Node * &tree, Node *leaf ) throw();   //!< grew the tree with the leaf
                 
+
             protected:
                 explicit Node(const Rule &r,
                               const bool term) throw();
@@ -52,7 +64,8 @@ namespace upsylon
             {
             public:
                 virtual ~TerminalNode() throw();
-                virtual Node *clone() const;
+                virtual Node       *clone() const;
+                virtual const void *inner() const throw();
 
             private:
                 explicit TerminalNode(const Rule &r, Lexeme *l) throw();
@@ -63,13 +76,15 @@ namespace upsylon
             };
 
             //! an Internal Node, has a list of children
-            class InternalNode : public Node
+            class InternalNode : public Node, public Node::List
             {
             public:
-                Node::List children;
+                //Node::List children;
 
                 virtual ~InternalNode() throw();
-                virtual Node *clone() const;
+                
+                virtual Node       *clone() const;
+                virtual const void *inner() const throw();
 
             private:
                 explicit InternalNode(const Rule &r) throw();
