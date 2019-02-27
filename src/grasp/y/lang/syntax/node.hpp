@@ -48,7 +48,7 @@ namespace upsylon
                 static Node * Create(const Rule &r, Lexeme *l);   //!< create a new terminal node
                 static Node * Create(const Rule &r);              //!< create a new internal node
                 static void   Grow( Node * &tree, Node *leaf ) throw();   //!< grew the tree with the leaf
-                
+                static void   Unget( Node * &node, Lexer &lexer) throw(); //!< restore lexemes into lexer
 
             protected:
                 explicit Node(const Rule &r,

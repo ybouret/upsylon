@@ -92,6 +92,26 @@ namespace upsylon
                 }
             }
 
+            void   Node:: Unget( Node * &node, Lexer &lexer) throw()
+            {
+                assert(node);
+                if(node->terminal)
+                {
+                }
+                else
+                {
+                    Node *scan = node->children().tail;
+                    while(scan)
+                    {
+                        Node *prev = scan->prev;
+                        Unget(scan,lexer); assert(0==scan);
+                        scan = prev;
+                    }
+                }
+                delete node;
+                node = 0;
+            }
+
         }
 
     }
