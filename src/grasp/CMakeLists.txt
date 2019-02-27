@@ -1,0 +1,36 @@
+PROJECT(y-grasp CXX)
+MESSAGE( STATUS "GRammar And Syntax Parsers")
+
+INCLUDE_DIRECTORIES(. ../main)
+
+FILE(GLOB main_decl y/lang/*.hpp)
+FILE(GLOB main_code y/lang/*.cpp)
+SET(main_srcs ${main_decl} ${main_code})
+SOURCE_GROUP( lang FILES ${main_srcs} )
+INSTALL( FILES ${main_decl} DESTINATION include/y/lang )
+
+
+FILE(GLOB syntax_decl y/lang/syntax/*.hpp)
+FILE(GLOB syntax_code y/lang/syntax/*.cpp)
+SET(syntax_srcs ${syntax_decl} ${syntax_code})
+SOURCE_GROUP( lang/syntax FILES ${syntax_srcs} )
+INSTALL( FILES ${syntax_decl} DESTINATION include/y/lang/syntax )
+
+#FILE(GLOB dynamo_decl y/lang/dynamo/*.hpp)
+#FILE(GLOB dynamo_code y/lang/dynamo/*.cpp)
+#SET(dynamo_srcs ${dynamo_decl} ${dynamo_code})
+#SOURCE_GROUP( lang/dynamo FILES ${dynamo_srcs} )
+#INSTALL( FILES ${dynamo_decl} DESTINATION include/y/lang/dynamo )
+
+ADD_LIBRARY(y-grasp STATIC 
+${main_srcs} 
+${syntax_srcs}
+#${dynamo_srcs}
+)
+INSTALL( TARGETS y-grasp ARCHIVE DESTINATION lib )
+
+#ADD_EXECUTABLE(y-dynamo y/lang/dynamo/y-dynamo.cxx ../json/y/json/json.g)
+#TARGET_LINK_Y(y-dynamo lang)
+
+
+ADD_SUBDIRECTORY(tests)

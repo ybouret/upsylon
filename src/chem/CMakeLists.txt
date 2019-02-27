@@ -1,4 +1,5 @@
 PROJECT(y-chem CXX)
+MESSAGE( STATUS "CHEMical" )
 
 INCLUDE_DIRECTORIES(. ../main ../math ../lua++ ../ext)
 

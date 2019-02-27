@@ -1,4 +1,5 @@
 PROJECT(y-ink CXX)
+MESSAGE( STATUS "Images Numerical Kernel" )
 
 INCLUDE_DIRECTORIES(. ../main
 ../ext
