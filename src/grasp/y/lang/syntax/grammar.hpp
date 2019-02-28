@@ -7,6 +7,7 @@
 
 #include "y/lang/syntax/terminal.hpp"
 #include "y/lang/syntax/compound.hpp"
+#include "y/lang/syntax/joker.hpp"
 
 namespace upsylon
 {
@@ -34,7 +35,7 @@ namespace upsylon
                 Rule & topLevel();                             //!< get top level rule
                 void   topLevel( Rule &r );                    //!< set top level rule
                 bool   ownsRule( const Rule & ) const throw(); //!< check ownership
-                void finalize() throw(); //!< clean up
+                void   finalize() throw();                     //!< clean up
 
                 //! wrapper to keep derived rule type
                 template <typename T>
@@ -47,17 +48,33 @@ namespace upsylon
                 //
                 // advanced rules management
                 //______________________________________________________________
-                inline Terminal  & terminal( const string &id )  { return decl( new Terminal(id) ); }
-                inline Terminal  & terminal( const char   *id )  { const string _(id); return terminal(_); }
-                inline Aggregate & aggregate( const string &id ) { return decl( new Aggregate(id) ); }
-                inline Aggregate & aggregate( const char   *id ) { const string _(id); return aggregate(_); }
+                Terminal  & terminal( const string &id )  { return decl( new Terminal(id) ); }
+                Terminal  & terminal( const char   *id )  { const string _(id); return terminal(_); }
+
+                Aggregate & aggregate( const string &id ) { return decl( new Aggregate(id) ); }
+                Aggregate & aggregate( const char   *id ) { const string _(id); return aggregate(_); }
+
+
+                Alternate   & alternate( const string &id );
+                Alternate   & alternate( const char   *id );
+                Alternate   & alternate(); //!< with automatic label
+                const Rule  & choice( const Rule &a, const Rule &b);
+
+                const Rule  & optional(   const Rule &r );
+                const Rule  & zeroOrMore( const Rule &r );
+                const Rule  & oneOrMore(  const Rule &r );
 
             private:
                 Rule::List        rules;
                 RuleReferenceSet *rrs;
                 bool              verbose;
-                void              no_rrs() throw();
+                unsigned          iAlt;
+                unsigned          iOpt;
+                unsigned          iZoM;
+                unsigned          iOoM;
+
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
+                void              no_rrs() throw();
             };
 
         }
