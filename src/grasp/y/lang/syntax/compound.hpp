@@ -32,15 +32,53 @@ namespace upsylon
             {
             public:
                 virtual ~Compound() throw(); //!< destructor
+                void append( const Rule &r ); //!< push back a new operand
+                Compound & operator<<( const Rule & );
+                const bool acceptHollow;
 
             protected:
-                explicit Compound(const uint32_t, const string &); //!< setup
+                explicit Compound(const uint32_t, const string &, bool accept_hollow); //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compound);
             };
 
-            
+            //! aggregation of rules
+            class Aggregate : public Compound
+            {
+            public:
+                static const uint32_t UUID = Y_FOURCC('A', 'G', 'G', 0);
+
+                explicit Aggregate(const string &id);     //!< setup
+                virtual ~Aggregate() throw();             //!< destructor
+                Aggregate & operator += ( const Rule & ); //!< syntactic sugar
+
+                virtual bool        isHollow() const throw(); //!< true if empty of all operands are hollow
+                virtual const char *typeName() const throw(); //!< "Aggregate"
+                Y_LANG_SYNTAX_ACCEPT_PROTO();
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Aggregate);
+            };
+
+            //! alternation of rules, reject hollow operand at build time
+            class Alternate : public Compound
+            {
+            public:
+                static const uint32_t UUID = Y_FOURCC('A', 'L', 'T', 0);
+
+                explicit Alternate(const string &id);
+                virtual ~Alternate() throw();
+                Alternate & operator |= ( const Rule & ); //!< syntactic sugar
+
+                virtual bool        isHollow() const throw(); //!< false by construction
+                virtual const char *typeName() const throw(); //!< "Alternate"
+                Y_LANG_SYNTAX_ACCEPT_PROTO();
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Alternate);
+            };
+
 
 
         }
