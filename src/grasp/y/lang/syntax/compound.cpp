@@ -141,7 +141,6 @@ namespace upsylon
 
             bool Alternate:: isHollow() const throw()
             {
-                
                 return false;
             }
 
@@ -152,6 +151,18 @@ namespace upsylon
 
             Y_LANG_SYNTAX_ACCEPT_START(Alternate)
             {
+                assert(NULL==tree||tree->internal);
+
+                // scan for ONE acceptance
+                for(Operand *op=head;op;op=op->next)
+                {
+                    Node *leaf = 0;
+                    if(op->rule.accept(source, lexer, leaf))
+                    {
+                        Node::Grow(tree,leaf);
+                        return false;
+                    }
+                }
 
                 return false;
             }

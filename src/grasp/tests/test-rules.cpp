@@ -15,6 +15,7 @@ Y_UTEST(rules)
     rules.push_back( new Syntax::ZeroOrMore( "ZOM_ID", *rules.head ) );
     rules.push_back( new Syntax::OneOrMore(  "OOM_ID", *rules.head ) );
     rules.push_back( new Syntax::Aggregate( "AGG" ) );
+    rules.push_back( new Syntax::Alternate( "ALT" ) );
 
     for( const Syntax::Rule *r = rules.head; r; r=r->next )
     {
