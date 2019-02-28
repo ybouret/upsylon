@@ -1,58 +1,5 @@
 #include "y/lang/syntax/grammar.hpp"
-
-namespace upsylon
-{
-    namespace Lang
-    {
-        namespace Syntax
-        {
-            RuleReference:: ~RuleReference() throw() {}
-
-            RuleReference:: RuleReference(const Rule &r) throw() :
-            rule(r)
-            {}
-
-            const string & RuleReference:: key() const throw()
-            {
-                return rule.name;
-            }
-
-            RuleReference:: RuleReference( const RuleReference &other ) throw() :
-            rule(other.rule)
-            {
-            }
-
-        }
-    }
-}
-
-namespace upsylon
-{
-    namespace Lang
-    {
-        namespace Syntax
-        {
-
-            RuleReferenceSet:: ~RuleReferenceSet() throw() {}
-
-            RuleReferenceSet:: RuleReferenceSet() throw() :
-            RuleReference::Set()
-            {
-            }
-
-            bool    RuleReferenceSet:: declare(const Rule *r)
-            {
-                assert(r!=NULL);
-                const RuleReference R( *r );
-                return insert(R);
-            }
-
-        }
-    }
-}
-
 #include "y/exception.hpp"
-#include "y/ptr/auto.hpp"
 
 namespace upsylon
 {
@@ -96,14 +43,14 @@ namespace upsylon
             void Grammar:: add( Rule *r )
             {
                 auto_ptr<Rule> pRule(r);
-                if(verbose) { std::cerr << "[GRAMMAR] adding new rule" << std::endl; }
+                if(verbose) { std::cerr << "{" << name << "} adding new rule" << std::endl; }
                 // sanity check
-                if(pRule.is_empty())     throw exception("[%s](NULL)",**name);
-                if(!rrs)                 throw exception("[%s](LOCKED)",**name);
-                if(rrs->search(r->name)) throw exception("[%s](Multiple '%s')", **name, *(r->name) );
+                if(pRule.is_empty())     throw exception("{%s}.add(NULL)",**name);
+                if(!rrs)                 throw exception("{%s}.add(LOCKED)",**name);
+                if(rrs->search(r->name)) throw exception("{%s}.add(Multiple '%s')", **name, *(r->name) );
 
                 // make a reference
-                if(!rrs->declare(r))     throw exception("%s(unexpected multiple '%s')",**name,*(r->name));
+                if(!rrs->declare(r))     throw exception("{%s}.add(unexpected multiple '%s')",**name,*(r->name));
 
                 // append
                 rules.push_back( pRule.yield() );
@@ -132,7 +79,7 @@ namespace upsylon
                         if(r->name==id) return *r;
                     }
                 }
-                throw exception("[%s] no Rule '%s'", **name, *id);
+                throw exception("{%s} has no Rule <%s>", **name, *id);
             }
 
             bool  Grammar:: ownsRule( const Rule &the_rule ) const throw()
@@ -150,7 +97,7 @@ namespace upsylon
 
             Rule & Grammar:: topLevel()
             {
-                if(rules.size<=0) throw exception("[%s] no rule", **name);
+                if(rules.size<=0) throw exception("{%s} no top level rule", **name);
                 assert(rules.head);
                 return *(rules.head);
             }
@@ -159,7 +106,7 @@ namespace upsylon
             {
                 if(!ownsRule(r))
                 {
-                    throw exception("[%s] topLevel(foreign rule '%s')", **name, *(r.name) );
+                    throw exception("{%s} topLevel(foreign rule <%s>)", **name, *(r.name) );
                 }
                 rules.move_to_front( &r );
             }
