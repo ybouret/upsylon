@@ -160,12 +160,12 @@ namespace upsylon
             }
 
             InternalNode:: InternalNode(const Rule &r) throw() :
-            Node(r,false), Node::List() //,children()
+            Node(r,false), Node::List()
             {
             }
 
             InternalNode:: InternalNode(const InternalNode &node) :
-            Node(node), //,children(node.children)
+            Node(node),
             Node::List(node)
             {
 
@@ -178,8 +178,7 @@ namespace upsylon
 
             const void  * InternalNode:: inner() const throw()
             {
-                const Node::List &as_list = *this;
-                return &as_list;
+                return static_cast<const List *>(this);
             }
 
         }

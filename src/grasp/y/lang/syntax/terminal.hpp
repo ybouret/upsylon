@@ -20,9 +20,9 @@ namespace upsylon
                 explicit Terminal(const string &n);
                 virtual ~Terminal() throw();
 
-                Y_LANG_SYNTAX_ACCEPT_PROTO();
-                virtual const char *typeName() const throw();
-                virtual bool        isHollow() const throw();
+                Y_LANG_SYNTAX_ACCEPT_PROTO();                 //!< a terminal with name==label
+                virtual const char *typeName() const throw(); //!< "Terminal"
+                virtual bool        isHollow() const throw(); //!< false
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);

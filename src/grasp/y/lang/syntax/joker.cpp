@@ -1,5 +1,5 @@
 #include "y/lang/syntax/joker.hpp"
-
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -13,6 +13,10 @@ namespace upsylon
             Rule(i,n),
             jk(r)
             {
+                if(jk.isHollow())
+                {
+                    throw exception("Lang.Syntax.Joker(hollow rule '%s')", *(r.name));
+                }
             }
 
         }
@@ -75,6 +79,7 @@ namespace upsylon
             ZeroOrMore:: ZeroOrMore(const string &n, const Rule &r) :
             Joker(UUID,n,r)
             {
+                derived = static_cast<ZeroOrMore *>(this);
             }
 
             bool ZeroOrMore:: isHollow() const throw()
@@ -101,13 +106,77 @@ namespace upsylon
                     assert(tree->internal);
                     assert(subTree->internal);
                     tree->children().merge_back( subTree->children() );
-                    return true;
+                    return true; // subTree will be deleteed
                 }
                 else
                 {
                     tree = subTree;
                     guard.dismiss();
-                    return true;
+                    return true; // subTree becomes the main tree
+                }
+            }
+
+        }
+    }
+}
+
+namespace upsylon
+{
+    namespace Lang
+    {
+        namespace Syntax
+        {
+            OneOrMore:: ~OneOrMore() throw()
+            {
+            }
+
+            OneOrMore:: OneOrMore(const string &n, const Rule &r) :
+            Joker(UUID,n,r)
+            {
+                derived = static_cast<OneOrMore *>(this);
+            }
+
+            bool OneOrMore:: isHollow() const throw()
+            {
+                assert(! jk.isHollow() );
+                return false;
+            }
+
+            const char *OneOrMore:: typeName() const throw()
+            {
+                return "OneOrMore";
+            }
+
+            Y_LANG_SYNTAX_ACCEPT_START(OneOrMore)
+            {
+                assert(NULL==tree||tree->internal);
+
+                assert(NULL==tree||tree->internal);
+
+                Node          *subTree = Node::Create(*this);
+                auto_ptr<Node> guard(subTree);
+                size_t count = 0;
+                while(jk.accept(source,lexer,subTree))
+                    ++count;
+
+                if(count<=0)
+                {
+                    assert(0==tree->children().size);
+                    return false; // empty subTree is deleted
+                }
+
+                if(tree)
+                {
+                    assert(tree->internal);
+                    assert(subTree->internal);
+                    tree->children().merge_back( subTree->children() );
+                    return true; // subTree will be deleteed
+                }
+                else
+                {
+                    tree = subTree;
+                    guard.dismiss();
+                    return true; // subTree becomes the main tree
                 }
             }
 
