@@ -6,6 +6,51 @@ namespace upsylon
     {
         namespace Syntax
         {
+            RuleReference:: ~RuleReference() throw() {}
+
+            RuleReference:: RuleReference(const Rule &r) throw() :
+            rule(r)
+            {}
+
+            const string & RuleReference:: key() const throw()
+            {
+                return rule.name;
+            }
+
+            RuleReference:: RuleReference( const RuleReference &other ) throw() :
+            rule(other.rule)
+            {
+            }
+
+        }
+    }
+}
+
+namespace upsylon
+{
+    namespace Lang
+    {
+        namespace Syntax
+        {
+
+            RuleReferenceSet:: ~RuleReferenceSet() throw() {}
+
+            RuleReferenceSet:: RuleReferenceSet() :
+            RuleReference::Set(10,as_capacity)
+            {
+            }
+
+        }
+    }
+}
+
+
+namespace upsylon
+{
+    namespace Lang
+    {
+        namespace Syntax
+        {
             Grammar:: ~Grammar() throw()
             {
             }

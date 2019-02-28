@@ -9,7 +9,9 @@ SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
 
 ENABLE_TESTING()
 
-ADD_TEST(Rules  test-grasp rules)
+ADD_TEST(Rules   test-grasp rules)
+ADD_TEST(Grammar test-grasp grammar)
+
 #ADD_TEST(Parser   test-lang parser)
 #ADD_TEST(Eval     test-lang eval NULL)
 #ADD_TEST(Dyn      test-lang dyn)

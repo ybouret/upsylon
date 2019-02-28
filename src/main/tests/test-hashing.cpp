@@ -66,7 +66,12 @@ namespace
 Y_UTEST(hashing)
 {
     vector< hashing::function::pointer > phash;
-#define __REGISTER(CLASS) do { hashing::function::pointer p = new hashing:: CLASS(); phash.push_back(p); } while(false)
+#define __REGISTER(CLASS) \
+do { hashing::function::pointer p = new hashing:: CLASS(); phash.push_back(p); \
+std::cerr << "sizeof(" #CLASS ")=" << sizeof(hashing:: CLASS)<< std::endl;     \
+std::cerr << "sizeof(key_hasher." #CLASS ")=" << sizeof(key_hasher<string,hashing::CLASS>)<< std::endl;     \
+} while(false)
+
     __REGISTER(adler32);
     __REGISTER(bjh32);
     __REGISTER(crc16);

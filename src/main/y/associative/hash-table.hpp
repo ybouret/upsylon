@@ -265,6 +265,8 @@ namespace upsylon
                 merging<meta_node>::sort(chain,__compare_node_keys<COMPARE_KEYS>, (void*)&compare_keys);
             }
 
+            //! allocated
+            inline size_t allocated_bytes() const throw() { return allocated; }
             
         private:
             Y_DISABLE_ASSIGN(hash_table);

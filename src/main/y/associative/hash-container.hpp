@@ -168,6 +168,12 @@ namespace upsylon
             }
         }
 
+        //! memory information
+        inline size_t allocated_bytes_for_table() const throw()
+        {
+            return table.allocated_bytes();
+        }
+
     protected:
         table_type table; //!< handle low level operations
         
