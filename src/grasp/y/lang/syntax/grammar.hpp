@@ -5,6 +5,9 @@
 #include "y/lang/syntax/rrs.hpp"
 #include "y/ptr/auto.hpp"
 
+#include "y/lang/syntax/terminal.hpp"
+#include "y/lang/syntax/compound.hpp"
+
 namespace upsylon
 {
     namespace Lang
@@ -40,6 +43,14 @@ namespace upsylon
                 //! accept
                 Node *accept( Source &source, Lexer &lexer );
 
+                //______________________________________________________________
+                //
+                // advanced rules management
+                //______________________________________________________________
+                inline Terminal  & terminal( const string &id )  { return decl( new Terminal(id) ); }
+                inline Terminal  & terminal( const char   *id )  { const string _(id); return terminal(_); }
+                inline Aggregate & aggregate( const string &id ) { return decl( new Aggregate(id) ); }
+                inline Aggregate & aggregate( const char   *id ) { const string _(id); return aggregate(_); }
 
             private:
                 Rule::List        rules;
