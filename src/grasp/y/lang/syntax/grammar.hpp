@@ -32,8 +32,10 @@ namespace upsylon
             class RuleReferenceSet : public RuleReference::Set
             {
             public:
-                explicit RuleReferenceSet();          //!< initialize
-                virtual ~RuleReferenceSet() throw();  //!< desctructor
+                explicit RuleReferenceSet() throw();  //!< initialize
+                virtual ~RuleReferenceSet() throw();  //!< destructor
+                bool     declare(const Rule *r);
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(RuleReferenceSet);
             };
@@ -53,11 +55,24 @@ namespace upsylon
                 //
                 // rules management
                 //______________________________________________________________
-                void add( Rule *r );
+                void add( Rule *r ); //!< add a rule with memory management
+                Rule & getRuleByName(const string &id);        //!< rule Look up
+                Rule & topLevel();                             //!< get top level rule
+                void   topLevel( Rule &r );                    //!< set top level rule
+                bool   ownsRule( const Rule & ) const throw(); //!< check ownership
+
+                //! wrapper to keep derived rule type
+                template <typename T>
+                inline T & decl( T *r ) { add(r); return *r; }
+
+
+                void finalize() throw(); //!< clean up
 
             private:
-                Rule::List rules;
-                bool       verbose;
+                Rule::List        rules;
+                RuleReferenceSet *rrs;
+                bool              verbose;
+                void              no_rrs() throw();
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
             };
 

@@ -14,9 +14,13 @@ Y_UTEST(grammar)
 
     Syntax::Grammar G( id );
 
-    Syntax::RuleReferenceSet rrs;
-    std::cerr << "rrs.capacity  = " << rrs.capacity() << std::endl;
-    std::cerr << "rss.allocated = " << rrs.allocated_bytes_for_table() << std::endl;
+    Syntax::Terminal  &ID  = G.decl( new Syntax::Terminal("ID") );
+    Syntax::OneOrMore &IDS = G.decl( new Syntax::OneOrMore( "IDS", ID ) );
+    std::cerr << "topLevel=" << G.topLevel().name << std::endl;
+    G.topLevel(IDS);
+    std::cerr << "topLevel=" << G.topLevel().name << std::endl;
+
+
 }
 Y_UTEST_DONE()
 
