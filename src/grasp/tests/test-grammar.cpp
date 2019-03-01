@@ -52,20 +52,21 @@ Y_UTEST(grammar)
     
     if(argc>1 && 0==strcmp(argv[1],"run"))
     {
-        Source   source( Module::OpenSTDIN() );
-#if 0
-        Lexeme                 *lx  = 0;
-        while( NULL != (lx=lexer.get(source) ) )
         {
-            auto_ptr<Lexeme> guard(lx);
-            std::cerr << "+" << *lx << "@" << lx->line() << ":" << lx->column() << std::endl;
+            Source                 source( Module::OpenSTDIN() );
+            auto_ptr<Syntax::Node> cst = G.accept(source,lexer);
+            std::cerr << "parsed..." << std::endl;
+            cst->graphViz("cst.dot");
+            cst->save("cst.bin");
         }
-#endif
-        auto_ptr<Syntax::Node> cst = G.accept(source,lexer);
-        std::cerr << "parsed..." << std::endl;
-        cst->graphViz("cst.dot");
-        cst->save("cst.bin");
-        
+
+        {
+            Source source( Module::OpenFile("cst.bin") );
+            auto_ptr<Syntax::Node> cst = Syntax::Node::Load(source,G);
+            cst->graphViz("cst2.dot");
+        }
+
+
     }
 
 

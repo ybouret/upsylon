@@ -11,7 +11,8 @@ namespace upsylon
 
         namespace Syntax
         {
-            class Rule; //!< forward declaration
+            class Rule;    //!< forward declaration
+            class Grammar; //!< forward declaration
 
             class Node : public Object, public core::inode<Node>
             {
@@ -56,7 +57,7 @@ namespace upsylon
                 static Node * Create(const Rule &r);                      //!< create a new internal node
                 static void   Grow( Node * &tree, Node *leaf )  throw();  //!< grew the tree with the leaf
                 static void   Unget(Node * &node, Lexer &lexer) throw();  //!< restore lexemes into lexer
-
+                static Node  *Load( Source &source, Grammar &G);
 
             protected:
                 explicit Node(const Rule &r,
