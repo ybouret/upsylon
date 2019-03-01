@@ -57,6 +57,7 @@ namespace upsylon
                 if(!rrs->declare(r))     throw exception("{%s}.add(unexpected multiple '%s')",**name,*(r->name));
 
                 // append
+                pRule->verbose = verbose;
                 rules.push_back( pRule.yield() );
             }
 

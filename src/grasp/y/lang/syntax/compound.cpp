@@ -152,7 +152,7 @@ namespace upsylon
             Y_LANG_SYNTAX_ACCEPT_START(Alternate)
             {
                 assert(NULL==tree||tree->internal);
-
+                Y_LANG_SYNTAX_VERBOSE("|_" << typeName() << " '" << name << "' #operands=" << size << std::endl);
                 // scan for ONE acceptance
                 for(Operand *op=head;op;op=op->next)
                 {
@@ -160,10 +160,11 @@ namespace upsylon
                     if(op->rule.accept(source, lexer, leaf))
                     {
                         Node::Grow(tree,leaf);
-                        return false;
+                        Y_LANG_SYNTAX_VERBOSE("|_accepted " << typeName() << " '" << name << "'" << std::endl);
+                        return true;
                     }
                 }
-
+                Y_LANG_SYNTAX_VERBOSE("|_rejected " << typeName() << " '" << name << "'" << std::endl);
                 return false;
             }
 

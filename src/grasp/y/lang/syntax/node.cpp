@@ -1,5 +1,7 @@
-#include "y/lang/syntax/node.hpp"
+#include "y/lang/syntax/rule.hpp"
 #include "y/exception.hpp"
+#include "y/ios/graphviz.hpp"
+#include "y/string/convert.hpp"
 
 namespace upsylon
 {
@@ -112,10 +114,32 @@ namespace upsylon
                 node = 0;
             }
 
+            void Node:: __viz( ios::ostream &fp) const
+            {
+                fp.viz(this);
+            }
+
+            
+            void Node:: graphViz( const string &dotfile) const
+            {
+                {
+                    ios::ocstream fp(dotfile);
+                    fp << "digraph G {\n";
+                    viz(fp);
+                    fp << "}\n";
+                }
+                ios::GraphViz::Render(dotfile);
+            }
+
+            void Node:: graphViz( const char *dotfile) const
+            {
+                const string _(dotfile); graphViz(_);
+            }
         }
 
     }
 }
+
 
 namespace upsylon
 {
@@ -125,6 +149,11 @@ namespace upsylon
         {
             TerminalNode:: ~TerminalNode() throw()
             {
+                if(lx)
+                {
+                    delete lx;
+                    lx = 0;
+                }
             }
 
             TerminalNode:: TerminalNode(const Rule &r, Lexeme *l) throw() :
@@ -143,6 +172,18 @@ namespace upsylon
             {
                 assert(lx);
                 return lx;
+            }
+
+            void     TerminalNode::   viz( ios::ostream &fp ) const
+            {
+                assert(lx);
+                string l = string_convert::to_printable( rule.name );
+                if(lx->size)
+                {
+                    const string content = lx->to_print();
+                    l <<'=' << '\'' << content << '\'';
+                }
+                __viz(fp); fp("[shape=box,label=\""); fp << l; fp("\"];\n");
             }
 
         }
@@ -179,6 +220,21 @@ namespace upsylon
             const void  * InternalNode:: inner() const throw()
             {
                 return static_cast<const List *>(this);
+            }
+
+            void     InternalNode::   viz( ios::ostream &fp ) const
+            {
+                const string l = string_convert::to_printable(rule.name);
+                __viz(fp); fp("[shape=house,label=\""); fp << l; fp("\"];\n");
+                const bool multiple = size>1;
+                unsigned  idx=1;
+                for(const Node *node = head; node; node=node->next, ++idx)
+                {
+                    node->viz(fp);
+                    __viz(fp); fp << "->"; node->__viz(fp);
+                    if(multiple) fp("[label=\"%u\"]",idx);
+                    fp << ";\n";
+                }
             }
 
         }

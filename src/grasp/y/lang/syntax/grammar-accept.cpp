@@ -38,6 +38,15 @@ namespace upsylon
                 assert(tree!=NULL);
                 auto_ptr<Node> guard(tree);
 
+                {
+                    auto_ptr<Lexeme> next = lexer.get(source);
+                    if(next.is_valid())
+                    {
+                        const string content = next->to_print();
+                        throw exception("{%s} extraneous %s='%s'", **name, **(next->label),*content);
+                    }
+                }
+
 
                 return guard.yield();
             }

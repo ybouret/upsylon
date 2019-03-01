@@ -30,6 +30,8 @@ namespace upsylon
 
                 virtual Node *      clone() const         = 0;
                 virtual const void *inner() const throw() = 0;
+                virtual void        viz( ios::ostream & ) const = 0;
+
                 virtual ~Node() throw();
 
                 //______________________________________________________________
@@ -40,6 +42,9 @@ namespace upsylon
                 const Lexeme &lexeme() const throw();
                 List         &children() throw();
                 const List   &children() const throw();
+                void          __viz( ios::ostream &fp) const; //!< fp.viz(this)
+                void          graphViz( const string &dotfile) const; //!< save to graphviz and try to render
+                void          graphViz( const char   *dotfile) const; //!< sabe to graphviz and try to render
 
                 //______________________________________________________________
                 //
@@ -66,6 +71,7 @@ namespace upsylon
                 virtual ~TerminalNode() throw();
                 virtual Node       *clone() const;
                 virtual const void *inner() const throw();
+                virtual void        viz( ios::ostream & ) const;
 
             private:
                 explicit TerminalNode(const Rule &r, Lexeme *l) throw();
@@ -85,6 +91,7 @@ namespace upsylon
                 
                 virtual Node       *clone() const;
                 virtual const void *inner() const throw();
+                void                viz( ios::ostream & ) const;
 
             private:
                 explicit InternalNode(const Rule &r) throw();

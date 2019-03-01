@@ -14,7 +14,7 @@ namespace upsylon
 
 #define Y_LANG_SYNTAX_ACCEPT_PROTO() virtual bool         accept(Source &source, Lexer &lexer, Node * &tree ) const
 #define Y_LANG_SYNTAX_ACCEPT_START(CLASS)    bool CLASS:: accept(Source &source, Lexer &lexer, Node * &tree ) const
-
+#define Y_LANG_SYNTAX_VERBOSE(OUTPUT) do { if(verbose) { std::cerr << OUTPUT; } } while(false)
             class Rule : public Object, public core::inode<Rule>
             {
             public:
