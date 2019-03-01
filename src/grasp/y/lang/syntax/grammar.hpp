@@ -4,6 +4,7 @@
 
 #include "y/lang/syntax/rrs.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/sequence/vector.hpp"
 
 #include "y/lang/syntax/terminal.hpp"
 #include "y/lang/syntax/compound.hpp"
@@ -16,21 +17,25 @@ namespace upsylon
         namespace Syntax
         {
 
+            typedef vector<string,memory::pooled> Strings;
+            typedef array<string>                 StringsArray;
+
+            //! a Grammar is a set of rules
             class Grammar : public Object
             {
             public:
-                const Tag name; //!< shared tag
+                const Tag name; //!< shared name
 
                 explicit Grammar(const Tag &tid); //!< initialize
                 virtual ~Grammar() throw();       //!< destructor
 
-                void setVerbose(const bool flag) throw(); //!< propagate flag to all rules
 
                 //______________________________________________________________
                 //
                 // basic rules management
                 //______________________________________________________________
-                void add( Rule *r ); //!< add a rule with memory management
+                void setVerbose(const bool flag) throw();      //!< propagate flag to all rules
+                void add( Rule *r );                           //!< add a rule with memory management
                 Rule & getRuleByName(const string &id);        //!< rule Look up
                 Rule & topLevel();                             //!< get top level rule
                 void   topLevel( Rule &r );                    //!< set top level rule
@@ -48,21 +53,26 @@ namespace upsylon
                 //
                 // advanced rules management
                 //______________________________________________________________
+                //! make a terminal recognition
                 Terminal  & terminal( const string &id )  { return decl( new Terminal(id) ); }
+                //! make a terminal recognition
                 Terminal  & terminal( const char   *id )  { const string _(id); return terminal(_); }
 
+                //! make an aggregate rule
                 Aggregate & aggregate( const string &id ) { return decl( new Aggregate(id) ); }
+
+                //! create an aggregate rule
                 Aggregate & aggregate( const char   *id ) { const string _(id); return aggregate(_); }
 
+                Alternate   & alternate( const string &id ); //!< create a named alternate
+                Alternate   & alternate( const char   *id ); //!< create a named alternate
+                Alternate   & alternate();                   //!< with automatic label
+                const Rule  & choice( const Rule &a, const Rule &b); //!< choice between two rules
+                const Rule  & choice( const Rule &a, const Rule &b, const Rule &c); //!< choice between three rules
 
-                Alternate   & alternate( const string &id );
-                Alternate   & alternate( const char   *id );
-                Alternate   & alternate(); //!< with automatic label
-                const Rule  & choice( const Rule &a, const Rule &b);
-
-                const Rule  & optional(   const Rule &r );
-                const Rule  & zeroOrMore( const Rule &r );
-                const Rule  & oneOrMore(  const Rule &r );
+                const Rule  & optional(   const Rule &r ); //!< make an Optional   rule
+                const Rule  & zeroOrMore( const Rule &r ); //!< make a  ZeroOrMore rule
+                const Rule  & oneOrMore(  const Rule &r ); //!< make a  OneOrMore  rule
 
             private:
                 Rule::List        rules;

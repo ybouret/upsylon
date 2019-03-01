@@ -49,6 +49,7 @@ Y_UTEST(grammar)
 
     myLexer lexer;
     G.setVerbose(true);
+    G.finalize();
     
     if(argc>1 && 0==strcmp(argv[1],"run"))
     {

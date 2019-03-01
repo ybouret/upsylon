@@ -22,6 +22,13 @@ namespace upsylon
                 return alt;
             }
 
+            const Rule & Grammar:: choice(const Rule &a, const Rule &b, const Rule &c)
+            {
+                Alternate & alt = alternate();
+                alt << a << b << c;
+                return alt;
+            }
+
             const Rule  & Grammar:: optional( const Rule &r )
             {
                 const string id = vformat("opt#%u",iOpt++);

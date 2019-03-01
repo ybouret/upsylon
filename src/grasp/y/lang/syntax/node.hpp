@@ -29,20 +29,19 @@ namespace upsylon
                 //
                 // virtual interface
                 //______________________________________________________________
-
-                virtual Node *      clone() const         = 0;
-                virtual const void *inner() const throw() = 0;
-                virtual void        viz( ios::ostream & ) const = 0;
-                virtual ~Node() throw();
+                virtual Node *      clone() const         = 0;       //!< clone the node
+                virtual const void *inner() const throw() = 0;       //!< internal data address
+                virtual void        viz( ios::ostream & ) const = 0; //!< output graphViz code
+                virtual ~Node() throw();                             //!< destructor
 
                 //______________________________________________________________
                 //
                 // non-virtual interface
                 //______________________________________________________________
-                Lexeme       &lexeme() throw();
-                const Lexeme &lexeme() const throw();
-                List         &children() throw();
-                const List   &children() const throw();
+                Lexeme       &lexeme() throw();                       //!< from inner
+                const Lexeme &lexeme() const throw();                 //!< from inner
+                List         &children() throw();                     //!< from inner
+                const List   &children() const throw();               //!< from inner
                 void          graphVizName( ios::ostream &fp) const;  //!< helper: fp.viz(this)
                 void          graphViz( const string &dotfile) const; //!< save to graphviz and try to render
                 void          graphViz( const char   *dotfile) const; //!< save to graphviz and try to render
@@ -51,7 +50,7 @@ namespace upsylon
                 void          save( const char   *binfile) const;     //!< save to file
                 string        toBinary() const;                       //!< to a binary string
                 string        toBase64() const;                       //!< to a human readable string
-                
+
                 //______________________________________________________________
                 //
                 // static interface
@@ -60,12 +59,11 @@ namespace upsylon
                 static Node * Create(const Rule &r);                      //!< create a new internal node
                 static void   Grow( Node * &tree, Node *leaf )  throw();  //!< grew the tree with the leaf
                 static void   Unget(Node * &node, Lexer &lexer) throw();  //!< restore lexemes into lexer
-                static Node  *Load( Source &source, Grammar &G);
+                static Node  *Load( Source &source, Grammar &G);          //!< reload node from a source
 
             protected:
-                explicit Node(const Rule &r,
-                              const bool term) throw();
-                explicit Node(const Node &other) throw();
+                explicit Node(const Rule &r, const bool term) throw(); //!< setup
+                Node(const Node &other) throw();                       //!< copy
 
             private:
                 Y_DISABLE_ASSIGN(Node);
@@ -76,33 +74,32 @@ namespace upsylon
             class TerminalNode : public Node
             {
             public:
-                static const uint8_t MAGIC_BYTE = 0x00;
+                static const uint8_t MAGIC_BYTE = 0x00;          //!< for I/O
 
-                virtual ~TerminalNode() throw();
-                virtual Node       *clone() const;
-                virtual const void *inner() const throw();
-                virtual void        viz( ios::ostream & ) const;
+                virtual ~TerminalNode() throw();                 //!< destructor
+                virtual Node       *clone() const;               //!< clone
+                virtual const void *inner() const throw();       //!< lx
+                virtual void        viz( ios::ostream & ) const; //!< graphViz
 
             private:
-                explicit TerminalNode(const Rule &r, Lexeme *l) throw();
-                friend class Node;
+                Y_DISABLE_COPY_AND_ASSIGN(TerminalNode);
                 Lexeme *lx;
 
-                Y_DISABLE_COPY_AND_ASSIGN(TerminalNode);
+                explicit TerminalNode(const Rule &r, Lexeme *l) throw();
                 virtual void emit( ios::ostream & ) const;
+                friend class Node;
             };
 
             //! an Internal Node, has a list of children
             class InternalNode : public Node, public Node::List
             {
             public:
-                static const uint8_t MAGIC_BYTE = 0x01;
+                static const uint8_t MAGIC_BYTE = 0x01; //!< for I/O
 
-                virtual ~InternalNode() throw();
-                
-                virtual Node       *clone() const;
-                virtual const void *inner() const throw();
-                void                viz( ios::ostream & ) const;
+                virtual ~InternalNode() throw();                 //!< destructor
+                virtual Node       *clone() const;               //!< clone
+                virtual const void *inner() const throw();       //!< this
+                void                viz( ios::ostream & ) const; //!< graphViz
                 
             private:
                 explicit InternalNode(const Rule &r) throw();

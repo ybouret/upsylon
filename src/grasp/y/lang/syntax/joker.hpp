@@ -10,30 +10,31 @@ namespace upsylon
     {
         namespace Syntax
         {
+            //! a Joker holds a reference to another Rule
             class Joker : public Rule
             {
             public:
-                virtual ~Joker() throw();
-
-                const Rule &jk;
+                virtual ~Joker() throw(); //!< destructor
+                const Rule &jk;           //!< the joker rule
 
             protected:
-                //! reject a hollow rule!
+                //! construct and reject a hollow rule!
                 explicit Joker(const uint32_t i, const string &n, const Rule &r);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Joker);
             };
 
+            //! optional joker, always accepted
             class Optional : public Joker
             {
             public:
-                static const uint32_t UUID = Y_FOURCC('?',0,0,0);
+                static const uint32_t UUID = Y_FOURCC('?',0,0,0); //!< UUID
 
-                explicit Optional(const string &n, const Rule &r);
-                virtual ~Optional() throw();
+                explicit Optional(const string &n, const Rule &r); //!< setup
+                virtual ~Optional() throw();                       //!< destructor
 
-                Y_LANG_SYNTAX_ACCEPT_PROTO();
+                Y_LANG_SYNTAX_ACCEPT_PROTO();                 //!< true, may contain data
                 virtual const char *typeName() const throw(); //!< "Optional"
                 virtual bool        isHollow() const throw(); //!< true
 
@@ -45,12 +46,12 @@ namespace upsylon
             class ZeroOrMore : public Joker
             {
             public:
-                static const uint32_t UUID = Y_FOURCC('>', '=', '0', 0);
+                static const uint32_t UUID = Y_FOURCC('>', '=', '0', 0); //!< UUID
 
-                explicit ZeroOrMore(const string &n, const Rule &r);
-                virtual ~ZeroOrMore() throw();
+                explicit ZeroOrMore(const string &n, const Rule &r); //!< setup
+                virtual ~ZeroOrMore() throw();                       //!< desctructor
                 
-                Y_LANG_SYNTAX_ACCEPT_PROTO();
+                Y_LANG_SYNTAX_ACCEPT_PROTO();                 //!< count, and always accept
                 virtual const char *typeName() const throw(); //!< "ZeroOrMore"
                 virtual bool        isHollow() const throw(); //!< true
 
@@ -62,14 +63,14 @@ namespace upsylon
             class OneOrMore : public Joker
             {
             public:
-                static const uint32_t UUID = Y_FOURCC('>', '=', '1', 0);
+                static const uint32_t UUID = Y_FOURCC('>', '=', '1', 0); //!< UUID
 
-                explicit OneOrMore(const string &n, const Rule &r);
-                virtual ~OneOrMore() throw();
+                explicit OneOrMore(const string &n, const Rule &r); //!< setup
+                virtual ~OneOrMore() throw();                       //!< desctructor
 
-                Y_LANG_SYNTAX_ACCEPT_PROTO();
+                Y_LANG_SYNTAX_ACCEPT_PROTO();                 //!< count and accept if >= 1
                 virtual const char *typeName() const throw(); //!< "OneOrMore"
-                virtual bool        isHollow() const throw(); //!< ...
+                virtual bool        isHollow() const throw(); //!< false
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OneOrMore);

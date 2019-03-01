@@ -15,14 +15,16 @@ namespace upsylon
             class RuleReference
             {
             public:
-                typedef set<string,RuleReference>            Set;     //!< alias
+                typedef key_hasher<string,hashing::fnv>            KeyHasher; //!< alias
+                typedef memory::pooled                             Memory;    //!< alias
+                typedef set<string,RuleReference,KeyHasher,Memory> Set;       //!< alias
 
-                const Rule &rule;
-                explicit RuleReference(const Rule &r) throw();
-                RuleReference( const RuleReference &other) throw();
-                ~RuleReference() throw();
-                const string & key() const throw();
+                explicit RuleReference(const Rule &r) throw();      //!< setup
+                RuleReference( const RuleReference &other) throw(); //!< copy
+                ~RuleReference() throw();                           //! destructor
+                const string & key() const throw();                 //!< rule.name
 
+                const Rule &rule; //!< the reference
 
             private:
                 Y_DISABLE_ASSIGN(RuleReference);
@@ -34,7 +36,7 @@ namespace upsylon
             public:
                 explicit RuleReferenceSet() throw();  //!< initialize
                 virtual ~RuleReferenceSet() throw();  //!< destructor
-                bool     declare(const Rule *r);
+                bool     declare(const Rule *r);      //!< try to insert a new reference
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(RuleReferenceSet);
