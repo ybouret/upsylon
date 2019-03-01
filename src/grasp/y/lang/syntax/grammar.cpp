@@ -130,6 +130,11 @@ namespace upsylon
                         r->graphVizProlog(fp);
                     }
 
+                    // link all nodes
+                    for(const Rule *r=rules.head;r;r=r->next)
+                    {
+                        r->graphVizEpilog(fp);
+                    }
                     fp << "}\n";
                 }
 

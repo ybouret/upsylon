@@ -24,7 +24,8 @@ namespace upsylon
                 virtual const char *typeName() const throw(); //!< "Terminal"
                 virtual bool        isHollow() const throw(); //!< false
                 virtual const char *graphVizShape() const throw();
-                
+                virtual void        graphVizEpilog(ios::ostream &) const;
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);
             };

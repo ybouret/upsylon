@@ -59,7 +59,11 @@ namespace upsylon
             {
                 return "box";
             }
-            
+
+            void Terminal:: graphVizEpilog(ios::ostream &) const
+            {
+
+            }
         }
     }
 }

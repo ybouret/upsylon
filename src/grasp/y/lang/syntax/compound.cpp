@@ -46,6 +46,15 @@ namespace upsylon
                 return *this;
             }
 
+            void Compound:: graphVizEpilog(ios::ostream &fp) const
+            {
+                unsigned idx=0;
+                if(size>1) ++idx;
+                for(const Operand *op=head;op;op=op->next)
+                {
+                    graphVizLink(fp, &(op->rule), idx++);
+                }
+            }
 
         }
     }
@@ -182,6 +191,7 @@ namespace upsylon
             {
                 return "egg";
             }
+
 
         }
 

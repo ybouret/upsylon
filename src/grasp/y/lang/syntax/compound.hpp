@@ -36,6 +36,8 @@ namespace upsylon
                 Compound & operator<<( const Rule & ); //!< append a rule
                 const bool acceptHollow;               //!< flag to accept appended ru;e
 
+                virtual void        graphVizEpilog(ios::ostream &) const;
+
             protected:
                 explicit Compound(const uint32_t, const string &, bool accept_hollow); //!< setup
 
@@ -76,7 +78,7 @@ namespace upsylon
                 virtual const char *typeName() const throw(); //!< "Alternate"
                 Y_LANG_SYNTAX_ACCEPT_PROTO();                 //!< accept the first possible operands
                 virtual const char *graphVizShape() const throw();
-                
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alternate);
             };

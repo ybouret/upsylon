@@ -20,6 +20,11 @@ namespace upsylon
                 derived = &jk;
             }
 
+            void Joker:: graphVizEpilog(ios::ostream &fp) const
+            {
+                graphVizLink(fp, &jk, 0);
+            }
+
         }
     }
 }
