@@ -21,7 +21,6 @@ namespace upsylon
                     {
                         const Tag       &tag = (*source)->origin; //!< common shallow tag
                         auto_ptr<Lexeme> plx = new Lexeme( tag ); //!< create lexeme
-
                         {
                             const size_t     nch = source.read_upack<size_t>();
                             const CharInfo   info(tag,0,0);
@@ -31,7 +30,6 @@ namespace upsylon
                                 plx->push_back( new Char(code,info) );
                             }
                         }
-
                         return Node::Create(the_rule,plx.yield());
                     }
 

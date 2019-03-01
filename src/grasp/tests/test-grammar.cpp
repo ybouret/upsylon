@@ -52,20 +52,25 @@ Y_UTEST(grammar)
     
     if(argc>1 && 0==strcmp(argv[1],"run"))
     {
+        string s1;
         {
             Source                 source( Module::OpenSTDIN() );
             auto_ptr<Syntax::Node> cst = G.accept(source,lexer);
             std::cerr << "parsed..." << std::endl;
             cst->graphViz("cst.dot");
             cst->save("cst.bin");
+            s1 = cst->toBase64();
         }
-
+        std::cerr << "s1=" << s1 << std::endl;
+        string s2;
         {
             Source source( Module::OpenFile("cst.bin") );
             auto_ptr<Syntax::Node> cst = Syntax::Node::Load(source,G);
             cst->graphViz("cst2.dot");
+            s2 = cst->toBase64();
         }
-
+        std::cerr << "s2=" << s2 << std::endl;
+        Y_ASSERT(s1==s2);
 
     }
 

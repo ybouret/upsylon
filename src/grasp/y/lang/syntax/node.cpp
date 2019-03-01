@@ -3,6 +3,10 @@
 #include "y/ios/graphviz.hpp"
 #include "y/string/convert.hpp"
 #include "y/string/io.hpp"
+#include "y/ios/osstream.hpp"
+#include "y/ios/imstream.hpp"
+
+#include "y/codec/base64.hpp"
 
 namespace upsylon
 {
@@ -115,7 +119,7 @@ namespace upsylon
                 node = 0;
             }
 
-            void Node:: __viz( ios::ostream &fp) const
+            void Node:: graphVizName( ios::ostream &fp) const
             {
                 fp.viz(this);
             }
@@ -141,6 +145,24 @@ namespace upsylon
             {
                 string_io::save_binary(fp,rule.name);
                 emit(fp);
+            }
+
+            string Node:: toBinary() const
+            {
+                string ans;
+                {
+                    ios::osstream fp(ans);
+                    save(fp);
+                }
+                return ans;
+            }
+
+            string Node:: toBase64() const
+            {
+                const string bin = toBinary();
+                ios::base64::encoder b64;
+                string       ans = b64.to_string(bin);
+                return ans;
             }
 
             void Node:: save( const string &binfile) const
@@ -203,7 +225,7 @@ namespace upsylon
                     const string content = lx->to_print();
                     l <<'=' << '\'' << content << '\'';
                 }
-                __viz(fp); fp("[shape=box,label=\""); fp << l; fp("\"];\n");
+                graphVizName(fp); fp("[shape=box,label=\""); fp << l; fp("\"];\n");
             }
 
             void TerminalNode:: emit(ios::ostream &fp) const
@@ -256,13 +278,13 @@ namespace upsylon
             void     InternalNode::   viz( ios::ostream &fp ) const
             {
                 const string l = string_convert::to_printable(rule.name);
-                __viz(fp); fp("[shape=house,label=\""); fp << l; fp("\"];\n");
+                graphVizName(fp); fp("[shape=house,label=\""); fp << l; fp("\"];\n");
                 const bool multiple = size>1;
                 unsigned  idx=1;
                 for(const Node *node = head; node; node=node->next, ++idx)
                 {
                     node->viz(fp);
-                    __viz(fp); fp << "->"; node->__viz(fp);
+                    graphVizName(fp); fp << "->"; node->graphVizName(fp);
                     if(multiple) fp("[label=\"%u\"]",idx);
                     fp << ";\n";
                 }

@@ -14,6 +14,7 @@ namespace upsylon
             class Rule;    //!< forward declaration
             class Grammar; //!< forward declaration
 
+            //! store syntax trees
             class Node : public Object, public core::inode<Node>
             {
             public:
@@ -42,13 +43,15 @@ namespace upsylon
                 const Lexeme &lexeme() const throw();
                 List         &children() throw();
                 const List   &children() const throw();
-                void          __viz( ios::ostream &fp) const;         //!< helper: fp.viz(this)
+                void          graphVizName( ios::ostream &fp) const;  //!< helper: fp.viz(this)
                 void          graphViz( const string &dotfile) const; //!< save to graphviz and try to render
                 void          graphViz( const char   *dotfile) const; //!< save to graphviz and try to render
                 void          save( ios::ostream &fp ) const;         //!< save to stream
                 void          save( const string &binfile) const;     //!< save to file
                 void          save( const char   *binfile) const;     //!< save to file
-
+                string        toBinary() const;                       //!< to a binary string
+                string        toBase64() const;                       //!< to a human readable string
+                
                 //______________________________________________________________
                 //
                 // static interface
