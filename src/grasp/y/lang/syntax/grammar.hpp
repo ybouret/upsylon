@@ -17,8 +17,8 @@ namespace upsylon
         namespace Syntax
         {
 
-            typedef vector<string,memory::pooled> Strings;
-            typedef array<string>                 StringsArray;
+            typedef vector<string,memory::pooled> Strings;         //!< alias, to store some strings
+            typedef array<string>                 ArrayOfStrings;  //!< alias, interface for functions
 
             //! a Grammar is a set of rules
             class Grammar : public Object
@@ -38,7 +38,7 @@ namespace upsylon
                 void add( Rule *r );                           //!< add a rule with memory management
                 Rule & getRuleByName(const string &id);        //!< rule Look up
                 Rule & topLevel();                             //!< get top level rule
-                void   topLevel( Rule &r );                    //!< set top level rule
+                void   topLevel( const Rule &r );              //!< set top level rule
                 bool   ownsRule( const Rule & ) const throw(); //!< check ownership
                 void   finalize() throw();                     //!< clean up
 
@@ -74,6 +74,9 @@ namespace upsylon
                 const Rule  & zeroOrMore( const Rule &r ); //!< make a  ZeroOrMore rule
                 const Rule  & oneOrMore(  const Rule &r ); //!< make a  OneOrMore  rule
 
+                string MakeAlternateName( const ArrayOfStrings &) const; //!< make name for an alternate
+                string MakeAggregateName( const ArrayOfStrings &) const; //!< make name for an aggregate
+                
             private:
                 Rule::List        rules;
                 RuleReferenceSet *rrs;
@@ -85,6 +88,7 @@ namespace upsylon
 
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 void              no_rrs() throw();
+                string MakeCompoundName(  const ArrayOfStrings &strings, const char sep) const;
             };
 
         }

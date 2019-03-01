@@ -17,7 +17,7 @@ public:
         Lexical::Scanner &root = **this;
         root.verbose = true;
         root.emit("ID","[:alpha:]+");
-        // root.emit("INT","[:digit:]+");
+        //root.emit("INT","[:digit:]+");
         hook<Lexical::jString>(root,"STRING");
 
 
@@ -39,10 +39,11 @@ Y_UTEST(grammar)
 
     Syntax::Grammar G( id );
 
-    Syntax::Terminal   &ID      = G.decl( new Syntax::Terminal("ID") );
+    Syntax::Terminal   &ID     = G.decl( new Syntax::Terminal("ID") );
     Syntax::Rule       &STRING = G.decl( new Syntax::Terminal("STRING") );
     const Syntax::Rule &TOKEN  = G.choice(ID,STRING);
-    Syntax::OneOrMore  &TOKENS = G.decl( new Syntax::OneOrMore( "TOKENS", TOKEN ) );
+    //Syntax::OneOrMore  &TOKENS = G.decl( new Syntax::OneOrMore( "TOKENS", TOKEN ) );
+    const Syntax::Rule &TOKENS = G.oneOrMore(TOKEN);
     std::cerr << "topLevel=" << G.topLevel().name << std::endl;
     G.topLevel(TOKENS);
     std::cerr << "topLevel=" << G.topLevel().name << std::endl;
@@ -71,7 +72,7 @@ Y_UTEST(grammar)
             s2 = cst->toBase64();
         }
         std::cerr << "s2=" << s2 << std::endl;
-        Y_ASSERT(s1==s2);
+        Y_CHECK(s1==s2);
 
     }
 

@@ -107,13 +107,13 @@ namespace upsylon
                 return *(rules.head);
             }
 
-            void Grammar:: topLevel( Rule &r )
+            void Grammar:: topLevel( const Rule &r )
             {
                 if(!ownsRule(r))
                 {
                     throw exception("{%s} topLevel(foreign rule <%s>)", **name, *(r.name) );
                 }
-                rules.move_to_front( &r );
+                rules.move_to_front( (Rule *)&r );
             }
 
         }
