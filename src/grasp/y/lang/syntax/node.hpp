@@ -59,7 +59,13 @@ namespace upsylon
                 static Node * Create(const Rule &r);                      //!< create a new internal node
                 static void   Grow( Node * &tree, Node *leaf )  throw();  //!< grew the tree with the leaf
                 static void   Unget(Node * &node, Lexer &lexer) throw();  //!< restore lexemes into lexer
-                static Node  *Load( Source &source, Grammar &G);          //!< reload node from a source
+
+                //! reload node from a binary source
+                /**
+                 All the CharInfo are CharInfo(source.module.origin,0,0),
+                 since we assume the source to be a binary source
+                 */
+                static Node  *Load( Source &source, Grammar &G);
 
             protected:
                 explicit Node(const Rule &r, const bool term) throw(); //!< setup

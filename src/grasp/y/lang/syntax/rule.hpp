@@ -11,12 +11,14 @@ namespace upsylon
     {
         namespace Syntax
         {
+            //! arguments for accept
+#define Y_LANG_SYNTAX_ACCEPT_ARGS Source &source, Lexer &lexer, Node * &tree
 
             //! accept prototype
-#define Y_LANG_SYNTAX_ACCEPT_PROTO() virtual bool         accept(Source &source, Lexer &lexer, Node * &tree ) const
+#define Y_LANG_SYNTAX_ACCEPT_PROTO() virtual bool         accept( Y_LANG_SYNTAX_ACCEPT_ARGS ) const
 
             //! accept implementation
-#define Y_LANG_SYNTAX_ACCEPT_START(CLASS)    bool CLASS:: accept(Source &source, Lexer &lexer, Node * &tree ) const
+#define Y_LANG_SYNTAX_ACCEPT_START(CLASS)    bool CLASS:: accept( Y_LANG_SYNTAX_ACCEPT_ARGS ) const
 
             //! switchable output on verbose flag
 #define Y_LANG_SYNTAX_VERBOSE(OUTPUT) do { if(verbose) { std::cerr << OUTPUT; } } while(false)

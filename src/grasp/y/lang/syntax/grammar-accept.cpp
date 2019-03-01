@@ -17,8 +17,10 @@ namespace upsylon
                 // initialize
                 //______________________________________________________________
 
-                const Rule *top = rules.head; if(!top) throw exception("{%s}.accept(no rule)",**name);
-                Node       *tree = 0;
+                const Rule *top    = rules.head; if(!top) throw exception("{%s} has no rule",**name);
+                Node       *tree   = 0;
+                const char *id     = **name;
+                const char *top_id = *(top->name);
 
                 //______________________________________________________________
                 //
@@ -27,8 +29,16 @@ namespace upsylon
                 if(!top->accept(source,lexer,tree))
                 {
                     assert(tree==0);
-
-                    throw exception("{%s}<%s> not accepted", **name, *(top->name));
+                    const Lexeme *lx = lexer.peek(source);
+                    if(lx)
+                    {
+                        const string content = lx->to_print();
+                        throw exception("{%s}'%s' unexpected '%s'='%s'", id, top_id, **(lx->label), *content);
+                    }
+                    else
+                    {
+                        throw exception("{%s}'%s' doesn't accept empty source", **name, *(top->name));
+                    }
                 }
 
                 //______________________________________________________________
