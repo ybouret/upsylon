@@ -17,6 +17,7 @@ namespace upsylon
                 {
                     throw exception("Lang.Syntax.Joker(hollow rule '%s')", *(r.name));
                 }
+                derived = &jk;
             }
 
         }

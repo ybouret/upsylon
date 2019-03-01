@@ -25,6 +25,7 @@ namespace upsylon
             Rule(u,n), Operand::List(),
             acceptHollow(accept_hollow)
             {
+                derived = static_cast<Compound*>(this);
             }
 
             void Compound:: append( const Rule &r )

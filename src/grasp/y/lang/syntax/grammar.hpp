@@ -40,7 +40,7 @@ namespace upsylon
                 Rule & topLevel();                             //!< get top level rule
                 void   topLevel( const Rule &r );              //!< set top level rule
                 bool   ownsRule( const Rule & ) const throw(); //!< check ownership
-                void   finalize() throw();                     //!< clean up
+                void   finalize();                             //!< clean up
 
                 //! wrapper to keep derived rule type
                 template <typename T>
@@ -62,7 +62,7 @@ namespace upsylon
                 Aggregate & aggregate( const string &id ) { return decl( new Aggregate(id) ); }
 
                 //! create an aggregate rule
-                Aggregate & aggregate( const char   *id ) { const string _(id); return aggregate(_); }
+                Aggregate  & aggregate( const char   *id ) { const string _(id); return aggregate(_); }
 
                 Alternate   & alternate( const string &id ); //!< create a named alternate
                 Alternate   & alternate( const char   *id ); //!< create a named alternate
@@ -87,8 +87,9 @@ namespace upsylon
                 unsigned          iOoM;
 
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
-                void              no_rrs() throw();
                 string MakeCompoundName(  const ArrayOfStrings &strings, const char sep) const;
+                void              no_rrs() throw(); //!< safely remove rrs
+                void validate() const; //!< check all rules are used
             };
 
         }

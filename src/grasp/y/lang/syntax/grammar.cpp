@@ -61,8 +61,9 @@ namespace upsylon
                 rules.push_back( pRule.yield() );
             }
 
-            void Grammar:: finalize() throw()
+            void Grammar:: finalize()
             {
+                validate();
                 no_rrs();
             }
 
