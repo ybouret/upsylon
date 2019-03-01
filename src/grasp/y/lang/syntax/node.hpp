@@ -31,7 +31,6 @@ namespace upsylon
                 virtual Node *      clone() const         = 0;
                 virtual const void *inner() const throw() = 0;
                 virtual void        viz( ios::ostream & ) const = 0;
-
                 virtual ~Node() throw();
 
                 //______________________________________________________________
@@ -42,9 +41,12 @@ namespace upsylon
                 const Lexeme &lexeme() const throw();
                 List         &children() throw();
                 const List   &children() const throw();
-                void          __viz( ios::ostream &fp) const; //!< fp.viz(this)
+                void          __viz( ios::ostream &fp) const;         //!< helper: fp.viz(this)
                 void          graphViz( const string &dotfile) const; //!< save to graphviz and try to render
-                void          graphViz( const char   *dotfile) const; //!< sabe to graphviz and try to render
+                void          graphViz( const char   *dotfile) const; //!< save to graphviz and try to render
+                void          save( ios::ostream &fp ) const;         //!< save to stream
+                void          save( const string &binfile) const;     //!< save to file
+                void          save( const char   *binfile) const;     //!< save to file
 
                 //______________________________________________________________
                 //
@@ -55,6 +57,7 @@ namespace upsylon
                 static void   Grow( Node * &tree, Node *leaf )  throw();  //!< grew the tree with the leaf
                 static void   Unget(Node * &node, Lexer &lexer) throw();  //!< restore lexemes into lexer
 
+
             protected:
                 explicit Node(const Rule &r,
                               const bool term) throw();
@@ -62,12 +65,15 @@ namespace upsylon
 
             private:
                 Y_DISABLE_ASSIGN(Node);
+                virtual void        emit( ios::ostream & ) const = 0;
             };
 
             //! a Terminal Node, acts as a lexeme smart pointer
             class TerminalNode : public Node
             {
             public:
+                static const uint8_t MAGIC_BYTE = 0x00;
+
                 virtual ~TerminalNode() throw();
                 virtual Node       *clone() const;
                 virtual const void *inner() const throw();
@@ -79,25 +85,27 @@ namespace upsylon
                 Lexeme *lx;
 
                 Y_DISABLE_COPY_AND_ASSIGN(TerminalNode);
+                virtual void emit( ios::ostream & ) const;
             };
 
             //! an Internal Node, has a list of children
             class InternalNode : public Node, public Node::List
             {
             public:
-                //Node::List children;
+                static const uint8_t MAGIC_BYTE = 0x01;
 
                 virtual ~InternalNode() throw();
                 
                 virtual Node       *clone() const;
                 virtual const void *inner() const throw();
                 void                viz( ios::ostream & ) const;
-
+                
             private:
                 explicit InternalNode(const Rule &r) throw();
                 explicit InternalNode(const InternalNode &);
                 friend class Node;
                 Y_DISABLE_ASSIGN(InternalNode);
+                virtual void emit( ios::ostream & ) const;
             };
 
         }

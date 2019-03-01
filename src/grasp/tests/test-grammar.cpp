@@ -64,6 +64,8 @@ Y_UTEST(grammar)
         auto_ptr<Syntax::Node> cst = G.accept(source,lexer);
         std::cerr << "parsed..." << std::endl;
         cst->graphViz("cst.dot");
+        cst->save("cst.bin");
+        
     }
 
 

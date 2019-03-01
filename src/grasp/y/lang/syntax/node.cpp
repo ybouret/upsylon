@@ -2,6 +2,7 @@
 #include "y/exception.hpp"
 #include "y/ios/graphviz.hpp"
 #include "y/string/convert.hpp"
+#include "y/string/io.hpp"
 
 namespace upsylon
 {
@@ -135,6 +136,25 @@ namespace upsylon
             {
                 const string _(dotfile); graphViz(_);
             }
+
+            void Node:: save( ios::ostream &fp ) const
+            {
+                string_io::save_binary(fp,rule.name);
+                emit(fp);
+            }
+
+            void Node:: save( const string &binfile) const
+            {
+                ios::ocstream fp(binfile);
+                save(fp);
+            }
+
+            void Node:: save( const char *binfile) const
+            {
+                const string _(binfile);
+                save(_);
+            }
+
         }
 
     }
@@ -186,6 +206,17 @@ namespace upsylon
                 __viz(fp); fp("[shape=box,label=\""); fp << l; fp("\"];\n");
             }
 
+            void TerminalNode:: emit(ios::ostream &fp) const
+            {
+                assert(lx);
+                fp.emit(MAGIC_BYTE);
+
+                fp.emit_upack(lx->size);
+                for(const Char *ch = lx->head;ch;ch=ch->next)
+                {
+                    fp.emit(ch->code);
+                }
+            }
         }
     }
 }
@@ -234,6 +265,16 @@ namespace upsylon
                     __viz(fp); fp << "->"; node->__viz(fp);
                     if(multiple) fp("[label=\"%u\"]",idx);
                     fp << ";\n";
+                }
+            }
+
+            void InternalNode:: emit(ios::ostream &fp) const
+            {
+                fp.emit(MAGIC_BYTE);
+                fp.emit_upack(size);
+                for(const Node *node=head;node;node=node->next)
+                {
+                    node->save(fp);
                 }
             }
 
