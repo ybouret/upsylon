@@ -1,4 +1,5 @@
 #include "y/lang/syntax/terminal.hpp"
+#include "y/string/convert.hpp"
 
 namespace upsylon
 {
@@ -53,6 +54,12 @@ namespace upsylon
                     }
                 }
             }
+
+            const char * Terminal:: graphVizShape() const throw()
+            {
+                return "box";
+            }
+            
         }
     }
 }

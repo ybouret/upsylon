@@ -1,5 +1,6 @@
 #include "y/lang/syntax/grammar.hpp"
 #include "y/exception.hpp"
+#include "y/ios/graphviz.hpp"
 
 namespace upsylon
 {
@@ -116,6 +117,31 @@ namespace upsylon
                 }
                 rules.move_to_front( (Rule *)&r );
             }
+
+            void Grammar:: graphViz( const string &dotfile ) const
+            {
+                {
+                    ios::ocstream fp(dotfile);
+                    fp << "digraph G {\n";
+
+                    // declare all nodes
+                    for(const Rule *r=rules.head;r;r=r->next)
+                    {
+                        r->graphVizProlog(fp);
+                    }
+
+                    fp << "}\n";
+                }
+
+                ios::GraphViz::Render(dotfile);
+
+            }
+
+            void Grammar:: graphViz( const char *dotfile ) const
+            {
+                const string _(dotfile); graphViz(_);
+            }
+
 
         }
     }

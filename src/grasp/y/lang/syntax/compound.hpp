@@ -56,6 +56,7 @@ namespace upsylon
                 virtual bool        isHollow() const throw(); //!< true if empty of all operands are hollow
                 virtual const char *typeName() const throw(); //!< "Aggregate"
                 Y_LANG_SYNTAX_ACCEPT_PROTO();                 //!< must accept all operands
+                virtual const char *graphVizShape() const throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);
@@ -74,6 +75,7 @@ namespace upsylon
                 virtual bool        isHollow() const throw(); //!< false by construction
                 virtual const char *typeName() const throw(); //!< "Alternate"
                 Y_LANG_SYNTAX_ACCEPT_PROTO();                 //!< accept the first possible operands
+                virtual const char *graphVizShape() const throw();
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alternate);

@@ -115,6 +115,12 @@ namespace upsylon
                 return true;
             }
 
+            const char * Aggregate:: graphVizShape() const throw()
+            {
+                return "house";
+            }
+
+
         }
 
     }
@@ -170,6 +176,11 @@ namespace upsylon
                 }
                 Y_LANG_SYNTAX_VERBOSE("|_rejected " << typeName() << " '" << name << "'" << std::endl);
                 return false;
+            }
+
+            const char * Alternate:: graphVizShape() const throw()
+            {
+                return "egg";
             }
 
         }

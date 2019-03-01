@@ -50,8 +50,11 @@ Y_UTEST(grammar)
 
     myLexer lexer;
     G.setVerbose(true);
+    G.graphViz("grammar.dot");
     G.finalize();
-    
+
+
+
     if(argc>1 && 0==strcmp(argv[1],"run"))
     {
         string s1;

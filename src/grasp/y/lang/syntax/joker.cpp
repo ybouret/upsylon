@@ -61,6 +61,10 @@ namespace upsylon
                 }
             }
 
+            const char * Optional:: graphVizShape() const throw()
+            {
+                return "diamond";
+            }
             
         }
     }
@@ -125,6 +129,10 @@ namespace upsylon
                 }
             }
 
+            const char * ZeroOrMore:: graphVizShape() const throw()
+            {
+                return "circle";
+            }
         }
     }
 }
@@ -195,6 +203,11 @@ namespace upsylon
                         return true; // subTree becomes the main tree
                     }
                 }
+            }
+
+            const char * OneOrMore:: graphVizShape() const throw()
+            {
+                return "octagon";
             }
 
         }

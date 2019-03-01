@@ -23,6 +23,7 @@ namespace upsylon
                 Y_LANG_SYNTAX_ACCEPT_PROTO();                 //!< accept a terminal with name==label
                 virtual const char *typeName() const throw(); //!< "Terminal"
                 virtual bool        isHollow() const throw(); //!< false
+                virtual const char *graphVizShape() const throw();
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);

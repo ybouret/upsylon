@@ -76,7 +76,10 @@ namespace upsylon
 
                 string MakeAlternateName( const ArrayOfStrings &) const; //!< make name for an alternate
                 string MakeAggregateName( const ArrayOfStrings &) const; //!< make name for an aggregate
-                
+
+                void graphViz( const string &dotfile ) const;
+                void graphViz( const char   *dotfile ) const;
+
             private:
                 Rule::List        rules;
                 RuleReferenceSet *rrs;

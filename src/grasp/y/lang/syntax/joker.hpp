@@ -37,6 +37,7 @@ namespace upsylon
                 Y_LANG_SYNTAX_ACCEPT_PROTO();                 //!< true, may contain data
                 virtual const char *typeName() const throw(); //!< "Optional"
                 virtual bool        isHollow() const throw(); //!< true
+                virtual const char *graphVizShape() const throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Optional);
@@ -54,6 +55,7 @@ namespace upsylon
                 Y_LANG_SYNTAX_ACCEPT_PROTO();                 //!< count, and always accept
                 virtual const char *typeName() const throw(); //!< "ZeroOrMore"
                 virtual bool        isHollow() const throw(); //!< true
+                virtual const char *graphVizShape() const throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ZeroOrMore);
@@ -71,6 +73,7 @@ namespace upsylon
                 Y_LANG_SYNTAX_ACCEPT_PROTO();                 //!< count and accept if >= 1
                 virtual const char *typeName() const throw(); //!< "OneOrMore"
                 virtual bool        isHollow() const throw(); //!< false
+                virtual const char *graphVizShape() const throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OneOrMore);
