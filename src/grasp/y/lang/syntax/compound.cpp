@@ -92,6 +92,7 @@ namespace upsylon
 
                 Node          *subTree = Node::Create(*this);
                 auto_ptr<Node> guard(subTree);
+                Y_LANG_SYNTAX_VERBOSE("|_" << typeName() << " '" << name << "' #operands=" << size << std::endl);
 
                 // scan for full acceptance
                 for(Operand *op=head;op;op=op->next)
@@ -101,6 +102,7 @@ namespace upsylon
                         // rejected=>restore
                         guard.dismiss();
                         Node::Unget(subTree,lexer);
+                        Y_LANG_SYNTAX_VERBOSE("|_rejected " << typeName() << " '" << name << "'" << std::endl);
                         return false;
                     }
                 }
@@ -108,6 +110,7 @@ namespace upsylon
                 // all are accepted
                 guard.dismiss();
                 Node::Grow(tree,subTree);
+                Y_LANG_SYNTAX_VERBOSE("|_accepted " << typeName() << " '" << name << "'" << std::endl);
                 return true;
             }
 
