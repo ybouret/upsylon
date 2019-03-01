@@ -76,6 +76,8 @@ Y_UTEST_INIT(128)
     Y_UTEST(mtf);
     Y_UTEST(delta);
     Y_UTEST(asf);
+    Y_UTEST(bwt);
+    
     Y_UTEST(local_file);
     Y_UTEST(bin2dat);
     Y_UTEST(digest);
