@@ -341,3 +341,15 @@ Y_UTEST(mpn)
 }
 Y_UTEST_DONE()
 
+Y_UTEST(mpn_fact)
+{
+    for(int i=1;i<argc;++i)
+    {
+        const string s = argv[i];
+        const mpn    n = mpn::dec(s);
+        const mpn    f = mpn::factorial(n);
+        std::cerr << "factorial(" << n << ")=" << f << std::endl;
+    }
+}
+Y_UTEST_DONE()
+

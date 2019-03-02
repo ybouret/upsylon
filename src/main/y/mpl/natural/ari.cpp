@@ -149,6 +149,18 @@ namespace upsylon
 
         }
 
+        natural natural:: factorial(const natural &n)
+        {
+            if(n<=1)
+            {
+                return natural(1);
+            }
+            else
+            {
+                return n * factorial( n-1 );
+            }
+        }
+
     }
 
 }

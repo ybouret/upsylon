@@ -480,7 +480,8 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             static bool    is_prime(const natural &);   //!< slow primality test
             static natural next_prime(const natural &); //!< slow find of next prime
             static bool    are_coprimes(const natural &, const natural &); //!< test co-primailty
-            
+            static natural factorial(const natural &n);
+
         private:
             size_t   bytes;     //!< active bytes
             size_t   allocated; //!< allocated bytes
