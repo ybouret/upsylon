@@ -19,8 +19,8 @@ scanners(4,as_capacity), \
 plugins(4,as_capacity),  \
 dict()
 
-            Translator:: Translator(const string &id) :
-            Y_LANG_TRANS()
+
+            void Translator:: setup()
             {
                 base = new Scanner(label);
                 {
@@ -30,6 +30,19 @@ dict()
                 curr = base;
                 base->userDict = &dict;
             }
+
+            Translator:: Translator(const string &id) :
+            Y_LANG_TRANS()
+            {
+                setup();
+            }
+
+            Translator:: Translator(const char *id) :
+            Y_LANG_TRANS()
+            {
+                setup();
+            }
+
 
             Translator:: ~Translator() throw()
             {

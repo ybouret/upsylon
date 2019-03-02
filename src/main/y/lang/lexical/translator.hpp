@@ -27,6 +27,9 @@ namespace upsylon
                 //! initialize
                 explicit Translator(const string &id);
 
+                //! initialize
+                explicit Translator(const char *id);
+
                 //! return root scanner
                 Scanner & operator *() throw();
 
@@ -131,6 +134,8 @@ namespace upsylon
                 Plugin &enroll_plugin( Plugin *plg ); //!< insert into plugins AND scanners
                 void    link(Scanner &, Plugin & );   //!< scanner calls plugin upon trigger
 
+                void setup();
+                
             public:
                 Dictionary dict; //!< shared dictionary, set as userDict for registers scanners
             };
