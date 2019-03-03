@@ -6,6 +6,9 @@
 #include "y/lang/syntax/grammar.hpp"
 
 #include "y/lang/syntax/terminal.hpp"
+#include "y/lang/syntax/joker.hpp"
+#include "y/lang/syntax/compound.hpp"
+
 
 namespace upsylon
 {
@@ -44,11 +47,26 @@ namespace upsylon
                 TERM & term( const char   *id, const char    C );  //!< create a terminal id matching a single char, wrapper
                 TERM & term( const char C);                        //!< create a terminal matching a single C with the same name
 
+                //! zero arguments plugin
+                template <typename PLUGIN> inline RULE & hook( const string &id )
+                {
+                    Lexical::Translator::hook<PLUGIN>(**this,id);
+                    return terminal(id).setStandard();
+                }
+
+                //! zero arguments plugin
+                template <typename PLUGIN> inline RULE & hook( const char *id )
+                {
+                    const string _(id); return hook<PLUGIN>(_);
+                }
+
+
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
                 void setOperator(); //!< promote to operator
+                void setSemantic(); //!< promote to semantic only
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);

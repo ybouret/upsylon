@@ -1,5 +1,6 @@
 #include "y/lang/syntax/parser.hpp"
 #include "y/utest/run.hpp"
+#include "y/lang/lexical/plugin/strings.hpp"
 
 using namespace upsylon;
 using namespace Lang;
@@ -10,9 +11,11 @@ public:
     inline myParser() : Syntax::Parser("JSONLite")
     {
         TERM &ID    = term("ID","[:alpha:]+");
-        TERM &COLON = term(":",':');
-        TERM &COMA  = term(',').setSemantic();
-        TERM &PLUS  = term("PLUS",'+').setOperator();
+        TERM &COLON  = term(":",':');
+        TERM &COMA   = term(',').setSemantic();
+        TERM &PLUS   = term("PLUS",'+').setOperator();
+        RULE &STRING = hook<Lexical::jString>("STRING");
+
 
         // lexical only
         (**this).drop("[:blank:]+");
