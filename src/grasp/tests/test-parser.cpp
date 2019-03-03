@@ -10,7 +10,7 @@ class myParser : public Syntax::Parser
 public:
     inline myParser() : Syntax::Parser("JSONLite")
     {
-        TERM &ID    = term("ID","[:alpha:]+");
+        TERM &ID     = term("ID","[:alpha:]+");
         TERM &COLON  = term(":",':');
         TERM &COMA   = term(',').setSemantic();
         TERM &PLUS   = term("PLUS",'+').setOperator();
