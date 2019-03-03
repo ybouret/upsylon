@@ -11,8 +11,8 @@ namespace upsylon
             {
             }
 
-            Terminal:: Terminal(const string &n) :
-            Rule(UUID,n)
+            Terminal:: Terminal(const string &n, const Attribute role) :
+            Rule(UUID,n), attr(role)
             {
                 derived = static_cast<Terminal *>(this);
             }

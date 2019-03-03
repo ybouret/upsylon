@@ -33,6 +33,11 @@ namespace upsylon
             fp.emit(UUID);
         }
 
+        bool Any1:: univocal() const throw()
+        {
+            return false;
+        }
+
         void Single:: __viz(ios::ostream &fp) const
         {
             fp(" [shape=square,label=\"%s\"];\n", printable_char[code] );
@@ -43,6 +48,11 @@ namespace upsylon
             fp.emit(UUID).emit(code);
         }
 
+        bool Single:: univocal() const throw()
+        {
+            return true;
+        }
+
         void Range:: __viz(ios::ostream &fp) const
         {
             fp(" [shape=box,label=\"%s-%s\"];\n", printable_char[lower], printable_char[upper] );
@@ -51,6 +61,11 @@ namespace upsylon
         void Range:: write(ios::ostream &fp) const
         {
             fp.emit(UUID).emit(lower).emit(upper);
+        }
+
+        bool Range:: univocal() const throw()
+        {
+            return (lower==upper);
         }
 
     }

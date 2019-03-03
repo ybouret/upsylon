@@ -40,6 +40,7 @@ namespace upsylon
             inline virtual  Any1 *clone() const { return new Any1(); }                 //!< clone
             virtual void          __viz( ios::ostream &fp ) const;                     //!< GraphViz
             virtual void          write( ios::ostream &fp ) const;                     //!< output [0xANY1] (+4)
+            virtual bool          univocal() const throw();                            //!< false
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Any1);
@@ -62,6 +63,7 @@ namespace upsylon
             inline virtual Single *clone() const { return new Single(code); } //!< clone
             virtual void           __viz( ios::ostream &fp ) const;           //!< GraphViz
             virtual void           write( ios::ostream &fp ) const;           //!< output [0xSNGL] [code] (+5)
+            virtual bool           univocal() const throw();                  //!< true
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Single);
@@ -90,6 +92,7 @@ namespace upsylon
             inline virtual Pattern *clone() const { return new Range(lower,upper); } //!< clone
             virtual void            __viz( ios::ostream &fp ) const;                 //!< GraphViz
             virtual void            write( ios::ostream &fp ) const;                 //!< output [0xRNGE] [lower] [upper] (+6)
+            virtual bool            univocal() const throw();                         //!< true is lower==upper
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Range);

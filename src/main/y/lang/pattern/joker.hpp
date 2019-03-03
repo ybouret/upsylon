@@ -15,9 +15,9 @@ namespace upsylon
         class Joker : public Pattern
         {
         public:
-            typedef auto_ptr<Pattern> Motif; //!< alias
-            virtual ~Joker() throw();        //!< destructor
-            void optimize() throw();         //!< call optimize on the motif
+            typedef auto_ptr<Pattern> Motif;       //!< alias
+            virtual ~Joker() throw();              //!< destructor
+            void optimize() throw();               //!< call optimize on the motif
 
         protected:
             const Motif motif;                                      //!< the motif
@@ -51,6 +51,9 @@ namespace upsylon
 
             //! always true
             inline virtual bool weak() const throw() { return true; }
+
+            //! always false
+            virtual bool univocal() const throw();
 
         private:
             inline explicit Optional( Pattern *jk ) throw() : Joker(UUID,jk)
@@ -97,6 +100,8 @@ namespace upsylon
             //! '+'
             static inline Pattern *OneOrMore( Pattern * p ) { return Repeating::Create(p,1); }
 
+            virtual bool univocal() const throw(); //!< false
+
         private:
             inline explicit Repeating( Pattern *jk, const size_t n) throw() : Joker(UUID,jk), nmin(n)
             {
@@ -135,18 +140,20 @@ namespace upsylon
             virtual bool weak() const throw()
             {
                 assert(! motif->weak() );
-                return nmin<=0;
+                return (nmin<=0);
             }
 
             //! match
             virtual bool match( Token &tkn, Source &src) const;
+
+            //! true if nmin==nmax and motif->univocal
+            virtual bool univocal() const throw();
 
         private:
             inline explicit Counting( Pattern *jk, const size_t n, const size_t m) throw() : Joker(UUID,jk), nmin(n), nmax(m)
             {
                 Y_LANG_PATTERN_IS(Counting);
                 assert(nmin<=nmax);
-
             }
 
             Y_DISABLE_COPY_AND_ASSIGN(Counting);

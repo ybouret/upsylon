@@ -16,15 +16,25 @@ Y_UTEST(regex)
         const string rx = argv[1];
         std::cerr << "Compiling '" << rx << "'" << std::endl;
         auto_ptr<Pattern> p = RegExp(rx,&dict);
-        p->GraphViz("regex.dot");
         if(p->weak())
         {
-            std::cerr << "this is a weak regular expression" << std::endl;
+            std::cerr << "\tthis is a WEAK regular expression" << std::endl;
         }
         else
         {
-            std::cerr << "this is a full regular expression" << std::endl;
+            std::cerr << "\tthis is a FULL regular expression" << std::endl;
         }
+        if(p->univocal())
+        {
+            std::cerr << "\t\tand UNIVOCAL" << std::endl;
+        }
+        else
+        {
+            std::cerr << "\t\tand NOT univocal" << std::endl;
+        }
+
+        p->GraphViz("regex.dot");
+
         if(argc>2&&0==strcmp(argv[2],"scan"))
         {
 

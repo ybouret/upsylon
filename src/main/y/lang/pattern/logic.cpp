@@ -78,6 +78,15 @@ namespace upsylon
             }
             return true; // all weak...
         }
+
+        bool AND:: univocal() const throw()
+        {
+            for(const Pattern *p=operands.head;p;p=p->next)
+            {
+                if(!p->univocal()) return false;
+            }
+            return true;
+        }
     }
 
 }
@@ -108,11 +117,23 @@ namespace upsylon
 
         bool OR:: weak() const throw()
         {
-            for(const Pattern *p=operands.head;p;p=p->next)
+            if(operands.size<=0)
             {
-                if(p->weak()) return true;
+                return true;
             }
-            return false; //! no weak
+            else
+            {
+                for(const Pattern *p=operands.head;p;p=p->next)
+                {
+                    if(p->weak()) return true;
+                }
+                return false; //! no weak
+            }
+        }
+
+        bool OR:: univocal() const throw()
+        {
+            return (1==operands.size) && operands.head->univocal();
         }
     }
 }
@@ -157,5 +178,9 @@ namespace upsylon
             return false;
         }
 
+        bool NONE:: univocal() const throw()
+        {
+            return false;
+        }
     }
 }

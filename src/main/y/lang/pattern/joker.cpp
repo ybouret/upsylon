@@ -27,6 +27,9 @@ namespace upsylon
             m = p;
         }
 
+
+
+
     }
 }
 
@@ -61,6 +64,13 @@ namespace upsylon
             guard.dismiss();
             return p;
         }
+
+        bool Optional:: univocal() const throw()
+        {
+            return false;
+        }
+
+
 
     }
 }
@@ -129,6 +139,11 @@ namespace upsylon
             }
         }
 
+        bool Repeating:: univocal() const throw()
+        {
+            return false;
+        }
+
     }
 }
 
@@ -184,6 +199,11 @@ namespace upsylon
                 src.unget(tkn);
                 return false;
             }
+        }
+
+        bool Counting:: univocal() const throw()
+        {
+            return (nmin>0) && (nmin==nmax) && motif->univocal();
         }
 
     }

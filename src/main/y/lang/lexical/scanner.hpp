@@ -256,7 +256,7 @@ namespace upsylon
 
                 //! helper for newline(id) on rx
                 void endl(const char   *id,const char   *rx);
-
+                
                 //! helper for endl shortcut
                 void endl(const char *rx);
 

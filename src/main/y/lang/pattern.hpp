@@ -36,6 +36,7 @@ namespace upsylon
             virtual void     write( ios::ostream &fp ) const = 0;       //!< binary output
             virtual bool     weak() const throw() = 0;                  //!< a pattern is weak if it matches an empty expression
             virtual bool     match( Token &tkn, Source &src) const = 0; //!< try to match
+            virtual bool     univocal() const throw() = 0;              //!< guess if univocal
 
             //__________________________________________________________________
             //

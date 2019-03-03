@@ -44,12 +44,12 @@ namespace upsylon
                 virtual            ~Rule() throw();                           //!< destructor
                 virtual const char *graphVizShape() const throw() = 0;        //!< shape for graphViz
                 virtual void        graphVizEpilog(ios::ostream &) const = 0; //!< perform necessary linking
+                virtual const char *graphVizStyle() const throw();            //!< based on isHollow, can be superseeded
 
                 //______________________________________________________________
                 //
                 // non-virtual interface
                 //______________________________________________________________
-                const char *graphVizStyle() const throw(); //!< based on isHollow
                 void graphVizName( ios::ostream &fp ) const;
                 void graphVizLink( ios::ostream &fp, const Rule *p, unsigned idx ) const;
                 void graphVizProlog( ios::ostream &fp ) const;

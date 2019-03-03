@@ -62,6 +62,7 @@ namespace upsylon
             virtual void            __viz( ios::ostream &fp ) const;                   //!< GraphViz output
             virtual bool            match( Token &tkn, Source &src ) const;            //!< must match all patterns
             virtual bool            weak() const throw();                              //!< if all operands are weak
+            virtual bool            univocal() const throw();                          //!< true is all are univocal
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(AND);
@@ -79,6 +80,7 @@ namespace upsylon
             virtual void            __viz( ios::ostream &fp ) const;                //!< GraphViz
             virtual bool            match( Token &tkn, Source &src ) const;         //!< true if finds a matching first operands
             virtual bool            weak() const throw();                           //!< true if one is weak
+            virtual bool            univocal() const throw();                       //!< true if one univocal operand
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OR);
@@ -95,6 +97,7 @@ namespace upsylon
             inline virtual Pattern *clone() const { return __clone( new NONE() ); }     //!< clone
             virtual void            __viz( ios::ostream &fp ) const;                    //!< GraphViz
             virtual bool            weak() const throw();                               //!< false
+            virtual bool            univocal() const throw();                           //!< false, even if could exceptionnaly be true if only 1 possible choice...
 
             //! match none of the patterns, returns single next char of false if no char
             virtual bool match( Token &tkn, Source &src ) const;
