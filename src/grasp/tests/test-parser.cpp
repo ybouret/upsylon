@@ -7,8 +7,18 @@ using namespace Lang;
 class myParser : public Syntax::Parser
 {
 public:
-    inline myParser() : Syntax::Parser("JSON")
+    inline myParser() : Syntax::Parser("JSONLite")
     {
+        TERM &ID    = term("ID","[:alpha:]+");
+        TERM &COLON = term(":",':');
+        TERM &COMA  = term(',').setSemantic();
+        TERM &PLUS  = term("PLUS",'+').setOperator();
+
+        // lexical only
+        (**this).drop("[:blank:]+");
+        (**this).endl("[:endl:]");
+
+        graphViz("jsonlite.dot");
     }
 
     inline virtual ~myParser() throw()

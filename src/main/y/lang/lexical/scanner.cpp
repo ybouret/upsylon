@@ -82,6 +82,14 @@ verbose(false)
                 return 0;
             }
 
+            const Rule & Scanner:: last() const throw()
+            {
+                assert(rules.size>0);
+                assert(rules.tail);
+                return *(rules.tail);
+            }
+
+
             string Scanner::JumpLabel( const string &target )
             {
                 return "->" + target;

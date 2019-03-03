@@ -44,8 +44,23 @@ namespace upsylon
                 // emit lexer rule
                 (**this).emit(id,rx);
 
-                // emit grammar rule
-                return terminal(id);
+                // link to a terminal
+                Terminal &t = terminal(id);
+
+                // finalize by setting univocal/regular
+                const Lexical::Rule &r = (**this).last();
+                assert(!r.motif->weak());
+                assert(id==*(r.label));
+                
+                if(r.motif->univocal())
+                {
+                    return t.setUnivocal();
+                }
+                else
+                {
+                    return t.setStandard();
+                }
+
             }
 
             Terminal & Parser:: term( const char   *id, const char   *rx)
@@ -59,8 +74,15 @@ namespace upsylon
                 return term(id,rx);
             }
 
+            Terminal & Parser:: term( const char   *id, const char    C )
+            {
+                const string _(id); return term(_,C);
+            }
 
-
+            Terminal & Parser:: term( const char C)
+            {
+                const string _(C); return term(_,C);
+            }
         }
 
     }

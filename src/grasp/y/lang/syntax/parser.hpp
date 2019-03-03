@@ -34,19 +34,15 @@ namespace upsylon
                 //
                 // Setting up
                 //______________________________________________________________
-
+                typedef Syntax::Rule     RULE; //!< alias for derived types
                 typedef Syntax::Terminal TERM; //!< alias for derived types
 
 
                 TERM & term( const string &id, const string &rx ); //!< create a terminal id matching rx
                 TERM & term( const char   *id, const char   *rx ); //!< create a terminal id matching rx, wrapper
-                TERM & term( const string &id, const char    C ); //!< create a terminal id matching a single char
-
-                TERM & word( const string &id, const string &rs); //!< create a terminal matching a raw string, promoted to Univocal at least
-                TERM & word( const char   *id, const char   *rs); //!< create a terminal matching a raw string, promoted to Univocal at least, wrapper
-
-
-                TERM & mark( const string &id, const string &rs ); //!< make a semantic mark
+                TERM & term( const string &id, const char    C );  //!< create a terminal id matching a single char
+                TERM & term( const char   *id, const char    C );  //!< create a terminal id matching a single char, wrapper
+                TERM & term( const char C);                        //!< create a terminal matching a single C with the same name
 
                 //______________________________________________________________
                 //

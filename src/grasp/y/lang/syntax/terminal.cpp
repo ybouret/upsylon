@@ -1,5 +1,6 @@
 #include "y/lang/syntax/terminal.hpp"
 #include "y/string/convert.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -12,10 +13,11 @@ namespace upsylon
             }
 
             Terminal:: Terminal(const string &n) :
-            Rule(UUID,n)
+            Rule(UUID,n), attr( Dangling )
             {
                 derived = static_cast<Terminal *>(this);
             }
+
 
             const char * Terminal:: typeName() const throw()
             {
@@ -26,6 +28,52 @@ namespace upsylon
             {
                 return false;
             }
+
+            bool Terminal:: isDangling() const throw() { return 0==attr; }
+
+            Terminal & Terminal:: setStandard()
+            {
+                if(!isDangling())
+                {
+                    throw exception("Terminal.setStandard('%s' was already set)", *name);
+                }
+                (attr_t &)attr |=  Standard;
+                return *this;
+            }
+
+            Terminal & Terminal:: setUnivocal()
+            {
+                if(!isDangling())
+                {
+                    throw exception("Terminal.setUnivocal('%s' was already set)", *name);
+                }
+                (attr_t &)attr |=  Univocal;
+                return *this;
+            }
+
+            Terminal & Terminal:: setOperator()
+            {
+                if(isSemantic())
+                {
+                    throw exception("Terminal.setOperator( '%s' declared as semantic )", *name);
+                }
+                (attr_t&)attr |= Operator;
+                return *this;
+            }
+
+            Terminal & Terminal:: setSemantic()
+            {
+                if(isOperator())
+                {
+                    throw exception("Terminal.setSemantic( '%s' declared as operator)", *name);
+                }
+                (attr_t&)attr |= Semantic;
+                return *this;
+            }
+
+
+
+
 
             Y_LANG_SYNTAX_ACCEPT_START(Terminal)
             {
@@ -57,12 +105,38 @@ namespace upsylon
 
             const char * Terminal:: graphVizShape() const throw()
             {
-                return "box";
+               if(isOperator())
+               {
+                   return "triangle";
+               }
+               else
+               {
+                   return "box";
+               }
             }
 
             void Terminal:: graphVizEpilog(ios::ostream &) const
             {
 
+            }
+
+            const char * Terminal:: graphVizStyle() const throw()
+            {
+                switch(attr)
+                {
+                    case Dangling: return "diagonals";
+                    case Standard: return "bold,filled";
+                    case Standard|Operator: return "bold,filled";
+                    case Standard|Semantic: return "bold,dashed,filled";
+
+                    case Univocal:          return "bold,rounded";
+                    case Univocal|Operator: return "bold,rounded";
+                    case Univocal|Semantic: return "bold,dashed,rounded";
+                        
+                    default:
+                        break;
+                }
+                return "bold";
             }
         }
     }
