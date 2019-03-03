@@ -157,7 +157,8 @@ namespace upsylon
             }
             else
             {
-                return n * factorial( n-1 );
+                const natural m = n.__dec();
+                return n * factorial( m );
             }
         }
 
