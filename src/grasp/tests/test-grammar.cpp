@@ -39,7 +39,7 @@ Y_UTEST(grammar)
 
     Syntax::Grammar G( id );
 
-    Syntax::Terminal   &ID     = G.decl( new Syntax::Terminal("ID") );
+    Syntax::Terminal   &ID     = G.decl( new Syntax::Terminal("ID")     );
     Syntax::Rule       &STRING = G.decl( new Syntax::Terminal("STRING") );
     const Syntax::Rule &TOKEN  = G.choice(ID,STRING);
     //Syntax::OneOrMore  &TOKENS = G.decl( new Syntax::OneOrMore( "TOKENS", TOKEN ) );

@@ -270,6 +270,9 @@ namespace upsylon
                 //! find a rule by its label
                 const Rule * getRuleByLabel( const string &id ) const throw();
 
+                //! return the last added rule
+                const Rule &last() const throw();
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
                 Rule::List    rules;

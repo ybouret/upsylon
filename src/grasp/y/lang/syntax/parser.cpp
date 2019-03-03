@@ -39,43 +39,27 @@ namespace upsylon
         namespace Syntax
         {
 
-            Terminal & Parser:: term(const string &id, const string &rx, const Attribute role)
+            Terminal & Parser:: term(const string &id, const string &rx )
             {
                 // emit lexer rule
                 (**this).emit(id,rx);
 
                 // emit grammar rule
-                return terminal(id,role);
+                return terminal(id);
             }
 
-            Terminal & Parser:: term( const char   *id, const char   *rx, const Attribute role)
+            Terminal & Parser:: term( const char   *id, const char   *rx)
             {
-                const string _(id), __(rx); return term(_,__,role);
+                const string _(id), __(rx); return term(_,__);
             }
 
-            Terminal & Parser:: term( const string &id, const char C, const Attribute role)
+            Terminal & Parser:: term( const string &id, const char C)
             {
                 const string rx = StringToRegExp(C);
-                return term(id,rx,role);
+                return term(id,rx);
             }
 
-            Terminal & Parser:: word( const string &id, const string &rs,  Attribute role )
-            {
-                switch(role)
-                {
-                    case Standard:
-                        role=Univocal;
-                    default:
-                        break;
-                }
-                const string rx = StringToRegExp(rs);
-                return term(id,rx,role);
-            }
 
-            Terminal & Parser:: word( const char *id, const char *rs,  Attribute role )
-            {
-                const string _(id), __(rs); return word(_,__,role);
-            }
 
         }
 

@@ -38,12 +38,12 @@ namespace upsylon
                 typedef Syntax::Terminal TERM; //!< alias for derived types
 
 
-                TERM & term( const string &id, const string &rx, const Attribute role = Standard ); //!< create a terminal id matching rx
-                TERM & term( const char   *id, const char   *rx, const Attribute role = Standard ); //!< create a terminal id matching rx, wrapper
-                TERM & term( const string &id, const char    C,  const Attribute role = Standard ); //!< create a terminal id matching a single char
+                TERM & term( const string &id, const string &rx ); //!< create a terminal id matching rx
+                TERM & term( const char   *id, const char   *rx ); //!< create a terminal id matching rx, wrapper
+                TERM & term( const string &id, const char    C ); //!< create a terminal id matching a single char
 
-                TERM & word( const string &id, const string &rs,       Attribute role = Univocal ); //!< create a terminal matching a raw string, promoted to Univocal at least
-                TERM & word( const char   *id, const char   *rs, const Attribute role = Univocal ); //!< create a terminal matching a raw string, promoted to Univocal at least, wrapper
+                TERM & word( const string &id, const string &rs); //!< create a terminal matching a raw string, promoted to Univocal at least
+                TERM & word( const char   *id, const char   *rs); //!< create a terminal matching a raw string, promoted to Univocal at least, wrapper
 
 
                 TERM & mark( const string &id, const string &rs ); //!< make a semantic mark

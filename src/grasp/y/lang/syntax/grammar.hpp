@@ -54,12 +54,12 @@ namespace upsylon
                 // advanced rules management
                 //______________________________________________________________
                 //! make a terminal recognition
-                Terminal  & terminal( const string &id, const  Attribute role = Standard )
-                { return decl( new Terminal(id,role) ); }
+                Terminal  & terminal( const string &id )
+                { return decl( new Terminal(id) ); }
 
                 //! make a terminal recognition
-                Terminal  & terminal( const char   *id, const  Attribute role = Standard )
-                { const string _(id); return terminal(_,role); }
+                Terminal  & terminal( const char   *id )
+                { const string _(id); return terminal(_); }
 
                 //! make an aggregate rule
                 Aggregate & aggregate( const string &id ) { return decl( new Aggregate(id) ); }
