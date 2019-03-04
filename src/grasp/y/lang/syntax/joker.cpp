@@ -136,7 +136,7 @@ namespace upsylon
 
             const char * ZeroOrMore:: graphVizShape() const throw()
             {
-                return "circle";
+                return "oval";
             }
         }
     }

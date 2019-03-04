@@ -21,8 +21,10 @@ namespace upsylon
 
             Compound:: ~Compound() throw() {}
 
-            Compound:: Compound( const uint32_t u, const string &n, bool accept_hollow) :
-            Internal(u,n), Operand::List(),
+            Compound:: Compound( const uint32_t u, const string &n, const Behavior b, bool accept_hollow) :
+            Internal(u,n),
+            Operand::List(),
+            behavior(b),
             acceptHollow(accept_hollow)
             {
                 derived = static_cast<Compound*>(this);
@@ -72,7 +74,7 @@ namespace upsylon
             }
 
             Aggregate:: Aggregate(const string &id ) :
-            Compound(UUID,id,true)
+            Compound(UUID,id,Group,true)
             {
             }
 
@@ -112,9 +114,9 @@ namespace upsylon
                         // rejected=>restore
                         Y_LANG_SYNTAX_VERBOSE("|_rejected " << typeName() << " '" << name << "'" << std::endl);
                         guard.dismiss();
-                        std::cerr << "*** Unget..." << std::endl;
+                        //std::cerr << "*** Unget..." << std::endl;
                         Node::Unget(subTree,lexer);
-                        std::cerr << "*** done" << std::endl;
+                        //std::cerr << "*** done" << std::endl;
                         return false;
                     }
                 }
@@ -129,6 +131,18 @@ namespace upsylon
             const char * Aggregate:: graphVizShape() const throw()
             {
                 return "house";
+            }
+
+            const char * Aggregate:: graphVizStyle() const throw()
+            {
+                switch (behavior)
+                {
+                    case Group: return "bold,filled";
+                    case Merge: return "bold,dashed";
+                    default:
+                        break;
+                }
+                return "solid";
             }
 
 
@@ -150,7 +164,7 @@ namespace upsylon
             }
 
             Alternate:: Alternate(const string &id) :
-            Compound(UUID,id,false)
+            Compound(UUID,id,Merge,false)
             {
             }
 

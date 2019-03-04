@@ -11,7 +11,8 @@ namespace upsylon
             {
             }
 
-            Internal:: Internal(const uint32_t i, const string &n) :
+            Internal:: Internal(const uint32_t i,
+                                const string  &n ) :
             Rule(i,n)
             {
             }

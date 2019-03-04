@@ -35,7 +35,7 @@ namespace upsylon
             {
                 if(!isDangling())
                 {
-                    throw exception("Terminal.setStandard('%s' was already set)", *name);
+                    throw exception("Terminal.setStandard(<%s> was already set)", *name);
                 }
                 (attr_t &)attr |=  Standard;
                 return *this;
@@ -45,7 +45,7 @@ namespace upsylon
             {
                 if(!isDangling())
                 {
-                    throw exception("Terminal.setUnivocal('%s' was already set)", *name);
+                    throw exception("Terminal.setUnivocal(<%s> was already set)", *name);
                 }
                 (attr_t &)attr |=  Univocal;
                 return *this;
@@ -55,7 +55,7 @@ namespace upsylon
             {
                 if(isSemantic())
                 {
-                    throw exception("Terminal.setOperator( '%s' declared as semantic )", *name);
+                    throw exception("Terminal.setOperator(<%s> declared as semantic )", *name);
                 }
                 (attr_t&)attr |= Operator;
                 return *this;
@@ -65,7 +65,7 @@ namespace upsylon
             {
                 if(isOperator())
                 {
-                    throw exception("Terminal.setSemantic( '%s' declared as operator)", *name);
+                    throw exception("Terminal.setSemantic(<%s> declared as operator)", *name);
                 }
                 (attr_t&)attr |= Semantic;
                 return *this;
@@ -78,7 +78,7 @@ namespace upsylon
             Y_LANG_SYNTAX_ACCEPT_START(Terminal)
             {
                 assert(NULL==tree||tree->internal);
-                Y_LANG_SYNTAX_VERBOSE("|_" << typeName() << " '" << name << "'" << std::endl);
+                Y_LANG_SYNTAX_VERBOSE("|_" << typeName() << " <" << name << ">" << std::endl);
                 Lexeme *next = lexer.get(source);
                 if(!next)
                 {
@@ -91,12 +91,12 @@ namespace upsylon
                     {
                         Node *leaf = Node::Create(*this,next);
                         Node::Grow(tree,leaf);
-                        Y_LANG_SYNTAX_VERBOSE("|_accepted " << typeName() << " '" << name << "'" << std::endl);
+                        Y_LANG_SYNTAX_VERBOSE("|_accepted " << typeName() << " <" << name << ">" << std::endl);
                         return true;
                     }
                     else
                     {
-                        Y_LANG_SYNTAX_VERBOSE("|_rejected " << typeName() << " '" << name << "'" << std::endl);
+                        Y_LANG_SYNTAX_VERBOSE("|_rejected " << typeName() << " <" << name << ">" << std::endl);
                         lexer.unget(next);
                         return false;
                     }

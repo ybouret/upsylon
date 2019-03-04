@@ -17,8 +17,7 @@ namespace upsylon
             typedef core::list_of_cpp<Lexeme> List; //!< alias
 
             const Tag      label; //!< rule label
-
-
+            
             explicit Lexeme(const Tag &ruleLabel);   //!< initialize
             Lexeme(const Lexeme &other);             //!< copy content and label
             virtual ~Lexeme() throw();               //!< destructor

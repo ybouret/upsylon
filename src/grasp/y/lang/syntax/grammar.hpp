@@ -62,9 +62,11 @@ namespace upsylon
                 //______________________________________________________________
                 Aggregate  & aggregate( const string &id );                      //!< create an aggregate rule
                 Aggregate  & aggregate( const char   *id );                      //! create an aggregate rule, wrapper
-                Aggregate  & aggregate();                                        //!< create an aggregate with automatic name
-                const Rule & join( const Rule &a, const Rule &b);                //!< create a small aggregate
-                const Rule & join( const Rule &a, const Rule &b, const Rule &c); //!< create a small aggregate
+                const Rule & join( const Rule &a, const Rule &b);                //!< create a small merging aggregate
+                const Rule & join( const Rule &a, const Rule &b, const Rule &c); //!< create a small merging aggregate
+                template <typename T>
+                inline Aggregate  & design( const T &id ) { return aggregate(id).will(Merge); }
+
 
                 //______________________________________________________________
                 //
@@ -100,7 +102,7 @@ namespace upsylon
                 RuleReferenceSet *rrs;
                 bool              verbose;
                 unsigned          iAlt;
-                unsigned          iAgg;
+                //unsigned          iAgg;
 
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 string MakeCompoundName(  const ArrayOfStrings &strings, const char sep) const;

@@ -120,6 +120,7 @@ namespace upsylon
             }
 
 
+#if 0
             Aggregate & Grammar:: aggregate()
             {
                 const string id  = vformat("agg#%u",iAgg);
@@ -127,7 +128,8 @@ namespace upsylon
                 ++iAgg;
                 return ans;
             }
-
+#endif
+            
             const Rule & Grammar:: join( const Rule &a, const Rule &b)
             {
                 if(!ownsRule(a)) throw exception("{%s}.binary join(loose Rule '%s')", **name, *a.name);
@@ -138,9 +140,9 @@ namespace upsylon
                 strings.push_back_(b.name);
                 const string id = MakeAggregateName(strings);
                 strings.release();
-                Aggregate & alt = aggregate(id);
-                alt << a << b;
-                return alt;
+                Aggregate & agg = aggregate(id);
+                agg << a << b;
+                return agg.will(Merge);
             }
 
             const Rule & Grammar:: join( const Rule &a, const Rule &b, const Rule &c)
@@ -155,9 +157,9 @@ namespace upsylon
                 strings.push_back_(c.name);
                 const string id = MakeAggregateName(strings);
                 strings.release();
-                Aggregate & alt = aggregate(id);
-                alt << a << b;
-                return alt;
+                Aggregate & agg = aggregate(id);
+                agg << a << b;
+                return agg.will(Merge);
             }
         }
     }

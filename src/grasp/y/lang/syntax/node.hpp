@@ -14,7 +14,7 @@ namespace upsylon
             class Rule;     //!< forward declaration
             class Grammar;  //!< forward declaration
             class Terminal; //!< forward declaration
-
+            
             //! store syntax trees
             class Node : public Object, public core::inode<Node>
             {
@@ -70,8 +70,9 @@ namespace upsylon
                  */
                 static Node  *Load( Source &source, Grammar &G);
 
-                //! info from rule, for internal nodes
-                const Terminal &term() const throw();
+                //! info from rule, for terminal nodes in AST
+                const Terminal &asTerminal() const throw();
+
 
                 //! cleanup the node
                 static Node * AST( Node *node ) throw();

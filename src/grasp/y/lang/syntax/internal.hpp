@@ -12,14 +12,17 @@ namespace upsylon
         namespace Syntax
         {
 
+
             class Internal : public Rule
             {
             public:
+
                 virtual ~Internal() throw();
 
             protected:
-                explicit Internal(const uint32_t i, const string &n);
-                
+                explicit Internal(const uint32_t  i,
+                                  const string   &n);
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Internal);
             };
