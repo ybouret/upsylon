@@ -37,6 +37,12 @@ namespace upsylon
             class Compound : public Internal, public Operand::List
             {
             public:
+                enum HollowPolicy
+                {
+                    AcceptHollowOperand,
+                    RejectHollowOperand
+
+                };
                 virtual ~Compound() throw();           //!< destructor
                 void append( const Rule &r );          //!< push back a new operand
                 Compound & operator<<( const Rule & ); //!< append a rule
@@ -49,11 +55,11 @@ namespace upsylon
                 explicit Compound(const uint32_t,
                                   const string   &,
                                   const Behavior,
-                                  bool accept_hollow); //!< setup
-                const bool acceptHollow;               //!< flag to accept appended rule
-
+                                  const HollowPolicy); //!< setup
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compound);
+                const HollowPolicy hollowPolicy; //!< check upon append
             };
 
             //! aggregation of rules

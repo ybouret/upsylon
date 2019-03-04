@@ -21,23 +21,28 @@ namespace upsylon
 
             Compound:: ~Compound() throw() {}
 
-            Compound:: Compound( const uint32_t u, const string &n, const Behavior b, bool accept_hollow) :
+            Compound:: Compound( const uint32_t u, const string &n, const Behavior b, const HollowPolicy p) :
             Internal(u,n),
             Operand::List(),
             behavior(b),
-            acceptHollow(accept_hollow)
+            hollowPolicy(p)
             {
                 derived = static_cast<Compound*>(this);
             }
 
             void Compound:: append( const Rule &r )
             {
-                if(!acceptHollow)
+                switch(hollowPolicy)
                 {
-                    if(r.isHollow())
-                    {
-                        throw exception("'%s' does not accept hollow operand '%s'", *name, *(r.name));
-                    }
+                    case AcceptHollowOperand:
+                        break;
+
+                    case RejectHollowOperand:
+                        if(r.isHollow())
+                        {
+                            throw exception("'%s' does not accept hollow operand '%s'", *name, *(r.name));
+                        }
+                        break;
                 }
                 push_back( new Operand(r) );
             }
@@ -74,7 +79,7 @@ namespace upsylon
             }
 
             Aggregate:: Aggregate(const string &id ) :
-            Compound(UUID,id,Group,true)
+            Compound(UUID,id,Group,AcceptHollowOperand)
             {
             }
 
@@ -164,7 +169,7 @@ namespace upsylon
             }
 
             Alternate:: Alternate(const string &id) :
-            Compound(UUID,id,Merge,false)
+            Compound(UUID,id,Merge,RejectHollowOperand)
             {
             }
 
