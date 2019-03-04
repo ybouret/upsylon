@@ -22,7 +22,7 @@ namespace upsylon
             Compound:: ~Compound() throw() {}
 
             Compound:: Compound( const uint32_t u, const string &n, bool accept_hollow) :
-            Rule(u,n), Operand::List(),
+            Internal(u,n), Operand::List(),
             acceptHollow(accept_hollow)
             {
                 derived = static_cast<Compound*>(this);

@@ -3,7 +3,7 @@
 #ifndef Y_LANG_SYNTAX_COMPOUND_INCLUDED
 #define Y_LANG_SYNTAX_COMPOUND_INCLUDED 1
 
-#include "y/lang/syntax/rule.hpp"
+#include "y/lang/syntax/internal.hpp"
 
 namespace upsylon
 {
@@ -28,18 +28,18 @@ namespace upsylon
             };
 
             //! holds a list of operands
-            class Compound : public Rule, public Operand::List
+            class Compound : public Internal, public Operand::List
             {
             public:
                 virtual ~Compound() throw();           //!< destructor
                 void append( const Rule &r );          //!< push back a new operand
                 Compound & operator<<( const Rule & ); //!< append a rule
-                const bool acceptHollow;               //!< flag to accept appended ru;e
 
                 virtual void        graphVizEpilog(ios::ostream &) const;
 
             protected:
                 explicit Compound(const uint32_t, const string &, bool accept_hollow); //!< setup
+                const bool acceptHollow;               //!< flag to accept appended rule
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compound);

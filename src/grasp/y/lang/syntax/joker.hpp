@@ -2,7 +2,7 @@
 #ifndef Y_LANG_SYNTAX_JOKER_INCLUDED
 #define Y_LANG_SYNTAX_JOKER_INCLUDED 1
 
-#include "y/lang/syntax/rule.hpp"
+#include "y/lang/syntax/internal.hpp"
 
 namespace upsylon
 {
@@ -11,7 +11,7 @@ namespace upsylon
         namespace Syntax
         {
             //! a Joker holds a reference to another Rule
-            class Joker : public Rule
+            class Joker : public Internal
             {
             public:
                 virtual ~Joker() throw(); //!< destructor
