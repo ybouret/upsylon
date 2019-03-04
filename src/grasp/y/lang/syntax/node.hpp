@@ -67,6 +67,9 @@ namespace upsylon
                  */
                 static Node  *Load( Source &source, Grammar &G);
 
+                //! cleanup the node
+                static Node * AST( Node *node ) throw();
+
             protected:
                 explicit Node(const Rule &r, const bool term) throw(); //!< setup
                 Node(const Node &other) throw();                       //!< copy

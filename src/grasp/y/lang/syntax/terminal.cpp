@@ -105,19 +105,19 @@ namespace upsylon
 
             const char * Terminal:: graphVizShape() const throw()
             {
-               if(isOperator())
-               {
-                   return "triangle";
-               }
-               else
-               {
-                   return "box";
-               }
+                if(isOperator())
+                {
+                    return "triangle";
+                }
+                else
+                {
+                    return "box";
+                }
             }
 
             void Terminal:: graphVizEpilog(ios::ostream &) const
             {
-
+                
             }
 
             const char * Terminal:: graphVizStyle() const throw()

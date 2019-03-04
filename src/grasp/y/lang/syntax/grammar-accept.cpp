@@ -20,7 +20,7 @@ namespace upsylon
                 const Rule *top    = rules.head; if(!top) throw exception("{%s} has no rule",**name);
                 Node       *tree   = 0;
                 const char *id     = **name;
-                const char *top_id = *(top->name);
+                //const char *top_id = *(top->name);
 
                 //______________________________________________________________
                 //
@@ -33,11 +33,11 @@ namespace upsylon
                     if(lx)
                     {
                         const string content = lx->to_print();
-                        throw exception("{%s}'%s' unexpected '%s'='%s'", id, top_id, **(lx->label), *content);
+                        throw exception("{%s} unexpected '%s' (='%s')", id, **(lx->label), *content);
                     }
                     else
                     {
-                        throw exception("{%s}'%s' doesn't accept empty source", **name, *(top->name));
+                        throw exception("{%s} doesn't accept empty source", **name );
                     }
                 }
 

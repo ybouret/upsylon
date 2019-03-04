@@ -95,6 +95,13 @@ namespace upsylon
                 return term(_,_);
             }
 
+            Node * Parser:: run(Source &source)
+            {
+                reset();
+                return accept(source, *this);
+            }
+
+
         }
 
     }

@@ -93,6 +93,7 @@ namespace upsylon
 
                 void graphViz( const string &dotfile ) const;
                 void graphViz( const char   *dotfile ) const;
+                
 
             private:
                 Rule::List        rules;

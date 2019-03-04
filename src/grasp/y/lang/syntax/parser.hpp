@@ -71,7 +71,7 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-
+                Node *run(Source &source);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);
