@@ -61,9 +61,11 @@ namespace upsylon
                 // Aggregates
                 //______________________________________________________________
                 Aggregate  & aggregate( const string &id );                      //!< create an aggregate rule
-                Aggregate  & aggregate( const char   *id );                      //! create an aggregate rule, wrapper
+                Aggregate  & aggregate( const char   *id );                      //!< create an aggregate rule, wrapper
                 Aggregate  & join( const Rule &a, const Rule &b);                //!< create a small merging aggregate
                 Aggregate  & join( const Rule &a, const Rule &b, const Rule &c); //!< create a small merging aggregate
+
+                //! create a merging aggregate
                 template <typename T>
                 inline Aggregate  & design( const T &id ) { return aggregate(id).will(Merge); }
 
@@ -93,8 +95,8 @@ namespace upsylon
                 string MakeAlternateName( const ArrayOfStrings &) const; //!< make name for an alternate
                 string MakeAggregateName( const ArrayOfStrings &) const; //!< make name for an aggregate
 
-                void graphViz( const string &dotfile ) const;
-                void graphViz( const char   *dotfile ) const;
+                void graphViz( const string &dotfile ) const; //!< save to GraphViz and try to render
+                void graphViz( const char   *dotfile ) const; //!< save to GraphViz and try to render, wrapper
                 
 
             private:
@@ -102,8 +104,7 @@ namespace upsylon
                 RuleReferenceSet *rrs;
                 bool              verbose;
                 unsigned          iAlt;
-                //unsigned          iAgg;
-
+                
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 string MakeCompoundName(  const ArrayOfStrings &strings, const char sep) const;
                 void              no_rrs() throw(); //!< safely remove rrs

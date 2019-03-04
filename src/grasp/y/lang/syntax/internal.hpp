@@ -1,4 +1,3 @@
-
 //! \file
 #ifndef Y_LANG_SYNTAX_INTERNAL_INCLUDED
 #define Y_LANG_SYNTAX_INTERNAL_INCLUDED 1
@@ -12,16 +11,15 @@ namespace upsylon
         namespace Syntax
         {
 
-
+            //! internal rule base class
             class Internal : public Rule
             {
             public:
-
-                virtual ~Internal() throw();
+                virtual ~Internal() throw(); //!< destructor
 
             protected:
-                explicit Internal(const uint32_t  i,
-                                  const string   &n);
+                explicit Internal(const uint32_t  ,
+                                  const string   &); //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Internal);

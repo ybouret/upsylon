@@ -50,9 +50,9 @@ namespace upsylon
                 //
                 // non-virtual interface
                 //______________________________________________________________
-                void graphVizName( ios::ostream &fp ) const;
-                void graphVizLink( ios::ostream &fp, const Rule *p, unsigned idx ) const;
-                void graphVizProlog( ios::ostream &fp ) const;
+                void graphVizName( ios::ostream &fp ) const; //!< write 'this' graphViz name
+                void graphVizLink( ios::ostream &fp, const Rule *p, unsigned idx ) const; //!< create a link
+                void graphVizProlog( ios::ostream &fp ) const; //!< common prolog for all Rules
 
             protected:
                 explicit Rule(const uint32_t i, const string &n); //!< setup

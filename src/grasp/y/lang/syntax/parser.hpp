@@ -17,10 +17,11 @@ namespace upsylon
         namespace Syntax
         {
 
+            //! base class to build a parser
             class Parser : public Lexer, public Grammar, public CountedObject
             {
             public:
-                typedef intr_ptr<string,Parser> Pointer;
+                typedef intr_ptr<string,Parser> Pointer; //!< alias
 
                 //______________________________________________________________
                 //
@@ -50,6 +51,7 @@ namespace upsylon
                 TERM & term( const string &rx );                   //!< create a terminal rx matching rx
                 TERM & term( const char   *rx );                   //!< create a terminal rx matching rx, wrapper
 
+                //! create a semantic terminal
                 template <typename T>
                 TERM & mark( const T &arg ) { return term(arg).setSemantic(); }
 
@@ -60,7 +62,7 @@ namespace upsylon
                     return terminal(id).setStandard();
                 }
 
-                //! zero arguments plugin
+                //! zero arguments plugin, wrapper
                 template <typename PLUGIN> inline RULE & hook( const char *id )
                 {
                     const string _(id); return hook<PLUGIN>(_);
@@ -71,7 +73,7 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                Node *run(Source &source);
+                Node *run(Source &source); //!< reset lexer and try to accept source
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);

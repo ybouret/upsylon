@@ -27,39 +27,41 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Operand);
             };
 
+            //! compound behaviors for AST
             enum Behavior
             {
-                Group,
-                Merge
+                Group, //!< keep grouped
+                Merge  //!< merge with parent node
             };
 
             //! holds a list of operands
             class Compound : public Internal, public Operand::List
             {
             public:
+                //! policy to accept or reject hollow operands
                 enum HollowPolicy
                 {
-                    AcceptHollowOperand,
-                    RejectHollowOperand
+                    AcceptHollowOperand, //!< would accept
+                    RejectHollowOperand  //!< would reject
 
                 };
                 virtual ~Compound() throw();           //!< destructor
                 void append( const Rule &r );          //!< push back a new operand
                 Compound & operator<<( const Rule & ); //!< append a rule
 
-                virtual void        graphVizEpilog(ios::ostream &) const;
+                virtual void        graphVizEpilog(ios::ostream &) const; //!< build links
 
-                const Behavior behavior;
+                const Behavior behavior; //!< the behavior for the AST
 
             protected:
                 explicit Compound(const uint32_t,
                                   const string   &,
                                   const Behavior,
                                   const HollowPolicy); //!< setup
-                
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compound);
-                const HollowPolicy hollowPolicy; //!< check upon append
+                const HollowPolicy hollowPolicy; //!< checked upon append
             };
 
             //! aggregation of rules
@@ -72,12 +74,13 @@ namespace upsylon
                 virtual ~Aggregate() throw();             //!< destructor
                 Aggregate & operator += ( const Rule & ); //!< syntactic sugar
 
-                virtual bool        isHollow() const throw(); //!< true if empty of all operands are hollow
-                virtual const char *typeName() const throw(); //!< "Aggregate"
-                Y_LANG_SYNTAX_ACCEPT_PROTO();                 //!< must accept all operands
+                virtual bool        isHollow() const throw();      //!< true if empty of all operands are hollow
+                virtual const char *typeName() const throw();      //!< "Aggregate"
+                Y_LANG_SYNTAX_ACCEPT_PROTO();                      //!< must accept all operands
                 virtual const char *graphVizShape() const throw(); //!< the shape
                 virtual const char *graphVizStyle() const throw(); //!< change style according to behavior
 
+                //! change behavior
                 Aggregate & will( Behavior newBehavior ) throw() { (Behavior &)behavior = newBehavior; return *this; }
 
             private:
