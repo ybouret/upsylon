@@ -62,8 +62,8 @@ namespace upsylon
                 //______________________________________________________________
                 Aggregate  & aggregate( const string &id );                      //!< create an aggregate rule
                 Aggregate  & aggregate( const char   *id );                      //! create an aggregate rule, wrapper
-                const Rule & join( const Rule &a, const Rule &b);                //!< create a small merging aggregate
-                const Rule & join( const Rule &a, const Rule &b, const Rule &c); //!< create a small merging aggregate
+                Aggregate  & join( const Rule &a, const Rule &b);                //!< create a small merging aggregate
+                Aggregate  & join( const Rule &a, const Rule &b, const Rule &c); //!< create a small merging aggregate
                 template <typename T>
                 inline Aggregate  & design( const T &id ) { return aggregate(id).will(Merge); }
 
@@ -75,16 +75,16 @@ namespace upsylon
                 Alternate   & alternate( const string &id );                        //!< create a named alternate
                 Alternate   & alternate( const char   *id );                        //!< create a named alternate
                 Alternate   & alternate();                                          //!< with automatic label
-                const Rule  & choice( const Rule &a, const Rule &b);                //!< choice between two rules
-                const Rule  & choice( const Rule &a, const Rule &b, const Rule &c); //!< choice between three rules
+                Rule        & choice( const Rule &a, const Rule &b);                //!< choice between two rules
+                Rule        & choice( const Rule &a, const Rule &b, const Rule &c); //!< choice between three rules
 
                 //______________________________________________________________
                 //
                 // Jokers
                 //______________________________________________________________
-                const Rule  & optional(   const Rule &r ); //!< make an Optional   rule
-                const Rule  & zeroOrMore( const Rule &r ); //!< make a  ZeroOrMore rule
-                const Rule  & oneOrMore(  const Rule &r ); //!< make a  OneOrMore  rule
+                Rule  & optional(   const Rule &r ); //!< make an Optional   rule
+                Rule  & zeroOrMore( const Rule &r ); //!< make a  ZeroOrMore rule
+                Rule  & oneOrMore(  const Rule &r ); //!< make a  OneOrMore  rule
 
                 //______________________________________________________________
                 //

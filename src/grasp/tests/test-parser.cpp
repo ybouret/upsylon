@@ -12,10 +12,10 @@ public:
     {
         setVerbose(true);
 
-        ALT  & JSON  = alternate("JSON");
-        ALT  & VALUE = alternate("value");
-        TERM & COMA  = term(',').setSemantic();
-
+        ALT  & JSON    = alternate("JSON");
+        ALT   & VALUE  = alternate("value");
+        TERM  & COMA   = term(',').setSemantic();
+        RULE & STRING  = hook<Lexical::jString>("string");
         {
             AGG & ARRAY = aggregate("array");
             ARRAY << mark('[');
@@ -23,10 +23,25 @@ public:
             ARRAY << zeroOrMore( join(COMA,VALUE) );
             ARRAY << mark(']');
             VALUE << ARRAY;
+
             JSON << ARRAY;
         }
 
-        VALUE << term("null") << term("true") << term("false") << term("number","-?[:digit:]+([.][:digit:]+)?") << hook<Lexical::jString>("string");
+        {
+            AGG & OBJECT = aggregate("object");
+            {
+                OBJECT << mark('{');
+                AGG & PAIR = aggregate("pair");
+                PAIR << STRING << mark(':') << VALUE;
+
+                OBJECT << PAIR;
+                OBJECT << zeroOrMore( join(COMA,PAIR) );
+                OBJECT << mark('}');
+                JSON << OBJECT;
+            }
+        }
+
+        VALUE << term("null") << term("true") << term("false") << term("number","-?[:digit:]+([.][:digit:]+)?") << STRING;
         
         finalize();
 

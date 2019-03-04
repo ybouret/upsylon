@@ -63,7 +63,7 @@ namespace upsylon
                 return alternate(id);
             }
 
-            const Rule & Grammar:: choice(const Rule &a, const Rule &b)
+            Rule & Grammar:: choice(const Rule &a, const Rule &b)
             {
                 if(!ownsRule(a)) throw exception("{%s}.binary choice(loose Rule '%s')", **name, *a.name);
                 if(!ownsRule(b)) throw exception("{%s}.binary choice(loose Rule '%s')", **name, *b.name);
@@ -78,7 +78,7 @@ namespace upsylon
                 return alt;
             }
 
-            const Rule & Grammar:: choice(const Rule &a, const Rule &b, const Rule &c)
+            Rule & Grammar:: choice(const Rule &a, const Rule &b, const Rule &c)
             {
                 if(!ownsRule(a)) throw exception("{%s}.ternary choice(loose Rule '%s')", **name, *a.name);
                 if(!ownsRule(b)) throw exception("{%s}.ternary choice(loose Rule '%s')", **name, *b.name);
@@ -95,7 +95,7 @@ namespace upsylon
                 return alt;
             }
 
-            const Rule  & Grammar:: optional( const Rule &r )
+            Rule  & Grammar:: optional( const Rule &r )
             {
                 if(!ownsRule(r)) throw exception("{%s}.optional(loose Rule '%s')",**name, *r.name);
                 const string id = r.name + '?';
@@ -103,7 +103,7 @@ namespace upsylon
                 return decl( new Optional(id,r) );
             }
 
-            const Rule & Grammar:: zeroOrMore(const Rule &r)
+            Rule & Grammar:: zeroOrMore(const Rule &r)
             {
                 if(!ownsRule(r)) throw exception("{%s}.zeroOrMore(loose Rule '%s')",**name, *r.name);
                 const string id = r.name + '*';
@@ -111,7 +111,7 @@ namespace upsylon
                 return decl( new ZeroOrMore(id,r) );
             }
 
-            const Rule & Grammar:: oneOrMore(const Rule &r)
+            Rule & Grammar:: oneOrMore(const Rule &r)
             {
                 if(!ownsRule(r)) throw exception("{%s}.oneOrMore(loose Rule '%s')",**name, *r.name);
                 const string id = r.name + '+';
@@ -120,17 +120,7 @@ namespace upsylon
             }
 
 
-#if 0
-            Aggregate & Grammar:: aggregate()
-            {
-                const string id  = vformat("agg#%u",iAgg);
-                Aggregate   &ans = aggregate(id);
-                ++iAgg;
-                return ans;
-            }
-#endif
-            
-            const Rule & Grammar:: join( const Rule &a, const Rule &b)
+            Aggregate & Grammar:: join( const Rule &a, const Rule &b)
             {
                 if(!ownsRule(a)) throw exception("{%s}.binary join(loose Rule '%s')", **name, *a.name);
                 if(!ownsRule(b)) throw exception("{%s}.binary join(loose Rule '%s')", **name, *b.name);
@@ -145,7 +135,7 @@ namespace upsylon
                 return agg.will(Merge);
             }
 
-            const Rule & Grammar:: join( const Rule &a, const Rule &b, const Rule &c)
+            Aggregate & Grammar:: join( const Rule &a, const Rule &b, const Rule &c)
             {
                 if(!ownsRule(a)) throw exception("{%s}.ternary join(loose Rule '%s')", **name, *a.name);
                 if(!ownsRule(b)) throw exception("{%s}.ternary join(loose Rule '%s')", **name, *b.name);
@@ -158,7 +148,7 @@ namespace upsylon
                 const string id = MakeAggregateName(strings);
                 strings.release();
                 Aggregate & agg = aggregate(id);
-                agg << a << b;
+                agg << a << b << c;
                 return agg.will(Merge);
             }
         }
