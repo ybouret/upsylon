@@ -8,12 +8,18 @@ namespace upsylon
         namespace Syntax
         {
 
-            Terminal  & Grammar:: terminal( const string &id ) { return decl( new Terminal(id) ); }
+            Terminal  & Grammar:: terminal( const string &id ) {
+                Y_LANG_SYNTAX_VERBOSE("|_Terminal '" << id << "'" << std::endl);
+                return decl( new Terminal(id) );
+            }
 
             Terminal  & Grammar:: terminal( const char   *id ) { const string _(id); return terminal(_); }
 
 
-            Aggregate & Grammar:: aggregate( const string &id ) { return decl( new Aggregate(id) ); }
+            Aggregate & Grammar:: aggregate( const string &id ) {
+                Y_LANG_SYNTAX_VERBOSE("|_Aggregate '" << id << "'" << std::endl);
+                return decl( new Aggregate(id) );
+            }
 
             Aggregate  & Grammar:: aggregate( const char   *id ) { const string _(id); return aggregate(_); }
 
@@ -45,7 +51,10 @@ namespace upsylon
 
 
 
-            Alternate & Grammar:: alternate( const string &id ) { return decl( new Alternate(id) ); }
+            Alternate & Grammar:: alternate( const string &id ) {
+                Y_LANG_SYNTAX_VERBOSE("|_Alternate '" << id << "'" << std::endl);
+                return decl( new Alternate(id) ); }
+
             Alternate & Grammar:: alternate( const char   *id ) { const string _(id); return alternate(_); }
 
             Alternate & Grammar:: alternate()
@@ -90,6 +99,7 @@ namespace upsylon
             {
                 if(!ownsRule(r)) throw exception("{%s}.optional(loose Rule '%s')",**name, *r.name);
                 const string id = r.name + '?';
+                Y_LANG_SYNTAX_VERBOSE("|_Optional '" << id << "'" << std::endl);
                 return decl( new Optional(id,r) );
             }
 
@@ -97,6 +107,7 @@ namespace upsylon
             {
                 if(!ownsRule(r)) throw exception("{%s}.zeroOrMore(loose Rule '%s')",**name, *r.name);
                 const string id = r.name + '*';
+                Y_LANG_SYNTAX_VERBOSE("|_ZeroOrMore '" << id << "'" << std::endl);
                 return decl( new ZeroOrMore(id,r) );
             }
 
@@ -104,6 +115,7 @@ namespace upsylon
             {
                 if(!ownsRule(r)) throw exception("{%s}.oneOrMore(loose Rule '%s')",**name, *r.name);
                 const string id = r.name + '+';
+                Y_LANG_SYNTAX_VERBOSE("|_OneOrMore '" << id << "'" << std::endl);
                 return decl( new OneOrMore(id,r) );
             }
 

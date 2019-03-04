@@ -46,7 +46,8 @@ namespace upsylon
             void Grammar:: add( Rule *r )
             {
                 auto_ptr<Rule> pRule(r);
-                if(verbose) { std::cerr << "{" << name << "} adding new rule" << std::endl; }
+                if(verbose) { std::cerr << "  \\_{" << name << "} adding new rule '" << r->name << "'" << std::endl; }
+
                 // sanity check
                 if(pRule.is_empty())     throw exception("{%s}.add(NULL)",**name);
                 if(!rrs)                 throw exception("{%s}.add(LOCKED)",**name);
