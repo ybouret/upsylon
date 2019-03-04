@@ -21,7 +21,7 @@ namespace upsylon
 #define Y_LANG_SYNTAX_ACCEPT_START(CLASS)    bool CLASS:: accept( Y_LANG_SYNTAX_ACCEPT_ARGS ) const
 
             //! switchable output on verbose flag
-#define Y_LANG_SYNTAX_VERBOSE(OUTPUT) do { if(verbose) { std::cerr << OUTPUT; } } while(false)
+#define Y_LANG_SYNTAX_VERBOSE(OUTPUT) do { if(verbose) { OUTPUT; } } while(false)
 
             //! Rule interface
             class Rule : public Object, public core::inode<Rule>

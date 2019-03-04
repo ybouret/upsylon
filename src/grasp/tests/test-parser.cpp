@@ -5,60 +5,64 @@
 using namespace upsylon;
 using namespace Lang;
 
-class myParser : public Syntax::Parser
-{
-public:
-    inline myParser() : Syntax::Parser("JSONLite")
+namespace {
+
+    class myParser : public Syntax::Parser
     {
-        setVerbose(true);
-
-        ALT  & JSON    = alternate("JSON");
-        ALT   & VALUE  = alternate("value");
-        TERM  & COMA   = term(',').setSemantic();
-        RULE & STRING  = hook<Lexical::jString>("string");
+    public:
+        inline myParser() : Syntax::Parser("JSONLite")
         {
-            AGG & ARRAY = aggregate("array");
-            ARRAY << mark('[');
-            ARRAY << VALUE;
-            ARRAY << zeroOrMore( join(COMA,VALUE) );
-            ARRAY << mark(']');
-            VALUE << ARRAY;
+            setVerbose(true);
 
-            JSON << ARRAY;
-        }
-
-        {
-            AGG & OBJECT = aggregate("object");
+            ALT   & JSON    = alternate("JSON");
+            ALT   & VALUE  = alternate("value");
+            TERM  & COMA   = term(',').setSemantic();
+            RULE  & STRING  = hook<Lexical::jString>("string");
             {
-                OBJECT << mark('{');
-                AGG & PAIR = aggregate("pair");
-                PAIR << STRING << mark(':') << VALUE;
+                AGG & ARRAY = aggregate("array");
+                ARRAY << mark('[');
+                ARRAY << VALUE;
+                ARRAY << zeroOrMore( join(COMA,VALUE) );
+                ARRAY << mark(']');
+                VALUE << ARRAY;
 
-                OBJECT << PAIR;
-                OBJECT << zeroOrMore( join(COMA,PAIR) );
-                OBJECT << mark('}');
-                JSON << OBJECT;
+                JSON << ARRAY;
             }
+
+            {
+                AGG & OBJECT = aggregate("object");
+                {
+                    OBJECT << mark('{');
+                    AGG & PAIR = aggregate("pair");
+                    PAIR << STRING << mark(':') << VALUE;
+
+                    OBJECT << PAIR;
+                    OBJECT << zeroOrMore( join(COMA,PAIR) );
+                    OBJECT << mark('}');
+                    JSON << OBJECT;
+                }
+            }
+
+            VALUE << term("null") << term("true") << term("false") << term("number","-?[:digit:]+([.][:digit:]+)?") << STRING;
+
+            finalize();
+
+            // lexical only
+            (**this).drop("[:blank:]+");
+            (**this).endl("[:endl:]");
+
+            graphViz( *name + ".dot" );
         }
 
-        VALUE << term("null") << term("true") << term("false") << term("number","-?[:digit:]+([.][:digit:]+)?") << STRING;
-        
-        finalize();
+        inline virtual ~myParser() throw()
+        {
+        }
 
-        // lexical only
-        (**this).drop("[:blank:]+");
-        (**this).endl("[:endl:]");
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(myParser);
+    };
 
-        graphViz( *name + ".dot" );
-    }
-
-    inline virtual ~myParser() throw()
-    {
-    }
-
-private:
-    Y_DISABLE_COPY_AND_ASSIGN(myParser);
-};
+}
 
 Y_UTEST(parser)
 {

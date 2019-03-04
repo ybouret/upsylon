@@ -30,8 +30,9 @@ namespace upsylon
             //! compound behaviors for AST
             enum Behavior
             {
-                Group, //!< keep grouped
-                Merge  //!< merge with parent node
+                SubGroup, //!< keep grouped
+                MergeOne, //!< merge if only one child
+                MergeAll  //!< merge with parent node for any number of children
             };
 
             //! holds a list of operands
@@ -52,6 +53,9 @@ namespace upsylon
                 virtual void        graphVizEpilog(ios::ostream &) const; //!< build links
 
                 const Behavior behavior; //!< the behavior for the AST
+
+                virtual void  upgrade() throw() = 0; //!< upgrade behavior
+
 
             protected:
                 explicit Compound(const uint32_t,
@@ -82,6 +86,7 @@ namespace upsylon
 
                 //! change behavior
                 Aggregate & will( Behavior newBehavior ) throw() { (Behavior &)behavior = newBehavior; return *this; }
+                virtual void  upgrade() throw(); //!< will detect design aggregate
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);
@@ -97,10 +102,11 @@ namespace upsylon
                 virtual ~Alternate() throw();         //!< desctructor
                 Alternate & operator |= ( const Rule & ); //!< syntactic sugar
 
-                virtual bool        isHollow() const throw(); //!< false by construction
-                virtual const char *typeName() const throw(); //!< "Alternate"
-                Y_LANG_SYNTAX_ACCEPT_PROTO();                 //!< accept the first possible operands
-                virtual const char *graphVizShape() const throw();
+                virtual bool        isHollow() const throw();      //!< false by construction
+                virtual const char *typeName() const throw();      //!< "Alternate"
+                Y_LANG_SYNTAX_ACCEPT_PROTO();                      //!< accept the first possible operands
+                virtual const char *graphVizShape() const throw(); //!< the shape
+                virtual void  upgrade() throw();                   //!< do nothing
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alternate);

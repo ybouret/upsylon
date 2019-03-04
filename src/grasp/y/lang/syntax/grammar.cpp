@@ -42,6 +42,8 @@ namespace upsylon
                 }
             }
 
+            bool Grammar:: getVerbose() const throw() { return verbose; }
+
             void Grammar:: add( Rule *r )
             {
                 auto_ptr<Rule> pRule(r);

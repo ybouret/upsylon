@@ -73,8 +73,8 @@ namespace upsylon
                 //! info from rule, for terminal nodes in AST
                 const Terminal &asTerminal() const throw();
 
-
-                //! cleanup the node
+                
+                //! 
                 static Node * AST( Node *node ) throw();
 
             protected:

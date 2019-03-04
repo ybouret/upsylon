@@ -79,7 +79,7 @@ namespace upsylon
             }
 
             Aggregate:: Aggregate(const string &id ) :
-            Compound(UUID,id,Group,AcceptHollowOperand)
+            Compound(UUID,id,SubGroup,AcceptHollowOperand)
             {
             }
 
@@ -109,7 +109,7 @@ namespace upsylon
 
                 Node          *subTree = Node::Create(*this);
                 auto_ptr<Node> guard(subTree);
-                Y_LANG_SYNTAX_VERBOSE("|_" << typeName() << " '" << name << "' #operands=" << size << std::endl);
+                Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_" << typeName() << " '" << name << "' #operands=" << size << std::endl);
 
                 // scan for full acceptance
                 for(Operand *op=head;op;op=op->next)
@@ -117,7 +117,7 @@ namespace upsylon
                     if(!op->rule.accept(source, lexer, subTree))
                     {
                         // rejected=>restore
-                        Y_LANG_SYNTAX_VERBOSE("|_rejected " << typeName() << " '" << name << "'" << std::endl);
+                        Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_rejected " << typeName() << " '" << name << "'" << std::endl);
                         guard.dismiss();
                         //std::cerr << "*** Unget..." << std::endl;
                         Node::Unget(subTree,lexer);
@@ -129,7 +129,7 @@ namespace upsylon
                 // all are accepted
                 guard.dismiss();
                 Node::Grow(tree,subTree);
-                Y_LANG_SYNTAX_VERBOSE("|_accepted " << typeName() << " '" << name << "'" << std::endl);
+                Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_accepted " << typeName() << " '" << name << "'" << std::endl);
                 return true;
             }
 
@@ -142,13 +142,15 @@ namespace upsylon
             {
                 switch (behavior)
                 {
-                    case Group: return "bold,filled";
-                    case Merge: return "bold,dashed";
+                    case SubGroup: return "bold,filled";
+                    case MergeOne: return "bold,dashed";
+                    case MergeAll: return "bold,dotted";
                     default:
                         break;
                 }
                 return "solid";
             }
+
 
 
         }
@@ -169,7 +171,7 @@ namespace upsylon
             }
 
             Alternate:: Alternate(const string &id) :
-            Compound(UUID,id,Merge,RejectHollowOperand)
+            Compound(UUID,id,MergeAll,RejectHollowOperand)
             {
             }
 
@@ -192,7 +194,7 @@ namespace upsylon
             Y_LANG_SYNTAX_ACCEPT_START(Alternate)
             {
                 assert(NULL==tree||tree->internal);
-                Y_LANG_SYNTAX_VERBOSE("|_" << typeName() << " '" << name << "' #operands=" << size << std::endl);
+                Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_" << typeName() << " '" << name << "' #operands=" << size << std::endl);
                 // scan for ONE acceptance
                 for(Operand *op=head;op;op=op->next)
                 {
@@ -200,11 +202,11 @@ namespace upsylon
                     if(op->rule.accept(source, lexer, leaf))
                     {
                         Node::Grow(tree,leaf);
-                        Y_LANG_SYNTAX_VERBOSE("|_accepted " << typeName() << " '" << name << "'" << std::endl);
+                        Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_accepted " << typeName() << " '" << name << "'" << std::endl);
                         return true;
                     }
                 }
-                Y_LANG_SYNTAX_VERBOSE("|_rejected " << typeName() << " '" << name << "'" << std::endl);
+                Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_rejected " << typeName() << " '" << name << "'" << std::endl);
                 return false;
             }
 
@@ -213,10 +215,53 @@ namespace upsylon
                 return "egg";
             }
 
+            void Alternate:: upgrade() throw()
+            {
+                assert(MergeAll==behavior);
+            }
 
         }
 
     }
 
+}
+
+#include "y/lang/syntax/terminal.hpp"
+
+namespace upsylon
+{
+
+    namespace Lang
+    {
+
+        namespace Syntax
+        {
+
+            void Aggregate:: upgrade() throw()
+            {
+                std::cerr << "*** upgrading <" << name << ">" << std::endl;
+                if(SubGroup==behavior)
+                {
+                    size_t count = 0;
+                    for(const Operand *op=head;op;op=op->next)
+                    {
+                        if(op->rule.uuid == Terminal::UUID)
+                        {
+                            assert(op->rule.derived);
+                            const Terminal &t = *static_cast<const Terminal *>(op->rule.derived);
+                            if(t.isSemantic()) continue;
+                        }
+                        ++count;
+                    }
+                    std::cerr << "*** count=" << count << std::endl;
+                    if(1==count)
+                    {
+                        will(MergeOne);
+                    }
+                }
+            }
+
+        }
+    }
 }
 

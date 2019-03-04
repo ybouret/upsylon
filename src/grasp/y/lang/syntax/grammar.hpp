@@ -35,6 +35,7 @@ namespace upsylon
                 // basic rules management
                 //______________________________________________________________
                 void setVerbose(const bool flag) throw();      //!< propagate flag to all rules
+                bool getVerbose() const throw();               //!< get the flag
                 void add( Rule *r );                           //!< add a rule with memory management
                 Rule & getRuleByName(const string &id);        //!< rule Look up
                 Rule & topLevel();                             //!< get top level rule
@@ -62,12 +63,12 @@ namespace upsylon
                 //______________________________________________________________
                 Aggregate  & aggregate( const string &id );                      //!< create an aggregate rule
                 Aggregate  & aggregate( const char   *id );                      //!< create an aggregate rule, wrapper
-                Aggregate  & join( const Rule &a, const Rule &b);                //!< create a small merging aggregate
-                Aggregate  & join( const Rule &a, const Rule &b, const Rule &c); //!< create a small merging aggregate
+                Aggregate  & join( const Rule &a, const Rule &b);                //!< create a small aggregate
+                Aggregate  & join( const Rule &a, const Rule &b, const Rule &c); //!< create a small aggregate
 
                 //! create a merging aggregate
                 template <typename T>
-                inline Aggregate  & design( const T &id ) { return aggregate(id).will(Merge); }
+                inline Aggregate  & design( const T &id ) { return aggregate(id).will(MergeAll); }
 
 
                 //______________________________________________________________

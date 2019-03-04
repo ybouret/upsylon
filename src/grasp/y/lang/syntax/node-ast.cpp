@@ -16,17 +16,14 @@ namespace upsylon
                 return *static_cast<const Terminal *>(rule.derived);
             }
 
-
-            namespace {
-
+            namespace
+            {
                 static inline
-                void __ManageTerminal( Node *sub,  Node::List &temp ) throw()
+                void AST_Terminal( Node *sub, Node::List &temp )
                 {
-                    assert(sub);
-                    assert(sub->terminal);
-                    assert(sub->rule.derived);
-                    if(static_cast<const Terminal *>(sub->rule.derived)->isSemantic())
+                    if(sub->asTerminal().isSemantic())
                     {
+                        std::cerr << "ast.remove semantic <" << sub->rule.name << ">" << std::endl;
                         delete sub;
                     }
                     else
@@ -36,24 +33,36 @@ namespace upsylon
                 }
 
                 static inline
-                void __ManageInternal( Node *sub, Node::List &temp ) throw()
+                void AST_Internal( Node *sub, Node::List &temp )
                 {
-                    assert(sub);
-                    assert(sub->internal);
-                    assert(sub->rule.derived);
-                    const Rule &rule = sub->rule;
-
-                    if( Aggregate::UUID == rule.uuid )
+                    std::cerr << "ast.internal <" << sub->rule.name << ">, #=" << sub->children().size << std::endl;
+                    if(sub->rule.uuid == Aggregate::UUID )
                     {
-                        const Compound &compound = *static_cast<const Compound *>(rule.derived);
-                        if(compound.behavior==Merge)
+                        std::cerr << "ast.checking agg <" << sub->rule.name << ">" << std::endl;
+                        switch( static_cast<const Compound *>(sub->rule.derived)->behavior )
                         {
-                            temp.merge_back(sub->children());
-                            delete sub;
-                        }
-                        else
-                        {
-                            temp.push_back(sub);
+                            case SubGroup:
+                                temp.push_back(sub);
+                                break;
+
+                            case MergeAll:
+                                std::cerr << "ast.merge all" << std::endl;
+                                temp.merge_back(sub->children());
+                                delete sub;
+                                break;
+
+                            case MergeOne:
+                                if(1==sub->children().size)
+                                {
+                                    std::cerr << "ast.merge one" << std::endl;
+                                    temp.merge_back(sub->children());
+                                    delete sub;
+                                }
+                                else
+                                {
+                                    temp.push_back(sub);
+                                }
+                                break;
                         }
                     }
                     else
@@ -61,54 +70,62 @@ namespace upsylon
                         temp.push_back(sub);
                     }
                 }
-
             }
-
 
             Node * Node:: AST(Node *node) throw()
             {
                 assert(node);
                 if(node->terminal)
                 {
-                    
                     if(node->asTerminal().isUnivocal())
                     {
+                        // delete content
+                        std::cerr << "ast.clear univocal <" << node->rule.name << ">" << std::endl;
                         node->lexeme().clear();
                     }
-
                     return node;
                 }
                 else
                 {
-                    // first pass: recursive call
+                    std::cerr << "ast.ini <" << node->rule.name << ">, #=" << node->children().size << std::endl;
                     Node::List &self = node->children();
                     {
-                        Node::List  temp;
+                        Node::List temp;
                         while(self.size)
                         {
-                            Node *sub = AST(self.pop_front());
-
+                            Node *sub = Node::AST( self.pop_front() );
                             if(sub->terminal)
                             {
-                                __ManageTerminal(sub,temp);
+                                AST_Terminal(sub,temp);
                             }
                             else
                             {
-                                __ManageInternal(sub,temp);
-
+                                AST_Internal(sub,temp);
                             }
                         }
-                        self.swap_with(temp);
+                        temp.swap_with(self);
                     }
 
-                    // check 1 item merging
-                    if(1==self.size &&
-                       Aggregate::UUID==self.head->rule.uuid &&
-                       Merge == static_cast<const Compound *>(self.head->rule.derived)->behavior)
+                    std::cerr << "ast.fin <" << node->rule.name << ">, #=" << node->children().size << std::endl;
+                    if(node->rule.uuid == Aggregate::UUID )
                     {
-                        Node *sub = self.pop_front(); assert(0==self.size);
-                        delete node;
-                        return sub;
+                        if( SubGroup == static_cast<const Compound *>(node->rule.derived)->behavior )
+                        {
+                            return node;
+                        }
+                        else
+                        {
+                            if(1==node->children().size)
+                            {
+                                Node  *one = node->children().pop_front();
+                                delete node;
+                                return one;
+                            }
+                            else
+                            {
+                                return node;
+                            }
+                        }
                     }
                     else
                     {
@@ -117,6 +134,7 @@ namespace upsylon
                 }
 
             }
+
 
         }
     }

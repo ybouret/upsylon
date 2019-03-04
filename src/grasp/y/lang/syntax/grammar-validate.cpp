@@ -17,20 +17,29 @@ namespace upsylon
                 public:
                     const Tag  name;
                     const bool verbose;
+                    int        level;
+
+                    std::ostream & indent(std::ostream &os) const
+                    {
+                        for(int i=level;i>0;--i) os << "..";
+                        return os;
+                    }
 
                     explicit RDB(const Tag &id, const size_t n, const bool v) :
-                    RDB_Type(n,as_capacity), name(id), verbose(v)
+                    RDB_Type(n,as_capacity), name(id), verbose(v), level(0)
                     {
                     }
 
                     virtual ~RDB() throw() { }
 
-                    inline bool visited( const string &id )
+                    inline bool visited( const Rule *r )
                     {
+                        assert(r);
+                        const string &id = r->name;
                         unsigned *pCount = search(id);
                         if(!pCount)
                         {
-                            Y_LANG_SYNTAX_VERBOSE("{" << *name << "} visiting '" << id << "'" << std::endl);
+                            Y_LANG_SYNTAX_VERBOSE( std::cerr << "{" << *name << "} "; indent(std::cerr) << "visiting <" << id << "> / " << r->typeName() << std::endl);
                             if(!insert(id,1)) throw exception("{%s} unexpected visited failure", **name);
                             return false;
                         }
@@ -49,34 +58,38 @@ namespace upsylon
                     {
                         switch(r->uuid)
                         {
-                            case Terminal::UUID: (void) visited(r->name);
+                            case Terminal::UUID: (void) visited(r);
                                 break;
 
                             case Aggregate:: UUID:
                             case Alternate:: UUID:
-                                if(!visited(r->name))
+                                if(!visited(r))
                                 {
                                     assert(r->derived);
                                     const Compound *compound = static_cast<const Compound *>(r->derived);
+                                    ++level;
                                     for(const Operand *op = compound->head;op;op=op->next)
                                     {
                                         visit( &(op->rule) );
                                     }
+                                    --level;
                                 }
                                 break;
 
                             case Optional  ::UUID:
                             case OneOrMore ::UUID:
                             case ZeroOrMore::UUID:
-                                if(!visited(r->name))
+                                if(!visited(r))
                                 {
+                                    ++level;
                                     assert(r->derived);
-                                    visit( static_cast<const Rule *>(r->derived) );
+                                    visit( &(static_cast<const Joker *>(r->derived)->jk) );
+                                    --level;
                                 }
                                 break;
 
                             default:
-                                throw exception("{%s} unexpected Syntax::Rule UUID [%04x] for '%s'", **name, unsigned(r->uuid), *(r->name) );
+                                throw exception("{%s} unexpected Syntax::Rule UUID [%04x] for <%s>", **name, unsigned(r->uuid), *(r->name) );
                         }
                     }
 
@@ -89,25 +102,44 @@ namespace upsylon
 
             void Grammar:: validate() const
             {
-                Y_LANG_SYNTAX_VERBOSE("{" << *name << "} validating..." << std::endl);
+                Y_LANG_SYNTAX_VERBOSE(std::cerr << "{" << *name << "} validating..." << std::endl);
                 if(rules.size<=0)
                 {
                     throw exception("{%s} no top level rule", **name );
                 }
+
+#if 0
+                for(const Rule *r=rules.head;r;r=r->next)
+                {
+                    if(r->uuid==Aggregate::UUID)
+                    {
+                        if(r->isHollow())
+                        {
+                            throw exception("{%s} has hollow %s <%s>, meaning empty or with all hollow operands!", **name, r->typeName(), *(r->name) );
+                        }
+                    }
+                }
+#endif
+
                 RDB rdb( name, rules.size, verbose);
+                /*
                 for(const Rule *r=rules.head;r;r=r->next)
                 {
                     rdb.visit(r);
-                }
+
+                 }
+                 */
+
+                rdb.visit(rules.head);
 
                 for(const Rule *r=rules.head;r;r=r->next)
                 {
                     if(! rdb.search(r->name) )
                     {
-                        throw exception("{%s} standalone rule %s '%s'", **name, r->typeName(), *(r->name) );
+                        throw exception("{%s} standalone %s <%s>", **name, r->typeName(), *(r->name) );
                     }
                 }
-                Y_LANG_SYNTAX_VERBOSE("{" << *name << "} seems valid!" << std::endl);
+                Y_LANG_SYNTAX_VERBOSE(std::cerr << "{" << *name << "} seems valid!" << std::endl);
             }
 
         }
