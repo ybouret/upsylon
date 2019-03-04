@@ -55,7 +55,7 @@ Y_UTEST(parser)
 {
     Syntax::Parser::Pointer P = new myParser();
     std::cerr << "Building [" << P->key() << "]" << std::endl;
-    if( argc>1 & 0 == strcmp("run",argv[1]))
+    if( argc>1 && 0 == strcmp("run",argv[1]))
     {
         Source source( Module::OpenSTDIN() );
         auto_ptr<Syntax::Node> ast = P->run( source );
