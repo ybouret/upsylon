@@ -110,9 +110,11 @@ namespace upsylon
                     if(!op->rule.accept(source, lexer, subTree))
                     {
                         // rejected=>restore
-                        guard.dismiss();
-                        Node::Unget(subTree,lexer);
                         Y_LANG_SYNTAX_VERBOSE("|_rejected " << typeName() << " '" << name << "'" << std::endl);
+                        guard.dismiss();
+                        std::cerr << "*** Unget..." << std::endl;
+                        Node::Unget(subTree,lexer);
+                        std::cerr << "*** done" << std::endl;
                         return false;
                     }
                 }

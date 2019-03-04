@@ -30,11 +30,13 @@ namespace upsylon
                 //
                 // virtual interface
                 //______________________________________________________________
-                virtual Node *      clone() const         = 0;       //!< clone the node
-                virtual const void *inner() const throw() = 0;       //!< internal data address
+                virtual Node *      clone() const               = 0; //!< clone the node
+                virtual const void *inner() const throw()       = 0; //!< internal data address
                 virtual void        viz( ios::ostream & ) const = 0; //!< output graphViz code
+                virtual void returnTo( Lexer &lexer ) throw()   = 0; //!< restore before delete
                 virtual ~Node() throw();                             //!< destructor
-
+                
+                
                 //______________________________________________________________
                 //
                 // non-virtual interface
@@ -81,6 +83,7 @@ namespace upsylon
             private:
                 Y_DISABLE_ASSIGN(Node);
                 virtual void        emit( ios::ostream & ) const = 0;
+
             };
 
             //! a Terminal Node, acts as a lexeme smart pointer
@@ -100,6 +103,7 @@ namespace upsylon
 
                 explicit TerminalNode(const Rule &r, Lexeme *l) throw();
                 virtual void emit( ios::ostream & ) const;
+                virtual void returnTo( Lexer &lexer ) throw();
                 friend class Node;
             };
 
@@ -120,6 +124,7 @@ namespace upsylon
                 friend class Node;
                 Y_DISABLE_ASSIGN(InternalNode);
                 virtual void emit( ios::ostream & ) const;
+                virtual void returnTo( Lexer &lexer ) throw();
             };
 
         }

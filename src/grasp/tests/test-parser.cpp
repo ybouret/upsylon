@@ -11,7 +11,7 @@ public:
     inline myParser() : Syntax::Parser("JSONLite")
     {
         setVerbose(true);
-#if 0
+
         ALT  & JSON  = alternate("JSON");
         ALT  & VALUE = alternate("value");
         TERM & COMA  = term(',').setSemantic();
@@ -27,13 +27,7 @@ public:
         }
 
         VALUE << term("null") << term("true") << term("false") << term("number","-?[:digit:]+([.][:digit:]+)?") << hook<Lexical::jString>("string");
-#endif
-
-        AGG & ARRAY = aggregate("array");
-        ARRAY << mark('[');
-        ARRAY << choice( term("ID","[:alpha:]+"),hook<Lexical::jString>("string") );
-        ARRAY << mark(']');
-
+        
         finalize();
 
         // lexical only

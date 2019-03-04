@@ -98,8 +98,7 @@ namespace upsylon
             Node * Parser:: run(Source &source)
             {
                 reset();
-                return accept(source, *this);
-                //return Node::AST();
+                return  Node::AST(accept(source, *this));
             }
 
 

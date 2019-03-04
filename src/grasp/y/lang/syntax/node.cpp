@@ -99,22 +99,26 @@ namespace upsylon
                 }
             }
 
+
+            void InternalNode:: returnTo(Lexer &lexer) throw()
+            {
+                while(size>0)
+                {
+                    tail->returnTo(lexer);
+                    delete pop_back();
+                }
+            }
+
+            void TerminalNode:: returnTo(Lexer &lexer) throw()
+            {
+                lexer.unget(lx);
+                lx=0;
+            }
+
             void   Node:: Unget( Node * &node, Lexer &lexer) throw()
             {
                 assert(node);
-                if(node->terminal)
-                {
-                }
-                else
-                {
-                    Node *scan = node->children().tail;
-                    while(scan)
-                    {
-                        Node *prev = scan->prev;
-                        Unget(scan,lexer); assert(0==scan);
-                        scan = prev;
-                    }
-                }
+                node->returnTo(lexer);
                 delete node;
                 node = 0;
             }
