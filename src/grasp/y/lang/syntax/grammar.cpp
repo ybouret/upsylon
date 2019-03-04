@@ -30,9 +30,7 @@ namespace upsylon
             rrs( new RuleReferenceSet() ),
             verbose(false),
             iAlt(1),
-            iOpt(1),
-            iZoM(1),
-            iOoM(1)
+            iAgg(1)
             {
             }
 

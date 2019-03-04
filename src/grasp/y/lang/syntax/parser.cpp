@@ -83,6 +83,18 @@ namespace upsylon
             {
                 const string _(C); return term(_,C);
             }
+
+            Terminal & Parser:: term( const string &rx )
+            {
+                return term(rx,rx);
+            }
+
+            Terminal & Parser:: term( const char *rx )
+            {
+                const string _(rx);
+                return term(_,_);
+            }
+
         }
 
     }

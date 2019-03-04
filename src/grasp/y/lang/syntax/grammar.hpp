@@ -51,32 +51,43 @@ namespace upsylon
 
                 //______________________________________________________________
                 //
-                // advanced rules management
+                // Terminals
                 //______________________________________________________________
-                //! make a terminal recognition
-                Terminal  & terminal( const string &id )
-                { return decl( new Terminal(id) ); }
+                Terminal  & terminal( const string &id );   //!< make a terminal recognition
+                Terminal  & terminal( const char   *id );   //!< make a terminal recognition, wrapper
 
-                //! make a terminal recognition
-                Terminal  & terminal( const char   *id )
-                { const string _(id); return terminal(_); }
+                //______________________________________________________________
+                //
+                // Aggregates
+                //______________________________________________________________
+                Aggregate  & aggregate( const string &id );                      //!< create an aggregate rule
+                Aggregate  & aggregate( const char   *id );                      //! create an aggregate rule, wrapper
+                Aggregate  & aggregate();                                        //!< create an aggregate with automatic name
+                const Rule & join( const Rule &a, const Rule &b);                //!< create a small aggregate
+                const Rule & join( const Rule &a, const Rule &b, const Rule &c); //!< create a small aggregate
 
-                //! make an aggregate rule
-                Aggregate & aggregate( const string &id ) { return decl( new Aggregate(id) ); }
-
-                //! create an aggregate rule
-                Aggregate  & aggregate( const char   *id ) { const string _(id); return aggregate(_); }
-
-                Alternate   & alternate( const string &id ); //!< create a named alternate
-                Alternate   & alternate( const char   *id ); //!< create a named alternate
-                Alternate   & alternate();                   //!< with automatic label
-                const Rule  & choice( const Rule &a, const Rule &b); //!< choice between two rules
+                //______________________________________________________________
+                //
+                // Alternates
+                //______________________________________________________________
+                Alternate   & alternate( const string &id );                        //!< create a named alternate
+                Alternate   & alternate( const char   *id );                        //!< create a named alternate
+                Alternate   & alternate();                                          //!< with automatic label
+                const Rule  & choice( const Rule &a, const Rule &b);                //!< choice between two rules
                 const Rule  & choice( const Rule &a, const Rule &b, const Rule &c); //!< choice between three rules
 
+                //______________________________________________________________
+                //
+                // Jokers
+                //______________________________________________________________
                 const Rule  & optional(   const Rule &r ); //!< make an Optional   rule
                 const Rule  & zeroOrMore( const Rule &r ); //!< make a  ZeroOrMore rule
                 const Rule  & oneOrMore(  const Rule &r ); //!< make a  OneOrMore  rule
 
+                //______________________________________________________________
+                //
+                // other methods
+                //______________________________________________________________
                 string MakeAlternateName( const ArrayOfStrings &) const; //!< make name for an alternate
                 string MakeAggregateName( const ArrayOfStrings &) const; //!< make name for an aggregate
 
@@ -88,9 +99,7 @@ namespace upsylon
                 RuleReferenceSet *rrs;
                 bool              verbose;
                 unsigned          iAlt;
-                unsigned          iOpt;
-                unsigned          iZoM;
-                unsigned          iOoM;
+                unsigned          iAgg;
 
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 string MakeCompoundName(  const ArrayOfStrings &strings, const char sep) const;

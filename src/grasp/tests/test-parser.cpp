@@ -10,11 +10,21 @@ class myParser : public Syntax::Parser
 public:
     inline myParser() : Syntax::Parser("JSONLite")
     {
-        TERM &ID     = term("ID","[:alpha:]+");
-        TERM &COLON  = term(":",':');
-        TERM &COMA   = term(',').setSemantic();
-        TERM &PLUS   = term("PLUS",'+').setOperator();
-        RULE &STRING = hook<Lexical::jString>("STRING");
+        ALT  & JSON  = alternate("JSON");
+        ALT  & VALUE = alternate("value");
+        TERM & COMA  = term(',').setSemantic();
+
+        {
+            AGG & ARRAY = aggregate("array");
+            ARRAY << mark('[');
+            ARRAY << VALUE;
+            ARRAY << zeroOrMore( join(COMA,VALUE) );
+            ARRAY << mark(']');
+            VALUE << ARRAY;
+            JSON << ARRAY;
+        }
+
+        VALUE << term("null") << term("true") << term("false") << term("number","-?[:digit:]+([.][:digit:]+)?") << hook<Lexical::jString>("string");
 
 
         // lexical only
@@ -36,6 +46,7 @@ Y_UTEST(parser)
 {
     Syntax::Parser::Pointer P = new myParser();
     std::cerr << "Building [" << P->key() << "]" << std::endl;
+    
 }
 Y_UTEST_DONE()
 

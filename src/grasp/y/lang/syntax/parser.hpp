@@ -46,7 +46,12 @@ namespace upsylon
                 TERM & term( const char   *id, const char   *rx ); //!< create a terminal id matching rx, wrapper
                 TERM & term( const string &id, const char    C );  //!< create a terminal id matching a single char
                 TERM & term( const char   *id, const char    C );  //!< create a terminal id matching a single char, wrapper
-                TERM & term( const char C);                        //!< create a terminal matching a single C with the same name
+                TERM & term( const char C );                       //!< create a terminal matching a single C with the same name
+                TERM & term( const string &rx );                   //!< create a terminal rx matching rx
+                TERM & term( const char   *rx );                   //!< create a terminal rx matching rx, wrapper
+
+                template <typename T>
+                TERM & mark( const T &arg ) { return term(arg).setSemantic(); }
 
                 //! zero arguments plugin
                 template <typename PLUGIN> inline RULE & hook( const string &id )
@@ -66,8 +71,7 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                void setOperator(); //!< promote to operator
-                void setSemantic(); //!< promote to semantic only
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);
