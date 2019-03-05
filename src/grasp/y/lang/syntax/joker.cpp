@@ -224,28 +224,3 @@ namespace upsylon
         }
     }
 }
-
-namespace upsylon
-{
-    namespace Lang
-    {
-        namespace Syntax
-        {
-            unsigned    Optional :: astMinCount() const throw()
-            {
-                return 0;
-            }
-
-            unsigned ZeroOrMore:: astMinCount() const throw()
-            {
-                return 0;
-            }
-
-            unsigned OneOrMore:: astMinCount() const throw()
-            {
-                return jk.astMinCount();
-            }
-        }
-    }
-}
-

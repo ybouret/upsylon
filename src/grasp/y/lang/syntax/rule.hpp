@@ -4,7 +4,6 @@
 
 #include "y/lang/syntax/node.hpp"
 #include "y/lang/lexical/translator.hpp"
-#include "y/lang/syntax/term-count.hpp"
 
 namespace upsylon
 {
@@ -48,7 +47,6 @@ namespace upsylon
                 virtual const char *graphVizShape() const throw() = 0;        //!< shape for graphViz
                 virtual void        graphVizEpilog(ios::ostream &) const = 0; //!< perform necessary linking
                 virtual const char *graphVizStyle() const throw();            //!< based on isHollow, can be superseeded
-                virtual unsigned    astMinCount() const throw() = 0;          //!< minimum number of produced terminals for AST
                 
                 //______________________________________________________________
                 //

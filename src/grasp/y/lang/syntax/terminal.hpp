@@ -34,8 +34,7 @@ namespace upsylon
                 virtual const char *graphVizShape() const throw();        //!< common shape
                 virtual void        graphVizEpilog(ios::ostream &) const; //!< nothing to do...
                 virtual const char *graphVizStyle() const throw();        //!< change style according to attributes
-                virtual unsigned    astMinCount() const throw();          //!< depends on semantic
-
+                
                 const bool      ordinary; //!< initialize : true
                 const bool      univocal; //!< initialize : false
                 const Attribute attr;     //!< Standard | Operator | Semantic

@@ -117,17 +117,7 @@ namespace upsylon
                 return "bold";
             }
 
-            unsigned    Terminal:: astMinCount() const throw()
-            {
-                if(Semantic==attr)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return 1;
-                }
-            }
+            
             
         }
     }
