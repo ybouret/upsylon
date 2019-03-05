@@ -63,6 +63,7 @@ namespace upsylon
                 template <typename T>
                 TERM & op( const T &arg ) { return term(arg).setOperator(); }
 
+                //! create an operator terminal
                 template <typename T, typename U>
                 TERM & op( const T &id, const U &data ) { return term(id,data).setOperator(); }
 

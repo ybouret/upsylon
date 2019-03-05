@@ -58,6 +58,7 @@ namespace upsylon
                 void graphVizLink( ios::ostream &fp, const Rule *p, unsigned idx ) const; //!< create a link
                 void graphVizProlog( ios::ostream &fp ) const;                            //!< common prolog for all Rules
 
+                //! conversion to derived class with consistency checking
                 template <typename RULE_TYPE>
                 inline const RULE_TYPE & as() const throw() { checkConsistency( typeid(RULE_TYPE) ); return *static_cast<const RULE_TYPE *>(derived); }
 

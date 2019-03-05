@@ -97,6 +97,7 @@ namespace upsylon
                 //! full recursive visit
                 void visitFrom(const Rule *top, const char *context);
 
+                //! finding recursivity index and depth
                 int recursivity(const Rule *top);
 
             private:
