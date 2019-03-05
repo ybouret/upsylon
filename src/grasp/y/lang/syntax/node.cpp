@@ -220,17 +220,7 @@ namespace upsylon
                 return lx;
             }
 
-            void     TerminalNode::   viz( ios::ostream &fp ) const
-            {
-                assert(lx);
-                string l = string_convert::to_printable( rule.name );
-                if(lx->size)
-                {
-                    const string content = lx->to_print();
-                    l <<'=' << '\'' << content << '\'';
-                }
-                graphVizName(fp); fp("[shape=box,label=\""); fp << l; fp("\"];\n");
-            }
+
 
             void TerminalNode:: emit(ios::ostream &fp) const
             {
@@ -308,3 +298,35 @@ namespace upsylon
     }
 }
 
+#include "y/lang/syntax/terminal.hpp"
+
+namespace upsylon
+{
+    namespace Lang
+    {
+        namespace Syntax
+        {
+
+            void     TerminalNode::   viz( ios::ostream &fp ) const
+            {
+                assert(lx);
+                string l = string_convert::to_printable( rule.name );
+                if(lx->size)
+                {
+                    const string content = lx->to_print();
+                    l <<'=' << '\'' << content << '\'';
+                }
+                const char *sh =  "box";
+                const char *st =  "solid";
+                switch( rule.as<Terminal>().attr )
+                {
+                    case Standard: break;
+                    case Operator: sh="triangle"; break;
+                    case Semantic: st="dashed";   break;
+                }
+                graphVizName(fp); fp("[shape=\"%s\",style=\"%s\",label=\"",sh,st); fp << l; fp("\"];\n");
+            }
+
+        }
+    }
+}

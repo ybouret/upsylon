@@ -21,7 +21,7 @@ namespace {
             ALT & ATOM = alternate("atom");
             ATOM << term("ID","[:alpha:]+") << term("NUMBER","[:digit:]+") << join( mark('('), ADD, mark( ')' ) );
 
-            ADD << MUL << zeroOrMore( join( term("ADDOP","[-+]" ), MUL ) );
+            ADD << MUL << zeroOrMore( join( op("ADDOP","[-+]"), MUL ) );
             MUL << POW << zeroOrMore( join( term("MULOP","[*/%]"), POW ) );
 
             POW << ATOM << optional( join( term('^'), POW) );
