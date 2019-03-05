@@ -249,7 +249,7 @@ namespace upsylon
                         {
                             assert(op->rule.derived);
                             const Terminal &t = *static_cast<const Terminal *>(op->rule.derived);
-                            if(t.isSemantic()) continue;
+                            if(Semantic==t.attr) continue;
                         }
                         ++count;
                     }

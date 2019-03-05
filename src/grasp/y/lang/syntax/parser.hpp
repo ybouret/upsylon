@@ -59,7 +59,7 @@ namespace upsylon
                 template <typename PLUGIN> inline RULE & hook( const string &id )
                 {
                     Lexical::Translator::hook<PLUGIN>(**this,id);
-                    return terminal(id).setStandard();
+                    return terminal(id);
                 }
 
                 //! zero arguments plugin, wrapper

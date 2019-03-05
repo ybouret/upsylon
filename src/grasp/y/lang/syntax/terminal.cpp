@@ -13,9 +13,25 @@ namespace upsylon
             }
 
             Terminal:: Terminal(const string &n) :
-            Rule(UUID,n), attr( Dangling )
+            Rule(UUID,n),
+            ordinary(true),
+            univocal(false),
+            attr(Standard)
             {
                 derived = static_cast<Terminal *>(this);
+            }
+
+
+            Terminal & Terminal:: setSemantic()
+            {
+                (Attribute &)attr = Semantic;
+                return *this;
+            }
+
+            Terminal & Terminal:: setOperator()
+            {
+                (Attribute &)attr = Operator;
+                return *this;
             }
 
 
@@ -28,51 +44,6 @@ namespace upsylon
             {
                 return false;
             }
-
-            bool Terminal:: isDangling() const throw() { return 0==attr; }
-
-            Terminal & Terminal:: setStandard()
-            {
-                if(!isDangling())
-                {
-                    throw exception("Terminal.setStandard(<%s> was already set)", *name);
-                }
-                (attr_t &)attr |=  Standard;
-                return *this;
-            }
-
-            Terminal & Terminal:: setUnivocal()
-            {
-                if(!isDangling())
-                {
-                    throw exception("Terminal.setUnivocal(<%s> was already set)", *name);
-                }
-                (attr_t &)attr |=  Univocal;
-                return *this;
-            }
-
-            Terminal & Terminal:: setOperator()
-            {
-                if(isSemantic())
-                {
-                    throw exception("Terminal.setOperator(<%s> declared as semantic )", *name);
-                }
-                (attr_t&)attr |= Operator;
-                return *this;
-            }
-
-            Terminal & Terminal:: setSemantic()
-            {
-                if(isOperator())
-                {
-                    throw exception("Terminal.setSemantic(<%s> declared as operator)", *name);
-                }
-                (attr_t&)attr |= Semantic;
-                return *this;
-            }
-
-
-
 
 
             Y_LANG_SYNTAX_ACCEPT_START(Terminal)
@@ -105,7 +76,7 @@ namespace upsylon
 
             const char * Terminal:: graphVizShape() const throw()
             {
-                if(isOperator())
+                if(Operator==attr)
                 {
                     return "triangle";
                 }
@@ -122,19 +93,26 @@ namespace upsylon
 
             const char * Terminal:: graphVizStyle() const throw()
             {
-                switch(attr)
-                {
-                    case Dangling: return "diagonals";
-                    case Standard: return "bold,filled";
-                    case Standard|Operator: return "bold,filled";
-                    case Standard|Semantic: return "bold,dashed,filled";
 
-                    case Univocal:          return "bold,rounded";
-                    case Univocal|Operator: return "bold,rounded";
-                    case Univocal|Semantic: return "bold,dashed,rounded";
-                        
-                    default:
-                        break;
+                if(ordinary)
+                {
+                    assert(!univocal);
+                    switch (attr)
+                    {
+                        case Standard: return "bold,filled";
+                        case Operator: return "bold,filled";
+                        case Semantic: return "bold,dashed";
+                    }
+                }
+                else
+                {
+                    assert(univocal);
+                    switch (attr)
+                    {
+                        case Standard: return "bold,filled,rounded";
+                        case Operator: return "bold,filled,rounded";
+                        case Semantic: return "bold,dashed,rounded";
+                    }
                 }
                 return "bold";
             }

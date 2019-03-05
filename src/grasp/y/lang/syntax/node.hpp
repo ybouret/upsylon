@@ -11,10 +11,11 @@ namespace upsylon
 
         namespace Syntax
         {
-            class Rule;     //!< forward declaration
-            class Grammar;  //!< forward declaration
-            class Terminal; //!< forward declaration
-            
+            class Rule;      //!< forward declaration
+            class Grammar;   //!< forward declaration
+            //class Terminal;  //!< forward declaration
+            //class Compound; //!< forward declaration
+
             //! store syntax trees
             class Node : public Object, public core::inode<Node>
             {
@@ -70,11 +71,19 @@ namespace upsylon
                  */
                 static Node  *Load( Source &source, Grammar &G);
 
+#if 0
                 //! info from rule, for terminal nodes in AST
                 const Terminal &asTerminal() const throw();
 
-                
-                //! 
+                //! info from rule, for compound nodes
+                const Compound &asCompound() const throw();
+#endif
+
+                //! get the derived rule Terminal|Compound
+                template <typename RULE_TYPE>
+                const RULE_TYPE & as() const throw();
+
+                //! transform a raw node into the direct AST
                 static Node * AST( Node *node ) throw();
 
             protected:

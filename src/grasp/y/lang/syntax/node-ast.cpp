@@ -9,11 +9,21 @@ namespace upsylon
         namespace Syntax
         {
 
-            const Terminal & Node:: asTerminal() const throw()
+            template <>
+            const Terminal & Node:: as<Terminal>() const throw()
             {
                 assert(terminal);
                 assert(rule.derived);
                 return *static_cast<const Terminal *>(rule.derived);
+            }
+
+            template <>
+            const Compound & Node:: as<Compound>() const throw()
+            {
+                assert(internal);
+                assert(rule.derived);
+                assert(rule.uuid==Alternate::UUID || rule.uuid==Aggregate::UUID);
+                return *static_cast<const Compound *>(rule.derived);
             }
 
             namespace
@@ -21,9 +31,8 @@ namespace upsylon
                 static inline
                 void AST_Terminal( Node *sub, Node::List &temp )
                 {
-                    if(sub->asTerminal().isSemantic())
+                    if(sub->as<Terminal>().attr==Semantic)
                     {
-                        std::cerr << "ast.remove semantic <" << sub->rule.name << ">" << std::endl;
                         delete sub;
                     }
                     else
@@ -35,18 +44,15 @@ namespace upsylon
                 static inline
                 void AST_Internal( Node *sub, Node::List &temp )
                 {
-                    std::cerr << "ast.internal <" << sub->rule.name << ">, #=" << sub->children().size << std::endl;
                     if(sub->rule.uuid == Aggregate::UUID )
                     {
-                        std::cerr << "ast.checking agg <" << sub->rule.name << ">" << std::endl;
-                        switch( static_cast<const Compound *>(sub->rule.derived)->behavior )
+                        switch( sub->as<Compound>().behavior )
                         {
                             case SubGroup:
                                 temp.push_back(sub);
                                 break;
 
                             case MergeAll:
-                                std::cerr << "ast.merge all" << std::endl;
                                 temp.merge_back(sub->children());
                                 delete sub;
                                 break;
@@ -54,7 +60,6 @@ namespace upsylon
                             case MergeOne:
                                 if(1==sub->children().size)
                                 {
-                                    std::cerr << "ast.merge one" << std::endl;
                                     temp.merge_back(sub->children());
                                     delete sub;
                                 }
@@ -77,17 +82,15 @@ namespace upsylon
                 assert(node);
                 if(node->terminal)
                 {
-                    if(node->asTerminal().isUnivocal())
+                    if(node->as<Terminal>().univocal)
                     {
                         // delete content
-                        std::cerr << "ast.clear univocal <" << node->rule.name << ">" << std::endl;
                         node->lexeme().clear();
                     }
                     return node;
                 }
                 else
                 {
-                    std::cerr << "ast.ini <" << node->rule.name << ">, #=" << node->children().size << std::endl;
                     Node::List &self = node->children();
                     {
                         Node::List temp;
@@ -106,15 +109,15 @@ namespace upsylon
                         temp.swap_with(self);
                     }
 
-                    std::cerr << "ast.fin <" << node->rule.name << ">, #=" << node->children().size << std::endl;
                     if(node->rule.uuid == Aggregate::UUID )
                     {
-                        if( SubGroup == static_cast<const Compound *>(node->rule.derived)->behavior )
+                        if( SubGroup == node->as<Compound>().behavior )
                         {
                             return node;
                         }
                         else
                         {
+                            // possible merging is only 1 child
                             if(1==node->children().size)
                             {
                                 Node  *one = node->children().pop_front();

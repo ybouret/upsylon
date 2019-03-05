@@ -13,7 +13,6 @@ namespace upsylon
 
 #define Y_LANG_SYNTAX_PARSER_CTOR(ID)  \
 Lexer(ID), Grammar(label), CountedObject()
-//, root( **this )
 
             Parser:: Parser(const string &id) : Y_LANG_SYNTAX_PARSER_CTOR(id)
             {
@@ -47,20 +46,18 @@ namespace upsylon
                 // link to a terminal
                 Terminal &t = terminal(id);
 
-                // finalize by setting univocal/regular
+                // finalize by setting univocal
                 const Lexical::Rule &r = (**this).last();
-                assert(!r.motif->weak());
                 assert(id==*(r.label));
-                
+                assert(!r.motif->weak());
+
                 if(r.motif->univocal())
                 {
-                    return t.setUnivocal();
-                }
-                else
-                {
-                    return t.setStandard();
+                    (bool &)(t.ordinary) = false;
+                    (bool &)(t.univocal) = true;
                 }
 
+                return t;
             }
 
             Terminal & Parser:: term( const char   *id, const char   *rx)

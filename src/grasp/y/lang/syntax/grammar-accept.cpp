@@ -20,7 +20,7 @@ namespace upsylon
                                   Grammar &G)
                 {
                     Syntax::Rule &rule = G.getRuleByName( *(lx->label) );
-                    if(rule.uuid==Terminal::UUID && static_cast<const Terminal *>(rule.derived)->isStandard())
+                    if(rule.uuid==Terminal::UUID && static_cast<const Terminal *>(rule.derived)->ordinary)
                     {
 
                         const string content = lx->to_print();
