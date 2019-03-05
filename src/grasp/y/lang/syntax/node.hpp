@@ -13,8 +13,6 @@ namespace upsylon
         {
             class Rule;      //!< forward declaration
             class Grammar;   //!< forward declaration
-            //class Terminal;  //!< forward declaration
-            //class Compound; //!< forward declaration
 
             //! store syntax trees
             class Node : public Object, public core::inode<Node>
@@ -34,7 +32,7 @@ namespace upsylon
                 virtual Node *      clone() const               = 0; //!< clone the node
                 virtual const void *inner() const throw()       = 0; //!< internal data address
                 virtual void        viz( ios::ostream & ) const = 0; //!< output graphViz code
-                virtual void returnTo( Lexer &lexer ) throw()   = 0; //!< restore before delete
+                virtual void        returnTo( Lexer & ) throw() = 0; //!< restore before delete
                 virtual ~Node() throw();                             //!< destructor
                 
                 
@@ -70,14 +68,6 @@ namespace upsylon
                  since we assume the source to be a binary source
                  */
                 static Node  *Load( Source &source, Grammar &G);
-
-#if 0
-                //! info from rule, for terminal nodes in AST
-                const Terminal &asTerminal() const throw();
-
-                //! info from rule, for compound nodes
-                const Compound &asCompound() const throw();
-#endif
 
                 //! get the derived rule Terminal|Compound
                 template <typename RULE_TYPE>
