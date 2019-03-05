@@ -16,6 +16,9 @@ SET(syntax_srcs ${syntax_decl} ${syntax_code})
 SOURCE_GROUP( lang/syntax FILES ${syntax_srcs} )
 INSTALL( FILES ${syntax_decl} DESTINATION include/y/lang/syntax )
 
+FILE(GLOB syntax_grammar_srcs y/lang/syntax/grammar/*.cpp)
+SOURCE_GROUP( lang/syntax/grammar FILES ${syntax_grammar_srcs} )
+
 #FILE(GLOB dynamo_decl y/lang/dynamo/*.hpp)
 #FILE(GLOB dynamo_code y/lang/dynamo/*.cpp)
 #SET(dynamo_srcs ${dynamo_decl} ${dynamo_code})
@@ -25,7 +28,7 @@ INSTALL( FILES ${syntax_decl} DESTINATION include/y/lang/syntax )
 ADD_LIBRARY(y-grasp STATIC 
 ${main_srcs} 
 ${syntax_srcs}
-#${dynamo_srcs}
+${syntax_grammar_srcs}
 )
 INSTALL( TARGETS y-grasp ARCHIVE DESTINATION lib )
 
