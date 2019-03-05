@@ -29,7 +29,8 @@ namespace upsylon
             rules(),
             rrs( new RuleReferenceSet() ),
             verbose(false),
-            iAlt(1)
+            iAlt(1),
+            maxRuleNameLength(0)
             {
             }
 
@@ -60,6 +61,7 @@ namespace upsylon
                 // append
                 pRule->verbose = verbose;
                 rules.push_back( pRule.yield() );
+                (size_t &)maxRuleNameLength = max_of( maxRuleNameLength, r->name.size() );
             }
 
             void Grammar:: finalize()

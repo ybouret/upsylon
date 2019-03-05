@@ -1,5 +1,6 @@
 #include "y/lang/syntax/grammar.hpp"
 #include "y/lang/syntax/rule-probe.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -32,6 +33,20 @@ namespace upsylon
                         throw exception("{%s} standalone %s <%s>", **name, r->typeName(), *(r->name) );
                     }
                 }
+
+                // check recursivity
+                for(const Rule *r=rules.head;r;r=r->next)
+                {
+                    std::cerr <<"<" << r->name << ">";
+                    for(size_t i=r->name.length();i<=maxRuleNameLength;++i)
+                    {
+                        std::cerr << ' ';
+                    }
+                    std::cerr << " recursivity: ";
+                    
+                    std::cerr << std::endl;
+                }
+
                 Y_LANG_SYNTAX_VERBOSE(std::cerr << "{" << *name << "} seems valid!" << std::endl);
             }
 

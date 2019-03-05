@@ -4,6 +4,7 @@
 
 #include "y/lang/syntax/node.hpp"
 #include "y/lang/lexical/translator.hpp"
+#include <typeinfo>
 
 namespace upsylon
 {
@@ -31,10 +32,11 @@ namespace upsylon
             public:
                 typedef core::list_of_cpp<Rule> List; //!< alias
 
-                const uint32_t uuid;     //!< class identifier
-                const string   name;     //!< user's identifier
-                const void    *derived;  //!< helper for optimizations
-                bool           verbose;  //!< for output
+                const uint32_t        uuid;     //!< class identifier
+                const string          name;     //!< user's identifier
+                const void           *derived;  //!< helper for optimizations
+                const std::type_info &info;     //!< derived pointer type info
+                bool                  verbose;  //!< for output
 
                 //______________________________________________________________
                 //
@@ -57,13 +59,14 @@ namespace upsylon
                 void graphVizProlog( ios::ostream &fp ) const;                            //!< common prolog for all Rules
 
                 template <typename RULE_TYPE>
-                inline const RULE_TYPE & as() const throw() { assert(derived); return *static_cast<const RULE_TYPE *>(derived); }
+                inline const RULE_TYPE & as() const throw() { checkConsistency( typeid(RULE_TYPE) ); return *static_cast<const RULE_TYPE *>(derived); }
 
             protected:
-                explicit Rule(const uint32_t i, const string &n); //!< setup
+                explicit Rule(const uint32_t i, const string &n, const std::type_info &tid); //!< setup
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Rule);
+                void checkConsistency( const std::type_info &target ) const;
             };
 
         }

@@ -1,4 +1,5 @@
 #include "y/lang/syntax/rule-probe.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -6,6 +7,15 @@ namespace upsylon
     {
         namespace Syntax
         {
+
+            const char RuleProbe:: VisitFunction[] = "Syntax.RuleProbe.visit";
+
+            void RuleProbe:: throwUUID(const char *fn, const Rule *r) const
+            {
+                assert(fn);
+                assert(r);
+                throw exception("%s(unexpected  UUID [%04x] for <%s>)", fn, unsigned(r->uuid), *(r->name) );
+            }
 
             RuleProbe:: RuleProbe()   throw() : RuleReferenceSet( ), depth(0), verbose(false) {}
 
@@ -42,6 +52,31 @@ namespace upsylon
                 reset();
                 visit(top,DoNothing,context);
             }
+
+            int RuleProbe:: recursivity(const Rule *r)
+            {
+                assert(r!=NULL);
+                reset();
+
+                switch(r->uuid)
+                {
+                    case Terminal::UUID:
+                        break;
+
+                    case Optional::  UUID:
+                    case ZeroOrMore::UUID:
+                    case OneOrMore:: UUID:
+                        visit( & (r->as<Joker>().jk), DoNothing, NULL);
+                        if( search(r->name) ) return 0;
+                        break;
+
+                    default:
+                        throwUUID("Syntax.RuleProbe.recursivity",r);
+                }
+
+                return -1;
+            }
+
 
         }
 

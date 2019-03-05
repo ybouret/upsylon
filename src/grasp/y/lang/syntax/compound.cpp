@@ -22,7 +22,7 @@ namespace upsylon
             Compound:: ~Compound() throw() {}
 
             Compound:: Compound( const uint32_t u, const string &n, const Behavior b, const HollowPolicy p) :
-            Internal(u,n),
+            Internal(u,n,typeid(Compound)),
             Operand::List(),
             behavior(b),
             hollowPolicy(p)

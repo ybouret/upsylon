@@ -9,29 +9,13 @@ namespace upsylon
         namespace Syntax
         {
 
-            template <>
-            const Terminal & Node:: as<Terminal>() const throw()
-            {
-                assert(terminal);
-                assert(rule.derived);
-                return *static_cast<const Terminal *>(rule.derived);
-            }
-
-            template <>
-            const Compound & Node:: as<Compound>() const throw()
-            {
-                assert(internal);
-                assert(rule.derived);
-                assert(rule.uuid==Alternate::UUID || rule.uuid==Aggregate::UUID);
-                return *static_cast<const Compound *>(rule.derived);
-            }
-
+            
             namespace
             {
                 static inline
                 void AST_Terminal( Node *sub, Node::List &temp )
                 {
-                    if(sub->as<Terminal>().attr==Semantic)
+                    if(sub->rule.as<Terminal>().attr==Semantic)
                     {
                         delete sub;
                     }
@@ -46,7 +30,7 @@ namespace upsylon
                 {
                     if(sub->rule.uuid == Aggregate::UUID )
                     {
-                        switch( sub->as<Compound>().behavior )
+                        switch( sub->rule.as<Compound>().behavior )
                         {
                             case SubGroup:
                                 temp.push_back(sub);
@@ -82,7 +66,7 @@ namespace upsylon
                 assert(node);
                 if(node->terminal)
                 {
-                    if(node->as<Terminal>().univocal)
+                    if(node->rule.as<Terminal>().univocal)
                     {
                         // delete content
                         node->lexeme().clear();
@@ -111,7 +95,7 @@ namespace upsylon
 
                     if(node->rule.uuid == Aggregate::UUID )
                     {
-                        if( SubGroup == node->as<Compound>().behavior )
+                        if( SubGroup == node->rule.as<Compound>().behavior )
                         {
                             return node;
                         }

@@ -6,7 +6,6 @@
 #include "y/lang/syntax/joker.hpp"
 #include "y/lang/syntax/compound.hpp"
 #include "y/lang/syntax/rrs.hpp"
-#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -77,7 +76,7 @@ namespace upsylon
                                 break;
 
                             default:
-                                throw exception("Syntax::RuleProbe: unexpected  UUID [%04x] for <%s>",unsigned(r->uuid), *(r->name) );
+                                throwUUID(VisitFunction,r);
                         }
                     }
                     catch(...)
@@ -89,9 +88,14 @@ namespace upsylon
 
                 //! full recursive visit
                 void visitFrom(const Rule *top, const char *context);
-                
+
+                int recursivity(const Rule *top);
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(RuleProbe);
+                static const char VisitFunction[];
+                void throwUUID( const char *fn, const Rule *r) const;
+
             };
 
         }

@@ -69,10 +69,6 @@ namespace upsylon
                  */
                 static Node  *Load( Source &source, Grammar &G);
 
-                //! get the derived rule Terminal|Compound
-                template <typename RULE_TYPE>
-                const RULE_TYPE & as() const throw();
-
                 //! transform a raw node into the direct AST
                 static Node * AST( Node *node ) throw();
 

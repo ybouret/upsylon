@@ -10,7 +10,7 @@ namespace upsylon
             Joker::~Joker() throw() {}
 
             Joker:: Joker(const uint32_t i, const string &n, const Rule &r) :
-            Internal(i,n),
+            Internal(i,n,typeid(Joker)),
             jk(r)
             {
                 if(jk.isHollow())

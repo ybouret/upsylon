@@ -13,7 +13,7 @@ namespace upsylon
             }
 
             Terminal:: Terminal(const string &n) :
-            Rule(UUID,n),
+            Rule(UUID,n, typeid(Terminal) ),
             ordinary(true),
             univocal(false),
             attr(Standard)

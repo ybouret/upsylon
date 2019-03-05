@@ -1,5 +1,6 @@
 #include "y/lang/syntax/rule.hpp"
 #include "y/string/convert.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -12,13 +13,21 @@ namespace upsylon
             {
             }
 
-            Rule:: Rule( const uint32_t i, const string &n ) :
+            Rule:: Rule( const uint32_t i, const string &n, const std::type_info &tid ) :
             uuid(i),
             name(n),
             derived(0),
+            info(tid),
             verbose(false)
             {
             }
+
+            void Rule:: checkConsistency( const std::type_info &target ) const
+            {
+                if(!derived)         throw exception("%s <%s>.derived=NULL",   typeName(), *name );
+                if( info != target ) throw exception("%s <%s>.mismatch typeid", typeName(), *name);
+            }
+
 
             void Rule:: graphVizName( ios::ostream &fp ) const
             {

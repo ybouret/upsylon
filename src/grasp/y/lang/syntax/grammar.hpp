@@ -105,11 +105,14 @@ namespace upsylon
                 RuleReferenceSet *rrs;
                 bool              verbose;
                 unsigned          iAlt;
-                
+
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 string MakeCompoundName(  const ArrayOfStrings &strings, const char sep) const;
                 void              no_rrs() throw(); //!< safely remove rrs
                 void validate() const; //!< check all rules are used
+
+            public:
+                const size_t maxRuleNameLength; //!< if need to align
             };
 
         }
