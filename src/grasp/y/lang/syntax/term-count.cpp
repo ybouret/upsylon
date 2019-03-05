@@ -1,4 +1,4 @@
-#if 0
+#if 1
 #include "y/lang/syntax/term-count.hpp"
 
 namespace upsylon
@@ -7,7 +7,7 @@ namespace upsylon
     {
         namespace Syntax
         {
-            TermCount:: TermCount(const unsigned lo, const int up) throw() : nmin(lo), nmax(up) {}
+            TermCount:: TermCount(const int lo, const int up) throw() : nmin(lo), nmax(up) {}
 
             TermCount:: TermCount(const TermCount &other) throw() :
             nmin( other.nmin ),
@@ -26,17 +26,9 @@ namespace upsylon
                 return *this;
             }
 
-            std::ostream & operator<<( std::ostream &os, const TermCount &c)
+            std::ostream & operator<<( std::ostream &os, const TermCount &)
             {
-                os << '[' << c.nmin << ':';
-                if(c.nmax>=0)
-                {
-                    os << c.nmax;
-                }
-                else
-                {
-                    os << "inf";
-                }
+                os << '[';
                 os << ']';
                 return os;
             }

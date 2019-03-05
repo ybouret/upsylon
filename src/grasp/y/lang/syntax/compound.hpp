@@ -83,7 +83,8 @@ namespace upsylon
                 Y_LANG_SYNTAX_ACCEPT_PROTO();                      //!< must accept all operands
                 virtual const char *graphVizShape() const throw(); //!< the shape
                 virtual const char *graphVizStyle() const throw(); //!< change style according to behavior
-                
+                virtual unsigned    astMinCount() const throw();   //!<
+
 
                 //! change behavior
                 Aggregate & will( Behavior newBehavior ) throw() { (Behavior &)behavior = newBehavior; return *this; }
@@ -108,7 +109,8 @@ namespace upsylon
                 virtual const char *typeName() const throw();      //!< "Alternate"
                 Y_LANG_SYNTAX_ACCEPT_PROTO();                      //!< accept the first possible operands
                 virtual const char *graphVizShape() const throw(); //!< the shape
-                
+                virtual unsigned    astMinCount() const throw();   //!< 
+
                 virtual void  upgrade() throw();                   //!< do nothing
 
             private:

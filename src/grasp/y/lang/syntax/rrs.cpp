@@ -41,6 +41,11 @@ namespace upsylon
             {
             }
 
+            RuleReferenceSet:: RuleReferenceSet(size_t n)  :
+            RuleReference::Set(n,as_capacity)
+            {
+            }
+
             bool    RuleReferenceSet:: declare(const Rule *r)
             {
                 assert(r!=NULL);

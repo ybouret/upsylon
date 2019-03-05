@@ -1,6 +1,5 @@
 #include "y/lang/syntax/grammar.hpp"
 #include "y/exception.hpp"
-#include "y/associative/map.hpp"
 
 namespace upsylon
 {
@@ -10,9 +9,10 @@ namespace upsylon
         {
             namespace
             {
-                typedef map<string,unsigned,RuleReference::KeyHasher,RuleReference::Memory> RDB_Type;
+                //typedef map<string,unsigned,RuleReference::KeyHasher,RuleReference::Memory> RDB_Type;
+                typedef RuleReferenceSet RRS;
 
-                class RDB : public RDB_Type
+                class RDB : public RRS
                 {
                 public:
                     const Tag  name;
@@ -26,7 +26,7 @@ namespace upsylon
                     }
 
                     explicit RDB(const Tag &id, const size_t n, const bool v) :
-                    RDB_Type(n,as_capacity), name(id), verbose(v), level(0)
+                    RRS(n), name(id), verbose(v), level(0)
                     {
                     }
 
@@ -36,6 +36,16 @@ namespace upsylon
                     {
                         assert(r);
                         const string &id = r->name;
+                        if( declare(r) )
+                        {
+                            Y_LANG_SYNTAX_VERBOSE( std::cerr << "{" << *name << "} "; indent(std::cerr) << "visiting <" << id << "> / " << r->typeName() << std::endl);
+                            return false;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+#if 0
                         unsigned *pCount = search(id);
                         if(!pCount)
                         {
@@ -49,6 +59,7 @@ namespace upsylon
                             ++(*pCount);
                             return true;
                         }
+#endif
                     }
 
 
@@ -122,7 +133,9 @@ namespace upsylon
                     }
                     if(verbose)
                     {
-                        std::cerr << "\tChecking astTermCount for " << r->name << std::endl;
+                        std::cerr << "\tChecking astMinCount for " << r->name << std::endl;
+                        //const unsigned nmin = r->astMinCount();
+                       // std::cerr << "\t\tnmin" << nmin << std::endl;
                     }
                 }
                 Y_LANG_SYNTAX_VERBOSE(std::cerr << "{" << *name << "} seems valid!" << std::endl);

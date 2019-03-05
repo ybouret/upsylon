@@ -1,4 +1,3 @@
-#if 0
 //! \file
 #ifndef Y_LANG_SYNTAX_TERM_COUNT_INCLUDED
 #define Y_LANG_SYNTAX_TERM_COUNT_INCLUDED 1
@@ -16,10 +15,10 @@ namespace upsylon
             class TermCount
             {
             public:
-                unsigned nmin; //!< minimal number of emitted terminals
-                int      nmax; //!< maximal number of emitter terminals, negatif means infinite...
+                int nmin; //!< minimal number of emitted terminals, negatif means infinite
+                int nmax; //!< maximal number of emitter terminals, negatif means infinite...
 
-                TermCount(const unsigned lo=0, const int up=0) throw(); //!< setup
+                TermCount(const int lo=0, const int up=0) throw(); //!< setup
                 TermCount(const TermCount &) throw();                   //!< copy
                 TermCount&operator=(const TermCount&) throw();          //!< assign
                 ~TermCount() throw();                                   //!< destruct
@@ -31,5 +30,4 @@ namespace upsylon
     }
 }
 
-#endif
 #endif

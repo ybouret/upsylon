@@ -35,6 +35,7 @@ namespace upsylon
             {
             public:
                 explicit RuleReferenceSet() throw();  //!< initialize
+                explicit RuleReferenceSet(size_t n);  //!< initialize with capacity
                 virtual ~RuleReferenceSet() throw();  //!< destructor
                 bool     declare(const Rule *r);      //!< try to insert a new reference
 

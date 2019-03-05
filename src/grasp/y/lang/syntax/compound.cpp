@@ -264,3 +264,42 @@ namespace upsylon
     }
 }
 
+namespace upsylon
+{
+    namespace Lang
+    {
+        namespace Syntax
+        {
+
+            unsigned Alternate:: astMinCount() const throw()
+            {
+                if(size>0)
+                {
+                    const Operand *op   = head;
+                    unsigned       nmin = op->rule.astMinCount();
+                    while(nmin>0 && NULL != (op=op->next) )
+                    {
+                        nmin = min_of(nmin,op->rule.astMinCount());
+                    }
+                    return nmin;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
+            unsigned Aggregate:: astMinCount() const throw()
+            {
+                unsigned nmin = 0;
+                for(const Operand *op=head;op;op=op->next)
+                {
+                    nmin += op->rule.astMinCount();
+                }
+                return nmin;
+            }
+
+        }
+    }
+}
+
