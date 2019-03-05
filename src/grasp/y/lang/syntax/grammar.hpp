@@ -41,7 +41,7 @@ namespace upsylon
                 Rule & topLevel();                             //!< get top level rule
                 void   topLevel( const Rule &r );              //!< set top level rule
                 bool   ownsRule( const Rule & ) const throw(); //!< check ownership
-                void   finalize();                             //!< clean up
+                void   finalize();                             //!< clean up and check for operators
 
                 //! wrapper to keep derived rule type
                 template <typename T>
@@ -63,12 +63,16 @@ namespace upsylon
                 //______________________________________________________________
                 Aggregate  & aggregate( const string &id );                      //!< create an aggregate rule
                 Aggregate  & aggregate( const char   *id );                      //!< create an aggregate rule, wrapper
-                Aggregate  & join( const Rule &a, const Rule &b);                //!< create a small aggregate with autoUpgrade
-                Aggregate  & join( const Rule &a, const Rule &b, const Rule &c); //!< create a small aggregate with autoUpgrade
+                Aggregate  & join( const Rule &a, const Rule &b);                //!< create a small bundle
+                Aggregate  & join( const Rule &a, const Rule &b, const Rule &c); //!< create a small bundle()
+
+                //! create a merging if one child aggregate
+                template <typename T>
+                inline Aggregate  & design( const T &id ) { return aggregate(id).design(); }
 
                 //! create a merging aggregate
                 template <typename T>
-                inline Aggregate  & design( const T &id ) { return aggregate(id).will(MergeOne); }
+                inline Aggregate  & bundle( const T &id ) { return aggregate(id).bundle(); }
 
 
                 //______________________________________________________________
@@ -103,6 +107,9 @@ namespace upsylon
             private:
                 Rule::List        rules;
                 RuleReferenceSet *rrs;
+            public:
+                const bool        hasOperators;
+            private:
                 bool              verbose;
                 unsigned          iAlt;
 

@@ -3,6 +3,7 @@
 #define Y_LANG_SYNTAX_NODE_INCLUDED 1
 
 #include "y/lang/lexical/translator.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon
 {
@@ -73,7 +74,7 @@ namespace upsylon
                 static Node * AST( Node *node ) throw();
 
                 //! rewrite an AST according to operators
-                static Node * Rewrite( Node *node );
+                static Node * Rewrite( Node *node, const Grammar &G );
 
 
 
@@ -126,6 +127,8 @@ namespace upsylon
                 Y_DISABLE_ASSIGN(InternalNode);
                 virtual void emit( ios::ostream & ) const;
                 virtual void returnTo( Lexer &lexer ) throw();
+
+                auto_ptr<string> data;
             };
 
         }

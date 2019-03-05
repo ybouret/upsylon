@@ -28,6 +28,7 @@ namespace upsylon
             name(id),
             rules(),
             rrs( new RuleReferenceSet() ),
+            hasOperators(false),
             verbose(false),
             iAlt(1),
             maxRuleNameLength(0)

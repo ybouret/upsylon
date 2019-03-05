@@ -12,6 +12,8 @@ namespace upsylon
             void Grammar:: validate() const
             {
                 Y_LANG_SYNTAX_VERBOSE(std::cerr << "{" << *name << "} validating..." << std::endl);
+                bool &ops = (bool &)hasOperators;
+                ops = false;
                 if(rules.size<=0)
                 {
                     throw exception("{%s} no top level rule", **name );
@@ -31,6 +33,11 @@ namespace upsylon
                     if(! probe.search(r->name) )
                     {
                         throw exception("{%s} standalone %s <%s>", **name, r->typeName(), *(r->name) );
+                    }
+                    if(r->uuid==Terminal::UUID&&r->as<Terminal>().attr == Operator )
+                    {
+                        ops = true;
+                        Y_LANG_SYNTAX_VERBOSE(std::cerr << "#{" << *name << "} <" << r->name << "> is an operator" << std::endl);
                     }
                 }
 

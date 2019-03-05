@@ -103,40 +103,6 @@ namespace upsylon
     }
 }
 
-#if 0
-namespace upsylon
-{
-    namespace Lang
-    {
-        namespace Syntax
-        {
-            Terminal & Parser:: sole( const string &id, const string &rs)
-            {
-                const string rx = StringToRegExp(rs);
-                return term(id,rx);
-            }
-            
-            Terminal & Parser:: sole( const char *id, const char *rs)
-            {
-                const string _(id), __(rs); return sole(_,__);
-            }
-
-            Terminal & Parser:: sole( const string &rs )
-            {
-                const string rx = StringToRegExp(rs);
-                return term(rs,rx);
-            }
-
-            Terminal & Parser:: sole( const char *rs )
-            {
-                const string _(rs); return sole(_);
-            }
-
-
-        }
-    }
-}
-#endif
 
 namespace upsylon
 {
@@ -148,7 +114,15 @@ namespace upsylon
             Node * Parser:: run(Source &source)
             {
                 reset();
-                return  Node::AST(accept(source, *this));
+                Node *ast = Node::AST(accept(source, *this));
+                if(hasOperators)
+                {
+                    return Node::Rewrite(ast,*this);
+                }
+                else
+                {
+                    return ast;
+                }
             }
 
 

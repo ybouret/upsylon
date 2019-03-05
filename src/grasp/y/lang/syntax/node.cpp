@@ -248,15 +248,19 @@ namespace upsylon
             }
 
             InternalNode:: InternalNode(const Rule &r) throw() :
-            Node(r,false), Node::List()
+            Node(r,false), Node::List(), data(NULL)
             {
             }
 
             InternalNode:: InternalNode(const InternalNode &node) :
             Node(node),
-            Node::List(node)
+            Node::List(node),
+            data( NULL )
             {
-
+                if( node.data.is_valid() )
+                {
+                    data = new string( * node.data );
+                }
             }
 
             Node * InternalNode:: clone() const

@@ -132,8 +132,7 @@ namespace upsylon
                 strings.release();
                 Aggregate & agg = aggregate(id);
                 agg << a << b;
-                agg.autoUpgrade();
-                return agg;
+                return agg.bundle();
             }
 
             Aggregate & Grammar:: join( const Rule &a, const Rule &b, const Rule &c)
@@ -150,8 +149,7 @@ namespace upsylon
                 strings.release();
                 Aggregate & agg = aggregate(id);
                 agg << a << b << c;
-                agg.autoUpgrade();
-                return agg;
+                return agg.bundle();
             }
         }
     }
