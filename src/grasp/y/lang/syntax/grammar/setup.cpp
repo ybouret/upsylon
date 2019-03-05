@@ -132,7 +132,7 @@ namespace upsylon
                 strings.release();
                 Aggregate & agg = aggregate(id);
                 agg << a << b;
-                agg.upgrade();
+                agg.autoUpgrade();
                 return agg;
             }
 
@@ -150,7 +150,7 @@ namespace upsylon
                 strings.release();
                 Aggregate & agg = aggregate(id);
                 agg << a << b << c;
-                agg.upgrade();
+                agg.autoUpgrade();
                 return agg;
             }
         }

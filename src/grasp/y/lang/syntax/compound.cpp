@@ -231,9 +231,9 @@ namespace upsylon
         namespace Syntax
         {
 
-            void Aggregate:: upgrade() throw()
+            void Aggregate:: autoUpgrade() throw()
             {
-                std::cerr << "*** upgrading <" << name << ">" << std::endl;
+                // std::cerr << "*** upgrading <" << name << ">" << std::endl;
                 if(SubGroup==behavior)
                 {
                     size_t count = 0;
@@ -247,7 +247,7 @@ namespace upsylon
                         }
                         ++count;
                     }
-                    std::cerr << "*** count=" << count << std::endl;
+                    //std::cerr << "*** count=" << count << std::endl;
                     if(1==count)
                     {
                         will(MergeOne);

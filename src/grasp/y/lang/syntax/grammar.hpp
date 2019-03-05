@@ -63,12 +63,12 @@ namespace upsylon
                 //______________________________________________________________
                 Aggregate  & aggregate( const string &id );                      //!< create an aggregate rule
                 Aggregate  & aggregate( const char   *id );                      //!< create an aggregate rule, wrapper
-                Aggregate  & join( const Rule &a, const Rule &b);                //!< create a small aggregate
-                Aggregate  & join( const Rule &a, const Rule &b, const Rule &c); //!< create a small aggregate
+                Aggregate  & join( const Rule &a, const Rule &b);                //!< create a small aggregate with autoUpgrade
+                Aggregate  & join( const Rule &a, const Rule &b, const Rule &c); //!< create a small aggregate with autoUpgrade
 
                 //! create a merging aggregate
                 template <typename T>
-                inline Aggregate  & design( const T &id ) { return aggregate(id).will(MergeAll); }
+                inline Aggregate  & design( const T &id ) { return aggregate(id).will(MergeOne); }
 
 
                 //______________________________________________________________

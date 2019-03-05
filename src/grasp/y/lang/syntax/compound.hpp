@@ -86,7 +86,7 @@ namespace upsylon
 
                 //! change behavior
                 Aggregate & will( Behavior newBehavior ) throw() { (Behavior &)behavior = newBehavior; return *this; }
-                void  upgrade() throw(); //!< will detect design aggregate
+                void  autoUpgrade() throw(); //!< will detect design aggregate
 
 
             private:

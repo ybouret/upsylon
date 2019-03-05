@@ -22,14 +22,22 @@ namespace upsylon
             }
 
 
-            Terminal & Terminal:: setSemantic()
+            Terminal & Terminal:: sm()
             {
+                if(Standard!=attr)
+                {
+                    throw exception("%s <%s>.sm() is NOT Standard", typeName(), *name);
+                }
                 (Attribute &)attr = Semantic;
                 return *this;
             }
 
-            Terminal & Terminal:: setOperator()
+            Terminal & Terminal:: op()
             {
+                if(Standard!=attr)
+                {
+                    throw exception("%s <%s>.op() is NOT Standard", typeName(), *name);
+                }
                 (Attribute &)attr = Operator;
                 return *this;
             }

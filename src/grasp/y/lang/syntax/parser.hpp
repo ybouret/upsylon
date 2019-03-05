@@ -51,21 +51,18 @@ namespace upsylon
                 TERM & term( const string &rx );                   //!< create a terminal rx matching rx
                 TERM & term( const char   *rx );                   //!< create a terminal rx matching rx, wrapper
 
-                //! create a semantic terminal
+
                 template <typename T>
-                TERM & mark( const T &arg ) { return term(arg).setSemantic(); }
+                inline TERM & mark( const T &arg ) { return term(arg).sm(); }
 
-                //! create a semantic terminal
                 template <typename T, typename U>
-                TERM & mark( const T &id, const U &data ) { return term(id,data).setSemantic(); }
+                inline TERM & mark( const T &id, const U &arg ) { return term(id,arg).sm(); }
 
-                //! create an operator terminal
                 template <typename T>
-                TERM & op( const T &arg ) { return term(arg).setOperator(); }
+                inline TERM & op( const T &arg ) { return term(arg).op(); }
 
-                //! create an operator terminal
                 template <typename T, typename U>
-                TERM & op( const T &id, const U &data ) { return term(id,data).setOperator(); }
+                inline TERM & op( const T &id, const U &arg ) { return term(id,arg).op(); }
 
                 //! zero arguments plugin
                 template <typename PLUGIN> inline RULE & hook( const string &id )
@@ -80,6 +77,7 @@ namespace upsylon
                     const string _(id); return hook<PLUGIN>(_);
                 }
 
+                void end() throw();
 
                 //______________________________________________________________
                 //

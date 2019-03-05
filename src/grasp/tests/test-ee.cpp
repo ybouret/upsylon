@@ -34,12 +34,13 @@ namespace {
 
             EXPR << zeroOrMore( join(ADD,mark(';')) );
 
-            finalize();
 
             // lexical only
             (**this).drop("[:blank:]+");
             (**this).endl("[:endl:]");
 
+            end();
+            
             graphViz( *name + ".dot" );
         }
 

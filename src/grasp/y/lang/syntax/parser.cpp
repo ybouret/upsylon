@@ -27,6 +27,11 @@ Lexer(ID), Grammar(label), CountedObject()
                 return *name;
             }
 
+            void Parser:: end() throw()
+            {
+                finalize();
+                dict.release();
+            }
         }
     }
 }
@@ -91,6 +96,54 @@ namespace upsylon
                 const string _(rx);
                 return term(_,_);
             }
+
+
+
+        }
+    }
+}
+
+#if 0
+namespace upsylon
+{
+    namespace Lang
+    {
+        namespace Syntax
+        {
+            Terminal & Parser:: sole( const string &id, const string &rs)
+            {
+                const string rx = StringToRegExp(rs);
+                return term(id,rx);
+            }
+            
+            Terminal & Parser:: sole( const char *id, const char *rs)
+            {
+                const string _(id), __(rs); return sole(_,__);
+            }
+
+            Terminal & Parser:: sole( const string &rs )
+            {
+                const string rx = StringToRegExp(rs);
+                return term(rs,rx);
+            }
+
+            Terminal & Parser:: sole( const char *rs )
+            {
+                const string _(rs); return sole(_);
+            }
+
+
+        }
+    }
+}
+#endif
+
+namespace upsylon
+{
+    namespace Lang
+    {
+        namespace Syntax
+        {
 
             Node * Parser:: run(Source &source)
             {

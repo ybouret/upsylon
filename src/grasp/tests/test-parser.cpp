@@ -15,17 +15,18 @@ namespace {
             setVerbose(true);
 
             ALT   & JSON    = alternate("JSON");
-            ALT   & VALUE  = alternate("value");
-            TERM  & COMA   = term(',').setSemantic();
+            ALT   & VALUE   = alternate("value");
+            TERM  & COMA    = term(',').sm();
             RULE  & STRING  = hook<Lexical::jString>("string");
             {
                 AGG & ARRAY = aggregate("array");
-                ARRAY << mark('[');
-                ARRAY << VALUE;
-                ARRAY << zeroOrMore( join(COMA,VALUE) );
-                ARRAY << mark(']');
-                VALUE << ARRAY;
-
+                {
+                    ARRAY << mark('[');
+                    ARRAY << VALUE;
+                    ARRAY << zeroOrMore( join(COMA,VALUE) );
+                    ARRAY << mark(']');
+                    VALUE << ARRAY;
+                }
                 JSON << ARRAY;
             }
 
@@ -34,22 +35,24 @@ namespace {
                 {
                     OBJECT << mark('{');
                     AGG & PAIR = aggregate("pair");
-                    PAIR << STRING << mark(':') << VALUE;
+                    PAIR << STRING << term(':').sm() << VALUE;
 
                     OBJECT << PAIR;
                     OBJECT << zeroOrMore( join(COMA,PAIR) );
                     OBJECT << mark('}');
-                    JSON << OBJECT;
                 }
+                JSON << OBJECT;
+
             }
 
-            VALUE << term("null") << term("true") << term("false") << term("number","-?[:digit:]+([.][:digit:]+)?") << STRING;
+            VALUE << term("null") << term("true","true") << term("false") << term("number","-?[:digit:]+([.][:digit:]+)?") << STRING;
 
-            finalize();
 
             // lexical only
             (**this).drop("[:blank:]+");
             (**this).endl("[:endl:]");
+
+            end();
 
             graphViz( *name + ".dot" );
         }
