@@ -39,8 +39,7 @@ namespace upsylon
                 virtual const char *typeName() const throw();      //!< "Optional"
                 virtual bool        isHollow() const throw();      //!< true
                 virtual const char *graphVizShape() const throw(); //!< the shape
-                virtual TermCount   astTermCount() const throw();  //!< [0;jk.nmax]
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Optional);
             };
@@ -58,7 +57,6 @@ namespace upsylon
                 virtual const char *typeName() const throw();      //!< "ZeroOrMore"
                 virtual bool        isHollow() const throw();      //!< true
                 virtual const char *graphVizShape() const throw(); //!< the shape
-                virtual TermCount   astTermCount() const throw();  //!< [0;-1]
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ZeroOrMore);
@@ -77,7 +75,6 @@ namespace upsylon
                 virtual const char *typeName() const throw();      //!< "OneOrMore"
                 virtual bool        isHollow() const throw();      //!< false
                 virtual const char *graphVizShape() const throw(); //!< the shape
-                virtual TermCount   astTermCount() const throw();  //!< [jk.nmin:-1]
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OneOrMore);

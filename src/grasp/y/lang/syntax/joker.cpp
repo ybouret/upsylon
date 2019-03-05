@@ -71,12 +71,7 @@ namespace upsylon
                 return "diamond";
             }
 
-            TermCount Optional:: astTermCount() const throw()
-            {
-                TermCount count = jk.astTermCount();
-                count.nmin = 0;
-                return count;
-            }
+
         }
     }
 }
@@ -146,10 +141,7 @@ namespace upsylon
                 return "oval";
             }
 
-            TermCount ZeroOrMore:: astTermCount() const throw()
-            {
-                return TermCount(0,-1);
-            }
+
         }
     }
 }
@@ -227,13 +219,7 @@ namespace upsylon
                 return "octagon";
             }
 
-            TermCount OneOrMore:: astTermCount() const throw()
-            {
-                TermCount count = jk.astTermCount();
-                count.nmax = -1;
-                return count;
-            }
-
+            
 
         }
     }

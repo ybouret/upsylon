@@ -117,18 +117,7 @@ namespace upsylon
                 return "bold";
             }
 
-            TermCount  Terminal:: astTermCount() const throw()
-            {
-                TermCount count;
-                assert(0==count.nmax);
-                assert(0==count.nmin);
-                if(Semantic!=attr)
-                {
-                    count.nmax = 1;
-                    count.nmin = 1;
-                }
-                return count;
-            }
+            
         }
     }
 }

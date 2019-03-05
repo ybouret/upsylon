@@ -123,8 +123,6 @@ namespace upsylon
                     if(verbose)
                     {
                         std::cerr << "\tChecking astTermCount for " << r->name << std::endl;
-                        const TermCount tc = r->astTermCount();
-                        std::cerr << "\t" << r->typeName() << " <" << r->name << "> astTermCount=" << tc << std::endl;
                     }
                 }
                 Y_LANG_SYNTAX_VERBOSE(std::cerr << "{" << *name << "} seems valid!" << std::endl);

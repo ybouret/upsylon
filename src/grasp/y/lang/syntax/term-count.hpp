@@ -1,4 +1,4 @@
-
+#if 0
 //! \file
 #ifndef Y_LANG_SYNTAX_TERM_COUNT_INCLUDED
 #define Y_LANG_SYNTAX_TERM_COUNT_INCLUDED 1
@@ -32,4 +32,4 @@ namespace upsylon
 }
 
 #endif
-
+#endif
