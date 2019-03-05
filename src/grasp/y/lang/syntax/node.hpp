@@ -72,6 +72,11 @@ namespace upsylon
                 //! transform a raw node into the direct AST
                 static Node * AST( Node *node ) throw();
 
+                //! rewrite an AST according to operators
+                static Node * Rewrite( Node *node );
+
+
+
             protected:
                 explicit Node(const Rule &r, const bool term) throw(); //!< setup
                 Node(const Node &other) throw();                       //!< copy

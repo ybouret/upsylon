@@ -84,8 +84,10 @@ namespace upsylon
                 virtual const char *graphVizStyle() const throw(); //!< change style according to behavior
 
 
+                Aggregate & design()  throw() { (Behavior &)behavior = MergeOne; return *this; }
+                Aggregate & bundle()  throw() { (Behavior &)behavior = MergeAll; return *this; }
+
                 //! change behavior
-                Aggregate & will( Behavior newBehavior ) throw() { (Behavior &)behavior = newBehavior; return *this; }
                 void  autoUpgrade() throw(); //!< will detect design aggregate
 
 

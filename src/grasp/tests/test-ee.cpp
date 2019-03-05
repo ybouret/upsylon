@@ -23,14 +23,14 @@ namespace {
 
             RULE & ADDOP = op("ADDOP","[-+]");
 
-            ADD << optional(ADDOP) << MUL << zeroOrMore( join( ADDOP, MUL ) );
-            MUL << POW << zeroOrMore( join( term("MULOP","[*/%]"), POW ) );
+            ADD << optional(ADDOP) << MUL << zeroOrMore( join( ADDOP, MUL ).bundle() );
+            MUL << POW << zeroOrMore( join( term("MULOP","[*/%]"), POW ).bundle() );
 
             POW << ATOM << optional( join( term('^'), POW) );
 
-            MUL.will(Syntax::MergeOne);
-            POW.will(Syntax::MergeOne);
-            ADD.will(Syntax::MergeOne);
+            MUL.design();
+            POW.design();
+            ADD.design();
 
             EXPR << zeroOrMore( join(ADD,mark(';')) );
 

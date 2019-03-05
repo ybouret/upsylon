@@ -63,7 +63,9 @@ namespace upsylon
                 inline const RULE_TYPE & as() const throw() { checkConsistency( typeid(RULE_TYPE) ); return *static_cast<const RULE_TYPE *>(derived); }
 
             protected:
-                explicit Rule(const uint32_t i, const string &n, const std::type_info &tid); //!< setup
+                explicit Rule(const uint32_t        u,
+                              const string         &n,
+                              const std::type_info &tid); //!< setup
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Rule);

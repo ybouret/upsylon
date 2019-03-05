@@ -250,7 +250,7 @@ namespace upsylon
                     //std::cerr << "*** count=" << count << std::endl;
                     if(1==count)
                     {
-                        will(MergeOne);
+                        (void) design();
                     }
                 }
             }

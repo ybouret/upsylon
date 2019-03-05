@@ -13,8 +13,10 @@ namespace upsylon
             {
             }
 
-            Rule:: Rule( const uint32_t i, const string &n, const std::type_info &tid ) :
-            uuid(i),
+            Rule:: Rule(const uint32_t        u,
+                        const string         &n,
+                        const std::type_info &tid ) :
+            uuid(u),
             name(n),
             derived(0),
             info(tid),

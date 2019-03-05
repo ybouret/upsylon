@@ -1,6 +1,4 @@
-
 #include "y/lang/syntax/grammar.hpp"
-#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -66,17 +64,38 @@ namespace upsylon
                 assert(node);
                 if(node->terminal)
                 {
+                    //__________________________________________________________
+                    //
+                    //
+                    // process terminal
+                    //
+                    //__________________________________________________________
                     if(node->rule.as<Terminal>().univocal)
                     {
-                        // delete content
+                        //______________________________________________________
+                        //
+                        // delete univocal content
+                        //______________________________________________________
                         node->lexeme().clear();
                     }
                     return node;
                 }
                 else
                 {
+                    //__________________________________________________________
+                    //
+                    //
+                    // process internal
+                    //
+                    //__________________________________________________________
                     Node::List &self = node->children();
+
+
                     {
+                        //______________________________________________________
+                        //
+                        // first pass : recursive call
+                        //______________________________________________________
                         Node::List temp;
                         while(self.size)
                         {
@@ -95,13 +114,22 @@ namespace upsylon
 
                     if(node->rule.uuid == Aggregate::UUID )
                     {
+                        //______________________________________________________
+                        //
+                        // second pass: local merging
+                        //______________________________________________________
                         if( SubGroup == node->rule.as<Compound>().behavior )
                         {
+                            //--------------------------------------------------
+                            // leave untouched
+                            //--------------------------------------------------
                             return node;
                         }
                         else
                         {
+                            //--------------------------------------------------
                             // possible merging is only 1 child
+                            //--------------------------------------------------
                             if(1==node->children().size)
                             {
                                 Node  *one = node->children().pop_front();
