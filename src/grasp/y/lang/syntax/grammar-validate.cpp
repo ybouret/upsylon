@@ -108,28 +108,10 @@ namespace upsylon
                     throw exception("{%s} no top level rule", **name );
                 }
 
-#if 0
-                for(const Rule *r=rules.head;r;r=r->next)
-                {
-                    if(r->uuid==Aggregate::UUID)
-                    {
-                        if(r->isHollow())
-                        {
-                            throw exception("{%s} has hollow %s <%s>, meaning empty or with all hollow operands!", **name, r->typeName(), *(r->name) );
-                        }
-                    }
-                }
-#endif
-
+                // prepare the database
                 RDB rdb( name, rules.size, verbose);
-                /*
-                for(const Rule *r=rules.head;r;r=r->next)
-                {
-                    rdb.visit(r);
 
-                 }
-                 */
-
+                // recursively check rules
                 rdb.visit(rules.head);
 
                 for(const Rule *r=rules.head;r;r=r->next)
@@ -137,6 +119,12 @@ namespace upsylon
                     if(! rdb.search(r->name) )
                     {
                         throw exception("{%s} standalone %s <%s>", **name, r->typeName(), *(r->name) );
+                    }
+                    if(verbose)
+                    {
+                        std::cerr << "\tChecking astTermCount for " << r->name << std::endl;
+                        const TermCount tc = r->astTermCount();
+                        std::cerr << "\t" << r->typeName() << " <" << r->name << "> astTermCount=" << tc << std::endl;
                     }
                 }
                 Y_LANG_SYNTAX_VERBOSE(std::cerr << "{" << *name << "} seems valid!" << std::endl);

@@ -20,6 +20,8 @@ Y_UTEST(rules)
     for( const Syntax::Rule *r = rules.head; r; r=r->next )
     {
         std::cerr << "typeName=" << r->typeName() << " : " << r->name << std::endl;
+        Syntax::TermCount tc = r->astTermCount();
+        std::cerr << "\tastTermCount=" << tc << std::endl;
     }
     std::cerr << "sizeof(Node)         = " << sizeof(Syntax::Node)         << std::endl;
     std::cerr << "sizeof(TerminalNode) = " << sizeof(Syntax::TerminalNode) << std::endl;

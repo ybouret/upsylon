@@ -151,6 +151,30 @@ namespace upsylon
                 return "solid";
             }
 
+            TermCount Aggregate:: astTermCount() const throw()
+            {
+                TermCount count;
+                for(const Operand *op=head;op;op=op->next)
+                {
+                    TermCount opc = op->rule.astTermCount();
+                    count.nmin += opc.nmin;
+                    if(count.nmax>=0)
+                    {
+                        if(opc.nmax>=0)
+                        {
+                            count.nmax += opc.nmax;
+                        }
+                        else
+                        {
+                            assert(opc.nmax<0);
+                            count.nmax=-1;
+                        }
+
+                    }
+                    // else keep nmax<0
+                }
+                return count;
+            }
 
 
         }
@@ -218,6 +242,30 @@ namespace upsylon
             void Alternate:: upgrade() throw()
             {
                 assert(MergeAll==behavior);
+            }
+
+            TermCount Alternate:: astTermCount() const throw()
+            {
+                TermCount count;
+                for(const Operand *op=head;op;op=op->next)
+                {
+                    TermCount opc = op->rule.astTermCount();
+                    count.nmin = min_of(count.nmin,opc.nmin);
+                    if(count.nmax>=0)
+                    {
+                        if(opc.nmax>=0)
+                        {
+                            count.nmax = max_of(count.nmax,opc.nmax);
+                        }
+                        else
+                        {
+                            assert(opc.nmax<0);
+                            count.nmax = -1;
+                        }
+                    }
+                    // else keep nmax<0
+                }
+                return count;
             }
 
         }

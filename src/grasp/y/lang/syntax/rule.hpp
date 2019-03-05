@@ -4,6 +4,7 @@
 
 #include "y/lang/syntax/node.hpp"
 #include "y/lang/lexical/translator.hpp"
+#include "y/lang/syntax/term-count.hpp"
 
 namespace upsylon
 {
@@ -11,6 +12,8 @@ namespace upsylon
     {
         namespace Syntax
         {
+
+
             //! arguments for accept
 #define Y_LANG_SYNTAX_ACCEPT_ARGS Source &source, Lexer &lexer, Node * &tree
 
@@ -39,8 +42,9 @@ namespace upsylon
                 // virtual interface
                 //______________________________________________________________
                 Y_LANG_SYNTAX_ACCEPT_PROTO()  = 0;                            //!< accept method
-                virtual const char *typeName() const throw() = 0;             //!< get a textual name
-                virtual bool        isHollow() const throw() = 0;             //!< if accepts an empty node
+                virtual const char *typeName() const throw()     = 0;         //!< get a textual name
+                virtual bool        isHollow() const throw()     = 0;         //!< if accepts an empty node
+                virtual TermCount   astTermCount() const throw() = 0;         //!< count terminals for AST upon accept
                 virtual            ~Rule() throw();                           //!< destructor
                 virtual const char *graphVizShape() const throw() = 0;        //!< shape for graphViz
                 virtual void        graphVizEpilog(ios::ostream &) const = 0; //!< perform necessary linking

@@ -83,10 +83,13 @@ namespace upsylon
                 Y_LANG_SYNTAX_ACCEPT_PROTO();                      //!< must accept all operands
                 virtual const char *graphVizShape() const throw(); //!< the shape
                 virtual const char *graphVizStyle() const throw(); //!< change style according to behavior
+                virtual TermCount   astTermCount() const throw();  //!< sum of counts
+
 
                 //! change behavior
                 Aggregate & will( Behavior newBehavior ) throw() { (Behavior &)behavior = newBehavior; return *this; }
                 virtual void  upgrade() throw(); //!< will detect design aggregate
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);
@@ -106,6 +109,8 @@ namespace upsylon
                 virtual const char *typeName() const throw();      //!< "Alternate"
                 Y_LANG_SYNTAX_ACCEPT_PROTO();                      //!< accept the first possible operands
                 virtual const char *graphVizShape() const throw(); //!< the shape
+                virtual TermCount   astTermCount() const throw();  //!< count
+
                 virtual void  upgrade() throw();                   //!< do nothing
 
             private:
