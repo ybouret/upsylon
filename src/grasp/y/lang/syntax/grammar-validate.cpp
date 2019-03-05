@@ -19,53 +19,34 @@ namespace upsylon
                     const bool verbose;
                     int        level;
 
-                    std::ostream & indent(std::ostream &os) const
+                    inline std::ostream & indent(std::ostream &os) const
                     {
                         for(int i=level;i>0;--i) os << "..";
                         return os;
                     }
 
-                    explicit RDB(const Tag &id, const size_t n, const bool v) :
+                    inline explicit RDB(const Tag &id, const size_t n, const bool v) :
                     RRS(n), name(id), verbose(v), level(0)
                     {
                     }
 
-                    virtual ~RDB() throw() { }
+                    inline virtual ~RDB() throw() { }
 
                     inline bool visited( const Rule *r )
                     {
                         assert(r);
-                        const string &id = r->name;
                         if( declare(r) )
                         {
-                            Y_LANG_SYNTAX_VERBOSE( std::cerr << "{" << *name << "} "; indent(std::cerr) << "visiting <" << id << "> / " << r->typeName() << std::endl);
+                            Y_LANG_SYNTAX_VERBOSE( std::cerr << "{" << *name << "} "; indent(std::cerr) << "visiting <" << r->name << "> / " << r->typeName() << std::endl);
                             return false;
                         }
                         else
                         {
                             return true;
                         }
-#if 0
-                        unsigned *pCount = search(id);
-                        if(!pCount)
-                        {
-                            Y_LANG_SYNTAX_VERBOSE( std::cerr << "{" << *name << "} "; indent(std::cerr) << "visiting <" << id << "> / " << r->typeName() << std::endl);
-                            if(!insert(id,1)) throw exception("{%s} unexpected visited failure", **name);
-                            return false;
-                        }
-                        else
-                        {
-                            assert(*pCount>0);
-                            ++(*pCount);
-                            return true;
-                        }
-#endif
                     }
 
-
-
-
-                    void visit( const Rule *r )
+                    inline void visit( const Rule *r )
                     {
                         switch(r->uuid)
                         {
@@ -130,12 +111,6 @@ namespace upsylon
                     if(! rdb.search(r->name) )
                     {
                         throw exception("{%s} standalone %s <%s>", **name, r->typeName(), *(r->name) );
-                    }
-                    if(verbose)
-                    {
-                        std::cerr << "\tChecking astMinCount for " << r->name << std::endl;
-                        //const unsigned nmin = r->astMinCount();
-                       // std::cerr << "\t\tnmin" << nmin << std::endl;
                     }
                 }
                 Y_LANG_SYNTAX_VERBOSE(std::cerr << "{" << *name << "} seems valid!" << std::endl);
