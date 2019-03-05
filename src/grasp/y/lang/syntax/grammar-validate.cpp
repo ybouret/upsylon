@@ -22,7 +22,7 @@ namespace upsylon
                 probe.verbose = verbose;
                 
                 // recursively check rules
-                probe.visit_from(rules.head,**name);
+                probe.visitFrom(rules.head,**name);
 
                 // check everyone was visited
                 for(const Rule *r=rules.head;r;r=r->next)

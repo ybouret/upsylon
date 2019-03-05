@@ -7,6 +7,7 @@
 #include "y/lang/syntax/compound.hpp"
 #include "y/lang/syntax/rrs.hpp"
 #include "y/exception.hpp"
+
 namespace upsylon
 {
     namespace Lang
@@ -20,37 +21,20 @@ namespace upsylon
                 int              depth;
                 bool             verbose;
 
-                explicit RuleProbe()   throw() : RuleReferenceSet( ), depth(0), verbose(false) {}
+                explicit RuleProbe() throw();
+                virtual ~RuleProbe() throw();
 
-                virtual ~RuleProbe() throw() {}
+                void reset() throw();
 
-                inline void reset() throw()
-                {
-                    free();
-                    depth = 0;
-                }
-
-                inline std::ostream & indent(std::ostream &os, const char *context) const
-                {
-                    os << '|';
-                    if(context)
-                    {
-                        os << '{' << context << '}' << '.';
-                    }
-                    for(int i=depth;i>0;--i)
-                    {
-                        os << '.' << '.';
-                    }
-                    return os;
-                }
+                std::ostream & indent(std::ostream &os, const char *context) const;
 
                 //! check visited
-                inline bool visited( const Rule *r ) { return !declare(r); }
+                bool visited( const Rule *r );
 
                 //! do nothing callback example
-                inline static void DoNothing(const Rule *) { }
+                static void DoNothing(const Rule *);
 
-                //! ok
+                //! start visit from r
                 template <typename CALLBACK>
                 inline void visit(const Rule *r,
                                   CALLBACK   &proc,
@@ -101,13 +85,9 @@ namespace upsylon
                     }
                 }
 
-                inline void visit_from(const Rule *top, const char *context)
-                {
-                    reset();
-                    visit(top,DoNothing,context);
-                }
-
-
+                //! full recursive visit
+                void visitFrom(const Rule *top, const char *context);
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(RuleProbe);
             };
