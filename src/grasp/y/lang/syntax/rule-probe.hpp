@@ -15,18 +15,20 @@ namespace upsylon
         namespace Syntax
         {
 
+            //! probing rules
             class RuleProbe : public RuleReferenceSet
             {
             public:
-                int              depth;
-                bool             verbose;
+                int              depth;      //!< call depth
+                bool             verbose;    //!< verbose flag
 
-                explicit RuleProbe() throw();
-                virtual ~RuleProbe() throw();
+                explicit RuleProbe() throw(); //!< setup
+                virtual ~RuleProbe() throw(); //!< destruct
 
-                void reset() throw();
+                void reset() throw(); //!< free and depth=0
 
-                std::ostream & indent(std::ostream &os, const char *context) const;
+                //! indent on verbose flag
+                std::ostream & indent(std::ostream &, const char *) const;
 
                 //! check visited
                 bool visited( const Rule *r );
