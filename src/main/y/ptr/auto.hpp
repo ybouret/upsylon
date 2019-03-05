@@ -62,7 +62,7 @@ namespace upsylon
 
     private:
         void zero() const throw() { *(pointee_type *)( &(this->pointee) ) = 0;  }
-        void kill() throw()       { if(this->pointee) { delete this->pointee; this->pointee=0; } }
+        void kill() throw()       { if(this->pointee) { delete this->pointee; zero(); } }
     };
 }
 

@@ -1,5 +1,6 @@
 #include "y/ptr/counted.hpp"
 #include "y/ptr/arc.hpp"
+#include "y/ptr/zrc.hpp"
 #include "y/ptr/shared.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/utest/run.hpp"
@@ -58,6 +59,19 @@ Y_UTEST(ptr)
         Y_CHECK(!p.is_valid());
         Y_CHECK(q.is_valid());
         
+    }
+    
+    {
+        std::cerr << "-- ZRC" << std::endl;
+        typedef zrc_ptr<counted> ZP;
+        ZP p = NULL;
+        Y_CHECK(p.is_empty());
+        p    = new counted();
+        Y_CHECK(p.is_valid());
+        ZP q = p;
+        Y_CHECK(q.is_valid());
+        Y_CHECK( & *q == & * q);
+
     }
     
     
