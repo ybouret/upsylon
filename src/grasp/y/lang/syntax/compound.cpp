@@ -100,7 +100,7 @@ namespace upsylon
 
             const char * Aggregate:: typeName() const throw()
             {
-                return "Aggregate";
+                return "Aggregate ";
             }
 
             Y_LANG_SYNTAX_ACCEPT_START(Aggregate)
@@ -143,8 +143,8 @@ namespace upsylon
                 switch (behavior)
                 {
                     case SubGroup: return "bold,filled";
-                    case MergeOne: return "bold,dashed";
-                    case MergeAll: return "bold,dotted";
+                    case MergeOne: return "bold,solid";
+                    case MergeAll: return "bold,dashed";
                     default:
                         break;
                 }
@@ -186,7 +186,7 @@ namespace upsylon
 
             const char * Alternate:: typeName() const throw()
             {
-                return "Alternate";
+                return "Alternate ";
             }
 
             Y_LANG_SYNTAX_ACCEPT_START(Alternate)

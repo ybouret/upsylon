@@ -45,18 +45,41 @@ namespace upsylon
 
             bool RuleProbe:: visited( const Rule *r ) { return !declare(r); }
 
-            void RuleProbe:: DoNothing(const Rule *) { }
+            bool RuleProbe:: DoNothing(const Rule *)
+            {
+                //std::cerr << "DoNothing on " << r->name << std::endl;
+                return false;
+            }
 
             void RuleProbe:: visitFrom(const Rule *top, const char *context)
             {
                 reset();
-                visit(top,DoNothing,context);
+                if(!visit(top,DoNothing,context))
+                {
+                    throw exception("Syntax.RuleProbe.visitFrom(Unexpected Bad Visit)");
+                }
+            }
+
+            namespace
+            {
+                struct StopOnID
+                {
+                    const string *pID;
+
+                    inline bool operator()(const Rule *r) throw()
+                    {
+                        assert(pID);
+                        return (r->name==*pID);
+                    }
+
+                };
             }
 
             int RuleProbe:: recursivity(const Rule *r)
             {
                 assert(r!=NULL);
-                reset();
+                verbose=false;
+                StopOnID stop = { &(r->name) };
 
                 switch(r->uuid)
                 {
@@ -66,9 +89,27 @@ namespace upsylon
                     case Optional::  UUID:
                     case ZeroOrMore::UUID:
                     case OneOrMore:: UUID:
-                        visit( & (r->as<Joker>().jk), DoNothing, NULL);
-                        if( search(r->name) ) return 0;
+                        reset();
+                        visit( & (r->as<Joker>().jk), stop, NULL);
+                        if( search(r->name) )
+                        {
+                            return 0;
+                        }
                         break;
+
+                    case Alternate::UUID:
+                    case Aggregate::UUID: {
+                        int i = 0;
+                        for(const Operand *op = r->as<Compound>().head;op;op=op->next,++i)
+                        {
+                            reset();
+                            visit( &(op->rule), stop, NULL);
+                            if( search(r->name) )
+                            {
+                                return i;
+                            }
+                        }
+                    } break;
 
                     default:
                         throwUUID("Syntax.RuleProbe.recursivity",r);

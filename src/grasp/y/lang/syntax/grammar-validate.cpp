@@ -35,18 +35,23 @@ namespace upsylon
                 }
 
                 // check recursivity
-                for(const Rule *r=rules.head;r;r=r->next)
+                if(false)
                 {
-                    std::cerr <<"<" << r->name << ">";
-                    for(size_t i=r->name.length();i<=maxRuleNameLength;++i)
+                    for(const Rule *r=rules.head;r;r=r->next)
                     {
-                        std::cerr << ' ';
+                        const int rr = probe.recursivity(r);
+                        if(rr>=0)
+                        {
+                            std::cerr << r->typeName() << " <" << r->name << ">";
+                            for(size_t i=r->name.length();i<=maxRuleNameLength;++i)
+                            {
+                                std::cerr << ' ';
+                            }
+                            std::cerr << " recursivity: " << rr << "@" << probe.depth;
+                            std::cerr << std::endl;
+                        }
                     }
-                    std::cerr << " recursivity: ";
-                    
-                    std::cerr << std::endl;
                 }
-
                 Y_LANG_SYNTAX_VERBOSE(std::cerr << "{" << *name << "} seems valid!" << std::endl);
             }
 

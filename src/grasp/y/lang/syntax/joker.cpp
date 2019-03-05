@@ -45,7 +45,7 @@ namespace upsylon
 
             const char * Optional:: typeName() const throw()
             {
-                return "Optional";
+                return "Optional  ";
             }
 
             bool Optional:: isHollow() const throw()
@@ -170,7 +170,7 @@ namespace upsylon
 
             const char *OneOrMore:: typeName() const throw()
             {
-                return "OneOrMore";
+                return "OneOrMore ";
             }
 
             Y_LANG_SYNTAX_ACCEPT_START(OneOrMore)

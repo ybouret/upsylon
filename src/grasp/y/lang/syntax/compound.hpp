@@ -92,7 +92,7 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);
             };
-
+            
             //! alternation of rules, reject hollow operand at build time
             class Alternate : public Compound
             {

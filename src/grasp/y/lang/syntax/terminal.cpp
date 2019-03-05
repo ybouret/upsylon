@@ -37,7 +37,7 @@ namespace upsylon
 
             const char * Terminal:: typeName() const throw()
             {
-                return "Terminal";
+                return "Terminal  ";
             }
 
             bool Terminal:: isHollow() const throw()

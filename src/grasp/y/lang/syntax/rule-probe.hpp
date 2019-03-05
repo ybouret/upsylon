@@ -33,24 +33,25 @@ namespace upsylon
                 bool visited( const Rule *r );
 
                 //! do nothing callback example
-                static void DoNothing(const Rule *);
+                static bool DoNothing(const Rule *);
 
                 //! start visit from r
                 template <typename CALLBACK>
-                inline void visit(const Rule *r,
-                                  CALLBACK   &proc,
+                inline bool visit(const Rule *r,
+                                  CALLBACK   &stop,
                                   const char *context)
                 {
                     assert(NULL!=r);
-                    if(visited(r)) return;
+                    if(visited(r)) return true;
 
                     try
                     {
                         Y_LANG_SYNTAX_VERBOSE( indent(std::cerr,context) << r->typeName() << ' ' << '<' << r->name  << '>' << std::endl );
+                        if(stop(r)) return false;
+
                         switch(r->uuid)
                         {
                             case Terminal::UUID:
-                                proc(r);
                                 break;
 
                             case Aggregate:: UUID:
@@ -60,7 +61,10 @@ namespace upsylon
                                 ++depth;
                                 for(const Operand *op = r->as<Compound>().head;op;op=op->next)
                                 {
-                                    visit( &(op->rule), proc, context);
+                                    if(!visit( &(op->rule), stop, context))
+                                    {
+                                        return false;
+                                    }
                                 }
                                 --depth;
                                 break;
@@ -71,13 +75,17 @@ namespace upsylon
                                 assert(r->derived);
 
                                 ++depth;
-                                visit( &(r->as<Joker>().jk), proc,context );
+                                if(!visit( &(r->as<Joker>().jk),stop,context ))
+                                {
+                                    return false;
+                                }
                                 --depth;
                                 break;
 
                             default:
                                 throwUUID(VisitFunction,r);
                         }
+                        return true;
                     }
                     catch(...)
                     {
