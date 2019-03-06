@@ -36,9 +36,9 @@ namespace upsylon
                 static bool DoNothing(const Rule *);
 
                 //! start visit from r
-                template <typename CALLBACK>
+                template <typename FUNC>
                 inline bool visit(const Rule *r,
-                                  CALLBACK   &stop,
+                                  FUNC   &stop,
                                   const char *context)
                 {
                     assert(NULL!=r);
@@ -61,7 +61,7 @@ namespace upsylon
                                 ++depth;
                                 for(const Operand *op = r->as<Compound>().head;op;op=op->next)
                                 {
-                                    if(!visit<CALLBACK>( &(op->rule), stop, context))
+                                    if(!visit<FUNC>( &(op->rule), stop, context))
                                     {
                                         return false;
                                     }
@@ -75,7 +75,7 @@ namespace upsylon
                                 assert(r->derived);
 
                                 ++depth;
-                                if(!visit<CALLBACK>( &(r->as<Joker>().jk),stop,context ))
+                                if(!visit<FUNC>( &(r->as<Joker>().jk),stop,context ))
                                 {
                                     return false;
                                 }
