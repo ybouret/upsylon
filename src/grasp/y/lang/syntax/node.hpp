@@ -73,10 +73,21 @@ namespace upsylon
                  */
                 static Node  *Load( Source &source, Grammar &G);
 
+                //! wrapper to use module
+                static Node  *Load( Module *m, Grammar &G);
+
                 //! transform a raw node into the direct AST
+                /**
+                 remove univocal content and semantic node,
+                 and apply node behavior to merge branches
+                 */
                 static Node * AST( Node *node ) throw();
 
                 //! rewrite a standalone node from AST
+                /**
+                 transform using operators, a second pass AST
+                 should be called
+                 */
                 static Node * Rewrite( Node *node, const Grammar &G );
 
 

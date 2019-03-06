@@ -90,6 +90,12 @@ namespace upsylon
                 throw exception("%s(unknown MAGIC=0x%02x for <%s>)", fn, magic, *(the_rule.name) );
             }
 
+            Node  * Node:: Load( Module *m, Grammar &G)
+            {
+                Source source(m);
+                return Load(source,G);
+            }
+
         }
     }
 }
