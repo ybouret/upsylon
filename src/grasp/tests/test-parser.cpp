@@ -1,6 +1,7 @@
 #include "y/lang/syntax/parser.hpp"
 #include "y/utest/run.hpp"
 #include "y/lang/lexical/plugin/strings.hpp"
+#include "y/lang/syntax/analyzer.hpp"
 
 using namespace upsylon;
 using namespace Lang;
@@ -71,7 +72,7 @@ Y_UTEST(parser)
 {
     Syntax::Parser::Pointer P = new myParser();
     std::cerr << "Building [" << P->key() << "]" << std::endl;
-    if( argc>1 && 0 == strcmp("run",argv[1]))
+    if( argc>1 && 0 == strcmp("run",argv[1]) )
     {
         Source source( Module::OpenSTDIN() );
         auto_ptr<Syntax::Node> ast = P->run( source );
@@ -86,7 +87,10 @@ Y_UTEST(parser)
         std::cerr << "ast: " << ast64 << std::endl;
         std::cerr << "bin: " << bin64 << std::endl;
         Y_CHECK(ast64==bin64);
-        
+
+        Syntax::Analyzer a;
+        a.walk(*ast);
+
     }
 }
 Y_UTEST_DONE()

@@ -3,6 +3,7 @@
 #include "y/lang/syntax/terminal.hpp"
 #include "y/lang/syntax/joker.hpp"
 #include "y/lang/lexical/plugin/strings.hpp"
+#include "y/lang/syntax/analyzer.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -64,6 +65,8 @@ Y_UTEST(grammar)
             cst->graphViz("cst.dot");
             cst->save("cst.bin");
             s1 = cst->toBase64();
+            Syntax::Analyzer a;
+            a.walk( *cst );
         }
         std::cerr << "s1=" << s1 << std::endl;
         string s2;
@@ -75,6 +78,7 @@ Y_UTEST(grammar)
         }
         std::cerr << "s2=" << s2 << std::endl;
         Y_CHECK(s1==s2);
+
 
     }
 

@@ -1,5 +1,6 @@
 
 #include "y/lang/syntax/parser.hpp"
+#include "y/lang/syntax/analyzer.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -65,6 +66,8 @@ Y_UTEST(ee)
         Source source( Module::OpenSTDIN() );
         auto_ptr<Syntax::Node> ast = P.run( source );
         ast->graphViz( *(P.name) + "_tree.dot" );
+        Syntax::Analyzer a;
+        a.walk( *ast );
     }
 }
 Y_UTEST_DONE()
