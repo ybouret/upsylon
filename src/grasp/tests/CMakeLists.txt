@@ -13,13 +13,7 @@ ADD_TEST(Rules   test-grasp rules)
 ADD_TEST(Grammar test-grasp grammar)
 ADD_TEST(Parser  test-grasp parser)
 ADD_TEST(Eval    test-grasp ee)
-
-#ADD_TEST(Parser   test-lang parser)
-#ADD_TEST(Eval     test-lang eval NULL)
-#ADD_TEST(Dyn      test-lang dyn)
-#ADD_TEST(Gen:List test-lang gen ${HERE}/list.g)
-#ADD_TEST(Gen:Eval test-lang gen ${HERE}/eval.g)
-#ADD_TEST(Gen:JSON test-lang gen ${HERE}/../../json/y/json/json.g)
+ADD_TEST(JSON    test-grasp json)
 
 ADD_CUSTOM_TARGET(utest-grasp
 COMMAND ${CMAKE_CTEST_COMMAND} -V
