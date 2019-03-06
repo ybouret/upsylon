@@ -8,6 +8,20 @@ namespace upsylon
     {
         namespace Syntax
         {
+
+            namespace
+            {
+                static inline
+                void LoadChildren( Node::List &ch, Source &source, Grammar &G)
+                {
+                    const size_t nch  = source.read_upack<size_t>();
+                    for(size_t i=nch;i>0;--i)
+                    {
+                        ch.push_back( Node::Load(source,G) );
+                    }
+                }
+            }
+
             Node  * Node:: Load(Source &source, Grammar &G)
             {
                 static const char fn[] = "Node.Load";
@@ -54,38 +68,20 @@ namespace upsylon
                         //
                         //------------------------------------------------------
                     {
-                        auto_ptr<Node> node    = 0;
+                        auto_ptr<Node> node    = Node::Create(the_rule);
+                        LoadChildren(node->children(),source,G);
+                        return node.yield();
+                    }
 
                         //------------------------------------------------------
-                        // check data and create node accordingly
+                        //
+                    case ExtendedNode::MAGIC_BYTE:
+                        //
                         //------------------------------------------------------
-                        const unsigned  hasData = source.read<uint8_t>();
-
-                        switch(hasData)
-                        {
-                            case 0x00: node = Node::Create(the_rule); break;
-                            case 0x01: {
-                                const string s = string_io::load_binary(source);
-                                node           = Node::Create(the_rule,s);
-                            } break;
-
-                            default:
-                                throw exception("%s(invalid hasData=0x%02x for <%s>)",fn, hasData, *(the_rule.name) );
-                        }
-
-                        //------------------------------------------------------
-                        // read children
-                        //------------------------------------------------------
-                        const size_t   nch  = source.read_upack<size_t>();
-                        List          &ch   = node->children();
-                        for(size_t i=nch;i>0;--i)
-                        {
-                            ch.push_back( Load(source,G) );
-                        }
-
-                        //------------------------------------------------------
-                        // done
-                        //------------------------------------------------------
+                    {
+                        const string   s       = string_io::load_binary(source);
+                        auto_ptr<Node> node    = Node::Create(the_rule,s);
+                        LoadChildren(node->children(),source,G);
                         return node.yield();
                     }
 

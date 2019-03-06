@@ -55,7 +55,7 @@ namespace upsylon
 
             Node * Node:: Create(const Rule &r, const string &s)
             {
-                return new InternalNode(r,s);
+                return new ExtendedNode(r,s);
             }
 
             const Lexeme & Node:: lexeme() const throw()
@@ -256,26 +256,18 @@ namespace upsylon
 
             InternalNode:: InternalNode(const Rule &r) throw() :
             Node(r,false),
-            Node::List(),
-            _data(0)
+            Node::List()
             {
             }
 
             InternalNode:: InternalNode(const InternalNode &node) throw() :
             Node(node),
-            Node::List(node),
-            _data(node._data)
+            Node::List(node)
             {
 
             }
 
-            InternalNode:: InternalNode(const Rule &r, const string &s) :
-            Node(r,false),
-            Node::List(),
-            _data( new string(s) )
-            {
 
-            }
 
             Node * InternalNode:: clone() const
             {
@@ -287,10 +279,8 @@ namespace upsylon
                 return static_cast<const List *>(this);
             }
 
-            void     InternalNode::   viz( ios::ostream &fp ) const
+            void InternalNode::  vizLink( ios::ostream &fp ) const
             {
-                const string l = string_convert::to_printable(rule.name);
-                graphVizName(fp); fp("[shape=house,label=\""); fp << l; fp("\"];\n");
                 const bool multiple = size>1;
                 unsigned  idx=1;
                 for(const Node *node = head; node; node=node->next, ++idx)
@@ -302,44 +292,89 @@ namespace upsylon
                 }
             }
 
-            void InternalNode:: emit(ios::ostream &fp) const
+
+            void     InternalNode::   viz( ios::ostream &fp ) const
             {
-                fp.emit(MAGIC_BYTE);
+                const string l = string_convert::to_printable(rule.name);
+                graphVizName(fp); fp("[shape=house,label=\""); fp << l; fp("\"];\n");
+                vizLink(fp);
+            }
 
-                //--------------------------------------------------------------
-                // internal data
-                //--------------------------------------------------------------
-                if(_data.is_valid())
-                {
-                    fp.emit<uint8_t>(1);
-                    string_io::save_binary(fp,*_data);
-                }
-                else
-                {
-                    fp.emit<uint8_t>(0);
-                }
 
-                //--------------------------------------------------------------
-                // children
-                //--------------------------------------------------------------
+            void InternalNode:: emitList(ios::ostream &fp) const
+            {
                 fp.emit_upack(size);
                 for(const Node *node=head;node;node=node->next)
                 {
                     node->save(fp);
                 }
+            }
 
-
+            void InternalNode:: emit(ios::ostream &fp) const
+            {
+                fp.emit(MAGIC_BYTE);
+                emitList(fp);
             }
 
             const string * InternalNode:: data() const throw()
             {
-                return ( _data.is_valid() ) ? & *_data : 0;
+                return 0;
             }
 
 
         }
     }
 }
+
+namespace upsylon
+{
+    namespace Lang
+    {
+        namespace Syntax
+        {
+            ExtendedNode:: ~ExtendedNode() throw() {}
+
+            ExtendedNode:: ExtendedNode( const Rule &r, const string &s ) :
+            InternalNode(r),
+            shared( new string(s) )
+            {
+            }
+
+            ExtendedNode:: ExtendedNode( const ExtendedNode &node ) throw() :
+            InternalNode(node),
+            shared(node.shared)
+            {
+            }
+
+            const string * ExtendedNode:: data() const throw()
+            {
+                return & *shared;
+            }
+
+            Node * ExtendedNode:: clone() const
+            {
+                return new ExtendedNode( *this );
+            }
+
+            void ExtendedNode:: emit(ios::ostream &fp) const
+            {
+                fp.emit(MAGIC_BYTE);
+                string_io::save_binary(fp, *shared);
+                emitList(fp);
+            }
+
+            void  ExtendedNode::   viz( ios::ostream &fp ) const
+            {
+                const string l = string_convert::to_printable(rule.name);
+                const string c = string_convert::to_printable(*shared);
+                graphVizName(fp); fp("[shape=pentagon,label=\"%s='%s'\"];\n",*l,*c);
+                vizLink(fp);
+            }
+
+        }
+    }
+}
+
 
 #include "y/lang/syntax/terminal.hpp"
 

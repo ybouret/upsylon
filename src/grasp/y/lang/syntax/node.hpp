@@ -3,7 +3,7 @@
 #define Y_LANG_SYNTAX_NODE_INCLUDED 1
 
 #include "y/lang/lexical/translator.hpp"
-#include "y/ptr/zrc.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace upsylon
 {
@@ -21,7 +21,7 @@ namespace upsylon
             public:
                 typedef core::inode<Node>             Base; //!< alias
                 typedef core::list_of_cloneable<Node> List; //!< alias
-                typedef zrc_ptr<const string>         Data; //!< alias
+                typedef arc_ptr<const string>         Data; //!< alias
 
                 const Rule &rule;     //!< creating rule
                 const bool  terminal; //!< terminal flag
@@ -124,16 +124,38 @@ namespace upsylon
                 void                  viz( ios::ostream & ) const; //!< graphViz
                 virtual const string *data() const throw();        //!< data or NULL
 
-            private:
-                InternalNode(const Rule &r) throw();          //!< from rule
+            protected:
                 InternalNode(const InternalNode &) throw();   //!< copy
-                InternalNode(const Rule &r, const string &s); //!< from rule, with content
+                InternalNode(const Rule &r) throw();          //!< from rule
+                virtual void emit( ios::ostream & ) const;    //!< emit binary
+                void         emitList( ios::ostream &) const; //!< emit list of children
+                void         vizLink( ios::ostream & ) const; //!< emit links
+            private:
                 friend class Node;
                 Y_DISABLE_ASSIGN(InternalNode);
-                virtual void emit( ios::ostream & ) const;
                 virtual void returnTo( Lexer &lexer ) throw();
+                
+            };
 
-                Data _data;
+            //! an Extended Node is an internal node with data
+            class ExtendedNode : public InternalNode
+            {
+            public:
+                static const uint8_t MAGIC_BYTE = 0x02;
+
+                virtual ~ExtendedNode() throw(); //!< destructor
+                virtual  Node   *     clone() const;
+                void                  viz( ios::ostream &) const; //!< graphViz
+                virtual const string *data() const throw();
+
+            private:
+                Y_DISABLE_ASSIGN(ExtendedNode);
+                ExtendedNode(const Rule &, const string &s);
+                ExtendedNode( const ExtendedNode &node ) throw();
+                friend class Node;
+                virtual void emit( ios::ostream & ) const;
+
+                Data shared;
             };
 
         }
