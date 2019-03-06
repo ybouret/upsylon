@@ -25,9 +25,9 @@ namespace {
                     ARRAY << VALUE;
                     ARRAY << zeroOrMore( join(COMA,VALUE) );
                     ARRAY << mark(']');
-                    VALUE << ARRAY;
                 }
                 JSON << ARRAY;
+                VALUE << ARRAY;
             }
 
             {
@@ -42,7 +42,7 @@ namespace {
                     OBJECT << mark('}');
                 }
                 JSON << OBJECT;
-
+                VALUE << OBJECT;
             }
 
             VALUE << term("null") << term("true","true") << term("false") << term("number","-?[:digit:]+([.][:digit:]+)?") << STRING;
@@ -75,7 +75,7 @@ Y_UTEST(parser)
     {
         Source source( Module::OpenSTDIN() );
         auto_ptr<Syntax::Node> ast = P->run( source );
-        ast->graphViz( *(P->name) + "_ast.dot" );
+        ast->graphViz( *(P->name) + "_tree.dot" );
     }
 }
 Y_UTEST_DONE()

@@ -85,6 +85,8 @@ namespace upsylon
                 //______________________________________________________________
                 Node *run(Source &source); //!< reset lexer and try to accept source
 
+                const bool ready;
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);
             };

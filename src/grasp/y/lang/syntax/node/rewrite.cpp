@@ -11,13 +11,20 @@ namespace upsylon
             Node * Node:: Rewrite( Node *node, const Grammar &G)
             {
                 assert( node );
+                assert( node->is_single() );
+                
                 if(node->terminal)
                 {
+                    //----------------------------------------------------------
                     // do nothing
+                    //----------------------------------------------------------
                     return node;
                 }
                 else
                 {
+                    //----------------------------------------------------------
+                    //
+                    //----------------------------------------------------------
                     auto_ptr<Node> guard(node);
 
                     Node::List &self = node->children();
@@ -43,7 +50,19 @@ namespace upsylon
                                 auto_ptr<Node> lhs = (temp.tail != NULL) ? temp.pop_back() : NULL;
 
                                 // create
-                                Node *op = Node::Create(sub->rule);
+                                Node *op = NULL;
+                                if(sub->rule.as<Terminal>().univocal)
+                                {
+                                    // univocal operator
+                                    op = Node::Create(sub->rule);
+                                }
+                                else
+                                {
+                                    // ordinary (rx) operator
+                                    const string s = sub->lexeme().to_string();
+                                    op = Node::Create(sub->rule,s);
+                                }
+                                assert(op);
                                 if(lhs.is_valid()) op->children().push_back( lhs.yield() );
                                 op->children().push_back( rhs.yield() );
                                 temp.push_back(op);

@@ -15,7 +15,7 @@ namespace {
             setVerbose(true);
             AGG & EXPR = aggregate("expr");
 
-            AGG & ADD  = aggregate("add");
+            AGG & ADD  = design("add");
             AGG & MUL  = aggregate("mul");
             AGG & POW  = aggregate("pow");
             ALT & ATOM = alternate("atom");
@@ -23,15 +23,18 @@ namespace {
 
             RULE & ADDOP = op("ADDOP","[-+]");
 
-            ADD << optional(ADDOP) << MUL << zeroOrMore( join( ADDOP, MUL ).bundle() );
-            MUL << POW << zeroOrMore( join( term("MULOP","[*/%]"), POW ).bundle() );
 
-            POW << ATOM << optional( join( term('^'), POW) );
+            ADD << optional(ADDOP) << MUL << zeroOrMore( join( ADDOP, MUL ).bundle() );
+
+            RULE & MULOP = op('*');
+            RULE & DIVOP = op('/');
+            MUL << POW << zeroOrMore( join( choice(MULOP,DIVOP), POW ).bundle() );
+
+            POW << ATOM << optional( join( op('^'), POW) );
 
             MUL.design();
             POW.design();
-            ADD.design();
-
+            
             EXPR << zeroOrMore( join(ADD,mark(';')) );
 
 
@@ -61,7 +64,7 @@ Y_UTEST(ee)
     {
         Source source( Module::OpenSTDIN() );
         auto_ptr<Syntax::Node> ast = P.run( source );
-        ast->graphViz( *(P.name) + "_ast.dot" );
+        ast->graphViz( *(P.name) + "_tree.dot" );
     }
 }
 Y_UTEST_DONE()

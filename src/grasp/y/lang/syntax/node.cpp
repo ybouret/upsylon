@@ -367,7 +367,7 @@ namespace upsylon
             {
                 const string l = string_convert::to_printable(rule.name);
                 const string c = string_convert::to_printable(*shared);
-                graphVizName(fp); fp("[shape=pentagon,label=\"%s='%s'\"];\n",*l,*c);
+                graphVizName(fp); fp("[shape=house,label=\"%s='%s'\",style=rounded];\n",*l,*c);
                 vizLink(fp);
             }
 
@@ -389,10 +389,13 @@ namespace upsylon
             {
                 assert(lx);
                 string l = string_convert::to_printable( rule.name );
-                if(lx->size)
+                if(!rule.as<Terminal>().univocal)
                 {
-                    const string content = lx->to_print();
-                    l <<'=' << '\'' << content << '\'';
+                    if(lx->size)
+                    {
+                        const string content = lx->to_print();
+                        l <<'=' << '\'' << content << '\'';
+                    }
                 }
                 const char *sh =  "box";
                 const char *st =  "solid";

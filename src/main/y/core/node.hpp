@@ -47,7 +47,8 @@ namespace upsylon
 
             inline explicit inode() throw() : next(0), prev(0) {} //!< initialize
             inline virtual ~inode() throw() {}                    //!< destructor
-
+            inline bool     is_linked() const throw() { return (0!=next) || (0!=prev); } //!< linked to another
+            inline bool     is_single() const throw() { return (0==next) && (0==prev); } //!< not in list
         private:
             Y_DISABLE_COPY_AND_ASSIGN(inode);
         };

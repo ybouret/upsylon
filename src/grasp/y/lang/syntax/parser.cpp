@@ -12,7 +12,7 @@ namespace upsylon
             }
 
 #define Y_LANG_SYNTAX_PARSER_CTOR(ID)  \
-Lexer(ID), Grammar(label), CountedObject()
+Lexer(ID), Grammar(label), CountedObject(), ready(false)
 
             Parser:: Parser(const string &id) : Y_LANG_SYNTAX_PARSER_CTOR(id)
             {
@@ -29,8 +29,12 @@ Lexer(ID), Grammar(label), CountedObject()
 
             void Parser:: end() throw()
             {
-                finalize();
-                dict.release();
+                if(!ready)
+                {
+                    finalize();
+                    dict.release();
+                    (bool&)ready = true;
+                }
             }
         }
     }
@@ -103,7 +107,7 @@ namespace upsylon
     }
 }
 
-
+#include "y/exception.hpp"
 namespace upsylon
 {
     namespace Lang
@@ -113,11 +117,26 @@ namespace upsylon
 
             Node * Parser:: run(Source &source)
             {
+                if(!ready) throw exception("{%s} is not ready, call end() before use",**name);
+
                 reset();
-                Node *ast = Node::AST(accept(source, *this));
+                Node *raw = accept(source,*this);
+                if(false)
+                {
+                    auto_ptr<Node> guard = raw;
+                    raw->graphViz( *name + "_raw.dot" );
+                    guard.dismiss();
+                }
+                Node *ast = Node::AST(raw);
+                if(false)
+                {
+                    auto_ptr<Node> guard = ast;
+                    raw->graphViz( *name + "_ast.dot" );
+                    guard.dismiss();
+                }
                 if(hasOperators)
                 {
-                    return Node::Rewrite(ast,*this);
+                    return Node::AST(Node::Rewrite(ast,*this));
                 }
                 else
                 {

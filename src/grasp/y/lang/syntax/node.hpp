@@ -76,7 +76,7 @@ namespace upsylon
                 //! transform a raw node into the direct AST
                 static Node * AST( Node *node ) throw();
 
-                //! rewrite an AST according to operators
+                //! rewrite a standalone node from AST
                 static Node * Rewrite( Node *node, const Grammar &G );
 
 
