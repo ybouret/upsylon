@@ -14,8 +14,10 @@ namespace upsylon
         class Dictionary : public CountedObject
         {
         public:
-            typedef Pattern           *Handle; //!< alias
-            typedef map<string,Handle> Map;    //!< database
+            typedef Pattern                            *Handle;    //!< alias
+            typedef key_hasher<string,hashing::fnv>     KeyHasher; //!< alias
+            typedef memory::pooled                      Memory;    //!< alias
+            typedef map<string,Handle,KeyHasher,Memory> Map;       //!< database
 
             explicit Dictionary() throw(); //!< initialize
             virtual ~Dictionary() throw(); //!< destructor
