@@ -25,6 +25,7 @@ Y_UTEST(rules)
     std::cerr << "sizeof(Node)         = " << sizeof(Syntax::Node)          << std::endl;
     std::cerr << "sizeof(TerminalNode) = " << sizeof(Syntax::TerminalNode)  << std::endl;
     std::cerr << "sizeof(InternalNode) = " << sizeof(Syntax::InternalNode)  << std::endl;
+    std::cerr << "sizeof(ExtendedNode) = " << sizeof(Syntax::ExtendedNode)  << std::endl;
     std::cerr << "sizeof(Node::Data)   = " << sizeof(Syntax::Node::Data)    << std::endl;
 }
 Y_UTEST_DONE()

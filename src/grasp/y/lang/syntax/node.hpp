@@ -130,6 +130,7 @@ namespace upsylon
                 virtual void emit( ios::ostream & ) const;    //!< emit binary
                 void         emitList( ios::ostream &) const; //!< emit list of children
                 void         vizLink( ios::ostream & ) const; //!< emit links
+
             private:
                 friend class Node;
                 Y_DISABLE_ASSIGN(InternalNode);
@@ -137,7 +138,7 @@ namespace upsylon
                 
             };
 
-            //! an Extended Node is an internal node with data
+            //! an Extended Node is an internal node with data, for 
             class ExtendedNode : public InternalNode
             {
             public:

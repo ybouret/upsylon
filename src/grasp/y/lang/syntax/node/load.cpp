@@ -56,8 +56,7 @@ namespace upsylon
                             const CharInfo   info(tag,0,0);
                             for(size_t i=nch;i>0;--i)
                             {
-                                const uint8_t code = source.read<uint8_t>();
-                                plx->push_back( new Char(code,info) );
+                                plx->push_back( new Char(source.read<uint8_t>(),info) );
                             }
                         }
                         return Node::Create(the_rule,plx.yield());
@@ -85,8 +84,7 @@ namespace upsylon
                         return node.yield();
                     }
 
-                    default:
-                        ;
+                    default: break;
                 }
 
                 throw exception("%s(unknown MAGIC=0x%02x for <%s>)", fn, magic, *(the_rule.name) );
