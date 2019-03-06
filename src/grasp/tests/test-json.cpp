@@ -14,7 +14,8 @@ namespace {
     public:
         inline jParser() : Syntax::Parser("JSON")
         {
-            setVerbose(true);
+            //setVerbose(true);
+            
             //__________________________________________________________________
             //
             // 
@@ -60,7 +61,7 @@ namespace {
             <<  term("null")
             <<  term("true")
             <<  term("false")
-            <<  term("number","-?[:digit:]+")
+            <<  term("number","-?[:digit:]+([.][:digit:]+)?")
             << STRING;
             
             
