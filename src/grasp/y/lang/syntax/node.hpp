@@ -3,7 +3,7 @@
 #define Y_LANG_SYNTAX_NODE_INCLUDED 1
 
 #include "y/lang/lexical/translator.hpp"
-#include "y/ptr/auto.hpp"
+#include "y/ptr/zrc.hpp"
 
 namespace upsylon
 {
@@ -21,6 +21,7 @@ namespace upsylon
             public:
                 typedef core::inode<Node>             Base; //!< alias
                 typedef core::list_of_cloneable<Node> List; //!< alias
+                typedef zrc_ptr<const string>         Data; //!< alias
 
                 const Rule &rule;     //!< creating rule
                 const bool  terminal; //!< terminal flag
@@ -30,11 +31,12 @@ namespace upsylon
                 //
                 // virtual interface
                 //______________________________________________________________
-                virtual Node *      clone() const               = 0; //!< clone the node
-                virtual const void *inner() const throw()       = 0; //!< internal data address
-                virtual void        viz( ios::ostream & ) const = 0; //!< output graphViz code
-                virtual void        returnTo( Lexer & ) throw() = 0; //!< restore before delete
-                virtual ~Node() throw();                             //!< destructor
+                virtual Node *        clone() const               = 0; //!< clone the node
+                virtual const void   *inner() const throw()       = 0; //!< internal address
+                virtual void          viz( ios::ostream & ) const = 0; //!< output graphViz code
+                virtual void          returnTo( Lexer & ) throw() = 0; //!< restore before delete
+                virtual const string *data() const throw()        = 0; //!< return data if any
+                virtual ~Node() throw();                               //!< destructor
                 
                 
                 //______________________________________________________________
@@ -60,6 +62,7 @@ namespace upsylon
                 //______________________________________________________________
                 static Node * Create(const Rule &r, Lexeme *l);           //!< create a new terminal node
                 static Node * Create(const Rule &r);                      //!< create a new internal node
+                static Node * Create(const Rule &r, const string &s);     //!< create a new internal node with data
                 static void   Grow( Node * &tree, Node *leaf )  throw();  //!< grew the tree with the leaf
                 static void   Unget(Node * &node, Lexer &lexer) throw();  //!< restore lexemes into lexer
 
@@ -77,7 +80,6 @@ namespace upsylon
                 static Node * Rewrite( Node *node, const Grammar &G );
 
 
-
             protected:
                 explicit Node(const Rule &r, const bool term) throw(); //!< setup
                 Node(const Node &other) throw();                       //!< copy
@@ -92,12 +94,13 @@ namespace upsylon
             class TerminalNode : public Node
             {
             public:
-                static const uint8_t MAGIC_BYTE = 0x00;          //!< for I/O
+                static const uint8_t MAGIC_BYTE = 0x00;            //!< for I/O
 
-                virtual ~TerminalNode() throw();                 //!< destructor
-                virtual Node       *clone() const;               //!< clone
-                virtual const void *inner() const throw();       //!< lx
-                virtual void        viz( ios::ostream & ) const; //!< graphViz
+                virtual ~TerminalNode() throw();                   //!< destructor
+                virtual Node       *  clone() const;               //!< clone
+                virtual const void *  inner() const throw();       //!< lx
+                virtual void          viz( ios::ostream & ) const; //!< graphViz
+                virtual const string *data() const throw();        //!< NULL
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(TerminalNode);
@@ -113,22 +116,24 @@ namespace upsylon
             class InternalNode : public Node, public Node::List
             {
             public:
-                static const uint8_t MAGIC_BYTE = 0x01; //!< for I/O
+                static const uint8_t MAGIC_BYTE = 0x01;            //!< for I/O
 
-                virtual ~InternalNode() throw();                 //!< destructor
-                virtual Node       *clone() const;               //!< clone
-                virtual const void *inner() const throw();       //!< this
-                void                viz( ios::ostream & ) const; //!< graphViz
-                
+                virtual ~InternalNode() throw();                   //!< destructor
+                virtual Node       *  clone() const;               //!< clone
+                virtual const void *  inner() const throw();       //!< this
+                void                  viz( ios::ostream & ) const; //!< graphViz
+                virtual const string *data() const throw();        //!< data or NULL
+
             private:
-                explicit InternalNode(const Rule &r) throw();
-                explicit InternalNode(const InternalNode &);
+                InternalNode(const Rule &r) throw();          //!< from rule
+                InternalNode(const InternalNode &) throw();   //!< copy
+                InternalNode(const Rule &r, const string &s); //!< from rule, with content
                 friend class Node;
                 Y_DISABLE_ASSIGN(InternalNode);
                 virtual void emit( ios::ostream & ) const;
                 virtual void returnTo( Lexer &lexer ) throw();
 
-                auto_ptr<string> data;
+                Data _data;
             };
 
         }

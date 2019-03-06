@@ -53,36 +53,41 @@ namespace upsylon
                 return new InternalNode(r);
             }
 
+            Node * Node:: Create(const Rule &r, const string &s)
+            {
+                return new InternalNode(r,s);
+            }
+
             const Lexeme & Node:: lexeme() const throw()
             {
-                const void *data = inner();
+                const void *addr = inner();
                 assert(terminal);
-                assert(data);
-                return *static_cast<const Lexeme *>(data);
+                assert(addr);
+                return *static_cast<const Lexeme *>(addr);
             }
 
             Lexeme & Node:: lexeme() throw()
             {
-                void *data = (void*)inner();
+                void *addr = (void*)inner();
                 assert(terminal);
-                assert(data);
-                return *static_cast<Lexeme *>(data);
+                assert(addr);
+                return *static_cast<Lexeme *>(addr);
             }
 
             const Node::List & Node:: children() const throw()
             {
-                const void *data = inner();
+                const void *addr = inner();
                 assert(internal);
-                assert(data);
-                return *static_cast<const List *>(data);
+                assert(addr);
+                return *static_cast<const List *>(addr);
             }
 
             Node::List & Node:: children() throw()
             {
-                void *data = (void*)inner();
+                void *addr = (void*)inner();
                 assert(internal);
-                assert(data);
-                return *static_cast<List *>(data);
+                assert(addr);
+                return *static_cast<List *>(addr);
             }
 
             void  Node:: Grow( Node * &tree, Node *leaf ) throw()
@@ -233,6 +238,8 @@ namespace upsylon
                     fp.emit(ch->code);
                 }
             }
+
+            const string * TerminalNode:: data() const throw() { return 0; }
         }
     }
 }
@@ -248,19 +255,26 @@ namespace upsylon
             }
 
             InternalNode:: InternalNode(const Rule &r) throw() :
-            Node(r,false), Node::List(), data(NULL)
+            Node(r,false),
+            Node::List(),
+            _data(0)
             {
             }
 
-            InternalNode:: InternalNode(const InternalNode &node) :
+            InternalNode:: InternalNode(const InternalNode &node) throw() :
             Node(node),
             Node::List(node),
-            data( NULL )
+            _data(node._data)
             {
-                if( node.data.is_valid() )
-                {
-                    data = new string( * node.data );
-                }
+
+            }
+
+            InternalNode:: InternalNode(const Rule &r, const string &s) :
+            Node(r,false),
+            Node::List(),
+            _data( new string(s) )
+            {
+
             }
 
             Node * InternalNode:: clone() const
@@ -291,12 +305,37 @@ namespace upsylon
             void InternalNode:: emit(ios::ostream &fp) const
             {
                 fp.emit(MAGIC_BYTE);
+
+                //--------------------------------------------------------------
+                // internal data
+                //--------------------------------------------------------------
+                if(_data.is_valid())
+                {
+                    fp.emit<uint8_t>(1);
+                    string_io::save_binary(fp,*_data);
+                }
+                else
+                {
+                    fp.emit<uint8_t>(0);
+                }
+
+                //--------------------------------------------------------------
+                // children
+                //--------------------------------------------------------------
                 fp.emit_upack(size);
                 for(const Node *node=head;node;node=node->next)
                 {
                     node->save(fp);
                 }
+
+
             }
+
+            const string * InternalNode:: data() const throw()
+            {
+                return ( _data.is_valid() ) ? & *_data : 0;
+            }
+
 
         }
     }
