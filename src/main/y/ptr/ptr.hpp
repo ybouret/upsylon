@@ -73,6 +73,10 @@ namespace upsylon
         {
             cswap(pointee,other.pointee);
         }
+
+        //! set pointee to NULL, no matter what
+        inline void zero() const throw() { *(pointee_type *)( &(this->pointee) ) = 0;  }
+
     private:
         Y_DISABLE_ASSIGN(ptr);
     };

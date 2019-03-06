@@ -18,7 +18,7 @@ namespace upsylon
     class zrc_ptr : public ptr<T>
     {
     public:
-        typedef typename ptr<T>::pointee_type pointee_type; //!< instead of using
+        typedef typename ptr<T>::pointee_type pointee_type; //!< alias
 
         //! attache and withhold address
         inline zrc_ptr(T *addr) throw() : ptr<T>(addr)
@@ -50,15 +50,39 @@ namespace upsylon
         //! delete resource if necessary
         inline virtual ~zrc_ptr() throw()
         {
-            if(this->pointee&&this->pointee->liberate())
+            if((this->pointee)  &&
+               (this->pointee->liberate()) )
             {
                 delete (this->pointee);
-                zero();
+                this->zero();
             }
         }
+
+        //! get pointee reference count
+        inline size_t refcount() const throw()
+        {
+            if(this->pointee)
+            {
+                return this->pointee->refcount();
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        //! yield pointee by decreasing #refcount
+        T *yield() throw()
+        {
+            pointee_type *p = this->pointee;
+            if(p)
+            {
+                (void) p->liberate();
+            }
+            this->zero();
+            return p;
+        }
         
-    private:
-        inline void zero() const throw() { *(pointee_type *)( &(this->pointee) ) = 0;  }
 
     };
 }

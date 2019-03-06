@@ -47,6 +47,12 @@ namespace upsylon
                 delete (this->pointee);
             }
         }
+
+        //! get pointee reference count
+        inline size_t refcount() const throw()
+        {
+            assert( this->pointee ); return this->pointee->refcount();
+        }
         
     };
 }

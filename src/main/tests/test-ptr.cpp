@@ -65,9 +65,10 @@ Y_UTEST(ptr)
         std::cerr << "-- ZRC" << std::endl;
         typedef zrc_ptr<counted> ZP;
         ZP p = NULL;
-        Y_CHECK(p.is_empty());
-        p    = new counted();
-        Y_CHECK(p.is_valid());
+        Y_CHECK(p.is_empty()); std::cerr << "#p=" << p.refcount() << std::endl;
+        auto_ptr<counted> tmp = new counted; std::cerr << "#counted=" << tmp->refcount() << std::endl;
+        p    = tmp.yield();
+        Y_CHECK(p.is_valid()); std::cerr << "#p=" << p.refcount() << std::endl;
         ZP q = p;
         Y_CHECK(q.is_valid());
         Y_CHECK( & *q == & * q);
