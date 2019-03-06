@@ -61,7 +61,7 @@ namespace upsylon
                                 ++depth;
                                 for(const Operand *op = r->as<Compound>().head;op;op=op->next)
                                 {
-                                    if(!visit( &(op->rule), stop, context))
+                                    if(!visit<CALLBACK>( &(op->rule), stop, context))
                                     {
                                         return false;
                                     }
@@ -75,7 +75,7 @@ namespace upsylon
                                 assert(r->derived);
 
                                 ++depth;
-                                if(!visit( &(r->as<Joker>().jk),stop,context ))
+                                if(!visit<CALLBACK>( &(r->as<Joker>().jk),stop,context ))
                                 {
                                     return false;
                                 }

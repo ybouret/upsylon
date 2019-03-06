@@ -78,6 +78,7 @@ namespace upsylon
             int RuleProbe:: recursivity(const Rule *r)
             {
                 assert(r!=NULL);
+                const char *ctx = 0;
                 verbose=false;
                 StopOnID stop = { &(r->name) };
 
@@ -90,7 +91,7 @@ namespace upsylon
                     case ZeroOrMore::UUID:
                     case OneOrMore:: UUID:
                         reset();
-                        visit( & (r->as<Joker>().jk), stop, NULL);
+                        visit( & (r->as<Joker>().jk), stop, ctx);
                         if( search(r->name) )
                         {
                             return 0;
@@ -103,7 +104,7 @@ namespace upsylon
                         for(const Operand *op = r->as<Compound>().head;op;op=op->next,++i)
                         {
                             reset();
-                            visit( &(op->rule), stop, NULL);
+                            visit( &(op->rule), stop, ctx);
                             if( search(r->name) )
                             {
                                 return i;
