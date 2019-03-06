@@ -33,6 +33,11 @@ namespace upsylon
             return *p;
         }
 
+        const Pattern & Dictionary::operator()(const char   *name, Pattern *p)
+        {
+            const string _ = name; return (*this)(_,p);
+        }
+
         void Dictionary:: release() throw()
         {
             entries.release();
@@ -50,10 +55,19 @@ namespace upsylon
             return p.clone();
         }
 
+        Pattern * Dictionary:: create(const char *name) const
+        {
+            const string _ = name; return create(_);
+        }
 
         const Pattern & Dictionary:: operator()(const string &name, const string &rx)
         {
             return (*this)(name, RegExp(rx,this));
+        }
+
+        const Pattern & Dictionary::  operator()(const char *name, const char *rx)
+        {
+            const string _(name), __(rx); return (*this)(_,__);
         }
 
 
