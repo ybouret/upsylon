@@ -33,7 +33,8 @@ namespace upsylon
             const char       *last;
             int               depth;
             const Dictionary *dict;
-
+            const char       *RX;
+            
             inline ~RXCompiler() throw() {}
 
             //__________________________________________________________________
@@ -44,7 +45,8 @@ namespace upsylon
             curr( *rx ),
             last( curr+rx.size() ),
             depth(0),
-            dict( user_dict      )
+            dict( user_dict      ),
+            RX( curr )
             {
             }
 
@@ -82,7 +84,7 @@ namespace upsylon
                             break;
 
                         case RPAREN:
-                            if(depth<=0) throw exception("%stoo many '%c'",fn,RPAREN);
+                            if(depth<=0) throw exception("%stoo many '%c' in '%s'",fn,RPAREN,RX);
                             --depth; // keep track
                             ++curr;  // skip RPAREN
                             goto END_OF_SUB;
