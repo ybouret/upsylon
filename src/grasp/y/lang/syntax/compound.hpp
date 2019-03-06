@@ -75,7 +75,6 @@ namespace upsylon
 
                 explicit Aggregate(const string &id);     //!< setup
                 virtual ~Aggregate() throw();             //!< destructor
-                Aggregate & operator += ( const Rule & ); //!< syntactic sugar
 
                 virtual bool        isHollow() const throw();      //!< true if empty of all operands are hollow
                 virtual const char *typeName() const throw();      //!< "Aggregate"
@@ -84,11 +83,9 @@ namespace upsylon
                 virtual const char *graphVizStyle() const throw(); //!< change style according to behavior
 
 
-                Aggregate & design()  throw() { (Behavior &)behavior = MergeOne; return *this; }
-                Aggregate & bundle()  throw() { (Behavior &)behavior = MergeAll; return *this; }
-
-                //! change behavior
-                void  autoUpgrade() throw(); //!< will detect design aggregate
+                Aggregate & design()  throw();            //!< set behavior to MergeOne
+                Aggregate & bundle()  throw();            //!< set behavior to MergeAll
+                Aggregate & operator += ( const Rule & ); //!< syntactic sugar
 
 
             private:
@@ -101,8 +98,8 @@ namespace upsylon
             public:
                 static const uint32_t UUID = Y_FOURCC('A', 'L', 'T', 0); //!< UUID
 
-                explicit Alternate(const string &id); //!< setup
-                virtual ~Alternate() throw();         //!< desctructor
+                explicit Alternate(const string &id);     //!< setup
+                virtual ~Alternate() throw();             //!< desctructor
                 Alternate & operator |= ( const Rule & ); //!< syntactic sugar
 
                 virtual bool        isHollow() const throw();      //!< false by construction

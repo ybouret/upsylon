@@ -30,7 +30,7 @@ namespace upsylon
                 Y_DISABLE_ASSIGN(RuleReference);
             };
 
-            //! Database of rules
+            //! database of rules
             class RuleReferenceSet : public RuleReference::Set
             {
             public:

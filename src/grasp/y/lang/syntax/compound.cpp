@@ -151,6 +151,10 @@ namespace upsylon
                 return "solid";
             }
 
+            Aggregate & Aggregate:: design()  throw() { (Behavior &)behavior = MergeOne; return *this; }
+            Aggregate & Aggregate:: bundle()  throw() { (Behavior &)behavior = MergeAll; return *this; }
+
+
         }
 
     }
@@ -220,6 +224,7 @@ namespace upsylon
 
 }
 
+#if 0
 #include "y/lang/syntax/terminal.hpp"
 
 namespace upsylon
@@ -258,4 +263,4 @@ namespace upsylon
         }
     }
 }
-
+#endif

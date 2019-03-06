@@ -51,16 +51,19 @@ namespace upsylon
                 TERM & term( const string &rx );                   //!< create a terminal rx matching rx
                 TERM & term( const char   *rx );                   //!< create a terminal rx matching rx, wrapper
 
-
+                //! build a terminal with one argument and make it semantic
                 template <typename T>
                 inline TERM & mark( const T &arg ) { return term(arg).sm(); }
 
+                //! build a terminal with two arguments and make it semantic
                 template <typename T, typename U>
                 inline TERM & mark( const T &id, const U &arg ) { return term(id,arg).sm(); }
 
+                //! build a terminal with one argument and make it an operator
                 template <typename T>
                 inline TERM & op( const T &arg ) { return term(arg).op(); }
 
+                //! build a terminal with two arguments and make it an operator
                 template <typename T, typename U>
                 inline TERM & op( const T &id, const U &arg ) { return term(id,arg).op(); }
 
@@ -77,15 +80,12 @@ namespace upsylon
                     const string _(id); return hook<PLUGIN>(_);
                 }
 
+                //! finalize grammar, empty dictionary and set ready
                 void end() throw();
 
-                //______________________________________________________________
-                //
-                // members
-                //______________________________________________________________
                 Node *run(Source &source); //!< reset lexer and try to accept source
-
-                const bool ready;
+                
+                const bool ready; //!< checked before run, set by end()
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);

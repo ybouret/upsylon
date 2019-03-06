@@ -108,7 +108,7 @@ namespace upsylon
                 Rule::List        rules;
                 RuleReferenceSet *rrs;
             public:
-                const bool        hasOperators;
+                const bool        hasOperators; //!< detected by finalize()
             private:
                 bool              verbose;
                 unsigned          iAlt;

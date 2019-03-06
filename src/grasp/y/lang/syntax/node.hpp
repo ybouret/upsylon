@@ -32,10 +32,10 @@ namespace upsylon
                 // virtual interface
                 //______________________________________________________________
                 virtual Node *        clone() const               = 0; //!< clone the node
-                virtual const void   *inner() const throw()       = 0; //!< internal address
+                virtual const void   *inner() const throw()       = 0; //!< internal address for lexeme/children
                 virtual void          viz( ios::ostream & ) const = 0; //!< output graphViz code
                 virtual void          returnTo( Lexer & ) throw() = 0; //!< restore before delete
-                virtual const string *data() const throw()        = 0; //!< return data if any
+                virtual const string *data() const throw()        = 0; //!< return extra data, if any
                 virtual ~Node() throw();                               //!< destructor
                 
                 
@@ -149,16 +149,16 @@ namespace upsylon
                 
             };
 
-            //! an Extended Node is an internal node with data, for 
+            //! an Extended Node is an internal node with data, for variable operator
             class ExtendedNode : public InternalNode
             {
             public:
-                static const uint8_t MAGIC_BYTE = 0x02;
+                static const uint8_t MAGIC_BYTE = 0x02;           //!< for I/O
 
-                virtual ~ExtendedNode() throw(); //!< destructor
-                virtual  Node   *     clone() const;
+                virtual ~ExtendedNode() throw();                  //!< destructor
+                virtual  Node   *     clone() const;              //!< hardcopy with shared data
                 void                  viz( ios::ostream &) const; //!< graphViz
-                virtual const string *data() const throw();
+                virtual const string *data() const throw();       //!< & *shared
 
             private:
                 Y_DISABLE_ASSIGN(ExtendedNode);
