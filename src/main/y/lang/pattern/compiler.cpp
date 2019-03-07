@@ -93,7 +93,7 @@ namespace upsylon
                             // alternation
                             //--------------------------------------------------
                         case ALT: {
-                            if(p->operands.size<=0) throw exception("%sempty sub-expression before '%c'",fn,ALT);
+                            if(p->operands.size<=0) throw exception("%sempty sub-expression before '%c' in '%s'",fn,ALT,RX);
                             auto_ptr<Logical> alt = new OR();
                             alt->add( p.yield() );
                             ++curr; // skip ALT
@@ -107,7 +107,7 @@ namespace upsylon
                         case '+':
                         case '*':
                         case '?':
-                            if(p->size()<=0) throw exception("%sno sub-expression before '%c'",fn,C);
+                            if(p->size()<=0) throw exception("%sno sub-expression before '%c' in '%s'",fn,C,RX);
                             p->add( simpleJoker(C,p->remove() ) );
                             ++curr; // skip joker sign
                             break;
@@ -116,7 +116,6 @@ namespace upsylon
                             // braced expression
                             //--------------------------------------------------
                         case LBRACE:
-                            //if(p->operands.size<=0) throw exception("%sno sub-expression before '%c'",fn,C);
                             buildBraced(p);
                             break;
 
@@ -173,7 +172,7 @@ namespace upsylon
                     default:
                         break;
                 }
-                throw exception("%sinvalid simple joker type!!!",fn);
+                throw exception("%sunexpected invalid simple joker type!!!",fn);
             }
 
             //__________________________________________________________________
@@ -197,7 +196,7 @@ namespace upsylon
                 //______________________________________________________________
                 do
                 {
-                    if(++curr>=last) throw exception("%sunfinished braced expression",fn);
+                    if(++curr>=last) throw exception("%sunfinished braced expression in '%s'",fn,RX);
                 }
                 while(RBRACE != *curr);
                 const char *end = curr;
@@ -211,7 +210,7 @@ namespace upsylon
                 assert(RBRACE==*end);
                 ++ini;
                 string content(ini,end-ini);
-                if(content.size()<=0) throw exception("%sempty braces",fn);
+                if(content.size()<=0) throw exception("%sempty braces in '%s'",fn,RX);
 
                 //______________________________________________________________
                 //
@@ -228,7 +227,7 @@ namespace upsylon
                 }
                 else
                 {
-                    throw exception("%sinvalid content char '%s'",fn,visible_char[ uint8_t(content[0]) ]);
+                    throw exception("%sinvalid content char '%s' in '%s'",fn,visible_char[ uint8_t(content[0]) ],RX);
                 }
                 ++curr;
             }
@@ -241,7 +240,7 @@ namespace upsylon
             //__________________________________________________________________
             inline void insertEntry( auto_ptr<Logical> &p, const string &content )
             {
-                if(!dict) throw exception("%smissing dictionary for '%s'",fn,*content);
+                if(!dict) throw exception("%smissing dictionary for '%s' while compiling '%s'",fn,*content,RX);
                 p->add( dict->create(content) );
             }
 
@@ -258,7 +257,7 @@ namespace upsylon
                 //
                 // check status
                 //______________________________________________________________
-                if(p->size()<=0) throw exception("%sno sub-expression before {%s}",fn,*content);
+                if(p->size()<=0) throw exception("%sno sub-expression before {%s} in '%s'",fn,*content,RX);
 
                 //______________________________________________________________
                 //
@@ -273,16 +272,13 @@ namespace upsylon
                 {
                     *(smax++)=0;
                     lmax = length_of(smax);
-                    std::cerr << "smax=" << smax << "/#" << lmax << std::endl;
                     if(lmax>0)
                     {
                         nmax = string_convert::to<size_t>(smax,"Lang::RegExp::Range.nmax");
-                        std::cerr << "nmax=" << nmax << std::endl;
                     }
                 }
 
                 const size_t lmin = length_of(smin);
-                std::cerr << "smin=" << smin << "/#" << lmin << std::endl;
 
                 //______________________________________________________________
                 //
@@ -292,7 +288,6 @@ namespace upsylon
                 {
                     // smin has a value
                     const size_t nmin = string_convert::to<size_t>(smin,"Lang::RegExp::Range.nmin");
-                    std::cerr << "nmin=" << nmin << std::endl;
                     if(lmax>0)
                     {
                         p->add( Counting::Create(p->remove(),nmin,nmax) );
@@ -335,7 +330,7 @@ case 'f': return new Single('\f')
             inline Pattern * subEscape()
             {
                 assert(BACKSLASH==curr[-1]);
-                if(curr>=last) throw exception("%smissing sub-expression escape sequence",fn);
+                if(curr>=last) throw exception("%smissing sub-expression escape sequence in '%s'",fn, RX);
                 const char C = *(curr++);
                 switch(C)
                 {
@@ -365,7 +360,7 @@ case 'f': return new Single('\f')
                         break;
 
                 }
-                throw exception("%sunknown sub-expression escape sequence '%s'",fn,visible_char[uint8_t(C)]);
+                throw exception("%sunknown sub-expression escape sequence '%s' in '%s'",fn,visible_char[uint8_t(C)],RX);
             }
 
             //__________________________________________________________________
@@ -378,13 +373,13 @@ case 'f': return new Single('\f')
             {
                 assert('x'==curr[-1]);
                 // read 2 chars
-                if(curr>=last) throw exception("%smissing first hexadecimal char",fn);
+                if(curr>=last) throw exception("%smissing first hexadecimal char in '%s'",fn,RX);
                 const char hiCH = *(curr++);
-                if(curr>=last) throw exception("%smissing second hexadecimal char",fn);
+                if(curr>=last) throw exception("%smissing second hexadecimal char in '%s'",fn,RX);
                 const char loCH = *(curr++);
 
-                const int hi = hexadecimal::to_decimal(hiCH); if(hi<0) throw exception("%sinvalid first hexadecimal char '%s'",fn,visible_char[uint8_t(hiCH)]);
-                const int lo = hexadecimal::to_decimal(loCH); if(lo<0) throw exception("%sinvalid second hexadecimal char '%s'",fn,visible_char[uint8_t(loCH)]);
+                const int hi = hexadecimal::to_decimal(hiCH); if(hi<0) throw exception("%sinvalid first hexadecimal char '%s' in '%s'",fn,visible_char[uint8_t(hiCH)],RX);
+                const int lo = hexadecimal::to_decimal(loCH); if(lo<0) throw exception("%sinvalid second hexadecimal char '%s in '%s''",fn,visible_char[uint8_t(loCH)],RX);
 
                 const uint8_t B = uint8_t(hi) << 4 | uint8_t(lo);
                 return new Single(B);
@@ -401,7 +396,7 @@ case 'f': return new Single('\f')
                 assert(curr[-1]==LBRACK);
                 if(curr>=last)
                 {
-                    throw exception("%smissing group",fn);
+                    throw exception("%smissing group in '%s'",fn,RX);
                 }
                 //______________________________________________________________
                 //
@@ -447,7 +442,7 @@ case 'f': return new Single('\f')
                             //--------------------------------------------------
                         case RBRACK:
                             ++curr;
-                            if(g->size()<=0) throw exception("%sempty group",fn);
+                            if(g->size()<=0) throw exception("%sempty group in '%s'",fn,RX);
                             return Pattern::Optimize( g.yield() );
 
                             //--------------------------------------------------
@@ -477,7 +472,7 @@ case 'f': return new Single('\f')
                     }
 
                 }
-                throw exception("%sunfinished group",fn);
+                throw exception("%sunfinished group in '%s'",fn,RX);
             }
 
             //__________________________________________________________________
@@ -495,12 +490,12 @@ case 'f': return new Single('\f')
                 do
                 {
                     ++curr;
-                    if(curr>=last) throw exception("%sunfinished posix label",fn);
+                    if(curr>=last) throw exception("%sunfinished posix label in '%s'",fn,RX);
                 }
                 while( ':' != *curr );
                 const char *end = curr;
-                if(++curr>=last)  throw exception("%send of expression after ':'",fn);
-                if(RBRACK!=*curr) throw exception("%sinvalid '%s' after ':'", fn, visible_char[ uint8_t(*curr) ]);
+                if(++curr>=last)  throw exception("%send of expression after ':' in '%s'",fn,RX);
+                if(RBRACK!=*curr) throw exception("%sinvalid '%s' after ':' in '%s'", fn, visible_char[ uint8_t(*curr) ],RX);
                 ++curr; // skip RBRACK
                 assert(end>ini);
                 assert(*ini==':');
@@ -523,7 +518,7 @@ case 'f': return new Single('\f')
                 Y_RX_POSIX(core);
 
 
-                throw exception("%sunknown posix label '%s'", fn, *label );
+                throw exception("%sunknown posix label '%s' in '%s'", fn, *label, RX);
 
             }
 
@@ -537,7 +532,7 @@ case 'f': return new Single('\f')
             inline Pattern * grpEscape()
             {
                 assert(BACKSLASH==curr[-1]);
-                if(curr>=last) throw exception("%smissing group escape sequence",fn);
+                if(curr>=last) throw exception("%smissing group escape sequence in '%s'",fn,RX);
                 const char C = *(curr++);
                 switch(C)
                 {
@@ -561,7 +556,7 @@ case 'f': return new Single('\f')
                         break;
 
                 }
-                throw exception("%sunknown group escape sequence '%s'",fn,visible_char[uint8_t(C)]);
+                throw exception("%sunknown group escape sequence '%s' in '%s'",fn,visible_char[uint8_t(C)],RX);
             }
 
             //__________________________________________________________________
@@ -577,9 +572,9 @@ case 'f': return new Single('\f')
                 //
                 // check lhs
                 //______________________________________________________________
-                if(g->operands.size<=0) throw exception("%sno left argument for range",fn);
+                if(g->operands.size<=0) throw exception("%sno left argument for range in '%s'",fn,RX);
                 auto_ptr<Pattern> lhs = g->remove();
-                if( Single::UUID != lhs->uuid) throw exception("%sno single char before dash",fn);
+                if( Single::UUID != lhs->uuid) throw exception("%sno single char before dash in '%s'",fn,RX);
                 const uint8_t lo = static_cast<Single *>(lhs->priv)->code;
 
                 //______________________________________________________________
@@ -588,7 +583,7 @@ case 'f': return new Single('\f')
                 //______________________________________________________________
                 if(++curr>=last)
                 {
-                    throw exception("%sunfinished range",fn);
+                    throw exception("%sunfinished range in '%s'",fn,RX);
                 }
                 const char C  = *(curr++); // skip current char
                 uint8_t    up = uint8_t(C);
@@ -596,7 +591,7 @@ case 'f': return new Single('\f')
                 {
                     case RBRACK:
                     case LBRACK:
-                        throw exception("%sinvalid upper value for range='%s'",fn,visible_char[ up ]);
+                        throw exception("%sinvalid upper value for range='%s' in '%s'",fn,visible_char[ up ],RX);
 
                     case BACKSLASH: {
                         auto_ptr<Pattern> rhs = grpEscape(); assert( Single::UUID==rhs->uuid);
@@ -624,7 +619,7 @@ case 'f': return new Single('\f')
             auto_ptr<Pattern> p = cmp.sub();
             if(cmp.depth>0)
             {
-                throw exception("%sunfinished sub-expression",fn);
+                throw exception("%sunfinished sub-expression in '%s'",fn,*rx);
             }
             return p.yield();
         }
@@ -634,35 +629,6 @@ case 'f': return new Single('\f')
             const string _ = rx; return RegExp(_,dict);
         }
 
-        string StringToRegExp(const char *text, const size_t size)
-        {
-            assert( !(NULL==text&&size>0) );
-            string ans(size*4,as_capacity);
-            for(size_t i=0;i<size;++i)
-            {
-                const uint8_t B = text[i];
-                ans << '\\';
-                ans << 'x';
-                ans << hexadecimal::digit(B>>4);
-                ans << hexadecimal::digit(B);
-            }
-            return ans;
-        }
-
-        string StringToRegExp(const string &s)
-        {
-            return StringToRegExp(*s,s.size());
-        }
-
-        string StringToRegExp(const char *text)
-        {
-            return StringToRegExp(text,length_of(text));
-        }
-
-        string StringToRegExp(const char C)
-        {
-            return StringToRegExp(&C,1);
-        }
 
     }
 }
