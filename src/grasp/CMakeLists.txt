@@ -22,17 +22,18 @@ SOURCE_GROUP( lang/syntax/grammar FILES ${syntax_grammar_srcs} )
 FILE(GLOB syntax_node_srcs y/lang/syntax/node/*.cpp)
 SOURCE_GROUP( lang/syntax/node FILES ${syntax_node_srcs} )
 
-#FILE(GLOB dynamo_decl y/lang/dynamo/*.hpp)
-#FILE(GLOB dynamo_code y/lang/dynamo/*.cpp)
-#SET(dynamo_srcs ${dynamo_decl} ${dynamo_code})
-#SOURCE_GROUP( lang/dynamo FILES ${dynamo_srcs} )
-#INSTALL( FILES ${dynamo_decl} DESTINATION include/y/lang/dynamo )
+FILE(GLOB dynamo_decl y/lang/dynamo/*.hpp)
+FILE(GLOB dynamo_code y/lang/dynamo/*.cpp)
+SET(dynamo_srcs ${dynamo_decl} ${dynamo_code})
+SOURCE_GROUP( lang/dynamo FILES ${dynamo_srcs} )
+INSTALL( FILES ${dynamo_decl} DESTINATION include/y/lang/dynamo )
 
 ADD_LIBRARY(y-grasp STATIC 
 ${main_srcs} 
 ${syntax_srcs}
 ${syntax_grammar_srcs}
 ${syntax_node_srcs}
+${dynamo_srcs}
 )
 INSTALL( TARGETS y-grasp ARCHIVE DESTINATION lib )
 

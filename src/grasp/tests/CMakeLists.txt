@@ -14,6 +14,7 @@ ADD_TEST(Grammar test-grasp grammar)
 ADD_TEST(Parser  test-grasp parser)
 ADD_TEST(Eval    test-grasp ee)
 ADD_TEST(JSON    test-grasp json)
+ADD_TEST(Dynamo  test-grasp dyn)
 
 ADD_CUSTOM_TARGET(utest-grasp
 COMMAND ${CMAKE_CTEST_COMMAND} -V

@@ -84,7 +84,8 @@ namespace upsylon
                 void end() throw();
 
                 Node *run(Source &source); //!< reset lexer and try to accept source
-                
+                Node *run(Module *module); //!< run lexer and try to accept module
+
                 const bool ready; //!< checked before run, set by end()
 
             private:

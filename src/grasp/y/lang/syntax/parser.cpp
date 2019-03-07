@@ -144,6 +144,12 @@ namespace upsylon
                 }
             }
 
+            Node * Parser:: run(Module *module)
+            {
+                if(!module) throw exception("{%s} run(NULL module)", **name);
+                Source source(module);
+                return run(source);
+            }
 
         }
 

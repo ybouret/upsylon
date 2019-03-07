@@ -7,6 +7,7 @@ Y_UTEST_INIT(8)
     Y_UTEST(parser);
     Y_UTEST(ee);
     Y_UTEST(json);
+    Y_UTEST(dyn);
 }
 Y_UTEST_EXEC()
 
