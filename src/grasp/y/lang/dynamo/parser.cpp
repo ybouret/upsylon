@@ -19,20 +19,35 @@ namespace upsylon
             setVerbose(true);
             const string ruleRX = Common::C_IDENTIFIER;
 
-            AGG  &DYNAMO = aggregate("dynamo");
-            RULE &END    = mark(';');
+            AGG  &dynamo = aggregate("dynamo");
+            RULE &stop   = mark(';');
+            RULE &sep    = mark(':');
+            RULE &rx     = plug<Lexical::jString>("rx");
+            RULE &rs     = plug<Lexical::rString>("rs");
+            RULE &str    = choice(rx,rs);
+            RULE &rid   = term("rid",ruleRX);
 
             //------------------------------------------------------------------
-            // declare the module
+            // Declare the module preamble
             //------------------------------------------------------------------
             {
                 const string moduleRX = "[.]" + ruleRX;
-                DYNAMO << join( term("module",moduleRX), END );
+                dynamo << join( term("module",moduleRX), stop );
             }
 
 
             //------------------------------------------------------------------
-            // Lexical Only Rules
+            // Declare the Lexical rules
+            //------------------------------------------------------------------
+            {
+                const string lexicalRX = "@" + ruleRX;
+                RULE &lid = term("lid",lexicalRX);
+                dynamo << zeroOrMore( aggregate("plg") << lid << sep << rid << stop );
+                dynamo << zeroOrMore( aggregate("lxr") << lid << sep << zeroOrMore(str) << stop);
+            }
+
+            //------------------------------------------------------------------
+            // Extraneous Lexical Only Rules
             //------------------------------------------------------------------
             hook<Lexical::CXX_Comment>(**this,"CXX_Comment");
             hook<Lexical::C_Comment>(  **this,"C_Comment");
