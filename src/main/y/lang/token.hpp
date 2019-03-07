@@ -50,6 +50,10 @@ namespace upsylon
             //! convert to printable string
             string to_print()  const;
 
+            //! convert to visible string
+            string to_visible()  const;
+
+
             //! write content as GraphViz
             void   viz( ios::ostream &fp ) const;
 

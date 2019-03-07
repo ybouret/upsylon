@@ -59,7 +59,10 @@ namespace upsylon
             void Analyzer:: onTerminal(const string &id, const Lexeme &lx)
             {
                 indent(std::cerr) << "[push] <" << id << ">";
-                if(lx.size) std::cerr << '=' << '\'' << lx << '\'';
+                if(lx.size) {
+                    const string s = lx.to_visible();
+                    std::cerr << '=' << '\'' << s << '\'';
+                }
                 std::cerr << std::endl;
             }
 

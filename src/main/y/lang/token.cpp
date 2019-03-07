@@ -42,6 +42,16 @@ namespace upsylon
             return ans;
         }
 
+        string Token::to_visible() const
+        {
+            string ans(3*size,as_capacity);
+            for(const Char *ch=head;ch;ch=ch->next)
+            {
+                ans << visible_char[ch->code];
+            }
+            return ans;
+        }
+
         void Token::viz( ios::ostream &fp ) const
         {
             fp << '\'';

@@ -16,7 +16,7 @@ namespace upsylon
 
         DynamoParser:: DynamoParser() : Syntax::Parser("Dynamo")
         {
-            setVerbose(true);
+            //setVerbose(true);
             const string ruleRX = Common::C_IDENTIFIER;
 
             AGG  &dynamo = aggregate("dynamo");
