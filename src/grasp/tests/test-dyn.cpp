@@ -12,7 +12,9 @@ Y_UTEST(dyn)
 
     if(argc>1)
     {
-        auto_ptr<Syntax::Node> g = dynamo.run( Module::OpenFile(argv[1]) );
+        const string           fn = argv[1];
+        auto_ptr<Syntax::Node> g  = dynamo.run( (fn=="STDIN") ? Module::OpenSTDIN() : Module::OpenFile(argv[1]) );
+        g->graphViz( "dynamo_tree.dot" );
     }
 }
 Y_UTEST_DONE()

@@ -101,6 +101,7 @@ Y_UTEST_INIT(128)
     Y_UTEST(token);
     Y_UTEST(source);
     Y_UTEST(pattern);
+    Y_UTEST(common);
     Y_UTEST(posix);
     Y_UTEST(regex);
     Y_UTEST(matching);
