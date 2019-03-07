@@ -22,7 +22,7 @@ namespace {
             //__________________________________________________________________
             ALT  &VALUE  = alternate("value");
             RULE &COMA   = mark(',');
-            RULE &STRING = hook<Lexical::jString>("string");
+            RULE &STRING = plug<Lexical::jString>("string");
             
             //__________________________________________________________________
             //

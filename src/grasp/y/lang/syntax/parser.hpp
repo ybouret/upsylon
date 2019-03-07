@@ -68,20 +68,20 @@ namespace upsylon
                 inline TERM & op( const T &id, const U &arg ) { return term(id,arg).op(); }
 
                 //! zero arguments plugin
-                template <typename PLUGIN> inline RULE & hook( const string &id )
+                template <typename PLUGIN> inline RULE & plug( const string &id )
                 {
                     Lexical::Translator::hook<PLUGIN>(**this,id);
                     return terminal(id);
                 }
 
                 //! zero arguments plugin, wrapper
-                template <typename PLUGIN> inline RULE & hook( const char *id )
+                template <typename PLUGIN> inline RULE & plug( const char *id )
                 {
-                    const string _(id); return hook<PLUGIN>(_);
+                    const string _(id); return plug<PLUGIN>(_);
                 }
 
                 //! finalize grammar, empty dictionary and set ready
-                void end() throw();
+                void end();
 
                 Node *run(Source &source); //!< reset lexer and try to accept source
                 Node *run(Module *module); //!< run lexer and try to accept module

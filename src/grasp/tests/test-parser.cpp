@@ -18,7 +18,7 @@ namespace {
             ALT   & JSON    = alternate("JSON");
             ALT   & VALUE   = alternate("value");
             TERM  & COMA    = term(',').sm();
-            RULE  & STRING  = hook<Lexical::jString>("string");
+            RULE  & STRING  = plug<Lexical::jString>("string");
             {
                 AGG & ARRAY = aggregate("array");
                 {

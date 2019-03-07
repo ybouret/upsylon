@@ -27,7 +27,7 @@ Lexer(ID), Grammar(label), CountedObject(), ready(false)
                 return *name;
             }
 
-            void Parser:: end() throw()
+            void Parser:: end()
             {
                 if(!ready)
                 {
