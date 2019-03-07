@@ -14,7 +14,7 @@ namespace upsylon
                 
             }
 
-            Analyzer:: Analyzer() throw()
+            Analyzer:: Analyzer() throw() : depth(0)
             {
                 
             }
@@ -46,7 +46,8 @@ namespace upsylon
 
             std::ostream & Analyzer:: indent( std::ostream &os ) const
             {
-                os << '|';
+                const string lvl = vformat("x%02x",unsigned(depth));
+                os << '|' << lvl << '|';
                 for(int i=depth;i>0;--i)
                 {
                     os << '-' << '-';
