@@ -21,7 +21,7 @@ Y_UTEST(dyn)
     {
         const string           fn = argv[1];
 
-        if( true )
+        if( false )
         {
             Source source( doOpen(fn) );
             Lexeme *lx = NULL;
@@ -32,7 +32,7 @@ Y_UTEST(dyn)
             }
         }
 
-        if(false)
+        if(true)
         {
             auto_ptr<Syntax::Node> g  = dynamo.run( doOpen(fn) );
             g->graphViz( "dynamo_tree.dot" );

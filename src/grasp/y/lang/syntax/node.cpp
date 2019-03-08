@@ -117,7 +117,7 @@ namespace upsylon
             void TerminalNode:: returnTo(Lexer &lexer) throw()
             {
                 assert(lx);
-                std::cerr << "returning '" << *lx << ", label=<" << lx->label << ">" << std::endl;
+                //std::cerr << "returning '" << *lx << ", label=<" << lx->label << ">" << std::endl;
                 lexer.unget(lx);
                 lx=0;
             }
@@ -125,7 +125,7 @@ namespace upsylon
             void   Node:: Unget( Node * &node, Lexer &lexer) throw()
             {
                 assert(node);
-                std::cerr << "[UNGET from <" << node->rule.name << ">]" << std::endl;
+                //std::cerr << "[UNGET from <" << node->rule.name << ">]" << std::endl;
                 node->returnTo(lexer);
                 delete node;
                 node = 0;

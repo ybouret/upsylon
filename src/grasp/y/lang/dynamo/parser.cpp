@@ -25,7 +25,7 @@ namespace upsylon
             RULE &rx      = plug<Lexical::jString>("rx");
             RULE &rs      = plug<Lexical::rString>("rs");
             RULE &str     = choice(rx,rs);
-           // RULE &zom_str = zeroOrMore(str);
+            RULE &zom_str = zeroOrMore(str);
             RULE &rid     = term("rid","{ID}");
             RULE &carret  = term('\x5e');
             RULE &ops_str = join(str,optional(carret));
@@ -45,7 +45,6 @@ namespace upsylon
             //------------------------------------------------------------------
             // Declare the Rule Interface
             //------------------------------------------------------------------
-#if 0
             {
                 CMP &rule = (aggregate("rule") << rid << optional( term('!') ) << sep);
                 {
@@ -54,9 +53,7 @@ namespace upsylon
                 rule << stop;
                 itm << rule;
             }
-#endif
 
-#if 0
             //------------------------------------------------------------------
             // Declare the Lexical Rules : plugin and lexical
             //------------------------------------------------------------------
@@ -73,8 +70,7 @@ namespace upsylon
                 RULE &cid = term("cid","%{ID}");
                 itm << (aggregate("cmd") << cid << zeroOrMore(rs) << stop);
             }
-#endif
-
+            
             //------------------------------------------------------------------
             // Extraneous Lexical Only Rules
             //------------------------------------------------------------------

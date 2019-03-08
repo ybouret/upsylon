@@ -57,11 +57,6 @@ namespace upsylon
             {
                 assert(NULL==tree||tree->internal);
                 Y_LANG_SYNTAX_VERBOSE(std::cerr <<"|_" <<  typeName() << " <" << jk.name << "> : <" << name << ">" << std::endl);
-                const Lexeme *next = lexer.peek(source);
-                if(next)
-                {
-                    std::cerr << "..next='" << *next << "', label <" << *(next->label) << ">" <<  std::endl;
-                }
 
                 if( jk.accept(source, lexer, tree) )
                 {
