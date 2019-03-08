@@ -40,7 +40,7 @@ namespace upsylon
             //------------------------------------------------------------------
             // Declare the rule declaration
             //------------------------------------------------------------------
-            CMP &rule = (aggregate("rule") << rid << sep);
+            CMP &rule = (aggregate("rule") << rid << optional( term('!') ) << sep);
             {
 
             }

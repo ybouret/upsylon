@@ -1,6 +1,7 @@
 .hello;
 
 add : ;
+mul!: ;
 
 @string : jstring;
 
