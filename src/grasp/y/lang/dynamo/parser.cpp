@@ -16,7 +16,7 @@ namespace upsylon
 
         DynamoParser:: DynamoParser() : Syntax::Parser("Dynamo")
         {
-            //setVerbose(true);
+            setVerbose(true);
             dict("ID",Common::C_IDENTIFIER);
 
             AGG  &dynamo  = aggregate("dynamo");
@@ -25,50 +25,55 @@ namespace upsylon
             RULE &rx      = plug<Lexical::jString>("rx");
             RULE &rs      = plug<Lexical::rString>("rs");
             RULE &str     = choice(rx,rs);
-            RULE &zom_str = zeroOrMore(str);
+           // RULE &zom_str = zeroOrMore(str);
             RULE &rid     = term("rid","{ID}");
+            RULE &carret  = term('\x5e');
+            RULE &ops_str = join(str,optional(carret));
+
+            ALT &itm      = alternate("itm");
 
             //------------------------------------------------------------------
-            // Declare the Module preamble
+            // dynamo = module + items
             //------------------------------------------------------------------
+            dynamo << join( term("module","[.]{ID}"), stop ) << zeroOrMore(itm);
+
+            //------------------------------------------------------------------
+            // Declare the Alias
+            //------------------------------------------------------------------
+            itm << ( aggregate("aka") << rid << sep << ops_str << stop);
+
+            //------------------------------------------------------------------
+            // Declare the Rule Interface
+            //------------------------------------------------------------------
+#if 0
             {
-                //const string moduleRX = "[.]" + ruleRX;
-                dynamo << join( term("module","[.]{ID}"), stop );
+                CMP &rule = (aggregate("rule") << rid << optional( term('!') ) << sep);
+                {
+
+                }
+                rule << stop;
+                itm << rule;
             }
+#endif
 
-
-            //------------------------------------------------------------------
-            // Declare the rule declaration
-            //------------------------------------------------------------------
-            CMP &rule = (aggregate("rule") << rid << optional( term('!') ) << sep);
-            {
-                
-            }
-            rule << stop;
-
-
+#if 0
             //------------------------------------------------------------------
             // Declare the Lexical Rules : plugin and lexical
             //------------------------------------------------------------------
-            AGG &plg = aggregate("plg");
-            AGG &lxr = aggregate("lxr");
             {
                 RULE &lid = term("lid","@{ID}");
-                plg << lid << sep << rid     << stop;
-                lxr << lid << sep << zom_str << stop;
+                itm << ( aggregate("plg") << lid << sep << rid     << stop);
+                itm << ( aggregate("lxr") << lid << sep << zom_str << stop);
             }
 
             //------------------------------------------------------------------
             // Declare the Command Rules
             //------------------------------------------------------------------
-            AGG &cmd = aggregate("cmd");
             {
-                //const string commandRX = "%" + ruleRX;
                 RULE &cid = term("cid","%{ID}");
-                cmd << cid << zeroOrMore(rs)  << stop;
+                itm << (aggregate("cmd") << cid << zeroOrMore(rs) << stop);
             }
-
-            dynamo << zeroOrMore( alternate("item") << rule << plg << lxr << cmd );
+#endif
 
             //------------------------------------------------------------------
             // Extraneous Lexical Only Rules
@@ -78,6 +83,9 @@ namespace upsylon
             (**this).endl( "[:endl:]"  );
             (**this).drop( "[:blank:]" );
 
+            //------------------------------------------------------------------
+            // finalize
+            //------------------------------------------------------------------
             end();
         }
     }

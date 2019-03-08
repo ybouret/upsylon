@@ -59,6 +59,14 @@ namespace upsylon
                 assert(NULL==tree||tree->internal);
                 Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_" << typeName() << " <" << name << ">" << std::endl);
                 Lexeme *next = lexer.get(source);
+                if(next)
+                {
+                    std::cerr << "..testing '" << *next << "', #=" << next->size << ", label=<" << *(next->label) << ">" << std::endl;
+                }
+                else
+                {
+                    std::cerr << "..EOF" << std::endl;
+                }
                 if(!next)
                 {
                     Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_EOF" << std::endl );

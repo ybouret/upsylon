@@ -54,6 +54,7 @@ namespace upsylon
 
                 // link to a terminal
                 Terminal &t = terminal(id);
+                Y_LANG_SYNTAX_VERBOSE( std::cerr << "   \\_Compiling \"" << rx << "\"" << std::endl);
 
                 // finalize by setting univocal
                 const Lexical::Rule &r = (**this).last();
@@ -64,6 +65,13 @@ namespace upsylon
                 {
                     (bool &)(t.ordinary) = false;
                     (bool &)(t.univocal) = true;
+                }
+
+                if(verbose)
+                {
+                    std::cerr << "    \\_";
+                    if(t.ordinary) std::cerr << "|ordinary|"; else std::cerr << "|univocal|";
+                    std::cerr << std::endl;
                 }
 
                 return t;

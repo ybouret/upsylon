@@ -109,8 +109,11 @@ namespace upsylon
                 RuleReferenceSet *rrs;
             public:
                 const bool        hasOperators; //!< detected by finalize()
+
+            protected:
+                bool              verbose;      //!< verbosity debug flag
+
             private:
-                bool              verbose;
                 unsigned          iAlt;
 
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);

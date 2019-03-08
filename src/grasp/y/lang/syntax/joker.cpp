@@ -56,12 +56,23 @@ namespace upsylon
             Y_LANG_SYNTAX_ACCEPT_START(Optional)
             {
                 assert(NULL==tree||tree->internal);
+                Y_LANG_SYNTAX_VERBOSE(std::cerr <<"|_" <<  typeName() << " <" << jk.name << "> : <" << name << ">" << std::endl);
+                const Lexeme *next = lexer.peek(source);
+                if(next)
+                {
+                    std::cerr << "..next='" << *next << "', label <" << *(next->label) << ">" <<  std::endl;
+                }
+
                 if( jk.accept(source, lexer, tree) )
                 {
+                    assert(NULL!=tree);
+                    Y_LANG_SYNTAX_VERBOSE(std::cerr <<"|_(+)<" << jk.name << ">" << std::endl);
                     return true;
                 }
                 else
                 {
+                    assert(NULL==tree||tree->internal);
+                    Y_LANG_SYNTAX_VERBOSE(std::cerr <<"|_(-)<" << jk.name << ">" << std::endl);
                     return true;
                 }
             }
@@ -110,12 +121,12 @@ namespace upsylon
                 
                 Node          *subTree = Node::Create(*this);
                 auto_ptr<Node> guard(subTree);
-                Y_LANG_SYNTAX_VERBOSE(std::cerr <<"|_" <<  typeName() << " '" << jk.name << "' : '" << name << "'" << std::endl);
+                Y_LANG_SYNTAX_VERBOSE(std::cerr <<"|_" <<  typeName() << " <" << jk.name << "> : <" << name << ">" << std::endl);
 
                 size_t count = 0;
                 while(jk.accept(source,lexer,subTree))
                 {
-                    Y_LANG_SYNTAX_VERBOSE(std::cerr <<"|_+'" << jk.name << "'" << std::endl);
+                    Y_LANG_SYNTAX_VERBOSE(std::cerr <<"|_+<" << jk.name << ">" << std::endl);
                     ++count;
                 }
 
@@ -124,14 +135,14 @@ namespace upsylon
                     assert(tree->internal);
                     assert(subTree->internal);
                     tree->children().merge_back( subTree->children() );
-                    Y_LANG_SYNTAX_VERBOSE(std::cerr <<"|_accepted " << typeName() << " '" << name << "' fusion@count=" << count << std::endl);
+                    Y_LANG_SYNTAX_VERBOSE(std::cerr <<"|_accepted " << typeName() << " <" << name << "> fusion@count=" << count << std::endl);
                     return true; // subTree will be deleteed
                 }
                 else
                 {
                     tree = subTree;
                     guard.dismiss();
-                    Y_LANG_SYNTAX_VERBOSE(std::cerr <<"|_accepted " << typeName() << " '" << name << "' replace@count=" << count << std::endl);
+                    Y_LANG_SYNTAX_VERBOSE(std::cerr <<"|_accepted " << typeName() << " <" << name << "> replace@count=" << count << std::endl);
                     return true; // subTree becomes the main tree
                 }
             }
@@ -179,19 +190,19 @@ namespace upsylon
                 Node          *subTree = Node::Create(*this);
                 auto_ptr<Node> guard(subTree);
 
-                Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_" <<  typeName() << " '" << jk.name << "' : '" << name << "'" << std::endl);
+                Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_" <<  typeName() << " <" << jk.name << "> : <" << name << ">" << std::endl);
                 size_t count = 0;
                 while(jk.accept(source,lexer,subTree))
                 {
                     ++count;
-                    Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_[count=" << count << "] '" << jk.name << "'" << std::endl);
+                    Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_[count=" << count << "] <" << jk.name << ">" << std::endl);
                 }
 
 
                 if(count<=0)
                 {
                     assert(0==subTree->children().size);
-                    Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_rejected " << typeName() << " '" << name << "'@count=" << count << std::endl);
+                    Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_rejected " << typeName() << " <" << name << ">@count=" << count << std::endl);
                     return false; // empty subTree is deleted
                 }
                 else
@@ -201,14 +212,14 @@ namespace upsylon
                         assert(tree->internal);
                         assert(subTree->internal);
                         tree->children().merge_back( subTree->children() );
-                        Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_accepted " << typeName() << " '" << name << "' fusion@count=" << count << std::endl);
+                        Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_accepted " << typeName() << " <" << name << "> fusion@count=" << count << std::endl);
                         return true; // subTree will be deleteed
                     }
                     else
                     {
                         tree = subTree;
                         guard.dismiss();
-                        Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_accepted " << typeName() << " '" << name << "' replace@count=" << count << std::endl);
+                        Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_accepted " << typeName() << " <" << name << "> replace@count=" << count << std::endl);
                         return true; // subTree becomes the main tree
                     }
                 }
