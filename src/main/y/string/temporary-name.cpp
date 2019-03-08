@@ -18,7 +18,7 @@ namespace upsylon
     string temporary_name(const size_t length)
     {
         static randomized::bits &ran = randomized::bits::crypto();
-        static const char        nch = length_of(file_name_chars);
+        static const size_t      nch = length_of(file_name_chars);
         const size_t n = max_of<size_t>(1,length);
         string       ans(n+4,as_capacity);
         for(size_t i=0;i<n;++i)
