@@ -2,5 +2,8 @@
 
 @string : jstring;
 
-@drop : "\t" ' ' "[:blank:]";
+%include 'lex.g';
+
+@drop : "\t" ' ' "[:blank:]" '\t';
 @endl : "[:endl:]";
+

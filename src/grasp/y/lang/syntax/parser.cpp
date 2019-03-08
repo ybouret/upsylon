@@ -118,7 +118,9 @@ namespace upsylon
             Node * Parser:: run(Source &source)
             {
                 if(!ready) throw exception("{%s} is not ready, call end() before use",**name);
-
+                //--------------------------------------------------------------
+                // get the raw tree
+                //--------------------------------------------------------------
                 reset();
                 Node *raw = accept(source,*this);
                 if(false)
@@ -127,6 +129,10 @@ namespace upsylon
                     raw->graphViz( *name + "_raw.dot" );
                     guard.dismiss();
                 }
+
+                //--------------------------------------------------------------
+                // clean up the tree
+                //--------------------------------------------------------------
                 Node *ast = Node::AST(raw);
                 if(false)
                 {
@@ -134,9 +140,13 @@ namespace upsylon
                     raw->graphViz( *name + "_ast.dot" );
                     guard.dismiss();
                 }
+
+                //--------------------------------------------------------------
+                // rewrite if needed
+                //--------------------------------------------------------------
                 if(hasOperators)
                 {
-                    return Node::AST(Node::Rewrite(ast,*this));
+                    return Node::Compact(Node::Rewrite(ast,*this));
                 }
                 else
                 {

@@ -151,6 +151,88 @@ namespace upsylon
             }
 
 
+            Node * Node:: Compact(Node *node) throw()
+            {
+                assert(node);
+                if(node->terminal)
+                {
+                    //__________________________________________________________
+                    //
+                    //
+                    // process terminal
+                    //
+                    //__________________________________________________________
+                    return node; // that was easy
+                }
+                else
+                {
+                    //__________________________________________________________
+                    //
+                    //
+                    // process internal
+                    //
+                    //__________________________________________________________
+                    Node::List &self = node->children();
+
+                    {
+                        //______________________________________________________
+                        //
+                        // first pass : recursive call
+                        //______________________________________________________
+                        Node::List temp;
+                        while(self.size)
+                        {
+                            Node *sub = Node::AST( self.pop_front() );
+                            if(sub->terminal)
+                            {
+                                temp.push_back(sub);
+                            }
+                            else
+                            {
+                                AST_Internal(sub,temp);
+                            }
+                        }
+                        temp.swap_with(self);
+                    }
+
+                    if(node->rule.uuid == Aggregate::UUID )
+                    {
+                        //______________________________________________________
+                        //
+                        // second pass: local merging
+                        //______________________________________________________
+                        if( SubGroup == node->rule.as<Compound>().behavior )
+                        {
+                            //--------------------------------------------------
+                            // leave untouched
+                            //--------------------------------------------------
+                            return node;
+                        }
+                        else
+                        {
+                            //--------------------------------------------------
+                            // possible merging is only 1 child
+                            //--------------------------------------------------
+                            if(1==node->children().size)
+                            {
+                                Node  *one = node->children().pop_front();
+                                delete node;
+                                return one;
+                            }
+                            else
+                            {
+                                return node;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return node;
+                    }
+                }
+
+            }
+
         }
     }
 }

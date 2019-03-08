@@ -90,6 +90,12 @@ namespace upsylon
                  */
                 static Node * Rewrite( Node *node, const Grammar &G );
 
+                //! Compact only the AST
+                /**
+                 apply only node behavior to merge branche after
+                 a Rewrite operation, does not touch terminals
+                 */
+                static Node * Compact( Node *node ) throw();
 
             protected:
                 explicit Node(const Rule &r, const bool term) throw(); //!< setup

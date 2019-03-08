@@ -19,16 +19,17 @@ namespace upsylon
             //setVerbose(true);
             const string ruleRX = Common::C_IDENTIFIER;
 
-            AGG  &dynamo = aggregate("dynamo");
-            RULE &stop   = mark(';');
-            RULE &sep    = mark(':');
-            RULE &rx     = plug<Lexical::jString>("rx");
-            RULE &rs     = plug<Lexical::rString>("rs");
-            RULE &str    = choice(rx,rs);
-            RULE &rid   = term("rid",ruleRX);
+            AGG  &dynamo  = aggregate("dynamo");
+            RULE &stop    = mark(';');
+            RULE &sep     = mark(':');
+            RULE &rx      = plug<Lexical::jString>("rx");
+            RULE &rs      = plug<Lexical::rString>("rs");
+            RULE &str     = choice(rx,rs);
+            RULE &zom_str = zeroOrMore(str);
+            RULE &rid     = term("rid",ruleRX);
 
             //------------------------------------------------------------------
-            // Declare the module preamble
+            // Declare the Module preamble
             //------------------------------------------------------------------
             {
                 const string moduleRX = "[.]" + ruleRX;
@@ -37,14 +38,28 @@ namespace upsylon
 
 
             //------------------------------------------------------------------
-            // Declare the Lexical rules
+            // Declare the Lexical Rules
             //------------------------------------------------------------------
+            AGG &plg = aggregate("plg");
+            AGG &lxr = aggregate("lxr");
             {
                 const string lexicalRX = "@" + ruleRX;
                 RULE &lid = term("lid",lexicalRX);
-                dynamo << zeroOrMore( aggregate("plg") << lid << sep << rid << stop );
-                dynamo << zeroOrMore( aggregate("lxr") << lid << sep << zeroOrMore(str) << stop);
+                plg << lid << sep << rid     << stop;
+                lxr << lid << sep << zom_str << stop;
             }
+
+            //------------------------------------------------------------------
+            // Declare the Command Rules
+            //------------------------------------------------------------------
+            AGG &cmd = aggregate("cmd");
+            {
+                const string commandRX = "%" + ruleRX;
+                RULE &cid = term("cid",commandRX);
+                cmd << cid << zeroOrMore(rs)  << stop;
+            }
+
+            dynamo << zeroOrMore( alternate("item") << plg << lxr << cmd );
 
             //------------------------------------------------------------------
             // Extraneous Lexical Only Rules
