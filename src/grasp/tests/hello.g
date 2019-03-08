@@ -15,3 +15,4 @@ PLUS : '*'^;
 @drop : "\t" ' ' "[:blank:]" '\t';
 @endl : "[:endl:]";
 
+%hello;

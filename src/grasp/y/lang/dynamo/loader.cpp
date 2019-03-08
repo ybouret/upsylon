@@ -48,7 +48,9 @@ namespace upsylon
             {
                 //--------------------------------------------------------------
                 //
+                //
                 // scan all sub nodes
+                //
                 //
                 //--------------------------------------------------------------
                 Syntax::Node::List &self = node.children();
@@ -56,7 +58,9 @@ namespace upsylon
                     Syntax::Node::List temp;
                     //----------------------------------------------------------
                     //
+                    //
                     // ENTER: internal loop
+                    //
                     //
                     //----------------------------------------------------------
                     while( self.size > 0 )
@@ -66,12 +70,15 @@ namespace upsylon
                         if( "cmd" == cmd->rule.name )
                         {
                             //--------------------------------------------------
-                            // this is a command
+                            //
+                            // this is a command : get its name
+                            //
                             //--------------------------------------------------
                             Y_LANG_SYNTAX_VERBOSE(std::cerr << "{" << name << "} <cmd>" << std::endl);
                             string        cmdName;
                             Syntax::Node *args = getCmdArgs(*cmd,cmdName);
                             Y_LANG_SYNTAX_VERBOSE(std::cerr << "{" << name << "} |_'" << cmdName << "'" << std::endl);
+
                             if( "include" == cmdName )
                             {
                                 //----------------------------------------------
@@ -89,8 +96,8 @@ namespace upsylon
                                 //----------------------------------------------
                                 for(;args;args=args->next)
                                 {
-                                    if(!args->terminal)         throw exception("{%s} invalid include argument",**name);
-                                    if("rs"!=args->rule.name)   throw exception("{%s} invalid include argument name",**name);
+                                    if(!args->terminal)         throw exception("{%s} invalid include argument (internal)",**name);
+                                    if("rs"!=args->rule.name)   throw exception("{%s} invalid include argument name ('%s'!='rs')",**name,*(args->rule.name));
                                     const string inc = cwd + args->lexeme().to_string(1,1);
                                     Y_LANG_SYNTAX_VERBOSE(std::cerr << "{" << name << "} |_loading=[" << inc << "]" << std::endl);
                                     temp.push_back( load( Module::OpenFile(inc) ) );
@@ -106,12 +113,14 @@ namespace upsylon
                                 //----------------------------------------------
                                 temp.push_back( cmd.yield() );
                             }
-
+                            
                         }
                         else
                         {
                             //--------------------------------------------------
+                            //
                             // this is a NOT command
+                            //
                             //--------------------------------------------------
                             temp.push_back( cmd.yield() );
                         }
@@ -119,7 +128,9 @@ namespace upsylon
 
                     //----------------------------------------------------------
                     //
+                    //
                     // LEAVE: internal loop
+                    //
                     //
                     //----------------------------------------------------------
                     temp.swap_with(self);
