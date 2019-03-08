@@ -21,25 +21,19 @@ Y_UTEST(dyn)
     {
         const string           fn = argv[1];
 
-        if( false )
+        auto_ptr<Syntax::Node> g  = dynamo.load( doOpen(fn) );
+        g->graphViz( "dynamo_tree.dot" );
+
+        g->save("dynamo.bin");
+
         {
-            Source source( doOpen(fn) );
-            Lexeme *lx = NULL;
-            while( NULL != (lx=dynamo.get(source) ) )
-            {
-                std::cerr << "<" << lx->label << ">='" << *lx << "'" << std::endl;
-                delete lx;
-            }
+            std::cerr << "Reloading" << std::endl;
+            auto_ptr<Syntax::Node> g2 = Syntax::Node::Load( Module::OpenFile("dynamo.bin"),dynamo );
+            g2->graphViz("dynamo_tree2.dot");
         }
 
-        if(true)
-        {
-            auto_ptr<Syntax::Node> g  = dynamo.load( doOpen(fn) );
-            g->graphViz( "dynamo_tree.dot" );
-
-            Syntax::Analyzer a;
-            a.walk(*g);
-        }
+        Syntax::Analyzer a;
+        a.walk(*g);
     }
 }
 Y_UTEST_DONE()

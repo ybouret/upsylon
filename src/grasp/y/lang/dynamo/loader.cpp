@@ -39,7 +39,29 @@ namespace upsylon
             cmdName = s;
             return sub->next;
         }
-        
+
+        string DynamoLoader:: getRS( const Syntax::Node &node ) const
+        {
+            const string &rname = node.rule.name;
+            if(!node.terminal || "rs" != rname) throw exception("{%s} invalid raw string node <%s>",**name, *rname );
+            return node.lexeme().to_string(1,1);
+        }
+
+        string DynamoLoader:: getRX( const Syntax::Node &node ) const
+        {
+            const string &rname = node.rule.name;
+            if(!node.terminal || "rx" != rname) throw exception("{%s} invalid regexp node <%s>",**name, *rname );
+            return node.lexeme().to_string(1,1);
+        }
+
+        string DynamoLoader:: getSTR( const Syntax::Node &node ) const
+        {
+            const string &rname = node.rule.name;
+            if(!node.terminal || !("rx" == rname||"rs"==rname) ) throw exception("{%s} invalid string(regexp|raw) node <%s>",**name, *rname );
+            return node.lexeme().to_string(1,1);
+        }
+
+
 
         void DynamoLoader:: checkIncludes(Syntax::Node &node, const Module &currentModule)
         {
@@ -96,9 +118,7 @@ namespace upsylon
                                 //----------------------------------------------
                                 for(;args;args=args->next)
                                 {
-                                    if(!args->terminal)         throw exception("{%s} invalid include argument (internal)",**name);
-                                    if("rs"!=args->rule.name)   throw exception("{%s} invalid include argument name ('%s'!='rs')",**name,*(args->rule.name));
-                                    const string inc = cwd + args->lexeme().to_string(1,1);
+                                    const string inc = cwd + getRS(*args);
                                     Y_LANG_SYNTAX_VERBOSE(std::cerr << "{" << name << "} |_loading=[" << inc << "]" << std::endl);
                                     temp.push_back( load( Module::OpenFile(inc) ) );
                                 }

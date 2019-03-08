@@ -21,6 +21,9 @@ namespace upsylon
 
 
             Syntax::Node * getCmdArgs( Syntax::Node &cmd, string &cmdName ) const;
+            string         getRS( const Syntax::Node &node ) const;
+            string         getRX( const Syntax::Node &node ) const;
+            string         getSTR(const Syntax::Node &node ) const;
 
         private:
             Y_DISABLE_COPY(DynamoLoader);
