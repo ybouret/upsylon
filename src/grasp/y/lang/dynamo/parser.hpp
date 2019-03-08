@@ -8,11 +8,12 @@ namespace upsylon
 {
     namespace Lang
     {
+        //! Parser for the Dynamo Grammar
         class DynamoParser : public Syntax::Parser
         {
         public:
-            explicit DynamoParser();
-            virtual ~DynamoParser() throw();
+            explicit DynamoParser();          //!< setup the grammar
+            virtual ~DynamoParser() throw();  //!< destructor
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoParser);
