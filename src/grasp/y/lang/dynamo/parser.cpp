@@ -17,7 +17,7 @@ namespace upsylon
         DynamoParser:: DynamoParser() : Syntax::Parser("Dynamo")
         {
             //setVerbose(true);
-            const string ruleRX = Common::C_IDENTIFIER;
+            dict("ID",Common::C_IDENTIFIER);
 
             AGG  &dynamo  = aggregate("dynamo");
             RULE &stop    = mark(';');
@@ -26,14 +26,14 @@ namespace upsylon
             RULE &rs      = plug<Lexical::rString>("rs");
             RULE &str     = choice(rx,rs);
             RULE &zom_str = zeroOrMore(str);
-            RULE &rid     = term("rid",ruleRX);
+            RULE &rid     = term("rid","{ID}");
 
             //------------------------------------------------------------------
             // Declare the Module preamble
             //------------------------------------------------------------------
             {
-                const string moduleRX = "[.]" + ruleRX;
-                dynamo << join( term("module",moduleRX), stop );
+                //const string moduleRX = "[.]" + ruleRX;
+                dynamo << join( term("module","[.]{ID}"), stop );
             }
 
 
@@ -53,8 +53,7 @@ namespace upsylon
             AGG &plg = aggregate("plg");
             AGG &lxr = aggregate("lxr");
             {
-                const string lexicalRX = "@" + ruleRX;
-                RULE &lid = term("lid",lexicalRX);
+                RULE &lid = term("lid","@{ID}");
                 plg << lid << sep << rid     << stop;
                 lxr << lid << sep << zom_str << stop;
             }
@@ -64,8 +63,8 @@ namespace upsylon
             //------------------------------------------------------------------
             AGG &cmd = aggregate("cmd");
             {
-                const string commandRX = "%" + ruleRX;
-                RULE &cid = term("cid",commandRX);
+                //const string commandRX = "%" + ruleRX;
+                RULE &cid = term("cid","%{ID}");
                 cmd << cid << zeroOrMore(rs)  << stop;
             }
 
