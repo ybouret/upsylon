@@ -75,7 +75,7 @@ namespace upsylon
                             if( "include" == cmdName )
                             {
                                 //----------------------------------------------
-                                // this is an 'include'
+                                // this is an 'include' : get directory
                                 //----------------------------------------------
                                 if(currentModule.type!=Module::FromFile)
                                 {
@@ -83,6 +83,10 @@ namespace upsylon
                                 }
                                 const string cwd = vfs::get_file_dir( *currentModule.origin );
                                 Y_LANG_SYNTAX_VERBOSE(std::cerr << "{" << name << "} |_cwd=[" << cwd << "]" << std::endl);
+
+                                //----------------------------------------------
+                                // include sub files
+                                //----------------------------------------------
                                 for(;args;args=args->next)
                                 {
                                     if(!args->terminal)         throw exception("{%s} invalid include argument",**name);
@@ -94,7 +98,6 @@ namespace upsylon
                                 //----------------------------------------------
                                 // and cmd content is destroyed by auto_ptr
                                 //----------------------------------------------
-                                //temp.push_back( cmd.yield() );
                             }
                             else
                             {
