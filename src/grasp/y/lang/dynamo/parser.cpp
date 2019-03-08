@@ -42,7 +42,7 @@ namespace upsylon
             //------------------------------------------------------------------
             CMP &rule = (aggregate("rule") << rid << optional( term('!') ) << sep);
             {
-
+                
             }
             rule << stop;
 
