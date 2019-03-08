@@ -1,5 +1,7 @@
 .hello;
 
+add : ;
+
 @string : jstring;
 
 %include 'lex.g';

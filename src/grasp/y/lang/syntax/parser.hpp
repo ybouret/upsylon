@@ -42,6 +42,7 @@ namespace upsylon
                 typedef Syntax::Terminal  TERM; //!< alias for derived types
                 typedef Syntax::Aggregate AGG;  //!< alias for derived types
                 typedef Syntax::Alternate ALT;  //!< alias for derived types
+                typedef Syntax::Compound  CMP;  //!< alias for derived types
 
                 TERM & term( const string &id, const string &rx ); //!< create a terminal id matching rx
                 TERM & term( const char   *id, const char   *rx ); //!< create a terminal id matching rx, wrapper

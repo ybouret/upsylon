@@ -38,7 +38,17 @@ namespace upsylon
 
 
             //------------------------------------------------------------------
-            // Declare the Lexical Rules
+            // Declare the rule declaration
+            //------------------------------------------------------------------
+            CMP &rule = (aggregate("rule") << rid << sep);
+            {
+
+            }
+            rule << stop;
+
+
+            //------------------------------------------------------------------
+            // Declare the Lexical Rules : plugin and lexical
             //------------------------------------------------------------------
             AGG &plg = aggregate("plg");
             AGG &lxr = aggregate("lxr");
@@ -59,7 +69,7 @@ namespace upsylon
                 cmd << cid << zeroOrMore(rs)  << stop;
             }
 
-            dynamo << zeroOrMore( alternate("item") << plg << lxr << cmd );
+            dynamo << zeroOrMore( alternate("item") << rule << plg << lxr << cmd );
 
             //------------------------------------------------------------------
             // Extraneous Lexical Only Rules
