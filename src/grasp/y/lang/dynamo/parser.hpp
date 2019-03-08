@@ -9,6 +9,19 @@ namespace upsylon
     namespace Lang
     {
         //! Parser for the Dynamo Grammar
+        /**
+         dynamo : module item*;
+         module : "[.]{ID}" ';';
+         item   : rule | plg | lxr | cmd;
+         rid    : "{ID}";
+         lid    : "@{ID}";
+         plg    : lid ':' rid ';' ;
+         rx     : jstring;
+         rs     : rstring;
+         lxr    : lid ':' (rs|rs)* ';' ;
+         cid    : "%{ID}";
+         cmd    : cid ':' rs* ';' ;
+         */
         class DynamoParser : public Syntax::Parser
         {
         public:

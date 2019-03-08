@@ -13,7 +13,7 @@ namespace upsylon
         return (count<=1) ? "" : "s";
     }
 
-    //! hexadecimal helpes
+    //! hexadecimal helpers
     struct hexadecimal
     {
         static const char *lowercase_word[16]; //!< "0".."f"
@@ -32,6 +32,7 @@ namespace upsylon
 
     //! convert a byte into a visible char
     extern const char *visible_char[256];
+
     //! convert a byte into a printable char
     extern const char *printable_char[256];
 
