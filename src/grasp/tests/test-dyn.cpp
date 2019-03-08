@@ -1,4 +1,4 @@
-#include "y/lang/dynamo/parser.hpp"
+#include "y/lang/dynamo/loader.hpp"
 #include "y/utest/run.hpp"
 #include "y/lang/syntax/analyzer.hpp"
 
@@ -13,7 +13,7 @@ static inline Module * doOpen( const string &fn )
 
 Y_UTEST(dyn)
 {
-    DynamoParser dynamo;
+    DynamoLoader dynamo;
     dynamo.graphViz("dynamo.dot");
 
 
@@ -34,7 +34,7 @@ Y_UTEST(dyn)
 
         if(true)
         {
-            auto_ptr<Syntax::Node> g  = dynamo.run( doOpen(fn) );
+            auto_ptr<Syntax::Node> g  = dynamo.load( doOpen(fn) );
             g->graphViz( "dynamo_tree.dot" );
 
             Syntax::Analyzer a;

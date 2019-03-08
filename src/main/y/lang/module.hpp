@@ -9,10 +9,18 @@ namespace upsylon
     namespace Lang
     {
 
+
+
         //! convert an istream of 'char' into a strean of tagged 'Char'
         class Module : public CharInfo, public counted
         {
         public:
+            enum Type
+            {
+                FromSTDIN,
+                FromFile,
+                FromData
+            };
             typedef arc_ptr<Module> Pointer; //!< pointer for Source
 
             virtual ~Module() throw();       //!< destructor
@@ -39,8 +47,10 @@ namespace upsylon
         private:
             Input          input;
             Y_DISABLE_COPY_AND_ASSIGN(Module);
-            explicit Module( const Tag &org, const Input &inp );
+            explicit Module( const Tag &org, const Input &inp, const Type t);
 
+        public:
+            const Type type;
 
         };
 
