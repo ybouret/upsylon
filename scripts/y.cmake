@@ -280,8 +280,10 @@ MACRO(TARGET_LINK_Y tgt)
 	
 	#specific flags
 	IF( Y_GNU AND WIN32)
-		IF("${YOCTO_COMPILER_VERSION}" VERSION_GREATER "4.5.0" )
-		TARGET_LINK_LIBRARIES( ${tgt} -static-libgcc -static-libstdc++ )
+		#MESSAGE( STATUS "gnu+win32" )
+		IF("${Y_COMPILER_VERSION}" VERSION_GREATER "4.5.0" )
+			#MESSAGE( STATUS "static gcc/g++ linking for ${tgt}")
+			TARGET_LINK_LIBRARIES( ${tgt} -static-libgcc -static-libstdc++ )
 		ENDIF()
 	ENDIF()
 	
