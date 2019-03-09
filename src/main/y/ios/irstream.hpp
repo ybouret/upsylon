@@ -15,10 +15,10 @@ namespace upsylon
         {
         public:
             //! open a file stream
-            explicit irstream(const string &filename, const offset_t shift=0);
+            explicit irstream(const string &filename, const offset_t shift=0,const offset_t len=-1);
 
             //! open a file stream
-            explicit irstream(const char   *filename, const offset_t shift=0);
+            explicit irstream(const char   *filename, const offset_t shift=0,const offset_t len=-1);
 
             //! map from cstdin
             explicit irstream( const ios::cstdin_t & );
@@ -32,7 +32,8 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(irstream);
             int             cache;
-            
+            offset_t        count;
+            const offset_t  length;
         };
     }
 }

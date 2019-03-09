@@ -29,9 +29,9 @@ Y_UTEST(local_file)
             fp.flush();
         }
 
-        std::cerr << "Reading Level-1." << std::endl;
+        std::cerr << "Reading Level-1/5 bytes max" << std::endl;
         {
-            ios::irstream fp("ors.dat",0);
+            ios::irstream fp("ors.dat",0,5);
             char   C = 0;
             while( fp.query(C) )
             {
