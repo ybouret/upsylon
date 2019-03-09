@@ -8,7 +8,7 @@ namespace upsylon
 {
     namespace Lang
     {
-        typedef Syntax::Node XNode;
+        typedef Syntax::Node XNode; //!< Alias
 
         //! Parser for the Dynamo Grammar
         /**

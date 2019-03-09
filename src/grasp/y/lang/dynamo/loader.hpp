@@ -10,30 +10,28 @@ namespace upsylon
     namespace Lang
     {
 
+        //! full loading of dynamo trees and utility functions
         class DynamoLoader : public DynamoParser
         {
         public:
-            explicit DynamoLoader();
-            virtual ~DynamoLoader() throw();
+            explicit DynamoLoader();         //!< initialize
+            virtual ~DynamoLoader() throw(); //!< desctructor
 
-            //! load grammar node and perform includes
-            XNode * load( Module *m );
+            XNode * load( Module *m ); //!< load grammar node and perform includes
 
+            XNode * getCmdArgs( XNode &cmd, string &cmdName ) const; //!< get first argument and the '%cmdName' from the node
 
-            Syntax::Node * getCmdArgs( XNode &cmd, string &cmdName ) const;
+            string   getRS(  const XNode &node ) const; //!< extract rs, without simple quote
+            string   getRX(  const XNode &node ) const; //!< extract rx, without double quotes
+            string   getSTR( const XNode &node ) const; //!< extract RS or RX, remove quote(s)
 
-            string         getString(const XNode &node,
-                                     const char  *description,
-                                     bool       (*matching)(const string &identifier)) const;
-
-
-            string         getRS(  const XNode &node ) const;
-            string         getRX(  const XNode &node ) const;
-            string         getSTR( const XNode &node ) const;
 
         private:
             Y_DISABLE_COPY(DynamoLoader);
             void checkIncludes(Syntax::Node &node, const Module &currentModule);
+            string         getString(const XNode &node,
+                                     const char  *description,
+                                     bool       (*matching)(const string &identifier)) const;
         };
         
     }

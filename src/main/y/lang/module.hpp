@@ -15,11 +15,12 @@ namespace upsylon
         class Module : public CharInfo, public counted
         {
         public:
+            //! opening mode
             enum Type
             {
-                FromSTDIN,
-                FromFile,
-                FromData
+                FromSTDIN, //!< stdin was open
+                FromFile,  //!< a file was open
+                FromData   //!< some data where provided
             };
             typedef arc_ptr<Module> Pointer; //!< pointer for Source
 
@@ -50,7 +51,7 @@ namespace upsylon
             explicit Module( const Tag &org, const Input &inp, const Type t);
 
         public:
-            const Type type;
+            const Type type; //!< keep track of the opening mode
 
         };
 
