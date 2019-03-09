@@ -17,13 +17,19 @@ namespace upsylon
             virtual ~DynamoLoader() throw();
 
             //! load grammar node and perform includes
-            Syntax::Node * load( Module *m );
+            XNode * load( Module *m );
 
 
-            Syntax::Node * getCmdArgs( Syntax::Node &cmd, string &cmdName ) const;
-            string         getRS( const Syntax::Node &node ) const;
-            string         getRX( const Syntax::Node &node ) const;
-            string         getSTR(const Syntax::Node &node ) const;
+            Syntax::Node * getCmdArgs( XNode &cmd, string &cmdName ) const;
+
+            string         getString(const XNode &node,
+                                     const char  *description,
+                                     bool       (*matching)(const string &identifier)) const;
+
+
+            string         getRS(  const XNode &node ) const;
+            string         getRX(  const XNode &node ) const;
+            string         getSTR( const XNode &node ) const;
 
         private:
             Y_DISABLE_COPY(DynamoLoader);

@@ -14,10 +14,10 @@ namespace upsylon
 
         }
 
-        Syntax::Node * DynamoLoader:: load( Module *m )
+        XNode * DynamoLoader:: load( Module *m )
         {
-            Source                 source(m);
-            auto_ptr<Syntax::Node> g = run(source);
+            Source          source(m);
+            auto_ptr<XNode> g = run(source);
 
             checkIncludes(*g,**source);
 
@@ -25,7 +25,7 @@ namespace upsylon
         }
 
 
-        Syntax::Node * DynamoLoader:: getCmdArgs( Syntax::Node &cmd, string &cmdName ) const
+        XNode  * DynamoLoader:: getCmdArgs( Syntax::Node &cmd, string &cmdName ) const
         {
             assert( "cmd" == cmd.rule.name );
             if(!cmd.internal)        throw exception("{%s} invalid <cmd> node", **name);
@@ -40,25 +40,42 @@ namespace upsylon
             return sub->next;
         }
 
-        string DynamoLoader:: getRS( const Syntax::Node &node ) const
+
+        string      DynamoLoader:: getString(const XNode &node,
+                                             const char  *description,
+                                             bool       (*matching)(const string &identifier)) const
         {
-            const string &rname = node.rule.name;
-            if(!node.terminal || "rs" != rname) throw exception("{%s} invalid raw string node <%s>",**name, *rname );
+            assert(description);
+            assert(matching);
+            const RULE   &theRule = node.rule;
+            const string &theName = theRule.name;
+            if(!node.terminal)     throw exception("{%s} getString<%s>(invalid  node <%s>)", **name, description, *theName );
+            if(!matching(theName)) throw exception("{%s} getString<%s>(mismatch node <%s>)", **name, description, *theName );
             return node.lexeme().to_string(1,1);
         }
+
+        static inline bool isRS( const string &name ) throw() { return "rs" == name; }
+
+        string DynamoLoader:: getRS( const XNode &node ) const
+        {
+            return getString(node,"raw string",isRS);
+        }
+
+        static inline bool isRX( const string &name ) throw() { return "rx" == name; }
 
         string DynamoLoader:: getRX( const Syntax::Node &node ) const
         {
-            const string &rname = node.rule.name;
-            if(!node.terminal || "rx" != rname) throw exception("{%s} invalid regexp node <%s>",**name, *rname );
-            return node.lexeme().to_string(1,1);
+            return getString(node,"regular expression",isRX);
+
         }
 
-        string DynamoLoader:: getSTR( const Syntax::Node &node ) const
+        static inline bool isSTR( const string &name ) throw() { return (isRS(name) || isRX(name)); }
+
+
+
+        string DynamoLoader:: getSTR( const XNode &node ) const
         {
-            const string &rname = node.rule.name;
-            if(!node.terminal || !("rx" == rname||"rs"==rname) ) throw exception("{%s} invalid string(regexp|raw) node <%s>",**name, *rname );
-            return node.lexeme().to_string(1,1);
+            return getString(node,"any string",isSTR);
         }
 
 

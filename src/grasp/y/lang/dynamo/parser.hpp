@@ -8,6 +8,8 @@ namespace upsylon
 {
     namespace Lang
     {
+        typedef Syntax::Node XNode;
+
         //! Parser for the Dynamo Grammar
         /**
          - dynamo : module item*;
