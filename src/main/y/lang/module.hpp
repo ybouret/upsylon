@@ -43,7 +43,7 @@ namespace upsylon
             static Module *OpenData( const string &name, const void *data, const size_t size);  //!< open a data stream, create a tag 'name'
             static Module *OpenData( const char   *name, const void *data, const size_t size);  //!< open a data stream, create a tag 'name'
             static Module *OpenData( const string &name, const memory::ro_buffer &buff);        //!< open a data stream, create a tag 'name'
-            static Module *OpenData(const char *name, const memory::ro_buffer &buff);           //!< open a data stream, create a tag 'name'
+            static Module *OpenData( const char   *name, const memory::ro_buffer &buff);        //!< open a data stream, create a tag 'name'
 
         private:
             Input          input;

@@ -3,6 +3,7 @@
 
 //add : mult ( (PLUS|MINUS) mult);
 add : ;
+mul!: ;
 
 // Alias
 PLUS : '*'^;
