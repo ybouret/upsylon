@@ -34,6 +34,10 @@ Y_UTEST(dyn)
 
         Syntax::Analyzer a;
         a.walk(*g);
+
+        MatchString cut = "lxr|plg|cmd|aka";
+        XNode::RemoveFrom(*g,cut);
+        g->graphViz( "dynamo_cut.dot" );
     }
 }
 Y_UTEST_DONE()

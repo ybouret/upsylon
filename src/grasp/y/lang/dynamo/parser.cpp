@@ -48,7 +48,14 @@ namespace upsylon
             {
                 CMP &rule = (aggregate("rule") << rid << optional( term('!') ) << sep);
                 {
-
+                    ALT    &rBit  = alternate("bit");
+                    RULE   &rJkr  = alternate("jkr") <<term('?') << term('+') << term('*');
+                    RULE   &rAtm  = design("atom") << rBit << optional(rJkr);
+                    RULE   &rAlt  = design("alt") << rAtm << zeroOrMore(join( mark('|'), rAtm) );
+                    RULE   &rAgg  = oneOrMore(rAlt);
+                    RULE   &rGrp  = design("grp") <<mark('(') << rAgg <<  mark(')');
+                    rBit <<  rid << rx << rs << rGrp;
+                    rule << rAgg;
                 }
                 rule << stop;
                 itm << rule;

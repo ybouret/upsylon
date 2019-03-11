@@ -4,6 +4,7 @@
 
 #include "y/lang/lexical/translator.hpp"
 #include "y/ptr/arc.hpp"
+#include "y/lang/pattern/matching.hpp"
 
 namespace upsylon
 {
@@ -96,6 +97,11 @@ namespace upsylon
                  a Rewrite operation, does not touch terminals
                  */
                 static Node * Compact( Node *node ) throw();
+
+                //! remove some nodes
+                static void RemoveFrom( Node &node, Matching &name_matches );
+
+
 
             protected:
                 explicit Node(const Rule &r, const bool term) throw(); //!< setup

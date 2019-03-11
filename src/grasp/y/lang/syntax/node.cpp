@@ -189,6 +189,30 @@ namespace upsylon
                 save(_);
             }
 
+            void Node:: RemoveFrom( Node &node, Matching &name_matches )
+            {
+                if(node.internal)
+                {
+                    List &self = node.children();
+                    List  temp;
+                    while(self.size)
+                    {
+                        Node *sub = self.pop_front();
+                        if(name_matches.exactly(sub->rule.name))
+                        {
+                            delete sub;
+                        }
+                        else
+                        {
+                            RemoveFrom(*sub,name_matches);
+                            temp.push_back(sub);
+                        }
+                    }
+                    temp.swap_with(self);
+                }
+            }
+
+
         }
 
     }
