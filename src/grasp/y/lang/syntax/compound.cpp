@@ -143,7 +143,7 @@ namespace upsylon
                 switch (behavior)
                 {
                     case SubGroup: return "bold,filled";
-                    case MergeOne: return "bold,solid";
+                    case MergeOne: return "bold,dashed,filled";
                     case MergeAll: return "bold,dashed";
                     default:
                         break;

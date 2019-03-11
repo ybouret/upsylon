@@ -24,7 +24,7 @@ namespace upsylon
             RULE &sep     = mark(':');
             RULE &rx      = plug<Lexical::jString>("rx");
             RULE &rs      = plug<Lexical::rString>("rs");
-            RULE &str     = choice(rx,rs);
+            RULE &str     = alternate("str") << rx << rs;
             RULE &zom_str = zeroOrMore(str);
             RULE &rid     = term("rid","{ID}");
             RULE &carret  = term('\x5e');
@@ -48,13 +48,14 @@ namespace upsylon
             {
                 CMP &rule = (aggregate("rule") << rid << optional( term('!') ) << sep);
                 {
-                    ALT    &rBit  = alternate("bit");
-                    RULE   &rJkr  = alternate("jkr") <<term('?') << term('+') << term('*');
-                    RULE   &rAtm  = design("atom") << rBit << optional(rJkr);
-                    RULE   &rAlt  = design("alt") << rAtm << zeroOrMore(join( mark('|'), rAtm) );
+                    ALT    &rAtm  = alternate("atom");
+                    RULE   &rMod  = alternate("mod") << term('?') << term('+') << term('*');
+                    RULE   &rJk   = design("jk")     << rAtm << optional(rMod);
+                    RULE   &rxJk  = bundle("xjk")    << mark('|') << rJk;
+                    RULE   &rAlt  = design("alt")    << rJk << zeroOrMore(rxJk);
                     RULE   &rAgg  = oneOrMore(rAlt);
-                    RULE   &rGrp  = design("grp") <<mark('(') << rAgg <<  mark(')');
-                    rBit <<  rid << rx << rs << rGrp;
+                    RULE   &rGrp  = design("grp")    << mark('(') << rAgg <<  mark(')');
+                    rAtm <<  rid << rx << rs << rGrp;
                     rule << rAgg;
                 }
                 rule << stop;

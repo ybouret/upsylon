@@ -24,14 +24,23 @@ namespace upsylon
             string   getRS(  const XNode &node ) const; //!< extract rs, without simple quote
             string   getRX(  const XNode &node ) const; //!< extract rx, without double quotes
             string   getSTR( const XNode &node ) const; //!< extract RS or RX, remove quote(s)
-
+            string   getRID( const XNode &node ) const; //!< extract rid
 
         private:
             Y_DISABLE_COPY(DynamoLoader);
             void checkIncludes(Syntax::Node &node, const Module &currentModule);
+            
             string         getString(const XNode &node,
                                      const char  *description,
-                                     bool       (*matching)(const string &identifier)) const;
+                                     Matching    &matching) const;
+            mutable Matching isRS;
+            mutable Matching isRX;
+            mutable Matching isSTR;
+            
+            string getContent(const XNode &node,
+                              const char  *description,
+                              const char  *id) const;
+            
         };
         
     }

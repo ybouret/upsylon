@@ -9,7 +9,10 @@ namespace upsylon
 
         DynamoLoader:: ~DynamoLoader() throw() {}
 
-        DynamoLoader:: DynamoLoader() : DynamoParser()
+        DynamoLoader:: DynamoLoader() : DynamoParser(),
+        isRS("rs"),
+        isRX("rx"),
+        isSTR("rx|rs")
         {
 
         }
@@ -43,42 +46,51 @@ namespace upsylon
 
         string      DynamoLoader:: getString(const XNode &node,
                                              const char  *description,
-                                             bool       (*matching)(const string &identifier)) const
+                                             Matching    &matching) const
         {
             assert(description);
-            assert(matching);
             const RULE   &theRule = node.rule;
             const string &theName = theRule.name;
-            if(!node.terminal)     throw exception("{%s} getString<%s>(invalid  node <%s>)", **name, description, *theName );
-            if(!matching(theName)) throw exception("{%s} getString<%s>(mismatch node <%s>)", **name, description, *theName );
+            if(!node.terminal)             throw exception("{%s} getString<%s>(invalid  node <%s>)", **name, description, *theName );
+            if(!matching.exactly(theName)) throw exception("{%s} getString<%s>(mismatch node <%s>)", **name, description, *theName );
             return node.lexeme().to_string(1,1);
         }
-
-        static inline bool isRS( const string &name ) throw() { return "rs" == name; }
-
+        
+        string DynamoLoader:: getContent(const XNode &node,
+                                         const char  *description,
+                                         const char  *id) const
+        {
+            assert(description);
+            assert(id);
+            const RULE   &theRule = node.rule;
+            const string &theName = theRule.name;
+            if(!node.terminal) throw exception("{%s} getLabel<%s>(invalid  node <%s>)", **name, description, *theName );
+            if(theName!=id)    throw exception("{%s} getLabel<%s>(invalid  node <%s!=%s>)", **name, description, *theName,id );
+            return node.lexeme().to_string();
+        }
+        
         string DynamoLoader:: getRS( const XNode &node ) const
         {
             return getString(node,"raw string",isRS);
         }
-
-        static inline bool isRX( const string &name ) throw() { return "rx" == name; }
-
+        
         string DynamoLoader:: getRX( const Syntax::Node &node ) const
         {
             return getString(node,"regular expression",isRX);
 
         }
 
-        static inline bool isSTR( const string &name ) throw() { return (isRS(name) || isRX(name)); }
-
-
-
+        
         string DynamoLoader:: getSTR( const XNode &node ) const
         {
             return getString(node,"any string",isSTR);
         }
 
-
+        string DynamoLoader:: getRID( const XNode &node ) const
+        {
+            return getContent(node, "rule identifier", "rid");
+        }
+        
 
         void DynamoLoader:: checkIncludes(Syntax::Node &node, const Module &currentModule)
         {
