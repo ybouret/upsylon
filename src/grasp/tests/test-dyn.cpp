@@ -1,4 +1,4 @@
-#include "y/lang/dynamo/loader.hpp"
+#include "y/lang/dynamo/compiler.hpp"
 #include "y/utest/run.hpp"
 #include "y/lang/syntax/analyzer.hpp"
 
@@ -13,7 +13,7 @@ static inline Module * doOpen( const string &fn )
 
 Y_UTEST(dyn)
 {
-    DynamoLoader dynamo;
+    DynamoCompiler dynamo;
     dynamo.graphViz("dynamo.dot");
 
 
