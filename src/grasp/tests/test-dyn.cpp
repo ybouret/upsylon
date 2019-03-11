@@ -20,7 +20,6 @@ Y_UTEST(dyn)
     if(argc>1)
     {
         const string           fn = argv[1];
-
         auto_ptr<Syntax::Node> g  = dynamo.load( doOpen(fn) );
         g->graphViz( "dynamo_tree.dot" );
 
@@ -32,9 +31,8 @@ Y_UTEST(dyn)
             g2->graphViz("dynamo_tree2.dot");
         }
 
-        Syntax::Analyzer a;
-        a.walk(*g);
-
+        auto_ptr<DynamoNode> il = dynamo.IL(*g);
+        
         MatchString cut = "lxr|plg|cmd|aka";
         XNode::RemoveFrom(*g,cut);
         g->graphViz( "dynamo_cut.dot" );
