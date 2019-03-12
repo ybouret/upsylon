@@ -9,19 +9,34 @@ namespace upsylon
     namespace Lang
     {
 
-        
+        //! base class for data
+        class DynamoInfo
+        {
+        public:
+            typedef memory::pooled                  Memory;
+            typedef key_hasher<string,hashing::fnv> KeyHasher;
+
+            const Tag moduleID;
+            explicit DynamoInfo(const Tag &id ) throw();
+            virtual ~DynamoInfo() throw();
+            DynamoInfo(const DynamoInfo &other) throw();
+
+        private:
+            Y_DISABLE_ASSIGN(DynamoInfo);
+        };
+
         template <typename T>
-        class DynamoRef
+        class DynamoRef : public DynamoInfo
         {
         public:
             Y_DECL_ARGS(T,type); //!< alias
-            typedef set<string,DynamoRef> Set;
+            typedef set<string,DynamoRef,KeyHasher,Memory> Set;
 
             type &rule;
 
-            inline  DynamoRef( type &r ) throw() : rule(r) {}
+            inline  DynamoRef( const Tag &id, type &r ) throw() : DynamoInfo(id), rule(r) {}
             inline ~DynamoRef() throw() {}
-            inline  DynamoRef( const DynamoRef &other ) throw() : rule(other.rule) {}
+            inline  DynamoRef( const DynamoRef &other ) throw() : DynamoInfo(other), rule(other.rule) {}
             const string & key() const throw() { return rule.name; }
 
         private:
@@ -36,14 +51,18 @@ namespace upsylon
         class DynamoCompiler : public DynamoLoader
         {
         public:
+            typedef vector<const Tag,DynamoInfo::Memory> Modules;
             explicit DynamoCompiler();
             virtual ~DynamoCompiler() throw();
             
 
             Syntax::Parser *compile( XNode &top );
 
-            DynamoRule::Set rules;
-            DynamoRule::Set terms;
+            DynamoRule::Set   rules;
+            DynamoRule::Set   terms;
+            Modules           modules;
+
+            void decl( XNode &node ); //!< populate rules and terms
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoCompiler);
