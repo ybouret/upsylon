@@ -30,7 +30,7 @@ namespace upsylon
 
         const char * DynamoCompiler:: top_kw[] =
         {
-            "dynamo"
+            "dynamo", "rule"
         };
 
         DynamoCompiler:: DynamoCompiler() :

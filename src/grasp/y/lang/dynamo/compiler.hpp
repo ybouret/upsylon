@@ -73,8 +73,9 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoCompiler);
 
-            void declModule( XNode &node );
+            void    declModule( XNode &node );
             string *getModuleName( const XNode *node ) const;
+            void    declRule( XNode &node );
             
         };
         
