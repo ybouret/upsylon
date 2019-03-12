@@ -97,11 +97,20 @@ namespace upsylon
             if(self.size<=0)              throw exception("%s(Empty <dynamo> node)",fn);
             if(self.head->name!="module") throw exception("%s(Invalid Module Name='%s')",fn,*(self.head->name));
 
-            //build a tag
+            // build a tag
             const Tag moduleID = new string( self.head->content() );
             modules.push_back(moduleID);
             delete self.pop_front();
+
+            
+            // and declare the new module
             DynamoNode::Indent(std::cerr << "@gen",level) << "[DECL '" << moduleID << "']" << std::endl;
+            // would create parser
+            if(1==modules.size())
+            {
+                assert( parser.is_empty() );
+                parser = new Syntax::Parser( *moduleID );
+            }
             ++level;
             for(DynamoNode *sub  = self.head; sub; sub=sub->next )
             {
