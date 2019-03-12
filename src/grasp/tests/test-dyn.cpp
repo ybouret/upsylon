@@ -31,11 +31,13 @@ Y_UTEST(dyn)
             g2->graphViz("dynamo_tree2.dot");
         }
 
-        //auto_ptr<DynamoNode> il = dynamo.IL(*g);
-        
+
         MatchString cut = "lxr|plg|cmd|aka";
         XNode::RemoveFrom(*g,cut);
         g->graphViz( "dynamo_cut.dot" );
+
+        auto_ptr<Syntax::Parser> P = dynamo.compile(*g);
+
     }
 }
 Y_UTEST_DONE()

@@ -3,6 +3,7 @@
 #define Y_DYNAMO_COMPILER_INCLUDED 1
 
 #include "y/lang/dynamo/loader.hpp"
+#include "y/hashing/mph.hpp"
 
 namespace upsylon
 {
@@ -54,18 +55,26 @@ namespace upsylon
             typedef vector<const Tag,DynamoInfo::Memory> Modules;
             explicit DynamoCompiler();
             virtual ~DynamoCompiler() throw();
-            
+            void reset() throw();
 
             Syntax::Parser *compile( XNode &top );
 
-            DynamoRule::Set   rules;
-            DynamoRule::Set   terms;
-            Modules           modules;
+            auto_ptr<Syntax::Parser> parser;
+            DynamoRule::Set          rules;
+            DynamoRule::Set          terms;
+            Modules                  modules;
 
             void decl( XNode &node ); //!< populate rules and terms
 
+            const hashing::mperf top_h; //!< mperf(top_kw)
+
+            static const char   *top_kw[];
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoCompiler);
+
+            void declModule( XNode &node );
+            string *getModuleName( const XNode *node ) const;
             
         };
         

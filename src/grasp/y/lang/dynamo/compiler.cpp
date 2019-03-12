@@ -27,9 +27,19 @@ namespace upsylon
 {
     namespace Lang
     {
-        
+
+        const char * DynamoCompiler:: top_kw[] =
+        {
+            "dynamo"
+        };
+
         DynamoCompiler:: DynamoCompiler() :
-        DynamoLoader()
+        DynamoLoader(),
+        parser(0),
+        rules(),
+        terms(),
+        modules(),
+        top_h(YOCTO_MPERF_FOR(top_kw))
         {
         }
         
@@ -37,13 +47,26 @@ namespace upsylon
         {
         }
 
-
-        Syntax::Parser * DynamoCompiler:: compile( XNode &top )
+        void DynamoCompiler:: reset() throw()
         {
             rules.free();
             terms.free();
             modules.free();
-            
+            parser = 0;
+        }
+
+        Syntax::Parser * DynamoCompiler:: compile( XNode &top )
+        {
+            reset();
+            try
+            {
+                decl(top);
+            }
+            catch(...)
+            {
+                reset();
+                throw;
+            }
             return 0;
         }
         
