@@ -23,20 +23,24 @@ Y_UTEST(dyn)
         auto_ptr<Syntax::Node> g  = dynamo.load( doOpen(fn) );
         g->graphViz( "dynamo_tree.dot" );
 
-        g->save("dynamo.bin");
-
+        if(false)
         {
-            std::cerr << "Reloading" << std::endl;
-            auto_ptr<Syntax::Node> g2 = Syntax::Node::Load( Module::OpenFile("dynamo.bin"),dynamo );
-            g2->graphViz("dynamo_tree2.dot");
+            g->save("dynamo.bin");
+
+            {
+                std::cerr << "Reloading" << std::endl;
+                auto_ptr<Syntax::Node> g2 = Syntax::Node::Load( Module::OpenFile("dynamo.bin"),dynamo );
+                g2->graphViz("dynamo_tree2.dot");
+            }
         }
+
+        dynamo.compile(*g);
 
 
         MatchString cut = "lxr|plg|cmd|aka";
         XNode::RemoveFrom(*g,cut);
         g->graphViz( "dynamo_cut.dot" );
 
-        auto_ptr<Syntax::Parser> P = dynamo.compile(*g);
 
     }
 }

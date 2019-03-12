@@ -1,6 +1,25 @@
 #include "y/lang/dynamo/compiler.hpp"
 #include "y/exception.hpp"
 
+
+namespace upsylon
+{
+    namespace Lang
+    {
+
+        DynamoCompiler:: DynamoCompiler() : DynamoLoader(), Syntax::Analyzer()
+        {
+        }
+
+        DynamoCompiler::~DynamoCompiler() throw()
+        {
+        }
+        
+    }
+
+}
+
+#if 0
 namespace upsylon
 {
     namespace Lang
@@ -72,3 +91,5 @@ namespace upsylon
         
     }
 }
+#endif
+

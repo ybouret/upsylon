@@ -4,12 +4,14 @@
 
 #include "y/lang/dynamo/loader.hpp"
 #include "y/hashing/mph.hpp"
+#include "y/lang/syntax/analyzer.hpp"
 
 namespace upsylon
 {
     namespace Lang
     {
 
+#if 0
         //! base class for data
         class DynamoInfo
         {
@@ -47,7 +49,6 @@ namespace upsylon
         typedef DynamoRef<Syntax::Compound> DynamoRule;
         typedef DynamoRef<Syntax::Terminal> DynamoTerm;
 
-
         //! build an intermediate tree
         class DynamoCompiler : public DynamoLoader
         {
@@ -78,7 +79,59 @@ namespace upsylon
             void    declRule( XNode &node );
             
         };
-        
+#endif
+
+        enum DynamoType
+        {
+            DynamoTerminal,
+            DynamoInternal
+        };
+
+        class DynamoNode;
+        typedef core::list_of_cpp<DynamoNode> DynamoList;
+
+        class DynamoNode : public core::inode<DynamoNode>
+        {
+        public:
+            const DynamoType type;
+            const string     name;
+
+            explicit DynamoNode(const string &id, const Lexeme &lx, const size_t nskip=0,const size_t ntrim=0);
+            explicit DynamoNode(const string &id);
+            virtual ~DynamoNode() throw();
+
+            const string & content() const throw();
+            DynamoList   & children() throw();
+
+
+        private:
+            void            *impl;
+            Y_DISABLE_COPY_AND_ASSIGN(DynamoNode);
+        };
+
+
+        //! build an intermediate tree
+        class DynamoCompiler : public DynamoLoader, public Syntax::Analyzer
+        {
+        public:
+            explicit DynamoCompiler();
+            virtual ~DynamoCompiler() throw();
+
+
+            void compile( const XNode &node );
+            size_t created;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(DynamoCompiler);
+            DynamoList items;
+
+            //! called when a terminal is met
+            virtual void onTerminal( const string &id, const Lexeme &lx );
+
+            //! called when an internal is met
+            virtual void onInternal( const string &id, const size_t  sz, const string *data);
+        };
+
     }
 }
 
