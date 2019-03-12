@@ -1,6 +1,7 @@
 #include "y/lang/dynamo/compiler.hpp"
+#include "y/lang/dynamo/loader.hpp"
+
 #include "y/utest/run.hpp"
-#include "y/lang/syntax/analyzer.hpp"
 
 using namespace upsylon;
 using namespace Lang;
@@ -13,7 +14,8 @@ static inline Module * doOpen( const string &fn )
 
 Y_UTEST(dyn)
 {
-    DynamoCompiler dynamo;
+    DynamoLoader   dynamo;
+    DynamoCompiler dynCmp;
     dynamo.graphViz("dynamo.dot");
 
 
@@ -34,7 +36,7 @@ Y_UTEST(dyn)
             }
         }
 
-        auto_ptr<DynamoNode> il = dynamo.compile(*g);
+        auto_ptr<DynamoNode> il = dynCmp.compile(*g);
         std::cerr << "IntermediateLang=" << std::endl;
         std::cerr << il;
 

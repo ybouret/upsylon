@@ -122,8 +122,8 @@ namespace upsylon
         };
         
         DynamoCompiler:: DynamoCompiler() :
-        DynamoLoader(),
         Syntax::Analyzer(),
+        created(0),
         items(),
         lxh( YOCTO_MPERF_FOR(lxkw) )
         {
@@ -145,7 +145,7 @@ namespace upsylon
 
         DynamoNode *DynamoCompiler:: compile( const XNode &node )
         {
-            created=0;
+            (size_t&)created=0;
             items.clear();
             walk(node);
             std::cerr << "#items  =" << items.size << std::endl;
@@ -174,7 +174,7 @@ namespace upsylon
             }
             
             items.push_back( new DynamoNode(id,lx,nskip,ntrim) );
-            ++created;
+            ++(size_t&)created;
 
             indent(std::cerr) << "[push] <" << id << ">";
             const string &content = items.tail->content();
@@ -201,84 +201,9 @@ namespace upsylon
             }
             items.push_back(node);
 
-            ++created;
+            ++(size_t&)created;
         }
     }
 
 }
-
-
-#if 0
-namespace upsylon
-{
-    namespace Lang
-    {
-        DynamoInfo:: ~DynamoInfo() throw()
-        {
-
-        }
-
-
-        DynamoInfo:: DynamoInfo( const Tag &id ) throw() : moduleID(id) {}
-
-        DynamoInfo:: DynamoInfo( const DynamoInfo &other) throw() :
-        moduleID(other.moduleID)
-        {
-        }
-
-        
-    }
-
-
-}
-namespace upsylon
-{
-    namespace Lang
-    {
-
-        const char * DynamoCompiler:: top_kw[] =
-        {
-            "dynamo", "rule"
-        };
-
-        DynamoCompiler:: DynamoCompiler() :
-        DynamoLoader(),
-        parser(0),
-        rules(),
-        terms(),
-        modules(),
-        top_h(YOCTO_MPERF_FOR(top_kw))
-        {
-        }
-        
-        DynamoCompiler:: ~DynamoCompiler() throw()
-        {
-        }
-
-        void DynamoCompiler:: reset() throw()
-        {
-            rules.free();
-            terms.free();
-            modules.free();
-            parser = 0;
-        }
-
-        Syntax::Parser * DynamoCompiler:: compile( XNode &top )
-        {
-            reset();
-            try
-            {
-                decl(top);
-            }
-            catch(...)
-            {
-                reset();
-                throw;
-            }
-            return 0;
-        }
-        
-    }
-}
-#endif
 
