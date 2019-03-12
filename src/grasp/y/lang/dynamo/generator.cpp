@@ -18,7 +18,8 @@ namespace upsylon
         parser(0),
         declH( Y_MPERF_FOR(declKW) ),
         modules(),
-        level(0)
+        level(0),
+        verbose(true)
         {
         }
 
@@ -42,7 +43,7 @@ namespace upsylon
 
         void DynamoGenerator:: declTerminal(const DynamoNode &node)
         {
-            node.display(std::cerr << "@gen",level);
+            Y_LANG_SYNTAX_VERBOSE(node.display(std::cerr << "@gen",level));
         }
 
         void DynamoGenerator:: declInternal( DynamoNode &node)
@@ -51,7 +52,7 @@ namespace upsylon
             DynamoList   &self = node.children();
             const string &name = node.name;
 
-            DynamoNode::Indent(std::cerr << "@gen",level) << "rule <" << node.name << ">/" << self.size << std::endl;
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "rule <" << node.name << ">/" << self.size << std::endl);
 
             switch( declH(name) )
             {
@@ -104,7 +105,7 @@ namespace upsylon
 
             
             // and declare the new module
-            DynamoNode::Indent(std::cerr << "@gen",level) << "[DECL '" << moduleID << "']" << std::endl;
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[DECL '" << moduleID << "']" << std::endl);
             // would create parser
             if(1==modules.size())
             {
@@ -118,7 +119,7 @@ namespace upsylon
             }
             --level;
             modules.pop_back();
-            DynamoNode::Indent(std::cerr << "@gen",level) << "[DONE '" << moduleID << "']" << std::endl;
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[DONE '" << moduleID << "']" << std::endl);
 
 
         }
