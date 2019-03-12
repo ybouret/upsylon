@@ -103,10 +103,10 @@ namespace upsylon
         verbose(false),
         level(0),
         modules(),
-        htop( YOCTO_MPERF_FOR(ktop) ),
-        hstr( YOCTO_MPERF_FOR(kstr) ),
-        hlxr( YOCTO_MPERF_FOR(klxr) ),
-        hsyn( YOCTO_MPERF_FOR(ksyn) ),
+        htop( Y_MPERF_FOR(ktop) ),
+        hstr( Y_MPERF_FOR(kstr) ),
+        hlxr( Y_MPERF_FOR(klxr) ),
+        hsyn( Y_MPERF_FOR(ksyn) ),
         terminals(),
         internals()
         {

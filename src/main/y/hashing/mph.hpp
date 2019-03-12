@@ -114,7 +114,7 @@ namespace upsylon
     }
 
     //! to use litterals
-#define YOCTO_MPERF_FOR(WORDS) WORDS,sizeof(WORDS)/sizeof(WORDS[0])
+#define Y_MPERF_FOR(WORDS) WORDS,sizeof(WORDS)/sizeof(WORDS[0])
 
 }
 

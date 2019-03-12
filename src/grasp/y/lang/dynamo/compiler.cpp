@@ -68,7 +68,7 @@ namespace upsylon
                 case DynamoTerminal: {
                     const string s = string_convert::to_visible( content() );
                     Indent(os,level) << "[term] <" << name << ">";
-                    if(s.size()>=0)
+                    if(s.size()>0)
                     {
                         os << "='" << s << "'";
                     }
@@ -78,15 +78,12 @@ namespace upsylon
                 case DynamoInternal: {
                     const DynamoList &self = children();
                     Indent(os,level) << "[call] <" << name << ">/" << self.size << std::endl;
-                    //Indent(os,level) << "|" << std::endl;
                     ++level;
                     for(const DynamoNode *node = self.head; node; node=node->next )
                     {
                         node->display(os,level);
                     }
                     --level;
-                    //Indent(os,level) << "|" << std::endl;
-                   // Indent(os,level) << "[.ret] <" << name << ">/" << self.size  << std::endl;
                 } break;
             }
             return os;
@@ -125,7 +122,7 @@ namespace upsylon
         Syntax::Analyzer(),
         created(0),
         items(),
-        lxh( YOCTO_MPERF_FOR(lxkw) )
+        lxh( Y_MPERF_FOR(lxkw) )
         {
         }
 
@@ -150,6 +147,7 @@ namespace upsylon
             walk(node);
             std::cerr << "#items  =" << items.size << std::endl;
             std::cerr << "#created=" << created    << std::endl;
+
             if(1!=items.size)
             {
                 throw exception("DynamoCompiler: corrupted Syntax Node <%s>", *(node.rule.name));

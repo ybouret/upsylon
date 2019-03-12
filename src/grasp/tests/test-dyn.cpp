@@ -1,5 +1,5 @@
-#include "y/lang/dynamo/compiler.hpp"
 #include "y/lang/dynamo/loader.hpp"
+#include "y/lang/dynamo/generator.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -14,8 +14,10 @@ static inline Module * doOpen( const string &fn )
 
 Y_UTEST(dyn)
 {
-    DynamoLoader   dynamo;
-    DynamoCompiler dynCmp;
+    DynamoLoader    dynamo;
+    DynamoCompiler  dynCmp;
+    DynamoGenerator dynGen;
+
     dynamo.graphViz("dynamo.dot");
 
 
@@ -39,6 +41,9 @@ Y_UTEST(dyn)
         auto_ptr<DynamoNode> il = dynCmp.compile(*g);
         std::cerr << "IntermediateLang=" << std::endl;
         std::cerr << il;
+
+        dynGen.build( *il );
+
 
         if(false)
         {

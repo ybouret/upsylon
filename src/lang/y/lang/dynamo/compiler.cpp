@@ -19,7 +19,7 @@ namespace upsylon
         DynamoCompiler:: DynamoCompiler() :
         parser(  ),
         depth( 0 ),
-        commands( YOCTO_MPERF_FOR(commands_kw) )
+        commands( Y_MPERF_FOR(commands_kw) )
         {
             
         }
