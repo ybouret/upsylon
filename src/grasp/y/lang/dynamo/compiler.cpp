@@ -15,6 +15,12 @@ namespace upsylon
         {
         }
 
+
+        Syntax::Parser * DynamoCompiler:: compile( XNode &top )
+        {
+
+            return 0;
+        }
         
     }
 }
