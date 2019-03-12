@@ -100,10 +100,17 @@ namespace upsylon
             explicit DynamoNode(const string &id);
             virtual ~DynamoNode() throw();
 
-            const string & content() const throw();
-            DynamoList   & children() throw();
+            const string       & content()  const throw();
+            DynamoList         & children() throw();
+            const DynamoList   & children() const throw();
 
+            std::ostream & display( std::ostream &os, int level ) const;
 
+            static        std::ostream & Indent(std::ostream &, int level);
+            friend inline std::ostream & operator<<( std::ostream &os, const DynamoNode &node )
+            {
+                return node.display(os,0);
+            }
         private:
             void            *impl;
             Y_DISABLE_COPY_AND_ASSIGN(DynamoNode);
@@ -117,13 +124,18 @@ namespace upsylon
             explicit DynamoCompiler();
             virtual ~DynamoCompiler() throw();
 
+            //! generate intermediate code from node
+            DynamoNode *compile( const XNode &node );
 
-            void compile( const XNode &node );
+
+
             size_t created;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoCompiler);
-            DynamoList items;
+            DynamoList           items;
+            const hashing::mperf lxh;  //!< "module", "cid", "lid", "rs", "rx"
+
 
             //! called when a terminal is met
             virtual void onTerminal( const string &id, const Lexeme &lx );

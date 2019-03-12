@@ -34,13 +34,16 @@ Y_UTEST(dyn)
             }
         }
 
-        dynamo.compile(*g);
+        auto_ptr<DynamoNode> il = dynamo.compile(*g);
+        std::cerr << "IntermediateLang=" << std::endl;
+        std::cerr << il;
 
-
-        MatchString cut = "lxr|plg|cmd|aka";
-        XNode::RemoveFrom(*g,cut);
-        g->graphViz( "dynamo_cut.dot" );
-
+        if(false)
+        {
+            MatchString cut = "lxr|plg|cmd|aka";
+            XNode::RemoveFrom(*g,cut);
+            g->graphViz( "dynamo_cut.dot" );
+        }
 
     }
 }
