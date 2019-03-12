@@ -31,7 +31,7 @@ Y_UTEST(dyn)
             g2->graphViz("dynamo_tree2.dot");
         }
 
-        auto_ptr<DynamoNode> il = dynamo.IL(*g);
+        //auto_ptr<DynamoNode> il = dynamo.IL(*g);
         
         MatchString cut = "lxr|plg|cmd|aka";
         XNode::RemoveFrom(*g,cut);
