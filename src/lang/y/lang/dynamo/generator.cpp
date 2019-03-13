@@ -47,10 +47,10 @@ namespace upsylon
             if( parser.is_empty() )
             {
                 throw exception("DynamoGenerator: empty parser for terminal <%s>", *node.name);
-
             }
         }
 
+        
         void DynamoGenerator:: declInternal( DynamoNode &node)
         {
 
@@ -64,6 +64,8 @@ namespace upsylon
                 case 0: assert("dynamo"==name);
                     declModule(node);
                     break;
+
+
 
                 default:
                     ++level;
@@ -136,9 +138,14 @@ namespace upsylon
             // decl for sub items
             //__________________________________________________________________
             ++level;
-            for(DynamoNode *sub  = self.head; sub; sub=sub->next )
+            DynamoList temp;
+            while(self.size)
             {
-                decl(*sub);
+                auto_ptr<DynamoNode> sub = self.pop_front();
+
+
+                decl( *sub );
+                temp.push_back( sub.yield() );
             }
             --level;
             modules.pop_back();
