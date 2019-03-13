@@ -1,5 +1,5 @@
-PROJECT(y-grasp CXX)
-MESSAGE( STATUS "GRammar And Syntax Parsers")
+PROJECT(y-lang CXX)
+MESSAGE( STATUS "Lang")
 
 INCLUDE_DIRECTORIES(. ../main)
 
@@ -28,14 +28,14 @@ SET(dynamo_srcs ${dynamo_decl} ${dynamo_code})
 SOURCE_GROUP( lang/dynamo FILES ${dynamo_srcs} )
 INSTALL( FILES ${dynamo_decl} DESTINATION include/y/lang/dynamo )
 
-ADD_LIBRARY(y-grasp STATIC 
+ADD_LIBRARY(y-lang STATIC 
 ${main_srcs} 
 ${syntax_srcs}
 ${syntax_grammar_srcs}
 ${syntax_node_srcs}
 ${dynamo_srcs}
 )
-INSTALL( TARGETS y-grasp ARCHIVE DESTINATION lib )
+INSTALL( TARGETS y-lang ARCHIVE DESTINATION lib )
 
 #ADD_EXECUTABLE(y-dynamo y/lang/dynamo/y-dynamo.cxx ../json/y/json/json.g)
 #TARGET_LINK_Y(y-dynamo lang)
