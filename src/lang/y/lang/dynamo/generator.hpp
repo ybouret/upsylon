@@ -8,7 +8,60 @@ namespace upsylon
 {
     namespace Lang
     {
-        typedef memory::pooled DynamoMemory; //!< internal memory type
+        typedef memory::pooled                  DynamoMemory; //!< internal memory type
+        typedef key_hasher<string,hashing::fnv> DynamoHasher; //!< string hasher
+
+        typedef functor<Syntax::Terminal &,TL2(const string &, Syntax::Parser &)> DynamoPlugin;         //!< functor to hook a plugin
+        typedef map<string,DynamoPlugin,DynamoHasher,DynamoMemory>                DynamoPluginFactory;  //!< database of plugin builder
+
+        //! base class for symbols
+        class DynamoInfo
+        {
+        public:
+            typedef set<string,DynamoInfo,DynamoHasher,DynamoMemory> Set; //!< set alias
+
+            virtual ~DynamoInfo() throw(); //!< destructor
+            const Tag           from;      //!< creator module
+            const Syntax::Rule &rule;      //!< the generic underlying rule
+
+            const string &key() const throw(); //!< rule.name
+
+            DynamoInfo(const DynamoInfo &other) throw(); //!< no throw copy
+
+        protected:
+            //! setup
+            explicit DynamoInfo( const Tag &moduleID, const Syntax::Rule &r ) throw();
+
+        private:
+            Y_DISABLE_ASSIGN(DynamoInfo);
+        };
+
+        //! generic derived symbol store for toplevel rules
+        template <typename T>
+        class DynamoRef : public DynamoInfo
+        {
+        public:
+            typedef set<string,DynamoRef,DynamoHasher,DynamoMemory> Set; //!< databse
+
+            T &derived; //!< the derived type reference
+
+            //! setup
+            inline explicit DynamoRef(const Tag &moduleID, T &d ) throw() : DynamoInfo(moduleID,d), derived(d) {}
+
+            //! desctructor
+            inline virtual ~DynamoRef() throw() {}
+
+            //! no-throw copy
+            inline DynamoRef(const DynamoRef &other) throw() : DynamoInfo(other), derived(other.derived) {}
+
+        private:
+            Y_DISABLE_ASSIGN(DynamoRef);
+        };
+
+
+        typedef DynamoRef<Syntax::Terminal> DynamoTerm; //!< alias for terminal
+        typedef DynamoRef<Syntax::Compound> DynamoRule; //!< alias for compound
+
 
 
         //! generates a parser from a compiled tree
@@ -16,29 +69,72 @@ namespace upsylon
         {
         public:
             typedef vector<const Tag,DynamoMemory> Modules; //!< alias
-            virtual ~DynamoGenerator() throw();
-            explicit DynamoGenerator();
 
+            virtual ~DynamoGenerator() throw(); //!< destructor
+            explicit DynamoGenerator();         //!< setup and register plugins
+
+            //! build the parser from a top-level dynamo node
             Syntax::Parser * build( DynamoNode &top );
-            
+
+            //! register a plugin
+            void registerPlugin(const string &id, const DynamoPlugin &dp);
+
+            //! wrapper to register a host+method plugin
+            template <typename HOST_POINTER,
+            typename METHOD_POINTER>
+            inline void registerPlugin(const string  &id,
+                                       HOST_POINTER   host,
+                                       METHOD_POINTER meth)
+            {
+                DynamoPlugin dp(host,meth);
+                registerPlugin(id,dp);
+            }
+
+            //! wrapper to register a host+method plugin
+            template <typename HOST_POINTER,
+            typename METHOD_POINTER>
+            inline void registerPlugin(const char    *id,
+                                       HOST_POINTER   host,
+                                       METHOD_POINTER meth)
+            {
+                const string _(id); registerPlugin(_,host,meth);
+            }
+
+            //! find a registered plugin
+            DynamoPlugin &findPlugin( const string &id );
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
 
 
-            auto_ptr<Syntax::Parser> parser;   //!< currently built parser
-            const hashing::mperf     declH;    //!< "dynamo"
-            Modules                  modules;  //!< stack of modules
-            int                      level;    //!< depth
+            auto_ptr<Syntax::Parser> parser;    //!< currently built parser
+            const hashing::mperf     declH;     //!< "dynamo",...
+            Modules                  modules;   //!< stack of modules
+            DynamoInfo::Set          symbols;   //!< all the symbols
+            DynamoTerm::Set          terminals; //!< all the terminals
+            DynamoRule::Set          internals; //!< all the internals
+            DynamoPluginFactory      plugins;   //!< declared plugins
+            int                      level;     //!< depth
 
-            void decl( DynamoNode &node );
-            void declInternal( DynamoNode       &node );
-            void declTerminal( const DynamoNode &node );
-            void declModule( DynamoNode &dynamo );
-            void declAlias( const DynamoNode &alias );
+
+
+            void declModule( DynamoNode       &dynamo );
+            void declAlias(  const DynamoNode &alias );
+            void declPlugin( const DynamoNode &plg );
+
+            string getContent( const DynamoNode *node, const char *id, const char *context) const;
+            string getRID( const DynamoNode *node, const char *context ) const;
+            string getLID( const DynamoNode *node, const char *context ) const;
+            string getSTR( const DynamoNode *node, const char *context ) const;
+
+            void storeDecl( Syntax::Terminal &t );
+
+            Syntax::Terminal & _jstring( const string &id, Syntax::Parser &p );
+            Syntax::Terminal & _rstring( const string &id, Syntax::Parser &p );
 
         public:
-            bool verbose;
+            bool verbose; //!< verbosity flag
+
         };
     }
 

@@ -69,14 +69,14 @@ namespace upsylon
                 inline TERM & op( const T &id, const U &arg ) { return term(id,arg).op(); }
 
                 //! zero arguments plugin
-                template <typename PLUGIN> inline RULE & plug( const string &id )
+                template <typename PLUGIN> inline TERM & plug( const string &id )
                 {
                     Lexical::Translator::hook<PLUGIN>(**this,id);
                     return terminal(id);
                 }
 
                 //! zero arguments plugin, wrapper
-                template <typename PLUGIN> inline RULE & plug( const char *id )
+                template <typename PLUGIN> inline TERM & plug( const char *id )
                 {
                     const string _(id); return plug<PLUGIN>(_);
                 }
