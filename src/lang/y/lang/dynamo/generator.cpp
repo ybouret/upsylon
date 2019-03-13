@@ -11,7 +11,8 @@ namespace upsylon
 
         static const char *declKW[] =
         {
-            "dynamo"
+            "dynamo",
+            "aka"
         };
 
         DynamoGenerator:: DynamoGenerator() :
@@ -29,11 +30,13 @@ namespace upsylon
 
         Syntax::Parser * DynamoGenerator:: build( DynamoNode &top )
         {
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<Building Parser>" << std::endl);
             modules.free();
             parser = 0;
             level  = 0;
 
-            decl(top);
+            declModule(top);
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<Building Parser/>" << std::endl);
 
             return 0;
         }
@@ -50,7 +53,7 @@ namespace upsylon
             }
         }
 
-        
+#if 0
         void DynamoGenerator:: declInternal( DynamoNode &node)
         {
 
@@ -79,7 +82,9 @@ namespace upsylon
 
 
         }
+#endif
 
+#if 0
         void DynamoGenerator:: decl( DynamoNode &node )
         {
             switch(node.type)
@@ -93,18 +98,20 @@ namespace upsylon
                     break;
             }
         }
-
+#endif
 
 
         void DynamoGenerator:: declModule(DynamoNode &dynamo)
         {
             static const char fn[] = "DynamoGenerator.declModule";
-            assert("dynamo"==dynamo.name);
 
             //__________________________________________________________________
             //
             // sanity check
             //__________________________________________________________________
+            if(dynamo.name!="dynamo")       throw exception("%s(expecting <dynamo> and not <%s>)",fn,*(dynamo.name));
+            if(dynamo.type!=DynamoInternal) throw exception("%s(<dynamo> is not internal)",fn);
+
             DynamoList   &self = dynamo.children();
             if(self.size<=0)              throw exception("%s(Empty <dynamo> node)",fn);
             if(self.head->name!="module") throw exception("%s(Invalid Module Name='%s')",fn,*(self.head->name));
@@ -141,17 +148,38 @@ namespace upsylon
             DynamoList temp;
             while(self.size)
             {
-                auto_ptr<DynamoNode> sub = self.pop_front();
+                auto_ptr<DynamoNode> sub  = self.pop_front();
+                const string         id   = sub->name;
+                bool                 keep = true;
+                switch( declH(id) )
+                {
+                    case 0: assert("dynamo"==id); declModule(*sub); break;
+                    case 1: assert("aka"==id);    declAlias(*sub);  keep=false; break;
+                    default:
+                        break;
+                }
 
-
-                decl( *sub );
-                temp.push_back( sub.yield() );
+                if(keep) temp.push_back( sub.yield() );
             }
             --level;
+            temp.swap_with(self);
             modules.pop_back();
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[DONE '" << moduleID << "']" << std::endl);
 
 
+        }
+
+        void DynamoGenerator:: declAlias( const DynamoNode &alias )
+        {
+            assert( "aka" == alias.name );
+            assert( parser.is_valid()   );
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[ALIAS]" << std::endl);
+            if( alias.type != DynamoInternal ) throw exception("{%s} unexpected terminal alias", **(parser->name));
+            const DynamoList &args = alias.children();
+            for(const DynamoNode *node=args.head;node;node=node->next)
+            {
+                std::cerr << node->name << std::endl;
+            }
         }
 
     }

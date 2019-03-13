@@ -35,7 +35,7 @@ namespace upsylon
             void declInternal( DynamoNode       &node );
             void declTerminal( const DynamoNode &node );
             void declModule( DynamoNode &dynamo );
-            void declAlias( DynamoNode &alias );
+            void declAlias( const DynamoNode &alias );
 
         public:
             bool verbose;
