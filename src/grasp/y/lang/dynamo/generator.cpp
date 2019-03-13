@@ -93,25 +93,43 @@ namespace upsylon
         {
             static const char fn[] = "DynamoGenerator.declModule";
             assert("dynamo"==dynamo.name);
+
+            //__________________________________________________________________
+            //
             // sanity check
+            //__________________________________________________________________
             DynamoList   &self = dynamo.children();
             if(self.size<=0)              throw exception("%s(Empty <dynamo> node)",fn);
             if(self.head->name!="module") throw exception("%s(Invalid Module Name='%s')",fn,*(self.head->name));
 
+            //__________________________________________________________________
+            //
             // build a tag
+            //__________________________________________________________________
             const Tag moduleID = new string( self.head->content() );
             modules.push_back(moduleID);
             delete self.pop_front();
 
-            
+            //__________________________________________________________________
+            //
             // and declare the new module
+            //__________________________________________________________________
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[DECL '" << moduleID << "']" << std::endl);
-            // would create parser
+
             if(1==modules.size())
             {
+                //______________________________________________________________
+                //
+                // would create parser
+                //______________________________________________________________
                 assert( parser.is_empty() );
                 parser = new Syntax::Parser( *moduleID );
             }
+
+            //__________________________________________________________________
+            //
+            // decl for sub items
+            //__________________________________________________________________
             ++level;
             for(DynamoNode *sub  = self.head; sub; sub=sub->next )
             {
