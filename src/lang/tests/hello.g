@@ -23,7 +23,7 @@ ADDOP : "[-+]"^;
 
 %include 'lex.g';
 
-@drop : "\t" ' ' "[:blank:]" '\t';
-@endl : "[:endl:]";
-
+@comment : '#';
+@comment : '--';
+@comment : '/*' '*/';
 %hello;

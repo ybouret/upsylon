@@ -14,6 +14,10 @@ namespace upsylon
         typedef functor<Syntax::Terminal &,TL2(const string &, Syntax::Parser &)> DynamoPlugin;         //!< functor to hook a plugin
         typedef map<string,DynamoPlugin,DynamoHasher,DynamoMemory>                DynamoPluginFactory;  //!< database of plugin builder
 
+        typedef array<const string>                                       DynamoArgs;
+        typedef functor<void,TL2(Lexer &, const DynamoArgs &)>            DynamoLexical;
+        typedef map<string,DynamoLexical,DynamoHasher,DynamoMemory>       DynamoLexicalFactory;
+
         //! base class for symbols
         class DynamoInfo
         {
@@ -103,6 +107,32 @@ namespace upsylon
             //! find a registered plugin
             DynamoPlugin &findPlugin( const string &id );
 
+            void registerLexical( const string &id, const DynamoLexical &dl );
+
+            //! wrapper to register a host+method lexical
+            template <typename HOST_POINTER,
+            typename METHOD_POINTER>
+            inline void registerLexical(const string  &id,
+                                       HOST_POINTER   host,
+                                       METHOD_POINTER meth)
+            {
+                DynamoLexical dp(host,meth);
+                registerLexical(id,dp);
+            }
+
+            //! wrapper to register a host+method lexical
+            template <typename HOST_POINTER,
+            typename METHOD_POINTER>
+            inline void registerLexical(const char    *id,
+                                        HOST_POINTER   host,
+                                        METHOD_POINTER meth)
+            {
+                const string _(id);
+                return registerLexical(_,host,meth);
+            }
+
+            DynamoLexical & findLexical( const string &id );
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
 
@@ -114,13 +144,15 @@ namespace upsylon
             DynamoTerm::Set          terminals; //!< all the terminals
             DynamoRule::Set          internals; //!< all the internals
             DynamoPluginFactory      plugins;   //!< declared plugins
+            DynamoLexicalFactory     lexicals;  //!< declared lexical
             int                      level;     //!< depth
 
 
 
-            void declModule( DynamoNode       &dynamo );
-            void declAlias(  const DynamoNode &alias );
-            void declPlugin( const DynamoNode &plg );
+            void declModule(  DynamoNode       &dynamo );
+            void declAlias(   const DynamoNode &alias  );
+            void declPlugin(  const DynamoNode &plg    );
+            void declLexical( const DynamoNode &lxr    );
 
             string getContent( const DynamoNode *node, const char *id, const char *context) const;
             string getRID( const DynamoNode *node, const char *context ) const;
@@ -131,6 +163,10 @@ namespace upsylon
 
             Syntax::Terminal & _jstring( const string &id, Syntax::Parser &p );
             Syntax::Terminal & _rstring( const string &id, Syntax::Parser &p );
+
+            void lexicalDrop( Lexer &, const DynamoArgs & );
+            void lexicalEndl( Lexer &, const DynamoArgs & );
+            void lexicalComm( Lexer &, const DynamoArgs & );
 
         public:
             bool verbose; //!< verbosity flag

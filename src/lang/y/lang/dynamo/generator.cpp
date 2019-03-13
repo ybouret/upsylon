@@ -44,7 +44,8 @@ namespace upsylon
         {
             "dynamo",
             "aka",
-            "plg"
+            "plg",
+            "lxr"
         };
 
         DynamoGenerator:: DynamoGenerator() :
@@ -56,6 +57,10 @@ namespace upsylon
         {
             registerPlugin("jstring",  this, & DynamoGenerator::_jstring );
             registerPlugin("rstring",  this, & DynamoGenerator::_rstring );
+
+            registerLexical("drop",    this, & DynamoGenerator::lexicalDrop);
+            registerLexical("endl",    this, & DynamoGenerator::lexicalEndl);
+            registerLexical("comment", this, & DynamoGenerator::lexicalComm);
 
         }
 
@@ -143,6 +148,89 @@ namespace upsylon
         }
     }
 
+}
+
+namespace upsylon
+{
+
+    namespace Lang
+    {
+
+        void DynamoGenerator:: registerLexical(const string &id, const DynamoLexical &dl)
+        {
+            if(!lexicals.insert(id,dl)) throw exception("DynamoGenerator: muliple lexical '%s'", *id);
+        }
+
+        DynamoLexical & DynamoGenerator:: findLexical( const string &id )
+        {
+            DynamoLexical *l = lexicals.search(id);
+            if(!l)
+            {
+                throw exception("DynamoGenerator: no registered lexical '@%s'", *id);
+            }
+            return *l;
+        }
+
+
+
+        void DynamoGenerator:: lexicalDrop( Lexer &target, const DynamoArgs &args )
+        {
+            const size_t n = args.size();
+            for(size_t i=1;i<=n;++i)
+            {
+                const string rx = args[i];
+                (*target).drop(rx,rx);
+            }
+        }
+
+        void DynamoGenerator:: lexicalEndl( Lexer &target, const DynamoArgs &args )
+        {
+            const size_t n = args.size();
+            for(size_t i=1;i<=n;++i)
+            {
+                const string rx = args[i];
+                (*target).endl(rx,rx);
+            }
+        }
+
+    }
+
+}
+
+#include "y/lang/lexical/plugin/comment.hpp"
+
+namespace upsylon
+{
+
+    namespace Lang
+    {
+
+        void DynamoGenerator:: lexicalComm( Lexer &target, const DynamoArgs &args )
+        {
+            switch( args.size() )
+            {
+                case 1: {
+                    // end of line comment
+                    const string &arg = args[1];
+                    const string  comment_name = "comm@" + arg;
+                    target.hook<Lexical::EndOfLineComment>(*target, comment_name, *arg);
+                } break;
+
+                case 2:
+                {
+                    // multiple line comment
+                    const string &arg1 = args[1];
+                    const string &arg2 = args[2];
+                    const string  comment_name = "comm@" + arg1 + arg2;
+                    target.hook<Lexical::MultiLinesComment>(*target,comment_name,*arg1,*arg2);
+                }   break;
+
+                default:
+                    throw exception("DynamoGenerator.lexicalComm: invalid #args=%u", unsigned(args.size()));
+            }
+        }
+
+    }
 }
 
 
