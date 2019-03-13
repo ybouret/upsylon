@@ -27,7 +27,7 @@ namespace upsylon
             RULE &str     = alternate("str") << rx << rs;
             RULE &zom_str = zeroOrMore(str);
             RULE &rid     = term("rid","{ID}");
-            RULE &carret  = term('\x5e');
+            RULE &carret  = term('^');
             RULE &ops_str = join(str,optional(carret));
 
             ALT &itm      = alternate("itm");

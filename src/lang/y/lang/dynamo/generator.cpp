@@ -44,6 +44,11 @@ namespace upsylon
         void DynamoGenerator:: declTerminal(const DynamoNode &node)
         {
             Y_LANG_SYNTAX_VERBOSE(node.display(std::cerr << "@gen",level));
+            if( parser.is_empty() )
+            {
+                throw exception("DynamoGenerator: empty parser for terminal <%s>", *node.name);
+
+            }
         }
 
         void DynamoGenerator:: declInternal( DynamoNode &node)
@@ -52,7 +57,7 @@ namespace upsylon
             DynamoList   &self = node.children();
             const string &name = node.name;
 
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "rule <" << node.name << ">/" << self.size << std::endl);
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "internal <" << node.name << ">/" << self.size << std::endl);
 
             switch( declH(name) )
             {

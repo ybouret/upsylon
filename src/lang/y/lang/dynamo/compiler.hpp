@@ -29,7 +29,10 @@ namespace upsylon
             const string     name; //!< from the id=rule.name
 
             //! create an internal node with compiled lexeme
-            explicit DynamoNode(const string &id, const Lexeme &lx, const size_t nskip=0,const size_t ntrim=0);
+            explicit DynamoNode(const string &id,
+                                const Lexeme &lx,
+                                const size_t  nskip,
+                                const size_t  ntrim);
 
             //! create an internal node
             explicit DynamoNode(const string &id);
@@ -66,7 +69,7 @@ namespace upsylon
             explicit DynamoCompiler();         //!< setup
             virtual ~DynamoCompiler() throw(); //!< destructor
 
-            //! generate intermediate code from node
+            //! generate intermediate representation code from node
             DynamoNode *compile( const XNode &node );
 
             //! last number of created nodes

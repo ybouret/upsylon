@@ -22,7 +22,10 @@ namespace upsylon
             impl=0;
         }
 
-        DynamoNode:: DynamoNode( const string &id, const Lexeme &lx, const size_t nskip, const size_t ntrim) :
+        DynamoNode:: DynamoNode(const string &id,
+                                const Lexeme &lx,
+                                const size_t  nskip,
+                                const size_t  ntrim) :
         type( DynamoTerminal ),
         name(id),
         impl( NULL )
