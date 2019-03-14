@@ -55,6 +55,11 @@ namespace upsylon
         parser(0),
         declH( Y_MPERF_FOR(declKW) ),
         modules(),
+        symbols(),
+        terminals(),
+        internals(),
+        plugins(4,as_capacity),
+        lexicals(4,as_capacity),
         level(0),
         verbose(true)
         {

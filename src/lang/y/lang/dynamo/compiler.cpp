@@ -1,6 +1,7 @@
 #include "y/lang/dynamo/compiler.hpp"
 #include "y/exception.hpp"
 #include "y/string/convert.hpp"
+#include "y/string/io.hpp"
 #include "y/ios/graphviz.hpp"
 
 namespace upsylon
@@ -151,6 +152,30 @@ namespace upsylon
             }
             (void)ios::GraphViz::Render(filename);
 
+        }
+
+        void DynamoNode:: save( ios::ostream &fp ) const
+        {
+            string_io::save_binary(fp,name);
+            switch (type)
+            {
+                case DynamoTerminal: {
+                    fp.emit<uint8_t>(0);
+                    const string s = content();
+                    string_io::save_binary(fp,s);
+                } break;
+
+                case DynamoInternal: {
+                    fp.emit<uint8_t>(1);
+                    const DynamoList &ch = children();
+                    const size_t      nch = ch.size;
+                    fp.emit_upack(nch);
+                    for(const DynamoNode *node=ch.head;node;node=node->next)
+                    {
+                        node->save(fp);
+                    }
+                } break;
+            }
         }
 
 

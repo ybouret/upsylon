@@ -62,6 +62,10 @@ namespace upsylon
             //! create a directed graph and try to render
             void graphViz( const string &filename ) const;
 
+            //! save to bin stream
+            void save( ios::ostream &fp ) const;
+            
+
         private:
             void            *impl;
             Y_DISABLE_COPY_AND_ASSIGN(DynamoNode);

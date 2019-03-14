@@ -179,7 +179,7 @@ namespace upsylon
 
 
 
-            void declModule(        DynamoNode &dynamo );
+            void declModule(        DynamoNode &dynamo ); //!< top level call
             void declAlias(   const DynamoNode &alias  );
             void declPlugin(  const DynamoNode &plg    );
             void declLexical( const DynamoNode &lxr    );
@@ -203,6 +203,9 @@ namespace upsylon
             void lexicalDrop( Lexer &, const DynamoArgs & );
             void lexicalEndl( Lexer &, const DynamoArgs & );
             void lexicalComm( Lexer &, const DynamoArgs & );
+
+            void implRule( const DynamoNode &dynamo ); //!< top level call to implement declared rules
+
 
         public:
             bool verbose; //!< verbosity flag
