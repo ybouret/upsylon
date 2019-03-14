@@ -1,5 +1,4 @@
 #include "y/lang/dynamo/generator.hpp"
-#include "y/string/convert.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon
@@ -21,7 +20,7 @@ namespace upsylon
             }
         }
 
-
+        
         void DynamoGenerator:: declModule(DynamoNode &dynamo)
         {
             static const char fn[] = "DynamoGenerator.declModule";
@@ -94,186 +93,7 @@ namespace upsylon
         }
 
 
-
-
-
-        void DynamoGenerator:: declAlias( const DynamoNode &alias )
-        {
-            //__________________________________________________________________
-            //
-            // sanity check
-            //__________________________________________________________________
-            assert( "aka" == alias.name );
-            assert( parser.is_valid()   );
-
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[ALIAS]" << std::endl);
-            if( alias.type != DynamoInternal ) throw exception("{%s} unexpected terminal alias", **(parser->name));
-
-            //__________________________________________________________________
-            //
-            // get name
-            //__________________________________________________________________
-            const DynamoNode *node = alias.children().head;
-            const string aliasName = getRID(node,"alias name");
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_name='" << aliasName << "'" << std::endl );
-
-
-            //__________________________________________________________________
-            //
-            // get string
-            //__________________________________________________________________
-            const string aliasExpr = getSTR(node=node->next,"alias string");
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_expr='" << aliasExpr << "'" << std::endl );
-
-            if((node=node->next))
-            {
-                // check modifier is '^'
-                Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_operator" << std::endl);
-                const string aliasMod = getContent(node, "^", "alias modifier");
-                if(aliasMod.size()>0)       throw exception("{%s} unexpected alias '%s' modifier content='%s'", **(parser->name), *aliasName, *aliasMod);
-                if(NULL!=(node->next)) throw exception("{%s} unexpected extraneous child for alias '%s'",  **(parser->name), *aliasName);
-            }
-            else
-            {
-                // nothing to do
-                Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_standard" << std::endl);
-            }
-
-            //__________________________________________________________________
-            //
-            // declare it
-            //__________________________________________________________________
-
-            Syntax::Terminal &t = parser->term(aliasName,aliasExpr);
-            if(node) t.op();
-            storeDecl(t);
-
-            
-
-        }
-
-        void DynamoGenerator:: declPlugin( const DynamoNode &plg )
-        {
-            //__________________________________________________________________
-            //
-            // sanity check
-            //__________________________________________________________________
-            assert( "plg" == plg.name );
-            assert( parser.is_valid()   );
-
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[PLUGIN]" << std::endl);
-            if( plg.type != DynamoInternal ) throw exception("{%s} unexpected terminal plugin", **(parser->name));
-
-            //__________________________________________________________________
-            //
-            // get plugin label, its terminal name
-            //__________________________________________________________________
-            const DynamoNode *node     = plg.children().head;
-            const string      plgLabel = getLID(node,"plugin label");
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_label='" << plgLabel << "'" << std::endl );
-
-            //__________________________________________________________________
-            //
-            // get plugin class for factory
-            //__________________________________________________________________
-            const string      plgClass = getRID(node=node->next,"plugin class");
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_class='" << plgClass << "'" << std::endl );
-
-            //__________________________________________________________________
-            //
-            // check OK
-            //__________________________________________________________________
-            if(NULL!=(node=node->next))
-            {
-                throw exception("{%s} unexpected extraneous args for plugin '%s'", **(parser->name), *plgLabel);
-            }
-
-            //__________________________________________________________________
-            //
-            // find plugin and register corresponding syntax terminal
-            //__________________________________________________________________
-            DynamoPlugin     &P = findPlugin(plgClass);
-            Syntax::Terminal &t = P(plgLabel,*parser);
-            storeDecl(t);
-
-        }
-
-
-        void DynamoGenerator:: declLexical( const DynamoNode &lxr    )
-        {
-            //__________________________________________________________________
-            //
-            // sanity check
-            //__________________________________________________________________
-            assert( "lxr" == lxr.name );
-            assert( parser.is_valid()   );
-
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[LEX]" << std::endl);
-            if( lxr.type != DynamoInternal ) throw exception("{%s} unexpected lexer code", **(parser->name));
-
-            //__________________________________________________________________
-            //
-            // get lexical instruction
-            //__________________________________________________________________
-            const DynamoNode *node  = lxr.children().head;
-            const string      instr = getLID(node,"lexer instruction");
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_instr='" << instr << "'" << std::endl);
-
-
-            //__________________________________________________________________
-            //
-            // find lexical function
-            //__________________________________________________________________
-            DynamoLexical &lex = findLexical(instr);
-
-            //__________________________________________________________________
-            //
-            // build arguments
-            //__________________________________________________________________
-            vector<const string,DynamoMemory> args(lxr.children().size-1,as_capacity);
-            for(node=node->next;node;node=node->next)
-            {
-                const string arg = getSTR(node,"lexical argument");
-                args.push_back_(arg);
-            }
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_args =" << args << std::endl);
-
-            lex( *parser, args );
-
-        }
-
-
-        void DynamoGenerator:: declEOL(const DynamoNode &eol)
-        {
-            //__________________________________________________________________
-            //
-            // sanity check
-            //__________________________________________________________________
-            assert( "eol" == eol.name );
-            assert( parser.is_valid()   );
-
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[EOL]" << std::endl);
-            if( eol.type != DynamoInternal ) throw exception("{%s} unexpected terminal EOL", **(parser->name));
-
-            //__________________________________________________________________
-            //
-            // get name
-            //__________________________________________________________________
-            const DynamoNode *node    = eol.children().head;
-            const string      eolName = getEID(node,"EOL name");
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_name='" << eolName << "'" << std::endl );
-
-
-            //__________________________________________________________________
-            //
-            // get string
-            //__________________________________________________________________
-            const string eolExpr = getSTR(node=node->next,"EOL string");
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_expr='" << eolExpr << "'" << std::endl );
-
-            storeDecl(parser->endl(eolName,eolExpr));
-        }
-
+      
 
     }
 

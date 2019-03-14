@@ -8,33 +8,61 @@ namespace upsylon
 {
     namespace Lang
     {
+        //______________________________________________________________________
+        //
+        //
+        // class management
+        //
+        //______________________________________________________________________
         typedef memory::pooled                  DynamoMemory; //!< internal memory type
         typedef key_hasher<string,hashing::fnv> DynamoHasher; //!< string hasher
-
+        template <typename T>
+        struct DynamoSetOf
+        {
+            typedef set<string,T,DynamoHasher,DynamoMemory> Type;
+        };
+        //______________________________________________________________________
+        //
+        //
+        // user's plugin management
+        //
+        //______________________________________________________________________
         typedef functor<Syntax::Terminal &,TL2(const string &, Syntax::Parser &)> DynamoPlugin;         //!< functor to hook a plugin
         typedef map<string,DynamoPlugin,DynamoHasher,DynamoMemory>                DynamoPluginFactory;  //!< database of plugin builder
 
-        typedef array<const string>                                       DynamoArgs;
-        typedef functor<void,TL2(Lexer &, const DynamoArgs &)>            DynamoLexical;
-        typedef map<string,DynamoLexical,DynamoHasher,DynamoMemory>       DynamoLexicalFactory;
+        //______________________________________________________________________
+        //
+        //
+        // user's lexer managamement
+        //
+        //______________________________________________________________________
+        typedef array<const string>                                       DynamoArgs;           //!< array of arguments for lexical instructions
+        typedef functor<void,TL2(Lexer &, const DynamoArgs &)>            DynamoLexical;        //!< lexer only modifier
+        typedef map<string,DynamoLexical,DynamoHasher,DynamoMemory>       DynamoLexicalFactory; //!< database of lexer modifier
+
+        //______________________________________________________________________
+        //
+        //
+        // Generator class and auxiliary classes
+        //
+        //______________________________________________________________________
 
         //! base class for symbols
         class DynamoInfo
         {
         public:
-            typedef set<string,DynamoInfo,DynamoHasher,DynamoMemory> Set; //!< set alias
+            typedef DynamoSetOf<DynamoInfo>::Type Set; //!< database of symbols
 
-            virtual ~DynamoInfo() throw(); //!< destructor
-            const Tag           from;      //!< creator module
-            const Syntax::Rule &rule;      //!< the generic underlying rule
+            DynamoInfo(const DynamoInfo &) throw();    //!< no throw copy
+            virtual ~DynamoInfo() throw();             //!< destructor
+            const string &key() const throw();         //!< rule.name
 
-            const string &key() const throw(); //!< rule.name
-
-            DynamoInfo(const DynamoInfo &other) throw(); //!< no throw copy
+            const Tag           from;                   //!< creator module
+            const Syntax::Rule &rule;                   //!< the generic underlying rule
 
         protected:
             //! setup
-            explicit DynamoInfo( const Tag &moduleID, const Syntax::Rule &r ) throw();
+            explicit DynamoInfo( const Tag &, const Syntax::Rule & ) throw();
 
         private:
             Y_DISABLE_ASSIGN(DynamoInfo);
@@ -45,7 +73,7 @@ namespace upsylon
         class DynamoRef : public DynamoInfo
         {
         public:
-            typedef set<string,DynamoRef,DynamoHasher,DynamoMemory> Set; //!< databse
+            typedef typename DynamoSetOf<DynamoRef>::Type Set; //!< specialized database
 
             T &derived; //!< the derived type reference
 
