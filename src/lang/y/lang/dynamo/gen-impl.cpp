@@ -72,8 +72,14 @@ namespace upsylon
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << ".....found '" << cmp.name << "'" << std::endl);
             switch(cmp.uuid)
             {
-                default:
+                case Syntax::Aggregate::UUID:
                     break;
+
+                case Syntax::Alternate::UUID:
+                    break;
+
+                default:
+                    throw exception("{%s} unexpected UUID at top level, corrupted code", **(parser->name));
             }
         }
 
