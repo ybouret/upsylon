@@ -30,33 +30,46 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // get string
+            // get class
             //__________________________________________________________________
-            const string aliasExpr = getSTR(node=node->next,"alias string");
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_expr='" << aliasExpr << "'" << std::endl );
+            node=node->next;
+            if(!node) throw exception("{%s} missing alias '%s' description", **(parser->name), *aliasName);
+            const string &aliasType = node->name;
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_type='" << aliasType << "'" << std::endl );
 
-            if((node=node->next))
+            
+            bool isOperator = false;
+            switch( operH(aliasType) )
             {
-                // check modifier is '^'
-                Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_operator" << std::endl);
-                const string aliasMod = getContent(node, "^", "alias modifier");
-                if(aliasMod.size()>0)       throw exception("{%s} unexpected alias '%s' modifier content='%s'", **(parser->name), *aliasName, *aliasMod);
-                if(NULL!=(node->next)) throw exception("{%s} unexpected extraneous child for alias '%s'",  **(parser->name), *aliasName);
-            }
-            else
-            {
-                // nothing to do
-                Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_standard" << std::endl);
+                case 0: assert("op"==aliasType);
+                    // set to operator and change node
+                    isOperator=true;
+                    if(node->type!=DynamoInternal) throw exception("{%s} alias '%s' is not internal",**(parser->name),*aliasName);
+                    node=node->children().head;
+
+                    // checking structure
+                    if(!node->next)              throw exception("{%s} alias operator '%s' is missing specification!",**(parser->name),*aliasName);
+                    if(node->next->name != "^" ) throw exception("{%s} alias operator '%s' has invalid spec '%s'",**(parser->name),*aliasName,*(node->next->name));
+                    if(NULL!=(node->next->next)) throw exception("{%s} alias operator '%s' has extraneous data!",**(parser->name),*aliasName);
+                    break;
+
+                case 1: assert("rx"==aliasType);
+                    break;
+
+                case 2: assert("rs"==aliasType);
+                    break;
+
+                default:
+                    throw exception("{%s} corrupted alias '%s' type=<%s>", **(parser->name), *aliasName, *aliasType);
             }
 
-            //__________________________________________________________________
-            //
-            // declare it
-            //__________________________________________________________________
 
+            const string aliasExpr = getSTR(node,"alias string");
             Syntax::Terminal &t = parser->term(aliasName,aliasExpr);
-            if(node) t.op();
-            storeDecl(t);
+            if(isOperator) t.op();
+            storeDecl( t );
+
+
         }
 
     }

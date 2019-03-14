@@ -172,6 +172,7 @@ namespace upsylon
             auto_ptr<Syntax::Parser> parser;    //!< currently built parser
             const hashing::mperf     declH;     //!< "dynamo","aka","plg","lxr","eol","cmd","rule"
             const hashing::mperf     implH;     //!< "dynamo","rule"
+            const hashing::mperf     operH;     //!< "op", "rx", "rs"
             const hashing::mperf     fillH;     //!< "rid",...
             Modules                  modules;   //!< stack of modules
             DynamoInfo::Set          symbols;   //!< all the reachable symbols

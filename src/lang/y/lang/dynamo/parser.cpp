@@ -28,7 +28,7 @@ namespace upsylon
             RULE &zom_str = zeroOrMore(str);
             RULE &rid     = term("rid","{ID}");
             RULE &carret  = term('^');
-            RULE &xstr    = design("xstr") << str << optional(carret);
+            RULE &op      = design("op") << str << optional(carret);
 
             ALT &itm      = alternate("itm");
 
@@ -40,7 +40,7 @@ namespace upsylon
             //------------------------------------------------------------------
             // Declare the Alias
             //------------------------------------------------------------------
-            itm << ( aggregate("aka") << rid << optional( term('$') ) << sep << xstr << stop);
+            itm << ( aggregate("aka") << rid << sep << op << stop);
 
             //------------------------------------------------------------------
             // Declare the Rule Interface
@@ -56,7 +56,7 @@ namespace upsylon
                     RULE   &rAgg  = oneOrMore(rAlt);
                     RULE   &rGrp  = design("grp")    << mark('(') << rAgg <<  mark(')');
                     //rAtm <<  rid << rx << rs << rGrp;
-                    rAtm <<  rid << xstr << rGrp;
+                    rAtm <<  rid << op << rGrp;
                     rule << rAgg;
                 }
                 rule << stop;

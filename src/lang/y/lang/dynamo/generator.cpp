@@ -51,6 +51,14 @@ namespace upsylon
             "rule"
         };
 
+        static const char *operKW[] =
+        {
+            "op",
+            "rx",
+            "rs"
+        };
+
+
         static const char *implKW[] =
         {
             "dynamo",
@@ -62,10 +70,13 @@ namespace upsylon
             "rid"
         };
 
+
+
         DynamoGenerator:: DynamoGenerator() :
         parser(0),
         declH( Y_MPERF_FOR(declKW) ),
         implH( Y_MPERF_FOR(implKW) ),
+        operH( Y_MPERF_FOR(operKW) ),
         fillH( Y_MPERF_FOR(fillKW) ),
         modules(),
         symbols(),

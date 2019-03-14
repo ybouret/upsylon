@@ -24,19 +24,39 @@ namespace upsylon
             //
             // get name
             //__________________________________________________________________
-            const DynamoList &self     = rule.children();
-            const DynamoNode *node     = self.head;
-            const string      ruleName = getRID(node,"rule name");
+            DynamoList  &self     = rule.children();
+            const string ruleName = getRID(self.head,"rule name");
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_name='" << ruleName << "'" << std::endl );
 
+            //__________________________________________________________________
+            //
+            // check second node
+            //__________________________________________________________________
+            bool isDesignNode=false;
+            if(self.size>1)
+            {
+                DynamoNode *second = self.head->next;
+                if(second->name == "!")
+                {
+                    isDesignNode = true;
+                    delete self.unlink(second);
+                }
+            }
 
-            if(self.size==2&&node->next->name=="alt")
+            if(self.size==2&&self.head->next->name=="alt")
             {
                 storeDecl( parser->alternate(ruleName) );
             }
             else
             {
-                storeDecl( parser->aggregate(ruleName) );
+                if(isDesignNode)
+                {
+                    storeDecl( parser->design(ruleName) );
+                }
+                else
+                {
+                    storeDecl( parser->aggregate(ruleName) );
+                }
             }
         }
 
