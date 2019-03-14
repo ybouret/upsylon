@@ -16,10 +16,10 @@ namespace upsylon
         //______________________________________________________________________
         typedef memory::pooled                  DynamoMemory; //!< internal memory type
         typedef key_hasher<string,hashing::fnv> DynamoHasher; //!< string hasher
-        template <typename T>
-        struct DynamoSetOf
+        //! predefined set
+        template <typename T> struct DynamoSetOf
         {
-            typedef set<string,T,DynamoHasher,DynamoMemory> Type;
+            typedef set<string,T,DynamoHasher,DynamoMemory> Type; //!< alias
         };
         //______________________________________________________________________
         //
@@ -135,6 +135,7 @@ namespace upsylon
             //! find a registered plugin
             DynamoPlugin &findPlugin( const string &id );
 
+            //! register a lexical management function
             void registerLexical( const string &id, const DynamoLexical &dl );
 
             //! wrapper to register a host+method lexical
@@ -159,6 +160,7 @@ namespace upsylon
                 return registerLexical(_,host,meth);
             }
 
+            //! find a registered lexical management function
             DynamoLexical & findLexical( const string &id );
 
         private:
@@ -182,10 +184,12 @@ namespace upsylon
             void declPlugin(  const DynamoNode &plg    );
             void declLexical( const DynamoNode &lxr    );
             void declEOL(     const DynamoNode &eol    );
+            void declCommand( const DynamoNode &cmd    );
 
             string getContent( const DynamoNode *node, const char *id, const char *context) const;
             string getRID( const DynamoNode *node, const char *context ) const;
             string getEID( const DynamoNode *node, const char *context ) const;
+            string getCID( const DynamoNode *node, const char *context ) const;
             string getLID( const DynamoNode *node, const char *context ) const;
             string getSTR( const DynamoNode *node, const char *context ) const;
 

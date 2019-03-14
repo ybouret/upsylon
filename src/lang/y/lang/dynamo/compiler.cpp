@@ -1,6 +1,7 @@
 #include "y/lang/dynamo/compiler.hpp"
 #include "y/exception.hpp"
 #include "y/string/convert.hpp"
+#include "y/ios/graphviz.hpp"
 
 namespace upsylon
 {
@@ -102,6 +103,57 @@ namespace upsylon
             }
             return os;
         }
+
+        void DynamoNode:: viz( ios::ostream &fp ) const
+        {
+            fp.viz(this);
+            const string l = string_convert::to_visible(name);
+            switch (type) {
+                case DynamoTerminal: {
+                    string s = content();
+                    s = string_convert::to_visible(s);
+                    if(s.size()>0)
+                    {
+                        fp("[label=\"%s='%s'\"];\n",*l,*s);
+                    }
+                    else
+                    {
+                        fp("[label=\"%s\"];\n",*l);
+                    }
+
+                } break;
+
+                case DynamoInternal:{
+                    fp("[label=\"%s\"];\n",*l);
+                    const bool multiple = children().size>0;
+                    unsigned   idx      = 1;
+                    for( const DynamoNode *node=children().head;node;node=node->next,++idx)
+                    {
+                        node->viz(fp);
+                        fp.viz(this); fp << "->"; fp.viz(node);
+                        if(multiple)
+                        {
+                            fp("[label=\"%u\"]",idx);
+                        }
+                        fp << ';' << '\n';
+                    }
+                } break;
+            }
+        }
+
+        void DynamoNode:: graphViz(const string &filename) const
+        {
+            {
+                ios::ocstream fp(filename);
+                fp << "digraph G {\n";
+                viz(fp);
+                fp << "}\n";
+            }
+            (void)ios::GraphViz::Render(filename);
+
+        }
+
+
     }
 }
 

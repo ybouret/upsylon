@@ -46,7 +46,8 @@ namespace upsylon
             "aka",
             "plg",
             "lxr",
-            "eol"
+            "eol",
+            "cmd"
         };
 
         DynamoGenerator:: DynamoGenerator() :
@@ -126,6 +127,11 @@ namespace upsylon
         string DynamoGenerator:: getEID( const DynamoNode *node, const char *context ) const
         {
             return getContent(node, "eid", context);
+        }
+
+        string DynamoGenerator:: getCID( const DynamoNode *node, const char *context ) const
+        {
+            return getContent(node, "cid", context);
         }
 
         string DynamoGenerator:: getLID( const DynamoNode *node, const char *context ) const

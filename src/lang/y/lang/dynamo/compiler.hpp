@@ -55,7 +55,13 @@ namespace upsylon
             {
                 return node.display(os,0);
             }
-            
+
+            //! write this node as GraphViz code
+            void viz( ios::ostream &fp ) const;
+
+            //! create a directed graph and try to render
+            void graphViz( const string &filename ) const;
+
         private:
             void            *impl;
             Y_DISABLE_COPY_AND_ASSIGN(DynamoNode);
@@ -78,7 +84,7 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoCompiler);
             DynamoList           items; //!< stack
-            const hashing::mperf lxh;   //!< "module", "cid", "lid", "rs", "rx"
+            const hashing::mperf lxh;   //!< "module", "cid", "lid", "rs", "rx", "eid"
 
             //! called when a terminal is met
             virtual void onTerminal( const string &id, const Lexeme &lx );

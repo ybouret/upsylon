@@ -42,7 +42,9 @@ Y_UTEST(dyn)
         std::cerr << "IntermediateLang=" << std::endl;
         std::cerr << il;
 
+        il->graphViz("il0.dot");
         dynGen.build( *il );
+        il->graphViz("il1.dot");
 
 
         if(false)
