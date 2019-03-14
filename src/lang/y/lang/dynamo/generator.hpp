@@ -195,6 +195,7 @@ namespace upsylon
             string getSTR( const DynamoNode *node, const char *context ) const;
 
             void storeDecl( Syntax::Terminal &t );
+            void storeDecl( Syntax::Compound &c );
 
             Syntax::Terminal & _jstring( const string &id, Syntax::Parser &p );
             Syntax::Terminal & _rstring( const string &id, Syntax::Parser &p );

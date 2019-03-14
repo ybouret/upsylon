@@ -20,6 +20,18 @@ namespace upsylon
             }
         }
 
+        void DynamoGenerator:: storeDecl( Syntax::Compound &c )
+        {
+            assert( parser.is_valid() );
+            assert( modules.size()>0);
+
+            const DynamoRule symb(modules.back(),c);
+            if( !symbols.insert(symb) || !internals.insert(symb))
+            {
+                throw exception("{%s} multiple rule <%s>",**(parser->name), *(c.name));
+            }
+        }
+
         
         void DynamoGenerator:: declModule(DynamoNode &dynamo)
         {

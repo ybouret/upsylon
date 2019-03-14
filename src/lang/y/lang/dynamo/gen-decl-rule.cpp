@@ -28,7 +28,7 @@ namespace upsylon
             const string      ruleName = getRID(node,"rule name");
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_name='" << ruleName << "'" << std::endl );
 
-
+            storeDecl( parser->aggregate(ruleName) );
         }
 
     }
