@@ -24,11 +24,20 @@ namespace upsylon
             //
             // get name
             //__________________________________________________________________
-            const DynamoNode *node     = rule.children().head;
+            const DynamoList &self     = rule.children();
+            const DynamoNode *node     = self.head;
             const string      ruleName = getRID(node,"rule name");
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_name='" << ruleName << "'" << std::endl );
 
-            storeDecl( parser->aggregate(ruleName) );
+
+            if(self.size==2&&node->next->name=="alt")
+            {
+                storeDecl( parser->alternate(ruleName) );
+            }
+            else
+            {
+                storeDecl( parser->aggregate(ruleName) );
+            }
         }
 
     }
