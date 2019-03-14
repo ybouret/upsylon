@@ -115,6 +115,18 @@ namespace upsylon
             const string aliasName = getRID(node,"alias name");
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_name='" << aliasName << "'" << std::endl );
 
+#if 0
+            bool isEOL = false;
+            node=node->next;
+            if(!node) throw exception("{%s} unexpected unfinished alias", **(parser->name));
+            if( node->name == '$' )
+            {
+                isEOL = true;
+                Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_EndOfLine" << std::endl);
+                node  = node->next;
+            }
+#endif
+
             //__________________________________________________________________
             //
             // get string
@@ -128,7 +140,7 @@ namespace upsylon
                 Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_operator" << std::endl);
                 const string aliasMod = getContent(node, "^", "alias modifier");
                 if(aliasMod.size()>0)       throw exception("{%s} unexpected alias '%s' modifier content='%s'", **(parser->name), *aliasName, *aliasMod);
-                if(NULL!=(node=node->next)) throw exception("{%s} unexpected extraneous child for alias '%s'",  **(parser->name), *aliasName);
+                if(NULL!=(node->next)) throw exception("{%s} unexpected extraneous child for alias '%s'",  **(parser->name), *aliasName);
             }
             else
             {
@@ -140,9 +152,12 @@ namespace upsylon
             //
             // declare it
             //__________________________________________________________________
+
             Syntax::Terminal &t = parser->term(aliasName,aliasExpr);
             if(node) t.op();
             storeDecl(t);
+
+            
 
         }
 

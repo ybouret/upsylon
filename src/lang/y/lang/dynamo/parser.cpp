@@ -28,7 +28,9 @@ namespace upsylon
             RULE &zom_str = zeroOrMore(str);
             RULE &rid     = term("rid","{ID}");
             RULE &carret  = term('^');
-            RULE &ops_str = join(str,optional(carret));
+            //RULE &eol     = term('_');
+            //RULE &role    = alternate("role") << carret << eol;
+            RULE &xstr    = bundle("xstr") << str << optional(carret);
 
             ALT &itm      = alternate("itm");
 
@@ -40,7 +42,7 @@ namespace upsylon
             //------------------------------------------------------------------
             // Declare the Alias
             //------------------------------------------------------------------
-            itm << ( aggregate("aka") << rid << sep << ops_str << stop);
+            itm << ( aggregate("aka") << rid << optional( term('$') ) << sep << xstr << stop);
 
             //------------------------------------------------------------------
             // Declare the Rule Interface
@@ -77,6 +79,14 @@ namespace upsylon
             {
                 RULE &cid = term("cid","%{ID}");
                 itm << (aggregate("cmd") << cid << zeroOrMore(rs) << stop);
+            }
+
+            //------------------------------------------------------------------
+            // Declare the New Line Rules
+            //------------------------------------------------------------------
+            {
+                RULE &eid = term("eid","${ID}");
+                itm << (aggregate("eol") << eid << sep << str << stop);
             }
             
             //------------------------------------------------------------------

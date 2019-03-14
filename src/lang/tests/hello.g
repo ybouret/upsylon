@@ -17,7 +17,7 @@ r11 : r1 ( r3 | r3 );
 // Alias
 PLUS : '+'^;
 ADDOP : "[-+]"^;
-
+$NL   : "[:endl:]";
 
 @string : jstring;
 

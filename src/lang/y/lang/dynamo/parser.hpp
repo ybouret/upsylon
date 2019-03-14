@@ -23,6 +23,7 @@ namespace upsylon
          - lxr    : lid ':' (rs|rs)* ';' ;
          - cid    : "%{ID}";
          - cmd    : cid ':' rs* ';' ;
+         - endl   : "${ID}" ':' (rs|rx);
          */
         class DynamoParser : public Syntax::Parser
         {

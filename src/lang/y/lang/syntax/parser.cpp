@@ -47,14 +47,11 @@ namespace upsylon
         namespace Syntax
         {
 
-            Terminal & Parser:: term(const string &id, const string &rx )
+            Terminal & Parser:: linkTo( const string &id )
             {
-                // emit lexer rule
-                (**this).emit(id,rx);
-
                 // link to a terminal
                 Terminal &t = terminal(id);
-                Y_LANG_SYNTAX_VERBOSE( std::cerr << "   \\_Compiling \"" << rx << "\"" << std::endl);
+                Y_LANG_SYNTAX_VERBOSE( std::cerr << "   \\_Linking To <" << id << ">" << std::endl);
 
                 // finalize by setting univocal
                 const Lexical::Rule &r = (**this).last();
@@ -76,6 +73,19 @@ namespace upsylon
 
                 return t;
             }
+
+
+            Terminal & Parser:: term(const string &id, const string &rx )
+            {
+                Y_LANG_SYNTAX_VERBOSE( std::cerr << "   \\_Compiling \"" << rx << "\"" << std::endl);
+
+                // emit lexer rule
+                (**this).emit(id,rx);
+
+                // link to a terminal
+                return linkTo(id);
+            }
+
 
             Terminal & Parser:: term( const char   *id, const char   *rx)
             {
@@ -109,8 +119,23 @@ namespace upsylon
                 return term(_,_);
             }
 
+            Terminal & Parser:: endl(const string &id, const string &rx )
+            {
+                Y_LANG_SYNTAX_VERBOSE( std::cerr << "   \\_Compiling \"" << rx << "\" (ENDL)" << std::endl);
+
+                // emit lexer rule
+                (**this).endl(id,rx);
+
+                // link to a terminal
+                return linkTo(id);
+            }
 
 
+            Terminal & Parser:: endl( const char   *id, const char   *rx)
+            {
+                const string _(id), __(rx); return endl(_,__);
+            }
+            
         }
     }
 }

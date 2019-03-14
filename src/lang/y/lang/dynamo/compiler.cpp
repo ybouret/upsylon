@@ -118,7 +118,8 @@ namespace upsylon
             "lid",    //1
             "cid",    //2
             "rx",     //3
-            "rs"      //4
+            "rs",     //4
+            "eid"     //5
         };
         
         DynamoCompiler:: DynamoCompiler() :
@@ -170,6 +171,7 @@ namespace upsylon
                 case 2: assert("cid"==id);    nskip=1; break;
                 case 3: assert("rx"==id);     nskip=1; ntrim=1; break;
                 case 4: assert("rs"==id);     nskip=1; ntrim=1; break;
+                case 5: assert("eid"==id);    nskip=1; break;
 
                 default: break; // take the full lexeme
             }

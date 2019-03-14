@@ -52,6 +52,9 @@ namespace upsylon
                 TERM & term( const string &rx );                   //!< create a terminal rx matching rx
                 TERM & term( const char   *rx );                   //!< create a terminal rx matching rx, wrapper
 
+                TERM & endl( const string &id, const string &rx);  //!< create a terminal with endl trigger
+                TERM & endl( const char   *id, const char   *rx);  //!< create a terminal with endl trigger
+
                 //! build a terminal with one argument and make it semantic
                 template <typename T>
                 inline TERM & mark( const T &arg ) { return term(arg).sm(); }
@@ -67,6 +70,8 @@ namespace upsylon
                 //! build a terminal with two arguments and make it an operator
                 template <typename T, typename U>
                 inline TERM & op( const T &id, const U &arg ) { return term(id,arg).op(); }
+
+
 
                 //! zero arguments plugin
                 template <typename PLUGIN> inline TERM & plug( const string &id )
@@ -91,6 +96,7 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);
+                TERM & linkTo( const string &id );
             };
 
         }
