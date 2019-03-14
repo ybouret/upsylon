@@ -74,10 +74,11 @@ namespace upsylon
                 bool                 keep = true;
                 switch( declH(id) )
                 {
-                    case 0: assert("dynamo"==id); declModule(*sub); break;
-                    case 1: assert("aka"==id);    declAlias(*sub);  keep=false; break;
-                    case 2: assert("plg"==id);    declPlugin(*sub); keep=false; break;
+                    case 0: assert("dynamo"==id); declModule(*sub);              break;
+                    case 1: assert("aka"==id);    declAlias(*sub);   keep=false; break;
+                    case 2: assert("plg"==id);    declPlugin(*sub);  keep=false; break;
                     case 3: assert("lxr"==id);    declLexical(*sub); keep=false; break;
+                    case 4: assert("eol"==id);    declEOL(*sub);     keep=false; break;
 
                     default:
                         break;
@@ -115,17 +116,6 @@ namespace upsylon
             const string aliasName = getRID(node,"alias name");
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_name='" << aliasName << "'" << std::endl );
 
-#if 0
-            bool isEOL = false;
-            node=node->next;
-            if(!node) throw exception("{%s} unexpected unfinished alias", **(parser->name));
-            if( node->name == '$' )
-            {
-                isEOL = true;
-                Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_EndOfLine" << std::endl);
-                node  = node->next;
-            }
-#endif
 
             //__________________________________________________________________
             //
@@ -251,6 +241,37 @@ namespace upsylon
 
         }
 
+
+        void DynamoGenerator:: declEOL(const DynamoNode &eol)
+        {
+            //__________________________________________________________________
+            //
+            // sanity check
+            //__________________________________________________________________
+            assert( "eol" == eol.name );
+            assert( parser.is_valid()   );
+
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[EOL]" << std::endl);
+            if( eol.type != DynamoInternal ) throw exception("{%s} unexpected terminal EOL", **(parser->name));
+
+            //__________________________________________________________________
+            //
+            // get name
+            //__________________________________________________________________
+            const DynamoNode *node    = eol.children().head;
+            const string      eolName = getEID(node,"EOL name");
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_name='" << eolName << "'" << std::endl );
+
+
+            //__________________________________________________________________
+            //
+            // get string
+            //__________________________________________________________________
+            const string eolExpr = getSTR(node=node->next,"EOL string");
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_expr='" << eolExpr << "'" << std::endl );
+
+            storeDecl(parser->endl(eolName,eolExpr));
+        }
 
 
     }

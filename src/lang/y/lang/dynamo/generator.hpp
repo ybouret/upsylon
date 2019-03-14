@@ -153,9 +153,11 @@ namespace upsylon
             void declAlias(   const DynamoNode &alias  );
             void declPlugin(  const DynamoNode &plg    );
             void declLexical( const DynamoNode &lxr    );
+            void declEOL(     const DynamoNode &eol    );
 
             string getContent( const DynamoNode *node, const char *id, const char *context) const;
             string getRID( const DynamoNode *node, const char *context ) const;
+            string getEID( const DynamoNode *node, const char *context ) const;
             string getLID( const DynamoNode *node, const char *context ) const;
             string getSTR( const DynamoNode *node, const char *context ) const;
 
