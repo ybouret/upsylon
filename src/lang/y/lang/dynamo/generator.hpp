@@ -168,7 +168,8 @@ namespace upsylon
 
 
             auto_ptr<Syntax::Parser> parser;    //!< currently built parser
-            const hashing::mperf     declH;     //!< "dynamo",...
+            const hashing::mperf     declH;     //!< "dynamo","aka","plg","lxr","eol","cmd","rule"
+            const hashing::mperf     implH;     //!< "dynamo","rule"
             Modules                  modules;   //!< stack of modules
             DynamoInfo::Set          symbols;   //!< all the symbols
             DynamoTerm::Set          terminals; //!< all the terminals
@@ -204,8 +205,8 @@ namespace upsylon
             void lexicalEndl( Lexer &, const DynamoArgs & );
             void lexicalComm( Lexer &, const DynamoArgs & );
 
-            void implRule( const DynamoNode &dynamo ); //!< top level call to implement declared rules
-
+            void implModule( DynamoNode &dynamo ); //!< top level call to implement declared rules
+            void implRule(   DynamoNode &r      ); //!< top level rule
 
         public:
             bool verbose; //!< verbosity flag

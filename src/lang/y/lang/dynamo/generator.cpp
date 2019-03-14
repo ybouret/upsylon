@@ -51,9 +51,18 @@ namespace upsylon
             "rule"
         };
 
+        static const char *implKW[] =
+        {
+            "dynamo",
+            "rule"
+        };
+
+
+
         DynamoGenerator:: DynamoGenerator() :
         parser(0),
         declH( Y_MPERF_FOR(declKW) ),
+        implH( Y_MPERF_FOR(implKW) ),
         modules(),
         symbols(),
         terminals(),
@@ -99,7 +108,14 @@ namespace upsylon
             parser = 0;
             level  = 0;
 
+            // first pass
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<First  Pass: DECL>" << std::endl);
             declModule(top);
+
+            /// second pass
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<Second Pass: IMPL>" << std::endl);
+            implModule(top);
+
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<Building Parser/>" << std::endl);
 
             parser->graphViz( *(parser->name) + ".dot" );
