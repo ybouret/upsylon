@@ -79,7 +79,8 @@ namespace upsylon
                     case 3: assert("lxr"==id);    declLexical(*sub); keep=false; break;
                     case 4: assert("eol"==id);    declEOL(*sub);     keep=false; break;
                     case 5: assert("cmd"==id);    declCommand(*sub); keep=false; break;
-                        
+                    case 6: assert("rule"==id);   declRule(*sub);                break;
+
                     default:
                         Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[unprocessed '" << id << "']" << std::endl);
                         break;

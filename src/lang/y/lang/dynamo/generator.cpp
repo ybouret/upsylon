@@ -47,7 +47,8 @@ namespace upsylon
             "plg",
             "lxr",
             "eol",
-            "cmd"
+            "cmd",
+            "rule"
         };
 
         DynamoGenerator:: DynamoGenerator() :
@@ -57,9 +58,11 @@ namespace upsylon
         level(0),
         verbose(true)
         {
+            // known plugins
             registerPlugin("jstring",  this, & DynamoGenerator::_jstring );
             registerPlugin("rstring",  this, & DynamoGenerator::_rstring );
 
+            // know lexical modifiers
             registerLexical("drop",    this, & DynamoGenerator::lexicalDrop);
             registerLexical("endl",    this, & DynamoGenerator::lexicalEndl);
             registerLexical("comment", this, & DynamoGenerator::lexicalComm);

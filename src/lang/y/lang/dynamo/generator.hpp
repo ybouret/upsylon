@@ -179,12 +179,13 @@ namespace upsylon
 
 
 
-            void declModule(  DynamoNode       &dynamo );
+            void declModule(        DynamoNode &dynamo );
             void declAlias(   const DynamoNode &alias  );
             void declPlugin(  const DynamoNode &plg    );
             void declLexical( const DynamoNode &lxr    );
             void declEOL(     const DynamoNode &eol    );
             void declCommand( const DynamoNode &cmd    );
+            void declRule(          DynamoNode &cmd    );
 
             string getContent( const DynamoNode *node, const char *id, const char *context) const;
             string getRID( const DynamoNode *node, const char *context ) const;
