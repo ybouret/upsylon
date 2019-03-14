@@ -81,6 +81,7 @@ namespace upsylon
                     case 4: assert("eol"==id);    declEOL(*sub);     keep=false; break;
 
                     default:
+                        Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[unprocessed '" << id << "']" << std::endl);
                         break;
                 }
 
