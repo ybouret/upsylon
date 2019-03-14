@@ -28,9 +28,7 @@ namespace upsylon
             RULE &zom_str = zeroOrMore(str);
             RULE &rid     = term("rid","{ID}");
             RULE &carret  = term('^');
-            //RULE &eol     = term('_');
-            //RULE &role    = alternate("role") << carret << eol;
-            RULE &xstr    = bundle("xstr") << str << optional(carret);
+            RULE &xstr    = design("xstr") << str << optional(carret);
 
             ALT &itm      = alternate("itm");
 
@@ -57,7 +55,8 @@ namespace upsylon
                     RULE   &rAlt  = design("alt")    << rJk << zeroOrMore(rxJk);
                     RULE   &rAgg  = oneOrMore(rAlt);
                     RULE   &rGrp  = design("grp")    << mark('(') << rAgg <<  mark(')');
-                    rAtm <<  rid << rx << rs << rGrp;
+                    //rAtm <<  rid << rx << rs << rGrp;
+                    rAtm <<  rid << xstr << rGrp;
                     rule << rAgg;
                 }
                 rule << stop;

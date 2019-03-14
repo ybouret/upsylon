@@ -32,17 +32,20 @@ namespace upsylon
 
             void Compound:: append( const Rule &r )
             {
-                switch(hollowPolicy)
+                if(false)
                 {
-                    case AcceptHollowOperand:
-                        break;
+                    switch(hollowPolicy)
+                    {
+                        case AcceptHollowOperand:
+                            break;
 
-                    case RejectHollowOperand:
-                        if(r.isHollow())
-                        {
-                            throw exception("'%s' does not accept hollow operand '%s'", *name, *(r.name));
-                        }
-                        break;
+                        case RejectHollowOperand:
+                            if(r.isHollow())
+                            {
+                                throw exception("'%s' does not accept hollow operand '%s'", *name, *(r.name));
+                            }
+                            break;
+                    }
                 }
                 push_back( new Operand(r) );
             }
@@ -119,9 +122,7 @@ namespace upsylon
                         // rejected=>restore
                         Y_LANG_SYNTAX_VERBOSE(std::cerr << "|_rejected " << typeName() << " '" << name << "'" << std::endl);
                         guard.dismiss();
-                        //std::cerr << "*** Unget..." << std::endl;
                         Node::Unget(subTree,lexer);
-                        //std::cerr << "*** done" << std::endl;
                         return false;
                     }
                 }
@@ -223,44 +224,3 @@ namespace upsylon
     }
 
 }
-
-#if 0
-#include "y/lang/syntax/terminal.hpp"
-
-namespace upsylon
-{
-
-    namespace Lang
-    {
-
-        namespace Syntax
-        {
-
-            void Aggregate:: autoUpgrade() throw()
-            {
-                // std::cerr << "*** upgrading <" << name << ">" << std::endl;
-                if(SubGroup==behavior)
-                {
-                    size_t count = 0;
-                    for(const Operand *op=head;op;op=op->next)
-                    {
-                        if(op->rule.uuid == Terminal::UUID)
-                        {
-                            assert(op->rule.derived);
-                            const Terminal &t = *static_cast<const Terminal *>(op->rule.derived);
-                            if(Semantic==t.attr) continue;
-                        }
-                        ++count;
-                    }
-                    //std::cerr << "*** count=" << count << std::endl;
-                    if(1==count)
-                    {
-                        (void) design();
-                    }
-                }
-            }
-
-        }
-    }
-}
-#endif

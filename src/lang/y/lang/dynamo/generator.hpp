@@ -174,9 +174,10 @@ namespace upsylon
             const hashing::mperf     implH;     //!< "dynamo","rule"
             const hashing::mperf     fillH;     //!< "rid",...
             Modules                  modules;   //!< stack of modules
-            DynamoInfo::Set          symbols;   //!< all the symbols
-            DynamoTerm::Set          terminals; //!< all the terminals
-            DynamoRule::Set          internals; //!< all the internals
+            DynamoInfo::Set          symbols;   //!< all the reachable symbols
+            DynamoTerm::Set          terminals; //!< all the reachable terminals
+            DynamoRule::Set          internals; //!< all the reachable internals
+            DynamoTerm::Set          literals;  //!< all the literals 
             DynamoPluginFactory      plugins;   //!< declared plugins
             DynamoLexicalFactory     lexicals;  //!< declared lexical
             int                      level;     //!< depth

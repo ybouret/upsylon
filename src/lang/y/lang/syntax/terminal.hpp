@@ -41,7 +41,7 @@ namespace upsylon
 
                 Terminal & op(); //!< set operator attribute
                 Terminal & sm(); //!< set semantic attribute
-
+                
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);
