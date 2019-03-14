@@ -57,12 +57,16 @@ namespace upsylon
             "rule"
         };
 
-
+        static const char *fillKW[] =
+        {
+            "rid"
+        };
 
         DynamoGenerator:: DynamoGenerator() :
         parser(0),
         declH( Y_MPERF_FOR(declKW) ),
         implH( Y_MPERF_FOR(implKW) ),
+        fillH( Y_MPERF_FOR(fillKW) ),
         modules(),
         symbols(),
         terminals(),

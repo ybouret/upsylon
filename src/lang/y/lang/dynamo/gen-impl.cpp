@@ -6,6 +6,19 @@ namespace upsylon
 
     namespace Lang
     {
+
+        const Syntax::Rule  & DynamoGenerator:: findSymbol( const string &id )
+        {
+            assert(parser.is_valid());
+            DynamoInfo *pInf = symbols.search(id);
+            if(!pInf)
+            {
+                throw exception("{%s} unregistered symbol '%s'", **(parser->name), *id);
+            }
+            return pInf->rule;
+        }
+
+
         void DynamoGenerator:: implModule(  DynamoNode &dynamo )
         {
             static const char fn[] = "DynamoGenerator.implModule";
@@ -40,6 +53,7 @@ namespace upsylon
 
                 }
 
+
             }
 
         }
@@ -66,22 +80,57 @@ namespace upsylon
             //
             // get the parent rule
             //__________________________________________________________________
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << " implement [" << ruleName << "]" << std::endl);
             Syntax::Rule     &rule     = parser->getRuleByName(ruleName);    assert(rule.derived);
             Syntax::Compound &cmp      = *(Syntax::Compound*)(rule.derived); assert(rule.uuid==cmp.uuid);
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << ".....found '" << cmp.name << "'" << std::endl);
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << ruleName << "]/" << rule.typeName() << std::endl);
+
+            //__________________________________________________________________
+            //
+            // start recursion depending on parent UUID
+            //__________________________________________________________________
             switch(cmp.uuid)
             {
                 case Syntax::Aggregate::UUID:
+                    fill(cmp,node->next);
                     break;
 
                 case Syntax::Alternate::UUID:
+                    node=node->next;
+                    if(self.size!=2||node->name!="alt") throw exception("{%s} unexpected top level alternate <%s>",**(parser->name),*ruleName);
+                    if(node->type!=DynamoInternal)      throw exception("{%s} unexpected terminal 'alt' for  <%s>",**(parser->name),*ruleName);
+                    fill(cmp,node->children().head);
                     break;
 
                 default:
-                    throw exception("{%s} unexpected UUID at top level, corrupted code", **(parser->name));
+                    throw exception("{%s} unexpected UUID for <%s> at top level, corrupted code", **(parser->name),*ruleName);
             }
         }
+
+        void DynamoGenerator:: fill( Syntax::Compound &parent, DynamoNode *node )
+        {
+            ++level;
+            assert(node);
+            const string &name = parent.name;
+            for(;node;node=node->next)
+            {
+                const string &id = node->name;
+                switch( fillH(id) )
+                {
+                    case 0: assert("rid"==id); {
+                        const string symbolName = getRID(node,"symbol name");
+                        Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << name << "]<-" << id << "=[" << symbolName << "]" << std::endl);
+                        parent << findSymbol(symbolName);
+                    } break;
+
+                    default:
+                        Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << name << "]<-" << id << std::endl);
+
+                }
+
+            }
+            --level;
+        }
+
 
 
     }

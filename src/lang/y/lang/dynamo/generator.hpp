@@ -163,6 +163,8 @@ namespace upsylon
             //! find a registered lexical management function
             DynamoLexical & findLexical( const string &id );
 
+            const Syntax::Rule  & findSymbol( const string &id );
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoGenerator);
 
@@ -170,6 +172,7 @@ namespace upsylon
             auto_ptr<Syntax::Parser> parser;    //!< currently built parser
             const hashing::mperf     declH;     //!< "dynamo","aka","plg","lxr","eol","cmd","rule"
             const hashing::mperf     implH;     //!< "dynamo","rule"
+            const hashing::mperf     fillH;     //!< "rid",...
             Modules                  modules;   //!< stack of modules
             DynamoInfo::Set          symbols;   //!< all the symbols
             DynamoTerm::Set          terminals; //!< all the terminals
@@ -207,6 +210,7 @@ namespace upsylon
 
             void implModule( DynamoNode &dynamo ); //!< top level call to implement declared rules
             void implRule(   DynamoNode &r      ); //!< top level rule
+            void fill( Syntax::Compound &parent, DynamoNode *node );
 
         public:
             bool verbose; //!< verbosity flag
