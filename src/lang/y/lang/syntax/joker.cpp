@@ -13,10 +13,12 @@ namespace upsylon
             Internal(i,n,typeid(Joker)),
             jk(r)
             {
+                /*
                 if(jk.isHollow())
                 {
-                    throw exception("Lang.Syntax.Joker(hollow rule '%s')", *(r.name));
+                    //throw exception("Lang.Syntax.Joker(hollow rule '%s')", *(r.name));
                 }
+                 */
                 derived = (const Joker *)this;
             }
 
@@ -170,7 +172,7 @@ namespace upsylon
 
             bool OneOrMore:: isHollow() const throw()
             {
-                assert(! jk.isHollow() );
+                //assert(! jk.isHollow() );
                 return false;
             }
 

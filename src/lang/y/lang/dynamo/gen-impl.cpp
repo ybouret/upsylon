@@ -111,15 +111,39 @@ namespace upsylon
             ++level;
             assert(node);
             const string &name = parent.name;
-            for(;node;node=node->next)
+            unsigned      indx = 1;
+            for(;node;node=node->next,++indx)
             {
                 const string &id = node->name;
                 switch( fillH(id) )
                 {
+                        //------------------------------------------------------
+
                     case 0: assert("rid"==id); {
                         const string symbolName = getRID(node,"symbol name");
                         Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << name << "]<-" << id << "=[" << symbolName << "]" << std::endl);
                         parent << findSymbol(symbolName);
+                    } break;
+
+
+                    case 1: assert("jk"==id); {
+                        const string      jokerName = name + vformat("#jk@%u",indx);
+                        if(node->type!=DynamoInternal) throw exception("{%s} unexpected terminal joker in <%s>", **(parser->name),*name);
+                        const DynamoList &ch = node->children();
+                        if(ch.size!=2)                    throw exception("{%s} mismatching joker size in <%s>", **(parser->name),*name);
+                        if(ch.tail->type!=DynamoTerminal) throw exception("{%s} mismatching joker type in <%s>", **(parser->name),*name);
+                        const string     &jokerType = ch.tail->name;
+                        std::cerr << "Joker Type=[" << jokerType << "]" << std::endl;
+                        Syntax::Compound &jokerRule = parser->bundle(jokerName);
+                        fill(jokerRule,ch.head);
+                        switch( jokerType[0] )
+                        {
+                            case '*': parent << parser->zeroOrMore(jokerRule); break;
+                            case '+': parent << parser->oneOrMore(jokerRule);  break;
+                            case '?': parent << parser->optional(jokerRule);   break;
+                            default: throw exception("{%s} unknown joker type in <%s>",**(parser->name),*name);
+                        }
+
                     } break;
 
                     default:
