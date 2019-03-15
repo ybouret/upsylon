@@ -38,6 +38,7 @@ namespace upsylon
                 DynamoNode *second = self.head->next;
                 if(second->name == "!")
                 {
+                    if(second->type!=DynamoTerminal) throw exception("{%s} corrupted terminal '!'", **(parser->name));
                     isDesignNode = true;
                     delete self.unlink(second);
                 }
