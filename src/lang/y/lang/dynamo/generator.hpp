@@ -212,7 +212,12 @@ namespace upsylon
 
             void implModule( DynamoNode &dynamo ); //!< top level call to implement declared rules
             void implRule(   DynamoNode &r      ); //!< top level rule
-            void fill( Syntax::Compound &parent, DynamoNode *node );
+
+            void fill(    Syntax::Compound &parent, DynamoNode *node );
+            void fillRID( Syntax::Compound &parent, DynamoNode *node );
+            void fillJK(  Syntax::Compound &parent, DynamoNode *node, const unsigned indx );
+            void fillALT( Syntax::Compound &parent, DynamoNode *node, const unsigned indx );
+            void fillGRP( Syntax::Compound &parent, DynamoNode *node, const unsigned indx );
 
         public:
             bool verbose; //!< verbosity flag

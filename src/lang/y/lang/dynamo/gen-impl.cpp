@@ -117,43 +117,84 @@ namespace upsylon
                 const string &id = node->name;
                 switch( fillH(id) )
                 {
-                        //------------------------------------------------------
-
-                    case 0: assert("rid"==id); {
-                        const string symbolName = getRID(node,"symbol name");
-                        Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << name << "]<-" << id << "=[" << symbolName << "]" << std::endl);
-                        parent << findSymbol(symbolName);
-                    } break;
-
-
-                    case 1: assert("jk"==id); {
-                        const string      jokerName = name + vformat("#jk@%u",indx);
-                        if(node->type!=DynamoInternal) throw exception("{%s} unexpected terminal joker in <%s>", **(parser->name),*name);
-                        const DynamoList &ch = node->children();
-                        if(ch.size!=2)                    throw exception("{%s} mismatching joker size in <%s>", **(parser->name),*name);
-                        if(ch.tail->type!=DynamoTerminal) throw exception("{%s} mismatching joker type in <%s>", **(parser->name),*name);
-                        const string     &jokerType = ch.tail->name;
-                        std::cerr << "Joker Type=[" << jokerType << "]" << std::endl;
-                        Syntax::Compound &jokerRule = parser->bundle(jokerName);
-                        fill(jokerRule,ch.head);
-                        switch( jokerType[0] )
-                        {
-                            case '*': parent << parser->zeroOrMore(jokerRule); break;
-                            case '+': parent << parser->oneOrMore(jokerRule);  break;
-                            case '?': parent << parser->optional(jokerRule);   break;
-                            default: throw exception("{%s} unknown joker type in <%s>",**(parser->name),*name);
-                        }
-
-                    } break;
+                    case 0: assert("rid"==id); fillRID(parent,node);      break;
+                    case 1: assert("jk"==id);  fillJK(parent,node,indx);  break;
+                    case 2: assert("alt"==id); fillALT(parent,node,indx); break;
+                    case 3: assert("grp"==id); fillGRP(parent,node,indx); break;
 
                     default:
-                        Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << name << "]<-" << id << std::endl);
+                        Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << name << "]<-" << id << " TODO" << std::endl);
 
                 }
 
             }
             --level;
         }
+
+        void DynamoGenerator:: fillRID( Syntax::Compound &parent, DynamoNode *node )
+        {
+            assert(node);
+            const string symbolName = getRID(node,"symbol name");
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << parent.name << "]<-" << node->name << "=[" << symbolName << "]" << std::endl);
+            parent << findSymbol(symbolName);
+        }
+
+        void DynamoGenerator:: fillJK(  Syntax::Compound &parent, DynamoNode *node, const unsigned indx )
+        {
+            assert(node);
+            const string &name      = parent.name;
+            const string  jokerName = name + vformat("#%u",indx);
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << name << "]<-" << node->name << "=[" << jokerName << "]" << std::endl);
+
+            if(node->type!=DynamoInternal) throw exception("{%s} unexpected terminal joker in <%s>", **(parser->name),*name);
+            DynamoList &ch = node->children();
+            if(ch.size!=2)                    throw exception("{%s} mismatching joker size in <%s>", **(parser->name),*name);
+            if(ch.tail->type!=DynamoTerminal) throw exception("{%s} mismatching joker type in <%s>", **(parser->name),*name);
+            const string     &jokerType = ch.tail->name;
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_joker[" << jokerType << "]" << std::endl);
+
+            Syntax::Compound &jokerRule = parser->bundle(jokerName);
+            const char        jokerChar = jokerType[0];
+            delete ch.pop_back(); assert(ch.head);
+            fill(jokerRule,ch.head);
+            switch( jokerChar )
+            {
+                case '*': parent << parser->zeroOrMore(jokerRule); break;
+                case '+': parent << parser->oneOrMore(jokerRule);  break;
+                case '?': parent << parser->optional(jokerRule);   break;
+                default: throw exception("{%s} unknown joker type '%c' in <%s>",**(parser->name),jokerChar,*name);
+            }
+        }
+
+
+        void DynamoGenerator:: fillALT(  Syntax::Compound &parent, DynamoNode *node, const unsigned indx )
+        {
+            assert(node);
+            const string &name     = parent.name;
+            const string  altName  = name + vformat("#%u",indx);
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << name << "]<-" << node->name << "=[" << altName << "]" << std::endl);
+
+            if(node->type!=DynamoInternal) throw exception("{%s} unexpected terminal alternation in <%s>", **(parser->name),*name);
+
+            Syntax::Compound &altRule = parser->alternate(altName);
+            fill(altRule,node->children().head);
+            parent << altRule;
+
+        }
+
+        void DynamoGenerator::  fillGRP( Syntax::Compound &parent, DynamoNode *node, const unsigned indx )
+        {
+            const string &name     = parent.name;
+            const string  grpName  = name + vformat("#%u",indx);
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << name << "]<-" << node->name << "=[" << grpName << "]" << std::endl);
+
+            if(node->type!=DynamoInternal) throw exception("{%s} unexpected terminal alternation in <%s>", **(parser->name),*name);
+
+            Syntax::Compound &grpRule = parser->bundle(grpName);
+            fill(grpRule,node->children().head);
+            parent << grpRule;
+        }
+
 
 
 

@@ -67,8 +67,8 @@ namespace upsylon
 
         static const char *fillKW[] =
         {
-            "rid",
-            "jk"
+            //0     1     2      3
+            "rid", "jk", "alt", "grp"
         };
 
 
