@@ -46,11 +46,12 @@ namespace upsylon
                     isOperator=true;
                     if(node->type!=DynamoInternal) throw exception("{%s} alias '%s' is not internal",**(parser->name),*aliasName);
                     node=node->children().head;
+                    if(NULL!=(node->next)) throw exception("{%s} alias operator '%s' has extraneous data!",**(parser->name),*aliasName);
 
                     // checking structure
-                    if(!node->next)              throw exception("{%s} alias operator '%s' is missing specification!",**(parser->name),*aliasName);
-                    if(node->next->name != "^" ) throw exception("{%s} alias operator '%s' has invalid spec '%s'",**(parser->name),*aliasName,*(node->next->name));
-                    if(NULL!=(node->next->next)) throw exception("{%s} alias operator '%s' has extraneous data!",**(parser->name),*aliasName);
+                    //if(!node->next)              throw exception("{%s} alias operator '%s' is missing specification!",**(parser->name),*aliasName);
+                    //if(node->next->name != "^" ) throw exception("{%s} alias operator '%s' has invalid spec '%s'",**(parser->name),*aliasName,*(node->next->name));
+                    //if(NULL!=(node->next->next)) throw exception("{%s} alias operator '%s' has extraneous data!",**(parser->name),*aliasName);
                     break;
 
                 case 1: assert("rx"==aliasType);

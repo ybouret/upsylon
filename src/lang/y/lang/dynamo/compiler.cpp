@@ -278,7 +278,13 @@ namespace upsylon
             for(size_t i=sz;i>0;--i)
             {
                 self.push_front( items.pop_back() );
+                //std::cerr << "|_adding '" << self.tail->name << "'" << std::endl;
+                if( self.tail->name == '^' )
+                {
+                    delete self.pop_back();
+                }
             }
+
             items.push_back(node);
 
             ++(size_t&)created;
