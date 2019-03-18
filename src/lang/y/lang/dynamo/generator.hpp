@@ -213,6 +213,7 @@ namespace upsylon
 
             void storeDecl( Syntax::Terminal &t );
             void storeDecl( Syntax::Compound &c );
+            void storeImpl( Syntax::Compound &c );
 
             Syntax::Terminal & _jstring( const string &id, Syntax::Parser &p );
             Syntax::Terminal & _rstring( const string &id, Syntax::Parser &p );

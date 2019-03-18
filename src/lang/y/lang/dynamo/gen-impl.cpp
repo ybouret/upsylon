@@ -28,9 +28,11 @@ namespace upsylon
             // sanity check
             //__________________________________________________________________
             assert( parser.is_valid() );
-            
+            assert( 1==modules.size() );
+
             if(dynamo.name!="dynamo")       throw exception("%s(expecting <dynamo> and not <%s>)",fn,*(dynamo.name));
             if(dynamo.type!=DynamoInternal) throw exception("%s(<dynamo> is not internal)",fn);
+
             
             DynamoList     &self = dynamo.children();
             while(self.size)
@@ -126,7 +128,8 @@ namespace upsylon
                         
                     default:
                         Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << name << "]<-" << id << " TODO" << std::endl);
-                        
+                        throw exception("{%s} unexpected  <%s> while filling '%s'", **(parser->name),*id,*name);
+
                 }
                 
             }
@@ -184,6 +187,7 @@ namespace upsylon
             if(node->type!=DynamoInternal) throw exception("{%s} unexpected terminal alternation in <%s>", **(parser->name),*name);
             
             Syntax::Compound &altRule = parser->alternate(altName);
+            storeDecl(altRule);
             fill(altRule,node->children().head);
             parent << altRule;
             
@@ -198,6 +202,7 @@ namespace upsylon
             if(node->type!=DynamoInternal) throw exception("{%s} unexpected terminal alternation in <%s>", **(parser->name),*name);
             
             Syntax::Compound &grpRule = parser->bundle(grpName);
+            storeDecl(grpRule);
             fill(grpRule,node->children().head);
             parent << grpRule;
         }
@@ -223,11 +228,8 @@ namespace upsylon
             
             std::cerr << "Parent=" << name << std::endl;
             const DynamoRule *pRule = internals.search(name);
-            if(!pRule)
-            {
-                throw exception("{%s} unable to find parent name '%s' for '%s", **(parser->name), *name, *strName);
-            }
-            
+            if(!pRule) throw exception("{%s} unregistered parent '%s'", **(parser->name), *name);
+
             DynamoTerm *pTerm = literals.search(strName);
             if(pTerm)
             {
@@ -245,6 +247,7 @@ namespace upsylon
                 {
                     throw exception("{%s} unexpected failure to insert  '%s' !!", **(parser->name),*strName);
                 }
+                parent << t;
                 
             }
             

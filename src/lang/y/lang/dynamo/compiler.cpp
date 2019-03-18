@@ -28,6 +28,7 @@ namespace upsylon
                                 const Lexeme &lx,
                                 const size_t  nskip,
                                 const size_t  ntrim) :
+        parent(NULL),
         type( DynamoTerminal ),
         name(id),
         impl( NULL )
@@ -59,6 +60,7 @@ namespace upsylon
 
 
         DynamoNode:: DynamoNode( const string &id ) :
+        parent(NULL),
         type( DynamoInternal ),
         name(id),
         impl( new DynamoList() )
@@ -178,6 +180,18 @@ namespace upsylon
             }
         }
 
+#if 0
+        const DynamoNode * DynamoNode:: root() const throw()
+        {
+            const DynamoNode *ans = this;
+            while(ans->parent)
+            {
+                ans = ans->parent;
+            }
+            return ans;
+        }
+#endif
+
 
     }
 }
@@ -244,11 +258,11 @@ namespace upsylon
             switch( lxh(id) )
             {
                 case 0: assert("module"==id); nskip=1; break;
-                case 1: assert("lid"==id);    nskip=1; break;
-                case 2: assert("cid"==id);    nskip=1; break;
-                case 3: assert("rx"==id);     nskip=1; ntrim=1; break;
-                case 4: assert("rs"==id);     nskip=1; ntrim=1; break;
-                case 5: assert("eid"==id);    nskip=1; break;
+                case 1: assert("lid"   ==id); nskip=1; break;
+                case 2: assert("cid"   ==id); nskip=1; break;
+                case 3: assert("rx"    ==id); nskip=1; ntrim=1; break;
+                case 4: assert("rs"    ==id); nskip=1; ntrim=1; break;
+                case 5: assert("eid"   ==id); nskip=1; break;
 
                 default: break; // take the full lexeme
             }
@@ -278,12 +292,19 @@ namespace upsylon
             for(size_t i=sz;i>0;--i)
             {
                 self.push_front( items.pop_back() );
-                //std::cerr << "|_adding '" << self.tail->name << "'" << std::endl;
-                if( self.tail->name == '^' )
-                {
-                    delete self.pop_back();
-                }
+                self.head->parent = node;
             }
+            if(self.tail->name == '^' )
+            {
+                delete self.pop_back();
+            }
+
+#ifndef NDEBUG
+            for(const DynamoNode *sub=self.head;sub;sub=sub->next)
+            {
+                assert(sub->parent==node);
+            }
+#endif
 
             items.push_back(node);
 

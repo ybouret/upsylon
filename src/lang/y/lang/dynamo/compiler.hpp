@@ -25,14 +25,16 @@ namespace upsylon
         class DynamoNode : public core::inode<DynamoNode>
         {
         public:
-            const DynamoType type; //!< ist type
-            const string     name; //!< from the id=rule.name
+            const DynamoNode *parent; //!< parent
+            const DynamoType  type;   //!< node type
+            const string      name;   //!< from the id=rule.name
+
 
             //! create an internal node with compiled lexeme
-            explicit DynamoNode(const string &id,
-                                const Lexeme &lx,
-                                const size_t  nskip,
-                                const size_t  ntrim);
+            explicit DynamoNode(const string     &id,
+                                const Lexeme     &lx,
+                                const size_t      nskip,
+                                const size_t      ntrim);
 
             //! create an internal node
             explicit DynamoNode(const string &id);
@@ -65,6 +67,7 @@ namespace upsylon
             //! save to bin stream
             void save( ios::ostream &fp ) const;
             
+
 
         private:
             void            *impl;
