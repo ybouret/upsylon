@@ -218,7 +218,8 @@ namespace upsylon
             void fillJK(  Syntax::Compound &parent, DynamoNode *node, const unsigned indx );
             void fillALT( Syntax::Compound &parent, DynamoNode *node, const unsigned indx );
             void fillGRP( Syntax::Compound &parent, DynamoNode *node, const unsigned indx );
-
+            static string MakeSubName( const Syntax::Compound &parent, const unsigned indx);
+            
         public:
             bool verbose; //!< verbosity flag
 

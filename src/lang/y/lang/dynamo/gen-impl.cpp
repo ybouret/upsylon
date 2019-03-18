@@ -139,11 +139,16 @@ namespace upsylon
             parent << findSymbol(symbolName);
         }
 
+        string DynamoGenerator:: MakeSubName( const Syntax::Compound &parent, const unsigned indx)
+        {
+            return parent.name + vformat(".%u",indx);
+        }
+        
         void DynamoGenerator:: fillJK(  Syntax::Compound &parent, DynamoNode *node, const unsigned indx )
         {
             assert(node);
             const string &name      = parent.name;
-            const string  jokerName = name + vformat("#%u",indx);
+            const string  jokerName = MakeSubName(parent,indx);
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << name << "]<-" << node->name << "=[" << jokerName << "]" << std::endl);
 
             if(node->type!=DynamoInternal) throw exception("{%s} unexpected terminal joker in <%s>", **(parser->name),*name);
@@ -171,7 +176,7 @@ namespace upsylon
         {
             assert(node);
             const string &name     = parent.name;
-            const string  altName  = name + vformat("#%u",indx);
+            const string  altName  = MakeSubName(parent,indx);
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << name << "]<-" << node->name << "=[" << altName << "]" << std::endl);
 
             if(node->type!=DynamoInternal) throw exception("{%s} unexpected terminal alternation in <%s>", **(parser->name),*name);
@@ -185,7 +190,7 @@ namespace upsylon
         void DynamoGenerator::  fillGRP( Syntax::Compound &parent, DynamoNode *node, const unsigned indx )
         {
             const string &name     = parent.name;
-            const string  grpName  = name + vformat("#%u",indx);
+            const string  grpName  = MakeSubName(parent,indx);
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << name << "]<-" << node->name << "=[" << grpName << "]" << std::endl);
 
             if(node->type!=DynamoInternal) throw exception("{%s} unexpected terminal alternation in <%s>", **(parser->name),*name);

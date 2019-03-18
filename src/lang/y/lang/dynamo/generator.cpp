@@ -83,6 +83,7 @@ namespace upsylon
         symbols(),
         terminals(),
         internals(),
+        literals(),
         plugins(4,as_capacity),
         lexicals(4,as_capacity),
         level(0),
