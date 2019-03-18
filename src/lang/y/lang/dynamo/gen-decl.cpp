@@ -13,7 +13,7 @@ namespace upsylon
             assert( parser.is_valid() );
             assert( modules.size()>0);
 
-            const DynamoTerm symb(modules.back(),t);
+            DynamoTerm symb(modules.back(),t,DynamoInfo::Plugin);
             if( !symbols.insert(symb) || !terminals.insert(symb))
             {
                 throw exception("{%s} multiple terminal <%s>",**(parser->name), *(t.name));
@@ -25,7 +25,7 @@ namespace upsylon
             assert( parser.is_valid() );
             assert( modules.size()>0);
 
-            const DynamoRule symb(modules.back(),c);
+            const DynamoRule symb(modules.back(),c,0);
             if( !symbols.insert(symb) || !internals.insert(symb))
             {
                 throw exception("{%s} multiple rule <%s>",**(parser->name), *(c.name));

@@ -2,10 +2,10 @@
 
 
 //add : mult ( (PLUS|MINUS) mult);
-r1 : "hello";
-r1b : 'hello';
-r2 : 'hello' r1;
-r2b! : 'hello' '-'^ r1;
+r1  : "hello";
+r1b : 'world';
+r2 : 'world' r1 "example";
+r2b! : 'world' '-'^ r1 "example";
 r2c : r1|r2|r1;
 r2d : r1|r2|r1;
 PLUS : '+'^;

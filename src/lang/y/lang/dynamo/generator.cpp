@@ -7,9 +7,10 @@ namespace upsylon
     namespace Lang
     {
 
-        DynamoInfo:: DynamoInfo(const Tag &moduleID, const Syntax::Rule &r ) throw() :
+        DynamoInfo:: DynamoInfo(const Tag &moduleID, const Syntax::Rule &r, const unsigned inf ) throw() :
         from(moduleID),
-        rule(r)
+        rule(r),
+        info(inf)
         {
         }
 
@@ -18,7 +19,7 @@ namespace upsylon
         }
 
         DynamoInfo:: DynamoInfo( const DynamoInfo &other) throw() :
-        from(other.from), rule(other.rule)
+        from(other.from), rule(other.rule), info(other.info)
         {
         }
 
@@ -67,8 +68,8 @@ namespace upsylon
 
         static const char *fillKW[] =
         {
-            //0     1     2      3
-            "rid", "jk", "alt", "grp"
+            //0     1     2      3      4    5
+            "rid", "jk", "alt", "grp", "rs", "rx"
         };
 
 

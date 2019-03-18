@@ -51,6 +51,11 @@ namespace upsylon
         class DynamoInfo
         {
         public:
+            static const unsigned Plugin=0x01;
+            static const unsigned FromRS=0x02;
+            static const unsigned FromRX=0x04;
+            static const unsigned IsOper=0x08;
+            
             typedef DynamoSetOf<DynamoInfo>::Type Set; //!< database of symbols
 
             DynamoInfo(const DynamoInfo &) throw();    //!< no throw copy
@@ -59,10 +64,11 @@ namespace upsylon
 
             const Tag           from;                   //!< creator module
             const Syntax::Rule &rule;                   //!< the generic underlying rule
-
+            unsigned            info;                   //!< some binary info
+            
         protected:
             //! setup
-            explicit DynamoInfo( const Tag &, const Syntax::Rule & ) throw();
+            explicit DynamoInfo( const Tag &, const Syntax::Rule &, const unsigned ) throw();
 
         private:
             Y_DISABLE_ASSIGN(DynamoInfo);
@@ -75,10 +81,15 @@ namespace upsylon
         public:
             typedef typename DynamoSetOf<DynamoRef>::Type Set; //!< specialized database
 
-            T &derived; //!< the derived type reference
+            T  &derived; //!< the derived type reference
 
             //! setup
-            inline explicit DynamoRef(const Tag &moduleID, T &d ) throw() : DynamoInfo(moduleID,d), derived(d) {}
+            inline explicit DynamoRef(const Tag     &moduleID,
+                                      T             &host,
+                                      const unsigned flag
+                                      ) throw() :
+            DynamoInfo(moduleID,host,flag), derived(host)
+            {}
 
             //! desctructor
             inline virtual ~DynamoRef() throw() {}
@@ -213,12 +224,14 @@ namespace upsylon
             void implModule( DynamoNode &dynamo ); //!< top level call to implement declared rules
             void implRule(   DynamoNode &r      ); //!< top level rule
 
+            static string MakeSubName( const Syntax::Compound &parent, const unsigned indx);
+            
             void fill(    Syntax::Compound &parent, DynamoNode *node );
             void fillRID( Syntax::Compound &parent, DynamoNode *node );
             void fillJK(  Syntax::Compound &parent, DynamoNode *node, const unsigned indx );
             void fillALT( Syntax::Compound &parent, DynamoNode *node, const unsigned indx );
             void fillGRP( Syntax::Compound &parent, DynamoNode *node, const unsigned indx );
-            static string MakeSubName( const Syntax::Compound &parent, const unsigned indx);
+            void fillSTR( Syntax::Compound &parent, DynamoNode *node );
             
         public:
             bool verbose; //!< verbosity flag
