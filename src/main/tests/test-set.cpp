@@ -34,11 +34,17 @@ namespace
         Y_DISABLE_ASSIGN(dummy);
     };
 
+    template <typename T>
+    static inline bool is_bad( const T & )
+    {
+        return alea.to<double>() > 0.5;
+    }
+
     template <typename KEY,typename T>
     static inline void do_test()
     {
         // by copy
-        std::cerr << "-- by copy" << std::endl;
+        std::cerr << "-- By Copy:" << std::endl;
         {
             typedef set< KEY, dummy<KEY,T> > set_type;
             { set_type db0; }
@@ -98,13 +104,13 @@ namespace
 
 
             {
-                std::cerr << "copy" << std::endl;
+                std::cerr << "Copy:" << std::endl;
                 set_type tmp(db);
                 Y_CHECK(tmp.size()==db.size());
             }
 
             {
-                std::cerr << "assign" << std::endl;
+                std::cerr << "Assign:" << std::endl;
                 set_type tmp;
 
                 tmp = db;
@@ -126,13 +132,30 @@ namespace
                 db.collect_hash_keys(lkeys);
             }
 
-
-            
-
             for(size_t i=1;i<=keys.size();++i)
             {
                 Y_ASSERT(db.remove(keys[i]));
             }
+
+
+            std::cerr << "RemoveIf" << std::endl;
+            count = 0;
+            for(size_t i=0;i<1000;++i)
+            {
+                const KEY k = support::get<KEY>();
+                const T   v = support::get<T>();
+                const dummy<KEY,T> d(k,v);
+
+                if( db.insert(d) )
+                {
+                    ++count;
+                    keys.push_back(k);
+                }
+            }
+            std::cerr << "..ini=" << db.size() << std::endl;
+            db.remove_if( is_bad< dummy<KEY,T> > );
+            std::cerr << "..end=" << db.size() << std::endl;
+
         }
 
         // by pointer
@@ -171,6 +194,8 @@ Y_UTEST(set)
     do_test<string,int>();
     do_test<int,string>();
     do_test<string,string>();
+
+
 
 }
 Y_UTEST_DONE()

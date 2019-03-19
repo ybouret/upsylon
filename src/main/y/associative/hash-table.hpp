@@ -81,7 +81,7 @@ namespace upsylon
                 assert( metas.is_filled() );
             }
 
-            //! release resources and store bakc node and meta
+            //! release resources and store back node and meta
             inline void __free( NODE *node ) throw()
             {
                 assert(node);

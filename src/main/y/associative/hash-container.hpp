@@ -25,6 +25,7 @@ namespace upsylon
         typedef core::hash_table<NODE,ALLOCATOR> table_type; //!< internal table
         typedef typename table_type::slot_type   slot_type;  //!< slot of data
         typedef typename table_type::meta_node   meta_node;  //!< meta node
+        typedef typename table_type::meta_list   meta_list;  //!< meta node
         typedef associative<KEY,T>               base_type;  //!< base type 
         //! destructor
         inline virtual ~hash_container() throw() {}
@@ -172,6 +173,32 @@ namespace upsylon
         inline size_t allocated_bytes_for_table() const throw()
         {
             return table.allocated_bytes();
+        }
+
+        //! fast removal
+        template <typename FUNC>
+        inline void remove_if( FUNC &is_bad ) throw()
+        {
+            for(size_t i=0;i<table.slots;++i)
+            {
+                slot_type &src = table.slot[i];
+                slot_type  tmp;
+                while(src.size)
+                {
+                    NODE       *node = src.pop_front();
+                    const_type &data = node->data;
+                    if(is_bad(data))
+                    {
+                        table.__free(node);
+                        //tmp.push_back(node);
+                    }
+                    else
+                    {
+                        tmp.push_back(node);
+                    }
+                }
+                src.swap_with(tmp);
+            }
         }
 
     protected:

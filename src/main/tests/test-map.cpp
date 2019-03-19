@@ -8,7 +8,13 @@ using namespace upsylon;
 
 namespace
 {
+    template <typename T>
+    static inline bool is_bad( const T & )
+    {
+        return alea.to<double>() > 0.5;
+    }
 
+    
     template <typename KEY,typename T>
     static inline void do_test()
     {
@@ -103,6 +109,22 @@ namespace
         {
             Y_ASSERT(db.remove(keys[i]));
         }
+
+        count = 0;
+        for(size_t i=0;i<1000;++i)
+        {
+            const KEY k = support::get<KEY>();
+            const T   v = support::get<T>();
+            if(db.insert(k,v))
+            {
+                ++count;
+                keys.push_back(k);
+            }
+
+        }
+        std::cerr << "..ini=" << db.size() << std::endl;
+        db.remove_if( is_bad<T>  );
+        std::cerr << "..end=" << db.size() << std::endl;
     }
     
 
