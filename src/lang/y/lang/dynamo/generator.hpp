@@ -128,7 +128,10 @@ namespace upsylon
             explicit DynamoGenerator();         //!< setup and register plugins
 
             //! build the parser from a top-level dynamo node
-            Syntax::Parser * build( DynamoNode &top );
+            Syntax::Parser * build( DynamoNode &top, DynamoInfo::Set *terms=0 );
+
+            //! clear maximum of data
+            void clear() throw();
 
             //! register a plugin
             void registerPlugin(const string &id, const DynamoPlugin &dp);

@@ -150,6 +150,7 @@ namespace upsylon
         {
         }
 
+
 #if 0
         static inline
         bool isSemantic( const DynamoTerm &dt ) throw()
@@ -163,9 +164,20 @@ namespace upsylon
             return (Syntax::Alternate::UUID == dr.derived.uuid );
         }
 #endif
-        
 
-        Syntax::Parser * DynamoGenerator:: build( DynamoNode &top )
+        void DynamoGenerator:: clear() throw()
+        {
+            level  = 0;
+            literals.  release();
+            internals. release();
+            terminals. release();
+            symbols.   release();
+            modules.   release();
+            parser = 0;
+        }
+
+
+        Syntax::Parser * DynamoGenerator:: build( DynamoNode &top, DynamoInfo::Set *terms )
         {
             //__________________________________________________________________
             //
@@ -173,9 +185,7 @@ namespace upsylon
             //__________________________________________________________________
 
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<Building Parser>" << std::endl);
-            modules.free();
-            parser = 0;
-            level  = 0;
+            clear();
 
             //__________________________________________________________________
             //
@@ -203,6 +213,22 @@ namespace upsylon
             std::cerr << "internals=" << internals << std::endl;
             std::cerr << "literals =" << literals  << std::endl;
 
+            if(terms)
+            {
+                terms->free();
+                for( DynamoTerm::Set::iterator it = terminals.begin(); it!=terminals.end(); ++it )
+                {
+                    const DynamoTerm &dt = *it;
+                    if(dt.derived.attr!=Syntax::Standard)
+                    {
+                        throw exception("{%s} unexpected not standard terminal '%s'!!!", **(parser->name), *(dt.derived.name));
+                    }
+                    if(!terms->insert(dt))
+                    {
+                        throw exception("{%s} unexpected multiple terminal '%s'", **(parser->name), *(dt.derived.name) );
+                    }
+                }
+            }
 
             //__________________________________________________________________
             //

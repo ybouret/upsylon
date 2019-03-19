@@ -538,12 +538,13 @@ case 'f': return new Single('\f')
                 {
                         // direct sequence
                     case '\\':
-                    case '[':
-                    case ']':
-                    case '-':
-                    case '^':
-                    case '"':
+                    case '[' :
+                    case ']' :
+                    case '-' :
+                    case '^' :
+                    case '"' :
                     case '\'':
+                    case ':' :
                         return new Single(C);
 
                         // interpreted
