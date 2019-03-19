@@ -8,12 +8,7 @@ namespace upsylon {
 
     namespace Lang
     {
-        //______________________________________________________________________
-        //
-        //
-        // class management
-        //
-        //______________________________________________________________________
+        
         typedef memory::pooled                  DynamoMemory; //!< internal memory type
         typedef key_hasher<string,hashing::fnv> DynamoHasher; //!< string hasher
 
@@ -34,15 +29,15 @@ namespace upsylon {
         class DynamoInfo
         {
         public:
-            static const unsigned Plugin=0x01;
-            static const unsigned FromRS=0x02;
-            static const unsigned FromRX=0x04;
+            static const unsigned Plugin=0x01; //!< arising from a plugin
+            static const unsigned FromRS=0x02; //!< arising from a raw string
+            static const unsigned FromRX=0x04; //!< arising from a regular expression
 
-            typedef DynamoSetOf<DynamoInfo>::Type Set; //!< database of symbols
+            typedef DynamoSetOf<DynamoInfo>::Type Set;  //!< database of symbols
 
-            DynamoInfo(const DynamoInfo &) throw();    //!< no throw copy
-            virtual ~DynamoInfo() throw();             //!< destructor
-            const string &key() const throw();         //!< rule.name
+            DynamoInfo(const DynamoInfo &) throw();     //!< no throw copy
+            virtual ~DynamoInfo() throw();              //!< destructor
+            const string &key() const throw();          //!< rule.name
 
             const Tag           from;                   //!< creator module
             const Syntax::Rule &rule;                   //!< the generic underlying rule
@@ -64,11 +59,11 @@ namespace upsylon {
         class DynamoSymbols
         {
         public:
-            explicit DynamoSymbols() throw();
-            virtual ~DynamoSymbols() throw();
+            explicit DynamoSymbols() throw(); //!< setup
+            virtual ~DynamoSymbols() throw(); //!< desctructor
 
-            DynamoInfo::Set terminals;
-            DynamoInfo::Set internals;
+            DynamoInfo::Set terminals; //!< set of terminals
+            DynamoInfo::Set internals; //!< set of internals
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoSymbols);
@@ -101,7 +96,7 @@ namespace upsylon {
             //! display
             std::ostream & display( std::ostream &os ) const;
 
-            // output
+            //! output
             inline friend std::ostream & operator<<(std::ostream &os,const DynamoRef &dr)
             {
                 return dr.display(os);

@@ -106,6 +106,7 @@ namespace upsylon
             //! find a registered lexical management function
             DynamoLexical & findLexical( const string &id );
 
+            //! find a registered symbol by its name
             const Syntax::Rule  & findSymbol( const string &id );
 
         private:
