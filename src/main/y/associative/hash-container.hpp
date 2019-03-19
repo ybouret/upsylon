@@ -26,7 +26,7 @@ namespace upsylon
         typedef typename table_type::slot_type   slot_type;  //!< slot of data
         typedef typename table_type::meta_node   meta_node;  //!< meta node
         typedef typename table_type::meta_list   meta_list;  //!< meta node
-        typedef associative<KEY,T>               base_type;  //!< base type 
+        typedef associative<KEY,T>               base_type;  //!< base type
         //! destructor
         inline virtual ~hash_container() throw() {}
 
@@ -177,27 +177,33 @@ namespace upsylon
 
         //! fast removal
         template <typename FUNC>
-        inline void remove_if( FUNC &is_bad ) throw()
+        inline void remove_if( FUNC &is_bad )
         {
             for(size_t i=0;i<table.slots;++i)
             {
                 slot_type &src = table.slot[i];
                 slot_type  tmp;
-                while(src.size)
+                try
                 {
-                    NODE       *node = src.pop_front();
-                    const_type &data = node->data;
-                    if(is_bad(data))
+                    while(src.size)
                     {
-                        table.__free(node);
-                        //tmp.push_back(node);
+                        type       &data = src.head->data;
+                        if(is_bad(data))
+                        {
+                            table.__free( src.pop_front() );
+                        }
+                        else
+                        {
+                            tmp.push_back( src.pop_front() );
+                        }
                     }
-                    else
-                    {
-                        tmp.push_back(node);
-                    }
+                    src.swap_with(tmp);
                 }
-                src.swap_with(tmp);
+                catch(...)
+                {
+                    src.merge_front(tmp);
+                    throw;
+                }
             }
         }
 

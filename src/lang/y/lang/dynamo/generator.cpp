@@ -34,6 +34,30 @@ namespace upsylon
             return os;
         }
 
+        std::ostream & operator<<(std::ostream &os,const DynamoTerm &dt)
+        {
+            const DynamoInfo &di = dt;
+            switch(dt.derived.attr)
+            {
+                case Syntax::Semantic: os << "(-)"; break;
+                case Syntax::Standard: os << "(+)"; break;
+                case Syntax::Operator: os << "(^)"; break;
+            }
+            return (os<<di);
+        }
+
+        std::ostream & operator<<(std::ostream &os,const DynamoRule &dr)
+        {
+            const DynamoInfo &di = dr;
+            switch(di.rule.uuid)
+            {
+                case Syntax::Aggregate::UUID: os << "[+]"; break;
+                case Syntax::Alternate::UUID: os << "[-]"; break;
+                default: os << "(?)"; break;
+            }
+            return (os<<di);
+        }
+
     }
 
 }
@@ -124,30 +148,84 @@ namespace upsylon
         {
         }
 
+
+        static inline
+        bool isSemanticLiteral( DynamoTerm &d )
+        {
+            Syntax::Terminal & t = d.derived;
+#if 0
+            switch( t.attr )
+            {
+                case Syntax::Standard:
+                    if(t.univocal)
+                    {
+                        t.sm();
+                        std::cerr << d << "--> semantic" << std::endl;
+                        return true; //!< removed from literals
+                    }
+                    else
+                    {
+                        // an 'in-grammar' regular expression, keep but not good..
+                        std::cerr << d << "--> built-in" << std::endl;
+                        return false;
+                    }
+
+                case Syntax::Operator:
+                    std::cerr << d << "--> operator" << std::endl;
+                    return false;
+
+                case Syntax::Semantic:
+                    throw exception("<%s_%s> cannot be semantic at that point!",**(d.from),*t.name);
+            }
+#endif
+            return false;
+        }
+
         Syntax::Parser * DynamoGenerator:: build( DynamoNode &top )
         {
+            //__________________________________________________________________
+            //
+            // Clean up and initialize
+            //__________________________________________________________________
+
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<Building Parser>" << std::endl);
             modules.free();
             parser = 0;
             level  = 0;
 
-            // first pass
+            //__________________________________________________________________
+            //
+            // first pass : top level declarations and tree clean-up
+            //__________________________________________________________________
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<First  Pass: DECL>" << std::endl);
             declModule(top);
             assert(0==modules.size());
-            
-            /// second pass
+
+            //__________________________________________________________________
+            //
+            // second pass: implement rules and literals
+            //__________________________________________________________________
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<Second Pass: IMPL>" << std::endl);
             implModule(top);
             assert(0==modules.size());
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<Building Parser/>" << std::endl);
 
-            parser->graphViz( *(parser->name) + ".dot" );
 
             
             std::cerr << "terminals=" << terminals << std::endl;
             std::cerr << "internals=" << internals << std::endl;
             std::cerr << "literals =" << literals  << std::endl;
+
+
+            //__________________________________________________________________
+            //
+            // thirds pass: update tables
+            //__________________________________________________________________
+            literals.remove_if( isSemanticLiteral );
+
+            parser->graphViz( *(parser->name) + ".dot" );
+
+
             return 0;
         }
 

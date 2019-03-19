@@ -103,7 +103,18 @@ namespace upsylon
             }
             modules.pop_back();
         }
-        
+
+        static inline
+        void isSM( const Tag &parserTag, Syntax::Terminal &t )
+        {
+            switch(t.attr)
+            {
+                case Syntax::Standard: t.sm(); break;
+                case Syntax::Semantic:         break;
+                case Syntax::Operator: throw exception("{%s} operator '%s' cannot be checked as semantic!!!", **parserTag, *t.name);
+            }
+        }
+
         void DynamoGenerator:: fill( Syntax::Compound &parent, DynamoNode *node )
         {
             assert(modules.size()>0);
@@ -120,7 +131,7 @@ namespace upsylon
                     case 1: assert("jk" ==id); fillJK(parent,node,indx);   break;
                     case 2: assert("alt"==id); fillALT(parent,node,indx);  break;
                     case 3: assert("grp"==id); fillGRP(parent,node,indx);  break;
-                    case 4: assert("rs" ==id); (void)fillSTR(parent,node); break;
+                    case 4: assert("rs" ==id); isSM(parser->name,fillSTR(parent,node)); break;
                     case 5: assert("rx" ==id); (void)fillSTR(parent,node); break;
                     case 6: assert("op" ==id); fillOP(parent,node);        break;
 

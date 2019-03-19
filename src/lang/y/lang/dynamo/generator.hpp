@@ -100,6 +100,8 @@ namespace upsylon
             //! no-throw copy
             inline DynamoRef(const DynamoRef &other) throw() : DynamoInfo(other), derived(other.derived) {}
 
+            friend std::ostream & operator<<(std::ostream &,const DynamoRef &);
+
         private:
             Y_DISABLE_ASSIGN(DynamoRef);
         };
