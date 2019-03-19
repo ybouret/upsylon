@@ -8,7 +8,7 @@ namespace upsylon {
 
     namespace Lang
     {
-        
+
         typedef memory::pooled                  DynamoMemory; //!< internal memory type
         typedef key_hasher<string,hashing::fnv> DynamoHasher; //!< string hasher
 
@@ -69,6 +69,7 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(DynamoSymbols);
         };
 
+        typedef DynamoInfo::Set::iterator DynamoSymbolIterator; //!< alias
 
         //! generic derived symbol store for toplevel rules
         template <typename T>
@@ -82,8 +83,7 @@ namespace upsylon {
             //! setup
             inline explicit DynamoRef(const Tag     &moduleID,
                                       T             &host,
-                                      const unsigned flag
-                                      ) throw() :
+                                      const unsigned flag  ) throw() :
             DynamoInfo(moduleID,host,flag), derived(host)
             {}
 

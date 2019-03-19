@@ -1,5 +1,6 @@
 #include "y/lang/dynamo/loader.hpp"
 #include "y/lang/dynamo/generator.hpp"
+#include "y/lang/dynamo/hash31.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -54,6 +55,20 @@ Y_UTEST(dyn)
         std::cerr << "symbols.terminals=" << symbols.terminals << std::endl;
         std::cerr << "symbols.internals=" << symbols.internals << std::endl;
 
+        DynamoHash31 H;
+
+        for(DynamoSymbolIterator i= symbols.terminals.begin(); i != symbols.terminals.end(); ++i)
+        {
+            const DynamoInfo &di = *i;
+            std::cerr << "term '" << di.rule.name << "' -> " << H(di.rule.name) << std::endl;
+        }
+
+        for(DynamoSymbolIterator i= symbols.internals.begin(); i != symbols.internals.end(); ++i)
+        {
+            const DynamoInfo &di = *i;
+            std::cerr << "rule '" << di.rule.name << "' -> " << H(di.rule.name) << std::endl;
+        }
+
         if(false)
         {
             MatchString cut = "lxr|plg|cmd|aka";
@@ -63,8 +78,8 @@ Y_UTEST(dyn)
 
         if(argc>2)
         {
-            const string    fn = argv[2];
-            auto_ptr<XNode> tree = P->run((fn=="STDIN") ? Module::OpenSTDIN() : Module::OpenFile(fn));
+            const string    fn      = argv[2];
+            auto_ptr<XNode> tree    = P->run((fn=="STDIN") ? Module::OpenSTDIN() : Module::OpenFile(fn));
             const string    dotfile = *(P->name) + "_tree.dot";
             tree->graphViz(dotfile);
 
