@@ -10,8 +10,7 @@ namespace upsylon
         {
             assert(node);
             const string &name      = parent.name;
-            const string  jokerName = MakeSubName(parent,indx);
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << name << "]<-" << node->name << "=[" << jokerName << "]" << std::endl);
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << name << "]<-" << node->name << "@" << indx << std::endl);
 
             if(node->type!=DynamoInternal)    throw exception("{%s} unexpected terminal joker in <%s>", **(parser->name),*name);
             DynamoList &ch = node->children();
@@ -19,10 +18,14 @@ namespace upsylon
             if(ch.tail->type!=DynamoTerminal) throw exception("{%s} mismatching joker type in <%s>", **(parser->name),*name);
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_joker[" << ch.tail->name << "]" << std::endl);
 
-            Syntax::Compound &jokerRule = parser->bundle(jokerName);
             const char        jokerChar = static_cast<const string &>(ch.tail->name)[0];
             delete ch.pop_back(); assert(ch.head);
-            fill(jokerRule,ch.head);
+
+            // use parent as temporary
+            fill(parent,ch.head);assert(parent.size>0);
+            auto_ptr<Syntax::Operand> operand   = parent.pop_back();
+            const Syntax::Rule       &jokerRule = operand->rule;
+
             switch( jokerChar )
             {
                 case '*': parent << parser->zeroOrMore(jokerRule); break;

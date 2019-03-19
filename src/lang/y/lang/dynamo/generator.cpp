@@ -150,8 +150,19 @@ namespace upsylon
         {
         }
 
+#if 0
+        static inline
+        bool isSemantic( const DynamoTerm &dt ) throw()
+        {
+            return (dt.derived.attr == Syntax::Semantic);
+        }
+#endif
 
-
+        static inline
+        bool isAlternate( const DynamoRule &dr ) throw()
+        {
+            return (Syntax::Alternate::UUID == dr.derived.uuid );
+        }
 
         Syntax::Parser * DynamoGenerator:: build( DynamoNode &top )
         {
@@ -193,7 +204,7 @@ namespace upsylon
             //
             // thirds pass: update tables
             //__________________________________________________________________
-            //literals.remove_if( isSemanticLiteral );
+            
 
             parser->graphViz( *(parser->name) + ".dot" );
 
