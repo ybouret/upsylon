@@ -147,7 +147,7 @@ namespace upsylon
         
         string DynamoGenerator:: MakeSubName( const Syntax::Compound &parent, const unsigned indx)
         {
-            return parent.name + vformat(".%u",indx);
+            return parent.name + vformat("@%u",indx);
         }
         
       

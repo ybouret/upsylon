@@ -2,86 +2,6 @@
 #include "y/string/convert.hpp"
 #include "y/exception.hpp"
 
-namespace upsylon
-{
-    namespace Lang
-    {
-
-        DynamoInfo:: DynamoInfo(const Tag &moduleID, const Syntax::Rule &r, const unsigned inf ) throw() :
-        from(moduleID),
-        rule(r),
-        info(inf)
-        {
-        }
-
-        DynamoInfo:: ~DynamoInfo() throw()
-        {
-        }
-
-        DynamoInfo:: DynamoInfo( const DynamoInfo &other) throw() :
-        from(other.from), rule(other.rule), info(other.info)
-        {
-        }
-
-        const string & DynamoInfo:: key() const throw()
-        {
-            return rule.name;
-        }
-
-        std::ostream & operator<<( std::ostream &os, const DynamoInfo &di )
-        {
-            os << di.from << "_" << di.rule.name;
-            return os;
-        }
-
-
-        template<>
-        std::ostream & DynamoTerm :: display(std::ostream &os) const
-        {
-            switch(derived.attr)
-            {
-                case Syntax::Semantic: os << "(-)"; break;
-                case Syntax::Standard: os << "(+)"; break;
-                case Syntax::Operator: os << "(^)"; break;
-            }
-            return (os<< static_cast<const DynamoInfo &>(*this));
-        }
-
-        template <>
-        std::ostream & DynamoRule :: display(std::ostream &os) const
-        {
-            switch(rule.uuid)
-            {
-                case Syntax::Aggregate::UUID: os << "[+]"; break;
-                case Syntax::Alternate::UUID: os << "[-]"; break;
-                default: os << "(?)"; break;
-            }
-            return (os<< static_cast<const DynamoInfo &>(*this));
-        }
-
-
-    }
-
-}
-
-namespace upsylon
-{
-    namespace Lang
-    {
-        DynamoSymbols:: DynamoSymbols() throw() :
-        terminals(), internals()
-        {
-
-        }
-
-        DynamoSymbols:: ~DynamoSymbols() throw()
-        {
-        }
-
-
-    }
-
-}
 
 
 
@@ -169,19 +89,7 @@ namespace upsylon
         {
         }
 
-#if 0
-        static inline
-        bool isSemantic( const DynamoTerm &dt ) throw()
-        {
-            return (dt.derived.attr == Syntax::Semantic);
-        }
 
-        static inline
-        bool isAlternate( const DynamoRule &dr ) throw()
-        {
-            return (Syntax::Alternate::UUID == dr.derived.uuid );
-        }
-#endif
 
         void DynamoGenerator:: clear() throw()
         {
@@ -199,7 +107,9 @@ namespace upsylon
         {
             //__________________________________________________________________
             //
+            //
             // Clean up and initialize
+            //
             //__________________________________________________________________
 
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<Building Parser>" << std::endl);
@@ -207,7 +117,9 @@ namespace upsylon
 
             //__________________________________________________________________
             //
+            //
             // first pass : top level declarations and tree clean-up
+            //
             //__________________________________________________________________
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<First  Pass: DECL>" << std::endl);
             declModule(top);
@@ -218,7 +130,9 @@ namespace upsylon
 
             //__________________________________________________________________
             //
+            //
             // second pass: implement rules and literals
+            //
             //__________________________________________________________________
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<Second Pass: IMPL>" << std::endl);
             implModule(top);
@@ -231,6 +145,12 @@ namespace upsylon
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << " internals=" << internals << std::endl);
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << " literals =" << literals  << std::endl);
 
+            //__________________________________________________________________
+            //
+            //
+            // collect symbols if necessary
+            //
+            //__________________________________________________________________
             if(symbols)
             {
                 symbols->terminals.free();
@@ -266,7 +186,7 @@ namespace upsylon
                 for( DynamoTerm::Set::iterator it = literals.begin(); it!=terminals.end(); ++it )
                 {
                     const DynamoTerm       &dt = *it;
-                    const Syntax::Terminal &t = dt.derived;
+                    const Syntax::Terminal &t  = dt.derived;
                     switch(t.attr)
                     {
                         case Syntax::Standard:
