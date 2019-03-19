@@ -28,7 +28,6 @@ namespace upsylon
             // sanity check
             //__________________________________________________________________
             assert( parser.is_valid() );
-            assert( 1==modules.size() );
 
             if(dynamo.name!="dynamo")       throw exception("%s(expecting <dynamo> and not <%s>)",fn,*(dynamo.name));
             if(dynamo.type!=DynamoInternal) throw exception("%s(<dynamo> is not internal)",fn);
@@ -80,12 +79,15 @@ namespace upsylon
             
             //__________________________________________________________________
             //
-            // get the parent rule
+            // get the top-level parent rule
             //__________________________________________________________________
-            Syntax::Rule     &rule     = parser->getRuleByName(ruleName);    assert(rule.derived);
-            Syntax::Compound &cmp      = *(Syntax::Compound*)(rule.derived); assert(rule.uuid==cmp.uuid);
+            DynamoRule         *pRule = internals.search(ruleName); if(!pRule)     throw exception("{%s} missing top level '%s'", **(parser->name), *ruleName);
+            const Syntax::Rule &rule  = pRule->rule;    assert(rule.derived);
+            Syntax::Compound   &cmp   = *(Syntax::Compound*)(rule.derived); assert(rule.uuid==cmp.uuid);
+
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "[" << ruleName << "]/" << rule.typeName() << std::endl);
-            
+
+            modules.push_back(pRule->from);
             //__________________________________________________________________
             //
             // start recursion depending on parent UUID
@@ -106,10 +108,12 @@ namespace upsylon
                 default:
                     throw exception("{%s} unexpected UUID for <%s> at top level, corrupted code", **(parser->name),*ruleName);
             }
+            modules.pop_back();
         }
         
         void DynamoGenerator:: fill( Syntax::Compound &parent, DynamoNode *node )
         {
+            assert(modules.size()>0);
             ++level;
             assert(node);
             const string &name = parent.name;
@@ -187,7 +191,7 @@ namespace upsylon
             if(node->type!=DynamoInternal) throw exception("{%s} unexpected terminal alternation in <%s>", **(parser->name),*name);
             
             Syntax::Compound &altRule = parser->alternate(altName);
-            storeDecl(altRule);
+            //storeDecl(altRule);
             fill(altRule,node->children().head);
             parent << altRule;
             
@@ -202,7 +206,7 @@ namespace upsylon
             if(node->type!=DynamoInternal) throw exception("{%s} unexpected terminal alternation in <%s>", **(parser->name),*name);
             
             Syntax::Compound &grpRule = parser->bundle(grpName);
-            storeDecl(grpRule);
+            //storeDecl(grpRule);
             fill(grpRule,node->children().head);
             parent << grpRule;
         }
@@ -226,9 +230,6 @@ namespace upsylon
                 throw exception("{%s} expression '%s' collides with a symbol name!!", **(parser->name),*strName);
             }
             
-            std::cerr << "Parent=" << name << std::endl;
-            const DynamoRule *pRule = internals.search(name);
-            if(!pRule) throw exception("{%s} unregistered parent '%s'", **(parser->name), *name);
 
             DynamoTerm *pTerm = literals.search(strName);
             if(pTerm)
@@ -242,7 +243,8 @@ namespace upsylon
                 // create new standard literal
                 Syntax::Terminal &t = parser->term(strName,strExpr);
                 
-                const DynamoTerm  symb(pRule->from,t,info);
+                const DynamoTerm  symb(modules.back(),t,info);
+                Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_new literal " << symb.from << "_" << t.name << std::endl);
                 if(!literals.insert(symb))
                 {
                     throw exception("{%s} unexpected failure to insert  '%s' !!", **(parser->name),*strName);

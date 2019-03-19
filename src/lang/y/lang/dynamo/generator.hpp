@@ -65,7 +65,12 @@ namespace upsylon
             const Tag           from;                   //!< creator module
             const Syntax::Rule &rule;                   //!< the generic underlying rule
             unsigned            info;                   //!< some binary info
-            
+
+            friend std::ostream & operator<<( std::ostream &os, const DynamoInfo &di )
+            {
+                os << di.from << "_" << di.rule.name;
+                return os;
+            }
         protected:
             //! setup
             explicit DynamoInfo( const Tag &, const Syntax::Rule &, const unsigned ) throw();

@@ -129,20 +129,20 @@ namespace upsylon
             // first pass
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<First  Pass: DECL>" << std::endl);
             declModule(top);
-
+            assert(0==modules.size());
+            
             /// second pass
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<Second Pass: IMPL>" << std::endl);
-            modules.free();
-            {
-                const Tag tmp = new string("DYN");
-                modules.push_back(tmp);
-            }
             implModule(top);
-
+            assert(0==modules.size());
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<Building Parser/>" << std::endl);
 
             parser->graphViz( *(parser->name) + ".dot" );
-            modules.free();
+
+            
+            std::cerr << "terminals=" << terminals << std::endl;
+            std::cerr << "internals=" << internals << std::endl;
+            std::cerr << "literals =" << literals  << std::endl;
             return 0;
         }
 
