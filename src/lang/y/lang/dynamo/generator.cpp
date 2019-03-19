@@ -34,29 +34,31 @@ namespace upsylon
             return os;
         }
 
-        std::ostream & operator<<(std::ostream &os,const DynamoTerm &dt)
+
+        template<>
+        std::ostream & DynamoTerm :: display(std::ostream &os) const
         {
-            const DynamoInfo &di = dt;
-            switch(dt.derived.attr)
+            switch(derived.attr)
             {
                 case Syntax::Semantic: os << "(-)"; break;
                 case Syntax::Standard: os << "(+)"; break;
                 case Syntax::Operator: os << "(^)"; break;
             }
-            return (os<<di);
+            return (os<< static_cast<const DynamoInfo &>(*this));
         }
 
-        std::ostream & operator<<(std::ostream &os,const DynamoRule &dr)
+        template <>
+        std::ostream & DynamoRule :: display(std::ostream &os) const
         {
-            const DynamoInfo &di = dr;
-            switch(di.rule.uuid)
+            switch(rule.uuid)
             {
                 case Syntax::Aggregate::UUID: os << "[+]"; break;
                 case Syntax::Alternate::UUID: os << "[-]"; break;
                 default: os << "(?)"; break;
             }
-            return (os<<di);
+            return (os<< static_cast<const DynamoInfo &>(*this));
         }
+
 
     }
 
@@ -149,37 +151,7 @@ namespace upsylon
         }
 
 
-        static inline
-        bool isSemanticLiteral( DynamoTerm &d )
-        {
-            Syntax::Terminal & t = d.derived;
-#if 0
-            switch( t.attr )
-            {
-                case Syntax::Standard:
-                    if(t.univocal)
-                    {
-                        t.sm();
-                        std::cerr << d << "--> semantic" << std::endl;
-                        return true; //!< removed from literals
-                    }
-                    else
-                    {
-                        // an 'in-grammar' regular expression, keep but not good..
-                        std::cerr << d << "--> built-in" << std::endl;
-                        return false;
-                    }
 
-                case Syntax::Operator:
-                    std::cerr << d << "--> operator" << std::endl;
-                    return false;
-
-                case Syntax::Semantic:
-                    throw exception("<%s_%s> cannot be semantic at that point!",**(d.from),*t.name);
-            }
-#endif
-            return false;
-        }
 
         Syntax::Parser * DynamoGenerator:: build( DynamoNode &top )
         {
@@ -221,7 +193,7 @@ namespace upsylon
             //
             // thirds pass: update tables
             //__________________________________________________________________
-            literals.remove_if( isSemanticLiteral );
+            //literals.remove_if( isSemanticLiteral );
 
             parser->graphViz( *(parser->name) + ".dot" );
 
