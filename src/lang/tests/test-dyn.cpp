@@ -67,6 +67,9 @@ Y_UTEST(dyn)
             auto_ptr<XNode> tree = P->run((fn=="STDIN") ? Module::OpenSTDIN() : Module::OpenFile(fn));
             const string    dotfile = *(P->name) + "_tree.dot";
             tree->graphViz(dotfile);
+
+            Syntax::Analyzer A;
+            A.walk(*tree);
         }
 
 
