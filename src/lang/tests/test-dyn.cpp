@@ -25,10 +25,10 @@ Y_UTEST(dyn)
     {
         const string           fn = argv[1];
         auto_ptr<Syntax::Node> g  = dynamo.load( doOpen(fn) );
-        g->graphViz( "dynamo_tree.dot" );
 
         if(false)
         {
+            g->graphViz( "dynamo_tree.dot" );
             g->save("dynamo.bin");
 
             {
@@ -49,7 +49,7 @@ Y_UTEST(dyn)
 
         il->graphViz("il0.dot");
         dynGen.build( *il );
-        il->graphViz("il1.dot");
+        //il->graphViz("il1.dot");
 
 
         if(false)

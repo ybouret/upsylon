@@ -54,7 +54,6 @@ namespace upsylon
             static const unsigned Plugin=0x01;
             static const unsigned FromRS=0x02;
             static const unsigned FromRX=0x04;
-            static const unsigned IsOper=0x08;
             
             typedef DynamoSetOf<DynamoInfo>::Type Set; //!< database of symbols
 
@@ -65,12 +64,11 @@ namespace upsylon
             const Tag           from;                   //!< creator module
             const Syntax::Rule &rule;                   //!< the generic underlying rule
             unsigned            info;                   //!< some binary info
+            
 
-            friend std::ostream & operator<<( std::ostream &os, const DynamoInfo &di )
-            {
-                os << di.from << "_" << di.rule.name;
-                return os;
-            }
+            //! output
+            friend std::ostream & operator<<(std::ostream &,const DynamoInfo &);
+
         protected:
             //! setup
             explicit DynamoInfo( const Tag &, const Syntax::Rule &, const unsigned ) throw();
@@ -237,8 +235,9 @@ namespace upsylon
             void fillJK(  Syntax::Compound &parent, DynamoNode *node, const unsigned indx );
             void fillALT( Syntax::Compound &parent, DynamoNode *node, const unsigned indx );
             void fillGRP( Syntax::Compound &parent, DynamoNode *node, const unsigned indx );
-            void fillSTR( Syntax::Compound &parent, DynamoNode *node );
-            
+            void fillOP(  Syntax::Compound &parent, DynamoNode *node );
+            Syntax::Terminal &fillSTR( Syntax::Compound &parent, DynamoNode *node );
+
         public:
             bool verbose; //!< verbosity flag
 

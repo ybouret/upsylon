@@ -28,6 +28,11 @@ namespace upsylon
             return rule.name;
         }
 
+        std::ostream & operator<<( std::ostream &os, const DynamoInfo &di )
+        {
+            os << di.from << "_" << di.rule.name;
+            return os;
+        }
 
     }
 
@@ -68,8 +73,8 @@ namespace upsylon
 
         static const char *fillKW[] =
         {
-            //0     1     2      3      4    5
-            "rid", "jk", "alt", "grp", "rs", "rx"
+            //0     1     2      3      4     5     6
+            "rid", "jk", "alt", "grp", "rs", "rx", "op"
         };
 
 
