@@ -20,6 +20,7 @@ Y_UTEST(dyn)
 
     dynamo.graphViz("dynamo.dot");
 
+    DynamoSymbols symbols;
 
     if(argc>1)
     {
@@ -48,9 +49,10 @@ Y_UTEST(dyn)
         }
 
         il->graphViz("il0.dot");
-        auto_ptr<Syntax::Parser> P = dynGen.build( *il );
+        auto_ptr<Syntax::Parser> P = dynGen.build( *il, &symbols );
         //il->graphViz("il1.dot");
-
+        std::cerr << "symbols.terminals=" << symbols.terminals << std::endl;
+        std::cerr << "symbols.internals=" << symbols.internals << std::endl;
 
         if(false)
         {

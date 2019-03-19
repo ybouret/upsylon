@@ -77,6 +77,21 @@ namespace upsylon
             Y_DISABLE_ASSIGN(DynamoInfo);
         };
 
+        //! base class to collect generic terminals and internals
+        class DynamoSymbols
+        {
+        public:
+            explicit DynamoSymbols() throw();
+            virtual ~DynamoSymbols() throw();
+
+            DynamoInfo::Set terminals;
+            DynamoInfo::Set internals;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(DynamoSymbols);
+        };
+
+
         //! generic derived symbol store for toplevel rules
         template <typename T>
         class DynamoRef : public DynamoInfo
@@ -128,7 +143,8 @@ namespace upsylon
             explicit DynamoGenerator();         //!< setup and register plugins
 
             //! build the parser from a top-level dynamo node
-            Syntax::Parser * build( DynamoNode &top, DynamoInfo::Set *terms=0 );
+            Syntax::Parser * build(DynamoNode     &top,
+                                   DynamoSymbols *symbols);
 
             //! clear maximum of data
             void clear() throw();

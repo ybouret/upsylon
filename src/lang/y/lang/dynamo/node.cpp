@@ -1,0 +1,184 @@
+
+#include "y/lang/dynamo/compiler.hpp"
+#include "y/exception.hpp"
+#include "y/string/convert.hpp"
+#include "y/string/io.hpp"
+#include "y/ios/graphviz.hpp"
+
+namespace upsylon
+{
+    namespace Lang
+    {
+        DynamoNode:: ~DynamoNode() throw()
+        {
+            assert(impl);
+            switch(type)
+            {
+                case DynamoInternal:
+                    delete static_cast<DynamoList *>(impl);
+                    break;
+
+                case DynamoTerminal:
+                    delete static_cast<string*>(impl);
+                    break;
+            }
+            impl=0;
+        }
+
+        DynamoNode:: DynamoNode(const string &id,
+                                const Lexeme &lx,
+                                const size_t  nskip,
+                                const size_t  ntrim) :
+        type( DynamoTerminal ),
+        name(id),
+        impl( NULL )
+        {
+            const string s = lx.to_string(nskip,ntrim);
+            impl = new string(s);
+        }
+
+        const string & DynamoNode:: content() const throw()
+        {
+            assert(DynamoTerminal==type);
+            assert(NULL!=impl);
+            return *static_cast<const string *>(impl);
+        }
+
+        DynamoList   &  DynamoNode:: children() throw()
+        {
+            assert(DynamoInternal==type);
+            assert(NULL!=impl);
+            return *static_cast<DynamoList *>(impl);
+        }
+
+        const DynamoList   &  DynamoNode:: children() const throw()
+        {
+            assert(DynamoInternal==type);
+            assert(NULL!=impl);
+            return *static_cast<const DynamoList *>(impl);
+        }
+
+
+        DynamoNode:: DynamoNode( const string &id ) :
+        type( DynamoInternal ),
+        name(id),
+        impl( new DynamoList() )
+        {
+
+        }
+
+        std::ostream & DynamoNode:: display( std::ostream &os, int level ) const
+        {
+            switch(type)
+            {
+                case DynamoTerminal: {
+                    const string s = string_convert::to_visible( content() );
+                    Indent(os,level) << "[term] <" << name << ">";
+                    if(s.size()>0)
+                    {
+                        os << "='" << s << "'";
+                    }
+                    os << std::endl;
+                } break;
+
+                case DynamoInternal: {
+                    const DynamoList &self = children();
+                    Indent(os,level) << "[call] <" << name << ">/" << self.size << std::endl;
+                    ++level;
+                    for(const DynamoNode *node = self.head; node; node=node->next )
+                    {
+                        node->display(os,level);
+                    }
+                    --level;
+                } break;
+            }
+            return os;
+        }
+
+        std::ostream & DynamoNode:: Indent(std::ostream &os, int level)
+        {
+            const string s = vformat("x%02x",level);
+            os << '|' << s << '|';
+            for(;level>0;--level)
+            {
+                os << '_' << '_';
+            }
+            return os;
+        }
+
+        void DynamoNode:: viz( ios::ostream &fp ) const
+        {
+            fp.viz(this);
+            const string l = string_convert::to_visible(name);
+            switch (type) {
+                case DynamoTerminal: {
+                    string s = content();
+                    s = string_convert::to_visible(s);
+                    if(s.size()>0)
+                    {
+                        fp("[label=\"%s='%s'\"];\n",*l,*s);
+                    }
+                    else
+                    {
+                        fp("[label=\"%s\"];\n",*l);
+                    }
+
+                } break;
+
+                case DynamoInternal:{
+                    fp("[label=\"%s\"];\n",*l);
+                    const bool multiple = children().size>0;
+                    unsigned   idx      = 1;
+                    for( const DynamoNode *node=children().head;node;node=node->next,++idx)
+                    {
+                        node->viz(fp);
+                        fp.viz(this); fp << "->"; fp.viz(node);
+                        if(multiple)
+                        {
+                            fp("[label=\"%u\"]",idx);
+                        }
+                        fp << ';' << '\n';
+                    }
+                } break;
+            }
+        }
+
+        void DynamoNode:: graphViz(const string &filename) const
+        {
+            {
+                ios::ocstream fp(filename);
+                fp << "digraph G {\n";
+                viz(fp);
+                fp << "}\n";
+            }
+            (void)ios::GraphViz::Render(filename);
+
+        }
+
+        void DynamoNode:: save( ios::ostream &fp ) const
+        {
+            string_io::save_binary(fp,name);
+            switch (type)
+            {
+                case DynamoTerminal: {
+                    fp.emit<uint8_t>(0);
+                    const string s = content();
+                    string_io::save_binary(fp,s);
+                } break;
+
+                case DynamoInternal: {
+                    fp.emit<uint8_t>(1);
+                    const DynamoList &ch = children();
+                    const size_t      nch = ch.size;
+                    fp.emit_upack(nch);
+                    for(const DynamoNode *node=ch.head;node;node=node->next)
+                    {
+                        node->save(fp);
+                    }
+                } break;
+            }
+        }
+        
+
+    }
+}

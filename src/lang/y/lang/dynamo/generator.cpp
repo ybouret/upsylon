@@ -64,6 +64,25 @@ namespace upsylon
 
 }
 
+namespace upsylon
+{
+    namespace Lang
+    {
+        DynamoSymbols:: DynamoSymbols() throw() :
+        terminals(), internals()
+        {
+
+        }
+
+        DynamoSymbols:: ~DynamoSymbols() throw()
+        {
+        }
+
+
+    }
+
+}
+
 
 
 namespace upsylon
@@ -150,7 +169,6 @@ namespace upsylon
         {
         }
 
-
 #if 0
         static inline
         bool isSemantic( const DynamoTerm &dt ) throw()
@@ -177,7 +195,7 @@ namespace upsylon
         }
 
 
-        Syntax::Parser * DynamoGenerator:: build( DynamoNode &top, DynamoInfo::Set *terms )
+        Syntax::Parser * DynamoGenerator:: build( DynamoNode &top, DynamoSymbols *symbols )
         {
             //__________________________________________________________________
             //
@@ -209,13 +227,28 @@ namespace upsylon
 
 
             
-            std::cerr << "terminals=" << terminals << std::endl;
-            std::cerr << "internals=" << internals << std::endl;
-            std::cerr << "literals =" << literals  << std::endl;
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << " terminals=" << terminals << std::endl);
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << " internals=" << internals << std::endl);
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << " literals =" << literals  << std::endl);
 
-            if(terms)
+            if(symbols)
             {
-                terms->free();
+                symbols->terminals.free();
+                symbols->internals.free();
+
+                for( DynamoRule::Set::iterator ir = internals.begin(); ir != internals.end(); ++ir)
+                {
+                    const DynamoRule &dr = *ir;
+                    if(dr.derived.uuid==Syntax::Aggregate::UUID)
+                    {
+                        if(!symbols->internals.insert(dr))
+                        {
+                            throw exception("{%s} unexpected multiple internal '%s'", **(parser->name), *(dr.derived.name) );
+                        }
+                    }
+                }
+
+
                 for( DynamoTerm::Set::iterator it = terminals.begin(); it!=terminals.end(); ++it )
                 {
                     const DynamoTerm &dt = *it;
@@ -223,9 +256,35 @@ namespace upsylon
                     {
                         throw exception("{%s} unexpected not standard terminal '%s'!!!", **(parser->name), *(dt.derived.name));
                     }
-                    if(!terms->insert(dt))
+
+                    if(!symbols->terminals.insert(dt))
                     {
                         throw exception("{%s} unexpected multiple terminal '%s'", **(parser->name), *(dt.derived.name) );
+                    }
+                }
+
+                for( DynamoTerm::Set::iterator it = literals.begin(); it!=terminals.end(); ++it )
+                {
+                    const DynamoTerm       &dt = *it;
+                    const Syntax::Terminal &t = dt.derived;
+                    switch(t.attr)
+                    {
+                        case Syntax::Standard:
+                            if(!symbols->terminals.insert(dt))
+                            {
+                                throw exception("{%s} unexpected multiple literal '%s'", **(parser->name), *(dt.derived.name) );
+                            }
+                            break;
+
+                        case Syntax::Operator:
+                            if(!symbols->internals.insert(dt))
+                            {
+                                throw exception("{%s} unexpected multiple literal '%s'", **(parser->name), *(dt.derived.name) );
+                            }
+                            break;
+
+                        case Syntax::Semantic:
+                            break; // do nothing
                     }
                 }
             }
