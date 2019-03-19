@@ -19,35 +19,55 @@ namespace upsylon
                     throw exception("{%s} no top level rule", **name );
                 }
 
+                //______________________________________________________________
+                //
                 // prepare the database
+                //______________________________________________________________
                 RuleProbe probe;
                 probe.ensure(rules.size);
                 probe.verbose = verbose;
-                
+
+                //______________________________________________________________
+                //
                 // recursively check rules
+                //______________________________________________________________
                 probe.visitFrom(rules.head,**name);
 
-                // check everyone was visited
+
                 bool hasTerminal = false;
                 for(const Rule *r=rules.head;r;r=r->next)
                 {
+                    //__________________________________________________________
+                    //
+                    // check visited
+                    //__________________________________________________________
                     if(! probe.search(r->name) )
                     {
                         throw exception("{%s} standalone %s <%s>", **name, r->typeName(), *(r->name) );
                     }
 
-                    if( r->uuid == Syntax::Terminal::UUID )
-                    {
-                        hasTerminal = true;
-                    }
+                    //__________________________________________________________
+                    //
+                    // check ready
+                    //__________________________________________________________
 
                     r->checkReady();
 
-                    if(r->uuid==Terminal::UUID&&r->as<Terminal>().attr == Operator )
+                    //__________________________________________________________
+                    //
+                    // update status for terminal
+                    //__________________________________________________________
+                    if( r->uuid == Syntax::Terminal::UUID )
                     {
-                        ops = true;
-                        Y_LANG_SYNTAX_VERBOSE(std::cerr << "#{" << *name << "} <" << r->name << "> is an operator" << std::endl);
+                        hasTerminal = true;
+                        if(r->as<Terminal>().attr == Operator)
+                        {
+                            ops = true;
+                            Y_LANG_SYNTAX_VERBOSE(std::cerr << "#{" << *name << "} <" << r->name << "> is an operator" << std::endl);
+                        }
                     }
+
+
                 }
 
                 if(!hasTerminal)
