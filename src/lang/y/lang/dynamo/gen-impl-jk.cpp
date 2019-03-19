@@ -17,11 +17,10 @@ namespace upsylon
             DynamoList &ch = node->children();
             if(ch.size!=2)                    throw exception("{%s} mismatching joker size in <%s>", **(parser->name),*name);
             if(ch.tail->type!=DynamoTerminal) throw exception("{%s} mismatching joker type in <%s>", **(parser->name),*name);
-            const string     &jokerType = ch.tail->name;
-            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_joker[" << jokerType << "]" << std::endl);
+            Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_joker[" << ch.tail->name << "]" << std::endl);
 
             Syntax::Compound &jokerRule = parser->bundle(jokerName);
-            const char        jokerChar = jokerType[0];
+            const char        jokerChar = static_cast<const string &>(ch.tail->name)[0];
             delete ch.pop_back(); assert(ch.head);
             fill(jokerRule,ch.head);
             switch( jokerChar )
@@ -29,7 +28,7 @@ namespace upsylon
                 case '*': parent << parser->zeroOrMore(jokerRule); break;
                 case '+': parent << parser->oneOrMore(jokerRule);  break;
                 case '?': parent << parser->optional(jokerRule);   break;
-                default: throw exception("{%s} unknown joker type '%c' in <%s>",**(parser->name),jokerChar,*name);
+                default : throw exception("{%s} unknown joker type '%c' in <%s>",**(parser->name),jokerChar,*name);
             }
         }
         
