@@ -46,7 +46,7 @@ namespace upsylon
                 //______________________________________________________________
                 Syntax::Terminal &t = parser->term(strName,strExpr);
                 const DynamoTerm  symb(modules.back(),t,info);
-                Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_new literal " << symb << std::endl);
+                Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr << "@gen",level) << "|_new literal '" << symb.from << "_" << symb.rule.name << "'" << std::endl);
                 if(!literals.insert(symb))
                 {
                     throw exception("{%s} unexpected failure to insert  '%s' !!", **(parser->name),*strName);

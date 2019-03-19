@@ -1,4 +1,4 @@
 .lexicalOnly;
 
-@drop : "\t" ' ' "[:blank:]" '\t';
+@drop : "[:blank:]";
 @endl : "[:endl:]";
