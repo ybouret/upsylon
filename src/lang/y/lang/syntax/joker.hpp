@@ -16,7 +16,9 @@ namespace upsylon
             public:
                 virtual ~Joker() throw(); //!< destructor
                 const Rule &jk;           //!< the joker rule
-                virtual void        graphVizEpilog(ios::ostream &) const;
+
+                virtual void graphVizEpilog(ios::ostream &) const; //!< link to jk
+                virtual void checkReady() const; //!< jk must be non hollow
 
             protected:
                 //! construct and reject a hollow rule!

@@ -156,13 +156,14 @@ namespace upsylon
         {
             return (dt.derived.attr == Syntax::Semantic);
         }
-#endif
 
         static inline
         bool isAlternate( const DynamoRule &dr ) throw()
         {
             return (Syntax::Alternate::UUID == dr.derived.uuid );
         }
+#endif
+        
 
         Syntax::Parser * DynamoGenerator:: build( DynamoNode &top )
         {
@@ -183,6 +184,9 @@ namespace upsylon
             Y_LANG_SYNTAX_VERBOSE(DynamoNode::Indent(std::cerr<< "@gen",0) << "<First  Pass: DECL>" << std::endl);
             declModule(top);
             assert(0==modules.size());
+            if(parser.is_empty()) throw exception("DynamoGenerator( No Top Level Rule!!! )");
+
+            parser->setVerbose( verbose );
 
             //__________________________________________________________________
             //
@@ -202,14 +206,13 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // thirds pass: update tables
+            // and validate
             //__________________________________________________________________
-            
-
             parser->graphViz( *(parser->name) + ".dot" );
 
+            parser->end();
 
-            return 0;
+            return parser.yield();
         }
 
     }

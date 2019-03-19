@@ -156,6 +156,12 @@ namespace upsylon
             Aggregate & Aggregate:: bundle()  throw() { (Behavior &)behavior = MergeAll; return *this; }
 
 
+            void Aggregate:: checkReady() const
+            {
+                if(size<=0) throw exception("%s '%s' is empty",typeName(),*name);
+            }
+
+
         }
 
     }
@@ -186,6 +192,10 @@ namespace upsylon
 
             bool Alternate:: isHollow() const throw()
             {
+                for(const Operand *op=head;op;op=op->next)
+                {
+                    if(op->rule.isHollow()) return true;
+                }
                 return false;
             }
 
@@ -218,6 +228,11 @@ namespace upsylon
                 return "egg";
             }
 
+
+            void Alternate:: checkReady() const
+            {
+                if(isHollow()) throw exception("%s '%s' is hollow",typeName(),*name);
+            }
 
         }
 

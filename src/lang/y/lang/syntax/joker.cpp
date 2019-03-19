@@ -13,12 +13,7 @@ namespace upsylon
             Internal(i,n,typeid(Joker)),
             jk(r)
             {
-                /*
-                if(jk.isHollow())
-                {
-                    //throw exception("Lang.Syntax.Joker(hollow rule '%s')", *(r.name));
-                }
-                 */
+
                 derived = (const Joker *)this;
             }
 
@@ -26,6 +21,15 @@ namespace upsylon
             {
                 graphVizLink(fp, &jk, 0);
             }
+
+            void Joker:: checkReady() const
+            {
+                if(jk.isHollow())
+                {
+                    throw exception("%s '%s' is hollow", typeName(), *(jk.name));
+                }
+            }
+            
 
         }
     }

@@ -48,7 +48,7 @@ Y_UTEST(dyn)
         }
 
         il->graphViz("il0.dot");
-        dynGen.build( *il );
+        auto_ptr<Syntax::Parser> P = dynGen.build( *il );
         //il->graphViz("il1.dot");
 
 
@@ -58,6 +58,15 @@ Y_UTEST(dyn)
             XNode::RemoveFrom(*g,cut);
             g->graphViz( "dynamo_cut.dot" );
         }
+
+        if(argc>2)
+        {
+            const string    fn = argv[2];
+            auto_ptr<XNode> tree = P->run((fn=="STDIN") ? Module::OpenSTDIN() : Module::OpenFile(fn));
+            const string    dotfile = *(P->name) + "_tree.dot";
+            tree->graphViz(dotfile);
+        }
+
 
     }
 }

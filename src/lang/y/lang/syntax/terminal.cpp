@@ -53,6 +53,10 @@ namespace upsylon
                 return false;
             }
 
+            void Terminal:: checkReady() const
+            {
+                // do nothing
+            }
 
             Y_LANG_SYNTAX_ACCEPT_START(Terminal)
             {

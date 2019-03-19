@@ -81,6 +81,7 @@ namespace upsylon
                 Y_LANG_SYNTAX_ACCEPT_PROTO();                      //!< must accept all operands
                 virtual const char *graphVizShape() const throw(); //!< the shape
                 virtual const char *graphVizStyle() const throw(); //!< change style according to behavior
+                virtual void        checkReady() const;            //!< at least a non-hollow rule
 
 
                 Aggregate & design()  throw();            //!< set behavior to MergeOne
@@ -102,11 +103,11 @@ namespace upsylon
                 virtual ~Alternate() throw();             //!< desctructor
                 Alternate & operator |= ( const Rule & ); //!< syntactic sugar
 
-                virtual bool        isHollow() const throw();      //!< false by construction
+                virtual bool        isHollow() const throw();      //!< if any rule is hollow, empty is not hollow, rejected
                 virtual const char *typeName() const throw();      //!< "Alternate"
                 Y_LANG_SYNTAX_ACCEPT_PROTO();                      //!< accept the first possible operands
                 virtual const char *graphVizShape() const throw(); //!< the shape
-                
+                virtual void        checkReady() const;            //!< error if hollow
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alternate);

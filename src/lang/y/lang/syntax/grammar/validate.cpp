@@ -28,12 +28,21 @@ namespace upsylon
                 probe.visitFrom(rules.head,**name);
 
                 // check everyone was visited
+                bool hasTerminal = false;
                 for(const Rule *r=rules.head;r;r=r->next)
                 {
                     if(! probe.search(r->name) )
                     {
                         throw exception("{%s} standalone %s <%s>", **name, r->typeName(), *(r->name) );
                     }
+
+                    if( r->uuid == Syntax::Terminal::UUID )
+                    {
+                        hasTerminal = true;
+                    }
+
+                    r->checkReady();
+
                     if(r->uuid==Terminal::UUID&&r->as<Terminal>().attr == Operator )
                     {
                         ops = true;
@@ -41,24 +50,11 @@ namespace upsylon
                     }
                 }
 
-                // check recursivity
-                if(false)
+                if(!hasTerminal)
                 {
-                    for(const Rule *r=rules.head;r;r=r->next)
-                    {
-                        const int rr = probe.recursivity(r);
-                        if(rr>=0)
-                        {
-                            std::cerr << r->typeName() << " <" << r->name << ">";
-                            for(size_t i=r->name.length();i<=maxRuleNameLength;++i)
-                            {
-                                std::cerr << ' ';
-                            }
-                            std::cerr << " recursivity: " << rr << "@" << probe.depth;
-                            std::cerr << std::endl;
-                        }
-                    }
+                    throw exception("{%s} no terminal were found", **name );
                 }
+
                 Y_LANG_SYNTAX_VERBOSE(std::cerr << "{" << *name << "} seems valid!" << std::endl);
             }
 
