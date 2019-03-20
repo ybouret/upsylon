@@ -60,10 +60,11 @@ ADD_TEST(mem:dyadic      test-main dyadic)
 ADD_TEST(mem:ptr         test-main ptr)
 ADD_TEST(mem:release     test-main release)
 
-SOURCE_GROUP(par FILES test-parallel.cpp test-threads.cpp test-simd.cpp)
+SOURCE_GROUP(par FILES test-parallel.cpp test-threads.cpp test-simd.cpp test-server.cpp)
 ADD_TEST(par:parallel    test-main parallel)
 ADD_TEST(par:threads     test-main threads)
 ADD_TEST(par:simd        test-main simd)
+ADD_TEST(par:server      test-main server)
 
 SOURCE_GROUP(str FILES test-string.cpp test-string-convert.cpp test-tokenizer.cpp)
 ADD_TEST(str:string      test-main string)

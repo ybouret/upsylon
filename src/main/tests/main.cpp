@@ -44,6 +44,7 @@ Y_UTEST_INIT(128)
     Y_UTEST(parallel);
     Y_UTEST(threads);
     Y_UTEST(simd);
+    Y_UTEST(server);
     Y_UTEST(complex);
     Y_UTEST(xbitrev);
     Y_UTEST(mpn);
