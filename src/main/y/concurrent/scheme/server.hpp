@@ -21,7 +21,7 @@ namespace upsylon
             {
             public:
                 const job_uuid uuid;
-                const job_type work;
+                job_type       work;
                 jnode         *next;
                 jnode         *prev;
                 jnode(const job_uuid u, const job_type &w ) :
@@ -37,13 +37,32 @@ namespace upsylon
 
             virtual ~server() throw();
 
-            job_uuid append( const job_type &J );
-
+            
 
         protected:
             jlist    jobs;
             jpool    jmem;
             job_uuid uuid;
+
+            explicit server() throw();
+            
+            job_uuid append( const job_type &J );
+            void     remove( jnode          *j ) throw();
+            void     remove_pending_jobs() throw();
+
+            template <typename OBJECT_POINTER, typename METHOD_POINTER>
+            job_uuid enqueue( OBJECT_POINTER host, METHOD_POINTER meth )
+            {
+                const job_type J(host,meth);
+                return append(J);
+            }
+
+            template <typename FUNCTIONOID>
+            job_uuid enqueue( const FUNCTIONOID &F )
+            {
+                const job_type J(F);
+                return append(J);
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(server);
