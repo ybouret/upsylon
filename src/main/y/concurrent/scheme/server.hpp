@@ -40,6 +40,13 @@ namespace upsylon
                 return enqueue(J);
             }
 
+            template <typename FUNCTIONOID>
+            inline job_uuid enroll(const FUNCTIONOID &F )
+            {
+                const job_type J(F);
+                return enqueue(J);
+            }
+
         protected:
             job_uuid uuid;
             explicit server() throw();
