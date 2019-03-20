@@ -40,7 +40,7 @@ namespace {
         Y_DISABLE_ASSIGN(dummy);
     };
 
-
+#if 0
 
     class dummyServer : public concurrent::server
     {
@@ -113,19 +113,15 @@ namespace {
     private:
         Y_DISABLE_COPY_AND_ASSIGN(dummyServer);
     };
+#endif
 
 }
 
 Y_UTEST(server)
 {
     std::cerr << "sizeof(job_type)    =" << sizeof(concurrent::job_type) << std::endl;
-    std::cerr << "sizeof(server.jnode)=" << sizeof(concurrent::server::jnode) << std::endl;
 
-    dummyServer srv;
-    dummy       global(-3);
-
-    srv.demo(global);
-
+    
 
 
 }
