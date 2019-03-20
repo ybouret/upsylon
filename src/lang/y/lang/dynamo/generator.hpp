@@ -36,7 +36,7 @@ namespace upsylon
         //! generates a parser from a compiled tree
         //
         //______________________________________________________________________
-        class DynamoGenerator
+        class DynamoGenerator : public DynamoObject
         {
         public:
             typedef vector<const Tag,DynamoMemory> Modules; //!< alias

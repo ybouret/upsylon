@@ -57,7 +57,7 @@ namespace upsylon {
         };
 
         //! base class to collect generic terminals and internals
-        class DynamoSymbols
+        class DynamoSymbols : public DynamoObject
         {
         public:
             explicit DynamoSymbols() throw(); //!< setup

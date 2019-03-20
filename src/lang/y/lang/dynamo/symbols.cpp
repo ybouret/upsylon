@@ -7,6 +7,7 @@ namespace upsylon
     {
 
         DynamoInfo:: DynamoInfo(const Tag &moduleID, const Syntax::Rule &r, const unsigned inf ) throw() :
+        DynamoObject(),
         from(moduleID),
         rule(r),
         info(inf)
@@ -18,6 +19,7 @@ namespace upsylon
         }
 
         DynamoInfo:: DynamoInfo( const DynamoInfo &other) throw() :
+        DynamoObject(),
         from(other.from), rule(other.rule), info(other.info)
         {
         }
@@ -53,7 +55,7 @@ namespace upsylon
             {
                 case Syntax::Aggregate::UUID: os << "[+]"; break;
                 case Syntax::Alternate::UUID: os << "[-]"; break;
-                default: os << "(?)"; break;
+                default:                      os << "(?)"; break;
             }
             return (os<< static_cast<const DynamoInfo &>(*this));
         }
