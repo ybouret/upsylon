@@ -39,10 +39,32 @@ namespace upsylon
                 const job_type J(host,meth);
                 return enqueue(J);
             }
+
+        protected:
+            job_uuid uuid;
+            explicit server() throw();
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(server);
         };
 
+
+        class sequential_server : public server
+        {
+        public:
+            parallel  context;
+            fake_lock access;
+
+            explicit sequential_server() throw();
+            virtual ~sequential_server() throw();
+
+            virtual job_uuid enqueue( const job_type &job );
+            virtual bool     is_done( const job_uuid      ) const throw(); //!< true
+            virtual bool     is_live( const job_uuid      ) const throw(); //!< false
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(sequential_server);
+        };
     }
     
 }
