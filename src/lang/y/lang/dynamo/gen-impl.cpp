@@ -150,11 +150,7 @@ namespace upsylon
             return parent.name + vformat("@%u",indx);
         }
         
-      
-        
-      
-        
-        
+          
     }
     
 }
