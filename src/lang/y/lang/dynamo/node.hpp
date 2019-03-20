@@ -3,6 +3,7 @@
 #define Y_DYNAMO_NODE_INCLUDED 1
 
 #include "y/lang/lexical/unit.hpp"
+#include "y/lang/dynamo/types.hpp"
 
 namespace upsylon
 {
@@ -20,7 +21,7 @@ namespace upsylon
         typedef core::list_of_cpp<DynamoNode> DynamoList; //!< alias
 
         //! a generic node
-        class DynamoNode : public core::inode<DynamoNode>
+        class DynamoNode : public DynamoObject, public core::inode<DynamoNode>
         {
         public:
             const DynamoType  type;   //!< node type

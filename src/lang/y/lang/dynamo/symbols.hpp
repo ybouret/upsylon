@@ -3,6 +3,7 @@
 #define Y_DYNAMO_SYMBOLS_INCLUDED 1
 
 #include "y/lang/syntax/grammar.hpp"
+#include "y/lang/dynamo/types.hpp"
 
 namespace upsylon {
 
@@ -26,7 +27,7 @@ namespace upsylon {
 
 
         //! base class for symbols
-        class DynamoInfo
+        class DynamoInfo : public DynamoObject
         {
         public:
             static const unsigned Plugin=0x01; //!< arising from a plugin

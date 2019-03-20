@@ -49,7 +49,7 @@ namespace upsylon
                 virtual const char *graphVizShape() const throw() = 0;        //!< shape for graphViz
                 virtual void        graphVizEpilog(ios::ostream &) const = 0; //!< perform necessary linking
                 virtual const char *graphVizStyle() const throw();            //!< based on isHollow, can be superseeded
-                virtual void        checkReady() const = 0;                   //!< check
+                virtual void        checkReady() const = 0;                   //!< check if well designed
 
                 //______________________________________________________________
                 //

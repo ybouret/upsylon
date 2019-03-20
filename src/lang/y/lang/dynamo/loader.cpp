@@ -73,14 +73,14 @@ namespace upsylon
         {
             return getString(node,"raw string",isRS);
         }
-        
+
+#if 1
         string DynamoLoader:: getRX( const Syntax::Node &node ) const
         {
             return getString(node,"regular expression",isRX);
 
         }
 
-        
         string DynamoLoader:: getSTR( const XNode &node ) const
         {
             return getString(node,"any string",isSTR);
@@ -90,6 +90,7 @@ namespace upsylon
         {
             return getContent(node, "rule identifier", "rid");
         }
+#endif
         
 
         void DynamoLoader:: checkIncludes(Syntax::Node &node, const Module &currentModule)
