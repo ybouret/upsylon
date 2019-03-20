@@ -11,7 +11,7 @@ namespace {
     public:
         int data;
 
-        explicit dummy( const int d) : data(d)
+        explicit dummy(const int d) : data(d)
         {
 
         }
@@ -32,6 +32,7 @@ namespace {
         inline void work(parallel &context, lockable &access )
         {
             Y_LOCK(access);
+            ++data;
             std::cerr << context.indx << ", data=" << data <<  std::endl;
         }
 
@@ -59,6 +60,8 @@ namespace {
         void demo( dummy &global )
         {
             concurrent::job_uuid localID = 0;
+            reserve(1);
+
             {
                 dummy J(7);
                 localID = enqueue(J);
@@ -79,9 +82,12 @@ namespace {
             {
                 j->work(context,access);
             }
+            Y_CHECK(global.data==3);
 
             remove_pending_jobs();
 
+            reserve(1000);
+            
             {
                 dummy J(7);
                 localID = enqueue(J);
@@ -89,7 +95,7 @@ namespace {
             }
 
             {
-                globalID = enqueue( &global, &dummy::work );
+                globalID    = enqueue( &global, &dummy::work );
                 global.data = 4;
             }
 
@@ -100,6 +106,7 @@ namespace {
             {
                 j->work(context,access);
             }
+            Y_CHECK(global.data==5);
 
         }
 

@@ -4,6 +4,10 @@ namespace upsylon
 {
     namespace concurrent
     {
+        server:: jnode::  jnode(const job_uuid u, const job_type &w ) : uuid(u), work(w), next(0), prev(0) {}
+        server:: jnode:: ~jnode() throw() {}
+
+
 
         server:: server() throw() :
         jobs(),
@@ -48,6 +52,15 @@ namespace upsylon
             }
         }
 
+        void server:: reserve(  size_t nj )
+        {
+            while(nj-->0)
+            {
+                jmem.store( object::acquire1<jnode>() );
+            }
+        }
+
+
         void server:: remove(jnode *j) throw()
         {
             assert(j);
@@ -61,7 +74,37 @@ namespace upsylon
         {
             while( jobs.size ) remove( jobs.pop_back() );
         }
-        
+
+        bool server:: is_active( const job_uuid u ) const throw()
+        {
+            for(const jnode *j = jobs.head; j; j=j->next )
+            {
+                if( u == j->uuid ) return true;
+            }
+            return false;
+        }
+
+
     }
 }
+
+namespace upsylon
+{
+    namespace concurrent
+    {
+        sequential_server:: sequential_server() throw() :
+        access(),
+        context()
+        {
+        }
+
+        sequential_server:: ~sequential_server() throw()
+        {
+        }
+
+    }
+
+}
+
+
 
