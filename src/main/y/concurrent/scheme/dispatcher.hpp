@@ -45,16 +45,20 @@ namespace upsylon
             virtual job_uuid   enqueue( const job_type &job );
             virtual void       join() throw();
             virtual executor & engine() throw();  //!< implementation
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(dispatcher);
             jlist     jobs;
             jpool     jmem;
             threads   workers;
-            bool      done; //!< flag to quit loops
-
+            bool      done;  //!< flag to quit loops
+            size_t    ready; //!< for initial wait on cycle
+            condition cycle;
+            condition synch;
+            
             static void start(void *, parallel &, lockable &);
-            void loop( parallel &, lockable & );
+            void loop( parallel &);
 
 
         public:

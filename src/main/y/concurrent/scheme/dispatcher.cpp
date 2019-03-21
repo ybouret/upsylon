@@ -25,20 +25,34 @@ namespace upsylon
     {
         dispatcher:: ~dispatcher() throw()
         {
-            // direct suppression of pending jobs
             {
                 Y_LOCK(workers.access);
                 done=true;
+
+                if(verbose) {
+                    std::cerr << "** [dispatcher.quit: remaining #jobs=" << jobs.size  << "]" << std::endl;
+                    std::cerr << "** [dispatcher.quit: ready=" << ready << "/" << workers.count << "]" << std::endl;
+                }
+
+                // direct suppression of pending jobs
                 while( jobs.size )
                 {
                     jnode *j = jobs.pop_back();
                     destruct(j);
                     object::release1(j);
                 }
-            }
 
-            // wait for current jobs to end
-            join();
+                // wait for current jobs to finish
+                if(ready<workers.count)
+                {
+                    // wait on a locked mutex
+                    synch.wait(workers.access);
+                    // come back on a locked mutex
+                }
+
+                cycle.broadcast();
+            }
+            
             assert(0==jobs.size);
 
             // and final clear
@@ -52,10 +66,20 @@ namespace upsylon
         jmem(),
         workers(v),
         done(false),
+        ready(0),
+        cycle(),
         verbose( workers.verbose )
         {
             // and start
             workers.run(start,this);
+
+            // wait for initial synch
+            Y_MUTEX_PROBE(workers.access,ready>=workers.count);
+
+            if(verbose)
+            {
+                std::cerr << "** [dispatcher: ready]" << std::endl;
+            }
         }
 
         executor & dispatcher:: engine() throw()
@@ -125,20 +149,65 @@ namespace upsylon
 
         void dispatcher:: join() throw()
         {
-            
+            if(verbose)
+            {
+                std::cerr << "** [dispatcher.join done=" << (done?"true":"false") << "]" << std::endl;
+            }
         }
 
-        void dispatcher:: start(void *addr, parallel &context, lockable &access)
+        void dispatcher:: start(void     *addr,
+                                parallel &context,
+                                lockable &)
         {
             assert(addr);
             dispatcher &self = *static_cast<dispatcher *>(addr);
-            self.loop(context,access);
+            self.loop(context);
         }
 
-        void dispatcher:: loop(parallel &context, lockable &access)
+        void dispatcher:: loop(parallel &context)
         {
-            Y_LOCK(access);
-            std::cerr << "dispatcher.loop@" << context.size << "." << context.rank << std::endl;
+            mutex &access = workers.access;
+
+
+            access.lock();
+            if(verbose)
+            {
+                std::cerr << "** [dispatcher.loop@" << context.size << "." << context.rank << "]" << std::endl;
+            }
+            assert(ready<workers.count);
+            ++ready;
+            if(verbose&&ready>=workers.count)
+            {
+                std::cerr << "** [dispatcher.synchronized]" << std::endl;
+            }
+
+        LOOP:
+            // wait on the lock mutex
+            cycle.wait(access);
+
+            if(verbose) { std::cerr << " dispatch loop is called!" << std::endl; }
+
+            // wake up on the LOCKED mutex
+            if(done)
+            {
+                if(verbose) { std::cerr << " dispatch loop is done" << std::endl; }
+                access.unlock();
+                return;
+            }
+
+            // mark this thread as engaged in a computation
+            --ready;
+
+            // blah, blah
+
+            // end of loop
+            access.lock();
+            if(++ready)
+            {
+                synch.broadcast();
+            }
+            goto LOOP;
+
         }
 
     }
