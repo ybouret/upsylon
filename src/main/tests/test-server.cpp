@@ -10,14 +10,15 @@ namespace {
     class dummy
     {
     public:
-        int data;
+        int       data;
+        rt_clock &rtc;
 
-        explicit dummy(const int d) : data(d)
+        explicit dummy(const int d, rt_clock &c) : data(d), rtc(c)
         {
 
         }
 
-        dummy( const dummy &other) : data(other.data)
+        dummy( const dummy &other) : data(other.data), rtc(other.rtc)
         {
         }
 
@@ -32,9 +33,15 @@ namespace {
 
         inline void work(parallel &context, lockable &access )
         {
-            Y_LOCK(access);
-            ++data;
-            std::cerr << "@thread#" << context.rank << ", data=" << data <<  std::endl;
+            double dt = 0.1;
+            {
+                Y_LOCK(access);
+                ++data;
+                std::cerr << "@thread#" << context.rank << ", data=" << data <<  std::endl;
+                std::cerr << "waiting..." << std::endl;
+                dt += alea.to<double>()*0.3;
+            }
+            rtc.sleep(dt);
         }
 
     private:
@@ -53,12 +60,17 @@ Y_UTEST(server)
 
     concurrent::dispatcher srv(true);
 
-    dummy d(7);
-
     wtime chrono;
+    dummy d(7,chrono);
+
 
     srv.enroll( &d, &dummy::work );
     srv.enroll(d);
+
+    for(size_t i=0;i<100;++i)
+    {
+        srv.enroll( &d, &dummy::work );
+    }
 
     chrono.sleep(0.5);
 

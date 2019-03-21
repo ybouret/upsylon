@@ -222,9 +222,10 @@ namespace upsylon
             --ready;
             while(jobs.size>0)
             {
-                // take the jov
+
+                // take the job
                 jnode *j = jobs.pop_front();
-                if(verbose) { std::cerr << "** [dispatcher.done@" << context.size << "." << context.rank << "] => job#" << j->uuid << std::endl; }
+                if(verbose) { std::cerr << "** [dispatcher.take@" << context.size << "." << context.rank << "] => job#" << j->uuid << " out of " << jobs.size << " remaining jobs" << std::endl; }
 
                 // let other threads work
                 access.unlock();
@@ -239,8 +240,17 @@ namespace upsylon
                 access.lock();
                 junk.store(j);
             }
+
+            //------------------------------------------------------------------
+            //
+            // mutex is locked at end of computation
+            //
+            //------------------------------------------------------------------
             ++ready;
-            
+            if(ready>=workers.count)
+            {
+                synch.broadcast();
+            }
             goto CYCLE;
 
 
