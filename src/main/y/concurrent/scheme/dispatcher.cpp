@@ -98,12 +98,14 @@ namespace upsylon
 
         job_uuid dispatcher:: enqueue( const job_type &job )
         {
-            Y_LOCK(workers.access);
+            Y_LOCK(access);
             jnode *j = junk.fetch();
             try
             {
                 new (j) jnode(uuid,job);
                 ++uuid;
+                jobs.push_back(j);
+                cycle.signal();
                 return j->uuid;
             }
             catch(...)
@@ -199,10 +201,11 @@ namespace upsylon
 
             //------------------------------------------------------------------
             //
-            // wkae up on the LOCKED mutex
+            // wake up on the LOCKED mutex
             //
             //------------------------------------------------------------------
             if(verbose) { std::cerr << "** [dispatcher.call@" << context.size << "." << context.rank << "]" << std::endl; }
+            if(verbose) { std::cerr << "** [dispatcher.call@" << context.size << "." << context.rank << "] jobs=" << jobs.size << std::endl; }
 
             if(done)
             {
@@ -211,6 +214,32 @@ namespace upsylon
                 return;
             }
 
+            //------------------------------------------------------------------
+            //
+            // engage this thread in computation
+            //
+            //------------------------------------------------------------------
+            --ready;
+            while(jobs.size>0)
+            {
+                // take the jov
+                jnode *j = jobs.pop_front();
+                if(verbose) { std::cerr << "** [dispatcher.done@" << context.size << "." << context.rank << "] => job#" << j->uuid << std::endl; }
+
+                // let other threads work
+                access.unlock();
+                try
+                {
+                    j->call(context,access);
+                }
+                catch(...)
+                {
+                    // TODO: put in a thrash pool ?
+                }
+                access.lock();
+                junk.store(j);
+            }
+            ++ready;
             
             goto CYCLE;
 

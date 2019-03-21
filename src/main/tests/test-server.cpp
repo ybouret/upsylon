@@ -1,5 +1,6 @@
 #include "y/concurrent/scheme/dispatcher.hpp"
 #include "y/utest/run.hpp"
+#include "y/os/wtime.hpp"
 
 using namespace upsylon;
 
@@ -33,7 +34,7 @@ namespace {
         {
             Y_LOCK(access);
             ++data;
-            std::cerr << context.indx << ", data=" << data <<  std::endl;
+            std::cerr << "@thread#" << context.rank << ", data=" << data <<  std::endl;
         }
 
     private:
@@ -50,8 +51,16 @@ Y_UTEST(server)
     std::cerr << "sizeof(job_type)           =" << sizeof(concurrent::job_type) << std::endl;
     std::cerr << "sizeof(dispatcher::jnode)  =" << sizeof(concurrent::dispatcher::jnode) << std::endl;
 
-    concurrent::dispatcher d(true);
-    
+    concurrent::dispatcher srv(true);
+
+    dummy d(7);
+
+    wtime chrono;
+
+    srv.enroll( &d, &dummy::work );
+    srv.enroll(d);
+
+    chrono.sleep(0.5);
 
 
 }
