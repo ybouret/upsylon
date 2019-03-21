@@ -40,17 +40,21 @@ namespace upsylon
             void remove_pending() throw();
             void reserve_jobs( size_t n );
 
-            virtual bool     is_done( const job_uuid  jid ) const throw();
-            virtual bool     is_live( const job_uuid  jid ) const throw();
-            virtual job_uuid enqueue( const job_type &job );
-            virtual void     achieve() throw();
+            virtual bool       is_done( const job_uuid  jid ) const throw();
+            virtual bool       is_live( const job_uuid  jid ) const throw();
+            virtual job_uuid   enqueue( const job_type &job );
+            virtual void       join() throw();
+            virtual executor & engine() throw();  //!< implementation
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(dispatcher);
-            jlist   jobs;
-            jpool   jmem;
-            threads workers;
+            jlist     jobs;
+            jpool     jmem;
+            threads   workers;
+            bool      done; //!< flag to quit loops
 
+            static void start(void *, parallel &, lockable &);
+            void loop( parallel &, lockable & );
 
 
         public:

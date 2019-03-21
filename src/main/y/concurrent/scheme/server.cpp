@@ -23,20 +23,26 @@ namespace upsylon
         sequential_server:: ~sequential_server() throw() {}
 
         sequential_server:: sequential_server() throw():
-        server(), context(), access()
+        server(), impl()
         {
 
         }
 
         job_uuid sequential_server:: enqueue(const job_type &job)
         {
-            ((job_type&)job)(context,access);
+            ((job_type&)job)(impl[0],impl.access);
             return ++uuid;
         }
 
         bool sequential_server:: is_done(const job_uuid ) const throw() { return true; }
         bool sequential_server:: is_live(const job_uuid ) const throw() { return false; }
-        void sequential_server:: achieve() throw() {}
+        void sequential_server:: join() throw() {}
+
+        executor & sequential_server:: engine() throw()
+        {
+            return impl;
+        }
+
     }
 }
 

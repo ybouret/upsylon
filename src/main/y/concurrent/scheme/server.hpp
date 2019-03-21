@@ -24,10 +24,11 @@ namespace upsylon
             //------------------------------------------------------------------
 
             virtual ~server() throw();
-            virtual job_uuid enqueue( const job_type &job ) = 0;
-            virtual bool     is_done( const job_uuid  jid ) const throw() = 0;
-            virtual bool     is_live( const job_uuid  jid ) const throw() = 0;
-            virtual void     achieve() throw()                            = 0;
+            virtual job_uuid   enqueue( const job_type &job )               = 0;
+            virtual bool       is_done( const job_uuid  jid ) const throw() = 0;
+            virtual bool       is_live( const job_uuid  jid ) const throw() = 0;
+            virtual void       join()   throw()                             = 0;
+            virtual executor & engine() throw()                             = 0;
 
             //------------------------------------------------------------------
             //
@@ -60,19 +61,18 @@ namespace upsylon
         class sequential_server : public server
         {
         public:
-            parallel  context;
-            fake_lock access;
-
             explicit sequential_server() throw();
             virtual ~sequential_server() throw();
 
-            virtual job_uuid enqueue( const job_type &job );
-            virtual bool     is_done( const job_uuid      ) const throw(); //!< true
-            virtual bool     is_live( const job_uuid      ) const throw(); //!< false
-            virtual void     achieve() throw(); //!< do nothing
+            virtual job_uuid   enqueue( const job_type &job );
+            virtual bool       is_done( const job_uuid      ) const throw(); //!< true
+            virtual bool       is_live( const job_uuid      ) const throw(); //!< false
+            virtual void       join() throw();    //!< do nothing
+            virtual executor & engine() throw();  //!< implementation
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(sequential_server);
+            sequential impl;
         };
     }
     

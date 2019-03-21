@@ -28,6 +28,7 @@ namespace upsylon
             // direct suppression of pending jobs
             {
                 Y_LOCK(workers.access);
+                done=true;
                 while( jobs.size )
                 {
                     jnode *j = jobs.pop_back();
@@ -37,7 +38,7 @@ namespace upsylon
             }
 
             // wait for current jobs to end
-            achieve();
+            join();
             assert(0==jobs.size);
 
             // and final clear
@@ -50,8 +51,16 @@ namespace upsylon
         jobs(),
         jmem(),
         workers(v),
+        done(false),
         verbose( workers.verbose )
         {
+            // and start
+            workers.run(start,this);
+        }
+
+        executor & dispatcher:: engine() throw()
+        {
+            return workers;
         }
 
 
@@ -114,11 +123,23 @@ namespace upsylon
         }
 
 
-        void dispatcher:: achieve() throw()
+        void dispatcher:: join() throw()
         {
             
         }
 
+        void dispatcher:: start(void *addr, parallel &context, lockable &access)
+        {
+            assert(addr);
+            dispatcher &self = *static_cast<dispatcher *>(addr);
+            self.loop(context,access);
+        }
+
+        void dispatcher:: loop(parallel &context, lockable &access)
+        {
+            Y_LOCK(access);
+            std::cerr << "dispatcher.loop@" << context.size << "." << context.rank << std::endl;
+        }
 
     }
 }

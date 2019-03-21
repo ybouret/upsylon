@@ -21,8 +21,10 @@ namespace upsylon
 
             //! run a kernel with data, presenting a context and a shared access
             virtual void       run( kernel, void * ) = 0;
+
             //! number of underlying threads
             virtual size_t     num_threads()   const throw() = 0;
+
             //! access to individual context
             virtual parallel & operator[](const size_t) throw() = 0;
 
@@ -97,6 +99,8 @@ namespace upsylon
             
         private:
             parallel  context;
+            
+        public:
             fake_lock access;
 
         };
