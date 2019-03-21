@@ -22,7 +22,8 @@ namespace upsylon
     {
         sequential_server:: ~sequential_server() throw() {}
 
-        sequential_server:: sequential_server() throw(): server()
+        sequential_server:: sequential_server() throw():
+        server(), context(), access()
         {
 
         }
