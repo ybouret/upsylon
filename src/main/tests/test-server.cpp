@@ -43,10 +43,14 @@ namespace {
     
 }
 
+
+
 Y_UTEST(server)
 {
-    std::cerr << "sizeof(job_type)    =" << sizeof(concurrent::job_type) << std::endl;
+    std::cerr << "sizeof(job_type)           =" << sizeof(concurrent::job_type) << std::endl;
+    std::cerr << "sizeof(dispatcher::jnode)  =" << sizeof(concurrent::dispatcher::jnode) << std::endl;
 
+    concurrent::dispatcher d(true);
     
 
 

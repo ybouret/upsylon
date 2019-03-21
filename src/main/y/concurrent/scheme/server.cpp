@@ -35,7 +35,7 @@ namespace upsylon
 
         bool sequential_server:: is_done(const job_uuid ) const throw() { return true; }
         bool sequential_server:: is_live(const job_uuid ) const throw() { return false; }
-
+        void sequential_server:: achieve() throw() {}
     }
 }
 

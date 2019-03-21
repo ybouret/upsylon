@@ -27,6 +27,7 @@ namespace upsylon
             virtual job_uuid enqueue( const job_type &job ) = 0;
             virtual bool     is_done( const job_uuid  jid ) const throw() = 0;
             virtual bool     is_live( const job_uuid  jid ) const throw() = 0;
+            virtual void     achieve() throw()                            = 0;
 
             //------------------------------------------------------------------
             //
@@ -68,6 +69,7 @@ namespace upsylon
             virtual job_uuid enqueue( const job_type &job );
             virtual bool     is_done( const job_uuid      ) const throw(); //!< true
             virtual bool     is_live( const job_uuid      ) const throw(); //!< false
+            virtual void     achieve() throw(); //!< do nothing
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(sequential_server);

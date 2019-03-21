@@ -20,7 +20,7 @@ namespace upsylon {
         class threads : public executor, public __topology, public __threads
         {
         public:
-            mutex access;      //!< for threads synchronisation
+            mutable mutex access;      //!< for threads synchronisation
 
             //! quit threads
             virtual ~threads() throw();
