@@ -101,7 +101,7 @@ namespace upsylon
             parallel  context;
             
         public:
-            fake_lock access;
+            fake_lock access; //!< shared access
 
         };
 

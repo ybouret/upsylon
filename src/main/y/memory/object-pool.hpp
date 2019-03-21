@@ -10,6 +10,7 @@ namespace upsylon
     namespace memory
     {
 
+#if 0
         template <typename NODE>
         class object_pool : public core::pool_of<NODE>
         {
@@ -31,7 +32,8 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(object_pool);
         };
-
+#endif
+        
     }
 }
 

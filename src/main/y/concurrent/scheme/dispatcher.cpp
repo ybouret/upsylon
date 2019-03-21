@@ -12,8 +12,58 @@ namespace upsylon
         }
 
         dispatcher:: jnode:: jnode( const job_uuid u, const job_type &J ) :
-        next(0), prev(0), uuid(u), call(J), valid(true)
+        next(0), prev(0), uuid(u), call(J), valid(1)
         {
+        }
+
+    }
+
+}
+
+namespace upsylon
+{
+    namespace concurrent
+    {
+        dispatcher:: jpool:: jpool() throw()  : jpool_type() {}
+
+        dispatcher:: jpool::  ~jpool() throw()
+        {
+            clear();
+        }
+
+        dispatcher::jnode * dispatcher:: jpool:: fetch()
+        {
+            if(size)
+            {
+                return checked( query() );
+            }
+            else
+            {
+                return object::acquire1<jnode>();
+            }
+        }
+
+        void dispatcher:: jpool:: clear() throw()
+        {
+            while(size)
+            {
+                jnode *j = checked( query() );
+                object::release1(j);
+            }
+        }
+
+        void dispatcher:: jpool:: gc() throw()
+        {
+            for( jnode *j = top; j; j=checked(j)->next)
+                ;
+        }
+
+
+        dispatcher::jnode * dispatcher:: jpool:: checked( jnode *j ) throw()
+        {
+            assert(j);
+            if(j->valid) { destruct(j); assert(0==j->valid); }
+            return j;
         }
 
     }
@@ -30,6 +80,7 @@ namespace upsylon
         dispatcher:: dispatcher(const bool v) :
         jobs(),
         junk(),
+        jerr(),
         workers(v),
         access( workers.access ),
         done(false),
@@ -232,13 +283,15 @@ namespace upsylon
                 try
                 {
                     j->call(context,access);
+                    access.lock();
+                    junk.store(j);
                 }
                 catch(...)
                 {
-                    // TODO: put in a thrash pool ?
+                    access.lock();
+                    jerr.store(j);
                 }
-                access.lock();
-                junk.store(j);
+
             }
 
             //------------------------------------------------------------------

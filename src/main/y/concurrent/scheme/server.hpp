@@ -13,9 +13,11 @@ namespace upsylon
         typedef functor<void,TL2(parallel&,lockable&)> job_type; //!< a functor holds the job to do
         typedef size_t                                 job_uuid; //!< unique ID to look for task completion
 
+        //! jobs server interface
         class server
         {
         public:
+            virtual ~server() throw(); //!< destructor
 
             //------------------------------------------------------------------
             //
@@ -23,18 +25,18 @@ namespace upsylon
             //
             //------------------------------------------------------------------
 
-            virtual ~server() throw();
-            virtual job_uuid   enqueue( const job_type &job )               = 0;
-            virtual bool       is_done( const job_uuid  jid ) const throw() = 0;
-            virtual bool       is_live( const job_uuid  jid ) const throw() = 0;
-            virtual void       join()   throw()                             = 0;
-            virtual executor & engine() throw()                             = 0;
+            virtual job_uuid   enqueue( const job_type &job )               = 0; //!< enqueue a job
+            virtual bool       is_done( const job_uuid  jid ) const throw() = 0; //!< check if job ID is done
+            virtual bool       is_live( const job_uuid  jid ) const throw() = 0; //!< check if job ID is alive
+            virtual void       join()   throw()                             = 0; //!< wait for all enqueued jobs to complete
+            virtual executor & engine() throw()                             = 0; //!< get underlying engine
 
             //------------------------------------------------------------------
             //
             // non-virtual interface
             //
             //------------------------------------------------------------------
+            //! wrapper
             template <typename OBJECT_POINTER, typename METHOD_POINTER>
             inline job_uuid enroll( OBJECT_POINTER host, METHOD_POINTER meth )
             {
@@ -42,6 +44,7 @@ namespace upsylon
                 return enqueue(J);
             }
 
+            //! wrapper
             template <typename FUNCTIONOID>
             inline job_uuid enroll(const FUNCTIONOID &F )
             {
@@ -50,7 +53,7 @@ namespace upsylon
             }
 
         protected:
-            job_uuid uuid;
+            job_uuid uuid; //!< uuid generator
             explicit server() throw();
 
         private:
@@ -58,17 +61,18 @@ namespace upsylon
         };
 
 
+        //! sequential server implementation
         class sequential_server : public server
         {
         public:
-            explicit sequential_server() throw();
-            virtual ~sequential_server() throw();
+            explicit sequential_server() throw(); //!< initialize
+            virtual ~sequential_server() throw(); //!< destructor
 
-            virtual job_uuid   enqueue( const job_type &job );
+            virtual job_uuid   enqueue( const job_type &job );               //!< execute
             virtual bool       is_done( const job_uuid      ) const throw(); //!< true
             virtual bool       is_live( const job_uuid      ) const throw(); //!< false
-            virtual void       join() throw();    //!< do nothing
-            virtual executor & engine() throw();  //!< implementation
+            virtual void       join() throw();                               //!< do nothing
+            virtual executor & engine() throw();                             //!< implementation
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(sequential_server);

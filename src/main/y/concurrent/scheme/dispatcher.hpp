@@ -10,19 +10,19 @@ namespace upsylon
 {
     namespace concurrent
     {
-
+        //! MP jobs server
         class dispatcher : public server
         {
         public:
-            //! internal node
+            //! internal node to hold a job
             class jnode
             {
             public:
-                jnode         *next;
-                jnode         *prev;
-                const job_uuid uuid;
-                job_type       call;
-                const int      valid;
+                jnode         *next;  //!< for list/pool
+                jnode         *prev;  //!< for list
+                const job_uuid uuid;  //!< given by dispatcher
+                job_type       call;  //!< the job to do
+                const int      valid; //!< flag to manage memory
 
                 ~jnode() throw();                         //!< destructor
                 jnode(const job_uuid, const job_type &J); //!< initialize
@@ -31,64 +31,35 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(jnode);
             };
 
-            typedef core::list_of<jnode> jlist;
-            typedef core::pool_of<jnode> jpool_type;
+            typedef core::list_of<jnode> jlist;      //!< alias
+            typedef core::pool_of<jnode> jpool_type; //!< alias
+
+            //! pool to manage valid and invalid nodes
             class jpool : public jpool_type
             {
             public:
-                explicit jpool() throw() : jpool_type() {}
-
-                virtual ~jpool() throw()
-                {
-                    clear();
-                }
-
-                jnode *fetch() throw()
-                {
-                    if(size)
-                    {
-                        return checked( query() );
-                    }
-                    else
-                    {
-                        return object::acquire1<jnode>();
-                    }
-                }
-
-                void clear() throw()
-                {
-                    while(size)
-                    {
-                        jnode *j = checked( query() );
-                        object::release1(j);
-                    }
-                }
-
-                void gc() throw()
-                {
-                    for( jnode *j = top; j; j=checked(j)->next)
-                        ;
-                }
+                explicit jpool() throw(); //!< initialize
+                virtual ~jpool() throw(); //!< destructor
+                jnode   *fetch();         //!< fetch a not valid done
+                void     clear() throw(); //!< delete all nodes
+                void     gc()    throw(); //!< invalidate all nodes
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(jpool);
-                static jnode *checked( jnode *j ) throw() {
-                    assert(j);
-                    if(j->valid) { destruct(j); assert(0==j->valid); }
-                    return j;
-                }
+                static jnode *checked( jnode *j ) throw();
             };
 
 
-            explicit dispatcher( const bool v = false );
-            virtual ~dispatcher() throw();
+            explicit dispatcher( const bool v = false ); //!< initialize
+            virtual ~dispatcher() throw();               //!< destruct, all pending jobs are removed
 
-            void remove_pending() throw();
-            void reserve_jobs( size_t n );
+            void remove_pending() throw(); //!< remove all pending jobs
+            void reserve_jobs( size_t n ); //!< memory to reserve for some jobs
 
-            virtual bool       is_done( const job_uuid  jid ) const throw();
-            virtual bool       is_live( const job_uuid  jid ) const throw();
-            virtual job_uuid   enqueue( const job_type &job );
+
+            virtual bool       is_done( const job_uuid  jid ) const throw(); //!< look up
+            virtual bool       is_live( const job_uuid  jid ) const throw(); //!< loop up
+            virtual job_uuid   enqueue( const job_type &job );  //!< enqueue a job
             virtual void       join() throw();
             virtual executor & engine() throw();  //!< implementation
             
@@ -97,9 +68,10 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(dispatcher);
             jlist     jobs;
             jpool     junk;
+            jpool     jerr;
             threads   workers;
         public:
-            mutex    &access;
+            mutex    &access; //!< shared mutex
         private:
             bool      done;  //!< flag to quit loops
             size_t    ready; //!< for initial wait on cycle
@@ -111,7 +83,7 @@ namespace upsylon
 
 
         public:
-            bool &verbose;
+            bool &verbose; //!< workers.verbose
         };
 
     }
