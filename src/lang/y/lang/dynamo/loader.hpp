@@ -10,7 +10,7 @@ namespace upsylon
     namespace Lang
     {
 
-        //! full loading of dynamo trees and utility functions
+        //! full loading of dynamo trees
         class DynamoLoader : public DynamoParser
         {
         public:

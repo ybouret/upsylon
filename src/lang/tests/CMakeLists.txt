@@ -17,11 +17,12 @@ ADD_TEST(Grammar       test-lang grammar)
 ADD_TEST(Parser        test-lang parser)
 ADD_TEST(Eval          test-lang ee)
 ADD_TEST(JSON          test-lang json)
-#ADD_TEST(Dynamo:Hello  test-lang dyn ${HERE}/hello.g)
 ADD_TEST(H31           test-lang h31)
 ADD_TEST(Dynamo:List   test-lang dyn ${HERE}/list.g)
 ADD_TEST(Dynamo:Eval   test-lang dyn ${HERE}/eval.g)
 ADD_TEST(Dynamo:Expr   test-lang dyn ${HERE}/expr.g)
+ADD_TEST(Manager       test-lang manager)
+
 ADD_TEST(Dynamo:JSON   test-lang dyn ${HERE}/../../json/y/json/json.g)
 
 ADD_CUSTOM_TARGET(utest-lang

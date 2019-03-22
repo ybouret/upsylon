@@ -45,11 +45,15 @@ Y_UTEST(h31)
                 const Word::Ptr *pw = words.search(w->code);
                 if( pw )
                 {
-                    throw exception("collision of '%s' with '%s'", *((**pw).data), *(w->data) );
+                    //throw exception("collision of '%s' with '%s'", *((**pw).data), *(w->data) );
+                    std::cerr << "Collision of '" << (**pw).data << "' with '" << w->data << "'" << std::endl;
                 }
-                if(!words.insert(w))
+                else
                 {
-                    throw exception("unexpected failure to insert '%s'", *(w->data));
+                    if(!words.insert(w))
+                    {
+                        throw exception("unexpected failure to insert '%s'", *(w->data));
+                    }
                 }
             }
         }
