@@ -209,6 +209,7 @@ namespace upsylon
                 }
             }
 
+
             //__________________________________________________________________
             //
             // and validate
@@ -217,7 +218,9 @@ namespace upsylon
 
             parser->end();
 
-            return parser.yield();
+            Syntax::Parser *theParser = parser.yield();
+            clear();
+            return theParser;
         }
 
     }

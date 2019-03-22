@@ -11,21 +11,11 @@ namespace upsylon
         }
 
         DynamoManager:: DynamoManager() throw() :
-        gen(0),
         ld(0)
         {
         }
 
-
-        DynamoGenerator & DynamoManager:: generator()
-        {
-            if(gen.is_empty())
-            {
-                gen = new DynamoGenerator();
-            }
-            
-            return *gen;
-        }
+        
 
         DynamoLoader & DynamoManager:: loader()
         {

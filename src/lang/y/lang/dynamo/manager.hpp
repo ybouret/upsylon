@@ -12,11 +12,11 @@ namespace upsylon
     namespace Lang
     {
 
-        class DynamoManager : public singleton<DynamoManager>
+        //! singleton to create parsers
+        class DynamoManager : public singleton<DynamoManager>, public DynamoGenerator
         {
         public:
-            DynamoGenerator & generator(); //!< generator management
-            DynamoLoader    & loader();    //!< loader management
+            DynamoLoader & loader();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoManager);
@@ -25,8 +25,7 @@ namespace upsylon
             virtual ~DynamoManager() throw();
             static const at_exit::longevity life_time = -13;
 
-            auto_ptr<DynamoGenerator> gen;
-            auto_ptr<DynamoLoader>    ld;
+            auto_ptr<DynamoLoader> ld;
 
         };
 
