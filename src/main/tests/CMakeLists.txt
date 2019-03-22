@@ -65,6 +65,7 @@ ADD_TEST(par:parallel    test-main parallel)
 ADD_TEST(par:threads     test-main threads)
 ADD_TEST(par:simd        test-main simd)
 ADD_TEST(par:server      test-main server)
+ADD_TEST(par:servpi      test-main servpi)
 
 SOURCE_GROUP(str FILES test-string.cpp test-string-convert.cpp test-tokenizer.cpp)
 ADD_TEST(str:string      test-main string)

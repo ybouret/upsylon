@@ -8,7 +8,7 @@ namespace upsylon
         {
         }
 
-        server:: server() throw() : uuid(0)
+        server:: server() throw() : uuid(1)
         {}
 
 
@@ -39,6 +39,16 @@ namespace upsylon
         executor & sequential_server:: engine() throw()
         {
             return impl;
+        }
+
+        void sequential_server:: process(array<job_uuid> &uuids, const array<job_type> &batch)
+        {
+            assert(uuids.size()==batch.size());
+            uuids.ld(0);
+            for(size_t i=1;i<=batch.size();++i)
+            {
+                uuids[i] = enqueue(batch[i]);
+            }
         }
 
     }

@@ -57,10 +57,11 @@ namespace upsylon
             void reserve_jobs( size_t n ); //!< memory to reserve for some jobs
 
 
-            virtual job_uuid   enqueue( const job_type &job );  //!< enqueue a job
-            virtual void       flush()  throw();
-            virtual executor & engine() throw();  //!< implementation
-            
+            virtual job_uuid   enqueue( const job_type &job );                      //!< enqueue a job
+            virtual void       flush()  throw();                                    //!< wait for all enqueued jobs
+            virtual executor & engine() throw();                                    //!< implementation
+            virtual void       process(array<job_uuid> &, const array<job_type> &); //!< batch
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(dispatcher);

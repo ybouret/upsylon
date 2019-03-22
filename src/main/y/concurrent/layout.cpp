@@ -22,7 +22,7 @@ namespace upsylon
         shift( min_of<size_t>(starting,procs-1) ),
         width( min_of<size_t>( cores, procs-shift) )
         {
-            std::cerr << "layout: using #core=" << cores << "/" << procs << ", starting@" << shift << "=>width=" << width << std::endl;
+            //std::cerr << "layout: using #core=" << cores << "/" << procs << ", starting@" << shift << "=>width=" << width << std::endl;
         }
 
         layout:: layout(const layout &other) throw() :

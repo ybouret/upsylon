@@ -151,6 +151,31 @@ namespace upsylon
             }
         }
 
+        void dispatcher:: process(array<job_uuid> &uuids, const array<job_type> &batch)
+        {
+            assert(uuids.size()==batch.size());
+            Y_LOCK(access);
+            const size_t n = batch.size();
+            for(size_t i=1;i<=n;++i)
+            {
+                jnode *j = storage.fetch();
+                try
+                {
+                    new (j) jnode( (uuids[i]=uuid) ,batch[i]);
+                    ++uuid;
+                    pending.push_back(j);
+
+                }
+                catch(...)
+                {
+                    (int&)(j->valid)=0; // mark as not constructed in any case
+                    storage.store(j);
+                    throw;
+                }
+            }
+            activity.signal();
+        }
+
 
         void dispatcher:: flush() throw()
         {
@@ -166,7 +191,10 @@ namespace upsylon
                 flushing.wait(access);
 
                 // wake up on a locked mutex
-                std::cerr << "|_[dispatcher.flush achived with stopping=" << (stopping?"true":"false") << "]" << std::endl;
+                if(verbose)
+                {
+                    std::cerr << "|_[dispatcher.flush achived with stopping=" << (stopping?"true":"false") << "]" << std::endl;
+                }
             }
             access.unlock();
         }

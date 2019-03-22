@@ -41,10 +41,13 @@ Y_UTEST_INIT(128)
     Y_UTEST(arrays);
     Y_UTEST(dyadic);
     Y_UTEST(endian);
+
     Y_UTEST(parallel);
     Y_UTEST(threads);
     Y_UTEST(simd);
     Y_UTEST(server);
+    Y_UTEST(servpi);
+
     Y_UTEST(complex);
     Y_UTEST(xbitrev);
     Y_UTEST(mpn);
