@@ -26,9 +26,7 @@ namespace upsylon
             //------------------------------------------------------------------
 
             virtual job_uuid   enqueue( const job_type &job )               = 0; //!< enqueue a job
-            virtual bool       is_done( const job_uuid  jid ) const throw() = 0; //!< check if job ID is done
-            virtual bool       is_live( const job_uuid  jid ) const throw() = 0; //!< check if job ID is alive
-            virtual void       join()   throw()                             = 0; //!< wait for all enqueued jobs to complete
+            virtual void       flush()   throw()                            = 0; //!< wait for all enqueued jobs to complete
             virtual executor & engine() throw()                             = 0; //!< get underlying engine
 
             //------------------------------------------------------------------
@@ -69,9 +67,7 @@ namespace upsylon
             virtual ~sequential_server() throw(); //!< destructor
 
             virtual job_uuid   enqueue( const job_type &job );               //!< execute
-            virtual bool       is_done( const job_uuid      ) const throw(); //!< true
-            virtual bool       is_live( const job_uuid      ) const throw(); //!< false
-            virtual void       join() throw();                               //!< do nothing
+            virtual void       flush() throw();                              //!< do nothing
             virtual executor & engine() throw();                             //!< implementation
 
         private:

@@ -63,7 +63,7 @@ Y_UTEST(server)
     wtime chrono;
     dummy d(7,chrono);
 
-
+#if 0
     srv.enroll( &d, &dummy::work );
     srv.enroll(d);
 
@@ -73,7 +73,7 @@ Y_UTEST(server)
     }
 
     chrono.sleep(0.5);
-
+#endif
 
 }
 Y_UTEST_DONE()

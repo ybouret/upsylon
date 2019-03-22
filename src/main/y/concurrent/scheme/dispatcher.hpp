@@ -57,26 +57,27 @@ namespace upsylon
             void reserve_jobs( size_t n ); //!< memory to reserve for some jobs
 
 
-            virtual bool       is_done( const job_uuid  jid ) const throw(); //!< look up
-            virtual bool       is_live( const job_uuid  jid ) const throw(); //!< loop up
             virtual job_uuid   enqueue( const job_type &job );  //!< enqueue a job
-            virtual void       join() throw();
+            virtual void       flush()  throw();
             virtual executor & engine() throw();  //!< implementation
             
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(dispatcher);
-            jlist     jobs;
-            jpool     junk;
-            jpool     jerr;
-            threads   workers;
+            jlist     pending; //!< pending jobs
+            jlist     current; //!< currently processed jobs
+            jpool     aborted; //!< jobs that raised an exception
+            jpool     storage; //!< main thread memory
+            threads   workers; //!< the engine
+            
         public:
             mutex    &access; //!< shared mutex
+
         private:
-            bool      done;  //!< flag to quit loops
-            size_t    ready; //!< for initial wait on cycle
-            condition cycle;
-            condition synch;
+            size_t    prepared;  //!< for first synchronization
+            bool      stopping;  //!< flag to quit loops
+            condition activity;
+            condition flushing;
             
             static void start(void *, parallel &, lockable &);
             void loop( parallel &);
