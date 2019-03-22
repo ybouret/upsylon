@@ -16,10 +16,12 @@ namespace upsylon
         synch(),
         kproc(0),
         kdata(0),
+        ended(0),
         verbose( workers.verbose )
         {
             workers.run(call,this);
-            Y_MUTEX_PROBE(access,ready>=workers.count);
+            const size_t count = workers.num_threads();
+            Y_MUTEX_PROBE(access,ready>=count);
         }
 
         void simd:: call( void *data, parallel &context, lockable &) throw()
@@ -35,23 +37,25 @@ namespace upsylon
         }
 
 
-
-
-
         simd:: ~simd() throw()
         {
-
+            //__________________________________________________________________
+            //
             // will intercept all codes
-            {
-                Y_LOCK(access);
-                assert(ready>=workers.size());
-                done = true;
-            }
+            //__________________________________________________________________
+            access.lock();
+            const size_t count = workers.num_threads();
+            assert(ready>=count);
+            done = true;
+            access.unlock();
 
-
-
+            //__________________________________________________________________
+            //
             // then say bye to synchonized
+            //__________________________________________________________________
             cycle.broadcast();
+            Y_MUTEX_PROBE(access,ended>=count);
+
         }
 
         void simd:: loop(parallel &context) throw()
@@ -62,10 +66,10 @@ namespace upsylon
             // first initialization
             //
             //__________________________________________________________________
-            const size_t count   = workers.count;
+            const size_t count   = workers.num_threads();
 
             access.lock();
-            assert(ready<workers.count);
+            assert(ready<count);
             if(verbose) { std::cerr << "[threads.simd.loop] enter " << context.label << std::endl; }
             ++ready;
             if(verbose&&ready>=count)
@@ -93,6 +97,7 @@ namespace upsylon
             if(done)
             {
                 if(verbose) { std::cerr << "[threads.simd.loop] leave " << context.label << std::endl; }
+                ++ended;
                 access.unlock();
                 return;
             }
@@ -118,7 +123,6 @@ namespace upsylon
                 synch.broadcast();
             }
 
-            //std::cerr << "ready=" << ready << " from " << context.label << std::endl;
             goto LOOP;
         }
 
@@ -126,15 +130,14 @@ namespace upsylon
         {
             access.lock();
             assert(code);
-            assert(workers.count==ready);
+            assert(workers.num_threads()==ready);
             kproc = code;
             kdata = data;
             ready = 0;
             cycle.broadcast();
             synch.wait(access);
-            assert(ready>=workers.count);
+            assert(ready>=workers.num_threads());
             access.unlock();
-
         }
 
     }

@@ -17,33 +17,26 @@ namespace upsylon {
         typedef slots<thread,memory::global> __threads;   //!< memory for threads
 
         //! base class to handle threads creation/destruction
-        class threads : public executor, public __topology, public __threads
+        class threads : public executor, public __topology//, public __threads
         {
         public:
             mutable mutex access;      //!< for threads synchronisation
 
-            //! quit threads
-            virtual ~threads() throw();
-            //! construct threads
-            explicit threads(const bool v=false);
 
-            //! unleashed threads
-            virtual void run(kernel code, void *data);
+            virtual ~threads() throw();           //!< quit threads
+            explicit threads(const bool v=false); //!< construct threads, waiting on start when ready
 
-            //! access parallelism
-            virtual size_t num_threads() const throw() { return this->size(); }
+            virtual void       run(kernel code, void *data);      //!< unleash threads
+            virtual size_t     num_threads() const throw();       //!< access parallelism
+            virtual parallel & get_context(const size_t) throw(); //!< access contexts
 
-            //! access contexts
-            inline virtual parallel & operator[](const size_t indx) throw()
-            {
-                __threads &self = *this; return self[indx];
-            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(threads);
             static  void system_entry(void*) throw(); //!< for system call, call this->thread_entry()
             void         thread_entry()      throw(); //!< parallel entry point
-            
+
+            __threads  engines;
             bool       halting;
             size_t     ready;
             condition  start;

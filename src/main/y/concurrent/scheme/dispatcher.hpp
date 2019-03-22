@@ -62,6 +62,7 @@ namespace upsylon
             virtual executor & engine() throw();                                    //!< implementation
             virtual void       process(array<job_uuid> &, const array<job_type> &); //!< batch
 
+            double efficiency( const double speed_up ) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(dispatcher);

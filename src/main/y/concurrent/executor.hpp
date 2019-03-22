@@ -16,6 +16,13 @@ namespace upsylon
         class executor
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // virtual interface
+            //
+            //__________________________________________________________________
+
             //! destructor
             virtual  ~executor() throw();
 
@@ -26,7 +33,19 @@ namespace upsylon
             virtual size_t     num_threads()   const throw() = 0;
 
             //! access to individual context
-            virtual parallel & operator[](const size_t) throw() = 0;
+            virtual parallel & get_context(const size_t indx) throw() = 0;
+
+            //__________________________________________________________________
+            //
+            //
+            // non-virtual interface
+            //
+            //__________________________________________________________________
+            //! access to individual context
+            parallel & operator[](const size_t) throw();
+
+            //! access to individual context, CONST
+            const parallel & operator[](const size_t) const throw();
 
             //! allocate memory per context
             void make_all(const size_t n);
@@ -95,7 +114,7 @@ namespace upsylon
             inline virtual size_t num_threads() const throw() { return 1; }
 
             //! context
-            inline virtual parallel & operator[](const size_t) throw() { return context; }
+            inline virtual parallel & get_context(const size_t) throw() { return context; }
             
         private:
             parallel  context;

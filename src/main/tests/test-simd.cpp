@@ -74,6 +74,7 @@ Y_UTEST(simd)
 
     
 #if 1
+    std::cerr << "-- testing parallelization" << std::endl;
     double par_speed = 0;
     concurrent::simd par(false);
     par.engine().make_all(12);

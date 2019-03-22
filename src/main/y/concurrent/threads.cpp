@@ -14,7 +14,7 @@ namespace upsylon
         {
             {
                 Y_LOCK(access);
-                if(verbose) { std::cerr << "[threads.quit] " << ready << "/" << count << std::endl; }
+                if(verbose) { std::cerr << "[threads.quit] " << ready << "/" << engines.count << std::endl; }
             }
             
             start.broadcast();
@@ -22,10 +22,16 @@ namespace upsylon
 
         }
 
+        size_t     threads:: num_threads() const throw() { return engines.size(); }
+        parallel & threads:: get_context(const size_t context_index) throw()
+        {
+            return engines[context_index];
+        }
+
         threads:: threads(const bool v) :
         __topology( layout::create() ),
-        __threads( (*static_cast<__topology *>(this))->cores ),
         access(),
+        engines( (*static_cast<__topology *>(this))->cores ),
         halting(true),
         ready(0),
         start(),
@@ -37,6 +43,7 @@ namespace upsylon
             //
             // threads init
             //__________________________________________________________________
+            const size_t count = engines.count;
             if(verbose) { std::cerr << "[threads.init] build " << count << " thread" << plural_s(count) << "..." << std::endl; }
 
             try
@@ -45,7 +52,7 @@ namespace upsylon
                 for(size_t i=0;i<count;++i)
                 {
                     const size_t target = i+1; //! desired new number of threads
-                    build<thread_proc,void*,size_t,size_t>(system_entry,this,count,i);
+                    engines.build<thread_proc,void*,size_t,size_t>(system_entry,this,count,i);
                     Y_MUTEX_PROBE(access,ready>=target);
                 }
 
@@ -53,6 +60,7 @@ namespace upsylon
             catch(...)
             {
                 start.broadcast();
+                Y_MUTEX_PROBE(access,ready<=0);
                 throw;
             }
             if(verbose) { std::cerr << "[threads.init] built " << count << " thread" << plural_s(count)  << "!!!" << std::endl; }
@@ -70,7 +78,7 @@ namespace upsylon
             nucleus::thread::assign(nucleus::thread::get_current_handle(),topo->core_index_of(0));
 
             // place other threads
-            __threads &thr = *this;
+            __threads &thr = engines;
             for(size_t i=0;i<count;++i)
             {
                 const size_t icpu = topo->core_index_of(i);
@@ -98,7 +106,7 @@ namespace upsylon
             // entering thread
             //__________________________________________________________________
             access.lock();
-            parallel &context = static_cast<__threads&>(*this)[ready];
+            parallel &context = engines[ready];
             if(verbose) { std::cerr << "[threads.init.call] (+) " << context.label << std::endl; }
             ++ready; //!< for constructor
             //__________________________________________________________________
@@ -157,8 +165,8 @@ namespace upsylon
             {
                 Y_LOCK(access);
                 if(verbose) { std::cerr << fn << std::endl; }
-                if(ready<size()) { throw exception("%s unexpected unfinished setup",fn); }
-                if(!halting)    { throw exception("%s already setup run",fn);}
+                if(ready<engines.size()) { throw exception("%s unexpected unfinished setup",fn); }
+                if(!halting)             { throw exception("%s already setup run",fn);           }
                 halting = false;
                 kproc   = code;
                 kdata   = data;

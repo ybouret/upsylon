@@ -90,15 +90,22 @@ namespace upsylon
         flushing(),
         verbose( workers.verbose )
         {
+            //__________________________________________________________________
+            //
             // and start
+            //__________________________________________________________________
             workers.run(start,this);
 
-            // wait for initial synch
-            Y_MUTEX_PROBE(access,prepared>=workers.count);
+            //__________________________________________________________________
+            //
+            // wait for initial synchro
+            //__________________________________________________________________
+            const size_t count = workers.num_threads();
+            Y_MUTEX_PROBE(access,prepared>=count);
 
             if(verbose)
             {
-                std::cerr << "|_[dispatcher: ready]" << std::endl;
+                std::cerr << "|_[dispatcher.prepared]" << std::endl;
             }
         }
 
@@ -126,6 +133,11 @@ namespace upsylon
             {
                 storage.store( object::acquire1<jnode>() );
             }
+        }
+
+        double dispatcher:: efficiency( const double speed_up ) const
+        {
+            return workers[0].efficiency(speed_up);
         }
 
 
@@ -179,21 +191,31 @@ namespace upsylon
 
         void dispatcher:: flush() throw()
         {
+            //__________________________________________________________________
+            //
+            // take control
+            //__________________________________________________________________
             access.lock();
             if(verbose)
             {
-                std::cerr << "|_[dispatcher.flush request with stopping=" << (stopping?"true":"false") << "]" << std::endl;
+                std::cerr << "|_[dispatcher.flush request with stopping=<" << (stopping?"true":"false") << ">]" << std::endl;
             }
 
             if(pending.size>0||current.size>0)
             {
+                //______________________________________________________________
+                //
                 // wait on a locked muted
+                //______________________________________________________________
                 flushing.wait(access);
 
+                //______________________________________________________________
+                //
                 // wake up on a locked mutex
+                //______________________________________________________________
                 if(verbose)
                 {
-                    std::cerr << "|_[dispatcher.flush achived with stopping=" << (stopping?"true":"false") << "]" << std::endl;
+                    std::cerr << "|_[dispatcher.flush achived with stopping=<" << (stopping?"true":"false") << ">]" << std::endl;
                 }
             }
             access.unlock();
@@ -211,18 +233,26 @@ namespace upsylon
 
         dispatcher:: ~dispatcher() throw()
         {
+            //__________________________________________________________________
+            //
             // take control
+            //__________________________________________________________________
             access.lock();
 
+            //__________________________________________________________________
+            //
             // next activity will be to comeback
+            //__________________________________________________________________
             stopping=true;
-
             if(verbose)
             {
                 std::cerr << "|_[dispatcher.quit: remaining #jobs=" << pending.size  << "]" << std::endl;
             }
 
+            //__________________________________________________________________
+            //
             //  suppression of pending jobs
+            //__________________________________________________________________
             while( pending.size )
             {
                 jnode *j = pending.pop_back();
@@ -230,22 +260,33 @@ namespace upsylon
                 object::release1(j);
             }
 
+            //__________________________________________________________________
+            //
             // flush current threads
+            //__________________________________________________________________
             access.unlock();
             flush();
 
+            //__________________________________________________________________
+            //
             // prepare for final call
+            //__________________________________________________________________
             access.lock();
             activity.broadcast();
             access.unlock();
 
-            // wait for final synch
+            //__________________________________________________________________
+            //
+            // wait for final synchro
+            //__________________________________________________________________
             Y_MUTEX_PROBE(access,prepared<=0);
 
             assert(0==pending.size);
             assert(0==current.size);
+            //__________________________________________________________________
+            //
             // and memory is releaded by storage and aborted
-
+            //__________________________________________________________________
 
         }
 
@@ -261,11 +302,12 @@ namespace upsylon
             access.lock();
             if(verbose)
             {
-                std::cerr << "|_[dispatcher.loop@" << context.size << "." << context.rank << "]" << std::endl;
+                std::cerr << "|_[dispatcher.loop@" << context.label << "]" << std::endl;
             }
-            assert(prepared<workers.count);
+            const size_t count = workers.num_threads();
+            assert(prepared<count);
             ++prepared;
-            if(verbose&&prepared>=workers.count)
+            if(verbose&&prepared>=count)
             {
                 std::cerr << "|_[dispatcher.synchronized]" << std::endl;
             }
@@ -293,7 +335,7 @@ namespace upsylon
             //------------------------------------------------------------------
             if(stopping)
             {
-                if(verbose) { std::cerr << "|_[dispatcher.done@"<< context.size << "." << context.rank << "]" << std::endl; }
+                if(verbose) { std::cerr << "|_[dispatcher.done@" << context.label << "]" << std::endl; }
                 assert(prepared>0);
                 --prepared;
                 access.unlock();
@@ -316,13 +358,13 @@ namespace upsylon
                 //--------------------------------------------------------------
                 jnode *j = pending.pop_front();
                 current.push_back(j);
-                if(verbose) { std::cerr << "|_[dispatcher.done@"<< context.size << "." << context.rank << ": job#" << j->uuid << "]" << std::endl; }
+                if(verbose) { std::cerr << "|_[dispatcher.call@"<< context.label << ": job#" << j->uuid << "]" << std::endl; }
 
                 //______________________________________________________________
                 //
                 // set activity for other
                 //______________________________________________________________
-                if(pending.size)
+                if(pending.size>0)
                 {
                     activity.signal();
                 }
@@ -340,6 +382,8 @@ namespace upsylon
                 try
                 {
                     j->call(context,access);
+                    //...
+                    //...
                     //__________________________________________________________
                     //
                     // take control and put back into storage

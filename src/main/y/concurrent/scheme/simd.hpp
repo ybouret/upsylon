@@ -36,8 +36,10 @@ namespace upsylon
             size_t       ready;  //!< count who is ready
             condition    cycle;  //!< waiting to start cycle
             condition    synch;  //!< wait for end of cycle sync
-            kernel       kproc;
-            void        *kdata;
+            kernel       kproc;  //!< the Single Instruction
+            void        *kdata;  //!< global data to share for kproc
+            size_t       ended;  //!< count for waiting
+
         public:
             bool         &verbose; //!< for threads verbosity indicator
         };

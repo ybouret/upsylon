@@ -29,5 +29,19 @@ namespace upsylon
             }
         }
 
+        parallel & executor:: operator[](const size_t context_index) throw()
+        {
+            assert(context_index<num_threads());
+            return get_context(context_index);
+        }
+
+        const parallel & executor:: operator[](const size_t context_index) const throw()
+        {
+            assert(context_index<num_threads());
+            executor &self = (executor &) *this;
+            return self.get_context(context_index);
+        }
+
+
     }
 }

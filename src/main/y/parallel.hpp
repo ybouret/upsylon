@@ -66,7 +66,7 @@ namespace upsylon
         }
 
         //! compute efficiency, two significative figures
-        inline double efficiency(const double speed_up)
+        inline double efficiency(const double speed_up) const
         {
             if(size<=1)
             {
