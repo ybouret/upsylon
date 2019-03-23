@@ -8,7 +8,7 @@
 
 namespace upsylon
 {
-    typedef memory::xslot<memory::global> parallel_cache;
+    typedef memory::xslot<memory::global> parallel_cache; //!< alias for base type
 
     //! information and operation for parallelism
     class parallel : public parallel_cache

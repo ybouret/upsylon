@@ -16,6 +16,7 @@ namespace upsylon
         class DynamoManager : public singleton<DynamoManager>, public DynamoGenerator
         {
         public:
+            //! loader on-the-fly creation
             DynamoLoader & loader();
 
         private:

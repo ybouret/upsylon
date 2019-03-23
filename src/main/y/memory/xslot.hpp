@@ -9,32 +9,34 @@ namespace upsylon
 {
     namespace memory
     {
+        //! base class for xslot
         class xslot_type
         {
         public:
             typedef void (*kill_proc)(void *); //!< alias
 
-            virtual ~xslot_type() throw();
-            void free() throw(); //!< kill/clear data
+            virtual ~xslot_type() throw();             //! destruct
+            void     free() throw();                   //!< kill/clear data
+            bool     is_cplusplus() const throw();     //!< if kill!=NULL
+            void     swap_with( xslot_type &) throw(); //!< no-throw swap
 
-            const size_t    size;
+            const size_t    size; //!< available bytes
 
-            bool is_cplusplus() const throw(); //!< if kill!=NULL
-            void swap_with( xslot_type &other ) throw(); //!< no-throw swap
-            
         protected:
-            void           *data;
-            kill_proc       kill;
+            void           *data; //!< first available byte
+            kill_proc       kill; //!< cleaning content
 
-            explicit xslot_type() throw();
-            void     would_kill() throw();
+            explicit xslot_type() throw(); //!< initialize
+            void     would_kill() throw(); //!< check and kill
 
+            //! template function to kill data content
             template <typename U>
             static inline void kill_for( void *addr ) throw()
             {
                 static_cast<U*>(addr)->~U();
             }
 
+            //! register kill function
             template <typename T>
             void set_as() throw()
             {
@@ -48,14 +50,15 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(xslot_type);
         };
 
+        //! slot of any data
         template <typename ALLOCATOR=global>
         class xslot : public xslot_type
         {
         public:
-            inline virtual ~xslot() throw() { release();}
+            inline virtual ~xslot() throw() { release();}      //!< release content
+            inline explicit xslot() throw() : xslot_type() {}  //!< initialize
 
-            inline explicit xslot() throw() : xslot_type() {}
-
+            //! initialize with data
             inline explicit xslot(const size_t n) : xslot_type()
             {
                 ALLOCATOR &mgr = ALLOCATOR::instance();
@@ -73,6 +76,7 @@ namespace upsylon
                 return as<T>();
             }
 
+            //! copy constructor
             template <typename T>
             inline T & build_from(typename type_traits<T>::parameter_type arg)
             {
@@ -119,7 +123,7 @@ namespace upsylon
                 }
             }
 
-            //! kill content but keep memory if enough
+            //! kill content but keep memory if enough bytes
             inline void acquire(const size_t n)
             {
                 if(n>size) {
