@@ -6,7 +6,7 @@
 #include "y/string.hpp"
 #include "y/ptr/intr.hpp"
 #include "y/ptr/counted.hpp"
-#include "y/memory/cslot.hpp"
+#include "y/memory/xslot.hpp"
 
 namespace upsylon
 {
@@ -24,7 +24,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Object);
         };
 
-        typedef memory::cslot<memory::global> LocalMemory; //!< local memory for species
+        typedef memory::xslot<memory::global> LocalMemory; //!< local memory for species
 
         //! species info
         class Species : public Object

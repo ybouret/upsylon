@@ -49,10 +49,10 @@ Y_UTEST(xslot)
     xslot<pooled> xpooled0;      display_xs(xpooled0);
     xslot<pooled> xpooled1(10);  display_xs(xpooled1);
 
-    xdefault0.make(21); display_xs( xdefault0 );
-    xdefault1.make(6);  display_xs( xdefault1 );
-    xpooled0.make(21);  display_xs( xpooled0  );
-    xpooled1.make(43);  display_xs( xpooled1  );
+    xdefault0.acquire(21); display_xs( xdefault0 );
+    xdefault1.acquire(6);  display_xs( xdefault1 );
+    xpooled0.acquire(21);  display_xs( xpooled0  );
+    xpooled1.acquire(43);  display_xs( xpooled1  );
 
     xdefault0.build<string>();
     xdefault1.build<string>();

@@ -67,7 +67,7 @@ namespace upsylon
             template <typename T>
             inline T & build()
             {
-                make( sizeof(T) );
+                acquire( sizeof(T) );
                 new (data) typename type_traits<T>::mutable_type();
                 set_as<T>();
                 return as<T>();
@@ -77,7 +77,7 @@ namespace upsylon
             template <typename T,typename U> inline
             T & build( typename type_traits<U>::parameter_type u )
             {
-                make( sizeof(T) );
+                acquire( sizeof(T) );
                 new (data) typename type_traits<T>::mutable_type(u);
                 set_as<T>();
                 return as<T>();
@@ -111,7 +111,7 @@ namespace upsylon
             }
 
             //! kill content but keep memory if enough
-            inline void make(const size_t n)
+            inline void acquire(const size_t n)
             {
                 if(n>size) {
                     xslot temp(n); swap_with(temp);
@@ -137,14 +137,14 @@ namespace upsylon
             }
 
             //! get POD, assuming multiple
-            template <typename T> inline T & at(const size_t indx) throw()
+            template <typename T> inline T & get(const size_t indx) throw()
             {
                 assert(size>=(indx+1)*sizeof(T));
                 return *(static_cast<T*>(data)+indx);
             }
 
             //! get POD, assuming multiple, const
-            template <typename T> inline const T & at(const size_t indx) const throw()
+            template <typename T> inline const T & get(const size_t indx) const throw()
             {
                 assert(size>=(indx+1)*sizeof(T));
                 return *(static_cast<T*>(data)+indx);

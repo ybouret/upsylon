@@ -3,7 +3,7 @@
 #define Y_INK_TILES_INCLUDED 1
 
 #include "y/ink/area.hpp"
-#include "y/memory/cslot.hpp"
+#include "y/memory/xslot.hpp"
 #include "y/ptr/counted.hpp"
 #include "y/ptr/arc.hpp"
 
@@ -12,7 +12,7 @@ namespace upsylon
     namespace Ink
     {
         //! reusable local memory for one tile
-        typedef memory::cslot<memory::global> LocalMemory;
+        typedef memory::xslot<memory::global> LocalMemory;
 
         //! a tile is an area with a memory cache
         class Tile : public Area, public counted
