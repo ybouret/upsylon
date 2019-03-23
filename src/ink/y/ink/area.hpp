@@ -4,7 +4,6 @@
 
 #include "y/ink/types.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/memory/cslot.hpp"
 
 namespace upsylon
 {
