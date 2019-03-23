@@ -41,6 +41,12 @@ namespace upsylon
             }
         }
 
+        bool xslot_type:: is_cplusplus() const throw()
+        {
+            return kill!=0;
+        }
+
+
 
     }
 

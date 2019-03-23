@@ -17,7 +17,9 @@ namespace upsylon
             void free() throw(); //!< kill/clear data
 
             const size_t    size;
-            
+
+            bool is_cplusplus() const throw(); //!< if kill!=NULL
+
         protected:
             void           *data;
             kill_proc       kill;
@@ -56,6 +58,37 @@ namespace upsylon
                     ALLOCATOR::location().release(data,(size_t&)size);
                 }
             }
+
+            //! get POD
+            template <typename T> inline T & get() throw()
+            {
+                assert(size>=sizeof(T));
+                assert(!is_cplusplus()||die("use as<>"));
+                return *static_cast<T*>(data);
+            }
+
+            //! get POD, const
+            template <typename T> inline const T & get() const throw()
+            {
+                assert(size>=sizeof(T));
+                assert(!is_cplusplus()||die("use as<>"));
+                return *static_cast<T*>(data);
+            }
+
+            //! get POD, assuming multiple
+            template <typename T> inline T & at(const size_t indx) throw()
+            {
+                assert(size>=(indx+1)*sizeof(T));
+                return *(static_cast<T*>(data)+indx);
+            }
+
+            //! get POD, assuming multiple, const
+            template <typename T> inline const T & at(const size_t indx) const throw()
+            {
+                assert(size>=(indx+1)*sizeof(T));
+                return *(static_cast<T*>(data)+indx);
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(xslot);
