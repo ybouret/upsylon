@@ -73,7 +73,7 @@ namespace upsylon
                 acquire( sizeof(T) );
                 new (data) typename type_traits<T>::mutable_type();
                 set_as<T>();
-                return as<T>();
+                return get<T>();
             }
 
             //! copy constructor
@@ -83,7 +83,7 @@ namespace upsylon
                 acquire( sizeof(T) );
                 new (data) typename type_traits<T>::mutable_type(arg);
                 set_as<T>();
-                return as<T>();
+                return get<T>();
             }
 
             //! build with one argument
@@ -93,24 +93,9 @@ namespace upsylon
                 acquire( sizeof(T) );
                 new (data) typename type_traits<T>::mutable_type(u);
                 set_as<T>();
-                return as<T>();
+                return get<T>();
             }
 
-            //! type conversion
-            template <typename T>
-            T & as() throw()
-            {
-                assert(is_cplusplus()); assert(size>=sizeof(T));
-                return *static_cast<T*>(data);
-            }
-
-            //! type conversion, const
-            template <typename T>
-            const T & as() const throw()
-            {
-                assert(is_cplusplus()); assert(size>=sizeof(T));
-                return *static_cast<const T*>(data);
-            }
 
             //! free and release memory
             inline void release() throw()
@@ -137,7 +122,6 @@ namespace upsylon
             template <typename T> inline T & get() throw()
             {
                 assert(size>=sizeof(T));
-                assert(!is_cplusplus()||die("use as<>"));
                 return *static_cast<T*>(data);
             }
 
@@ -145,7 +129,6 @@ namespace upsylon
             template <typename T> inline const T & get() const throw()
             {
                 assert(size>=sizeof(T));
-                assert(!is_cplusplus()||die("use as<>"));
                 return *static_cast<T*>(data);
             }
 

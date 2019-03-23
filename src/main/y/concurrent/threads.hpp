@@ -17,7 +17,7 @@ namespace upsylon {
         typedef slots<thread,memory::global> __threads;   //!< memory for threads
 
         //! base class to handle threads creation/destruction
-        class threads : public executor, public __topology//, public __threads
+        class threads : public executor, public __topology
         {
         public:
             mutable mutex access;      //!< for threads synchronisation

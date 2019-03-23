@@ -59,17 +59,79 @@ namespace upsylon
 
             //! sum of local stored type
             template <typename T> inline
-            T sum()
+            T sum() const
             {
-                executor &self = *this;
-                T         ans  = 0;
-                size_t    i    = num_threads();
+                const executor &self = *this;
+                T               ans(0);
+                size_t          i    = num_threads();
                 while(i-->0)
                 {
                     ans +=  self[i].get<T>();
                 }
                 return ans;
             }
+
+            //! zero argument build data for each context
+            template <typename T>
+            inline void build()
+            {
+                executor    &self = *this;
+                const size_t n    = num_threads();
+                try
+                {
+                    for(size_t i=0;i<n;++i)
+                    {
+                        self[i].build<T>();
+                    }
+                }
+                catch(...)
+                {
+                    free_all();
+                    throw;
+                }
+            }
+
+            //! zero argument build data for each context
+            template <typename T>
+            inline void build_from( typename type_traits<T>::parameter_type arg )
+            {
+                executor    &self = *this;
+                const size_t n    = num_threads();
+                try
+                {
+                    for(size_t i=0;i<n;++i)
+                    {
+                        self[i].build_from<T>(arg);
+                    }
+                }
+                catch(...)
+                {
+                    free_all();
+                    throw;
+                }
+            }
+
+            //! build with one argument
+            template <typename T,typename U> inline
+            void build( typename type_traits<U>::parameter_type u )
+            {
+                executor    &self = *this;
+                const size_t n    = num_threads();
+                try
+                {
+                    for(size_t i=0;i<n;++i)
+                    {
+                        self[i].build<T,U>(u);
+                    }
+                }
+                catch(...)
+                {
+                    free_all();
+                    throw;
+                }
+            }
+
+
 
         protected:
             //! constructor
