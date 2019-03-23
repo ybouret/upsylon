@@ -49,6 +49,11 @@ Y_UTEST(dyn)
             il->save(fp);
         }
 
+        {
+            Source fp( Module::OpenFile("il.bin") );
+            auto_ptr<DynamoNode> il2 = DynamoNode::Load( fp );
+        }
+
         il->graphViz("il0.dot");
         auto_ptr<Syntax::Parser> P = dynGen.build( *il, &symbols );
         //il->graphViz("il1.dot");

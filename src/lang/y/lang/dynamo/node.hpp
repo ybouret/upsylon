@@ -4,6 +4,8 @@
 
 #include "y/lang/lexical/unit.hpp"
 #include "y/lang/dynamo/types.hpp"
+#include "y/lang/source.hpp"
+#include "y/hashing/function.hpp"
 
 namespace upsylon
 {
@@ -65,7 +67,10 @@ namespace upsylon
             //! save to bin stream
             void save( ios::ostream &fp ) const;
 
+            //! load from binary stream
+            static DynamoNode *Load( Source &source );
 
+            void run( hashing::function &H ) const throw();
 
         private:
             void            *impl;

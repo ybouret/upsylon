@@ -178,7 +178,68 @@ namespace upsylon
                 } break;
             }
         }
-        
+
+
+        DynamoNode * DynamoNode:: Load( Source &fp )
+        {
+            static const char fn[] = "DynamoNode::Load";
+
+            const string   theName = string_io::load_binary(fp);
+            const unsigned theType = fp.read<uint8_t>();
+            switch( theType )
+            {
+                case 0: // DynamoTerminal
+                {
+                    const size_t nch = fp.read_upack<size_t>();
+                    Lexeme       lex( (*fp)->origin );
+                    for(size_t i=0;i<nch;++i)
+                    {
+                        Char *ch = fp.get();
+                        if(!ch) throw exception("%s(missing chars for '%s')",fn,*theName);
+                        lex.push_back(ch);
+                    }
+                    return new DynamoNode(theName,lex,0,0);
+                }
+
+
+                case 1: // DynamoInternal
+                {
+                    const size_t         nch  = fp.read_upack<size_t>();
+                    auto_ptr<DynamoNode> node = new DynamoNode(theName);
+                    DynamoList          &ch   = node->children();
+                    for(size_t i=0;i<nch;++i)
+                    {
+                        ch.push_back( Load(fp) );
+                    }
+                    return node.yield();
+                }
+
+                default:
+                    break;
+            }
+            throw exception("%s(invalid DynamoType=%u for '%s')", fn, theType, *theName);
+        }
+
+        void DynamoNode::  run( hashing::function &H ) const throw()
+        {
+            static const uint8_t TermHash = 0;
+            static const uint8_t RuleHash = 1;
+            H(name);
+            switch (type)
+            {
+                case DynamoTerminal:
+                    H.run_type(TermHash);
+                    H(content()); break;
+
+                case DynamoInternal:
+                    H.run_type(RuleHash);
+                    for(const DynamoNode *node=children().head;node;node=node->next)
+                    {
+                        node->run(H);
+                    }
+                    break;
+            }
+        }
 
     }
 }
