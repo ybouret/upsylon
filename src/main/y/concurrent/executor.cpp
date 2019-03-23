@@ -8,14 +8,14 @@ namespace upsylon
         executor:: ~executor() throw() {}
         executor::  executor() throw() {}
 
-        void executor:: make_all(const size_t n)
+        void executor:: acquire_all(const size_t n)
         {
             //std::cerr << "alloc/clear space for " << n <<  " bytes" << std::endl;
             executor    &self = *this;
             const size_t nthr = num_threads();
             for(size_t i=0;i<nthr;++i)
             {
-                self[i].make(n);
+                self[i].acquire(n);
             }
         }
 

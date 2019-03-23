@@ -48,25 +48,13 @@ namespace upsylon
             const parallel & operator[](const size_t) const throw();
 
             //! allocate memory per context
-            void make_all(const size_t n);
+            void acquire_all(const size_t n);
 
             //! free all memory per context
             void free_all() throw();
 
-            //! allocate for T per context
             template <typename T>
-            void make_for() { make_all( sizeof(T) ); }
-
-            //! get cast memory
-            template <typename T> inline
-            T &get(const size_t indx) throw()
-            {
-                executor &self = *this;
-                parallel &ctx  = self[indx];
-                assert(ctx.bytes>=sizeof(T));
-                assert(ctx.space);
-                return *static_cast<T*>(ctx.space);
-            }
+            void acquire_for() { acquire_all( sizeof(T) ); }
 
             //! sum of local stored type
             template <typename T> inline
@@ -77,9 +65,7 @@ namespace upsylon
                 size_t    i    = num_threads();
                 while(i-->0)
                 {
-                    assert(self[i].bytes>=sizeof(T));
-                    assert(self[i].space!=0);
-                    ans += *static_cast<T*>(self[i].space);
+                    ans +=  self[i].get<T>();
                 }
                 return ans;
             }

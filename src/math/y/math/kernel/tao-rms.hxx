@@ -137,7 +137,7 @@ typename real_for<T>::type _rms( const array<T> &a, concurrent::for_each &loop )
     {
         __rms<T> args = { &a, 0 };
         concurrent::executor &engine = loop.engine();
-        engine.make_for<typename real_for<T>::type>();
+        engine.acquire_for<typename real_for<T>::type>();
         loop.run( __rms<T>::call1, &args );
         return sqrt_of( engine.sum<typename real_for<T>::type>()/n );
     }
@@ -156,7 +156,7 @@ typename real_for<T>::type _mod2( const array<T> &a, concurrent::for_each &loop 
     {
         __rms<T> args = { &a, 0 };
         concurrent::executor &engine = loop.engine();
-        engine.make_for<typename real_for<T>::type>();
+        engine.acquire_for<typename real_for<T>::type>();
         loop.run( __rms<T>::call1, &args );
         return engine.sum<typename real_for<T>::type>();
     }
@@ -175,7 +175,7 @@ typename real_for<T>::type _rms( const array<T> &a, const array<T> &b, concurren
     {
         __rms<T> args = { &a, &b };
         concurrent::executor &engine = loop.engine();
-        engine.make_for<typename real_for<T>::type>();
+        engine.acquire_for<typename real_for<T>::type>();
         loop.run( __rms<T>::call2, &args );
         return sqrt_of(engine.sum<typename real_for<T>::type>()/n);
     }
@@ -194,7 +194,7 @@ typename real_for<T>::type _mod2( const array<T> &a, const array<T> &b, concurre
     {
         __rms<T> args = { &a, &b };
         concurrent::executor &engine = loop.engine();
-        engine.make_for<typename real_for<T>::type>();
+        engine.acquire_for<typename real_for<T>::type>();
         loop.run( __rms<T>::call2, &args );
         return engine.sum<typename real_for<T>::type>();
     }

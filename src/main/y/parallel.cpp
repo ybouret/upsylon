@@ -2,8 +2,33 @@
 #include <cstring>
 #include <cstdio>
 #include <iostream>
+#include <cmath>
+
 namespace upsylon
 {
+    parallel:: ~parallel() throw() { free(); }
+
+    parallel:: parallel() throw() : size(1),rank(0),indx(1),label() { __format(); }
+
+    parallel:: parallel(const size_t sz, const size_t rk) throw() :
+    size(sz),rank(rk),indx(rk+1),label()
+    {
+        assert(size>0); assert(rank<size);
+        __format();
+    }
+
+    double parallel:: efficiency(const double speed_up) const
+    {
+        if(size<=1)
+        {
+            return 100.0;
+        }
+        else
+        {
+            return floor(10000.0*(speed_up-1.0)/(size-1))/100.0;
+        }
+    }
+
     void parallel:: __format() throw()
     {
         static const size_t max_size = 999;
@@ -27,34 +52,5 @@ namespace upsylon
             snprintf(s,sizeof(label),fmt,unsigned(size),unsigned(rank));
         }
     }
-
-    void parallel:: free() throw()
-    {
-        if(bytes>0)
-        {
-            assert(space);
-            object::operator delete(space,bytes);
-            bytes = 0;
-            space = 0;
-        }
-        else
-        {
-            assert(0==space);
-        }
-    }
-
-    void parallel:: make( const size_t n )
-    {
-        if(n>bytes)
-        {
-            free();
-            space = object::operator new(n);
-            bytes = n;
-        }
-        else
-        {
-            memset(space,0,bytes);
-        }
-        assert(bytes>=n);
-    }
+    
 }
