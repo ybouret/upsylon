@@ -1,6 +1,7 @@
 
 #include "y/memory/xslot.hpp"
 #include <cstring>
+#include "y/type/cswap.hpp"
 
 namespace upsylon
 {
@@ -43,10 +44,25 @@ namespace upsylon
 
         bool xslot_type:: is_cplusplus() const throw()
         {
-            return kill!=0;
+            if(kill)
+            {
+                assert(data);
+                assert(size>0);
+                return true;
+            }
+            else
+            {
+                assert(!(data&&size>0));
+                return false;
+            }
         }
 
-
+        void xslot_type:: swap_with(xslot_type &other) throw()
+        {
+            cswap(size,other.size);
+            cswap(data,other.data);
+            cswap(kill,other.kill);
+        }
 
     }
 

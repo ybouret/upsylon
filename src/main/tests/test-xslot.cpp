@@ -1,7 +1,8 @@
 #include "y/memory/xslot.hpp"
 #include "y/utest/run.hpp"
 
-#include "y/memory/pooled.hpp"
+//#include "y/memory/pooled.hpp"
+#include "y/string.hpp"
 
 using namespace upsylon;
 using namespace memory;
@@ -11,6 +12,31 @@ namespace  {
     {
         std::cerr << "size=" << xs.size << std::endl;
     }
+
+    class dummy
+    {
+    public:
+        const int data;
+        dummy() : data(0)
+        {
+            std::cerr << "New Dummy0@" << data << std::endl;
+        }
+
+        dummy(const int z) : data(z)
+        {
+            std::cerr << "New Dummy1@" << data << std::endl;
+        }
+
+        ~dummy() throw()
+        {
+            std::cerr << "Zap Dummy@" << data << std::endl;
+        }
+
+
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(dummy);
+    };
 }
 
 Y_UTEST(xslot)
@@ -22,6 +48,26 @@ Y_UTEST(xslot)
     xslot<>       xdefault1(10); display_xs( xdefault1 );
     xslot<pooled> xpooled0;      display_xs(xpooled0);
     xslot<pooled> xpooled1(10);  display_xs(xpooled1);
+
+    xdefault0.make(21); display_xs( xdefault0 );
+    xdefault1.make(6);  display_xs( xdefault1 );
+    xpooled0.make(21);  display_xs( xpooled0  );
+    xpooled1.make(43);  display_xs( xpooled1  );
+
+    xdefault0.build<string>();
+    xdefault1.build<string>();
+    xpooled0.build<string>();
+    xpooled1.build<string>();
+
+    xdefault0.build<dummy>();
+    xdefault1.build<dummy>();
+    xpooled0.build<dummy>();
+    xpooled1.build<dummy>();
+
+    xdefault0.build<dummy,int>(1);
+    xdefault1.build<dummy,char>(2);
+    xpooled0.build<dummy,short>(3);
+    xpooled1.build<dummy,long>(4);
 
 }
 Y_UTEST_DONE()
