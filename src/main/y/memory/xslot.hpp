@@ -73,6 +73,15 @@ namespace upsylon
                 return as<T>();
             }
 
+            template <typename T>
+            inline T & build_from(typename type_traits<T>::parameter_type arg)
+            {
+                acquire( sizeof(T) );
+                new (data) typename type_traits<T>::mutable_type(arg);
+                set_as<T>();
+                return as<T>();
+            }
+
             //! build with one argument
             template <typename T,typename U> inline
             T & build( typename type_traits<U>::parameter_type u )

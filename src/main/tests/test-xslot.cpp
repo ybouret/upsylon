@@ -59,10 +59,20 @@ Y_UTEST(xslot)
     xpooled0.build<string>();
     xpooled1.build<string>();
 
+
+
     xdefault0.build<dummy>();
     xdefault1.build<dummy>();
     xpooled0.build<dummy>();
     xpooled1.build<dummy>();
+
+    {
+        const string arg = "hello";
+        xdefault0.build_from<string>(arg);
+        xdefault1.build_from<string>(arg);
+        xpooled0.build_from<string>(arg);
+        xpooled1.build_from<string>(arg);
+    }
 
     xdefault0.build<dummy,int>(1);
     xdefault1.build<dummy,char>(2);
