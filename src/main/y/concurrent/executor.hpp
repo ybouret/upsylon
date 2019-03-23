@@ -53,6 +53,7 @@ namespace upsylon
             //! free all memory per context
             void free_all() throw();
 
+            //! allocate memory per context
             template <typename T>
             void acquire_for() { acquire_all( sizeof(T) ); }
 
