@@ -9,13 +9,12 @@ namespace upsylon
         rc::io:: ~io() throw()
         {
         }
-
+        
         rc::io:: io( const string &filename ) :
-        be_magic( swap_be(MAGIC) ),
         name( filename )
         {
         }
-
+        
         uint16_t rc::io:: id_be_length( const string &identifier) const
         {
             const size_t id_size = identifier.length();
@@ -25,8 +24,8 @@ namespace upsylon
             }
             return swap_be16(id_size);
         }
-
-
+        
+        
         bool rc::io:: put_all( descriptor::type handle, const void *data, const size_t size)
         {
             if(size<=0)
@@ -39,25 +38,25 @@ namespace upsylon
                 descriptor::put(handle, data, size, done);
                 return (done==size);
             }
-
+            
         }
-
+        
     }
-
+    
 }
 
+
+#include "y/ios/icstream.hpp"
 
 namespace upsylon
 {
     namespace ios
     {
-
-        const uint32_t rc::MAGIC;
-
+        
         rc::writer:: ~writer() throw()
         {
         }
-
+        
         rc::writer:: writer( const string &filename ) :
         io( filename ),
         fp( name, ios::writable ),
@@ -66,96 +65,136 @@ namespace upsylon
         {
             fp.unwind();
         }
-
+        
         void rc::writer:: append_file(const string &datafile,
                                       const string &identifier)
         {
+            ios::icstream inp(datafile);
+           
+            mark();
+            emit(identifier);
+            hasher.set();
+            hasher(identifier);
+            char C = 0;
+            while( inp.query(C) )
+            {
+                hasher.run(&C,1);
+                if(!put_all<uint8_t>(*fp,C))
+                {
+                    throw exception("rc::write::append_file(error for [%s])", *name );
+                }
+                ++total;
+            }
+            sign();
+        }
+        
+        void rc::writer:: append_file(const string &datafile,
+                                      const char   *identifier )
+        {
+            const string _(identifier);
+            append_file(datafile,_);
+        }
+        
+        void rc::writer:: append_file( const char   *datafile, const char   *identifier )
+        {
+            const string _(datafile), __(identifier);
+            append_file(_,__);
         }
 
+
+        
         void rc::writer:: mark()
         {
-            if(!put_all(*fp, &be_magic,sizeof(be_magic) ) )
+            if(!put_all<uid_t>(*fp,MAGIC))
             {
                 throw exception("rc::write::mark(error for [%s])", *name );
             }
-            total += sizeof(be_magic);
+            total += sizeof(uid_t);
         }
-
+        
         void rc::writer:: emit(const string &id)
         {
-            const uint16_t be_sz = id_be_length(id);
-            if(!put_all(*fp,&be_sz,sizeof(be_sz)))
+            if(!put_all<ssz_t>(*fp,id_be_length(id)))
             {
                 throw exception("rc::write::emit(error for [%s] identifier length)", *name );
             }
-            total += sizeof(be_sz);
-
+            total += sizeof(ssz_t);
+            
             {
                 const  size_t size = id.length();
-                size_t        done = 0;
-                descriptor::put( *fp, id.ro(), size, done);
-                if( done != size )
+                if( !put_all( *fp, id.ro(), size) )
                 {
                     throw exception("rc::write::sign(error for [%s] identifier content)", *name );
                 }
                 total += size;
             }
-        
+            
         }
-
-        void rc::writer:: sign(const key_t k)
+        
+        void rc::writer:: sign()
         {
-            const key_t be_k = swap_be(k);
-            size_t      done = 0;
-            descriptor::put( *fp, &be_k, sizeof(key_t), done);
-            if(done!=sizeof(key_t))
+            if( ! put_all<key_t>(*fp,hasher.key<key_t>()))
             {
                 throw exception("rc::write::sign(error for [%s])", *name );
             }
             total += sizeof(key_t);
         }
-
+        
         void rc::writer:: append_data(const void *data, const size_t size, const string &identifier)
         {
             assert(!(data==NULL&&size>0));
+            
             mark();
             emit(identifier);
             hasher.set();
             hasher(identifier);
             hasher.run(data, size);
-
-            sign(hasher.key<key_t>());
+            
+            if(!put_all(*fp,data,size))
             {
-                size_t done = 0;
-                descriptor::put( *fp, data, size, done);
-                if(done!=size)
-                {
-                    throw exception("rc::write::append_data(error for [%s] <- '%s')", *name, *identifier);
-                }
-                total += size;
+                throw exception("rc::write::append_data(error for [%s] <- '%s')", *name, *identifier);
             }
             
+            sign();
+            total += size;
+            
+            
         }
-
+        
         void rc::writer:: append_data(const void *data, const size_t size, const char *identifier)
         {
             const string _(identifier); append_data(data,size,_);
         }
-
+        
         void rc::writer:: append_data( const char *text, const string &identifier )
         {
             append_data( text, length_of(text), identifier );
         }
-
+        
         void rc::writer:: append_data( const char *text, const char *identifier )
         {
             const string _(identifier); append_data(text,_);
         }
-
+        
+        void rc::writer:: append_data( const memory::ro_buffer &buf, const string &identifier)
+        {
+            append_data( buf.ro(), buf.length(), identifier);
+        }
+        
+        void rc::writer:: append_data( const memory::ro_buffer &buf, const char *identifier )
+        {
+            const string _(identifier);
+            append_data(buf,_);
+        }
+        
         void rc::writer:: finish()
         {
-            
+            if( !put_all<len_t>(*fp,total) )
+            {
+                throw exception("rc::write::finish(error for [%s] <- total)", *name);
+            }
+            mark();
         }
-
+        
     }
 }

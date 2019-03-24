@@ -159,7 +159,7 @@ namespace upsylon {
     inline uint8_t swap_be( const uint8_t &x ) throw() {
         return x;
     }
-
+    
 
     //! 16 bits swap big endian
     template <>
