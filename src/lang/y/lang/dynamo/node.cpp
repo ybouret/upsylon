@@ -241,5 +241,12 @@ namespace upsylon
             }
         }
 
+        digest DynamoNode:: md( hashing::function &H ) const
+        {
+            H.set();
+            run(H);
+            return H.md();
+        }
+
     }
 }

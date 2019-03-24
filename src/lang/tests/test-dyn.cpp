@@ -52,6 +52,16 @@ Y_UTEST(dyn)
         {
             Source fp( Module::OpenFile("il.bin") );
             auto_ptr<DynamoNode> il2 = DynamoNode::Load( fp );
+            hashing::sha1 H;
+            digest md0 = il->md(H);
+            digest md2 = il2->md(H);
+            std::cerr << "md0=" << md0 << std::endl;
+            std::cerr << "md2=" << md2 << std::endl;
+            if(md0!=md2)
+            {
+                throw exception("DynamoNode I/O failure");
+            }
+
         }
 
         il->graphViz("il0.dot");

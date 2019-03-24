@@ -72,6 +72,8 @@ namespace upsylon
 
             void run( hashing::function &H ) const throw();
 
+            digest md( hashing::function &H ) const;
+            
         private:
             void            *impl;
             Y_DISABLE_COPY_AND_ASSIGN(DynamoNode);
