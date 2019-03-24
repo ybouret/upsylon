@@ -73,7 +73,7 @@ ADD_TEST(str:strconv     test-main string_convert s 123456 s 0xff i -23 i 908 s 
 ADD_TEST(str:tokenizer   test-main tokenizer)
 
 
-SOURCE_GROUP(ios FILES test-ostreams.cpp test-istreams.cpp test-vfs.cpp test-dll.cpp test-tmpname.cpp test-local-file.cpp test-ichannel.cpp test-bin2dat.cpp)
+SOURCE_GROUP(ios FILES test-ostreams.cpp test-istreams.cpp test-vfs.cpp test-dll.cpp test-tmpname.cpp test-local-file.cpp test-ichannel.cpp test-bin2dat.cpp test-rc.cpp)
 ADD_TEST(ios:ostreams    test-main ostreams)
 ADD_TEST(ios:istreams    test-main istreams)
 ADD_TEST(ios:vfs         test-main vfs .)
@@ -82,6 +82,7 @@ ADD_TEST(ios:tmpname     test-main tmpname)
 ADD_TEST(ios:local-file  test-main local_file)
 ADD_TEST(ios:ichannel    test-main ichannel)
 ADD_TEST(ios:bin2dat     test-main bin2dat)
+ADD_TEST(ios:rc          test-main rc)
 
 SOURCE_GROUP(crypto FILES test-hashing.cpp test-hmac.cpp test-kr-sc.cpp test-kr-bc.cpp test-uuid.cpp test-digest.cpp)
 ADD_TEST(crypto:hashing     test-main hashing)

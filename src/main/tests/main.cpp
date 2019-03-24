@@ -99,6 +99,7 @@ Y_UTEST_INIT(128)
     Y_UTEST(dll);
     Y_UTEST(timings);
     Y_UTEST(ichannel);
+    Y_UTEST(rc);
     Y_UTEST(sobol);
 
 

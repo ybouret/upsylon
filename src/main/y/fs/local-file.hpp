@@ -64,7 +64,7 @@ namespace upsylon
 
             //! access operator, copy of handle
             descriptor::type operator*() throw();
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(local_file);
 
