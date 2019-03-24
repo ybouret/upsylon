@@ -70,8 +70,10 @@ namespace upsylon
             //! load from binary stream
             static DynamoNode *Load( Source &source );
 
+            //! recursive run of a hashing function
             void run( hashing::function &H ) const throw();
 
+            //! full digest from this node
             digest md( hashing::function &H ) const;
             
         private:
