@@ -208,7 +208,8 @@ namespace upsylon
                 // wait on a locked muted
                 //______________________________________________________________
                 flushing.wait(access);
-
+                storage.gc();
+                
                 //______________________________________________________________
                 //
                 // wake up on a locked mutex
