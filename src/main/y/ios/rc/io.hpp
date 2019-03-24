@@ -32,6 +32,7 @@ namespace upsylon
             protected:
                 explicit io(const string &filename);
 
+                bool put_all( descriptor::type handle, const void *data, const size_t size);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(io);
@@ -57,7 +58,8 @@ namespace upsylon
                 void mark();                  //!< emit BE MAGIC, update total
                 void emit( const string &id); //!< emit length+id
                 void sign(const key_t  k);    //!< emit BE k,     update total
-                
+
+                void finish();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(writer);

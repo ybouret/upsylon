@@ -25,6 +25,23 @@ namespace upsylon
             }
             return swap_be16(id_size);
         }
+
+
+        bool rc::io:: put_all( descriptor::type handle, const void *data, const size_t size)
+        {
+            if(size<=0)
+            {
+                return true;
+            }
+            else
+            {
+                size_t done = 0;
+                descriptor::put(handle, data, size, done);
+                return (done==size);
+            }
+
+        }
+
     }
 
 }
@@ -57,28 +74,21 @@ namespace upsylon
 
         void rc::writer:: mark()
         {
-            static const size_t be_magic_size = sizeof(be_magic);
-            size_t done = 0;
-            descriptor::put( *fp, &be_magic, be_magic_size, done);
-            if(done!=be_magic_size)
+            if(!put_all(*fp, &be_magic,sizeof(be_magic) ) )
             {
                 throw exception("rc::write::mark(error for [%s])", *name );
             }
-            total += be_magic_size;
+            total += sizeof(be_magic);
         }
 
         void rc::writer:: emit(const string &id)
         {
             const uint16_t be_sz = id_be_length(id);
+            if(!put_all(*fp,&be_sz,sizeof(be_sz)))
             {
-                size_t done = 0;
-                descriptor::put( *fp, &be_sz, sizeof(be_sz), done);
-                if( done != sizeof(be_sz) )
-                {
-                    throw exception("rc::write::emit(error for [%s] identifier length)", *name );
-                }
-                total += sizeof(be_sz);
+                throw exception("rc::write::emit(error for [%s] identifier length)", *name );
             }
+            total += sizeof(be_sz);
 
             {
                 const  size_t size = id.length();
@@ -140,6 +150,11 @@ namespace upsylon
         void rc::writer:: append_data( const char *text, const char *identifier )
         {
             const string _(identifier); append_data(text,_);
+        }
+
+        void rc::writer:: finish()
+        {
+            
         }
 
     }
