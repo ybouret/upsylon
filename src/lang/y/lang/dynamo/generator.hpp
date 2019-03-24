@@ -168,6 +168,8 @@ namespace upsylon
             void fillOP(  Syntax::Compound &parent, DynamoNode *node );
             Syntax::Terminal &fillSTR( Syntax::Compound &parent, DynamoNode *node );
 
+            void dispatchTerminals( const DynamoTerm::Set &terms, DynamoSymbols &symbols, const char *context ) const;
+
         public:
             bool verbose; //!< verbosity flag
 

@@ -156,6 +156,7 @@ namespace upsylon
                 symbols->terminals.free();
                 symbols->internals.free();
 
+                // dispatching internals
                 for( DynamoRule::Set::iterator ir = internals.begin(); ir != internals.end(); ++ir)
                 {
                     const DynamoRule &dr = *ir;
@@ -168,45 +169,11 @@ namespace upsylon
                     }
                 }
 
+                // dispatching terminals/internals
+                dispatchTerminals(terminals, *symbols, "terminal");
+                dispatchTerminals(literals,  *symbols, "literal");
 
-                for( DynamoTerm::Set::iterator it = terminals.begin(); it!=terminals.end(); ++it )
-                {
-                    const DynamoTerm &dt = *it;
-                    if(dt.derived.attr!=Syntax::Standard)
-                    {
-                        throw exception("{%s} unexpected not standard terminal '%s'!!!", **(parser->name), *(dt.derived.name));
-                    }
 
-                    if(!symbols->terminals.insert(dt))
-                    {
-                        throw exception("{%s} unexpected multiple terminal '%s'", **(parser->name), *(dt.derived.name) );
-                    }
-                }
-
-                for( DynamoTerm::Set::iterator it = literals.begin(); it!=terminals.end(); ++it )
-                {
-                    const DynamoTerm       &dt = *it;
-                    const Syntax::Terminal &t  = dt.derived;
-                    switch(t.attr)
-                    {
-                        case Syntax::Standard:
-                            if(!symbols->terminals.insert(dt))
-                            {
-                                throw exception("{%s} unexpected multiple literal '%s'", **(parser->name), *(dt.derived.name) );
-                            }
-                            break;
-
-                        case Syntax::Operator:
-                            if(!symbols->internals.insert(dt))
-                            {
-                                throw exception("{%s} unexpected multiple literal '%s'", **(parser->name), *(dt.derived.name) );
-                            }
-                            break;
-
-                        case Syntax::Semantic:
-                            break; // do nothing
-                    }
-                }
             }
 
 
@@ -221,6 +188,38 @@ namespace upsylon
             Syntax::Parser *theParser = parser.yield();
             clear();
             return theParser;
+        }
+
+        void DynamoGenerator:: dispatchTerminals( const DynamoTerm::Set &terms, DynamoSymbols &symbols, const char *context ) const
+        {
+            assert(context);
+            for( DynamoTerm::Set::const_iterator it = terms.begin(); it!=terms.end(); ++it )
+            {
+                const DynamoTerm       &dt = *it;
+                const Syntax::Terminal &t  = dt.derived;
+
+                switch(t.attr)
+                {
+                    case Syntax::Standard: // regular terminal, pugin or alias
+                        if(!symbols.terminals.insert(dt))
+                        {
+                            throw exception("{%s} unexpected multiple standard %s '%s'", **(parser->name), context, *(t.name) );
+                        }
+                        break;
+
+                    case Syntax::Operator: // an operator becomes an internal
+                        if(!symbols.internals.insert(dt))
+                        {
+                            throw exception("{%s} unexpected multiple operator %s '%s'", **(parser->name), context, *(t.name) );
+                        }
+                        break;
+
+                    case Syntax::Semantic: // drop
+                        break;
+
+                }
+
+            }
         }
 
     }
