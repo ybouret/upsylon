@@ -43,7 +43,7 @@ namespace upsylon
             const uint32_t mark = fp.read<uint32_t>();
             if(mark!=magic)
             {
-                throw exception("%s([%s] invalid final magic)",fn,*name);
+                return;
             }
 
             if(verbose)
