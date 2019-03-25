@@ -49,11 +49,12 @@ ADD_SUBDIRECTORY(z++)
 ADD_SUBDIRECTORY(bz2++)
 ADD_SUBDIRECTORY(lua++)
 ADD_SUBDIRECTORY(sqlite++)
-MESSAGE(STATUS "")
-Y_SEPLINE()
-MESSAGE( STATUS "Scanning C++ Wrapping Libraries" )
-Y_SEPLINE()
-MESSAGE(STATUS "")
-
 ADD_SUBDIRECTORY(fltk)
+
+#TODO vairable to be populated
+ADD_CUSTOM_TARGET(int 
+DEPENDS 
+test-z++ test-bz2++ test-lua++ test-sqlite++
+COMMENT "Built Wrapping Libraries")
+
 

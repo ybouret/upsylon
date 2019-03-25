@@ -264,6 +264,10 @@ ${kr_sc_srcs} ${kr_bc_srcs}
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
 
+ADD_EXECUTABLE(y_rc y_rc.cpp)
+TARGET_LINK_Y(y_rc)
+INSTALL( TARGETS y_rc RUNTIME DESTINATION bin)
+
 IF(FALSE)
   ADD_EXECUTABLE(nwsrt nwsrt.cpp)
   TARGET_LINK_Y(nwsrt)
