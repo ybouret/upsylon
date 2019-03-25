@@ -11,15 +11,15 @@ namespace upsylon
         {
         }
 
-#define Y_RC_CTOR() io(filename), fp(filename), items()
+#define Y_RC_CTOR() io(filename,v), fp(filename), items()
 
-        rc:: loader:: loader( const string &filename ) :
+        rc:: loader:: loader( const string &filename, const bool v ) :
         Y_RC_CTOR()
         {
             initialize();
         }
 
-        rc:: loader:: loader( const char *filename ) :
+        rc:: loader:: loader( const char *filename, const bool v ) :
         Y_RC_CTOR()
         {
             initialize();
@@ -32,7 +32,11 @@ namespace upsylon
             static const offset_t off_uid = sizeof(uid_t);
             static const offset_t off_len = sizeof(len_t)+off_uid;
 
-            std::cerr << "length=" << fp.length() << std::endl;
+            if( verbose )
+            {
+                std::cerr << "** rc.open.load [" << name << "]" << std::endl;
+                std::cerr << "** rc.length=" << fp.length() << std::endl;
+            }
             
             // goto end and look for magick
             fp.seek(-off_uid,from_end);
@@ -41,13 +45,21 @@ namespace upsylon
             {
                 throw exception("%s([%s] invalid final magic)",fn,*name);
             }
-            std::cerr << "found magic" << std::endl;
+
+            if(verbose)
+            {
+                std::cerr << "** rc.found magic" << std::endl;
+            }
 
             // read total written size
             const offset_t off_end = fp.seek(-off_len,from_end);
-            const len_t total = fp.read<len_t>();
-            std::cerr << "found total=" << total << std::endl;
-            const offset_t shift = total+off_len;
+            const len_t    total   = fp.read<len_t>();
+            const offset_t shift   = total+off_len;
+
+            if(verbose)
+            {
+                std::cerr << "** rc.total=" << total << std::endl;
+            }
 
             // prepare reading
             (void) fp.seek(-shift,from_end);
@@ -57,12 +69,18 @@ namespace upsylon
                 {
                     throw exception("%s([%s] bad magic header)",fn,*name);
                 }
-                const string id = string_io::load_binary(fp);
+                const string id    = string_io::load_binary(fp);
                 offset_t     start = fp.tell();
                 size_t       extra = 0;
                 const size_t bytes = fp.read_upack<size_t>(&extra);
                 start += extra;
-                
+
+                if(verbose)
+                {
+                    std::cerr << "** rc.item '" << id << "' @" << start << ", #bytes=" << bytes << std::endl;
+                }
+
+
                 hash.set();
                 hash(id);
                 for(size_t i=0;i<bytes;++i)
@@ -76,7 +94,10 @@ namespace upsylon
                 {
                     throw exception("%s([%s] corrupted '%s')",fn,*name,*id);
                 }
-                std::cerr << "...checked" << std::endl;
+
+
+
+
                 const item::ptr it = new item(id,start,bytes);
                 if( !items.insert(it) )
                 {
@@ -84,7 +105,7 @@ namespace upsylon
                 }
             }
 
-            std::cerr << items << std::endl;
+            //std::cerr << items << std::endl;
 
 
         }

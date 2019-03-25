@@ -30,11 +30,13 @@ namespace upsylon
             public:
                 const string name;     //!< resource file name
                 hfn_t        hash;     //!< for signing
+                bool         verbose;  //!< to display
+
                 virtual ~io() throw(); //!< destructor
 
             protected:
-                explicit io(const string &filename); //!< setup
-                explicit io(const char   *filename); //!< setup
+                explicit io(const string &filename, const bool v); //!< setup
+                explicit io(const char   *filename, const bool v); //!< setup
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(io);
@@ -46,8 +48,8 @@ namespace upsylon
             public:
                 const bool closed; //!< check possible access
 
-                explicit writer( const string &filename ); //!< setup
-                explicit writer( const char   *filename ); //!< setup
+                explicit writer( const string &filename, const bool v=false); //!< setup
+                explicit writer( const char   *filename, const bool v=false); //!< setup
                 virtual ~writer() throw();                 //!< destructor
 
 
@@ -79,8 +81,11 @@ namespace upsylon
                 //! wrapper
                 void append_data( const char   *identifier, const memory::ro_buffer &buf );
 
-
+                //! append file content
                 void append_file( const string &identifier, const string &filename );
+
+                //! append_file wrapper
+                void append_file( const char   *identfier, const char *filename );
 
                 //! mark end of resource, and close it
                 /**
@@ -114,11 +119,7 @@ namespace upsylon
                 const string &key() const throw(); //!< label
 
                 //! output
-                friend std::ostream & operator<<( std::ostream &os, const item &it )
-                {
-                    os << "@" << it.start << "+" << it.bytes << " : <" << it.label << ">";
-                    return os;
-                }
+                friend std::ostream & operator<<( std::ostream &, const item &);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(item);
@@ -128,14 +129,13 @@ namespace upsylon
             class loader : public io
             {
             public:
-                explicit loader( const string &filename ); //!< setup
-                explicit loader( const char   *filename ); //!< setup
-                virtual ~loader() throw();                 //!< destructor
+                explicit loader( const string &filename, const bool v=false ); //!< setup
+                explicit loader( const char   *filename, const bool v=false ); //!< setup
+                virtual ~loader() throw();                                    //!< destructor
 
-                const  item::db & db() const throw();
-
-                ios::irstream *load_stream( const string &id );
-                string         load_string( const string &id );
+                const  item::db & db() const throw();           //!< get the database
+                ios::irstream *load_stream( const string &id ); //!< create a new stream
+                string         load_string( const string &id ); //!< create a new string
 
 
             private:

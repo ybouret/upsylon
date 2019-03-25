@@ -10,16 +10,19 @@ namespace upsylon
         {
         }
 
-#define Y_RC_CTOR()  io(filename), closed(false), fp(filename,true), sz(0)
+#define Y_RC_CTOR()  io(filename,v), closed(false), fp(filename,true), sz(0)
+#define Y_RC_SHOW() if(verbose) std::cerr << "** rc.open.write [" << name << "]" << std::endl
 
-        rc:: writer:: writer( const string &filename ) :
+        rc:: writer:: writer( const string &filename, const bool v ) :
         Y_RC_CTOR()
         {
+            Y_RC_SHOW();
         }
 
-        rc:: writer:: writer( const char *filename ) :
+        rc:: writer:: writer( const char *filename, const bool v ) :
         Y_RC_CTOR()
         {
+            Y_RC_SHOW();
         }
 
 
@@ -39,6 +42,10 @@ namespace upsylon
         {
             static const char fn[] = "rc.writer.append_data";
 
+            if(verbose)
+            {
+                std::cerr << "** rc.append_data '" << identifier << "', #bytes=" << size << std::endl;
+            }
             // initialize
             if(closed) throw exception("%s([%s] is closed)",fn,*name);
             hash.set();
@@ -60,14 +67,16 @@ namespace upsylon
             // data
             fp.output((const char *)data,size);
             sz += size;
-            std::cerr << "bytes=" << size << std::endl;
 
             // sign
             hash(identifier);
             hash(data,size);
             sign();
             written = sz - written;
-            std::cerr << "#written=" << written << std::endl;
+            if(verbose)
+            {
+                std::cerr << "** rc.append_data #written=" << written << std::endl;
+            }
         }
 
 
@@ -107,7 +116,10 @@ namespace upsylon
             if(closed) throw exception("%s([%s] is closed)",fn,*name);
 
             (bool&)closed=true;
-            std::cerr << "total=" << sz << std::endl;
+            if(verbose)
+            {
+                std::cerr << "** rc.finalize #total=" << sz << std::endl;
+            }
             fp.emit<len_t>(sz);
             mark();
         }
@@ -115,6 +127,11 @@ namespace upsylon
         void rc:: writer:: append_file( const string &identifier, const string &filename )
         {
             static const char fn[] = "rc.writer.append_file";
+
+            if(verbose)
+            {
+                std::cerr << "** rc.append_file '" << identifier << "' from [" << filename << "]" << std::endl;
+            }
 
             // initialize
             if(closed) throw exception("%s([%s] is closed)",fn,*name);
@@ -155,7 +172,16 @@ namespace upsylon
 
             sign();
             written = sz - written;
-            std::cerr << "#written=" << written << std::endl;
+            if(verbose)
+            {
+                std::cerr << "** rc.append_file #written=" << written << std::endl;
+            }
+        }
+
+        void rc::writer:: append_file( const char   *identfier, const char *filename )
+        {
+            const  string _(identfier), __(filename);
+            return append_file(_,__);
         }
 
 

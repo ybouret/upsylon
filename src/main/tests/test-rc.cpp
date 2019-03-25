@@ -13,8 +13,9 @@ Y_UTEST(rc)
         fp << "Hello, World!\n";
     }
 
+    std::cerr << "-- writer" << std::endl;
     {
-        ios::rc::writer rc("rc.bin");
+        ios::rc::writer rc("rc.bin",true);
         rc.append_data("code/first","this is the first part");
         rc.append_data("code/second","this is the second part");
 
@@ -26,8 +27,10 @@ Y_UTEST(rc)
         rc.finalize();
     }
 
+
+    std::cerr << "-- loader" << std::endl;
     {
-        ios::rc::loader rc("rc.bin");
+        ios::rc::loader rc("rc.bin",true);
         string s1 = rc.load_string("code/first");  std::cerr << "s1=" << s1 << "/" << s1.size() << std::endl;
         string s2 = rc.load_string("code/second"); std::cerr << "s1=" << s2 << "/" << s2.size() << std::endl;
 
