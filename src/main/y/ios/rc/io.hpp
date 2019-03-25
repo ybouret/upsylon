@@ -3,6 +3,7 @@
 #define Y_IOS_RC_IO_INCLUDED 1
 
 #include "y/ios/irstream.hpp"
+#include "y/ios/ocstream.hpp"
 #include "y/type/fourcc.hpp"
 #include "y/hashing/sha1.hpp"
 
@@ -14,35 +15,22 @@ namespace upsylon
         //! load resources appended to the end of a file
         struct rc
         {
-            typedef      uint32_t      uid_t;
-            static const uid_t         MAGIC = Y_FOURCC('Y', '_' , 'R', 'C');
-            typedef      uint64_t      len_t; //!< data length type
-            typedef      uint64_t      key_t; //!< hashing key type
-            typedef      hashing::sha1 hfn_t; //!< hashing function alias
-            typedef      uint16_t      ssz_t; //!< type for identifier length
-            
+            typedef uint32_t      uid_t; //!< for magic marker
+            typedef uint64_t      key_t; //!< for signing data
+            typedef uint64_t      len_t; //!< for global offset
+            typedef hashing::sha1 hfn_t; //!< hash function
+
+            static const uint32_t magic = Y_FOURCC('<','R', 'C', '>');
             class io
             {
             public:
-                const string   name;
-
+                const string name; //!< resource file name
+                hfn_t        hash; //!< for signing
                 virtual ~io() throw();
-
-                ssz_t id_be_length( const string &identifier) const;
 
             protected:
                 explicit io(const string &filename);
 
-                bool put_all( descriptor::type handle, const void *data, const size_t size);
-                
-                template <typename U> inline
-                bool put_all( descriptor::type handle, const U value )
-                {
-                    const U be_value = swap_be(value);
-                    return put_all( handle, &be_value, sizeof(be_value) );
-                }
-                
-                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(io);
             };
@@ -50,41 +38,59 @@ namespace upsylon
             class writer : public io
             {
             public:
-                //! open file and go at the end
                 explicit writer( const string &filename );
                 virtual ~writer() throw();
 
-                void append_file( const string &datafile, const string &identifier );
-                void append_file( const string &datafile, const char   *identifier );
-                void append_file( const char   *datafile, const char   *identifier );
+                const bool closed;
 
-                void append_data( const void   *data, const size_t size, const string &identifier);
-                void append_data( const void   *data, const size_t size, const char   *identifier);
+                void mark(); //!< write magic
+                void sign(); //!< write current key
 
-                void append_data( const char   *text, const string &identifier);
-                void append_data( const char   *text, const char   *identifier);
+                //! append data
+                /**
+                 - magic
+                 - identifier
+                 - size
+                 - data[size]
+                 - sign
+                 */
+                void append_data( const string &identifier, const void *data, const size_t size );
 
-                void append_data( const memory::ro_buffer &, const string &identifier);
-                void append_data( const memory::ro_buffer &, const char   *identifier);
+                //! wrapper
+                void append_data( const char   *identifier, const void *data, const size_t size );
 
-                void mark();                  //!< emit  MAGIC, update total
-                void emit( const string &id); //!< emit length+id
-                void sign();                  //!< emit key
+                //! wrapper
+                void append_data( const string &identifier, const char *text);
 
-                void finish(); //!< emit total+magic
+                //! wrapper
+                void append_data( const char   *identifier, const char *text);
+
+                //! wrapper
+                void append_data( const string &identifier, const memory::ro_buffer &buf );
+
+                //! wrapper
+                void append_data( const char   *identifier, const memory::ro_buffer &buf );
+
+                //! mark end of resource, and close it
+                /**
+                 - sz
+                 - magic
+                 */
+                void finalize();
 
             private:
+                ios::ocstream fp;
+                len_t         sz;
                 Y_DISABLE_COPY_AND_ASSIGN(writer);
-                local_file fp;
-                len_t      total;
-
-            public:
-                hfn_t      hasher;
-
             };
 
 
+            class loader
+            {
+            };
+
         };
+
 
 
     }

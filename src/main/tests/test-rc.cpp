@@ -14,10 +14,12 @@ Y_UTEST(rc)
 
     {
         ios::rc::writer rc("rc.bin");
-        rc.append_data("my special code","code/main");
-        rc.append_data("another code","code/second");
+        rc.append_data("code/first","this is the first part");
+        rc.append_data("code/second","this is the second part");
 
-        rc.finish();
+        rc.finalize();
+
+        
     }
 }
 Y_UTEST_DONE()
