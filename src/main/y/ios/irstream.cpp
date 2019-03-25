@@ -12,7 +12,7 @@ namespace upsylon
 #define Y_IRSTREAM(L)          \
 cache(-1),                     \
 count(0),                      \
-length(L)
+max_length(L)
 
         irstream:: irstream(const string &filename,const offset_t shift, const offset_t len) :
         local_file(filename,readable),
@@ -48,7 +48,7 @@ length(L)
             }
             else
             {
-                if(length>=0&&count>=length)
+                if(max_length>=0&&count>=max_length)
                 {
                     return false;
                 }

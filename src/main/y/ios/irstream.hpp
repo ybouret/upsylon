@@ -33,7 +33,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(irstream);
             int             cache;
             offset_t        count;
-            const offset_t  length;
+            const offset_t  max_length;
         };
     }
 }

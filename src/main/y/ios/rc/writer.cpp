@@ -10,14 +10,18 @@ namespace upsylon
         {
         }
 
+#define Y_RC_CTOR()  io(filename), closed(false), fp(filename,true), sz(0)
 
         rc:: writer:: writer( const string &filename ) :
-        io(filename),
-        closed(false),
-        fp(filename,true),
-        sz(0)
+        Y_RC_CTOR()
         {
         }
+
+        rc:: writer:: writer( const char *filename ) :
+        Y_RC_CTOR()
+        {
+        }
+
 
         void rc::writer:: mark()
         {
@@ -56,6 +60,7 @@ namespace upsylon
             // data
             fp.output((const char *)data,size);
             sz += size;
+            std::cerr << "bytes=" << size << std::endl;
 
             // sign
             hash(identifier);
@@ -102,6 +107,7 @@ namespace upsylon
             if(closed) throw exception("%s([%s] is closed)",fn,*name);
 
             (bool&)closed=true;
+            std::cerr << "total=" << sz << std::endl;
             fp.emit<len_t>(sz);
             mark();
         }
