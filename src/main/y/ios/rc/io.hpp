@@ -129,9 +129,12 @@ namespace upsylon
                 explicit loader( const char   *filename ); //!< setup
                 virtual ~loader() throw();                 //!< destructor
 
-                string load_string( const string &id );
                 const  item::db & db() const throw();
-                
+
+                ios::irstream *load_stream( const string &id );
+                string         load_string( const string &id );
+
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(loader);
                 ios::irstream fp;

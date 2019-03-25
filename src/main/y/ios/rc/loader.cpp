@@ -58,13 +58,11 @@ namespace upsylon
                     throw exception("%s([%s] bad magic header)",fn,*name);
                 }
                 const string id = string_io::load_binary(fp);
-                std::cerr << "found '" << id << "'" << std::endl;
-                offset_t start = fp.tell();
-                size_t   extra = 0;
-                const size_t   bytes = fp.read_upack<size_t>(&extra);
+                offset_t     start = fp.tell();
+                size_t       extra = 0;
+                const size_t bytes = fp.read_upack<size_t>(&extra);
                 start += extra;
-                std::cerr << "bytes=" << bytes << "@" << start << std::endl;
-
+                
                 hash.set();
                 hash(id);
                 for(size_t i=0;i<bytes;++i)
@@ -111,6 +109,24 @@ namespace upsylon
             }
 
             return ans;
+        }
+
+        ios::irstream * rc::loader:: load_stream( const string &id )
+        {
+            static const char fn[] = "rc.loader.load_stream";
+
+            const item::ptr *ppItem = items.search(id);
+            if(!ppItem) throw exception("%s(no <%s> in [%s])", fn, *id, *name );
+
+            const item &it = **ppItem;
+            return new ios::irstream(name,it.start,it.bytes);
+        }
+
+
+
+        const  rc::item::db & rc::loader:: db() const throw()
+        {
+            return items;
         }
 
 
