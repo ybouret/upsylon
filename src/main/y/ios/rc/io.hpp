@@ -79,6 +79,9 @@ namespace upsylon
                 //! wrapper
                 void append_data( const char   *identifier, const memory::ro_buffer &buf );
 
+
+                void append_file( const string &identifier, const string &filename );
+
                 //! mark end of resource, and close it
                 /**
                  - sz

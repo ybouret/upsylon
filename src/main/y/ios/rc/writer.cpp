@@ -112,6 +112,52 @@ namespace upsylon
             mark();
         }
 
+        void rc:: writer:: append_file( const string &identifier, const string &filename )
+        {
+            static const char fn[] = "rc.writer.append_file";
+
+            // initialize
+            if(closed) throw exception("%s([%s] is closed)",fn,*name);
+            hash.set();
+            ios::irstream inp(filename);
+
+            // mark
+            size_t written = sz;
+            mark();
+
+            // identifier
+            sz += string_io::save_binary(fp,identifier);
+            hash(identifier);
+            const size_t size = inp.length();
+
+            // data length
+            {
+                size_t shift = 0;
+                fp.emit_upack<size_t>(size,&shift);
+                sz += shift;
+            }
+            assert(0==inp.tell());
+
+            // write data
+            {
+                char C = 0;
+                for(size_t i=0;i<size;++i)
+                {
+                    if( !inp.query(C) )
+                    {
+                        throw exception("%s([%s] missing bytes!)",fn,*name);
+                    }
+                    hash(&C,1);
+                    fp.write(C);
+                }
+            }
+            sz += size;
+
+            sign();
+            written = sz - written;
+            std::cerr << "#written=" << written << std::endl;
+        }
+
 
     }
 

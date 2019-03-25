@@ -18,6 +18,11 @@ Y_UTEST(rc)
         rc.append_data("code/first","this is the first part");
         rc.append_data("code/second","this is the second part");
 
+        if(argc>1)
+        {
+            rc.append_file("file",argv[1]);
+        }
+
         rc.finalize();
     }
 
