@@ -59,8 +59,10 @@ namespace upsylon
                 }
                 const string id = string_io::load_binary(fp);
                 std::cerr << "found '" << id << "'" << std::endl;
-                const offset_t start = fp.tell();
-                const size_t   bytes = fp.read_upack<size_t>();
+                offset_t start = fp.tell();
+                size_t   extra = 0;
+                const size_t   bytes = fp.read_upack<size_t>(&extra);
+                start += extra;
                 std::cerr << "bytes=" << bytes << "@" << start << std::endl;
 
                 hash.set();
