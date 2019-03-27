@@ -3,6 +3,7 @@
 #include "y/ios/ocstream.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/lang/source.hpp"
 
 using namespace upsylon;
 
@@ -21,7 +22,7 @@ Y_UTEST(rc)
 
         if(argc>1)
         {
-            rc.append_file("file",argv[1]);
+            rc.append_file(argv[1],argv[1]);
         }
 
         rc.finalize();
@@ -45,7 +46,22 @@ Y_UTEST(rc)
         }
         std::cerr << "]" << std::endl;
         
+        if(argc>1)
+        {
+            std::cerr << "-- using Lang::Module" << std::endl;
+            Lang::Source source( Lang::Module::OpenResource(rc,argv[1]) );
+            Lang::Char *ch = 0;
+            size_t      count = 0;
+            while( NULL != (ch=source.get()) )
+            {
+                ++count;
+                delete ch;
+            }
+            std::cerr << "-- read " << count << std::endl;
+        }
     }
+    
+    
 }
 Y_UTEST_DONE()
 

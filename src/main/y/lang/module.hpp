@@ -3,13 +3,13 @@
 #define Y_LANG_MODULE_INCLUDED 1
 
 #include "y/lang/char.hpp"
+#include "y/ios/rc/io.hpp"
 
 namespace upsylon
 {
+    
     namespace Lang
     {
-
-
 
         //! convert an istream of 'char' into a strean of tagged 'Char'
         class Module : public CharInfo, public counted
@@ -45,6 +45,15 @@ namespace upsylon
             static Module *OpenData( const string &name, const memory::ro_buffer &buff);        //!< open a data stream, create a tag 'name'
             static Module *OpenData( const char   *name, const memory::ro_buffer &buff);        //!< open a data stream, create a tag 'name'
 
+            //__________________________________________________________________
+            //
+            // opening resources
+            //__________________________________________________________________
+            static Module *OpenResource(const ios::rc::loader &resources,
+                                        const string          &identifier); //!< open a resource stream, create a tag 'identifier'
+            
+            static Module *OpenResource(const ios::rc::loader &resources,
+                                        const char            *identifier); //!< open a resource stream, create a tag 'identifier'
         private:
             Input          input;
             Y_DISABLE_COPY_AND_ASSIGN(Module);

@@ -29,7 +29,7 @@ Y_PROGRAM_START()
     {
 
         ios::rc::writer rc(filename,true);
-        for(int iarg=2;i<argc;++iarg)
+        for(int iarg=2;iarg<argc;++iarg)
         {
             const string arg = argv[iarg];
             add_rc(rc,arg);

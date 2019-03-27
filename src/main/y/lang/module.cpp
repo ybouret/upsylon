@@ -75,5 +75,20 @@ namespace upsylon
         {
             return OpenData(name, (char *)buff.ro(), buff.length() );
         }
+        
+        Module * Module:: OpenResource(const ios::rc::loader &resources,
+                                       const string          &identifier)
+        {
+            const Tag   org = new string(identifier);
+            const Input inp = resources.load_stream(identifier);
+            return new Module(org,inp,FromData);
+        }
+        
+        Module * Module:: OpenResource(const ios::rc::loader &resources,
+                                       const char            *identifier)
+        {
+            const string _(identifier);
+            return OpenResource(resources,_);
+        }
     }
 }

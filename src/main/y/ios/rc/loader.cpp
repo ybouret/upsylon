@@ -111,7 +111,7 @@ namespace upsylon
         }
 
 
-        string rc::loader:: load_string( const string &id )
+        string rc::loader:: load_string( const string &id ) const
         {
             static const char fn[] = "rc.loader.load_string";
 
@@ -132,7 +132,7 @@ namespace upsylon
             return ans;
         }
 
-        ios::irstream * rc::loader:: load_stream( const string &id )
+        ios::irstream * rc::loader:: load_stream( const string &id ) const
         {
             static const char fn[] = "rc.loader.load_stream";
 

@@ -133,15 +133,15 @@ namespace upsylon
                 explicit loader( const char   *filename, const bool v=false ); //!< setup
                 virtual ~loader() throw();                                    //!< destructor
 
-                const  item::db & db() const throw();           //!< get the database
-                ios::irstream *load_stream( const string &id ); //!< create a new stream
-                string         load_string( const string &id ); //!< create a new string
+                const  item::db & db() const throw();                 //!< get the database
+                ios::irstream *load_stream( const string &id ) const; //!< create a new stream
+                string         load_string( const string &id ) const; //!< create a new string
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(loader);
-                ios::irstream fp;
-                item::db      items;
+                mutable ios::irstream fp;
+                item::db              items;
                 void initialize();
                 
             };

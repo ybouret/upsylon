@@ -169,7 +169,10 @@ namespace upsylon
                 }
             }
             sz += size;
-
+            if(verbose)
+            {
+                std::cerr << "** rc.append_file '" << identifier << "', #bytes=" << size << std::endl;
+            }
             sign();
             written = sz - written;
             if(verbose)
