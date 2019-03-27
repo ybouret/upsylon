@@ -43,7 +43,7 @@ Y_UTEST(dyn)
         std::cerr << "IntermediateLang=" << std::endl;
         std::cerr << il;
 
-        const size_t out_bytes = il->output_bytes();
+        const size_t out_bytes = il->outputBytes();
         
         {
             ios::ocstream fp("il.bin");

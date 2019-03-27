@@ -153,10 +153,11 @@ namespace upsylon
                 const string _(dotfile); graphViz(_);
             }
 
-            void Node:: save( ios::ostream &fp ) const
+            void Node:: save( ios::ostream &fp, size_t *bytes ) const
             {
-                string_io::save_binary(fp,rule.name);
-                emit(fp);
+                const size_t sz = string_io::save_binary(fp,rule.name);
+                if( bytes ) (*bytes) += sz;
+                emit(fp,bytes);
             }
 
             string Node:: toBinary() const
@@ -254,15 +255,15 @@ namespace upsylon
 
 
 
-            void TerminalNode:: emit(ios::ostream &fp) const
+            void TerminalNode:: emit(ios::ostream &fp, size_t *bytes) const
             {
                 assert(lx);
-                fp.emit(MAGIC_BYTE);
-
-                fp.emit_upack(lx->size);
+                fp.emit(MAGIC_BYTE);           if(bytes) (*bytes) += 1;
+                fp.emit_upack(lx->size,bytes);
                 for(const Char *ch = lx->head;ch;ch=ch->next)
                 {
                     fp.emit(ch->code);
+                    if(bytes) (*bytes) += sizeof(ch->code);
                 }
             }
 
@@ -328,19 +329,21 @@ namespace upsylon
             }
 
 
-            void InternalNode:: emitList(ios::ostream &fp) const
+            void InternalNode:: emitList(ios::ostream &fp,size_t *bytes) const
             {
-                fp.emit_upack(size);
+                size_t sz =0;
+                fp.emit_upack(size,&sz);
+                if(bytes) *bytes += sz;
                 for(const Node *node=head;node;node=node->next)
                 {
-                    node->save(fp);
+                    node->save(fp,bytes);
                 }
             }
 
-            void InternalNode:: emit(ios::ostream &fp) const
+            void InternalNode:: emit(ios::ostream &fp,size_t *bytes) const
             {
-                fp.emit(MAGIC_BYTE);
-                emitList(fp);
+                fp.emit(MAGIC_BYTE); if(bytes) (*bytes) += 1;
+                emitList(fp,bytes);
             }
 
             const string * InternalNode:: data() const throw()
@@ -383,11 +386,15 @@ namespace upsylon
                 return new ExtendedNode( *this );
             }
 
-            void ExtendedNode:: emit(ios::ostream &fp) const
+            void ExtendedNode:: emit(ios::ostream &fp, size_t *bytes) const
             {
                 fp.emit(MAGIC_BYTE);
-                string_io::save_binary(fp, *shared);
-                emitList(fp);
+                const size_t sz = string_io::save_binary(fp, *shared);
+                if(bytes)
+                {
+                    (*bytes) += (sz+1);
+                }
+                emitList(fp,bytes);
             }
 
             void  ExtendedNode::   viz( ios::ostream &fp ) const

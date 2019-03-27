@@ -68,10 +68,10 @@ namespace upsylon
             void save( ios::ostream &fp, size_t *bytes=0) const;
             
             //! get bytes to store binary
-            size_t output_bytes() const;
+            size_t outputBytes() const;
             
             //! get a binary representation
-            string to_string() const;
+            string toBinary() const;
             
             //! load from binary stream
             static DynamoNode *Load( Source &source );

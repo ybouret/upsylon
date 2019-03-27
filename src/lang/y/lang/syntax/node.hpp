@@ -44,16 +44,16 @@ namespace upsylon
                 //
                 // non-virtual interface
                 //______________________________________________________________
-                Lexeme       &lexeme() throw();                       //!< from inner
-                const Lexeme &lexeme() const throw();                 //!< from inner
-                List         &children() throw();                     //!< from inner
-                const List   &children() const throw();               //!< from inner
-                void          graphVizName( ios::ostream &fp) const;  //!< helper: fp.viz(this)
-                void          graphViz( const string &dotfile) const; //!< save to graphviz and try to render
-                void          graphViz( const char   *dotfile) const; //!< save to graphviz and try to render
-                void          save( ios::ostream &fp ) const;         //!< save to stream
-                void          save( const string &binfile) const;     //!< save to file
-                void          save( const char   *binfile) const;     //!< save to file
+                Lexeme       &lexeme() throw();                               //!< from inner
+                const Lexeme &lexeme() const throw();                         //!< from inner
+                List         &children() throw();                             //!< from inner
+                const List   &children() const throw();                       //!< from inner
+                void          graphVizName( ios::ostream &fp) const;          //!< helper: fp.viz(this)
+                void          graphViz( const string &dotfile) const;         //!< save to graphviz and try to render
+                void          graphViz( const char   *dotfile) const;         //!< save to graphviz and try to render
+                void          save( ios::ostream &fp, size_t *bytes=0) const; //!< save to stream
+                void          save( const string &binfile) const;             //!< save to file
+                void          save( const char   *binfile) const;             //!< save to file
                 string        toBinary() const;                       //!< to a binary string
                 string        toBase64() const;                       //!< to a human readable string
 
@@ -109,7 +109,7 @@ namespace upsylon
 
             private:
                 Y_DISABLE_ASSIGN(Node);
-                virtual void        emit( ios::ostream & ) const = 0;
+                virtual void        emit( ios::ostream & , size_t *) const = 0;
 
             };
 
@@ -130,7 +130,7 @@ namespace upsylon
                 Lexeme *lx;
 
                 explicit TerminalNode(const Rule &r, Lexeme *l) throw();
-                virtual void emit( ios::ostream & ) const;
+                virtual void emit( ios::ostream &, size_t *) const;
                 virtual void returnTo( Lexer &lexer ) throw();
                 friend class Node;
             };
@@ -148,11 +148,11 @@ namespace upsylon
                 virtual const string *data() const throw();        //!< data or NULL
 
             protected:
-                InternalNode(const InternalNode &) throw();   //!< copy
-                InternalNode(const Rule &r) throw();          //!< from rule
-                virtual void emit( ios::ostream & ) const;    //!< emit binary
-                void         emitList( ios::ostream &) const; //!< emit list of children
-                void         vizLink( ios::ostream & ) const; //!< emit links
+                InternalNode(const InternalNode &) throw();             //!< copy
+                InternalNode(const Rule &r) throw();                    //!< from rule
+                virtual void emit( ios::ostream &, size_t *) const;     //!< emit binary
+                void         emitList( ios::ostream &, size_t *) const; //!< emit list of children
+                void         vizLink( ios::ostream & ) const;           //!< emit links
 
             private:
                 friend class Node;
@@ -177,7 +177,7 @@ namespace upsylon
                 ExtendedNode(const Rule &, const string &s);
                 ExtendedNode( const ExtendedNode &node ) throw();
                 friend class Node;
-                virtual void emit( ios::ostream & ) const;
+                virtual void emit( ios::ostream &, size_t *bytes) const;
 
                 Data shared;
             };

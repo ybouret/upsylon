@@ -184,7 +184,7 @@ namespace upsylon
             }
         }
         
-        size_t DynamoNode:: output_bytes() const
+        size_t DynamoNode:: outputBytes() const
         {
             size_t            bytes = 0;
             ios::null_ostream fp;
@@ -193,9 +193,9 @@ namespace upsylon
         }
 
         
-        string DynamoNode:: to_string() const
+        string DynamoNode:: toBinary() const
         {
-            string ans;
+            string ans(outputBytes(),as_capacity);
             ios::osstream fp(ans);
             save(fp);
             
