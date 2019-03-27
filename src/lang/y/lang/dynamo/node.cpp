@@ -4,6 +4,8 @@
 #include "y/string/convert.hpp"
 #include "y/string/io.hpp"
 #include "y/ios/graphviz.hpp"
+#include "y/ios/osstream.hpp"
+#include "y/ios/null-ostream.hpp"
 
 namespace upsylon
 {
@@ -155,29 +157,51 @@ namespace upsylon
 
         }
 
-        void DynamoNode:: save( ios::ostream &fp ) const
+        void DynamoNode:: save( ios::ostream &fp , size_t *bytes) const
         {
-            string_io::save_binary(fp,name);
+            const size_t nl = string_io::save_binary(fp,name);
+            if(bytes) (*bytes) += nl;
             switch (type)
             {
                 case DynamoTerminal: {
-                    fp.emit<uint8_t>(0);
-                    const string s = content();
-                    string_io::save_binary(fp,s);
+                    fp.emit<uint8_t>(0);        if(bytes) ++(*bytes);
+                    const string s  = content();
+                    const size_t sz = string_io::save_binary(fp,s);
+                    if(bytes) (*bytes) += sz;
                 } break;
 
                 case DynamoInternal: {
-                    fp.emit<uint8_t>(1);
+                    fp.emit<uint8_t>(1); if(bytes) ++(*bytes);
                     const DynamoList &ch = children();
                     const size_t      nch = ch.size;
-                    fp.emit_upack(nch);
+                    size_t            sz  = 0;
+                    fp.emit_upack(nch,&sz); if(bytes) (*bytes) += sz;
                     for(const DynamoNode *node=ch.head;node;node=node->next)
                     {
-                        node->save(fp);
+                        node->save(fp,bytes);
                     }
                 } break;
             }
         }
+        
+        size_t DynamoNode:: output_bytes() const
+        {
+            size_t            bytes = 0;
+            ios::null_ostream fp;
+            save(fp,&bytes);
+            return bytes;
+        }
+
+        
+        string DynamoNode:: to_string() const
+        {
+            string ans;
+            ios::osstream fp(ans);
+            save(fp);
+            
+            return ans;
+        }
+
 
 
         DynamoNode * DynamoNode:: Load( Source &fp )

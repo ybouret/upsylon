@@ -10,7 +10,7 @@ namespace upsylon
     {
         typedef Syntax::Node XNode; //!< Alias
 
-        //! Parser for the Dynamo Grammar
+        //! Parser for the Dynamo Grammar, produces a raw Syntax::Node tree
         /**
          - dynamo : module item*;            // top level rule
          - module : "[.]{ID}" ';';           // module name

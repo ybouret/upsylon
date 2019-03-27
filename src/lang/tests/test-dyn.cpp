@@ -1,7 +1,6 @@
 #include "y/lang/dynamo/loader.hpp"
 #include "y/lang/dynamo/generator.hpp"
 #include "y/lang/dynamo/hash31.hpp"
-
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -44,6 +43,8 @@ Y_UTEST(dyn)
         std::cerr << "IntermediateLang=" << std::endl;
         std::cerr << il;
 
+        const size_t out_bytes = il->output_bytes();
+        
         {
             ios::ocstream fp("il.bin");
             il->save(fp);
@@ -102,6 +103,11 @@ Y_UTEST(dyn)
             A.walk(*tree);
         }
 
+        std::cerr << "OutputIL=" << out_bytes << std::endl;
+        {
+            ios::irstream chk("il.bin");
+            Y_CHECK(chk.length()==out_bytes);
+        }
 
     }
 }

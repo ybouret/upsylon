@@ -65,8 +65,14 @@ namespace upsylon
             void graphViz( const string &filename ) const;
 
             //! save to bin stream
-            void save( ios::ostream &fp ) const;
-
+            void save( ios::ostream &fp, size_t *bytes=0) const;
+            
+            //! get bytes to store binary
+            size_t output_bytes() const;
+            
+            //! get a binary representation
+            string to_string() const;
+            
             //! load from binary stream
             static DynamoNode *Load( Source &source );
 
