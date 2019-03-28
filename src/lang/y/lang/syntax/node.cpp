@@ -157,7 +157,7 @@ namespace upsylon
             void Node:: save( ios::ostream &fp, size_t *bytes ) const
             {
                 const size_t sz = string_io::save_binary(fp,rule.name);
-                if( bytes ) (*bytes) += sz;
+                ios::__add_to(bytes,sz);
                 emit(fp,bytes);
             }
             
@@ -271,13 +271,13 @@ namespace upsylon
                 {
                     size_t sz=0;
                     fp.emit_upack(lx->size,&sz);
-                    if(bytes) (*bytes) += (sz+1);
+                    ios::__add_to(bytes,sz+1);
                 }
                 for(const Char *ch = lx->head;ch;ch=ch->next)
                 {
                     fp.emit(ch->code);
-                    if(bytes) (*bytes) += sizeof(ch->code);
                 }
+                ios::__add_to(bytes,lx->size);
             }
             
             const string * TerminalNode:: data() const throw() { return 0; }
@@ -347,7 +347,7 @@ namespace upsylon
                 {
                     size_t sz =0;
                     fp.emit_upack(size,&sz);
-                    if(bytes) *bytes += sz;
+                    ios::__add_to(bytes,sz);
                 }
                 for(const Node *node=head;node;node=node->next)
                 {
@@ -405,10 +405,7 @@ namespace upsylon
             {
                 fp.emit(MAGIC_BYTE);
                 const size_t sz = string_io::save_binary(fp, *shared);
-                if(bytes)
-                {
-                    (*bytes) += (sz+1);
-                }
+                ios::__add_to(bytes,sz+1);
                 emitList(fp,bytes);
             }
             
