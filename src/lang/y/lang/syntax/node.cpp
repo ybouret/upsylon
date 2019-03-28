@@ -5,6 +5,7 @@
 #include "y/string/io.hpp"
 #include "y/ios/osstream.hpp"
 #include "y/ios/imstream.hpp"
+#include "y/ios/null-ostream.hpp"
 
 #include "y/codec/base64.hpp"
 
@@ -160,9 +161,17 @@ namespace upsylon
                 emit(fp,bytes);
             }
             
+            size_t Node:: outputBytes() const
+            {
+                size_t bytes = 0;
+                ios::null_ostream fp;
+                save(fp,&bytes);
+                return bytes;
+            }
+            
             string Node:: toBinary() const
             {
-                string ans;
+                string ans( outputBytes(), as_capacity);
                 {
                     ios::osstream fp(ans);
                     save(fp);

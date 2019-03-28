@@ -7,10 +7,19 @@
 #include "y/os/endian.hpp"
 #include "y/os/static-check.hpp"
 
+
+
 namespace upsylon
 {
     namespace ios
     {
+        
+        template <typename T, typename U>
+        inline void __add_to( T *addr, const U value ) throw()
+        {
+            if(addr) (*addr) += value;
+        }
+
         //! interface for output streams
         class ostream : public stream
         {

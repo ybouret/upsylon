@@ -44,18 +44,19 @@ namespace upsylon
                 //
                 // non-virtual interface
                 //______________________________________________________________
-                Lexeme       &lexeme() throw();                               //!< from inner
-                const Lexeme &lexeme() const throw();                         //!< from inner
-                List         &children() throw();                             //!< from inner
-                const List   &children() const throw();                       //!< from inner
-                void          graphVizName( ios::ostream &fp) const;          //!< helper: fp.viz(this)
-                void          graphViz( const string &dotfile) const;         //!< save to graphviz and try to render
-                void          graphViz( const char   *dotfile) const;         //!< save to graphviz and try to render
-                void          save( ios::ostream &fp, size_t *bytes=0) const; //!< save to stream
+                Lexeme       &lexeme() throw();                                   //!< from inner
+                const Lexeme &lexeme() const throw();                             //!< from inner
+                List         &children() throw();                                 //!< from inner
+                const List   &children() const throw();                           //!< from inner
+                void          graphVizName( ios::ostream &fp) const;              //!< helper: fp.viz(this)
+                void          graphViz( const string &dotfile) const;             //!< save to graphviz and try to render
+                void          graphViz( const char   *dotfile) const;             //!< save to graphviz and try to render
+                void          save( ios::ostream &fp, size_t *bytes=0) const;     //!< save to stream
                 void          save( const string &binfile, size_t *bytes=0) const;//!< save to file
                 void          save( const char   *binfile, size_t *bytes=0) const;//!< save to file
-                string        toBinary() const;                       //!< to a binary string
-                string        toBase64() const;                       //!< to a human readable string
+                size_t        outputBytes() const;                                //!< count the bytes for output
+                string        toBinary() const;                                   //!< to a binary string
+                string        toBase64() const;                                   //!< to a human readable string
 
                 //______________________________________________________________
                 //

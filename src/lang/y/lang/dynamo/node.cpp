@@ -19,14 +19,14 @@ namespace upsylon
                 case DynamoInternal:
                     delete static_cast<DynamoList *>(impl);
                     break;
-
+                    
                 case DynamoTerminal:
                     delete static_cast<string*>(impl);
                     break;
             }
             impl=0;
         }
-
+        
         DynamoNode:: DynamoNode(const string &id,
                                 const Lexeme &lx,
                                 const size_t  nskip,
@@ -38,37 +38,37 @@ namespace upsylon
             const string s = lx.to_string(nskip,ntrim);
             impl = new string(s);
         }
-
+        
         const string & DynamoNode:: content() const throw()
         {
             assert(DynamoTerminal==type);
             assert(NULL!=impl);
             return *static_cast<const string *>(impl);
         }
-
+        
         DynamoList   &  DynamoNode:: children() throw()
         {
             assert(DynamoInternal==type);
             assert(NULL!=impl);
             return *static_cast<DynamoList *>(impl);
         }
-
+        
         const DynamoList   &  DynamoNode:: children() const throw()
         {
             assert(DynamoInternal==type);
             assert(NULL!=impl);
             return *static_cast<const DynamoList *>(impl);
         }
-
-
+        
+        
         DynamoNode:: DynamoNode( const string &id ) :
         type( DynamoInternal ),
         name(id),
         impl( new DynamoList() )
         {
-
+            
         }
-
+        
         std::ostream & DynamoNode:: display( std::ostream &os, int level ) const
         {
             switch(type)
@@ -82,7 +82,7 @@ namespace upsylon
                     }
                     os << std::endl;
                 } break;
-
+                    
                 case DynamoInternal: {
                     const DynamoList &self = children();
                     Indent(os,level) << "[call] <" << name << ">/" << self.size << std::endl;
@@ -96,7 +96,7 @@ namespace upsylon
             }
             return os;
         }
-
+        
         std::ostream & DynamoNode:: Indent(std::ostream &os, int level)
         {
             const string s = vformat("x%02x",level);
@@ -107,7 +107,7 @@ namespace upsylon
             }
             return os;
         }
-
+        
         void DynamoNode:: viz( ios::ostream &fp ) const
         {
             fp.viz(this);
@@ -124,9 +124,9 @@ namespace upsylon
                     {
                         fp("[label=\"%s\"];\n",*l);
                     }
-
+                    
                 } break;
-
+                    
                 case DynamoInternal:{
                     fp("[label=\"%s\"];\n",*l);
                     const bool multiple = children().size>0;
@@ -144,7 +144,7 @@ namespace upsylon
                 } break;
             }
         }
-
+        
         void DynamoNode:: graphViz(const string &filename) const
         {
             {
@@ -154,28 +154,29 @@ namespace upsylon
                 fp << "}\n";
             }
             (void)ios::GraphViz::Render(filename);
-
+            
         }
-
+        
         void DynamoNode:: save( ios::ostream &fp , size_t *bytes) const
         {
             const size_t nl = string_io::save_binary(fp,name);
-            if(bytes) (*bytes) += nl;
+            ios::__add_to(bytes,nl);
             switch (type)
             {
                 case DynamoTerminal: {
-                    fp.emit<uint8_t>(0);        if(bytes) ++(*bytes);
+                    fp.emit<uint8_t>(0);
                     const string s  = content();
                     const size_t sz = string_io::save_binary(fp,s);
-                    if(bytes) (*bytes) += sz;
+                    ios::__add_to(bytes,sz+1);
                 } break;
-
+                    
                 case DynamoInternal: {
-                    fp.emit<uint8_t>(1); if(bytes) ++(*bytes);
+                    fp.emit<uint8_t>(1);
                     const DynamoList &ch = children();
                     const size_t      nch = ch.size;
                     size_t            sz  = 0;
-                    fp.emit_upack(nch,&sz); if(bytes) (*bytes) += sz;
+                    fp.emit_upack(nch,&sz);
+                    ios::__add_to(bytes,sz+1);
                     for(const DynamoNode *node=ch.head;node;node=node->next)
                     {
                         node->save(fp,bytes);
@@ -191,7 +192,7 @@ namespace upsylon
             save(fp,&bytes);
             return bytes;
         }
-
+        
         
         string DynamoNode:: toBinary() const
         {
@@ -201,13 +202,23 @@ namespace upsylon
             
             return ans;
         }
-
-
-
+        
+        void DynamoNode::save( const string &binfile, size_t *bytes) const
+        {
+            ios::ocstream fp(binfile);
+            save(fp,bytes);
+        }
+        
+        void DynamoNode::save( const char *binfile, size_t *bytes) const
+        {
+            const string _(binfile);
+            save(_,bytes);
+        }
+        
         DynamoNode * DynamoNode:: Load( Source &fp )
         {
             static const char fn[] = "DynamoNode::Load";
-
+            
             const string   theName = string_io::load_binary(fp);
             const unsigned theType = fp.read<uint8_t>();
             switch( theType )
@@ -224,8 +235,8 @@ namespace upsylon
                     }
                     return new DynamoNode(theName,lex,0,0);
                 }
-
-
+                    
+                    
                 case 1: // DynamoInternal
                 {
                     const size_t         nch  = fp.read_upack<size_t>();
@@ -237,13 +248,13 @@ namespace upsylon
                     }
                     return node.yield();
                 }
-
+                    
                 default:
                     break;
             }
             throw exception("%s(invalid DynamoType=%u for '%s')", fn, theType, *theName);
         }
-
+        
         void DynamoNode::  run( hashing::function &H ) const throw()
         {
             static const uint8_t TermHash = 0;
@@ -254,7 +265,7 @@ namespace upsylon
                 case DynamoTerminal:
                     H.run_type(TermHash);
                     H(content()); break;
-
+                    
                 case DynamoInternal:
                     H.run_type(RuleHash);
                     for(const DynamoNode *node=children().head;node;node=node->next)
@@ -264,13 +275,13 @@ namespace upsylon
                     break;
             }
         }
-
+        
         digest DynamoNode:: md( hashing::function &H ) const
         {
             H.set();
             run(H);
             return H.md();
         }
-
+        
     }
 }
