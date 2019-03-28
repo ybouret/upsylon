@@ -11,7 +11,8 @@ namespace upsylon
         }
 
         DynamoManager:: DynamoManager() throw() :
-        ld(0)
+        __loader(0),
+        __compiler(0)
         {
         }
 
@@ -19,11 +20,20 @@ namespace upsylon
 
         DynamoLoader & DynamoManager:: loader()
         {
-            if(ld.is_empty())
+            if(__loader.is_empty())
             {
-                ld = new DynamoLoader();
+                __loader = new DynamoLoader();
             }
-            return *ld;
+            return * __loader;
+        }
+        
+        DynamoCompiler & DynamoManager:: compiler()
+        {
+            if( __compiler.is_empty() )
+            {
+                __compiler = new DynamoCompiler();
+            }
+            return * __compiler;
         }
         
         Syntax::Parser * DynamoManager:: link( Module *dynamoModule, DynamoSymbols *symbols)
@@ -37,11 +47,9 @@ namespace upsylon
         Syntax::Parser * DynamoManager:: loadAndLink( Module *grammarModule, DynamoSymbols *symbols )
         {
             assert(grammarModule);
-            DynamoCompiler cmp;
             auto_ptr<Module>      guard( grammarModule );
-            DynamoLoader         &dynld = loader();
-            auto_ptr<XNode>       xnode = dynld.load(guard.yield());
-            auto_ptr<DynamoNode>  dnode = cmp.compile(*xnode);
+            auto_ptr<XNode>       xnode = loader().load(guard.yield());
+            auto_ptr<DynamoNode>  dnode = compiler().compile(*xnode);
             return build(*dnode,symbols);
         }
 

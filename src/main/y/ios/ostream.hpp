@@ -13,7 +13,7 @@ namespace upsylon
 {
     namespace ios
     {
-        
+        //! add value to addr if addr is valid
         template <typename T, typename U>
         inline void __add_to( T *addr, const U value ) throw()
         {

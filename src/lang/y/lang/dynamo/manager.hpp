@@ -17,10 +17,15 @@ namespace upsylon
         {
         public:
             //! loader on-the-fly creation
-            DynamoLoader & loader();
-
+            DynamoLoader   & loader();
+            
+            //! compiler on-the-fly creation
+            DynamoCompiler & compiler();
+            
             //! load DynamoNode and build parser
             Syntax::Parser *link( Module *dynamoModule, DynamoSymbols *symbols=NULL);
+            
+            //! load SyntaxNode, compiler and build
             Syntax::Parser *loadAndLink( Module *grammarModule, DynamoSymbols *symbols=NULL );
             
         private:
@@ -30,8 +35,8 @@ namespace upsylon
             virtual ~DynamoManager() throw();
             static const at_exit::longevity life_time = -13;
 
-            auto_ptr<DynamoLoader> ld;
-
+            auto_ptr<DynamoLoader>    __loader;
+            auto_ptr<DynamoCompiler>  __compiler;
         };
 
     }
