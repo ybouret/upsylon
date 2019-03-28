@@ -13,7 +13,7 @@ namespace upsylon
     {
 
         //! singleton to create parsers
-        class DynamoManager : public singleton<DynamoManager>, public DynamoGenerator
+        class DynamoManager : public singleton<DynamoManager>
         {
         public:
             //! loader on-the-fly creation
@@ -21,6 +21,9 @@ namespace upsylon
             
             //! compiler on-the-fly creation
             DynamoCompiler & compiler();
+            
+            //! Generator on-the-fly creation
+            DynamoGenerator & generator();
             
             //! load DynamoNode and build parser
             Syntax::Parser *link( Module *dynamoModule, DynamoSymbols *symbols=NULL);
@@ -37,6 +40,7 @@ namespace upsylon
 
             auto_ptr<DynamoLoader>    __loader;
             auto_ptr<DynamoCompiler>  __compiler;
+            auto_ptr<DynamoGenerator> __generator;
         };
 
     }

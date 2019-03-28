@@ -12,7 +12,8 @@ namespace upsylon
 
         DynamoManager:: DynamoManager() throw() :
         __loader(0),
-        __compiler(0)
+        __compiler(0),
+        __generator(0)
         {
         }
 
@@ -36,12 +37,21 @@ namespace upsylon
             return * __compiler;
         }
         
+        DynamoGenerator & DynamoManager:: generator()
+        {
+            if( __generator.is_empty() )
+            {
+                __generator = new DynamoGenerator();
+            }
+            return * __generator;
+        }
+        
         Syntax::Parser * DynamoManager:: link( Module *dynamoModule, DynamoSymbols *symbols)
         {
             assert( dynamoModule );
             Source               source(dynamoModule);
             auto_ptr<DynamoNode> dnode = DynamoNode::Load(source);
-            return build(*dnode,symbols);
+            return generator().build(*dnode,symbols);
         }
 
         Syntax::Parser * DynamoManager:: loadAndLink( Module *grammarModule, DynamoSymbols *symbols )
@@ -50,7 +60,8 @@ namespace upsylon
             auto_ptr<Module>      guard( grammarModule );
             auto_ptr<XNode>       xnode = loader().load(guard.yield());
             auto_ptr<DynamoNode>  dnode = compiler().compile(*xnode);
-            return build(*dnode,symbols);
+            xnode = 0;
+            return generator().build(*dnode,symbols);
         }
 
     }
