@@ -19,6 +19,10 @@ namespace upsylon
             //! loader on-the-fly creation
             DynamoLoader & loader();
 
+            //! load DynamoNode and build parser
+            Syntax::Parser *link( Module *dynamoModule, DynamoSymbols *symbols=NULL);
+            Syntax::Parser *loadAndLink( Module *grammarModule, DynamoSymbols *symbols=NULL );
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(DynamoManager);
             friend class singleton<DynamoManager>;
