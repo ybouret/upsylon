@@ -27,15 +27,18 @@ Y_UTEST(dyn)
         const string           fn = argv[1];
         auto_ptr<Syntax::Node> g  = dynamo.load( doOpen(fn) );
 
-        if(false)
+        if(true)
         {
-            g->graphViz( "dynamo_tree.dot" );
-            g->save("dynamo.bin");
-
+            //g->graphViz( "dynamo_tree.dot" );
+            size_t bytes=0;
+            g->save("dynamo.bin",&bytes);
+            std::cerr << "Written=" << bytes << std::endl;
+            Y_CHECK(ios::local_file::length_of("dynamo.bin")==bytes);
+            
             {
                 std::cerr << "Reloading" << std::endl;
                 auto_ptr<Syntax::Node> g2 = Syntax::Node::Load( Module::OpenFile("dynamo.bin"),dynamo );
-                g2->graphViz("dynamo_tree2.dot");
+                //g2->graphViz("dynamo_tree2.dot");
             }
         }
 
@@ -105,8 +108,7 @@ Y_UTEST(dyn)
 
         std::cerr << "OutputIL=" << out_bytes << std::endl;
         {
-            ios::irstream chk("il.bin");
-            Y_CHECK(chk.length()==out_bytes);
+            Y_CHECK(ios::local_file::length_of("il.bin")==out_bytes);
         }
 
     }

@@ -65,6 +65,12 @@ namespace upsylon
             //! access operator, copy of handle
             descriptor::type operator*() throw();
             
+            //! length of file
+            static size_t length_of( const string &filename );
+            
+            //! length of file, wrapper
+            static size_t length_of( const char   *filename );
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(local_file);
 

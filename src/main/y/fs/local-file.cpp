@@ -217,6 +217,18 @@ namespace upsylon
                 throw exception( "local_file::length(bad reset)");
             return size_t(ans);
         }
+        
+        size_t local_file:: length_of( const string &filename )
+        {
+            local_file fp( filename, readable);
+            return fp.length();
+        }
+        
+        size_t local_file:: length_of( const char *filename )
+        {
+            const string _(filename);
+            return length_of(_);
+        }
 
 
     }

@@ -52,8 +52,8 @@ namespace upsylon
                 void          graphViz( const string &dotfile) const;         //!< save to graphviz and try to render
                 void          graphViz( const char   *dotfile) const;         //!< save to graphviz and try to render
                 void          save( ios::ostream &fp, size_t *bytes=0) const; //!< save to stream
-                void          save( const string &binfile) const;             //!< save to file
-                void          save( const char   *binfile) const;             //!< save to file
+                void          save( const string &binfile, size_t *bytes=0) const;//!< save to file
+                void          save( const char   *binfile, size_t *bytes=0) const;//!< save to file
                 string        toBinary() const;                       //!< to a binary string
                 string        toBase64() const;                       //!< to a human readable string
 
