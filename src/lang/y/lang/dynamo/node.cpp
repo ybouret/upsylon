@@ -215,7 +215,7 @@ namespace upsylon
             save(_,bytes);
         }
         
-        DynamoNode * DynamoNode:: Load( Source &fp )
+        DynamoNode * DynamoNode:: Load_( Source &fp )
         {
             static const char fn[] = "DynamoNode::Load";
             
@@ -244,7 +244,7 @@ namespace upsylon
                     DynamoList          &ch   = node->children();
                     for(size_t i=0;i<nch;++i)
                     {
-                        ch.push_back( Load(fp) );
+                        ch.push_back( Load_(fp) );
                     }
                     return node.yield();
                 }
@@ -253,6 +253,13 @@ namespace upsylon
                     break;
             }
             throw exception("%s(invalid DynamoType=%u for '%s')", fn, theType, *theName);
+        }
+        
+        DynamoNode * DynamoNode:: Load( Module *m )
+        {
+            assert(m);
+            Source source(m);
+            return Load_(source);
         }
         
         void DynamoNode::  run( hashing::function &H ) const throw()

@@ -50,7 +50,7 @@ namespace upsylon
         {
             assert( dynamoModule );
             Source               source(dynamoModule);
-            auto_ptr<DynamoNode> dnode = DynamoNode::Load(source);
+            auto_ptr<DynamoNode> dnode = DynamoNode::Load_(source);
             return generator().build(*dnode,symbols);
         }
 

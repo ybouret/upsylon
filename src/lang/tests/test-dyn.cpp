@@ -54,8 +54,7 @@ Y_UTEST(dyn)
         }
 
         {
-            Source fp( Module::OpenFile("il.bin") );
-            auto_ptr<DynamoNode> il2 = DynamoNode::Load( fp );
+            auto_ptr<DynamoNode> il2 = DynamoNode::Load( Module::OpenFile("il.bin") );
             hashing::sha1 H;
             digest md0 = il->md(H);
             digest md2 = il2->md(H);

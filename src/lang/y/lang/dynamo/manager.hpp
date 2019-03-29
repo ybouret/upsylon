@@ -25,7 +25,7 @@ namespace upsylon
             //! Generator on-the-fly creation
             DynamoGenerator & generator();
             
-            //! load DynamoNode and build parser
+            //! load a compiled DynamoNode and build parser
             Syntax::Parser *link( Module *dynamoModule, DynamoSymbols *symbols=NULL);
             
             //! load SyntaxNode, compiler and build

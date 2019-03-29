@@ -74,8 +74,9 @@ namespace upsylon
             //! get a binary representation
             string toBinary() const;
             
-            //! load from binary stream
-            static DynamoNode *Load( Source &source );
+            //! load from binary stream, recursive
+            static DynamoNode *Load_( Source &source );
+            static DynamoNode *Load( Module *m );
             
             //! recursive run of a hashing function
             void run( hashing::function &H ) const throw();
