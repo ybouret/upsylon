@@ -33,7 +33,7 @@ namespace upsylon {
     
     bool vfs::entry::  is_subdir() const throw()
     {
-        return is_dir == attr && 0 != strcmp(".",base_name) && 0 != strcmp(".",base_name);
+        return (is_dir == attr) && (0 != strcmp(".",base_name)) && (0 != strcmp("..",base_name));
     }
     
     
