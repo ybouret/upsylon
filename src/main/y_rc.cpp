@@ -59,6 +59,7 @@ Y_PROGRAM_START()
             const string arg = argv[iarg];
             add_rc(rc,parent,arg);
         }
+        rc.finalize();
     }
 
 

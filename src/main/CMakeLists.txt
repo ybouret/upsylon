@@ -272,7 +272,7 @@ ADD_EXECUTABLE(rc-demo rc-demo.cpp)
 TARGET_LINK_Y(rc-demo)
 
 ADD_CUSTOM_COMMAND( TARGET rc-demo 
-COMMAND y_rc $<TARGET_FILE:rc-demo> 
+COMMAND y_rc $<TARGET_FILE:rc-demo> ${CMAKE_CURRENT_SOURCE_DIR}/rc1.txt
 COMMENT "Adding Resources to rc-demo")
 
 IF(FALSE)
