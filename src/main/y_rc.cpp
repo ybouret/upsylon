@@ -5,7 +5,9 @@
 using namespace upsylon;
 
 static inline
-void add_rc( ios::rc::writer &rc, const string &arg )
+void add_rc(ios::rc::writer &rc,
+            const string    &parent,
+            const string    &arg )
 {
     vfs &fs = local_fs::instance();
 
@@ -14,6 +16,7 @@ void add_rc( ios::rc::writer &rc, const string &arg )
     if(ep.is_regular())
     {
         // add the file
+        
     }
 
 }
@@ -29,10 +32,11 @@ Y_PROGRAM_START()
     {
 
         ios::rc::writer rc(filename,true);
+        string parent = "";
         for(int iarg=2;iarg<argc;++iarg)
         {
             const string arg = argv[iarg];
-            add_rc(rc,arg);
+            add_rc(rc,parent,arg);
         }
     }
 
