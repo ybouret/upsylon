@@ -268,6 +268,13 @@ ADD_EXECUTABLE(y_rc y_rc.cpp)
 TARGET_LINK_Y(y_rc)
 INSTALL( TARGETS y_rc RUNTIME DESTINATION bin)
 
+ADD_EXECUTABLE(rc-demo rc-demo.cpp)
+TARGET_LINK_Y(rc-demo)
+
+ADD_CUSTOM_COMMAND( TARGET rc-demo 
+COMMAND y_rc $<TARGET_FILE:rc-demo> 
+COMMENT "Adding Resources to rc-demo")
+
 IF(FALSE)
   ADD_EXECUTABLE(nwsrt nwsrt.cpp)
   TARGET_LINK_Y(nwsrt)

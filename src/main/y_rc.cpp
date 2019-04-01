@@ -5,18 +5,39 @@
 using namespace upsylon;
 
 static inline
+string make_resource_name(const string &parent,
+                          const string &path )
+{
+    const string b_name = vfs::get_base_name(path);
+    if(parent.size()>0)
+    {
+        return vfs::to_directory(parent) + path;
+    }
+    else
+    {
+        return b_name;
+    }
+}
+
+static inline
 void add_rc(ios::rc::writer &rc,
             const string    &parent,
-            const string    &arg )
+            const string    &path )
 {
     vfs &fs = local_fs::instance();
 
-    vfs::entry ep(arg,fs);
+    vfs::entry ep(path,fs);
 
     if(ep.is_regular())
     {
         // add the file
-        
+        const string id = make_resource_name(parent,ep.path);
+        rc.append_file(id,path);
+    }
+
+    if( ep.is_directory() && !ep.is_dot_or_ddot() )
+    {
+
     }
 
 }
