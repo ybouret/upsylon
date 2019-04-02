@@ -157,22 +157,24 @@ namespace upsylon
             {
 
                 static const T SHRINK = T(0.3819660112501051);
-
+                static const int GTA = 1;
+                static const int GTC = 2;
+                //______________________________________________________________
+                //
                 // ordering..
+                //______________________________________________________________
                 if(x.a>x.c)
                 {
                     cswap(x.a, x.c);
                     cswap(f.a, f.c);
                 }
+                assert(x.is_ordered());
 
-                //__________________________________________________________________
+                //______________________________________________________________
                 //
                 // try to find x.b so that f.b <= f.a and f.b <= f.c
-                //__________________________________________________________________
-                const int GTA = 1;
-                const int GTC = 2;
-
-                // and at least one turn
+                // and at least one turn!
+                //______________________________________________________________
                 T width = x.c-x.a; assert(width>=0);
                 for(;;)
                 {
@@ -188,6 +190,7 @@ namespace upsylon
                         }
                         else
                         {
+                            // f.c==f.a numerically
                             x.b = clamp<T>(x.a,x.a + T(0.5) * (x.c-x.a),x.c);
                         }
                     }

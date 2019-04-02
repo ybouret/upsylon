@@ -97,16 +97,13 @@ namespace upsylon
                 {
                     // expand
                     aa.b=_end; EE.b = Eend;
-                    std::cerr << "expand" << std::endl;
                     bracket::expand(E,aa,EE);
                 }
                 else
                 {
                     // backtrack
                     aa.c=_end; EE.c = Eend;
-                    std::cerr << "backtrack" << std::endl;
                     bracket::inside(E,aa,EE);
-                    std::cerr << "aa=" << aa << std::endl;
                 }
                 //______________________________________________________________
                 //
@@ -116,7 +113,27 @@ namespace upsylon
                 const double Etry  = E(alpha);
 				if(Etry>=Eini)
                 {
+                    std::cerr << "@min" << std::endl;
                     break; // minimum is reached
+                }
+                bool converged = true;
+                for(size_t j=M;j>0;--j)
+                {
+                    if(active[j])
+                    {
+                        const double newC = Ctry[j];
+                        const double oldC = Cini[j];
+                        const double dCj = fabs( newC - oldC );
+                        if( dCj > numeric<double>::ftol * ( fabs(newC)+fabs(oldC)) )
+                        {
+                            converged = false;
+                        }
+                    }
+                }
+                if(converged)
+                {
+                    std::cerr << "@cvg" << std::endl;
+                    break; // spurious minimum
                 }
                 
                 Eini = Etry;
