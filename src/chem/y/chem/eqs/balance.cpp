@@ -60,8 +60,9 @@ namespace upsylon
 
         bool Equilibria:: balance(array<double> &C)
         {
-            static const double _end = 1;
-
+            static const double _end  = 1;
+			static const double _ftol = numeric<double>::ftol;
+			
             //__________________________________________________________________
             //
             // initialize search
@@ -111,11 +112,13 @@ namespace upsylon
                 //______________________________________________________________
                 const double alpha = max_of<double>(0,minimize::run(E,aa,EE));
                 const double Etry  = E(alpha);
-				if(Etry>=Eini)
+				if( fabs(Etry-Eini) <= _ftol * Eini )
                 {
                     std::cerr << "@min" << std::endl;
                     break; // minimum is reached
                 }
+                
+                #if 0
                 bool converged = true;
                 for(size_t j=M;j>0;--j)
                 {
@@ -124,7 +127,7 @@ namespace upsylon
                         const double newC = Ctry[j];
                         const double oldC = Cini[j];
                         const double dCj = fabs( newC - oldC );
-                        if( dCj > numeric<double>::ftol * ( fabs(newC)+fabs(oldC)) )
+                        if( dCj > _ftol * ( fabs(newC)+fabs(oldC)) )
                         {
                             converged = false;
                         }
@@ -135,6 +138,7 @@ namespace upsylon
                     std::cerr << "@cvg" << std::endl;
                     break; // spurious minimum
                 }
+                #endif
                 
                 Eini = Etry;
                 tao::_set(Cini,Ctry);
