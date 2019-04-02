@@ -97,13 +97,16 @@ namespace upsylon
                 {
                     // expand
                     aa.b=_end; EE.b = Eend;
+                    std::cerr << "expand" << std::endl;
                     bracket::expand(E,aa,EE);
                 }
                 else
                 {
                     // backtrack
                     aa.c=_end; EE.c = Eend;
+                    std::cerr << "backtrack" << std::endl;
                     bracket::inside(E,aa,EE);
+                    std::cerr << "aa=" << aa << std::endl;
                 }
                 //______________________________________________________________
                 //
@@ -111,10 +114,11 @@ namespace upsylon
                 //______________________________________________________________
                 const double alpha = max_of<double>(0,minimize::run(E,aa,EE));
                 const double Etry  = E(alpha);
-                if(Etry>=Eini)
+				if(Etry>=Eini)
                 {
                     break; // minimum is reached
                 }
+                
                 Eini = Etry;
                 tao::_set(Cini,Ctry);
             }
