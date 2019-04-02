@@ -51,7 +51,7 @@ namespace upsylon
             hash.set();
 
             // mark
-            size_t written = sz;
+            len_t written = sz;
             mark();
 
             // identifier
@@ -139,7 +139,7 @@ namespace upsylon
             ios::irstream inp(filename);
 
             // mark
-            size_t written = sz;
+            len_t written = sz;
             mark();
 
             // identifier
