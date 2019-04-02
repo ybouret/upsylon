@@ -63,6 +63,11 @@ namespace upsylon
             return *q;
         }
 
+        Species & Library:: operator[](const char   *id ) const
+        {
+            const string _ = id; return (*this)[_];
+        }
+
         ios::ostream & Library:: header( ios::ostream &fp ) const
         {
             for(const_iterator i=begin();i!=end();++i)

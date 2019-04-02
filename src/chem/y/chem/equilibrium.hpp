@@ -29,8 +29,10 @@ namespace upsylon
 
                 //! initialize
                 explicit Component( Species &s, const int n) throw();
+
                 //! destructor
                 virtual ~Component() throw();
+
                 //! compare by index
                 static  int Compare( const Component *lhs, const Component *rhs,void*);
 
@@ -59,6 +61,7 @@ namespace upsylon
 
             //! add with nu=1
             inline void add( Species &sp ) { add(sp,1);  }
+
             //! add with nu=-1
             inline void sub( Species &sp ) { add(sp,-1); }
 
@@ -121,8 +124,10 @@ namespace upsylon
         public:
             //! destructor
             inline virtual ~ConstEquilibrium() throw() {}
+
             //! initialize
             inline explicit ConstEquilibrium(const string &id, const double _K) : Equilibrium(id), K(_K) { check(); }
+
             //! initialize
             inline explicit ConstEquilibrium(const char   *id, const double _K) : Equilibrium(id), K(_K) { check(); }
 

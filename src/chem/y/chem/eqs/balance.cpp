@@ -40,6 +40,7 @@ namespace upsylon
 
         namespace
         {
+            // wrapper to compute excess of negative conc @cini+alpha*dC
             struct __balance
             {
                 Equilibria          * _cs;
@@ -106,7 +107,7 @@ namespace upsylon
                 }
                 //______________________________________________________________
                 //
-                // minimize accordingly
+                // minimize accordingly, don't go back
                 //______________________________________________________________
                 const double alpha = max_of<double>(0,minimize::run(E,aa,EE));
                 const double Etry  = E(alpha);

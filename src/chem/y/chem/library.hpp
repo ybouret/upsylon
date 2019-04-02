@@ -26,7 +26,7 @@ namespace upsylon
             //! register a species
             Species        & operator()(const string &name, const int z);
 
-            //! register a speceis
+            //! register a species, wrapper
             inline Species & operator()(const char   *name, const int z)
             {
                 const string _ = name;
@@ -59,13 +59,10 @@ namespace upsylon
             Species        & operator[](const string &id ) const;
 
             //! access by name
-            inline Species & operator[](const char   *id ) const
-            {
-                const string _ = id; return (*this)[_];
-            }
+            Species & operator[](const char   *id ) const;
 
             //! write species
-             ios::ostream & header( ios::ostream &fp ) const;
+            ios::ostream & header( ios::ostream &fp ) const;
 
             //! write concentrations only
             ios::ostream & xprint( ios::ostream &fp, const array<double> &a ) const;

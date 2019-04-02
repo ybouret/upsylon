@@ -85,8 +85,10 @@ namespace upsylon
 
             //! evaluate constants for a given time
             void computeK(const double t);
+
             //! compute Gamma from a set of concentrations
             void computeGamma(const array<double> &C);
+
             //! compute Gamma and Phi from a set of concentrations
             void computeGammaAndPhi(const array<double> &C);
 

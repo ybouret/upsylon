@@ -16,19 +16,19 @@ namespace upsylon {
     bool vfs:: entry:: is_dot()  const throw()
     {
         assert(base_name);
-        return is_dir == attr && 0 == strcmp(".",base_name);
+        return (is_dir == attr) && (0 == strcmp(".",base_name));
     }
     
     bool vfs:: entry:: is_ddot()  const throw()
     {
         assert(base_name);
-        return is_dir == attr && 0 == strcmp("..",base_name);
+        return (is_dir == attr) && (0 == strcmp("..",base_name));
     }
     
     bool vfs::entry:: is_dot_or_ddot() const throw()
     {
         assert(base_name);
-        return is_dir == attr && ( 0 == strcmp(".",base_name) || 0 == strcmp("..",base_name));
+        return (is_dir == attr) && ( 0 == strcmp(".",base_name) || 0 == strcmp("..",base_name));
     }
     
     bool vfs::entry::  is_subdir() const throw()
