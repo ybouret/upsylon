@@ -61,8 +61,8 @@ namespace upsylon
         bool Equilibria:: balance(array<double> &C)
         {
             static const double _end  = 1;
-			static const double _ftol = numeric<double>::ftol;
-			
+            static const double _ftol = numeric<double>::ftol;
+
             //__________________________________________________________________
             //
             // initialize search
@@ -112,34 +112,12 @@ namespace upsylon
                 //______________________________________________________________
                 const double alpha = max_of<double>(0,minimize::run(E,aa,EE));
                 const double Etry  = E(alpha);
-				if( fabs(Etry-Eini) <= _ftol * Eini )
+                if( fabs(Etry-Eini) <= _ftol * Eini )
                 {
-                    std::cerr << "@min" << std::endl;
+                    //std::cerr << "@min" << std::endl;
                     break; // minimum is reached
                 }
-                
-                #if 0
-                bool converged = true;
-                for(size_t j=M;j>0;--j)
-                {
-                    if(active[j])
-                    {
-                        const double newC = Ctry[j];
-                        const double oldC = Cini[j];
-                        const double dCj = fabs( newC - oldC );
-                        if( dCj > _ftol * ( fabs(newC)+fabs(oldC)) )
-                        {
-                            converged = false;
-                        }
-                    }
-                }
-                if(converged)
-                {
-                    std::cerr << "@cvg" << std::endl;
-                    break; // spurious minimum
-                }
-                #endif
-                
+
                 Eini = Etry;
                 tao::_set(Cini,Ctry);
             }
@@ -175,7 +153,7 @@ namespace upsylon
                     {
                         if(CC<0)
                         {
-                            std::cerr << "unable to find valid C#" << j << std::endl;
+                            //std::cerr << "unable to find valid C#" << j << std::endl;
                             return false;
                         }
                     }

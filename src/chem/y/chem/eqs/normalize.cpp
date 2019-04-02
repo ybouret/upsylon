@@ -21,6 +21,10 @@ namespace upsylon
                 Corg[j] = C[j];
             }
 
+            //__________________________________________________________________
+            //
+            // balance concentrations
+            //__________________________________________________________________
             if(!balance(Corg))
             {
                 std::cerr << "[normalize] unable to balance initial concentrations" << std::endl;
@@ -29,7 +33,11 @@ namespace upsylon
 
             while(true)
             {
+                //--------------------------------------------------------------
+                //
                 // try to find a valid starting point
+                //
+                //--------------------------------------------------------------
                 computeGammaAndPhi(Corg);
                 tao::_mmul_rtrn(W,Phi,Nu);
                 if( !LU::build(W) )
@@ -50,43 +58,57 @@ namespace upsylon
                     }
                 }
 
+                //--------------------------------------------------------------
+                //
                 // compute the new position
+                //
+                //--------------------------------------------------------------
                 tao::neg(xi,Gamma);
                 LU::solve(W,xi);
                 tao::mul(step,tNu,xi);
                 tao::add(Cnew,Corg,step);
-                //std::cerr << "Cnew=" << Cnew << std::endl;
-
+                
+                //--------------------------------------------------------------
+                //
                 // balance the new position
+                //
+                //--------------------------------------------------------------
                 if(!balance(Cnew))
                 {
                     std::cerr << "[normalize] cannot balance" << std::endl;
                     return false;
                 }
 
+                //--------------------------------------------------------------
+                //
                 // test convergence
+                //
+                //--------------------------------------------------------------
                 bool converged = true;
                 for(size_t j=M;j>0;--j)
                 {
                     if(active[j])
                     {
-                        const double d = fabs( Cnew[j] - Corg[j] );
-                        const double c = numeric<double>::ftol * max_of<double>(fabs(Cnew[j]),fabs(Corg[j]));
+                        const double newC = Cnew[j];
+                        const double oldC = Corg[j];
+                        const double d    = fabs( newC - oldC );
+                        const double c    = numeric<double>::ftol * max_of<double>(fabs(newC),fabs(oldC));
                         if(d>c)
                         {
                             converged = false;
                         }
-                        Corg[j] = Cnew[j];
+                        Corg[j] = newC;
                     }
+#ifndef NDEBUG
                     else
                     {
                         assert( fabs(Cnew[j]-Corg[j])<=0 );
                     }
+#endif
                 }
 
                 if(converged)
                 {
-                    //std::cerr << "converged" << std::endl;
                     break;
                 }
             }
