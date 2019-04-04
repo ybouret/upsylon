@@ -61,7 +61,7 @@ ENDIF()
 ########################################################################
 ##
 ##
-## Guess 32/64 pits
+## Guess compiler version
 ##
 ##
 ########################################################################
@@ -122,6 +122,7 @@ IF( "${Y_CC}" MATCHES "^gcc.*" )
 	IF( "${Y_COMPILER_MAJOR}" GREATER 6 )
 		MESSAGE(STATUS "GNU version 7+, deactivating -no-except-type")
 		SET(SPECIFIC_CXX_FLAGS "-Wno-noexcept-type")
+		#SET(SPECIFIC_CXX_FLAGS "${SPECIFIC_CXX_FLAGS} -std=c++11 -U__STDC_NO_ATOMICS__")
 	ENDIF()
         
 	SET(COMMON_C_FLAGS        "-Wall -Wextra -pipe" )
@@ -147,7 +148,7 @@ IF( "${Y_CC}" MATCHES "^clang.*" )
 	SET(CMAKE_C_FLAGS_DEBUG   "${COMMON_C_FLAGS} -g -O0" )
 	SET(CMAKE_C_FLAGS_RELEASE "${COMMON_C_FLAGS} -O2 -DNDEBUG=1 -D_FORTIFY_SOURCE=2")
 
-	SET(COMMON_CXX_FLAGS        "-Wall -Wextra -pipe -fexceptions -Weffc++ ${PIC_FLAGS} ${SPECIAL_CXX_FLAGS}")
+	SET(COMMON_CXX_FLAGS        "-Wall -Wextra -pipe -fexceptions -Weffc++")
 	SET(CMAKE_CXX_FLAGS_DEBUG   "${COMMON_CXX_FLAGS} -g -O0" )
 	SET(CMAKE_CXX_FLAGS_RELEASE "${COMMON_CXX_FLAGS} -O2 -DNDEBUG=1 -D_FORTIFY_SOURCE=2")
 	
@@ -163,11 +164,11 @@ IF( "${Y_CC}" MATCHES "^icc.*" )
 	SET(Y_KNOWN_COMPILER ON)
 	Y_FIND_COMPILER_VERSION()
 
-	SET(COMMON_C_FLAGS        "-Wall -pipe -wd981 ${PIC_FLAGS}" )
+	SET(COMMON_C_FLAGS        "-Wall -pipe -wd981" )
 	SET(CMAKE_C_FLAGS_DEBUG   "${COMMON_C_FLAGS} -g" )
 	SET(CMAKE_C_FLAGS_RELEASE "${COMMON_C_FLAGS} -O2 -DNDEBUG=1 -DFORTIFY_SOURCE=2")
 
-	SET(COMMON_CXX_FLAGS        "-Wall -pipe -wd981 -fexceptions ${PIC_FLAGS}" )
+	SET(COMMON_CXX_FLAGS        "-Wall -pipe -wd981 -fexceptions" )
 	SET(CMAKE_CXX_FLAGS_DEBUG   "${COMMON_CXX_FLAGS} -g" )
 	SET(CMAKE_CXX_FLAGS_RELEASE "${COMMON_CXX_FLAGS} -O2 -DNDEBUG=1 -DFORTIFY_SOURCE=2")
   

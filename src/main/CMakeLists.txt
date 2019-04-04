@@ -10,7 +10,7 @@ SOURCE_GROUP( main FILES ${main_srcs} )
 INSTALL( FILES ${main_decl} DESTINATION include/y )
 
 FILE(GLOB os_decl y/os/*.h*)
-FILE(GLOB os_code y/os/*.cpp)
+FILE(GLOB os_code y/os/*.c*)
 SET(os_srcs ${os_decl} ${os_code})
 SOURCE_GROUP( os FILES ${os_srcs} )
 INSTALL( FILES ${os_decl} DESTINATION include/y/os )
