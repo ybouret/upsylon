@@ -7,22 +7,22 @@ namespace upsylon
     namespace mpl
     {
 
-        pfd_entry:: pfd_entry(const natural &_p, const natural &_q) :
+        _pfd:: _pfd(const natural &_p, const natural &_q) :
         p( _p ),
         q( _q )
         {
             if( q.is_zero() )
             {
-                throw exception("mpp: invalid zero exponent");
+                throw exception("_pfd: invalid zero exponent");
             }
         }
 
-        pfd_entry:: ~pfd_entry() throw()
+        _pfd:: ~_pfd() throw()
         {
 
         }
 
-        pfd_entry:: pfd_entry( const pfd_entry &other ) :
+        _pfd:: _pfd( const _pfd &other ) :
         p( other.p ),
         q( other.q )
         {
@@ -32,6 +32,7 @@ namespace upsylon
     }
 }
 
+#if 0
 namespace upsylon
 {
     namespace mpl
@@ -89,6 +90,7 @@ namespace upsylon
 
     }
 }
+#endif
 
 #include "y/core/node.hpp"
 #include "y/core/list.hpp"
@@ -103,17 +105,16 @@ namespace upsylon
         }
 
         pfd:: pfd( const natural &n ) :
-        value( n ),
-        table(   )
+        table()
         {
-            setup();
+            setup(n);
         }
 
         pfd:: pfd( const word_t n ) :
-        value( n ),
-        table(   )
+        table()
         {
-            setup();
+            const natural _(n);
+            setup(_);
         }
 
         namespace
@@ -138,46 +139,62 @@ namespace upsylon
             };
         }
 
-        void pfd:: setup()
+        void pfd:: setup(const natural &value)
         {
-            if( value.is_byte(0) || value.is_byte(1) )
+            if( value.is_byte(0) )
             {
                 // do nothing
             }
             else
             {
-                assert(value>1);
-                core::list_of_cpp<Node> factors;
+                const _pfd::table &const_self = table;
+                _pfd::table       &self       = (_pfd::table &)const_self;
 
-                natural v = value; //!< current value
-
-                for( natural p = 2; p<=v ; p = natural::next_prime(++p) )
+                if ( value.is_byte(1) )
                 {
-                    natural q = 0;
-                    std::cerr << v << "?" << p << std::endl;
-                    while( v.is_divisible_by(p) )
-                    {
-                        ++q;
-                        v /= p;
-                    }
-                    if(q.is_positive())
-                    {
-                        std::cerr << p << "^" << q << std::endl;
-                        factors.push_back( new Node(p,q) );
-                    }
-                }
-                
-
-                const pfd_entry::table &const_self = table;
-                pfd_entry::table       &self       = ((pfd_entry::table &)const_self);
-                self.reserve(factors.size);
-
-                for(const Node *node = factors.head; node; node=node->next )
-                {
-                    const pfd_entry::pointer tmp = new pfd_entry( node->P, node->Q );
+                    self.reserve(1);
+                    MPN & _ = MPN::instance();
+                    const _pfd::pointer tmp = new _pfd( _._1, _._1 );
                     if(!self.insert(tmp))
                     {
-                        throw exception("mpp: unexpected multiple factor in setup!");
+                        throw exception("mpp: unexpected multiple 1!");
+                    }
+                }
+                else
+                {
+                    assert(value>1);
+                    core::list_of_cpp<Node> factors;
+
+                    natural v = value; //!< current value
+                    natural q;
+
+                    for( natural p = 2; p<=v ; p = natural::next_prime(++p) )
+                    {
+                        q.clr();
+                        std::cerr << v << "?" << p << std::endl;
+                        while( v.is_divisible_by(p) )
+                        {
+                            ++q;
+                            v /= p;
+                        }
+                        if(q.is_positive())
+                        {
+                            std::cerr << p << "^" << q << std::endl;
+                            factors.push_back( new Node(p,q) );
+                        }
+                    }
+
+
+
+                    self.reserve(factors.size);
+
+                    for(const Node *node = factors.head; node; node=node->next )
+                    {
+                        const _pfd::pointer tmp = new _pfd( node->P, node->Q );
+                        if(!self.insert(tmp))
+                        {
+                            throw exception("mpp: unexpected multiple factor in setup!");
+                        }
                     }
                 }
             }

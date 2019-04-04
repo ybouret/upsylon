@@ -5,10 +5,10 @@ using namespace upsylon;
 
 Y_UTEST(pfd)
 {
-    std::cerr << "sizeof(pfd_entry)          = " << sizeof(mpl::pfd_entry)          << std::endl;
-    std::cerr << "sizeof(pfd_entry::pointer) = " << sizeof(mpl::pfd_entry::pointer) << std::endl;
-    std::cerr << "sizeof(pfd_table)          = " << sizeof(mpl::pfd_table)          << std::endl;
-    std::cerr << "sizeof(pfd)                = " << sizeof(mpl::pfd)                << std::endl;
+    std::cerr << "sizeof(_pfd)          = " << sizeof(mpl::_pfd)          << std::endl;
+    std::cerr << "sizeof(_pfd::pointer) = " << sizeof(mpl::_pfd::pointer) << std::endl;
+    std::cerr << "sizeof(_pfd::table)   = " << sizeof(mpl::_pfd::table)   << std::endl;
+    std::cerr << "sizeof(pfd)           = " << sizeof(mpl::pfd)           << std::endl;
 
     if( argc > 1 )
     {

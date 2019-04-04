@@ -12,17 +12,17 @@ namespace upsylon
     namespace mpl
     {
 
-        class pfd_entry : public counted_object
+        class _pfd : public counted_object
         {
         public:
-            typedef intr_ptr<natural,pfd_entry> pointer;
+            typedef intr_ptr<natural,_pfd> pointer;
 
             const natural p; //!< a prime
             natural       q; //!< its power
 
-            explicit pfd_entry(const natural &_p, const natural &_q);
-            virtual ~pfd_entry() throw();
-            pfd_entry( const pfd_entry &t );
+            explicit _pfd(const natural &_p, const natural &_q);
+            virtual ~_pfd() throw();
+            _pfd( const _pfd &t );
 
             const natural & key() const throw() { return p; }
 
@@ -31,41 +31,31 @@ namespace upsylon
             typedef memory::pooled                                 table_memory;
             typedef set<natural,pointer,prime_hasher,table_memory> table;
 
-            inline friend std::ostream & operator<<( std::ostream &os, const pfd_entry &entry )
+            inline friend std::ostream & operator<<( std::ostream &os, const _pfd &entry )
             {
                 os << entry.p << '^' << entry.q;
                 return os;
             }
 
         private:
-            Y_DISABLE_ASSIGN(pfd_entry);
+            Y_DISABLE_ASSIGN(_pfd);
         };
 
-        class pfd_table : public pfd_entry::table
-        {
-        public:
-            void add( const natural &p, const natural &q );
-            void sub( const natural &p, const natural &q );
-
-            explicit pfd_table() throw();
-            virtual ~pfd_table() throw();
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(pfd_table);
-        };
 
         class pfd : public counted_object
         {
         public:
-            const natural    value;
-            const pfd_table  table;
+            const _pfd::table  table;
             virtual ~pfd() throw();
             pfd( const natural &n );
             pfd( const word_t   n );
 
+            void mul_by( const pfd &other );
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(pfd);
-            void setup();
+            void setup(const natural &value);
         };
 
     }
