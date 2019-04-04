@@ -34,7 +34,7 @@ size_t upsylon_hardware_nprocs()
     
 #if defined(Y_WIN)
     SYSTEM_INFO sysinfo;
-    ::GetSystemInfo( &sysinfo );
+    GetSystemInfo( &sysinfo );
     const DWORD n = sysinfo.dwNumberOfProcessors;
     return n <= 1 ? 1:n;
 #endif
