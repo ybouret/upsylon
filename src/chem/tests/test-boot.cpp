@@ -43,7 +43,9 @@ Y_UTEST(boot)
     }
 
     cs.compile_for(lib);
-    
+    std::cerr << "<Equilibria>" << std::endl;
+    std::cerr << cs << std::endl;
+    std::cerr << "<Equilibria/>" << std::endl << std::endl;
 
     Boot::Loader loader;
     loader.electroneutrality(lib);
@@ -62,6 +64,7 @@ Y_UTEST(boot)
     {
         lib.display(std::cerr,C);
 
+        std::cerr << std::endl << "Damping..." << std::endl;
         vector<double> delta(cs.M);
         for(size_t iter=1;iter<=4;++iter)
         {
@@ -75,9 +78,8 @@ Y_UTEST(boot)
                 throw exception("unexpected damp failure!!!");
             }
             std::cerr << "delta1=" << delta << std::endl;
-
-
         }
+        std::cerr << "...done" << std::endl;
     }
     else
     {

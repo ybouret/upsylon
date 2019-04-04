@@ -115,7 +115,7 @@ namespace upsylon
                 //
                 // Pojection
                 //______________________________________________________________
-                //std::cerr << "C0=" << C0 << std::endl;
+
                 // U = PC-L;
                 for(size_t i=Nc;i>0;--i)
                 {
@@ -137,9 +137,7 @@ namespace upsylon
                     std::cerr << "cannot normalize" << std::endl;
                     return false;
                 }
-
-                //std::cerr << "C1=" << C1 << std::endl;
-
+                
                 for(size_t j=M;j>0;--j)
                 {
                     R[j]  = fabs(C0[j]-C1[j]);
@@ -151,7 +149,7 @@ namespace upsylon
                 switch (status)
                 {
                     case BootInitialize:
-                        std::cerr << "BootInitialize @" << R1 << std::endl;
+                        //std::cerr << "BootInitialize @" << R1 << std::endl;
                         status = BootFindingOut;
                         break;
 
@@ -159,14 +157,14 @@ namespace upsylon
                         if(R1<R0)
                         {
                             status = BootDecreasing;
-                            std::cerr << "BootDecreasing @ " << R0 << " -> " << R1 << std::endl;
+                            //std::cerr << "BootDecreasing @ " << R0 << " -> " << R1 << std::endl;
                         }
                         break;
 
                     case BootDecreasing:
                         if(R1>=R0)
                         {
-                            std::cerr << "BootDecreasing done" << std::endl;
+                            //std::cerr << "BootDecreasing done" << std::endl;
                             for(size_t j=M;j>0;--j)
                             {
                                 C[j] = C0[j];
