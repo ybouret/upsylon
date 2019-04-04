@@ -11,6 +11,7 @@
 #include "y/concurrent/singleton.hpp"
 #include "y/randomized/bits.hpp"
 #include "y/type/xnumeric.hpp"
+#include "y/ios/ostream.hpp"
 
 #include <iostream>
 #include <cstring>
@@ -481,6 +482,15 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             static natural next_prime(const natural &); //!< slow find of next prime
             static bool    are_coprimes(const natural &, const natural &); //!< test co-primailty
             static natural factorial(const natural &n); //!< factorial computation, recurvsive algorithm
+
+            //__________________________________________________________________
+            //
+            //
+            // io
+            //
+            //__________________________________________________________________
+            size_t save( ios::ostream &fp ) const;
+            size_t save_length() const;
 
         private:
             size_t   bytes;     //!< active bytes

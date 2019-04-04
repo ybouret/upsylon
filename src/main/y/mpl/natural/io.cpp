@@ -3,6 +3,7 @@
 #include "y/exceptions.hpp"
 #include "y/code/utils.hpp"
 #include <cerrno>
+#include "y/ios/null-ostream.hpp"
 
 namespace upsylon
 {
@@ -145,6 +146,23 @@ namespace upsylon
                 ans += d;
             }
             return ans;
+        }
+
+        size_t natural:: save( ios::ostream &fp ) const
+        {
+            size_t shift = 0;
+            fp.emit_upack(bytes,&shift);
+            for(size_t i=0;i<bytes;++i)
+            {
+                fp.write(byte[i]);
+            }
+            return shift + bytes;
+        }
+
+        size_t natural:: save_length() const
+        {
+            ios::null_ostream nil;
+            return save(nil);
         }
 
     }

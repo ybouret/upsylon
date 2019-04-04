@@ -284,6 +284,8 @@ IF(FALSE)
   TARGET_LINK_Y(nwsrt)
 ENDIF()
 
+ADD_EXECUTABLE(mprimes mprimes.cpp)
+TARGET_LINK_Y(mprimes)
 
 ADD_SUBDIRECTORY(tests)
 
