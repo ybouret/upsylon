@@ -55,8 +55,8 @@ namespace upsylon
                     L[ic] = constraint.value;
                 }
             }
-            std::cerr << "P=" << P << std::endl;
-            std::cerr << "L=" << L << std::endl;
+            //std::cerr << "P=" << P << std::endl;
+            //std::cerr << "L=" << L << std::endl;
 
             //__________________________________________________________________
             //
@@ -102,27 +102,34 @@ namespace upsylon
                 }
             }
 
-            vector<double> C0(M);
-            vector<double> C1(M);
-            vector<double> U(Nc);
-            vector<double> R(M);
+            //__________________________________________________________________
+            //
+            // Boot Loop
+            //__________________________________________________________________
+            vector<double> C0(M,0);                 //!< starting point
+            vector<double> C1(M,0);                 //!< projection
+            vector<double> U(Nc,0);                 //!< internal vector
+            vector<double> R(M,0);                  //!< residual
+            BootStatus     status = BootInitialize; //!< initial state
+            double         R0     = 0;              //!< will be used after first turn
 
-            BootStatus status = BootInitialize;
-            double     R0     = 0;
             while(true)
             {
                 //______________________________________________________________
                 //
-                // Pojection
-                //______________________________________________________________
-
+                // Projection
                 // U = PC-L;
+                //______________________________________________________________
                 for(size_t i=Nc;i>0;--i)
                 {
                     U[i] = L[i] - tao::_dot<double>(P[i],C0);
                 }
 
+                //______________________________________________________________
+                //
+                // Concentration correction
                 // C1=C0+(U2C*U)/detP2
+                //______________________________________________________________
                 for(size_t j=M;j>0;--j)
                 {
                     C1[j] = C0[j] + tao::_dot<double>(U2C[j],U)/detP2;
@@ -134,22 +141,23 @@ namespace upsylon
                 //______________________________________________________________
                 if(!normalize(C1))
                 {
-                    std::cerr << "cannot normalize" << std::endl;
                     return false;
                 }
-                
+
+                //______________________________________________________________
+                //
+                // compute residual
+                //______________________________________________________________
                 for(size_t j=M;j>0;--j)
                 {
                     R[j]  = fabs(C0[j]-C1[j]);
                 }
-
-
                 const double R1 = sorted_sum(R);
 
                 switch (status)
                 {
                     case BootInitialize:
-                        //std::cerr << "BootInitialize @" << R1 << std::endl;
+                        std::cerr << "BootInitialize @" << R1 << std::endl;
                         status = BootFindingOut;
                         break;
 
@@ -157,14 +165,14 @@ namespace upsylon
                         if(R1<R0)
                         {
                             status = BootDecreasing;
-                            //std::cerr << "BootDecreasing @ " << R0 << " -> " << R1 << std::endl;
+                            std::cerr << "BootDecreasing init@ " << R0 << " -> " << R1 << std::endl;
                         }
                         break;
 
                     case BootDecreasing:
                         if(R1>=R0)
                         {
-                            //std::cerr << "BootDecreasing done" << std::endl;
+                            std::cerr << "BootDecreasing done@ " << R0 << " -> " << R1 << std::endl;
                             for(size_t j=M;j>0;--j)
                             {
                                 C[j] = C0[j];

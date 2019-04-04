@@ -55,14 +55,14 @@ Y_UTEST(boot)
     loader.conserve(0.0001,NH4,NH3);
 
     vector<double> C( cs.M+2 );
-    lib.display(std::cerr,C,"\t(0) " );
+    lib.display(std::cerr,C,"\t(0) ");
     std::cerr << loader << std::endl;
 
     cs.computeK(0.0);
     std::cerr << "Nu=" << cs.Nu << std::endl;
     if(cs.boot(C,loader))
     {
-        lib.display(std::cerr,C);
+        lib.display(std::cerr,C,"\t(*) ");
 
         std::cerr << std::endl << "Damping..." << std::endl;
         vector<double> delta(cs.M);
