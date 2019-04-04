@@ -41,8 +41,8 @@ namespace  {
 
 Y_UTEST(xslot)
 {
-    std::cerr << "sizeof(xslot<global>)=" << sizeof(xslot<global::allocator>) << std::endl;
-    std::cerr << "sizeof(xslot<pooled>)=" << sizeof(xslot<pooled::allocator>) << std::endl;
+    std::cerr << "sizeof(xslot<global>)=" << sizeof(xslot<global>) << std::endl;
+    std::cerr << "sizeof(xslot<pooled>)=" << sizeof(xslot<pooled>) << std::endl;
 
     xslot<>       xdefault0;     display_xs( xdefault0 );
     xslot<>       xdefault1(10); display_xs( xdefault1 );
