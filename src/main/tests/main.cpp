@@ -54,6 +54,8 @@ Y_UTEST_INIT(128)
     Y_UTEST(mpn_fact);
     Y_UTEST(mpz);
     Y_UTEST(mpq);
+    Y_UTEST(pfd);
+
     Y_UTEST(hashing);
     Y_UTEST(hmac);
     Y_UTEST(ostreams);

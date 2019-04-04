@@ -126,11 +126,12 @@ ADD_TEST(Lang:Lex      test-main  lex     NULL)
 SOURCE_GROUP(geom FILES test-geom-iso2d.cpp)
 ADD_TEST(geom:iso2d test-main geom_iso2d)
 
-SOURCE_GROUP(mp FILES test-mpn.cpp test-mpz.cpp test-mpq.cpp)
+SOURCE_GROUP(mp FILES test-mpn.cpp test-mpz.cpp test-mpq.cpp test-pfd.cpp)
 ADD_TEST(mp:n         test-main mpn)
 ADD_TEST(mp:fact      test-main mpn_fact 1 10 20 30 50)
 ADD_TEST(mp:z         test-main mpz)
 ADD_TEST(mp:q         test-main mpq)
+ADD_TEST(mp:pfd       test-main pfd)
 
 SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-nwsrt.cpp test-locate.cpp)
 ADD_TEST(sort:sort        test-main sort)
