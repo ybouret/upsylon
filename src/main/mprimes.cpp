@@ -62,7 +62,7 @@ Y_PROGRAM_START()
         {
             size_t    nr = 0;
             const mpn p = mpn::read(fp,&nr);
-            std::cerr << '.';
+            //std::cerr << '.';
             nread += nr;
             hasher(p);
         }
