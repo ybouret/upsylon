@@ -75,6 +75,12 @@ namespace upsylon
             setup(_);
         }
 
+        pfd:: pfd( const pfd &other ) :
+        table( other.table )
+        {
+        }
+        
+
         namespace
         {
             class Node : public core::inode<Node>
@@ -167,8 +173,8 @@ namespace upsylon
         void pfd:: mul_by( const pfd &other )
         {
 
-            const _pfd::table &const_self = table;
-            _pfd::table       &self       = (_pfd::table &)const_self;
+            const table_t &const_self = table;
+            table_t       &self       = (table_t &)const_self;
 
             if( this == &other )
             {
@@ -184,10 +190,10 @@ namespace upsylon
             }
             else
             {
-                // first pass: collect factors and targets
+                // first pass: collect factors and check if exists already
                 core::list_of_cpp<Node> factors;
                 size_t                  count = 0;
-                for( _pfd::table::const_iterator i = other.table.begin(); i != other.table.end(); ++i )
+                for( table_t::const_iterator i = other.table.begin(); i != other.table.end(); ++i )
                 {
                     const _pfd &factor = **i;
                     factors.push_back( new Node(factor.p, factor.q, self.search(factor.p)) );
@@ -220,8 +226,7 @@ namespace upsylon
                 self.sort_data( _pfd::compare_data );
                 if(self.size()>1)
                 {
-                    const MPN & _ = MPN::instance();
-                    self.no( _._1 );
+                    self.no( MPN::instance()._1 );
                 }
             }
         }
@@ -237,7 +242,7 @@ namespace upsylon
                 default: {
                     os << '(';
                     size_t count = 1;
-                    for( _pfd::table::const_iterator i=self.begin();i!=self.end();++i,++count)
+                    for( pfd::table_t::const_iterator i=self.begin();i!=self.end();++i,++count)
                     {
                         if(count>1) os << '*';
                         os << (**i);
@@ -246,6 +251,16 @@ namespace upsylon
                 }
             }
             return os;
+        }
+
+        void pfd:: run( hashing::function &H ) const throw()
+        {
+            for( table_t::const_iterator i=table.begin(); i != table.end(); ++i )
+            {
+                const _pfd &F = **i;
+                H(F.p);
+                H(F.q);
+            }
         }
 
     }

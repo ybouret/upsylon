@@ -56,6 +56,12 @@ namespace upsylon
             tmp.swap_with(table);
         }
 
+        //! swap tables, no throw
+        inline void swap_table_with( hash_container &other ) throw()
+        {
+            table.swap_with(other.table);
+        }
+
         //! copy
         inline hash_container(const hash_container &other) : dynamic(), base_type(), table(other.table), hash() {}
 

@@ -8,9 +8,7 @@
 #include "y/os/endian.hpp"
 #include "y/comparison.hpp"
 #include "y/code/utils.hpp"
-#include "y/concurrent/singleton.hpp"
 #include "y/randomized/bits.hpp"
-#include "y/type/xnumeric.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/ios/istream.hpp"
 
@@ -567,45 +565,67 @@ static inline natural __##CALL(const uint8_t *l, const size_t nl, const uint8_t 
             friend class integer;
         };
 
-        //! precompiled naturals
-        class MPN : public singleton<MPN>
-        {
-        public:
-            const natural _0;  //!< 0
-            const natural _1;  //!< 1
-            const natural _2;  //!< 2
-            const natural _3;  //!< 3
-            const natural _4;  //!< 4
-            const natural _5;  //!< 5
-            const natural _6;  //!< 6
-            const natural _10; //!< 10
-
-        private:
-            inline explicit MPN() :
-            _0(0), _1(1), _2(2), _3(3), _4(4), _5(5), _6(6), _10(10)
-            {}
-            inline virtual ~MPN() throw() {}
-            friend class singleton<MPN>;
-
-        public:
-            static const at_exit::longevity life_time = manager::life_time - 1; //!< based on manager existence
-        };
     }
+}
+
+#include "y/concurrent/singleton.hpp"
+#include "y/sequence/list.hpp"
+
+
+
+#include "y/type/xnumeric.hpp"
+
+namespace upsylon
+{
 
     typedef mpl::natural   mpn; //!< alias
     namespace math
     {
         inline mpn fabs_of(const mpn &u) { return u;   } //!< overloaded __fabs function
-        inline mpn __mod2(const mpn &u) { return u*u; } //!< overloaded __mod2 function
+        inline mpn __mod2(const mpn &u)  { return u*u; } //!< overloaded __mod2 function
     }
 
     //! extended numeric for mpn
-    template <> struct xnumeric<mpn> {
+    template <> struct xnumeric<mpn>
+    {
         static inline mpn  abs_minimum() { return mpn(); } //!< 0
         static inline bool is_zero(const mpn &x)     { return x.is_zero();     } //!< x==0
         static inline bool is_positive(const mpn &x) { return x.is_positive(); } //!< x>0
     };
 
 }
+
+namespace upsylon
+{
+
+    //! precompiled naturals
+    class MPN : public singleton<MPN>
+    {
+    public:
+        typedef list<const mpn> primeseq; //!< alias
+        const primeseq primes;  //!< precomputed primes
+        const mpn  _0;          //!< 0
+        const mpn  _1;          //!< 1
+        const mpn  _2;          //!< 2
+        const mpn  _3;          //!< 3
+        const mpn  _4;          //!< 4
+        const mpn  _5;          //!< 5
+        const mpn  _6;          //!< 6
+        const mpn  _10;         //!< 10
+
+        void append_primes( const size_t count );
+        void load_primes( ios::istream &fp );
+
+    private:
+        explicit MPN();
+        virtual ~MPN() throw();
+        friend class singleton<MPN>;
+
+    public:
+        static const at_exit::longevity life_time = mpl::manager::life_time - 1; //!< based on manager existence
+    };
+
+}
+
 #endif
 

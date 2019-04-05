@@ -199,6 +199,15 @@ namespace upsylon
             nodes.reverse();
         }
 
+        //! delete cache
+        inline void trim() throw()
+        {
+            while( cache.size )
+            {
+                node_type *node = cache.query();
+                object::release1(node);
+            }
+        }
 
     private:
         nodes_list nodes;
@@ -241,11 +250,7 @@ namespace upsylon
                 destruct(node);
                 object::release1(node);
             }
-            while( cache.size )
-            {
-                node_type *node = cache.query();
-                object::release1(node);
-            }
+            trim();
         }
 
         template <typename FUNC> static inline

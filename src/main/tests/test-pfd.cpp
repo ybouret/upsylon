@@ -1,7 +1,7 @@
 #include "y/mpl/pfd.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
-
+#include "y/hashing/sha1.hpp"
 using namespace upsylon;
 
 Y_UTEST(pfd)
@@ -23,9 +23,16 @@ Y_UTEST(pfd)
     std::cerr << "F=" << F << std::endl;
 
     mpl::pfd prod(1);
+    hashing::sha1 H;
     for(size_t i=1;i<=F.size();++i)
     {
         prod.mul_by( *F[i] );
+        H.set();
+        prod.run(H);
+        const digest   md0 = H.md();
+        const mpl::pfd tmp = prod; H.set(); tmp.run(H);
+        const digest   md1 = H.md();
+        Y_ASSERT(md0==md1);
     }
     std::cerr << "prod=" << prod << std::endl;
 

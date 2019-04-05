@@ -47,19 +47,24 @@ namespace upsylon
         {
         public:
             typedef arc_ptr<pfd> pointer; //!< alias
+            typedef _pfd::table  table_t; //!< alias
 
-            const _pfd::table  table; //!< table that holds the decomposition
+            const table_t  table; //!< table that holds the decomposition
             virtual ~pfd() throw();   //!< destructor
             pfd( const natural &n );  //!< setup from a natural
             pfd( const word_t   n );  //!< setup from an integral
+            pfd( const pfd &other );  //!< hard copy
 
             void mul_by( const pfd &other ); //!< mul by another or self
 
             //! output
             friend std::ostream & operator<<( std::ostream &os, const pfd &F );
 
+            //! run hash function
+            void run( hashing::function &H ) const throw();
+
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(pfd);
+            Y_DISABLE_ASSIGN(pfd);
             void setup(const natural &value);
         };
 

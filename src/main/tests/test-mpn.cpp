@@ -336,7 +336,7 @@ Y_UTEST(mpn)
     }
 
 
-
+    std::cerr << "sizeof(mpn)=" << sizeof(mpn) << std::endl;
 
 }
 Y_UTEST_DONE()
@@ -352,4 +352,6 @@ Y_UTEST(mpn_fact)
     }
 }
 Y_UTEST_DONE()
+
+
 
