@@ -34,10 +34,8 @@ namespace upsylon
             //! output
             friend std::ostream & operator<<( std::ostream &os, const _pfd & );
 
-            static int compare_data( const pointer &lhs, const pointer &rhs ) throw()
-            {
-                return natural::compare(lhs->p,rhs->p);
-            }
+            //! used to keep factors in increasing prime
+            static int compare_data( const pointer &lhs, const pointer &rhs ) throw();
 
         private:
             Y_DISABLE_ASSIGN(_pfd);
@@ -57,6 +55,7 @@ namespace upsylon
 
             void mul_by( const pfd &other ); //!< mul by another or self
 
+            //! output
             friend std::ostream & operator<<( std::ostream &os, const pfd &F );
 
         private:

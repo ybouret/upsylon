@@ -489,8 +489,8 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             // io
             //
             //__________________________________________________________________
-            size_t save( ios::ostream &fp ) const;
-            size_t save_length() const;
+            size_t save( ios::ostream &fp ) const; //!< write binary, return written bytes
+            size_t save_length() const;            //!< return bytes to write
 
         private:
             size_t   bytes;     //!< active bytes

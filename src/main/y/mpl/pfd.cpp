@@ -39,6 +39,10 @@ namespace upsylon
             return os;
         }
 
+        int _pfd:: compare_data( const pointer &lhs, const pointer &rhs ) throw()
+        {
+            return natural::compare(lhs->p,rhs->p);
+        }
     }
 }
 

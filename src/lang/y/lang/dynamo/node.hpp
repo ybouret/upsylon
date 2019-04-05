@@ -76,6 +76,8 @@ namespace upsylon
             
             //! load from binary stream, recursive
             static DynamoNode *Load_( Source &source );
+
+            //! load from any module
             static DynamoNode *Load( Module *m );
             
             //! recursive run of a hashing function
