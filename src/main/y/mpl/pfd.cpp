@@ -8,6 +8,7 @@ namespace upsylon
     {
 
         _pfd:: _pfd(const natural &_p, const natural &_q) :
+        counted_object(),
         p( _p ),
         q( _q )
         {
@@ -23,6 +24,7 @@ namespace upsylon
         }
 
         _pfd:: _pfd( const _pfd &other ) :
+        counted_object(),
         p( other.p ),
         q( other.q )
         {
