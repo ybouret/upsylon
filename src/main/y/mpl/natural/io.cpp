@@ -172,8 +172,9 @@ namespace upsylon
             mpn          ans(num_bytes,as_capacity);
             fp.input(ans.byte,(ans.bytes=num_bytes));
             ans.update();
-            
+            if(ans.bytes!=num_bytes) throw exception("mpn.read(corrupted bytes)");
             if(nr) *nr += num_bytes;
+            return ans;
         }
     }
 
