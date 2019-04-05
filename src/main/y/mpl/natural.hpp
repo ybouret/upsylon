@@ -604,6 +604,7 @@ namespace upsylon
     public:
         typedef list<const mpn> primeseq; //!< alias
         const primeseq primes;  //!< precomputed primes
+        const mpn      _probe;  //!< next prime probe 5+k*6>=highest prime
         const mpn  _0;          //!< 0
         const mpn  _1;          //!< 1
         const mpn  _2;          //!< 2
@@ -620,7 +621,8 @@ namespace upsylon
         explicit MPN();
         virtual ~MPN() throw();
         friend class singleton<MPN>;
-
+        void find_probe();
+        
     public:
         static const at_exit::longevity life_time = mpl::manager::life_time - 1; //!< based on manager existence
     };

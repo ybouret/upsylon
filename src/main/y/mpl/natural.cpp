@@ -33,7 +33,7 @@ namespace upsylon
 
     }
 
-    MPN:: MPN() : primes(),
+    MPN:: MPN() : primes(), _probe(5),
     _0(0), _1(1), _2(2), _3(3), _4(4), _5(5), _6(6), _10(10)
     {}
 
@@ -55,6 +55,8 @@ namespace upsylon
             p = mpn::next_prime(++p);
             prm.push_back(p);
         }
+        
+        find_probe();
     }
 
     void MPN:: load_primes( ios::istream &fp )
@@ -70,12 +72,18 @@ namespace upsylon
                 mpn p = mpn::read(fp);
                 prm.push_back(p);
             }
+            find_probe();
         }
         catch(...)
         {
             prm.free();
             throw;
         }
+    }
+    
+    void MPN:: find_probe()
+    {
+        
     }
 
 }
