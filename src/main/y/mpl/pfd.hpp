@@ -12,29 +12,31 @@ namespace upsylon
     namespace mpl
     {
 
+        //! prime factor
         class _pfd : public counted_object
         {
         public:
-            typedef intr_ptr<natural,_pfd> pointer;
+            typedef intr_ptr<natural,_pfd>                         pointer;      //!< alias
+            typedef hashing::fnv                                   block_hasher; //!< hash bytes
+            typedef key_hasher<natural,block_hasher>               prime_hasher; //!< hash key
+            typedef memory::pooled                                 table_memory; //!< medium sized tables
+            typedef set<natural,pointer,prime_hasher,table_memory> table;        //!< table
 
             const natural p; //!< a prime
             natural       q; //!< its power
 
-            explicit _pfd(const natural &_p, const natural &_q);
-            virtual ~_pfd() throw();
-            _pfd( const _pfd &t );
+            explicit _pfd(const natural &_p, const natural &_q); //!< setup
+            virtual ~_pfd() throw();                             //!< cleanup
+            _pfd( const _pfd &t );                               //!< copy
+            const natural & key() const throw();                 //!< key for table
 
-            const natural & key() const throw() { return p; }
 
-            typedef hashing::fnv                                   block_hasher;
-            typedef key_hasher<natural,block_hasher>               prime_hasher;
-            typedef memory::pooled                                 table_memory;
-            typedef set<natural,pointer,prime_hasher,table_memory> table;
+            //! output
+            friend std::ostream & operator<<( std::ostream &os, const _pfd & );
 
-            inline friend std::ostream & operator<<( std::ostream &os, const _pfd &entry )
+            static int compare_data( const pointer &lhs, const pointer &rhs ) throw()
             {
-                os << entry.p << '^' << entry.q;
-                return os;
+                return natural::compare(lhs->p,rhs->p);
             }
 
         private:
@@ -42,16 +44,20 @@ namespace upsylon
         };
 
 
+        //! prime factor decomposition
         class pfd : public counted_object
         {
         public:
-            const _pfd::table  table;
-            virtual ~pfd() throw();
-            pfd( const natural &n );
-            pfd( const word_t   n );
+            typedef arc_ptr<pfd> pointer; //!< alias
 
-            void mul_by( const pfd &other );
+            const _pfd::table  table; //!< table that holds the decomposition
+            virtual ~pfd() throw();   //!< destructor
+            pfd( const natural &n );  //!< setup from a natural
+            pfd( const word_t   n );  //!< setup from an integral
 
+            void mul_by( const pfd &other ); //!< mul by another or self
+
+            friend std::ostream & operator<<( std::ostream &os, const pfd &F );
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(pfd);

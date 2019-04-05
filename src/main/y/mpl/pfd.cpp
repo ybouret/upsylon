@@ -29,68 +29,20 @@ namespace upsylon
             assert( ! q.is_zero() );
         }
 
-    }
-}
+        const natural &  _pfd::  key() const throw() { return p; }
 
-#if 0
-namespace upsylon
-{
-    namespace mpl
-    {
-        pfd_table:: ~pfd_table() throw()
+        std::ostream & operator<<( std::ostream &os, const _pfd &entry )
         {
-        }
-
-
-        pfd_table:: pfd_table() throw() : pfd_entry::table()
-        {
-        }
-
-        void pfd_table:: add( const natural &p, const natural &q )
-        {
-            //assert( natural::is_prime(p) );
-            if( q.is_zero() )
-            {
-                return;
-            }
-            else
-            {
-                pfd_entry::pointer *ppt = search(p);
-                if(ppt)
-                {
-                    (**ppt).q += q;
-                }
-                else
-                {
-                    const pfd_entry::pointer tmp = new pfd_entry(p,q);
-                    if(!insert(tmp))
-                    {
-                        throw exception("mpp: unexpected insert failure");
-                    }
-                }
-            }
-        }
-
-        void pfd_table:: sub( const natural &p, const natural &q )
-        {
-            //assert( natural::is_prime(p) );
-            if( q.is_zero() )
-            {
-                return;
-            }
-            else
-            {
-                pfd_entry::pointer *ppt = search(p);
-                if(!ppt) throw exception("mpp.sub: no matching factor");
-                (**ppt).q -= q;
-
-
-            }
+            assert( entry.q.is_positive() );
+            os << entry.p;
+            if( !entry.q.is_byte(1) ) os << '^' << entry.q;
+            return os;
         }
 
     }
 }
-#endif
+
+
 
 #include "y/core/node.hpp"
 #include "y/core/list.hpp"
@@ -122,17 +74,26 @@ namespace upsylon
             class Node : public core::inode<Node>
             {
             public:
-                inline Node( const natural &p, const natural &q ) :
-                P(p), Q(q)
+                inline Node( const natural &p, const natural &q, bool already=false) :
+                P(p), Q(q), exists(already)
                 {
                 }
 
                 inline virtual ~Node() throw()
                 {}
 
-                const natural P;
-                const natural Q;
+                const natural  P;
+                const natural  Q;
+                const bool     exists;
 
+                inline void put( _pfd::table &self ) const
+                {
+                    const _pfd::pointer tmp = new _pfd(P,Q);
+                    if(!self.insert(tmp))
+                    {
+                        throw exception("mpl.pfd: unexpected multiple factor in setup!");
+                    }
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
@@ -141,6 +102,8 @@ namespace upsylon
 
         void pfd:: setup(const natural &value)
         {
+            assert(0==table.size());
+
             if( value.is_byte(0) )
             {
                 // do nothing
@@ -153,11 +116,11 @@ namespace upsylon
                 if ( value.is_byte(1) )
                 {
                     self.reserve(1);
-                    MPN & _ = MPN::instance();
+                    const MPN & _ = MPN::instance();
                     const _pfd::pointer tmp = new _pfd( _._1, _._1 );
                     if(!self.insert(tmp))
                     {
-                        throw exception("mpp: unexpected multiple 1!");
+                        throw exception("mpl.pfd: unexpected multiple 1!");
                     }
                 }
                 else
@@ -187,17 +150,96 @@ namespace upsylon
 
 
                     self.reserve(factors.size);
-
                     for(const Node *node = factors.head; node; node=node->next )
                     {
-                        const _pfd::pointer tmp = new _pfd( node->P, node->Q );
-                        if(!self.insert(tmp))
-                        {
-                            throw exception("mpp: unexpected multiple factor in setup!");
-                        }
+                        node->put(self);
                     }
                 }
             }
+        }
+
+        void pfd:: mul_by( const pfd &other )
+        {
+
+            const _pfd::table &const_self = table;
+            _pfd::table       &self       = (_pfd::table &)const_self;
+
+            if( this == &other )
+            {
+                for( _pfd::table::iterator i = self.begin(); i != self.end(); ++i )
+                {
+                    _pfd    &F = **i;
+                    natural &Q = F.q;
+                    if( ! F.p.is_byte(1) )
+                    {
+                        Q += Q;
+                    }
+                }
+            }
+            else
+            {
+                // first pass: collect factors and targets
+                core::list_of_cpp<Node> factors;
+                size_t                  count = 0;
+                for( _pfd::table::const_iterator i = other.table.begin(); i != other.table.end(); ++i )
+                {
+                    const _pfd &factor = **i;
+                    factors.push_back( new Node(factor.p, factor.q, self.search(factor.p)) );
+                    if(false==factors.tail->exists) ++count; // new factor
+                }
+
+                // second pass
+                self.reserve(count);
+                for( Node *node = factors.head; node; node=node->next )
+                {
+                    _pfd::pointer *pp = self.search(node->P);
+                    if(node->exists)
+                    {
+                        if(!pp) throw exception("mpl.pfd.mul_by(unexpected missing factor)");
+                        _pfd &F = **pp;
+                        assert(F.p==node->P);
+                        if( ! F.p.is_byte(1) )
+                        {
+                            F.q += node->Q;
+                        }
+                    }
+                    else
+                    {
+                        if(pp) throw exception("mpl.pfd.mul_by(unexpected multiple factor)");
+                        node->put(self);
+                    }
+                }
+
+                // sort
+                self.sort_data( _pfd::compare_data );
+                if(self.size()>1)
+                {
+                    const MPN & _ = MPN::instance();
+                    self.no( _._1 );
+                }
+            }
+        }
+
+        std::ostream & operator<<( std::ostream &os, const pfd &F )
+        {
+            const _pfd::table &self = F.table;
+            const size_t       n    = self.size();
+            switch(n)
+            {
+                case 0: os << '0'; break;
+                case 1: os << **self.begin(); break;
+                default: {
+                    os << '(';
+                    size_t count = 1;
+                    for( _pfd::table::const_iterator i=self.begin();i!=self.end();++i,++count)
+                    {
+                        if(count>1) os << '*';
+                        os << (**i);
+                    }
+                    os << ')';
+                }
+            }
+            return os;
         }
 
     }
