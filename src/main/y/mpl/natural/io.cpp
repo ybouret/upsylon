@@ -165,6 +165,16 @@ namespace upsylon
             return save(nil);
         }
 
+
+        natural natural:: read( ios::istream &fp, size_t *nr)
+        {
+            const size_t num_bytes = fp.read_upack<size_t>(nr);
+            mpn          ans(num_bytes,as_capacity);
+            fp.input(ans.byte,(ans.bytes=num_bytes));
+            ans.update();
+            
+            if(nr) *nr += num_bytes;
+        }
     }
 
 }

@@ -12,6 +12,7 @@
 #include "y/randomized/bits.hpp"
 #include "y/type/xnumeric.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/ios/istream.hpp"
 
 #include <iostream>
 #include <cstring>
@@ -491,6 +492,8 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //__________________________________________________________________
             size_t save( ios::ostream &fp ) const; //!< write binary, return written bytes
             size_t save_length() const;            //!< return bytes to write
+
+            static natural read( ios::istream &fp, size_t *nr=0); //!< ready binary, number of bytes is saved if possibler
 
         private:
             size_t   bytes;     //!< active bytes
