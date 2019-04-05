@@ -76,6 +76,7 @@ namespace upsylon
         }
 
         pfd:: pfd( const pfd &other ) :
+        counted_object(),
         table( other.table )
         {
         }
