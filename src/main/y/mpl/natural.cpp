@@ -33,7 +33,31 @@ namespace upsylon
 
     }
 
-    MPN:: MPN() : primes(), _probe(5),
+    MPN:: PrimeInfo:: ~PrimeInfo() throw()
+    {
+    }
+
+    std::ostream & operator<<( std::ostream &os, const MPN::PrimeInfo &_ )
+    {
+        os << _.p;
+        return os;
+    }
+
+    MPN:: PrimeInfo:: PrimeInfo( const PrimeInfo &other ) :
+    p( other.p ),
+    q( other.q )
+    {
+    }
+
+    MPN:: PrimeInfo:: PrimeInfo( const mpn &n ) :
+    p( n ),
+    q( mpn::square_of(n) )
+    {
+    }
+    
+
+
+    MPN:: MPN() : plist(), probe(5),
     _0(0), _1(1), _2(2), _3(3), _4(4), _5(5), _6(6), _10(10)
     {}
 
@@ -41,14 +65,14 @@ namespace upsylon
     {
     }
 
-    void MPN:: append_primes( const size_t count )
+    void MPN:: createPrimes( const size_t count )
     {
-        primeseq &prm = (primeseq &)primes;
+        PrimeList &prm = (PrimeList &)plist;
         prm.reserve(count);
         mpn p = 1;
         if( prm.size() )
         {
-            p = prm.back();
+            p = prm.back().p;
         }
         for(size_t i=0;i<count;++i)
         {
@@ -59,9 +83,9 @@ namespace upsylon
         find_probe();
     }
 
-    void MPN:: load_primes( ios::istream &fp )
+    void MPN:: reloadPrimes( ios::istream &fp )
     {
-        primeseq &prm = (primeseq &)primes;
+        PrimeList &prm = (PrimeList &)plist;
         prm.free();
         const size_t count = fp.read<uint32_t>();
         prm.ensure(count);
@@ -109,6 +133,31 @@ namespace upsylon
 
         target.xch(p);
 #endif
+    }
+
+    bool MPN:: isPrime( const mpn &n ) const
+    {
+        if(n<=_1)
+            return false; //!< for 0 and 1
+        else if(n<=_3)
+            return true;  //!< for 2 and 3
+        else if( n.is_divisible_by_byte(2) || n.is_divisible_by_byte(3) ) //! for 2,4,6,8,9...
+            return false;
+        else
+        {
+            assert(n>=_5);
+            mpn i = _5;
+            for(;;)
+            {
+                const mpn isq = mpn::square_of(i);
+                if(isq>n) break;
+                if( n.is_divisible_by(i) )  return false;
+                const mpn j=i+_2;
+                if( n.is_divisible_by(j) )  return false;
+                i +=_6;
+            }
+            return true;
+        }
     }
 
 }
