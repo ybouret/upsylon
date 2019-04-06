@@ -83,7 +83,32 @@ namespace upsylon
     
     void MPN:: find_probe()
     {
-        
+#if 0
+        mpn &target = (mpn&)_probe;
+        mpn  pmax   = _3;
+        if( primes.size() > 0 )
+        {
+            const mpn &back = primes.back();
+            if( back > pmax )
+            {
+                pmax = back;
+            }
+        }
+        std::cerr << "pmax=" << pmax << std::endl;
+        mpn p = _5;
+        if(p<=pmax)
+        {
+            p.xch(pmax);
+            p -= _5;
+            p /= _6;
+            ++p;
+            p *= _6;
+            p += _5;
+        }
+        std::cerr << "p=" << p << std::endl;
+
+        target.xch(p);
+#endif
     }
 
 }
