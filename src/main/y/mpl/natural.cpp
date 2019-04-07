@@ -1,4 +1,5 @@
 #include "y/mpl/natural.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -62,7 +63,8 @@ namespace upsylon
     static const uint8_t probe_p = MPN_SMALLEST_PROBE;
     static const uint8_t probe_q = MPN_SMALLEST_PROBE*MPN_SMALLEST_PROBE;
 
-    MPN:: MPN() : plist(),
+    MPN:: MPN() :
+    plist(2,as_capacity),
     probe(5),
     _0(0), _1(1), _2(2), _3(3), _4(4), _5(5), _6(6), _10(10)
     {}
@@ -132,10 +134,49 @@ namespace upsylon
             throw;
         }
     }
-    
+
+#define __ADD_PRIME(X) do { const PrimeInfo p(X); prm.push_back(p); } while(false)
+
     void MPN:: findProbe()
     {
         initProbe();
+        try
+        {
+            //------------------------------------------------------------------
+            //
+            // minimal list sanity check
+            //
+            //------------------------------------------------------------------
+            {
+                PrimeList &prm = (PrimeList &)plist;
+                switch( plist.size() )
+                {
+                    case 0: __ADD_PRIME(_2); __ADD_PRIME(_3); break;
+                    case 1: __ADD_PRIME(_3); break;
+                    default:
+                        assert( plist.size() >= 2 );
+                        break;
+                }
+            }
+            if(plist.size()<2) throw exception("MPN: invalid prime list");
+            PrimeList::const_iterator i = plist.begin();
+            if( (*i).p != _2 ) throw exception("MPN: invalid first prime");
+            ++i;
+            if( (*i).p != _3 ) throw exception("MPN: invalid second prime");
+
+            //------------------------------------------------------------------
+            //
+            // starting point
+            //
+            //------------------------------------------------------------------
+            
+
+        }
+        catch(...)
+        {
+            failSafe();
+            throw;
+        }
     }
 
     bool MPN:: isPrime( const mpn &n ) const
