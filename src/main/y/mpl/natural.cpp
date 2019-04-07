@@ -67,7 +67,9 @@ namespace upsylon
     plist(2,as_capacity),
     probe(5),
     _0(0), _1(1), _2(2), _3(3), _4(4), _5(5), _6(6), _10(10)
-    {}
+    {
+        findProbe();
+    }
 
     MPN:: ~MPN() throw()
     {
@@ -169,8 +171,26 @@ namespace upsylon
             // starting point
             //
             //------------------------------------------------------------------
-            
+            const PrimeInfo &last_info = plist.back();
+            mpn              p         = last_info.p;
 
+            if(p>probe.p)
+            {
+                p -= _5;
+                p /= _6;
+                ++p;
+                p *= _6;
+                p += _5;
+            }
+            else
+            {
+                p = probe.p;
+            }
+            //std::cerr << "guess=" << p << std::endl;
+            mpn q = mpn::square_of(p);
+            //std::cerr << "gusqr=" << q << std::endl;
+            ((mpn &)(probe.p)).xch(p);
+            ((mpn &)(probe.q)).xch(q);
         }
         catch(...)
         {
