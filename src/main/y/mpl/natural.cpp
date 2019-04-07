@@ -173,8 +173,9 @@ namespace upsylon
             //------------------------------------------------------------------
             const PrimeInfo &last_info = plist.back();
             mpn              p         = last_info.p;
+            assert(probe.p==_5);
 
-            if(p>probe.p)
+            if(p>=probe.p)
             {
                 p -= _5;
                 p /= _6;
@@ -199,7 +200,7 @@ namespace upsylon
         }
     }
 
-    bool MPN:: isPrime( const mpn &n ) const
+    bool MPN:: isPrime_( const mpn &n ) const
     {
         if(n<=_1)
             return false; //!< for 0 and 1
