@@ -57,7 +57,13 @@ namespace upsylon
     
 
 
-    MPN:: MPN() : plist(), probe(5),
+#define MPN_SMALLEST_PROBE 5
+
+    static const uint8_t probe_p = MPN_SMALLEST_PROBE;
+    static const uint8_t probe_q = MPN_SMALLEST_PROBE*MPN_SMALLEST_PROBE;
+
+    MPN:: MPN() : plist(),
+    probe(5),
     _0(0), _1(1), _2(2), _3(3), _4(4), _5(5), _6(6), _10(10)
     {}
 
@@ -65,74 +71,71 @@ namespace upsylon
     {
     }
 
+    void MPN:: initProbe() throw()
+    {
+        ((mpn &)(probe.p)).set_byte(probe_p);
+        ((mpn &)(probe.q)).set_byte(probe_q);
+    }
+
+    void MPN:: failSafe() throw()
+    {
+        PrimeList &prm = (PrimeList &)plist;
+        prm.free();
+        initProbe();
+    }
+
     void MPN:: createPrimes( const size_t count )
     {
         PrimeList &prm = (PrimeList &)plist;
         prm.reserve(count);
-        mpn p = 1;
-        if( prm.size() )
+        try
         {
-            p = prm.back().p;
+            mpn p = 1;
+            if( prm.size() )
+            {
+                p = prm.back().p;
+            }
+            for(size_t i=0;i<count;++i)
+            {
+                p = mpn::next_prime(++p);
+                prm.push_back(p);
+            }
+            findProbe();
+
         }
-        for(size_t i=0;i<count;++i)
+        catch(...)
         {
-            p = mpn::next_prime(++p);
-            prm.push_back(p);
+            failSafe();
+            throw;
         }
-        
-        find_probe();
+
     }
 
     void MPN:: reloadPrimes( ios::istream &fp )
     {
+        failSafe();
         PrimeList &prm = (PrimeList &)plist;
-        prm.free();
-        const size_t count = fp.read<uint32_t>();
-        prm.ensure(count);
         try
         {
+            const size_t count = fp.read<uint32_t>();
+            prm.ensure(count);
             for(size_t i=0;i<count;++i)
             {
                 mpn p = mpn::read(fp);
                 prm.push_back(p);
             }
-            find_probe();
+            findProbe();
         }
         catch(...)
         {
-            prm.free();
+            failSafe();
             throw;
         }
     }
     
-    void MPN:: find_probe()
+    void MPN:: findProbe()
     {
-#if 0
-        mpn &target = (mpn&)_probe;
-        mpn  pmax   = _3;
-        if( primes.size() > 0 )
-        {
-            const mpn &back = primes.back();
-            if( back > pmax )
-            {
-                pmax = back;
-            }
-        }
-        std::cerr << "pmax=" << pmax << std::endl;
-        mpn p = _5;
-        if(p<=pmax)
-        {
-            p.xch(pmax);
-            p -= _5;
-            p /= _6;
-            ++p;
-            p *= _6;
-            p += _5;
-        }
-        std::cerr << "p=" << p << std::endl;
-
-        target.xch(p);
-#endif
+        initProbe();
     }
 
     bool MPN:: isPrime( const mpn &n ) const
