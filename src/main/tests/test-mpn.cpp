@@ -198,6 +198,22 @@ Y_UTEST(mpn)
         Y_ASSERT(R.lsw()==r);
     }
 
+    std::cerr << "-- divisibility" << std::endl;
+    {
+        for(uint64_t num=0;num<=1024;++num)
+        {
+            const mpn Num = num;
+            for( uint64_t den=1; den<=1024+256;++den )
+            {
+                const mpn Den = den;
+                const bool res = 0 == (num%den);
+                //std::cerr << num << "/" << den << std::endl;
+                Y_ASSERT( res == Num.is_divisible_by(Den) );
+            }
+        }
+    }
+    //exit(0);
+
     std::cerr << "-- boolean" << std::endl;
     for(size_t iter=0;iter<ITERS;++iter)
     {
@@ -334,6 +350,7 @@ Y_UTEST(mpn)
         const mpn n = mpn::dec(d);
         std::cerr << std::dec << "n=" << n << std::endl;
     }
+
 
 
     std::cerr << "sizeof(mpn)=" << sizeof(mpn) << std::endl;

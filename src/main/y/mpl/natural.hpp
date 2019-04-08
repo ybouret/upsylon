@@ -436,26 +436,22 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //
             //__________________________________________________________________
             Y_MPN_WRAP(%,__mod)
-            //! test divisibility
-            inline bool is_divisible_by( const natural &rhs ) const
-            {
-                const natural ans = __mod(*this,rhs);  return ans.is_zero();
-            }
+
+            //__________________________________________________________________
+            //
+            //
+            // DIVISIBILITY
+            //
+            //__________________________________________________________________
 
             //! test divisibility
-            inline bool is_divisible_by(word_t w) const
-            {
-                Y_MPN_PREPARE(w);
-                const natural ans = __mod(byte,bytes,pw,nw);
-                return ans.is_zero();
-            }
+            inline bool is_divisible_by( const natural &rhs ) const { return __dvs(byte,bytes,rhs.byte,rhs.bytes); }
 
             //! test divisibility
-            inline bool is_divisible_by_byte(const uint8_t b) const
-            {
-                const natural ans = __mod(byte,bytes,&b,1);
-                return ans.is_zero();
-            }
+            inline bool is_divisible_by(word_t w) const { Y_MPN_PREPARE(w); return __dvs(byte,bytes,pw,nw); }
+
+            //! test divisibility
+            inline bool is_divisible_by_byte(const uint8_t b) const { return __dvs(byte,bytes,&b,1); }
 
             //__________________________________________________________________
             //
@@ -547,6 +543,10 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
                                  const uint8_t *den, const size_t nd);
 
             static natural __mod(const uint8_t *num, const size_t nn,
+                                 const uint8_t *den, const size_t nd);
+
+            //! true if divisible
+            static bool    __dvs(const uint8_t *num, const size_t nn,
                                  const uint8_t *den, const size_t nd);
 
             static natural __bool(const uint8_t *l, const size_t nl,
