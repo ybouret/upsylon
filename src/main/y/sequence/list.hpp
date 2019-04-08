@@ -199,6 +199,15 @@ namespace upsylon
             nodes.reverse();
         }
 
+        //! steal conten of other
+        inline void merge_back( list &other ) throw()
+        {
+            if(this!=&other)
+            {
+                nodes.merge_back(other.nodes);
+            }
+        }
+
         //! delete cache
         inline void trim() throw()
         {

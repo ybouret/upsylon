@@ -262,8 +262,24 @@ byte( __digest_acquire(blen) )
         memcpy(byte,other.byte,size);
     }
 
+    size_t digest:: save( ios::ostream &fp ) const
+    {
+        size_t len = 0;
+        fp.emit_upack(size,&len);
+        fp.output((const char *)byte,size);
+        return len+size;
+    }
 
-    
+    digest digest:: load(ios::istream &fp, size_t *nr)
+    {
+        if(nr     ) *nr = 0;
+        const size_t sz = fp.read_upack<size_t>(nr);
+        digest       md(sz,0); assert(sz==md.size);
+        fp.input(md.byte,md.size);
+        if(nr) (*nr) += sz;
+        return md;
+    }
+
 }
 
 

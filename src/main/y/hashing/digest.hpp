@@ -3,6 +3,8 @@
 #define Y_DIGEST_INCLUDED 1
 
 #include "y/string.hpp"
+#include "y/ios/ostream.hpp"
+#include "y/ios/istream.hpp"
 
 namespace upsylon
 {
@@ -109,6 +111,9 @@ namespace upsylon
 
         //! increase by on
         void _inc() throw();
+
+        size_t        save( ios::ostream &fp ) const; //!< save binary, return written bytes
+        static digest load( ios::istream &fp, size_t *nr=0); //!< load binary, optional read bytes are written
 
     private:
         size_t   blen;
