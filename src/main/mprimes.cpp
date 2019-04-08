@@ -5,84 +5,60 @@
 #include "y/ios/icstream.hpp"
 #include "y/string/convert.hpp"
 #include "y/string/io.hpp"
-#include "y/hashing/sha1.hpp"
 #include <cmath>
 
 using namespace upsylon;
 
 Y_PROGRAM_START()
 {
-#if 0
-    size_t        po2 = 8;
-    
+    size_t max_bytes = 1000;
     if(argc>1)
     {
-        po2 = string_convert::to<size_t>(argv[1],"po2");
+        max_bytes = string_convert::to<size_t>(argv[1],"max_bytes");
     }
     
-    const size_t  max_size = 1<<po2;
-    size_t        written  = 0;
-    hashing::sha1 hasher;
-    std::cerr << "<GeneratingPrimes max_size='" << max_size <<"'>" << std::endl;
+    MPN &mgr = MPN::instance();
+    
+    mgr.initProbe();
+    
+    size_t l    = 0;
+    size_t iter = 0;
+    while( (l=mgr.recordLength()) < max_bytes )
+    {
+        mgr.createPrimes(1,MPN::CreateFast);
+        std::cerr << '.';
+        if( 0== ((++iter)&63) )
+        {
+            std::cerr << '[' << mgr.plist.back().p << ']' << std::endl;
+        }
+    }
+    std::cerr << "->[" << mgr.plist.back().p << "]" << std::endl;
+    std::cerr << "bytes    = " << l << "/" << max_bytes << std::endl;
+    std::cerr << "#primes  = " << mgr.plist.size() << std::endl;
+    std::cerr << "@probe   = " << mgr.probe        << std::endl;
+    
     {
         ios::orstream fp("mprimes.bin");
-        uint32_t      count    = 0;
-        fp.emit<uint32_t>(count);
-        written += sizeof(count);
-
-        mpn last_p = 0;
-        hasher.set();
-        for(mpn p=2;;p=mpn::next_prime(++p))
+        if( mgr.recordPrimes(fp) != l )
         {
-            const size_t to_write = p.save_length();
-            if(written+to_write>max_size)
-            {
-                break;
-            }
-           
-            written += p.save(fp);
-            last_p = p;
-            hasher(p);
-            ++count;
-            std::cerr << '.';
-            if(!(count&63) )
-            {
-                std::cerr << '[' << p << ']' << std::endl;
-            }
+            throw exception("recordPrimes length mismatch");
         }
-        std::cerr << "->" << last_p << std::endl;
-        fp.rewind();
-        fp.emit<uint32_t>(count);
-        std::cerr << "#written= " << written << std::endl;
-        std::cerr << "#count  = " << count   << std::endl;
-        std::cerr << "bpp     = " << double(written)/count << std::endl;
     }
-    const digest mdw = hasher.md();
-    std::cerr << "<GeneratingPrimes/>" << std::endl;
-    std::cerr << std::endl;
-    std::cerr << "<CheckingPrimes>" << std::endl;
-    hasher.set();
+    
+    if(false)
     {
-        ios::icstream  fp("mprimes.bin");
-        const uint32_t count = fp.read<uint32_t>();
-        size_t         nread = sizeof(count);
-        for(uint32_t i=0;i<count;++i)
-        {
-            size_t    nr = 0;
-            const mpn p = mpn::read(fp,&nr);
-            nread += nr;
-            hasher(p);
-        }
-        std::cerr << "input.nread=" << nread << std::endl;
-        std::cerr << "input.count=" << count << std::endl;
+        const digest md0 = mgr.md();
+        std::cerr << "md0=" << md0 << std::endl;
+        const size_t cr = mgr.plist.size() - 2;
+        mgr.initProbe();
+        mgr.createPrimes(cr,MPN::CreateSafe);
+        const digest md1 = mgr.md();
+        std::cerr << "md1=" << md1 << std::endl;
+        mgr.initProbe();
+        mgr.createPrimes(cr,MPN::CreateFast);
+        const digest md2 = mgr.md();
+        std::cerr << "md2=" << md2 << std::endl;
     }
-    const digest mdr = hasher.md();
-    std::cerr << "mdw=" << mdw << std::endl;
-    std::cerr << "mdr=" << mdr << std::endl;
-    if(mdw!=mdr) throw exception("corrupted data");
-    std::cerr << "<CheckingPrimes/>" << std::endl;
-    std::cerr << std::endl;
-#endif
 }
 Y_PROGRAM_END()
 

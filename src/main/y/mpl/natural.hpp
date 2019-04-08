@@ -616,6 +616,12 @@ namespace upsylon
     class MPN : public singleton<MPN>
     {
     public:
+        enum CreateMode
+        {
+            CreateSafe,
+            CreateFast
+        };
+        
         typedef hashing::sha1 Hasher;
         
         //! store prime and its squared value
@@ -647,7 +653,7 @@ namespace upsylon
         const mpn      _6;      //!< 6
         const mpn      _10;     //!< 10
         
-        void   createPrimes( const size_t count, bool optimized=false ); //!< append count primes to the primes sequence
+        void   createPrimes( const size_t count,  const CreateMode how=CreateSafe ); //!< append count primes to the primes sequence
         size_t recordPrimes( ios::ostream &fp ) const; //!< serialize
         size_t recordLength() const;
 
@@ -655,14 +661,16 @@ namespace upsylon
         bool isPrime(  const mpn &n ) const;   //!< hybrid method
         mpn  nextPrime_( const mpn &n ) const; //!< raw method
         mpn  nextPrime(  const mpn &n ) const; //!< hybrid method
-
+        
+        void   initProbe() throw();
+        digest md() const;
+        
     private:
         explicit MPN();
         virtual ~MPN() throw();
         friend class singleton<MPN>;
-        void   initProbe() throw();
         void   checkList() const;
-        size_t nextProbe(const bool optimized);
+        size_t nextProbe(const CreateMode how);
 
     public:
         static const at_exit::longevity life_time = mpl::manager::life_time - 1; //!< based on manager existence

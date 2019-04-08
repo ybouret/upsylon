@@ -103,7 +103,7 @@ namespace upsylon
         if( !probe_minus_5.is_divisible_by(_6) ) throw exception("MPN: invalid probe scale");
     }
 
-    size_t MPN:: nextProbe(const bool optimized)
+    size_t MPN:: nextProbe(const CreateMode how)
     {
         checkList();
         PrimeList    &prm        = (PrimeList&)plist;
@@ -126,15 +126,17 @@ namespace upsylon
             while(true)
             {
                 last_prime += _2;
-                if(optimized)
+                switch (how)
                 {
-                    if(! isPrime(last_prime)) continue;
+                    case CreateSafe:
+                        if(! isPrime_(last_prime)) continue;
+                        break;
+                        
+                    case CreateFast:
+                        if(! isPrime(last_prime)) continue;
+                        break;
                 }
-                else
-                {
-                    if(! isPrime_(last_prime)) continue;
-                }
-
+                
                 if(last_prime>=next_probe) break;
                 const PrimeInfo tmp(last_prime);
                 added.push_back(tmp);
@@ -161,10 +163,10 @@ namespace upsylon
 
     }
 
-    void MPN:: createPrimes( const size_t count, const bool optimized )
+    void MPN:: createPrimes( const size_t count, const CreateMode how )
     {
         size_t sum = 0;
-        while(sum<count) sum += nextProbe(optimized);
+        while(sum<count) sum += nextProbe(how);
     }
 
     
@@ -287,6 +289,18 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
         return recordPrimes(nil);
     }
 
+    digest MPN:: md() const
+    {
+        Hasher H;
+        H.set();
+        for( PrimeList::const_iterator i=plist.begin();i!=plist.end();++i)
+        {
+            H( (*i).p );
+        }
+        H( probe.p );
+        return H.md();
+        
+    }
 
 
 }
