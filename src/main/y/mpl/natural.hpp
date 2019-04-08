@@ -653,8 +653,10 @@ namespace upsylon
         size_t recordPrimes( ios::ostream &fp ) const;
         size_t recordLength() const;
 
-        bool isPrime_( const mpn &n ) const; //!< raw method
-
+        bool isPrime_( const mpn &n ) const;   //!< raw method
+        bool isPrime(  const mpn &n ) const;   //!< hybrid method
+        mpn  nextPrime_( const mpn &n ) const; //!< raw method
+        mpn  nextPrime(  const mpn &n ) const; //!< hybrid method
 
     private:
         explicit MPN();

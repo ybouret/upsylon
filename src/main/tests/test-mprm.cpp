@@ -3,51 +3,56 @@
 #include "y/utest/run.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/os/rt-clock.hpp"
 
 using namespace upsylon;
 
+static inline
+void check_primes( const size_t count )
+{
+    MPN  &mgr = MPN::instance();
+    
+    std::cerr << "Checking #" << count << " with #plist=" << mgr.plist.size() << std::endl;
+
+    mpn p=0,q=0;
+    uint64_t r_ticks = 0;
+    uint64_t h_ticks = 0;
+
+    for(size_t i=1;i<=count;++i)
+    {
+        {
+            const uint64_t mark = rt_clock::ticks();
+            p = mgr.nextPrime_(++p);
+            r_ticks += (rt_clock::ticks()-mark);
+        }
+        {
+            const uint64_t mark = rt_clock::ticks();
+            q = mgr.nextPrime(++q);
+            h_ticks += (rt_clock::ticks()-mark);
+        }
+        Y_ASSERT(p==q);
+    }
+    rt_clock rtc;
+    const double r_tmx = rtc(r_ticks);
+    const double h_tmx = rtc(h_ticks);
+    std::cerr << "r_tmx=" << r_tmx << " | h_tmx=" << h_tmx << std::endl;
+}
+
 Y_UTEST(mprm)
 {
+    MPN     &mgr = MPN::instance();
 
-    MPN &mgr = MPN::instance();
-    std::cerr << "plist=" << mgr.plist << std::endl;
-    std::cerr << "probe=" << mgr.probe << std::endl;
+    check_primes(2048);
 
-    double max_slope = 0;
+    mgr.createPrimes(10);
+    check_primes(2048);
 
+    mgr.createPrimes(100);
+    check_primes(2048);
 
-    const size_t len0 = mgr.recordLength();
-    const size_t num0 = mgr.plist.size();
+    mgr.createPrimes(1000);
+    check_primes(2048);
 
-    {
-        ios::ocstream fp("prm.dat");
-        fp("%u %u\n", unsigned(num0), unsigned(len0) );
-        std::cerr << num0 << " -> " << len0 << "@" << mgr.plist.back().p << "/" << mgr.probe.p << std::endl;
-
-
-
-        for(unsigned i=1;i<=1000;++i)
-        {
-            mgr.createPrimes(1);
-            const size_t num = mgr.plist.size();
-            const size_t len = mgr.recordLength();
-            fp("%u %u\n", unsigned(num), unsigned(len) );
-            std::cerr << num << " -> " << len << "@" << mgr.plist.back().p << "/" << mgr.probe.p << std::endl;
-            max_slope = max_of(max_slope, double(len-len0)/double(num-num0));
-        }
-
-    }
-    std::cerr << '#' << num0 << " -> " << len0 << std::endl;
-
-    const double intercept = double(len0) - max_slope * double(num0);
-
-    std::cerr << "max_slope=" << max_slope << std::endl;
-    std::cerr << "intercept=" << intercept << std::endl;
-
-    {
-        ios::ocstream fp("prm.bin");
-        mgr.recordPrimes(fp);
-    }
 
 }
 Y_UTEST_DONE()

@@ -185,6 +185,62 @@ namespace upsylon
         }
     }
 
+
+
+#define MPN_NEXT_PRIME(METHOD) \
+mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; return p
+
+    mpn MPN:: nextPrime_(const mpn &n) const
+    {
+        MPN_NEXT_PRIME(isPrime_);
+    }
+
+    mpn MPN:: nextPrime(const mpn &n) const
+    {
+        MPN_NEXT_PRIME(isPrime);
+    }
+
+
+    bool MPN:: isPrime( const mpn &n) const
+    {
+        if(n<=_1)
+            return false; //!< for 0 and 1
+        else if(n<=_3)
+            return true;  //!< for 2 and 3
+        else
+        {
+            //--- list usage
+            {
+                size_t                    np  = plist.size();
+                PrimeList::const_iterator it  = plist.begin();
+                while(np-->0)
+                {
+                    const PrimeInfo &I = *it;
+                    if(I.q>n)                  return true;
+                    if(n.is_divisible_by(I.p)) return false;
+                    ++it;
+                }
+            }
+
+            //--- fallback
+            mpn i = probe.p;
+            for(;;)
+            {
+                const mpn isq = mpn::square_of(i);
+                if(isq>n)
+                {
+                    break;
+                }
+                if( n.is_divisible_by(i) )  return false;
+                const mpn j=i+_2;
+                if( n.is_divisible_by(j) )  return false;
+                i +=_6;
+            }
+            return true;
+        }
+    }
+
+
     size_t MPN:: recordPrimes(ios::ostream &fp) const
     {
         Hasher H;
@@ -220,5 +276,7 @@ namespace upsylon
         ios::null_ostream nil;
         return recordPrimes(nil);
     }
+
+
 
 }
