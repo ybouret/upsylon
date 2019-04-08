@@ -486,8 +486,6 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //__________________________________________________________________
             static natural mod_inv( const natural &b, const natural &n );                     //!< modular inverse
             static natural mod_exp( const natural &b, const natural &e, const natural &n );   //!< modular exponentiation (b^e)[n]
-            static bool    is_prime(const natural &);   //!< slow primality test
-            static natural next_prime(const natural &); //!< slow find of next prime
             static bool    are_coprimes(const natural &, const natural &); //!< test co-primailty
             static natural factorial(const natural &n); //!< factorial computation, recurvsive algorithm
 
@@ -649,8 +647,8 @@ namespace upsylon
         const mpn      _6;      //!< 6
         const mpn      _10;     //!< 10
         
-        void   createPrimes( const size_t count ); //!< append count primes to the primes sequence
-        size_t recordPrimes( ios::ostream &fp ) const;
+        void   createPrimes( const size_t count, bool optimized=false ); //!< append count primes to the primes sequence
+        size_t recordPrimes( ios::ostream &fp ) const; //!< serialize
         size_t recordLength() const;
 
         bool isPrime_( const mpn &n ) const;   //!< raw method
@@ -664,7 +662,7 @@ namespace upsylon
         friend class singleton<MPN>;
         void   initProbe() throw();
         void   checkList() const;
-        size_t nextProbe();
+        size_t nextProbe(const bool optimized);
 
     public:
         static const at_exit::longevity life_time = mpl::manager::life_time - 1; //!< based on manager existence

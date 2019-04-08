@@ -123,13 +123,14 @@ namespace upsylon
             }
             else
             {
+                const MPN & _ = MPN::instance();
+
                 const _pfd::table &const_self = table;
                 _pfd::table       &self       = (_pfd::table &)const_self;
 
                 if ( value.is_byte(1) )
                 {
                     self.reserve(1);
-                    const MPN & _ = MPN::instance();
                     const _pfd::pointer tmp = new _pfd( _._1, _._1 );
                     if(!self.insert(tmp))
                     {
@@ -144,7 +145,7 @@ namespace upsylon
                     natural v = value; //!< current value
                     natural q;
 
-                    for( natural p = 2; p<=v ; p = natural::next_prime(++p) )
+                    for( natural p = 2; p<=v ; p = _.nextPrime(++p) )
                     {
                         q.clr();
                         std::cerr << v << "?" << p << std::endl;

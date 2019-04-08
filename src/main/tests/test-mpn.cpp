@@ -10,6 +10,8 @@ using namespace upsylon;
 #define ITERS_SMALL (1<<8)
 Y_UTEST(mpn)
 {
+    MPN &mgr = MPN::instance();
+
     mpn a;
     mpn b(a);
     mpn c(10);
@@ -283,7 +285,7 @@ Y_UTEST(mpn)
         mpn i=0;
         while(P.size()<=100)
         {
-            i = mpn::next_prime(i+1);
+            i = mgr.nextPrime(i+1);
             P.push_back(i);
         }
         std::cerr << "P=" << P << std::endl;
@@ -295,18 +297,18 @@ Y_UTEST(mpn)
     {
         std::cerr << "generating p..." << std::endl;
         mpn p( 5+alea.leq(25), randomized::bits::crypto() );
-        p = mpn::next_prime(p);
+        p = mgr.nextPrime(p);
         std::cerr << "p=" << p << std::endl;
         std::cerr << "generating q..." << std::endl;
         mpn q( 5+alea.leq(25), randomized::bits::crypto() );
-        q = mpn::next_prime(q);
+        q = mgr.nextPrime(q);
         std::cerr << "q=" << q << std::endl;
         const mpn n = p*q;
         std::cerr << "n=" << p*q << std::endl;
         const mpn phi = (p-1)*(q-1);
         std::cerr << "phi=" << phi << std::endl;
         mpn  e( phi.bits()/2, randomized::bits::crypto() );
-        e = mpn::next_prime(e);
+        e = mgr.nextPrime(e);
         std::cerr << "e=" << e << std::endl;
         const mpn d = mpn::mod_inv(e,phi);
         std::cerr << "d=" << d << std::endl;

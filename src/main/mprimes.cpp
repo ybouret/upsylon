@@ -12,6 +12,7 @@ using namespace upsylon;
 
 Y_PROGRAM_START()
 {
+#if 0
     size_t        po2 = 8;
     
     if(argc>1)
@@ -81,7 +82,7 @@ Y_PROGRAM_START()
     if(mdw!=mdr) throw exception("corrupted data");
     std::cerr << "<CheckingPrimes/>" << std::endl;
     std::cerr << std::endl;
-
+#endif
 }
 Y_PROGRAM_END()
 

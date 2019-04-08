@@ -93,6 +93,7 @@ namespace upsylon
             return result;
         }
 
+#if 0
         bool natural:: is_prime( const natural &n )
         {
             static const MPN &_ = MPN::instance();
@@ -134,6 +135,7 @@ namespace upsylon
                 return p;
             }
         }
+#endif
 
         bool natural:: are_coprimes(const natural &a, const natural &b)
         {
