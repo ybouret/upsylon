@@ -25,7 +25,7 @@ Y_UTEST(local_file)
             fp << ",World!";
             header2 = fp.tell();
             const string phrase = "password";
-            string_io::save_binary(fp,phrase);
+            phrase.serialize(fp);
             fp.flush();
         }
 

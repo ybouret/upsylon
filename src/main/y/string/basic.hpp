@@ -8,6 +8,8 @@
 #include "y/dynamic.hpp"
 #include "y/comparison.hpp"
 #include "y/ptr/counted.hpp"
+#include "y/ios/serializable.hpp"
+
 #include <cstring>
 #include <iosfwd>
 
@@ -39,7 +41,7 @@ assert( (S).size_<=(S).maxi_ );             \
 assert( 0 == (S).addr_[ (S).size_ ] )
 
     //! default fields initialisation
-#define Y_CORE_STRING_CTOR0()      memory::rw_buffer(), dynamic(), counted(), addr_(0)
+#define Y_CORE_STRING_CTOR0()      memory::rw_buffer(), dynamic(), counted(), ios::serializable(), addr_(0)
 
     //! string constructor to hold SIZE
 #define Y_CORE_STRING_CTOR(SIZE)   Y_CORE_STRING_CTOR0(), size_(SIZE), maxi_(0), items(size_+1), bytes(0)
@@ -54,7 +56,11 @@ maxi_ = items-1
     {
         //! string on a base class
         template <typename T>
-        class string : public memory::rw_buffer, public dynamic, public counted
+        class string :
+        public memory::rw_buffer,
+        public dynamic,
+        public counted,
+        public ios::serializable
         {
         public:
             //! buffer interface
@@ -410,9 +416,16 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
             //! front
             inline T &       front() throw()       { assert(size_>0); return addr_[0]; }
 
-            //! front, csont
+            //! front, const
             inline const T & front() const throw() { assert(size_>0); return addr_[0]; }
-            
+
+            //! serializable className
+            virtual const char * className() const throw();
+
+            //! write
+            virtual size_t serialize( ios::ostream &fp ) const;
+
+
         private:
             T     *addr_;
             size_t size_;

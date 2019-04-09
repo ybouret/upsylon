@@ -28,6 +28,7 @@ namespace upsylon
 #define Y_DIGEST_CTOR(SZ)      \
 memory::rw_buffer(),           \
 counted(),                     \
+ios::serializable(),           \
 size(SZ),                      \
 blen(size),                    \
 byte( __digest_acquire(blen) )
@@ -262,7 +263,12 @@ byte( __digest_acquire(blen) )
         memcpy(byte,other.byte,size);
     }
 
-    size_t digest:: save( ios::ostream &fp ) const
+    const char * digest:: className() const throw()
+    {
+        return "digest";
+    }
+
+    size_t digest:: serialize( ios::ostream &fp ) const
     {
         return fp.emit_block(*this);
     }

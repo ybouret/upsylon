@@ -269,14 +269,14 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
             const mpn curr = (*i).p;
             mpn       code = curr-last; assert(code.is_even());
             --(code.shr());
-            len += code.save(fp);
+            len += code.serialize(fp);
             last = curr;
             H(code);
         }
-        len += probe.save(fp);
+        len += probe.serialize(fp);
         H(probe);
         const digest md = H.md();
-        return len+md.save(fp);
+        return len+md.serialize(fp);
     }
 
     size_t MPN:: recordLength() const

@@ -11,7 +11,8 @@ namespace upsylon
 
 
     //! fixed length buffer
-    class digest : public memory::rw_buffer, public counted
+    class digest :
+    public memory::rw_buffer, public counted, public ios::serializable
     {
     public:
 
@@ -111,9 +112,10 @@ namespace upsylon
 
         //! increase by on
         void _inc() throw();
-
-        size_t        save( ios::ostream &fp ) const; //!< save binary, return written bytes
-        static digest load( ios::istream &fp, size_t *nr=0); //!< load binary, optional read bytes are written
+        
+        virtual const char *className() const throw(); //!< "digest"
+        virtual size_t      serialize( ios::ostream &fp ) const; //!< save binary, return written bytes
+        static  digest      load( ios::istream &fp, size_t *nr=0); //!< load binary, optional read bytes are written
 
     private:
         size_t   blen;

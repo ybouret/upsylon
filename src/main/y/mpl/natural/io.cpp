@@ -148,18 +148,17 @@ namespace upsylon
             return ans;
         }
 
-        size_t natural:: save( ios::ostream &fp ) const
+        size_t natural:: serialize( ios::ostream &fp ) const
         {
             return fp.emit_block(*this);
         }
 
-        size_t natural:: save_length() const
+        const char * natural:: className() const throw()
         {
-            ios::null_ostream nil;
-            return save(nil);
+            return "mpn";
         }
 
-
+        
         natural natural:: read( ios::istream &fp, size_t *nr)
         {
             const size_t num_bytes = fp.read_upack<size_t>(nr);

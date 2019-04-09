@@ -65,12 +65,12 @@ assert( (PTR)->byte-1==(PTR)->item );                           \
 assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
 
         //! in place constructor
-#define Y_MPN_CTOR(SZ,MX) memory::ro_buffer(), bytes(SZ), allocated(MX), byte( __acquire(allocated) ), item(byte-1)
+#define Y_MPN_CTOR(SZ,MX) memory::ro_buffer(), ios::serializable(), bytes(SZ), allocated(MX), byte( __acquire(allocated) ), item(byte-1)
 
         class integer; //!< forward declaration
 
         //! big natural number
-        class natural : public memory::ro_buffer
+        class natural : public memory::ro_buffer, public ios::serializable
         {
         public:
 
@@ -495,9 +495,8 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             // io
             //
             //__________________________________________________________________
-            size_t save( ios::ostream &fp ) const; //!< write binary, return written bytes
-            size_t save_length() const;            //!< return bytes to write
-
+            virtual const char *className() const throw(); //!< "mpn"
+            virtual size_t      serialize( ios::ostream &fp ) const; //!< write binary
             static natural read( ios::istream &fp, size_t *nr=0); //!< ready binary, number of bytes is saved if possibler
 
         private:

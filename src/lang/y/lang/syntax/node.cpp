@@ -156,7 +156,7 @@ namespace upsylon
             
             void Node:: save( ios::ostream &fp, size_t *bytes ) const
             {
-                const size_t sz = string_io::save_binary(fp,rule.name);
+                const size_t sz = rule.name.serialize(fp);
                 ios::__add_to(bytes,sz);
                 emit(fp,bytes);
             }
@@ -404,7 +404,7 @@ namespace upsylon
             void ExtendedNode:: emit(ios::ostream &fp, size_t *bytes) const
             {
                 fp.emit(MAGIC_BYTE);
-                const size_t sz = string_io::save_binary(fp, *shared);
+                const size_t sz = shared->serialize(fp);
                 ios::__add_to(bytes,sz+1);
                 emitList(fp,bytes);
             }

@@ -159,14 +159,14 @@ namespace upsylon
         
         void DynamoNode:: save( ios::ostream &fp , size_t *bytes) const
         {
-            const size_t nl = string_io::save_binary(fp,name);
+            const size_t nl = name.serialize(fp); //string_io::save_binary(fp,name);
             ios::__add_to(bytes,nl);
             switch (type)
             {
                 case DynamoTerminal: {
                     fp.emit<uint8_t>(0);
                     const string s  = content();
-                    const size_t sz = string_io::save_binary(fp,s);
+                    const size_t sz = s.serialize(fp);
                     ios::__add_to(bytes,sz+1);
                 } break;
                     

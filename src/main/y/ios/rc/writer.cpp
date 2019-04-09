@@ -55,7 +55,8 @@ namespace upsylon
             mark();
 
             // identifier
-            sz += string_io::save_binary(fp,identifier);
+            //sz += string_io::save_binary(fp,identifier);
+            sz += identifier.serialize(fp);
 
             // data length
             {
@@ -143,7 +144,9 @@ namespace upsylon
             mark();
 
             // identifier
-            sz += string_io::save_binary(fp,identifier);
+            //sz += string_io::save_binary(fp,identifier);
+            sz += identifier.serialize(fp);
+            
             hash(identifier);
             const size_t size = inp.length();
 

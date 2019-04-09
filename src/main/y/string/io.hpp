@@ -12,7 +12,7 @@ namespace upsylon
     //! basic I/O for strings
     struct string_io
     {
-        static size_t save_binary(ios::ostream &fp, const string &s); //!< Length+Data
+        //static size_t save_binary(ios::ostream &fp, const string &s); //!< Length+Data
         static string load_binary(ios::istream &fp); //!< from Length+Data
         static ios::ostream & write_C(ios::ostream &fp, const string &s); //!< encode as C-string
     };
