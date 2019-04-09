@@ -151,6 +151,14 @@ namespace upsylon
                 return align(*s,s.size(),aligned,C);
             }
 
+            //! emit a binary block, return written bytes
+            size_t emit_block( const void *data, const size_t size );
+
+            //! emit a binary block, return written bytes
+            size_t emit_block( const memory::ro_buffer  &buff );
+
+            //! emit a binary texr
+            size_t emit_block( const char *text );
 
         protected:
             //! constructor

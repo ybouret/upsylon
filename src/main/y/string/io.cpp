@@ -7,12 +7,7 @@ namespace  upsylon
     size_t string_io:: save_binary(ios::ostream &fp,
                                    const string &s)
     {
-        size_t       written = 0;
-        const size_t length  = s.size();
-        fp.emit_upack<size_t>(length, &written);
-        fp << s;
-        written += length;
-        return written;
+        return fp.emit_block(s);
     }
 
     string string_io:: load_binary(ios::istream &fp)

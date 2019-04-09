@@ -55,6 +55,24 @@ namespace upsylon
             return *this;
         }
 
+        size_t ostream:: emit_block( const void *data, const size_t size )
+        {
+            assert( !(NULL==data&&size>0) );
+            size_t shift = 0;
+            emit_upack(size,&shift).output( (const char *)data,size);
+            return shift + size;
+        }
+
+        size_t ostream:: emit_block( const memory::ro_buffer  &buff )
+        {
+            return emit_block(buff.ro(), buff.length());
+        }
+
+        size_t ostream:: emit_block( const char *text )
+        {
+            return emit_block( text, length_of(text) );
+        }
+
     }
 
 }

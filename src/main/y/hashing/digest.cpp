@@ -264,10 +264,7 @@ byte( __digest_acquire(blen) )
 
     size_t digest:: save( ios::ostream &fp ) const
     {
-        size_t len = 0;
-        fp.emit_upack(size,&len);
-        fp.output((const char *)byte,size);
-        return len+size;
+        return fp.emit_block(*this);
     }
 
     digest digest:: load(ios::istream &fp, size_t *nr)

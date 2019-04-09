@@ -150,13 +150,7 @@ namespace upsylon
 
         size_t natural:: save( ios::ostream &fp ) const
         {
-            size_t shift = 0;
-            fp.emit_upack(bytes,&shift);
-            for(size_t i=0;i<bytes;++i)
-            {
-                fp.write(byte[i]);
-            }
-            return shift + bytes;
+            return fp.emit_block(*this);
         }
 
         size_t natural:: save_length() const
