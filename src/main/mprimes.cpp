@@ -19,7 +19,7 @@ Y_PROGRAM_START()
     
     MPN &mgr = MPN::instance();
     
-    mgr.initProbe();
+    mgr.reset();
     
     size_t l    = 0;
     size_t iter = 0;
@@ -29,7 +29,7 @@ Y_PROGRAM_START()
         std::cerr << '.';
         if( 0== ((++iter)&63) )
         {
-            std::cerr << '[' << mgr.plist.back().p << ']' << std::endl;
+            std::cerr << '[' << mgr.plist.back().p << ']' << " | #=" << iter << ", bytes=" << l << std::endl;
         }
     }
     std::cerr << "->[" << mgr.plist.back().p << "]" << std::endl;
@@ -44,17 +44,29 @@ Y_PROGRAM_START()
             throw exception("recordPrimes length mismatch");
         }
     }
+    const digest md_original = mgr.md();
+    std::cerr << "md_original=" << md_original << std::endl;
+
+    {
+        ios::icstream fp("mprimes.bin");
+        mgr.reloadPrimes(fp);
+        const digest md_reloaded = mgr.md();
+        std::cerr << "md_reloaded=" << md_reloaded << std::endl;
+
+       if(md_original!=md_reloaded)
+       {
+           throw exception("reloadPrimes signature mismatch");
+       }
+    }
     
     if(false)
     {
-        const digest md0 = mgr.md();
-        std::cerr << "md0=" << md0 << std::endl;
         const size_t cr = mgr.plist.size() - 2;
-        mgr.initProbe();
+        mgr.reset();
         mgr.createPrimes(cr,MPN::CreateSafe);
         const digest md1 = mgr.md();
         std::cerr << "md1=" << md1 << std::endl;
-        mgr.initProbe();
+        mgr.reset();
         mgr.createPrimes(cr,MPN::CreateFast);
         const digest md2 = mgr.md();
         std::cerr << "md2=" << md2 << std::endl;

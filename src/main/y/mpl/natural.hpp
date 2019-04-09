@@ -616,13 +616,14 @@ namespace upsylon
     class MPN : public singleton<MPN>
     {
     public:
+        //! used for list creation
         enum CreateMode
         {
-            CreateSafe,
-            CreateFast
+            CreateSafe, //!< always use isPrime_
+            CreateFast  //!< use isPrime from freshly computed list
         };
         
-        typedef hashing::sha1 Hasher;
+        typedef hashing::sha1 Hasher; //!< internal hasher
         
         //! store prime and its squared value
         class PrimeInfo
@@ -643,7 +644,7 @@ namespace upsylon
 
         typedef list<const PrimeInfo> PrimeList; //!< alias
         const PrimeList plist;  //!< precomputed primes, with at least 2 and 3
-        const PrimeInfo probe;  //!< next prime probe 5+k*6>=highest prime
+        const mpn       probe;  //!< next prime probe 5+k*6>=highest prime
         const mpn      _0;      //!< 0
         const mpn      _1;      //!< 1
         const mpn      _2;      //!< 2
@@ -655,15 +656,16 @@ namespace upsylon
         
         void   createPrimes( const size_t count,  const CreateMode how=CreateSafe ); //!< append count primes to the primes sequence
         size_t recordPrimes( ios::ostream &fp ) const; //!< serialize
-        size_t recordLength() const;
+        size_t recordLength() const;                   //!< return the length of the full record
+        void   reloadPrimes( ios::istream &fp);        //!< try to reload
 
         bool isPrime_( const mpn &n ) const;   //!< raw method
         bool isPrime(  const mpn &n ) const;   //!< hybrid method
         mpn  nextPrime_( const mpn &n ) const; //!< raw method
         mpn  nextPrime(  const mpn &n ) const; //!< hybrid method
         
-        void   initProbe() throw();
-        digest md() const;
+        void   reset() throw(); //!< reset list and probe (failsafe)
+        digest md() const;      //!< current digest
         
     private:
         explicit MPN();

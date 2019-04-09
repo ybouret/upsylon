@@ -66,7 +66,7 @@ namespace upsylon
 #define MPN_INIT_PROBE 5
 
     static const uint8_t probe_p = MPN_INIT_PROBE;
-    static const uint8_t probe_q = MPN_INIT_PROBE*MPN_INIT_PROBE;
+    //static const uint8_t probe_q = MPN_INIT_PROBE*MPN_INIT_PROBE;
 
     MPN:: MPN() :
     plist(2,as_capacity),
@@ -82,24 +82,22 @@ namespace upsylon
     {
     }
 
-    void MPN:: initProbe() throw()
+    void MPN:: reset() throw()
     {
         PrimeList &prm = (PrimeList &)plist;
         assert(prm.size()>=2);
         while(prm.size()>2) prm.pop_back();
-        ((mpn &)(probe.p)).set_byte(probe_p);
-        ((mpn &)(probe.q)).set_byte(probe_q);
+        ((mpn &)(probe)).set_byte(probe_p);
     }
 
 
     void MPN:: checkList() const
     {
-        if( plist.size()<2 ) throw exception("MPN: not enough primes!");
+        if( plist.size()<2 )      throw exception("MPN: not enough primes!");
         const mpn & last_prime = plist.back().p;
-        const mpn & probe_p    = probe.p;
-        if( probe_p <= last_prime ) throw exception("MPN: invalid probe/last prime");
-        if( probe_p < _5 )          throw exception("MPN: invalid probe/5");
-        const mpn probe_minus_5 = probe_p-_5;
+        if( probe <= last_prime ) throw exception("MPN: invalid probe/last prime");
+        if( probe < _5 )          throw exception("MPN: invalid probe/5");
+        const mpn probe_minus_5 = probe-_5;
         if( !probe_minus_5.is_divisible_by(_6) ) throw exception("MPN: invalid probe scale");
     }
 
@@ -115,7 +113,7 @@ namespace upsylon
             //
             // initialize search
             //__________________________________________________________________
-            mpn       next_probe = probe.p + _6;
+            mpn       next_probe = probe + _6;
             PrimeList added;
             mpn       last_prime = prm.back().p;
 
@@ -146,10 +144,8 @@ namespace upsylon
             //
             // update, added may be 0
             //__________________________________________________________________
-            mpn next_prsqr = mpn::square_of(next_probe);
 
-            ((mpn &)(probe.p)).xch(next_probe);
-            ((mpn &)(probe.q)).xch(next_prsqr);
+            ((mpn &)(probe)).xch(next_probe);
             const size_t ans = added.size();
             prm.merge_back(added);
             return ans;
@@ -235,7 +231,7 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
             }
 
             //--- fallback
-            mpn i = probe.p;
+            mpn i = probe;
             for(;;)
             {
                 const mpn isq = mpn::square_of(i);
@@ -277,8 +273,8 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
             last = curr;
             H(code);
         }
-        len += probe.p.save(fp);
-        H(probe.p);
+        len += probe.save(fp);
+        H(probe);
         const digest md = H.md();
         return len+md.save(fp);
     }
@@ -289,6 +285,42 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
         return recordPrimes(nil);
     }
 
+    void MPN:: reloadPrimes( ios::istream &fp)
+    {
+        reset();
+        try
+        {
+            PrimeList    &prm = (PrimeList&)plist;
+            const size_t  sz  = fp.read_upack<size_t>();
+            Hasher        H;  H.set();
+
+            // loop
+            mpn curr = _3;
+            for(size_t i=0;i<sz;++i)
+            {
+                mpn code = mpn::read(fp);
+                H(code);
+                curr += ( (++code).shl() );
+                const PrimeInfo tmp(curr);
+                prm.push_back(tmp);
+            }
+            // probe
+            curr = mpn::read(fp);
+            ( (mpn&) probe ).xch(curr);
+            H(probe);
+
+            // check
+            const digest md0 = digest::load(fp);
+            const digest md1 = H.md();
+            if(md0!=md1) throw exception("MPN.reload(currupted data)");
+        }
+        catch(...)
+        {
+            reset();
+            throw;
+        }
+    }
+
     digest MPN:: md() const
     {
         Hasher H;
@@ -297,7 +329,7 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
         {
             H( (*i).p );
         }
-        H( probe.p );
+        H(probe);
         return H.md();
         
     }
