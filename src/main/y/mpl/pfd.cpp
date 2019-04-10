@@ -311,6 +311,39 @@ namespace upsylon
             }
         }
 
+        bool operator==( const pfd &lhs, const pfd &rhs ) throw()
+        {
+            const _pfd::table &L = lhs.table;
+            const _pfd::table &R = rhs.table;
+            size_t             N = L.size();
+            if(N!=R.size())
+            {
+                return false;
+            }
+            else
+            {
+                _pfd::table::const_iterator l = L.begin(), r=R.begin();
+                while(N-->0)
+                {
+                    const _pfd &ll = **l;
+                    const _pfd &rr = **r;
+                    if( (ll.p != rr.p) || (ll.q!=rr.q) )
+                    {
+                        return false;
+                    }
+                    ++l;
+                    ++r;
+                }
+                return true;
+            }
+        }
+
+        bool operator!=( const pfd &lhs, const pfd &rhs ) throw()
+        {
+            return !(lhs==rhs);
+        }
+
+
     }
 }
 

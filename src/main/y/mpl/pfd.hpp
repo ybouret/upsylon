@@ -66,6 +66,9 @@ namespace upsylon
             //! run hash function
             void run( hashing::function &H ) const throw();
 
+            friend bool operator==( const pfd &lhs, const pfd &rhs ) throw();
+            friend bool operator!=( const pfd &lhs, const pfd &rhs ) throw();
+
         private:
             Y_DISABLE_ASSIGN(pfd);
             void setup(const natural &value);

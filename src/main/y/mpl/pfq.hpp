@@ -16,10 +16,15 @@ namespace upsylon
             const pfd d;
 
             virtual ~pfq() throw();
-            explicit pfq();
-            explicit pfq( const pfd     &N, const pfd     &D);
-            explicit pfq( const natural &N, const natural &D);
-            
+            pfq();
+            pfq( const pfd     &N, const pfd     &D);
+            pfq( const natural &N, const natural &D);
+            pfq( const word_t   N, const word_t  D);
+
+            pfq( const pfd     &N);
+            pfq( const natural &N);
+            pfq( const word_t   N);
+
 
             friend std::ostream & operator<<( std::ostream &, const pfq &);
 
