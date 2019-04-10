@@ -27,7 +27,7 @@ Y_PROGRAM_START()
     {
         mgr.createPrimes(1,MPN::CreateFast);
         std::cerr << '.';
-        if( 0== ((++iter)&63) )
+        if( 0== ((++iter)&31) )
         {
             std::cerr << '[' << mgr.plist.back().p << ']' << " | #=" << iter << ", bytes=" << l << std::endl;
         }
