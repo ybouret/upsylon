@@ -23,7 +23,7 @@ Y_PROGRAM_START()
     
     size_t l    = 0;
     size_t iter = 0;
-    while( (l=mgr.recordLength()) < max_bytes )
+    while( (l=mgr.serialize_length()) < max_bytes )
     {
         mgr.createPrimes(1,MPN::CreateFast);
         std::cerr << '.';
@@ -39,7 +39,7 @@ Y_PROGRAM_START()
     
     {
         ios::orstream fp("mprimes.bin");
-        if( mgr.recordPrimes(fp) != l )
+        if( mgr.serialize(fp) != l )
         {
             throw exception("recordPrimes length mismatch");
         }

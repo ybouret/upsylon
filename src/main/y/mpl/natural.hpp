@@ -21,31 +21,16 @@ namespace upsylon
     {
 
         typedef uint64_t word_t;    //!< integral type for drop in replacement
-        typedef int64_t  integer_t; //!< integral type for
+        typedef int64_t  integer_t; //!< sgined integral type
+
         //! dedicated memory manager
         class manager : public singleton<manager>, public memory::allocator
         {
         public:
-            //! allocator interface
-            virtual void *acquire( size_t &n ) { Y_LOCK(access); return IO.acquire(n); }
-
-            //! allocator interface
-            virtual void release(void * &p, size_t &n ) throw() { Y_LOCK(access); IO.release(p,n); }
-
-            //! specialized acquire
-            inline uint8_t * __acquire(size_t &n)
-            {
-                Y_LOCK(access);
-                return static_cast<uint8_t*>(IO.acquire(n));
-            }
-
-            //! specialized release
-            inline void __release(uint8_t * &p,size_t &n) throw()
-            {
-                Y_LOCK(access);
-                IO.release((void * &)p,n);
-            }
-
+            virtual void *acquire( size_t &n );                  //!< allocator interface
+            virtual void release(void * &p, size_t &n ) throw(); //!< allocator interface
+            uint8_t * __acquire(size_t &n);                      //!< specialized acquire
+            void __release(uint8_t * &p,size_t &n) throw();      //!< specialized release
 
         private:
             explicit manager();
@@ -578,8 +563,7 @@ static inline natural __##CALL(const uint8_t *l, const size_t nl, const uint8_t 
     }
 }
 
-#include "y/concurrent/singleton.hpp"
-#include "y/sequence/list.hpp"
+
 
 
 
@@ -606,15 +590,18 @@ namespace upsylon
 }
 
 #include "y/hashing/sha1.hpp"
+#include "y/sequence/list.hpp"
 
 namespace upsylon
 {
 
 
     //! precompiled naturals
-    class MPN : public singleton<MPN>
+    class MPN : public singleton<MPN>, public ios::serializable
     {
     public:
+        static const char CLASS_NAME[]; //!< "MPN"
+
         //! used for list creation
         enum CreateMode
         {
@@ -652,11 +639,12 @@ namespace upsylon
         const mpn      _5;      //!< 5
         const mpn      _6;      //!< 6
         const mpn      _10;     //!< 10
-        
-        void   createPrimes( const size_t count,  const CreateMode how=CreateSafe ); //!< append count primes to the primes sequence
-        size_t recordPrimes( ios::ostream &fp ) const; //!< serialize
-        size_t recordLength() const;                   //!< return the length of the full record
-        void   reloadPrimes( ios::istream &fp);        //!< try to reload
+
+        virtual const char *className() const throw();           //!< CLASS_NAME
+        virtual size_t      serialize( ios::ostream &fp ) const; //!< serialize primes
+
+        void    reloadPrimes( ios::istream &fp);        //!< try to reload
+        void    createPrimes( const size_t count,const CreateMode how=CreateSafe ); //!< append count primes to the primes sequence
 
         bool isPrime_( const mpn &n ) const;   //!< raw method
         bool isPrime(  const mpn &n ) const;   //!< hybrid method

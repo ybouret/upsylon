@@ -5,13 +5,24 @@ namespace upsylon
 {
     namespace mpl
     {
-        manager:: manager() :
-        IO()
+        manager:: manager() : IO() { }
+
+        manager:: ~manager() throw()  { }
+
+        void * manager:: acquire( size_t &n ) { Y_LOCK(access); return IO.acquire(n); }
+
+        void   manager:: release(void * &p, size_t &n ) throw() { Y_LOCK(access); IO.release(p,n); }
+
+        uint8_t * manager:: __acquire(size_t &n)
         {
+            Y_LOCK(access);
+            return static_cast<uint8_t*>(IO.acquire(n));
         }
 
-        manager:: ~manager() throw()
+        void manager:: __release(uint8_t * &p,size_t &n) throw()
         {
+            Y_LOCK(access);
+            IO.release((void * &)p,n);
         }
 
         natural:: natural(const size_t nbit, randomized::bits &gen ) : Y_MPN_CTOR(0,0)
@@ -248,8 +259,14 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
         }
     }
 
+    const char   MPN:: CLASS_NAME[] = "MPN";
 
-    size_t MPN:: recordPrimes(ios::ostream &fp) const
+    const char * MPN:: className() const throw()
+    {
+        return CLASS_NAME;
+    }
+
+    size_t MPN:: serialize(ios::ostream &fp) const
     {
         Hasher H;
         H.set();
@@ -279,11 +296,7 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
         return len+md.serialize(fp);
     }
 
-    size_t MPN:: recordLength() const
-    {
-        ios::null_ostream nil;
-        return recordPrimes(nil);
-    }
+
 
     void MPN:: reloadPrimes( ios::istream &fp)
     {
