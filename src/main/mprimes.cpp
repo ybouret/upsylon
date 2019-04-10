@@ -20,9 +20,12 @@ Y_PROGRAM_START()
     MPN &mgr = MPN::instance();
     
     mgr.reset();
-    
+
+    list<mpn>    marker;
+    list<size_t> marksz;
     size_t l    = 0;
     size_t iter = 0;
+    size_t old_bits = 0;
     while( (l=mgr.serialize_length()) < max_bytes )
     {
         mgr.createPrimes(1,MPN::CreateFast);
@@ -31,12 +34,24 @@ Y_PROGRAM_START()
         {
             std::cerr << '[' << mgr.plist.back().p << ']' << " | #=" << iter << ", bytes=" << l << std::endl;
         }
+        const size_t new_bits = mgr.plist.back().p.bits();
+        if( new_bits > old_bits )
+        {
+            old_bits = new_bits;
+            marker.push_back( mgr.plist.back().p );
+            marksz.push_back( l );
+        }
     }
+
+
     std::cerr << "->[" << mgr.plist.back().p << "]" << std::endl;
     std::cerr << "bytes    = " << l << "/" << max_bytes << std::endl;
     std::cerr << "#primes  = " << mgr.plist.size() << std::endl;
     std::cerr << "@probe   = " << mgr.probe        << std::endl;
-    
+
+    std::cerr << "marker   = " << marker << std::endl;
+    std::cerr << "marksz   = " << marksz << std::endl;
+
     {
         ios::orstream fp("mprimes.bin");
         if( mgr.serialize(fp) != l )
