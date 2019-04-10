@@ -17,12 +17,15 @@ namespace upsylon
 
             virtual ~pfq() throw();
             explicit pfq();
+            explicit pfq( const pfd     &N, const pfd     &D);
+            explicit pfq( const natural &N, const natural &D);
+            
 
             friend std::ostream & operator<<( std::ostream &, const pfq &);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(pfq);
-            void update() throw();
+            void update();
         };
     }
 

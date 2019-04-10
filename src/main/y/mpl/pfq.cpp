@@ -17,6 +17,38 @@ namespace upsylon
         {
         }
 
+        pfq:: pfq( const pfd &N, const pfd &D ) :
+        n(N), d(D)
+        {
+            update();
+        }
+
+        pfq::  pfq( const natural &N, const natural &D) :
+        n(N), d(D)
+        {
+            update();
+        }
+
+
+        void pfq:: update()
+        {
+            if( d.is_zero() )
+            {
+                throw libc::exception( EDOM, "mpl.pfq: division by zero");
+            }
+
+            pfd &D = (pfd &)d;
+
+            if( n.is_zero() )
+            {
+                D.ld1();
+            }
+            else
+            {
+                
+            }
+        }
+
         std::ostream & operator<<( std::ostream &os, const pfq &Q)
         {
             const pfd &n = Q.n;
