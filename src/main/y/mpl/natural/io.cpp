@@ -153,9 +153,12 @@ namespace upsylon
             return fp.emit_block(*this);
         }
 
+
+        const char natural:: CLASS_NAME[] = "mpn";
+        
         const char * natural:: className() const throw()
         {
-            return "mpn";
+            return CLASS_NAME;
         }
 
         

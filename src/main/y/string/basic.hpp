@@ -63,6 +63,8 @@ maxi_ = items-1
         public ios::serializable
         {
         public:
+            static const char CLASS_NAME[]; //!< for serializable
+
             //! buffer interface
             inline virtual const void *ro()     const throw() { return addr_;  }
 

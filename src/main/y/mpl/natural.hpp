@@ -73,7 +73,7 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
         class natural : public memory::ro_buffer, public ios::serializable
         {
         public:
-
+            static const char CLASS_NAME[]; //!< for serializable
             //__________________________________________________________________
             //
             //

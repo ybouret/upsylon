@@ -263,9 +263,11 @@ byte( __digest_acquire(blen) )
         memcpy(byte,other.byte,size);
     }
 
+    const char digest:: CLASS_NAME[] = "digest";
+
     const char * digest:: className() const throw()
     {
-        return "digest";
+        return CLASS_NAME;
     }
 
     size_t digest:: serialize( ios::ostream &fp ) const

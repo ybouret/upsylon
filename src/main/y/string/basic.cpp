@@ -30,9 +30,12 @@ namespace upsylon
         }
 
         template <>
+        const char string<char>:: CLASS_NAME[] = "string";
+        
+        template <>
         const char * string<char>:: className() const throw()
         {
-            return "string";
+            return CLASS_NAME;
         }
 
         template <>
@@ -40,6 +43,8 @@ namespace upsylon
         {
             return fp.emit_block(addr_,size_);
         }
+
+
 
     }
 }

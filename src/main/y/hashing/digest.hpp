@@ -112,8 +112,9 @@ namespace upsylon
 
         //! increase by on
         void _inc() throw();
-        
-        virtual const char *className() const throw(); //!< "digest"
+
+        static  const char CLASS_NAME[]; //!< "digest"
+        virtual const char *className() const throw(); //!< CLASS_NAME
         virtual size_t      serialize( ios::ostream &fp ) const; //!< save binary, return written bytes
         static  digest      load( ios::istream &fp, size_t *nr=0); //!< load binary, optional read bytes are written
 
