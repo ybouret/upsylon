@@ -1,4 +1,4 @@
-#include "y/mpl/pfd.hpp"
+#include "y/mpl/pfq.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/hashing/sha1.hpp"
@@ -35,6 +35,11 @@ Y_UTEST(pfd)
         Y_ASSERT(md0==md1);
     }
     std::cerr << "prod=" << prod << std::endl;
+
+    prod.ldz();
+    prod.ld1();
+
+   
 
 }
 Y_UTEST_DONE()

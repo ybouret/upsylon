@@ -14,7 +14,7 @@ namespace upsylon
         {
             if( q.is_zero() )
             {
-                throw exception("_pfd: invalid zero exponent");
+                throw exception("pfd: invalid zero exponent");
             }
         }
 
@@ -80,7 +80,28 @@ namespace upsylon
         table( other.table )
         {
         }
-        
+
+        void pfd:: ldz() throw()
+        {
+            _pfd::table &self  = (_pfd::table &)table;
+            self.release();
+            assert( is_zero() );
+        }
+
+        void pfd:: ld1()
+        {
+            _pfd::table &self  = (_pfd::table &)table;
+            const MPN   & _    = MPN::instance();
+
+            self.release();
+            self.ensure(1);
+            const _pfd::pointer tmp = new _pfd(_._1,_._1);
+            if(!self.insert(tmp))
+            {
+                throw exception("mpl.pfd.ld1: unexpected multiple 1!");
+            }
+            assert( is_one() );
+        }
 
         namespace
         {
@@ -148,7 +169,6 @@ namespace upsylon
                     for( natural p = 2; p<=v ; p = _.nextPrime(++p) )
                     {
                         q.clr();
-                        std::cerr << v << "?" << p << std::endl;
                         while( v.is_divisible_by(p) )
                         {
                             ++q;
@@ -156,13 +176,10 @@ namespace upsylon
                         }
                         if(q.is_positive())
                         {
-                            std::cerr << p << "^" << q << std::endl;
                             factors.push_back( new Node(p,q) );
                         }
                     }
-
-
-
+                    
                     self.reserve(factors.size);
                     for(const Node *node = factors.head; node; node=node->next )
                     {
@@ -226,11 +243,10 @@ namespace upsylon
 
                 // sort
                 self.sort_data( _pfd::compare_data );
-                if(self.size()>1)
-                {
-                    self.no( MPN::instance()._1 );
-                }
+                if(self.size()>1) self.no( MPN::instance()._1 );
             }
+
+
         }
 
         std::ostream & operator<<( std::ostream &os, const pfd &F )
@@ -262,6 +278,36 @@ namespace upsylon
                 const _pfd &F = **i;
                 H(F.p);
                 H(F.q);
+            }
+        }
+
+
+        bool pfd:: is_zero() const throw()
+        {
+            return table.size() <= 0;
+        }
+
+        bool pfd:: is_one() const throw()
+        {
+            if( 1 == table.size() )
+            {
+                const table_t::const_iterator i = table.begin();
+                const _pfd &F = **i;
+                const mpn  &p = F.p; assert(p>0);
+                const mpn  &q = F.q; assert(q>0);
+                if( p.is_byte(1) )
+                {
+                    assert(q.is_byte(1));
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
             }
         }
 
