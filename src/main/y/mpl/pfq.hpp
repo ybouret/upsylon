@@ -25,6 +25,10 @@ namespace upsylon
             pfq( const natural &N);
             pfq( const word_t   N);
 
+            void mul_by( const pfd &other );
+            void div_by( const pfd &other );
+            void mul_by( const pfq &other );
+            void div_by( const pfq &other );
 
             friend std::ostream & operator<<( std::ostream &, const pfq &);
 

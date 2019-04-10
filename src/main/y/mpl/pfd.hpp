@@ -69,6 +69,8 @@ namespace upsylon
             friend bool operator==( const pfd &lhs, const pfd &rhs ) throw();
             friend bool operator!=( const pfd &lhs, const pfd &rhs ) throw();
 
+            natural value() const;
+
         private:
             Y_DISABLE_ASSIGN(pfd);
             void setup(const natural &value);

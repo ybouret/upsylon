@@ -154,7 +154,34 @@ namespace upsylon
             }
             return os;
         }
-        
+
+        void pfq:: mul_by( const pfd &other )
+        {
+            ((pfd &)n).mul_by(other);
+            update();
+        }
+
+        void pfq:: div_by( const pfd &other )
+        {
+            ((pfd &)d).mul_by(other);
+            update();
+        }
+
+        void pfq:: mul_by( const pfq &other )
+        {
+            ((pfd &)d).mul_by(other.d);
+            ((pfd &)n).mul_by(other.n);
+            update();
+        }
+
+        void pfq:: div_by( const pfq &other )
+        {
+            ((pfd &)d).mul_by(other.n);
+            ((pfd &)n).mul_by(other.d);
+            update();
+        }
+
+
 
     }
 

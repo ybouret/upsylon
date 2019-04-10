@@ -191,7 +191,11 @@ namespace upsylon
 
         void pfd:: mul_by( const pfd &other )
         {
+            if( is_zero() )     return;             //!< won't change a thing
+            if( other.is_one()) return;             //!< won't change a thing
+            if( other.is_zero()) { ldz(); return; } //!< in any case
 
+            // general case
             const table_t &const_self = table;
             table_t       &self       = (table_t &)const_self;
 
@@ -343,6 +347,31 @@ namespace upsylon
             return !(lhs==rhs);
         }
 
+
+        natural pfd:: value() const
+        {
+            if( is_zero() )
+            {
+                return mpn(0);
+            }
+            else if( is_one() )
+            {
+                return mpn(1);
+            }
+            else
+            {
+                mpn ans(1);
+                for( table_t::const_iterator i = table.begin();i!=table.end();++i)
+                {
+                    const _pfd &F = **i;
+                    for(mpn j=0;j<F.q;++j)
+                    {
+                        ans *= F.p;
+                    }
+                }
+                return ans;
+            }
+        }
 
     }
 }
