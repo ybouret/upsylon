@@ -298,10 +298,9 @@ namespace upsylon
                 const table_t::const_iterator i = table.begin();
                 const _pfd &F = **i;
                 const mpn  &p = F.p; assert(p>0);
-                const mpn  &q = F.q; assert(q>0);
                 if( p.is_byte(1) )
                 {
-                    assert(q.is_byte(1));
+                    assert(F.q.is_byte(1));
                     return true;
                 }
                 else
