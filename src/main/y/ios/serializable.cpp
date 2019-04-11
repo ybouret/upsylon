@@ -1,6 +1,7 @@
 
 #include "y/ios/serializable.hpp"
 #include "y/ios/null-ostream.hpp"
+#include "y/ios/ohstream.hpp"
 
 namespace upsylon
 {
@@ -42,6 +43,25 @@ namespace upsylon
             ios::null_ostream dev_null;
             return serialize_class(dev_null);
         }
+
+        size_t serializable:: hash_className_with( hashing::function &H ) const
+        {
+            ios::ohstream fp(H);
+            return serialize_className(fp);
+        }
+
+        size_t serializable:: hash_with( hashing::function &H ) const
+        {
+            ios::ohstream fp(H);
+            return serialize(fp);
+        }
+
+        size_t  serializable:: hash_class_with( hashing::function &H) const
+        {
+            ios::ohstream fp(H);
+            return serialize_class(fp);
+        }
+
 
 
     }

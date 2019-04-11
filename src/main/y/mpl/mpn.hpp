@@ -68,6 +68,9 @@ namespace upsylon
         void   reset() throw(); //!< reset list and probe (failsafe)
         digest md() const;      //!< current digest
 
+        bool locateNextPrime( mpn &n ) const; //!< using primes list
+
+
     private:
         explicit MPN();
         virtual ~MPN() throw();
