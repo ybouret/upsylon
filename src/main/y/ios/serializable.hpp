@@ -7,9 +7,14 @@
 namespace upsylon
 {
 
+    namespace hashing
+    {
+        class function; //!< forward declaration
+    };
+
     namespace ios
     {
-        class ostream;
+        class ostream; //!< forward declaration
 
         //! base class for portable binary object serialization
         class serializable
@@ -28,12 +33,13 @@ namespace upsylon
             //
             // non virtual interface
             //__________________________________________________________________
-            size_t serialize_length() const;                  //!< serialize(/dev/null)
-            size_t serialize_className( ostream &fp ) const;  //!< emit className
-            size_t serialize_className_length() const;        //!< serialize_class_name(/dev/null)
-            size_t serialize_class( ostream &fp ) const;      //!< emit className+data
-            size_t serialize_class_length() const;            //!< serialize_class(/dev/null)
+            size_t serialize_length() const;                    //!< serialize(/dev/null)
+            size_t serialize_className( ostream &fp ) const;    //!< emit className
+            size_t serialize_className_length() const;          //!< serialize_class_name(/dev/null)
+            size_t serialize_class( ostream &fp ) const;        //!< emit className+data
+            size_t serialize_class_length() const;              //!< serialize_class(/dev/null)
 
+            
         protected:
             explicit serializable() throw();
 
