@@ -2,6 +2,7 @@
 #include "y/mpl/pfq.hpp"
 #include <cerrno>
 #include "y/exceptions.hpp"
+#include <cerrno>
 
 namespace upsylon
 {
@@ -14,6 +15,11 @@ namespace upsylon
 
         pfq:: pfq() :
         n(0),d(1)
+        {
+        }
+
+        pfq:: pfq(const pfq &other) :
+        n(other.n),d(other.d)
         {
         }
 
@@ -181,7 +187,29 @@ namespace upsylon
             update();
         }
 
+        pfd pfq:: A(const word_t N, const word_t K)
+        {
+            if(K>N) throw libc::exception(EDOM,"A(N=%lu<K=%lu)", (unsigned long)N, (unsigned long)K);
+            const pfd num = pfd::factorial(N);
+            const pfd den = pfd::factorial(N-K);
+            const pfq Q(num,den);
+            if(!Q.d.is_one()) throw exception("unexpected failure in A(N=%lu,K=%lu)", (unsigned long)N, (unsigned long)K);
+            return Q.n;
+        }
 
+        pfd pfq:: C(const word_t N, const word_t K)
+        {
+            if(K>N) throw libc::exception(EDOM,"C(N=%lu<K=%lu)", (unsigned long)N, (unsigned long)K);
+            const pfd num = pfd::factorial(N);
+            const pfd den = pfd::factorial(N-K);
+            pfq Q(num,den);
+            {
+                const pfd KF = pfd::factorial(K);
+                Q.div_by(KF);
+            }
+            if(!Q.d.is_one()) throw exception("unexpected failure in C(N=%lu,K=%lu)", (unsigned long)N, (unsigned long)K);
+            return Q.n;
+        }
 
     }
 

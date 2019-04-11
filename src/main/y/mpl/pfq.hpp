@@ -8,32 +8,36 @@ namespace upsylon
 {
     namespace mpl
     {
-        // prime factors quotient
+        //! prime factors quotient
         class pfq : public counted_object
         {
         public:
-            const pfd n;
-            const pfd d;
+            const pfd n; //!< numerator
+            const pfd d; //!< denominator
 
-            virtual ~pfq() throw();
-            pfq();
-            pfq( const pfd     &N, const pfd     &D);
-            pfq( const natural &N, const natural &D);
-            pfq( const word_t   N, const word_t  D);
+            virtual ~pfq() throw();                   //!< destructor
+            pfq();                                    //!< 0/1
+            pfq(const pfq &other);                    //!< copy
+            pfq( const pfd     &N, const pfd     &D); //!< N/D
+            pfq( const natural &N, const natural &D); //!< N/D
+            pfq( const word_t   N, const word_t  D);  //!< N/D
+            pfq( const pfd     &N);                   //!< N/1
+            pfq( const natural &N);                   //!< N/1
+            pfq( const word_t   N);                   //!< N/1
+            void mul_by( const pfd &other );          //!< *= other
+            void div_by( const pfd &other );          //!< /= other
+            void mul_by( const pfq &other );          //!< *= other
+            void div_by( const pfq &other );          //!< /= other
 
-            pfq( const pfd     &N);
-            pfq( const natural &N);
-            pfq( const word_t   N);
-
-            void mul_by( const pfd &other );
-            void div_by( const pfd &other );
-            void mul_by( const pfq &other );
-            void div_by( const pfq &other );
-
+            //! output
             friend std::ostream & operator<<( std::ostream &, const pfq &);
+            
+            static pfd A(const word_t N, const word_t K); //!< arrangements N!/(N-K)!
+            static pfd C(const word_t N, const word_t K); //!< combinations N!/(N-K)!/K!
+
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(pfq);
+            Y_DISABLE_ASSIGN(pfq);
             void update();
         };
     }

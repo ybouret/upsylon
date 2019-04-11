@@ -39,6 +39,11 @@ Y_UTEST(pfd)
     prod.ldz();
     prod.ld1();
 
+    for(size_t i=0;i<=30;++i)
+    {
+        const mpl::pfd f = mpl::pfd::factorial(i);
+        std::cerr << i << "!=" << f << "=" << f.value() << std::endl;
+    }
    
 
 }

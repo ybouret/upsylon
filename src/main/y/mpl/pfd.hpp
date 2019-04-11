@@ -55,10 +55,15 @@ namespace upsylon
             pfd( const word_t   n );         //!< setup from an integral
             pfd( const pfd &other );         //!< hard copy
             void mul_by( const pfd &other ); //!< mul by another or self
+            void mul_by( const natural &n ); //!< mul by n
+            void mul_by( const word_t   n ); //!< mul by n
+
             bool is_zero() const throw();    //!< no factor
             bool is_one()  const throw();    //!< one factor 1^1
             void ldz() throw();              //!< set to zero
             void ld1();                      //!< set to one
+
+            static pfd factorial(word_t n);  //!< compute n!
 
             //! output
             friend std::ostream & operator<<( std::ostream &os, const pfd &F );
@@ -66,10 +71,10 @@ namespace upsylon
             //! run hash function
             void run( hashing::function &H ) const throw();
 
-            friend bool operator==( const pfd &lhs, const pfd &rhs ) throw();
-            friend bool operator!=( const pfd &lhs, const pfd &rhs ) throw();
+            friend bool operator==( const pfd &lhs, const pfd &rhs ) throw(); //!< test equality
+            friend bool operator!=( const pfd &lhs, const pfd &rhs ) throw(); //!< test difference
 
-            natural value() const;
+            natural value() const; //!< compute the product
 
         private:
             Y_DISABLE_ASSIGN(pfd);

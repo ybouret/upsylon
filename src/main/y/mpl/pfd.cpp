@@ -253,6 +253,19 @@ namespace upsylon
 
         }
 
+        void pfd:: mul_by( const natural &n )
+        {
+            const pfd _(n);
+            mul_by(_);
+        }
+
+        void pfd:: mul_by( const word_t n )
+        {
+            const pfd _(n);
+            mul_by(_);
+        }
+
+
         std::ostream & operator<<( std::ostream &os, const pfd &F )
         {
             const _pfd::table &self = F.table;
@@ -371,6 +384,19 @@ namespace upsylon
                 return ans;
             }
         }
+
+        pfd pfd:: factorial(word_t n)
+        {
+            pfd f(1);
+            while(n>1)
+            {
+                f.mul_by(n);
+                --n;
+            }
+
+            return f;
+        }
+
 
     }
 }

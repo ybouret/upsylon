@@ -38,6 +38,29 @@ Y_UTEST(pfq)
         std::cerr << "Q/" << div_by.value() << "=" << Q << std::endl;
     }
 
+    std::cerr << "Arrangements: " << std::endl;
+    for(size_t i=0;i<=10;++i)
+    {
+        std::cerr << i << ":";
+        for(size_t j=0;j<=i;++j)
+        {
+            const mpl::pfd a = mpl::pfq::A(i,j);
+            std::cerr << " " << a.value();
+        }
+        std::cerr << std::endl;
+    }
+
+    std::cerr << "Combinations: " << std::endl;
+    for(size_t i=0;i<=10;++i)
+    {
+        std::cerr << i << ":";
+        for(size_t j=0;j<=i;++j)
+        {
+            const mpl::pfd a = mpl::pfq::C(i,j);
+            std::cerr << " " << a.value();
+        }
+        std::cerr << std::endl;
+    }
 
 
 
