@@ -49,6 +49,10 @@ Y_PROGRAM_START()
         {
             throw exception("could not locate a predicted value!!!");
         }
+        if(!mgr.isComputedPrime(np))
+        {
+            throw exception("could not match a predicted value!!!");
+        }
     }
 
     {

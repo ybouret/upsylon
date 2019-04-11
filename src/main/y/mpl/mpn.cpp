@@ -375,6 +375,29 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
     }
 
 
+    bool MPN:: isComputedPrime(const mpn &n) const throw()
+    {
+        PrimeList::const_reverse_iterator rev = plist.rbegin();
+        PrimeList::const_iterator         fwd = plist.begin();
+        if( n < fwd->p )
+        {
+            return false;
+        }
+        else if( n > rev->p )
+        {
+            return false;
+        }
+        else
+        {
+            for(size_t i=(plist.size()+1)>>1;i>0;--i,++fwd,++rev)
+            {
+                if( n == (fwd)->p ) return true;
+                if( n == (rev)->p ) return true;
+            }
+            return false;
+        }
+    }
+
     namespace mpl
     {
         natural:: natural(const size_t nbit, randomized::bits &gen ) : Y_MPN_CTOR(0,0)
