@@ -5,32 +5,11 @@
 #include "y/ios/icstream.hpp"
 #include "y/string/convert.hpp"
 #include "y/string/io.hpp"
-#include "y/container/tuple.hpp"
 
 #include <cmath>
 
 using namespace upsylon;
 
-#if 0
-Y_TRIPLE_DECL(STANDARD,marker,const mpn,p,const size_t,bytes,const size_t,bits);
-
-Y_TRIPLE_END();
-
-static inline void check_markers(size_t           &old_bits,
-                                 sequence<marker> &markers,
-                                 const size_t      bytes)
-{
-    MPN &mgr = MPN::location();
-
-    const size_t new_bits = mgr.plist.back().p.bits();
-    if( new_bits > old_bits )
-    {
-        old_bits = new_bits;
-        const marker mk( mgr.plist.back().p, bytes,new_bits);
-        markers.push_back(mk);
-    }
-}
-#endif
 
 
 Y_PROGRAM_START()
@@ -45,8 +24,6 @@ Y_PROGRAM_START()
     
     mgr.reset();
 
-    //list<marker> markers;
-    //size_t       old_bits = 0;
     size_t       bytes    = 0;
     size_t       iter     = 0;
     while( (bytes=mgr.serialize_length()) < max_bytes )
@@ -57,17 +34,22 @@ Y_PROGRAM_START()
         {
             std::cerr << '[' << mgr.plist.back().p << ']' << " | #=" << iter << ", bytes=" << bytes << std::endl;
         }
-        //check_markers(old_bits,markers,bytes);
     }
-    //check_markers(old_bits,markers,bytes);
 
 
     std::cerr << "->[" << mgr.plist.back().p << "]" << std::endl;
     std::cerr << "bytes    = " << bytes << "/" << max_bytes << std::endl;
     std::cerr << "#primes  = " << mgr.plist.size() << std::endl;
     std::cerr << "@probe   = " << mgr.probe        << std::endl;
-
-    //std::cerr << "markers=" << markers << std::endl;
+    std::cerr << "checking.." << std::endl;
+    for(mpn i=0;i<=mgr.plist.back().p;++i)
+    {
+        mpn np = i;
+        if(!mgr.locateNextPrime(np))
+        {
+            throw exception("could not locate a predicted value!!!");
+        }
+    }
 
     {
         ios::orstream fp("mprimes.bin");
