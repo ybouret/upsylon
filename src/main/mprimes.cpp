@@ -1,6 +1,7 @@
 #include "y/program.hpp"
 #include "y/mpl/mpn.hpp"
 #include "y/ios/orstream.hpp"
+#include "y/ios/ocstream.hpp"
 #include "y/ios/osstream.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/string/convert.hpp"
@@ -14,6 +15,7 @@ using namespace upsylon;
 
 Y_PROGRAM_START()
 {
+    bool save_data   = false;
     size_t max_bytes = 1000;
     if(argc>1)
     {
@@ -21,21 +23,36 @@ Y_PROGRAM_START()
     }
     
     MPN &mgr = MPN::instance();
-    
+
+
+    // initialize
     mgr.reset();
 
-    size_t       bytes    = 0;
+    const string  growth = "mprimes.dat";
+
+    size_t       bytes    = mgr.serialize_length();
     size_t       iter     = 0;
-    while( (bytes=mgr.serialize_length()) < max_bytes )
+    if(save_data)
+    {
+        ios::ocstream fp( growth, false );
+        fp("%u %u\n", unsigned(mgr.plist.size()), unsigned(bytes));
+    }
+
+    while( bytes < max_bytes )
     {
         mgr.createPrimes(1,MPN::CreateFast);
+        bytes = mgr.serialize_length();
+        if(save_data)
+        {
+            ios::ocstream fp( growth, true );
+            fp("%u %u\n", unsigned(mgr.plist.size()), unsigned(bytes));
+        }
         std::cerr << '.';
         if( 0== ((++iter)&31) )
         {
             std::cerr << '[' << mgr.plist.back().p << ']' << " | #=" << iter << ", bytes=" << bytes << std::endl;
         }
     }
-
 
     std::cerr << "->[" << mgr.plist.back().p << "]" << std::endl;
     std::cerr << "bytes    = " << bytes << "/" << max_bytes << std::endl;
@@ -71,24 +88,12 @@ Y_PROGRAM_START()
         const digest md_reloaded = mgr.md();
         std::cerr << "md_reloaded=" << md_reloaded << std::endl;
 
-       if(md_original!=md_reloaded)
-       {
-           throw exception("reloadPrimes signature mismatch");
-       }
+        if(md_original!=md_reloaded)
+        {
+            throw exception("reloadPrimes signature mismatch");
+        }
     }
     
-    if(false)
-    {
-        const size_t cr = mgr.plist.size() - 2;
-        mgr.reset();
-        mgr.createPrimes(cr,MPN::CreateSafe);
-        const digest md1 = mgr.md();
-        std::cerr << "md1=" << md1 << std::endl;
-        mgr.reset();
-        mgr.createPrimes(cr,MPN::CreateFast);
-        const digest md2 = mgr.md();
-        std::cerr << "md2=" << md2 << std::endl;
-    }
 }
 Y_PROGRAM_END()
 
