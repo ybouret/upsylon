@@ -51,7 +51,7 @@ namespace upsylon
 
 
 #include "y/core/node.hpp"
-#include "y/core/list.hpp"
+#include "y/mpl/mpn.hpp"
 
 namespace upsylon
 {

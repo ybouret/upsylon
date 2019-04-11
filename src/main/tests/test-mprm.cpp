@@ -1,5 +1,5 @@
 
-#include "y/mpl/natural.hpp"
+#include "y/mpl/mpn.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/ios/ocstream.hpp"

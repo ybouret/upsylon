@@ -1,5 +1,5 @@
 #include "y/program.hpp"
-#include "y/mpl/natural.hpp"
+#include "y/mpl/mpn.hpp"
 #include "y/ios/orstream.hpp"
 #include "y/ios/osstream.hpp"
 #include "y/ios/icstream.hpp"

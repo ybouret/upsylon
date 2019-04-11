@@ -1,9 +1,8 @@
 
-#include "y/mpl/natural.hpp"
+#include "y/mpl/mpn.hpp"
 #include "y/exceptions.hpp"
 #include "y/code/utils.hpp"
 #include <cerrno>
-#include "y/ios/null-ostream.hpp"
 
 namespace upsylon
 {

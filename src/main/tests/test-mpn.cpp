@@ -1,4 +1,4 @@
-#include "y/mpl/natural.hpp"
+#include "y/mpl/mpn.hpp"
 #include "y/code/arith.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
