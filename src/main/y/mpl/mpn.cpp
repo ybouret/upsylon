@@ -389,11 +389,16 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
         }
         else
         {
+            // start by comparing both
             for(size_t i=(plist.size()+1)>>1;i>0;--i,++fwd,++rev)
             {
+                
                 if( n == (fwd)->p ) return true;
                 if( n == (rev)->p ) return true;
             }
+
+
+
             return false;
         }
     }
