@@ -46,11 +46,11 @@ namespace upsylon
         class MetaPrimeVector
         {
         public:
-            typedef const mpn *slot_t;
+            typedef const mpn *Slot;
             explicit MetaPrimeVector(const size_t n=0);
             virtual ~MetaPrimeVector() throw();
 
-            slot_t *slot;     //!<
+            Slot   *slot;     //!< slot[1.size]
             size_t  size;     //!< 0..capacity
             size_t  capacity; //!< from manager
             size_t  bytes;    //!< for  allocator

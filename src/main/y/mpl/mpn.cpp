@@ -38,7 +38,7 @@ namespace upsylon
 {
     MPN:: MetaPrimeVector:: ~MetaPrimeVector() throw()
     {
-        mpl::manager::location().release_as<slot_t>(slot,capacity,bytes);
+        mpl::manager::location().release_as<Slot>(++slot,capacity,bytes);
     }
 
     MPN:: MetaPrimeVector:: MetaPrimeVector(const size_t n) :
@@ -47,7 +47,8 @@ namespace upsylon
     capacity(max_of<size_t>(n,2)),
     bytes(0)
     {
-        slot = mpl::manager::instance().acquire_as<slot_t>(capacity,bytes);
+        slot = mpl::manager::instance().acquire_as<Slot>(capacity,bytes);
+        --slot;
     }
 
     void MPN:: MetaPrimeVector:: reserve(size_t n)
@@ -57,9 +58,11 @@ namespace upsylon
             mpl::manager &mgr          = mpl::manager::location();
             size_t        new_capacity = capacity+n;
             size_t        new_bytes    = 0;
-            slot_t       *new_slot     = mgr.acquire_as<slot_t>(new_capacity, new_bytes);
-            memcpy(new_slot,slot,sizeof(slot_t)*size);
+            Slot         *new_slot     = mgr.acquire_as<Slot>(new_capacity, new_bytes);
+            ++slot;
+            memcpy( new_slot,slot,sizeof(Slot)*size);
             mgr.release_as(slot,capacity,bytes);
+            --new_slot;
             slot     = new_slot;
             capacity = new_capacity;
             bytes    = new_bytes;
@@ -73,7 +76,7 @@ namespace upsylon
             reserve( container::next_increase(capacity) );
         }
         assert(size<capacity);
-        slot[size++] = &prime_ref;
+        slot[++size] = &prime_ref;
     }
 
 }
@@ -366,7 +369,64 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
 
     bool MPN:: locateNextPrime( mpn &n ) const
     {
+        assert( plist.size() == mpvec.size );
+        static const char error_text[] ="MPN.locateNextPrime(bad comparison result)";
+#if 1
+        if(n<=_2)
+        {
+            //------------------------------------------------------------------
+            //
+            // ok, easy
+            //
+            //------------------------------------------------------------------
+            n.set_byte(2);
+            return true;
+        }
+        else
+        {
+            //------------------------------------------------------------------
+            //
+            // check w.r.t upper
+            //
+            //------------------------------------------------------------------
+            assert(n>_2);
+            size_t                       jup  = mpvec.size;
+            const MetaPrimeVector::Slot *slot = mpvec.slot;
+            {
+                const mpn &upper = *slot[jup];
+                switch( mpn::compare(n,upper) )
+                {
+                    case  0: return true;  //! n == upper
+                    case  1: return false; //! n > upper, need sieve
+                    case -1: break;        //! n < upper
+                    default: throw exception(error_text);
+                }
+            }
 
+            //------------------------------------------------------------------
+            //
+            // bissection
+            //
+            //------------------------------------------------------------------
+            size_t jlo = 1;
+            while( jup>jlo )
+            {
+                const size_t jmid = (jlo+jup)>>1;
+                const mpn   &pmid = *slot[jmid];
+                switch( mpn::compare(n,pmid) )
+                {
+                    case  0: return true;         // n=pmid
+                    case -1: jup = jmid-1; break; // n<pmid
+                    case  1: jlo = jmid+1; break; // n>pmid
+                    default: throw exception(error_text);
+                }
+            }
+            n = *slot[jup];
+            return true;
+        }
+#endif
+
+#if 1
         if(n<=_2)
         {
             //------------------------------------------------------------------
@@ -435,6 +495,7 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
             }
 
         }
+#endif
     }
 
 
