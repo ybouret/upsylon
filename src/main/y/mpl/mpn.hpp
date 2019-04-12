@@ -27,6 +27,7 @@ namespace upsylon
         {
         public:
             PrimeInfo(const mpn &n);      //!< setup
+            PrimeInfo(const uint64_t n);  //!< setup
             PrimeInfo(const PrimeInfo &); //!< hard copy
             ~PrimeInfo() throw();         //!< destructor
             const mpn p;                  //!< a prime
@@ -39,7 +40,27 @@ namespace upsylon
             Y_DISABLE_ASSIGN(PrimeInfo);
         };
 
-        typedef list<const PrimeInfo> PrimeList; //!< alias
+        typedef list<const PrimeInfo>   PrimeList; //!< alias
+
+        //! holds address of computed primes
+        class MetaPrimeVector
+        {
+        public:
+            typedef const mpn *slot_t;
+            explicit MetaPrimeVector(const size_t n=0);
+            virtual ~MetaPrimeVector() throw();
+
+            slot_t *slot;     //!<
+            size_t  size;     //!< 0..capacity
+            size_t  capacity; //!< from manager
+            size_t  bytes;    //!< for  allocator
+
+            void    reserve( size_t n );
+            void    record( const mpn &prime_ref);
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(MetaPrimeVector);
+        };
 
         //----------------------------------------------------------------------
         //
@@ -47,16 +68,18 @@ namespace upsylon
         //
         //----------------------------------------------------------------------
 
-        const PrimeList plist;  //!< precomputed primes, with at least 2 and 3
-        const mpn       probe;  //!< next prime probe 5+k*6>=highest prime
-        const mpn      _0;      //!< 0
-        const mpn      _1;      //!< 1
-        const mpn      _2;      //!< 2
-        const mpn      _3;      //!< 3
-        const mpn      _4;      //!< 4
-        const mpn      _5;      //!< 5
-        const mpn      _6;      //!< 6
-        const mpn      _10;     //!< 10
+
+        const PrimeList       plist;  //!< precomputed primes, with at least 2 and 3
+        const MetaPrimeVector mpvec;  //!< from plist
+        const mpn             probe;  //!< next prime probe 5+k*6>=highest prime
+        const mpn            _0;      //!< 0
+        const mpn            _1;      //!< 1
+        const mpn            _2;      //!< 2
+        const mpn            _3;      //!< 3
+        const mpn            _4;      //!< 4
+        const mpn            _5;      //!< 5
+        const mpn            _6;      //!< 6
+        const mpn            _10;     //!< 10
 
 
         //----------------------------------------------------------------------
@@ -88,9 +111,6 @@ namespace upsylon
         // primes access
         //
         //----------------------------------------------------------------------
-        size_t     primes() const throw();            //!< plist.size()
-        const mpn &upper() const throw();             //!< plist.back().p
-        const mpn &lower() const throw();             //!< plist.front().p
         bool       isPrime_( const mpn &n )   const;  //!< raw method
         bool       isPrime(  const mpn &n )   const;  //!< hybrid method
         mpn        nextPrime_( const mpn &n ) const;  //!< raw method

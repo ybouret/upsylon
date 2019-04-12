@@ -43,6 +43,9 @@ namespace upsylon
         //! estimate next capacity
         static size_t next_capacity(const size_t n);
 
+        //! estimate next increase in capacity
+        static size_t next_increase(const size_t n);
+
     protected:
         //! constructor
         explicit container() throw();

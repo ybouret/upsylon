@@ -26,41 +26,83 @@ namespace upsylon
     {
     }
 
+    MPN:: PrimeInfo:: PrimeInfo( const uint64_t n) :
+    p( n ),
+    q( mpn::square_of(n) )
+    {
+    }
+
+}
+
+namespace upsylon
+{
+    MPN:: MetaPrimeVector:: ~MetaPrimeVector() throw()
+    {
+        mpl::manager::location().release_as<slot_t>(slot,capacity,bytes);
+    }
+
+    MPN:: MetaPrimeVector:: MetaPrimeVector(const size_t n) :
+    slot(0),
+    size(0),
+    capacity(max_of<size_t>(n,2)),
+    bytes(0)
+    {
+        slot = mpl::manager::instance().acquire_as<slot_t>(capacity,bytes);
+    }
+
+    void MPN:: MetaPrimeVector:: reserve(size_t n)
+    {
+        if(n>1)
+        {
+            mpl::manager &mgr          = mpl::manager::location();
+            size_t        new_capacity = capacity+n;
+            size_t        new_bytes    = 0;
+            slot_t       *new_slot     = mgr.acquire_as<slot_t>(new_capacity, new_bytes);
+            memcpy(new_slot,slot,sizeof(slot_t)*size);
+            mgr.release_as(slot,capacity,bytes);
+            slot     = new_slot;
+            capacity = new_capacity;
+            bytes    = new_bytes;
+        }
+    }
+
+    void MPN:: MetaPrimeVector:: record( const mpn &prime_ref )
+    {
+        if(size>=capacity)
+        {
+            reserve( container::next_increase(capacity) );
+        }
+        assert(size<capacity);
+        slot[size++] = &prime_ref;
+    }
+
+}
+
+namespace upsylon
+{
 
 
 #define MPN_INIT_PROBE 5
 
     static const uint8_t probe_p = MPN_INIT_PROBE;
-    //static const uint8_t probe_q = MPN_INIT_PROBE*MPN_INIT_PROBE;
 
     MPN:: MPN() :
     plist(2,as_capacity),
+    mpvec(2),
     probe(5),
     _0(0), _1(1), _2(2), _3(3), _4(4), _5(5), _6(6), _10(10)
     {
-        PrimeList &prm = (PrimeList &)plist;
-        { const PrimeInfo __2(_2); prm.push_back(__2); }
-        { const PrimeInfo __3(_3); prm.push_back(__3); }
+        PrimeList       &prm = (PrimeList &)plist;
+        MetaPrimeVector &mpv = (MetaPrimeVector &)mpvec;
+        { const PrimeInfo __2(_2); prm.push_back(__2); mpv.record(prm.back().p); }
+        { const PrimeInfo __3(_3); prm.push_back(__3); mpv.record(prm.back().p); }
     }
 
     MPN:: ~MPN() throw()
     {
     }
 
-    size_t MPN:: primes() const throw()
-    {
-        return plist.size();
-    }
 
-    const mpn & MPN:: upper() const throw()
-    {
-        return plist.back().p;
-    }
-
-    const mpn & MPN:: lower() const throw()
-    {
-        return plist.front().p;
-    }
 
     void MPN:: reset() throw()
     {
@@ -68,6 +110,7 @@ namespace upsylon
         assert(prm.size()>=2);
         while(prm.size()>2) prm.pop_back();
         ((mpn &)(probe)).set_byte(probe_p);
+        ((MetaPrimeVector&)mpvec).size = 2;
     }
 
 
@@ -84,8 +127,10 @@ namespace upsylon
     size_t MPN:: nextProbe(const CreateMode how)
     {
         checkList();
-        PrimeList    &prm        = (PrimeList&)plist;
-        const size_t  org        = prm.size();
+        assert(plist.size()==mpvec.size);
+        PrimeList       &prm = (PrimeList      &)plist;
+        MetaPrimeVector &mpv = (MetaPrimeVector&)mpvec;
+        const size_t     org = prm.size();
 
         try
         {
@@ -118,6 +163,7 @@ namespace upsylon
                 if(last_prime>=next_probe) break;
                 const PrimeInfo tmp(last_prime);
                 added.push_back(tmp);
+                mpv.record(added.back().p);
             }
 
             //__________________________________________________________________
@@ -134,6 +180,7 @@ namespace upsylon
         catch(...)
         {
             while(prm.size()>org) prm.pop_back();
+            mpv.size = org;
             throw;
         }
 
@@ -142,6 +189,7 @@ namespace upsylon
     void MPN:: createPrimes( const size_t count, const CreateMode how )
     {
         size_t sum = 0;
+        ((MetaPrimeVector &)mpvec).reserve(count);
         while(sum<count) sum += nextProbe(how);
     }
 

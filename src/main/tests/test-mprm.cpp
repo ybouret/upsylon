@@ -78,7 +78,7 @@ Y_UTEST_DONE()
 
 static inline uint64_t mpn_check(MPN &mgr, const size_t num_iter)
 {
-    const mpn      &n     = mgr.upper();
+    const mpn      &n     = mgr.plist.back().p;
     uint64_t        count = 0;
     for(mpn i=0;i<=n;++i)
     {
@@ -108,14 +108,22 @@ Y_UTEST(mprm2)
     ios::ocstream::overwrite(filename);
 
     const size_t iter = 256;
-    while( mgr.primes() < n )
+    while( mgr.plist.size() < n )
     {
         ios::ocstream fp(filename,true);
-        const double speed = 1e-6*mgr.primes()/(tmx(mpn_check(mgr,iter))/iter);
-        fp("%u %g\n", unsigned(mgr.primes()), speed);
-        std::cerr << mgr.primes() << " => " << speed << std::endl;
+        const double speed = 1e-6*mgr.plist.size()/(tmx(mpn_check(mgr,iter))/iter);
+        fp("%u %g\n", unsigned(mgr.plist.size()), speed);
+        std::cerr << mgr.plist.size() << " => " << speed << std::endl;
         mgr.createPrimes(1,MPN::CreateFast);
     }
+
+    std::cerr << "sizeof(PrimeInfo)         =" << sizeof(MPN::PrimeInfo)         << std::endl;
+    std::cerr << "sizeof(list<PrimeInfo>)   =" << sizeof(list<MPN::PrimeInfo>)   << std::endl;
+
+    MPN::MetaPrimeVector mpv;
+    std::cerr << "mpv.capacity=" << mpv.capacity << std::endl;
+    std::cerr << "mpv.bytes   =" << mpv.bytes    << std::endl;
+
 
 }
 Y_UTEST_DONE()

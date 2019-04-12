@@ -23,4 +23,9 @@ namespace upsylon {
         return m;
     }
 
+    size_t container:: next_increase(const size_t n)
+    {
+        return next_capacity(n)-n;
+    }
+
 }
