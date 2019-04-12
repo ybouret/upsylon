@@ -67,10 +67,55 @@ Y_UTEST(mprm)
     mgr.createPrimes(100);
     check_primes(n);
 
-    mgr.createPrimes(1000);
+    mgr.createPrimes(1000,MPN::CreateFast);
     check_primes(n);
 
-
+    
 }
 Y_UTEST_DONE()
 
+#include "y/utest/timings.hpp"
+
+static inline uint64_t mpn_check(MPN &mgr, const size_t num_iter)
+{
+    const mpn      &n     = mgr.upper();
+    uint64_t        count = 0;
+    for(mpn i=0;i<=n;++i)
+    {
+        mpn np = i;
+        Y_ASSERT(mgr.locateNextPrime(np));
+        size_t iter = num_iter;
+        while(iter-->0)
+        {
+            uint64_t ini = rt_clock::ticks();
+            Y_ASSERT(mgr.isComputedPrime(np));
+            count += rt_clock::ticks() - ini;
+        }
+    }
+    return count;
+}
+
+Y_UTEST(mprm2)
+{
+    size_t n = 100;
+    if(argc>1)
+    {
+        n = string_convert::to<size_t>(argv[1],"n");
+    }
+    MPN      &mgr = MPN::instance();
+    rt_clock tmx;
+    const string filename = "mprm.dat";
+    ios::ocstream::overwrite(filename);
+
+    const size_t iter = 256;
+    while( mgr.primes() < n )
+    {
+        ios::ocstream fp(filename,true);
+        const double speed = 1e-6*mgr.primes()/(tmx(mpn_check(mgr,iter))/iter);
+        fp("%u %g\n", unsigned(mgr.primes()), speed);
+        std::cerr << mgr.primes() << " => " << speed << std::endl;
+        mgr.createPrimes(1,MPN::CreateFast);
+    }
+
+}
+Y_UTEST_DONE()

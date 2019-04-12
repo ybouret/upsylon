@@ -47,6 +47,21 @@ namespace upsylon
     {
     }
 
+    size_t MPN:: primes() const throw()
+    {
+        return plist.size();
+    }
+
+    const mpn & MPN:: upper() const throw()
+    {
+        return plist.back().p;
+    }
+
+    const mpn & MPN:: lower() const throw()
+    {
+        return plist.front().p;
+    }
+
     void MPN:: reset() throw()
     {
         PrimeList &prm = (PrimeList &)plist;
@@ -367,7 +382,7 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
                     }
 
                 }
-                throw exception("corrupted primes list");
+                throw exception("MPN.locateNextPrime(corrupted)");
                 return true;
             }
 

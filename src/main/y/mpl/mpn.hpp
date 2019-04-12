@@ -14,16 +14,13 @@ namespace upsylon
     class MPN : public singleton<MPN>, public ios::serializable
     {
     public:
-        static const char CLASS_NAME[]; //!< "MPN"
-
-        //! used for list creation
-        enum CreateMode
-        {
-            CreateSafe, //!< always use isPrime_
-            CreateFast  //!< use isPrime from freshly computed list
-        };
-
-        typedef hashing::sha1 Hasher; //!< internal hasher
+        //----------------------------------------------------------------------
+        //
+        // data types
+        //
+        //----------------------------------------------------------------------
+        static const char CLASS_NAME[]; //!< "MPN" for serialize
+        typedef hashing::sha1 Hasher;   //!< internal hasher type
 
         //! store prime and its squared value
         class PrimeInfo
@@ -43,6 +40,13 @@ namespace upsylon
         };
 
         typedef list<const PrimeInfo> PrimeList; //!< alias
+
+        //----------------------------------------------------------------------
+        //
+        // public data
+        //
+        //----------------------------------------------------------------------
+
         const PrimeList plist;  //!< precomputed primes, with at least 2 and 3
         const mpn       probe;  //!< next prime probe 5+k*6>=highest prime
         const mpn      _0;      //!< 0
@@ -54,18 +58,44 @@ namespace upsylon
         const mpn      _6;      //!< 6
         const mpn      _10;     //!< 10
 
+
+        //----------------------------------------------------------------------
+        //
+        // serializable interface
+        //
+        //----------------------------------------------------------------------
         virtual const char *className() const throw();           //!< CLASS_NAME
         virtual size_t      serialize( ios::ostream &fp ) const; //!< serialize primes
 
-        void    reloadPrimes( ios::istream &fp);        //!< try to reload
-        void    createPrimes( const size_t count,const CreateMode how=CreateSafe ); //!< append count primes to the primes sequence
+        //----------------------------------------------------------------------
+        //
+        // primes creation
+        //
+        //----------------------------------------------------------------------
+        //! used for list creation
+        enum CreateMode
+        {
+            CreateSafe, //!< always use isPrime_
+            CreateFast  //!< use isPrime from freshly computed list
+        };
 
-        bool isPrime_( const mpn &n ) const;   //!< raw method
-        bool isPrime(  const mpn &n ) const;   //!< hybrid method
-        mpn  nextPrime_( const mpn &n ) const; //!< raw method
-        mpn  nextPrime(  const mpn &n ) const; //!< hybrid method
+        void reset() throw();                 //!< reset list and probe (failsafe)
+        void reloadPrimes( ios::istream &fp); //!< try to reload
+        void createPrimes( const size_t count,const CreateMode how=CreateSafe ); //!< append count primes to the primes sequence
 
-        void   reset() throw(); //!< reset list and probe (failsafe)
+        //----------------------------------------------------------------------
+        //
+        // primes access
+        //
+        //----------------------------------------------------------------------
+        size_t     primes() const throw();            //!< plist.size()
+        const mpn &upper() const throw();             //!< plist.back().p
+        const mpn &lower() const throw();             //!< plist.front().p
+        bool       isPrime_( const mpn &n )   const;  //!< raw method
+        bool       isPrime(  const mpn &n )   const;  //!< hybrid method
+        mpn        nextPrime_( const mpn &n ) const;  //!< raw method
+        mpn        nextPrime(  const mpn &n ) const;  //!< hybrid method
+
         digest md() const;      //!< current digest
 
         bool locateNextPrime(mpn       &n) const;         //!< using primes list
