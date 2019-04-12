@@ -50,13 +50,60 @@ void check_primes( const size_t count )
 
 #include "y/string/convert.hpp"
 
+static inline
+void check_consistency(const size_t count,
+                       const size_t cycle)
+{
+    assert(cycle>0);
+    MPN &mgr = MPN::instance();
+    mgr.reset();
+
+    const string filename = "mpchk.dat";
+    ios::ocstream::overwrite(filename);
+
+    rt_clock rtc;
+
+    for(;mgr.plist.size()<=count;mgr.createPrimes(1,MPN::CreateFast))
+    {
+        std::cerr << "#primes=" << mgr.plist.size() << " -> [" << mgr.plist.back().p << "]" << std::endl;
+        const mpn n     = mgr.plist.back().p;
+        uint64_t  count = 0;
+        for(size_t j=0;j<cycle;++j)
+        {
+            for(mpn i=0;i<=n;++i)
+            {
+                mpn np = i;
+                const uint64_t ini = rt_clock::ticks();
+                Y_ASSERT(mgr.locateNextPrime(np));
+                count += rt_clock::ticks()-ini;
+            }
+        }
+        ios::ocstream::echo(filename, "%u %g\n", unsigned(mgr.plist.size()), 1e6*rtc(count)/(mgr.plist.size()*cycle));
+    }
+
+
+}
+
 Y_UTEST(mprm)
 {
-    size_t n = 100;
+    size_t count = 500;
+    size_t cycle = 1;
+
     if(argc>1)
     {
-        n = string_convert::to<size_t>(argv[1],"n");
+        count = string_convert::to<size_t>(argv[1],"count");
     }
+
+    if(argc>2)
+    {
+        cycle = string_convert::to<size_t>(argv[2],"cycle");
+    }
+
+    std::cerr << "-- checking consistency" << std::endl;
+    check_consistency(count,cycle);
+    return 0;
+
+#if 0
     MPN     &mgr = MPN::instance();
 
     check_primes(n);
@@ -69,6 +116,7 @@ Y_UTEST(mprm)
 
     mgr.createPrimes(1000,MPN::CreateFast);
     check_primes(n);
+#endif
 
     
 }
