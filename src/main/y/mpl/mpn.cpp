@@ -389,10 +389,11 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
 
     }
 
+    static const char comparison_error_message[] ="MPN.locateNextPrime(bad comparison result)";
+
     bool MPN:: locateNextPrime( mpn &n ) const
     {
         assert( plist.size() == mpvec.size );
-        static const char error_text[] ="MPN.locateNextPrime(bad comparison result)";
 
         if(n<=_2)
         {
@@ -421,7 +422,7 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
                     case  0: return true;  //! n == upper
                     case  1: return false; //! n > upper, need sieve
                     case -1: break;        //! n < upper
-                    default: throw exception(error_text);
+                    default: throw exception(comparison_error_message);
                 }
             }
 
@@ -440,7 +441,7 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
                     case  0: return true;         // n=pmid
                     case -1: jup = jmid-1; break; // n<pmid
                     case  1: jlo = jmid+1; break; // n>pmid
-                    default: throw exception(error_text);
+                    default: throw exception(comparison_error_message);
                 }
             }
             n = *slot[jup];
@@ -450,29 +451,65 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
     }
 
 
-    bool MPN:: isComputedPrime(const mpn &n) const throw()
+    bool MPN:: isComputedPrime(const mpn &n) const
     {
 
-        ListOfPrimeInfo::const_reverse_iterator rev = plist.rbegin();
-        ListOfPrimeInfo::const_iterator         fwd = plist.begin();
-        if( n < fwd->p )
+        //----------------------------------------------------------------------
+        //
+        // check against lower bound
+        //
+        //----------------------------------------------------------------------
+        const MetaPrimeVector::Slot *slot = mpvec.slot;
         {
-            return false;
-        }
-        else if( n > rev->p )
-        {
-            return false;
-        }
-        else
-        {
-            for(size_t i=(plist.size()+1)>>1;i>0;--i,++fwd,++rev)
+            const mpn &lower = *slot[1];
+            switch( mpn::compare(n,lower) )
             {
-                if( n == (fwd)->p ) return true;
-                if( n == (rev)->p ) return true;
+                case  0: return true;  //! n == lower
+                case  1: break;        //! n > lower, go further
+                case -1: return false; //! n < lower
+                default: throw exception(comparison_error_message);
             }
-            
-            return false;
         }
+        assert( n > plist.lower() );
+
+        //----------------------------------------------------------------------
+        //
+        // check against upper bound
+        //
+        //----------------------------------------------------------------------
+        size_t jup  = mpvec.size;
+        {
+            const mpn &upper = *slot[jup];
+            //std::cerr << "..test against upper=" << upper << std::endl;
+            switch( mpn::compare(n,upper) )
+            {
+                case  0: return true;  //! n == upper
+                case  1: return false; //! n > upper, need sieve
+                case -1: break;        //! n < upper
+                default: throw exception(comparison_error_message);
+            }
+        }
+        assert( n < plist.upper() );
+
+        //----------------------------------------------------------------------
+        //
+        // bisection
+        //
+        //----------------------------------------------------------------------
+        size_t jlo  = 1;
+        while(jup>=jlo)
+        {
+            const size_t jmid = (jlo+jup)>>1;
+            const mpn   &pmid = *slot[jmid];
+            switch( mpn::compare(n,pmid) )
+            {
+                case  0: return true;         // n=pmid
+                case -1: jup = jmid-1; break; // n<pmid
+                case  1: jlo = jmid+1; break; // n>pmid
+                default: throw exception(comparison_error_message);
+            }
+        }
+        return false;
     }
 
     namespace mpl
