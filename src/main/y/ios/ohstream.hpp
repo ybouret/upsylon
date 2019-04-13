@@ -15,14 +15,13 @@ namespace upsylon
         class ohstream : public ostream
         {
         public:
-            virtual ~ohstream() throw();
-            explicit ohstream( hashing::function &H );
+            virtual ~ohstream() throw();                //!< destructor
+            explicit ohstream( hashing::function &H );  //!< setup
+            virtual void write( char C );               //!< H(C)
+            virtual void flush();                       //!< do nothing
 
-            hashing::function &hf;
+            hashing::function &hf;                      //!< host hashing function
 
-            virtual void write( char C );
-            virtual void flush();
-            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ohstream);
         };

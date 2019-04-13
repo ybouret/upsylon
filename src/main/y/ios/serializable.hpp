@@ -39,9 +39,9 @@ namespace upsylon
             size_t serialize_class( ostream &fp ) const;        //!< emit className+data
             size_t serialize_class_length() const;              //!< serialize_class(/dev/null)
 
-            size_t hash_className_with( hashing::function &H ) const;
-            size_t hash_with( hashing::function &H ) const;
-            size_t hash_class_with( hashing::function &H) const;
+            size_t hash_className_with( hashing::function &H ) const; //!< serialize_class_name( ohstream(H) )
+            size_t hash_with( hashing::function &H ) const;           //!< serialize( ohstream(H) )
+            size_t hash_class_with( hashing::function &H) const;      //!< serialize_class( ohstream(H) )
             
         protected:
             explicit serializable() throw();

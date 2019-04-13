@@ -26,15 +26,15 @@ namespace upsylon
         class PrimeInfo
         {
         public:
-            typedef list<const PrimeInfo> List;
-            PrimeInfo(const mpn &n);      //!< setup
-            PrimeInfo(const uint64_t n);  //!< setup
-            PrimeInfo(const PrimeInfo &); //!< hard copy
-            ~PrimeInfo() throw();         //!< destructor
-            const mpn p;                  //!< a prime
-            const mpn q;                  //!< p^2
+            typedef list<const PrimeInfo> List; //!< alis
+            PrimeInfo(const mpn &n);            //!< setup
+            PrimeInfo(const uint64_t n);        //!< setup
+            PrimeInfo(const PrimeInfo &);       //!< hard copy
+            ~PrimeInfo() throw();               //!< destructor
+            const mpn p;                        //!< a prime
+            const mpn q;                        //!< p^2
 
-            //! output just the value
+            //! output just the prime value
             friend std::ostream & operator<<( std::ostream &os, const PrimeInfo &);
 
         private:
@@ -45,11 +45,12 @@ namespace upsylon
         class ListOfPrimeInfo : public PrimeInfo::List
         {
         public:
-            explicit ListOfPrimeInfo() throw();
-            explicit ListOfPrimeInfo(const size_t n);
-            virtual ~ListOfPrimeInfo() throw();
-            const mpn & lower() const throw();
-            const mpn & upper() const throw();
+            explicit ListOfPrimeInfo() throw();        //!< default setup
+            explicit ListOfPrimeInfo(const size_t n);  //!< reserve memory
+            virtual ~ListOfPrimeInfo() throw();        //!< destructor
+            const mpn & lower() const throw();         //!< front().p
+            const mpn & upper() const throw();         //!< back().p
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ListOfPrimeInfo);
         };
@@ -58,17 +59,18 @@ namespace upsylon
         class MetaPrimeVector
         {
         public:
-            typedef const mpn *Slot;
-            explicit MetaPrimeVector(const size_t n=0);
-            virtual ~MetaPrimeVector() throw();
+            typedef const mpn *Slot; //!< alias
+
+            explicit MetaPrimeVector(const size_t n=0); //!< setup
+            virtual ~MetaPrimeVector() throw();         //!< destryuctor
 
             Slot   *slot;     //!< slot[1.size]
             size_t  size;     //!< 0..capacity
             size_t  capacity; //!< from manager
             size_t  bytes;    //!< for  allocator
 
-            void    reserve( size_t n );
-            void    record( const mpn &prime_ref);
+            void    reserve( size_t n );           //!< reserve extra memory
+            void    record( const mpn &prime_ref); //!< add prime reference
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MetaPrimeVector);
