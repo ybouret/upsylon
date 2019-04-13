@@ -90,6 +90,16 @@ namespace upsylon
         }
     }
 
+
+    void MPN:: MetaPrimeVector:: ensure( const size_t n)
+    {
+        if(n>capacity)
+        {
+            reserve(n-capacity);
+            assert(capacity>=n);
+        }
+    }
+
     void MPN:: MetaPrimeVector:: record( const mpn &prime_ref )
     {
         if(size>=capacity)
@@ -345,29 +355,41 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
         reset();
         try
         {
-            ListOfPrimeInfo &prm = (ListOfPrimeInfo &)plist;
-            const size_t     sz  = fp.read_upack<size_t>();
-            Hasher           H;  H.set();
-
-            // loop
-            mpn curr = _3;
-            for(size_t i=0;i<sz;++i)
+            // list
             {
-                mpn code = mpn::read(fp);
-                H(code);
-                curr += ( (++code).shl() );
-                const PrimeInfo tmp(curr);
-                prm.push_back(tmp);
-            }
-            // probe
-            curr = mpn::read(fp);
-            ( (mpn&) probe ).xch(curr);
-            H(probe);
+                ListOfPrimeInfo &prm = (ListOfPrimeInfo &)plist;
+                const size_t     sz  = fp.read_upack<size_t>();
+                Hasher           H;  H.set();
 
-            // check
-            const digest md0 = digest::load(fp);
-            const digest md1 = H.md();
-            if(md0!=md1) throw exception("MPN.reload(currupted data)");
+                // loop
+                mpn curr = _3;
+                for(size_t i=0;i<sz;++i)
+                {
+                    mpn code = mpn::read(fp);
+                    H(code);
+                    curr += ( (++code).shl() );
+                    const PrimeInfo tmp(curr);
+                    prm.push_back(tmp);
+                }
+                // probe
+                curr = mpn::read(fp);
+                ( (mpn&) probe ).xch(curr);
+                H(probe);
+
+                // check
+                const digest md0 = digest::load(fp);
+                const digest md1 = H.md();
+                if(md0!=md1) throw exception("MPN.reload(currupted data)");
+            }
+
+            // vector
+            MetaPrimeVector &mpv = (MetaPrimeVector &)mpvec;
+            mpv.ensure( plist.size() );
+            for(ListOfPrimeInfo::const_iterator i=plist.begin();i!=plist.end();++i)
+            {
+                mpv.record( i->p );
+            }
+
         }
         catch(...)
         {
@@ -382,7 +404,7 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
         H.set();
         for( ListOfPrimeInfo::const_iterator i=plist.begin();i!=plist.end();++i)
         {
-            H( (*i).p );
+            H( i->p );
         }
         H(probe);
         return H.md();

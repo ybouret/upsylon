@@ -70,6 +70,7 @@ namespace upsylon
             size_t  bytes;    //!< for  allocator
 
             void    reserve( size_t n );           //!< reserve extra memory
+            void    ensure( const size_t n);       //!< ensure capacity >= n
             void    record( const mpn &prime_ref); //!< add prime reference
 
         private:
