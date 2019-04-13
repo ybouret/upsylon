@@ -26,6 +26,7 @@ namespace upsylon
         class PrimeInfo
         {
         public:
+            typedef list<const PrimeInfo> List;
             PrimeInfo(const mpn &n);      //!< setup
             PrimeInfo(const uint64_t n);  //!< setup
             PrimeInfo(const PrimeInfo &); //!< hard copy
@@ -40,7 +41,18 @@ namespace upsylon
             Y_DISABLE_ASSIGN(PrimeInfo);
         };
 
-        typedef list<const PrimeInfo>   PrimeList; //!< alias
+        //! handle PrimeInfo
+        class ListOfPrimeInfo : public PrimeInfo::List
+        {
+        public:
+            explicit ListOfPrimeInfo() throw();
+            explicit ListOfPrimeInfo(const size_t n);
+            virtual ~ListOfPrimeInfo() throw();
+            const mpn & lower() const throw();
+            const mpn & upper() const throw();
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(ListOfPrimeInfo);
+        };
 
         //! holds address of computed primes
         class MetaPrimeVector
@@ -69,7 +81,7 @@ namespace upsylon
         //----------------------------------------------------------------------
 
 
-        const PrimeList       plist;  //!< precomputed primes, with at least 2 and 3
+        const ListOfPrimeInfo plist;  //!< precomputed primes, with at least 2 and 3
         const MetaPrimeVector mpvec;  //!< from plist
         const mpn             probe;  //!< next prime probe 5+k*6>=highest prime
         const mpn            _0;      //!< 0
@@ -95,16 +107,9 @@ namespace upsylon
         // primes creation
         //
         //----------------------------------------------------------------------
-        //! used for list creation
-        enum CreateMode
-        {
-            CreateSafe, //!< always use isPrime_
-            CreateFast  //!< use isPrime from freshly computed list
-        };
-
-        void reset() throw();                 //!< reset list and probe (failsafe)
-        void reloadPrimes( ios::istream &fp); //!< try to reload
-        void createPrimes( const size_t count,const CreateMode how=CreateSafe ); //!< append count primes to the primes sequence
+        void reset() throw();                    //!< reset list and probe (failsafe)
+        void reloadPrimes( ios::istream &fp);    //!< try to reload
+        void createPrimes( const size_t count ); //!< append count primes to the primes sequence
 
         //----------------------------------------------------------------------
         //
@@ -125,8 +130,7 @@ namespace upsylon
         explicit MPN();
         virtual ~MPN() throw();
         friend class singleton<MPN>;
-        void   checkList() const;
-        size_t nextProbe(const CreateMode how);
+        size_t nextProbe();
 
     public:
         static const at_exit::longevity life_time = mpl::manager::life_time - 1; //!< based on manager existence

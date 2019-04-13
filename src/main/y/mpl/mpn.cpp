@@ -36,6 +36,27 @@ namespace upsylon
 
 namespace upsylon
 {
+    MPN:: ListOfPrimeInfo::  ListOfPrimeInfo() throw()       : PrimeInfo::List()              {}
+    MPN:: ListOfPrimeInfo::  ListOfPrimeInfo(const size_t n) : PrimeInfo::List(n,as_capacity) {}
+    MPN:: ListOfPrimeInfo:: ~ListOfPrimeInfo() throw() {}
+
+    const mpn & MPN:: ListOfPrimeInfo:: lower() const throw()
+    {
+        assert( size() >= 2 );
+        return front().p;
+    }
+
+    const mpn & MPN:: ListOfPrimeInfo:: upper() const throw()
+    {
+        assert( size() >= 2 );
+        return back().p;
+    }
+
+
+}
+
+namespace upsylon
+{
     MPN:: MetaPrimeVector:: ~MetaPrimeVector() throw()
     {
         mpl::manager::location().release_as<Slot>(++slot,capacity,bytes);
@@ -90,12 +111,12 @@ namespace upsylon
     static const uint8_t probe_p = MPN_INIT_PROBE;
 
     MPN:: MPN() :
-    plist(2,as_capacity),
+    plist(2),
     mpvec(2),
     probe(5),
     _0(0), _1(1), _2(2), _3(3), _4(4), _5(5), _6(6), _10(10)
     {
-        PrimeList       &prm = (PrimeList &)plist;
+        ListOfPrimeInfo &prm = (ListOfPrimeInfo &)plist;
         MetaPrimeVector &mpv = (MetaPrimeVector &)mpvec;
         { const PrimeInfo __2(_2); prm.push_back(__2); mpv.record(prm.back().p); }
         { const PrimeInfo __3(_3); prm.push_back(__3); mpv.record(prm.back().p); }
@@ -109,30 +130,41 @@ namespace upsylon
 
     void MPN:: reset() throw()
     {
-        PrimeList &prm = (PrimeList &)plist;
-        assert(prm.size()>=2);
-        while(prm.size()>2) prm.pop_back();
-        ((mpn &)(probe)).set_byte(probe_p);
-        ((MetaPrimeVector&)mpvec).size = 2;
-    }
-
-
-    void MPN:: checkList() const
-    {
-        if( plist.size()<2 )      throw exception("MPN: not enough primes!");
-        const mpn & last_prime = plist.back().p;
-        if( probe <= last_prime ) throw exception("MPN: invalid probe/last prime");
-        if( probe < _5 )          throw exception("MPN: invalid probe/5");
-        const mpn probe_minus_5 = probe-_5;
-        if( !probe_minus_5.is_divisible_by(_6) ) throw exception("MPN: invalid probe scale");
-    }
-
-    size_t MPN:: nextProbe(const CreateMode how)
-    {
-        checkList();
         assert(plist.size()==mpvec.size);
-        PrimeList       &prm = (PrimeList      &)plist;
-        MetaPrimeVector &mpv = (MetaPrimeVector&)mpvec;
+
+
+        // reset list
+        {
+            ListOfPrimeInfo &prm = (ListOfPrimeInfo &)plist;
+            assert(prm.size()>=2);
+            while(prm.size()>2) prm.pop_back();
+        }
+
+        // reset probe
+        ((mpn &)(probe)).set_byte(probe_p);
+
+        // reset vector
+        {
+            MetaPrimeVector &mpv = (MetaPrimeVector &)mpvec;
+            memset( & mpv.slot[1], 0, mpv.bytes );
+            mpv.size = 2;
+            mpv.slot[1] = & plist.lower();
+            mpv.slot[2] = & plist.upper();
+        }
+
+    }
+
+    
+
+    size_t MPN:: nextProbe()
+    {
+        assert(plist.size()>=2);
+        assert(plist.size()==mpvec.size);
+        assert(probe>plist.back().p);
+        assert(probe>=_5);
+
+        ListOfPrimeInfo &prm = (ListOfPrimeInfo &)plist;
+        MetaPrimeVector &mpv = (MetaPrimeVector &)mpvec;
         const size_t     org = prm.size();
 
         try
@@ -141,9 +173,9 @@ namespace upsylon
             //
             // initialize search
             //__________________________________________________________________
-            mpn       next_probe = probe + _6;
-            PrimeList added;
-            mpn       last_prime = prm.back().p;
+            mpn              next_probe = probe + _6;
+            ListOfPrimeInfo  added;
+            mpn              last_prime = prm.back().p;
 
             //__________________________________________________________________
             //
@@ -152,17 +184,7 @@ namespace upsylon
             while(true)
             {
                 last_prime += _2;
-                switch (how)
-                {
-                    case CreateSafe:
-                        if(! isPrime_(last_prime)) continue;
-                        break;
-
-                    case CreateFast:
-                        if(! isPrime(last_prime)) continue;
-                        break;
-                }
-
+                if(! isPrime(last_prime) ) continue;
                 if(last_prime>=next_probe) break;
                 const PrimeInfo tmp(last_prime);
                 added.push_back(tmp);
@@ -189,11 +211,11 @@ namespace upsylon
 
     }
 
-    void MPN:: createPrimes( const size_t count, const CreateMode how )
+    void MPN:: createPrimes( const size_t count)
     {
         size_t sum = 0;
         ((MetaPrimeVector &)mpvec).reserve(count);
-        while(sum<count) sum += nextProbe(how);
+        while(sum<count) sum += nextProbe();
     }
 
 
@@ -250,8 +272,8 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
         {
             //--- list usage
             {
-                size_t                    np  = plist.size();
-                PrimeList::const_iterator it  = plist.begin();
+                size_t                          np  = plist.size();
+                ListOfPrimeInfo::const_iterator it  = plist.begin();
                 while(np-->0)
                 {
                     const PrimeInfo &I = *it;
@@ -297,7 +319,7 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
             fp.emit_upack<size_t>(plist.size()-2,&shift);
             len += shift;
         }
-        PrimeList::const_iterator i=plist.begin();
+        ListOfPrimeInfo::const_iterator i=plist.begin();
         assert(_2==(*i).p); ++i; //!< skip 2
         assert(_3==(*i).p); ++i; //!< skip 3
         mpn last = _3;
@@ -323,9 +345,9 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
         reset();
         try
         {
-            PrimeList    &prm = (PrimeList&)plist;
-            const size_t  sz  = fp.read_upack<size_t>();
-            Hasher        H;  H.set();
+            ListOfPrimeInfo &prm = (ListOfPrimeInfo &)plist;
+            const size_t     sz  = fp.read_upack<size_t>();
+            Hasher           H;  H.set();
 
             // loop
             mpn curr = _3;
@@ -358,7 +380,7 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
     {
         Hasher H;
         H.set();
-        for( PrimeList::const_iterator i=plist.begin();i!=plist.end();++i)
+        for( ListOfPrimeInfo::const_iterator i=plist.begin();i!=plist.end();++i)
         {
             H( (*i).p );
         }
@@ -501,8 +523,8 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
 
     bool MPN:: isComputedPrime(const mpn &n) const throw()
     {
-        PrimeList::const_reverse_iterator rev = plist.rbegin();
-        PrimeList::const_iterator         fwd = plist.begin();
+        ListOfPrimeInfo::const_reverse_iterator rev = plist.rbegin();
+        ListOfPrimeInfo::const_iterator         fwd = plist.begin();
         if( n < fwd->p )
         {
             return false;

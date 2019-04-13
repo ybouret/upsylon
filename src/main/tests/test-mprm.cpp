@@ -3,7 +3,8 @@
 #include "y/utest/run.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/ios/ocstream.hpp"
-#include "y/os/rt-clock.hpp"
+#include "y/utest/timings.hpp"
+
 #include <cmath>
 
 using namespace upsylon;
@@ -63,7 +64,7 @@ void check_consistency(const size_t count,
 
     rt_clock rtc;
 
-    for(;mgr.plist.size()<=count;mgr.createPrimes(1,MPN::CreateFast))
+    for(;mgr.plist.size()<=count;mgr.createPrimes(1))
     {
         std::cerr << "#primes=" << mgr.plist.size() << " -> [" << mgr.plist.back().p << "]" << std::endl;
         const mpn n     = mgr.plist.back().p;
@@ -73,9 +74,7 @@ void check_consistency(const size_t count,
             for(mpn i=0;i<=n;++i)
             {
                 mpn np = i;
-                const uint64_t ini = rt_clock::ticks();
-                Y_ASSERT(mgr.locateNextPrime(np));
-                count += rt_clock::ticks()-ini;
+                Y_TIMINGS_TICKS(count,Y_ASSERT(mgr.locateNextPrime(np)) );
             }
         }
         ios::ocstream::echo(filename, "%u %g\n", unsigned(mgr.plist.size()), 1e6*rtc(count)/(mgr.plist.size()*cycle));
@@ -162,7 +161,7 @@ Y_UTEST(mprm2)
         const double speed = 1e-6*mgr.plist.size()/(tmx(mpn_check(mgr,iter))/iter);
         fp("%u %g\n", unsigned(mgr.plist.size()), speed);
         std::cerr << mgr.plist.size() << " => " << speed << std::endl;
-        mgr.createPrimes(1,MPN::CreateFast);
+        mgr.createPrimes(1);
     }
 
     std::cerr << "sizeof(PrimeInfo)         =" << sizeof(MPN::PrimeInfo)         << std::endl;
