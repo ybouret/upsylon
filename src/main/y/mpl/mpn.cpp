@@ -452,6 +452,7 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
 
     bool MPN:: isComputedPrime(const mpn &n) const throw()
     {
+
         ListOfPrimeInfo::const_reverse_iterator rev = plist.rbegin();
         ListOfPrimeInfo::const_iterator         fwd = plist.begin();
         if( n < fwd->p )
@@ -478,16 +479,16 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
     {
         natural:: natural(const size_t nbit, randomized::bits &gen ) : Y_MPN_CTOR(0,0)
         {
-            static const MPN &_ = MPN::instance();
+            static const mpn  & one  = MPN::instance()._1;
             if(nbit)
             {
-                natural tmp = _._1;
+                natural tmp = one;
                 for(size_t i=nbit;i>1;--i)
                 {
                     tmp <<= 1;
                     if(gen.choice())
                     {
-                        tmp |= _._1;
+                        tmp |= one;
                     }
                 }
                 xch(tmp);

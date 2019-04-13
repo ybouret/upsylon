@@ -67,17 +67,20 @@ void check_consistency(const size_t count,
     for(;mgr.plist.size()<=count;mgr.createPrimes(1))
     {
         std::cerr << "#primes=" << mgr.plist.size() << " -> [" << mgr.plist.back().p << "]" << std::endl;
-        const mpn n     = mgr.plist.back().p;
-        uint64_t  count = 0;
+        const mpn n      = mgr.plist.back().p;
+        uint64_t  count1 = 0;
+        uint64_t  count2 = 0;
         for(size_t j=0;j<cycle;++j)
         {
             for(mpn i=0;i<=n;++i)
             {
                 mpn np = i;
-                Y_TIMINGS_TICKS(count,Y_ASSERT(mgr.locateNextPrime(np)) );
+                Y_TIMINGS_TICKS(count1,Y_ASSERT(mgr.locateNextPrime(np)) );
+                Y_TIMINGS_TICKS(count2,Y_ASSERT(mgr.isComputedPrime(np)) );
             }
         }
-        ios::ocstream::echo(filename, "%u %g\n", unsigned(mgr.plist.size()), 1e6*rtc(count)/(mgr.plist.size()*cycle));
+        const double factor = 1e6 / (mgr.plist.size()*cycle);
+        ios::ocstream::echo(filename, "%u %g %g\n", unsigned(mgr.plist.size()), factor * rtc(count1), factor * rtc(count2) );
     }
 
 
@@ -98,7 +101,7 @@ Y_UTEST(mprm)
         cycle = string_convert::to<size_t>(argv[2],"cycle");
     }
 
-    std::cerr << "-- checking consistency" << std::endl;
+    std::cerr << "-- checking consistency with #primes=" << count << " and #cycles=" << cycle << std::endl;
     check_consistency(count,cycle);
     return 0;
 
@@ -121,56 +124,4 @@ Y_UTEST(mprm)
 }
 Y_UTEST_DONE()
 
-#include "y/utest/timings.hpp"
 
-static inline uint64_t mpn_check(MPN &mgr, const size_t num_iter)
-{
-    const mpn      &n     = mgr.plist.back().p;
-    uint64_t        count = 0;
-    for(mpn i=0;i<=n;++i)
-    {
-        mpn np = i;
-        Y_ASSERT(mgr.locateNextPrime(np));
-        size_t iter = num_iter;
-        while(iter-->0)
-        {
-            uint64_t ini = rt_clock::ticks();
-            Y_ASSERT(mgr.isComputedPrime(np));
-            count += rt_clock::ticks() - ini;
-        }
-    }
-    return count;
-}
-
-Y_UTEST(mprm2)
-{
-    size_t n = 100;
-    if(argc>1)
-    {
-        n = string_convert::to<size_t>(argv[1],"n");
-    }
-    MPN      &mgr = MPN::instance();
-    rt_clock tmx;
-    const string filename = "mprm.dat";
-    ios::ocstream::overwrite(filename);
-
-    const size_t iter = 256;
-    while( mgr.plist.size() < n )
-    {
-        ios::ocstream fp(filename,true);
-        const double speed = 1e-6*mgr.plist.size()/(tmx(mpn_check(mgr,iter))/iter);
-        fp("%u %g\n", unsigned(mgr.plist.size()), speed);
-        std::cerr << mgr.plist.size() << " => " << speed << std::endl;
-        mgr.createPrimes(1);
-    }
-
-    std::cerr << "sizeof(PrimeInfo)         =" << sizeof(MPN::PrimeInfo)         << std::endl;
-    std::cerr << "sizeof(list<PrimeInfo>)   =" << sizeof(list<MPN::PrimeInfo>)   << std::endl;
-
-    MPN::MetaPrimeVector mpv;
-    std::cerr << "mpv.capacity=" << mpv.capacity << std::endl;
-    std::cerr << "mpv.bytes   =" << mpv.bytes    << std::endl;
-
-
-}
-Y_UTEST_DONE()
