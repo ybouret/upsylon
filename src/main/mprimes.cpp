@@ -40,7 +40,7 @@ Y_PROGRAM_START()
 
     while( bytes < max_bytes )
     {
-        mgr.createPrimes(1,MPN::CreateFast);
+        mgr.createPrimes(1);
         bytes = mgr.serialize_length();
         if(save_data)
         {

@@ -393,7 +393,7 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
     {
         assert( plist.size() == mpvec.size );
         static const char error_text[] ="MPN.locateNextPrime(bad comparison result)";
-#if 1
+
         if(n<=_2)
         {
             //------------------------------------------------------------------
@@ -446,78 +446,7 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
             n = *slot[jup];
             return true;
         }
-#endif
 
-#if 0
-        if(n<=_2)
-        {
-            //------------------------------------------------------------------
-            //
-            // ok, easy
-            //
-            //------------------------------------------------------------------
-            n.set_byte(2);
-            return true;
-        }
-        else
-        {
-            assert(n>_2);
-            assert(plist.size()>=2);
-            //------------------------------------------------------------------
-            //
-            // check if within the list
-            //
-            //------------------------------------------------------------------
-            PrimeList::const_reverse_iterator rev = plist.rbegin(); assert(rev->p>=_3);
-            if(n>rev->p)
-            {
-                //--------------------------------------------------------------
-                //
-                // no, so will trigger a sieve method
-                //
-                //--------------------------------------------------------------
-                return false;
-            }
-            else
-            {
-                assert(n>=plist.front().p && n<=plist.back().p);
-                //--------------------------------------------------------------
-                //
-                // yes, so will find the next prime!
-                //
-                //--------------------------------------------------------------
-                PrimeList::const_iterator fwd = plist.begin(); assert(fwd->p>=_2);
-                for(size_t i=plist.size()>>1;i>0;--i)
-                {
-                    {
-                        const mpn &hi = rev->p; ++rev;
-                        const mpn &lo = rev->p;
-                        assert(lo<hi);
-                        if(lo<n&&n<=hi)
-                        {
-                            n = hi;
-                            return true;
-                        }
-                    }
-
-                    {
-                        const mpn &lo = fwd->p; ++fwd;
-                        const mpn &hi = fwd->p;
-                        assert(lo<hi);
-                        if(lo<n&&n<=hi)
-                        {
-                            n = hi;
-                            return true;
-                        }
-                    }
-
-                }
-                throw exception("MPN.locateNextPrime(corrupted)");
-                return true;
-            }
-
-        }
-#endif
     }
 
 
