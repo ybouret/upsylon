@@ -5,7 +5,7 @@
 namespace upsylon
 {
 
-
+    bool digest:: UPPER_CASE = false;
     static inline
     uint8_t * __digest_acquire( size_t &blen )
     {
@@ -62,16 +62,19 @@ byte( __digest_acquire(blen) )
 
     std::ostream & digest:: display( std::ostream &os ) const
     {
-#if 0
-        size_t i=size;
-        while(i-->0)
+        if( digest::UPPER_CASE )
         {
-            os << hexadecimal::lowercase[ byte[i] ];
+            for(size_t i=0;i<size;++i)
+            {
+                os << hexadecimal::uppercase[ byte[i] ];
+            }
         }
-#endif
-        for(size_t i=0;i<size;++i)
+        else
         {
-            os << hexadecimal::lowercase[ byte[i] ];
+            for(size_t i=0;i<size;++i)
+            {
+                os << hexadecimal::lowercase[ byte[i] ];
+            }
         }
         return os;
     }

@@ -66,6 +66,20 @@ namespace upsylon
             return ans;
         }
 
+        digest function:: md( const void *buffer, size_t buflen)
+        {
+            set(); run(buffer,buflen); return md();
+        }
+
+        digest function:: md(const memory::ro_buffer &buffer)
+        {
+            return md( buffer.ro(), buffer.length() );
+        }
+
+        digest function:: md(const char *text)
+        {
+            return md( text, length_of(text) );
+        }
 	}
 
 }

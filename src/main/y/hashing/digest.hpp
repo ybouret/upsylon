@@ -15,7 +15,8 @@ namespace upsylon
     public memory::rw_buffer, public counted, public ios::serializable
     {
     public:
-
+        static bool UPPER_CASE; //!< global flag for an upper case output, default is false
+        
         explicit digest( const size_t n, const uint8_t b=0 ); //!< a zero digest with n bytes equal to b
         digest( const digest & );                     //!< copy
         virtual ~digest() throw();                    //!< destructor

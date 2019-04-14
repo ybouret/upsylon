@@ -22,13 +22,13 @@ namespace upsylon
 
     MPN:: PrimeInfo:: PrimeInfo( const mpn &n ) :
     p( n ),
-    q( mpn::square_of(n) )
+    q( mpn::square_of(p) )
     {
     }
 
     MPN:: PrimeInfo:: PrimeInfo( const uint64_t n) :
     p( n ),
-    q( mpn::square_of(n) )
+    q( mpn::square_of(p) )
     {
     }
 
@@ -143,17 +143,29 @@ namespace upsylon
         assert(plist.size()==mpvec.size);
 
 
+        //----------------------------------------------------------------------
+        //
         // reset list
+        //
+        //----------------------------------------------------------------------
         {
             ListOfPrimeInfo &prm = (ListOfPrimeInfo &)plist;
             assert(prm.size()>=2);
             while(prm.size()>2) prm.pop_back();
         }
 
+        //----------------------------------------------------------------------
+        //
         // reset probe
+        //
+        //----------------------------------------------------------------------
         ((mpn &)(probe)).set_byte(probe_p);
 
+        //----------------------------------------------------------------------
+        //
         // reset vector
+        //
+        //----------------------------------------------------------------------
         {
             MetaPrimeVector &mpv = (MetaPrimeVector &)mpvec;
             memset( & mpv.slot[1], 0, mpv.bytes );
