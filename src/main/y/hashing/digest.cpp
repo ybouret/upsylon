@@ -288,6 +288,27 @@ byte( __digest_acquire(blen) )
         return md;
     }
 
+    bool digest:: equals_hex(const char   *txt, const size_t len) const
+    {
+        const digest &lhs = *this;
+        const digest  rhs = hex(txt,len);
+        return lhs==rhs;
+    }
+
+    bool digest:: equals_hex(const char   *s) const
+    {
+        const digest &lhs = *this;
+        const digest  rhs = hex(s);
+        return lhs==rhs;
+    }
+
+    bool digest:: equals_hex(const string &s) const
+    {
+        const digest &lhs = *this;
+        const digest  rhs = hex(s);
+        return lhs==rhs;
+    }
+
 }
 
 

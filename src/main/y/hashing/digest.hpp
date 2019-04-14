@@ -59,30 +59,14 @@ namespace upsylon
         //! compare byte-wise result
         friend bool operator!=( const digest &lhs, const digest &rhs) throw();
 
+        //! compare to hexadecimal value
+        bool equals_hex(const char   *txt, const size_t len) const;
 
         //! compare to hexadecimal value
-        inline bool equals_hex(const char   *txt, const size_t len) const
-        {
-            const digest &lhs = *this;
-            const digest  rhs = hex(txt,len);
-            return lhs==rhs;
-        }
+        bool equals_hex(const char   *s) const;
 
         //! compare to hexadecimal value
-        inline bool equals_hex(const char   *s) const
-        {
-            const digest &lhs = *this;
-            const digest  rhs = hex(s);
-            return lhs==rhs;
-        }
-
-        //! compare to hexadecimal value
-        inline bool equals_hex(const string &s) const
-        {
-            const digest &lhs = *this;
-            const digest &rhs = hex(s);
-            return lhs==rhs;
-        }
+        bool equals_hex(const string &s) const;
 
         //! test against hexadecimal value
         inline friend bool operator==(const digest &lhs, const char *txt) { return lhs.equals_hex(txt); }
