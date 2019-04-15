@@ -57,6 +57,7 @@ Y_UTEST_INIT(128)
     Y_UTEST(pfd);
     Y_UTEST(pfq);
     Y_UTEST(mprm);
+    Y_UTEST(mprm1000);
 
     Y_UTEST(hashing);
     Y_UTEST(hmac);

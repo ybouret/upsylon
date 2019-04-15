@@ -67,4 +67,50 @@ Y_UTEST(mprm)
 }
 Y_UTEST_DONE()
 
+#include "y/sequence/vector.hpp"
+#include "y/string/tokenizer.hpp"
 
+static inline bool isSep( int C )
+{
+    return C==' ' || C=='\t';
+}
+
+Y_UTEST(mprm1000)
+{
+    if(argc<=1) return 0;
+
+    vector<mpn> pv(1000,as_capacity);
+    {
+        std::cerr << "-- Loading " << argv[1] << std::endl;
+        ios::icstream fp(argv[1]);
+        string line;
+        vector<string,memory::pooled> words(64,as_capacity);
+        while(fp.gets(line))
+        {
+            tokenizer<char>::split(words,line,isSep);
+            for(size_t i=1;i<=words.size();++i)
+            {
+                const mpn j = mpn::dec(words[i]);
+                pv.push_back(j);
+            }
+        }
+    }
+    std::cerr << "-- Loaded " << pv.size() << " values" << std::endl;
+    const size_t np = pv.size();
+    std::cerr << "-- Creating primes" << std::endl;
+    MPN &mp = MPN::instance();
+    mp.createPrimes( max_of<size_t>(np,2)-2 ); assert(mp.mpvec.size>=np);
+    std::cerr << "-- Checking primes" << std::endl;
+    for(size_t i=1;i<=np;++i)
+    {
+        const mpn &lhs = *mp.mpvec.slot[i];
+        const mpn &rhs = pv[i];
+        if( lhs != rhs )
+        {
+            std::cerr << "Error in prime list: " << lhs << " != " << rhs << std::endl;
+            throw exception("primes mismatch");
+        }
+    }
+    std::cerr << "-- All done..." << std::endl;
+}
+Y_UTEST_DONE()

@@ -8,6 +8,7 @@ COMMENT            "Testing miniLZO"
 )
 
 FILE(GLOB srcs test-*.cpp)
+SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
 
 ADD_EXECUTABLE(test-main main.cpp ${srcs} support.hpp)
 TARGET_LINK_Y(test-main)
@@ -132,8 +133,9 @@ ADD_TEST(mp:fact      test-main mpn_fact 1 10 20 30 50)
 ADD_TEST(mp:z         test-main mpz)
 ADD_TEST(mp:q         test-main mpq)
 ADD_TEST(mp:pfd       test-main pfd 10 20 30 40 50)
-ADD_TEST(mp:pfq       test-main pfq 1 2 3 4)
+ADD_TEST(mp:pfq       test-main pfq 110 221 348 417)
 ADD_TEST(mp:prm       test-main mprm 2000)
+ADD_TEST(mp:prm1000   test-main mprm1000 ${HERE}/../1000.txt)
 
 SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-nwsrt.cpp test-locate.cpp)
 ADD_TEST(sort:sort        test-main sort)
