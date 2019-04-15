@@ -4,6 +4,7 @@
 #define Y_MPL_SPRP_INCLUDED 1
 
 #include "y/mpl/natural.hpp"
+#include "y/core/node.hpp"
 
 namespace upsylon
 {
@@ -13,21 +14,37 @@ namespace upsylon
         class sprp : public base_class
         {
         public:
-            const natural n; //!< 2^s*d+1, must be odd
-            const natural m; //!< n-1,     even
-            const natural s; //!< exponent
-            const natural d; //!< odd value
+            class node_type : public core::inode<node_type>
+            {
+            public:
+                const mpn q;
+                node_type( const mpn       &value ) : q(value)   {}
+                node_type( const node_type &other)  : q(other.q) {}
+                virtual ~node_type() throw() {}
+
+            private:
+                Y_DISABLE_ASSIGN(node_type);
+            };
+            typedef core::list_of_cpp<node_type> list_type;
+
+
+            const natural   n; //!< 2^s*d+1, must be odd
+            const natural   m; //!< n-1,     even
+            const natural   s; //!< exponent
+            const list_type l; //!< list of d*2^[0..s-1]
 
             virtual ~sprp() throw();
             sprp( const natural &value );
+            sprp( const word_t   value );
             sprp( const sprp    &other );
 
             friend std::ostream & operator<<( std::ostream &, const sprp & );
 
-            bool is_for( const mpn &a ) const;
+            bool operator()( const mpn &a ) const;
 
         private:
             Y_DISABLE_ASSIGN(sprp);
+            void setup();
         };
 
     }

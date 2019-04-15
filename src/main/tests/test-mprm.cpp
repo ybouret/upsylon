@@ -75,7 +75,37 @@ Y_UTEST(mprm)
             std::cerr << ' ' << i << ' ';
         const mpl::sprp q = i;
         std::cerr << "=" << q << std::endl;
+        std::cerr << "\texponents={";
+        for( const mpl::sprp::node_type *node = q.l.head;node;node=node->next)
+        {
+            std::cerr << " " << node->q;
+        }
+        std::cerr << " }" << std::endl;
+
     }
+
+    {
+        const mpl::sprp SPRP2047(2047);
+        Y_CHECK(SPRP2047(2)==true);
+    }
+
+    {
+        const mpl::sprp SPRP121(121);
+        Y_CHECK(SPRP121(3)==true);
+    }
+
+    {
+        const mpl::sprp SPRP781(781);
+        Y_CHECK(SPRP781(5)==true);
+    }
+
+    {
+        const mpl::sprp SPRP25(25);
+        Y_CHECK(SPRP25(7)==true);
+    }
+
+
+
 
 }
 Y_UTEST_DONE()

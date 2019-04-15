@@ -16,16 +16,22 @@ namespace upsylon
         n(other.n),
         m(other.m),
         s(other.s),
-        d(other.d)
+        l(other.l)
         {
 
         }
 
-        sprp:: sprp( const natural &value ) :
+        sprp:: sprp( const word_t value ) :
         n(value),
         m(n),
         s(0),
-        d(0)
+        l()
+        {
+            setup();
+        }
+
+
+        void sprp:: setup()
         {
             static const char fn[] = "mpl.sprp.odd_dcmp";
             if( n.is_byte(0) || n.is_byte(1) || n.is_byte(2) )
@@ -39,16 +45,29 @@ namespace upsylon
             else
             {
                 assert(n>=3);
-                natural &M = (natural &)m;
-                natural &S = (natural &)s;
-                natural &D = (natural &)d;
-                D = --M; assert(M==D); assert(D.is_even());
+                list_type &L = (list_type&)l;
+                natural   &M = (natural &)m;
+                natural   &S = (natural &)s;
+                --M;
+                L.push_back( new node_type(M) );
+
+                natural &D = (natural &)(L.head->q);
+                assert(M==D); assert(D.is_even());
 
                 while( D.is_even() )
                 {
                     ++S;
                     D.shr();
                 }
+                if(S<=0) throw exception("%s(corrupted algorithm)",fn);
+
+                for(mpn i=S;i>1;--i)
+                {
+                    mpn tmp = L.tail->q;
+                    L.push_back( new node_type(tmp.shl()) );
+                }
+
+                assert(S==l.size);
 
 
 #ifndef NDEBUG
@@ -57,12 +76,22 @@ namespace upsylon
                 {
                     q *= 2;
                 }
-                q *= d;
+                q *= D;
                 ++q;
                 assert(q==n);
 #endif
+
             }
 
+        }
+
+        sprp:: sprp( const natural &value ) :
+        n(value),
+        m(n),
+        s(0),
+        l()
+        {
+            setup();
         }
 
         std::ostream & operator<<( std::ostream &os, const sprp &dcmp )
@@ -76,9 +105,10 @@ namespace upsylon
                 os << '^' << dcmp.s;
             }
 
-            if(dcmp.d>1)
+            const natural &d = dcmp.l.head->q;
+            if(d>1)
             {
-                os << '*' << dcmp.d;
+                os << '*' << d;
             }
 
             os << '+' << '1';
@@ -86,12 +116,24 @@ namespace upsylon
             return os;
         }
 
-        bool sprp:: is_for( const mpn &a ) const
+        bool sprp:: operator()( const mpn &a ) const
         {
+            if(a<2) throw exception("mpl.sprp<2");
+            
+            const node_type *node = l.head;
             {
-                const natural q = natural::mod_exp(a,d,n);
+                const natural &d = node->q;
+                const natural  q = natural::mod_exp(a,d,n);
                 if(q.is_byte(1)) return true;
+                if(q==m)         return true;
             }
+
+            for(node=node->next;node;node=node->next)
+            {
+                const natural q = natural::mod_exp(a,node->q,n);
+                if(q==m) return true;
+            }
+
 
             return false;
         }
