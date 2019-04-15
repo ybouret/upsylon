@@ -9,6 +9,7 @@
 namespace upsylon
 {
 
+  
 
     //! precompiled naturals
     class MPN : public singleton<MPN>, public ios::serializable
@@ -129,6 +130,7 @@ namespace upsylon
         bool locateNextPrime(mpn       &n) const; //!< using primes list
         bool isComputedPrime(const mpn &n) const; //!< in primes list
 
+
     private:
         explicit MPN();
         virtual ~MPN() throw();
@@ -138,6 +140,7 @@ namespace upsylon
     public:
         static const at_exit::longevity life_time = mpl::manager::life_time - 1; //!< based on manager existence
     };
+
 
 }
 

@@ -46,9 +46,11 @@ void check_consistency(const size_t count,
 
 }
 
+#include "y/mpl/sprp.hpp"
+
 Y_UTEST(mprm)
 {
-    size_t count = 500;
+    size_t count = 200;
     size_t cycle = 1;
 
     if(argc>1)
@@ -63,6 +65,17 @@ Y_UTEST(mprm)
 
     std::cerr << "-- checking consistency with #primes=" << count << " and #cycles=" << cycle << std::endl;
     check_consistency(count,cycle);
+
+    MPN &mp = MPN::instance();
+    for( mpn i=3; i<= mp.plist.upper(); i += 2 )
+    {
+        if(mp.isPrime(i))
+            std::cerr << '[' << i << ']';
+        else
+            std::cerr << ' ' << i << ' ';
+        const mpl::sprp q = i;
+        std::cerr << "=" << q << std::endl;
+    }
 
 }
 Y_UTEST_DONE()

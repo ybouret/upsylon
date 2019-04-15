@@ -57,7 +57,7 @@ namespace upsylon
 
 
         //! integer class
-        class integer : public object
+        class integer : public base_class
         {
         public:
             const sign_type s; //!< it sign

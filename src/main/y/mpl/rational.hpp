@@ -9,7 +9,7 @@ namespace upsylon
     namespace mpl
     {
         //! multiple precision rational
-        class rational : public object
+        class rational : public base_class
         {
         public:
             const integer num; //!< numerator

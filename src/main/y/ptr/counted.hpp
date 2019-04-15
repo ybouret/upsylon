@@ -28,7 +28,7 @@ namespace upsylon
     };
 
     //! a counted object...
-    class counted_object : public counted, public virtual object
+    class counted_object :  public virtual object, public counted
     {
     public:
         //! destructor

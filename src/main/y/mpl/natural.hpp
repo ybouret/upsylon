@@ -23,6 +23,16 @@ namespace upsylon
         typedef uint64_t word_t;    //!< integral type for drop in replacement
         typedef int64_t  integer_t; //!< sgined integral type
 
+        class base_class : public counted_object
+        {
+        public:
+            explicit base_class() throw();
+            virtual ~base_class() throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(base_class);
+        };
+
         //! dedicated memory manager
         class manager : public singleton<manager>, public memory::allocator
         {
@@ -55,7 +65,7 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
         class integer; //!< forward declaration
 
         //! big natural number
-        class natural : public memory::ro_buffer, public ios::serializable
+        class natural : public base_class, public memory::ro_buffer, public ios::serializable
         {
         public:
             static const char CLASS_NAME[]; //!< for serializable

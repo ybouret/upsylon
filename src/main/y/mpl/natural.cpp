@@ -25,7 +25,8 @@ namespace upsylon
             IO.release((void * &)p,n);
         }
 
-     
+        base_class::  base_class() throw() {}
+        base_class:: ~base_class() throw() {}
     }
 }
 
