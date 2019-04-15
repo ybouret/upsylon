@@ -1,5 +1,6 @@
 PROJECT(bz2++)
 
+MESSAGE( STATUS "<BZ2++>" )
 FILE( GLOB decl y/bz2++/*.hpp)
 FILE( GLOB impl y/bz2++/*.cpp)
 SET( srcs ${decl} ${impl} )
@@ -12,3 +13,4 @@ ADD_LIBRARY( y-bz2++ STATIC ${srcs} )
 INSTALL( TARGETS y-bz2++ ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
+MESSAGE( STATUS "<BZ2++/>" )

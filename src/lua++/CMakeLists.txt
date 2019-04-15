@@ -1,4 +1,5 @@
 PROJECT(lua++)
+MESSAGE( STATUS "<Lua++>")
 
 FILE( GLOB decl y/lua++/*.hpp)
 FILE( GLOB impl y/lua++/*.cpp)
@@ -12,3 +13,4 @@ ADD_LIBRARY( y-lua++ STATIC ${srcs} )
 INSTALL( TARGETS y-lua++ ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
+MESSAGE( STATUS "<Lua++/>")

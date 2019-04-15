@@ -1,5 +1,5 @@
 PROJECT(y-lang CXX)
-MESSAGE( STATUS "Lang")
+MESSAGE( STATUS "<Lang>")
 
 INCLUDE_DIRECTORIES(. ../main)
 
@@ -37,8 +37,5 @@ ${dynamo_srcs}
 )
 INSTALL( TARGETS y-lang ARCHIVE DESTINATION lib )
 
-#ADD_EXECUTABLE(y-dynamo y/lang/dynamo/y-dynamo.cxx ../json/y/json/json.g)
-#TARGET_LINK_Y(y-dynamo lang)
-
-
 ADD_SUBDIRECTORY(tests)
+MESSAGE( STATUS "<Lang/>")

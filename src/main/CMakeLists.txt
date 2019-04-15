@@ -1,5 +1,5 @@
 PROJECT(y C CXX)
-MESSAGE( STATUS "Upsylon" )
+MESSAGE( STATUS "<Upsylon>" )
 
 INCLUDE_DIRECTORIES(.)
 
@@ -288,4 +288,5 @@ ADD_EXECUTABLE(mprimes mprimes.cpp)
 TARGET_LINK_Y(mprimes)
 
 ADD_SUBDIRECTORY(tests)
+MESSAGE( STATUS "<Upsylon/>" )
 

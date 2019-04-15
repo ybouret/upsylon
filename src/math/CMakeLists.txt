@@ -1,5 +1,5 @@
 PROJECT(y-m C CXX)
-MESSAGE( STATUS "Mathematics" )
+MESSAGE( STATUS "<Mathematics>" )
 
 INCLUDE_DIRECTORIES(. ../main)
 
@@ -83,3 +83,5 @@ ${stat_srcs}
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
+MESSAGE( STATUS "<Mathematics/>" )
+

@@ -5,7 +5,7 @@ INCLUDE(../../scripts/fltk.cmake)
 INCLUDE_DIRECTORIES(. ../main)
 
 IF(FLTK_FOUND)
-
+MESSAGE( STATUS "<FLTK>" )
 FILE(GLOB main_decl y/fltk/*.hpp)
 FILE(GLOB main_code y/fltk/*.cpp)
 SET(main_srcs ${main_decl} ${main_code})
@@ -17,5 +17,6 @@ ADD_LIBRARY(y-fltk STATIC ${main_srcs})
 INSTALL( TARGETS y-fltk ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
+MESSAGE( STATUS "<FLTK/>" )
 
 ENDIF()

@@ -1,5 +1,6 @@
 PROJECT(z++)
 
+MESSAGE( STATUS "<z++>" )
 FILE( GLOB decl y/z++/*.hpp)
 FILE( GLOB impl y/z++/*.cpp)
 SET( srcs ${decl} ${impl} )
@@ -15,3 +16,4 @@ ADD_LIBRARY( y-z++ STATIC ${srcs} )
 INSTALL( TARGETS y-z++ ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
+MESSAGE( STATUS "<z++/>" )

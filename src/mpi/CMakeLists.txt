@@ -1,10 +1,10 @@
 PROJECT(y-mpi CXX)
-MESSAGE( STATUS "MPI" )
 
 INCLUDE_DIRECTORIES(. ../main)
 INCLUDE(../../scripts/mpi.cmake)
 
 IF(MPI_FOUND)
+	MESSAGE( STATUS "<MPI>" )
 
 	FILE(GLOB main_decl y/mpi/*.hpp)
 	FILE(GLOB main_code y/mpi/*.cpp)
@@ -18,5 +18,6 @@ IF(MPI_FOUND)
 	INSTALL( TARGETS y-mpi ARCHIVE DESTINATION lib )
 	
 	ADD_SUBDIRECTORY(tests)
-
+	
+	MESSAGE( STATUS "<MPI/>" )
 ENDIF()

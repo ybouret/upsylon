@@ -1,5 +1,5 @@
 PROJECT(y-net CXX)
-MESSAGE( STATUS "NETwork" )
+MESSAGE( STATUS "<NETwork>" )
 
 INCLUDE_DIRECTORIES(. ../main)
 
@@ -15,3 +15,4 @@ ${main_srcs}
 INSTALL( TARGETS y-net ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
+MESSAGE( STATUS "<NETwork/>" )
