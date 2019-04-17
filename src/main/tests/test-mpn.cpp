@@ -3,13 +3,28 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/code/primality.hpp"
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 
 #define ITERS       (1<<11)
 #define ITERS_SMALL (1<<8)
+
+
+
 Y_UTEST(mpn)
 {
+
+    {
+        ios::ocstream fp("miller.dat");
+        for(size_t i=1;i<=10000;++i)
+        {
+            const double x = i;
+            const double l = 2*square_of(log(x));
+            fp("%g %g %g\n", x,l,ceil(l));
+        }
+    }
+
     MPN &mgr = MPN::instance();
 
     mpn a;
@@ -37,7 +52,6 @@ Y_UTEST(mpn)
         const uint64_t z = y.lsw();
         Y_ASSERT(z==x);
     }
-
 
 
     std::cerr << "-- bits with words" << std::endl;

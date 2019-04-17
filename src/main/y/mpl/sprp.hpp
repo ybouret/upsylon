@@ -34,13 +34,18 @@ namespace upsylon
             const list_type l; //!< list of d*2^[0..s-1]
 
             virtual ~sprp() throw();
-            sprp( const natural &value );
-            sprp( const word_t   value );
-            sprp( const sprp    &other );
+            sprp( const natural &value ); //!< construct from natural
+            sprp( const word_t   value ); //!< construct from integral
+            sprp( const sprp    &other ); //!< hard copy
 
+            //! output
             friend std::ostream & operator<<( std::ostream &, const sprp & );
 
+            //! test if is a-SPRP
             bool operator()( const mpn &a ) const;
+
+            //! Miller's test
+            bool testPrime() const;
 
         private:
             Y_DISABLE_ASSIGN(sprp);

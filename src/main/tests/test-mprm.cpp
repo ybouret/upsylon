@@ -66,24 +66,6 @@ Y_UTEST(mprm)
     std::cerr << "-- checking consistency with #primes=" << count << " and #cycles=" << cycle << std::endl;
     check_consistency(count,cycle);
 
-    MPN &mp = MPN::instance();
-    for( mpn i=3; i<= mp.plist.upper(); i += 2 )
-    {
-        if(mp.isPrime(i))
-            std::cerr << '[' << i << ']';
-        else
-            std::cerr << ' ' << i << ' ';
-        const mpl::sprp q = i;
-        std::cerr << "=" << q << std::endl;
-        std::cerr << "\texponents={";
-        for( const mpl::sprp::node_type *node = q.l.head;node;node=node->next)
-        {
-            std::cerr << " " << node->q;
-        }
-        std::cerr << " }" << std::endl;
-
-    }
-
     {
         const mpl::sprp SPRP2047(2047);
         Y_CHECK(SPRP2047(2)==true);
@@ -103,6 +85,29 @@ Y_UTEST(mprm)
         const mpl::sprp SPRP25(25);
         Y_CHECK(SPRP25(7)==true);
     }
+
+    MPN &mp = MPN::instance();
+    for( mpn i=3; i<= mp.plist.upper(); i += 2 )
+    {
+        if(mp.isPrime(i))
+            std::cerr << '[' << i << ']';
+        else
+            std::cerr << ' ' << i << ' ';
+        const mpl::sprp q = i;
+        std::cerr << "=" << q << std::endl;
+        std::cerr << "\texponents={";
+        for( const mpl::sprp::node_type *node = q.l.head;node;node=node->next)
+        {
+            std::cerr << " " << node->q;
+        }
+        std::cerr << " }" << std::endl;
+        for(mpn a=2;a<=13;++a)
+        {
+            const bool aSPRP = q(a);
+            std::cerr << a << "-SPRP=" << (aSPRP ? "true" : "false" ) << std::endl;
+        }
+    }
+
 
 
 
