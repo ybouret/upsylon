@@ -13,6 +13,7 @@ namespace upsylon
         }
 
         sprp:: sprp( const sprp &other ) :
+        base_class(),
         n(other.n),
         m(other.m),
         s(other.s),
@@ -22,6 +23,7 @@ namespace upsylon
         }
 
         sprp:: sprp( const word_t value ) :
+        base_class(),
         n(value),
         m(n),
         s(0),
@@ -86,6 +88,7 @@ namespace upsylon
         }
 
         sprp:: sprp( const natural &value ) :
+        base_class(),
         n(value),
         m(n),
         s(0),
