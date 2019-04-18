@@ -49,7 +49,19 @@ namespace upsylon
             Y_LUA_CHECK(luaL_dostring(L,*code));
         }
 
-
+        void State:: load( const string &id, lua_CFunction fn)
+        {
+            if(!fn) throw exception("Lua.State.load('%s'=NULL)", *id );
+            lua_pushcfunction(L,fn);
+            lua_setglobal(L,*id);
+        }
+        
+        void State:: load( const char *id, lua_CFunction fn)
+        {
+            const string _(id);
+            load(_,fn);
+        }
+        
         bool State:: exists( const string &name )
         {
             lua_settop(L,0);

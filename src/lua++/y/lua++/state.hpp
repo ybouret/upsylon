@@ -45,6 +45,12 @@ namespace upsylon
                 const string _(code); doString(_);
             }
 
+            //! load a function
+            void load( const string &id, lua_CFunction fn);
+           
+            //! load a function, wrapper
+            void load( const char *id, lua_CFunction fn);
+            
             //! get a variable by its name
             template <typename T>
             T get( const string &id );
