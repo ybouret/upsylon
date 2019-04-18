@@ -1,0 +1,55 @@
+\documentclass[aps]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{mathptmx}
+\usepackage{xfrac}
+
+%% concentration notations
+\newcommand{\mymat}[1]{\boldsymbol{#1}}
+\newcommand{\mytrn}[1]{~^{\mathsf{t}}\!{#1}}
+\newcommand{\myvec}[1]{\overrightarrow{#1}}
+\newcommand{\mygrad}{\vec{\nabla}}
+\newcommand{\myhess}{\mathcal{H}}
+
+
+\begin{document}
+\title{Integer Logarithm approximation}
+\maketitle
+
+\section{Dyadic approximation}
+We evaluate $\log(x)$ on the set of $x_i=2^i$.
+Since the function is slowly varying, we use the cubic approximation:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	L_i(x)  & = & \ln(x_i) + \dfrac{x-x_i}{x_i} - b_i \left(x-x_i\right)^2 + c_i \left(x-x_i\right)^3\\
+	L_i'(x) & = & \dfrac{1}{x_i} - 2b_i \left(x-x_i\right) + 3 c_i  \left(x-x_i\right)^2 \\
+\end{array}
+\right.
+\end{equation}
+leading to:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\ln(x_{i+1})       & = & \ln(x_i) + \dfrac{x-x_i}{x_i} - b_i \left(x-x_i\right)^2 + c_i \left(x-x_i\right)^3\\
+	\dfrac{1}{x_{i+1}} & = & \dfrac{1}{x_i} - 2b_i \left(x-x_i\right) + 3 c_i  \left(x-x_i\right)^2 \\
+\end{array}
+\right.
+\end{equation}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+b_i  & = & \dfrac{5-6\ln(2)}{2^{2i+1}}\\
+\\
+c_ i & = & \dfrac{3-4\ln(2)}{2^{3i+1}}\\
+\end{array}
+\right.
+\end{equation}
+
+\end{document}
+
+
