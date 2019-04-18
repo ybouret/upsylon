@@ -19,19 +19,19 @@ namespace upsylon
             void check();
 
             //! default constructor, zero
-            inline rational() : num(),den(1) {}
+            inline rational() : base_class(), num(),den(1) {}
             //! destructor
             inline virtual ~rational() throw() {}
             //! from integral type
-            inline rational( const integer_t i ) : num(i), den(1) {}
+            inline rational( const integer_t i ) :  base_class(), num(i), den(1) {}
             //! from mpz
-            inline rational( const integer & z ) : num(z), den(1) {}
+            inline rational( const integer & z ) :  base_class(), num(z), den(1) {}
             //! from mpn
-            inline rational( const natural & n ) : num(n), den(1) {}
+            inline rational( const natural & n ) :  base_class(), num(n), den(1) {}
             //! from integral fraction
-            inline rational( const integer_t n, const word_t d) : num(n), den(d) { check(); }
+            inline rational( const integer_t n, const word_t d) :  base_class(), num(n), den(d) { check(); }
             //! from mpz/mpn
-            inline rational( const integer &z, const natural &u) : num(z), den(u) { check(); }
+            inline rational( const integer &z, const natural &u) :  base_class(), num(z), den(u) { check(); }
 
             //! output
             inline friend std::ostream & operator<<( std::ostream &os, const rational &q )
