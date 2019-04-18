@@ -70,16 +70,16 @@ namespace upsylon
             inline virtual ~integer() throw() {}
 
             //! copy constructor
-            inline integer(const integer &z) : s(z.s), n(z.n) {}
+            inline integer(const integer &z) : base_class(), s(z.s), n(z.n) {}
 
             //!  constructor from integral
-            inline integer(const integer_t &i) : s( sign_for(i) ), n( word_for(i) ) {}
+            inline integer(const integer_t &i) : base_class(), s( sign_for(i) ), n( word_for(i) ) {}
 
             //! constructor from natural
-            inline integer(const natural &u) : s( sign_for(u) ), n(u) {}
+            inline integer(const natural &u) : base_class(), s( sign_for(u) ), n(u) {}
             
             //! create from a natural and a given sign
-            inline integer(const sign_type _s, const natural &u ) : s( u.is_zero() ? __zero : _s), n(u) {}
+            inline integer(const sign_type _s, const natural &u ) : base_class(), s( u.is_zero() ? __zero : _s), n(u) {}
 
             //! status update
             inline void update() throw()
