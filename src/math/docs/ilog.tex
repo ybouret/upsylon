@@ -19,7 +19,7 @@
 \title{Integer Logarithm approximation}
 \maketitle
 
-\section{Dyadic approximation}
+\section{Dyadic Majoration}
 We evaluate $\log(x)$ on the set of $x_i=2^i$.
 Since the function is slowly varying, we use the cubic approximation:
 \begin{equation}
@@ -49,9 +49,43 @@ c_ i & = & \dfrac{3-4\ln(2)}{2^{3i+1}}\\
 \end{array}
 \right.
 \end{equation}
+and
+\begin{equation}
+\forall x\in[2^i,2^{i+1}], \;\; \ln(x) \leq L_i(x)
+\end{equation}
+
 
 \begin{equation}
 	\dfrac{177 i}{256} \leq \log\left(2^i\right) \leq \dfrac{178 i}{256}
+\end{equation}
+
+\section{Dyadic Minoration}
+Using the convexity
+\begin{equation}
+ 	\ln(x) \geq C_i(x) = \ln(x_i) + \dfrac{x-x_i}{x_{i+1}-{x_i}} \left[ \ln(x_{i+1}) - \ln(x_i)\right] + A_i (x_{i+1}-x)(x-x_{i})
+\end{equation}
+We want
+\begin{equation}
+D_i(x)=\ln(x)-C_i(x)\geq0
+\end{equation}
+The two boundaries conditions are
+\begin{equation}
+D_i'(x_i)\geq 0 \text{ and } D_i'(x_{i+1})\leq0
+\end{equation}
+\begin{equation}
+	D_i'(x) = \dfrac{1}{x} - \left[ \underbrace{\dfrac{\ln(x_{i+1}) - \ln(x_i)}{x_{i+1}-x_i}}_{\sigma_i} + A_i \left(x_{i+1}+x_i-2x\right)\right]
+\end{equation}
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+\dfrac{1}{x_i}     - \left[\sigma_i + A_i\left(x_{i+1}-x_i\right)\right] & \geq & 0 \\
+\dfrac{1}{x_{i+1}} - \left[\sigma_i - A_i\left(x_{i+1}-x_i\right)\right] & \leq & 0 \\
+\end{array}
+\right.
+\end{equation}
+which provides
+\begin{equation}
+	A_i = \dfrac{\ln(2)-\frac{1}{2}}{2^{2i}}
 \end{equation}
 
 \end{document}
