@@ -14,6 +14,9 @@
 \newcommand{\mygrad}{\vec{\nabla}}
 \newcommand{\myhess}{\mathcal{H}}
 
+\newcommand{\myfloor}[1]{{\left\lfloor#1\right\rfloor}}
+\newcommand{\myceil}[1]{{\left\lceil#1\right\rceil}}
+
 
 \begin{document}
 \title{Integer Logarithm approximation}
@@ -21,12 +24,13 @@
 
 \section{Dyadic Majoration}
 We evaluate $\log(x)$ on the set of $x_i=2^i$.
-Since the function is slowly varying, we use the cubic approximation:
+Since the function is slowly varying, we use self similar cubic approximation:
 \begin{equation}
 \left\lbrace
 \begin{array}{rcl}
-	L_i(x)  & = & \ln(x_i) + \dfrac{x-x_i}{x_i} - b_i \left(x-x_i\right)^2 + c_i \left(x-x_i\right)^3\\
-	L_i'(x) & = & \dfrac{1}{x_i} - 2b_i \left(x-x_i\right) + 3 c_i  \left(x-x_i\right)^2 \\
+	L_i(x)  & = & \ln(x_i) + \left(\dfrac{x-x_i}{x_i}\right) - b \left(\dfrac{x-x_i}{x_i}\right)^2 + c\left(\dfrac{x-x_i}{x_i}\right)^3\\
+	\\
+	L_i'(x) & = & \dfrac{1}{x_i} - 2\dfrac{b}{x_i} \left(\dfrac{x-x_i}{x_i}\right) + 3 \dfrac{c}{x_i^2}  \left(\dfrac{x-x_i}{x_i}\right)^2 \\
 \end{array}
 \right.
 \end{equation}
@@ -34,8 +38,8 @@ leading to:
 \begin{equation}
 \left\lbrace
 \begin{array}{rcl}
-	\ln(x_{i+1})       & = & \ln(x_i) + \dfrac{x-x_i}{x_i} - b_i \left(x-x_i\right)^2 + c_i \left(x-x_i\right)^3\\
-	\dfrac{1}{x_{i+1}} & = & \dfrac{1}{x_i} - 2b_i \left(x-x_i\right) + 3 c_i  \left(x-x_i\right)^2 \\
+	\ln(x_{i+1})       & = & L(x_{i_1})\\
+	\dfrac{1}{x_{i+1}} & = & L'(x_{i+1}) \\
 \end{array}
 \right.
 \end{equation}
@@ -43,20 +47,67 @@ leading to:
 \begin{equation}
 \left\lbrace
 \begin{array}{rcl}
-b_i  & = & \dfrac{5-6\ln(2)}{2^{2i+1}}\\
+b & = & \dfrac{5}{2}-3\ln(2)\\
 \\
-c_ i & = & \dfrac{3-4\ln(2)}{2^{3i+1}}\\
+c & = & \dfrac{3}{2}-2\ln(2)\\
 \end{array}
 \right.
 \end{equation}
 and
 \begin{equation}
-\forall x\in[2^i,2^{i+1}], \;\; \ln(x) \leq L_i(x)
+\forall x\in[2^i,2^{i+1}], \;\; \ln(x) \leq L_i(x) 
 \end{equation}
 
+\begin{equation}
+	L_i(x) = \dfrac{
+	2^{3i}\ln(x_i) 
+	+ 2^{2i}\left(x-2^i\right)
+	- b 2^{i}\left(x-2^i\right)^2
+	+ c      \left(x-2^i\right)^3
+	}
+	{2^{3i}} 
+\end{equation}
+Let us use a binary level $2^p$
+\begin{equation}
+	L_i(x) \leq \Lambda_i(x,p) = 
+	\dfrac{ i \cdot 2^{3i} \myceil{2^p \ln(2)} 
+	+ 2^{2i+p} \left(x-2^i\right)
+	- \myfloor{2^p b} 2^{i}\left(x-2^i\right)^2 + \myceil{2^p c} \left(x-2^i\right)^3
+	}
+	{2^{3i+p}}
+\end{equation}
+We compute
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\Lambda_i(2^{i+1},p) & = & \left( i\myceil{2^p \ln(2)} + 2^p - \myfloor{2^p b} + \myceil{2^p c} \right) 2^{-p}\\
+	\Lambda_{i+1}(2^{i+1},p) & = & \left( (i+1) \myceil{2^p \ln(2)} \right) 2^{-p}\\
+\end{array}
+\right.
+\end{equation}
+To be coherent
+\begin{equation}
+	\left\lbrace
+\begin{array}{rl}
+	 & \Lambda_i(2^{i+1},p)  \leq  \Lambda_{i+1}(2^{i+1},p)\\
+\Leftrightarrow & 2^p + \myceil{2^p c} - (\myceil{2^p \ln(2)} + \myfloor{2^p b}) \leq 0 \\
+\end{array}
+\right.
+\end{equation}
+and we find a reduced set of solutions, overriding multiple values:
+\begin{equation}
+	p \in \lbrace 11,13,14,16,17 \rbrace
+\end{equation}
 
 \begin{equation}
-	\dfrac{177 i}{256} \leq \log\left(2^i\right) \leq \dfrac{178 i}{256}
+\begin{array}{cccc}
+p & \myceil{2^p \ln(2)} &  \myfloor{2^p b} & \myceil{2^p c}\\
+11 & 1420 & 861 & 233\\
+13 & 5679 & 3445 & 932\\
+14 & 11357 & 6890 & 1863\\
+16 & 45427 & 27561 & 7452\\
+17 & 90853 & 55123 & 14904\\
+\end{array}
 \end{equation}
 
 \section{Dyadic Minoration}
