@@ -60,7 +60,7 @@ assert( (PTR)->byte-1==(PTR)->item );                           \
 assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
 
         //! in place constructor
-#define Y_MPN_CTOR(SZ,MX) memory::ro_buffer(), ios::serializable(), bytes(SZ), allocated(MX), byte( __acquire(allocated) ), item(byte-1)
+#define Y_MPN_CTOR(SZ,MX) base_class(), memory::ro_buffer(), ios::serializable(), bytes(SZ), allocated(MX), byte( __acquire(allocated) ), item(byte-1)
 
         class integer; //!< forward declaration
 
