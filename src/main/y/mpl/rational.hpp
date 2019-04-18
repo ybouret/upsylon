@@ -71,7 +71,7 @@ namespace upsylon
             }
 
             //! copy
-            inline rational( const rational &q ) : num(q.num), den(q.den) {}
+            inline rational( const rational &q ) :  base_class(), num(q.num), den(q.den) {}
 
             //! no throw exchange
             inline void xch( rational &q ) throw()
