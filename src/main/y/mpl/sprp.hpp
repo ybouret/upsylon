@@ -17,10 +17,11 @@ namespace upsylon
             class node_type : public core::inode<node_type>
             {
             public:
+                typedef core::inode<node_type> __node_type;
                 const mpn q;
-                node_type( const mpn       &value ) : q(value)   {}
-                node_type( const node_type &other)  : q(other.q) {}
-                virtual ~node_type() throw() {}
+                inline node_type( const mpn       &value ) : __node_type(), q(value)   {}
+                inline node_type( const node_type &other)  : __node_type(), q(other.q) {}
+                inline virtual ~node_type() throw() {}
 
             private:
                 Y_DISABLE_ASSIGN(node_type);
