@@ -1,52 +1,32 @@
 #include "y/mpl/natural.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/math/triplet.hpp"
 
 #include <cmath>
 
 using namespace upsylon;
 
+typedef  math::triplet<double> Triplet;
+
 namespace
 {
+    static const Triplet coeff = {log(2.0),2.5 - 3 * log(2.0), 1.5 - 2 * log(2.0) };
+    static const double  Xmax  = (12.0*log(2.0)-8.0)/(9.0-12.0*log(2));
 
-    static const double a = log(2);
-    static const double b = 2.5 - 3 * log(2.0);
-    static const double c = 1.5 - 2 * log(2.0);
-
-    class iLog
+    struct iLog
     {
-    public:
-        iLog() throw() {}
-        ~iLog() throw() {}
-
-        double operator()(size_t x, size_t i, size_t p)
+        unsigned i;
+        double operator()(double x) const
         {
-            const size_t tpp   = ipower(2,p);
-            const size_t tpi   = ipower(2.0,i);
-            const size_t A     = size_t(ceil(  a * tpp ));
-            const size_t B     = size_t(floor( b * tpp ));
-            const size_t C     = size_t(ceil(  c * tpp ));
-            const size_t X     = x-tpi;
-
-            size_t den = i * ipower(2,3*i)*A;
-            den       += X * ipower(2,2*i+p);
-            den       += C * ipower(X,3);
-            den       -= B * ipower(2,i) * ipower(X,2);
-            return den/ ipower(2.0,3*i+p);
+            const double x_i = ipower(2.0,i);
+            const double dx  = (x-x_i)/x_i;
+            return i * coeff.a + dx - coeff.b * (dx*dx) + coeff.c * (dx*dx*dx);
         }
 
-        double delta( const size_t p )
-        {
-            const double tpp   = ipower(2.0,p);
-            const double A     = ceil(  a * tpp );
-            const double B     = floor( b * tpp );
-            const double C     = ceil(  c * tpp );
-            return tpp-A-B+C;
-        }
-
-    private:
 
     };
+
 
 
 }
@@ -54,46 +34,29 @@ namespace
 Y_UTEST(ilog)
 {
 
-    std::cerr << "a=" << a << ", b=" << b << ", c=" << c << std::endl;
+    std::cerr << "coeff=" << coeff << std::endl;
 
-    iLog Lam;
+    iLog L;
     {
-        ios::ocstream fp("delta.dat");
-        for(size_t p=0;p<=30;++p)
+        ios::ocstream mx("deltamax.dat");
+        ios::ocstream fp("logapprox.dat");
+        unsigned &i = L.i;
+        for( i=0; i <= 16; ++i )
         {
-            const double delta = Lam.delta(p);
-            if(delta<=0)
+            const unsigned xlo = (1<<i);
+            const unsigned xup = xlo<<1;
+            for(unsigned x=xlo;x<=xup;++x)
             {
-                const double tpp   = ipower(2.0,p);
-                const double A     = ceil(  a * tpp );
-                const double B     = floor( b * tpp );
-                const double C     = ceil(  c * tpp );
-                fp("%u %g %g %g\n", unsigned(p),A,B,C );
+                const double Lx = L(x);
+                fp("%u %g %g\n", x, Lx, Lx-log(x));
             }
-        }
-    }
-    for(size_t p=0;p<=17;++p)
-    {
-        std::cerr << "p=" << p << ", delta=" << Lam.delta(p) << std::endl;
-        {
-            const double tpp = ipower(2.0,p);
-            const double A   = ceil(  a * tpp );
-            const double B   = floor( b * tpp );
-            const double C   = ceil(  c * tpp );
-            std::cerr << "A=" << A << ", B=" << B << ", C=" << C << std::endl;
-        }
-        const string  fn  = vformat("ilog%u.dat",unsigned(p));
-        ios::ocstream fp(fn);
-        for(size_t i=0;i<=16;++i)
-        {
-            for(size_t x=(1<<i);x<=(1<<(i+1));++x)
-            {
-                fp("%u %g %g\n", unsigned(x), double(Lam(x,i,p))-log(x), double(Lam(x,i,p)));
-            }
+            const double xmax = Xmax * xlo + xlo;
+            const double Lmax = L(xmax);
+            const double dmax = L(xmax) - log(xmax);
+            mx("%g %g %g\n", xmax, Lmax, dmax);
         }
     }
 
-    //std::cerr << "plot 'ilog.dat' u 1:2:3 w lp lc var" << std::endl;
 
 }
 Y_UTEST_DONE()

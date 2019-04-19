@@ -55,8 +55,11 @@ c & = & \dfrac{3}{2}-2\ln(2)\\
 \end{equation}
 and
 \begin{equation}
+\boxed{
 \forall x\in[2^i,2^{i+1}], \;\; \ln(x) \leq L_i(x) 
+}
 \end{equation}
+
 
 \begin{equation}
 	L_i(x) = \dfrac{
@@ -67,6 +70,17 @@ and
 	}
 	{2^{3i}} 
 \end{equation}
+We find that the maximum of $L_i(x)-\ln(x)$ is for 
+\begin{equation}
+	\dfrac{x_{i,max}-2^i}{2^i} = \dfrac{12\ln(2)-8}{9-12\ln(2)}
+\end{equation}
+and the value is independent of $i$
+\begin{equation}
+	\forall i, \;\; \max\lbrace L_i(x)-\ln(x)\rbrace \simeq 0.003642013011295071
+\end{equation}
+
+\end{document}
+
 Let us use a binary level $2^p$
 \begin{equation}
 	L_i(x) \leq \Lambda_i(x,p) = 
