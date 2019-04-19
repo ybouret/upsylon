@@ -42,9 +42,17 @@ namespace
             return i * coeff.a + dx - coeff.b * (dx*dx) + coeff.c * (dx*dx*dx);
         }
 
-
     };
 
+    static double Lambda( double x, unsigned i, unsigned p )
+    {
+        computeCOEFF(p);
+        const double x_i = ipower(2.0,i);
+        const double dx  = x-x_i;
+        const double num = i*COEFF.a*ipower(2.0,3*i) + dx * ( ipower(2.0,2*i+p) + dx * ( dx*COEFF.c - COEFF.b * ipower(2.0,i) ) );
+
+        return num / ipower(2.0,3*i+p);
+    }
 
 
 }
@@ -65,6 +73,7 @@ Y_UTEST(ilog)
             }
         }
     }
+
     iLog L;
     {
         ios::ocstream mx("deltamax.dat");
@@ -83,6 +92,29 @@ Y_UTEST(ilog)
             const double Lmax = L(xmax);
             const double dmax = L(xmax) - log(xmax);
             mx("%g %g %g\n", xmax, Lmax, dmax);
+        }
+    }
+
+    static const unsigned p_val[] = { 3,5,11,13,14,16,17 };
+    static const unsigned p_num = sizeof(p_val)/sizeof(p_val[0]);
+    for(unsigned ip=0; ip < p_num; ++ip )
+    {
+        const unsigned p = p_val[ip];
+        const double   d = computeDELTA(p);
+        if(d>0) throw exception("unexpected bad delta...");
+        const string  fn = vformat("ilog%u.dat",p);
+        ios::ocstream fp(fn);
+        unsigned &i = L.i;
+        for( i=0;i<=10;++i)
+        {
+            const unsigned xlo = (1<<i);
+            const unsigned xup = xlo<<1;
+            for(unsigned x=xlo;x<=xup;++x)
+            {
+                //const double Lx  = L(x);
+                const double Lam = Lambda(x,i,p);
+                fp("%g %g %g\n", log(double(x)), Lam, Lam-log(x));
+            }
         }
     }
 
