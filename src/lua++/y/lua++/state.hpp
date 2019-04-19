@@ -83,6 +83,15 @@ namespace upsylon
         };
 
         typedef State::Pointer VM; //!< shared lua_State
+
+        //! implement a simple unary function for Lua
+#define Y_LUA_IMPL_CFUNCTION(NAME,FUNC)            \
+int __upsylon_lua_##NAME( lua_State *L ) {                 \
+lua_pushnumber(L, FUNC( luaL_checknumber(L,1) ) ); \
+return 1;}
+
+#define Y_LUA_LOAD_CFUNCTION(THE_VM,NAME) (THE_VM)->load(#NAME,__upsylon_lua_##NAME)
+
     }
 
 }
