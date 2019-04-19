@@ -1,5 +1,4 @@
 //! \file
-
 #ifndef Y_MPL_SPRP_INCLUDED
 #define Y_MPL_SPRP_INCLUDED 1
 
@@ -11,22 +10,25 @@ namespace upsylon
     namespace mpl
     {
 
+        //! Strong PRobable Prime
         class sprp : public base_class
         {
         public:
+            //! internal node to store exponents
             class node_type : public core::inode<node_type>
             {
             public:
-                typedef core::inode<node_type> __node_type;
-                const mpn q;
-                inline node_type( const mpn       &value ) : __node_type(), q(value)   {}
-                inline node_type( const node_type &other)  : __node_type(), q(other.q) {}
-                inline virtual ~node_type() throw() {}
+                typedef core::inode<node_type> __node_type; //!< alias
+                const mpn q;                                //!< exponent value
+                inline node_type( const mpn       &value ) : __node_type(), q(value)   {} //!< setup
+                inline node_type( const node_type &other)  : __node_type(), q(other.q) {} //!< copy
+                inline virtual ~node_type() throw() {} //!< destructor
 
             private:
                 Y_DISABLE_ASSIGN(node_type);
             };
-            typedef core::list_of_cpp<node_type> list_type;
+
+            typedef core::list_of_cpp<node_type> list_type; //!< alias
 
 
             const natural   n; //!< 2^s*d+1, must be odd

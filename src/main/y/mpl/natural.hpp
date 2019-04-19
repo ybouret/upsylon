@@ -23,11 +23,12 @@ namespace upsylon
         typedef uint64_t word_t;    //!< integral type for drop in replacement
         typedef int64_t  integer_t; //!< sgined integral type
 
+        //! base class to clarify hierarchy
         class base_class : public counted_object
         {
         public:
-            explicit base_class() throw();
-            virtual ~base_class() throw();
+            explicit base_class() throw(); //!< setup
+            virtual ~base_class() throw(); //!< destructor
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(base_class);
