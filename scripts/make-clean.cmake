@@ -1,6 +1,11 @@
+FIND_PROGRAM(MAKE make)
 FILE( GLOB_RECURSE Makefiles "makefile")
-#MESSAGE( ${Makefiles} )
 
 FOREACH(f IN LISTS Makefiles )
-MESSAGE(${f})
+
+#MESSAGE(${f})
+GET_FILENAME_COMPONENT(d ${f} DIRECTORY)
+MESSAGE( STATUS "Cleaning ${d}" )
+EXECUTE_PROCESS(COMMAND ${MAKE} -C ${d} clean)
+
 ENDFOREACH(f)
