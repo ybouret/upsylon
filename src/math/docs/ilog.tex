@@ -47,6 +47,8 @@ leading to:
 \begin{equation}
 \left\lbrace
 \begin{array}{rcl}
+a & = & \ln(2) \\
+\\
 b & = & \dfrac{5}{2}-3\ln(2)\\
 \\
 c & = & \dfrac{3}{2}-2\ln(2)\\
@@ -63,7 +65,7 @@ and
 
 \begin{equation}
 	L_i(x) = \dfrac{
-	2^{3i}\ln(x_i) 
+	i\cdot2^{3i}a
 	+ 2^{2i}\left(x-2^i\right)
 	- b 2^{i}\left(x-2^i\right)^2
 	+ c      \left(x-2^i\right)^3
@@ -77,6 +79,43 @@ We find that the maximum of $L_i(x)-\ln(x)$ is for
 and the value is independent of $i$
 \begin{equation}
 	\forall i, \;\; \max\lbrace L_i(x)-\ln(x)\rbrace \simeq 0.003642013011295071
+\end{equation}
+We define 
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+A_p & = & \myceil{a 2^p} \\
+\\
+B_p & = & \myfloor{b 2^p}\\
+\\
+C_p & = & \myceil{c 2^p} \\
+\end{array}
+\right.
+\end{equation}
+so that
+\begin{equation}
+	\forall p, L_i(x) \leq 
+	\Lambda_i(x,p) =
+	 \dfrac{
+	i\cdot2^{3i}A_p
+	+ 2^{2i+p}\left(x-2^i\right)
+	- B_p 2^{i}\left(x-2^i\right)^2
+	+ C_p      \left(x-2^i\right)^3
+	 }{2^{3i+p}}
+\end{equation}
+We got
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\Lambda_i(x_{i+1},p) & = & \left[ i \cdot A_p + 2^p - B_p + C_p \right] 2^{-p}\\
+	\\
+	\Lambda_{i+1}(x_{i+1},p) & = & \left[  (i+1) \cdot A_p \right] 2^{-p} \\
+\end{array}
+\right.
+\end{equation}
+so that
+\begin{equation}
+	\Lambda_i(x_{i+1},p) \leq \Lambda_{i+1}(x_{i+1},p) \Rightarrow \delta\Lambda_p = 2^p + C_p - (A_p+B_p) \leq 0
 \end{equation}
 
 \end{document}

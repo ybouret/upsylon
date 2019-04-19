@@ -12,7 +12,25 @@ typedef  math::triplet<double> Triplet;
 namespace
 {
     static const Triplet coeff = {log(2.0),2.5 - 3 * log(2.0), 1.5 - 2 * log(2.0) };
+    static       Triplet COEFF = {1,1,1};
+
+
     static const double  Xmax  = (12.0*log(2.0)-8.0)/(9.0-12.0*log(2));
+
+    static void computeCOEFF(const unsigned p)
+    {
+        const double fac = ipower(2.0,p);
+        COEFF.a = ceil(  fac * coeff.a );
+        COEFF.b = floor( fac * coeff.b );
+        COEFF.c = ceil(  fac * coeff.c );
+    }
+
+    static double computeDELTA( const unsigned p )
+    {
+        computeCOEFF(p);
+        return floor( (ipower(2.0,p)  + COEFF.c - (COEFF.a+COEFF.b)) + 0.5 );
+    }
+
 
     struct iLog
     {
@@ -35,7 +53,18 @@ Y_UTEST(ilog)
 {
 
     std::cerr << "coeff=" << coeff << std::endl;
-
+    {
+        ios::ocstream fp("delta.dat");
+        for(unsigned p=0; p <= 32; ++p )
+        {
+            const double d = computeDELTA(p);
+            if(d<=0)
+            {
+                std::cerr << "COEFF" << p << "=" << COEFF << std::endl;
+                fp("%u %g\n",p,d);
+            }
+        }
+    }
     iLog L;
     {
         ios::ocstream mx("deltamax.dat");
