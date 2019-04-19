@@ -78,29 +78,19 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             //__________________________________________________________________
 
             //! a zero natural
-            inline natural() : Y_MPN_CTOR(0,0) { Y_MPN_CHECK(this); }
+            natural();
 
             //! a zero with any memory
-            inline natural(size_t n, const as_capacity_t &) : Y_MPN_CTOR(0,n) { Y_MPN_CHECK(this); }
+            natural(size_t n, const as_capacity_t &);
 
             //! release memory
-            inline virtual ~natural() throw()
-            {
-                static manager &mgr = manager::location();
-                Y_MPN_CHECK(this); mgr.__release(byte,allocated);
-            }
+            virtual ~natural() throw();
 
             //! copy
-            inline natural(const natural &other) : Y_MPN_CTOR(other.bytes,bytes)
-            {
-                Y_MPN_CHECK(&other); memcpy(byte,other.byte,bytes); Y_MPN_CHECK(this);
-            }
+            natural(const natural &other);
 
-            //! copy from a word_type
-            inline natural(word_t w) : Y_MPN_CTOR(0,sizeof(word_t))
-            {
-                memcpy(byte,prepare(w,bytes),sizeof(word_t)); Y_MPN_CHECK(this);
-            }
+            //! setup from a word_type
+            natural(word_t w);
 
             //! copy from raw memory
             inline natural( const void  *buffer, size_t buflen) : Y_MPN_CTOR(buflen,buflen)

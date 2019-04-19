@@ -30,3 +30,32 @@ namespace upsylon
     }
 }
 
+namespace upsylon
+{
+    namespace mpl
+    {
+        natural:: natural() : Y_MPN_CTOR(0,0) { Y_MPN_CHECK(this); }
+        natural:: natural(size_t n, const as_capacity_t &) : Y_MPN_CTOR(0,n) { Y_MPN_CHECK(this); }
+
+        natural:: ~natural() throw()
+        {
+            static manager &mgr = manager::location();
+            Y_MPN_CHECK(this); mgr.__release(byte,allocated);
+        }
+
+        natural:: natural(const natural &other) : Y_MPN_CTOR(other.bytes,bytes)
+        {
+            Y_MPN_CHECK(&other); memcpy(byte,other.byte,bytes); Y_MPN_CHECK(this);
+        }
+
+        natural:: natural(word_t w) : Y_MPN_CTOR(0,sizeof(word_t))
+        {
+            memcpy(byte,prepare(w,bytes),sizeof(word_t)); Y_MPN_CHECK(this);
+        }
+
+        
+
+    }
+}
+
+
