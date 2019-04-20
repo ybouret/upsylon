@@ -113,7 +113,7 @@ Y_UTEST(ilog)
             {
                 //const double Lx  = L(x);
                 const double Lam = Lambda(x,i,p);
-                fp("%g %g %g\n", log(double(x)), Lam, Lam-log(x));
+                fp("%g %g %g\n", log(double(x)), Lam, Lam-log(double(x)));
             }
         }
     }
