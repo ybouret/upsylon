@@ -86,7 +86,7 @@ Y_UTEST(ilog)
             for(unsigned x=xlo;x<=xup;++x)
             {
                 const double Lx = L(x);
-                fp("%u %g %g\n", x, Lx, Lx-log(x));
+                fp("%u %g %g\n", x, Lx, Lx-log(double(x)));
             }
             const double xmax = Xmax * xlo + xlo;
             const double Lmax = L(xmax);
