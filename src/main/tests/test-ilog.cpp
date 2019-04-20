@@ -15,7 +15,7 @@ namespace
     static       Triplet COEFF = {1,1,1};
 
 
-    static const double  Xmax  = (12.0*log(2.0)-8.0)/(9.0-12.0*log(2));
+    static const double  Xmax  = (12.0*log(2.0)-8.0)/(9.0-12.0*log(2.0));
 
     static void computeCOEFF(const unsigned p)
     {
