@@ -28,6 +28,9 @@ ADD_SUBDIRECTORY(y/tiff)
 MESSAGE( STATUS "                   sqlite")
 ADD_SUBDIRECTORY(y/sqlite)
 
+MESSAGE( STATUS "                   portaudio")
+ADD_SUBDIRECTORY(y/portaudio)
+
 
 MESSAGE( STATUS "")
 Y_SEPLINE()
