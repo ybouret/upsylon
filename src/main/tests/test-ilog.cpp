@@ -55,10 +55,32 @@ namespace
     }
 
 
+    template <typename T>
+    static inline void check_round()
+    {
+        const unsigned nb = sizeof(T)*8;
+        for(unsigned ibit=0;ibit<nb;++ibit)
+        {
+            const T round_one  = 1;
+            const T round_word = round_one << ibit;
+            const T round_mask = round_word - round_one;
+            const T round_not2 = ~round_mask;
+
+            std::cerr << std::dec << "ibit=" << ibit;
+            std::cerr << std::hex << "\tword=" << round_word << ", mask=" << round_mask << ", not2=" <<  round_not2;
+
+            std::cerr << std::endl;
+        }
+        std::cerr << std::dec;
+    }
+
 }
 
 Y_UTEST(ilog)
 {
+
+    check_round<uint16_t>();
+
 
     std::cerr << "coeff=" << coeff << std::endl;
     {
