@@ -29,7 +29,7 @@ SET(to_remove ${to_remove} ${tmp})
 ENDIF()
 
 MESSAGE( STATUS "collection old backup files" )
-FILE(GLOB_RECURSE tmp "*~")
+FILE(GLOB_RECURSE tmp "src/*~")
 SET(to_remove ${to_remove} ${tmp})
 
 #specific stuff
