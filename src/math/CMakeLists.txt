@@ -1,6 +1,5 @@
 PROJECT(y-m C CXX)
 
-MESSAGE(STATUS "")
 MESSAGE( STATUS "<Mathematics>" )
 
 INCLUDE_DIRECTORIES(. ../main)

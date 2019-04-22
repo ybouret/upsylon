@@ -1,6 +1,5 @@
 PROJECT(z++)
 
-MESSAGE( STATUS "" )
 MESSAGE( STATUS "<z++>" )
 FILE( GLOB decl y/z++/*.hpp)
 FILE( GLOB impl y/z++/*.cpp)

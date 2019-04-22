@@ -1,6 +1,5 @@
 PROJECT(y-net CXX)
 
-MESSAGE( STATUS "" )
 MESSAGE( STATUS "<NETwork>" )
 
 INCLUDE_DIRECTORIES(. ../main)

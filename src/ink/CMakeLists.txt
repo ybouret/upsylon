@@ -1,6 +1,5 @@
 PROJECT(y-ink CXX)
 
-MESSAGE(STATUS "")
 MESSAGE( STATUS "<Images Numerical Kernel>" )
 
 INCLUDE_DIRECTORIES(. ../main

@@ -1,6 +1,5 @@
 PROJECT(bz2++)
 
-MESSAGE(STATUS "")
 MESSAGE( STATUS "<BZ2++>" )
 FILE( GLOB decl y/bz2++/*.hpp)
 FILE( GLOB impl y/bz2++/*.cpp)

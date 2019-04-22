@@ -1,6 +1,5 @@
 PROJECT(y-lang CXX)
 
-MESSAGE(STATUS "")
 MESSAGE( STATUS "<Lang>")
 
 INCLUDE_DIRECTORIES(. ../main)

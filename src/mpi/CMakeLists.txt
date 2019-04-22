@@ -4,7 +4,6 @@ INCLUDE_DIRECTORIES(. ../main)
 INCLUDE(../../scripts/mpi.cmake)
 
 IF(MPI_FOUND)
-	MESSAGE(STATUS "")
 	MESSAGE( STATUS "<MPI>" )
 
 	FILE(GLOB main_decl y/mpi/*.hpp)

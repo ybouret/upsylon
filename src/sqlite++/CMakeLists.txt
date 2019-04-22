@@ -1,6 +1,5 @@
 PROJECT(sqlite++)
 
-MESSAGE( STATUS "" )
 MESSAGE( STATUS "<SQLite++>" )
 FILE( GLOB decl y/sqlite++/*.hpp)
 FILE( GLOB impl y/sqlite++/*.cpp)

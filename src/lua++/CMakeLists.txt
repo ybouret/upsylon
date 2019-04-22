@@ -1,6 +1,5 @@
 PROJECT(lua++)
 
-MESSAGE(STATUS "")
 MESSAGE( STATUS "<Lua++>")
 
 FILE( GLOB decl y/lua++/*.hpp)
