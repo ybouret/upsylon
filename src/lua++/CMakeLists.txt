@@ -1,4 +1,6 @@
 PROJECT(lua++)
+
+MESSAGE(STATUS "")
 MESSAGE( STATUS "<Lua++>")
 
 FILE( GLOB decl y/lua++/*.hpp)
@@ -14,3 +16,4 @@ INSTALL( TARGETS y-lua++ ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
 MESSAGE( STATUS "<Lua++/>")
+MESSAGE(STATUS "")

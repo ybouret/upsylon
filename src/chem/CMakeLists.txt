@@ -1,4 +1,5 @@
 PROJECT(y-chem CXX)
+MESSAGE(STATUS "")
 MESSAGE( STATUS "<CHEMical>" )
 
 INCLUDE_DIRECTORIES(. ../main ../math ../lua++ ../ext)
@@ -30,3 +31,4 @@ INSTALL( TARGETS y-chem ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
 MESSAGE( STATUS "<CHEMical/>" )
+MESSAGE(STATUS "")

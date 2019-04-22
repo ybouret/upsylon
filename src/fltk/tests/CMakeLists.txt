@@ -1,4 +1,4 @@
-
+PROJECT(test-fltk)
 FILE(GLOB test_srcs test-*.cpp)
 FLUID_UIC(matte)
 FLUID_UIC(canvas)

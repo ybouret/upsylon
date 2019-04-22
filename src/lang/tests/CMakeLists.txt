@@ -1,3 +1,4 @@
+PROJECT(test-lang)
 INCLUDE_DIRECTORIES(../../main/tests)
 FILE(GLOB srcs test-*.cpp)
 FILE(GLOB data *.g)

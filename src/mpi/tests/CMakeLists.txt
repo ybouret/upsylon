@@ -1,3 +1,5 @@
+PROJECT(test-mpi)
+
 INCLUDE_DIRECTORIES(../../main/tests)
 FILE(GLOB srcs test-*.cpp)
 

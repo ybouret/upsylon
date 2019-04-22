@@ -1,5 +1,6 @@
 PROJECT(sqlite++)
 
+MESSAGE( STATUS "" )
 MESSAGE( STATUS "<SQLite++>" )
 FILE( GLOB decl y/sqlite++/*.hpp)
 FILE( GLOB impl y/sqlite++/*.cpp)
@@ -15,5 +16,6 @@ INSTALL( TARGETS y-sqlite++ ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
 MESSAGE( STATUS "<SQLite++/>" )
+MESSAGE( STATUS "" )
 
 

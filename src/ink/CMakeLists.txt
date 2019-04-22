@@ -1,4 +1,6 @@
 PROJECT(y-ink CXX)
+
+MESSAGE(STATUS "")
 MESSAGE( STATUS "<Images Numerical Kernel>" )
 
 INCLUDE_DIRECTORIES(. ../main
@@ -65,3 +67,4 @@ INSTALL( TARGETS y-ink ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
 MESSAGE( STATUS "<Images Numerical Kernel/>" )
+MESSAGE(STATUS "")

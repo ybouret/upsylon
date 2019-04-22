@@ -1,3 +1,4 @@
+PROJECT(test-ink)
 INCLUDE_DIRECTORIES(../../main/tests)
 FILE(GLOB srcs test-*.cpp)
 

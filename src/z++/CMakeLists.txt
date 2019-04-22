@@ -1,5 +1,6 @@
 PROJECT(z++)
 
+MESSAGE( STATUS "" )
 MESSAGE( STATUS "<z++>" )
 FILE( GLOB decl y/z++/*.hpp)
 FILE( GLOB impl y/z++/*.cpp)
@@ -17,3 +18,4 @@ INSTALL( TARGETS y-z++ ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
 MESSAGE( STATUS "<z++/>" )
+MESSAGE( STATUS "" )

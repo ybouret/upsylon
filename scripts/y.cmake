@@ -1,7 +1,7 @@
 ########################################################################
 ##
 ##
-## global CMake parameters
+## Global CMake parameters
 ##
 ##
 ########################################################################
@@ -61,7 +61,7 @@ ENDIF()
 ########################################################################
 ##
 ##
-## Guess compiler version
+## <CompilerVersion>
 ##
 ##
 ########################################################################
@@ -84,9 +84,9 @@ FUNCTION(Y_FIND_COMPILER_VERSION)
 	ENDIF()
 	# get version pattern
 	STRING( REGEX MATCH    "[0-9]+\\.[0-9]+\\.[0-9]+"         YC_VERSION "${Y_RAW_COMPILER_VERSION}" )
-	STRING( REGEX REPLACE  "([0-9]+)\\.[0-9]+\\.[0-9]+" "\\1" YC_MAJOR "${YC_VERSION}")
-	STRING( REGEX REPLACE  "[0-9]+\\.([0-9]+)\\.[0-9]+" "\\1" YC_MINOR "${YC_VERSION}")
-	STRING( REGEX REPLACE  "[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" YC_PATCH "${YC_VERSION}")
+	STRING( REGEX REPLACE  "([0-9]+)\\.[0-9]+\\.[0-9]+" "\\1" YC_MAJOR   "${YC_VERSION}" )
+	STRING( REGEX REPLACE  "[0-9]+\\.([0-9]+)\\.[0-9]+" "\\1" YC_MINOR   "${YC_VERSION}" )
+	STRING( REGEX REPLACE  "[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" YC_PATCH   "${YC_VERSION}" )
 	MESSAGE( STATUS "[${Y_CC}] is <${YC_VERSION}>: major=${YC_MAJOR}, minor=${YC_MINOR}, patchlevel=${YC_PATCH}" )
 	SET(Y_COMPILER_VERSION ${YC_VERSION} PARENT_SCOPE)
 	SET(Y_COMPILER_MAJOR   ${YC_MAJOR}   PARENT_SCOPE)
@@ -98,7 +98,7 @@ ENDFUNCTION(Y_FIND_COMPILER_VERSION)
 ########################################################################
 ##
 ##
-## Find compilers
+## <FindCompilers>
 ##
 ##
 ########################################################################
@@ -197,11 +197,19 @@ IF(NOT Y_KNOWN_COMPILER)
 	MESSAGE( FATAL_ERROR "Unhandled compiler [${Y_CC}]")
 ENDIF()
 
+########################################################################
+##
+##
+## <FindCompilers/>
+##
+##
+########################################################################
+
 
 ########################################################################
 ##
 ##
-## Specific linking
+## <SpecificLinking>
 ##
 ##
 ########################################################################
@@ -294,4 +302,12 @@ MACRO(TARGET_LINK_Y tgt)
 	ENDIF()
 	
 ENDMACRO(TARGET_LINK_Y)
+
+########################################################################
+##
+##
+## <SpecificLinking/>
+##
+##
+########################################################################
 

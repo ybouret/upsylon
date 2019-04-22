@@ -1,6 +1,13 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.4)
 PROJECT(upsylon)
 
+########################################################################
+##
+##
+## <Setup>
+##
+##
+########################################################################
 INCLUDE(../scripts/y.cmake)
 SET(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/../sdk)
 MESSAGE( STATUS "SDK in ${CMAKE_INSTALL_PREFIX}")
@@ -8,9 +15,24 @@ MESSAGE( STATUS "SDK in ${CMAKE_INSTALL_PREFIX}")
 FILE(GLOB SCRIPTS ../scripts/*.cmake)
 INSTALL( FILES ${SCRIPTS} DESTINATION share/y )
 
+########################################################################
+##
+##
+## <Setup/>
+##
+##
+########################################################################
+
+########################################################################
+##
+##
+## <Libraries>
+##
+##
+########################################################################
 MESSAGE(STATUS "")
 Y_SEPLINE()
-MESSAGE( STATUS "Scanning Libraries" )
+MESSAGE( STATUS "<Scanning Libraries>" )
 Y_SEPLINE()
 MESSAGE(STATUS "")
 ADD_SUBDIRECTORY(main)
@@ -23,6 +45,26 @@ ADD_SUBDIRECTORY(ink)
 #ADD_SUBDIRECTORY(seem)
 ADD_SUBDIRECTORY(net)
 
+MESSAGE(STATUS "")
+Y_SEPLINE()
+MESSAGE( STATUS "<Scanning Libraries/>" )
+Y_SEPLINE()
+MESSAGE(STATUS "")
+########################################################################
+##
+##
+## <Libraries/>
+##
+##
+########################################################################
+
+########################################################################
+##
+##
+## <Doxygen>
+##
+##
+########################################################################
 FIND_PROGRAM(DOXYGEN doxygen)
 IF( "${DOXYGEN}" STREQUAL "DOXYGEN-NOTFOUND"  )
 	MESSAGE( STATUS "No available Doxygen" )
@@ -33,18 +75,58 @@ ELSE()
 		WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..
 		COMMENT "Generating Documentation")
 ENDIF()
+########################################################################
+##
+##
+## <Doxygen/>
+##
+##
+########################################################################
+
+########################################################################
+##
+##
+## <External>
+##
+##
+########################################################################
 MESSAGE( STATUS "")
 Y_SEPLINE()
-MESSAGE( STATUS "Scanning External Libraries" )
+MESSAGE( STATUS "<Scanning External Libraries>" )
 Y_SEPLINE()
+MESSAGE( STATUS "")
+
 ADD_SUBDIRECTORY(ext)
 
-MESSAGE(STATUS "")
+MESSAGE( STATUS "")
 Y_SEPLINE()
-MESSAGE( STATUS "Scanning C++ Wrapping Libraries" )
+MESSAGE( STATUS "<Scanning External Libraries/>" )
 Y_SEPLINE()
-MESSAGE(STATUS "")
+MESSAGE( STATUS "")
 
+
+########################################################################
+##
+##
+## <External/>
+##
+##
+########################################################################
+
+
+
+########################################################################
+##
+##
+## <Interface>
+##
+##
+########################################################################
+MESSAGE(STATUS "")
+Y_SEPLINE()
+MESSAGE( STATUS "<Scanning C++ Wrapping Libraries>" )
+Y_SEPLINE()
+MESSAGE(STATUS "")
 
 ADD_SUBDIRECTORY(z++)
 ADD_SUBDIRECTORY(bz2++)
@@ -58,4 +140,17 @@ DEPENDS
 test-z++ test-bz2++ test-lua++ test-sqlite++
 COMMENT "Built Interfaces Libraries")
 
+MESSAGE(STATUS "")
+Y_SEPLINE()
+MESSAGE( STATUS "<Scanning C++ Wrapping Libraries/>" )
+Y_SEPLINE()
+MESSAGE(STATUS "")
+
+########################################################################
+##
+##
+## <Interface/>
+##
+##
+########################################################################
 

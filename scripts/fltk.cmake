@@ -60,7 +60,7 @@ MESSAGE( STATUS "@FLTK fluid='${FLUID}" )
 #-----------------------------------------------------------------------
 #MESSAGE( STATUS "  @FLTK query cxxflags..." )
 EXEC_PROGRAM( bash ARGS ${FLTK-CONFIG} --cxxflags OUTPUT_VARIABLE FLTK-CXXFLAGS)
-MESSAGE( STATUS "  @FLTK-CXXFLAGS='${FLTK-CXXFLAGS}'" )
+#MESSAGE( STATUS "  @FLTK-CXXFLAGS='${FLTK-CXXFLAGS}'" )
 
 #-----------------------------------------------------------------------
 # extract include directories
@@ -68,14 +68,14 @@ MESSAGE( STATUS "  @FLTK-CXXFLAGS='${FLTK-CXXFLAGS}'" )
 STRING( REGEX MATCHALL "[-][I]([^ ;])+" FLTK-INCLUDES ${FLTK-CXXFLAGS} )
 STRING( REPLACE  "-I" "" FLTK-INCLUDES "${FLTK-INCLUDES}")
 LIST(REMOVE_DUPLICATES FLTK-INCLUDES)
-MESSAGE( STATUS "  @FLTK-INCLUDES='${FLTK-INCLUDES}'" )
+#MESSAGE( STATUS "  @FLTK-INCLUDES='${FLTK-INCLUDES}'" )
 INCLUDE_DIRECTORIES(${FLTK-INCLUDES})
 
 #-----------------------------------------------------------------------
 # extract definitions
 #-----------------------------------------------------------------------
 STRING( REGEX MATCHALL "[-][D]([^ ;])+" FLTK-DEFINES ${FLTK-CXXFLAGS} )
-MESSAGE( STATUS "  @FLTK-DEFINES='${FLTK-DEFINES}'")
+#MESSAGE( STATUS "  @FLTK-DEFINES='${FLTK-DEFINES}'")
 ADD_DEFINITIONS( ${FLTK-DEFINES} )
 
 #-----------------------------------------------------------------------
@@ -103,9 +103,9 @@ MACRO(TARGET_LINK_FLTK THE_TARGET)
 	ENDFOREACH( extra ${ARGN} )
 
 	#get all args
-	MESSAGE( STATUS "@FLTK --> ${THE_TARGET} | 'fltk-config ${_fltk_ldflags}'" )
+	#MESSAGE( STATUS "@FLTK --> ${THE_TARGET} | 'fltk-config ${_fltk_ldflags}'" )
 	EXEC_PROGRAM( bash ARGS ${FLTK-CONFIG} ${_fltk_ldflags} OUTPUT_VARIABLE FLTK-LDFLAGS)
-	MESSAGE( STATUS "FLTK-LDFLAGS='${FLTK-LDFLAGS}'")
+	#MESSAGE( STATUS "FLTK-LDFLAGS='${FLTK-LDFLAGS}'")
 
 	#extract libraries, link directories is already set
 	#STRING( REGEX MATCHALL "([-][l]([^ ;])+)|(-framework ([^ ;])+)" FLTK-LIBS ${FLTK-LDFLAGS})

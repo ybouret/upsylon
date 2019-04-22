@@ -1,3 +1,4 @@
+PROJECT(test-main)
 
 ADD_EXECUTABLE(test-lzo ../y/codec/lzo/testmini.c)
 TARGET_LINK_Y(test-lzo)

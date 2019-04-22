@@ -1,5 +1,6 @@
 PROJECT(bz2++)
 
+MESSAGE(STATUS "")
 MESSAGE( STATUS "<BZ2++>" )
 FILE( GLOB decl y/bz2++/*.hpp)
 FILE( GLOB impl y/bz2++/*.cpp)
@@ -14,3 +15,4 @@ INSTALL( TARGETS y-bz2++ ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
 MESSAGE( STATUS "<BZ2++/>" )
+MESSAGE(STATUS "")
