@@ -5,6 +5,7 @@
 #include <csignal>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <cerrno>
 #endif
 
 
