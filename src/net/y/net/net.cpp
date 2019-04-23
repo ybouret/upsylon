@@ -87,3 +87,73 @@ namespace upsylon
 
 }
 
+
+namespace upsylon
+{
+
+    namespace net
+    {
+
+#if defined(Y_WIN)
+        const  socket_type  invalid_socket = INVALID_SOCKET;
+#endif
+
+#if defined(Y_BSD)
+        const  socket_type invalid_socket = -1;
+#endif
+
+        static
+        socket_type bsd_acquire_socket(const int proto_family,
+                                       const int type,
+                                       const int protocol)
+        {
+            Y_GIANT_LOCK();
+
+            while( true )
+            {
+                socket_type s = ::socket(proto_family,type,protocol);
+                if( s == invalid_socket )
+                {
+                    const int err = net::get_last_error_code();
+
+#if defined(Y_BSD)
+                    switch( err )
+                    {
+                        case EINTR: continue;
+                        default:    break;
+                    }
+#endif
+
+                    throw net::exception( err, "socket" );
+                }
+
+                return s;
+            }
+        }
+
+
+    }
+
+
+    net::socket_type network:: open(const net::ip_protocol proto, const net::ip_version version)
+    {
+
+        int pf  = -1;
+        switch( version )
+        {
+            case net::v4: pf = PF_INET;  break;
+            case net::v6: pf = PF_INET6; break;
+        }
+
+        int st = -1;
+        int pr = -1;
+        switch( proto )
+        {
+            case net::tcp: st = SOCK_STREAM; pr=IPPROTO_TCP; break;
+            case net::udp: st = SOCK_DGRAM;  pr=IPPROTO_UDP; break;
+        }
+
+        return net::bsd_acquire_socket(pf,st,pr);
+    }
+
+}

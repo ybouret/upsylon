@@ -100,6 +100,31 @@ namespace upsylon
 
     }
 
+    namespace net
+    {
+        enum ip_version
+        {
+            v4,
+            v6
+        };
+
+        enum ip_protocol
+        {
+            tcp,
+            udp
+        };
+
+#if defined(Y_WIN)
+        typedef SOCKET socket_type;
+#endif
+
+#if defined(Y_BSD)
+        typedef int    socket_type;
+#endif
+
+        extern const socket_type invalid_socket;
+    }
+
 
 }
 
