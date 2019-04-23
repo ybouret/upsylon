@@ -11,7 +11,6 @@ static inline void test_nbo( const T x )
 {
     const T y = net::swap_nbo_as(x);
     const T z = net::swap_nbo_as(y);
-    //std::cerr << "[" << typeid(T).name() << "] : " << x << " -> " << y << " -> " << z << std::endl;
     Y_ASSERT(z==x);
 
 }
@@ -47,6 +46,9 @@ Y_UTEST(network)
     std::cerr << "sizeof(imported::exception)    = " << sizeof(imported::exception) << std::endl;
     std::cerr << "sizeof(net::exception)         = " << sizeof(net::exception)     << std::endl;
     
+    
+    std::cerr << "sizeof(sockaddr_in) =" << sizeof(sockaddr_in)  << std::endl;
+    std::cerr << "sizeof(sockaddr_in6)=" << sizeof(sockaddr_in6) << std::endl;
 
 }
 Y_UTEST_DONE()
