@@ -19,8 +19,7 @@ Y_UTEST(network)
 {
     network::verbose  = true;
     network      & nw = network::instance();
-    const string   hn = nw.get_host_name();
-    std::cerr << "host_name=" << hn << std::endl;
+
 
     net128_t x;
     std::cerr << "x=" << x << std::endl;
@@ -32,9 +31,13 @@ Y_UTEST(network)
         test_nbo( alea.full<short>() );
         test_nbo( alea.full<uint64_t>() );
         test_nbo( alea.full<int32_t>() );
-
     }
 
+    const string   hn = nw.get_host_name();
+    std::cerr << "host_name=" << hn << std::endl;
+
+    const net::exception excp(0,"testing exception");
+    std::cerr << "excp.code=" << excp.code() << " [" << excp.what() << "] while " << excp.when() << std::endl;
 }
 Y_UTEST_DONE()
 

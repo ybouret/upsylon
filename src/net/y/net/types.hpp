@@ -3,6 +3,7 @@
 #define Y_NET_TYPES_INCLUDED 1
 
 #include "y/os/endian.hpp"
+#include "y/exception.hpp"
 #include <iosfwd>
 
 namespace upsylon
@@ -68,6 +69,34 @@ namespace upsylon
             return alias.item;
         }
     }
+
+    namespace net
+    {
+#if defined(Y_BSD)
+        typedef int error_code; //!< from errno
+#endif
+
+#if defined(Y_WIN)
+        typedef int error_code; //!< from WSAGetLastError()
+#endif
+        class exception : public upsylon::exception
+        {
+        public:
+            explicit exception(const error_code err,const char *fmt,...) throw() Y_PRINTF_CHECK(3,4);
+            virtual ~exception() throw(); //!< default destructor
+            exception( const exception & ) throw(); //!< copy constructor
+
+            virtual const char *what() const throw(); //!< internal what_
+            error_code          code() const throw(); //!< internal code_
+
+        private:
+            const error_code code_;
+            char             what_[128];
+        };
+
+    }
+
+
 }
 
 #endif

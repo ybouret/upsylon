@@ -7,10 +7,7 @@
 
 namespace upsylon
 {
-    namespace net
-    {
-
-    }
+    
 
     //! network instance for system
     class network : public singleton<network>

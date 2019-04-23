@@ -23,6 +23,7 @@ namespace upsylon
 
         exception:: ~exception() throw()
         {
+            memset( what_, 0, sizeof(what_) );
         }
 
         exception:: exception( const exception &other ) throw() :
