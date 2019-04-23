@@ -4,7 +4,6 @@
 #if defined(Y_BSD)
 #include <csignal>
 #include <unistd.h>
-#include <sys/socket.h>
 #include <cerrno>
 #endif
 

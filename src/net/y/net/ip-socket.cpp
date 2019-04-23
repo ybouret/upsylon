@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/file.h>
-#include <sys/socket.h>
+#include <errno.h>
 #endif
 
 namespace upsylon

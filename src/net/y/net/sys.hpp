@@ -7,8 +7,8 @@
 #if defined(Y_BSD)
 #    if defined(__OpenBSD__)
 #        include <sys/types.h>
-#        include <sys/socket.h>
 #    endif
+#    include <sys/socket.h>
 #    include <netinet/in.h>
 #endif
 
