@@ -4,6 +4,7 @@
 
 #include "y/os/endian.hpp"
 #include "y/exception.hpp"
+#include "y/net/sys.hpp"
 #include <iosfwd>
 
 namespace upsylon

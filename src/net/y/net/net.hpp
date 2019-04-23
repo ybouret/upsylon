@@ -3,7 +3,6 @@
 #define Y_NETWORK_INCLUDED 1
 
 #include "y/net/types.hpp"
-#include "y/net/sys.hpp"
 #include "y/string.hpp"
 
 namespace upsylon

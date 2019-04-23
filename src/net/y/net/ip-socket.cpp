@@ -37,7 +37,6 @@ namespace upsylon
             try
             {
                 on(SO_REUSEADDR);
-                on(SO_REUSEPORT);
             }
             catch(...)
             {
@@ -56,7 +55,7 @@ namespace upsylon
             // If iMode == 0, blocking is enabled;
             // If iMode != 0, non-blocking mode is enabled.
             u_long iMode = 1;
-            if( NO_ERROR != ioctlsocket(sock, FIONBIO, &iMode) )
+            if( SOCKET_ERROR == ioctlsocket(sock, FIONBIO, &iMode) )
             {
                 throw net::exception( net::get_last_error_code(), "async/ioctlsocket" );
             }

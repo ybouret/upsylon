@@ -47,7 +47,6 @@ namespace upsylon
 }
 
 #include "y/os/error.hpp"
-#include "y/net/sys.hpp"
 
 #include <cstdarg>
 #include <cstring>
