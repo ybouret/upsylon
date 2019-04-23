@@ -50,13 +50,26 @@ namespace upsylon
 
 #include <cstdarg>
 #include <cstring>
-
+#include <cerrno>
 
 namespace upsylon
 {
 
     namespace net
     {
+
+        error_code get_last_error_code() throw()
+        {
+#if defined(Y_BSD)
+            return errno;
+#endif
+
+#if defined(Y_WIN)
+            return ::WSAGetLastError();
+#endif
+        }
+
+
         exception:: ~exception() throw()
         {
             memset(what_,0,sizeof(what_));

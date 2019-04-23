@@ -8,13 +8,13 @@
 namespace upsylon
 {
     
-
+    
     //! network instance for system
     class network : public singleton<network>
     {
     public:
         static bool verbose;          //!< mostly to debug
-        string get_host_name() const; //!< get host namse
+        string get_host_name() const; //!< get host name
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(network);

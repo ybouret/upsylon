@@ -79,6 +79,10 @@ namespace upsylon
 #if defined(Y_WIN)
         typedef int error_code; //!< from WSAGetLastError()
 #endif
+
+        //! return last error code, errno of WSAGetLastError()
+        error_code get_last_error_code() throw();
+
         class exception : public upsylon::exception
         {
         public:

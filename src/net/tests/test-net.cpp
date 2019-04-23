@@ -46,6 +46,8 @@ Y_UTEST(network)
     std::cerr << "sizeof(upsylon::exception)     = " << sizeof(upsylon::exception) << std::endl;
     std::cerr << "sizeof(imported::exception)    = " << sizeof(imported::exception) << std::endl;
     std::cerr << "sizeof(net::exception)         = " << sizeof(net::exception)     << std::endl;
+    
+
 }
 Y_UTEST_DONE()
 
