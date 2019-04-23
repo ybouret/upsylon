@@ -15,14 +15,11 @@ namespace upsylon
         //! aligned internal space
         static const size_t max_length = 512-sizeof(std::exception);
 
-        //! default destructor
-        virtual ~exception() throw();
-        
-        //! copy constructor
-        exception( const exception &other ) throw();
 
+        virtual ~exception() throw();                //!< destructor
+        exception( const exception &other ) throw(); //!< copy constructor
         virtual const char *what() const throw(); //!< overrides std::exception::what()
-        const char *when() const throw();         //!< exception context
+        const char         *when() const throw(); //!< exception context
 
         //! format when using printf syntax
         explicit exception( const char *fmt,...) throw() Y_PRINTF_CHECK(2,3);
