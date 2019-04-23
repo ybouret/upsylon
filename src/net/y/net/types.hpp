@@ -33,6 +33,12 @@ namespace upsylon
     namespace net
     {
         //! swap network byte order 16 bits
+        inline uint8_t swap_nbo(const uint8_t x) throw()
+        {
+            return x;
+        }
+
+        //! swap network byte order 16 bits
         inline uint16_t swap_nbo(const uint16_t x) throw()
         {
             return Y_SWAP_BE16(x);
@@ -48,6 +54,18 @@ namespace upsylon
         inline uint64_t swap_nbo(const uint64_t x) throw()
         {
             return Y_SWAP_BE64(x);
+        }
+
+        template <typename T>
+        inline T swap_nbo_as( const T &x ) throw()
+        {
+            typedef typename unsigned_int<sizeof(T)>::type uint_T;
+            union {
+                T      item;
+                uint_T bits;
+            } alias = { x };
+            alias.bits = swap_nbo(alias.bits);
+            return alias.item;
         }
     }
 }
