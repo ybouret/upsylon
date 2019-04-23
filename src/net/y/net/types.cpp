@@ -46,12 +46,11 @@ namespace upsylon
     }
 }
 
+#include "y/os/error.hpp"
+
 #include <cstdarg>
 #include <cstring>
 
-#if defined(Y_BSD)
-#include <cerrno>
-#endif
 
 namespace upsylon
 {
@@ -71,12 +70,7 @@ namespace upsylon
             va_list ap;
             va_start(ap,fmt);
             format(fmt,&ap);
-            memset( what_, 0, sizeof(what_) );
-
-#if defined(Y_BSD)
-            strncpy(what_, strerror(code_), sizeof(what_)-1 );
-#endif
-
+            format_error(what_, sizeof(what_),code_);
         }
 
         exception:: exception( const exception &other ) throw() :
