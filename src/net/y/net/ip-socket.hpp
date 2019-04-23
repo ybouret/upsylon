@@ -37,18 +37,19 @@ namespace upsylon
             void shutdown( const shutdown_type how ) throw(); //!< shutdown
 
             //! wrapper to setsocketopt
-            void setopt(const int      optname,
+            void setopt(const int      level,
+                        const int      optname,
                         const void    *optval,
                         const unsigned optlen);
 
             //! wrapper to boolean values
-            template <typename T> inline void setopt( const int optname, const T value )
+            template <typename T> inline void setopt( const int level, const int optname, const T value )
             {
-                setopt(optname, &value, sizeof(T) );
+                setopt(level,optname, &value, sizeof(T) );
             }
 
-            void on(  const int optname ); //!< turn flag on
-            void off( const int optname ); //!< turn flag off
+            void on(  const int level, const int optname ); //!< turn flag on
+            void off( const int level, const int optname ); //!< turn flag off
 
 
 

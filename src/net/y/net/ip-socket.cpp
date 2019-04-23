@@ -27,6 +27,7 @@ namespace upsylon
 
         ip_socket:: ~ip_socket() throw()
         {
+            shutdown(sd_both);
             bsd_close(sock);
         }
 
@@ -36,7 +37,7 @@ namespace upsylon
         {
             try
             {
-                on(SO_REUSEADDR);
+                on(SOL_SOCKET,SO_REUSEADDR);
             }
             catch(...)
             {
@@ -117,7 +118,7 @@ namespace upsylon
         const socket_boolean socket_false = FALSE;
 #endif
 
-        void ip_socket:: setopt(const int optname, const void *optval, const unsigned optlen)
+        void ip_socket:: setopt(const int level, const int optname, const void *optval, const unsigned optlen)
         {
             Y_GIANT_LOCK();
             assert(invalid_socket!=sock);
@@ -126,14 +127,14 @@ namespace upsylon
                 throw upsylon::exception("ip_socket::setopt(invalid optval/optlen");
             }
 #if defined(Y_BSD)
-            if( ::setsockopt(sock, SOL_SOCKET, optname, optval, static_cast<socklen_t>(optlen) ) < 0 )
+            if( ::setsockopt(sock, level, optname, optval, static_cast<socklen_t>(optlen) ) < 0 )
             {
                 throw net::exception( net::get_last_error_code(), "setsockopt");
             }
 #endif
 
 #if defined(Y_WIN)
-            if( SOCKET_ERROR == ::setsockopt(sock,SOL_SOCKET,optname, (const char *)optval, static_cast<int>(optlen) ) )
+            if( SOCKET_ERROR == ::setsockopt(sock,level,optname, (const char *)optval, static_cast<int>(optlen) ) )
             {
                 throw net::exception( net::get_last_error_code(), "setsockopt");
             }
@@ -141,8 +142,8 @@ namespace upsylon
 
         }
 
-        void ip_socket:: on(  const int optname )  { setopt<socket_boolean>(optname,socket_true);  }
-        void ip_socket:: off( const int optname )  { setopt<socket_boolean>(optname,socket_false); }
+        void ip_socket:: on(  const int level, const int optname )  { setopt<socket_boolean>(level,optname,socket_true);  }
+        void ip_socket:: off( const int level, const int optname )  { setopt<socket_boolean>(level,optname,socket_false); }
 
 
     }
