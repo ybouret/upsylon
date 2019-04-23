@@ -1,5 +1,4 @@
 #include "y/net/bsd.hpp"
-#include "y/net/sys.hpp"
 #include "y/concurrent/mutex.hpp"
 
 #if defined(Y_BSD)

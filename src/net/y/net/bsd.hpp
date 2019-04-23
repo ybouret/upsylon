@@ -3,6 +3,7 @@
 #define Y_NET_BSD_INCLUDED 1
 
 #include "y/net/types.hpp"
+#include "y/net/sys.hpp"
 
 namespace upsylon
 {

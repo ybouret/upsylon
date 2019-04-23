@@ -36,6 +36,7 @@ struct sockaddr_in6 {
 #    if defined(_MSC_VER) || defined(__DMC__)
 #        pragma comment(lib,"ws2_32.lib")
 #    endif
+
 #endif // defined(Y_WIN)
 
 #endif
