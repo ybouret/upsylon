@@ -9,8 +9,8 @@ using namespace upsylon;
 template <typename T>
 static inline void test_nbo( const T x )
 {
-    const T y = net::swap_nbo_as(x);
-    const T z = net::swap_nbo_as(y);
+    const T y = net::bswp_as(x);
+    const T z = net::bswp_as(y);
     Y_ASSERT(z==x);
 
 }
@@ -48,7 +48,10 @@ Y_UTEST(network)
     
     
     std::cerr << "sizeof(sockaddr_in) =" << sizeof(sockaddr_in)  << std::endl;
+    std::cerr << "sizeof(in6_addr)    =" << sizeof(in_addr)      << std::endl;
+
     std::cerr << "sizeof(sockaddr_in6)=" << sizeof(sockaddr_in6) << std::endl;
+    std::cerr << "sizeof(in6_addr)    =" << sizeof(in6_addr)     << std::endl;
 
 }
 Y_UTEST_DONE()

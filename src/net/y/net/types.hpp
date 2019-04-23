@@ -27,7 +27,9 @@ namespace upsylon
         net128_t( const uint8_t buf[16] ) throw();       //!< manual setup
 
         uint8_t h[16]; //!< content
-
+        
+        void reverse() throw();
+        
         //! display
         friend std::ostream & operator<< ( std::ostream &, const net128_t & );
     };
@@ -35,38 +37,47 @@ namespace upsylon
     namespace net
     {
         //! swap network byte order 16 bits
-        inline uint8_t swap_nbo(const uint8_t x) throw()
+        inline uint8_t bswp(const uint8_t x) throw()
         {
             return x;
         }
 
         //! swap network byte order 16 bits
-        inline uint16_t swap_nbo(const uint16_t x) throw()
+        inline uint16_t bswp(const uint16_t x) throw()
         {
             return Y_SWAP_BE16(x);
         }
 
         //! swap network byte order 32 bits
-        inline uint32_t swap_nbo(const uint32_t x) throw()
+        inline uint32_t bswp(const uint32_t x) throw()
         {
             return Y_SWAP_BE32(x);
         }
 
         //! swap network byte order 64 bits
-        inline uint64_t swap_nbo(const uint64_t x) throw()
+        inline uint64_t bswp(const uint64_t x) throw()
         {
             return Y_SWAP_BE64(x);
         }
-
+        
+        //! swap 128nits
+        inline net128_t bswp(const net128_t &x) throw()
+        {
+            net128_t y(x);
+            y.reverse();
+            return y;
+        }
+        
+        
         template <typename T>
-        inline T swap_nbo_as( const T &x ) throw()
+        inline T bswp_as( const T &x ) throw()
         {
             typedef typename unsigned_int<sizeof(T)>::type uint_T;
             union {
                 T      item;
                 uint_T bits;
             } alias = { x };
-            alias.bits = swap_nbo(alias.bits);
+            alias.bits = bswp(alias.bits);
             return alias.item;
         }
     }

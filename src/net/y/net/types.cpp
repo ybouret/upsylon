@@ -1,4 +1,5 @@
 #include "y/net/types.hpp"
+#include "y/type/bswap.hpp"
 
 #include <cstring>
 #include <iostream>
@@ -35,6 +36,20 @@ namespace upsylon
         assert( buf );
         memcpy( h, buf, sizeof(h) );
     }
+    
+    void net128_t:: reverse() throw()
+    {
+        cswap(h[0x0],h[0xF]);
+        cswap(h[0x1],h[0xE]);
+        cswap(h[0x2],h[0xD]);
+        cswap(h[0x3],h[0xC]);
+        cswap(h[0x4],h[0xB]);
+        cswap(h[0x5],h[0xA]);
+        cswap(h[0x6],h[0x9]);
+        cswap(h[0x7],h[0x8]);
+
+    }
+
 
     std::ostream & operator<< ( std::ostream &os, const net128_t &x )
     {

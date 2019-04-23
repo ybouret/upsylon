@@ -1,0 +1,25 @@
+#include "y/net/net.hpp"
+#include "y/utest/run.hpp"
+
+using namespace upsylon;
+
+Y_UTEST(addr)
+{
+    const uint16_t p = 8080;
+    net::ipv4 ip4( net::ip_addr_none, p );
+    net::ipv6 ip6( net::ip_addr_any, p );
+    std::cerr << "port4=" << net::bswp( ip4.port ) << std::endl;
+    std::cerr << "port6=" << net::bswp( ip6.port ) << std::endl;
+    Y_CHECK(p==net::bswp(ip4.port));
+    Y_CHECK(p==net::bswp(ip6.port));
+    std::cerr << "ip4=" << ip4 << std::endl;
+    std::cerr << "ip6=" << ip6 << std::endl;
+    ip6._(net::ip_addr_loopback);
+    std::cerr << "ip6.addr=" << ip6.addr << std::endl;
+    std::cerr << "swp.ip6.addr=" << net::bswp(ip6.addr) << std::endl;
+
+    std::cerr << "ip6=" << ip6 << std::endl;
+
+}
+Y_UTEST_DONE()
+
