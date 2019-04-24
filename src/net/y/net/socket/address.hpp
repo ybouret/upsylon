@@ -77,10 +77,14 @@ namespace upsylon
          
             net16_t & port; //!< network byte order port
 
+
+            void bind( socket_type &sock ) const;
+
         protected:
             //! setup
             socket_address(void          *data,
                            const unsigned port_offset) throw();
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(socket_address);

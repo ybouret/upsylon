@@ -78,6 +78,29 @@ namespace upsylon
             setup(_,version);
         }
 
+
+        socket_addr_ex:: socket_addr_ex( const ip_addr_value value, const ip_version version, const uint16_t user_port) throw() :
+        wksp(),
+        addr(NULL)
+        {
+            memset(wksp,0,sizeof(wksp));
+            switch(version)
+            {
+                case v4:
+                {
+                    ipv4  *a = new( memory::io::__force<ipv4>(wksp) ) ipv4(value,user_port);
+                    addr = a;
+                } break;
+
+                case v6:
+                {
+                    ipv6  *a = new( memory::io::__force<ipv6>(wksp) ) ipv6(value,user_port);
+                    addr = a;
+                }   break;
+
+            }
+        }
+
         socket_address & socket_addr_ex:: operator*() throw()
         {
             assert(addr);

@@ -20,8 +20,8 @@ namespace upsylon
         protected:
             explicit udp_socket(const ip_version version); //!< setup+version
 
-            void sendto( const socket_address &peer, const void *data, const size_t size ) const;
-
+            void   sendto(const socket_address &target, const void *data, const size_t size ) const;
+            size_t recvfrom(socket_address     &source, void       *data, const size_t size ) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(udp_socket);

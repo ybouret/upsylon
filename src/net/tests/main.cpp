@@ -7,7 +7,8 @@ Y_UTEST_INIT(16)
     Y_UTEST(addr);
     Y_UTEST(resolve);
     Y_UTEST(udp_client);
-    
+    Y_UTEST(udp_server);
+
 }
 Y_UTEST_EXEC()
 

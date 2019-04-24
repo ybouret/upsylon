@@ -8,6 +8,7 @@ namespace upsylon
 {
     namespace net
     {
+        //! a client is a socket with a target address, and a last recv IP
         class udp_client :  public socket_addr_ex, public udp_socket
         {
         public:
@@ -18,8 +19,12 @@ namespace upsylon
 
             void send(const void *data, const size_t size) const;
             void send(const char *data) const;
-            void send( const memory::ro_buffer &buff ) const;
-            
+            void send(const memory::ro_buffer &buff) const;
+
+            size_t recv(void *data, const size_t size) const;
+
+            mutable socket_addr_ex last_recv_ip;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(udp_client);
         };

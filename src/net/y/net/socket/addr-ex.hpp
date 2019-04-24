@@ -16,6 +16,7 @@ namespace upsylon
         public:
             virtual ~socket_addr_ex() throw();
             explicit socket_addr_ex( const socket_address &ip ) throw();
+            explicit socket_addr_ex( const ip_addr_value value, const ip_version version, const uint16_t user_port=0) throw();
             explicit socket_addr_ex( const string         &xname, const ip_version version);
             explicit socket_addr_ex( const char           *xname, const ip_version version);
 

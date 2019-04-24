@@ -9,7 +9,7 @@ namespace upsylon
         {
         }
 
-#define Y_NET_UDP_CLIENT( INI ) socket_addr_ex INI,  udp_socket( (**this).version() )
+#define Y_NET_UDP_CLIENT( INI ) socket_addr_ex INI,  udp_socket( (**this).version() ), last_recv_ip(ip_addr_none, (**this).version(),0 )
 
         udp_client:: udp_client(const socket_address &ip ) : Y_NET_UDP_CLIENT( (ip) ) {}
         udp_client:: udp_client(const string &xname, const ip_version version) : Y_NET_UDP_CLIENT( (xname,version) ) {}
@@ -28,6 +28,11 @@ namespace upsylon
         void udp_client:: send( const memory::ro_buffer &buff ) const
         {
             send( buff.ro(), buff.length() );
+        }
+
+        size_t udp_client:: recv(void *data, const size_t size) const
+        {
+            return recvfrom(*last_recv_ip,data,size);
         }
 
     }
