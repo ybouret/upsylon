@@ -15,10 +15,11 @@ namespace upsylon
         public:
             virtual ~udp_socket() throw();
 
-            void sendto( const socket_address &peer, const void *data, const size_t size, const int flags=0 );
 
         protected:
             explicit udp_socket(const ip_version version); //!< setup+version
+
+            void sendto( const socket_address &peer, const void *data, const size_t size, const int flags=0 ) const;
 
 
         private:

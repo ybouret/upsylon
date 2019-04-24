@@ -33,8 +33,8 @@ Y_UTEST(addr)
     show_ip( ip4 );
     show_ip( ip6 );
 
-    net::socket_hook h4(ip4);
-    net::socket_hook h6(ip6);
+    net::socket_addr_ex h4(ip4);
+    net::socket_addr_ex h6(ip6);
     std::cerr << "hook4: " << *h4 << "@" << net::bswp(h4->port) << std::endl;
     std::cerr << "hook6: " << *h6 << "@" << net::bswp(h6->port) << std::endl;
 

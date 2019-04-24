@@ -2,7 +2,7 @@
 #ifndef Y_NETWORK_INCLUDED
 #define Y_NETWORK_INCLUDED 1
 
-#include "y/net/socket/address.hpp"
+#include "y/net/socket/addr-ex.hpp"
 #include "y/string.hpp"
 
 namespace upsylon

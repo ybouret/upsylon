@@ -53,7 +53,8 @@ extern "C"
 
 namespace upsylon
 {
-    void network:: resolve( net::socket_address &ip, const string &name ) const
+    void network:: resolve(net::socket_address &ip,
+                           const string         &name ) const
     {
         Y_GIANT_LOCK();
 
@@ -103,9 +104,8 @@ namespace upsylon
 
         void socket_address:: resolve( const string &xname )
         {
-            static const char _sep  = ':';
             const char       *name = *xname;
-            char             *psep = (char *) ( strchr(name, _sep ) );
+            char             *psep = (char *) ( strchr(name, port_separator ) );
             if(psep)
             {
                 port  = bswp( static_cast<uint16_t>( string_convert::to<size_t>(psep+1,"port") ) );
@@ -114,11 +114,11 @@ namespace upsylon
             try
             {
                 network::instance().resolve(*this,name);
-                if(psep) *psep = _sep;
+                if(psep) *psep = port_separator;
             }
             catch(...)
             {
-                if(psep) *psep = _sep;
+                if(psep) *psep = port_separator;
                 throw;
             }
         }

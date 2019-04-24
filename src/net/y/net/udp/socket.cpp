@@ -16,7 +16,7 @@ namespace upsylon
         {
         }
 
-        void udp_socket:: sendto( const socket_address &peer, const void *data, const size_t size, const int flags)
+        void udp_socket:: sendto( const socket_address &peer, const void *data, const size_t size, const int flags) const
         {
             Y_GIANT_LOCK();
             assert( !(data==NULL&size>0) );
@@ -26,7 +26,10 @@ namespace upsylon
                 throw upsylon::exception("sendto(%s): message size overflow", peer.text() );
             }
 
-            const int msgSent = ::sendto(sock, (const char *)data, msgSize, flags,
+            const int msgSent = ::sendto(sock,
+                                         (const char *)data,
+                                         msgSize,
+                                         flags,
                                          static_cast<const sockaddr *>(peer.ro()),
                                          unsigned( peer.length()) );
             if(msgSent!=msgSize)
