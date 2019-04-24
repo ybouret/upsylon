@@ -45,6 +45,15 @@ namespace upsylon
         if(verbose) { std::cerr << "]" << std::endl; }
     }
 
+    const uint16_t network:: reserved_port   = IPPORT_RESERVED;
+#       if defined(Y_WIN) || defined(__FreeBSD__)
+    const uint16_t net:: first_user_port = IPPORT_RESERVED;
+#        else
+    const uint16_t network:: first_user_port = IPPORT_USERRESERVED;
+#        endif
+
+    const uint16_t network:: user_port_width = (network::final_user_port-network::first_user_port)+1;
+
 }
 
 #include "y/memory/buffers.hpp"

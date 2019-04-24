@@ -17,6 +17,13 @@ namespace upsylon
 
         net::socket_type open(const net::ip_protocol proto, const net::ip_version version);
 
+        //void resolve( ip_address &ip, const string &s ) constl
+
+        static const uint16_t reserved_port;   //!< port < reserved_port: for system
+        static const uint16_t first_user_port; //!< port >= first_user_port: for user
+        static const uint16_t final_user_port = 65535;
+        static const uint16_t user_port_width; //!< final_user_port-first_user_port+1;
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(network);
         explicit network();
