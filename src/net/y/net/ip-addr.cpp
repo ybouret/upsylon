@@ -42,7 +42,15 @@ namespace upsylon
             sa.sin_family = AF_INET;
             _(value);
         }
-        
+
+        ip_data<v4>:: ip_data(const ip_data &other ) throw() :
+        sa(),
+        addr( *memory::io::__force<net32_t>( &(sa.sin_addr) ) ),
+        hrb( other.hrb )
+        {
+            memcpy( &sa, &other.sa, sizeof(sa) );
+        }
+
         void ip_data<v4>::_(const ip_addr_value value) throw()
         {
             static const uint32_t __ip_addr_none = INADDR_NONE;
@@ -81,7 +89,9 @@ namespace upsylon
 
             return hrb.ch;
         }
-        
+
+
+        const char ip_data<v4>::class_name[] = "ipv4";
     }
 
 }
@@ -100,10 +110,17 @@ namespace upsylon
         sa(),
         addr(  *memory::io::__force<net128_t>( &(sa.sin6_addr) ) )
         {
-            assert(sizeof(sa.sin6_addr)==sizeof(net128_t));
             memset( &sa, 0, sizeof(sa) );
             sa.sin6_family = AF_INET;
             _(value);
+        }
+
+        ip_data<v6>:: ip_data(const ip_data &other ) throw() :
+        sa(),
+        addr( *memory::io::__force<net128_t>( &(sa.sin6_addr) ) ),
+        hrb( other.hrb )
+        {
+            memcpy( &sa, &other.sa, sizeof(sa) );
         }
         
         void ip_data<v6>::_(const ip_addr_value value) throw()
@@ -149,6 +166,7 @@ namespace upsylon
 
             hrb.clear();
 
+            // add 4bits
             for(size_t i=0;i<8;++i)
             {
                 const uint16_t hi = *(--byte);
@@ -174,6 +192,8 @@ namespace upsylon
             
             return hrb.ch;
         }
-        
+
+        const char ip_data<v6>::class_name[] = "ipv6";
+
     }
 }

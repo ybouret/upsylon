@@ -39,8 +39,8 @@ namespace upsylon
             
             net16_t & port;
 
-            virtual const char *text() const throw() = 0;
-
+            virtual const char *text()      const throw() = 0;
+            virtual const char *className() const throw() = 0;
             friend inline std::ostream & operator<<(std::ostream &os, const ip_address &i )
             {
                 return (os << i.text());
@@ -64,6 +64,7 @@ namespace upsylon
         template <> class ip_data<v6>
         {
         public:
+            static  const char     class_name[];
             typedef sockaddr_in6   type;
             static  const unsigned port_offset = offsetof(type,sin6_port);
             
@@ -71,6 +72,7 @@ namespace upsylon
             net128_t &addr;
             
             virtual ~ip_data() throw();
+            ip_data(const ip_data      &other) throw();
 
             void     _( const ip_addr_value value ) throw();
             const char *hr() const throw(); //!<
@@ -79,29 +81,30 @@ namespace upsylon
             explicit ip_data(const ip_addr_value value) throw();
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(ip_data);
+            Y_DISABLE_ASSIGN(ip_data);
             mutable hrbuff<64> hrb;
         };
 
         template <> class ip_data<v4>
         {
         public:
-            
+            static  const char      class_name[];
             typedef sockaddr_in     type;
             static  const unsigned  port_offset = offsetof(type,sin_port);
             
             type     sa;
             net32_t &addr;
             virtual ~ip_data() throw();
-            
+            ip_data(const ip_data      &other) throw();
+
             void     _( const ip_addr_value value ) throw();
             const char *hr() const throw(); //!<
 
         protected:
             explicit ip_data(const ip_addr_value value) throw();
-            
+
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(ip_data);
+            Y_DISABLE_ASSIGN(ip_data);
             mutable hrbuff<16> hrb;
         };
         
@@ -109,22 +112,28 @@ namespace upsylon
         class ip_addr : public ip_data<V>, public ip_address
         {
         public:
+            static const size_t __port = ip_data<V>::port_offset;
 
             inline virtual ~ip_addr() throw() {}
 
             inline ip_addr( const ip_addr_value value, uint16_t user_port ) throw() :
-            ip_data<V>( value ),
-            ip_address( & this->sa, ip_data<V>::port_offset )
+            ip_data<V>( value ), ip_address( &(this->sa), __port)
             {
                 port = bswp(user_port);
             }
+
+            inline ip_addr( const ip_addr &i ) throw() : ip_data<V>(i), ip_address( &(this->sa), __port)
+            {
+
+            }
             
-            virtual const void *ro()     const throw() { return &(this->sa); }
-            virtual size_t      length() const throw() { return sizeof(typename ip_data<V>::type); }
-            virtual const char *text()   const throw() { return this->hr(); }
-            
+            inline virtual const void *ro()        const throw() { return &(this->sa); }
+            inline virtual size_t      length()    const throw() { return sizeof(typename ip_data<V>::type); }
+            inline virtual const char *text()      const throw() { return this->hr(); }
+            inline virtual const char *className() const throw() { return this->class_name; }
+
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(ip_addr);
+            Y_DISABLE_ASSIGN(ip_addr);
         };
 
         typedef ip_addr<v4> ipv4;

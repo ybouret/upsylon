@@ -3,6 +3,13 @@
 
 using namespace upsylon;
 
+static inline void show_ip( const net::ip_address &ip )
+{
+    std::cerr << "address=" << ip.className() << std::endl;
+    std::cerr << "       |_" << ip.text()     << std::endl;
+    std::cerr << "       |_" << net::bswp( ip.port ) << std::endl;
+}
+
 Y_UTEST(addr)
 {
     const uint16_t p = 8080;
@@ -22,6 +29,9 @@ Y_UTEST(addr)
     std::cerr << "sizeof(hrbuff<64>)=" << sizeof(net::hrbuff<64>) << std::endl;
     std::cerr << "sizeof(net::ipv4) =" << sizeof(net::ipv4)       << std::endl;
     std::cerr << "sizeof(net::ipv6) =" << sizeof(net::ipv6)       << std::endl;
+
+    show_ip( ip4 );
+    show_ip( ip6 );
 
 }
 Y_UTEST_DONE()
