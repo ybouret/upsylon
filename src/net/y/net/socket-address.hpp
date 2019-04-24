@@ -51,57 +51,9 @@ namespace upsylon
 
             template <ip_version V> class format; //!< version dependent format
 
-            //! IPv6 format
-            template <> class format<v6>
-            {
-            public:
-                static  const char     class_name[]; //!< "ipv6"
-                typedef sockaddr_in6   type;         //!< net API
-                static  const unsigned port_offset = offsetof(type,sin6_port); //!< locate port
 
-                type      sa;   //!< low-level data
-                net128_t &addr; //!< binary mapping
 
-                virtual ~format() throw();           //!< destructor
-                format(const format &other) throw(); //!< copy
 
-                void     _( const ip_addr_value value ) throw(); //!< set to a specific value
-                const char *hr() const throw();                  //!< format internal buffer
-                unsigned    pf() const throw();                  //!< return sin_family
-
-            protected:
-                explicit format(const ip_addr_value value) throw(); //!< setup
-
-            private:
-                Y_DISABLE_ASSIGN(format);
-                mutable hrbuff<64> hrb;
-            };
-
-            //! IPv4 format
-            template <> class format<v4>
-            {
-            public:
-                static  const char      class_name[]; //!< "ipv4"
-                typedef sockaddr_in     type;         //!< net API
-                static  const unsigned  port_offset = offsetof(type,sin_port); //!< locate port
-
-                type     sa;   //!< low-level data
-                net32_t &addr; //!< binary mapping
-
-                virtual ~format() throw();           //!< destructor
-                format(const format &other) throw(); //!< copy
-
-                void     _( const ip_addr_value value ) throw(); //!< set to a specific value
-                const char *hr() const throw();                  //!< format internal buffer
-                unsigned    pf() const throw();                  //!< return sin6_family
-
-            protected:
-                explicit format(const ip_addr_value value) throw(); //!< setup
-
-            private:
-                Y_DISABLE_ASSIGN(format);
-                mutable hrbuff<16> hrb;
-            };
 
 
         protected:
@@ -114,9 +66,59 @@ namespace upsylon
         };
 
 
+        //! IPv6 format
+        template <> class socket_address:: format<v6>
+        {
+        public:
+            static  const char     class_name[]; //!< "ipv6"
+            typedef sockaddr_in6   type;         //!< net API
+            static  const unsigned port_offset = offsetof(type,sin6_port); //!< locate port
+
+            type      sa;   //!< low-level data
+            net128_t &addr; //!< binary mapping
+
+            virtual ~format() throw();           //!< destructor
+            format(const format &other) throw(); //!< copy
+
+            void     _( const ip_addr_value value ) throw(); //!< set to a specific value
+            const char *hr() const throw();                  //!< format internal buffer
+            unsigned    pf() const throw();                  //!< return sin_family
+
+        protected:
+            explicit format(const ip_addr_value value) throw(); //!< setup
+
+        private:
+            Y_DISABLE_ASSIGN(format);
+            mutable hrbuff<64> hrb;
+        };
+
+        //! IPv4 format
+        template <> class socket_address:: format<v4>
+        {
+        public:
+            static  const char      class_name[]; //!< "ipv4"
+            typedef sockaddr_in     type;         //!< net API
+            static  const unsigned  port_offset = offsetof(type,sin_port); //!< locate port
+
+            type     sa;   //!< low-level data
+            net32_t &addr; //!< binary mapping
+
+            virtual ~format() throw();           //!< destructor
+            format(const format &other) throw(); //!< copy
+
+            void     _( const ip_addr_value value ) throw(); //!< set to a specific value
+            const char *hr() const throw();                  //!< format internal buffer
+            unsigned    pf() const throw();                  //!< return sin6_family
+
+        protected:
+            explicit format(const ip_addr_value value) throw(); //!< setup
+
+        private:
+            Y_DISABLE_ASSIGN(format);
+            mutable hrbuff<16> hrb;
+        };
 
 
-        
         template <ip_version V>
         class socket_addr : public socket_address::format<V>, public socket_address
         {
