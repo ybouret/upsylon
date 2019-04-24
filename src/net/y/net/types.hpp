@@ -111,6 +111,7 @@ namespace upsylon
         private:
             const error_code code_;
             char             what_[128-sizeof(error_code)];
+            Y_DISABLE_ASSIGN(exception);
         };
 
     }

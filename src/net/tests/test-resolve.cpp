@@ -29,6 +29,7 @@ Y_UTEST(resolve)
         }
         catch(...)
         {
+            std::cerr << "unhandled exception..." << std::endl;
             throw;
         }
         
