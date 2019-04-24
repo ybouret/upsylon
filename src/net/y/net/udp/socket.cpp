@@ -1,5 +1,5 @@
 
-#include "y/net/udp-socket.hpp"
+#include "y/net/udp/socket.hpp"
 
 namespace upsylon
 {
@@ -14,8 +14,6 @@ namespace upsylon
         bsd_socket(udp,version)
         {
         }
-
-
 
     }
 }
