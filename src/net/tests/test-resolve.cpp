@@ -14,12 +14,13 @@ Y_UTEST(resolve)
         net::ipv4    ip4;
         net::ipv6    ip6;
         ip4 = name;
-        std::cerr << "          |_" << ip4 << " port:" << net::bswp(ip4.port) << std::endl;
+        std::cerr << "          |_" << ip4.className() << "=" << ip4 << "@" << net::bswp(ip4.port) <<std::endl;
 
         try
         {
             ip6 = name;
-            std::cerr << "          |_" << ip6 << " port:" << net::bswp(ip6.port) << std::endl;
+            std::cerr << "          |_" << ip6.className() << "=" << ip6 << "@" << net::bswp(ip6.port) <<std::endl;
+
         }
         catch(const exception &e)
         {
