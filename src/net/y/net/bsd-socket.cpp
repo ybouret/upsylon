@@ -1,4 +1,4 @@
-#include "y/net/ip-socket.hpp"
+#include "y/net/bsd-socket.hpp"
 
 #if defined(Y_BSD)
 #include <unistd.h>
@@ -25,14 +25,14 @@ namespace upsylon
             sock = invalid_socket;
         }
 
-        ip_socket:: ~ip_socket() throw()
+        bsd_socket:: ~bsd_socket() throw()
         {
             shutdown(sd_both);
             bsd_close(sock);
         }
 
 
-        ip_socket:: ip_socket( const ip_protocol protocol, const ip_version version) :
+        bsd_socket:: bsd_socket( const ip_protocol protocol, const ip_version version) :
         sock( network::instance().open(protocol,version) )
         {
             try
@@ -47,7 +47,7 @@ namespace upsylon
         }
 
 
-        void ip_socket:: async()
+        void bsd_socket:: async()
         {
             Y_GIANT_LOCK();
 
@@ -70,7 +70,7 @@ namespace upsylon
 #endif
         }
 
-        void ip_socket:: shutdown(const shutdown_type how) throw()
+        void bsd_socket:: shutdown(const shutdown_type how) throw()
         {
             assert( sock != invalid_socket );
 
@@ -118,7 +118,7 @@ namespace upsylon
         const socket_boolean socket_false = FALSE;
 #endif
 
-        void ip_socket:: setopt(const int level, const int optname, const void *optval, const unsigned optlen)
+        void bsd_socket:: setopt(const int level, const int optname, const void *optval, const unsigned optlen)
         {
             Y_GIANT_LOCK();
             assert(invalid_socket!=sock);
@@ -142,8 +142,8 @@ namespace upsylon
 
         }
 
-        void ip_socket:: on(  const int level, const int optname )  { setopt<socket_boolean>(level,optname,socket_true);  }
-        void ip_socket:: off( const int level, const int optname )  { setopt<socket_boolean>(level,optname,socket_false); }
+        void bsd_socket:: on(  const int level, const int optname )  { setopt<socket_boolean>(level,optname,socket_true);  }
+        void bsd_socket:: off( const int level, const int optname )  { setopt<socket_boolean>(level,optname,socket_false); }
 
 
     }

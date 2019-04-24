@@ -2,14 +2,14 @@
 #ifndef Y_NET_UDP_SOCKET_INCLUDED
 #define Y_NET_UDP_SOCKET_INCLUDED 1
 
-#include "y/net/ip-socket.hpp"
+#include "y/net/bsd-socket.hpp"
 
 namespace upsylon
 {
     namespace net
     {
 
-        class udp_socket : public ip_socket
+        class udp_socket : public bsd_socket
         {
         public:
             virtual ~udp_socket() throw();

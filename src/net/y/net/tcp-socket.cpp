@@ -10,7 +10,7 @@ namespace upsylon
         }
 
         tcp_socket:: tcp_socket( const ip_version version ) :
-        ip_socket(tcp,version)
+        bsd_socket(tcp,version)
         {
         }
 

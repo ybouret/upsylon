@@ -11,7 +11,7 @@ namespace upsylon
         }
 
         udp_socket:: udp_socket( const ip_version version ) :
-        ip_socket(udp,version)
+        bsd_socket(udp,version)
         {
         }
 
