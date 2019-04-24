@@ -15,12 +15,12 @@ Y_UTEST(resolve)
         net::ipv4    ip4;
         net::ipv6    ip6;
         nw.resolve(ip4,name);
-        std::cerr << "          |_" << ip4 << std::endl;
+        std::cerr << "          |_" << ip4.className() << "=" << ip4 << std::endl;
 
         try
         {
             nw.resolve(ip6,name);
-            std::cerr << "          |_" << ip6 << std::endl;
+            std::cerr << "          |_" << ip6.className() << "=" << ip6 << std::endl;
         }
         catch(const exception &e)
         {
