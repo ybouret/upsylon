@@ -219,10 +219,9 @@ namespace upsylon
             addr=0;
         }
 
-        socket_hook:: socket_hook(const socket_address &ip) throw() :
-        wksp(),
-        addr(NULL)
+        void  socket_hook::setup( const socket_address &ip ) throw()
         {
+            assert(NULL==addr);
             memset(wksp,0,sizeof(wksp));
             switch(ip.version())
             {
@@ -245,6 +244,47 @@ namespace upsylon
                 }   break;
 
             }
+        }
+
+
+        socket_hook:: socket_hook(const socket_address &ip) throw() :
+        wksp(),
+        addr(NULL)
+        {
+            setup(ip);
+        }
+
+
+        void socket_hook:: setup( const string &xname, const ip_version version)
+        {
+            switch (version) {
+                case v4:
+                {
+                    const ipv4 tmp(xname);
+                    setup(tmp);
+                } break;
+
+                case v6:
+                {
+                    const ipv6 tmp(xname);
+                    setup(tmp);
+                } break;
+            }
+        }
+
+        socket_hook:: socket_hook( const string &xname, const ip_version version):
+        wksp(),
+        addr(NULL)
+        {
+            setup(xname,version);
+        }
+
+        socket_hook:: socket_hook( const char *xname, const ip_version version) :
+        wksp(),
+        addr(NULL)
+        {
+            const string _(xname);
+            setup(_,version);
         }
 
         socket_address & socket_hook:: operator*() throw()

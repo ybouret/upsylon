@@ -232,11 +232,14 @@ namespace upsylon
         typedef socket_addr<v4> ipv4; //!< alias for level 4
         typedef socket_addr<v6> ipv6; //!< alias for level 6
 
+        //! smart pointer for address
         class socket_hook
         {
         public:
             virtual ~socket_hook() throw();
             explicit socket_hook( const socket_address &ip ) throw();
+            explicit socket_hook( const string         &xname, const ip_version version);
+            explicit socket_hook( const char           *xname, const ip_version version);
 
             socket_address       & operator*() throw();
             const socket_address & operator*() const throw();
@@ -247,6 +250,10 @@ namespace upsylon
         private:
             uint64_t        wksp[ Y_U64_FOR_ITEM(ipv6) ];
             socket_address *addr;
+
+            void setup( const socket_address &ip ) throw();
+            void setup( const string &xname, const ip_version version);
+            
         };
 
     }
