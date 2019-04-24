@@ -208,3 +208,72 @@ namespace upsylon
     }
 
 }
+
+namespace upsylon
+{
+    namespace net
+    {
+        socket_hook:: ~socket_hook() throw()
+        {
+            memset(wksp,0,sizeof(wksp));
+            addr=0;
+        }
+
+        socket_hook:: socket_hook(const socket_address &ip) throw() :
+        wksp(),
+        addr(NULL)
+        {
+            memset(wksp,0,sizeof(wksp));
+            switch(ip.version())
+            {
+                case v4:
+                {
+                    ipv4  *a = new( memory::io::__force<ipv4>(wksp) ) ipv4();
+                    addr = a;
+                    assert( a->length() == ipv4::sa_size );
+                    assert( ip.length() == ipv4::sa_size );
+                    memcpy( a->rw(), ip.ro(), ipv4::sa_size );
+                } break;
+
+                case v6:
+                {
+                    ipv6  *a = new( memory::io::__force<ipv6>(wksp) ) ipv6(); assert( a->length() == ipv6::sa_size );
+                    addr = a;
+                    assert( a->length() == ipv6::sa_size );
+                    assert( ip.length() == ipv6::sa_size );
+                    memcpy( a->rw(), ip.ro(), ipv6::sa_size );
+                }   break;
+
+            }
+        }
+
+        socket_address & socket_hook:: operator*() throw()
+        {
+            assert(addr);
+            return *addr;
+        }
+
+        const socket_address & socket_hook:: operator*() const throw()
+        {
+            assert(addr);
+            return *addr;
+        }
+
+
+        socket_address * socket_hook:: operator->() throw()
+        {
+            assert(addr);
+            return addr;
+        }
+
+        const socket_address * socket_hook:: operator->() const throw()
+        {
+            assert(addr);
+            return addr;
+        }
+
+
+
+    }
+
+}

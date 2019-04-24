@@ -59,6 +59,7 @@ namespace upsylon
             virtual const char *text()      const throw() = 0; //!< format internal buffer
             virtual const char *className() const throw() = 0; //!< for information
             virtual unsigned    family()    const throw() = 0; //!< for information/naming
+            virtual ip_version  version()   const throw() = 0; //!< for information
 
             //__________________________________________________________________
             //
@@ -69,10 +70,9 @@ namespace upsylon
             {
                 return (os << i.text());
             }
-
-            void resolve( const string &xname ); //!< using network::resolve
-            void resolve( const char   *xname ); //!< using network::resolve
-
+            void resolve( const string &xname );  //!< using network::resolve
+            void resolve( const char   *xname );  //!< using network::resolve
+         
             net16_t & port; //!< network byte order port
 
         protected:
@@ -115,7 +115,7 @@ namespace upsylon
 
             void        _( const ip_addr_value value ) throw(); //!< set to a specific value
             const char *hr() const throw();                     //!< format internal buffer
-            unsigned    pf() const throw();                     //!< return sin_family
+            unsigned    pf() const throw();                     //!< return sin6_family
 
         protected:
             explicit format(const ip_addr_value value) throw(); //!< setup
@@ -156,7 +156,7 @@ namespace upsylon
 
             void     _( const ip_addr_value value ) throw(); //!< set to a specific value
             const char *hr() const throw();                  //!< format internal buffer
-            unsigned    pf() const throw();                  //!< return sin6_family
+            unsigned    pf() const throw();                  //!< return sin_family
 
         protected:
             explicit format(const ip_addr_value value) throw(); //!< setup
@@ -183,7 +183,8 @@ namespace upsylon
             //__________________________________________________________________
             typedef socket_address::format<V>  format_type; //!< alias
             typedef typename format_type::type sa_type;     //!< alias
-            static const size_t                __port = format_type::port_offset; //!< alias
+            static const size_t                sa_size = sizeof(sa_type); //!< alias
+            static const size_t                __port  = format_type::port_offset; //!< alias
 
 
             //__________________________________________________________________
@@ -191,10 +192,11 @@ namespace upsylon
             // virtual interface
             //__________________________________________________________________
             inline virtual const void *ro()        const throw() { return &(this->sa); }       //!< rw_buffer interface
-            inline virtual size_t      length()    const throw() { return sizeof(sa_type); }   //!< rw_buffer interface
+            inline virtual size_t      length()    const throw() { return sa_size;     }       //!< rw_buffer interface
             inline virtual const char *text()      const throw() { return this->hr(); }        //!< socket_address interface
             inline virtual const char *className() const throw() { return this->class_name; }  //!< socket_address/serial interface
             inline virtual unsigned    family()    const throw() { return this->pf(); }        //!< socket_address interface
+            inline virtual ip_version  version()   const throw() { return V;          }        //!< the version
             inline virtual            ~socket_addr()     throw() {}                            //!< destructor
 
             //__________________________________________________________________
@@ -211,9 +213,9 @@ namespace upsylon
                 port = bswp(user_port);
             }
 
-            inline socket_addr( const string &xname  ) : Y_NET_SOCKET_ADDR(ip_addr_none) { resolve(xname); } //!< setup by resolve
-            inline socket_addr( const char   *xname  ) : Y_NET_SOCKET_ADDR(ip_addr_none) { resolve(xname); } //!< setup by resolve
-            inline socket_addr( const socket_addr &i ) throw() : Y_NET_SOCKET_ADDR(i) {}                     //!< copy
+            inline socket_addr( const string &xname  ) :         Y_NET_SOCKET_ADDR(ip_addr_none) { resolve(xname); } //!< setup by resolve
+            inline socket_addr( const char   *xname  ) :         Y_NET_SOCKET_ADDR(ip_addr_none) { resolve(xname); } //!< setup by resolve
+            inline socket_addr( const socket_addr &i ) throw() : Y_NET_SOCKET_ADDR(i) {}                             //!< copy
 
             //! assign
             inline socket_addr & assign( const socket_addr &other ) throw()
@@ -229,7 +231,24 @@ namespace upsylon
 
         typedef socket_addr<v4> ipv4; //!< alias for level 4
         typedef socket_addr<v6> ipv6; //!< alias for level 6
-        
+
+        class socket_hook
+        {
+        public:
+            virtual ~socket_hook() throw();
+            explicit socket_hook( const socket_address &ip ) throw();
+
+            socket_address       & operator*() throw();
+            const socket_address & operator*() const throw();
+
+            socket_address       * operator->() throw();
+            const socket_address * operator->() const throw();
+
+        private:
+            uint64_t        wksp[ Y_U64_FOR_ITEM(ipv6) ];
+            socket_address *addr;
+        };
+
     }
 }
 

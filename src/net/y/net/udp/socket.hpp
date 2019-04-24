@@ -15,12 +15,15 @@ namespace upsylon
         public:
             virtual ~udp_socket() throw();
 
+
         protected:
             explicit udp_socket(const ip_version version); //!< setup+version
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(udp_socket);
+            void sendto( const socket_address &peer, const void *data, const size_t size, const int flags=0 );
+
         };
 
     }
