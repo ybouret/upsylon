@@ -17,13 +17,10 @@ namespace upsylon
             explicit udp_client(const string &xname, const ip_version version = v4);
             explicit udp_client(const char   *xname, const ip_version version = v4);
 
-            void send(const void *data, const size_t size) const;
-            void send(const char *data) const;
-            void send(const memory::ro_buffer &buff) const;
+            virtual void   send_block(const void *data, const size_t size) const;
+            virtual size_t recv(void *data, const size_t size);
 
-            size_t recv(void *data, const size_t size) const;
-
-            mutable socket_addr_ex last_recv_ip;
+            socket_addr_ex last_recv_ip;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(udp_client);

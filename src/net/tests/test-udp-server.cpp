@@ -38,8 +38,10 @@ Y_UTEST(udp_server)
         memset(buff,0,sizeof(buff));
         const size_t nr = server.recv(buff,MAX_LENGTH);
         std::cerr << "nr=" << nr << " from " << server.peer->text() << "@" << net::bswp(server.peer->port) << std::endl;
-        const string msg(buff,nr);
-        std::cerr << "'" << msg << "'" << std::endl;
+        string msg(buff,nr);
+        std::cerr << "|_'" << msg << "'" << std::endl;
+        msg.reverse();
+        server.send(msg);
         if(msg=="stop") break;
     }
 }

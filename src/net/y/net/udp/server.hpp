@@ -19,8 +19,8 @@ namespace upsylon
             
             socket_addr_ex peer;
 
-            size_t recv( void *data, const size_t size);
-
+            virtual size_t recv( void *data,       const size_t size);
+            virtual void   send_block( const void *data, const size_t size) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(udp_server);

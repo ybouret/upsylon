@@ -79,6 +79,8 @@ namespace upsylon
             return msgRecv;
         }
 
+        void udp_socket:: send(const char *data) const { send_block(data,length_of(data)); }
+        void udp_socket:: send(const memory::ro_buffer &buff) const { send_block( buff.ro(), buff.length() ); }
 
     }
 }

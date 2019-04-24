@@ -15,22 +15,13 @@ namespace upsylon
         udp_client:: udp_client(const string &xname, const ip_version version) : Y_NET_UDP_CLIENT( (xname,version) ) {}
         udp_client:: udp_client(const char   *xname, const ip_version version) : Y_NET_UDP_CLIENT( (xname,version) ) {}
 
-        void udp_client::send(const void *data, const size_t size) const
+        void udp_client:: send_block(const void *data, const size_t size) const
         {
             sendto( **this, data, size );
         }
 
-        void udp_client:: send(const char *data) const
-        {
-            send( data, length_of(data) );
-        }
-
-        void udp_client:: send( const memory::ro_buffer &buff ) const
-        {
-            send( buff.ro(), buff.length() );
-        }
-
-        size_t udp_client:: recv(void *data, const size_t size) const
+        
+        size_t udp_client:: recv(void *data, const size_t size)
         {
             return recvfrom(*last_recv_ip,data,size);
         }

@@ -16,7 +16,12 @@ namespace upsylon
         public:
             virtual ~udp_socket() throw();
 
-
+            virtual void   send_block(const void *data, const size_t size ) const = 0;
+            virtual size_t recv(void *data, const size_t size) = 0;
+            
+            void           send(const char *data) const;
+            void           send(const memory::ro_buffer &buff) const;
+            
         protected:
             explicit udp_socket(const ip_version version); //!< setup+version
 

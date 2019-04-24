@@ -5,7 +5,7 @@ using namespace upsylon;
 
 Y_UTEST(udp_client)
 {
-    if(argc<=2) throw exception("%s: version=[v4|v6] dest:port [msg...]",argv[0]);
+    if(argc<=2) throw exception("%s: version=[v4|v6] dest@port [msg...]",argv[0]);
 
     net::ip_version version = net::v4;
     {
@@ -24,7 +24,7 @@ Y_UTEST(udp_client)
         }
     }
 
-    const net::udp_client client(argv[2],version);
+    net::udp_client client(argv[2],version);
     
     std::cerr << "UDP->" << client->text() << "@" << net::bswp(client->port) << std::endl;
 
@@ -33,6 +33,13 @@ Y_UTEST(udp_client)
         const string msg = argv[i];
         std::cerr << "|_'" << msg << "'" << std::endl;
         client.send(msg);
+        char block[256];
+        memset(block,0,sizeof(block));
+        const size_t nr = client.recv(block, sizeof(block)-1 );
+        std::cerr << "nr=" << nr << std::endl;
+        const string ans(block,nr);
+        std::cerr << "|_<" << ans << ">" << std::endl;
+
     }
 
 

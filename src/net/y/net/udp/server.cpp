@@ -31,6 +31,12 @@ peer(ip_addr_none, (**this).version() )
         {
             return recvfrom(*peer,data,size);
         }
+
+        void udp_server:: send_block( const void *data, const size_t size) const
+        {
+            sendto(*peer,data,size);
+        }
+
     }
 
 }
