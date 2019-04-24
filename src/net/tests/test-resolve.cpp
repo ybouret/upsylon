@@ -1,12 +1,11 @@
 
-#include "y/net/net.hpp"
+#include "y/net/socket-address.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
 
 Y_UTEST(resolve)
 {
-    network &nw = network::instance();
 
     for(int iarg=1;iarg<argc;++iarg)
     {
@@ -14,13 +13,13 @@ Y_UTEST(resolve)
         std::cerr << "resolving [" << name << "]" << std::endl;
         net::ipv4    ip4;
         net::ipv6    ip6;
-        nw.resolve(ip4,name);
-        std::cerr << "          |_" << ip4 << std::endl;
+        ip4 = name;
+        std::cerr << "          |_" << ip4 << " port:" << net::bswp(ip4.port) << std::endl;
 
         try
         {
-            nw.resolve(ip6,name);
-            std::cerr << "          |_" << ip6 << std::endl;
+            ip6 = name;
+            std::cerr << "          |_" << ip6 << " port:" << net::bswp(ip6.port) << std::endl;
         }
         catch(const exception &e)
         {

@@ -3,7 +3,7 @@
 #define Y_NET_SOCKET_ADDRESS_INCLUDED 1
 
 #include "y/net/types.hpp"
-#include "y/memory/buffer.hpp"
+#include "y/string.hpp"
 
 namespace upsylon
 {
@@ -36,9 +36,10 @@ namespace upsylon
         class socket_address : public memory::rw_buffer
         {
         public:
+            template <ip_version V> class format; //!< version dependent format
+
             virtual ~socket_address() throw();
             
-            net16_t & port;
 
             virtual const char *text()      const throw() = 0; //!< format internal buffer
             virtual const char *className() const throw() = 0; //!< for information
@@ -49,11 +50,10 @@ namespace upsylon
                 return (os << i.text());
             }
 
-            template <ip_version V> class format; //!< version dependent format
+            void resolve( const string &xname ); //!< using network::resolve
+            void resolve( const char   *xname ); //!< using network::resolve
 
-
-
-
+            net16_t & port; //!< network byte order port
 
 
         protected:
@@ -118,36 +118,53 @@ namespace upsylon
             mutable hrbuff<16> hrb;
         };
 
+#define Y_NET_SOCKET_ADDR(VALUE) format_type(VALUE), socket_address( &(this->sa), __port)
 
         template <ip_version V>
         class socket_addr : public socket_address::format<V>, public socket_address
         {
         public:
-            typedef socket_address::format<V> format_type;
+            typedef socket_address::format<V>  format_type;
+            typedef typename format_type::type sa_type;
+
             static const size_t             __port = format_type::port_offset;
 
-            inline virtual ~socket_addr() throw() {}
 
-            inline socket_addr( const ip_addr_value value = ip_addr_none, uint16_t user_port = 0 ) throw() :
-            format_type( value ), socket_address( &(this->sa), __port)
+            //! setup
+            inline socket_addr(const ip_addr_value value     = ip_addr_none,
+                               const uint16_t      user_port = 0 ) throw() :
+            Y_NET_SOCKET_ADDR(value)
             {
                 port = bswp(user_port);
             }
 
-            inline socket_addr( const socket_addr &i ) throw() : format_type(i), socket_address( &(this->sa), __port) {}
+            inline socket_addr( const string &xname  ) : Y_NET_SOCKET_ADDR(ip_addr_none) { resolve(xname); } //!< by resolve
+            inline socket_addr( const char   *xname  ) : Y_NET_SOCKET_ADDR(ip_addr_none) { resolve(xname); } //!< by resolve
+            inline socket_addr( const socket_addr &i ) throw() : Y_NET_SOCKET_ADDR(i) {}                     //!< copy
             
             inline virtual const void *ro()        const throw() { return &(this->sa); }
-            inline virtual size_t      length()    const throw() { return sizeof(typename format_type::type); }
+            inline virtual size_t      length()    const throw() { return sizeof(sa_type); }
             inline virtual const char *text()      const throw() { return this->hr(); }
             inline virtual const char *className() const throw() { return this->class_name; }
             inline virtual unsigned    family()    const throw() { return this->pf(); }
+            inline virtual            ~socket_addr()     throw() {} //!< destructor
+
+            inline socket_addr & assign( const socket_addr &other ) throw()
+            {
+                memmove( &(this->sa), &(other.sa), sizeof(sa_type) );
+                return *this;
+            }
+
+            socket_addr & operator=( const socket_addr &other ) throw() { return assign(other); }
+            socket_addr & operator=( const string &xname ) { const socket_addr tmp(xname); return assign(tmp); }
+            socket_addr & operator=( const char   *xname ) { const socket_addr tmp(xname); return assign(tmp); }
 
         private:
-            Y_DISABLE_ASSIGN(socket_addr);
+
         };
 
-        typedef socket_addr<v4> ipv4;
-        typedef socket_addr<v6> ipv6;
+        typedef socket_addr<v4> ipv4; //!< alias for level 4
+        typedef socket_addr<v6> ipv6; //!< alias for level 6
         
     }
 }

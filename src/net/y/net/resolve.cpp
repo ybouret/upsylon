@@ -92,3 +92,43 @@ namespace upsylon
         resolve(ip,_);
     }
 }
+
+#include "y/string/convert.hpp"
+
+namespace upsylon
+{
+
+    namespace net
+    {
+
+        void socket_address:: resolve( const string &xname )
+        {
+            static const char _sep  = ':';
+            const char       *name = *xname;
+            char             *psep = (char *) ( strchr(name, _sep ) );
+            if(psep)
+            {
+                port  = bswp( static_cast<uint16_t>( string_convert::to<size_t>(psep+1,"port") ) );
+                *psep = 0;
+            }
+            try
+            {
+                network::instance().resolve(*this,name);
+                if(psep) *psep = _sep;
+            }
+            catch(...)
+            {
+                if(psep) *psep = _sep;
+                throw;
+            }
+        }
+
+        void socket_address:: resolve( const char   *xname )
+        {
+            const string _(xname); resolve(_);
+        }
+        
+    }
+
+}
+

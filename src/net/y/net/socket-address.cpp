@@ -5,23 +5,7 @@
 
 #include <iostream>
 
-namespace upsylon
-{
-    namespace net
-    {
-        
-        socket_address:: ~socket_address() throw()
-        {
-        }
-        
-        socket_address:: socket_address( void *data, const unsigned port_offset ) throw() :
-        port( *memory::io::cast<net16_t>(data,port_offset) )
-        {
-        }
 
-    }
-
-}
 
 namespace upsylon
 {
@@ -206,4 +190,24 @@ namespace upsylon
         }
 
     }
+}
+
+
+namespace upsylon
+{
+    namespace net
+    {
+
+        socket_address:: ~socket_address() throw()
+        {
+        }
+
+        socket_address:: socket_address( void *data, const unsigned port_offset ) throw() :
+        port( *memory::io::cast<net16_t>(data,port_offset) )
+        {
+        }
+
+
+    }
+
 }
