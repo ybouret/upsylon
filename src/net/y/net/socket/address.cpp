@@ -1,11 +1,8 @@
-
-#include "y/net/socket-address.hpp"
+#include "y/net/socket/address.hpp"
 #include "y/memory/io.hpp"
 #include "y/code/utils.hpp"
 
 #include <iostream>
-
-
 
 namespace upsylon
 {

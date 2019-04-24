@@ -10,6 +10,11 @@ SET(main_srcs ${main_decl} ${main_code})
 SOURCE_GROUP( net FILES ${main_srcs} )
 INSTALL( FILES ${main_decl} DESTINATION include/y/net )
 
+FILE(GLOB socket_decl y/net/socket/*.hpp)
+FILE(GLOB socket_code y/net/socket/*.cpp)
+SET(socket_srcs ${socket_decl} ${socket_code})
+SOURCE_GROUP( net/socket FILES ${socket_srcs} )
+INSTALL( FILES ${socket_decl} DESTINATION include/y/net/socket )
 
 FILE(GLOB tcp_decl y/net/tcp/*.hpp)
 FILE(GLOB tcp_code y/net/tcp/*.cpp)
@@ -26,6 +31,7 @@ INSTALL( FILES ${udp_decl} DESTINATION include/y/net/udp )
 
 ADD_LIBRARY(y-net STATIC 
 ${main_srcs}
+${socket_srcs}
 ${tcp_srcs}
 ${udp_srcs}
 )

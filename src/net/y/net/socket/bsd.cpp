@@ -1,4 +1,4 @@
-#include "y/net/bsd-socket.hpp"
+#include "y/net/socket/bsd.hpp"
 
 #if defined(Y_BSD)
 #include <unistd.h>

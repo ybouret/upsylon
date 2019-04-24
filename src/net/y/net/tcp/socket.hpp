@@ -2,7 +2,7 @@
 #ifndef Y_NET_TCP_SOCKET_INCLUDED
 #define Y_NET_TCP_SOCKET_INCLUDED 1
 
-#include "y/net/bsd-socket.hpp"
+#include "y/net/socket/bsd.hpp"
 
 namespace upsylon
 {

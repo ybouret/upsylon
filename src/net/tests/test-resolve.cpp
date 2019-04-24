@@ -1,5 +1,5 @@
 
-#include "y/net/socket-address.hpp"
+#include "y/net/socket/address.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;

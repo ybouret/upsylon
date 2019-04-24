@@ -1,4 +1,4 @@
-#include "y/net/bsd-socket.hpp"
+#include "y/net/socket/bsd.hpp"
 #include "y/net/net.hpp"
 #include "y/utest/run.hpp"
 
