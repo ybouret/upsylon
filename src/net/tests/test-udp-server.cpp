@@ -42,7 +42,7 @@ Y_UTEST(udp_server)
         std::cerr << "|_'" << msg << "'" << std::endl;
         msg.reverse();
         server.send(msg);
-        if(msg=="stop") break;
+        if(msg=="pots") break;
     }
 }
 Y_UTEST_DONE()
