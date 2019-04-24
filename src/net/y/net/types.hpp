@@ -28,8 +28,11 @@ namespace upsylon
 
         uint8_t h[16]; //!< content
         
-        void reverse() throw();
-        
+        void            reverse() throw();                           //!< reverse for byte swapping interface
+        uint8_t       & operator[](const size_t indx) throw();       //!< access
+        const uint8_t & operator[](const size_t indx) const throw(); //!< access, const
+
+
         //! display
         friend std::ostream & operator<< ( std::ostream &, const net128_t & );
     };

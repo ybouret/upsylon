@@ -10,6 +10,20 @@ namespace upsylon
     namespace net
     {
 
+        template <size_t N>
+        class hrbuff
+        {
+        public:
+            inline  hrbuff() throw()    { clear(); }
+            inline ~hrbuff() throw()    { clear(); }
+            inline  hrbuff(const hrbuff &other) throw() { for(size_t i=0;i<N;++i) ch[i]=other.ch[i]; }
+            inline void clear() throw() { for(size_t i=0;i<N;++i) ch[i] = 0; }
+
+            char ch[N];
+        private:
+            Y_DISABLE_ASSIGN(hrbuff);
+        };
+
         enum ip_addr_value
         {
             ip_addr_none,
@@ -24,14 +38,16 @@ namespace upsylon
             virtual ~ip_address() throw();
             
             net16_t & port;
-            virtual void display( std::ostream &os ) const = 0;
-            
+
+            virtual const char *text() const throw() = 0;
+
             friend inline std::ostream & operator<<(std::ostream &os, const ip_address &i )
             {
-                i.display(os);
-                return os;
+                return (os << i.text());
             }
-            
+
+
+
         protected:
             ip_address(void          *data,
                        const unsigned port_offset) throw();
@@ -57,13 +73,14 @@ namespace upsylon
             virtual ~ip_data() throw();
 
             void     _( const ip_addr_value value ) throw();
-            void    output( std::ostream &os) const;
+            const char *hr() const throw(); //!<
 
         protected:
             explicit ip_data(const ip_addr_value value) throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ip_data);
+            mutable hrbuff<64> hrb;
         };
 
         template <> class ip_data<v4>
@@ -78,13 +95,14 @@ namespace upsylon
             virtual ~ip_data() throw();
             
             void     _( const ip_addr_value value ) throw();
-            void    output(std::ostream &os) const;
-            
+            const char *hr() const throw(); //!<
+
         protected:
             explicit ip_data(const ip_addr_value value) throw();
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ip_data);
+            mutable hrbuff<16> hrb;
         };
         
         template <ip_version V>
@@ -103,7 +121,7 @@ namespace upsylon
             
             virtual const void *ro()     const throw() { return &(this->sa); }
             virtual size_t      length() const throw() { return sizeof(typename ip_data<V>::type); }
-            virtual void        display( std::ostream &os) const { this->output(os); }
+            virtual const char *text()   const throw() { return this->hr(); }
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ip_addr);

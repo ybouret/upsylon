@@ -18,8 +18,16 @@ namespace upsylon
         port( *memory::io::cast<net16_t>(data,port_offset) )
         {
         }
-        
-        
+
+    }
+
+}
+
+namespace upsylon
+{
+    namespace net
+    {
+
         ip_data<v4>::~ip_data() throw()
         {
             memset( &sa, 0, sizeof(sa) );
@@ -27,9 +35,10 @@ namespace upsylon
         
         ip_data<v4>:: ip_data(const ip_addr_value value) throw() :
         sa(),
-        addr( *memory::io::__force<net32_t>( &(sa.sin_addr) ) )
+        addr( *memory::io::__force<net32_t>( &(sa.sin_addr) ) ),
+        hrb()
         {
-            memset( &sa, 0, sizeof(sa) );
+            memset( &sa,  0, sizeof(sa)  );
             sa.sin_family = AF_INET;
             _(value);
         }
@@ -47,18 +56,40 @@ namespace upsylon
                 case ip_addr_loopback: addr = bswp( __ip_addr_lbck ); break;
             }
         }
-        
-        void ip_data<v4>:: output(std::ostream &os) const
+
+        static inline void __add_dec( char * &buff, unsigned x ) throw()
         {
-            uint32_t dw = bswp(addr);
-            os
-            << int((dw>>24) & 0xff) << '.'
-            << int((dw>>24) & 0xff) << '.'
-            << int((dw>>24) & 0xff) << '.'
-            << int( dw      & 0xff) << '@' << bswp(sa.sin_port);
+            assert(x<256);
+            const unsigned c = x / 100;          assert(c<=2);
+            const unsigned d = ( x-=c*100) / 10; assert(d<10);
+            const unsigned u = ( x-=d*10);       assert(u<10);
+            if(c) { *(buff++) = '0'+c;}
+            if(d) { *(buff++) = '0'+d;}
+            *(buff++) = '0'+u;
+        }
+
+        const char * ip_data<v4>:: hr() const throw()
+        {
+            char    *buff = & hrb.ch[0];
+            uint32_t dw   = bswp(addr);
+
+            hrb.clear();
+            __add_dec(buff,unsigned((dw>>24) & 0xff)); *(buff++) = '.';
+            __add_dec(buff,unsigned((dw>>16) & 0xff)); *(buff++) = '.';
+            __add_dec(buff,unsigned((dw>>8)  & 0xff)); *(buff++) = '.';
+            __add_dec(buff,unsigned( dw      & 0xff));
+
+            return hrb.ch;
         }
         
-        
+    }
+
+}
+
+namespace upsylon
+{
+    namespace net
+    {
         
         ip_data<v6>::~ip_data() throw()
         {
@@ -92,34 +123,43 @@ namespace upsylon
                 case ip_addr_loopback: memcpy( & sa.sin6_addr, lbck, 16 ); break;
             }
         }
-        
-        void ip_data<v6>:: output(std::ostream &os) const
+
+        static inline void __add4bits( char * &buff, const uint16_t q) throw()
         {
-            const net128_t x        = bswp(addr);
-            char           buff[64] = { 0 };
-            const uint8_t *q        = x.h;
-            
-            memset(buff,0,sizeof(buff));
-            
-            size_t j=0;
+            assert(q<16);
+            if(q>0)
+            {
+                *(buff++) = * hexadecimal::lowercase_word[q];
+            }
+        }
+        
+        static inline void __add_hexa( char * &buff, const uint16_t w ) throw()
+        {
+            __add4bits(buff, (w>>12) & 0xf );
+            __add4bits(buff, (w>>8)  & 0xf );
+            __add4bits(buff, (w>>4)  & 0xf );
+            __add4bits(buff,  w      & 0xf );
+        }
+
+        const char* ip_data<v6>:: hr() const throw()
+        {
+            const uint8_t *byte     = &addr[0]+16;
+            char          *org      = &hrb.ch[0];
+            char          *buff     = org;
+
+            hrb.clear();
+
             for(size_t i=0;i<8;++i)
             {
-                if(q[0]!=0||q[1]!=0)
-                {
-                    for(size_t iter=0;iter<2;++iter)
-                    {
-                        const char *w = hexadecimal::lowercase[*(q++)];
-                        buff[j++] = w[0];
-                        buff[j++] = w[1];
-                    }
-                }
-                else
-                {
-                    q+=2;
-                }
-                if(i<7) buff[j++] = ':';
+                const uint16_t hi = *(--byte);
+                const uint16_t lo = *(--byte);
+                __add_hexa(buff, (hi<<8)|lo );
+                if(i<7) *(buff++) = ':';
             }
-            std::cerr << buff << "->";
+
+            // compress
+            size_t j = buff - org;
+            buff     = org;
             for(size_t k=1;k<j;)
             {
                 if(buff[k]==':' && buff[k+1] == ':' )
@@ -132,7 +172,7 @@ namespace upsylon
                 }
             }
             
-            os << buff << '@' << bswp(sa.sin6_port);
+            return hrb.ch;
         }
         
     }

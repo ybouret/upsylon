@@ -16,9 +16,12 @@ Y_UTEST(addr)
     std::cerr << "ip6=" << ip6 << std::endl;
     ip6._(net::ip_addr_loopback);
     std::cerr << "ip6.addr=" << ip6.addr << std::endl;
-    std::cerr << "swp.ip6.addr=" << net::bswp(ip6.addr) << std::endl;
-
     std::cerr << "ip6=" << ip6 << std::endl;
+
+    std::cerr << "sizeof(hrbuff<16>)=" << sizeof(net::hrbuff<16>) << std::endl;
+    std::cerr << "sizeof(hrbuff<64>)=" << sizeof(net::hrbuff<64>) << std::endl;
+    std::cerr << "sizeof(net::ipv4) =" << sizeof(net::ipv4)       << std::endl;
+    std::cerr << "sizeof(net::ipv6) =" << sizeof(net::ipv6)       << std::endl;
 
 }
 Y_UTEST_DONE()

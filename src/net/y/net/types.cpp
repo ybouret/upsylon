@@ -47,7 +47,18 @@ namespace upsylon
         cswap(h[0x5],h[0xA]);
         cswap(h[0x6],h[0x9]);
         cswap(h[0x7],h[0x8]);
+    }
 
+    uint8_t & net128_t:: operator[](const size_t indx) throw()
+    {
+        assert(indx<16);
+        return h[indx];
+    }
+
+    const uint8_t & net128_t:: operator[](const size_t indx) const throw()
+    {
+        assert(indx<16);
+        return h[indx];
     }
 
 
