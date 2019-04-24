@@ -16,6 +16,7 @@ namespace upsylon
         string get_host_name() const; //!< get host name
 
         net::socket_type open(const net::ip_protocol proto, const net::ip_version version);
+        
 
         //! resolve the address, preserving the port
         void resolve( net::socket_address &ip, const string &s ) const;
