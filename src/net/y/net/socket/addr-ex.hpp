@@ -33,6 +33,7 @@ namespace upsylon
             void setup( const socket_address &ip ) throw();
             void setup( const string &xname, const ip_version version);
 
+			Y_DISABLE_COPY_AND_ASSIGN(socket_addr_ex);
         };
 
     }

@@ -19,7 +19,7 @@ namespace upsylon
         void udp_socket:: sendto( const socket_address &target, const void *data, const size_t size ) const
         {
             Y_GIANT_LOCK();
-            assert( !(data==NULL&size>0) );
+            assert( !(data==NULL&&size>0) );
             const int msgSize = int(size);
             if(msgSize<0)
             {
@@ -51,7 +51,7 @@ namespace upsylon
         size_t udp_socket:: recvfrom( socket_address &source, void *data, const size_t size ) const
         {
             Y_GIANT_LOCK();
-            assert( !(data==NULL&size>0) );
+            assert( !(data==NULL&&size>0) );
             const int msgSize = int(size);
             if(msgSize<0)
             {
@@ -61,11 +61,14 @@ namespace upsylon
 
 #if defined(Y_WIN)
             const int     msgRecv = Y_NET_UDP_RECVFROM();
-            if( SOCKET_ERRROR == msgRecv )
+            if( SOCKET_ERROR == msgRecv )
             {
                 throw net::exception( get_last_error_code(), "::recvfrom" );
             }
+			return msgRecv;
 #endif
+
+#if defined(Y_BSD)
             int msgRecv = 0;
             while( (msgRecv=Y_NET_UDP_RECVFROM())<0)
             {
@@ -77,6 +80,7 @@ namespace upsylon
                 }
             }
             return msgRecv;
+#endif
         }
 
         void udp_socket:: send(const char *data) const { send_block(data,length_of(data)); }

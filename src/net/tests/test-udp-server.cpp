@@ -26,7 +26,7 @@ Y_UTEST(udp_server)
         }
     }
 
-    const uint16_t user_port = string_convert::to<size_t>(argv[2],"port");
+    const uint16_t user_port = uint16_t(string_convert::to<size_t>(argv[2],"port"));
 
     net::udp_server server( user_port, version );
 
