@@ -9,42 +9,62 @@ namespace upsylon
 {
     namespace net
     {
-
+        //______________________________________________________________________
+        //
         //! Human Readable Buffer
+        //______________________________________________________________________
         template <size_t N> class hrbuff
         {
         public:
+            //! setup
             inline  hrbuff() throw()    { clear(); }
+            //! cleanup
             inline ~hrbuff() throw()    { clear(); }
+            //! copy
             inline  hrbuff(const hrbuff &other) throw() { for(size_t i=0;i<N;++i) ch[i]=other.ch[i]; }
+            //! clear
             inline void clear() throw() { for(size_t i=0;i<N;++i) ch[i] = 0; }
 
-            char ch[N];
-
+            char ch[N]; //!< workspace
         private:
             Y_DISABLE_ASSIGN(hrbuff);
         };
 
+        //______________________________________________________________________
+        //
+        //! default address initializer
+        //______________________________________________________________________
         enum ip_addr_value
         {
-            ip_addr_none,
-            ip_addr_any,
-            ip_addr_loopback
+            ip_addr_none,     //!< error like
+            ip_addr_any,      //!< any interface
+            ip_addr_loopback  //!< loopback interface
         };
 
+        //______________________________________________________________________
+        //
         //! socket address interface[4|6]
+        //______________________________________________________________________
         class socket_address : public memory::rw_buffer
         {
         public:
+
             template <ip_version V> class format; //!< version dependent format
 
-            virtual ~socket_address() throw();
-            
-
+            //__________________________________________________________________
+            //
+            // virtual interface
+            //__________________________________________________________________
+            virtual            ~socket_address() throw();      //!< destructor
             virtual const char *text()      const throw() = 0; //!< format internal buffer
             virtual const char *className() const throw() = 0; //!< for information
             virtual unsigned    family()    const throw() = 0; //!< for information/naming
 
+            //__________________________________________________________________
+            //
+            // non virtual interface
+            //__________________________________________________________________
+            //! display
             friend inline std::ostream & operator<<(std::ostream &os, const socket_address &i )
             {
                 return (os << i.text());
@@ -55,7 +75,6 @@ namespace upsylon
 
             net16_t & port; //!< network byte order port
 
-
         protected:
             //! setup
             socket_address(void          *data,
@@ -65,24 +84,38 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(socket_address);
         };
 
-
+        //______________________________________________________________________
+        //
         //! IPv6 format
+        //______________________________________________________________________
         template <> class socket_address:: format<v6>
         {
         public:
-            static  const char     class_name[]; //!< "ipv6"
-            typedef sockaddr_in6   type;         //!< net API
+            //__________________________________________________________________
+            //
+            // typedef and metrics
+            //__________________________________________________________________
+            static  const char     class_name[];                           //!< "ipv6"
+            typedef sockaddr_in6   type;                                   //!< net API
             static  const unsigned port_offset = offsetof(type,sin6_port); //!< locate port
 
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             type      sa;   //!< low-level data
             net128_t &addr; //!< binary mapping
 
+            //__________________________________________________________________
+            //
+            // interface
+            //__________________________________________________________________
             virtual ~format() throw();           //!< destructor
             format(const format &other) throw(); //!< copy
 
-            void     _( const ip_addr_value value ) throw(); //!< set to a specific value
-            const char *hr() const throw();                  //!< format internal buffer
-            unsigned    pf() const throw();                  //!< return sin_family
+            void        _( const ip_addr_value value ) throw(); //!< set to a specific value
+            const char *hr() const throw();                     //!< format internal buffer
+            unsigned    pf() const throw();                     //!< return sin_family
 
         protected:
             explicit format(const ip_addr_value value) throw(); //!< setup
@@ -92,17 +125,32 @@ namespace upsylon
             mutable hrbuff<64> hrb;
         };
 
+        //______________________________________________________________________
+        //
         //! IPv4 format
+        //______________________________________________________________________
         template <> class socket_address:: format<v4>
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and metrics
+            //__________________________________________________________________
             static  const char      class_name[]; //!< "ipv4"
             typedef sockaddr_in     type;         //!< net API
             static  const unsigned  port_offset = offsetof(type,sin_port); //!< locate port
 
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             type     sa;   //!< low-level data
             net32_t &addr; //!< binary mapping
 
+            //__________________________________________________________________
+            //
+            // interface
+            //__________________________________________________________________
             virtual ~format() throw();           //!< destructor
             format(const format &other) throw(); //!< copy
 
@@ -118,19 +166,44 @@ namespace upsylon
             mutable hrbuff<16> hrb;
         };
 
+        //! wrapper for initialization
 #define Y_NET_SOCKET_ADDR(VALUE) format_type(VALUE), socket_address( &(this->sa), __port)
 
+        //______________________________________________________________________
+        //
+        //! generic socket address
+        //______________________________________________________________________
         template <ip_version V>
         class socket_addr : public socket_address::format<V>, public socket_address
         {
         public:
-            typedef socket_address::format<V>  format_type;
-            typedef typename format_type::type sa_type;
+            //__________________________________________________________________
+            //
+            // types and metrics
+            //__________________________________________________________________
+            typedef socket_address::format<V>  format_type; //!< alias
+            typedef typename format_type::type sa_type;     //!< alias
+            static const size_t                __port = format_type::port_offset; //!< alias
 
-            static const size_t             __port = format_type::port_offset;
+
+            //__________________________________________________________________
+            //
+            // virtual interface
+            //__________________________________________________________________
+            inline virtual const void *ro()        const throw() { return &(this->sa); }       //!< rw_buffer interface
+            inline virtual size_t      length()    const throw() { return sizeof(sa_type); }   //!< rw_buffer interface
+            inline virtual const char *text()      const throw() { return this->hr(); }        //!< socket_address interface
+            inline virtual const char *className() const throw() { return this->class_name; }  //!< socket_address/serial interface
+            inline virtual unsigned    family()    const throw() { return this->pf(); }        //!< socket_address interface
+            inline virtual            ~socket_addr()     throw() {}                            //!< destructor
+
+            //__________________________________________________________________
+            //
+            // non-virtual interface
+            //__________________________________________________________________
 
 
-            //! setup
+            //! setup by value(s)
             inline socket_addr(const ip_addr_value value     = ip_addr_none,
                                const uint16_t      user_port = 0 ) throw() :
             Y_NET_SOCKET_ADDR(value)
@@ -138,29 +211,20 @@ namespace upsylon
                 port = bswp(user_port);
             }
 
-            inline socket_addr( const string &xname  ) : Y_NET_SOCKET_ADDR(ip_addr_none) { resolve(xname); } //!< by resolve
-            inline socket_addr( const char   *xname  ) : Y_NET_SOCKET_ADDR(ip_addr_none) { resolve(xname); } //!< by resolve
+            inline socket_addr( const string &xname  ) : Y_NET_SOCKET_ADDR(ip_addr_none) { resolve(xname); } //!< setup by resolve
+            inline socket_addr( const char   *xname  ) : Y_NET_SOCKET_ADDR(ip_addr_none) { resolve(xname); } //!< setup by resolve
             inline socket_addr( const socket_addr &i ) throw() : Y_NET_SOCKET_ADDR(i) {}                     //!< copy
-            
-            inline virtual const void *ro()        const throw() { return &(this->sa); }
-            inline virtual size_t      length()    const throw() { return sizeof(sa_type); }
-            inline virtual const char *text()      const throw() { return this->hr(); }
-            inline virtual const char *className() const throw() { return this->class_name; }
-            inline virtual unsigned    family()    const throw() { return this->pf(); }
-            inline virtual            ~socket_addr()     throw() {} //!< destructor
 
+            //! assign
             inline socket_addr & assign( const socket_addr &other ) throw()
             {
                 memmove( &(this->sa), &(other.sa), sizeof(sa_type) );
                 return *this;
             }
 
-            socket_addr & operator=( const socket_addr &other ) throw() { return assign(other); }
-            socket_addr & operator=( const string &xname ) { const socket_addr tmp(xname); return assign(tmp); }
-            socket_addr & operator=( const char   *xname ) { const socket_addr tmp(xname); return assign(tmp); }
-
-        private:
-
+            socket_addr & operator=( const socket_addr &other ) throw() { return assign(other); }                //!< assign
+            socket_addr & operator=( const string &xname ) { const socket_addr tmp(xname); return assign(tmp); } //!< resolve/assign
+            socket_addr & operator=( const char   *xname ) { const socket_addr tmp(xname); return assign(tmp); } //!< resolve/assign
         };
 
         typedef socket_addr<v4> ipv4; //!< alias for level 4

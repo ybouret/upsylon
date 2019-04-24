@@ -71,7 +71,7 @@ namespace upsylon
             return y;
         }
         
-        
+        //! generic bswp
         template <typename T>
         inline T bswp_as( const T &x ) throw()
         {
@@ -98,11 +98,13 @@ namespace upsylon
         //! return last error code, errno of WSAGetLastError()
         error_code get_last_error_code() throw();
 
+        //! dedicated exception class
         class exception : public upsylon::exception
         {
         public:
+            //! setup
             explicit exception(const error_code err,const char *fmt,...) throw() Y_PRINTF_CHECK(3,4);
-            virtual ~exception() throw(); //!< default destructor
+            virtual ~exception() throw();           //!< default destructor
             exception( const exception & ) throw(); //!< copy constructor
 
             virtual const char *what() const throw(); //!< internal what_
@@ -118,27 +120,29 @@ namespace upsylon
 
     namespace net
     {
+        //! version[4|6]
         enum ip_version
         {
-            v4,
-            v6
+            v4, //!< for IPv4
+            v6  //!< for IPv6
         };
 
+        //! protocol[UDP|TCP]
         enum ip_protocol
         {
-            tcp,
-            udp
+            tcp, //!< mark TCP
+            udp  //!< mark UDP
         };
 
 #if defined(Y_WIN)
-        typedef SOCKET socket_type;
+        typedef SOCKET socket_type; //!< win32 sockets
 #endif
 
 #if defined(Y_BSD)
-        typedef int    socket_type;
+        typedef int    socket_type; //!< bsd sockets
 #endif
 
-        extern const socket_type invalid_socket;
+        extern const socket_type invalid_socket; //!< opaque invalid socket value
     }
 
 

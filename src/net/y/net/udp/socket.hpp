@@ -9,13 +9,14 @@ namespace upsylon
     namespace net
     {
 
+        //! base class for UDP socket
         class udp_socket : public bsd_socket
         {
         public:
             virtual ~udp_socket() throw();
 
         protected:
-            explicit udp_socket( const ip_version version);
+            explicit udp_socket(const ip_version version); //!< setup+version
 
 
         private:

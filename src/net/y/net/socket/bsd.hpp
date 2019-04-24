@@ -8,33 +8,34 @@ namespace upsylon
 {
     namespace net
     {
+        //! shutdown socket mnode
         enum shutdown_type
         {
-            sd_send,
-            sd_recv,
-            sd_both
+            sd_send, //!< stop sending
+            sd_recv, //!< stop receiving
+            sd_both  //!< stop all
         };
 
 #if defined(Y_BSD)
-        typedef int socket_boolean;
+        typedef int socket_boolean; //!< system boolean type
 #endif
 
 #if defined(Y_WIN)
-        typedef BOOL socket_boolean;
+        typedef BOOL socket_boolean; //!< system boolean type
 #endif
-        extern const socket_boolean socket_true;
-        extern const socket_boolean socket_false;
+        extern const socket_boolean socket_true;  //!< opaque TRUE value
+        extern const socket_boolean socket_false; //!< opaque FALSE value
 
         //! low level socket API
         class bsd_socket
         {
         public:
-            virtual ~bsd_socket() throw();
-            explicit bsd_socket(const ip_protocol protocol,
-                               const ip_version  version);
+            virtual ~bsd_socket() throw();                  //!< destructor
+            explicit bsd_socket(const ip_protocol protocol, //
+                                const ip_version  version); //!< setup
 
-            void async(); //!< set non blocking mode
-            void shutdown( const shutdown_type how ) throw(); //!< shutdown
+            void async();                               //!< set non blocking mode
+            void shutdown(const shutdown_type) throw(); //!< shutdown
 
             //! wrapper to setsocketopt
             void setopt(const int      level,
@@ -51,12 +52,8 @@ namespace upsylon
             void on(  const int level, const int optname ); //!< turn flag on
             void off( const int level, const int optname ); //!< turn flag off
 
-
-
-
-
         protected:
-            socket_type sock;
+            socket_type sock; //!< internal system socket
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bsd_socket);

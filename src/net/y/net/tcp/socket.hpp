@@ -9,13 +9,14 @@ namespace upsylon
     namespace net
     {
 
+        //! base class for TCP socket
         class tcp_socket : public bsd_socket
         {
         public:
-            virtual ~tcp_socket() throw();
+            virtual ~tcp_socket() throw(); //! destructor
 
         protected:
-            explicit tcp_socket( const ip_version version);
+            explicit tcp_socket( const ip_version version); //!< setup+version
             
 
         private:

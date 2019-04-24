@@ -15,11 +15,14 @@ namespace upsylon
         static bool verbose;          //!< mostly to debug
         string get_host_name() const; //!< get host name
 
+        //! create a socket
         net::socket_type open(const net::ip_protocol proto, const net::ip_version version);
         
 
         //! resolve the address, preserving the port
         void resolve( net::socket_address &ip, const string &s ) const;
+
+        //! resolve the address, preserving the port, wrapper
         void resolve( net::socket_address &ip, const char   *s ) const;
 
         static const uint16_t reserved_port;           //!< port < reserved_port: for system

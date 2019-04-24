@@ -4,8 +4,5 @@
 
 #include "y/os.hpp"
 
-#define Y_OFFSET_BASE(STRUCT) 
-#define Y_OFFSET_OF(STRUCT,MEMBER)
-
 #endif
 

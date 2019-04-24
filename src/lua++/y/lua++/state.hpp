@@ -90,6 +90,7 @@ int __upsylon_lua_##NAME( lua_State *L ) {                 \
 lua_pushnumber(L, FUNC( luaL_checknumber(L,1) ) ); \
 return 1;}
 
+        //! wrapper to load a CFunction into a Lua::VM
 #define Y_LUA_LOAD_CFUNCTION(THE_VM,NAME) (THE_VM)->load(#NAME,__upsylon_lua_##NAME)
 
     }
