@@ -13,8 +13,12 @@ namespace upsylon
         public:
             virtual ~udp_client() throw();
             explicit udp_client(const socket_address &ip);
+            explicit udp_client(const string &xname, const ip_version version = v4);
+            explicit udp_client(const char   *xname, const ip_version version = v4);
 
-            void send( const void *data, const size_t size, const int flags=0 ) const;
+            void send(const void *data, const size_t size) const;
+            void send(const char *data) const;
+            void send( const memory::ro_buffer &buff ) const;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(udp_client);

@@ -3,6 +3,7 @@
 #define Y_NET_UDP_SOCKET_INCLUDED 1
 
 #include "y/net/socket/bsd.hpp"
+#include "y/net/socket/io-params.hpp"
 
 namespace upsylon
 {
@@ -10,7 +11,7 @@ namespace upsylon
     {
 
         //! base class for UDP socket
-        class udp_socket : public bsd_socket
+        class udp_socket : public bsd_socket, public socket_io_params
         {
         public:
             virtual ~udp_socket() throw();
@@ -19,7 +20,7 @@ namespace upsylon
         protected:
             explicit udp_socket(const ip_version version); //!< setup+version
 
-            void sendto( const socket_address &peer, const void *data, const size_t size, const int flags=0 ) const;
+            void sendto( const socket_address &peer, const void *data, const size_t size ) const;
 
 
         private:

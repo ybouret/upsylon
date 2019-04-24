@@ -16,7 +16,7 @@ namespace upsylon
         {
         }
 
-        void udp_socket:: sendto( const socket_address &peer, const void *data, const size_t size, const int flags) const
+        void udp_socket:: sendto( const socket_address &peer, const void *data, const size_t size ) const
         {
             Y_GIANT_LOCK();
             assert( !(data==NULL&size>0) );
@@ -29,7 +29,7 @@ namespace upsylon
             const int msgSent = ::sendto(sock,
                                          (const char *)data,
                                          msgSize,
-                                         flags,
+                                         send_flags,
                                          static_cast<const sockaddr *>(peer.ro()),
                                          unsigned( peer.length()) );
             if(msgSent!=msgSize)

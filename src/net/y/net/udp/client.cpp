@@ -9,18 +9,26 @@ namespace upsylon
         {
         }
 
-        udp_client:: udp_client( const socket_address &ip ) :
-        socket_addr_ex(ip),
-        udp_socket( (**this).version() )
+#define Y_NET_UDP_CLIENT( INI ) socket_addr_ex INI,  udp_socket( (**this).version() )
+
+        udp_client:: udp_client(const socket_address &ip ) : Y_NET_UDP_CLIENT( (ip) ) {}
+        udp_client:: udp_client(const string &xname, const ip_version version) : Y_NET_UDP_CLIENT( (xname,version) ) {}
+        udp_client:: udp_client(const char   *xname, const ip_version version) : Y_NET_UDP_CLIENT( (xname,version) ) {}
+
+        void udp_client::send(const void *data, const size_t size) const
         {
-            
+            sendto( **this, data, size );
         }
 
-        void udp_client::send(const void *data, const size_t size, const int flags) const
+        void udp_client:: send(const char *data) const
         {
-            sendto( **this, data, size, flags);
+            send( data, length_of(data) );
         }
 
+        void udp_client:: send( const memory::ro_buffer &buff ) const
+        {
+            send( buff.ro(), buff.length() );
+        }
 
     }
 }
