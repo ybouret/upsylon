@@ -1,5 +1,5 @@
 
-#include "y/net/ip-addr.hpp"
+#include "y/net/socket-address.hpp"
 #include "y/memory/io.hpp"
 #include "y/code/utils.hpp"
 
@@ -10,11 +10,11 @@ namespace upsylon
     namespace net
     {
         
-        ip_address:: ~ip_address() throw()
+        socket_address:: ~socket_address() throw()
         {
         }
         
-        ip_address:: ip_address( void *data, const unsigned port_offset ) throw() :
+        socket_address:: socket_address( void *data, const unsigned port_offset ) throw() :
         port( *memory::io::cast<net16_t>(data,port_offset) )
         {
         }
@@ -28,12 +28,12 @@ namespace upsylon
     namespace net
     {
 
-        ip_data<v4>::~ip_data() throw()
+        socket_address:: format<v4>:: ~format() throw()
         {
             memset( &sa, 0, sizeof(sa) );
         }
         
-        ip_data<v4>:: ip_data(const ip_addr_value value) throw() :
+        socket_address:: format<v4>:: format(const ip_addr_value value) throw() :
         sa(),
         addr( *memory::io::__force<net32_t>( &(sa.sin_addr) ) ),
         hrb()
@@ -43,7 +43,7 @@ namespace upsylon
             _(value);
         }
 
-        ip_data<v4>:: ip_data(const ip_data &other ) throw() :
+        socket_address:: format<v4>:: format(const format &other ) throw() :
         sa(),
         addr( *memory::io::__force<net32_t>( &(sa.sin_addr) ) ),
         hrb( other.hrb )
@@ -51,7 +51,7 @@ namespace upsylon
             memcpy( &sa, &other.sa, sizeof(sa) );
         }
 
-        void ip_data<v4>::_(const ip_addr_value value) throw()
+        void socket_address:: format<v4>::_(const ip_addr_value value) throw()
         {
             static const uint32_t __ip_addr_none = INADDR_NONE;
             static const uint32_t __ip_addr_any  = INADDR_ANY;
@@ -76,7 +76,7 @@ namespace upsylon
             *(buff++) = '0'+u;
         }
 
-        const char * ip_data<v4>:: hr() const throw()
+        const char * socket_address:: format<v4>:: hr() const throw()
         {
             char    *buff = & hrb.ch[0];
             uint32_t dw   = bswp(addr);
@@ -90,8 +90,12 @@ namespace upsylon
             return hrb.ch;
         }
 
+        unsigned socket_address:: format<v4>::pf() const throw()
+        {
+            return static_cast<unsigned>( sa.sin_family );
+        }
 
-        const char ip_data<v4>::class_name[] = "ipv4";
+        const char socket_address::format<v4>::class_name[] = "ipv4";
     }
 
 }
@@ -101,21 +105,21 @@ namespace upsylon
     namespace net
     {
         
-        ip_data<v6>::~ip_data() throw()
+        socket_address:: format<v6>::~format() throw()
         {
             memset( &sa, 0, sizeof(sa) );
         }
         
-        ip_data<v6>:: ip_data(const ip_addr_value value) throw() :
+        socket_address:: format<v6>:: format(const ip_addr_value value) throw() :
         sa(),
         addr(  *memory::io::__force<net128_t>( &(sa.sin6_addr) ) )
         {
             memset( &sa, 0, sizeof(sa) );
-            sa.sin6_family = AF_INET;
+            sa.sin6_family = AF_INET6;
             _(value);
         }
 
-        ip_data<v6>:: ip_data(const ip_data &other ) throw() :
+        socket_address:: format<v6>:: format(const format &other ) throw() :
         sa(),
         addr( *memory::io::__force<net128_t>( &(sa.sin6_addr) ) ),
         hrb( other.hrb )
@@ -123,14 +127,14 @@ namespace upsylon
             memcpy( &sa, &other.sa, sizeof(sa) );
         }
         
-        void ip_data<v6>::_(const ip_addr_value value) throw()
+        void socket_address:: format<v6>::_(const ip_addr_value value) throw()
         {
             static const uint8_t lbck[16] =
             {
-                1,0,0,0,
                 0,0,0,0,
                 0,0,0,0,
-                0,0,0,0}
+                0,0,0,0,
+                0,0,0,1}
             ;
             
             switch( value )
@@ -158,9 +162,9 @@ namespace upsylon
             __add4bits(buff,  w      & 0xf );
         }
 
-        const char* ip_data<v6>:: hr() const throw()
+        const char* socket_address:: format<v6>:: hr() const throw()
         {
-            const uint8_t *byte     = &addr[0]+16;
+            const uint8_t *byte     = &addr[0];
             char          *org      = &hrb.ch[0];
             char          *buff     = org;
 
@@ -169,8 +173,8 @@ namespace upsylon
             // add 4bits
             for(size_t i=0;i<8;++i)
             {
-                const uint16_t hi = *(--byte);
-                const uint16_t lo = *(--byte);
+                const uint16_t lo = *(byte++);
+                const uint16_t hi = *(byte++);
                 __add_hexa(buff, (hi<<8)|lo );
                 if(i<7) *(buff++) = ':';
             }
@@ -193,7 +197,12 @@ namespace upsylon
             return hrb.ch;
         }
 
-        const char ip_data<v6>::class_name[] = "ipv6";
+        const char socket_address:: format<v6>::class_name[] = "ipv6";
+
+        unsigned socket_address:: format<v6>::pf() const throw()
+        {
+            return static_cast<unsigned>( sa.sin6_family );
+        }
 
     }
 }

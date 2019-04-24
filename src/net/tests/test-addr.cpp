@@ -3,7 +3,7 @@
 
 using namespace upsylon;
 
-static inline void show_ip( const net::ip_address &ip )
+static inline void show_ip( const net::socket_address &ip )
 {
     std::cerr << "address=" << ip.className() << std::endl;
     std::cerr << "       |_" << ip.text()     << std::endl;
