@@ -112,7 +112,8 @@ namespace upsylon
         
         socket_address:: format<v6>:: format(const ip_addr_value value) throw() :
         sa(),
-        addr(  *memory::io::__force<net128_t>( &(sa.sin6_addr) ) )
+        addr(  *memory::io::__force<net128_t>( &(sa.sin6_addr) ) ),
+        hrb()
         {
             memset( &sa, 0, sizeof(sa) );
             sa.sin6_family = AF_INET6;
