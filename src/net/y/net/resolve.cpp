@@ -51,11 +51,18 @@ extern "C"
 
 #include "y/exceptions.hpp"
 
+namespace
+{
+    static const char __resolve_pfx[] ="[network.resolve(<";
+    static const char __resolve_sfx[] = ">)]";
+}
 namespace upsylon
 {
+
     void network:: resolve(net::socket_address &ip,
                            const string         &name ) const
     {
+        Y_NET_VERBOSE(std::cerr << __resolve_pfx << name << __resolve_sfx << std::endl);
         Y_GIANT_LOCK();
 
         addrinfo fmt;
@@ -114,6 +121,7 @@ namespace upsylon
             try
             {
                 network::instance().resolve(*this,name);
+                Y_NET_VERBOSE(std::cerr << __resolve_pfx << '@' << bswp(port) << __resolve_sfx << std::endl);
                 if(psep) *psep = port_separator;
             }
             catch(...)

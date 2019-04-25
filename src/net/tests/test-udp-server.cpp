@@ -9,6 +9,7 @@ Y_UTEST(udp_server)
 {
     if(argc<=2) throw exception("%s: version=[v4|v6] port",argv[0]);
 
+    network::verbose = true;
     net::ip_version version = net::v4;
     {
         const string vstr = argv[1];

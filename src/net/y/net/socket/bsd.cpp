@@ -14,6 +14,11 @@ namespace upsylon
         static inline
         void bsd_close( socket_type &sock ) throw()
         {
+            if( network::verbose )
+            {
+                Y_LOCK(network::access);
+                std::cerr << "[network.bsd.socket.close]" << std::endl;
+            }
             assert( invalid_socket != sock );
 #if defined(Y_BSD)
             (void) ::close(sock);
@@ -35,6 +40,7 @@ namespace upsylon
         bsd_socket:: bsd_socket( const ip_protocol protocol, const ip_version version) :
         sock( network::instance().open(protocol,version) )
         {
+            
             try
             {
                 on(SOL_SOCKET,SO_REUSEADDR);

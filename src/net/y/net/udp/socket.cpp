@@ -65,7 +65,7 @@ namespace upsylon
             {
                 throw net::exception( get_last_error_code(), "::recvfrom" );
             }
-			return msgRecv;
+            return msgRecv;
 #endif
 
 #if defined(Y_BSD)
@@ -83,8 +83,13 @@ namespace upsylon
 #endif
         }
 
-        void udp_socket:: send(const char *data) const { send_block(data,length_of(data)); }
-        void udp_socket:: send(const memory::ro_buffer &buff) const { send_block( buff.ro(), buff.length() ); }
+        void udp_socket:: send(const void *data, const size_t size) const { send_(data,size);                }
+        void udp_socket:: send(const char *data)                    const { send_(data,length_of(data));     }
+        void udp_socket:: send(const memory::ro_buffer &buff)       const { send_(buff.ro(),buff.length() ); }
+
+        size_t udp_socket::recv(void *data, const size_t size) { return recv_(data,size); }
+        
+
 
     }
 }

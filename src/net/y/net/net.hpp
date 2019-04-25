@@ -38,8 +38,13 @@ namespace upsylon
 
     public:
         static const at_exit::longevity life_time = object::life_time - 13; //!< life time
-
     };
+
+    //! macro to be used with network verbosity
+#define Y_NET_VERBOSE(CODE) do {  \
+if(network::verbose) {            \
+Y_LOCK(network::access); CODE;    \
+} } while(false);                
 
 }
 

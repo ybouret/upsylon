@@ -6,7 +6,8 @@ using namespace upsylon;
 Y_UTEST(udp_client)
 {
     if(argc<=2) throw exception("%s: version=[v4|v6] dest@port [msg...]",argv[0]);
-
+    network::verbose = true;
+    
     net::ip_version version = net::v4;
     {
         const string vstr = argv[1];

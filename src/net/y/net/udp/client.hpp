@@ -12,15 +12,15 @@ namespace upsylon
         class udp_client :  public socket_addr_ex, public udp_socket
         {
         public:
-            virtual ~udp_client() throw();
-            explicit udp_client(const socket_address &ip);
-            explicit udp_client(const string &xname, const ip_version version = v4);
-            explicit udp_client(const char   *xname, const ip_version version = v4);
+            virtual ~udp_client() throw(); //!< destructor
+            explicit udp_client(const socket_address &ip); //!< initialize to target
+            explicit udp_client(const string &xname, const ip_version version = v4); //!< initialize to name
+            explicit udp_client(const char   *xname, const ip_version version = v4); //!< initialize to name
 
-            virtual void   send_block(const void *data, const size_t size) const;
-            virtual size_t recv(void *data, const size_t size);
+            virtual void   send_(const void *data, const size_t size) const; //!< sendto target
+            virtual size_t recv_(void *data, const size_t size);             //!< recfrom last_recv_ip
 
-            socket_addr_ex last_recv_ip;
+            socket_addr_ex last_recv_ip; //!< store origin of last recv
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(udp_client);

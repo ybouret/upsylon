@@ -27,12 +27,12 @@ peer(ip_addr_none, (**this).version() )
             (**this).bind(sock);
         }
         
-        size_t udp_server:: recv(void *data, const size_t size)
+        size_t udp_server:: recv_(void *data, const size_t size)
         {
             return recvfrom(*peer,data,size);
         }
 
-        void udp_server:: send_block( const void *data, const size_t size) const
+        void udp_server:: send_( const void *data, const size_t size) const
         {
             sendto(*peer,data,size);
         }

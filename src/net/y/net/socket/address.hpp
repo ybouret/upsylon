@@ -50,8 +50,8 @@ namespace upsylon
         class socket_address : public memory::rw_buffer
         {
         public:
-            static const char port_separator = '@';
-            template <ip_version V> class format; //!< version dependent format
+            static const char port_separator = '@';  //!< to parse address
+            template <ip_version V> class format;    //!< version dependent format
 
             //__________________________________________________________________
             //
@@ -72,14 +72,16 @@ namespace upsylon
             {
                 return (os << i.text());
             }
-            void resolve( const string &xname );  //!< using network::resolve
-            void resolve( const char   *xname );  //!< using network::resolve
-         
+            void resolve( const string &xname );      //!< using network::resolve
+            void resolve( const char   *xname );      //!< using network::resolve
+            void bind(    socket_type &sock ) const;  //!< bind address to socket
+            void connect( socket_type &sock ) const;  //!< connect to address via socket
+
             net16_t & port; //!< network byte order port
 
 
-            void bind( socket_type &sock ) const;
 
+            
         protected:
             //! setup
             socket_address(void          *data,

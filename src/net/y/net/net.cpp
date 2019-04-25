@@ -18,17 +18,17 @@ namespace upsylon
 #endif
     network:: ~network() throw()
     {
+        Y_NET_VERBOSE(std::cerr<< "[network.cleanup]" << std::endl);
 #if defined(Y_WIN)
         ::WSACleanup();
 #endif
-        if(verbose) { std::cerr << "[network.cleanup]" << std::endl; }
     }
 
 
     network:: network()
     {
+        Y_NET_VERBOSE(std::cerr << "[network.startup]" << std::endl);
         Y_GIANT_LOCK();
-        if(verbose) { std::cerr << "[network.startup"; }
 
 #if defined(Y_WIN)
         memset(&wsa, 0, sizeof(WSADATA) );
@@ -42,7 +42,6 @@ namespace upsylon
         signal( SIGPIPE, SIG_IGN );
 #endif
 
-        if(verbose) { std::cerr << "]" << std::endl; }
     }
 
     const uint16_t network:: reserved_port   = IPPORT_RESERVED;
@@ -117,6 +116,9 @@ namespace upsylon
                                        const int type,
                                        const int protocol)
         {
+            Y_NET_VERBOSE(std::cerr << "[network.bsd.socket.open]" << std::endl);
+
+
             Y_GIANT_LOCK();
 
             while( true )
@@ -147,22 +149,22 @@ namespace upsylon
 
     net::socket_type network:: open(const net::ip_protocol proto, const net::ip_version version)
     {
-
+        Y_NET_VERBOSE(std::cerr << "[network.open(");
         int pf  = -1;
         switch( version )
         {
-            case net::v4: pf = PF_INET;  break;
-            case net::v6: pf = PF_INET6; break;
+            case net::v4: pf = PF_INET;  Y_NET_VERBOSE(std::cerr << net::ipv4::class_name); break;
+            case net::v6: pf = PF_INET6; Y_NET_VERBOSE(std::cerr << net::ipv6::class_name); break;
         }
 
         int st = -1;
         int pr = -1;
         switch( proto )
         {
-            case net::tcp: st = SOCK_STREAM; pr=IPPROTO_TCP; break;
-            case net::udp: st = SOCK_DGRAM;  pr=IPPROTO_UDP; break;
+            case net::tcp: st = SOCK_STREAM; pr=IPPROTO_TCP; Y_NET_VERBOSE(std::cerr << ",tcp"); break;
+            case net::udp: st = SOCK_DGRAM;  pr=IPPROTO_UDP; Y_NET_VERBOSE(std::cerr << ",udp"); break;
         }
-
+        Y_NET_VERBOSE(std::cerr << ")]"<<std::endl);
         return net::bsd_acquire_socket(pf,st,pr);
     }
 
