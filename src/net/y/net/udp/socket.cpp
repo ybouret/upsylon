@@ -32,23 +32,17 @@ namespace upsylon
                                          (const char *)data,
                                          msgSize,
                                          send_flags,
-                                         static_cast<const sockaddr *>(target.ro()),
-                                         unsigned( target.length()) );
+                                         target.get_sa(),
+                                         target.get_sa_length() );
             if(msgSent!=msgSize)
             {
                 throw net::exception( get_last_error_code(), "sendto(%s)", target.text() );
             }
         }
 
-#if defined(Y_BSD)
-#define Y_NET_SOCKLEN socklen_t
-#endif
 
-#if defined(Y_WIN)
-#define Y_NET_SOCKLEN int
-#endif
 
-#define Y_NET_UDP_RECVFROM() ::recvfrom(sock, (char *)data,msgSize,recv_flags,  static_cast<sockaddr *>(source.rw()), &addrLen )
+#define Y_NET_UDP_RECVFROM() ::recvfrom(sock,(char *)data,msgSize,recv_flags,source.get_sa(),&addrLen)
 
         size_t udp_socket:: recvfrom( socket_address &source, void *data, const size_t size ) const
         {
@@ -59,7 +53,8 @@ namespace upsylon
             {
                 throw upsylon::exception("recvfrom: message size overflow" );
             }
-            Y_NET_SOCKLEN addrLen = (Y_NET_SOCKLEN)(source.length());
+
+            sa_length_t addrLen = source.get_sa_length();
 
 #if defined(Y_WIN)
             const int     msgRecv = Y_NET_UDP_RECVFROM();

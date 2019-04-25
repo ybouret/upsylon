@@ -14,7 +14,7 @@ namespace upsylon
         static inline
         void bsd_close( socket_type &sock ) throw()
         {
-            Y_NET_VERBOSE(std::cerr << "[network.bsd.socket.close]" << std::endl);
+            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.quit]" << std::endl);
 
             assert( invalid_socket != sock );
 #if defined(Y_BSD)
@@ -33,11 +33,8 @@ namespace upsylon
             bsd_close(sock);
         }
 
-
-        bsd_socket:: bsd_socket( const ip_protocol protocol, const ip_version version) :
-        sock( network::instance().open(protocol,version) )
+        void bsd_socket:: on_init()
         {
-
             try
             {
                 on(SOL_SOCKET,SO_REUSEADDR);
@@ -47,6 +44,20 @@ namespace upsylon
                 bsd_close(sock);
                 throw;
             }
+        }
+
+        bsd_socket:: bsd_socket( const ip_protocol protocol, const ip_version version) :
+        sock( network::instance().open(protocol,version) )
+        {
+            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.init]" << std::endl);
+            on_init();
+        }
+
+        bsd_socket:: bsd_socket( const socket_type accepted ) :
+        sock( accepted )
+        {
+            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.init/accepted]" << std::endl);
+            on_init();
         }
 
 

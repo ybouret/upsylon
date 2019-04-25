@@ -136,10 +136,12 @@ namespace upsylon
 
 #if defined(Y_WIN)
         typedef SOCKET socket_type; //!< win32 sockets
+        typedef int    sa_length_t; //!< for sizeof(sockaddr)
 #endif
 
 #if defined(Y_BSD)
-        typedef int    socket_type; //!< bsd sockets
+        typedef int       socket_type; //!< bsd sockets
+        typedef socklen_t sa_length_t; //!< for sizeof(sockaddr)
 #endif
 
         extern const socket_type invalid_socket; //!< opaque invalid socket value

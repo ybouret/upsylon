@@ -204,7 +204,10 @@ namespace upsylon
         {
         }
 
-        
+        sa_length_t        socket_address:: get_sa_length() const throw() { return static_cast<sa_length_t>( length() );   }
+        sockaddr         * socket_address:: get_sa()              throw() { return static_cast<sockaddr        *>( rw() ); }
+        const sockaddr   * socket_address:: get_sa()        const throw() { return static_cast<const sockaddr  *>( ro() ); }
+
     }
 
 }

@@ -56,9 +56,11 @@ namespace upsylon
 
         protected:
             socket_type sock; //!< internal system socket
-            
+            explicit bsd_socket( const socket_type accepted );
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bsd_socket);
+            void on_init();
         };
 
 

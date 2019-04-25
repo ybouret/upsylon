@@ -16,10 +16,11 @@ namespace upsylon
             virtual ~tcp_server() throw();                                    //! destructor
             explicit tcp_server( const socket_address &ip, const unsigned pending=1);                        //!< bind to specific address
             explicit tcp_server( const uint16_t user_port, const unsigned pending=1, const ip_version = v4); //!< bind to ANY and port
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tcp_server);
             void start(const unsigned pending);
+            socket_type accept( socket_address &ip ) const;
         };
 
     }

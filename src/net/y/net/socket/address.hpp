@@ -72,12 +72,16 @@ namespace upsylon
             {
                 return (os << i.text());
             }
+
             void resolve( const string &xname );      //!< using network::resolve
             void resolve( const char   *xname );      //!< using network::resolve
             void bind(    socket_type &sock ) const;  //!< bind address to socket
             void connect( socket_type &sock ) const;  //!< connect to address via socket
             net16_t & port; //!< network byte order port
 
+            sockaddr       *get_sa() throw();              //!< static_cast<sockaddr *>( rw() )
+            const sockaddr *get_sa() const throw();        //!< static_cast<const sockaddr *>( ro() )
+            sa_length_t     get_sa_length() const throw(); //!< static_cast<sa_length_t>( length() )
 
 
             
