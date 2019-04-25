@@ -81,7 +81,7 @@ namespace upsylon
 #if defined(Y_WIN)
         for(;;) {
             memory::pooled_buffer_of<char> blk( len );
-            if( ::gethostname( *blk, blk.length() ) == SOCKET_ERROR ) {
+            if( ::gethostname( *blk, int(blk.length()) ) == SOCKET_ERROR ) {
                 const DWORD err = ::WSAGetLastError();
                 if( err != WSAEFAULT )
                     throw   win32::exception( err, "::gethostname" );

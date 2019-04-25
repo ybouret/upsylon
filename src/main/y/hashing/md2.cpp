@@ -165,7 +165,7 @@ namespace upsylon
 				
 				/* Pad out to multiple of 16.
 				 */
-				index = context->count;
+				index = unsigned(context->count);
 				padLen = 16 - index;
 				MD2Update(context, PADDING[padLen], padLen);
 				
