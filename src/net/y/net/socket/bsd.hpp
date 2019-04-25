@@ -36,6 +36,8 @@ namespace upsylon
 
             void async();                               //!< set non blocking mode
             void shutdown(const shutdown_type) throw(); //!< shutdown
+            static const char *sd_text(const shutdown_type) throw(); //!< for shutdown info
+
 
             //! wrapper to setsocketopt
             void setopt(const int      level,

@@ -8,6 +8,7 @@ namespace upsylon
 
         tcp_client:: ~tcp_client() throw()
         {
+            Y_NET_VERBOSE(std::cerr << "[network.tcp_client.quit]" << std::endl);
         }
 
 #define Y_NET_TCP_CLIENT( INI ) socket_addr_ex INI,  tcp_socket( (**this).version() )
@@ -18,6 +19,7 @@ namespace upsylon
 
         void tcp_client:: start()
         {
+            Y_NET_VERBOSE(std::cerr << "[network.tcp_client.init]" << std::endl);
             (*this)->connect(sock);
         }
 

@@ -9,11 +9,13 @@ namespace upsylon
 
         udp_socket:: ~udp_socket() throw()
         {
+            Y_NET_VERBOSE(std::cerr << "[network.udp_socket.quit]" << std::endl);
         }
 
         udp_socket:: udp_socket( const ip_version version ) :
         bsd_socket(udp,version)
         {
+            Y_NET_VERBOSE(std::cerr << "[network.udp_socket.init]" << std::endl);
         }
 
         void udp_socket:: sendto( const socket_address &target, const void *data, const size_t size ) const

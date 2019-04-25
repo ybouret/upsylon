@@ -76,7 +76,6 @@ namespace upsylon
             void resolve( const char   *xname );      //!< using network::resolve
             void bind(    socket_type &sock ) const;  //!< bind address to socket
             void connect( socket_type &sock ) const;  //!< connect to address via socket
-
             net16_t & port; //!< network byte order port
 
 

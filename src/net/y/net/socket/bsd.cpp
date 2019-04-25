@@ -14,11 +14,8 @@ namespace upsylon
         static inline
         void bsd_close( socket_type &sock ) throw()
         {
-            if( network::verbose )
-            {
-                Y_LOCK(network::access);
-                std::cerr << "[network.bsd.socket.close]" << std::endl;
-            }
+            Y_NET_VERBOSE(std::cerr << "[network.bsd.socket.close]" << std::endl);
+
             assert( invalid_socket != sock );
 #if defined(Y_BSD)
             (void) ::close(sock);
@@ -40,7 +37,7 @@ namespace upsylon
         bsd_socket:: bsd_socket( const ip_protocol protocol, const ip_version version) :
         sock( network::instance().open(protocol,version) )
         {
-            
+
             try
             {
                 on(SOL_SOCKET,SO_REUSEADDR);
@@ -55,6 +52,7 @@ namespace upsylon
 
         void bsd_socket:: async()
         {
+            Y_NET_VERBOSE(std::cerr << "[network.bsd.socket.ASYNC]" << std::endl);
             Y_GIANT_LOCK();
 
             assert( invalid_socket != sock );
@@ -76,9 +74,25 @@ namespace upsylon
 #endif
         }
 
+        const char * bsd_socket:: sd_text(const shutdown_type how) throw()
+        {
+            switch (how) {
+                case sd_send:
+                    return "SEND";
+
+                case sd_recv:
+                    return "RECV";
+
+                case sd_both:
+                    return "BOTH";
+            }
+            return "????";
+        }
+
         void bsd_socket:: shutdown(const shutdown_type how) throw()
         {
             assert( sock != invalid_socket );
+            Y_NET_VERBOSE(std::cerr << "[network.bsd.shutdown(" << sd_text(how) << ")]" << std::endl);
 
 #if (Y_WIN)
             switch (how) {
@@ -126,6 +140,7 @@ namespace upsylon
 
         void bsd_socket:: setopt(const int level, const int optname, const void *optval, const unsigned optlen)
         {
+            Y_NET_VERBOSE(std::cerr << "[network.setopt]" << std::endl);
             Y_GIANT_LOCK();
             assert(invalid_socket!=sock);
             if(optval==0||optlen<=0)
