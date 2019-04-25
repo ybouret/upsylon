@@ -72,6 +72,15 @@ namespace upsylon
     }
 }
 
+namespace upsylon
+{
+
+    net_object::  net_object() throw() {}
+    net_object:: ~net_object() throw() {}
+
+}
+
+
 #include "y/os/error.hpp"
 
 #include <cstdarg>

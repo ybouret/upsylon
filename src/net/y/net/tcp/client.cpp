@@ -23,6 +23,14 @@ namespace upsylon
             (*this)->connect(sock);
         }
 
+        tcp_client:: tcp_client(const socket_type    &s,
+                                const socket_address &ip) :
+        socket_addr_ex(ip),
+        tcp_socket(s)
+        {
+            
+        }
+        
     }
 
 }

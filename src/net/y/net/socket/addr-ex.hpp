@@ -1,5 +1,4 @@
-
-// !\file
+//! \file
 #ifndef Y_NET_SOCKET_ADDR_EX_INCLUDED
 #define Y_NET_SOCKET_ADDR_EX_INCLUDED 1
 

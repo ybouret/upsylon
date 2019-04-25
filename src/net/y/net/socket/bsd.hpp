@@ -27,7 +27,7 @@ namespace upsylon
         extern const socket_boolean socket_false; //!< opaque FALSE value
 
         //! low level socket API
-        class bsd_socket
+        class bsd_socket : public net_object
         {
         public:
             virtual ~bsd_socket() throw();                  //!< destructor
@@ -56,7 +56,7 @@ namespace upsylon
 
         protected:
             socket_type sock; //!< internal system socket
-            explicit bsd_socket( const socket_type accepted );
+            explicit bsd_socket( const socket_type accepted ); //!< prepare an accepted socket
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bsd_socket);

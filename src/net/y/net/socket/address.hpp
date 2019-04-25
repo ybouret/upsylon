@@ -1,4 +1,4 @@
-// !\file
+//! \file
 #ifndef Y_NET_SOCKET_ADDRESS_INCLUDED
 #define Y_NET_SOCKET_ADDRESS_INCLUDED 1
 
@@ -47,7 +47,7 @@ namespace upsylon
         //
         //! socket address interface[4|6]
         //______________________________________________________________________
-        class socket_address : public memory::rw_buffer
+        class socket_address : public memory::rw_buffer, public net_object
         {
         public:
             static const char port_separator = '@';  //!< to parse address
@@ -133,7 +133,7 @@ namespace upsylon
 
         private:
             Y_DISABLE_ASSIGN(format);
-            mutable hrbuff<64> hrb;
+            mutable hrbuff<64> hrb; //! strlen(XXXX:XXXX:XXXX:XXXX:XXXX:XXXX:XXXX:XXXX) <= 49 => 52
         };
 
         //______________________________________________________________________
@@ -174,7 +174,7 @@ namespace upsylon
 
         private:
             Y_DISABLE_ASSIGN(format);
-            mutable hrbuff<16> hrb;
+            mutable hrbuff<16> hrb; //! strlen(XXX.XXX.XXX.XXX)<= 15 => 16
         };
 
         //! wrapper for initialization

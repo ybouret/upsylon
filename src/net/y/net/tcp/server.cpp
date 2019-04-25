@@ -58,8 +58,10 @@ namespace upsylon
 #endif
         }
 
-        socket_type tcp_server:: accept( socket_address &ip ) const
+        socket_type tcp_server:: __accept( socket_address &ip ) const
         {
+            Y_NET_VERBOSE(std::cerr << "[network.tcp_server(" << (*this)->text() << '@' << bswp((*this)->port) << ").accept]" << std::endl);
+
             socket_type s      = invalid_socket;
             sa_length_t sa_len = ip.get_sa_length();
             sockaddr   *sa_ptr = ip.get_sa();
@@ -90,8 +92,37 @@ namespace upsylon
             return s;
         }
 
+        tcp_client * tcp_server:: accept() const
+        {
+
+            socket_addr_ex  xip( ip_addr_none, (**this).version(), 0 );
+            socket_address &ip   = *xip;
+            tcp_client      *cln = net_object::acquire1<tcp_client>();
+            
+            try
+            {
+                socket_type s = __accept(ip);
+                return new (cln) tcp_client(s,ip);
+            }
+            catch(...)
+            {
+                net_object::release1(cln);
+                throw;
+            }
+        }
 
     }
 
+}
+
+#include "y/net/tcp/client.hpp"
+
+namespace upsylon
+{
+    namespace net
+    {
+        
+
+    }
 }
 

@@ -16,8 +16,8 @@ namespace upsylon
             virtual ~tcp_socket() throw(); //! destructor
 
         protected:
-            explicit tcp_socket( const ip_version version); //!< setup+version
-            
+            explicit tcp_socket( const ip_version   ); //!< setup+version
+            explicit tcp_socket( const socket_type &); //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tcp_socket);

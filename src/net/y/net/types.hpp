@@ -5,6 +5,8 @@
 #include "y/os/endian.hpp"
 #include "y/exception.hpp"
 #include "y/net/sys.hpp"
+#include "y/ptr/counted.hpp"
+
 #include <iosfwd>
 
 namespace upsylon
@@ -147,6 +149,16 @@ namespace upsylon
         extern const socket_type invalid_socket; //!< opaque invalid socket value
     }
 
+    //! base class
+    class net_object : public counted_object
+    {
+    public:
+        virtual ~net_object() throw(); //!< setup
+        explicit net_object() throw(); //!< destructor
+        
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(net_object);
+    };
 
 }
 
