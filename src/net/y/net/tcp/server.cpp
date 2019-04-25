@@ -80,7 +80,7 @@ namespace upsylon
 #endif
 
 #if defined(Y_WIN)
-            if( SOCKET_ERROR == (s=::accept(sock, sa_ptr, &sa_len) ) )
+            if( INVALID_SOCKET  == (s=::accept(sock, sa_ptr, &sa_len) ) )
             {
                 throw net::exception( get_last_error_code(), "::accept()" );
             }
