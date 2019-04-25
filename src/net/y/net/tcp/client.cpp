@@ -30,7 +30,63 @@ namespace upsylon
         {
             
         }
-        
+
+        size_t tcp_client:: send( const void *data, const size_t size ) const
+        {
+            assert( !(data==NULL&&size>0) );
+
+            const unsigned sz = unsigned(size);
+#if defined(Y_BSD)
+            int            ns = 0;
+            while( (ns= ::send(sock,data,sz,send_flags)) < 0 )
+            {
+                const int err = errno;
+                switch (err) {
+                    case EINTR:continue;
+                    default: throw net::exception(err,"::send(%s)", (**this).text() );
+                }
+            }
+            return ns;
+#endif
+
+#if defined(Y_WIN)
+            const int ns = ::send(sock,(const char*)data,sz,send_flags);
+            if( ns == SOCKET_ERROR )
+            {
+                throw net::exception( get_last_error_code(), "::send(%s)", (**this).text() );
+            }
+            return ns;
+#endif
+        }
+
+        size_t tcp_client:: recv( void *data, const size_t size ) const
+        {
+            const unsigned sz = unsigned(size);
+#if defined(Y_BSD)
+            int            ns = 0;
+            while( (ns= ::recv(sock,data,sz,send_flags)) < 0 )
+            {
+                const int err = errno;
+                switch (err) {
+                    case EINTR:continue;
+                    default: throw net::exception(err,"::recv(%s)", (**this).text() );
+                }
+            }
+            return ns;
+#endif
+
+#if defined(Y_WIN)
+            const int ns = ::recv(sock,(char*)data,sz,send_flags);
+            if( ns == SOCKET_ERROR )
+            {
+                throw net::exception( get_last_error_code(), "::recv(%s)", (**this).text() );
+            }
+            return ns;
+#endif
+        }
+
+
+
     }
 
 }

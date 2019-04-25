@@ -20,8 +20,9 @@ namespace upsylon
             explicit tcp_client(const string &xname, const ip_version version = v4); //!< connect by name resolution
             explicit tcp_client(const char   *xname, const ip_version version = v4); //!< connect by name resolution
 
-
-
+            size_t send( const void *data, const size_t size ) const;
+            size_t recv( void       *data, const size_t size ) const;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tcp_client);
             void start();
@@ -30,7 +31,7 @@ namespace upsylon
             friend class tcp_server;
         };
 
-        typedef arc_ptr<tcp_client> tcp_client_ptr;
+        typedef arc_ptr<tcp_client> tcp_link;
 
     }
 }

@@ -31,9 +31,20 @@ Y_UTEST(tcp_server)
     const unsigned  pending   = 1;
     net::tcp_server server( user_port, pending, version );
 
-    net::tcp_client_ptr client = server.accept();
-    std::cerr << "Connection From " << (**client).text() << std::endl;
+    net::tcp_link client = server.accept();
+    std::cerr << "Connexion From " << (*client)->text() << std::endl;
 
+    char buff[256];
+    size_t nr = 0;
+    while(memset(buff,0,sizeof(buff)),
+          (nr= client->recv(buff,sizeof(buff))) > 0 )
+    {
+        string s(buff,nr);
+        std::cerr << s;
+    }
+    std::cerr << std::endl;
+
+    
 }
 Y_UTEST_DONE()
 
