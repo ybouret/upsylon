@@ -2,8 +2,12 @@
 #include "y/utest/run.hpp"
 #include "y/string/convert.hpp"
 #include "y/net/tcp/stream.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/string/tokenizer.hpp"
 
 using namespace upsylon;
+
+static inline bool isSep( const int C ) { return C == ' ' || C == '\t'; }
 
 Y_UTEST(tcp_server)
 {
@@ -28,21 +32,29 @@ Y_UTEST(tcp_server)
         }
     }
 
-    const uint16_t  user_port = uint16_t(string_convert::to<size_t>(argv[2],"port"));
-    const unsigned  pending   = 1;
-    net::tcp_server server( user_port, pending, version );
-
+    const uint16_t                 user_port = uint16_t(string_convert::to<size_t>(argv[2],"port"));
+    const unsigned                 pending   = 1;
+    net::tcp_server                server( user_port, pending, version );
+    vector<string,memory::pooled>  words;
     while(true)
     {
         net::tcp_link client = server.accept();
         std::cerr << "Connexion From " << (*client)->text() << std::endl;
 
         net::tcp_istream fp( client );
-        string cmd;
-        while( fp.gets(cmd) )
+        net::tcp_ostream op( client );
+
+        string line;
+        while( fp.gets(line) )
         {
-            std::cerr << "<" << cmd << ">" << std::endl;
-            if( "stop" == cmd )
+            tokenizer<char>::split(words, line, isSep );
+            if(words.size()<=0) continue;
+            std::cerr << words << std::endl;
+            for(size_t i=1;i<=words.size();++i)
+            {
+                op << '<' << words[i] << '>' << '\n';
+            }
+            if( "stop" == words[1] )
             {
                 return 0;
             }

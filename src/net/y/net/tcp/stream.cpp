@@ -59,3 +59,33 @@ namespace upsylon
     }
 
 }
+
+
+namespace upsylon
+{
+    namespace net
+    {
+
+        tcp_ostream:: ~tcp_ostream() throw()
+        {
+        }
+
+
+        tcp_ostream:: tcp_ostream( const tcp_link &conn ) throw() :
+        link( conn )
+        {
+        }
+
+        void tcp_ostream:: flush() {}
+
+        void tcp_ostream:: write(char C)
+        {
+            if( 1 != link->send_block( &C, 1) )
+            {
+                throw upsylon::exception("tcp_ostream(%s): disconnected!", (**link).text() );
+            }
+        }
+    }
+
+}
+

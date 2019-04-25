@@ -13,8 +13,7 @@ namespace upsylon
 {
     namespace net
     {
-
-        //! istream decorator for tcp_client
+        //! istream decorator for tcp_client TODO: create dedicated cache
         class tcp_istream : public ios::istream
         {
         public:
@@ -36,6 +35,21 @@ namespace upsylon
 
             bool           load();
             Y_DISABLE_COPY_AND_ASSIGN(tcp_istream);
+        };
+
+        //! ostream decorator for tcp_client
+        class tcp_ostream : public ios::ostream
+        {
+        public:
+            virtual ~tcp_ostream() throw();
+            explicit tcp_ostream(const tcp_link &conn) throw();
+
+            virtual void write( char C ); //!< direct write
+            virtual void flush();         //!< do nothing
+
+        private:
+            const tcp_link link;
+            Y_DISABLE_COPY_AND_ASSIGN(tcp_ostream);
         };
     }
 }
