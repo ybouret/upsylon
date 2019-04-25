@@ -32,8 +32,14 @@ Y_UTEST(tcp_client)
 
     for(int i=3;i<argc;++i)
     {
-
-
+        string msg = argv[i];
+        msg += "\r\n";
+        const size_t ns = client.send_block(msg);
+        if(ns<msg.size())
+        {
+            std::cerr << "couldn't send all message" << std::endl;
+            break;
+        }
     }
 
 }

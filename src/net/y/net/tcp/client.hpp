@@ -20,9 +20,15 @@ namespace upsylon
             explicit tcp_client(const string &xname, const ip_version version = v4); //!< connect by name resolution
             explicit tcp_client(const char   *xname, const ip_version version = v4); //!< connect by name resolution
 
-            size_t send( const void *data, const size_t size ) const;
-            size_t recv( void       *data, const size_t size ) const;
+            size_t send( const void *data, const size_t size ) const; //!< try to read at most size bytes (0:disconnect)
+            size_t recv( void       *data, const size_t size ) const; //!< try to read at most size bytes (0:disconnect)
+
+            size_t send_block(const void *data,const size_t size) const; //!< best effort sending
+            size_t send_block(const char *data) const;                   //!< best effort sending
+            size_t send_block(const memory::ro_buffer &buff) const;      //!< best effort sending
+
             
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tcp_client);
             void start();
@@ -31,7 +37,7 @@ namespace upsylon
             friend class tcp_server;
         };
 
-        typedef arc_ptr<tcp_client> tcp_link;
+        typedef arc_ptr<tcp_client> tcp_link; //!< alias
 
     }
 }

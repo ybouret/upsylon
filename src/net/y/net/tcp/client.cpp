@@ -86,6 +86,30 @@ namespace upsylon
         }
 
 
+        size_t tcp_client:: send_block(const void *data,const size_t size) const
+        {
+            const uint8_t *addr = (const uint8_t *)data;
+            size_t         todo = size;
+            while(todo>0)
+            {
+                const size_t sent = send(addr,todo);
+                if(sent<=0) break;
+                todo -= sent;
+                addr += sent;
+            }
+            return size-todo;
+        }
+
+        size_t tcp_client:: send_block(const char *data) const
+        {
+            return send_block( data, length_of(data) );
+        }
+
+        size_t tcp_client:: send_block(const memory::ro_buffer &buff) const
+        {
+            return send_block( buff.ro(), buff.length() );
+        }
+
 
     }
 

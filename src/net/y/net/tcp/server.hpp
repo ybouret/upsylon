@@ -18,7 +18,7 @@ namespace upsylon
             explicit tcp_server( const socket_address &ip, const unsigned pending=1);                        //!< bind to specific address
             explicit tcp_server( const uint16_t user_port, const unsigned pending=1, const ip_version = v4); //!< bind to ANY and port
 
-            tcp_client * accept() const;
+            tcp_client * accept() const; //!< accept a new connection
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tcp_server);

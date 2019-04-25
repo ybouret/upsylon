@@ -1,6 +1,7 @@
 #include "y/net/tcp/server.hpp"
 #include "y/utest/run.hpp"
 #include "y/string/convert.hpp"
+#include "y/net/tcp/stream.hpp"
 
 using namespace upsylon;
 
@@ -31,19 +32,24 @@ Y_UTEST(tcp_server)
     const unsigned  pending   = 1;
     net::tcp_server server( user_port, pending, version );
 
-    net::tcp_link client = server.accept();
-    std::cerr << "Connexion From " << (*client)->text() << std::endl;
-
-    char buff[256];
-    size_t nr = 0;
-    while(memset(buff,0,sizeof(buff)),
-          (nr= client->recv(buff,sizeof(buff))) > 0 )
+    while(true)
     {
-        string s(buff,nr);
-        std::cerr << s;
-    }
-    std::cerr << std::endl;
+        net::tcp_link client = server.accept();
+        std::cerr << "Connexion From " << (*client)->text() << std::endl;
 
+        net::tcp_istream fp( client );
+        string cmd;
+        while( fp.gets(cmd) )
+        {
+            std::cerr << "<" << cmd << ">" << std::endl;
+            if( "stop" == cmd )
+            {
+                return 0;
+            }
+        }
+        
+
+    }
     
 }
 Y_UTEST_DONE()
