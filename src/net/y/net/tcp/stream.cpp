@@ -5,12 +5,31 @@ namespace upsylon
 {
     namespace net
     {
+        tcp_stream:: ~tcp_stream() throw()
+        {
+
+        }
+
+        tcp_stream:: tcp_stream( const tcp_link &conn ) throw() :
+        link(conn)
+        {
+        }
+        
+    }
+
+}
+
+
+namespace upsylon
+{
+    namespace net
+    {
         tcp_istream:: ~tcp_istream() throw()
         {
         }
 
         tcp_istream:: tcp_istream( const tcp_link &conn ) :
-        link( conn ),
+        tcp_stream( conn ),
         cache(),
         zbulk()
         {
@@ -72,7 +91,7 @@ namespace upsylon
 
 
         tcp_ostream:: tcp_ostream( const tcp_link &conn ) throw() :
-        link( conn )
+        tcp_stream( conn )
         {
         }
 

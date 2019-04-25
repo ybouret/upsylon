@@ -13,8 +13,23 @@ namespace upsylon
 {
     namespace net
     {
+        //! base class
+        class tcp_stream
+        {
+        public:
+            virtual ~tcp_stream() throw(); //!< destructor
+
+        protected:
+            const tcp_link link;                          //!< shared pointer
+            explicit tcp_stream(const tcp_link&) throw(); //!< setup
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(tcp_stream);
+        };
+
+
         //! istream decorator for tcp_client TODO: create dedicated cache
-        class tcp_istream : public ios::istream
+        class tcp_istream : public ios::istream, public tcp_stream
         {
         public:
             static const size_t bufsiz = 256; //!< internal size
@@ -29,7 +44,6 @@ namespace upsylon
             virtual void store( char C  ); //!< read back
 
         private:
-            const tcp_link link;
             byte_list      cache;
             byte_pool      zbulk;
 
@@ -38,17 +52,16 @@ namespace upsylon
         };
 
         //! ostream decorator for tcp_client
-        class tcp_ostream : public ios::ostream
+        class tcp_ostream : public ios::ostream, public tcp_stream
         {
         public:
-            virtual ~tcp_ostream() throw();
-            explicit tcp_ostream(const tcp_link &conn) throw();
+            virtual ~tcp_ostream() throw();                     //!< destructor
+            explicit tcp_ostream(const tcp_link &conn) throw(); //!< setup
 
             virtual void write( char C ); //!< direct write
             virtual void flush();         //!< do nothing
 
         private:
-            const tcp_link link;
             Y_DISABLE_COPY_AND_ASSIGN(tcp_ostream);
         };
     }
