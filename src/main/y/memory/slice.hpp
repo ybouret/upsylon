@@ -51,6 +51,13 @@ namespace upsylon
              */
             void *      acquire(size_t &n) throw();
 
+            //! try to receive n bytes
+            /**
+             if no block is available or big enough, return NULL,
+             otherwise, n is aligned to block_size, and copy memory
+             */
+            void *      receive( const void *p, size_t &n) throw();
+
             //! release the memory
             static slice *release(void * &p, size_t &n) throw();
 
@@ -65,7 +72,9 @@ namespace upsylon
             void __release(block *curr) throw();
             bool __check() const;
             friend class carver;
-            
+
+            void * __acquire( size_t &n, const bool zero) throw();
+
         public:
             slice *next; //!< for list
             slice *prev; //!< for list

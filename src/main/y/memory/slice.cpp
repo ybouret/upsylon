@@ -113,7 +113,7 @@ namespace upsylon
 {
     namespace memory
     {
-        void * slice:: acquire(size_t &n) throw()
+        void * slice:: __acquire(size_t &n, const bool zero) throw()
         {
             assert(n>0);
             if(!count) return 0;
@@ -128,12 +128,7 @@ namespace upsylon
                     const size_t available_bytes = curr->size;                      assert(available_bytes>0); assert(0==available_bytes%block_size);
                     const size_t preferred_bytes = Y_ALIGN_FOR_ITEM(block,n);       assert(preferred_bytes<=available_bytes);
                     const size_t remaining_bytes = available_bytes-preferred_bytes; assert(0==remaining_bytes%block_size);
-#if 0
-                    std::cerr << "required: " << n << std::endl;
-                    std::cerr << "\tavailable_bytes : " << available_bytes << std::endl;
-                    std::cerr << "\tpreferred_bytes : " << preferred_bytes << std::endl;
-                    std::cerr << "\tremaining_bytes : " << remaining_bytes << std::endl;
-#endif
+
                     if(remaining_bytes>=small_size)
                     {
                         //______________________________________________________
@@ -169,7 +164,10 @@ namespace upsylon
                     n          = curr->size;
                     curr->from = this;
                     void *addr = &curr[1];
-                    memset(addr,0,n);
+                    if(zero)
+                    {
+                        memset(addr,0,n);
+                    }
                     --count;
                     assert(__check());
                     return addr;
@@ -177,8 +175,34 @@ namespace upsylon
             }
             return 0;
         }
-    }
 
+        void * slice:: acquire(size_t &n) throw()
+        {
+            return __acquire(n,true);
+        }
+
+        void * slice:: receive( const void *p, size_t &n ) throw()
+        {
+            assert(p!=NULL);
+            assert(n>0);
+            const size_t m = n;
+            uint8_t     *q = static_cast<uint8_t *>(__acquire(n,false));
+            if( q )
+            {
+                // copy memory
+                assert(n>=m);
+                memcpy(q,p,m);
+                memset(q+m,0,n-m);
+                return q;
+            }
+            else
+            {
+                // not enough room
+                return 0;
+            }
+        }
+
+    }
 }
 
 namespace upsylon
