@@ -13,33 +13,39 @@ namespace upsylon
     //! will be uint8_t
     template <>
     struct unsigned_int<1> {
-        typedef uint8_t      type; //!< mapping
+        typedef uint8_t      type;            //!< mapping
         static const uint8_t minimun = 0;     //!< min
         static const uint8_t maximum = 0xff;  //!< max
+        //! check
+        static inline type   positive(const type x) throw() { return x; }
     };
     
     //! will be uint16_t
     template <>
     struct unsigned_int<2> {
-        typedef uint16_t      type; //!< mapping
+        typedef uint16_t      type;              //!< mapping
         static const uint16_t minimun = 0;       //!< min
         static const uint16_t maximum = 0xffff;  //!< max
+        //! check
+        static inline type    positive(const type x) throw() { return x; }
     };
     
     //! will be uint32_t
     template <>
     struct unsigned_int<4> {
-        typedef uint32_t      type; //!< mapping
+        typedef uint32_t      type;                 //!< mapping
         static const uint32_t minimun = 0;          //!< min
         static const uint32_t maximum = 0xffffffff; //!< max
+        static inline type    positive(const type x) throw() { return x; }
     };
     
     //! will be uint64_t
     template <>
     struct unsigned_int<8> {
-        typedef uint64_t type; //!< mapping
+        typedef uint64_t type;                                     //!< mapping
         static const uint64_t minimun = 0;                         //!< min
         static const uint64_t maximum = Y_U64(0xffffffffffffffff); //!< max
+        static inline type    positive(const type x) throw() { return x; }
     };
     
     //! compute signed int of a given size
@@ -49,36 +55,41 @@ namespace upsylon
     //! will be int8_t
     template <>
     struct signed_int<1> {
-        typedef int8_t type; //!< mapping
+        typedef int8_t      type;                    //!< mapping
         static const int8_t maximum =  127;          //!< min
         static const int8_t minimun = (-maximum-1);  //!< max
+        //! check
+        static inline type  positive(const type x) throw() { return (x<0)?0:x; }
     };
     
     //! will be int16_t
     template <>
     struct signed_int<2> {
-        typedef int16_t type; //!< mapping
-        static const int16_t maximum =  32767;         //!< min
-        static const int16_t minimun = (-maximum-1);   //!< max
-        
+        typedef int16_t      type;                     //!< mapping
+        static const int16_t maximum =  32767;         //!< max
+        static const int16_t minimun = (-maximum-1);   //!< min
+        //! check
+        static inline type   positive(const type x) throw() { return (x<0)?0:x; }
     };
     
     //! will be int32_t
     template <>
     struct signed_int<4> {
-        typedef int32_t type; //!< mapping
-        static const int32_t maximum =  2147483647;  //!< min
-        static const int32_t minimun = (-maximum-1); //!< ma
-        
+        typedef int32_t      type;                   //!< mapping
+        static const int32_t maximum =  2147483647;  //!< max
+        static const int32_t minimun = (-maximum-1); //!< min
+        //! check
+        static inline type   positive(const type x) throw() { return (x<0)?0:x; }
     };
     
     //! will be int64_t
     template <>
     struct signed_int<8> {
-        typedef int64_t type; //!< mapping
-        static const int64_t maximum =  Y_U64(0x7fffffffffffffff); //!< min
-        static const int64_t minimun =  (-maximum-1);              //!< max
-        
+        typedef int64_t      type;                                 //!< mapping
+        static const int64_t maximum =  Y_U64(0x7fffffffffffffff); //!< max
+        static const int64_t minimun =  (-maximum-1);              //!< min
+        //! check
+        static inline type   positive(const type x) throw() { return (x<0)?0:x; }
     };
     
     //! compute if an integral type is signed
@@ -91,15 +102,24 @@ namespace upsylon
     template <typename T>
     struct limit_of
     {
-        enum { size_of = sizeof(T) }; //!< alias
+        enum            { sizeof_value = sizeof(T) };         //!< alias
+        static const bool signed_value = is_signed<T>::value; //!< alias
+
         typedef typename select_type<
-        is_signed<T>::value,
-        signed_int<size_of>,
-        unsigned_int<size_of>
-        >::result __integer; //!< the matching integral struct
-        
-        static const typename __integer::type minimun = __integer::minimun; //!< associated min
-        static const typename __integer::type maximum = __integer::maximum; //!< associated max
+        signed_value,
+        signed_int<sizeof_value>,
+        unsigned_int<sizeof_value>
+        >::result                         __integer;   //!< the matching integral struct
+        typedef typename __integer::type integer_type; //!< the matching integer
+
+        static const integer_type minimun = __integer::minimun; //!< associated min
+        static const integer_type maximum = __integer::maximum; //!< associated max
+
+        static inline integer_type positive( const integer_type x ) throw()
+        {
+            return __integer::positive(x);
+        }
+
     };
 
     //! bytes for an unsigned type
