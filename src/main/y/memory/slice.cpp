@@ -221,6 +221,13 @@ namespace upsylon
             return from;
         }
 
+        const slice * slice:: owner_of(const void *p) throw()
+        {
+            assert(p);
+            return (static_cast<const block *>(p)-1)->from;
+        }
+
+
 
         void slice:: __release(block *curr) throw()
         {
