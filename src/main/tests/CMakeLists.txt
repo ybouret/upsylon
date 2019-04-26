@@ -18,7 +18,7 @@ ADD_LIBRARY(module MODULE module.cpp)
 
 
 ENABLE_TESTING()
-SOURCE_GROUP(os FILES test-platform.cpp test-types.cpp test-sys.cpp test-at-exit.cpp test-endian.cpp test-env.cpp test-spec.cpp)
+SOURCE_GROUP(os FILES test-platform.cpp test-types.cpp test-sys.cpp test-at-exit.cpp test-endian.cpp test-env.cpp test-spec.cpp test-chkbnd.cpp)
 ADD_TEST(os:platform    test-main platform)
 ADD_TEST(os:types       test-main types)
 ADD_TEST(os:sys         test-main sys)
@@ -26,6 +26,7 @@ ADD_TEST(os:atexit      test-main at_exit)
 ADD_TEST(os:endian      test-main endian)
 ADD_TEST(os:env         test-main env)
 ADD_TEST(os:spec        test-main spec)
+ADD_TEST(os:chkbnd      test-main chkbnd)
 
 SOURCE_GROUP(core FILES test-ppty.cpp test-lockable.cpp test-swap.cpp test-zset.cpp test-code.cpp test-bits.cpp test-core.cpp test-progress.cpp
  test-functor.cpp test-tuple.cpp test-traits.cpp)

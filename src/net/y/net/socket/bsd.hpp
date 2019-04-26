@@ -26,18 +26,28 @@ namespace upsylon
         extern const socket_boolean socket_true;  //!< opaque TRUE value
         extern const socket_boolean socket_false; //!< opaque FALSE value
 
+
         //! low level socket API
         class bsd_socket : public net_object
         {
         public:
+            //__________________________________________________________________
+            //
+            // open and close
+            //__________________________________________________________________
+
             virtual ~bsd_socket() throw();                  //!< destructor
             explicit bsd_socket(const ip_protocol protocol, //
                                 const ip_version  version); //!< setup
 
-            void async();                               //!< set non blocking mode
             void shutdown(const shutdown_type) throw(); //!< shutdown
             static const char *sd_text(const shutdown_type) throw(); //!< for shutdown info
 
+            //__________________________________________________________________
+            //
+            // set options
+            //__________________________________________________________________
+            void async();                               //!< set non blocking mode
 
             //! wrapper to setsocketopt
             void setopt(const int      level,
@@ -45,14 +55,40 @@ namespace upsylon
                         const void    *optval,
                         const unsigned optlen);
 
-            //! wrapper to boolean values
+            //! wrapper to integral values
             template <typename T> inline void setopt( const int level, const int optname, const T value )
             {
                 setopt(level,optname, &value, sizeof(T) );
             }
 
-            void on(  const int level, const int optname ); //!< turn flag on
-            void off( const int level, const int optname ); //!< turn flag off
+            void on(  const int level, const int optname ); //!< turn flag on,  using system boolean
+            void off( const int level, const int optname ); //!< turn flag off, using system boolean
+
+            void sndbuf(const unsigned bytes); //!< modify SO_SNDBUF
+            void rcvbuf(const unsigned bytes); //!< modify SO_RCVBUF
+
+
+            //__________________________________________________________________
+            //
+            // get options
+            //__________________________________________________________________
+            //! wrapper to getsockopt
+            void getopt(const int      level,
+                        const int      optname,
+                        void          *optval,
+                        const unsigned optlen) const;
+
+            //! for integral types
+            template <typename T> inline T getopt(const int level, const int optname ) const
+            {
+                uint64_t optval[ Y_U64_FOR_ITEM(T) ] = { 0 };
+                getopt(level,optname,optval,sizeof(T));
+                return *static_cast<T*>(addr2addr(optval));
+            }
+
+            bool test(const int level, const int optname) const; //!< boolean value
+            int  sndbuf() const; //!< current SO_SNDBUF
+            int  rcvbuf() const; //!< current SO_RCVBUF
 
         protected:
             socket_type sock; //!< internal system socket
@@ -61,6 +97,11 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bsd_socket);
             void on_init();
+            static void *addr2addr(void *) throw();
+            //! debug
+            static std::ostream& __show_opt(std::ostream  &os,
+                                            const void    *optval,
+                                            const unsigned optlen);
         };
 
 

@@ -38,6 +38,7 @@ namespace upsylon
             try
             {
                 on(SOL_SOCKET,SO_REUSEADDR);
+                assert(test(SOL_SOCKET,SO_REUSEADDR));
             }
             catch(...)
             {
@@ -67,7 +68,7 @@ namespace upsylon
             Y_GIANT_LOCK();
 
             assert( invalid_socket != sock );
-#if (Y_WIN)
+#if defined(Y_WIN)
             // If iMode == 0, blocking is enabled;
             // If iMode != 0, non-blocking mode is enabled.
             u_long iMode = 1;
@@ -77,7 +78,7 @@ namespace upsylon
             }
 #endif
 
-#if (Y_BSD)
+#if defined(Y_BSD)
             if( fcntl( sock, F_SETFL, O_NONBLOCK) < 0 )
             {
                 throw net::exception( errno, "async/fcntl");
@@ -105,7 +106,7 @@ namespace upsylon
             assert( sock != invalid_socket );
             Y_NET_VERBOSE(std::cerr << "[network.bsd.shutdown(" << sd_text(how) << ")]" << std::endl);
 
-#if (Y_WIN)
+#if defined(Y_WIN)
             switch (how) {
                 case sd_send:
                     (void) :: shutdown(sock,SD_SEND);
@@ -121,7 +122,7 @@ namespace upsylon
             }
 #endif
 
-#if (Y_BSD)
+#if defined(Y_BSD)
             switch (how) {
                 case sd_recv:
                     (void) :: shutdown(sock,0);
@@ -156,8 +157,11 @@ namespace upsylon
             assert(invalid_socket!=sock);
             if(optval==0||optlen<=0)
             {
-                throw upsylon::exception("ip_socket::setopt(invalid optval/optlen");
+                throw upsylon::exception("bsd_socket::setopt(invalid optval/optlen");
             }
+
+            //__show_opt(std::cerr<<"setopt:[",optval,optlen) << "]" << std::endl;
+
 #if defined(Y_BSD)
             if( ::setsockopt(sock, level, optname, optval, static_cast<socklen_t>(optlen) ) < 0 )
             {
@@ -176,6 +180,75 @@ namespace upsylon
 
         void bsd_socket:: on(  const int level, const int optname )  { setopt<socket_boolean>(level,optname,socket_true);  }
         void bsd_socket:: off( const int level, const int optname )  { setopt<socket_boolean>(level,optname,socket_false); }
+
+
+        void bsd_socket:: getopt(const int      level,
+                                 const int      optname,
+                                 void          *optval,
+                                 const unsigned optlen) const
+        {
+            Y_GIANT_LOCK();
+            assert(invalid_socket!=sock);
+            if(optval==0||optlen<=0)
+            {
+                throw upsylon::exception("ip_socket::getopt(invalid optval/optlen");
+            }
+            
+            sa_length_t optLen = static_cast<sa_length_t>(optlen);
+
+#if defined(Y_BSD)
+            if( ::getsockopt(sock, level, optname, optval, &optLen ) < 0 )
+            {
+                throw net::exception( net::get_last_error_code(), "::getsockopt");
+            }
+#endif
+
+#if defined(Y_WIN)
+            if( SOCKET_ERROR == ::getsockopt(sock,level,optname, (char *)optval,&optLen) )
+            {
+                throw net::exception( net::get_last_error_code(), "::getsockopt");
+            }
+#endif
+        }
+
+        void *bsd_socket:: addr2addr(void *ptr) throw()
+        {
+            assert(ptr);
+            return ptr;
+        }
+
+        bool bsd_socket:: test(const int level, const int optname) const
+        {
+            return getopt<socket_boolean>(level,optname) != socket_false;
+        }
+
+        int bsd_socket:: sndbuf() const { return getopt<int>(SOL_SOCKET,SO_SNDBUF); }
+
+        int bsd_socket:: rcvbuf() const { return getopt<int>(SOL_SOCKET,SO_RCVBUF); }
+
+    }
+
+}
+
+#include "y/code/utils.hpp"
+namespace upsylon
+{
+    namespace net
+    {
+        std::ostream & bsd_socket:: __show_opt(std::ostream  &os,
+                                               const void    *optval,
+                                               const unsigned optlen)
+        {
+            assert(optval);
+            assert(optlen);
+            const uint8_t *p = static_cast<const uint8_t *>(optval);
+            for(size_t i=0;i<optlen;++i)
+            {
+                os << hexadecimal::lowercase[p[i]];
+            }
+            return os;
+        }
+
 
 
     }
