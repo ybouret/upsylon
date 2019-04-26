@@ -110,7 +110,7 @@ namespace upsylon
                 }
             }
 
-            // cache missed and not enoug memory => create a new slice
+            // cache missed and not enough memory => create a new slice
             if(cached.size<=0)
             {
                 slice          *s = io::cast<slice>( pages.store( static_cast<page *>(hmem.__calloc(1,chunk_size) ) ), sizeof(void*));
