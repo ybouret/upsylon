@@ -32,16 +32,22 @@ Y_UTEST(tcp_server)
         }
     }
 
+
     const uint16_t                 user_port = uint16_t(string_convert::to<size_t>(argv[2],"port"));
     const unsigned                 pending   = 1;
     net::tcp_server                server( user_port, pending, version );
     vector<string,memory::pooled>  words;
+    net::tcp_input_cache           cache = new net::tcp_cache(16);
+
+    std::cerr << "cache.capacity =" << cache->capacity  << std::endl;
+    std::cerr << "cache.allocated=" << cache->allocated << std::endl;
+
     while(true)
     {
         net::tcp_link client = server.accept();
         std::cerr << "Connexion From " << (*client)->text() << std::endl;
 
-        net::tcp_istream fp( client );
+        net::tcp_istream fp( client, cache );
         net::tcp_ostream op( client );
 
         string line;

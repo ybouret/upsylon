@@ -24,28 +24,109 @@ namespace upsylon
 {
     namespace net
     {
+        tcp_cache:: tcp_cache(const size_t n) :
+        content(),
+        capacity(n),
+        s_offset( memory::align(capacity)       ),
+        s_length( byte_slab::bytes_for(capacity)),
+        allocated( s_offset + s_length ),
+        buffer( static_cast<uint8_t *>( memory::global::instance().acquire( (size_t &)allocated) ) ),
+        pool( &buffer[s_offset], s_length )
+        {
+            assert(pool.capacity()==capacity);
+        }
+
+        tcp_cache:: ~tcp_cache() throw()
+        {
+            reset();
+            memory::global::location().release(*(void **)&buffer, (size_t&)allocated);
+        }
+
+        size_t tcp_cache:: size() const throw() { return content.size; }
+
+
+        void  tcp_cache:: reset() throw()
+        {
+            while( content.size )
+            {
+                byte_node *node = content.pop_back();
+                node->code = 0;
+                pool.release(node);
+            }
+        }
+
+        bool tcp_cache:: load( const tcp_client &cln )
+        {
+            assert(content.size<=0);
+            assert(pool.size()==capacity);
+            const size_t nr = cln.recv(buffer,capacity);
+            if(nr)
+            {
+                for(size_t i=0;i<nr;++i)
+                {
+                    byte_node *node = pool.acquire();
+                    node->code = buffer[i];
+                    content.push_back(node);
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        char tcp_cache:: getch() throw()
+        {
+            assert(content.size>0);
+            assert(content.size+pool.size()==capacity);
+            const char ans = content.head->code;
+            content.head->code=0;
+            pool.release( content.pop_front() );
+            assert(content.size+pool.size()==capacity);
+            return ans;
+        }
+
+        void tcp_cache:: putch(char C)
+        {
+            if( pool.size() <= 0 )
+            {
+                throw upsylon::exception("tcp_cache: unable to store char!");
+            }
+            byte_node *node = pool.acquire();
+            node->code      = C;
+            content.push_front(node);
+        }
+
+    }
+
+}
+
+
+namespace upsylon
+{
+    namespace net
+    {
         tcp_istream:: ~tcp_istream() throw()
         {
         }
 
-        tcp_istream:: tcp_istream( const tcp_link &conn ) :
+        tcp_istream:: tcp_istream( const tcp_link &conn, const tcp_input_cache &shared ) :
         tcp_stream( conn ),
-        cache(),
-        zbulk()
+        cache(shared)
         {
-            while( zbulk.size < bufsiz ) zbulk.store( new byte_node(0) );
+            cache->reset();
         }
 
         bool tcp_istream:: query( char &C )
         {
-            if(cache.size<=0 && !load())
+            if(cache->size()<=0 && !cache->load(*link))
             {
                 return false;
             }
             else
             {
-                C = cache.head->data;
-                zbulk.store( cache.pop_front() );
+                C = cache->getch();
                 return true;
             }
 
@@ -53,27 +134,9 @@ namespace upsylon
 
         void tcp_istream:: store(char C)
         {
-            if(zbulk.size<=0) throw upsylon::exception("tcp_istream(%s): unable to store char!", (**link).text() );
-            cache.push_front( zbulk.query() );
-            cache.head->data = C;
+            cache->putch(C);
         }
-
-        bool tcp_istream:: load()
-        {
-            assert(0     ==cache.size);
-            assert(bufsiz==zbulk.size);
-
-            uint8_t       buffer[ bufsiz ];
-            const size_t  nr = link->recv(buffer,bufsiz); assert(nr<=bufsiz);
-
-            for(size_t i=0;i<nr;++i)
-            {
-                cache.push_back( zbulk.query() );
-                cache.tail->data = buffer[i];
-            }
-
-            return cache.size>0;
-        }
+        
 
     }
 

@@ -1,4 +1,5 @@
 #include "y/net/tcp/server.hpp"
+#include "y/net/tcp/stream.hpp"
 #include "y/net/udp/server.hpp"
 #include "y/net/udp/client.hpp"
 #include "y/utest/run.hpp"
@@ -25,6 +26,10 @@ Y_UTEST(info)
     SHOW(udp_client);
     SHOW(tcp_server);
     SHOW(tcp_client);
+    SHOW(tcp_ostream);
+    SHOW(tcp_istream);
+    SHOW(tcp_cache);
+    SHOW(tcp_cache::byte_node);
 
 }
 Y_UTEST_DONE()
