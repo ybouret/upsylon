@@ -1,5 +1,6 @@
 
 #include "y/net/tcp/client.hpp"
+#include "y/type/ints-chkbnd.hpp"
 
 namespace upsylon
 {
@@ -35,7 +36,8 @@ namespace upsylon
         {
             assert( !(data==NULL&&size>0) );
 
-            const unsigned sz = unsigned(size);
+            const int sz = check_bound<int,size_t>(size);
+
 #if defined(Y_BSD)
             int            ns = 0;
             while( (ns= ::send(sock,data,sz,send_flags)) < 0 )
@@ -61,7 +63,8 @@ namespace upsylon
 
         size_t tcp_client:: recv( void *data, const size_t size ) const
         {
-            const unsigned sz = unsigned(size);
+            const int sz = check_bound<int,size_t>(size);
+            
 #if defined(Y_BSD)
             int            ns = 0;
             while( (ns= ::recv(sock,data,sz,send_flags)) < 0 )
