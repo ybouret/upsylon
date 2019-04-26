@@ -1,5 +1,10 @@
 #include "y/net/net.hpp"
 
+#if defined(Y_BSD)
+#include <cerrno>
+#endif
+
+
 namespace upsylon
 {
     namespace net

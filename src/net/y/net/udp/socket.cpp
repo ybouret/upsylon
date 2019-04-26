@@ -2,6 +2,10 @@
 #include "y/net/udp/socket.hpp"
 #include "y/type/ints-chkbnd.hpp"
 
+#if defined(Y_BSD)
+#include <cerrno>
+#endif
+
 namespace upsylon
 {
     namespace net

@@ -1,6 +1,7 @@
-
-
 #include "y/net/tcp/server.hpp"
+#if defined(Y_BSD)
+#include <cerrno>
+#endif
 
 namespace upsylon
 {

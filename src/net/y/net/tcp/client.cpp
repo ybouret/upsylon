@@ -2,6 +2,10 @@
 #include "y/net/tcp/client.hpp"
 #include "y/type/ints-chkbnd.hpp"
 
+#if defined(Y_BSD)
+#include <cerrno>
+#endif
+
 namespace upsylon
 {
     namespace net
