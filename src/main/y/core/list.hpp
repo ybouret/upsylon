@@ -429,7 +429,7 @@ namespace upsylon
         {
         public:
             //! constructor
-            explicit list_of_cpp() throw() : list_of<NODE>() {}
+            explicit list_of_cpp() throw() : list_of<NODE>(), releasable() {}
 
             //! delete content
             inline virtual void release() throw()
@@ -444,7 +444,7 @@ namespace upsylon
             virtual ~list_of_cpp() throw() { release(); }
 
             //! valid only if a copy ctor is defined for NODE
-            inline list_of_cpp( const list_of_cpp &other ) : list_of<NODE> ()
+            inline list_of_cpp( const list_of_cpp &other ) : list_of<NODE>(), releasable()
             {
                 try
                 {

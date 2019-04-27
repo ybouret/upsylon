@@ -38,9 +38,9 @@ namespace upsylon {
             };
 
             slice               *acquiring; //!< cache
-            core::list_of<slice> slices;    //! live slices
-            core::pool_of<slice> cached;    //! pool of dead slices
-            core::pool_of<page>  pages;     //! ever growing memory to store slices
+            core::list_of<slice> slices;    //!< live slices
+            core::pool_of<slice> cached;    //!< pool of dead slices
+            core::pool_of<page>  pages;     //!< ever growing memory to store slices
 
             Y_DISABLE_COPY_AND_ASSIGN(carver);
             

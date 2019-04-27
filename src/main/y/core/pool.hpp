@@ -98,7 +98,7 @@ namespace upsylon
         {
         public:
             //! constructor
-            explicit pool_of_cpp() throw() : pool_of<NODE>() {}
+            explicit pool_of_cpp() throw() : pool_of<NODE>(), releasable() {}
 
             //! destructor, delete NODEs
             virtual ~pool_of_cpp() throw() { release(); }
