@@ -1,5 +1,7 @@
 #include "y/memory/carver.hpp"
 #include "y/type/utils.hpp"
+#include "y/exception.hpp"
+
 #include <iostream>
 
 namespace upsylon
@@ -162,6 +164,10 @@ namespace upsylon
             acquiring = slices.push_back( new (s) slice(buffer,buflen) );
             void   *p = s->acquire(n);
             assert(p);
+            while( s->prev && s->entry<s->prev->entry)
+            {
+                slices.towards_head(s);
+            }
             return p;
 
         }

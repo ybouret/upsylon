@@ -6,12 +6,12 @@
 
 namespace upsylon
 {
-
+    
     namespace memory
     {
-
+        
         class carver;
-
+        
         //! format and use user's memory area
         class slice
         {
@@ -26,7 +26,7 @@ namespace upsylon
             };
             static const size_t block_size = sizeof(block);   //!< alias
             static const size_t small_size = 2*sizeof(block); //!< critical space
-
+            
             //! format the buffer with buflen
             /**
              \param buffer memory buffer
@@ -34,39 +34,39 @@ namespace upsylon
              */
             slice(void        *buffer,
                   const size_t buflen) throw();
-
+            
             //! bytes to provide to constructor to hold data_size
             static size_t bytes_to_hold( const size_t data_size ) throw();
-
+            
             //! do nothing but display warning if not empty
             ~slice() throw();
-
+            
             //! to debug
             void display() const;
-
+            
             //! try to acquire n bytes
             /**
              if no block is available or big enough, return NULL,
              otherwise, n is aligned to block_size, and memory is zeroed
              */
             void *      acquire(size_t &n) throw();
-
+            
             //! try to receive n bytes
             /**
              if no block is available or big enough, return NULL,
              otherwise, n is aligned to block_size, and copy memory
              */
             void *      receive( const void *p, size_t &n) throw();
-
+            
             //! release the memory
             static slice *release(void * &p, size_t &n) throw();
-
+            
             //! check status
             bool is_empty() const throw();
-
+            
             //! find owner
             static const slice * owner_of(const void *p) throw();
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(slice);
             block *entry; //!< first item
@@ -75,17 +75,17 @@ namespace upsylon
             void __release(block *curr) throw();
             bool __check() const;
             friend class carver;
-
+            
             void * __acquire( size_t &n, const bool zero) throw();
-
+            
         public:
             slice *next; //!< for list
             slice *prev; //!< for list
         };
-
+        
     }
-
-
+    
+    
 }
 
 #endif
