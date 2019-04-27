@@ -10,8 +10,20 @@ namespace upsylon
     {
 
         template <typename T>
-        class arena_of : public arena
+        class arena_of
         {
+        public:
+            static const size_t BLOCK_SIZE = sizeof(T);
+
+            inline  arena_of(const size_t the_chunk_size) throw() : A(BLOCK_SIZE,the_chunk_size) {}
+            inline ~arena_of() throw() {}
+
+            inline T   *acquire()               { return static_cast<T*>(A.acquire()); }
+            inline void release( T *p ) throw() { A.release(p); }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(arena_of);
+            const arena A;
         };
 
     }

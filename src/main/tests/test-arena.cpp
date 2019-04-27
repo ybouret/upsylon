@@ -11,6 +11,12 @@ namespace
     };
 }
 
+template <typename T>
+static inline void test_arena_of()
+{
+    
+}
+
 Y_UTEST(arena)
 {
 
