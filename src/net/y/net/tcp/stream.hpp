@@ -28,8 +28,8 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(tcp_stream);
         };
 
-        //! reusabke cache for tcp_istream
-        class tcp_cache : public net_object
+        //! reusable cache for tcp_istream
+        class tcp_cache_ : public net_object
         {
         public:
             //! a dynamic code
@@ -42,47 +42,49 @@ namespace upsylon
             typedef memory::slab<byte_node>  byte_slab; //!< alias
             typedef core::list_of<byte_node> byte_list; //!< alias
 
-            explicit tcp_cache(const size_t n);     //!< setup memory
-            virtual ~tcp_cache() throw();           //!< reset and release
+            explicit tcp_cache_(const size_t n);    //!< setup memory
+            virtual ~tcp_cache_() throw();          //!< reset and release
             void     reset() throw();               //!< empty cache into pool
             bool     load( const tcp_client &cln ); //!< load an empty cache with something
             size_t   size() const throw();          //!< content.size
 
-            char getch() throw(); //!< return first char in cache
-            void putch(char C);   //!< try to unread
+            char getch() throw();   //!< return first char in cache
+            void putch(char C);     //!< try to unread
 
-        private:
-            byte_list    content;  //!< list of read bytes
-        public:
-            const size_t capacity; //!< total capacity
-        private:
-            const size_t s_offset;
-            const size_t s_length;
-        public:
-            const size_t       allocated; //!< allocated global memory
-        private:
-            uint8_t     *buffer;
-            byte_slab    pool;    //!< pool of bytes
+        private:                    //
+            byte_list    content;   //!< list of read bytes
+        public:                     //
+            const size_t capacity;  //!< total capacity
+        private:                    //
+            const size_t s_offset;  //
+            const size_t s_length;  //
+        public:                     //
+            const size_t allocated; //!< allocated global memory
+        private:                    //
+            uint8_t     *buffer;    //
+            byte_slab    pool;      //
 
-            Y_DISABLE_COPY_AND_ASSIGN(tcp_cache);
+            Y_DISABLE_COPY_AND_ASSIGN(tcp_cache_);
         };
 
-        typedef arc_ptr<tcp_cache> tcp_input_cache; //!< alias
+        //! internal creation
+        tcp_cache_                 *tcp_cache_new( const size_t n );
+        typedef arc_ptr<tcp_cache_> tcp_cache; //!< alias
 
 
         //! istream decorator for tcp_client TODO: create dedicated cache
         class tcp_istream : public ios::istream, public tcp_stream
         {
         public:
-            virtual ~tcp_istream() throw();              //!< destructor
-            explicit tcp_istream(const tcp_link        &,
-                                 const tcp_input_cache &); //!< setup
+            virtual ~tcp_istream() throw();          //!< destructor
+            explicit tcp_istream(const tcp_link  &,  //
+                                 const tcp_cache &); //!< setup
 
             virtual bool query( char &C ); //!< cache/read at most bufsize
             virtual void store( char C  ); //!< read back
 
         private:
-            tcp_input_cache cache;
+            tcp_cache cache;
 
             Y_DISABLE_COPY_AND_ASSIGN(tcp_istream);
         };

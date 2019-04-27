@@ -24,7 +24,7 @@ namespace upsylon
 {
     namespace net
     {
-        tcp_cache:: tcp_cache(const size_t n) :
+        tcp_cache_:: tcp_cache_(const size_t n) :
         content(),
         capacity(n),
         s_offset( memory::align(capacity)       ),
@@ -36,16 +36,16 @@ namespace upsylon
             assert(pool.capacity()==capacity);
         }
 
-        tcp_cache:: ~tcp_cache() throw()
+        tcp_cache_:: ~tcp_cache_() throw()
         {
             reset();
             memory::global::location().release(*(void **)&buffer, (size_t&)allocated);
         }
 
-        size_t tcp_cache:: size() const throw() { return content.size; }
+        size_t tcp_cache_:: size() const throw() { return content.size; }
 
 
-        void  tcp_cache:: reset() throw()
+        void  tcp_cache_:: reset() throw()
         {
             while( content.size )
             {
@@ -55,7 +55,7 @@ namespace upsylon
             }
         }
 
-        bool tcp_cache:: load( const tcp_client &cln )
+        bool tcp_cache_:: load( const tcp_client &cln )
         {
             assert(content.size<=0);
             assert(pool.size()==capacity);
@@ -76,7 +76,7 @@ namespace upsylon
             }
         }
 
-        char tcp_cache:: getch() throw()
+        char tcp_cache_:: getch() throw()
         {
             assert(content.size>0);
             assert(content.size+pool.size()==capacity);
@@ -87,7 +87,7 @@ namespace upsylon
             return ans;
         }
 
-        void tcp_cache:: putch(char C)
+        void tcp_cache_:: putch(char C)
         {
             if( pool.size() <= 0 )
             {
@@ -98,6 +98,10 @@ namespace upsylon
             content.push_front(node);
         }
 
+        tcp_cache_ * tcp_cache_new( const size_t n )
+        {
+            return new tcp_cache_(n);
+        }
     }
 
 }
@@ -111,7 +115,7 @@ namespace upsylon
         {
         }
 
-        tcp_istream:: tcp_istream( const tcp_link &conn, const tcp_input_cache &shared ) :
+        tcp_istream:: tcp_istream( const tcp_link &conn, const tcp_cache &shared ) :
         tcp_stream( conn ),
         cache(shared)
         {

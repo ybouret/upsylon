@@ -29,7 +29,7 @@ Y_UTEST(info)
     SHOW(tcp_ostream);
     SHOW(tcp_istream);
     SHOW(tcp_cache);
-    SHOW(tcp_cache::byte_node);
+    SHOW(tcp_cache_::byte_node);
 
 }
 Y_UTEST_DONE()

@@ -37,7 +37,7 @@ Y_UTEST(tcp_server)
     const unsigned                 pending   = 1;
     net::tcp_server                server( user_port, pending, version );
     vector<string,memory::pooled>  words;
-    net::tcp_input_cache           cache = new net::tcp_cache(16);
+    net::tcp_cache                 cache = net::tcp_cache_new(16);
 
     std::cerr << "cache.capacity =" << cache->capacity  << std::endl;
     std::cerr << "cache.allocated=" << cache->allocated << std::endl;

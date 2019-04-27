@@ -1,5 +1,5 @@
 
-#include "y/net/tcp/client.hpp"
+#include "y/net/tcp/stream.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -26,20 +26,23 @@ Y_UTEST(tcp_client)
         }
     }
 
-    net::tcp_client client(argv[2],version);
+    net::tcp_link   client = new net::tcp_client(argv[2],version);
+    net::tcp_cache  cache  = net::tcp_cache_new(32);
 
-    std::cerr << "TCP->" << client->text() << "@" << net::bswp(client->port) << std::endl;
+    std::cerr << "TCP->" << (*client)->text() << "@" << net::bswp( (*client)->port) << std::endl;
 
     for(int i=3;i<argc;++i)
     {
         string msg = argv[i];
         msg += "\r\n";
-        const size_t ns = client.send_block(msg);
+        const size_t ns = client->send_block(msg);
         if(ns<msg.size())
         {
             std::cerr << "couldn't send all message" << std::endl;
             break;
         }
+
+
     }
 
 }
