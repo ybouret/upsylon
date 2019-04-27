@@ -23,7 +23,7 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(arena_of);
-            const arena A;
+            arena A;
         };
 
     }

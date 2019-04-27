@@ -1,6 +1,7 @@
 #include "y/memory/arena-of.hpp"
 #include "y/utest/run.hpp"
 #include "y/memory/cblock.hpp"
+#include <typeinfo>
 
 using namespace upsylon;
 namespace
@@ -12,9 +13,36 @@ namespace
 }
 
 template <typename T>
-static inline void test_arena_of()
+static inline void test_arena_of(const size_t nb)
 {
-    
+    const char *tid = typeid(T).name();
+    std::cerr << "< arena_of<" << tid << "> >" << std::endl;
+    memory::arena_of<T>   A( 4096 );
+    memory::cblock_of<T*> blk(nb);
+
+    const size_t n   = blk.size;
+    const size_t h   = n/2;
+    for(size_t i=0;i<n;++i)
+    {
+        blk[i] = A.acquire();
+    }
+    alea.shuffle( &blk[0],n);
+    for(size_t i=h;i<n;++i)
+    {
+        A.release(blk[i]);
+    }
+    for(size_t i=h;i<n;++i)
+    {
+        blk[i] = A.acquire();
+    }
+    alea.shuffle( &blk[0],n);
+
+    for(size_t i=0;i<n;++i)
+    {
+        A.release(blk[i]);
+    }
+    std::cerr << "< arena_of<" << tid << ">/>" << std::endl;
+
 }
 
 Y_UTEST(arena)
@@ -61,6 +89,10 @@ Y_UTEST(arena)
 
     std::cerr << "sizeof(memory::arena)=" << sizeof(memory::arena) << std::endl;
     std::cerr << "sizeof(memory::chunk)=" << sizeof(memory::chunk) << std::endl;
+
+    test_arena_of<char>(nb*2);
+    test_arena_of<int>(nb*2);
+    test_arena_of<uint64_t>(nb*2);
 
 }
 Y_UTEST_DONE()
