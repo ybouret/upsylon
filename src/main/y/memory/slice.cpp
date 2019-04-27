@@ -25,7 +25,7 @@ namespace upsylon
             entry->from = 0; //!< aka 'free'
             entry->next = guard;
             Y_SLICE_SET_SIZE(entry);
-            assert(__check());
+            assert(__check()||die("slice::slice()"));
         }
 
         slice::~slice() throw()
@@ -50,8 +50,16 @@ namespace upsylon
 
         bool slice:: __check() const
         {
-            assert(entry);
-            assert(guard);
+            if(!entry)
+            {
+                std::cerr << "NULL entry" << std::endl;
+                return false;
+            }
+            if(!guard)
+            {
+                std::cerr << "NULL guard" << std::endl;
+                return false;
+            }
             assert(entry->prev==NULL);
             assert(guard>entry+1);
 
@@ -80,6 +88,7 @@ namespace upsylon
                 if(length!=blk->size)
                 {
                     std::cerr << "invalid blk->size for block #" << iBlock << std::endl;
+                    return false;
                 }
                 if(blk->from!=NULL)
                 {
@@ -90,11 +99,13 @@ namespace upsylon
                     ++fBlock;
                 }
             }
+
             if(uBlock+fBlock!=iBlock)
             {
                 std::cerr << "invalid checksum" << std::endl;
                 return false;
             }
+
             if(fBlock!=count)
             {
                 std::cerr << "invalid count of free blocks: " << fBlock << "/" << count <<  std::endl;
@@ -154,7 +165,7 @@ namespace upsylon
                         curr->next = temp;
                         Y_SLICE_SET_SIZE(curr); assert(preferred_bytes==curr->size);
                         ++count;
-                        assert(__check());
+                        assert(__check()||die("slice::acquire(level-1)"));
                     }
 
                     //__________________________________________________________
@@ -169,7 +180,7 @@ namespace upsylon
                         memset(addr,0,n);
                     }
                     --count;
-                    assert(__check());
+                    assert( __check()||die("slice::acquire(level-2)") );
                     return addr;
                 }
             }

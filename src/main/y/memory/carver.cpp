@@ -10,7 +10,7 @@ namespace upsylon
         size_t carver:: compute_chunk_size(const size_t user_chunk_size) throw()
         {
             size_t cs = max_of<size_t>(user_chunk_size,slice::small_size);
-            cs        = max_of<size_t>(cs,sizeof(void*)+sizeof(slice)   );
+            //cs        = max_of<size_t>(cs,sizeof(void*)+sizeof(slice)   );
 
             return next_power_of_two(cs);
         }
@@ -19,33 +19,21 @@ namespace upsylon
         chunk_size( compute_chunk_size(user_chunk_size) ),
         acquiring(0),
         slices(),
-        cached(),
-        pages(),
-        bytes(0),
-        slices_per_page( (chunk_size - sizeof(void*))/sizeof(slice) )
+        blocks(chunk_size)
         {
             
         }
 
         carver:: ~carver() throw()
         {
-
-            if(pages.size)
+            while(slices.size>0)
             {
                 static global &hmem = global::location();
-                while(slices.size>0)
-                {
-                    slice *s = slices.pop_back();
-                    s->~slice();
-                    hmem.__free(s->entry,io::delta(s->entry,s->guard));
-                }
-                while(pages.size)
-                {
-                    hmem.__free(pages.query(),chunk_size);
-                }
-                cached.reset();
+                slice *s = slices.pop_back();
+                s->~slice();
+                hmem.__free(s->entry,io::delta(s->entry,s->guard));
+                blocks.release(s);
             }
-
         }
         
     }
@@ -146,39 +134,36 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // cache missed and not enough memory
-            // => create a new page to hold slices memory
-            // => create new dead slices: slices_per_page
+            // cache missed and not enough memory:
+            // => get a new block
             //__________________________________________________________________
-            if(cached.size<=0)
-            {
-                page           *P = pages.store(  static_cast<page *>( hmem.__calloc(1,chunk_size) ) );
-                slice          *s = io::cast<slice>( P, sizeof(void*));
-                for(size_t i=0;i<slices_per_page;++i)
-                {
-                    (void)cached.store(s+i);
-                }
-                (size_t&)bytes += chunk_size;
-            }
-
-            //__________________________________________________________________
-            //
-            // create memory for one slice
-            //__________________________________________________________________
-            assert(cached.size>0);
+            slice       *s      = blocks.acquire();
             const size_t buflen = max_of(slice::bytes_to_hold(n),chunk_size);
-            void        *buffer = hmem.__calloc(1,buflen); assert(buffer);
-            (size_t&)bytes += buflen;
+            void        *buffer = 0;
 
+            try
+            {
+                //______________________________________________________________
+                //
+                // => memory for this slice
+                //______________________________________________________________
+                buffer = hmem.__calloc(1,buflen); assert(buffer);
+            }
+            catch(...)
+            {
+                blocks.release(s);
+                throw;
+            }
             //__________________________________________________________________
             //
-            // create slice, no-throw
+            // update and get memory
             //__________________________________________________________________
-            slice  *s = slices.push_back( new ( cached.query() ) slice(buffer,buflen) );
-            acquiring = s;
+            assert(buffer);
+            acquiring = slices.push_back( new (s) slice(buffer,buflen) );
             void   *p = s->acquire(n);
             assert(p);
             return p;
+
         }
 
     }

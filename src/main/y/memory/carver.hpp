@@ -3,7 +3,7 @@
 #define Y_MEMORY_CARVER_INCLUDED 1
 
 #include "y/memory/slice.hpp"
-#include "y/memory/arena.hpp"
+#include "y/memory/arena-of.hpp"
 
 namespace upsylon {
 
@@ -22,6 +22,7 @@ namespace upsylon {
 
             //! initialize using chunk size
             explicit carver(const size_t user_chunk_size) throw();
+
             //! clean up
             virtual ~carver() throw();
 
@@ -32,22 +33,12 @@ namespace upsylon {
             virtual void  release(void * &p, size_t &n) throw();
             
         private:
-            //! memory for slices mapping
-            struct page
-            {
-                page *next;
-            };
-
             slice               *acquiring; //!< previously used
             core::list_of<slice> slices;    //!< live slices, ranked by increasing memory
-            core::pool_of<slice> cached;    //!< pool of dead slices
-            core::pool_of<page>  pages;     //!< ever growing memory to store slices
-
-            Y_DISABLE_COPY_AND_ASSIGN(carver);
+            arena_of<slice>      blocks;    //!< memory for one slice layout
             
-        public:
-            const size_t bytes;           //!< total bytes (pages+slices)
-            const size_t slices_per_page; //!< number of allocatable slices per page
+            Y_DISABLE_COPY_AND_ASSIGN(carver);
+
 
         };
     }

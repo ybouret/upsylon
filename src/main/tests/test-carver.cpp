@@ -36,7 +36,7 @@ namespace
                             memory::carver       &C,
                             const size_t          nmax)
     {
-        while(blocks.size<=nmax)
+        while(blocks.size<nmax)
         {
             block *b = new block(C);
             try
@@ -59,13 +59,13 @@ namespace
 Y_UTEST(carver)
 {
 
-    core::list_of_cpp<block> blocks;
-
     for(size_t bs=32;bs<=4096;bs*=2)
     {
+        std::cerr << "carver" << bs << std::endl;
         memory::carver C(bs);
         for(size_t iter=0;iter<8;++iter)
         {
+            core::list_of_cpp<block> blocks;
             fill(blocks,C,2048);
             const size_t nhalf = blocks.size/2;
             alea.shuffle(blocks);
@@ -75,10 +75,7 @@ Y_UTEST(carver)
             }
             fill(blocks,C,2048);
             alea.shuffle(blocks);
-            blocks.release();
         }
-        assert(0==blocks.size);
-        std::cerr << "carver.bytes=" << C.bytes << std::endl;
     }
 
 }
@@ -94,7 +91,7 @@ Y_UTEST(pooled)
         std::cerr << "pooled memory is ok" << std::endl;
         for(size_t iter=0;iter<8;++iter)
         {
-            fill(blocks,P,2048);
+            fill(blocks,P,5000);
             const size_t nhalf = blocks.size/2;
             alea.shuffle(blocks);
             while( blocks.size>nhalf )
@@ -105,9 +102,6 @@ Y_UTEST(pooled)
             alea.shuffle(blocks);
             blocks.release();
         }
-        std::cerr << "pooled.bytes=" << P.bytes           << std::endl;
-        std::cerr << "pooled.slices_per_page=" << P.slices_per_page << std::endl;
-
     }
 }
 Y_UTEST_DONE()
