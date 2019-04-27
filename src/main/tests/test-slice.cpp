@@ -18,8 +18,14 @@ namespace
         inline block() throw() : next(0), prev(0), addr(0), size(0)
         {
         }
+
         inline virtual ~block() throw()
         {
+            if(addr)
+            {
+                assert(size);
+               (void) memory::slice::release(addr,size);
+            }
         }
 
         static inline int compare( const block *lhs, const block *rhs, void * )
@@ -74,18 +80,11 @@ Y_UTEST(slice)
                 alea.shuffle(blocks);
                 while( blocks.size>nhalf )
                 {
-                    block *b = blocks.pop_back();
-                    memory::slice::release(b->addr,b->size);
-                    delete b;
+                    delete blocks.pop_back();
                 }
                 fill(blocks,s);
                 alea.shuffle(blocks);
-                while(blocks.size>0)
-                {
-                    block *b = blocks.pop_back();
-                    memory::slice::release(b->addr,b->size);
-                    delete b;
-                }
+                blocks.clear();
             }
         }
         std::cerr << std::endl;
@@ -113,28 +112,26 @@ Y_UTEST(slice)
             merging<block>::sort(source_blocks, block::compare, NULL);
 
             std::cerr << "#source=" << source_blocks.size << "/";
+
             while(source_blocks.size)
             {
-                size_t new_size = source_blocks.tail->size;
-                void  *new_addr = target.receive(source_blocks.tail->addr,new_size);
+                const  block *old      = source_blocks.tail;
+                size_t        new_size = old->size;
+                void         *new_addr = target.receive(old->addr,new_size);
                 if(!new_addr) break;
-                const uint32_t crc32_old = crc32(source_blocks.tail->addr,source_blocks.tail->size);
-                const uint32_t crc32_new = crc32(new_addr,source_blocks.tail->size);
+                const uint32_t crc32_old = crc32(old->addr,old->size);
+                const uint32_t crc32_new = crc32(new_addr, old->size);
                 Y_ASSERT(crc32_new==crc32_old);
                 block *b = new block();
                 b->addr = new_addr;
                 b->size = new_size;
                 target_blocks.push_back(b);
-                source.release(source_blocks.tail->addr,source_blocks.tail->size);
+                //source.release(source_blocks.tail->addr,source_blocks.tail->size);
                 delete source_blocks.pop_back();
             }
 
-            while(target_blocks.size>0)
-            {
-                block *b = target_blocks.pop_back();
-                memory::slice::release(b->addr,b->size);
-                delete b;
-            }
+            target_blocks.clear();
+            
         }
         std::cerr << std::endl;
 
