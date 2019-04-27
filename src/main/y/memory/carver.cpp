@@ -70,50 +70,90 @@ namespace upsylon
                 void *p = acquiring->acquire(n);
                 if(p)
                 {
+                    //__________________________________________________________
+                    //
                     // fully cached!
+                    //__________________________________________________________
                     return p;
                 }
                 else
                 {
-                    // search..
+                    //__________________________________________________________
+                    //
+                    // interleaved search
+                    //__________________________________________________________
                     slice *lo = acquiring->prev;
                     slice *up = acquiring->next;
                     while(lo&&up)
                     {
                         {
                             void *p = lo->acquire(n);
-                            if(p) return p;
+                            if(p)
+                            {
+                                acquiring = lo;
+                                return p;
+                            }
                             lo = lo->prev;
                         }
 
                         {
                             void *p = up->acquire(n);
-                            if(p) return p;
+                            if(p)
+                            {
+                                acquiring = up;
+                                return p;
+
+                            }
                             up=up->next;
                         }
                     }
 
+                    //__________________________________________________________
+                    //
+                    // down search
+                    //__________________________________________________________
                     while(lo)
                     {
                         void *p = lo->acquire(n);
-                        if(p) return p;
+                        if(p)
+                        {
+                            acquiring = lo;
+                            return p;
+                        }
                         lo = lo->prev;
                     }
 
+                    //__________________________________________________________
+                    //
+                    // up search
+                    //__________________________________________________________
                     while(up)
                     {
                         void *p = up->acquire(n);
-                        if(p) return p;
+                        if(p)
+                        {
+                            acquiring = up;
+                            return p;
+                        }
                         up=up->next;
                     }
+                    //__________________________________________________________
+                    //
                     // search failure
+                    //__________________________________________________________
                 }
             }
 
-            // cache missed and not enough memory => create a new slice
+            //__________________________________________________________________
+            //
+            // cache missed and not enough memory
+            // => create a new page to hold slices memory
+            // => create new dead slices: slices_per_page
+            //__________________________________________________________________
             if(cached.size<=0)
             {
-                slice          *s = io::cast<slice>( pages.store( static_cast<page *>(hmem.__calloc(1,chunk_size) ) ), sizeof(void*));
+                page           *P = pages.store(  static_cast<page *>( hmem.__calloc(1,chunk_size) ) );
+                slice          *s = io::cast<slice>( P, sizeof(void*));
                 for(size_t i=0;i<slices_per_page;++i)
                 {
                     (void)cached.store(s+i);
@@ -121,14 +161,20 @@ namespace upsylon
                 (size_t&)bytes += chunk_size;
             }
 
-            // create data
+            //__________________________________________________________________
+            //
+            // create memory for one slice
+            //__________________________________________________________________
             assert(cached.size>0);
             const size_t buflen = max_of(slice::bytes_to_hold(n),chunk_size);
             void        *buffer = hmem.__calloc(1,buflen); assert(buffer);
             (size_t&)bytes += buflen;
-            
-            // create slice
-            slice  *s = new ( cached.query() ) slice(buffer,buflen); slices.push_back(s);
+
+            //__________________________________________________________________
+            //
+            // create slice, no-throw
+            //__________________________________________________________________
+            slice  *s = slices.push_back( new ( cached.query() ) slice(buffer,buflen) );
             acquiring = s;
             void   *p = s->acquire(n);
             assert(p);
@@ -151,7 +197,7 @@ namespace upsylon
                 assert(slices.owns(s));
                 if(s->is_empty())
                 {
-
+                    //std::cerr << "Empty Slice!" << std::endl;
                 }
             }
             else

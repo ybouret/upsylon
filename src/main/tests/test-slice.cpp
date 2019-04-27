@@ -138,6 +138,6 @@ Y_UTEST(slice)
 
         std::cerr << "<Testing re-allocation/>" << std::endl;
     }
-
+    std::cerr << "sizeof(memory::slice)=" << sizeof(memory::slice) << std::endl;
 }
 Y_UTEST_DONE()

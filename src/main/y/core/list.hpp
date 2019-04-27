@@ -48,8 +48,9 @@ assert((node)->prev==NULL)
 assert(!head); assert(!tail); assert(!size); \
 head = tail = node; size = 1
             //! append a NODE
-            inline void push_back( NODE *node ) throw()
+            inline NODE *push_back( NODE *node ) throw()
             {
+                assert(node);
                 Y_CORE_CHECK_LIST_NODE(node);
                 if( size <= 0 )
                 {
@@ -63,6 +64,7 @@ head = tail = node; size = 1
                     tail       = node;
                     ++size;
                 }
+                return node;
             }
 
             //! append node, syntactic helper
@@ -72,8 +74,9 @@ head = tail = node; size = 1
             }
 
             //! prepend a NODE
-            inline void push_front( NODE *node ) throw()
+            inline NODE *push_front( NODE *node ) throw()
             {
+                assert(node);
                 Y_CORE_CHECK_LIST_NODE(node);
                 if( size <= 0 )
                 {
@@ -88,7 +91,7 @@ head = tail = node; size = 1
                     head       = node;
                     ++size;
                 }
-
+                return node;
             }
 #undef Y_CORE_LIST_PUSH_FIRST
 
