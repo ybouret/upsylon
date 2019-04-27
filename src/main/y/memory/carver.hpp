@@ -3,6 +3,7 @@
 #define Y_MEMORY_CARVER_INCLUDED 1
 
 #include "y/memory/slice.hpp"
+#include "y/memory/arena.hpp"
 
 namespace upsylon {
 
@@ -37,8 +38,8 @@ namespace upsylon {
                 page *next;
             };
 
-            slice               *acquiring; //!< cache
-            core::list_of<slice> slices;    //!< live slices
+            slice               *acquiring; //!< previously used
+            core::list_of<slice> slices;    //!< live slices, ranked by increasing memory
             core::pool_of<slice> cached;    //!< pool of dead slices
             core::pool_of<page>  pages;     //!< ever growing memory to store slices
 

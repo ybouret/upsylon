@@ -1,4 +1,4 @@
-#include "y/memory/arena.hpp"
+#include "y/memory/arena-of.hpp"
 #include "y/utest/run.hpp"
 #include "y/memory/cblock.hpp"
 
