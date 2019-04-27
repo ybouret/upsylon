@@ -67,7 +67,7 @@ namespace upsylon
         void Edges:: compute_with(Engine &E)
         {
             // initialize
-            particles.clear();
+            particles.release();
             ld(0);
             E.acquire_all(Histogram::BYTES);
             gmax=0;

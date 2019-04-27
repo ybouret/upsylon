@@ -415,7 +415,9 @@ head = tail = node; size = 1
         };
     }
 
+
 }
+#include "y/type/releasable.hpp"
 
 namespace upsylon
 {
@@ -423,14 +425,14 @@ namespace upsylon
     {
         //! a node is a C++ object
         template <typename NODE>
-        class list_of_cpp : public list_of<NODE>
+        class list_of_cpp : public list_of<NODE>, public releasable
         {
         public:
             //! constructor
             explicit list_of_cpp() throw() : list_of<NODE>() {}
 
             //! delete content
-            inline void clear() throw()
+            inline virtual void release() throw()
             {
                 while(this->size)
                 {
@@ -439,7 +441,7 @@ namespace upsylon
             }
 
             //! clear on destructor
-            virtual ~list_of_cpp() throw() { clear(); }
+            virtual ~list_of_cpp() throw() { release(); }
 
             //! valid only if a copy ctor is defined for NODE
             inline list_of_cpp( const list_of_cpp &other ) : list_of<NODE> ()
@@ -453,7 +455,7 @@ namespace upsylon
                 }
                 catch(...)
                 {
-                    clear();
+                    release();
                     throw;
                 }
             }

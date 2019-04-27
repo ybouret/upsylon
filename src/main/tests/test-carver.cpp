@@ -13,11 +13,19 @@ namespace
         block *prev;
         void  *addr;
         size_t size;
-        inline block() throw() : next(0), prev(0), addr(0), size(0)
+        memory::carver &crv;
+
+        inline block( memory::carver &C ) throw() : next(0), prev(0), addr(0), size(0), crv(C)
         {
         }
+
         inline virtual ~block() throw()
         {
+            if(addr)
+            {
+                assert(size>0);
+                crv.release(addr,size);
+            }
         }
 
     private:
@@ -26,11 +34,11 @@ namespace
 
     static inline void fill(core::list_of<block> &blocks,
                             memory::carver       &C,
-                            const size_t nmax)
+                            const size_t          nmax)
     {
         while(blocks.size<=nmax)
         {
-            block *b = new block();
+            block *b = new block(C);
             try
             {
                 b->size  = 1+alea.leq(100);
@@ -63,18 +71,11 @@ Y_UTEST(carver)
             alea.shuffle(blocks);
             while( blocks.size>nhalf )
             {
-                block *b = blocks.pop_back();
-                C.release(b->addr,b->size);
-                delete b;
+                delete blocks.pop_back();
             }
             fill(blocks,C,2048);
             alea.shuffle(blocks);
-            while(blocks.size>0)
-            {
-                block *b = blocks.pop_back();
-                C.release(b->addr,b->size);
-                delete b;
-            }
+            blocks.release();
         }
         assert(0==blocks.size);
         std::cerr << "carver.bytes=" << C.bytes << std::endl;
@@ -85,7 +86,7 @@ Y_UTEST_DONE()
 
 Y_UTEST(pooled)
 {
-    memory::pooled &P  = memory::pooled::instance();
+    memory::pooled          &P  = memory::pooled::instance();
     core::list_of_cpp<block> blocks;
 
     if(P.exists())
@@ -98,21 +99,15 @@ Y_UTEST(pooled)
             alea.shuffle(blocks);
             while( blocks.size>nhalf )
             {
-                block *b = blocks.pop_back();
-                P.release(b->addr,b->size);
-                delete b;
+                delete blocks.pop_back();
             }
             fill(blocks,P,2048);
             alea.shuffle(blocks);
-            while(blocks.size>0)
-            {
-                block *b = blocks.pop_back();
-                P.release(b->addr,b->size);
-                delete b;
-            }
+            blocks.release();
         }
-        assert(0==blocks.size);
-        std::cerr << "pooled.bytes=" << P.bytes << std::endl;
+        std::cerr << "pooled.bytes=" << P.bytes           << std::endl;
+        std::cerr << "pooled.slices_per_page=" << P.slices_per_page << std::endl;
+
     }
 }
 Y_UTEST_DONE()

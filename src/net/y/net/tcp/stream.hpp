@@ -28,17 +28,19 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(tcp_stream);
         };
 
+        //! reusabke cache for tcp_istream
         class tcp_cache : public net_object
         {
         public:
+            //! a dynamic code
             struct byte_node
             {
-                byte_node *prev;
-                byte_node *next;
-                uint8_t    code;
+                byte_node *prev; //!< for list
+                byte_node *next; //!< for list
+                uint8_t    code; //!< current byte
             };
-            typedef memory::slab<byte_node>  byte_slab;
-            typedef core::list_of<byte_node> byte_list;
+            typedef memory::slab<byte_node>  byte_slab; //!< alias
+            typedef core::list_of<byte_node> byte_list; //!< alias
 
             explicit tcp_cache(const size_t n);     //!< setup memory
             virtual ~tcp_cache() throw();           //!< reset and release
@@ -57,7 +59,7 @@ namespace upsylon
             const size_t s_offset;
             const size_t s_length;
         public:
-            const size_t       allocated;
+            const size_t       allocated; //!< allocated global memory
         private:
             uint8_t     *buffer;
             byte_slab    pool;    //!< pool of bytes

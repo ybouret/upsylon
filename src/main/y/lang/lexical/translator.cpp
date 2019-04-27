@@ -104,8 +104,8 @@ dict()
             void Translator:: reset() throw()
             {
                 curr = base;
-                history.clear();
-                cache.clear();
+                history.release();
+                cache.release();
             }
 
             void   Translator:: unget( Lexeme *lx ) throw()

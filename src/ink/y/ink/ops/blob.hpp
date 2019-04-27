@@ -51,7 +51,7 @@ namespace upsylon
                     case Connect8: neighbors=8; break;
                 }
                 assert(neighbors>0);
-                particles.clear();
+                particles.release();
                 count = 0;
                 this->ld(0);
 

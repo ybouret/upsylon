@@ -45,7 +45,7 @@ namespace upsylon
         DynamoNode *DynamoCompiler:: compile( const XNode &node )
         {
             (size_t&)created=0;
-            items.clear();
+            items.release();
             walk(node);
             if(1!=items.size)
             {

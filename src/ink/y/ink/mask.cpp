@@ -124,8 +124,8 @@ namespace upsylon
         void Mask:: release() throw()
         {
             dict.release();
-            pool.clear();
-            list.clear();
+            pool.release();
+            list.release();
         }
 
         size_t Mask:: capacity() const throw()

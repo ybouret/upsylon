@@ -84,7 +84,7 @@ Y_UTEST(slice)
                 }
                 fill(blocks,s);
                 alea.shuffle(blocks);
-                blocks.clear();
+                blocks.release();
             }
         }
         std::cerr << std::endl;
@@ -130,7 +130,7 @@ Y_UTEST(slice)
                 delete source_blocks.pop_back();
             }
 
-            target_blocks.clear();
+            target_blocks.release();
             
         }
         std::cerr << std::endl;

@@ -36,6 +36,7 @@ namespace upsylon
         typedef uint32_t      type;                 //!< mapping
         static const uint32_t minimun = 0;          //!< min
         static const uint32_t maximum = 0xffffffff; //!< max
+        //! check
         static inline type    positive(const type x) throw() { return x; }
     };
     
@@ -45,6 +46,7 @@ namespace upsylon
         typedef uint64_t type;                                     //!< mapping
         static const uint64_t minimun = 0;                         //!< min
         static const uint64_t maximum = Y_U64(0xffffffffffffffff); //!< max
+        //! check
         static inline type    positive(const type x) throw() { return x; }
     };
     
@@ -114,7 +116,7 @@ namespace upsylon
 
         static const integer_type minimun = __integer::minimun; //!< associated min
         static const integer_type maximum = __integer::maximum; //!< associated max
-
+        //! check
         static inline integer_type positive( const integer_type x ) throw()
         {
             return __integer::positive(x);

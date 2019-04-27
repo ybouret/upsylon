@@ -11,7 +11,7 @@ namespace upsylon
 {
 
     
-
+    //! return a positive bounded value of OUPUT based on INPUT type
     template <typename OUTPUT,typename INPUT>
     inline OUTPUT check_bound( INPUT x ) throw()
     {

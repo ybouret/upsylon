@@ -200,7 +200,7 @@ namespace upsylon
         void mperf:: release() throw()
         {
             assert(root);
-            root->chld.clear();
+            root->chld.release();
             root->freq=1;
             (size_t&)nodes=1;
         }

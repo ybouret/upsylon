@@ -65,7 +65,7 @@ namespace upsylon
             void __String:: Init( const Token &t )
             {
                 //std::cerr << "enter " << label << std::endl;
-                content.clear();
+                content.release();
                 Collect(t);
             }
 

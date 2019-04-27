@@ -289,7 +289,7 @@ namespace upsylon
 
         void Iso2d:: Lines:: connect(const Segments &segments)
         {
-            clear();
+            release();
             // loop over all segments
             for(const Segment *seg=segments.head;seg;seg=seg->next)
             {

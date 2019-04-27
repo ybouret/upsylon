@@ -82,19 +82,29 @@ namespace upsylon
         };
 
 
+    }
+
+}
+
+#include "y/type/releasable.hpp"
+
+namespace upsylon
+{
+    namespace core
+    {
         //! pool of C++ NODEs
         template <typename NODE>
-        class pool_of_cpp : public pool_of<NODE>
+        class pool_of_cpp : public pool_of<NODE>, public releasable
         {
         public:
             //! constructor
             explicit pool_of_cpp() throw() : pool_of<NODE>() {}
 
             //! destructor, delete NODEs
-            virtual ~pool_of_cpp() throw() { clear(); }
+            virtual ~pool_of_cpp() throw() { release(); }
 
             //! proper NODEs deleting
-            inline void clear() throw()
+            inline virtual void release() throw()
             {
                 while(this->size>0)
                 {

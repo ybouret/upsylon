@@ -76,7 +76,7 @@ namespace upsylon
                         //
                         // delete univocal content
                         //______________________________________________________
-                        node->lexeme().clear();
+                        node->lexeme().release();
                     }
                     return node;
                 }

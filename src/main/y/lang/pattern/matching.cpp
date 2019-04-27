@@ -31,7 +31,7 @@ namespace upsylon
 
         bool Matching:: exactly(const string &s)
         {
-            clear();
+            release();
             Source source( Module::OpenData(s,s) );
             if( motif->match(*this,source) )
             {
@@ -45,7 +45,7 @@ namespace upsylon
 
         bool Matching:: partly(const string &s)
         {
-            clear();
+            release();
             Source source( Module::OpenData(s,s) );
             while( ! motif->match(*this,source) )
             {
@@ -57,7 +57,7 @@ namespace upsylon
 
         size_t Matching:: find( sequence<Token> &seq, const string &s )
         {
-            clear();
+            release();
             seq.free();
             Source source( Module::OpenData(s,s) );
             while( true )
