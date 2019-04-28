@@ -53,8 +53,8 @@ maxi_ = items-1
 
     namespace core
     {
-        memory::allocator & string_allocator_instance();
-        memory::allocator & string_allocator_location() throw();
+        memory::allocator & string_allocator_instance();          //!< call to internal pooled memory
+        memory::allocator & string_allocator_location() throw();  //!< call to internal pooled memory
 
         //! string on a base class
         template <typename T>

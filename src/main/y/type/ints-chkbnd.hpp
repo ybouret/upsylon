@@ -13,23 +13,24 @@ namespace upsylon
     namespace core
     {
         //! for unsigned U=uint[8|16|32|64]
-        template <typename OUTPUT,typename U> OUTPUT chkbnd(const U &u) throw();
+        template <typename OUTPUT,typename U> inline OUTPUT chkbnd(const U &u) throw();
 
         //______________________________________________________________________
         //
         // INPUT=uint8_t
         //______________________________________________________________________
-        template <> uint8_t  chkbnd<uint8_t, uint8_t>(const uint8_t &u) throw() { return u; } //!< u8->u8
-        template <> uint16_t chkbnd<uint16_t,uint8_t>(const uint8_t &u) throw() { return u; } //!< u8->u16
-        template <> uint32_t chkbnd<uint32_t,uint8_t>(const uint8_t &u) throw() { return u; } //!< u8->u32
-        template <> uint64_t chkbnd<uint64_t,uint8_t>(const uint8_t &u) throw() { return u; } //!< u8->u64
+        template <> inline uint8_t  chkbnd<uint8_t, uint8_t>(const uint8_t &u) throw() { return u; } //!< u8->u8
+        template <> inline uint16_t chkbnd<uint16_t,uint8_t>(const uint8_t &u) throw() { return u; } //!< u8->u16
+        template <> inline uint32_t chkbnd<uint32_t,uint8_t>(const uint8_t &u) throw() { return u; } //!< u8->u32
+        template <> inline uint64_t chkbnd<uint64_t,uint8_t>(const uint8_t &u) throw() { return u; } //!< u8->u64
 
+        //! wrapper to let the compiler decide of the type
 #define Y_CHKBND(OUTPUT,INPUT,VALUE) return ( (u>=static_cast<INPUT>(VALUE)) ? static_cast<OUTPUT>(VALUE) : static_cast<OUTPUT>(u) )
 
-        template <> int8_t   chkbnd<int8_t,uint8_t>( const uint8_t &u) throw() { Y_CHKBND(int8_t,uint8_t,127); } //!< u8->i8
-        template <> int16_t  chkbnd<int16_t,uint8_t>(const uint8_t &u) throw() { return u; }                     //!< u8->i16
-        template <> int32_t  chkbnd<int32_t,uint8_t>(const uint8_t &u) throw() { return u; }                     //!< u8->i32
-        template <> int64_t  chkbnd<int64_t,uint8_t>(const uint8_t &u) throw() { return u; }                     //!< u8->i64
+        template <> inline int8_t   chkbnd<int8_t,uint8_t>( const uint8_t &u) throw() { Y_CHKBND(int8_t,uint8_t,0x7f); } //!< u8->i8
+        template <> inline int16_t  chkbnd<int16_t,uint8_t>(const uint8_t &u) throw() { return u; }                     //!< u8->i16
+        template <> inline int32_t  chkbnd<int32_t,uint8_t>(const uint8_t &u) throw() { return u; }                     //!< u8->i32
+        template <> inline int64_t  chkbnd<int64_t,uint8_t>(const uint8_t &u) throw() { return u; }                     //!< u8->i64
 
 
 
@@ -37,42 +38,64 @@ namespace upsylon
         //
         // INPUT=uint16_t
         //______________________________________________________________________
-        template <> uint8_t  chkbnd<uint8_t, uint16_t>(const uint16_t &u) throw() { Y_CHKBND(uint8_t,uint16_t,255); } //!< u16->u8
-        template <> uint16_t chkbnd<uint16_t,uint16_t>(const uint16_t &u) throw() { return u; }  //!< u16->u16
-        template <> uint32_t chkbnd<uint32_t,uint16_t>(const uint16_t &u) throw() { return u; }  //!< u16->u32
-        template <> uint64_t chkbnd<uint64_t,uint16_t>(const uint16_t &u) throw() { return u; }  //!< u16->u64
+        template <> inline uint8_t  chkbnd<uint8_t, uint16_t>(const uint16_t &u) throw() { Y_CHKBND(uint8_t,uint16_t,0xff); } //!< u16->u8
+        template <> inline uint16_t chkbnd<uint16_t,uint16_t>(const uint16_t &u) throw() { return u; }  //!< u16->u16
+        template <> inline uint32_t chkbnd<uint32_t,uint16_t>(const uint16_t &u) throw() { return u; }  //!< u16->u32
+        template <> inline uint64_t chkbnd<uint64_t,uint16_t>(const uint16_t &u) throw() { return u; }  //!< u16->u64
 
-        template <> int8_t  chkbnd<int8_t, uint16_t>(const uint16_t &u) throw() { Y_CHKBND(int8_t,uint16_t,127);    } //!< u16->u8
-        template <> int16_t chkbnd<int16_t,uint16_t>(const uint16_t &u) throw() { Y_CHKBND(int16_t,uint16_t,32767); } //!< u16->u16
-        template <> int32_t chkbnd<int32_t,uint16_t>(const uint16_t &u) throw() { return u; }                         //!< u16->u32
-        template <> int64_t chkbnd<int64_t,uint16_t>(const uint16_t &u) throw() { return u; }                         //!< u16->u64
+        template <> inline int8_t  chkbnd<int8_t, uint16_t>(const uint16_t &u) throw() { Y_CHKBND(int8_t,uint16_t,0x7f);    } //!< u16->i8
+        template <> inline int16_t chkbnd<int16_t,uint16_t>(const uint16_t &u) throw() { Y_CHKBND(int16_t,uint16_t,0x7fff); } //!< u16->i16
+        template <> inline int32_t chkbnd<int32_t,uint16_t>(const uint16_t &u) throw() { return u; }                         //!< u16->i32
+        template <> inline int64_t chkbnd<int64_t,uint16_t>(const uint16_t &u) throw() { return u; }                         //!< u16->i64
 
-
+        //______________________________________________________________________
+        //
+        // INPUT=uint32_t
+        //______________________________________________________________________
+        template <> inline uint8_t  chkbnd<uint8_t, uint32_t>(const uint32_t &u) throw() { Y_CHKBND(uint8_t,uint32_t,0xff);    } //!< u32->u8
+        template <> inline uint16_t chkbnd<uint16_t,uint32_t>(const uint32_t &u) throw() { Y_CHKBND(uint16_t,uint32_t,0xffff); } //!< u32->u16
+        template <> inline uint32_t chkbnd<uint32_t,uint32_t>(const uint32_t &u) throw() { return u; }                           //!< u32->u32
+        template <> inline uint64_t chkbnd<uint64_t,uint32_t>(const uint32_t &u) throw() { return u; }                           //!< u32->u64
+        
+        template <> inline int8_t  chkbnd<int8_t, uint32_t>(const uint32_t &u) throw() { Y_CHKBND(int8_t,uint32_t,0x7f);        } //!< u32->i8
+        template <> inline int16_t chkbnd<int16_t,uint32_t>(const uint32_t &u) throw() { Y_CHKBND(int16_t,uint32_t,0x7fff);     } //!< u32->i16
+        template <> inline int32_t chkbnd<int32_t,uint32_t>(const uint32_t &u) throw() { Y_CHKBND(int32_t,uint32_t,0x7fffffff); } //!< u32->i32
+        template <> inline int64_t chkbnd<int64_t,uint32_t>(const uint32_t &u) throw() { return u; }                              //!< u32->i64
+        
+        //______________________________________________________________________
+        //
+        // INPUT=uint64_t
+        //______________________________________________________________________
+        template <> inline uint8_t  chkbnd<uint8_t, uint64_t>(const uint64_t &u) throw() { Y_CHKBND(uint8_t,uint64_t,0xff);    }      //!< u64->u8
+        template <> inline uint16_t chkbnd<uint16_t,uint64_t>(const uint64_t &u) throw() { Y_CHKBND(uint16_t,uint64_t,0xffff); }      //!< u64->u16
+        template <> inline uint32_t chkbnd<uint32_t,uint64_t>(const uint64_t &u) throw() { Y_CHKBND(uint32_t,uint64_t,0xffffffff);  } //!< u64->u32
+        template <> inline uint64_t chkbnd<uint64_t,uint64_t>(const uint64_t &u) throw() { return u; }                                //!< u64->u64
+        
+        template <> inline int8_t  chkbnd<int8_t, uint64_t>(const uint64_t &u) throw() { Y_CHKBND(int8_t,uint64_t,0x7f);        } //!< u64->i8
+        template <> inline int16_t chkbnd<int16_t,uint64_t>(const uint64_t &u) throw() { Y_CHKBND(int16_t,uint64_t,0x7fff);     } //!< u64->i16
+        template <> inline int32_t chkbnd<int32_t,uint64_t>(const uint64_t &u) throw() { Y_CHKBND(int32_t,uint64_t,0x7fffffff); } //!< u64->i32
+        template <> inline int64_t chkbnd<int64_t,uint64_t>(const uint64_t &u) throw()
+        {
+            if(u>=Y_U64(0x7fffffffffffffff))
+            {
+                return Y_I64(0x7fffffffffffffff);
+            }
+            else
+            {
+                return static_cast<int64_t>(u);
+            }
+        } //!< u64->i64
+        
+        
     }
     
     //! return a positive bounded value of OUPUT based on INPUT type
     template <typename OUTPUT,typename INPUT>
     inline OUTPUT check_bound( INPUT x ) throw()
     {
-        typedef typename limit_of<INPUT>::unsigned_type  u_inp_t;
-        //typedef typename limit_of<OUTPUT>::unsigned_type u_out_t;
-
-        const u_inp_t ui = limit_of<INPUT>::positive(x);
-
-
-        static const uint64_t  omax64 = static_cast<uint64_t>(limit_of<OUTPUT>::maximum);
-        static const uint64_t  imax64 = static_cast<uint64_t>(limit_of<INPUT> ::maximum);
-        static const uint64_t  vmax64 = (omax64<imax64) ? omax64 : imax64;
-        static const INPUT     imax   = static_cast<INPUT>(vmax64);
-
-        if( static_cast<uint64_t>(ui) > vmax64 )
-        {
-            return imax;
-        }
-        else
-        {
-            return x;
-        }
+        typedef typename limit_of<INPUT>::unsigned_type  UNSIGNED_TYPE;
+        const UNSIGNED_TYPE ui = limit_of<INPUT>::positive(x);
+        return core::chkbnd<OUTPUT,UNSIGNED_TYPE>(ui);
     }
 
     

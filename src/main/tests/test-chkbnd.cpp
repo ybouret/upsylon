@@ -1,6 +1,7 @@
 #include "y/type/ints-chkbnd.hpp"
 #include "y/os/endian.hpp"
 #include "y/utest/run.hpp"
+#include <typeinfo>
 
 using namespace upsylon;
 
@@ -25,16 +26,34 @@ std::cerr << "check_bound<" << #OUTPUT << "," << #INPUT << ">(" << VALUE << ")="
 template <typename OUTPUT,typename UNSIGNED_INPUT>
 void check_full()
 {
+    std::cerr << "full: core::chkbd<" << typeid(OUTPUT).name() << "," << typeid(UNSIGNED_INPUT).name() << ">" << std::endl;
     uint64_t j = 0;
     for(UNSIGNED_INPUT i=0; j<limit_of<UNSIGNED_INPUT>::maximum; ++j, ++i)
     {
-        core::chkbnd<OUTPUT,UNSIGNED_INPUT>(i);
+        const uint64_t ans = core::chkbnd<OUTPUT,UNSIGNED_INPUT>(i);
+        Y_ASSERT(ans<=uint64_t(i));
+        Y_ASSERT(ans<=limit_of<UNSIGNED_INPUT>::maximum);
+    }
+}
+
+template <typename OUTPUT,typename UNSIGNED_INPUT>
+void check_part()
+{
+    std::cerr << "part: core::chkbd<" << typeid(OUTPUT).name() << "," << typeid(UNSIGNED_INPUT).name() << ">" << std::endl;
+    for(size_t iter=1<<21;iter>0;--iter)
+    {
+        const UNSIGNED_INPUT i = alea.full<UNSIGNED_INPUT>();
+        const uint64_t ans = core::chkbnd<OUTPUT,UNSIGNED_INPUT>(i);
+        Y_ASSERT(ans<=uint64_t(i));
+        Y_ASSERT(ans<=limit_of<UNSIGNED_INPUT>::maximum);
     }
 }
 
 
+
 Y_UTEST(chkbnd)
 {
+    // u8->
     check_full<uint8_t,uint8_t>();
     check_full<uint16_t,uint8_t>();
     check_full<uint32_t,uint8_t>();
@@ -45,7 +64,40 @@ Y_UTEST(chkbnd)
     check_full<int32_t,uint8_t>();
     check_full<int64_t,uint8_t>();
 
+    // u16->
+    check_full<uint8_t,uint16_t>();
+    check_full<uint16_t,uint16_t>();
+    check_full<uint32_t,uint16_t>();
+    check_full<uint64_t,uint16_t>();
+    
+    check_full<int8_t,uint16_t>();
+    check_full<int16_t,uint16_t>();
+    check_full<int32_t,uint16_t>();
+    check_full<int64_t,uint16_t>();
+    
+    
+    // u32->
+    check_part<uint8_t,uint32_t>();
+    check_part<uint16_t,uint32_t>();
+    check_part<uint32_t,uint32_t>();
+    check_part<uint64_t,uint32_t>();
+    
+    check_part<int8_t,uint32_t>();
+    check_part<int16_t,uint32_t>();
+    check_part<int32_t,uint32_t>();
+    check_part<int64_t,uint32_t>();
 
+    // u64->
+    check_part<uint8_t,uint64_t>();
+    check_part<uint16_t,uint64_t>();
+    check_part<uint32_t,uint64_t>();
+    check_part<uint64_t,uint64_t>();
+    
+    check_part<int8_t,uint64_t>();
+    check_part<int16_t,uint64_t>();
+    check_part<int32_t,uint64_t>();
+    check_part<int64_t,uint64_t>();
+    
     //CHECK_POS(uint8_t);
     CHECK_POS(uint16_t);
     CHECK_POS(uint32_t);
@@ -70,16 +122,6 @@ Y_UTEST(chkbnd)
     SHOW(short,int,100000);
     SHOW(unsigned short,int,100000);
     SHOW(short,unsigned short,38000);
-
-    const uint32_t X = 0x12345678;
-    union
-    {
-        uint32_t dw;
-        uint8_t  b[4];
-    } item = { swap_be(X) };
-    std::cerr << std::hex << "b=0x" << uint32_t(item.b[0]) << uint32_t(item.b[1]) << int32_t(item.b[2]) << uint32_t(item.b[3]) << std::endl;
-
-
 
 
 }
