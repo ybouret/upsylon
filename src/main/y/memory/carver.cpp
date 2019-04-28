@@ -5,6 +5,7 @@
 #include "y/memory/arena-of.hpp"
 
 #include <iostream>
+#include <cstring>
 
 namespace upsylon
 {
@@ -25,7 +26,6 @@ namespace upsylon
         chunk_size( compute_chunk_size(user_chunk_size) ),
         acquiring(0),
         slices(),
-        //blocks(chunk_size),
         wksp(),
         impl( &wksp[0] )
         {
