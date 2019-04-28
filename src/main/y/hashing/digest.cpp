@@ -1,6 +1,7 @@
 #include "y/hashing/digest.hpp"
 #include "y/code/utils.hpp"
 #include "y/exception.hpp"
+#include "y/memory/pooled.hpp"
 
 namespace upsylon
 {

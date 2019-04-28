@@ -8,6 +8,7 @@
 #include "y/ptr/arc.hpp"
 #include "y/ptr/intr.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/memory/pooled.hpp"
 
 namespace upsylon
 {

@@ -1,6 +1,7 @@
 #include "y/sequence/pipe.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
+#include "y/memory/pooled.hpp"
 
 using namespace upsylon;
 

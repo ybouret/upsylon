@@ -4,6 +4,7 @@
 
 #include "y/memory/slice.hpp"
 #include "y/memory/arena-of.hpp"
+#include "y/memory/allocator.hpp"
 
 namespace upsylon {
 

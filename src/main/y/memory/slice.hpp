@@ -2,7 +2,7 @@
 #ifndef Y_MEMORY_SLICE_INCLUDED
 #define Y_MEMORY_SLICE_INCLUDED 1
 
-#include "y/object.hpp"
+#include "y/os/platform.hpp"
 
 namespace upsylon
 {

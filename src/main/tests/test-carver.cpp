@@ -1,5 +1,5 @@
-#include "y/memory/pooled.hpp"
 #include "y/memory/cblock.hpp"
+#include "y/memory/pooled.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -59,6 +59,10 @@ namespace
 Y_UTEST(carver)
 {
 
+    std::cerr << "sizeof(arena)             = " << sizeof(memory::arena)              << std::endl;
+    std::cerr << "sizeof(arena_of<char>   ) = " << sizeof(memory::arena_of<char>)     << std::endl;
+    std::cerr << "sizeof(arena_of<uint64)t) = " << sizeof(memory::arena_of<uint64_t>) << std::endl;
+
     for(size_t bs=32;bs<=4096;bs*=2)
     {
         std::cerr << "carver" << bs << std::endl;
@@ -80,6 +84,7 @@ Y_UTEST(carver)
 
 }
 Y_UTEST_DONE()
+
 
 Y_UTEST(pooled)
 {

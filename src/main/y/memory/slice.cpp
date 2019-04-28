@@ -1,5 +1,7 @@
 #include "y/memory/slice.hpp"
 #include "y/type/utils.hpp"
+#include "y/memory/io.hpp"
+#include "y/code/round.hpp"
 #include <iostream>
 #include <cstring>
 

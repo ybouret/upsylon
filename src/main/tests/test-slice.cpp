@@ -3,6 +3,7 @@
 #include "y/utest/run.hpp"
 #include "y/sort/merge.hpp"
 #include "y/comparison.hpp"
+#include "y/object.hpp"
 
 using namespace upsylon;
 

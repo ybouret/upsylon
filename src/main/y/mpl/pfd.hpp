@@ -6,6 +6,7 @@
 #include "y/mpl/natural.hpp"
 #include "y/associative/set.hpp"
 #include "y/ptr/intr.hpp"
+#include "y/memory/pooled.hpp"
 
 namespace upsylon
 {

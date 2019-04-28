@@ -2,7 +2,6 @@
 #ifndef Y_STRING_BASIC_INCLUDED
 #define Y_STRING_BASIC_INCLUDED 1
 
-#include "y/memory/pooled.hpp"
 #include "y/memory/buffer.hpp"
 #include "y/type/cswap.hpp"
 #include "y/dynamic.hpp"
@@ -47,13 +46,16 @@ assert( 0 == (S).addr_[ (S).size_ ] )
 #define Y_CORE_STRING_CTOR(SIZE)   Y_CORE_STRING_CTOR0(), size_(SIZE), maxi_(0), items(size_+1), bytes(0)
 
     //! string memory allocation and setup
-#define Y_CORE_STRING_ALLOC()                                \
-static memory::allocator &hmem = memory::pooled::instance(); \
-addr_ = hmem.acquire_as<T>(items,bytes);                     \
+#define Y_CORE_STRING_ALLOC()                                 \
+static memory::allocator &hmem = string_allocator_instance(); \
+addr_ = hmem.acquire_as<T>(items,bytes);                      \
 maxi_ = items-1
 
     namespace core
     {
+        memory::allocator & string_allocator_instance();
+        memory::allocator & string_allocator_location() throw();
+
         //! string on a base class
         template <typename T>
         class string :
@@ -71,15 +73,17 @@ maxi_ = items-1
             //! buffer interface
             inline virtual size_t      length() const throw() { return size_*sizeof(T); }
 
-            //! the size method...
+            //! dynamic interface: the size method...
             inline  virtual size_t size()     const throw() { return size_; }
+
+            //! dynami interface: the capacity method
             inline  virtual size_t capacity() const throw() { return maxi_; }
             
             //! destroy memory
             inline virtual ~string() throw()
             {
                 Y_CORE_STRING_CHECK(*this);
-                static memory::allocator &hmem = memory::pooled::location();
+                static memory::allocator &hmem = string_allocator_location();
                 hmem.release_as<T>(addr_,items,bytes);
             }
 

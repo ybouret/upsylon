@@ -3,6 +3,7 @@
 #define Y_MEMORY_POOLED_INCLUDED 1
 
 #include "y/memory/carver.hpp"
+#include "y/object.hpp"
 
 namespace upsylon
 {

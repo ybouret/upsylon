@@ -37,7 +37,7 @@ namespace upsylon
         explicit miniLZO();         //!< initialize the library
         virtual ~miniLZO() throw(); //!< destructor
     public:
-        static const at_exit::longevity life_time = memory::pooled::life_time - 8; //!< life time for singleton
+        static const at_exit::longevity life_time = 0; //!< life time for singleton
     };
 }
 

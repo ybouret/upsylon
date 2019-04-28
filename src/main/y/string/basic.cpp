@@ -1,12 +1,28 @@
 #include "y/string/basic.hpp"
-#include <iostream>
+#include "y/memory/pooled.hpp"
+
 #include "y/code/utils.hpp"
+
 #include "y/ios/ostream.hpp"
+#include <iostream>
 
 namespace upsylon
 {
     namespace core
     {
+
+        memory::allocator & string_allocator_instance()
+        {
+            return memory::pooled::instance();
+        }
+
+        memory::allocator & string_allocator_location() throw()
+        {
+            assert(memory::pooled::exists());
+            return memory::pooled::location();
+        }
+
+
         template <>
         std::ostream & string<char>::std_display(std::ostream &os) const
         {

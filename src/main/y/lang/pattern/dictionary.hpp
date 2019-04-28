@@ -4,6 +4,7 @@
 
 #include "y/lang/pattern.hpp"
 #include "y/associative/map.hpp"
+#include "y/memory/pooled.hpp"
 
 namespace upsylon
 {
