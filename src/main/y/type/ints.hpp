@@ -104,22 +104,24 @@ namespace upsylon
     template <typename T>
     struct limit_of
     {
-        enum            { sizeof_value = sizeof(T) };         //!< alias
-        static const bool signed_value = is_signed<T>::value; //!< alias
+        enum            { sizeof_T = sizeof(T) };         //!< alias
+        static const bool signed_T = is_signed<T>::value; //!< alias
 
-        typedef typename select_type<
-        signed_value,
-        signed_int<sizeof_value>,
-        unsigned_int<sizeof_value>
-        >::result                         __integer;   //!< the matching integral struct
-        typedef typename __integer::type integer_type; //!< the matching integer
+        typedef unsigned_int<sizeof_T>                                 u_int_T;       //!< the matching unsigned struct, in any case
+        typedef signed_int<sizeof_T>                                   s_int_T;       //!< the matching signed struct
+        typedef typename select_type<signed_T,s_int_T,u_int_T>::result __integral;    //!< the matching integral struct
 
-        static const integer_type minimun = __integer::minimun; //!< associated min
-        static const integer_type maximum = __integer::maximum; //!< associated max
+
+        typedef typename __integral::type  integral_type;  //!< the matching integer
+        typedef typename u_int_T::type     unsigned_type;  //!< the matching unsigned
+
+        static const integral_type minimun = __integral::minimun; //!< associated min
+        static const integral_type maximum = __integral::maximum; //!< associated max
+
         //! check
-        static inline integer_type positive( const integer_type x ) throw()
+        static inline unsigned_type positive( const integral_type x ) throw()
         {
-            return __integer::positive(x);
+            return static_cast<unsigned_type>( __integral::positive(x));
         }
 
     };

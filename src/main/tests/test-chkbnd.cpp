@@ -21,6 +21,7 @@ static inline void check_positive(const char *id)
 #define SHOW(OUTPUT,INPUT,VALUE) do { const OUTPUT res = check_bound<OUTPUT,INPUT>(VALUE);\
 std::cerr << "check_bound<" << #OUTPUT << "," << #INPUT << ">(" << VALUE << ")=" << res << std::endl; } while(false)
 
+
 Y_UTEST(chkbnd)
 {
     //CHECK_POS(uint8_t);
@@ -45,7 +46,9 @@ Y_UTEST(chkbnd)
     SHOW(short,int,10000);
     SHOW(short,int,-10000);
     SHOW(short,int,100000);
+    SHOW(unsigned short,int,100000);
     SHOW(short,unsigned short,38000);
+
     
 
 }
