@@ -8,6 +8,7 @@
 #include "y/ptr/intr.hpp"
 #include "y/math/types.hpp"
 #include "y/string/tokenizer.hpp"
+#include "y/memory/pooled.hpp"
 
 namespace upsylon
 {

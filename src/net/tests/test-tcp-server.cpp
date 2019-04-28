@@ -36,7 +36,7 @@ Y_UTEST(tcp_server)
     const uint16_t                 user_port = uint16_t(string_convert::to<size_t>(argv[2],"port"));
     const unsigned                 pending   = 1;
     net::tcp_server                server( user_port, pending, version );
-    vector<string,memory::pooled>  words;
+    vector<string>                 words(16,as_capacity);
     net::tcp_cache                 cache = net::tcp_cache_new(16);
 
     std::cerr << "cache.capacity =" << cache->capacity  << std::endl;

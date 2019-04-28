@@ -288,7 +288,7 @@ namespace upsylon
 
     public:
         //! life-time of the singleton
-        static const  at_exit::longevity life_time = memory::pooled::life_time - 2;
+        static const  at_exit::longevity life_time = memory::global::life_time - 4;
     };
 
     //! MPI_Init
