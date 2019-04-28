@@ -1,8 +1,8 @@
 #include "y/memory/carver.hpp"
 #include "y/memory/global.hpp"
+#include "y/memory/arena-of.hpp"
 #include "y/type/utils.hpp"
 #include "y/exception.hpp"
-#include "y/memory/arena-of.hpp"
 
 #include <iostream>
 #include <cstring>
@@ -14,13 +14,20 @@ namespace upsylon
 
         size_t carver:: compute_chunk_size(const size_t user_chunk_size) throw()
         {
-            size_t cs = max_of<size_t>(user_chunk_size,slice::small_size);
-            //cs        = max_of<size_t>(cs,sizeof(void*)+sizeof(slice)   );
-
+            size_t cs = Y_MEMALIGN(user_chunk_size);
+            if(cs<=slice::small_size) cs = slice::small_size;
             return next_power_of_two(cs);
         }
 
-        typedef arena_of<slice> arena_type;
+        namespace
+        {
+            typedef arena_of<slice> arena_type;
+        }
+
+        void carver:: clr() throw()
+        {
+            memset(wksp,0,sizeof(wksp));
+        }
 
         carver:: carver( const size_t user_chunk_size ) throw() :
         chunk_size( compute_chunk_size(user_chunk_size) ),
@@ -30,9 +37,8 @@ namespace upsylon
         impl( &wksp[0] )
         {
             assert( sizeof(wksp) >= sizeof( arena_of<slice> ) );
-            memset(wksp,0,sizeof(wksp));
+            clr();
             new (impl) arena_type(chunk_size);
-
         }
 
         carver:: ~carver() throw()
@@ -48,7 +54,7 @@ namespace upsylon
                 a.release(s);
             }
             destruct( &a );
-            memset(wksp,0,sizeof(wksp));
+            clr();
         }
         
     }

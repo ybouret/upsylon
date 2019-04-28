@@ -40,6 +40,8 @@ namespace upsylon {
             core::list_of<slice> slices;    //!< live slices, ranked by increasing memory
             void *               wksp[19];  //!< ugly hack
             void                *impl;      //!< where the arena_of<slice> is
+
+            void clr() throw();
         };
     }
 
