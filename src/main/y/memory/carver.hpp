@@ -3,8 +3,8 @@
 #define Y_MEMORY_CARVER_INCLUDED 1
 
 #include "y/memory/slice.hpp"
-#include "y/memory/arena-of.hpp"
 #include "y/memory/allocator.hpp"
+#include "y/core/list.hpp"
 
 namespace upsylon {
 
@@ -27,20 +27,19 @@ namespace upsylon {
             //! clean up
             virtual ~carver() throw();
 
-            //! allocator interface
+            //! allocator interface: acquire
             virtual void *acquire(size_t &n);
 
-            //! allocator interface
+            //! allocator interface: release
             virtual void  release(void * &p, size_t &n) throw();
             
         private:
-            slice               *acquiring; //!< previously used
-            core::list_of<slice> slices;    //!< live slices, ranked by increasing memory
-            arena_of<slice>      blocks;    //!< memory for one slice layout
-            
             Y_DISABLE_COPY_AND_ASSIGN(carver);
 
-
+            slice               *acquiring; //!< previously used
+            core::list_of<slice> slices;    //!< live slices, ranked by increasing memory
+            void *               wksp[19];  //!< ugly hack
+            void                *impl;      //!< where the arena_of<slice> is
         };
     }
 

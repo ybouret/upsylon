@@ -1,6 +1,8 @@
 #include "y/memory/cblock.hpp"
 #include "y/memory/pooled.hpp"
+#include "y/memory/carver.hpp"
 #include "y/utest/run.hpp"
+#include "y/object.hpp"
 
 using namespace upsylon;
 
@@ -13,9 +15,9 @@ namespace
         block *prev;
         void  *addr;
         size_t size;
-        memory::carver &crv;
+        memory::allocator &crv;
 
-        inline block( memory::carver &C ) throw() : next(0), prev(0), addr(0), size(0), crv(C)
+        inline block( memory::allocator &C ) throw() : next(0), prev(0), addr(0), size(0), crv(C)
         {
         }
 
@@ -33,7 +35,7 @@ namespace
     };
 
     static inline void fill(core::list_of<block> &blocks,
-                            memory::carver       &C,
+                            memory::allocator    &C,
                             const size_t          nmax)
     {
         while(blocks.size<nmax)
@@ -59,10 +61,7 @@ namespace
 Y_UTEST(carver)
 {
 
-    std::cerr << "sizeof(arena)             = " << sizeof(memory::arena)              << std::endl;
-    std::cerr << "sizeof(arena_of<char>   ) = " << sizeof(memory::arena_of<char>)     << std::endl;
-    std::cerr << "sizeof(arena_of<uint64)t) = " << sizeof(memory::arena_of<uint64_t>) << std::endl;
-
+    
     for(size_t bs=32;bs<=4096;bs*=2)
     {
         std::cerr << "carver" << bs << std::endl;

@@ -2,6 +2,7 @@
 #include "y/memory/global.hpp"
 #include "y/type/utils.hpp"
 #include "y/exception.hpp"
+#include "y/memory/arena-of.hpp"
 
 #include <iostream>
 
@@ -18,25 +19,36 @@ namespace upsylon
             return next_power_of_two(cs);
         }
 
+        typedef arena_of<slice> arena_type;
+
         carver:: carver( const size_t user_chunk_size ) throw() :
         chunk_size( compute_chunk_size(user_chunk_size) ),
         acquiring(0),
         slices(),
-        blocks(chunk_size)
+        //blocks(chunk_size),
+        wksp(),
+        impl( &wksp[0] )
         {
-            
+            assert( sizeof(wksp) >= sizeof( arena_of<slice> ) );
+            memset(wksp,0,sizeof(wksp));
+            new (impl) arena_type(chunk_size);
+
         }
 
         carver:: ~carver() throw()
         {
+            assert(impl);
+            arena_type &a = *static_cast<arena_type *>(impl);
             while(slices.size>0)
             {
                 static global &hmem = global::location();
                 slice *s = slices.pop_back();
                 s->~slice();
                 hmem.__free(s->entry,io::delta(s->entry,s->guard));
-                blocks.release(s);
+                a.release(s);
             }
+            destruct( &a );
+            memset(wksp,0,sizeof(wksp));
         }
         
     }
@@ -140,7 +152,8 @@ namespace upsylon
             // cache missed and not enough memory:
             // => get a new block
             //__________________________________________________________________
-            slice       *s      = blocks.acquire();
+            arena_type  &a      = *static_cast<arena_type *>(impl);
+            slice       *s      = a.acquire();
             const size_t buflen = max_of(slice::bytes_to_hold(n),chunk_size);
             void        *buffer = 0;
 
@@ -154,7 +167,7 @@ namespace upsylon
             }
             catch(...)
             {
-                blocks.release(s);
+                a.release(s);
                 throw;
             }
             //__________________________________________________________________
