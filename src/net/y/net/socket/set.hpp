@@ -8,13 +8,14 @@ namespace upsylon
 {
     namespace net
     {
-
+        //! wrapper for socket_set
         class socket_set : public net_object
         {
         public:
+            static const size_t MAX_SIZE = FD_SETSIZE;
             explicit socket_set() throw();
             virtual ~socket_set() throw();
-            
+
         private:
             fd_set fds; //!< system level desritptor
         };
