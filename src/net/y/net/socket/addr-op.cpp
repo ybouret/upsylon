@@ -18,7 +18,7 @@ namespace upsylon
 #if defined(Y_WIN)
             if( SOCKET_ERROR == ::bind( sock, static_cast<const sockaddr*>( ro() ), int( length() )))
             {
-                throw net::exception( get_last_error_code(), "::bind(%s)", text() );
+                throw net::exception( Y_NET_LAST_ERROR(), "::bind(%s)", text() );
             }
 #endif
 
@@ -47,7 +47,7 @@ namespace upsylon
 #if defined(Y_WIN)
             if( SOCKET_ERROR == ::connect( sock, static_cast<const sockaddr*>( ro() ), int( length() )))
             {
-                throw net::exception( get_last_error_code(), "::connect(%s)", text() );
+                throw net::exception( Y_NET_LAST_ERROR(), "::connect(%s)", text() );
             }
 #endif
 
