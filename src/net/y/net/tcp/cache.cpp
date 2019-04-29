@@ -10,7 +10,7 @@ namespace upsylon
         s_offset( memory::align(capacity)       ),
         s_length( byte_slab::bytes_for(capacity)),
         allocated( s_offset + s_length ),
-        buffer( static_cast<uint8_t *>( memory::global::instance().acquire( (size_t &)allocated) ) ),
+        buffer( static_cast<char *>( memory::global::instance().acquire( (size_t &)allocated) ) ),
         pool( &buffer[s_offset], s_length )
         {
             assert(pool.capacity()==capacity);
