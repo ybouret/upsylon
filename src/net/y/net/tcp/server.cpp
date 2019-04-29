@@ -39,7 +39,7 @@ namespace upsylon
 #if defined(Y_WIN)
             if( SOCKET_ERROR == ::listen(sock,pending) )
             {
-                throw net::exception( get_last_error_code(), "::listen(%s)", self.text() );
+                throw net::exception( Y_NET_LAST_ERROR(), "::listen(%s)", self.text() );
             }
 #endif
 
@@ -85,7 +85,7 @@ namespace upsylon
 #if defined(Y_WIN)
             if( INVALID_SOCKET  == (s=::accept(sock, sa_ptr, &sa_len) ) )
             {
-                throw net::exception( get_last_error_code(), "::accept()" );
+                throw net::exception( Y_NET_LAST_ERROR(), "::accept()" );
             }
 #endif
 
@@ -116,14 +116,5 @@ namespace upsylon
 
 }
 
-#include "y/net/tcp/client.hpp"
 
-namespace upsylon
-{
-    namespace net
-    {
-        
-
-    }
-}
 

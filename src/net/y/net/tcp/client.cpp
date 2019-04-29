@@ -60,7 +60,7 @@ namespace upsylon
             const int ns = ::send(sock,(const char*)data,sz,send_flags);
             if( ns == SOCKET_ERROR )
             {
-                throw net::exception( get_last_error_code(), "::send(%s)", (**this).text() );
+                throw net::exception( Y_NET_LAST_ERROR(), "::send(%s)", (**this).text() );
             }
             return ns;
 #endif
@@ -88,7 +88,7 @@ namespace upsylon
             const int ns = ::recv(sock,(char*)data,sz,send_flags);
             if( ns == SOCKET_ERROR )
             {
-                throw net::exception( get_last_error_code(), "::recv(%s)", (**this).text() );
+                throw net::exception( Y_NET_LAST_ERROR(), "::recv(%s)", (**this).text() );
             }
             return ns;
 #endif
