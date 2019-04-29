@@ -14,7 +14,6 @@ Y_UTEST(bsd)
 
     net::bsd_socket tcp_v4(net::tcp,net::v4); display(tcp_v4);
     net::bsd_socket tcp_v6(net::tcp,net::v6); display(tcp_v6);
-
     net::bsd_socket udp_v4(net::udp,net::v4); display(udp_v4);
     net::bsd_socket udp_v6(net::udp,net::v6); display(udp_v6);
 

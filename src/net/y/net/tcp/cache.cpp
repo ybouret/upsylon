@@ -10,8 +10,8 @@ namespace upsylon
         s_offset( memory::align(capacity)       ),
         s_length( byte_slab::bytes_for(capacity)),
         allocated( s_offset + s_length ),
-        buffer( static_cast<char *>( memory::global::instance().acquire( (size_t &)allocated) ) ),
-        pool( &buffer[s_offset], s_length )
+        buffer( memory::global::instance().acquire( (size_t &)allocated) ),
+        pool( static_cast<char *>(buffer)+s_offset, s_length )
         {
             assert(pool.capacity()==capacity);
         }
@@ -20,11 +20,8 @@ namespace upsylon
         {
             reset();
             memset(buffer,0,allocated);
-            {
-                void *ptr = (void *)buffer;
-                memory::global::location().release(ptr, (size_t&)allocated);
-            }
-            buffer=0;
+            memory::global::location().release(buffer, (size_t&)allocated);
+
         }
 
         size_t tcp_cache_:: size() const throw() { return content.size; }
@@ -44,13 +41,14 @@ namespace upsylon
         {
             assert(content.size<=0);
             assert(pool.size()==capacity);
-            const size_t nr = cln.recv(buffer,capacity);
+            char        *data = static_cast<char *>(buffer);
+            const size_t nr   = cln.recv(data,capacity);
             if(nr)
             {
                 for(size_t i=0;i<nr;++i)
                 {
                     byte_node *node = pool.acquire();
-                    node->code = buffer[i];
+                    node->code = data[i];
                     content.push_back(node);
                 }
                 return true;

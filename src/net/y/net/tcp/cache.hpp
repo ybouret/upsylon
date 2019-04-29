@@ -43,7 +43,7 @@ namespace upsylon
         public:                     //
             const size_t allocated; //!< allocated global memory
         private:                    //
-            char        *buffer;    //
+            void        *buffer;    //
             byte_slab    pool;      //
 
             Y_DISABLE_COPY_AND_ASSIGN(tcp_cache_);

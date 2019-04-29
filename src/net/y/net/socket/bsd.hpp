@@ -35,7 +35,6 @@ namespace upsylon
             //
             // open and close
             //__________________________________________________________________
-
             virtual ~bsd_socket() throw();                  //!< destructor
             explicit bsd_socket(const ip_protocol protocol, //
                                 const ip_version  version); //!< setup
@@ -47,13 +46,11 @@ namespace upsylon
             //
             // set options
             //__________________________________________________________________
-            void async();                               //!< set non blocking mode
-
-            //! wrapper to setsocketopt
-            void setopt(const int      level,
-                        const int      optname,
-                        const void    *optval,
-                        const unsigned optlen);
+            void async();                       //!< set non blocking mode
+            void setopt(const int      level,   //
+                        const int      optname, //
+                        const void    *optval,  //
+                        const unsigned optlen); //!< wrapper to setsocketopt
 
             //! wrapper to integral values
             template <typename T> inline void setopt( const int level, const int optname, const T value )
@@ -63,9 +60,8 @@ namespace upsylon
 
             void on(  const int level, const int optname ); //!< turn flag on,  using system boolean
             void off( const int level, const int optname ); //!< turn flag off, using system boolean
-
-            void sndbuf(const unsigned bytes); //!< modify SO_SNDBUF
-            void rcvbuf(const unsigned bytes); //!< modify SO_RCVBUF
+            void sndbuf(const unsigned bytes);              //!< modify SO_SNDBUF
+            void rcvbuf(const unsigned bytes);              //!< modify SO_RCVBUF
 
 
             //__________________________________________________________________
@@ -90,6 +86,12 @@ namespace upsylon
             int  sndbuf() const; //!< current SO_SNDBUF
             int  rcvbuf() const; //!< current SO_RCVBUF
 
+            //__________________________________________________________________
+            //
+            // handling
+            //__________________________________________________________________
+            const socket_type & key() const throw(); //!< get key for set
+          
         protected:
             socket_type sock; //!< internal system socket
             explicit bsd_socket( const socket_type accepted ); //!< prepare an accepted socket
