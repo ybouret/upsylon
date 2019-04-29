@@ -1,8 +1,18 @@
 #include "y/net/socket/set.hpp"
+#include "y/net/socket/delay.hpp"
+
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
 
+namespace
+{
+    static inline
+    void show( const net::socket_delay &d )
+    {
+        std::cerr << "usr=" << d.usr.tv_sec  << "+1e6*" << d.usr.tv_usec << std::endl;
+    }
+}
 
 Y_UTEST(sockset)
 {
@@ -22,6 +32,7 @@ Y_UTEST(sockset)
     std::cerr << "<i/o for sockset>" << std::endl;
     for(size_t iter=0;iter<128;++iter)
     {
+        std::cerr << ".";
         alea.shuffle(arr,num);
         for(size_t i=0;i<num;++i)
         {
@@ -47,6 +58,11 @@ Y_UTEST(sockset)
 
     }
     std::cerr << "<i/o for sockset/>" << std::endl;
+
+    net::socket_delay d1, d2=0, d3=1.01;
+    show(d1);
+    show(d2);
+    show(d3);
 
 }
 Y_UTEST_DONE()
