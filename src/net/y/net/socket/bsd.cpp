@@ -206,7 +206,7 @@ namespace upsylon
 #if defined(Y_WIN)
             if( SOCKET_ERROR == ::getsockopt(sock,level,optname, (char *)optval,&optLen) )
             {
-                throw net::exception( net::get_last_error_code(), "::getsockopt");
+                throw net::exception( Y_NET_LAST_ERROR(), "::getsockopt");
             }
 #endif
         }
