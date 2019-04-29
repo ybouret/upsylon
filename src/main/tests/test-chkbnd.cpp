@@ -42,8 +42,8 @@ void check_part()
     std::cerr << "part: core::chkbd<" << typeid(OUTPUT).name() << "," << typeid(UNSIGNED_INPUT).name() << ">" << std::endl;
     for(size_t iter=1<<21;iter>0;--iter)
     {
-        const UNSIGNED_INPUT i = alea.full<UNSIGNED_INPUT>();
-        const uint64_t ans = core::chkbnd<OUTPUT,UNSIGNED_INPUT>(i);
+        const UNSIGNED_INPUT i   = alea.full<UNSIGNED_INPUT>();
+        const uint64_t       ans = core::chkbnd<OUTPUT,UNSIGNED_INPUT>(i);
         Y_ASSERT(ans<=uint64_t(i));
         Y_ASSERT(ans<=limit_of<UNSIGNED_INPUT>::maximum);
     }
