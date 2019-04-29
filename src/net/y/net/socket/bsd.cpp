@@ -220,6 +220,7 @@ namespace upsylon
                                  void          *optval,
                                  const unsigned optlen) const
         {
+            Y_NET_VERBOSE(std::cerr << "[network.getopt]" << std::endl);
             Y_GIANT_LOCK();
             assert(invalid_socket!=sock);
             if(optval==0||optlen<=0)
