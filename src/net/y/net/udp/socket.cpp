@@ -48,7 +48,7 @@ namespace upsylon
                                          target.get_sa_length() );
             if(msgSent!=msgSize)
             {
-                throw net::exception( get_last_error_code(), "%s(%s)", fn, target.text() );
+                throw net::exception( Y_NET_LAST_ERROR(), "%s(%s)", fn, target.text() );
             }
         }
 
@@ -68,7 +68,7 @@ namespace upsylon
             const int     msgRecv = Y_NET_UDP_RECVFROM();
             if( SOCKET_ERROR == msgRecv )
             {
-                throw net::exception( get_last_error_code(), "::recvfrom" );
+                throw net::exception( Y_NET_LAST_ERROR(), "::recvfrom" );
             }
             return msgRecv;
 #endif

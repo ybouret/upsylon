@@ -165,14 +165,14 @@ namespace upsylon
 #if defined(Y_BSD)
             if( ::setsockopt(sock, level, optname, optval, static_cast<socklen_t>(optlen) ) < 0 )
             {
-                throw net::exception( net::get_last_error_code(), "setsockopt");
+                throw net::exception( Y_NET_LAST_ERROR(), "setsockopt");
             }
 #endif
 
 #if defined(Y_WIN)
             if( SOCKET_ERROR == ::setsockopt(sock,level,optname, (const char *)optval, static_cast<int>(optlen) ) )
             {
-                throw net::exception( net::get_last_error_code(), "setsockopt");
+                throw net::exception( Y_NET_LAST_ERROR(), "setsockopt");
             }
 #endif
 
@@ -199,7 +199,7 @@ namespace upsylon
 #if defined(Y_BSD)
             if( ::getsockopt(sock, level, optname, optval, &optLen ) < 0 )
             {
-                throw net::exception( net::get_last_error_code(), "::getsockopt");
+                throw net::exception(Y_NET_LAST_ERROR(), "::getsockopt");
             }
 #endif
 

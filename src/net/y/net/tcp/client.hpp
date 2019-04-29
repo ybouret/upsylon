@@ -20,8 +20,8 @@ namespace upsylon
             explicit tcp_client(const string &xname, const ip_version version = v4); //!< connect by name resolution
             explicit tcp_client(const char   *xname, const ip_version version = v4); //!< connect by name resolution
 
-            size_t send( const void *data, const size_t size ) const; //!< try to read at most size bytes (0:disconnect)
-            size_t recv( void       *data, const size_t size ) const; //!< try to read at most size bytes (0:disconnect)
+            size_t send( const void *data, const size_t size ) const; //!< try to read at most size bytes (0:disconnect), truncated to positive int
+            size_t recv( void       *data, const size_t size ) const; //!< try to read at most size bytes (0:disconnect), truncated to positive int
 
             size_t send_block(const void *data,const size_t size) const; //!< best effort sending
             size_t send_block(const char *data) const;                   //!< best effort sending

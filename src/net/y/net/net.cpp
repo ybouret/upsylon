@@ -126,7 +126,7 @@ namespace upsylon
                 socket_type s = ::socket(proto_family,type,protocol);
                 if( s == invalid_socket )
                 {
-                    const int err = net::get_last_error_code();
+                    const int err = Y_NET_LAST_ERROR();
 
 #if defined(Y_BSD)
                     switch( err )

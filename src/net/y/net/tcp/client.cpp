@@ -38,6 +38,7 @@ namespace upsylon
 
         size_t tcp_client:: send( const void *data, const size_t size ) const
         {
+            Y_GIANT_LOCK();
             assert( !(data==NULL&&size>0) );
 
             const int sz = check_bound<int,size_t>(size);
@@ -67,6 +68,7 @@ namespace upsylon
 
         size_t tcp_client:: recv( void *data, const size_t size ) const
         {
+            Y_GIANT_LOCK();
             const int sz = check_bound<int,size_t>(size);
             
 #if defined(Y_BSD)

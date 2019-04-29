@@ -93,9 +93,9 @@ namespace upsylon
     template <typename OUTPUT,typename INPUT>
     inline OUTPUT check_bound( INPUT x ) throw()
     {
-        typedef typename limit_of<INPUT>::unsigned_type  UNSIGNED_TYPE;
-        const UNSIGNED_TYPE ui = limit_of<INPUT>::positive(x);
-        return core::chkbnd<OUTPUT,UNSIGNED_TYPE>(ui);
+        typedef typename limit_of<INPUT>::unsigned_type  UNSIGNED_INPUT;
+        const UNSIGNED_INPUT ui = limit_of<INPUT>::positive(x);
+        return core::chkbnd<OUTPUT,UNSIGNED_INPUT>(ui);
     }
 
     
