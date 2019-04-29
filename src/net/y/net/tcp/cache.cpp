@@ -19,7 +19,12 @@ namespace upsylon
         tcp_cache_:: ~tcp_cache_() throw()
         {
             reset();
-            memory::global::location().release(*(void **)&buffer, (size_t&)allocated);
+            memset(buffer,0,allocated);
+            {
+                void *ptr = (void *)buffer;
+                memory::global::location().release(ptr, (size_t&)allocated);
+            }
+            buffer=0;
         }
 
         size_t tcp_cache_:: size() const throw() { return content.size; }
