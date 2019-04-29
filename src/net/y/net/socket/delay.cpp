@@ -23,6 +23,7 @@ namespace upsylon
 
         socket_delay:: socket_delay( const double nsec ) throw() :
         usr(),
+        org(),
         ptr(0)
         {
             initialize();
