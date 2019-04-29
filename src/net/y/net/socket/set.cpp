@@ -130,8 +130,28 @@ namespace upsylon
             *target = lhs;
             FD_SET(lhs,ufd);
             assert(FD_ISSET(lhs,ufd));
-
         }
+
+        void socket_set::remove(const bsd_socket &s) throw()
+        {
+            const socket_type lhs = s.key();
+
+            // remove low-level
+            FD_CLR(lhs,ufd);
+            assert( !FD_ISSET(lhs,ufd) );
+
+            // remove high-level
+            size_t            idx = 0;
+            if( core::locate(lhs,sock,size,__compare_socks, idx) )
+            {
+                assert(size>0);
+                socket_type *target = sock+idx;
+                size_t      &length = (size_t&)size;
+                memmove(target,target+1,( (--length)-idx ) * sizeof(socket_type) );
+            }
+            assert( !core::locate(lhs,sock,size,__compare_socks, idx) );
+        }
+
 
 
 

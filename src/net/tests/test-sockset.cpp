@@ -17,16 +17,36 @@ Y_UTEST(sockset)
     net::bsd_socket udp_v6(net::udp,net::v6);
 
     net::bsd_socket *arr[4] = { &tcp_v4 , &tcp_v6, &udp_v4, &udp_v6 };
+    const size_t     num    = sizeof(arr)/sizeof(arr[0]);
 
+    std::cerr << "<i/o for sockset>" << std::endl;
     for(size_t iter=0;iter<128;++iter)
     {
-        alea.shuffle(arr,sizeof(arr)/sizeof(arr[0]));
-        for(size_t i=0;i<sizeof(arr)/sizeof(arr[0]);++i)
+        alea.shuffle(arr,num);
+        for(size_t i=0;i<num;++i)
         {
             sockset.insert(*arr[i]);
         }
+        Y_ASSERT(num==sockset.size);
+
+        alea.shuffle(arr,num);
+        for(size_t i=0;i<num;++i)
+        {
+            sockset.remove(*arr[i]);
+        }
+        Y_ASSERT(sockset.size==0);
+
+        alea.shuffle(arr,num);
+        for(size_t i=0;i<num;++i)
+        {
+            sockset.insert(*arr[i]);
+        }
+        Y_ASSERT(num==sockset.size);
         sockset.free();
+        Y_ASSERT(sockset.size==0);
+
     }
+    std::cerr << "<i/o for sockset/>" << std::endl;
 
 }
 Y_UTEST_DONE()

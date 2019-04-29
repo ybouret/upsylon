@@ -15,14 +15,15 @@ namespace upsylon
         class socket_set : public net_object
         {
         public:
-            static const size_t capacity = FD_SETSIZE;
-            explicit socket_set();
-            virtual ~socket_set() throw();
+            static const size_t capacity = FD_SETSIZE;  //!< system settings
 
-            void insert( const bsd_socket &s );
-            void free() throw();
+            explicit socket_set();                      //!< allocate memory
+            virtual ~socket_set() throw();              //!< destruct
+            void insert( const bsd_socket &s );         //!< insert two levels
+            void remove( const bsd_socket &s ) throw(); //!< failsafe remove
+            void free() throw();                        //!< remove all
             
-            const size_t size;      //!< current number of fd
+            const size_t size;      //!< current number of sockets
             const size_t allocated; //!< allocated bytes
 
         private:
