@@ -46,7 +46,7 @@ namespace upsylon
             //
             // set options
             //__________________________________________________________________
-            void async();                       //!< set non blocking mode
+            void blocking(const bool value);    //!< set blocking value
             void setopt(const int      level,   //
                         const int      optname, //
                         const void    *optval,  //

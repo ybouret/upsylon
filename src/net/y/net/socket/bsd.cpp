@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <sys/file.h>
 #include <errno.h>
+#include "y/exceptions.hpp"
 #endif
 
 namespace upsylon
@@ -62,6 +63,34 @@ namespace upsylon
         }
 
 
+        void bsd_socket:: blocking(const bool value)
+        {
+            Y_NET_VERBOSE(std::cerr << "[network.bsd.socket.blocking(" << value << ")]" << std::endl);
+            Y_GIANT_LOCK();
+            assert( invalid_socket != sock );
+#if defined(Y_WIN)
+            // If iMode == 0, blocking is enabled;
+            // If iMode != 0, non-blocking mode is enabled.
+            u_long iMode = value ? 0 : 1;
+            if( SOCKET_ERROR == ioctlsocket(sock, FIONBIO, &iMode) )
+            {
+                throw net::exception( Y_NET_LAST_ERROR(), "ioctlsocket" );
+            }
+#endif
+
+#if defined(Y_BSD)
+            int flags = fcntl(sock, F_GETFL, 0);
+            if (flags<0) throw libc::exception( errno, "fcntl(GETFL)");
+            if (value)
+                flags &= ~O_NONBLOCK;
+            else
+                flags |= O_NONBLOCK;
+            if( fcntl(sock, F_SETFL, flags) < 0 ) throw libc::exception( errno, "fcntl(SETFL)");
+#endif
+
+        }
+
+#if 0
         void bsd_socket:: async()
         {
             Y_NET_VERBOSE(std::cerr << "[network.bsd.socket.ASYNC]" << std::endl);
@@ -85,6 +114,10 @@ namespace upsylon
             }
 #endif
         }
+#endif
+
+
+
 
         const char * bsd_socket:: sd_text(const shutdown_type how) throw()
         {
