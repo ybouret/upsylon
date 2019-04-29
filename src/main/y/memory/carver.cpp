@@ -222,4 +222,38 @@ namespace upsylon
 
 }
 
+namespace upsylon
+{
+    namespace memory
+    {
+        bool carver:: defragment( void * &addr, size_t &capa, const size_t size) throw()
+        {
+            assert(addr);
+            assert(capa);
+            slice *curr = slice::owner_of(addr); assert(slices.owns(curr));
+
+            for( slice *scan=slices.head; scan != curr; scan=scan->next)
+            {
+                assert(scan->entry<curr->entry);
+                size_t new_capa = size;
+                void  *new_addr = scan->acquire(new_capa);
+                if(new_addr)
+                {
+                    memcpy(new_addr,addr,size);
+                    curr->release(addr,capa); assert(0==addr); assert(0==capa);
+                    addr = new_addr;
+                    capa = new_capa;
+                    return true;
+                }
+            }
+
+
+            return false;
+        }
+
+    }
+
+}
+
+
 

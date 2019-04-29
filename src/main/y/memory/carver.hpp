@@ -32,7 +32,10 @@ namespace upsylon {
 
             //! allocator interface: release
             virtual void  release(void * &p, size_t &n) throw();
-            
+
+            //! try to compact memory
+            bool defragment( void * &addr, size_t &capa, const size_t size ) throw();
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(carver);
 

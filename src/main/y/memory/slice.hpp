@@ -64,9 +64,12 @@ namespace upsylon
             //! check status
             bool is_empty() const throw();
             
-            //! find owner
+            //! find owner, const
             static const slice * owner_of(const void *p) throw();
-            
+
+            //! find owner
+            static slice *owner_of(void *p) throw();
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(slice);
             block *entry; //!< first item

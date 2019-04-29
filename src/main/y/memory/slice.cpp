@@ -240,6 +240,11 @@ namespace upsylon
             return (static_cast<const block *>(p)-1)->from;
         }
 
+        slice * slice:: owner_of(void *p) throw()
+        {
+            assert(p);
+            return (static_cast<block *>(p)-1)->from;
+        }
 
 
         void slice:: __release(block *curr) throw()
