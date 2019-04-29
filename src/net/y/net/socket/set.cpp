@@ -153,7 +153,6 @@ namespace upsylon
             }
             assert( !core::locate(lhs,sock,size,__compare_socks, idx) );
         }
-
         
 
         size_t socket_set:: probe( socket_delay &d )
@@ -203,6 +202,37 @@ namespace upsylon
             {
                 return 0;
             }
+        }
+
+        static inline bool __test_fd_set(const socket_type fd,
+                                         fd_set           *fds) throw()
+        {
+            assert(fds);
+            if( FD_ISSET(fd,fds) )
+            {
+                FD_CLR(fd,fds);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        bool socket_set::is_readable(const bsd_socket &s) throw()
+        {
+            return __test_fd_set(s.key(),rfd);
+        }
+
+
+        bool socket_set::is_writable(const bsd_socket &s) throw()
+        {
+            return __test_fd_set(s.key(),wfd);
+        }
+
+        bool socket_set::is_exception(const bsd_socket &s) throw()
+        {
+            return __test_fd_set(s.key(),xfd);
         }
 
     }

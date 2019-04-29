@@ -10,11 +10,12 @@ namespace upsylon
     namespace net
     {
 
-        
+
         //! wrapper for socket_set
         class socket_set : public net_object
         {
         public:
+
             static const size_t capacity = FD_SETSIZE;  //!< system settings
 
             explicit socket_set();                      //!< allocate memory
@@ -27,6 +28,11 @@ namespace upsylon
             const size_t allocated; //!< allocated bytes
 
             size_t probe( socket_delay &d );
+
+            bool is_readable(  const bsd_socket &s ) throw(); //!< check and clear flag
+            bool is_writable(  const bsd_socket &s ) throw(); //!< check and clear flag
+            bool is_exception( const bsd_socket &s ) throw(); //!< check and clear flag
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(socket_set);
