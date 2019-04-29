@@ -170,3 +170,21 @@ namespace upsylon
 
     
 }
+
+#include "y/net/socket/bsd.hpp"
+
+namespace upsylon
+{
+
+    namespace net
+    {
+
+        void *bsd_socket:: addr2addr(void *ptr) throw()
+        {
+            assert(ptr);
+            return ptr;
+        }
+
+
+    }
+}

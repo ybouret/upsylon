@@ -211,11 +211,7 @@ namespace upsylon
 #endif
         }
 
-        void *bsd_socket:: addr2addr(void *ptr) throw()
-        {
-            assert(ptr);
-            return ptr;
-        }
+       
 
         bool bsd_socket:: test(const int level, const int optname) const
         {
