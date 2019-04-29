@@ -2,7 +2,9 @@
 #include "y/net/socket/set.hpp"
 #include "y/core/locate.hpp"
 
+#if defined(Y_BSD)
 #include <sys/select.h>
+#endif
 
 #if !defined(NDEBUG)
 #include "y/alea.hpp"
