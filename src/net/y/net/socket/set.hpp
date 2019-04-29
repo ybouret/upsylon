@@ -2,8 +2,8 @@
 #ifndef Y_NET_SOCKET_SET_INCLUDED
 #define Y_NET_SOCKET_SET_INCLUDED 1
 
+#include "y/net/socket/delay.hpp"
 #include "y/net/socket/bsd.hpp"
-#include "y/associative/set.hpp"
 
 namespace upsylon
 {
@@ -25,6 +25,8 @@ namespace upsylon
             
             const size_t size;      //!< current number of sockets
             const size_t allocated; //!< allocated bytes
+
+            size_t probe( socket_delay &d );
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(socket_set);

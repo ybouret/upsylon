@@ -9,6 +9,7 @@ namespace upsylon
 
     namespace net
     {
+        
         class socket_delay
         {
         public:
@@ -17,12 +18,15 @@ namespace upsylon
             socket_delay &operator=(const socket_delay &other) throw();
             
             ~socket_delay() throw();
-
             
-            const struct timeval  usr; //!< set by usr
-            const struct timeval  sys; //!< passed to select(...)
+            double   wait_for() const throw();
+            timeval *time_out() throw();
+
+
         private:
-            struct timeval *ptr; //!< sys if delay>=0
+            timeval  usr; //!< set by usr
+            timeval  org; //!< original value
+            timeval *ptr; //!< &usr if delay>=0, NULL otherwise
             void initialize() throw();
             void copy_from( const socket_delay &other ) throw();
         };

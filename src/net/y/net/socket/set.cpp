@@ -152,8 +152,56 @@ namespace upsylon
             assert( !core::locate(lhs,sock,size,__compare_socks, idx) );
         }
 
+        
+
+        size_t socket_set:: probe( socket_delay &d )
+        {
+            Y_NET_VERBOSE(std::cerr << "[network.select(time=" << d.wait_for() << ")]" << std::endl);
+            if(size>0)
+            {
+                Y_GIANT_LOCK();
+
+                const uint8_t *u = (uint8_t *)ufd;
+
+                uint8_t       *r = (uint8_t *)rfd;
+                uint8_t       *w = (uint8_t *)wfd;
+                uint8_t       *x = (uint8_t *)xfd;
+
+                for(size_t i=0;i<sizeof(fd_set);++i)
+                {
+                    r[i] = w[i] = x[i] = u[i];
+                }
 
 
+#if defined(Y_BSD)
+                const socket_type fmx = sock[size-1]+1;
+                int               ans = 0;
+                while( (ans= ::select(fmx, rfd, wfd, xfd, d.time_out()))<0 )
+                {
+                    const int err = Y_NET_LAST_ERROR();
+                    switch(err)
+                    {
+                        case EINTR: continue;
+                        default:    throw net::exception( err, "::select()");
+                    }
+                }
+                return ans;
+#endif
+
+#if defined(Y_WIN)
+                const int ans = ::select(0,rfd, wfd, xfd, d.time_out());
+                if(ans==SOCKET_ERROR)
+                {
+                    throw net::exception( Y_NET_LAST_ERROR(), "::select()");
+                }
+                return ans;
+#endif
+            }
+            else
+            {
+                return 0;
+            }
+        }
 
     }
 }

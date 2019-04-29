@@ -1,5 +1,7 @@
 
 #include "y/net/socket/delay.hpp"
+#include "y/type/bzset.hpp"
+
 #include <cmath>
 
 namespace upsylon
@@ -9,8 +11,8 @@ namespace upsylon
 
         void socket_delay:: initialize() throw()
         {
-            memset( (void*)&usr, 0, sizeof(usr) );
-            memset( (void*)&sys, 0, sizeof(sys) );
+            bzset(usr);
+            bzset(org);
         }
 
 
@@ -21,36 +23,36 @@ namespace upsylon
 
         socket_delay:: socket_delay( const double nsec ) throw() :
         usr(),
-        sys(),
         ptr(0)
         {
             initialize();
             if(nsec<0)
             {
                 // do nothing
-                ( (struct timeval *) &usr )->tv_sec = -1;
+                usr.tv_sec = -1;
             }
             else
             {
-                ptr = (struct timeval *)&sys;
+                ptr = (struct timeval *)&usr;
                 if(nsec>0)
                 {
                     const double nsec_floor           = floor(nsec);
-                    ((struct timeval *)&usr)->tv_sec  = int(nsec_floor);
-                    ((struct timeval *)&usr)->tv_usec = int( floor( (nsec-nsec_floor)*1e6 + 0.5 ) );
+                    usr.tv_sec  = int(nsec_floor);
+                    usr.tv_usec = int( floor( (nsec-nsec_floor)*1e6 + 0.5 ) );
                 }
             }
+            memcpy( &org, &usr, sizeof(timeval) );
         }
 
 
         void socket_delay:: copy_from(const socket_delay &other) throw()
         {
             assert( this != &other );
-            memcpy( (void*)&usr, &other.usr, sizeof(usr) );
-            memcpy( (void*)&sys, &other.sys, sizeof(sys) );
+            memcpy( &usr, &other.usr, sizeof(timeval) );
+            memcpy( &org, &other.org, sizeof(timeval) );
             if(other.ptr)
             {
-                ptr = (struct timeval *)&sys;
+                ptr = (struct timeval *)&usr;
             }
             else
             {
@@ -60,7 +62,7 @@ namespace upsylon
 
         socket_delay:: socket_delay( const socket_delay &other ) throw() :
         usr(),
-        sys(),
+        org(),
         ptr(0)
         {
             copy_from(other);
@@ -74,6 +76,19 @@ namespace upsylon
             }
             return *this;
         }
+
+
+        double socket_delay:: wait_for() const throw()
+        {
+            return double(usr.tv_sec) + 1e-6*double(usr.tv_usec);
+        }
+
+        struct timeval * socket_delay:: time_out()  throw()
+        {
+            memcpy(&usr,&org,sizeof(timeval));
+            return ptr;
+        }
+
 
     }
 }

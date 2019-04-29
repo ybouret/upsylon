@@ -10,7 +10,7 @@ namespace
     static inline
     void show( const net::socket_delay &d )
     {
-        std::cerr << "usr=" << d.usr.tv_sec  << "+1e6*" << d.usr.tv_usec << std::endl;
+        std::cerr << "wait_for=" << d.wait_for() << std::endl;
     }
 }
 
@@ -63,6 +63,15 @@ Y_UTEST(sockset)
     show(d1);
     show(d2);
     show(d3);
+
+    alea.shuffle(arr,num);
+    for(size_t i=0;i<num;++i)
+    {
+        sockset.insert(*arr[i]);
+    }
+
+    const size_t ans = sockset.probe(d2);
+    std::cerr << "probe=" << ans << std::endl;
 
 }
 Y_UTEST_DONE()
