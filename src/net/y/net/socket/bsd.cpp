@@ -74,7 +74,7 @@ namespace upsylon
             u_long iMode = 1;
             if( SOCKET_ERROR == ioctlsocket(sock, FIONBIO, &iMode) )
             {
-                throw net::exception( net::get_last_error_code(), "async/ioctlsocket" );
+                throw net::exception( Y_NET_LAST_ERROR(), "async/ioctlsocket" );
             }
 #endif
 
