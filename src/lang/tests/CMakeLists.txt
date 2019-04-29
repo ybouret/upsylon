@@ -10,7 +10,7 @@ ${data}
 TARGET_LINK_Y(test-lang lang)
 
 SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
-MESSAGE( STATUS " [Working from ${HERE}]" )
+#MESSAGE( STATUS "[Working from ${HERE}]" )
 ENABLE_TESTING()
 
 ADD_TEST(Rules         test-lang rules)
