@@ -1,6 +1,7 @@
 
 #include "y/lang/pattern/matching.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/memory/pooled.hpp"
 
 namespace upsylon
 {

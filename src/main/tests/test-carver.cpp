@@ -137,20 +137,51 @@ Y_UTEST(pooled)
 
     if(P.exists())
     {
-        std::cerr << "pooled memory is ok" << std::endl;
         for(size_t iter=0;iter<8;++iter)
         {
-            fill(blocks,P,5000);
-            const size_t nhalf = blocks.size/2;
-            alea.shuffle(blocks);
-            while( blocks.size>nhalf )
-            {
-                delete blocks.pop_back();
-            }
+            std::cerr << "-- initial fill" << std::endl;
             fill(blocks,P,2048);
             alea.shuffle(blocks);
+            {
+                const size_t nhalf = blocks.size/2;
+                while( blocks.size>nhalf )
+                {
+                    delete blocks.pop_back();
+                }
+            }
+
+            std::cerr << "-- second fill" << std::endl;
+            fill(blocks,P,2048);
+            alea.shuffle(blocks);
+            {
+                const size_t nhalf = blocks.size/2;
+                while( blocks.size>nhalf )
+                {
+                    delete blocks.pop_back();
+                }
+            }
+
+            std::cerr << "-- sorting" << std::endl;
+            merging<block>::sort(blocks, block::compare, NULL);
+            size_t j=0;
+            for(block *blk=blocks.head;blk;blk=blk->next)
+            {
+                assert(blk->addr);
+                assert(blk->capa);
+                assert(blk->size<=blk->capa);
+                if( P.compact(blk->addr, blk->capa, blk->size ) )
+                {
+                    std::cerr << '+';
+                }
+                else
+                {
+                    std::cerr << '-';
+                }
+                if( 0 == (++j&63) ) std::cerr << std::endl;
+            }
+            std::cerr << std::endl;
             blocks.release();
         }
-        }
-        }
-        Y_UTEST_DONE()
+    }
+}
+Y_UTEST_DONE()

@@ -14,9 +14,10 @@ namespace upsylon
         class pooled : public singleton<pooled>, public allocator
         {
         public:
-            virtual void *acquire( size_t &n ); //!< allocator interface: acquire
-            virtual void  release(void * &p, size_t &n) throw(); //!< allocator interface: release
-            
+            virtual void *acquire( size_t &n );                                            //!< allocator interface: acquire
+            virtual void  release(void * &p, size_t &n) throw();                           //!< allocator interface: release
+            bool          compact(void * &addr, size_t &capa, const size_t size ) throw(); //!< try to compact
+
         private:
             explicit pooled() throw();
             virtual ~pooled() throw();

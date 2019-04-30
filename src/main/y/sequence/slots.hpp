@@ -2,7 +2,6 @@
 #ifndef Y_SEQUENCE_SLOTS_INCLUDED
 #define Y_SEQUENCE_SLOTS_INCLUDED 1
 
-#include "y/memory/pooled.hpp"
 #include "y/dynamic.hpp"
 #include "y/type/args.hpp"
 

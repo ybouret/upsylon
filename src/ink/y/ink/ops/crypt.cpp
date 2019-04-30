@@ -1,5 +1,6 @@
 
 #include "y/ink/ops/crypt.hpp"
+#include "y/memory/pooled.hpp"
 
 namespace upsylon
 {

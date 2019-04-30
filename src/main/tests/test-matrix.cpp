@@ -91,7 +91,6 @@ Y_UTEST(matrix)
     do_test<mpn>();
     do_test<mpz>();
     do_test<mpq>();
-
 }
 Y_UTEST_DONE()
 

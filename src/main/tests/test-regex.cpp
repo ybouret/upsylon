@@ -1,4 +1,6 @@
 #include "y/lang/pattern/compiler.hpp"
+#include "y/lang/pattern/dictionary.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/ios/icstream.hpp"

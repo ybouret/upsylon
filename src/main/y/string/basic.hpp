@@ -31,11 +31,11 @@ namespace upsylon
     }
 
     //! sanity check of a core string
-#define Y_CORE_STRING_CHECK(S)         \
-assert( (S).addr_ );                    \
-assert( (S).items>0 );                   \
-assert( (S).bytes>=(S).items*sizeof(T) ); \
-assert( (S).items-1==(S).maxi_ );          \
+#define Y_CORE_STRING_CHECK(S)              \
+assert( (S).addr_ );                        \
+assert( (S).items>0 );                      \
+assert( (S).bytes>=(S).items*sizeof(T) );   \
+assert( (S).items-1==(S).maxi_ );           \
 assert( (S).size_<=(S).maxi_ );             \
 assert( 0 == (S).addr_[ (S).size_ ] )
 

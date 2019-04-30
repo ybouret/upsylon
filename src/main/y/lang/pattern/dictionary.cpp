@@ -1,3 +1,4 @@
+#include "y/lang/pattern/dictionary.hpp"
 #include "y/lang/pattern/compiler.hpp"
 #include "y/exception.hpp"
 

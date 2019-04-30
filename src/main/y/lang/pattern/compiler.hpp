@@ -2,12 +2,13 @@
 #ifndef Y_LANG_PATTERN_COMPILER_INCLUDED
 #define Y_LANG_PATTERN_COMPILER_INCLUDED 1
 
-#include "y/lang/pattern/dictionary.hpp"
+#include "y/lang/pattern.hpp"
 
 namespace upsylon
 {
     namespace Lang
     {
+        class Dictionary;
         class RXCompiler; //!< forward declaration to avoid class collision
 
         //! compile a regular expression

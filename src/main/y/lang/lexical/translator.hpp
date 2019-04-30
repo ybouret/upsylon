@@ -3,6 +3,7 @@
 #define Y_LANG_LEXICAL_TRANSLATOR_INCLUDED 1
 
 #include "y/lang/lexical/plugin.hpp"
+#include "y/lang/pattern/dictionary.hpp"
 #include "y/associative/set.hpp"
 #include "y/core/addr-list.hpp"
 

@@ -1,5 +1,6 @@
 
 #include "y/lang/pattern/compiler.hpp"
+#include "y/lang/pattern/dictionary.hpp"
 #include "y/lang/pattern/logic.hpp"
 #include "y/lang/pattern/basic.hpp"
 #include "y/lang/pattern/joker.hpp"

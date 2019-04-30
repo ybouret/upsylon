@@ -49,6 +49,14 @@ namespace upsylon
             mgr.release(p,n);
         }
 
+        bool  pooled:: compact(void * &addr, size_t &capa, const size_t size ) throw()
+        {
+            static carver &crv = * __carver();
+            Y_LOCK(access);
+            return crv.compact(addr,capa,size);
+        }
+
+
     }
 }
 
