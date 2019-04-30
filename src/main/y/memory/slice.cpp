@@ -194,26 +194,24 @@ namespace upsylon
             return __acquire(n,true);
         }
 
-        void * slice:: receive( const void *p, size_t &n ) throw()
+        slice * slice:: receive( void * &addr, size_t &capa, const size_t size ) throw()
         {
-            assert(p!=NULL);
-            assert(n>0);
-            const size_t m = n;
-            uint8_t     *q = static_cast<uint8_t *>(__acquire(n,false));
-            if( q )
+            assert(size<=capa);
+            size_t  new_capa = size;
+            void   *new_addr = __acquire(new_capa,false);
+            if( new_addr )
             {
-                // copy memory
-                assert(n>=m);
-                memcpy(q,p,m);
-                memset(q+m,0,n-m);
-                return q;
+                char  *buff = (char *)new_addr;
+                memcpy(buff,addr,size);
+                memset(buff+size,0,new_capa-size);
+                return slice::release(addr,capa);
             }
             else
             {
-                // not enough room
-                return 0;
+                return NULL;
             }
         }
+
 
     }
 }

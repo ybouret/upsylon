@@ -50,17 +50,14 @@ namespace upsylon
              otherwise, n is aligned to block_size, and memory is zeroed
              */
             void *      acquire(size_t &n) throw();
-            
-            //! try to receive n bytes
-            /**
-             if no block is available or big enough, return NULL,
-             otherwise, n is aligned to block_size, and copy memory
-             */
-            void *      receive( const void *p, size_t &n) throw();
-            
+
+            //! try to receive memory, copied. Original slice is returned
+            slice * receive( void * &addr, size_t &capa, const size_t size ) throw();
+
             //! release the memory
             static slice *release(void * &p, size_t &n) throw();
-            
+
+
             //! check status
             bool is_empty() const throw();
             

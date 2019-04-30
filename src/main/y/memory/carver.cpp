@@ -235,14 +235,10 @@ namespace upsylon
             for( slice *scan=slices.head; scan != curr; scan=scan->next)
             {
                 assert(scan->entry<curr->entry);
-                size_t new_capa = size;
-                void  *new_addr = scan->acquire(new_capa);
-                if(new_addr)
+                slice *stmp = scan->receive(addr,capa,size);
+                if(stmp)
                 {
-                    memcpy(new_addr,addr,size);
-                    curr->release(addr,capa); assert(0==addr); assert(0==capa);
-                    addr = new_addr;
-                    capa = new_capa;
+                    assert(stmp==curr);
                     return true;
                 }
             }
