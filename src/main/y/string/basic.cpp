@@ -60,6 +60,21 @@ namespace upsylon
             return fp.emit_block(addr_,size_);
         }
 
+        template <>
+        bool string<char>:: compact() throw()
+        {
+            static  memory::pooled &mgr = memory::pooled::location();
+
+            if(mgr.compact_as(addr_,items,bytes,size_+1))
+            {
+                maxi_ = items - 1;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
 
     }

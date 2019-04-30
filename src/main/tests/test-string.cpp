@@ -1,9 +1,32 @@
 #include "support.hpp"
 #include "y/utest/run.hpp"
+#include "y/core/node.hpp"
+#include "y/core/list.hpp"
+#include "y/sort/merge.hpp"
 
 using namespace upsylon;
 
 #define __DISP(X) std::cerr << #X "='" << X << "'" << std::endl
+
+namespace
+{
+    class s_node : public core::inode<s_node>
+    {
+    public:
+        string s;
+        explicit s_node(const string &_) : core::inode<s_node>(), s(_) {}
+        virtual ~s_node() throw() {}
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(s_node);
+    };
+
+    static inline int compare_strings_by_length( const s_node *lhs, const s_node *rhs, void *)
+    {
+        return comparison::increasing(lhs->s.size(),rhs->s.size());
+    }
+
+}
 
 Y_UTEST(string)
 {
@@ -76,8 +99,45 @@ Y_UTEST(string)
             {
                 s.skip( alea.leq(10) );
             }
+            if(s.size())
             std::cerr << s << std::endl;
         }
+    }
+
+    std::cerr << "compacting..." << std::endl;
+    {
+        core::list_of_cpp<s_node> s_list;
+
+        while( s_list.size <= 4000 )
+        {
+            const string tmp = support::get<string>();
+            s_list.push_back( new s_node(tmp) );
+        }
+        alea.shuffle(s_list);
+        {
+            const size_t nh = s_list.size/2;
+            while(s_list.size>nh)
+            {
+                delete s_list.pop_back();
+            }
+        }
+        merging<s_node>::sort(s_list, compare_strings_by_length, NULL);
+        size_t j = 0;
+        for(s_node *node = s_list.head; node; node=node->next )
+        {
+            const uint32_t str32 = crc32( *(node->s), node->s.size()+1 );
+            if( node->s.compact() )
+            {
+                Y_ASSERT( crc32( *(node->s), node->s.size()+1 ) == str32 );
+                std::cerr << '+';
+            }
+            else
+            {
+                std::cerr << '-';
+            }
+            if( 0 == (++j&63) ) std::cerr << std::endl;
+        }
+        std::cerr << std::endl;
     }
 
 }

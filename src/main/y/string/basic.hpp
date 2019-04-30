@@ -431,6 +431,8 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
             //! write
             virtual size_t serialize( ios::ostream &fp ) const;
 
+            //! compact in memory
+            bool compact() throw();
 
         private:
             T     *addr_;
