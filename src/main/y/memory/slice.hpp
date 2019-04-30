@@ -51,12 +51,11 @@ namespace upsylon
              */
             void *      acquire(size_t &n) throw();
 
-            //! try to receive memory, copied. Original slice is returned
-            slice * receive( void * &addr, size_t &capa, const size_t size ) throw();
+            //! try to receive memory from a slice, may be this. Original owner is returned.
+            slice *     receive( void * &addr, size_t &capa, const size_t size ) throw();
 
             //! release the memory
             static slice *release(void * &p, size_t &n) throw();
-
 
             //! check status
             bool is_empty() const throw();
