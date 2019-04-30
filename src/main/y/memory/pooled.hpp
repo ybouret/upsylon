@@ -18,6 +18,30 @@ namespace upsylon
             virtual void  release(void * &p, size_t &n) throw();                           //!< allocator interface: release
             bool          compact(void * &addr, size_t &capa, const size_t size ) throw(); //!< try to compact
 
+            //! compact with high-level interface
+            template <typename T>
+            inline bool   compact_as( T * &addr, size_t &count, size_t &bytes, const size_t num ) throw()
+            {
+                assert(addr);
+                assert(count);
+                assert(bytes);
+                assert(bytes>=count*sizeof(T));
+                assert(num<=count);
+                void  *p = static_cast<void *>(addr);
+                size_t n = bytes;
+                if( compact(p,n,num*sizeof(T)) )
+                {
+                    addr   = static_cast<T*>(p);
+                    bytes  = n;
+                    count  = bytes/sizeof(T);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+                
+            }
         private:
             explicit pooled() throw();
             virtual ~pooled() throw();
