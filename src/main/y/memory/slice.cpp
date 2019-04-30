@@ -197,14 +197,19 @@ namespace upsylon
         slice * slice:: receive( void * &addr, size_t &capa, const size_t size ) throw()
         {
             assert(size<=capa);
-            size_t  new_capa = size;
+            size_t  new_capa = max_of<size_t>(size,1);
             void   *new_addr = __acquire(new_capa,false);
             if( new_addr )
             {
                 char  *buff = (char *)new_addr;
                 memcpy(buff,addr,size);
                 memset(buff+size,0,new_capa-size);
-                return slice::release(addr,capa);
+                slice *curr =  slice::release(addr,capa);
+                assert(0==addr);
+                assert(0==capa);
+                addr = new_addr;
+                capa = new_capa;
+                return curr;
             }
             else
             {

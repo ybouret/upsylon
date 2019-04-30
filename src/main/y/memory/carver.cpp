@@ -226,12 +226,13 @@ namespace upsylon
 {
     namespace memory
     {
-        bool carver:: defragment( void * &addr, size_t &capa, const size_t size) throw()
+        bool carver:: compact( void * &addr, size_t &capa, const size_t size) throw()
         {
             assert(addr);
             assert(capa);
-            slice *curr = slice::owner_of(addr); assert(slices.owns(curr));
+            assert(size<=capa);
 
+            slice      *curr = slice::owner_of(addr); assert(slices.owns(curr));
             for( slice *scan=slices.head; scan != curr; scan=scan->next)
             {
                 assert(scan->entry<curr->entry);

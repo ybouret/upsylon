@@ -32,7 +32,7 @@ namespace
 
         static inline int compare( const block *lhs, const block *rhs, void * )
         {
-            return comparison::increasing(lhs->capa,rhs->capa);
+            return comparison::increasing(lhs->size,rhs->size);
         }
 
     private:
