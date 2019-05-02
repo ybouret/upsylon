@@ -4,6 +4,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
 #include "support.hpp"
+#include "y/memory/pooled.hpp"
 
 using namespace upsylon;
 
@@ -23,7 +24,9 @@ Y_UTEST(string_defrag)
 {
     const size_t nv = 20;
     const size_t nl = 30;
-    vector<string> vs(nv,as_capacity);
+    vector<string>                vs(nv,as_capacity);
+    vector<string,memory::pooled> ps(nv,as_capacity);
+
     list<string>   ls(nl,as_capacity);
 
     {
@@ -47,14 +50,24 @@ Y_UTEST(string_defrag)
             vs.push_back(tmp);
         }
 
+        for(size_t i=0;i<nv;++i)
+        {
+            const string tmp = support::get<string>();
+            ps.push_back(tmp);
+        }
+
     }
 
     string_defrag SD;
+
     do_defrag(SD,vs);
     vs.release();
+
     do_defrag(SD,ls);
     ls.release();
 
+    do_defrag(SD,ps);
+    ps.release();
 
 
 }
