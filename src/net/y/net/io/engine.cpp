@@ -9,7 +9,9 @@ namespace upsylon
         {
         }
 
-        io_engine:: io_engine() : sockset()
+        io_engine:: io_engine() :
+        sockset(),
+        tcp_servers()
         {
         }
 
