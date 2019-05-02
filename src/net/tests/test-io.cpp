@@ -11,6 +11,11 @@ Y_UTEST(io)
     {
         net::ipv4 ip( net::ip_addr_any, 12000 );
         engine.start( new net::tcp_server_protocol(ip) );
+
+        net::socket_delay d = -1;
+        engine.cycle(d);
+
+
     }
 
 }

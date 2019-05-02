@@ -12,7 +12,8 @@ namespace upsylon
     namespace net
     {
         typedef set<socket_type,tcp_server_proto,socket_hasher> tcp_server_proto_db;
-
+        typedef tcp_server_proto_db::iterator                   tcp_server_iterator;
+        
         class io_engine : public net_object
         {
         public:
@@ -20,6 +21,10 @@ namespace upsylon
             virtual ~io_engine() throw();
 
             void start( tcp_server_protocol *srv );
+
+            bool cycle( socket_delay &d );
+
+
 
         private:
             socket_set          sockset;
