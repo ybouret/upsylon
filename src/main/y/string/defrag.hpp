@@ -8,24 +8,26 @@
 namespace upsylon
 {
 
+    //! strings defragmenter
     class string_defrag : public releasable
     {
     public:
-        typedef core::addr_node<string>   s_node;
-        typedef core::addr_list<string>   s_list;
-        typedef core::pool_of_cpp<s_node> s_pool;
+        typedef core::addr_node<string>   s_node; //!< alias
+        typedef core::addr_list<string>   s_list; //!< alias
+        typedef core::pool_of_cpp<s_node> s_pool; //!< alias
 
-        explicit string_defrag() throw();
-        virtual ~string_defrag() throw();
+        explicit string_defrag() throw(); //!< setup
+        virtual ~string_defrag() throw(); //!< cleanu
 
-        void         record( string &s );
-        void         remove( string &s ) throw();
-        void         free() throw();
-        virtual void release() throw();
+        void         record( string &s );         //!< record a string to be defragged
+        void         remove( string &s ) throw(); //!< remove a string
+        void         free() throw();              //!< drop all the work to do
+        virtual void release() throw();           //!< free() and release mempry
 
         size_t       one_cycle() throw(); //!< call a direct cycle upon the recorded strings
         size_t       cycle() throw();     //!< order string, call one_cycle repeatedly
 
+        //! free(), record all n strings, cycle()
         template <typename ITERATOR>
         size_t cycle_on( ITERATOR it, size_t n )
         {
@@ -34,6 +36,7 @@ namespace upsylon
             return cycle();
         }
 
+        //! free(), record all sequence, cycle()
         template <typename SEQUENCE>
         size_t cycle_on( SEQUENCE &seq )
         {

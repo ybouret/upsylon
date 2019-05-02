@@ -11,20 +11,21 @@ namespace upsylon
 {
     namespace net
     {
-        typedef set<socket_type,tcp_server_proto,socket_hasher> tcp_server_proto_db;
-        typedef tcp_server_proto_db::iterator                   tcp_server_iterator;
+        typedef set<socket_type,tcp_server_proto,socket_hasher> tcp_server_proto_db; //!< alias
+        typedef tcp_server_proto_db::iterator                   tcp_server_iterator; //!< alias
         
+        //! handle connections
         class io_engine : public net_object
         {
         public:
-            explicit io_engine();
-            virtual ~io_engine() throw();
+            explicit io_engine();         //!< setup
+            virtual ~io_engine() throw(); //!< cleanup
 
+            //! register a (taken care of) tcp_server
             void start( tcp_server_protocol *srv );
 
+            //! perform a cycle, return true if an activity is detected before timeout
             bool cycle( socket_delay &d );
-
-
 
         private:
             socket_set          sockset;

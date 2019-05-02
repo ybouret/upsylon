@@ -17,6 +17,7 @@ namespace upsylon
             explicit socket_hasher() throw(); //!< setup
             virtual ~socket_hasher() throw(); //!< cleanup
 
+            //! return a hash key for a socket_type
             size_t operator()( const socket_type &s ) throw();
 
         private:

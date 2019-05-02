@@ -8,6 +8,11 @@ namespace upsylon
         namespace Fit
         {
 
+            bool & Rescale:: use_coeff() throw() { return vars(used,_coeff); }
+            bool & Rescale:: use_scale() throw() { return vars(used,_scale); }
+            bool & Rescale:: use_shift() throw() { return vars(used,_shift); }
+
+            
             Rescale:: ~Rescale() throw()
             {
             }
