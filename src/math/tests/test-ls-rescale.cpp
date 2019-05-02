@@ -33,6 +33,24 @@ Y_UTEST(ls_rescale)
         vec.Y[i] = f1d( vec.X[i] );
     }
 
+    Fit::Sample<double> sample(vec.X,vec.Y,vec.Yf);
+
+    numeric<double>::function F = cfunctor(f1d);
+    Fit::Rescaler<numeric<double>::function> rs( F );
+
+
+    Fit::Variables &vars = sample.variables;
+    rs.declare( sample.variables );
+    const size_t nv = vars.size();
+    vector<double> aorg(nv,0);
+    vector<double> aerr(nv,0);
+    vector<bool>   used(nv,false);
+
+    rs.initialize(aorg,vars);
+
+
+
+
     
 }
 Y_UTEST_DONE()

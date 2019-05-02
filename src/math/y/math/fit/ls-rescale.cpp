@@ -16,6 +16,10 @@ namespace upsylon
             Y_LS_RESCALER(VariableShift);
             Y_LS_RESCALER(VariableScale);
 
+            void RescalerInfo:: declare( Variables &vars )
+            {
+                vars << FunctionCoeff << VariableScale << VariableShift;
+            }
         }
     }
 }

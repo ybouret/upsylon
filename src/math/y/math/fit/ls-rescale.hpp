@@ -22,6 +22,8 @@ namespace upsylon
                 static const char VariableScale[]; //!< "VariableScale"
                 static const char VariableShift[]; //!< "VariableShift";
 
+                void declare( Variables &vars );
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(RescalerInfo);
             };
@@ -51,6 +53,13 @@ namespace upsylon
                     return  coeff * F( scale*(value-shift) );
                 }
 
+                template <typename T>
+                inline void initialize(array<T> &aorg, const Variables &vars )
+                {
+                    vars(aorg,FunctionCoeff) = 1;
+                    vars(aorg,VariableScale) = 1;
+                    vars(aorg,VariableShift) = 0;
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Rescaler);
