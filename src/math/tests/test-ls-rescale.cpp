@@ -45,21 +45,21 @@ Y_UTEST(ls_rescale)
 
     rs.use_coeff() = true;
     
-    if(!rs.update(ls,sample,g1d))
+    if(!rs.update(ls,sample,g1d,Fit::Rescale::StartWithIdentity))
     {
         throw exception("no rescaling");
     }
     rs.vars.display(std::cerr,rs.values(),rs.errors());
 
     rs.use_scale() = true;
-    if(!rs.update(ls,sample,g1d))
+    if(!rs.update(ls,sample,g1d,Fit::Rescale::WouldTakeNextStep))
     {
         throw exception("no rescaling");
     }
     rs.vars.display(std::cerr,rs.values(),rs.errors());
 
     rs.use_shift() = true;
-    if(!rs.update(ls,sample,g1d))
+    if(!rs.update(ls,sample,g1d,Fit::Rescale::WouldTakeNextStep))
     {
         throw exception("no rescaling");
     }

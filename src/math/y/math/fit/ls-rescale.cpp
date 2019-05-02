@@ -8,15 +8,15 @@ namespace upsylon
         namespace Fit
         {
 
-            RescalingInfo:: ~RescalingInfo() throw()
+            Rescale:: ~Rescale() throw()
             {
             }
 
-            const char RescalingInfo::_coeff[] = "coeff";
-            const char RescalingInfo::_scale[] = "scale";
-            const char RescalingInfo::_shift[] = "shift";
+            const char Rescale::_coeff[] = "coeff";
+            const char Rescale::_scale[] = "scale";
+            const char Rescale::_shift[] = "shift";
 
-            RescalingInfo:: RescalingInfo() :
+            Rescale:: Rescale() :
             vars(NVAR),
             used(3,false)
             {
