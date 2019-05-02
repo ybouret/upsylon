@@ -106,7 +106,7 @@ namespace upsylon {
 
             }
 
-            static const at_exit::longevity life_time = memory::pooled::life_time - 1;
+            static const at_exit::longevity life_time = longevity_for::system_env;
         };
 
     }

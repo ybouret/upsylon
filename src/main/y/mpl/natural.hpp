@@ -38,10 +38,10 @@ namespace upsylon
         class manager : public singleton<manager>, public memory::allocator
         {
         public:
-            virtual void *acquire( size_t &n );                   //!< allocator interface
-            virtual void release(void * &p, size_t &n ) throw();  //!< allocator interface
-            uint8_t *  __acquire(size_t &n);                      //!< specialized acquire
-            void       __release(uint8_t * &p,size_t &n) throw(); //!< specialized release
+            virtual void *acquire( size_t &n );                    //!< allocator interface
+            virtual void  release(void * &p, size_t &n ) throw();  //!< allocator interface
+            uint8_t *   __acquire(size_t &n);                      //!< specialized acquire
+            void        __release(uint8_t * &p,size_t &n) throw(); //!< specialized release
 
         private:
             explicit manager();

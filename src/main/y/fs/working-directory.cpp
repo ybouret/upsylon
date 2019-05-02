@@ -19,6 +19,7 @@
 namespace upsylon
 {
 	
+    const at_exit::longevity working_directory::life_time = longevity_for::memory_pooled-1;
 
     working_directory:: working_directory() throw()
     {

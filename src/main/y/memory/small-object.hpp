@@ -5,6 +5,7 @@
 #include "y/memory/blocks.hpp"
 #include "y/memory/global.hpp"
 #include "y/concurrent/singleton.hpp"
+#include "y/longevities.hpp"
 
 namespace upsylon
 {
@@ -172,7 +173,7 @@ namespace upsylon
                 inline virtual ~provider() throw() {}
 
             public:
-                static const at_exit::longevity life_time = global::life_time - 1;
+                static const at_exit::longevity life_time = longevity_for::memory_object;
             };
 
         public:

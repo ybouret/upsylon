@@ -8,6 +8,8 @@ namespace upsylon
     namespace memory
     {
 
+        const at_exit::longevity  pooled:: life_time =  longevity_for::memory_pooled;
+        
         namespace
         {
             static uint64_t        ___carver[ Y_U64_FOR_ITEM(carver) ] = { 0 };

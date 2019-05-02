@@ -24,7 +24,7 @@ namespace upsylon
         virtual ~local_fs() throw();
         friend class singleton<local_fs>;
         Y_DISABLE_COPY_AND_ASSIGN(local_fs);
-        static const at_exit::longevity life_time = object::life_time - 2; // TODO: check this value
+        static const at_exit::longevity life_time;
     };
 
     

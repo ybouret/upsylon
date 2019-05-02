@@ -37,7 +37,7 @@ namespace upsylon
         Y_DISABLE_COPY_AND_ASSIGN(working_directory);
         friend class singleton<working_directory>;
         
-        static const at_exit::longevity life_time = object::life_time - 9; // TODO: check this value
+        static const at_exit::longevity life_time; // TODO: check this value
     };
 
     //! avoid code deleting...

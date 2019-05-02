@@ -4,7 +4,6 @@
 
 #include "y/memory/allocator.hpp"
 #include "y/concurrent/singleton.hpp"
-#include "y/type/ints.hpp"
 
 namespace upsylon
 {
@@ -50,7 +49,8 @@ namespace upsylon
             
         public:
             //! come right before object::life_time
-            static const at_exit::longevity life_time = limit_of<at_exit::longevity>::maximum - 2;
+            static  const at_exit::longevity  life_time;
+
         };
     }
 }
