@@ -1,4 +1,5 @@
 #include "y/net/socket/bsd.hpp"
+#include "y/net/socket/hasher.hpp"
 #include "y/net/net.hpp"
 #include "y/utest/run.hpp"
 
@@ -19,17 +20,12 @@ Y_UTEST(bsd)
     net::bsd_socket tcp_v6(net::tcp,net::v6); display(tcp_v6);
     net::bsd_socket udp_v4(net::udp,net::v4); display(udp_v4);
     net::bsd_socket udp_v6(net::udp,net::v6); display(udp_v6);
-
-    const uint16_t w = 0x1234;
-    union
-    {
-        uint32_t dw;
-        uint16_t w;
-    } tmp = { 0 };
-    tmp.w = swap_le(w);
-    const uint32_t dw = swap_le(tmp.dw);
-    std::cerr << std::hex << "w=" << w << ", dw=" << dw << std::dec << std::endl;
-
+    
+    net::socket_hasher H;
+    
+    
+   
+    
 }
 Y_UTEST_DONE()
 
