@@ -12,7 +12,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(tcp_server);
     Y_UTEST(info);
     Y_UTEST(sockset);
-
+    Y_UTEST(io);
 }
 Y_UTEST_EXEC()
 
