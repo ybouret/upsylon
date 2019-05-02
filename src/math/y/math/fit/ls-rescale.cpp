@@ -7,19 +7,25 @@ namespace upsylon
     {
         namespace Fit
         {
-            RescalerInfo::  RescalerInfo() throw() {}
-            RescalerInfo:: ~RescalerInfo() throw() {}
 
-#define Y_LS_RESCALER(FIELD) const char RescalerInfo:: FIELD[] = #FIELD
-
-            Y_LS_RESCALER(FunctionCoeff);
-            Y_LS_RESCALER(VariableShift);
-            Y_LS_RESCALER(VariableScale);
-
-            void RescalerInfo:: declare( Variables &vars )
+            RescalingInfo:: ~RescalingInfo() throw()
             {
-                vars << FunctionCoeff << VariableScale << VariableShift;
             }
+
+            const char RescalingInfo::_coeff[] = "coeff";
+            const char RescalingInfo::_scale[] = "scale";
+            const char RescalingInfo::_shift[] = "shift";
+
+            RescalingInfo:: RescalingInfo() :
+            vars(NVAR),
+            used(3,false)
+            {
+                Variables &_ = (Variables &)vars;
+                _ << _coeff << _scale << _shift;
+                assert(NVAR==vars.size());
+            }
+
+            
         }
     }
 }

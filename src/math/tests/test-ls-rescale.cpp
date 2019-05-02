@@ -12,7 +12,12 @@ namespace
 
     double f1d( double x )
     {
-        return 0.1 * sin( 3 * x + 0.1 );
+        return 0.1 * sin( 3 * (x + 0.1) );
+    }
+
+    double g1d( double x )
+    {
+        return sin(x);
     }
 
 }
@@ -35,21 +40,30 @@ Y_UTEST(ls_rescale)
 
     Fit::Sample<double> sample(vec.X,vec.Y,vec.Yf);
 
-    numeric<double>::function F = cfunctor(f1d);
-    Fit::Rescaler<numeric<double>::function> rs( F );
+    Fit::Rescaling<double>    rs;
+    Fit::LeastSquares<double> ls;
 
-
-    Fit::Variables &vars = sample.variables;
-    rs.declare( sample.variables );
-    const size_t nv = vars.size();
-    vector<double> aorg(nv,0);
-    vector<double> aerr(nv,0);
-    vector<bool>   used(nv,false);
-
-    rs.initialize(aorg,vars);
+    rs.use_coeff() = true;
     
+    if(!rs.update(ls,sample,g1d))
+    {
+        throw exception("no rescaling");
+    }
+    rs.vars.display(std::cerr,rs.values(),rs.errors());
 
+    rs.use_scale() = true;
+    if(!rs.update(ls,sample,g1d))
+    {
+        throw exception("no rescaling");
+    }
+    rs.vars.display(std::cerr,rs.values(),rs.errors());
 
+    rs.use_shift() = true;
+    if(!rs.update(ls,sample,g1d))
+    {
+        throw exception("no rescaling");
+    }
+    rs.vars.display(std::cerr,rs.values(),rs.errors());
 
     
 }
