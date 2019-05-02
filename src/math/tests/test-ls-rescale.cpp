@@ -47,7 +47,7 @@ Y_UTEST(ls_rescale)
     vector<bool>   used(nv,false);
 
     rs.initialize(aorg,vars);
-
+    
 
 
 
