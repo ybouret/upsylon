@@ -12,8 +12,8 @@ namespace upsylon
 {
     namespace net
     {
-        typedef memory::pooled                                   io_memory;
-        typedef network::hasher                                  io_hasher;
+        typedef memory::pooled                                   io_memory; //!< internal memory model
+        typedef network::hasher                                  io_hasher; //!< copy socket hkey
 
         typedef set<size_t,tcp_server_proto,io_hasher,io_memory> tcp_server_proto_db; //!< alias
         typedef tcp_server_proto_db::iterator                    tcp_server_iterator; //!< alias
@@ -26,8 +26,8 @@ namespace upsylon
         class io_engine : public net_object
         {
         public:
-            static const size_t tcp_servers_init = 2;
-            static const size_t tcp_clients_init = 2;
+            static const size_t tcp_servers_init = 2; //!< default capacity
+            static const size_t tcp_clients_init = 2; //!< default capacity
 
             explicit io_engine();         //!< setup
             virtual ~io_engine() throw(); //!< cleanup

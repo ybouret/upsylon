@@ -27,7 +27,7 @@ namespace upsylon
             const size_t size;      //!< current number of sockets
             const size_t allocated; //!< allocated bytes
 
-            size_t probe( socket_delay &d );
+            size_t probe( socket_delay &d ); //!< call select
 
             bool is_readable(  const bsd_socket &s ) throw(); //!< check and clear flag
             bool is_writable(  const bsd_socket &s ) throw(); //!< check and clear flag

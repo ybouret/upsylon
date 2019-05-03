@@ -187,15 +187,13 @@ namespace upsylon
 
         void bsd_socket:: setopt(const int level, const int optname, const void *optval, const unsigned optlen)
         {
-            Y_NET_VERBOSE(std::cerr << "[network.setopt]" << std::endl);
+            Y_NET_VERBOSE(std::cerr << "[network.setopt(" << sockopt_level(level) << "," << sockopt_name(optname) << ")]" << std::endl);
             Y_GIANT_LOCK();
             assert(invalid_socket!=sock);
             if(optval==0||optlen<=0)
             {
                 throw upsylon::exception("bsd_socket::setopt(invalid optval/optlen");
             }
-
-            //__show_opt(std::cerr<<"setopt:[",optval,optlen) << "]" << std::endl;
 
 #if defined(Y_BSD)
             if( ::setsockopt(sock, level, optname, optval, static_cast<socklen_t>(optlen) ) < 0 )
@@ -222,7 +220,7 @@ namespace upsylon
                                  void          *optval,
                                  const unsigned optlen) const
         {
-            Y_NET_VERBOSE(std::cerr << "[network.getopt]" << std::endl);
+            Y_NET_VERBOSE(std::cerr << "[network.getopt(" << sockopt_level(level) << "," << sockopt_name(optname) << ")]" << std::endl);
             Y_GIANT_LOCK();
             assert(invalid_socket!=sock);
             if(optval==0||optlen<=0)
@@ -265,6 +263,33 @@ namespace upsylon
             return hkey;
         }
 
+#define Y_NET_SOCKOPT(ID) case ID: return #ID
+        
+        const char *bsd_socket:: sockopt_level(const int level)  throw()
+        {
+            switch(level)
+            {
+                    Y_NET_SOCKOPT(SOL_SOCKET);
+                default:
+                    break;
+            }
+            return "UNKNOWN_LEVEL";
+        }
+        
+        const char *bsd_socket:: sockopt_name(const int optname)  throw()
+        {
+            switch(optname)
+            {
+                    Y_NET_SOCKOPT(SO_REUSEADDR);
+                    Y_NET_SOCKOPT(SO_SNDBUF);
+                    Y_NET_SOCKOPT(SO_RCVBUF);
+                default:
+                    break;
+            }
+            return "UNKNOWN_NAME";
+        }
+        
+        
     }
 
 }

@@ -8,7 +8,9 @@ static inline void display( net::bsd_socket &s )
 {
 
     std::cerr << "\t<SOCKET>" << std::endl;
-    std::cerr << "\tsocket: sndbuf=" << s.sndbuf() << " | rcvbuf=" << s.rcvbuf() << std::endl;
+    const int sb = s.sndbuf();
+    const int rb = s.rcvbuf();
+    std::cerr << "\tsocket: sndbuf=" << sb << " | rcvbuf=" << rb << std::endl;
     s.blocking(true);
     s.blocking(false);
     std::cerr << "\t<SOCKET/>" << std::endl << std::endl;

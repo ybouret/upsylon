@@ -44,6 +44,13 @@ namespace upsylon
 
             //__________________________________________________________________
             //
+            // options names for debug
+            //__________________________________________________________________
+            static const char *sockopt_level(const int level)  throw(); //!< socket option level text
+            static const char *sockopt_name(const int optname) throw(); //!< socket option name
+            
+            //__________________________________________________________________
+            //
             // set options
             //__________________________________________________________________
             void blocking(const bool value);    //!< set blocking value
@@ -90,7 +97,7 @@ namespace upsylon
             //
             // handling
             //__________________________________________________________________
-            socket_type     fd() const throw();
+            socket_type     fd() const throw();  //!< (pseudo) file descriptor
             const size_t  & key() const throw(); //!< get key for set
 
         protected:

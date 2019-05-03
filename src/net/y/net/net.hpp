@@ -45,9 +45,9 @@ namespace upsylon
         class hasher
         {
         public:
-            inline  hasher() throw() {}
-            inline ~hasher() throw() {}
-            inline size_t operator()(const size_t k) const throw() { return k; }
+            inline  hasher() throw() {} //!< setup
+            inline ~hasher() throw() {} //!< cleanup
+            inline size_t operator()(const size_t k) const throw() { return k; } //!< copy
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(hasher);

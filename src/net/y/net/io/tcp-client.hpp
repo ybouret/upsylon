@@ -17,7 +17,7 @@ namespace upsylon
             explicit tcp_client_protocol(const tcp_link &) throw(); //!< setup
             virtual ~tcp_client_protocol() throw();                 //!< cleanup
 
-            const size_t &key() const throw();
+            const size_t &key() const throw(); //!< forward to client
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tcp_client_protocol);

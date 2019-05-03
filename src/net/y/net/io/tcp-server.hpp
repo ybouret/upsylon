@@ -19,7 +19,7 @@ namespace upsylon
                                          const unsigned pending=1); //!< setup
             virtual ~tcp_server_protocol() throw();                 //!< cleanup
 
-            virtual  tcp_client_protocol * create( const tcp_link & );
+            virtual  tcp_client_protocol * create( const tcp_link & ); //!< create a matching protocol
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tcp_server_protocol);
