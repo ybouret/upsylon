@@ -122,7 +122,7 @@ namespace upsylon
                 
                 //! helper to evaluate functions
                 template <typename FUNC>
-                inline T eval( FUNC &f, const T x) const
+                inline T operator()( FUNC &f, const T x) const
                 {
                     Wrapper<FUNC> w (f);
                     Function      F( &w, & Wrapper<FUNC>::Compute );

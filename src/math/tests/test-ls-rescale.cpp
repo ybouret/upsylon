@@ -3,6 +3,7 @@
 #include "y/math/fit/vectors.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/sort/heap.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -35,8 +36,10 @@ Y_UTEST(ls_rescale)
     for(size_t i=1;i<=N;++i)
     {
         vec.X[i] = alea.symm<double>();
-        vec.Y[i] = f1d( vec.X[i] );
+        vec.Y[i] = f1d( vec.X[i] ) + 0.002 * alea.symm<double>();
     }
+
+    hsort(vec.X, vec.Y, comparison::increasing<double>);
 
     Fit::Sample<double> sample(vec.X,vec.Y,vec.Yf);
 
@@ -64,6 +67,22 @@ Y_UTEST(ls_rescale)
         throw exception("no rescaling");
     }
     rs.vars.display(std::cerr,rs.values(),rs.errors());
+
+    {
+        ios::ocstream fp("rs-dat.dat");
+        for(size_t i=1;i<=N;++i)
+        {
+            fp("%g %g\n", vec.X[i], vec.Y[i]);
+        }
+    }
+
+    {
+        ios::ocstream fp("rs-fit.dat");
+        for(double x=vec.X[1]; x<=vec.X[N];x += 1e-3)
+        {
+            fp("%g %g\n", x, rs(g1d,x) );
+        }
+    }
 
     
 }
