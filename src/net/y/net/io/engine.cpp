@@ -11,70 +11,21 @@ namespace upsylon
 
         io_engine:: io_engine() :
         sockset(),
-        tcp_servers()
+        tcp_servers(tcp_servers_init,as_capacity),
+        tcp_clients(tcp_clients_init,as_capacity)
         {
         }
 
-
-        void io_engine:: start( tcp_server_protocol *srv )
-        {
-            const tcp_server_proto p( srv );
-
-            //------------------------------------------------------------------
-            //
-            // try to insert in socket set
-            //
-            //------------------------------------------------------------------
-            sockset.insert(*p);
-
-            //------------------------------------------------------------------
-            //
-            // try to insert in database
-            //
-            //------------------------------------------------------------------
-            try
-            {
-                srv->blocking(false);
-                if(!tcp_servers.insert(p))
-                {
-                    const socket_address &a = **srv;
-                    throw upsylon::exception("net::io_engine:start(tcp_server %s@%u) multiple socket!", a.text(), bswp( a.port ) );
-                }
-            }
-            catch(...)
-            {
-                sockset.remove(*p);
-                throw;
-            }
-        }
+        
+    
 
         bool io_engine:: cycle( socket_delay &d )
         {
             size_t na =  sockset.probe(d);
             if(na>0)
             {
-                //--------------------------------------------------------------
-                //
-                // probing tcp servers
-                //
-                //--------------------------------------------------------------
-                {
-                    size_t n = tcp_servers.size();
-                    tcp_server_iterator it = tcp_servers.begin();
-                    while(n-->0)
-                    {
-                        tcp_server_protocol  &srv = **it;
-                        const socket_address &sip = *srv;
-                        if( sockset.is_readable(srv) )
-                        {
-                            // new connection ?
-                            std::cerr << "New connection on " << sip.text() << "@" << bswp( sip.port ) << std::endl;
-                        }
-                        ++it;
-                    }
-                }
-
-
+                check_tcp_servers(na);
+                check_tcp_clients(na);
                 return true;
             }
             else

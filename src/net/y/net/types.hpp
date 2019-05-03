@@ -211,6 +211,8 @@ namespace upsylon
 #endif
 
         extern const socket_type invalid_socket; //!< opaque invalid socket value
+
+        typedef unsigned_int<sizeof(socket_type)>::type socket_word; //!< alias
     }
 
     //! base class
