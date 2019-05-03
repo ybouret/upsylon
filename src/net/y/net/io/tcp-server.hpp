@@ -24,7 +24,7 @@ namespace upsylon
         };
 
         //! dynamic tcp_server_protocol
-        typedef intr_ptr<socket_type,tcp_server_protocol> tcp_server_proto;
+        typedef intr_ptr<size_t,tcp_server_protocol> tcp_server_proto;
 
     }
 }

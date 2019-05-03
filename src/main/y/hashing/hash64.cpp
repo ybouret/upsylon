@@ -64,26 +64,3 @@ const uint32_t ib = (il*il) + ~(ih*ih);\
     }
 }
 
-namespace upsylon
-{
-    namespace hashing
-    {
-        void hash64:: OES( uint32_t *lword, uint32_t *rword ) throw()
-        {
-            const uint32_t o_mask = 0xaaaaaaaa;
-            const uint32_t e_mask = 0x55555555;
-            
-            const uint32_t lw = *lword;
-            const uint32_t lo = lw&o_mask;
-            const uint32_t le = lw&e_mask;
-            
-            const uint32_t rw = *rword;
-            const uint32_t ro = rw&o_mask;
-            const uint32_t re = rw&e_mask;
-            
-            *lword = (lo>>1) | ro;
-            *rword = (re<<1) | le;
-        }
-    }
-    
-}

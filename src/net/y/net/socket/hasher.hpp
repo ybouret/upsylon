@@ -3,7 +3,6 @@
 #define Y_NET_SOCKET_HASHER_INCLUDED 1
 
 #include "y/net/types.hpp"
-#include "y/hashing/fnv.hpp"
 
 namespace upsylon
 {
@@ -18,11 +17,10 @@ namespace upsylon
             virtual ~socket_hasher() throw(); //!< cleanup
 
             //! return a hash key for a socket_type
-            size_t operator()( const socket_type &s ) throw();
+            size_t operator()( const size_t k ) throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(socket_hasher);
-            hashing::fnv h;
         };
 
     }

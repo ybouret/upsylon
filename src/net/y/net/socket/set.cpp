@@ -114,7 +114,7 @@ namespace upsylon
             }
 
 
-            const socket_type lhs = s.key();
+            const socket_type lhs = s.fd();
             // low-level check
             if( FD_ISSET(lhs,ufd) )
             {
@@ -136,7 +136,7 @@ namespace upsylon
 
         void socket_set::remove(const bsd_socket &s) throw()
         {
-            const socket_type lhs = s.key();
+            const socket_type lhs = s.fd();
 
             // remove low-level
             FD_CLR(lhs,ufd);
@@ -221,18 +221,18 @@ namespace upsylon
 
         bool socket_set::is_readable(const bsd_socket &s) throw()
         {
-            return __test_fd_set(s.key(),rfd);
+            return __test_fd_set(s.fd(),rfd);
         }
 
 
         bool socket_set::is_writable(const bsd_socket &s) throw()
         {
-            return __test_fd_set(s.key(),wfd);
+            return __test_fd_set(s.fd(),wfd);
         }
 
         bool socket_set::is_exception(const bsd_socket &s) throw()
         {
-            return __test_fd_set(s.key(),xfd);
+            return __test_fd_set(s.fd(),xfd);
         }
 
     }

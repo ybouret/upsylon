@@ -40,6 +40,19 @@ namespace upsylon
 
     public:
         static const at_exit::longevity life_time = object::life_time - 13; //!< life time
+
+        //! hash key copy
+        class hasher
+        {
+        public:
+            inline  hasher() throw() {}
+            inline ~hasher() throw() {}
+            inline size_t operator()(const size_t k) const throw() { return k; }
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(hasher);
+        };
+
     };
 
     //! macro to be used with network verbosity

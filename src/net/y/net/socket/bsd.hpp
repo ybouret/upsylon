@@ -90,14 +90,17 @@ namespace upsylon
             //
             // handling
             //__________________________________________________________________
-            const socket_type & key() const throw(); //!< get key for set
-          
+            socket_type     fd() const throw();
+            const size_t  & key() const throw(); //!< get key for set
+
         protected:
-            explicit bsd_socket( const socket_type accepted ); //!< prepare an accepted socket
+            explicit     bsd_socket( const socket_type ); //!< prepare an accepted socket
             socket_type  sock; //!< internal system socket
+
         public:
-            const size_t hkey; //!< computed hash key
-            
+            const size_t hkey; //!< pre computed hash key
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bsd_socket);
             void on_init();

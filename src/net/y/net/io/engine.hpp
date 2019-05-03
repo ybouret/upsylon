@@ -11,8 +11,8 @@ namespace upsylon
 {
     namespace net
     {
-        typedef set<socket_type,tcp_server_proto,socket_hasher> tcp_server_proto_db; //!< alias
-        typedef tcp_server_proto_db::iterator                   tcp_server_iterator; //!< alias
+        typedef set<size_t,tcp_server_proto,socket_hasher> tcp_server_proto_db; //!< alias
+        typedef tcp_server_proto_db::iterator              tcp_server_iterator; //!< alias
         
         //! handle connections
         class io_engine : public net_object
