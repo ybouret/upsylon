@@ -49,16 +49,18 @@ namespace upsylon
         }
 
         bsd_socket:: bsd_socket( const ip_protocol protocol, const ip_version version) :
-        sock( network::instance().open(protocol,version) )
+        sock( network::instance().open(protocol,version) ),
+        hkey( network::hash(sock) )
         {
-            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.init]" << std::endl);
+            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.init.key=" << hkey << "]" << std::endl);
             on_init();
         }
 
         bsd_socket:: bsd_socket( const socket_type accepted ) :
-        sock( accepted )
+        sock( accepted ),
+        hkey( network::hash(sock) )
         {
-            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.init/accepted]" << std::endl);
+            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.init.key=" << hkey << "]" << std::endl);
             on_init();
         }
 

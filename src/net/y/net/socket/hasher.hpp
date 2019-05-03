@@ -3,7 +3,7 @@
 #define Y_NET_SOCKET_HASHER_INCLUDED 1
 
 #include "y/net/types.hpp"
-//#include "y/hashing/fnv.hpp"
+#include "y/hashing/fnv.hpp"
 
 namespace upsylon
 {
@@ -22,7 +22,7 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(socket_hasher);
-            //hashing::fnv h;
+            hashing::fnv h;
         };
 
     }

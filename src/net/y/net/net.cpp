@@ -55,6 +55,25 @@ namespace upsylon
 
 }
 
+#include "y/hashing/hash64.hpp"
+
+namespace upsylon {
+
+    size_t network:: hash( const net::socket_type &s ) throw()
+    {
+        union
+        {
+            uint32_t         q[2];
+            net::socket_type s;
+            size_t           k;
+        } item = { {0,0} };
+        item.s = s;
+        hashing::hash64::DES(item.q,item.q+1);
+        return item.k;
+    }
+    
+}
+
 #include "y/memory/buffers.hpp"
 
 namespace upsylon

@@ -1,36 +1,31 @@
-
 #include "y/net/socket/hasher.hpp"
-//#include "y/hashing/hash64.hpp"
 
 namespace upsylon
 {
     namespace net
     {
 
-        socket_hasher:: ~socket_hasher() throw()       {
-            //h.set();
-        }
+        socket_hasher:: ~socket_hasher() throw() { h.set(); }
         
-        socket_hasher::  socket_hasher() throw()  {
-            //h.set();
-            
-        }
+        socket_hasher::  socket_hasher() throw() : h() { h.set(); }
 
         size_t socket_hasher:: operator()( const socket_type &s ) throw()
         {
-            // h.set();
-            // h.run( &s, sizeof(socket_type) );
-            // return h.key<size_t>();
+            h.set();
+            
+            // initialize a field
             union
             {
-                uint32_t    dw[2];
-                size_t      sz;
+                uint64_t    qw;
                 socket_type st;
-            } item = { {0,0} }; //{ {0xffffffff,0xffffffff} };
+            } item = { 0 };
+            
+            // fill in the field
             item.st = s;
-            //hashing::hash64::OES(item.dw,item.dw+1);
-            //std::cerr << "hashing: " << s << "->" << item.sz << std::endl;
-            return item.sz;
+            
+            // hash the field
+            h.run_type(item.qw);
+            return h.key<size_t>();
         }
 
 

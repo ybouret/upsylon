@@ -18,6 +18,8 @@ namespace upsylon
         //! create a socket
         net::socket_type open(const net::ip_protocol proto, const net::ip_version version);
         
+        //! hash a socket
+        static size_t hash( const net::socket_type &s ) throw();
 
         //! resolve the address, preserving the port
         void resolve( net::socket_address &ip, const string &s ) const;
