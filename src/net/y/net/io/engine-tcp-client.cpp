@@ -51,6 +51,11 @@ namespace upsylon
                 tcp_client_protocol &proto = **it;
                 tcp_client          &cln   = *proto;
                 
+                if( sockset.is_readable(cln) )
+                {
+                    // load data
+                    
+                }
             }
         }
 
