@@ -16,7 +16,8 @@ namespace upsylon
 
             static void IBJ( uint32_t *lword, uint32_t *rword ) throw(); //!< based on Bob Jenkins's integer hash
             static void DES( uint32_t *lword, uint32_t *rword ) throw(); //!< based on DES code
-
+            static void OES( uint32_t *lword, uint32_t *rword ) throw(); //!< Odd Even Mixing
+            
             //! mixing any integral type
             template <typename T> static inline
             T mix(const T x, hash64::proc h) throw()
@@ -40,6 +41,10 @@ namespace upsylon
             //! wrapper
             template <typename T> static inline
             T mixDES(const T x) throw() { return mix<T>(x,DES); }
+            
+            //! wrapper
+            template <typename T> static inline
+            T mixOES(const T x) throw() { return mix<T>(x,OES); }
         };
     }
 

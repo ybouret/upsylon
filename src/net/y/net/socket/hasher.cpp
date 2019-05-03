@@ -1,6 +1,6 @@
 
 #include "y/net/socket/hasher.hpp"
-#include "y/hashing/hash64.hpp"
+//#include "y/hashing/hash64.hpp"
 
 namespace upsylon
 {
@@ -26,10 +26,10 @@ namespace upsylon
                 uint32_t    dw[2];
                 size_t      sz;
                 socket_type st;
-            } item = { {0,0} };
-            hashing::hash64::IBJ(item.dw,item.dw+1);
+            } item = { {0,0} }; //{ {0xffffffff,0xffffffff} };
             item.st = s;
-            std::cerr << "hashing: " << s << "->" << item.sz << std::endl;
+            //hashing::hash64::OES(item.dw,item.dw+1);
+            //std::cerr << "hashing: " << s << "->" << item.sz << std::endl;
             return item.sz;
         }
 
