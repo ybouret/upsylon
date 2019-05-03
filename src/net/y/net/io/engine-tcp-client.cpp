@@ -54,7 +54,10 @@ namespace upsylon
                 if( sockset.is_readable(cln) )
                 {
                     // load data
-                    
+                    char buff[256];
+                    size_t nr = cln.recv(buff,sizeof(buff));
+                    std::cerr << "#recv=" << nr << std::endl;
+                    --na;
                 }
             }
         }

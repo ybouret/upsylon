@@ -13,8 +13,11 @@ Y_UTEST(io)
         engine.start( new net::tcp_server_protocol(ip) );
 
         net::socket_delay d = -1;
-        engine.cycle(d);
-
+        while(true)
+        {
+            engine.cycle(d);
+        }
+        
 
     }
 
