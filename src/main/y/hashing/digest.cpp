@@ -45,7 +45,11 @@ byte( __digest_acquire(blen) )
         assert( memory::pooled::exists() );
         static memory::allocator &mgr = memory::pooled::location();
         ldz();
-        mgr.release( *(void **)&byte,blen);
+        {
+            void *p = byte;
+            mgr.release(p,blen);
+        }
+        byte = 0;
     }
 
     const void * digest:: ro()     const throw() { return byte; }
