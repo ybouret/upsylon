@@ -3,7 +3,6 @@
 #define Y_MP_NATURAL_INCLUDED 1
 
 #include "y/string.hpp"
-#include "y/memory/vein.hpp"
 #include "y/type/utils.hpp"
 #include "y/os/endian.hpp"
 #include "y/comparison.hpp"
@@ -13,7 +12,6 @@
 #include "y/ios/istream.hpp"
 
 #include <iostream>
-#include <cstring>
 
 namespace upsylon
 {
@@ -47,7 +45,6 @@ namespace upsylon
             explicit manager();
             virtual ~manager() throw();
             friend class singleton<manager>;
-            memory::vein IO;
 
         public:
             static const at_exit::longevity life_time = object::life_time - 1; //!< need only objects

@@ -1,26 +1,56 @@
 #include "y/mpl/natural.hpp"
 #include "y/exception.hpp"
+#include "y/memory/vein.hpp"
+#include "y/memory/io.hpp"
 
 namespace upsylon
 {
     namespace mpl
     {
-        manager:: manager() : IO() { }
+        namespace
+        {
+            static uint64_t ___IO[ Y_U64_FOR_ITEM(memory::vein) ];
+            static inline
+            memory::allocator * __IO() throw()
+            {
+                return memory::io::__force<memory::vein>(___IO);
+            }
+        }
 
-        manager:: ~manager() throw()  { }
+        manager:: manager()
+        {
+            new ( __IO() ) memory::vein();
+        }
 
-        void * manager:: acquire( size_t &n ) { Y_LOCK(access); return IO.acquire(n); }
+        manager:: ~manager() throw()
+        {
+            destruct( __IO() );
+        }
 
-        void   manager:: release(void * &p, size_t &n ) throw() { Y_LOCK(access); IO.release(p,n); }
+        void * manager:: acquire( size_t &n )
+        {
+            static memory::allocator &IO = *__IO();
+            Y_LOCK(access);
+            return IO.acquire(n);
+        }
+
+        void   manager:: release(void * &p, size_t &n ) throw()
+        {
+            static memory::allocator &IO = *__IO();
+            Y_LOCK(access);
+            IO.release(p,n);
+        }
 
         uint8_t * manager:: __acquire(size_t &n)
         {
+            static memory::allocator &IO = *__IO();
             Y_LOCK(access);
             return static_cast<uint8_t*>(IO.acquire(n));
         }
 
         void manager:: __release(uint8_t * &p,size_t &n) throw()
         {
+            static memory::allocator &IO = *__IO();
             Y_LOCK(access);
             IO.release((void * &)p,n);
         }
