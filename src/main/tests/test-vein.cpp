@@ -59,6 +59,11 @@ Y_UTEST(vein)
     memory::vein v;
 
     std::cerr << "-- Checking sizes..." << std::endl;
+    std::cerr << "\tmax_size=" << v.max_size << std::endl;
+    std::cerr << "\tmax_bits=" << v.max_bits << std::endl;
+    std::cerr << "\tmin_size=" << v.min_size << std::endl;
+    std::cerr << "\tmin_bits=" << v.min_bits << std::endl;
+    std::cerr << "\tpsize   =" << v.psize    << " is sizeof(nugget<...>)" << std::endl;
     for(size_t i=0;i<=v.max_size;++i)
     {
         size_t       ibit = 0;

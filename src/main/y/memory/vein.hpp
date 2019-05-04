@@ -27,8 +27,8 @@ namespace upsylon
             explicit vein() throw(); //!< construct nuggets, by metaprogramming
             virtual ~vein() throw(); //!< destruct nuggets,  by metaprogramming
 
-            virtual void *acquire(size_t &n);                   //!< allocator interface : acquire
-            virtual void  release(void * &p, size_t &n) throw();//! allocator interface : release
+            virtual void *acquire(size_t &n);                    //!< allocator interface : acquire
+            virtual void  release(void * &p, size_t &n) throw(); //! allocator interface : release
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(vein);

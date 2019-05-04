@@ -8,42 +8,44 @@ namespace upsylon
     namespace memory
     {
 
-        template <size_t NMIN,size_t N> struct nuggets_ops;
-
-        template <size_t N>
-        struct nuggets_ops<N,N>
+        namespace
         {
-            static inline void make( char *base ) throw()
+            template <size_t NMIN,size_t N> struct nuggets_ops;
+
+            template <size_t N>
+            struct nuggets_ops<N,N>
             {
-                new (base) nuggets<N>();
-            }
+                static inline void make( char *base ) throw()
+                {
+                    new (base) nuggets<N>();
+                }
 
-            static inline void kill( char *base ) throw()
+                static inline void kill( char *base ) throw()
+                {
+                    destruct( (nuggets<N> *)base );
+                }
+            };
+
+            template <size_t NMIN,size_t N> struct nuggets_ops
             {
-                destruct( (nuggets<N> *)base );
-            }
-        };
+                static inline void make(char *base) throw()
+                {
+                    // pre-order make
+                    nuggets_ops<NMIN,N-1>::make(base);
+                    new (base+(N-NMIN)*sizeof(nuggets<N>)) nuggets<N>();
+                }
 
-        template <size_t NMIN,size_t N> struct nuggets_ops
-        {
-            static inline void make(char *base) throw()
-            {
-                // pre-order make
-                nuggets_ops<NMIN,N-1>::make(base);
-                new (base+(N-NMIN)*sizeof(nuggets<N>)) nuggets<N>();
-            }
+                static inline void kill( char *base ) throw()
+                {
+                    // post-order kill
+                    char *addr = base +(N-NMIN)*sizeof(nuggets<N>);
+                    destruct( (nuggets<N> *)addr );
 
-            static inline void kill( char *base ) throw()
-            {
-                // post-order kill
-                char *addr = base +(N-NMIN)*sizeof(nuggets<N>);
-                destruct( (nuggets<N> *)addr );
+                    nuggets_ops<NMIN,N-1>::kill(base);
+                }
+            };
 
-                nuggets_ops<NMIN,N-1>::kill(base);
-            }
-        };
-
-
+        }
 
 
         vein:: vein() throw() :
@@ -156,6 +158,7 @@ namespace upsylon
             }
             else
             {
+                assert( memory::global::exists() );
                 memory::global::location().release(p,n);
             }
         }
