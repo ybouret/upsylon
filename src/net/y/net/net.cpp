@@ -55,7 +55,6 @@ namespace upsylon
 
 }
 
-#include "y/hashing/hash64.hpp"
 
 namespace upsylon {
 
@@ -63,13 +62,11 @@ namespace upsylon {
     {
         union
         {
-            uint32_t         q[2];
-            net::socket_type s;
-            size_t           k;
-        } item = { {0,0} };
-        item.s = s;
-        hashing::hash64::DES(item.q,item.q+1);
-        return item.k;
+            size_t   h;
+            uint32_t dw;
+        } item = { 0 };
+        item.dw = crc32(&s,sizeof(s));
+        return item.h;
     }
     
 }

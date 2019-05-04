@@ -48,20 +48,38 @@ namespace upsylon
             }
         }
 
+        static inline
+        socket_id_t sock2uuid( const socket_type &s ) throw()
+        {
+            union {
+                socket_id_t id;
+                socket_type st;
+            } item = { 0 };
+            item.st = s;
+            return item.id;
+        }
+
+#define Y_NET_BSD_CTOR()     \
+uuid( sock2uuid(sock)     ),\
+hkey( network::hash(sock) )
+
+#define Y_NET_BSD_INI() do { \
+Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.init: uuid=" << uuid << ", hkey=" << hkey << "]" << std::endl);\
+on_init();        \
+} while(false)
+
         bsd_socket:: bsd_socket( const ip_protocol protocol, const ip_version version) :
         sock( network::instance().open(protocol,version) ),
-        hkey( network::hash(sock) )
+        Y_NET_BSD_CTOR()
         {
-            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.init.key=" << hkey << "]" << std::endl);
-            on_init();
+            Y_NET_BSD_INI();
         }
 
         bsd_socket:: bsd_socket( const socket_type accepted ) :
         sock( accepted ),
-        hkey( network::hash(sock) )
+        Y_NET_BSD_CTOR()
         {
-            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.init.key=" << hkey << "]" << std::endl);
-            on_init();
+            Y_NET_BSD_INI();
         }
 
 

@@ -26,6 +26,7 @@ namespace upsylon
         extern const socket_boolean socket_true;  //!< opaque TRUE value
         extern const socket_boolean socket_false; //!< opaque FALSE value
 
+        typedef uint64_t socket_id_t;
 
         //! low level socket API
         class bsd_socket : public net_object
@@ -103,8 +104,9 @@ namespace upsylon
             explicit     bsd_socket( const socket_type ); //!< prepare an accepted socket
 
         public:
-            socket_type  sock; //!< internal system socket
-            const size_t hkey; //!< pre computed hash key
+            socket_type        sock; //!< internal system socket
+            const socket_id_t  uuid; //!< socket unique identifier
+            const size_t       hkey; //!< pre computed hash key
 
 
         private:
