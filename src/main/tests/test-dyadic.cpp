@@ -18,6 +18,10 @@ namespace
         seq.ensure(100);
         std::cerr << "seq.size=" << seq.size() << "/" << seq.capacity() << std::endl;
 
+        seq.free();
+        seq.ensure(1100);
+        std::cerr << "seq.size=" << seq.size() << "/" << seq.capacity() << std::endl;
+
     }
 
 }

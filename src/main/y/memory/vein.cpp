@@ -2,6 +2,7 @@
 #include "y/memory/vein.hpp"
 #include "y/exceptions.hpp"
 #include <cerrno>
+#include "y/memory/nuggets.hpp"
 
 namespace upsylon
 {
@@ -45,17 +46,16 @@ namespace upsylon
                 }
             };
 
+            //typedef nuggets<vein::min_bits> proto;
         }
 
 
         vein:: vein() throw() :
-        entry(0),
         workspace()
         {
+            assert(proto_size>=sizeof(nuggets<min_bits>));
             char *addr = &workspace[0][0];
             nuggets_ops<min_bits,max_bits>::make(addr);
-            entry  = (proto *)addr;
-            entry -= min_bits;
         }
 
         vein:: ~vein() throw()
@@ -120,7 +120,7 @@ namespace upsylon
                     n           = bytes_for(n,ibit);
                     assert(ibit>=min_bits);
                     assert(ibit<=max_bits);
-                    __nuggets *mgr = (__nuggets *)&entry[ibit];
+                    __nuggets *mgr = (__nuggets *)&workspace[ibit-min_bits][0];
                     assert(mgr->get_block_bits()==ibit);
                     return mgr->acquire();
                 }
@@ -139,11 +139,11 @@ namespace upsylon
             assert(n>=min_size);
             if(n<=max_size)
             {
-                for(size_t i=max_bits;i>0;--i)
+                for(size_t i=max_bits;i>=min_bits;--i)
                 {
                     if( 0 != ( (size_t(1)<<i) & n ) )
                     {
-                        __nuggets *mgr = (__nuggets *)(entry+i);
+                        __nuggets *mgr = (__nuggets *)&workspace[i-min_bits][0];
                         assert(mgr->get_block_bits()==i);
                         assert(mgr->get_block_size()==n);
                         mgr->release(p);

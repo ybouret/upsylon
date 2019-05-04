@@ -3,6 +3,7 @@
 #define Y_MP_INTEGER_INCLUDED 1
 
 #include "y/mpl/natural.hpp"
+#include "y/os/error.hpp"
 
 namespace upsylon
 {

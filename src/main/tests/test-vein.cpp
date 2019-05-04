@@ -1,5 +1,8 @@
 #include "y/memory/vein.hpp"
 #include "y/utest/run.hpp"
+#include "y/core/list.hpp"
+#include "y/type/utils.hpp"
+#include "y/object.hpp"
 
 using namespace upsylon;
 
@@ -25,9 +28,9 @@ namespace
     {
         size_t n = nreq;
         void  *p = v.acquire(n);
-        assert(p);
-        assert(n>0);
-        assert(is_a_power_of_two(n));
+        Y_ASSERT(p!=NULL);
+        Y_ASSERT(n>0);
+        Y_ASSERT(is_a_power_of_two(n));
         block *b = new block();
         b->addr = p;
         b->size = n;
@@ -59,11 +62,12 @@ Y_UTEST(vein)
     memory::vein v;
 
     std::cerr << "-- Checking sizes..." << std::endl;
-    std::cerr << "\tmax_size=" << v.max_size << std::endl;
-    std::cerr << "\tmax_bits=" << v.max_bits << std::endl;
-    std::cerr << "\tmin_size=" << v.min_size << std::endl;
-    std::cerr << "\tmin_bits=" << v.min_bits << std::endl;
-    std::cerr << "\tpsize   =" << v.psize    << " is sizeof(nugget<...>)" << std::endl;
+    std::cerr << "\tmax_size     = " << v.max_size   << std::endl;
+    std::cerr << "\tmax_bits     = " << v.max_bits   << std::endl;
+    std::cerr << "\tmin_size     = " << v.min_size   << std::endl;
+    std::cerr << "\tmin_bits     = " << v.min_bits   << std::endl;
+    std::cerr << "\tproto_size   = " << v.proto_size << " is sizeof(nugget<...>)" << std::endl;
+    std::cerr << "\tsizeof(vein) = " << sizeof(memory::vein) << std::endl;
     for(size_t i=0;i<=v.max_size;++i)
     {
         size_t       ibit = 0;
@@ -71,7 +75,6 @@ Y_UTEST(vein)
         if(!is_a_power_of_two(alen)) throw exception("invalid aligned length");
         if(alen<i) throw exception("invalid length for input=%lu", (unsigned long)i);
     }
-
     
     std::cerr << "-- Allocating specific sizes" << std::endl;
     core::list_of_cpp<block> blocks;
