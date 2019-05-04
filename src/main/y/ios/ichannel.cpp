@@ -9,7 +9,11 @@ namespace upsylon
     {
         bulk:: ~bulk() throw()
         {
-            memory::global::location().release( *(void **)&addr, size);
+            {
+                void *p = addr;
+                memory::global::location().release( p, size);
+            }
+            addr = 0;
         }
 
         bulk:: bulk(const size_t n) :
