@@ -27,7 +27,8 @@ namespace upsylon
             const size_t size;      //!< current number of sockets
             const size_t allocated; //!< allocated bytes
 
-            size_t probe( socket_delay &d ); //!< call select
+            size_t incoming( socket_delay &d ); //!< call select read+excp
+            size_t outgoing();                  //!< call select write+excp
 
             bool is_readable(  const bsd_socket &s ) throw(); //!< check and clear flag
             bool is_writable(  const bsd_socket &s ) throw(); //!< check and clear flag
@@ -42,6 +43,9 @@ namespace upsylon
             fd_set      *wfd;       //!< writable  fd
             fd_set      *rfd;       //!< readable  fd
             fd_set      *xfd;       //!< exception fd
+
+            size_t call_select(fd_set *r, fd_set *w, fd_set *x, struct timeval *tv) const;
+
         };
 
     }

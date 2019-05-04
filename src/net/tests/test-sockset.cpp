@@ -80,7 +80,7 @@ Y_UTEST(sockset)
         {
             sockset.insert(*arr[i]);
         }
-        const size_t ans = sockset.probe(d2);
+        const size_t ans = sockset.incoming(d2);
         std::cerr << "probe=" << ans << std::endl;
 
         for(size_t i=0;i<num;++i)
@@ -89,7 +89,7 @@ Y_UTEST(sockset)
             std::cerr << id[i] << ":";
             if( sockset.is_exception(s) ) std::cerr << "x"; else std::cerr << "-";
             if( sockset.is_readable(s)  ) std::cerr << "r"; else std::cerr << "-";
-            if( sockset.is_writable(s)  ) std::cerr << "w"; else std::cerr << "-";
+            //if( sockset.is_writable(s)  ) std::cerr << "w"; else std::cerr << "-";
             std::cerr << std::endl;
         }
     }

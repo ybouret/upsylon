@@ -24,7 +24,7 @@ namespace upsylon
         bool io_engine:: cycle( socket_delay &d )
         {
             Y_NET_VERBOSE(std::cerr << "[network.io_engine.cycle]" << std::endl);
-            size_t na =  sockset.probe(d);
+            size_t na =  sockset.incoming(d);
             if(na>0)
             {
                 Y_NET_VERBOSE(std::cerr << "[network.io_engine.activities=" << na << "]" << std::endl);

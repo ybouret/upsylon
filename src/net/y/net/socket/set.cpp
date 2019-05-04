@@ -60,7 +60,7 @@ namespace upsylon
             uint32_t w32 = Y_NET_W32;
             uint32_t r32 = Y_NET_R32;
             uint32_t x32 = Y_NET_X32;
-           // Y_NET_OUT();
+            // Y_NET_OUT();
 #endif
             FD_ZERO(xfd);
 #if !defined(NDEBUG)
@@ -114,7 +114,7 @@ namespace upsylon
             }
 
 
-            const socket_type lhs = s.fd();
+            const socket_type lhs = s.sock;
             // low-level check
             if( FD_ISSET(lhs,ufd) )
             {
@@ -136,7 +136,7 @@ namespace upsylon
 
         void socket_set::remove(const bsd_socket &s) throw()
         {
-            const socket_type lhs = s.fd();
+            const socket_type lhs = s.sock;
 
             // remove low-level
             FD_CLR(lhs,ufd);
@@ -155,54 +155,82 @@ namespace upsylon
         }
         
 
-        size_t socket_set:: probe( socket_delay &d )
+
+        size_t socket_set:: call_select(fd_set *r, fd_set *w, fd_set *x, struct timeval *tv) const
         {
-            Y_NET_VERBOSE(std::cerr << "[network.select(time=" << d.wait_for() << ")]" << std::endl);
-            if(size>0)
-            {
-                Y_GIANT_LOCK();
-
-                const uint8_t *u = (uint8_t *)ufd;
-
-                uint8_t       *r = (uint8_t *)rfd;
-                uint8_t       *w = (uint8_t *)wfd;
-                uint8_t       *x = (uint8_t *)xfd;
-
-                for(size_t i=0;i<sizeof(fd_set);++i)
-                {
-                    r[i] = w[i] = x[i] = u[i];
-                }
-
-
+            Y_GIANT_LOCK();
 #if defined(Y_BSD)
-                const socket_type fmx = sock[size-1]+1;
-                int               ans = 0;
-                while( (ans= ::select(fmx, rfd, wfd, xfd, d.time_out()))<0 )
+            const socket_type fmx = sock[size-1]+1;
+            int               ans = 0;
+            while( (ans= ::select(fmx, r, w, x, tv))<0 )
+            {
+                const int err = Y_NET_LAST_ERROR();
+                switch(err)
                 {
-                    const int err = Y_NET_LAST_ERROR();
-                    switch(err)
-                    {
-                        case EINTR: continue;
-                        default:    throw net::exception( err, "::select()");
-                    }
+                    case EINTR: continue;
+                    default:    throw net::exception( err, "::select()");
                 }
-                return ans;
+            }
+            return ans;
 #endif
 
 #if defined(Y_WIN)
-                const int ans = ::select(0,rfd, wfd, xfd, d.time_out());
-                if(ans==SOCKET_ERROR)
-                {
-                    throw net::exception( Y_NET_LAST_ERROR(), "::select()");
-                }
-                return ans;
+            const int ans = ::select(0,r, w, x, tv);
+            if(ans==SOCKET_ERROR)
+            {
+                throw net::exception( Y_NET_LAST_ERROR(), "::select()");
+            }
+            return ans;
 #endif
+        }
+
+        size_t socket_set:: incoming( socket_delay &d )
+        {
+            Y_NET_VERBOSE(std::cerr << "[network.socket_set.incomping(delay=" << d.wait_for() << ")]" << std::endl);
+            if(size>0)
+            {
+
+                {
+                    const uint8_t *u = (uint8_t *)ufd;
+                    uint8_t       *r = (uint8_t *)rfd;
+                    uint8_t       *x = (uint8_t *)xfd;
+                    for(size_t i=0;i<sizeof(fd_set);++i)
+                    {
+                        r[i] =  x[i] = u[i];
+                    }
+                }
+                return call_select(rfd,NULL,xfd,d.time_out());
+
             }
             else
             {
                 return 0;
             }
         }
+
+        size_t socket_set:: outgoing()
+        {
+            Y_NET_VERBOSE(std::cerr << "[network.socket_set.outgoing)]" << std::endl);
+            if(size>0)
+            {
+                {
+                    const uint8_t *u = (uint8_t *)ufd;
+                    uint8_t       *w = (uint8_t *)wfd;
+                    uint8_t       *x = (uint8_t *)xfd;
+                    for(size_t i=0;i<sizeof(fd_set);++i)
+                    {
+                        w[i] = x[i] = u[i];
+                    }
+                }
+                struct timeval no_wait = {0,0};
+                return call_select(NULL,wfd,xfd,&no_wait);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
 
         static inline bool __test_fd_set(const socket_type fd,
                                          fd_set           *fds) throw()
@@ -221,18 +249,18 @@ namespace upsylon
 
         bool socket_set::is_readable(const bsd_socket &s) throw()
         {
-            return __test_fd_set(s.fd(),rfd);
+            return __test_fd_set(s.sock,rfd);
         }
 
 
         bool socket_set::is_writable(const bsd_socket &s) throw()
         {
-            return __test_fd_set(s.fd(),wfd);
+            return __test_fd_set(s.sock,wfd);
         }
 
         bool socket_set::is_exception(const bsd_socket &s) throw()
         {
-            return __test_fd_set(s.fd(),xfd);
+            return __test_fd_set(s.sock,xfd);
         }
 
     }

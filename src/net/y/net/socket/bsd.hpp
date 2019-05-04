@@ -97,14 +97,13 @@ namespace upsylon
             //
             // handling
             //__________________________________________________________________
-            socket_type     fd() const throw();  //!< (pseudo) file descriptor
             const size_t  & key() const throw(); //!< get key for set
 
         protected:
             explicit     bsd_socket( const socket_type ); //!< prepare an accepted socket
-            socket_type  sock; //!< internal system socket
 
         public:
+            socket_type  sock; //!< internal system socket
             const size_t hkey; //!< pre computed hash key
 
 

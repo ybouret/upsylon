@@ -256,7 +256,6 @@ namespace upsylon
 
         int bsd_socket:: rcvbuf() const { return getopt<int>(SOL_SOCKET,SO_RCVBUF); }
 
-        socket_type bsd_socket:: fd() const throw() { return sock; }
         
         const size_t & bsd_socket:: key() const throw()
         {
