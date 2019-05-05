@@ -26,7 +26,7 @@ namespace upsylon
         extern const socket_boolean socket_true;  //!< opaque TRUE value
         extern const socket_boolean socket_false; //!< opaque FALSE value
 
-        typedef uint64_t socket_id_t;
+        typedef uint64_t socket_id_t; //!< wide type to store system socket
 
         //! low level socket API
         class bsd_socket : public net_object

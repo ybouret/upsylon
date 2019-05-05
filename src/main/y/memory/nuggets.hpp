@@ -35,20 +35,27 @@ namespace upsylon
             //! the big chunk size
             virtual size_t get_chunk_size() const throw() = 0;
 
-            static void * global_calloc( const size_t count, const size_t size);
-            static void   global_free(void *p, const size_t bytes) throw();
+            static void * global_calloc( const size_t count, const size_t size); //!< legacy memory calloc
+            static void   global_free(void *p, const size_t bytes) throw();      //!< legacy memory free
 
         protected:
             //! constructor
             explicit nuggets() throw();
 
-            //! page to store individual nugget memory
+            //! page to store individual dead nugget memory
             struct page
             {
                 page *next; //!< for pool
             };
         private:
             Y_DISABLE_COPY_AND_ASSIGN(nuggets);
+            void  clr() throw();
+            void *wksp[19];       //!< internal arena data
+        protected:
+            void *impl;           //!< internal arena impl
+
+            void *query_nugget_space();               //!< from internal arena
+            void  store_nugget_space(void *) throw(); //!< into internal arena
         };
 
         //! multiple nuggets of same block_size

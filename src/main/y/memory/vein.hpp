@@ -18,7 +18,7 @@ namespace upsylon
             static const size_t       count      = (1+max_bits)-min_bits;        //!< number of different blocks
             static const size_t       min_size   = 1 << min_bits;                //!< minimal bytes per block
             static const size_t       max_size   = 1 << max_bits;                //!< maximal bytes per block
-            static const size_t       proto_size = 16 * sizeof(void*);          //!< sizeof nuggets<BLOCK_BITS>
+            static const size_t       proto_size = 36 * sizeof(void*);          //!< sizeof nuggets<BLOCK_BITS>
 
             static size_t       bytes_for( const size_t length, size_t &ibit ); //!< computation or power of two size and corresponding most significant bit
 
