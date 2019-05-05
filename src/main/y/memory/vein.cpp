@@ -54,7 +54,7 @@ namespace upsylon
         vein:: vein() throw() :
         workspace()
         {
-            Y_STATIC_CHECK(proto_size>=sizeof(nuggets_for<min_bits>),workspace_too_small);
+            Y_STATIC_CHECK(proto_size==sizeof(nuggets_for<min_bits>),workspace_too_small);
             char *addr = &workspace[0][0];
             nuggets_ops<min_bits,max_bits>::make(addr);
         }

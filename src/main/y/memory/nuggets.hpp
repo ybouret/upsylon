@@ -42,11 +42,6 @@ namespace upsylon
             //! constructor
             explicit nuggets() throw();
 
-            //! page to store individual dead nugget memory
-            struct page
-            {
-                page *next; //!< for pool
-            };
         private:
             Y_DISABLE_COPY_AND_ASSIGN(nuggets);
             void  clr() throw();
@@ -96,15 +91,13 @@ namespace upsylon
                 }
             }
 
-            //! compute memory characteristics \todo work on that
+            //! compute memory characteristics \TODO work on that
             inline explicit nuggets_for() :
             nuggets(),
             acquiring(0),
             releasing(0),
             available(0),
             content(),
-            cached(),
-            pages(),
             num_blocks( compute_num_blocks()    ),
             chunk_size( num_blocks * block_size )
             {
@@ -115,23 +108,10 @@ namespace upsylon
             inline virtual size_t get_num_blocks() const throw() { return num_blocks; }
             inline virtual size_t get_chunk_size() const throw() { return num_blocks; }
 
-
             //! release all memory
             inline virtual ~nuggets_for() throw()
             {
-                if(pages.size)
-                {
-                    for(nugget_type *node=content.tail;node;node=node->prev)
-                    {
-                        nuggets::global_free(node->data,node->bytes);
-                    }
-                    content.reset();
-                    cached.reset();
-                    while(pages.size)
-                    {
-                        nuggets::global_free(pages.query(),small_chunk_size);
-                    }
-                }
+                while(content.size>0) delete_nugget(content.pop_back());
             }
 
             //! acquire one block of block_size bytes
@@ -241,32 +221,19 @@ namespace upsylon
             nugget_type               *releasing;
             size_t                     available;
             core::list_of<nugget_type> content;
-            core::pool_of<nugget_type> cached;
-            core::pool_of<page>        pages;
             const size_t               num_blocks;
             const size_t               chunk_size;
 
             Y_DISABLE_COPY_AND_ASSIGN(nuggets_for);
             
-            inline void create_nuggets()
-            {
-                assert(cached.size<=0);
-                nugget_type *node = io::cast<nugget_type>(pages.store(static_cast<page *>(nuggets::global_calloc(1,small_chunk_size))),sizeof(void*));
-                for(size_t i=0;i<nuggets_per_page;++i)
-                {
-                    (void)cached.store( node+i );
-                }
-            }
-
             //! debug only
             inline bool memory_is_ordered() const throw()
             {
-                if( content.size > 0 )
+                if(content.size>0)
                 {
-                    for(const nugget_type *scan = content.head; scan->next; scan=scan->next )
+                    for(const nugget_type *scan = content.head;NULL!=scan->next; scan=scan->next )
                     {
-                        if(scan->data>=scan->next->data)
-                            return false;
+                        if(scan->data>=scan->next->data) return false;
                     }
                 }
                 return true;
@@ -278,22 +245,19 @@ namespace upsylon
                 assert( memory_is_ordered() );
                 if(content.size<=0)
                 {
-                    content.push_back(node);
-                    return node;
+                    return content.push_back(node);
                 }
                 else
                 {
                     if(node->data<content.head->data)
                     {
-                        content.push_front(node);
-                        return node;
+                        return content.push_front(node);
                     }
                     else
                     {
                         if(node->data>content.tail->data)
                         {
-                            content.push_back(node);
-                            return node;
+                            return content.push_back(node);
                         }
                         else
                         {
@@ -311,7 +275,7 @@ namespace upsylon
                             }
 
                             // should never get here
-                            delete node;
+                            delete_nugget(node);
                             fatal_error("[nuggets.insert] invalid memory");
                             return 0;
                         }
@@ -324,16 +288,29 @@ namespace upsylon
             //! create a new nugget with full memory handling
             inline nugget_type *create_nugget()
             {
-                if(cached.size<=0)
+                nugget_type *node = static_cast<nugget_type *>(query_nugget_space());
+                try
                 {
-                    create_nuggets();
+                    new (node) nugget_type(chunk_size, nuggets::global_calloc(1,chunk_size) );
+                    assert(num_blocks==node->still_available);
+                    available += num_blocks;
+                    return insert(node);
                 }
-                assert(cached.size>0);
-                void        *data = nuggets::global_calloc(1,chunk_size);
-                nugget_type *node = new ( cached.query() ) nugget_type(chunk_size,data);
-                assert(num_blocks==node->still_available);
-                available += num_blocks;
-                return insert(node);
+                catch(...)
+                {
+                    store_nugget_space(node);
+                    throw;
+                }
+            }
+
+            //! release memory of a valid nugget
+            inline void delete_nugget( nugget_type *node ) throw()
+            {
+                assert(node);
+                assert(0==node->next);
+                assert(0==node->prev);
+                nuggets::global_free(node->data,node->bytes);
+                store_nugget_space(node);
             }
         };
     }
