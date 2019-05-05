@@ -32,6 +32,7 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(vein);
             char   workspace[count][proto_size];
+            void   clr() throw();
         };
     }
 }

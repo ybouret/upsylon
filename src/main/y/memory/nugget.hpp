@@ -7,6 +7,7 @@
 #include "y/os/static-check.hpp"
 #include "y/memory/ownership.hpp"
 #include <cstring>
+#include <iostream>
 
 namespace upsylon
 {
@@ -50,12 +51,14 @@ namespace upsylon
                 {
                     *(size_t *)p = ++i;
                 }
-
             }
 
             //! destructor
             inline ~nugget() throw()
             {
+                assert(still_available<=provided_number);
+                const size_t missing = provided_number-still_available;
+                if(missing) std::cerr << "[nugget<" << block_size << ">: missing " << missing << " blocks]" << std::endl;
             }
 
             //! acquire a clean block of memory

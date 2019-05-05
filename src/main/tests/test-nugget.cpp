@@ -19,10 +19,10 @@ namespace  {
 
         for(size_t num_blocks=1;num_blocks<=num_max;++num_blocks)
         {
-            const size_t chunk_size = (1<<BLOCK_BITS)*num_blocks;
-            memory::cblock_of<char> chunk_mem(chunk_size);
+            const size_t               chunk_size = (1<<BLOCK_BITS)*num_blocks;
+            memory::cblock_of<char>    chunk_mem(chunk_size);
             memory::nugget<BLOCK_BITS> Nugget(chunk_size,chunk_mem.data);
-            assert(Nugget.provided_number==num_blocks);
+            Y_ASSERT(Nugget.provided_number==num_blocks);
 
             for(size_t iter=0;iter<128;++iter)
             {
@@ -66,7 +66,7 @@ namespace
     template <const size_t BLOCK_BITS>
     static inline void do_test_all()
     {
-        std::cerr << "sizeof(memory::nuggets_for<" << BLOCK_BITS << ">)=" << sizeof(memory::nuggets_for<BLOCK_BITS>) << std::endl;
+        std::cerr << "sizeof(memory::nuggets_for<" << BLOCK_BITS << ">) = " << sizeof(memory::nuggets_for<BLOCK_BITS>) << std::endl;
         memory::nuggets_for<BLOCK_BITS> Nuggets;
         const size_t                    num_max = 12000;
         memory::cblock_of<block>        blk(num_max);

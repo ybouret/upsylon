@@ -17,7 +17,6 @@ namespace upsylon
         {
             destruct( static_cast<arena *>(impl) );
             clr();
-
         }
 
 

@@ -58,8 +58,7 @@ namespace upsylon
         class nuggets_for : public nuggets
         {
         public:
-            typedef nugget<BLOCK_BITS> nugget_type; //!< the one nugget
-            static  const size_t       nuggets_per_page = (small_chunk_size - sizeof(void*))/sizeof(nugget_type); //!< ever growing pages
+            typedef nugget<BLOCK_BITS> nugget_type;                          //!< the one nugget
             static  const size_t       block_size = nugget_type::block_size; //!< the nugget block size
 
             //! number of blocks per nugget, simple heuristic
@@ -106,7 +105,7 @@ namespace upsylon
             inline virtual size_t get_block_bits() const throw() { return nugget_type::block_bits; }
             inline virtual size_t get_block_size() const throw() { return nugget_type::block_size; }
             inline virtual size_t get_num_blocks() const throw() { return num_blocks; }
-            inline virtual size_t get_chunk_size() const throw() { return num_blocks; }
+            inline virtual size_t get_chunk_size() const throw() { return chunk_size; }
 
             //! release all memory
             inline virtual ~nuggets_for() throw()

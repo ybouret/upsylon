@@ -50,19 +50,23 @@ namespace upsylon
 
         }
 
+        void vein:: clr() throw()
+        {
+            memset( &workspace[0][0],0,sizeof(workspace) );
+        }
 
         vein:: vein() throw() :
         workspace()
         {
             Y_STATIC_CHECK(proto_size==sizeof(nuggets_for<min_bits>),workspace_too_small);
-            char *addr = &workspace[0][0];
-            nuggets_ops<min_bits,max_bits>::make(addr);
+            clr();
+            nuggets_ops<min_bits,max_bits>::make(&workspace[0][0]);
         }
 
         vein:: ~vein() throw()
         {
-            char *addr = &workspace[0][0];
-            nuggets_ops<min_bits,max_bits>::kill(addr);
+            nuggets_ops<min_bits,max_bits>::kill(&workspace[0][0]);
+            clr();
         }
 
 
