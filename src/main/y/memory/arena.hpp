@@ -63,7 +63,7 @@ namespace upsylon
 
             Y_DISABLE_COPY_AND_ASSIGN(arena);
             void    load_new_chunk( chunk *node ) throw();
-            void    new_block();
+            void    new_page();  //!< create a new page with chunks_per_page dead chunks
             chunk  *new_chunk();
             
         public:

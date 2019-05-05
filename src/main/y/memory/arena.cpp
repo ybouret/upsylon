@@ -31,7 +31,7 @@ namespace upsylon {
                 //
                 // clean allocated chunks
                 //______________________________________________________________
-                global &hmem = global::location();
+                global &_ = global::location();
                 for(const chunk *node=chunks.head;node;node=node->next)
                 {
                     if( !node->is_empty() )
@@ -40,7 +40,7 @@ namespace upsylon {
                         const size_t bs     = node->words_increment * node->word_size;
                         std::cerr << "[memory.chunk] still #allocated=" << nalloc << ", block_size<=" << bs << std::endl;
                     }
-                    hmem.__free(node->data,io::delta(node->data,node->last));
+                    _.__free(node->data,io::delta(node->data,node->last));
                 }
                 // then hard reset
                 chunks.reset();
@@ -51,7 +51,7 @@ namespace upsylon {
                 //______________________________________________________________
                 while(pages.size)
                 {
-                    hmem.__free(pages.query(),chunk_size);
+                    _.__free(pages.query(),chunk_size);
                 }
 
             }
@@ -96,7 +96,7 @@ namespace upsylon {
             assert(chunks_per_page>0);
         }
 
-        void arena:: new_block()
+        void arena:: new_page()
         {
             static global &hmem = global::instance();
             chunk         *ch   = io::cast<chunk>(pages.store(static_cast<page *>(hmem.__calloc(1,chunk_size))),sizeof(void*));
@@ -158,25 +158,39 @@ namespace upsylon {
 
         chunk * arena:: new_chunk()
         {
-            // ensure cached mchunk
+            //------------------------------------------------------------------
+            //
+            // ensure cached chunk
+            //
+            //------------------------------------------------------------------
             if(cached.size<=0)
             {
-                new_block();
+                new_page();
             }
             assert(cached.size>0);
 
+            //------------------------------------------------------------------
+            //
             // get a cached chunk, with no memory
+            //
+            //------------------------------------------------------------------
             chunk *ch = cached.query();
             try
             {
+                //--------------------------------------------------------------
                 // get memory
+                //--------------------------------------------------------------
                 static global &hmem = global::instance();
                 void   *data = hmem.__calloc(1,chunk_size);
 
+                //--------------------------------------------------------------
                 //format the chunk
+                //--------------------------------------------------------------
                 new (ch) chunk(block_size,data,chunk_size);
 
+                //--------------------------------------------------------------
                 // update bookeeping
+                //--------------------------------------------------------------
                 available += ch->provided_number;
                 load_new_chunk(ch);
 #if !defined(NDEBUG)
@@ -185,6 +199,7 @@ namespace upsylon {
                     assert(node->data<node->next->data);
                 }
 #endif
+                return ch;
 
             }
             catch(...)
@@ -192,7 +207,6 @@ namespace upsylon {
                 cached.store(ch);
                 throw;
             }
-            return ch;
         }
 
 
@@ -225,7 +239,9 @@ namespace upsylon {
                     chunk *lo = acquiring->prev;
                     chunk *up = acquiring->next;
 
+                    //----------------------------------------------------------
                     // scan both direction
+                    //----------------------------------------------------------
                     while(up&&lo)
                     {
                         if(lo->still_available)
@@ -243,7 +259,9 @@ namespace upsylon {
                         up = up->next;
                     }
 
+                    //----------------------------------------------------------
                     // scan remaining lo
+                    //----------------------------------------------------------
                     while(lo)
                     {
                         if(lo->still_available)
@@ -254,7 +272,9 @@ namespace upsylon {
                         lo=lo->prev;
                     }
 
+                    //----------------------------------------------------------
                     // scan remaining up
+                    //----------------------------------------------------------
                     while(up)
                     {
                         if(up->still_available)
@@ -276,11 +296,19 @@ namespace upsylon {
             }
 
         ACQUIRE:
+            //------------------------------------------------------------------
+            //
             // at this point, everything is OK
+            //
+            //------------------------------------------------------------------
             assert(acquiring&&acquiring->still_available);
             assert(available>0);
 
+            //------------------------------------------------------------------
+            //
             // bookeeping
+            //
+            //------------------------------------------------------------------
             --available;
             if(empty==acquiring) empty=0;
             return acquiring->acquire();
@@ -318,6 +346,8 @@ namespace upsylon {
             assert(p);
             assert(releasing);
             assert(acquiring);
+            assert(global::exists());
+
             switch(releasing->whose(p))
             {
                 case owned_by_this:
@@ -367,7 +397,8 @@ namespace upsylon {
                     }
                     available -= empty->provided_number;   // bookeeping
                     cached.store( chunks.unlink(empty) );  // clear chunk
-                    global::location().__free(empty->data,io::delta(empty->data,empty->last));
+                    static global &_ = global::location();
+                    _.__free(empty->data,io::delta(empty->data,empty->last));
                 }
 
                 empty = releasing;
