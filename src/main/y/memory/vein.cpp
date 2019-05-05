@@ -1,8 +1,10 @@
 
 #include "y/memory/vein.hpp"
+#include "y/memory/nuggets.hpp"
+#include "y/memory/global.hpp"
+#include "y/os/static-check.hpp"
 #include "y/exceptions.hpp"
 #include <cerrno>
-#include "y/memory/nuggets.hpp"
 
 namespace upsylon
 {
@@ -18,12 +20,12 @@ namespace upsylon
             {
                 static inline void make( char *base ) throw()
                 {
-                    new (base) nuggets<N>();
+                    new (base) nuggets_for<N>();
                 }
 
                 static inline void kill( char *base ) throw()
                 {
-                    destruct( (nuggets<N> *)base );
+                    destruct( (nuggets_for<N> *)base );
                 }
             };
 
@@ -33,27 +35,26 @@ namespace upsylon
                 {
                     // pre-order make
                     nuggets_ops<NMIN,N-1>::make(base);
-                    new (base+(N-NMIN)*sizeof(nuggets<N>)) nuggets<N>();
+                    new (base+(N-NMIN)*sizeof(nuggets_for<N>)) nuggets_for<N>();
                 }
 
                 static inline void kill( char *base ) throw()
                 {
                     // post-order kill
-                    char *addr = base +(N-NMIN)*sizeof(nuggets<N>);
-                    destruct( (nuggets<N> *)addr );
+                    char *addr = base +(N-NMIN)*sizeof(nuggets_for<N>);
+                    destruct( (nuggets_for<N> *)addr );
 
                     nuggets_ops<NMIN,N-1>::kill(base);
                 }
             };
 
-            //typedef nuggets<vein::min_bits> proto;
         }
 
 
         vein:: vein() throw() :
         workspace()
         {
-            assert(proto_size>=sizeof(nuggets<min_bits>));
+            Y_STATIC_CHECK(proto_size>=sizeof(nuggets_for<min_bits>),workspace_too_small);
             char *addr = &workspace[0][0];
             nuggets_ops<min_bits,max_bits>::make(addr);
         }
@@ -120,7 +121,7 @@ namespace upsylon
                     n           = bytes_for(n,ibit);
                     assert(ibit>=min_bits);
                     assert(ibit<=max_bits);
-                    __nuggets *mgr = (__nuggets *)&workspace[ibit-min_bits][0];
+                    nuggets *mgr = (nuggets *)&workspace[ibit-min_bits][0];
                     assert(mgr->get_block_bits()==ibit);
                     return mgr->acquire();
                 }
@@ -143,7 +144,7 @@ namespace upsylon
                 {
                     if( 0 != ( (size_t(1)<<i) & n ) )
                     {
-                        __nuggets *mgr = (__nuggets *)&workspace[i-min_bits][0];
+                        nuggets *mgr = (nuggets *)&workspace[i-min_bits][0];
                         assert(mgr->get_block_bits()==i);
                         assert(mgr->get_block_size()==n);
                         mgr->release(p);

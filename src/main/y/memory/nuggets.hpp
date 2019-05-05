@@ -3,7 +3,8 @@
 #define Y_MEMORY_NUGGETS_INCLUDED 1
 
 #include "y/memory/nugget.hpp"
-#include "y/object.hpp"
+#include "y/memory/arena.hpp"
+#include "y/object-parameters.hpp"
 #include "y/os/error.hpp"
 
 namespace upsylon
@@ -11,14 +12,14 @@ namespace upsylon
     namespace memory
     {
         //! base class for common interface
-        class __nuggets
+        class nuggets
         {
         public:
             static const size_t small_chunk_size = Y_CHUNK_SIZE; //!< base size for allocation
             static const size_t min_num_blocks   = 1<<3;         //!< minimum number of blocks per nugget
 
             //! destructor
-            inline virtual ~__nuggets() throw() {}
+            virtual ~nuggets() throw();
 
             //! common acquire method
             virtual void *acquire() = 0;
@@ -34,13 +35,12 @@ namespace upsylon
             //! the big chunk size
             virtual size_t get_chunk_size() const throw() = 0;
 
+            static void * global_calloc( const size_t count, const size_t size);
+            static void   global_free(void *p, const size_t bytes) throw();
 
         protected:
             //! constructor
-            inline explicit __nuggets() throw()
-            {
-                assert(is_a_power_of_two(small_chunk_size));
-            }
+            explicit nuggets() throw();
 
             //! page to store individual nugget memory
             struct page
@@ -48,12 +48,12 @@ namespace upsylon
                 page *next; //!< for pool
             };
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(__nuggets);
+            Y_DISABLE_COPY_AND_ASSIGN(nuggets);
         };
 
         //! multiple nuggets of same block_size
         template <const size_t BLOCK_BITS>
-        class nuggets : public __nuggets
+        class nuggets_for : public nuggets
         {
         public:
             typedef nugget<BLOCK_BITS> nugget_type; //!< the one nugget
@@ -90,8 +90,8 @@ namespace upsylon
             }
 
             //! compute memory characteristics \todo work on that
-            inline explicit nuggets() :
-            __nuggets(),
+            inline explicit nuggets_for() :
+            nuggets(),
             acquiring(0),
             releasing(0),
             available(0),
@@ -110,20 +110,19 @@ namespace upsylon
 
 
             //! release all memory
-            inline virtual ~nuggets() throw()
+            inline virtual ~nuggets_for() throw()
             {
                 if(pages.size)
                 {
-                    global &hmem = global::location();
                     for(nugget_type *node=content.tail;node;node=node->prev)
                     {
-                        hmem.__free(node->data,node->bytes);
+                        nuggets::global_free(node->data,node->bytes);
                     }
                     content.reset();
                     cached.reset();
                     while(pages.size)
                     {
-                        hmem.__free(pages.query(),small_chunk_size);
+                        nuggets::global_free(pages.query(),small_chunk_size);
                     }
                 }
             }
@@ -240,12 +239,12 @@ namespace upsylon
             const size_t               num_blocks;
             const size_t               chunk_size;
 
-            Y_DISABLE_COPY_AND_ASSIGN(nuggets);
+            Y_DISABLE_COPY_AND_ASSIGN(nuggets_for);
             
             inline void create_nuggets()
             {
                 assert(cached.size<=0);
-                nugget_type *node = io::cast<nugget_type>(pages.store(static_cast<page *>(global::instance().__calloc(1,small_chunk_size))),sizeof(void*));
+                nugget_type *node = io::cast<nugget_type>(pages.store(static_cast<page *>(nuggets::global_calloc(1,small_chunk_size))),sizeof(void*));
                 for(size_t i=0;i<nuggets_per_page;++i)
                 {
                     (void)cached.store( node+i );
@@ -323,7 +322,7 @@ namespace upsylon
                     create_nuggets();
                 }
                 assert(cached.size>0);
-                void        *data = memory::global::instance().__calloc(1,chunk_size);
+                void        *data = nuggets::global_calloc(1,chunk_size);
                 nugget_type *node = new ( cached.query() ) nugget_type(chunk_size,data);
                 assert(num_blocks==node->still_available);
                 available += num_blocks;

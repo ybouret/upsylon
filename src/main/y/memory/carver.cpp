@@ -3,6 +3,7 @@
 #include "y/memory/arena-of.hpp"
 #include "y/type/utils.hpp"
 #include "y/exception.hpp"
+#include "y/os/static-check.hpp"
 
 #include <iostream>
 #include <cstring>
@@ -36,7 +37,7 @@ namespace upsylon
         wksp(),
         impl( &wksp[0] )
         {
-            assert( sizeof(wksp) >= sizeof( arena_of<slice> ) );
+            Y_STATIC_CHECK(sizeof(wksp)>=sizeof(arena_of<slice>),worspace_too_small);
             clr();
             new (impl) arena_type(chunk_size);
         }

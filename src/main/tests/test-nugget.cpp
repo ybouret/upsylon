@@ -66,10 +66,10 @@ namespace
     template <const size_t BLOCK_BITS>
     static inline void do_test_all()
     {
-        std::cerr << "sizeof(memory::nuggets<" << BLOCK_BITS << ">)=" << sizeof(memory::nuggets<BLOCK_BITS>) << std::endl;
-        memory::nuggets<BLOCK_BITS> Nuggets;
-        const size_t                num_max = 12000;
-        memory::cblock_of<block>    blk(num_max);
+        std::cerr << "sizeof(memory::nuggets_for<" << BLOCK_BITS << ">)=" << sizeof(memory::nuggets_for<BLOCK_BITS>) << std::endl;
+        memory::nuggets_for<BLOCK_BITS> Nuggets;
+        const size_t                    num_max = 12000;
+        memory::cblock_of<block>        blk(num_max);
         block *b = blk.data;
 
         for(size_t iter=0;iter<32;++iter)

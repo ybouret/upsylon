@@ -3,16 +3,8 @@
 #define Y_OBJECT_INCLUDED 1
 
 #include "y/memory/small-object.hpp"
+#include "y/object-parameters.hpp"
 
-//! default limit size for small object
-#ifndef Y_LIMIT_SIZE
-#define Y_LIMIT_SIZE 512
-#endif
-
-//! default chunk size for small object, should be a power of two
-#ifndef Y_CHUNK_SIZE
-#define Y_CHUNK_SIZE 4096
-#endif
 
 namespace upsylon
 {

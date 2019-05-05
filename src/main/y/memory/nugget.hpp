@@ -13,7 +13,7 @@ namespace upsylon
     namespace memory
     {
 
-        //! handle memory for power of two aligned blocks
+        //! handle memory for power-of-two aligned blocks
         template <const size_t BLOCK_BITS>
         class nugget
         {
