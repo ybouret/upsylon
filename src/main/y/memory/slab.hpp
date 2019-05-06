@@ -3,8 +3,6 @@
 #define Y_MEMORY_SLAB_INCLUDED 1
 
 #include "y/dynamic.hpp"
-#include "y/memory/chunk.hpp"
-#include "y/os/static-check.hpp"
 
 namespace upsylon
 {
@@ -15,24 +13,21 @@ namespace upsylon
         class slab : public dynamic
         {
         public:
-            typedef __chunk<size_t> chunk_type; //!< internal data
-            virtual ~slab() throw();            //!< cleanup
-
-
-            //! number of available memory object
-            virtual size_t size() const throw();
-
-            //! orignal number of memory objects
-            virtual size_t capacity() const throw();
-
+            virtual ~slab() throw();                //!< cleanup
+            virtual size_t size() const throw();    //!< number of available memory object
+            virtual size_t capacity() const throw();//!< orignal number of memory objects
 
         protected:
             explicit slab(const size_t block_size,          //|
                           void        *chunk_data,          //|
                           const size_t chunk_size) throw(); //!< setup
-            chunk_type chunk;                               //!< handling data
+
+            void *acquire_block();              //!< uses internal chunk
+            void  release_block(void*) throw(); //!< uses internal chunk
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(slab);
+            void      *impl[ 8 ]; //!< greater or equal to sizeof any __chunk
         };
 
         //! memory I/O for a fixed number of objects
@@ -45,7 +40,6 @@ namespace upsylon
             //! compute bytes to provide to hold num_objects
             static inline size_t bytes_for( const size_t num_objects ) throw()
             {
-                Y_STATIC_CHECK(block_size>=sizeof(T),bad_block_size);
                 return block_size * num_objects;
             }
 
@@ -60,20 +54,15 @@ namespace upsylon
             inline T *acquire() throw()
             {
                 assert( size() > 0 );
-                return static_cast<T*>(chunk.acquire());
+                return static_cast<T*>(acquire_block());
             }
 
             //! release a previously allocated block
             inline void release(T *addr) throw()
             {
-                chunk.release(static_cast<void*>(addr));
+                release_block(addr);
             }
 
-            //! check memory
-            inline bool owns(const T *addr) const throw()
-            {
-                return chunk.owns(addr);
-            }
 
 
         private:

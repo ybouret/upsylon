@@ -35,7 +35,7 @@ namespace upsylon
             const word_type  provided_number; //!< initial count
 
             //! destructor
-            inline __chunk() throw(){}
+            inline ~__chunk() throw(){}
             
             //! compute parameters and format data
             /**
