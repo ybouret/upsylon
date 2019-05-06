@@ -43,26 +43,14 @@ namespace upsylon
                 return block_size * num_objects;
             }
 
-            //! format unerlying chunk
+            //! format underlying chunk
             inline slab_of(void *chunk_data,const size_t chunk_size) throw() :
             slab(block_size,chunk_data,chunk_size) {}
 
-            //! destructor
-            inline virtual ~slab_of() throw() {}
 
-            //! prepare memory area for sizeof(T)
-            inline T *acquire() throw()
-            {
-                assert( size() > 0 );
-                return static_cast<T*>(acquire_block());
-            }
-
-            //! release a previously allocated block
-            inline void release(T *addr) throw()
-            {
-                release_block(addr);
-            }
-
+            inline virtual ~slab_of() throw() {}                                                   //!< destructor
+            inline T       *acquire() throw()        {  return static_cast<T*>(acquire_block()); } //!< prepare memory area for sizeof(T)
+            inline void     release(T *addr) throw() { release_block(addr); }                      //!<release a previously allocated block
 
 
         private:
