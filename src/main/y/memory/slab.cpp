@@ -1,6 +1,6 @@
 #include "y/memory/slab.hpp"
 #include "y/memory/chunk.hpp"
-
+#include <cstring>
 
 
 
