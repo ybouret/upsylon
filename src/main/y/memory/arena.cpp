@@ -1,6 +1,8 @@
 #include "y/memory/arena.hpp"
 #include "y/type/utils.hpp"
 #include "y/memory/global.hpp"
+#include "y/hashing/hash64.hpp"
+
 #include "y/os/error.hpp"
 #include <iostream>
 
@@ -9,17 +11,32 @@ namespace upsylon {
     namespace memory
     {
 
-        ////////////////////////////////////////////////////////////////////////
-        //
-        // arena setup
-        //
-        ////////////////////////////////////////////////////////////////////////
 
+        chunk * arena:: delete_chunk_data(chunk *node) throw()
+        {
+            assert(node);
+            static global &_ = global::location();
+            if( !node->is_empty() )
+            {
+                const size_t nalloc = node->allocated();
+                const size_t bs     = node->words_increment * node->word_size;
+                std::cerr << "[memory.chunk] still #allocated=" << nalloc << ", block_size<=" << bs << std::endl;
+            }
+            _.__free(node->data,io::delta(node->data,node->last));
+            return node;
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //
+        // arena destruction
+        //
+        ////////////////////////////////////////////////////////////////////////
         arena:: ~arena() throw()
         {
             if(pages.size)
             {
                 assert(global::exists());
+                static global &_ = global::location();
 
                 //______________________________________________________________
                 //
@@ -31,16 +48,9 @@ namespace upsylon {
                 //
                 // clean allocated chunks
                 //______________________________________________________________
-                global &_ = global::location();
-                for(const chunk *node=chunks.head;node;node=node->next)
+                for(chunk *node=chunks.head;node;node=node->next)
                 {
-                    if( !node->is_empty() )
-                    {
-                        const size_t nalloc = node->allocated();
-                        const size_t bs     = node->words_increment * node->word_size;
-                        std::cerr << "[memory.chunk] still #allocated=" << nalloc << ", block_size<=" << bs << std::endl;
-                    }
-                    _.__free(node->data,io::delta(node->data,node->last));
+                    (void) delete_chunk_data(node);
                 }
                 // then hard reset
                 chunks.reset();
@@ -66,21 +76,25 @@ namespace upsylon {
                                          const size_t the_chunk_size) throw()
         {
             assert(the_block_size>0);
+
             // chunk size must be bigger than the_block_size and the chunk::word_size
             size_t cs = max_of(the_block_size,the_chunk_size,chunk::word_size);
 
-            // we also need to have at least one sizeof(chunk) in memory block
+            // we also need to have at least one sizeof(chunk) in memory page
             const size_t min_page_size = sizeof(void*)+sizeof(chunk);
             cs = max_of(cs,min_page_size);
 
+            // and we align memory
             return next_power_of_two(cs);
         }
+
 
 
         arena:: arena(const size_t the_block_size,
                       const size_t the_chunk_size) throw() :
         block_size(the_block_size),
         chunk_size( compute_chunk_size(block_size,the_chunk_size) ),
+        block_hkey( hashing::hash64::mixDES(block_size) ),
         acquiring(0),
         releasing(0),
         available(0),
@@ -96,17 +110,17 @@ namespace upsylon {
             assert(chunks_per_page>0);
         }
 
-        void arena:: new_page()
+        void arena:: prepare_page()
         {
             static global &hmem = global::instance();
             chunk         *ch   = io::cast<chunk>(pages.store(static_cast<page *>(hmem.__calloc(1,chunk_size))),sizeof(void*));
             for(size_t i=0;i<chunks_per_page;++i)
             {
-                cached.store( ch+i );
+                cached.store( ch++ );
             }
         }
 
-        void arena:: load_new_chunk(chunk *node) throw()
+        void arena:: insert_chunk(chunk *node) throw()
         {
             Y_CORE_CHECK_LIST_NODE(node);
 
@@ -153,6 +167,7 @@ namespace upsylon {
             }
 
             // never get here!
+            cached.store( delete_chunk_data(node) );
             fatal_error("invalid system memory mapping in arena");
         }
 
@@ -165,7 +180,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             if(cached.size<=0)
             {
-                new_page();
+                prepare_page();
             }
             assert(cached.size>0);
 
@@ -192,7 +207,7 @@ namespace upsylon {
                 // update bookeeping
                 //--------------------------------------------------------------
                 available += ch->provided_number;
-                load_new_chunk(ch);
+                insert_chunk(ch);
 #if !defined(NDEBUG)
                 for(const chunk *node=chunks.head;node->next;node=node->next)
                 {
@@ -213,8 +228,7 @@ namespace upsylon {
     }
 }
 
-#include "y/exceptions.hpp"
-#include <cerrno>
+#include "y/exception.hpp"
 
 namespace upsylon {
 
@@ -285,7 +299,7 @@ namespace upsylon {
                         up=up->next;
                     }
 
-                    throw libc::exception(ENOMEM,"unexpected failure in arena.acquire(block_size=%u)", unsigned(block_size));
+                    throw exception("[arena.acquire(unexpected failure for block_size=%u)]", unsigned(block_size));
                 }
 
             }
@@ -379,7 +393,6 @@ namespace upsylon {
                 {
                     //__________________________________________________________
                     //
-                    // std::cerr << "two empty chunks!" << std::endl;
                     // check highest memory
                     //__________________________________________________________
                     if(empty->data<releasing->data)
@@ -395,10 +408,17 @@ namespace upsylon {
                     {
                         acquiring = releasing;
                     }
+                    //__________________________________________________________
+                    //
+                    // bookeeping of memory
+                    //__________________________________________________________
                     available -= empty->provided_number;   // bookeeping
-                    cached.store( chunks.unlink(empty) );  // clear chunk
-                    static global &_ = global::location();
-                    _.__free(empty->data,io::delta(empty->data,empty->last));
+
+                    //__________________________________________________________
+                    //
+                    // and release some system memory
+                    //__________________________________________________________
+                    cached.store( delete_chunk_data( chunks.unlink(empty) ) );
                 }
 
                 empty = releasing;

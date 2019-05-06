@@ -41,7 +41,19 @@ namespace upsylon
             template <typename T> static inline
             T mixDES(const T x) throw() { return mix<T>(x,DES); }
             
-            
+            template <const uint32_t MASK>
+            static inline void swap_bits(uint32_t &lhs,
+                                         uint32_t &rhs) throw()
+            {
+                const uint32_t l_bits = lhs & MASK;
+                const uint32_t r_bits = rhs & MASK;
+                lhs &= ~MASK;
+                rhs &= ~MASK;
+                lhs |= r_bits;
+                rhs |= l_bits;
+            }
+
+
         };
     }
 

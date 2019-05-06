@@ -48,6 +48,7 @@ static inline void test_arena_of(const size_t nb)
 Y_UTEST(arena)
 {
 
+    
     const size_t nb = 4000;
 
     memory::cblock_of<block> blocks(nb);
@@ -93,6 +94,8 @@ Y_UTEST(arena)
     test_arena_of<char>(nb*2);
     test_arena_of<int>(nb*2);
     test_arena_of<uint64_t>(nb*2);
+
+
 
 }
 Y_UTEST_DONE()

@@ -1,0 +1,8 @@
+//! \file
+#ifndef Y_MEMORY_ARENA_IMPL_INCLUDED
+#define Y_MEMORY_ARENA_IMPL_INCLUDED 1
+
+#define Y_MEMORY_ARENA_BLK 20
+
+#endif
+

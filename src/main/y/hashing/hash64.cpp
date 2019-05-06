@@ -57,10 +57,8 @@ const uint32_t ib = (il*il) + ~(ih*ih);\
             static const uint32_t Y3 = 0x55a7ca46L;
 
             _YCE_NR_HASH64(0) _YCE_NR_HASH64(1) _YCE_NR_HASH64(2) _YCE_NR_HASH64(3)
-
-
         }
-
+        
     }
 }
 

@@ -3,8 +3,9 @@
 #define Y_MEMORY_NUGGETS_INCLUDED 1
 
 #include "y/memory/nugget.hpp"
-#include "y/memory/arena.hpp"
+#include "y/memory/arena-impl.hpp"
 #include "y/object-parameters.hpp"
+#include "y/core/list.hpp"
 #include "y/os/error.hpp"
 
 namespace upsylon
@@ -45,9 +46,9 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(nuggets);
             void  clr() throw();
-            void *wksp[19];       //!< internal arena data
+            void *wksp[Y_MEMORY_ARENA_BLK]; //!< internal arena data
         protected:
-            void *impl;           //!< internal arena impl
+            void *impl;                     //!< internal arena impl
 
             void *query_nugget_space();               //!< from internal arena
             void  store_nugget_space(void *) throw(); //!< into internal arena

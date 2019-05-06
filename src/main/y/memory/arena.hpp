@@ -30,7 +30,7 @@ namespace upsylon
 
             const size_t block_size; //!< the same block_size for everyone
             const size_t chunk_size; //!< global memory chunk_size for any allocation
-
+            const size_t block_hkey; //!< hashed block_size
 
             //! compute required chunk_size to run this arena
             static size_t compute_chunk_size(const size_t the_block_size,
@@ -62,10 +62,10 @@ namespace upsylon
             core::pool_of<page>   pages;     //!< ever growing memory to store initial dead chunks
 
             Y_DISABLE_COPY_AND_ASSIGN(arena);
-            void    load_new_chunk( chunk *node ) throw();
-            void    new_page();  //!< create a new page with chunks_per_page dead chunks
-            chunk  *new_chunk();
-            
+            void    insert_chunk(chunk *) throw();      //!< put new chunk into position, by increasing memory
+            void    prepare_page();                     //!< create a new page with chunks_per_page dead chunks
+            chunk  *new_chunk();                        //!< handle memory
+            chunk  *delete_chunk_data(chunk *) throw(); //!< delete only content
         public:
             arena       *next; //!< for list
             arena       *prev; //!< for list
