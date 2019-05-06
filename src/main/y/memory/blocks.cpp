@@ -21,7 +21,7 @@ namespace upsylon
             static global &_ = global::location();
             {
                 arena_list *slots = static_cast<arena_list *>(htable);
-                cache_type *cache = static_cast<cache_type *>(z_impl);
+                cache_type *cache = (cache_type *)(&z_wksp[0]);
                 for(size_t i=0;i<=table_mask;++i)
                 {
                     arena_list &slot = slots[i];
@@ -66,7 +66,7 @@ namespace upsylon
             assert( is_a_power_of_two(chunk_size)   );
             assert( is_a_power_of_two(table_mask+1) );
             memset(z_wksp,0,sizeof(z_wksp));
-            new (z_impl) cache_type(chunk_size);
+            new (&z_wksp[0]) cache_type(chunk_size);
         }
 
         
