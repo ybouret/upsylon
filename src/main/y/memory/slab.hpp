@@ -38,10 +38,8 @@ namespace upsylon
             //! destructor
             inline virtual ~slab() throw()
             {
-                if(!chunk.is_empty())
-                {
-                    //std::cerr << "[memory.slab] still #allocated=" << chunk.allocated() << std::endl;
-                }
+                const size_t still_allocated = chunk.allocated();
+                if(still_allocated>0) { std::cerr << "[memory.slab] still #allocated=" << still_allocated << std::endl; }
             }
 
             //! number of available memory object
