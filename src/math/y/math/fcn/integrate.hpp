@@ -5,6 +5,7 @@
 #include "y/math/types.hpp"
 #include "y/core/pool.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/core/list.hpp"
 #include <cstdlib>
 
 namespace upsylon

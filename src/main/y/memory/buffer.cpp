@@ -14,6 +14,8 @@ namespace upsylon
     }
 }
 
+#include "y/type/bswap.hpp"
+
 namespace upsylon
 {
     namespace memory

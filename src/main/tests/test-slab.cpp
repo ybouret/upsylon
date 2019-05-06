@@ -1,6 +1,7 @@
 #include "y/memory/slab.hpp"
 #include "y/utest/run.hpp"
 #include "y/memory/buffers.hpp"
+#include "y/core/list.hpp"
 
 using namespace upsylon;
 

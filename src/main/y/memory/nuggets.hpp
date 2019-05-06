@@ -91,7 +91,7 @@ namespace upsylon
                 }
             }
 
-            //! compute memory characteristics \TODO work on that
+            //! compute memory characteristics \todo work on that?
             inline explicit nuggets_for() :
             nuggets(),
             acquiring(0),

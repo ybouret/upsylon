@@ -58,7 +58,7 @@ namespace upsylon
         vein:: vein() throw() :
         workspace()
         {
-            Y_STATIC_CHECK(proto_size==sizeof(nuggets_for<min_bits>),workspace_too_small);
+            Y_STATIC_CHECK(proto_size==sizeof(nuggets_for<min_bits>),workspace_mismatch);
             clr();
             nuggets_ops<min_bits,max_bits>::make(&workspace[0][0]);
         }

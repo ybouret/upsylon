@@ -30,7 +30,6 @@ namespace upsylon
 
             const size_t block_size; //!< the same block_size for everyone
             const size_t chunk_size; //!< global memory chunk_size for any allocation
-            const size_t block_hkey; //!< hashed block_size
 
             //! compute required chunk_size to run this arena
             static size_t compute_chunk_size(const size_t the_block_size,

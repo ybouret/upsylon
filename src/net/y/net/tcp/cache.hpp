@@ -5,6 +5,7 @@
 
 #include "y/net/tcp/client.hpp"
 #include "y/memory/slab.hpp"
+#include "y/core/list.hpp"
 
 namespace upsylon
 {

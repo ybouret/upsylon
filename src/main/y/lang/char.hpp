@@ -4,6 +4,7 @@
 
 #include "y/lang/char-info.hpp"
 #include "y/core/node.hpp"
+#include "y/core/list.hpp"
 
 namespace upsylon
 {

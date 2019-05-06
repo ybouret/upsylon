@@ -20,13 +20,15 @@ Y_UTEST(blocks)
     for(size_t chunk_size=1;chunk_size<=4096;chunk_size*=2)
     {
         memory::blocks B(chunk_size);
-
+        std::cerr << "requested chunk_size: " << chunk_size     << std::endl;
+        std::cerr << "allocated chunk_size: " << B.chunk_size   << std::endl;
+        std::cerr << "computed  table_mask: " << B.table_mask   << std::endl;
+        std::cerr << "computed  table_size: " << B.table_mask+1 << std::endl;
 
         const size_t n = 1000;
         const size_t h = n/2;
         memory::cblock_of<block> wksp(n);
         block *blk = wksp.data;
-        std::cerr << "#pages,arenas:";
         for(size_t iter=0;iter<16;++iter)
         {
             for(size_t i=0;i<n;++i)
@@ -52,7 +54,6 @@ Y_UTEST(blocks)
                 Y_ASSERT( B.owns(blk[i].addr,blk[i].size) );
                 B.release(blk[i].addr,blk[i].size);
             }
-            std::cerr << B.num_pages() << "," << B.num_arenas() << "/";
         }
         std::cerr << std::endl;
     }

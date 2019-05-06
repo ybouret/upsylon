@@ -40,7 +40,8 @@ namespace upsylon
             //! wrapper
             template <typename T> static inline
             T mixDES(const T x) throw() { return mix<T>(x,DES); }
-            
+
+            //! exchange bits from mask bwtween two dwords
             template <const uint32_t MASK>
             static inline void swap_bits(uint32_t &lhs,
                                          uint32_t &rhs) throw()

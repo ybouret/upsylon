@@ -5,6 +5,7 @@
 #include "y/sequence/array.hpp"
 #include "y/container/sequence.hpp"
 #include "y/math/types.hpp"
+#include "y/type/bswap.hpp"
 
 namespace upsylon
 {

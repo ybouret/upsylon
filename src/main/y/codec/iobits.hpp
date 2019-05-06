@@ -2,9 +2,11 @@
 #ifndef Y_IOBITS_INCLUDED
 #define Y_IOBITS_INCLUDED 1
 
+
+#include "y/object.hpp"
 #include "y/core/list.hpp"
 #include "y/core/pool.hpp"
-#include "y/object.hpp"
+#include <iostream>
 
 namespace upsylon
 {

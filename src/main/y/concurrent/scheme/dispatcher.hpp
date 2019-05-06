@@ -5,6 +5,8 @@
 
 #include "y/concurrent/scheme/server.hpp"
 #include "y/concurrent/threads.hpp"
+#include "y/core/list.hpp"
+#include "y/core/pool.hpp"
 
 namespace upsylon
 {

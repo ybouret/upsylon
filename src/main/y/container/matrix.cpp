@@ -2,6 +2,8 @@
 #include "y/container/matrix.hpp"
 #include "y/exceptions.hpp"
 #include "y/type/utils.hpp"
+#include "y/type/cswap.hpp"
+
 #include <cerrno>
 
 namespace upsylon

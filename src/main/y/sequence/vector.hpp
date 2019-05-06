@@ -5,6 +5,7 @@
 #include "y/container/sequence.hpp"
 #include "y/sequence/array.hpp"
 #include "y/iterate/linear.hpp"
+#include "y/type/bswap.hpp"
 #include <cstring>
 
 namespace upsylon

@@ -4,6 +4,7 @@
 
 #include "y/mpl/natural.hpp"
 #include "y/core/node.hpp"
+#include "y/core/list.hpp"
 
 namespace upsylon
 {

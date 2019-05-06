@@ -4,6 +4,7 @@
 
 #include "y/sequence/array.hpp"
 #include "y/ptr/counted.hpp"
+#include "y/type/bswap.hpp"
 #include <cstdlib>
 
 namespace upsylon

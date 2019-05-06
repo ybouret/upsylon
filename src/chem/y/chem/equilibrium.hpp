@@ -4,6 +4,7 @@
 
 #include "y/chem/species.hpp"
 #include "y/sequence/array.hpp"
+#include "y/core/list.hpp"
 
 namespace upsylon
 {

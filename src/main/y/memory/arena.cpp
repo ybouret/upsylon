@@ -94,7 +94,6 @@ namespace upsylon {
                       const size_t the_chunk_size) throw() :
         block_size(the_block_size),
         chunk_size( compute_chunk_size(block_size,the_chunk_size) ),
-        block_hkey( hashing::hash64::mixDES(block_size) ),
         acquiring(0),
         releasing(0),
         available(0),

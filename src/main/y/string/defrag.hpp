@@ -4,6 +4,7 @@
 
 #include "y/string.hpp"
 #include "y/core/addr-list.hpp"
+#include "y/core/pool.hpp"
 
 namespace upsylon
 {
