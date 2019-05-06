@@ -21,7 +21,7 @@ namespace upsylon
             static global &_ = global::location();
             {
                 arena_list *slots = static_cast<arena_list *>(htable);
-                cache_type *cache = (cache_type *)(&z_wksp[0]);
+                cache_type *cache = (cache_type *)(&cached[0]);
                 for(size_t i=0;i<=table_mask;++i)
                 {
                     arena_list &slot = slots[i];
@@ -59,14 +59,13 @@ namespace upsylon
         acquiring(0),
         releasing(0),
         htable( static_cast<arena_list *>(global::instance().__calloc(1, chunk_size)) ),
-        z_wksp(),
-        z_impl( &z_wksp[0] )
+        cached()
         {
-            Y_STATIC_CHECK(sizeof(z_wksp)>=sizeof(cache_type),workspace_too_small);
+            Y_STATIC_CHECK(sizeof(cached)>=sizeof(cache_type),workspace_too_small);
             assert( is_a_power_of_two(chunk_size)   );
             assert( is_a_power_of_two(table_mask+1) );
-            memset(z_wksp,0,sizeof(z_wksp));
-            new (&z_wksp[0]) cache_type(chunk_size);
+            memset(cached,0,sizeof(cached));
+            new (&cached[0]) cache_type(chunk_size);
         }
 
         
@@ -103,7 +102,7 @@ namespace upsylon
                 //
                 // need to take from zcache
                 //______________________________________________________________
-                cache_type &zcache = *static_cast<cache_type *>(z_impl);
+                cache_type &zcache = *(cache_type *)(&cached[0]);
                 arena      *a      = zcache.acquire();
                 try { new (a) arena(block_size,chunk_size); }
                 catch(...){ zcache.release(a); throw;}

@@ -43,8 +43,7 @@ namespace upsylon
             arena          *acquiring; //!< acquiring cache
             arena          *releasing; //!< releasing cache
             void           *htable;    //!< array of core::list_of<arena>
-            void           *z_wksp[Y_MEMORY_ARENA_BLK];  //!< provider of empty arena
-            void           *z_impl;
+            void           *cached[Y_MEMORY_ARENA_BLK];  //!< provider of empty arena
             Y_DISABLE_COPY_AND_ASSIGN(blocks);
 
         };

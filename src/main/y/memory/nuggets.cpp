@@ -15,18 +15,16 @@ namespace upsylon
 
         nuggets:: ~nuggets() throw()
         {
-            destruct( static_cast<arena *>(impl) );
+            destruct( (arena *)( &wksp[0]) );
             clr();
         }
 
 
-        nuggets:: nuggets() throw() :
-        wksp(),
-        impl( &wksp[0] )
+        nuggets:: nuggets() throw() : wksp()
         {
             clr();
             assert(is_a_power_of_two(small_chunk_size));
-            new (impl) memory::arena( sizeof(nugget<3>), Y_CHUNK_SIZE );
+            new ( &wksp[0]) memory::arena( sizeof(nugget<3>), Y_CHUNK_SIZE );
         }
 
         void * nuggets:: global_calloc( const size_t count, const size_t size)
@@ -44,13 +42,14 @@ namespace upsylon
 
         void * nuggets:: query_nugget_space()
         {
-            return static_cast<arena*>(impl)->acquire();
+
+            return ((arena*)( &wksp[0]))->acquire();
         }
 
         void nuggets:: store_nugget_space(void *p) throw()
         {
             assert(p);
-            static_cast<arena*>(impl)->release(p);
+            ((arena*)( &wksp[0]))->release(p);
         }
     }
 

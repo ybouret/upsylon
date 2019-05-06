@@ -34,18 +34,16 @@ namespace upsylon
         chunk_size( compute_chunk_size(user_chunk_size) ),
         acquiring(0),
         slices(),
-        wksp(),
-        impl( &wksp[0] )
+        wksp()
         {
             Y_STATIC_CHECK(sizeof(wksp)>=sizeof(arena_of<slice>),worspace_too_small);
             clr();
-            new (impl) arena_type(chunk_size);
+            new (&wksp[0]) arena_type(chunk_size);
         }
 
         carver:: ~carver() throw()
         {
-            assert(impl);
-            arena_type &a = *static_cast<arena_type *>(impl);
+            arena_type &a = *(arena_type *)(&wksp[0]);
             while(slices.size>0)
             {
                 static global &hmem = global::location();
@@ -159,7 +157,7 @@ namespace upsylon
             // cache missed and not enough memory:
             // => get a new block
             //__________________________________________________________________
-            arena_type  &a      = *static_cast<arena_type *>(impl);
+            arena_type  &a      = *(arena_type *)(&wksp[0]);
             slice       *s      = a.acquire();
             const size_t buflen = max_of(slice::bytes_to_hold(n),chunk_size);
             void        *buffer = 0;
