@@ -55,17 +55,26 @@ namespace upsylon
 
 }
 
+#include "y/hashing/hash64.hpp"
 
 namespace upsylon {
 
     size_t network:: hash( const net::socket_type &s ) throw()
     {
+        // prepare field
         union
         {
-            size_t   h;
-            uint32_t dw;
-        } item = { 0 };
-        item.dw = crc32(&s,sizeof(s));
+            uint32_t         dw[2];
+            net::socket_type s;
+            size_t           h;
+        } item = { {0,0} };
+
+        // fill field with socket
+        item.s = s;
+
+        // wide hashing
+        hashing::hash64::DES(&item.dw[0],&item.dw[1]);
+
         return item.h;
     }
     
@@ -132,7 +141,7 @@ namespace upsylon
                                        const int type,
                                        const int protocol)
         {
-            Y_NET_VERBOSE(std::cerr << "[network.bsd.socket.open]" << std::endl);
+            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.open]" << std::endl);
 
 
             Y_GIANT_LOCK();

@@ -8,6 +8,8 @@
 #include "y/exceptions.hpp"
 #endif
 
+#include "y/codec/base64.hpp"
+
 namespace upsylon
 {
     namespace net
@@ -30,12 +32,24 @@ namespace upsylon
 
         bsd_socket:: ~bsd_socket() throw()
         {
+            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.~<" << name << ">]" << std::endl);
             shutdown(sd_both);
             bsd_close(sock);
+            char *dest = (char *) &name[0];
+            memset( dest, 0, sizeof(name) );
         }
 
         void bsd_socket:: on_init()
         {
+            char *dest = (char *) &name[0];
+            memset( dest, 0, sizeof(name) );
+            uint64_t qw = uuid;
+            while(qw)
+            {
+                *(dest++) = ios::base64::encode_std[ qw & 0x3f ];
+                qw >>= 6;
+            }
+            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.name=<" << name << ">]" << std::endl);
             try
             {
                 on(SOL_SOCKET,SO_REUSEADDR);
@@ -61,7 +75,7 @@ namespace upsylon
 
 #define Y_NET_BSD_CTOR()     \
 uuid( sock2uuid(sock)     ),\
-hkey( network::hash(sock) )
+hkey( network::hash(sock) ), name()
 
 #define Y_NET_BSD_INI() do { \
 Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.init: uuid=" << uuid << ", hkey=" << hkey << "]" << std::endl);\
@@ -85,7 +99,7 @@ on_init();        \
 
         void bsd_socket:: blocking(const bool value)
         {
-            Y_NET_VERBOSE(std::cerr << "[network.bsd.socket.blocking(" << value << ")]" << std::endl);
+            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.blocking(<" << name << ">," << (value ? "ON" : "OFF") << ")]" << std::endl);
             Y_GIANT_LOCK();
             assert( invalid_socket != sock );
 #if defined(Y_WIN)
@@ -94,47 +108,23 @@ on_init();        \
             u_long iMode = value ? 0 : 1;
             if( SOCKET_ERROR == ioctlsocket(sock, FIONBIO, &iMode) )
             {
-                throw net::exception( Y_NET_LAST_ERROR(), "ioctlsocket" );
+                throw net::exception( Y_NET_LAST_ERROR(), "ioctlsocket(<%s>)",name);
             }
 #endif
 
 #if defined(Y_BSD)
             int flags = fcntl(sock, F_GETFL, 0);
-            if (flags<0) throw libc::exception( errno, "fcntl(GETFL)");
+            if (flags<0) throw libc::exception( errno, "fcntl(GETFL,<%s>)",name);
             if (value)
                 flags &= ~O_NONBLOCK;
             else
                 flags |= O_NONBLOCK;
-            if( fcntl(sock, F_SETFL, flags) < 0 ) throw libc::exception( errno, "fcntl(SETFL)");
+            if( fcntl(sock, F_SETFL, flags) < 0 ) throw libc::exception( errno, "fcntl(SETFL,<%s>)",name);
 #endif
 
         }
 
-#if 0
-        void bsd_socket:: async()
-        {
-            Y_NET_VERBOSE(std::cerr << "[network.bsd.socket.ASYNC]" << std::endl);
-            Y_GIANT_LOCK();
 
-            assert( invalid_socket != sock );
-#if defined(Y_WIN)
-            // If iMode == 0, blocking is enabled;
-            // If iMode != 0, non-blocking mode is enabled.
-            u_long iMode = 1;
-            if( SOCKET_ERROR == ioctlsocket(sock, FIONBIO, &iMode) )
-            {
-                throw net::exception( Y_NET_LAST_ERROR(), "async/ioctlsocket" );
-            }
-#endif
-
-#if defined(Y_BSD)
-            if( fcntl( sock, F_SETFL, O_NONBLOCK) < 0 )
-            {
-                throw net::exception( errno, "async/fcntl");
-            }
-#endif
-        }
-#endif
 
 
 
@@ -157,7 +147,7 @@ on_init();        \
         void bsd_socket:: shutdown(const shutdown_type how) throw()
         {
             assert( sock != invalid_socket );
-            Y_NET_VERBOSE(std::cerr << "[network.bsd.shutdown(" << sd_text(how) << ")]" << std::endl);
+            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.shutdown(" << sd_text(how) << ")]" << std::endl);
 
 #if defined(Y_WIN)
             switch (how) {
@@ -205,25 +195,25 @@ on_init();        \
 
         void bsd_socket:: setopt(const int level, const int optname, const void *optval, const unsigned optlen)
         {
-            Y_NET_VERBOSE(std::cerr << "[network.setopt(" << sockopt_level(level) << "," << sockopt_name(optname) << ")]" << std::endl);
+            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.setopt(<" << name << ">," << sockopt_level(level) << "," << sockopt_name(optname) << ")]" << std::endl);
             Y_GIANT_LOCK();
             assert(invalid_socket!=sock);
             if(optval==0||optlen<=0)
             {
-                throw upsylon::exception("bsd_socket::setopt(invalid optval/optlen");
+                throw upsylon::exception("bsd_socket::setopt(invalid optval/optlen for socket=<%s>)",name);
             }
 
 #if defined(Y_BSD)
             if( ::setsockopt(sock, level, optname, optval, static_cast<socklen_t>(optlen) ) < 0 )
             {
-                throw net::exception( Y_NET_LAST_ERROR(), "setsockopt");
+                throw net::exception( Y_NET_LAST_ERROR(), "setsockopt(<%s>)",name);
             }
 #endif
 
 #if defined(Y_WIN)
             if( SOCKET_ERROR == ::setsockopt(sock,level,optname, (const char *)optval, static_cast<int>(optlen) ) )
             {
-                throw net::exception( Y_NET_LAST_ERROR(), "setsockopt");
+                throw net::exception( Y_NET_LAST_ERROR(), "setsockopt(<%s>)");
             }
 #endif
 
@@ -238,12 +228,12 @@ on_init();        \
                                  void          *optval,
                                  const unsigned optlen) const
         {
-            Y_NET_VERBOSE(std::cerr << "[network.getopt(" << sockopt_level(level) << "," << sockopt_name(optname) << ")]" << std::endl);
+            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.getopt(<" << name << ">," << sockopt_level(level) << "," << sockopt_name(optname) << ")]" << std::endl);
             Y_GIANT_LOCK();
             assert(invalid_socket!=sock);
             if(optval==0||optlen<=0)
             {
-                throw upsylon::exception("ip_socket::getopt(invalid optval/optlen");
+                throw upsylon::exception("ip_socket::getopt(invalid optval/optlen for <%s>)",name);
             }
             
             sa_length_t optLen = static_cast<sa_length_t>(optlen);
@@ -251,14 +241,14 @@ on_init();        \
 #if defined(Y_BSD)
             if( ::getsockopt(sock, level, optname, optval, &optLen ) < 0 )
             {
-                throw net::exception(Y_NET_LAST_ERROR(), "::getsockopt");
+                throw net::exception(Y_NET_LAST_ERROR(), "::getsockopt(<%s>)",name);
             }
 #endif
 
 #if defined(Y_WIN)
             if( SOCKET_ERROR == ::getsockopt(sock,level,optname, (char *)optval,&optLen) )
             {
-                throw net::exception( Y_NET_LAST_ERROR(), "::getsockopt");
+                throw net::exception( Y_NET_LAST_ERROR(), "::getsockopt(<%s>)",name);
             }
 #endif
         }

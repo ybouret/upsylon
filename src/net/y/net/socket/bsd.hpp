@@ -107,7 +107,7 @@ namespace upsylon
             socket_type        sock; //!< internal system socket
             const socket_id_t  uuid; //!< socket unique identifier
             const size_t       hkey; //!< pre computed hash key
-
+            const char         name[16];
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bsd_socket);
