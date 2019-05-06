@@ -33,14 +33,14 @@ namespace
     {
         std::cerr << std::endl;
         std::cerr << "slab<size=" << sizeof(T) << ">" << std::endl;
-        std::cerr << "\tblock_size=" << memory::slab<T>::block_size << std::endl;
+        std::cerr << "\tblock_size=" << memory::slab_of<T>::block_size << std::endl;
         core::list_of_cpp< Node<T> > nodes;
 
         for(size_t count=1;count<=1024;++count)
         {
-            const size_t bytes = memory::slab<T>::bytes_for(count);
+            const size_t bytes = memory::slab_of<T>::bytes_for(count);
             memory::buffer_of<char,memory::global> buff(bytes);
-            memory::slab<T> S(*buff,bytes);
+            memory::slab_of<T> S(*buff,bytes);
             while( S.size( ) )
             {
                 T *addr = S.acquire();

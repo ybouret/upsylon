@@ -40,8 +40,8 @@ namespace upsylon
             typedef addr_node<NODE>         meta_node; //!< to store node addresses
             typedef addr_list<NODE>         meta_list; //!< list of node addresses
             typedef core::list_of<NODE>     slot_type; //!< a slot of the hash table
-            typedef memory::slab<NODE>      node_slab; //!< to acquire/release node
-            typedef memory::slab<meta_node> meta_slab; //!< to acquire/release meta
+            typedef memory::slab_of<NODE>      node_slab; //!< to acquire/release node
+            typedef memory::slab_of<meta_node> meta_slab; //!< to acquire/release meta
 
             //! default initialization
 #define Y_CORE_HASH_TABLE_CTOR() hash_table_info(), chain(),slot(0),slots(0),smask(0),items(0),nodes(0,0),metas(0,0),buffer(0),allocated(0)

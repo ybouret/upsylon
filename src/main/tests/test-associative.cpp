@@ -61,7 +61,6 @@ Y_UTEST(associative)
     {
         for(size_t n=0;n<=1000;n+=1+alea.leq(30))
         {
-            std::cerr << std::endl;
             core::hash_table<hnode> htable(n);
             for(size_t i=1;i<=2*n;++i)
             {

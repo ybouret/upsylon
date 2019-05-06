@@ -22,8 +22,8 @@ namespace upsylon
                 byte_node *next; //!< for list
                 uint8_t    code; //!< current byte
             };
-            typedef memory::slab<byte_node>  byte_slab; //!< alias
-            typedef core::list_of<byte_node> byte_list; //!< alias
+            typedef memory::slab_of<byte_node> byte_slab; //!< alias
+            typedef core::list_of<byte_node>   byte_list; //!< alias
 
             explicit tcp_cache_(const size_t n);    //!< setup memory
             virtual ~tcp_cache_() throw();          //!< reset and release
