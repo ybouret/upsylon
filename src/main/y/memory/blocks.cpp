@@ -3,7 +3,8 @@
 #include "y/type/utils.hpp"
 #include "y/os/static-check.hpp"
 #include "y/memory/arena-of.hpp"
-#include <iostream>
+
+#include <cstring>
 
 namespace upsylon
 {
