@@ -213,7 +213,7 @@ on_init();        \
 #if defined(Y_WIN)
             if( SOCKET_ERROR == ::setsockopt(sock,level,optname, (const char *)optval, static_cast<int>(optlen) ) )
             {
-                throw net::exception( Y_NET_LAST_ERROR(), "setsockopt(<%s>)");
+                throw net::exception( Y_NET_LAST_ERROR(), "setsockopt(<%s>)",name);
             }
 #endif
 
