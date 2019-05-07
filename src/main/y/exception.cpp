@@ -13,6 +13,7 @@ namespace upsylon
     }
 
     exception:: exception( const exception &other ) throw() :
+    std::exception(other),
     when_()
     {
         memcpy( when_, other.when_, sizeof(when_) );
