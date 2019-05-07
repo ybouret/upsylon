@@ -23,15 +23,15 @@ namespace upsylon
             //! destructor
             inline virtual ~rational() throw() {}
             //! from integral type
-            inline rational( const integer_t i ) :  base_class(), num(i), den(1) {}
+            inline rational( const integer_t i ) :  object(), base_class(), num(i), den(1) {}
             //! from mpz
-            inline rational( const integer & z ) :  base_class(), num(z), den(1) {}
+            inline rational( const integer & z ) :  object(), base_class(), num(z), den(1) {}
             //! from mpn
-            inline rational( const natural & n ) :  base_class(), num(n), den(1) {}
+            inline rational( const natural & n ) :  object(), base_class(), num(n), den(1) {}
             //! from integral fraction
-            inline rational( const integer_t n, const word_t d) :  base_class(), num(n), den(d) { check(); }
+            inline rational( const integer_t n, const word_t  d) :  object(), base_class(), num(n), den(d) { check(); }
             //! from mpz/mpn
-            inline rational( const integer &z, const natural &u) :  base_class(), num(z), den(u) { check(); }
+            inline rational( const integer &z, const natural &u) :  object(), base_class(), num(z), den(u) { check(); }
 
             //! output
             inline friend std::ostream & operator<<( std::ostream &os, const rational &q )
@@ -71,7 +71,7 @@ namespace upsylon
             }
 
             //! copy
-            inline rational( const rational &q ) :  base_class(), num(q.num), den(q.den) {}
+            inline rational( const rational &q ) :  object(), base_class(), num(q.num), den(q.den) {}
 
             //! no throw exchange
             inline void xch( rational &q ) throw()

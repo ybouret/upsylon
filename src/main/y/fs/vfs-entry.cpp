@@ -38,6 +38,7 @@ namespace upsylon {
     
     
     vfs::entry:: entry( const string &vfs_path, const vfs &vfs_from ) :
+    object(),
     path( vfs_path ),
     cstr( *path    ),
     base_name( vfs::get_base_name( path ) ),
@@ -52,6 +53,7 @@ namespace upsylon {
     
     
     vfs:: entry:: entry( const entry &other ) :
+    object(),
     path( other.path ),
     cstr( *path      ),
     base_name( vfs::get_base_name( path ) ),

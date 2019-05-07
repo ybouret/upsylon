@@ -17,6 +17,7 @@ namespace upsylon
         layout:: layout(const size_t num_procs,
                         const size_t num_cores,
                         const size_t starting) :
+        object(),
         procs( max_of<size_t>(1,num_procs)      ),
         cores( clamp<size_t>(1,num_cores,procs) ),
         shift( min_of<size_t>(starting,procs-1) ),
@@ -26,6 +27,7 @@ namespace upsylon
         }
 
         layout:: layout(const layout &other) throw() :
+        object(),
         procs(other.procs),
         cores(other.cores),
         shift(other.shift),
