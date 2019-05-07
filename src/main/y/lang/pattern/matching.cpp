@@ -107,7 +107,7 @@ namespace upsylon
         MatchString::  MatchString(const char   *rx) : Matching(rx,0) {}
         MatchString::  MatchString(const string &rx) : Matching(rx,0) {}
         MatchString:: ~MatchString() throw() {}
-        MatchString::  MatchString(const MatchString &other) throw() : Matching(other) {}
+        MatchString::  MatchString(const MatchString &other) throw() : object(), Matching(other) {}
 
         bool MatchString::  operator()( const string &s ) { return exactly(s); }
 

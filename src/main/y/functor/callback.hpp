@@ -64,7 +64,7 @@ namespace upsylon {
         private:
             Y_DISABLE_ASSIGN(callback);
             //! use the copy semantics of FUNCTION to clone
-            explicit callback( const callback &other ) : callable_type(), function_( other.function_ ) {}
+            explicit callback( const callback &other ) : object(), callable_type(), function_( other.function_ ) {}
             FUNCTION function_;
         };
 

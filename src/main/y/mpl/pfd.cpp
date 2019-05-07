@@ -70,6 +70,8 @@ namespace upsylon
         }
 
         pfd:: pfd( const word_t n ) :
+        object(),
+        counted_object(),
         table()
         {
             const natural _(n);
@@ -77,6 +79,7 @@ namespace upsylon
         }
 
         pfd:: pfd( const pfd &other ) :
+        object(),
         counted_object(),
         table( other.table )
         {

@@ -63,7 +63,7 @@ namespace upsylon
         }
 
         //! copy
-        inline hash_container(const hash_container &other) : dynamic(), base_type(), table(other.table), hash() {}
+        inline hash_container(const hash_container &other) : dynamic(), object(), base_type(), table(other.table), hash() {}
 
         //! assign by duplication
         inline hash_container & operator=( const hash_container &other )

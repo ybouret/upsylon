@@ -65,7 +65,7 @@ namespace upsylon
         inline explicit map(const size_t n, const as_capacity_t &_) : base_type(n,_) {}
 
         //! copy constructor
-        inline map(const map &other) : dynamic(), base_type(other) {}
+        inline map(const map &other) : dynamic(), object(), base_type(other) {}
 
         //! assign from base type
         inline map & operator=( const map &other )
