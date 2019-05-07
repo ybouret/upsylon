@@ -30,9 +30,7 @@ Y_UTEST(bsd)
     std::cerr << "sizeof(bsd_socket)   =" << sizeof(net::bsd_socket)  << std::endl;
     std::cerr << "sizeof(socket_type)  =" << sizeof(net::socket_type) << std::endl;
     std::cerr << "sizeof(socket_id_t)  =" << sizeof(net::socket_id_t) << std::endl;
-    std::cerr << "bsd_socket.uid_bytes =" << net::bsd_socket::uid_bytes << std::endl;
-    std::cerr << "bsd_socket.rnd_bytes =" << net::bsd_socket::rnd_bytes   << std::endl;
-
+    
     std::cerr << std::endl;
 
 }

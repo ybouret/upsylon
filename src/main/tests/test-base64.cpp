@@ -3,24 +3,54 @@
 #include "y/ios/icstream.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/type/utils.hpp"
+#include <typeinfo>
+#include "y/codec/base64-name.hpp"
 
 using namespace upsylon;
 
+template <typename T>
+static inline void test_b64id()
+{
+    std::cerr << "base64_name<" << typeid(T).name() << "/#bytes=" << sizeof(T) << ">" << std::endl;
+    std::cerr << "\treq_bytes=" << base64_name<T>::req_bytes << std::endl;
+    std::cerr << "\trnd_bytes=" << base64_name<T>::rnd_bytes << std::endl;
+    std::cerr << "\tsizeof   =" << sizeof(base64_name<T>)    << std::endl;
+    Y_ASSERT(sizeof(base64_name<T>)== base64_name<T>::rnd_bytes);
+    for(size_t i=0;i<8;++i)
+    {
+        const T x = alea.full<T>();
+        base64_name<T> id = x;
+        std::cerr << std::hex << "\t\tx=" << x << " -> " << std::dec << *id << std::endl;
+    }
 
+
+}
+
+
+Y_UTEST(b64id)
+{
+    test_b64id<unsigned char>();
+    test_b64id<char>();
+
+    test_b64id<short>();
+    test_b64id<unsigned short>();
+
+    test_b64id<int>();
+    test_b64id<unsigned int>();
+
+    test_b64id<long>();
+    test_b64id<unsigned long>();
+
+    base64_name<float>  idf = 0.3f; std::cerr << "idf=" << *idf << std::endl;
+    base64_name<double> idd = 0.3;  std::cerr << "idd=" << *idd << std::endl;
+
+
+}
+Y_UTEST_DONE()
 
 Y_UTEST(base64)
 {
-#if 0
-    for(size_t i=0;i<=40;++i)
-    {
-        std::cerr << i << " bits ->" << Y_BASE64_BITS_FOR(i)  << std::endl;
-    }
 
-    for(size_t i=1;i<=16;++i)
-    {
-        std::cerr << "#bytes=" << i << "->" << Y_BASE64_BYTES_FOR(i) << std::endl;
-    }
-#endif
     if( (argc>1) && (0==strcmp(argv[1],"NULL")) )
     {
 

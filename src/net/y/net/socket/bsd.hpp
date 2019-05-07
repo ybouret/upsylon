@@ -3,7 +3,7 @@
 #define Y_NET_BSD_SOCKET_INCLUDED 1
 
 #include "y/net/net.hpp"
-#include "y/codec/base64-defs.hpp"
+#include "y/codec/base64-name.hpp"
 
 namespace upsylon
 {
@@ -32,8 +32,7 @@ namespace upsylon
         class bsd_socket : public net_object
         {
         public:
-            static const size_t uid_bytes = 2+Y_BASE64_BYTES_FOR(sizeof(socket_id_t)); //!< to encode uid: '@' + base64 + '\0'
-            static const size_t rnd_bytes = Y_ROUND8(uid_bytes);                       //!< round
+            typedef base64_name<socket_id_t> name_type; //!< alias for named socket
 
             //__________________________________________________________________
             //
@@ -107,12 +106,11 @@ namespace upsylon
             explicit     bsd_socket( const socket_type ); //!< prepare an accepted socket
 
         public:
-            socket_type        sock;            //!< internal system socket
-            const socket_id_t  uuid;            //!< socket unique identifier
-            const size_t       hkey;            //!< pre computed hash key
-            const char         name[rnd_bytes]; //!< base64 uuid
+            socket_type        sock;  //!< internal system socket
+            const socket_id_t  uuid;  //!< socket unique identifier
+            const size_t       hkey;  //!< pre computed hash key
+            const name_type    name;  //!< base64 uuid
 
-            static void __fmt_name(char *field, socket_id_t sid) throw(); //!< field[rnd_bytes]
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bsd_socket);

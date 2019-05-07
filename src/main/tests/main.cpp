@@ -85,6 +85,7 @@ Y_UTEST_INIT(128)
     Y_UTEST(release);
     Y_UTEST(base64);
     Y_UTEST(u64);
+    Y_UTEST(b64id);
     Y_UTEST(spec);
     Y_UTEST(lzo);
     Y_UTEST(iobits);

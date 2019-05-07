@@ -35,28 +35,12 @@ namespace upsylon
             Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.~<" << name << ">]" << std::endl);
             shutdown(sd_both);
             bsd_close(sock);
-            memset( (char *) &name[0], 0, sizeof(name) );
         }
 
 
-        void bsd_socket:: __fmt_name( char *field, socket_id_t sid) throw()
-        {
-            assert(field);
-            memset(field,0,rnd_bytes);
-            size_t pos = 0;
-            field[pos++] = '@';
-            while(sid)
-            {
-                assert(pos<rnd_bytes);
-                field[pos++] = ios::base64::encode_url[ sid & 0x3f ];
-                sid >>= 6;
-            }
-        }
 
         void bsd_socket:: on_init()
         {
-            __fmt_name((char *)name,uuid);
-            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.name=<" << name << ">]" << std::endl);
             try
             {
                 on(SOL_SOCKET,SO_REUSEADDR);
@@ -81,11 +65,12 @@ namespace upsylon
         }
 
 #define Y_NET_BSD_CTOR()     \
-uuid( sock2uuid(sock)     ),\
-hkey( network::hash(sock) ), name()
+uuid( sock2uuid(sock)     ), \
+hkey( network::hash(sock) ), \
+name( uuid )
 
 #define Y_NET_BSD_INI() do { \
-Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.init: uuid=" << uuid << ", hkey=" << hkey << "]" << std::endl);\
+Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.init: uuid=" << uuid << ", name=<" << name << ">, hkey=" << hkey << "]" << std::endl);\
 on_init();        \
 } while(false)
 
@@ -115,18 +100,18 @@ on_init();        \
             u_long iMode = value ? 0 : 1;
             if( SOCKET_ERROR == ioctlsocket(sock, FIONBIO, &iMode) )
             {
-                throw net::exception( Y_NET_LAST_ERROR(), "ioctlsocket(<%s>)",name);
+                throw net::exception( Y_NET_LAST_ERROR(), "ioctlsocket(<%s>)",*name);
             }
 #endif
 
 #if defined(Y_BSD)
             int flags = fcntl(sock, F_GETFL, 0);
-            if (flags<0) throw libc::exception( errno, "fcntl(GETFL,<%s>)",name);
+            if (flags<0) throw libc::exception( errno, "fcntl(GETFL,<%s>)",*name);
             if (value)
                 flags &= ~O_NONBLOCK;
             else
                 flags |= O_NONBLOCK;
-            if( fcntl(sock, F_SETFL, flags) < 0 ) throw libc::exception( errno, "fcntl(SETFL,<%s>)",name);
+            if( fcntl(sock, F_SETFL, flags) < 0 ) throw libc::exception( errno, "fcntl(SETFL,<%s>)",*name);
 #endif
 
         }
@@ -207,20 +192,20 @@ on_init();        \
             assert(invalid_socket!=sock);
             if(optval==0||optlen<=0)
             {
-                throw upsylon::exception("bsd_socket::setopt(invalid optval/optlen for socket=<%s>)",name);
+                throw upsylon::exception("bsd_socket::setopt(invalid optval/optlen for socket=<%s>)",*name);
             }
 
 #if defined(Y_BSD)
             if( ::setsockopt(sock, level, optname, optval, static_cast<socklen_t>(optlen) ) < 0 )
             {
-                throw net::exception( Y_NET_LAST_ERROR(), "setsockopt(<%s>)",name);
+                throw net::exception( Y_NET_LAST_ERROR(), "setsockopt(<%s>)",*name);
             }
 #endif
 
 #if defined(Y_WIN)
             if( SOCKET_ERROR == ::setsockopt(sock,level,optname, (const char *)optval, static_cast<int>(optlen) ) )
             {
-                throw net::exception( Y_NET_LAST_ERROR(), "setsockopt(<%s>)",name);
+                throw net::exception( Y_NET_LAST_ERROR(), "setsockopt(<%s>)",*name);
             }
 #endif
 
@@ -240,7 +225,7 @@ on_init();        \
             assert(invalid_socket!=sock);
             if(optval==0||optlen<=0)
             {
-                throw upsylon::exception("ip_socket::getopt(invalid optval/optlen for <%s>)",name);
+                throw upsylon::exception("ip_socket::getopt(invalid optval/optlen for <%s>)",*name);
             }
             
             sa_length_t optLen = static_cast<sa_length_t>(optlen);
@@ -248,14 +233,14 @@ on_init();        \
 #if defined(Y_BSD)
             if( ::getsockopt(sock, level, optname, optval, &optLen ) < 0 )
             {
-                throw net::exception(Y_NET_LAST_ERROR(), "::getsockopt(<%s>)",name);
+                throw net::exception(Y_NET_LAST_ERROR(), "::getsockopt(<%s>)",*name);
             }
 #endif
 
 #if defined(Y_WIN)
             if( SOCKET_ERROR == ::getsockopt(sock,level,optname, (char *)optval,&optLen) )
             {
-                throw net::exception( Y_NET_LAST_ERROR(), "::getsockopt(<%s>)",name);
+                throw net::exception( Y_NET_LAST_ERROR(), "::getsockopt(<%s>)",*name);
             }
 #endif
         }
