@@ -22,7 +22,7 @@ namespace
 
         dummy( const KEY &l, const T &v ) : counted_object(), label( l ), value( v ) {}
         virtual ~dummy() throw() {}
-        dummy( const dummy &other ) : counted_object(), label(other.label), value(other.value) {}
+        dummy( const dummy &other ) : object(), counted_object(), label(other.label), value(other.value) {}
 
         inline friend std::ostream & operator<<( std::ostream &os, const dummy &d)
         {

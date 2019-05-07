@@ -70,7 +70,7 @@ namespace upsylon
 
 
     //! constructor helper
-#define Y_MATRIX_CTOR(NR,NC) matrix_data(NR,NC,sizeof(T)), row_ptr(0), r_aux1(), c_aux1(), r_aux2(), c_aux2()
+#define Y_MATRIX_CTOR(NR,NC) object(), matrix_data(NR,NC,sizeof(T)), row_ptr(0), r_aux1(), c_aux1(), r_aux2(), c_aux2()
 
     //! versatile matrix
     template <typename T>
