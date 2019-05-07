@@ -19,12 +19,12 @@ namespace upsylon
         //==============================================================
 
         //! callable skeleton
-#define Y_CALLABLE_PROTOTYPE()        \
-private:                              \
-Y_DISABLE_COPY_AND_ASSIGN(callable);  \
-public:                               \
-explicit callable() throw() {}        \
-virtual ~callable() throw() {}        \
+#define Y_CALLABLE_PROTOTYPE()            \
+private:                                  \
+Y_DISABLE_COPY_AND_ASSIGN(callable);      \
+public:                                   \
+explicit callable() throw() : object() {} \
+virtual ~callable() throw() {}            \
 virtual callable *clone() const = 0
 
 
