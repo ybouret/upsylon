@@ -21,6 +21,8 @@ namespace upsylon {
 
             //! construct from host+method
             explicit command( const OBJECT_POINTER o, const METHOD_POINTER m ) :
+            object(),
+            callable_type(),
             object_( o ),
             method_( m )
             {
@@ -84,6 +86,7 @@ namespace upsylon {
 
             //! copy for the clone function
             explicit command( const command &other ) throw():
+            object(),
             callable_type(),
             object_( other.object_ ),
             method_( other.method_ )
