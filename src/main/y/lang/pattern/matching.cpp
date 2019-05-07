@@ -24,6 +24,7 @@ namespace upsylon
         }
 
         Matching:: Matching(const Matching &other) throw() :
+        object(),
         Token(),
         motif( other.motif )
         {

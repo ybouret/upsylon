@@ -18,7 +18,9 @@ namespace upsylon
         {
         }
 
-        pfq:: pfq(const pfq &other) : counted_object(),
+        pfq:: pfq(const pfq &other) :
+        object(),
+        counted_object(),
         n(other.n),d(other.d)
         {
         }

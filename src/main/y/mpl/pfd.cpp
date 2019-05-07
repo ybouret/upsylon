@@ -24,6 +24,7 @@ namespace upsylon
         }
 
         _pfd:: _pfd( const _pfd &other ) :
+        object(),
         counted_object(),
         p( other.p ),
         q( other.q )

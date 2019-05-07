@@ -12,6 +12,7 @@ namespace upsylon
     }
 
     uuid:: uuid() :
+    object(),
     byte()
     {
 
@@ -35,6 +36,7 @@ namespace upsylon
     }
 
     uuid:: uuid( const uuid &other ) throw() :
+    object(),
     memory::ro_buffer(),
     byte()
     {

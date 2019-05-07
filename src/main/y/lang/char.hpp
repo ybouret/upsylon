@@ -21,11 +21,11 @@ namespace upsylon
             uint8_t code; //!< current char value
 
             //! constructor
-            inline explicit Char(const uint8_t c, const CharInfo &info) throw() : CharInfo(info), Base(), code(c) {}
+            explicit Char(const uint8_t c, const CharInfo &info) throw();
             //! destructor
-            inline virtual ~Char() throw() {}
+            virtual ~Char() throw();
             //! copy
-            inline Char(const Char &other) throw() : CharInfo(other), Base(), code(other.code) {}
+            Char(const Char &other) throw();
 
         private:
             Y_DISABLE_ASSIGN(Char);

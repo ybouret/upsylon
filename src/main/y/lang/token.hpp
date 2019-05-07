@@ -24,7 +24,7 @@ namespace upsylon
             }
 
             //! direct copy
-            inline Token(const Token &other) : Object(), Char::List(other){}
+            inline Token(const Token &other) : object(), Object(), Char::List(other){}
 
             //! assign
             inline Token & operator=( const Token &other )

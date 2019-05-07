@@ -74,7 +74,7 @@ namespace upsylon
             inline integer(const integer &z) : base_class(), s(z.s), n(z.n) {}
 
             //!  constructor from integral
-            inline integer(const integer_t &i) : base_class(), s( sign_for(i) ), n( word_for(i) ) {}
+            inline integer(const integer_t &i) : object(), base_class(), s( sign_for(i) ), n( word_for(i) ) {}
 
             //! constructor from natural
             inline integer(const natural &u) : base_class(), s( sign_for(u) ), n(u) {}
