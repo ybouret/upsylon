@@ -11,21 +11,30 @@ namespace upsylon
     namespace Lang
     {
 
-        //! full fledge class, a code and its position
+        //! full fledged class, a code and its position
         class Char : public CharInfo, public core::inode<Char>
         {
         public:
+            //__________________________________________________________________
+            //
+            // types
+            //__________________________________________________________________
             typedef core::inode<Char>       Base; //!< alias
             typedef core::list_of_cpp<Char> List; //!< list for I/O or buffer
 
-            uint8_t code; //!< current char value
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            explicit Char(const uint8_t,const CharInfo &) throw();//!< constructor
+            virtual ~Char() throw();                              //!< destructor
+            Char(const Char &other) throw();                      //!< hard copy
 
-            //! constructor
-            explicit Char(const uint8_t c, const CharInfo &info) throw();
-            //! destructor
-            virtual ~Char() throw();
-            //! copy
-            Char(const Char &other) throw();
+            //__________________________________________________________________
+            //
+            // data
+            //__________________________________________________________________
+            uint8_t code; //!< current char value
 
         private:
             Y_DISABLE_ASSIGN(Char);

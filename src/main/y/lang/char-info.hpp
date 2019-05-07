@@ -13,23 +13,25 @@ namespace upsylon
         class CharInfo : public Object
         {
         public:
-            virtual ~CharInfo() throw();
-
+            //__________________________________________________________________
+            //
+            // data
+            //__________________________________________________________________
             const Tag    origin;  //!< origin from Module
             const int    line;    //!< line  in origin
             const int    column;  //!< column origin
 
-            //! initialize
-            explicit CharInfo(const Tag &org, const int l, const int c) throw();
-
-            //! no-throw copy
-            CharInfo( const CharInfo &other ) throw();
-
-            //! no-throw assign by copy/swap
-            CharInfo & operator=( const CharInfo &other ) throw();
-
-            //! no throw swap
-            void swapWith(CharInfo &other) throw();
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            explicit CharInfo(const Tag &org,               //|
+                              const int l,                  //|
+                              const int c) throw();         //!< initialize
+            virtual ~CharInfo() throw();                    //!< destructor
+            CharInfo( const CharInfo & ) throw();           //!< no-throw copy
+            CharInfo & operator=(const CharInfo &) throw(); //!< no-throw assign by copy/swap
+            void swapWith(CharInfo &other) throw();         //!< no throw swap
         };
 
     }
