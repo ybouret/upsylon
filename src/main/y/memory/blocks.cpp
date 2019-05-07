@@ -21,7 +21,7 @@ namespace upsylon
             static global &_ = global::location();
             {
                 arena_list *slots = static_cast<arena_list *>(htable);
-                cache_type *cache = (cache_type *)(cached);
+                cache_type *cache = (cache_type *)cached;
                 for(size_t i=0;i<=table_mask;++i)
                 {
                     arena_list &slot = slots[i];
@@ -33,9 +33,9 @@ namespace upsylon
                     }
                 }
                 destruct(cache);
+                memset(hidden,0,sizeof(hidden));
             }
             _.__free(htable,chunk_size);
-            memset(hidden,0,sizeof(hidden));
         }
 
         size_t blocks:: compute_chunk_size(const size_t the_chunk_size) throw()

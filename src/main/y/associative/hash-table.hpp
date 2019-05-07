@@ -37,9 +37,9 @@ namespace upsylon
         class hash_table : public hash_table_info
         {
         public:
-            typedef addr_node<NODE>         meta_node; //!< to store node addresses
-            typedef addr_list<NODE>         meta_list; //!< list of node addresses
-            typedef core::list_of<NODE>     slot_type; //!< a slot of the hash table
+            typedef addr_node<NODE>            meta_node; //!< to store node addresses
+            typedef addr_list<NODE>            meta_list; //!< list of node addresses
+            typedef core::list_of<NODE>        slot_type; //!< a slot of the hash table
             typedef memory::slab_of<NODE>      node_slab; //!< to acquire/release node
             typedef memory::slab_of<meta_node> meta_slab; //!< to acquire/release meta
 
@@ -107,14 +107,14 @@ namespace upsylon
             inline void swap_with( hash_table &other ) throw()
             {
                 upsylon::bswap(chain,other.chain);
-                upsylon::bswap(slot,other.slot);
-                upsylon::bswap(slots,other.slots);
-                upsylon::bswap(smask,other.smask);
-                upsylon::bswap(items,other.items);
-                upsylon::bswap(nodes,other.nodes);
-                upsylon::bswap(metas,other.metas);
-                upsylon::bswap(buffer,other.buffer);
-                upsylon::bswap(allocated,other.allocated);
+                upsylon::cswap(slot,other.slot);
+                upsylon::cswap(slots,other.slots);
+                upsylon::cswap(smask,other.smask);
+                upsylon::cswap(items,other.items);
+                nodes.swap_with(other.nodes);
+                metas.swap_with(other.metas);
+                upsylon::cswap(buffer,other.buffer);
+                upsylon::cswap(allocated,other.allocated);
 
             }
 

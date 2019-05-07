@@ -17,6 +17,8 @@ namespace upsylon
             virtual size_t size() const throw();    //!< number of available memory object
             virtual size_t capacity() const throw();//!< orignal number of memory objects
 
+            void swap_with( slab &other ) throw();
+
         protected:
             explicit slab(const size_t block_size,          //|
                           void        *chunk_data,          //|
@@ -25,9 +27,11 @@ namespace upsylon
             void *acquire_block();              //!< uses internal chunk
             void  release_block(void*) throw(); //!< uses internal chunk
 
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(slab);
-            void      *impl[ 8 ]; //!< greater or equal to sizeof any __chunk
+            void      *impl;      //!< &data[0]
+            void      *data[ 8 ]; //!< greater or equal to sizeof any __chunk
         };
 
         //! memory I/O for a fixed number of objects
