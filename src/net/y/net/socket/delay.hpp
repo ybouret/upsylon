@@ -4,6 +4,10 @@
 
 #include "y/net/types.hpp"
 
+#if defined(Y_BSD)
+#   include <sys/time.h>
+#endif
+
 namespace upsylon
 {
 

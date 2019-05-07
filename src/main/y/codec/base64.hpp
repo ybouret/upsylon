@@ -4,6 +4,7 @@
 
 #include "y/ios/codec.hpp"
 
+
 namespace upsylon
 {
     namespace ios
@@ -11,7 +12,7 @@ namespace upsylon
         //! Base64 I/O
         struct base64
         {
-
+            
             static const char  encode_std[64]; //!< standard encoding
             static const char  encode_url[64]; //!< URL type encoding
             static const short decoded[256];   //!< inverse look up table

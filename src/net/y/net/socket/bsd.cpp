@@ -35,20 +35,27 @@ namespace upsylon
             Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.~<" << name << ">]" << std::endl);
             shutdown(sd_both);
             bsd_close(sock);
-            char *dest = (char *) &name[0];
-            memset( dest, 0, sizeof(name) );
+            memset( (char *) &name[0], 0, sizeof(name) );
+        }
+
+
+        void bsd_socket:: __fmt_name( char *field, socket_id_t sid) throw()
+        {
+            assert(field);
+            memset(field,0,rnd_bytes);
+            size_t pos = 0;
+            field[pos++] = '@';
+            while(sid)
+            {
+                assert(pos<rnd_bytes);
+                field[pos++] = ios::base64::encode_url[ sid & 0x3f ];
+                sid >>= 6;
+            }
         }
 
         void bsd_socket:: on_init()
         {
-            char *dest = (char *) &name[0];
-            memset( dest, 0, sizeof(name) );
-            uint64_t qw = uuid;
-            while(qw)
-            {
-                *(dest++) = ios::base64::encode_std[ qw & 0x3f ];
-                qw >>= 6;
-            }
+            __fmt_name((char *)name,uuid);
             Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.name=<" << name << ">]" << std::endl);
             try
             {

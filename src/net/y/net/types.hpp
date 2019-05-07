@@ -18,13 +18,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 #if defined(Y_BSD)
-#    if defined(__OpenBSD__)
-#        include <sys/types.h>
-#    endif
-#    include <sys/socket.h>
-#    include <netinet/in.h>
-#    include <errno.h>
-#    include <sys/time.h>
+#   if defined(__OpenBSD__)
+#      include <sys/types.h>
+#   endif
+#   include <sys/socket.h>
+#   include <netinet/in.h>
+#   include <errno.h>
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -33,8 +32,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 #if defined(Y_WIN)
-#    include <winsock2.h>
-#    include <ws2tcpip.h>
+#   include <winsock2.h>
+#   include <ws2tcpip.h>
 
 #        if    defined(__DMC__)
 typedef struct in6_addr {
@@ -74,8 +73,6 @@ struct sockaddr_in6 {
 
 namespace upsylon
 {
-
-
     typedef uint8_t  net8_t;  //!< alias
     typedef uint16_t net16_t; //!< alias
     typedef uint32_t net32_t; //!< alias
@@ -97,7 +94,6 @@ namespace upsylon
         uint8_t       & operator[](const size_t indx) throw();       //!< access
         const uint8_t & operator[](const size_t indx) const throw(); //!< access, const
 
-
         //! display
         friend std::ostream & operator<< ( std::ostream &, const net128_t & );
     };
@@ -105,28 +101,16 @@ namespace upsylon
     namespace net
     {
         //! swap network byte order 16 bits
-        inline uint8_t bswp(const uint8_t x) throw()
-        {
-            return x;
-        }
+        inline uint8_t bswp(const uint8_t x) throw() { return x; }
 
         //! swap network byte order 16 bits
-        inline uint16_t bswp(const uint16_t x) throw()
-        {
-            return Y_SWAP_BE16(x);
-        }
+        inline uint16_t bswp(const uint16_t x) throw() { return Y_SWAP_BE16(x); }
 
         //! swap network byte order 32 bits
-        inline uint32_t bswp(const uint32_t x) throw()
-        {
-            return Y_SWAP_BE32(x);
-        }
+        inline uint32_t bswp(const uint32_t x) throw() { return Y_SWAP_BE32(x); }
 
         //! swap network byte order 64 bits
-        inline uint64_t bswp(const uint64_t x) throw()
-        {
-            return Y_SWAP_BE64(x);
-        }
+        inline uint64_t bswp(const uint64_t x) throw() { return Y_SWAP_BE64(x); }
         
         //! swap 128nits
         inline net128_t bswp(const net128_t &x) throw()
@@ -154,13 +138,13 @@ namespace upsylon
     {
 #if defined(Y_BSD)
         typedef int error_code; //!< from errno
-        //! return the last error code
+        //! value of the last error code
 #define Y_NET_LAST_ERROR() (errno)
 #endif
 
 #if defined(Y_WIN)
-        //! return the last error code
-        typedef int error_code; //!< from ::WSAGetLastError()
+        typedef int error_code;
+        //! value of the last error code
 #define Y_NET_LAST_ERROR() (::WSAGetLastError())
 #endif
 
@@ -201,19 +185,17 @@ namespace upsylon
             udp  //!< mark UDP
         };
 
-#if defined(Y_WIN)
-        typedef SOCKET socket_type; //!< win32 sockets
-        typedef int    sa_length_t; //!< for sizeof(sockaddr)
-#endif
+#if defined(Y_WIN)                      //--------------------------------------
+        typedef SOCKET     socket_type; //!< win32 sockets
+        typedef int        sa_length_t; //!< for sizeof(sockaddr)
+#endif                                  //|
+#if defined(Y_BSD)                      //|
+        typedef int        socket_type; //!< bsd sockets
+        typedef socklen_t  sa_length_t; //!< for sizeof(sockaddr)
+#endif                                  //|-------------------------------------
 
-#if defined(Y_BSD)
-        typedef int       socket_type; //!< bsd sockets
-        typedef socklen_t sa_length_t; //!< for sizeof(sockaddr)
-#endif
-
-        extern const socket_type invalid_socket; //!< opaque invalid socket value
-
-        typedef unsigned_int<sizeof(socket_type)>::type socket_word; //!< alias
+        extern const socket_type                        invalid_socket; //!< opaque invalid socket value
+        typedef unsigned_int<sizeof(socket_type)>::type socket_id_t;    //!< alias for uuid
     }
 
     //! base class

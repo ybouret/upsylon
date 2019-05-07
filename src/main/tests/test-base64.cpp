@@ -10,7 +10,17 @@ using namespace upsylon;
 
 Y_UTEST(base64)
 {
+#if 0
+    for(size_t i=0;i<=40;++i)
+    {
+        std::cerr << i << " bits ->" << Y_BASE64_BITS_FOR(i)  << std::endl;
+    }
 
+    for(size_t i=1;i<=16;++i)
+    {
+        std::cerr << "#bytes=" << i << "->" << Y_BASE64_BYTES_FOR(i) << std::endl;
+    }
+#endif
     if( (argc>1) && (0==strcmp(argv[1],"NULL")) )
     {
 

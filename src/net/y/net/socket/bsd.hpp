@@ -3,6 +3,7 @@
 #define Y_NET_BSD_SOCKET_INCLUDED 1
 
 #include "y/net/net.hpp"
+#include "y/codec/base64-defs.hpp"
 
 namespace upsylon
 {
@@ -26,12 +27,14 @@ namespace upsylon
         extern const socket_boolean socket_true;  //!< opaque TRUE value
         extern const socket_boolean socket_false; //!< opaque FALSE value
 
-        typedef uint64_t socket_id_t; //!< wide type to store system socket
-
+        
         //! low level socket API
         class bsd_socket : public net_object
         {
         public:
+            static const size_t uid_bytes = 2+Y_BASE64_BYTES_FOR(sizeof(socket_id_t)); //!< to encode uid: '@' + base64 + '\0'
+            static const size_t rnd_bytes = Y_ROUND8(uid_bytes);                       //!< round
+
             //__________________________________________________________________
             //
             // open and close
@@ -104,10 +107,12 @@ namespace upsylon
             explicit     bsd_socket( const socket_type ); //!< prepare an accepted socket
 
         public:
-            socket_type        sock;     //!< internal system socket
-            const socket_id_t  uuid;     //!< socket unique identifier
-            const size_t       hkey;     //!< pre computed hash key
-            const char         name[16]; //!< base64 uuid
+            socket_type        sock;            //!< internal system socket
+            const socket_id_t  uuid;            //!< socket unique identifier
+            const size_t       hkey;            //!< pre computed hash key
+            const char         name[rnd_bytes]; //!< base64 uuid
+
+            static void __fmt_name(char *field, socket_id_t sid) throw(); //!< field[rnd_bytes]
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bsd_socket);
