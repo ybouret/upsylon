@@ -188,7 +188,7 @@ namespace upsylon
                     tokenizer<char>  tknz(id);
                     const Variables &self = *this;
                     const size_t     nvar = arr.size();
-                    bool (*proc)(const char) = is_colon;
+                    bool           (*proc)(const char) = is_colon;
                     while( tknz.next(proc) )
                     {
                         const string var_name( tknz.token(), tknz.units() );

@@ -54,7 +54,8 @@ namespace upsylon
             void RuleProbe:: visitFrom(const Rule *top, const char *context)
             {
                 reset();
-                if(!visit(top,DoNothing,context))
+                bool (*proc)(const Rule *) = DoNothing;
+                if(!visit(top,proc,context))
                 {
                     throw exception("Syntax.RuleProbe.visitFrom(Unexpected Bad Visit)");
                 }
