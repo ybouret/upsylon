@@ -92,7 +92,7 @@ namespace upsylon {
             inline virtual ~DynamoRef() throw() {}
 
             //! no-throw copy
-            inline DynamoRef(const DynamoRef &other) throw() : DynamoInfo(other), derived(other.derived) {}
+            inline DynamoRef(const DynamoRef &other) throw() : object(), DynamoInfo(other), derived(other.derived) {}
 
             //! display
             std::ostream & display( std::ostream &os ) const;

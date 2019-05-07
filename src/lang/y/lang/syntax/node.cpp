@@ -26,6 +26,7 @@ namespace upsylon
             }
             
             Node:: Node(const Node &other) throw() :
+            object(),
             Object(),
             Base(),
             rule(other.rule),
@@ -302,6 +303,7 @@ namespace upsylon
             }
             
             InternalNode:: InternalNode(const InternalNode &node) throw() :
+            object(),
             Node(node),
             Node::List(node)
             {
@@ -386,6 +388,7 @@ namespace upsylon
             }
             
             ExtendedNode:: ExtendedNode( const ExtendedNode &node ) throw() :
+            object(),
             InternalNode(node),
             shared(node.shared)
             {

@@ -109,7 +109,7 @@ namespace upsylon
 
         //! copy by passing parameters
         inline lightweight_array( const lightweight_array &other ) throw() :
-        dynamic(), array<T>(other.item_,other.size_)
+        dynamic(), object(), array<T>(other.item_,other.size_)
         {
             
         }

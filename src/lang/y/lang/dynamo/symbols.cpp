@@ -19,6 +19,7 @@ namespace upsylon
         }
 
         DynamoInfo:: DynamoInfo( const DynamoInfo &other) throw() :
+        object(),
         DynamoObject(),
         from(other.from), rule(other.rule), info(other.info)
         {

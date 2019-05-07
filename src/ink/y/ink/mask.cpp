@@ -14,7 +14,7 @@ namespace upsylon
 
         }
 
-        Mask:: Mask(const Mask &other) : dynamic(), container(), list(), dict( other.size(), as_capacity ), pool()
+        Mask:: Mask(const Mask &other) : dynamic(), object(), container(), list(), dict( other.size(), as_capacity ), pool()
         {
             match_capacities();
             for( const Vertex *v = other.head(); v; v=v->next )
