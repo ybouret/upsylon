@@ -288,6 +288,11 @@ ENDIF()
 ADD_EXECUTABLE(mprimes mprimes.cpp)
 TARGET_LINK_Y(mprimes)
 
+ADD_EXECUTABLE(y_uniq y_uniq.cpp)
+TARGET_LINK_Y(y_uniq)
+INSTALL( TARGETS y_uniq RUNTIME DESTINATION bin)
+
+
 ADD_SUBDIRECTORY(tests)
 MESSAGE( STATUS "<Upsylon/>" )
 MESSAGE(STATUS "")
