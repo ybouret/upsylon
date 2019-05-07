@@ -34,6 +34,7 @@ namespace upsylon {
 
             slice               *acquiring;                //!< previously used
             core::list_of<slice> slices;                   //!< live slices, ranked by increasing memory
+            void                *impl;                     //!< &wksp[0]
             void *               wksp[Y_MEMORY_ARENA_BLK]; //!< workspace for arena_of<slice>
         };
     }
