@@ -27,8 +27,7 @@ namespace upsylon
 
         //! copy: duplicate the functor context
         inline functor( const functor &other ) :
-        callable(),
-        function_( other.function_->clone() )
+        object(), callable(), function_( other.function_->clone() )
         { assert( function_ ); }
 
         //! assign: duplicate source context
@@ -58,7 +57,7 @@ namespace upsylon
          This is achieved through the core::callback which uses the copy semantic of FUNCTION.
          */
         template <typename FUNCTION>
-        inline functor( const FUNCTION &functionoid ) :
+        inline functor( const FUNCTION &functionoid ) : object(), callable(),
         function_( new core::callback<R,TLIST,FUNCTION>(functionoid) ) {}
 
         //! object+method constructor
@@ -70,7 +69,7 @@ namespace upsylon
          original object.
          */
         template <typename OBJECT_POINTER, typename METHOD_POINTER>
-        inline functor( OBJECT_POINTER o, METHOD_POINTER m ) :
+        inline functor( OBJECT_POINTER o, METHOD_POINTER m ) : object(), callable(),
         function_( new core::command<R,TLIST,OBJECT_POINTER,METHOD_POINTER>( o, m ) ) {}
 
         //======================================================================
