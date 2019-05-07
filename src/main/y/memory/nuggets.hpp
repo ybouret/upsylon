@@ -46,6 +46,7 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(nuggets);
             void  clr() throw();
+            void *impl;                     //!< &wksp[0]
             void *wksp[Y_MEMORY_ARENA_BLK]; //!< internal arena data
 
         protected:
