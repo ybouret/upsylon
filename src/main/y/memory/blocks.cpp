@@ -21,7 +21,7 @@ namespace upsylon
             static global &_ = global::location();
             {
                 arena_list *slots = static_cast<arena_list *>(htable);
-                cache_type *cache = (cache_type *)(&cached[0]);
+                cache_type *cache = (cache_type *)(cached);
                 for(size_t i=0;i<=table_mask;++i)
                 {
                     arena_list &slot = slots[i];
@@ -35,7 +35,7 @@ namespace upsylon
                 destruct(cache);
             }
             _.__free(htable,chunk_size);
-            
+            memset(hidden,0,sizeof(hidden));
         }
 
         size_t blocks:: compute_chunk_size(const size_t the_chunk_size) throw()
@@ -59,13 +59,15 @@ namespace upsylon
         acquiring(0),
         releasing(0),
         htable( static_cast<arena_list *>(global::instance().__calloc(1, chunk_size)) ),
-        cached()
+        cached(0),
+        hidden()
         {
-            Y_STATIC_CHECK(sizeof(cached)>=sizeof(cache_type),workspace_too_small);
+            Y_STATIC_CHECK(sizeof(hidden)>=sizeof(cache_type),workspace_too_small);
             assert( is_a_power_of_two(chunk_size)   );
             assert( is_a_power_of_two(table_mask+1) );
-            memset(cached,0,sizeof(cached));
-            new (&cached[0]) cache_type(chunk_size);
+            memset(hidden,0,sizeof(hidden));
+            cached = (void *)&hidden[0];
+            new (cached) cache_type(chunk_size);
         }
 
         
@@ -102,7 +104,7 @@ namespace upsylon
                 //
                 // need to take from zcache
                 //______________________________________________________________
-                cache_type &zcache = *(cache_type *)(&cached[0]);
+                cache_type &zcache = *(cache_type *)(cached);
                 arena      *a      = zcache.acquire();
                 try { new (a) arena(block_size,chunk_size); }
                 catch(...){ zcache.release(a); throw;}
