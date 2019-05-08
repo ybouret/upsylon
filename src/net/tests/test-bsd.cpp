@@ -1,4 +1,5 @@
 #include "y/net/socket/bsd.hpp"
+#include "y/net/socket/id-hasher.hpp"
 #include "y/net/net.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"

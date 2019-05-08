@@ -66,11 +66,10 @@ namespace upsylon
 
 #define Y_NET_BSD_CTOR()     \
 uuid( sock2uuid(sock)     ), \
-hkey( network::hash(sock) ), \
 name( uuid )
 
 #define Y_NET_BSD_INI() do { \
-Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.init: uuid=" << uuid << ", name=<" << name << ">, hkey=" << hkey << "]" << std::endl);\
+Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.init: uuid=" << uuid << ", name=<" << name << ">]" << std::endl);\
 on_init();        \
 } while(false)
 
@@ -257,9 +256,9 @@ on_init();        \
         int bsd_socket:: rcvbuf() const { return getopt<int>(SOL_SOCKET,SO_RCVBUF); }
 
         
-        const size_t & bsd_socket:: key() const throw()
+        const socket_id_t & bsd_socket:: key() const throw()
         {
-            return hkey;
+            return uuid;
         }
 
 #define Y_NET_SOCKOPT(ID) case ID: return #ID

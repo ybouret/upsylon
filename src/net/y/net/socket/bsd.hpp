@@ -100,7 +100,7 @@ namespace upsylon
             //
             // handling
             //__________________________________________________________________
-            const size_t  & key() const throw(); //!< get key for set
+            const socket_id_t  & key() const throw(); //!< get key for set
 
         protected:
             explicit     bsd_socket( const socket_type ); //!< prepare an accepted socket
@@ -108,7 +108,6 @@ namespace upsylon
         public:
             socket_type        sock;  //!< internal system socket
             const socket_id_t  uuid;  //!< socket unique identifier
-            const size_t       hkey;  //!< pre computed hash key
             const name_type    name;  //!< base64 uuid
 
 
@@ -121,6 +120,8 @@ namespace upsylon
                                             const void    *optval,
                                             const unsigned optlen);
         };
+
+        
 
 
     }

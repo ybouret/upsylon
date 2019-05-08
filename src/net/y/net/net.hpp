@@ -18,8 +18,7 @@ namespace upsylon
         //! create a socket
         net::socket_type open(const net::ip_protocol proto, const net::ip_version version);
         
-        //! hash a socket
-        static size_t hash( const net::socket_type &s ) throw();
+
 
         //! resolve the address, preserving the port
         void resolve( net::socket_address &ip, const string &s ) const;
@@ -41,18 +40,7 @@ namespace upsylon
     public:
         static const at_exit::longevity life_time = object::life_time - 13; //!< life time
 
-        //! hash key copy
-        class hasher
-        {
-        public:
-            inline  hasher() throw() {} //!< setup
-            inline ~hasher() throw() {} //!< cleanup
-            inline size_t operator()(const size_t k) const throw() { return k; } //!< copy
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(hasher);
-        };
-
+        
     };
 
     //! macro to be used with network verbosity
