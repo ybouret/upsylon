@@ -30,7 +30,7 @@ namespace upsylon
     public:
         static  const size_t req_bytes = 1+Y_BASE64_BYTES_FOR(sizeof(T)); //!< bytes to hold converted type
         static  const size_t rnd_bytes = Y_ROUND4(req_bytes);             //!< memory alignment
-
+        
         //! setup
         inline base64_name( const T &x ) throw() : content()
         {

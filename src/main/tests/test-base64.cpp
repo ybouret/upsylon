@@ -16,6 +16,12 @@ static inline void test_b64id()
     std::cerr << "\trnd_bytes=" << base64_name<T>::rnd_bytes << std::endl;
     std::cerr << "\tsizeof   =" << sizeof(base64_name<T>)    << std::endl;
     Y_ASSERT(sizeof(base64_name<T>)== base64_name<T>::rnd_bytes);
+    for(T i=0;i<=8;++i)
+    {
+        const T x = i*i;
+        base64_name<T> id = x;
+        std::cerr << std::hex << "\t\tx=" << x << " -> " << std::dec << *id << std::endl;
+    }
     for(size_t i=0;i<8;++i)
     {
         const T x = alea.full<T>();
