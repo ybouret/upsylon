@@ -186,7 +186,7 @@ namespace upsylon
 
         size_t socket_set:: incoming( socket_delay &d )
         {
-            Y_NET_VERBOSE(std::cerr << "[network.socket_set.incomping(delay=" << d.wait_for() << ")]" << std::endl);
+            Y_NET_VERBOSE(std::cerr << "[network.socket_set.incoming(delay=" << d.wait_for() << ")]" << std::endl);
             if(size>0)
             {
 

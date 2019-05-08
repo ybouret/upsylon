@@ -29,6 +29,8 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(engine);
             socket_set    sockset;
             tcp_server_db tcp_servers;
+
+            bool handle_tcp_servers(size_t &na);
             
         };
     }

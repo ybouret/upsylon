@@ -40,6 +40,7 @@ namespace upsylon
 
         bool engine:: cycle( socket_delay &d )
         {
+            Y_NET_VERBOSE(std::cerr<<"[net.engine.cycle(" << d.wait_for() << ")]" << std::endl);
 
             //------------------------------------------------------------------
             //
@@ -49,10 +50,30 @@ namespace upsylon
             size_t na = sockset.incoming(d);
             if( na )
             {
+                handle_tcp_servers(na);
                 return true;
             }
 
+
             
+            return false;
+        }
+
+
+        bool engine:: handle_tcp_servers( size_t &na )
+        {
+
+            size_t n = tcp_servers.size();
+            for( tcp_server_iterator it=tcp_servers.begin(); n-- > 0; ++it )
+            {
+                tcp_server_protocol &srv = **it;
+                if( sockset.is_readable(srv) )
+                {
+                    Y_NET_VERBOSE(std::cerr << "server<" << srv->text() << "@" << bswp(srv->port) << "> accept a new connection " << std::endl);
+                    --na;
+                }
+            }
+
             return false;
         }
 
