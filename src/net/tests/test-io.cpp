@@ -6,7 +6,7 @@ using namespace upsylon;
 Y_UTEST(io)
 {
     network::verbose = true;
-    net::io_engine engine;
+    net::engine E;
     
 
 }

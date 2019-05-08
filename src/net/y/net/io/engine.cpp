@@ -5,15 +5,15 @@ namespace upsylon
 {
     namespace net
     {
-        io_engine:: ~io_engine() throw()
+        engine:: ~engine() throw()
         {
-            Y_NET_VERBOSE(std::cerr << "[network.io_engine.quit]" << std::endl);
+            Y_NET_VERBOSE(std::cerr << "[network.engine.quit]" << std::endl);
         }
 
-        io_engine:: io_engine() :
+        engine:: engine() :
         sockset()
         {
-            Y_NET_VERBOSE(std::cerr << "[network.io_engine.init]" << std::endl);
+            Y_NET_VERBOSE(std::cerr << "[network.engine.init]" << std::endl);
         }
 
         

@@ -13,16 +13,16 @@ namespace upsylon
 
 
         //! handle connections
-        class io_engine : public net_object
+        class engine : public net_object
         {
         public:
 
-            explicit io_engine();         //!< setup
-            virtual ~io_engine() throw(); //!< cleanup
+            explicit engine();         //!< setup
+            virtual ~engine() throw(); //!< cleanup
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(io_engine);
+            Y_DISABLE_COPY_AND_ASSIGN(engine);
             socket_set sockset;
             
             
