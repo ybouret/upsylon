@@ -9,7 +9,8 @@
 namespace upsylon
 {
 
-    progress:: progress() : rt_clock(),
+    progress:: progress() :
+    stopwatch(),
     mark(0),
     bips(0),
     percent(0),
@@ -31,6 +32,11 @@ namespace upsylon
         (double&)percent = 0;
         (double&)done    = 0;
         (double&)left    = max_seconds;
+    }
+
+    uint64_t progress:: count() const
+    {
+        return ticks() - mark;
     }
 
     void progress:: update( double ratio)

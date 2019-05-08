@@ -130,3 +130,14 @@ namespace upsylon
     }
 }
 
+namespace upsylon
+{
+    stopwatch::  stopwatch() : rt_clock() {}
+    stopwatch:: ~stopwatch() throw() {}
+
+    double stopwatch:: query() const
+    {
+        const rt_clock &self = *this;
+        return self( count() );
+    }
+}

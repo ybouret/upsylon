@@ -30,6 +30,22 @@ namespace upsylon
         freq_type freq;
     };
 
+    class stopwatch : public rt_clock
+    {
+    public:
+        virtual ~stopwatch() throw();
+
+        virtual void     start()       = 0;
+        virtual uint64_t count() const = 0;
+        double           query() const;
+
+    protected:
+        explicit stopwatch();
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(stopwatch);
+    };
+
 }
 
 #endif

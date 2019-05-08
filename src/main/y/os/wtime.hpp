@@ -7,15 +7,14 @@
 namespace upsylon
 {
     //! wall time
-    class wtime : public rt_clock
+    class wtime : public stopwatch
     {
     public:
         explicit wtime();         //!< set initial mark
         virtual ~wtime() throw(); //!< destructor
 
-        void     start();       //!< start again, time to zero
-        uint64_t count() const; //!< ellapsed ticks
-        double   query() const; //!< ellapsed time in seconds
+        virtual void     start();       //!< start again, time to zero
+        virtual uint64_t count() const; //!< ellapsed ticks
         
     private:
         uint64_t mark;

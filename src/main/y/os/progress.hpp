@@ -8,7 +8,7 @@
 namespace upsylon
 {
     //! compute progress timings
-    class progress : public rt_clock
+    class progress : public stopwatch
     {
     public:
         static const size_t max_days    = 99; //!< days limit
@@ -18,8 +18,9 @@ namespace upsylon
         explicit progress();         //!< setup
         virtual ~progress() throw(); //!< destructor
 
-        void start() throw();        //!< initialize timer
-        void update(double ratio);   //!< update predictions 0<=ratio<=1
+        virtual void     start() throw();      //!< initialize stopwatch and data
+        virtual uint64_t count() const;        //!< ticks from last start
+        void             update(double ratio); //!< update predictions 0<=ratio<=1
 
         //! wrapper to update
         template <typename T>

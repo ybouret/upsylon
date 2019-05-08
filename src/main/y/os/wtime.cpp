@@ -4,7 +4,7 @@
 namespace upsylon
 {
 
-    wtime:: wtime() : rt_clock(), mark( ticks() )
+    wtime:: wtime() : stopwatch(), mark( ticks() )
     {
     }
 
@@ -22,10 +22,6 @@ namespace upsylon
     {
         return ticks() - mark;
     }
-
-    double wtime:: query() const
-    {
-        return (*this)(ticks()-mark);
-    }
+    
 }
 
