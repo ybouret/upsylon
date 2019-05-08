@@ -23,7 +23,8 @@ namespace upsylon
         public:
             virtual ~tcp_server_protocol() throw();                  //!< destructor
             explicit tcp_server_protocol(const socket_address &ip);  //!< default constructor
-            
+            virtual  tcp_client_protocol *create( const tcp_link &link );
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tcp_server_protocol);
         };

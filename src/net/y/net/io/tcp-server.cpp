@@ -18,3 +18,18 @@ namespace upsylon
 }
 
 
+
+#include "y/net/io/tcp-client.hpp"
+
+namespace upsylon
+{
+    namespace net
+    {
+        tcp_client_protocol * tcp_server_protocol:: create(const tcp_link &link)
+        {
+
+            return new tcp_client_protocol( link );
+        }
+    }
+
+}
