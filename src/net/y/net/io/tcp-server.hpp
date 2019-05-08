@@ -15,22 +15,24 @@ namespace upsylon
     namespace net
     {
 
-        class tcp_client_protocol;
+        class tcp_client_protocol; //!< forward declaration
 
+        //! protocol description
         class tcp_server_protocol : public tcp_server
         {
         public:
-            virtual ~tcp_server_protocol() throw();
-            explicit tcp_server_protocol(const socket_address &ip);
+            virtual ~tcp_server_protocol() throw();                  //!< destructor
+            explicit tcp_server_protocol(const socket_address &ip);  //!< default constructor
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tcp_server_protocol);
         };
 
-        typedef intr_ptr<socket_id_t,tcp_server_protocol>          tcp_server_proto;
-        typedef memory::pooled                                     tcp_server_alloc;
-        typedef set<socket_id_t,tcp_server_proto,socket_id_hasher,tcp_server_alloc> tcp_server_db;
-        typedef tcp_server_db::iterator                            tcp_server_iterator;
+        typedef intr_ptr<socket_id_t,tcp_server_protocol> tcp_server_proto;    //!< smart pointer
+        typedef memory::pooled                            tcp_server_alloc;    //!< allocator
+        typedef set<socket_id_t,tcp_server_proto,                              //|
+        socket_id_hasher,tcp_server_alloc>                tcp_server_db;       //!< database of tcp servers
+        typedef tcp_server_db::iterator                   tcp_server_iterator; //!< tcp server iterator
     }
 
 }

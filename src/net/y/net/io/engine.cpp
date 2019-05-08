@@ -28,9 +28,11 @@ namespace upsylon
                 {
                     throw upsylon::exception("net.engine.start(unexpected multiple socket)");
                 }
+                srv->blocking(false);
             }
             catch(...)
             {
+                tcp_servers.no(proto->uuid);
                 sockset.remove(*proto);
                 throw;
             }

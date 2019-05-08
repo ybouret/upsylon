@@ -7,7 +7,17 @@ namespace upsylon
 {
     namespace net
     {
-        
+
+        class ioQ : public net_object
+        {
+        public:
+            explicit ioQ();
+            virtual ~ioQ() throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(ioQ);
+        };
+
     }
 }
 
