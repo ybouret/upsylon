@@ -27,7 +27,6 @@ namespace upsylon
     {
         tcp_client_protocol * tcp_server_protocol:: create(const tcp_link &link)
         {
-
             return new tcp_client_protocol( link );
         }
     }

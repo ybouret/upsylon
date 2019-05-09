@@ -26,7 +26,7 @@ namespace upsylon
             {
                 if(!tcp_servers.insert(proto))
                 {
-                    throw upsylon::exception("net.engine.start(unexpected multiple socket)");
+                    throw upsylon::exception("net.engine.start(unexpected multiple tcp server socket)");
                 }
                 srv->blocking(false);
             }
@@ -46,14 +46,25 @@ namespace upsylon
 
             //------------------------------------------------------------------
             //
-            // read incoming
+            // read incoming with delay
             //
             //------------------------------------------------------------------
-            size_t na = sockset.incoming(d);
-            if( na )
+            size_t na      = sockset.incoming(d);
+
+            //------------------------------------------------------------------
+            //
+            //
+            // TCP
+            //
+            //
+            //------------------------------------------------------------------
+            if( (na>0) )
             {
                 handle_tcp_servers(na);
-                return true;
+                if(na>0)
+                {
+                    handle_tcp_clients_incoming(na);
+                }
             }
 
 
@@ -62,22 +73,7 @@ namespace upsylon
         }
 
 
-        bool engine:: handle_tcp_servers( size_t &na )
-        {
-
-            size_t n = tcp_servers.size();
-            for( tcp_server_iterator it=tcp_servers.begin(); n-- > 0; ++it )
-            {
-                tcp_server_protocol &srv = **it;
-                if( sockset.is_readable(srv) )
-                {
-                    Y_NET_VERBOSE(std::cerr << "server<" << srv->text() << "@" << bswp(srv->port) << "> accept a new connection " << std::endl);
-                    --na;
-                }
-            }
-
-            return false;
-        }
+       
 
     }
 }

@@ -4,6 +4,7 @@
 
 #include "y/net/socket/set.hpp"
 #include "y/net/io/tcp-server.hpp"
+#include "y/net/io/tcp-client.hpp"
 
 
 namespace upsylon
@@ -29,9 +30,10 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(engine);
             socket_set    sockset;
             tcp_server_db tcp_servers;
+            tcp_client_db tcp_clients;
 
             bool handle_tcp_servers(size_t &na);
-            
+            bool handle_tcp_clients_incoming(size_t &na);
         };
     }
 }
