@@ -15,13 +15,7 @@ namespace upsylon
         class tcp_cache_ : public net_object
         {
         public:
-            //! a dynamic code
-            struct byte_node
-            {
-                byte_node *prev; //!< for list
-                byte_node *next; //!< for list
-                uint8_t    code; //!< current byte
-            };
+            
             typedef memory::slab_of<byte_node> byte_slab; //!< alias
             typedef core::list_of<byte_node>   byte_list; //!< alias
 

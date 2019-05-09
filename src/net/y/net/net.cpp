@@ -7,18 +7,58 @@
 #include <cerrno>
 #endif
 
+#include "y/memory/arena-of.hpp"
+#include "y/memory/io.hpp"
 
 namespace upsylon
 {
 
-    bool network::verbose = false;
+    namespace
+    {
 
 #if defined(Y_WIN)
-    static WSADATA wsa;
+        static WSADATA wsa;
 #endif
+
+        typedef memory::arena_of<net::byte_node> byte_node_arena;
+        uint64_t __byte_node_arena[Y_U64_FOR_ITEM(byte_node_arena)];
+    }
+
+    net::byte_node * network:: acquire_byte_node() const
+    {
+        Y_LOCK(access);
+        static byte_node_arena &a = *memory::io::__force<byte_node_arena>(__byte_node_arena);
+        return a.acquire();
+    }
+
+    void network:: release_byte_node( net::byte_node *p) const throw()
+    {
+        Y_LOCK(access);
+        static byte_node_arena &a = *memory::io::__force<byte_node_arena>(__byte_node_arena);
+        a.release(p);
+    }
+
+    bool network::verbose = false;
+
+
     network:: ~network() throw()
     {
         Y_NET_VERBOSE(std::cerr<< "[network.cleanup]" << std::endl);
+
+        //----------------------------------------------------------------------
+        //
+        // cleanup local stuff...
+        //
+        //----------------------------------------------------------------------
+        destruct( memory::io::__force<byte_node_arena>(__byte_node_arena) );
+        memset( __byte_node_arena, 0, sizeof(__byte_node_arena) );
+
+
+        //----------------------------------------------------------------------
+        //
+        // cleanup system stuff
+        //
+        //----------------------------------------------------------------------
 #if defined(Y_WIN)
         ::WSACleanup();
 #endif
@@ -30,11 +70,16 @@ namespace upsylon
         Y_NET_VERBOSE(std::cerr << "[network.startup]" << std::endl);
         Y_GIANT_LOCK();
 
+        //----------------------------------------------------------------------
+        //
+        // system dependent initializations
+        //
+        //----------------------------------------------------------------------
 #if defined(Y_WIN)
         memset(&wsa, 0, sizeof(WSADATA) );
         if( :: WSAStartup( MAKEWORD(2,2), &wsa ) !=  0 )
         {
-            throw win32::exception( ::WSAGetLastError(), "WSAStartup" );
+            throw win32::exception( ::WSAGetLastError(), "::WSAStartup" );
         }
 #endif
 
@@ -42,7 +87,15 @@ namespace upsylon
         signal( SIGPIPE, SIG_IGN );
 #endif
 
+        //----------------------------------------------------------------------
+        //
+        // local stuff...
+        //
+        //----------------------------------------------------------------------
+        memset( __byte_node_arena, 0, sizeof(__byte_node_arena) );
+        new ( memory::io::__force<byte_node_arena>(__byte_node_arena)) byte_node_arena(Y_CHUNK_SIZE);
     }
+
 
     const uint16_t network:: reserved_port   = IPPORT_RESERVED;
 #       if defined(Y_WIN) || defined(__FreeBSD__)

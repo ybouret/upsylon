@@ -17,8 +17,9 @@ namespace upsylon
 
         //! create a socket
         net::socket_type open(const net::ip_protocol proto, const net::ip_version version);
-        
 
+        net::byte_node *acquire_byte_node() const; //!< acquire byte_node
+        void            release_byte_node( net::byte_node * ) const throw(); //!< release a byte_node
 
         //! resolve the address, preserving the port
         void resolve( net::socket_address &ip, const string &s ) const;

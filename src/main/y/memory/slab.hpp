@@ -9,15 +9,23 @@ namespace upsylon
     namespace memory
     {
 
-        //! slab base class
+        //! slab base class, NOT a POD!
         class slab : public dynamic
         {
         public:
+            //__________________________________________________________________
+            //
+            // virtual interface
+            //__________________________________________________________________
             virtual ~slab() throw();                //!< cleanup
-            virtual size_t size() const throw();    //!< number of available memory object
-            virtual size_t capacity() const throw();//!< orignal number of memory objects
+            virtual size_t size() const throw();    //!< dynamic interface: number of available memory object
+            virtual size_t capacity() const throw();//!< dynamic interface: orignal number of memory objects
 
-            void swap_with( slab &other ) throw();
+            //__________________________________________________________________
+            //
+            // non-virtual interface
+            //__________________________________________________________________
+            void swap_with( slab &other ) throw(); //!< no-throw data swap
 
         protected:
             explicit slab(const size_t block_size,          //|

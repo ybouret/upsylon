@@ -22,9 +22,9 @@ namespace upsylon
             explicit engine();         //!< setup
             virtual ~engine() throw(); //!< cleanup
 
-            void start( tcp_server_protocol *srv );
+            void start( tcp_server_protocol *srv ); //!< register a new tcp protocol
 
-            bool cycle( socket_delay &d );
+            bool cycle( socket_delay &d ); //!< probe incoming/outgoing
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(engine);

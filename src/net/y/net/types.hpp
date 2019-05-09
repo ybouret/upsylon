@@ -209,6 +209,17 @@ namespace upsylon
         Y_DISABLE_COPY_AND_ASSIGN(net_object);
     };
 
+    namespace net
+    {
+        //! lightweight node for caches
+        struct byte_node
+        {
+            byte_node *next; //!< for list/pool
+            byte_node *prev; //!< for list
+            uint8_t    code; //!< current data
+        };
+    }
+    
 }
 
 #endif
