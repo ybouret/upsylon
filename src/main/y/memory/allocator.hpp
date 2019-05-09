@@ -50,7 +50,9 @@ namespace upsylon
                 count = 0;
                 p     = 0;
             }
-            
+
+            uint8_t *acquire_bytes(size_t &n );
+            void     release_bytes(uint8_t * &p, size_t &n ) throw();
             
         protected:
             //! constructor, set allocated=0
