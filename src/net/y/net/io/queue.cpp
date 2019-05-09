@@ -20,10 +20,10 @@ namespace upsylon
         tcp_queue:: tcp_queue( const size_t bs) :
         net_object(),
         bytes(),
-        bpool(),
         block_size(check_block_size(bs)),
         allocated(block_size),
-        buffer( memory::pooled::instance().acquire_bytes(allocated) )
+        buffer( memory::pooled::instance().acquire_bytes(allocated) ),
+        bpool()
         {
         }
 
@@ -58,26 +58,48 @@ namespace upsylon
             }
         }
 
-
-        byte_node * tcp_queue:: to_node(const uint8_t code)
+        namespace
         {
-            if(bpool.size>0)
+            static inline byte_node *byte_node_fmt( byte_node *node, const uint8_t code ) throw()
             {
-                byte_node *node = bpool.query();
+                assert(node);
                 node->code = code;
-                return node;
-            }
-            else
-            {
-                static const network &nw = network::instance();
-                byte_node *node = nw.acquire_byte_node();
-                node->code = 0;
                 return node;
             }
         }
 
-#if 0
-        size_t tcp_queue:: recv( tcp_client &client )
+
+        byte_node * tcp_queue:: to_node(const uint8_t code)
+        {
+            static const network &nw = network::instance();
+            return byte_node_fmt( (bpool.size>0) ? bpool.query() : nw.acquire_byte_node() ,code);
+        }
+
+
+
+    }
+}
+
+namespace upsylon
+{
+    namespace net
+    {
+
+        tcp_recv_queue:: tcp_recv_queue( const size_t bs ) :
+        tcp_queue(bs)
+        {
+        }
+
+        tcp_recv_queue:: ~tcp_recv_queue() throw()
+        {
+        }
+
+        size_t tcp_recv_queue:: size() const throw()
+        {
+            return bytes.size;
+        }
+
+        size_t tcp_recv_queue:: load(const tcp_client &client)
         {
             const size_t nr = client.recv(buffer,block_size);
             uint8_t     *p  = buffer;
@@ -88,7 +110,56 @@ namespace upsylon
             }
             return nr;
         }
-#endif
+
+        size_t tcp_recv_queue::  pop(void *ptr,size_t len) throw()
+        {
+            assert( !(NULL==ptr&&len>0) );
+            size_t   ng   = 0;
+            uint8_t *dest = static_cast<uint8_t *>(ptr);
+            while(len-->0)
+            {
+                if( bytes.size <= 0 )
+                {
+                    break;
+                }
+                else
+                {
+                    byte_node *node = bpool.store( bytes.pop_front() );
+                    dest[ng++]      = node->code;
+                    node->code      = 0;
+                }
+            }
+            return ng;
+        }
+
+        size_t tcp_recv_queue:: peek(void *ptr,size_t len) const throw()
+        {
+            assert( !(NULL==ptr&&len>0) );
+            size_t           ng   = 0;
+            uint8_t         *dest = static_cast<uint8_t *>(ptr);
+            const byte_node *node = bytes.head;
+            while(len-->0)
+            {
+                if(!node) break; else dest[ng++] = node->code;
+                node = node->next;
+            }
+            return ng;
+        }
+
+        char tcp_recv_queue:: getch() throw()
+        {
+            assert(bytes.size>0);
+            char C = char(bytes.head->code);
+            bpool.store( bytes.pop_front() )->code = 0;
+            return C;
+        }
+
+        void tcp_recv_queue:: putch(char C)
+        {
+            bytes.push_front( to_node(C) );
+        }
 
     }
+
 }
+
