@@ -2,7 +2,6 @@
 #ifndef Y_NET_TCP_STREAM_INCLUDED
 #define Y_NET_TCP_STREAM_INCLUDED 1
 
-#include "y/net/tcp/cache.hpp"
 #include "y/net/io/tcp-recv-queue.hpp"
 #include "y/ios/istream.hpp"
 #include "y/ios/ostream.hpp"
