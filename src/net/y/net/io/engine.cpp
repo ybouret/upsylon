@@ -11,7 +11,9 @@ namespace upsylon
         }
 
         engine:: engine() :
-        sockset()
+        sockset(),
+        tcp_servers( ),
+        tcp_clients( )
         {
             Y_NET_VERBOSE(std::cerr << "[network.engine.init]" << std::endl);
         }
