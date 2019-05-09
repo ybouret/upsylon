@@ -76,17 +76,19 @@ namespace upsylon
             }
         }
 
-
+#if 0
         size_t tcp_queue:: recv( tcp_client &client )
         {
             const size_t nr = client.recv(buffer,block_size);
-            for(size_t i=0;i<nr;++i)
+            uint8_t     *p  = buffer;
+            for(size_t i=nr;i>0;--i)
             {
-                bytes.push_back( to_node( buffer[i] ) );
+                bytes.push_back( to_node( *p ) );
+                *(p++) = 0;
             }
             return nr;
         }
-
+#endif
 
     }
 }
