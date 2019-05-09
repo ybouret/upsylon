@@ -3,6 +3,7 @@
 #define Y_NET_TCP_STREAM_INCLUDED 1
 
 #include "y/net/tcp/cache.hpp"
+#include "y/net/io/tcp-recv-queue.hpp"
 #include "y/ios/istream.hpp"
 #include "y/ios/ostream.hpp"
 
@@ -24,7 +25,8 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(tcp_stream);
         };
 
-      
+        //! alias to use a shared tcp_recv_queue
+        typedef arc_ptr<tcp_recv_queue> tcp_cache;
 
         //! istream decorator for tcp_client TODO: create dedicated cache
         class tcp_istream : public ios::istream, public tcp_stream

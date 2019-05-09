@@ -51,8 +51,8 @@ namespace upsylon
                 p     = 0;
             }
 
-            uint8_t *acquire_bytes(size_t &n );
-            void     release_bytes(uint8_t * &p, size_t &n ) throw();
+            uint8_t *acquire_bytes(size_t &n);                        //!< wrapper for byte-wise allocation
+            void     release_bytes(uint8_t * &p, size_t &n ) throw(); //!< wrapper for byte-wise release
             
         protected:
             //! constructor, set allocated=0

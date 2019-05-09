@@ -34,12 +34,12 @@ namespace upsylon
         tcp_stream( conn ),
         cache(shared)
         {
-            cache->reset();
+            cache->free();
         }
 
         bool tcp_istream:: query( char &C )
         {
-            if(cache->size()<=0 && !cache->load(*link))
+            if(cache->size()<=0 && cache->load(*link)<=0 )
             {
                 return false;
             }

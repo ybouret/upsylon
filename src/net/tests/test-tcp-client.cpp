@@ -27,7 +27,8 @@ Y_UTEST(tcp_client)
     }
 
     net::tcp_link   client = new net::tcp_client(argv[2],version);
-    net::tcp_cache  cache  = net::tcp_cache_new(32);
+    net::tcp_cache  cache  = new net::tcp_recv_queue(32);
+    std::cerr << "cache.block_size=" << cache->block_size << std::endl;
 
     std::cerr << "TCP->" << (*client)->text() << "@" << net::bswp( (*client)->port) << std::endl;
 

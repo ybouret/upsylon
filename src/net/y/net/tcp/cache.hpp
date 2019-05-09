@@ -46,7 +46,7 @@ namespace upsylon
 
         //! internal creation
         tcp_cache_                 *tcp_cache_new( const size_t n );
-        typedef arc_ptr<tcp_cache_> tcp_cache; //!< alias
+       // typedef arc_ptr<tcp_cache_> tcp_cache; //!< alias
 
     }
 
