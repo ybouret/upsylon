@@ -20,7 +20,6 @@ namespace upsylon
 
             void free() throw(); //!< put bytes into pool
             void trim() throw(); //!< clear pool
-            void extra( size_t n ); //!< extra nodes into pool
 
             //size_t recv( tcp_client &client );
             //size_t send( tcp_client &client );
