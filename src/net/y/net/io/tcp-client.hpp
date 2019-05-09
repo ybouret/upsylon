@@ -4,7 +4,7 @@
 
 #include "y/net/tcp/client.hpp"
 #include "y/net/socket/id-hasher.hpp"
-#include "y/net/io/queue.hpp"
+#include "y/net/io/tcp-queue.hpp"
 
 #include "y/ptr/intr.hpp"
 #include "y/associative/set.hpp"
