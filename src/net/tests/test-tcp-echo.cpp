@@ -27,7 +27,7 @@ Y_UTEST(tcp_echo)
     }
 
     net::tcp_link       client = new net::tcp_client(argv[2],version);
-    net::tcp_cache      icache = new net::tcp_recv_queue(32);
+    net::tcp_recv_cache icache = new net::tcp_recv_queue(32);
     net::tcp_istream    inp( client, icache );
 
     net::tcp_send_queue ocache(16);

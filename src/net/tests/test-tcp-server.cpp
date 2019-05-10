@@ -37,17 +37,18 @@ Y_UTEST(tcp_server)
     const unsigned                 pending   = 1;
     net::tcp_server                server( user_port, pending, version );
     vector<string>                 words(16,as_capacity);
-    net::tcp_cache                 cache = new net::tcp_recv_queue(32);
+    net::tcp_recv_cache            icache = new net::tcp_recv_queue(32);
+    net::tcp_send_cache            ocache = new net::tcp_send_queue(32);
 
-    std::cerr << "cache.block_size=" << cache->block_size << std::endl;
+    std::cerr << "cache.block_size=" << icache->block_size << std::endl;
 
     while(true)
     {
         net::tcp_link client = server.accept();
         std::cerr << "Connexion From " << (*client)->text() << std::endl;
 
-        net::tcp_istream fp( client, cache );
-        net::tcp_ostream op( client );
+        net::tcp_istream fp( client, icache );
+        net::tcp_ostream op( client, ocache );
 
         string line;
         while( fp.gets(line) )

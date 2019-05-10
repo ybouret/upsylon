@@ -30,7 +30,7 @@ namespace upsylon
         {
         }
 
-        tcp_istream:: tcp_istream( const tcp_link &conn, const tcp_cache &shared ) :
+        tcp_istream:: tcp_istream( const tcp_link &conn, const tcp_recv_cache &shared ) :
         tcp_stream( conn ),
         cache(shared)
         {
@@ -72,9 +72,12 @@ namespace upsylon
         }
 
 
-        tcp_ostream:: tcp_ostream( const tcp_link &conn ) throw() :
-        tcp_stream( conn )
+        tcp_ostream:: tcp_ostream( const tcp_link      &conn,
+                                  const tcp_send_cache &oc) throw() :
+        tcp_stream( conn ),
+        cache(oc)
         {
+            cache->reset();
         }
 
         void tcp_ostream:: flush() {}
