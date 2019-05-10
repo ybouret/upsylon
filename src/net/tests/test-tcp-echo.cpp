@@ -1,10 +1,10 @@
-
 #include "y/net/tcp/stream.hpp"
+#include "y/net/io/tcp-send-queue.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
 
-Y_UTEST(tcp_client)
+Y_UTEST(tcp_echo)
 {
     if(argc<=2) throw exception("%s: version=[v4|v6] dest@port [msg...]",argv[0]);
     network::verbose = true;
@@ -26,24 +26,35 @@ Y_UTEST(tcp_client)
         }
     }
 
-    net::tcp_link   client = new net::tcp_client(argv[2],version);
-    //net::tcp_cache  cache  = new net::tcp_recv_queue(32);
-    //std::cerr << "cache.block_size=" << cache->block_size << std::endl;
-    
+    net::tcp_link       client = new net::tcp_client(argv[2],version);
+    net::tcp_cache      icache = new net::tcp_recv_queue(32);
+    net::tcp_istream    inp( client, icache );
+
+    net::tcp_send_queue ocache(16);
+
     std::cerr << "TCP->" << (*client)->text() << "@" << net::bswp( (*client)->port) << std::endl;
 
     for(int i=3;i<argc;++i)
     {
         string msg = argv[i];
         msg += "\r\n";
-        const size_t ns = client->send_block(msg);
-        if(ns<msg.size())
+        ocache.push(msg);
+    }
+    std::cerr << "ocache.size=" << ocache.size() << std::endl;
+    while( ocache.size() )
+    {
+        const size_t ns = ocache.comm(*client);
+        if( ns <= 0 )
         {
-            std::cerr << "couldn't send all message" << std::endl;
             break;
         }
+    }
 
-
+    string line;
+    for(int i=3;i<argc;++i)
+    {
+        if( !inp.gets(line) ) break;
+        std::cerr << line << std::endl;
     }
 
 }

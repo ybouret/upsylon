@@ -19,7 +19,7 @@ namespace upsylon
             return bytes.size;
         }
 
-        size_t tcp_recv_queue:: load(const tcp_client &client)
+        size_t tcp_recv_queue:: comm(const tcp_client &client)
         {
             const size_t nr = client.recv(buffer,block_size);
             uint8_t     *p  = buffer;

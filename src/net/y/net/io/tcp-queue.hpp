@@ -16,10 +16,11 @@ namespace upsylon
         class tcp_queue : public net_object
         {
         public:
-            virtual ~tcp_queue() throw();             //!< cleanup everything
-            void           prune() throw();           //!< clear pool
-            virtual size_t size()  const throw() = 0; //!< bytes for I/O
-            virtual void   reset() throw() = 0;       //!< free content, keep resources
+            virtual ~tcp_queue() throw();                   //!< cleanup everything
+            void           prune() throw();                 //!< clear pool
+            virtual size_t size()  const throw() = 0;       //!< bytes for I/O
+            virtual void   reset() throw() = 0;             //!< free content, keep resources
+            virtual size_t comm(const tcp_client &) = 0;  //!< send or receive
 
         protected:
             explicit tcp_queue(const size_t bs); //!< setup with internal block size

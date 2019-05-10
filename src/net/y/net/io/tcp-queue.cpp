@@ -47,6 +47,7 @@ namespace upsylon
         void tcp_queue:: clear() throw()
         {
             while(bytes.size) bpool.store( bytes.pop_back() )->code = 0;
+            memset(buffer,0,block_size);
         }
 
         void tcp_queue:: prune() throw()

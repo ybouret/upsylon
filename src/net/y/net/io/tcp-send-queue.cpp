@@ -34,10 +34,14 @@ namespace upsylon
         void tcp_send_queue:: defrag() throw()
         {
             assert(to_send<=block_size);
-            const size_t to_move = to_send;
-            for(size_t i=0;i<to_move;++i)
             {
-                buffer[i] = current[i];
+                uint8_t     *target  = buffer;
+                uint8_t     *source  = current;
+                for(size_t i=to_send;i>0;--i);
+                {
+                    *(target++) = *(source);
+                    *(source++) = 0;
+                }
             }
             available = buffer+to_send;
             remaining = buffer_space();
@@ -80,9 +84,30 @@ namespace upsylon
 
         }
 
-        void tcp_send_queue:: putch( const char C )
+        void tcp_send_queue:: push( const char C )
         {
             push(&C,1);
+        }
+
+        void tcp_send_queue:: push(const char *text)
+        {
+            push( text, length_of(text) );
+        }
+
+        void tcp_send_queue:: push( const memory::ro_buffer &buff )
+        {
+            push( buff.ro(), buff.length() );
+        }
+
+        size_t tcp_send_queue:: comm(const tcp_client &cln)
+        {
+            const size_t ns = cln.send(buffer,to_send);
+
+            current += ns;
+            to_send -= ns;
+            defrag();
+
+            return ns;
         }
     }
 

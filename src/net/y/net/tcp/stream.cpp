@@ -39,7 +39,7 @@ namespace upsylon
 
         bool tcp_istream:: query( char &C )
         {
-            if(cache->size()<=0 && cache->load(*link)<=0 )
+            if(cache->size()<=0 && cache->comm(*link)<=0 )
             {
                 return false;
             }

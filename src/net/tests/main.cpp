@@ -9,6 +9,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(udp_client);
     Y_UTEST(udp_server);
     Y_UTEST(tcp_client);
+    Y_UTEST(tcp_echo);
     Y_UTEST(tcp_server);
     Y_UTEST(info);
     Y_UTEST(sockset);
