@@ -16,14 +16,15 @@ namespace upsylon
         class tcp_queue : public net_object
         {
         public:
-            virtual ~tcp_queue() throw(); //!< cleanup everything
-            void free() throw();          //!< put bytes into pool
-            void trim() throw();          //!< clear pool
-
+            virtual ~tcp_queue() throw();             //!< cleanup everything
+            void           prune() throw();           //!< clear pool
+            virtual size_t size()  const throw() = 0; //!< bytes for I/O
+            virtual void   reset() throw() = 0;       //!< free content, keep resources
 
         protected:
             explicit tcp_queue(const size_t bs); //!< setup with internal block size
-            //__________________________________________________________________
+            
+            //------------------------------------------------------------------
             core::list_of<byte_node> bytes;      //!< list of bytes
         public:                                  //|
             const size_t             block_size; //!< internal block_size
@@ -32,10 +33,10 @@ namespace upsylon
         protected:                               //|
             uint8_t                 *buffer;     //!< linear buffer[block_size]
             core::pool_of<byte_node> bpool;      //!< pool of byte nodes
-            //__________________________________________________________________
+            byte_node * to_node(const uint8_t);  //!< dynamic memory handling
+            void        clear() throw();         //!< put bytes into pool
+            //------------------------------------------------------------------
 
-            byte_node * to_node(const uint8_t code); //!< dynamic memory handling
-            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tcp_queue);
         };

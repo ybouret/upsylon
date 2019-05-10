@@ -79,6 +79,10 @@ namespace upsylon
             bytes.push_front( to_node(C) );
         }
 
+        void tcp_recv_queue:: reset() throw()
+        {
+            clear();
+        }
     }
 
 }

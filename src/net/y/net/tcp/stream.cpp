@@ -34,7 +34,7 @@ namespace upsylon
         tcp_stream( conn ),
         cache(shared)
         {
-            cache->free();
+            cache->reset();
         }
 
         bool tcp_istream:: query( char &C )

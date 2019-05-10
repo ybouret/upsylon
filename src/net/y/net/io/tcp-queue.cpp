@@ -29,7 +29,7 @@ namespace upsylon
 
         tcp_queue:: ~tcp_queue() throw()
         {
-            trim();
+            prune();
 
             while( bytes.size )
             {
@@ -44,12 +44,12 @@ namespace upsylon
             (size_t&)block_size=0;
         }
 
-        void tcp_queue:: free() throw()
+        void tcp_queue:: clear() throw()
         {
             while(bytes.size) bpool.store( bytes.pop_back() )->code = 0;
         }
 
-        void tcp_queue:: trim() throw()
+        void tcp_queue:: prune() throw()
         {
             while( bpool.size )
             {

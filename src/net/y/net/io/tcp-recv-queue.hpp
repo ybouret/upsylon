@@ -16,10 +16,11 @@ namespace upsylon
         public:
             virtual ~tcp_recv_queue() throw();        //!< cleanup
             explicit tcp_recv_queue(const size_t bs); //!< setup
+            
+            virtual void   reset() throw();                   //!< clear
+            virtual size_t size() const throw();              //!< available bytes
 
-            size_t  load( const tcp_client &client );        //!< recv block and get data
-
-            size_t  size() const throw();                     //!< available bytes
+            size_t  load( const tcp_client &client );         //!< recv block and get data
             size_t  pop(void *ptr,size_t num) throw();        //!< pop at most num first bytes
             size_t  peek(void *ptr,size_t num) const throw(); //!< peek at most num first bytes
 
