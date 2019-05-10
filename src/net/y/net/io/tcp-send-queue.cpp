@@ -26,6 +26,11 @@ namespace upsylon
             remaining = block_size;
         }
 
+        size_t     tcp_send_queue::    buffer_space() const throw()
+        {
+            return block_size - to_send;
+        }
+
         void tcp_send_queue:: defrag() throw()
         {
             assert(to_send<=block_size);
@@ -35,7 +40,12 @@ namespace upsylon
                 buffer[i] = current[i];
             }
             available = buffer+to_send;
-            remaining = block_size-to_send;
+            remaining = buffer_space();
+            while(remaining>0&&bytes.size>0)
+            {
+                *(available++) = bpool.store(bytes.pop_front())->code;
+                --remaining;
+            }
         }
 
         size_t tcp_send_queue:: size() const throw()
@@ -48,7 +58,10 @@ namespace upsylon
             const uint8_t *p = static_cast<const uint8_t *>(ptr);
 
             // defrag ?
-
+            if( (num>>1) >= buffer_space() )
+            {
+                defrag();
+            }
 
             // fill in remaining
             while(num>0&&remaining>0)
@@ -56,6 +69,7 @@ namespace upsylon
                 *(available++) = *(p++);
                 --num;
                 --remaining;
+                ++to_send;
             }
 
             // enqueue remaining bytes

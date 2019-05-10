@@ -20,8 +20,7 @@ namespace upsylon
 
             virtual void   reset()  throw();                   //!< re-link and clear()
             virtual size_t size() const throw();               //!< to_send + bytes.size()
-
-            void           defrag() throw();                   //!< optimize space
+            size_t         buffer_space() const throw();       //!< block_size - to_send
             void           push(const void *ptr, size_t num);  //!< append data in buffer and bytes
             void           putch(const char C );               //!< append one char
 
@@ -31,6 +30,8 @@ namespace upsylon
             size_t   to_send;   //!< number of bytes to send
             uint8_t *available; //!< available address
             size_t   remaining; //!< remaining bytes in buffer
+
+            void defrag() throw(); //!< optimize space
 
         };
     }

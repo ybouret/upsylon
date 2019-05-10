@@ -83,6 +83,15 @@ namespace upsylon
         {
             clear();
         }
+
+        void    tcp_recv_queue:: skip(size_t num) throw()
+        {
+            assert(num<=bytes.size);
+            while(num-->0)
+            {
+                bpool.store( bytes.pop_front() )->code = 0;
+            }
+        }
     }
 
 }

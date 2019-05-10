@@ -23,7 +23,7 @@ namespace upsylon
             size_t  load( const tcp_client &client );         //!< recv block and get data
             size_t  pop(void *ptr,size_t num) throw();        //!< pop at most num first bytes
             size_t  peek(void *ptr,size_t num) const throw(); //!< peek at most num first bytes
-
+            void    skip(size_t num) throw();                 //!< skip num bytes, nun<=size()
             char getch() throw();   //!< return first char in cache
             void putch(char C);     //!< unread char
 
