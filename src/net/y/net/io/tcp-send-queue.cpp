@@ -110,6 +110,11 @@ namespace upsylon
 
             return ns;
         }
+        
+        bool tcp_send_queue:: is_filled() const throw()
+        {
+            return remaining<=0;
+        }
     }
 
 }

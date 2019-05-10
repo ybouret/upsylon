@@ -80,13 +80,19 @@ namespace upsylon
             cache->reset();
         }
 
-        void tcp_ostream:: flush() {}
+        void tcp_ostream:: flush()
+        {
+            while( cache->comm(*link) > 0  )
+            {
+            }
+        }
 
         void tcp_ostream:: write(char C)
         {
-            if( 1 != link->send_block( &C, 1) )
+            cache->push(C);
+            if(cache->is_filled())
             {
-                throw upsylon::exception("tcp_ostream(%s): disconnected!", (**link).text() );
+                flush();
             }
         }
     }

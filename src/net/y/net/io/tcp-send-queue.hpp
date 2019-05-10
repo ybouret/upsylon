@@ -21,12 +21,13 @@ namespace upsylon
             virtual void   reset()  throw();                   //!< re-link and clear()
             virtual size_t size() const throw();               //!< to_send + bytes.size()
             virtual size_t comm(const tcp_client &);           //!< send data and update
-
+            
             size_t         buffer_space() const throw();        //!< block_size - to_send
             void           push(const void *ptr, size_t num);   //!< append data in buffer and bytes
             void           push(const char C );                 //!< append one char
             void           push(const char *text);              //!< append text
             void           push(const memory::ro_buffer &buff); //!< append buffer
+            bool           is_filled() const throw();           //!< full buffer + bytes
             std::ostream & display( std::ostream &os ) const;   //!< display
 
             //! display
