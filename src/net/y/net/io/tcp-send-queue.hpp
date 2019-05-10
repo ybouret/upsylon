@@ -27,6 +27,13 @@ namespace upsylon
             void           push(const char C );                 //!< append one char
             void           push(const char *text);              //!< append text
             void           push(const memory::ro_buffer &buff); //!< append buffer
+            std::ostream & display( std::ostream &os ) const;   //!< display
+
+            //! display
+            inline friend std::ostream &operator<<(std::ostream &os, const tcp_send_queue &Q )
+            {
+                return Q.display(os);
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tcp_send_queue);

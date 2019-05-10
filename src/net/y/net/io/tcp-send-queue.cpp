@@ -39,16 +39,17 @@ namespace upsylon
                 uint8_t     *source  = current;
                 for(size_t i=to_send;i>0;--i);
                 {
-                    *(target++) = *(source);
-                    *(source++) = 0;
+                    *(target++) = *(source++);
                 }
             }
             available = buffer+to_send;
             remaining = buffer_space();
+
             while(remaining>0&&bytes.size>0)
             {
                 *(available++) = bpool.store(bytes.pop_front())->code;
                 --remaining;
+                ++to_send;
             }
         }
 
@@ -109,6 +110,33 @@ namespace upsylon
 
             return ns;
         }
+    }
+
+}
+
+#include "y/code/utils.hpp"
+
+namespace upsylon
+{
+    namespace net
+    {
+
+        std::ostream & tcp_send_queue:: display( std::ostream &os ) const
+        {
+            os << '[';
+            for(size_t i=0;i<to_send;++i)
+            {
+                os << visible_char[ buffer[i] ];
+            }
+            os <<']' << '{';
+            for(const byte_node *node = bytes.head; node; node=node->next)
+            {
+                os << visible_char[ node->code ];
+            }
+            os << '}';
+            return os;
+        }
+
     }
 
 }

@@ -39,7 +39,10 @@ Y_UTEST(tcp_echo)
         string msg = argv[i];
         msg += "\r\n";
         ocache.push(msg);
+        std::cerr << "ocache=" << ocache << std::endl;
     }
+
+    
     std::cerr << "ocache.size=" << ocache.size() << std::endl;
     while( ocache.size() )
     {
@@ -48,6 +51,7 @@ Y_UTEST(tcp_echo)
         {
             break;
         }
+        std::cerr << "ocache=" << ocache << std::endl;
     }
 
     string line;
