@@ -42,6 +42,7 @@ namespace upsylon
             assert( !(data==NULL&&size>0) );
 
             const int sz = check_bound<int,size_t>(size);
+            Y_NET_VERBOSE(const socket_address &ip = **this; std::cerr << "[net.tcp.client.send #" << sz << " ->" << ip << "]" << std::endl);
 
 #if defined(Y_BSD)
             int            ns = 0;
@@ -70,10 +71,11 @@ namespace upsylon
         {
             Y_GIANT_LOCK();
             const int sz = check_bound<int,size_t>(size);
-            
+            Y_NET_VERBOSE(std::cerr << "[net.tcp.client.recv(up to " << sz << ")]" << std::endl);
+
 #if defined(Y_BSD)
-            int            ns = 0;
-            while( (ns= ::recv(sock,data,sz,send_flags)) < 0 )
+            int            nr = 0;
+            while( (nr= ::recv(sock,data,sz,send_flags)) < 0 )
             {
                 const int err = errno;
                 switch (err) {
@@ -81,16 +83,16 @@ namespace upsylon
                     default: throw net::exception(err,"::recv(%s)", (**this).text() );
                 }
             }
-            return ns;
+            return nr;
 #endif
 
 #if defined(Y_WIN)
-            const int ns = ::recv(sock,(char*)data,sz,send_flags);
-            if( ns == SOCKET_ERROR )
+            const int nr = ::recv(sock,(char*)data,sz,send_flags);
+            if( nr == SOCKET_ERROR )
             {
                 throw net::exception( Y_NET_LAST_ERROR(), "::recv(%s)", (**this).text() );
             }
-            return ns;
+            return nr;
 #endif
         }
 

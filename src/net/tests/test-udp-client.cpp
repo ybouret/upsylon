@@ -27,7 +27,7 @@ Y_UTEST(udp_client)
 
     net::udp_client client(argv[2],version);
     
-    std::cerr << "UDP->" << client->text() << "@" << net::bswp(client->port) << std::endl;
+    std::cerr << "UDP->" << *(client) << std::endl;
 
     for(int i=3;i<argc;++i)
     {

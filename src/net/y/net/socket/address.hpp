@@ -70,7 +70,7 @@ namespace upsylon
             //! display
             friend inline std::ostream & operator<<(std::ostream &os, const socket_address &i )
             {
-                return (os << i.text());
+                return (os << i.text() << port_separator << bswp(i.port) );
             }
 
             void resolve( const string &xname );      //!< using network::resolve

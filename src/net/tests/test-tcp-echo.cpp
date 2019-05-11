@@ -33,7 +33,7 @@ Y_UTEST(tcp_echo)
     net::tcp_send_cache ocache = new net::tcp_send_queue(16);
     net::tcp_ostream    out( client, ocache );
 
-    std::cerr << "TCP->" << (*client)->text() << "@" << net::bswp( (*client)->port) << std::endl;
+    std::cerr << "TCP->" << (**client) << std::endl;
 
     std::cerr << "\t<send>" << std::endl;
     for(int i=3;i<argc;++i)

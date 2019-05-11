@@ -45,7 +45,7 @@ Y_UTEST(tcp_server)
     while(true)
     {
         net::tcp_link client = server.accept();
-        std::cerr << "Connexion From " << (*client)->text() << std::endl;
+        std::cerr << "Connexion From " << (**client)<< std::endl;
 
         net::tcp_istream fp( client, icache );
         net::tcp_ostream op( client, ocache );
