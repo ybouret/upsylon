@@ -28,12 +28,18 @@ namespace upsylon
 
         size_t     tcp_send_queue::    buffer_space() const throw()
         {
-            return block_size - to_send;
+            return (block_size - to_send);
         }
 
         void tcp_send_queue:: defrag() throw()
         {
             assert(to_send<=block_size);
+
+            //------------------------------------------------------------------
+            //
+            // shift down memory
+            //
+            //------------------------------------------------------------------
             {
                 uint8_t     *target  = buffer;
                 uint8_t     *source  = current;
@@ -42,9 +48,21 @@ namespace upsylon
                     *(target++) = *(source++);
                 }
             }
+
+            //------------------------------------------------------------------
+            //
+            // update status
+            //
+            //------------------------------------------------------------------
+            current   = buffer;
             available = buffer+to_send;
             remaining = buffer_space();
 
+            //------------------------------------------------------------------
+            //
+            // move possible bytes into buffer
+            //
+            //------------------------------------------------------------------
             while(remaining>0&&bytes.size>0)
             {
                 *(available++) = bpool.store(bytes.pop_front())->code;
@@ -62,13 +80,21 @@ namespace upsylon
         {
             const uint8_t *p = static_cast<const uint8_t *>(ptr);
 
+            //------------------------------------------------------------------
+            //
             // defrag ?
+            //
+            //------------------------------------------------------------------
             if( (num>>1) >= buffer_space() )
             {
                 defrag();
             }
 
+            //------------------------------------------------------------------
+            //
             // fill in remaining
+            //
+            //------------------------------------------------------------------
             while(num>0&&remaining>0)
             {
                 *(available++) = *(p++);
@@ -77,7 +103,11 @@ namespace upsylon
                 ++to_send;
             }
 
+            //------------------------------------------------------------------
+            //
             // enqueue remaining bytes
+            //
+            //------------------------------------------------------------------
             while(num-->0)
             {
                 bytes.push_back( to_node(*(p++)) );
@@ -102,18 +132,23 @@ namespace upsylon
 
         size_t tcp_send_queue:: comm(const tcp_client &cln)
         {
-            const size_t ns = cln.send(buffer,to_send);
-
-            current += ns;
-            to_send -= ns;
-            defrag();
-
-            return ns;
+            if(to_send )
+            {
+                const size_t ns = cln.send(buffer,to_send);
+                current += ns;
+                to_send -= ns;
+                defrag();
+                return ns;
+            }
+            else
+            {
+                return 0;
+            }
         }
         
         bool tcp_send_queue:: is_filled() const throw()
         {
-            return remaining<=0;
+            return (to_send==block_size);
         }
     }
 

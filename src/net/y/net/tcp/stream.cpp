@@ -39,7 +39,7 @@ namespace upsylon
 
         bool tcp_istream:: query( char &C )
         {
-            if(cache->size()<=0 && cache->comm(*link)<=0 )
+            if( cache->size()<=0 && cache->comm(*link)<=0 )
             {
                 return false;
             }
@@ -72,7 +72,7 @@ namespace upsylon
         }
 
 
-        tcp_ostream:: tcp_ostream( const tcp_link      &conn,
+        tcp_ostream:: tcp_ostream(const tcp_link       &conn,
                                   const tcp_send_cache &oc) throw() :
         tcp_stream( conn ),
         cache(oc)
@@ -82,9 +82,11 @@ namespace upsylon
 
         void tcp_ostream:: flush()
         {
-            while( cache->comm(*link) > 0  )
+            Y_NET_VERBOSE(std::cerr << "[net.tcp_ostream.flush(" << cache->size() << ")]" << std::endl);
+            while(cache->comm(*link)>0 )
             {
             }
+            Y_NET_VERBOSE(std::cerr << "[net.tcp_ostream.flush(<done>)]" << std::endl);
         }
 
         void tcp_ostream:: write(char C)

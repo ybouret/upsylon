@@ -60,6 +60,7 @@ Y_UTEST(tcp_server)
             {
                 op << '<' << words[i] << '>' << '\n';
             }
+            op.flush();
             if( "stop" == words[1] )
             {
                 return 0;
