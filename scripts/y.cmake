@@ -13,7 +13,7 @@ SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS    ON)
 
 # display a separator line
 MACRO(Y_SEPLINE)
-	MESSAGE( STATUS "************************************************" )
+	MESSAGE( STATUS "------------------------------------------------" )
 ENDMACRO(Y_SEPLINE)
 
 ########################################################################
