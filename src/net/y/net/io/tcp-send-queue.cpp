@@ -43,7 +43,7 @@ namespace upsylon
             {
                 uint8_t     *target  = buffer;
                 uint8_t     *source  = current;
-                for(size_t i=to_send;i>0;--i);
+                for(size_t i=to_send;i>0;--i)
                 {
                     *(target++) = *(source++);
                 }
