@@ -59,8 +59,9 @@ Y_UTEST(tcp_server)
             std::cerr << "    |_echoing: init..." << std::endl;
             for(size_t i=1;i<=words.size();++i)
             {
-                op << '<' << words[i] << '>' << '\n';
+                op << '<' << words[i] << '>';
             }
+            op << '\n';
             op.flush();
             std::cerr << "    |_echoing: done" << std::endl;
             if( "stop" == words[1] )
