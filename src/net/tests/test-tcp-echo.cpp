@@ -40,18 +40,21 @@ Y_UTEST(tcp_echo)
     {
         out << argv[i] << "\r\n";
     }
+    const bool sent = ocache->size() > 0;
     out.flush();
     std::cerr << "\t<send/>" << std::endl << std::endl;
 
-    std::cerr << "\t<recv>" << std::endl;
-    string line;
-    for(int i=3;i<argc;++i)
+    if(sent)
     {
-        if( !inp.gets(line) ) break;
-        std::cerr << line << std::endl;
+        std::cerr << "\t<recv>" << std::endl;
+        string line;
+        while(inp.gets(line) )
+        {
+            std::cerr << line << std::endl;
+        }
+        std::cerr << "\t<recv/>" << std::endl << std::endl;
     }
-    std::cerr << "\t<recv/>" << std::endl << std::endl;
-
+    
 }
 Y_UTEST_DONE()
 
