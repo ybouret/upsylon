@@ -51,15 +51,15 @@ namespace
         }
         
         void dLV( array<T> &dydx, T , const array<T> &y )
-		{
-			const T a = 3, b = 2, c = 3, d = 2;
-			const T X = y[1];
-			const T Y = y[2];
-			dydx[1] =  a*X - b * X * Y;
-			dydx[2] = -c*Y + d * X * Y;
-			++count;
-		}
-
+        {
+            const T a = 3, b = 2, c = 3, d = 2;
+            const T X = y[1];
+            const T Y = y[2];
+            dydx[1] =  a*X - b * X * Y;
+            dydx[2] = -c*Y + d * X * Y;
+            ++count;
+        }
+        
         
         
     private:
@@ -145,17 +145,17 @@ namespace
                 }
                 std::cerr << "count=" << pb.count << std::endl;
             }
-
+            
             std::cerr << "full eq: " << y << std::endl;
             y[1] = 1;
             y[2] = 0;
-            ODE::LimitedStepSizeIntegrator::RunWith<T,SOLVER>(odeint,
-                                                              EqCos,
-                                                              y,
-                                                              0,
-                                                              L,
-                                                              0.10,
-                                                              NULL);
+            ODE::LSSI::LinearRun<T,SOLVER>(odeint,
+                                           EqCos,
+                                           y,
+                                           0,
+                                           L,
+                                           0.10,
+                                           NULL);
             std::cerr << "lss  eq: " << y << std::endl;
         }
         
@@ -165,7 +165,7 @@ namespace
             y.make(2,0);
             pb.count = 0;
             h1 = L/n;
-          
+            
             y[1] = 1;
             y[2] = 2;
             
@@ -187,7 +187,7 @@ namespace
             
             
         }
-
+        
         
     }
 }
