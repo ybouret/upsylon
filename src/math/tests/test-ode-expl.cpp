@@ -4,7 +4,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/ios/ocstream.hpp"
 #include <typeinfo>
-#include "y/math/ode/explicit/integrator.hpp"
+#include "y/math/ode/explicit/lss-integrator.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -145,9 +145,18 @@ namespace
                 }
                 std::cerr << "count=" << pb.count << std::endl;
             }
-            
-            ODE::Integrator::Run(EqCos);
-            
+
+            std::cerr << "full eq: " << y << std::endl;
+            y[1] = 1;
+            y[2] = 0;
+            ODE::LimitedStepSizeIntegrator::RunWith<T,SOLVER>(odeint,
+                                                              EqCos,
+                                                              y,
+                                                              0,
+                                                              L,
+                                                              0.01,
+                                                              NULL);
+            std::cerr << "lss  eq: " << y << std::endl;
         }
         
         std::cerr << "LV" << std::endl;
