@@ -101,7 +101,7 @@ Y_UTEST(intg)
 {
     do_test<float>();
     do_test<double>();
-    //return 0;
+    return 0;
     
     std::cerr << "multi-dimensional integral" << std::endl;
     const double area = integrate::compute2(just1,-1.0,1.0,lower_y,upper_y,0.8*1e-5);

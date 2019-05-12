@@ -4,6 +4,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/ios/ocstream.hpp"
 #include <typeinfo>
+#include "y/math/ode/explicit/integrator.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -145,6 +146,7 @@ namespace
                 std::cerr << "count=" << pb.count << std::endl;
             }
             
+            ODE::Integrator::Run(EqCos);
             
         }
         
