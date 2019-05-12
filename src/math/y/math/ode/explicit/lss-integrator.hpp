@@ -54,7 +54,8 @@ namespace upsylon
                         ns     = static_cast<size_t>(length/abs_dx);
                         dx     = signed_length/ns;
                     }
-
+                    //std::cerr << "nstep=" << ns << std::endl;
+                    
                     //__________________________________________________________
                     //
                     // initialize

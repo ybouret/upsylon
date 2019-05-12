@@ -154,7 +154,7 @@ namespace
                                                               y,
                                                               0,
                                                               L,
-                                                              0.01,
+                                                              0.10,
                                                               NULL);
             std::cerr << "lss  eq: " << y << std::endl;
         }
