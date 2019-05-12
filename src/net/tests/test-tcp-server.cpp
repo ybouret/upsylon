@@ -55,12 +55,14 @@ Y_UTEST(tcp_server)
         {
             tokenizer<char>::split(words, line, isSep );
             if(words.size()<=0) continue;
-            std::cerr << words << std::endl;
+            std::cerr << "recv=" << words << std::endl;
+            std::cerr << "    |_echoing: init..." << std::endl;
             for(size_t i=1;i<=words.size();++i)
             {
                 op << '<' << words[i] << '>' << '\n';
             }
             op.flush();
+            std::cerr << "    |_echoing: done" << std::endl;
             if( "stop" == words[1] )
             {
                 return 0;
