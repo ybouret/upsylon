@@ -146,7 +146,7 @@ namespace
                 std::cerr << "count=" << pb.count << std::endl;
             }
             
-            std::cerr << "full eq: " << y << std::endl;
+            std::cerr << "full equation   : " << y << std::endl;
             y[1] = 1;
             y[2] = 0;
             ODE::LSSI::LinearRun<T,SOLVER>(odeint,
@@ -156,7 +156,17 @@ namespace
                                            L,
                                            0.10,
                                            NULL);
-            std::cerr << "lss  eq: " << y << std::endl;
+            std::cerr << "lineary run     : " << y << std::endl;
+            y[1] = 1;
+            y[2] = 0;
+            ODE::LSSI::LogarithmicRun<T,SOLVER>(odeint,
+                                                EqCos,
+                                                y,
+                                                log(1e-3),
+                                                log(L),
+                                                0.01,
+                                                NULL);
+            std::cerr << "logarithmic run : " << y << std::endl;
         }
         
         std::cerr << "LV" << std::endl;
@@ -185,7 +195,9 @@ namespace
                 std::cerr << "count=" << pb.count << std::endl;
             }
             
-            
+            {
+
+            }
         }
         
         
