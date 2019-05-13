@@ -17,6 +17,11 @@ namespace upsylon
             struct DriverCK
             {
                 typedef ExplicitDriver<T,RK45,RKCK> Type; //!< the integrator
+                static inline
+                ExplicitSolverInterface<T> *New()
+                {
+                    return new Type();
+                }
             };
         }
     }

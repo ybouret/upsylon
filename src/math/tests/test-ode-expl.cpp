@@ -213,7 +213,10 @@ Y_UTEST(ode_expl)
     solve<double,ODE::DriverDP<double>::Type>( "dp" );
     solve<float,ODE::DriverCK<float>::Type>( "ck" );
     solve<float,ODE::DriverDP<float>::Type>( "dp" );
-    
+
+    ODE::ExplicitSolverInterface<double>::Pointer odeint = ODE::DriverCK<double>::New();
+
+
 }
 Y_UTEST_DONE()
 
