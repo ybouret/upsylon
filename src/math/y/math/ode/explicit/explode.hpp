@@ -23,7 +23,7 @@ namespace upsylon
                 typedef typename Field<T>::Equation  Equation;    //!< alias for equation
                 typedef typename Field<T>::Callback  Callback;    //!< alias for callback
                 typedef ExplicitSolver<T>            SolverType;  //!< alias
-                typedef typename SolverType::Pointer Solver;      //!< alias for shared sovler
+                typedef typename SolverType::Pointer Solver;      //!< alias for shared solver
 
                 //! embedding derived problem
                 template <typename PROBLEM>
@@ -36,44 +36,50 @@ namespace upsylon
                 inline virtual ~ExplODE() throw() {} //!< cleanup
 
                 //! perform integration from begin() to value, return phase space
-                const array<T> & state_at(const T value )
+                const array<T> & at(const T value)
                 {
                     S->start( Y.size() );
                     P->setup(Y);
                     LSSI::LinearRun(*S,E,Y,P->begin(),value,P->delta(),NULL);
+                    last_ = value;
                     return Y;
                 }
-
-                //! perform integration from begin() to value
-                inline T at(const T value)
-                {
-                    return P->query(state_at(value),value);
-                }
-
-
-                //! perform integration from 0 to exp(lnValue), first step is [0,begin()]
-                inline T at_log(const T lnValue)
+                
+                //! reset solver
+                const array<T> & reset()
                 {
                     S->start( Y.size() );
                     P->setup(Y);
-                    LSSI::LogarithmicRun(*S,E,Y,P->begin(),lnValue,P->delta(),NULL);
-                    return P->query(Y,exp(lnValue));
+                    last_ = P->begin();
+                    return Y;
                 }
-
+                
+                //! sequential call
+                const array<T> & update(const T value)
+                {
+                    S->start( Y.size() );
+                    LSSI::LinearRun(*S,E,Y,last_,value,P->delta(),NULL);
+                    last_ = value;
+                    return Y;
+                }
 
                 //! setup
                 inline explicit ExplODE(const Solver  &solver,
                                         const Problem &problem) :
+                last_(0),
                 S(solver),
                 P(problem),
                 E( & *P, & ProblemType::compute ),
                 Y( P->dimension(),0)
                 {
-                    S->start( Y.size() );
+                    reset();
                 }
 
+                inline T last() const throw() { return last_; }
+                
 
             private:
+                T              last_;
                 Solver         S;
                 Problem        P;
                 Equation       E;

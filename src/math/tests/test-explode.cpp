@@ -50,35 +50,13 @@ namespace
             dCos(dydx,x,y);
         }
 
+        virtual double begin() const throw() { return 0; }
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Something);
     };
 
-    class SomethingLin : public Something
-    {
-    public:
-        explicit SomethingLin() throw() {}
-        virtual ~SomethingLin() throw() {}
-
-        virtual double begin() const throw() { return 0; }
-
-
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(SomethingLin);
-    };
-
-    class SomethingLog : public Something
-    {
-    public:
-        explicit SomethingLog() throw() {}
-        virtual ~SomethingLog() throw() {}
-
-        virtual double begin() const throw() { return log(0.01); }
-
-
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(SomethingLog);
-    };
+    
     
 
 }
@@ -86,19 +64,35 @@ namespace
 Y_UTEST(explode)
 {
 
-
-    IODE::Solver   solver     = ODE::DriverCK<double>::New();
-    IODE::Embedded<SomethingLin>::Type linpb( new SomethingLin() );
-    IODE::Problem problemLog = new SomethingLog();
-
-    IODE          iodeLin(solver,linpb.pointer);
-    IODE          iodeLog(solver,problemLog);
-
-    ios::ocstream fp("iode.dat");
-
-    for(double x=0.1;x<=10;x+=0.1)
+    // get a solver
+    IODE::Solver                    solver  = ODE::DriverCK<double>::New();
+    IODE::Embedded<Something>::Type problem;
+    IODE                            iode(solver,problem.pointer);
+    solver->eps = 1e-5;
+    
+    const double dx = 0.01;
+    
     {
-        fp("%g %g %g\n",x,iodeLin.at(x),iodeLog.at_log(log(x)));
+        std::cerr << "Compute Full" << std::endl;
+        ios::ocstream fp("iode_full.dat");
+        for(double x=problem->begin();x<=10;x+=dx)
+        {
+            const array<double> &Y = iode.at(x);
+            fp("%g %g\n",x,Y[1]);
+        }
+    }
+    
+    {
+        std::cerr << "Compute Fast" << std::endl;
+        ios::ocstream fp("iode_fast.dat");
+        const array<double> &Y = iode.reset();
+        fp("%g %g\n", iode.last(), Y[1]);
+        for(double x=iode.last()+dx;x<=10;x+=dx)
+        {
+            (void)iode.update(x);
+            fp("%g %g\n", iode.last(), Y[1]);
+        }
+
     }
 
 

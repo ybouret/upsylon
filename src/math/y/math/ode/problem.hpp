@@ -25,7 +25,6 @@ namespace upsylon
                 virtual void   setup( array<T> & ) const throw()         = 0; //!< initialize internal variables at initial coordinate
                 virtual T      begin() const throw()                     = 0; //!< return linear=starting point/log=first log point
                 virtual T      delta() const throw()                     = 0; //!< maximum coordinate step
-                virtual T      query( const array<T> &, const T ) const  = 0; //!< return final result at final coordinate
                 virtual void   compute( array<T> &, T, const array<T> &) = 0; //!< differential equation API
 
             protected:
