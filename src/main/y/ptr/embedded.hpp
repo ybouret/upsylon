@@ -15,11 +15,14 @@ namespace upsylon
         typedef PTR<U> pointer_type; //!< smart pointer on base blass
 
         //! take a user created derived pointer
-        inline explicit embedded( const_type *p ) throw() : handle_( (mutable_type *)p ), pointer( handle_ ) {}
+        inline  embedded( const_type *p ) throw() : handle_( (mutable_type *)p ), pointer( handle_ ) {}
 
         //! use default constructor
-        inline explicit embedded() : handle_( new mutable_type() ), pointer( handle_ ) {}
-
+        inline  embedded() : handle_( new mutable_type() ), pointer( handle_ ) {}
+        
+        //! copy using pointer semantics
+        inline embedded( const embedded &other ) throw() : handle_( other.handle_ ), pointer( other.pointer ) {}
+        
         //! cleanup
         inline virtual ~embedded() throw() { handle_=0; }
 
@@ -32,7 +35,7 @@ namespace upsylon
     private: mutable_type       *handle_; //!< retain the base class
     public:  const pointer_type  pointer; //!< pointer type with specific semantic
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(embedded);
+        Y_DISABLE_ASSIGN(embedded);
     };
 }
 
