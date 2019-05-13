@@ -135,7 +135,7 @@ namespace upsylon
                     //
                     // internal steps
                     //__________________________________________________________
-                    ctrl = lnStep/2;
+                    ctrl = dl/2;
                     for(size_t i=1;i<ns;++i)
                     {
                         const T lnext = lnMin + (i*length)/ns;
