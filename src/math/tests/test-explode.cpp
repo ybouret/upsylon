@@ -31,7 +31,7 @@ namespace
             dydx[2] = - a * y[1];
         }
 
-        virtual void setup( array<double> &y  )
+        virtual void setup( array<double> &y  ) const throw()
         {
             y[1] = 1;
             y[2] = 0;
