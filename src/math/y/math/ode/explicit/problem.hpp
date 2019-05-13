@@ -13,13 +13,12 @@ namespace upsylon
         namespace ODE
         {
 
-            //! interface to an explicit differential problem
+            //! interface to solve an explicit differential problem
             template <typename T>
             class ExplicitProblem : public Problem<T>
             {
             public:
                 inline virtual ~ExplicitProblem() throw() {} //!< destructor
-
 
             protected:
                 inline explicit ExplicitProblem() throw() : Problem<T>() {} //!< setup
