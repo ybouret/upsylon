@@ -1,4 +1,4 @@
-#include "y/math/ode/explicit/exode.hpp"
+#include "y/math/ode/explicit/explode.hpp"
 #include "y/math/ode/explicit/driver-ck.hpp"
 #include "y/ios/ocstream.hpp"
 
@@ -10,7 +10,7 @@ using namespace math;
 
 namespace
 {
-    typedef ODE::ExODE<double> IODE;
+    typedef ODE::ExplODE<double> IODE;
 
     class Something : public IODE::ProblemType
     {
@@ -83,7 +83,7 @@ namespace
 
 }
 
-Y_UTEST(exode)
+Y_UTEST(explode)
 {
 
 

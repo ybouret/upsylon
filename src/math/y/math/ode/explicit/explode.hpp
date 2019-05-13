@@ -15,7 +15,7 @@ namespace upsylon
 
             //! Integrated Ordinary Differential Equation
             template <typename T>
-            class ExODE
+            class ExplODE
             {
             public:
                 typedef ExplicitProblem<T>           ProblemType; //!< kind of problem
@@ -27,7 +27,7 @@ namespace upsylon
                 typedef typename ESI::Pointer        Solver;      //!< alias for shared sovler
 
 
-                virtual ~ExODE() throw() {} //!< cleanup
+                virtual ~ExplODE() throw() {} //!< cleanup
 
                 //! perform integration from begin() to value
                 inline T at(const T value)
@@ -49,8 +49,8 @@ namespace upsylon
 
 
                 //! setup
-                inline explicit ExODE(const Solver  &solver,
-                                      const Problem &problem) :
+                inline explicit ExplODE(const Solver  &solver,
+                                        const Problem &problem) :
                 S(solver),
                 P(problem),
                 E( & *P, & ProblemType::compute ),
@@ -67,7 +67,7 @@ namespace upsylon
                 vector<T>      Y;
 
 
-                Y_DISABLE_COPY_AND_ASSIGN(ExODE);
+                Y_DISABLE_COPY_AND_ASSIGN(ExplODE);
             };
 
         }
