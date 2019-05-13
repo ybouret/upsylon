@@ -1,3 +1,4 @@
+#include "y/ptr/embedded.hpp"
 #include "y/ptr/counted.hpp"
 #include "y/ptr/arc.hpp"
 #include "y/ptr/zrc.hpp"
@@ -9,7 +10,20 @@ using namespace upsylon;
 
 namespace
 {
-    
+
+    class derived : public counted_object
+    {
+    public:
+        const int a;
+
+        explicit derived( const int arg=0 ) : a(arg) {}
+        virtual ~derived() throw() {}
+
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(derived);
+    };
+
 }
 
 Y_UTEST(ptr)
@@ -26,6 +40,11 @@ Y_UTEST(ptr)
         ARC r = new counted_object();
         r = p;
         Y_CHECK( 3==r->refcount() );
+
+        embedded<derived,counted_object,arc_ptr> emb0,emb1( new derived(1) );
+        std::cerr << "emb0: " << emb0->a << std::endl;
+        std::cerr << "emb1: " << emb1->a << std::endl;
+
     }
     
     {
@@ -40,6 +59,10 @@ Y_UTEST(ptr)
         SHP r = new counted_object();
         r = p;
         Y_CHECK( 3==r.refcount() );
+        embedded<derived,counted_object,shared_ptr> emb0,emb1( new derived(1) );
+        std::cerr << "emb0: " << emb0->a << std::endl;
+        std::cerr << "emb1: " << emb1->a << std::endl;
+
     }
 
     {
@@ -58,7 +81,9 @@ Y_UTEST(ptr)
         q = p;
         Y_CHECK(!p.is_valid());
         Y_CHECK(q.is_valid());
-        
+        embedded<derived,counted_object,auto_ptr> emb0,emb1( new derived(1) );
+        std::cerr << "emb0: " << emb0->a << std::endl;
+        std::cerr << "emb1: " << emb1->a << std::endl;
     }
     
     {
@@ -72,7 +97,9 @@ Y_UTEST(ptr)
         ZP q = p;
         Y_CHECK(q.is_valid());
         Y_CHECK( & *q == & * q);
-
+        embedded<derived,counted_object,zrc_ptr> emb0,emb1( new derived(1) );
+        std::cerr << "emb0: " << emb0->a << std::endl;
+        std::cerr << "emb1: " << emb1->a << std::endl;
     }
     
     

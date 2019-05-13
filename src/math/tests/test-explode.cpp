@@ -87,11 +87,11 @@ Y_UTEST(explode)
 {
 
 
-    IODE::Solver  solver     = ODE::DriverCK<double>::New();
-    IODE::Problem problemLin = new SomethingLin();
+    IODE::Solver   solver     = ODE::DriverCK<double>::New();
+    IODE::Embedded<SomethingLin>::Type linpb( new SomethingLin() );
     IODE::Problem problemLog = new SomethingLog();
 
-    IODE          iodeLin(solver,problemLin);
+    IODE          iodeLin(solver,linpb.pointer);
     IODE          iodeLog(solver,problemLog);
 
     ios::ocstream fp("iode.dat");

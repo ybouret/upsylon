@@ -2,8 +2,8 @@
 #ifndef Y_MATH_ODE_ExODE_INCLUDED
 #define Y_MATH_ODE_ExODE_INCLUDED 1
 
-#include "y/math/ode/explicit/lssi.hpp"
 #include "y/math/ode/explicit/problem.hpp"
+#include "y/math/ode/explicit/lssi.hpp"
 #include "y/sequence/vector.hpp"
 
 namespace upsylon
@@ -22,12 +22,18 @@ namespace upsylon
                 typedef arc_ptr<ProblemType>         Problem;     //!< shared problem
                 typedef typename Field<T>::Equation  Equation;    //!< alias for equation
                 typedef typename Field<T>::Callback  Callback;    //!< alias for callback
-
                 typedef ExplicitSolverInterface<T>   ESI;         //!< alias
                 typedef typename ESI::Pointer        Solver;      //!< alias for shared sovler
 
+                //! embedding derived problem
+                template <typename PROBLEM>
+                struct Embedded
+                {
+                    typedef embedded<PROBLEM,ProblemType,arc_ptr> Type; //!< ensure conversion
+                };
 
-                virtual ~ExplODE() throw() {} //!< cleanup
+
+                inline virtual ~ExplODE() throw() {} //!< cleanup
 
                 //! perform integration from begin() to value
                 inline T at(const T value)

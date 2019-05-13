@@ -20,7 +20,6 @@ namespace upsylon
             public:
                 inline virtual ~ExplicitProblem() throw() {} //!< destructor
 
-                virtual void   compute( array<T> &, T, const array<T> &) = 0; //!< differential equation API
 
             protected:
                 inline explicit ExplicitProblem() throw() : Problem<T>() {} //!< setup
