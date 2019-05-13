@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_MATH_ODE_EXPLICIT_IODE_INCLUDED
-#define Y_MATH_ODE_EXPLICIT_IODE_INCLUDED 1
+#ifndef Y_MATH_ODE_ExODE_INCLUDED
+#define Y_MATH_ODE_ExODE_INCLUDED 1
 
 #include "y/math/ode/explicit/lssi.hpp"
 #include "y/sequence/vector.hpp"
@@ -14,10 +14,11 @@ namespace upsylon
 
             //! Integrated Ordinary Differential Equation
             template <typename T>
-            class ExplicitIODE
+            class ExODE
             {
             public:
 
+                //! the differential problem to solve
                 class ProblemType : public counted_object
                 {
                 public:
@@ -56,19 +57,29 @@ namespace upsylon
                 typedef typename ESI::Pointer        Solver;
 
 
-                virtual ~ExplicitIODE() throw() {}
+                virtual ~ExODE() throw() {}
 
 
-                //! perfomr integration init->value
-                inline T Linear(const T value)
+                //! perform integration init->value
+                inline T at(const T value)
                 {
                     P->setup(Y);
                     LSSI::LinearRun(*S,E,Y,P->init(),value,P->safe(),NULL);
                     return P->finalize(Y,value);
                 }
 
-                inline explicit ExplicitIODE(const Solver  &solver,
-                                             const Problem &problem) :
+                //! perform integration init->value
+                inline T at_log(const T lnValue)
+                {
+                    P->setup(Y);
+                    LSSI::LogarithmicRun(*S,E,Y,P->init(),lnValue,P->safe(),NULL);
+                    return P->finalize(Y,exp(lnValue));
+                }
+
+
+
+                inline explicit ExODE(const Solver  &solver,
+                                      const Problem &problem) :
                 S(solver),
                 P(problem),
                 E( & *P, & ProblemType::compute ),
@@ -85,7 +96,7 @@ namespace upsylon
                 vector<T>      Y;
 
 
-                Y_DISABLE_COPY_AND_ASSIGN(ExplicitIODE);
+                Y_DISABLE_COPY_AND_ASSIGN(ExODE);
             };
 
         }

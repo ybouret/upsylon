@@ -1,5 +1,6 @@
 #include "y/math/ode/explicit/iode.hpp"
 #include "y/math/ode/explicit/driver-ck.hpp"
+#include "y/ios/ocstream.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -9,12 +10,12 @@ using namespace math;
 
 namespace
 {
-    typedef ODE::ExplicitIODE<double> IODE;
+    typedef ODE::ExODE<double> IODE;
 
     class Something : public IODE::ProblemType
     {
     public:
-        explicit Something() : a(0.1) {}
+        explicit Something() : a(1.2) {}
         virtual ~Something() throw() {}
 
         double a;
@@ -41,7 +42,6 @@ namespace
             return y[1];
         }
 
-        virtual double init() const throw() { return 0; }
 
         virtual double safe() const throw() { return 0.01; }
 
@@ -54,6 +54,31 @@ namespace
         Y_DISABLE_COPY_AND_ASSIGN(Something);
     };
 
+    class SomethingLin : public Something
+    {
+    public:
+        explicit SomethingLin() throw() {}
+        virtual ~SomethingLin() throw() {}
+
+        virtual double init() const throw() { return 0; }
+
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(SomethingLin);
+    };
+
+    class SomethingLog : public Something
+    {
+    public:
+        explicit SomethingLog() throw() {}
+        virtual ~SomethingLog() throw() {}
+
+        virtual double init() const throw() { return log(0.01); }
+
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(SomethingLog);
+    };
     
 
 }
@@ -62,12 +87,21 @@ Y_UTEST(iode)
 {
 
 
-    IODE::Solver  solver  = ODE::DriverCK<double>::New();
-    IODE::Problem problem = new Something();
+    IODE::Solver  solver     = ODE::DriverCK<double>::New();
+    IODE::Problem problemLin = new SomethingLin();
+    IODE::Problem problemLog = new SomethingLog();
 
-    IODE iode(solver,problem);
+    IODE          iodeLin(solver,problemLin);
+    IODE          iodeLog(solver,problemLog);
 
-    iode.Linear(1);
+    ios::ocstream fp("iode.dat");
+
+    for(double x=0.1;x<=10;x+=0.1)
+    {
+        fp("%g %g %g\n",x,iodeLin.at(x),iodeLog.at_log(log(x)));
+    }
+
+
 
 }
 Y_UTEST_DONE()
