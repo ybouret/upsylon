@@ -22,8 +22,8 @@ namespace upsylon
                 typedef arc_ptr<ProblemType>         Problem;     //!< shared problem
                 typedef typename Field<T>::Equation  Equation;    //!< alias for equation
                 typedef typename Field<T>::Callback  Callback;    //!< alias for callback
-                typedef ExplicitSolverInterface<T>   ESI;         //!< alias
-                typedef typename ESI::Pointer        Solver;      //!< alias for shared sovler
+                typedef ExplicitSolver<T>            SolverType;  //!< alias
+                typedef typename SolverType::Pointer Solver;      //!< alias for shared sovler
 
                 //! embedding derived problem
                 template <typename PROBLEM>

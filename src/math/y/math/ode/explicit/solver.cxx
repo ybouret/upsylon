@@ -20,14 +20,14 @@ namespace upsylon
             }
             
             template <>
-            void ExplicitSolver<real_t>:: step(equation                   &drvs,
+            void ExplicitSolver<real_t>:: step(Equation                   &drvs,
                                                ExplicitControler<real_t>  &ctrl,
                                                ExplicitStep<real_t>       &forward,
                                                array<real_t>              &ystart,
                                                const real_t                x1,
                                                const real_t                x2,
                                                real_t                      &h1,
-                                               callback                    *cb
+                                               Callback                    *cb
                                                )
             {
                 const size_t   n    = ystart.size();

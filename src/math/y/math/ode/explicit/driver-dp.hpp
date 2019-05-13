@@ -19,7 +19,7 @@ namespace upsylon
                 typedef ExplicitDriver<T,RK45,RKDP> Type; //!< the integrator
                 //! create a new solver
                 static inline
-                ExplicitSolverInterface<T> *New()
+                ExplicitSolver<T> *New()
                 {
                     return new Type();
                 }
