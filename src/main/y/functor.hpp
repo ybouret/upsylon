@@ -182,7 +182,7 @@ namespace upsylon
                 return functor_(bounded_,p1);
             }
 
-            //! 23->2 arguments call
+            //! 3->2 arguments call
             inline R operator()(param1 p1, param2 p2)
             {
                 return functor_(bounded_,p1,p2);

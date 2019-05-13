@@ -3,7 +3,7 @@
 #define Y_FUNCTOR_CALL_INCLUDED 1
 
 
-#include "y/object.hpp"
+#include "y/ptr/counted.hpp"
 #include "y/type/traits.hpp"
 
 namespace upsylon
@@ -23,13 +23,13 @@ namespace upsylon
 private:                                  \
 Y_DISABLE_COPY_AND_ASSIGN(callable);      \
 public:                                   \
-explicit callable() throw() : object() {} \
+explicit callable() throw() : object(), counted() {} \
 virtual ~callable() throw() {}            \
 virtual callable *clone() const = 0
 
 
         //! memory management
-#define Y_CALLABLE_OBJECT() : public virtual object
+#define Y_CALLABLE_OBJECT() : public virtual object, public counted
         //! defines the behavior of a generic callable object
         /**
          the parameters are send thru a typelist

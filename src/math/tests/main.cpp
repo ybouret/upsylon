@@ -15,13 +15,17 @@ Y_UTEST_INIT(64)
     Y_UTEST(svd);
     Y_UTEST(cholesky);
     Y_UTEST(diag);
+
     Y_UTEST(ode);
     Y_UTEST(rk4);
-    Y_UTEST(functions);
-    Y_UTEST(intg);
     Y_UTEST(michaelis);
     Y_UTEST(ode_expl);
     Y_UTEST(ode_impl);
+    Y_UTEST(iode);
+
+    Y_UTEST(functions);
+    Y_UTEST(intg);
+
     Y_UTEST(fit_circle);
     Y_UTEST(fit_conic);
     Y_UTEST(bracket);

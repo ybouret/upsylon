@@ -22,12 +22,13 @@ ADD_TEST(mk:tao2     test-m tao2)
 ADD_TEST(mk:tao3     test-m tao3)
 
 SOURCE_GROUP(ode FILES test-michaelis.cpp test-ode.cpp test-rk4.cpp
-test-ode-expl.cpp test-ode-impl.cpp)
+test-ode-expl.cpp test-ode-impl.cpp test-iode.cpp)
 ADD_TEST(ode:michaelis   test-m michaelis)
 ADD_TEST(ode:types       test-m ode)
 ADD_TEST(ode:rk4         test-m rk4)
 ADD_TEST(ode:expl        test-m ode_expl)
 ADD_TEST(ode:impl        test-m ode_impl)
+ADD_TEST(ode:iode        test-m iode)
 
 SOURCE_GROUP(opt FILES test-bracket.cpp test-min.cpp)
 ADD_TEST(opt:bracket     test-m bracket)
