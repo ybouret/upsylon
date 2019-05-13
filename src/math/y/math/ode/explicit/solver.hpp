@@ -38,15 +38,15 @@ namespace upsylon
                  \param h1      guess step, updated
                  \param cb      a callback to correct trials
                  */
-                void operator()(equation              &drvs,
-                                ExplicitControler<T>  &ctrl,
-                                ExplicitStep<T>       &forward,
-                                array<T>              &ystart,
-                                const T                x1,
-                                const T                x2,
-                                T                     &h1,
-                                callback              *cb
-                                );
+                void step(equation              &drvs,
+                          ExplicitControler<T>  &ctrl,
+                          ExplicitStep<T>       &forward,
+                          array<T>              &ystart,
+                          const T                x1,
+                          const T                x2,
+                          T                     &h1,
+                          callback              *cb
+                          );
 
 
 
@@ -123,7 +123,7 @@ namespace upsylon
                                        )
                 {
                     ExplicitSolver<T> &self = *this;
-                    self( drvs, ctrl_, step_, ystart, x1, x2, h1,cb);
+                    self.step( drvs, ctrl_, step_, ystart, x1, x2, h1,cb);
                 }
                 
 
