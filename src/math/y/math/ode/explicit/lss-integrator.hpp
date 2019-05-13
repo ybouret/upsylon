@@ -32,7 +32,7 @@ namespace upsylon
                     //
                     // prepare/update memory
                     //__________________________________________________________
-                    driver.start(ystart.size());
+                    //driver.start(ystart.size());
                     
                     //__________________________________________________________
                     //
@@ -99,7 +99,7 @@ namespace upsylon
                     //
                     // prepare/update memory
                     //__________________________________________________________
-                    driver.start(ystart.size());
+                    //driver.start(ystart.size());
                     
                     //__________________________________________________________
                     //
