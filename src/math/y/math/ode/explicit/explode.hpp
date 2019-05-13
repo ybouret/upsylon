@@ -35,14 +35,21 @@ namespace upsylon
 
                 inline virtual ~ExplODE() throw() {} //!< cleanup
 
-                //! perform integration from begin() to value
-                inline T at(const T value)
+                //! perform integration from begin() to value, return phase space
+                const array<T> & state_at(const T value )
                 {
                     S->start( Y.size() );
                     P->setup(Y);
                     LSSI::LinearRun(*S,E,Y,P->begin(),value,P->delta(),NULL);
-                    return P->query(Y,value);
+                    return Y;
                 }
+
+                //! perform integration from begin() to value
+                inline T at(const T value)
+                {
+                    return P->query(state_at(value),value);
+                }
+
 
                 //! perform integration from 0 to exp(lnValue), first step is [0,begin()]
                 inline T at_log(const T lnValue)
