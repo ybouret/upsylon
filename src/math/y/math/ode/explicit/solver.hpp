@@ -59,8 +59,8 @@ namespace upsylon
             class ExplicitSolverInterface : public counted_object
             {
             public:
-                typedef arc_ptr< ExplicitSolverInterface<T> > Pointer;
-                inline virtual ~ExplicitSolverInterface() throw() {}
+                typedef arc_ptr< ExplicitSolverInterface<T> > Pointer; //!< alias for shared solvers
+                inline virtual ~ExplicitSolverInterface() throw() {}   //!< cleanup
 
                 virtual void start(size_t nvar) = 0; //!< allocate internal data
 
@@ -82,7 +82,7 @@ namespace upsylon
 
 
             protected:
-                inline explicit ExplicitSolverInterface() throw() {}
+                inline explicit ExplicitSolverInterface() throw() {} //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ExplicitSolverInterface);

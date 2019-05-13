@@ -18,17 +18,16 @@ namespace upsylon
             class ExODE
             {
             public:
-                typedef ExplicitProblem<T>           ProblemType;
-                typedef arc_ptr<ProblemType>         Problem;
-                typedef typename Field<T>::Equation  Equation;
-                typedef typename Field<T>::Callback  Callback;
+                typedef ExplicitProblem<T>           ProblemType; //!< kind of problem
+                typedef arc_ptr<ProblemType>         Problem;     //!< shared problem
+                typedef typename Field<T>::Equation  Equation;    //!< alias for equation
+                typedef typename Field<T>::Callback  Callback;    //!< alias for callback
 
-                typedef ExplicitSolverInterface<T>   ESI;
-                typedef typename ESI::Pointer        Solver;
+                typedef ExplicitSolverInterface<T>   ESI;         //!< alias
+                typedef typename ESI::Pointer        Solver;      //!< alias for shared sovler
 
 
-                virtual ~ExODE() throw() {}
-
+                virtual ~ExODE() throw() {} //!< cleanup
 
                 //! perform integration from begin() to value
                 inline T at(const T value)

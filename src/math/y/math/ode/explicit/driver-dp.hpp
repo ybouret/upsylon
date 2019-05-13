@@ -17,6 +17,7 @@ namespace upsylon
             struct DriverDP
             {
                 typedef ExplicitDriver<T,RK45,RKDP> Type; //!< the integrator
+                //! create a new solver
                 static inline
                 ExplicitSolverInterface<T> *New()
                 {
