@@ -26,6 +26,10 @@ namespace upsylon
                 typedef typename SolverType::Pointer Solver;      //!< alias for shared solver
 
                 //! embedding derived problem
+                /**
+                 the PROBLEM must derive from a ProblemType and implement
+                 the (virtual) interface
+                 */
                 template <typename PROBLEM>
                 struct Embedded
                 {

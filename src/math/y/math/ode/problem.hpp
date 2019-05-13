@@ -14,6 +14,10 @@ namespace upsylon
         namespace ODE
         {
             //! interface to solve a differential problem
+            /**
+             Using this approach, one can transform a differential equation
+             into an integrated function for further use.
+             */
             template <typename T>
             class Problem : public counted_object
             {
