@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_MATH_ODE_IMPL_LSS_INTEGRATOR_INCLUDED
-#define Y_MATH_ODE_IMPL_LSS_INTEGRATOR_INCLUDED
+#ifndef Y_MATH_ODE_IMPL_LSSI_INCLUDED
+#define Y_MATH_ODE_IMPL_LSSI_INCLUDED
 
 #include "y/math/ode/explicit/solver.hpp"
 
