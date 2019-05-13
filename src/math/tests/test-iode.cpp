@@ -1,4 +1,4 @@
-#include "y/math/ode/explicit/iode.hpp"
+#include "y/math/ode/explicit/exode.hpp"
 #include "y/math/ode/explicit/driver-ck.hpp"
 #include "y/ios/ocstream.hpp"
 
@@ -37,13 +37,13 @@ namespace
             y[2] = 0;
         }
 
-        virtual double finalize( const array<double> &y, double ) const
+        virtual double query( const array<double> &y, double ) const
         {
             return y[1];
         }
 
 
-        virtual double safe() const throw() { return 0.01; }
+        virtual double delta() const throw() { return 0.01; }
 
         virtual void compute( array<double> &dydx, double x, const array<double> &y )
         {
@@ -60,7 +60,7 @@ namespace
         explicit SomethingLin() throw() {}
         virtual ~SomethingLin() throw() {}
 
-        virtual double init() const throw() { return 0; }
+        virtual double begin() const throw() { return 0; }
 
 
     private:
@@ -73,7 +73,7 @@ namespace
         explicit SomethingLog() throw() {}
         virtual ~SomethingLog() throw() {}
 
-        virtual double init() const throw() { return log(0.01); }
+        virtual double begin() const throw() { return log(0.01); }
 
 
     private:
@@ -83,7 +83,7 @@ namespace
 
 }
 
-Y_UTEST(iode)
+Y_UTEST(exode)
 {
 
 

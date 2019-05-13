@@ -13,6 +13,22 @@ namespace upsylon
         namespace ODE
         {
 
+            //! interface to an explicit differential problem
+            template <typename T>
+            class ExplicitProblem : public Problem<T>
+            {
+            public:
+                inline virtual ~ExplicitProblem() throw() {} //!< destructor
+
+                virtual void   compute( array<T> &, T, const array<T> &) = 0; //!< differential equation API
+
+            protected:
+                inline explicit ExplicitProblem() throw() : Problem<T>() {} //!< setup
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(ExplicitProblem);
+            };
+           
         }
     }
 }

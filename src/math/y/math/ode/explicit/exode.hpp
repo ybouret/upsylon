@@ -3,6 +3,7 @@
 #define Y_MATH_ODE_ExODE_INCLUDED 1
 
 #include "y/math/ode/explicit/lssi.hpp"
+#include "y/math/ode/explicit/problem.hpp"
 #include "y/sequence/vector.hpp"
 
 namespace upsylon
@@ -17,38 +18,7 @@ namespace upsylon
             class ExODE
             {
             public:
-
-                //! the differential problem to solve
-                class ProblemType : public counted_object
-                {
-                public:
-                    inline virtual ~ProblemType() throw() {}
-
-                    //! problem dimension
-                    virtual size_t dimension() const throw() = 0;
-
-                    //! initialize internal variables at initial coordinate
-                    virtual void setup( array<T> & ) = 0;
-
-                    //! return linear=starting point/log=first log point
-                    virtual T init() const throw() = 0;
-
-                    //! safe coordinate step
-                    virtual T safe() const throw() = 0;
-
-                    //! return final result at final time
-                    virtual T finalize( const array<T> &, const T ) const = 0;
-
-                    //! interface
-                    virtual void compute( array<T> &, T, const array<T> &) = 0;
-
-                protected:
-                    inline explicit ProblemType() throw() {}
-
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(ProblemType);
-                };
-
+                typedef ExplicitProblem<T>           ProblemType;
                 typedef arc_ptr<ProblemType>         Problem;
                 typedef typename Field<T>::Equation  Equation;
                 typedef typename Field<T>::Callback  Callback;
@@ -60,24 +30,26 @@ namespace upsylon
                 virtual ~ExODE() throw() {}
 
 
-                //! perform integration init->value
+                //! perform integration from begin() to value
                 inline T at(const T value)
                 {
+                    S->start( Y.size() );
                     P->setup(Y);
-                    LSSI::LinearRun(*S,E,Y,P->init(),value,P->safe(),NULL);
-                    return P->finalize(Y,value);
+                    LSSI::LinearRun(*S,E,Y,P->begin(),value,P->delta(),NULL);
+                    return P->query(Y,value);
                 }
 
-                //! perform integration init->value
+                //! perform integration from 0 to exp(lnValue), first step is [0,begin()]
                 inline T at_log(const T lnValue)
                 {
+                    S->start( Y.size() );
                     P->setup(Y);
-                    LSSI::LogarithmicRun(*S,E,Y,P->init(),lnValue,P->safe(),NULL);
-                    return P->finalize(Y,exp(lnValue));
+                    LSSI::LogarithmicRun(*S,E,Y,P->begin(),lnValue,P->delta(),NULL);
+                    return P->query(Y,exp(lnValue));
                 }
 
 
-
+                //! setup
                 inline explicit ExODE(const Solver  &solver,
                                       const Problem &problem) :
                 S(solver),

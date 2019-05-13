@@ -28,7 +28,7 @@ ADD_TEST(ode:types       test-m ode)
 ADD_TEST(ode:rk4         test-m rk4)
 ADD_TEST(ode:expl        test-m ode_expl)
 ADD_TEST(ode:impl        test-m ode_impl)
-ADD_TEST(ode:iode        test-m iode)
+ADD_TEST(ode:exode        test-m iode)
 
 SOURCE_GROUP(opt FILES test-bracket.cpp test-min.cpp)
 ADD_TEST(opt:bracket     test-m bracket)
