@@ -1,3 +1,9 @@
+
+FOREACH( word IN ITEMS "-Wextra" )
+	STRING(REPLACE "${word}" "" CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS_DEBUG}"   )
+	STRING(REPLACE "${word}" "" CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}" )
+ENDFOREACH()
+
 MESSAGE( STATUS "                   lua")
 ADD_SUBDIRECTORY(y/lua)
 
