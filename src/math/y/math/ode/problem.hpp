@@ -22,6 +22,8 @@ namespace upsylon
             class Problem : public counted_object
             {
             public:
+                typedef typename Field<T>::Callback Callback;
+
                 //______________________________________________________________
                 //
                 // types
@@ -32,12 +34,14 @@ namespace upsylon
                 //
                 // (virtual) interface
                 //______________________________________________________________
-                inline virtual ~Problem() throw() {}                           //!< cleanup
-                virtual size_t  dimension() const throw()                 = 0; //!< problem dimension
-                virtual void    setup( array<T> & ) const throw()         = 0; //!< initialize internal variables at initial coordinate
-                virtual T       begin() const throw()                     = 0; //!< return linear=starting point/log=first log point
-                virtual T       delta() const throw()                     = 0; //!< maximum coordinate step
-                virtual void    compute( array<T> &, T, const array<T> &) = 0; //!< differential equation API
+                inline virtual   ~Problem() throw() {}                           //!< cleanup
+                virtual size_t    dimension() const throw()                 = 0; //!< problem dimension
+                virtual void      setup( array<T> & ) const throw()         = 0; //!< initialize internal variables at initial coordinate
+                virtual T         begin() const throw()                     = 0; //!< return linear=starting point/log=first log point
+                virtual T         delta() const throw()                     = 0; //!< maximum coordinate step
+                virtual void      compute( array<T> &, T, const array<T> &) = 0; //!< differential equation API
+                virtual Callback *conform() throw() { return NULL; }             //!< default callback
+
 
             protected:
                 inline explicit Problem() throw() {} //!< setup
