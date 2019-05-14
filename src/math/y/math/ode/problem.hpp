@@ -22,18 +22,25 @@ namespace upsylon
             class Problem : public counted_object
             {
             public:
-                Y_DECL_ARGS(T,type);
-                inline virtual ~Problem() throw() {}
+                //______________________________________________________________
+                //
+                // types
+                //______________________________________________________________
+                Y_DECL_ARGS(T,type);                 //!< aliases for typename
 
-                virtual size_t dimension() const throw()                 = 0; //!< problem dimension
-                virtual void   setup( array<T> & ) const throw()         = 0; //!< initialize internal variables at initial coordinate
-                virtual T      begin() const throw()                     = 0; //!< return linear=starting point/log=first log point
-                virtual T      delta() const throw()                     = 0; //!< maximum coordinate step
-                virtual void   compute( array<T> &, T, const array<T> &) = 0; //!< differential equation API
+                //______________________________________________________________
+                //
+                // (virtual) interface
+                //______________________________________________________________
+                inline virtual ~Problem() throw() {}                           //!< cleanup
+                virtual size_t  dimension() const throw()                 = 0; //!< problem dimension
+                virtual void    setup( array<T> & ) const throw()         = 0; //!< initialize internal variables at initial coordinate
+                virtual T       begin() const throw()                     = 0; //!< return linear=starting point/log=first log point
+                virtual T       delta() const throw()                     = 0; //!< maximum coordinate step
+                virtual void    compute( array<T> &, T, const array<T> &) = 0; //!< differential equation API
 
             protected:
-                inline explicit Problem() throw() {}
-
+                inline explicit Problem() throw() {} //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Problem);

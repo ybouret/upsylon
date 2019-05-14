@@ -66,7 +66,9 @@ Y_UTEST(explode)
 
     // get a solver
     IODE::Solver                    solver  = ODE::DriverCK<double>::New();
+    // create a problem ( here using new Something() )
     IODE::Embedded<Something>::Type problem;
+    // create the integrator
     IODE                            iode(solver,problem.pointer);
     solver->eps = 1e-5;
     
@@ -86,11 +88,11 @@ Y_UTEST(explode)
         std::cerr << "Compute Fast" << std::endl;
         ios::ocstream fp("iode_fast.dat");
         const array<double> &Y = iode.reset();
-        fp("%g %g\n", iode.last(), Y[1]);
-        for(double x=iode.last()+dx;x<=10;x+=dx)
+        fp("%g %g\n", iode.current(), Y[1]);
+        for(double x=iode.current()+dx;x<=10;x+=dx)
         {
             (void)iode.update(x);
-            fp("%g %g\n", iode.last(), Y[1]);
+            fp("%g %g\n", iode.current(), Y[1]);
         }
 
     }

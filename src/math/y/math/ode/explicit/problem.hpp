@@ -13,7 +13,10 @@ namespace upsylon
         namespace ODE
         {
 
-            //! interface to solve an explicit differential problem
+            //__________________________________________________________________
+            //
+            //! interface to solve an explicit differential problem=Problem<T>
+            //__________________________________________________________________
             template <typename T>
             class ExplicitProblem : public Problem<T>
             {

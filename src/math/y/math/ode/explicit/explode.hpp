@@ -13,11 +13,21 @@ namespace upsylon
         namespace ODE
         {
 
-            //! Integrated Ordinary Differential Equation
+            //__________________________________________________________________
+            //
+            //
+            //! Explicit Ordinary Differential Equation Integrator
+            //
+            //__________________________________________________________________
             template <typename T>
             class ExplODE
             {
             public:
+                //______________________________________________________________
+                //
+                // types definitions
+                //______________________________________________________________
+                Y_DECL_ARGS(T,type);                              //!< aliases
                 typedef ExplicitProblem<T>           ProblemType; //!< kind of problem
                 typedef arc_ptr<ProblemType>         Problem;     //!< shared problem
                 typedef typename Field<T>::Equation  Equation;    //!< alias for equation
@@ -36,59 +46,88 @@ namespace upsylon
                     typedef embedded<PROBLEM,ProblemType,arc_ptr> Type; //!< ensure conversion
                 };
 
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
 
-                inline virtual ~ExplODE() throw() {} //!< cleanup
+                //______________________________________________________________
+                //
+                //! cleanup
+                //______________________________________________________________
+                inline virtual ~ExplODE() throw() {}
 
+                //______________________________________________________________
+                //
+                //! reset solver, return phase space
+                //______________________________________________________________
+                const array<type> & reset() { return initialize(); }
+                
+                //______________________________________________________________
+                //
                 //! perform integration from begin() to value, return phase space
-                const array<T> & at(const T value)
+                //______________________________________________________________
+                const array<type> & at(const_type value)
                 {
-                    S->start( Y.size() );
-                    P->setup(Y);
-                    LSSI::LinearRun(*S,E,Y,P->begin(),value,P->delta(),NULL);
-                    last_ = value;
-                    return Y;
+                    LSSI::LinearRun(*_solver,
+                                    _diffeq,
+                                    initialize(),
+                                    _crunch->begin(),
+                                    value,
+                                    _crunch->delta(),
+                                    NULL);
+                    _current = value;
+                    return _fields;
                 }
-                
-                //! reset solver
-                const array<T> & reset()
-                {
-                    S->start( Y.size() );
-                    P->setup(Y);
-                    last_ = P->begin();
-                    return Y;
-                }
-                
+
+                //______________________________________________________________
+                //
                 //! sequential call
-                const array<T> & update(const T value)
+                //______________________________________________________________
+                const array<type> & update(const_type value)
                 {
-                    S->start( Y.size() );
-                    LSSI::LinearRun(*S,E,Y,last_,value,P->delta(),NULL);
-                    last_ = value;
-                    return Y;
+                    _solver->start(_fields.size());
+                    LSSI::LinearRun(*_solver,_diffeq,_fields,_current,value,_crunch->delta(),NULL);
+                    _current = value;
+                    return _fields;
                 }
 
-                //! setup
+                //______________________________________________________________
+                //
+                //! setup: acquire resources and set variables
+                //______________________________________________________________
                 inline explicit ExplODE(const Solver  &solver,
-                                        const Problem &problem) :
-                last_(0),
-                S(solver),
-                P(problem),
-                E( & *P, & ProblemType::compute ),
-                Y( P->dimension(),0)
+                                        const Problem &crunch) :
+                _current(0),
+                _solver(solver),
+                _crunch(crunch),
+                _diffeq( & *_crunch, & ProblemType::compute ),
+                _fields(_crunch->dimension(),0)
                 {
-                    reset();
+                    (void)reset();
                 }
 
-                inline T last() const throw() { return last_; }
+                //______________________________________________________________
+                //
+                // access last values
+                //______________________________________________________________
+                inline type                current() const throw() { return _current; } //!< current position
+                inline const array<type> & fields() const throw()  { return _fields;  } //!< current phase space
                 
-
             private:
-                T              last_;
-                Solver         S;
-                Problem        P;
-                Equation       E;
-                vector<T>      Y;
+                mutable_type   _current;
+                Solver         _solver;
+                Problem        _crunch;
+                Equation       _diffeq;
+                vector<T>      _fields;
 
+                inline array<type> & initialize()
+                {
+                    _solver->start(_fields.size());
+                    _crunch->setup(_fields);
+                    _current = _crunch->begin();
+                    return _fields;
+                }
 
                 Y_DISABLE_COPY_AND_ASSIGN(ExplODE);
             };
