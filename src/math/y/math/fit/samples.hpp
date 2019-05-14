@@ -8,6 +8,7 @@
 #include "y/math/kernel/tao.hpp"
 #include "y/math/fcn/derivative.hpp"
 #include "y/math/stat/metrics.hpp"
+#include "y/sort/sorted-sum.hpp"
 
 namespace upsylon
 {
@@ -170,9 +171,12 @@ namespace upsylon
             protected:
                 //! initialize
                 inline explicit SampleType(const size_t nvar_max) :
-                SampleInfo(nvar_max)
+                SampleInfo(nvar_max),
+                rc()
                 {
                 }
+
+                vector<T>    rc; //!< resources
 
 
             private:
@@ -259,13 +263,14 @@ namespace upsylon
                 {
                     assert(X.size()==Y.size());
                     assert(X.size()==Yf.size());
-                    T ans = 0;
+                    this->rc.free();
+                    this->rc.ensure(X.size());
                     for(size_t i=X.size();i>0;--i)
                     {
                         const T Fi = (Yf[i]=F(X[i],aorg,this->variables));
-                        ans += square_of(Y[i]-Fi);
+                        this->rc.push_back_( square_of(Y[i]-Fi) );
                     }
-                    return ans;
+                    return sorted_sum(this->rc);
                 }
 
                 //! compute D2 and sum differential values
@@ -284,13 +289,14 @@ namespace upsylon
                     assert(X.size()==Yf.size());
 
                     Array &dFda = alpha.r_aux1;
-                    T ans = 0;
+                    this->rc.free();
+                    this->rc.ensure(X.size());
                     for(size_t i=X.size();i>0;--i)
                     {
                         const T Xi  = X[i];
                         const T Fi  = (Yf[i]=F(Xi,aorg,this->variables));
                         const T dFi = Y[i]-Fi;
-                        ans += square_of(dFi);
+                        this->rc.push_back_( square_of(dFi) );
                         grad(dFda,F,Xi,aorg,this->variables,used);
                         for(size_t j=nvar;j>0;--j)
                         {
@@ -309,7 +315,7 @@ namespace upsylon
                             }
                         }
                     }
-                    return ans;
+                    return sorted_sum(this->rc);
                 }
 
                 //! correlation from fitted and source data
@@ -374,12 +380,14 @@ namespace upsylon
                                     const Array  &aorg)
                 {
                     typename Sample<T>::Collection &self = *this;
-                    T ans = 0;
-                    for(size_t k=this->size();k>0;--k)
+                    const size_t n = this->size();
+                    this->rc.free();
+                    this->rc.ensure(n);
+                    for(size_t k=n;k>0;--k)
                     {
-                        ans += self[k]->computeD2(F,aorg);
+                        this->rc.push_back_( self[k]->computeD2(F,aorg) );
                     }
-                    return ans;
+                    return sorted_sum(this->rc);
                 }
 
                 //! sum of all counts
@@ -431,6 +439,7 @@ namespace upsylon
                     return *p;
                 }
 
+                //! compute D2 and sum all differential values
                 virtual T computeD2(Function          &F,
                                     const Array       &aorg,
                                     Array             &beta,
@@ -439,12 +448,14 @@ namespace upsylon
                                     const array<bool> &used)
                 {
                     typename Sample<T>::Collection &self = *this;
-                    T ans = 0;
-                    for(size_t k=self.size();k>0;--k)
+                    const size_t n = self.size();
+                    this->rc.free();
+                    this->rc.ensure(n);
+                    for(size_t k=n;k>0;--k)
                     {
-                        ans += self[k]->computeD2(F,aorg,beta,alpha,grad,used);
+                        this->rc.push_back_( self[k]->computeD2(F,aorg,beta,alpha,grad,used) );
                     }
-                    return ans;
+                    return sorted_sum(this->rc);
                 }
 
 
