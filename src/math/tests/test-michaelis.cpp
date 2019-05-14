@@ -144,8 +144,10 @@ Y_UTEST(michaelis)
         odeint( diffeq, y, t, t+dt, h, NULL);
         t=i*dt;
         Output(t, y);
+        std::cerr << "t=" << t << " " << y << "             \r";
         if(t>30) break;
     }
+    std::cerr << std::endl;
     
 }
 Y_UTEST_DONE()
