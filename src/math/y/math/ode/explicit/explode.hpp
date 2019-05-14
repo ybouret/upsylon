@@ -73,7 +73,7 @@ namespace upsylon
                     _current = value;
                     return _fields;
                 }
-
+                
                 //______________________________________________________________
                 //
                 //! sequential call
