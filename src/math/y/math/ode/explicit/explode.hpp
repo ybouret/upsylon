@@ -69,7 +69,7 @@ namespace upsylon
                 //______________________________________________________________
                 const array<type> & at(const_type value)
                 {
-                    LSSI::LinearRun(*_solver,
+                    LSSI::LinearRun<type,SolverType>(*_solver,
                                     _diffeq,
                                     initialize(),
                                     _crunch->begin(),
@@ -87,7 +87,7 @@ namespace upsylon
                 const array<type> & update(const_type value)
                 {
                     _solver->start(_fields.size());
-                    LSSI::LinearRun(*_solver,_diffeq,_fields,_current,value,_crunch->delta(),NULL);
+                    LSSI::LinearRun<type,SolverType>(*_solver,_diffeq,_fields,_current,value,_crunch->delta(),NULL);
                     _current = value;
                     return _fields;
                 }
