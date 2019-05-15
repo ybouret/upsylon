@@ -265,10 +265,8 @@ ${kr_sc_srcs} ${kr_bc_srcs}
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
 
-ADD_EXECUTABLE(y_rc y_rc.cpp)
-TARGET_LINK_Y(y_rc)
-INSTALL( TARGETS y_rc RUNTIME DESTINATION bin)
 
+ADD_SUBDIRECTORY(cli)
 ADD_EXECUTABLE(rc-demo rc-demo.cpp)
 TARGET_LINK_Y(rc-demo)
 
@@ -280,19 +278,7 @@ COMMAND rc-demo
 DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/rc1.txt ${SUB_RC}
 COMMENT "Adding Resources to rc-demo")
 
-IF(FALSE)
-  ADD_EXECUTABLE(nwsrt nwsrt.cpp)
-  TARGET_LINK_Y(nwsrt)
-ENDIF()
-
-ADD_EXECUTABLE(mprimes mprimes.cpp)
-TARGET_LINK_Y(mprimes)
-
-ADD_EXECUTABLE(y_uniq y_uniq.cpp)
-TARGET_LINK_Y(y_uniq)
-INSTALL( TARGETS y_uniq RUNTIME DESTINATION bin)
-
-ADD_SUBDIRECTORY(cli)
 ADD_SUBDIRECTORY(tests)
+
 MESSAGE( STATUS "<Upsylon/>" )
 MESSAGE(STATUS "")
