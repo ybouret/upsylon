@@ -17,9 +17,9 @@ namespace upsylon
             T round_floor( const T a )
             {
                 assert(a>0);
-                const T a_log = __floor( __log10(a) );
-                const T a_one = __floor( a * __pow( T(10.0),-a_log));
-                return  a_one * __pow( T(10.0),a_log);
+                const T a_log = floor_of( log10_of(a) );
+                const T a_one = floor_of( a * pow_of( T(10.0),-a_log));
+                return  a_one * pow_of( T(10.0),a_log);
             }
 
             //! integer*exponent10 >= a
@@ -27,9 +27,9 @@ namespace upsylon
             T round_ceil( const T a ) throw()
             {
                 assert( a > 0 );
-                const T a_log = __floor( __log10(a) );
-                const T a_one = __ceil( a * __pow( T(10.0),-a_log));
-                return  a_one * __pow( T(10.0),a_log);
+                const T a_log = floor_of( log10_of(a) );
+                const T a_one = ceil_of( a * pow_of( T(10.0),-a_log));
+                return  a_one * pow_of( T(10.0),a_log);
             }
 
             //! adjust dt, dt_save and return every time step to save
@@ -39,7 +39,7 @@ namespace upsylon
                 assert(dt>0);
                 dt = round_floor(dt);
                 if(dt_save<=dt) { dt_save=dt; }
-                const size_t count = max_of<size_t>( size_t(__anint(dt_save/dt)), 1 );
+                const size_t count = max_of<size_t>( size_t( anint_of(dt_save/dt)), 1 );
                 dt_save = count*dt;
                 return count;
             }
@@ -50,7 +50,7 @@ namespace upsylon
             {
                 assert(dt>0);
                 assert(every>0);
-                size_t iter = size_t( __ceil(fabs_of(t_run/dt) ) );
+                size_t iter = size_t( ceil_of(fabs_of(t_run/dt) ) );
                 if(iter<every) { iter=every; }
                 while( 0 != (iter%every) ) ++iter;
                 t_run = iter*dt;

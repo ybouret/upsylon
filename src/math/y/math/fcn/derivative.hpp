@@ -37,7 +37,7 @@ namespace upsylon
             //! step scaling w.r.t characteristic scale of 1
             static inline T unit_step_size() throw()
             {
-                static const T value = log_round_floor(__pow(numeric<T>::epsilon,T(1.0)/T(3.0)));
+                static const T value = log_round_floor( pow_of(numeric<T>::epsilon,T(1.0)/T(3.0)) );
                 return value;
             }
 

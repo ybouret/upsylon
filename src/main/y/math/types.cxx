@@ -51,7 +51,7 @@ namespace upsylon
         real_t __angle_of( real_t c, real_t s ) throw()
         {
             std::cerr << "c=" << c << ", s=" << s << std::endl;
-            const real_t den = __hypotenuse(c,s); assert(den>REAL(0.0));
+            const real_t den = hypotenuse_of(c,s); assert(den>REAL(0.0));
             const real_t C   = c/den;
             const real_t A   = REAL(acos)(C);
             if(s>=0)

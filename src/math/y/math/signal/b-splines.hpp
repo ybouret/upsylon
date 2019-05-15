@@ -31,7 +31,7 @@ namespace upsylon
             // x: 0 -> 1: find the segment
             //______________________________________________________________
             const T      xscaled = clamp<T>(0,x,1)*num_segments;
-            const unit_t segment = unit_t(__floor( xscaled ));
+            const unit_t segment = unit_t(floor_of( xscaled ));
             const T      t       = (x*num_segments-segment);
 
             //______________________________________________________________
@@ -96,7 +96,7 @@ namespace upsylon
             inline vertex tangent(const T u) const
             {
                 // optimal step for u around 0.5
-                static const T h_opt = __pow(numeric<T>::epsilon,T(1.0)/T(3.0))*T(0.5);
+                static const T h_opt = pow_of(numeric<T>::epsilon,T(1.0)/T(3.0))*T(0.5);
                 vertex q;
                 type *p = (type *)&q;
                 for(idim=0;idim<DIM;++idim)

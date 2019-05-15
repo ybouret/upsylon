@@ -76,7 +76,7 @@ namespace upsylon
                     
                 }
                 
-                //! integrate from 0 to exp(lnMax), first step is 0->exp(lnMin), and not greater than lnStep
+                //! integrate from 0 to exp(lnMax), first step is 0->exp(lnMin), and not greater step than lnStep
                 template <
                 typename T,
                 typename DRIVER
@@ -127,7 +127,7 @@ namespace upsylon
                     for(size_t i=1;i<ns;++i)
                     {
                         const T lnext = lnMin + (i*length)/ns;
-                        const T xnext = exp(lnext);
+                        const T xnext = exp_of(lnext);
                         driver(eqdiff,ystart,xcurr,xnext,ctrl,cb);
                         xcurr = xnext;
                     }
@@ -136,7 +136,7 @@ namespace upsylon
                     //
                     //final step
                     //__________________________________________________________
-                    driver(eqdiff,ystart,xcurr,exp(lnMax),ctrl,cb);
+                    driver(eqdiff,ystart,xcurr,exp_of(lnMax),ctrl,cb);
                     
                 }
                 

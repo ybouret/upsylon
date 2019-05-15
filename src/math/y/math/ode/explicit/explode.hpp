@@ -25,7 +25,9 @@ namespace upsylon
             public:
                 //______________________________________________________________
                 //
+                //
                 // types definitions
+                //
                 //______________________________________________________________
                 Y_DECL_ARGS(T,type);                              //!< aliases
                 typedef ExplicitProblem<T>           ProblemType; //!< kind of problem
@@ -48,7 +50,9 @@ namespace upsylon
 
                 //______________________________________________________________
                 //
+                //
                 // methods
+                //
                 //______________________________________________________________
 
                 //______________________________________________________________
@@ -70,10 +74,17 @@ namespace upsylon
                 const array<type> & at(const_type value)
                 {
                     LSSI::LinearRun<type,SolverType>(*_solver,_diffeq,initialize(),_crunch->begin(),value,_crunch->delta(),_crunch->conform());
-                    _current = value;
-                    return _fields;
+                    return fields_at(value);
                 }
-                
+
+                const array<type> & ln_at(const_type value)
+                {
+                    assert(value>0);
+                    const_type lnStep = _crunch->delta();
+                    const_type lnVmax = log_of(value);
+                    return fields_at(value);
+                }
+
                 //______________________________________________________________
                 //
                 //! sequential call
@@ -82,8 +93,7 @@ namespace upsylon
                 {
                     _solver->start(_fields.size());
                     LSSI::LinearRun<type,SolverType>(*_solver,_diffeq,_fields,_current,value,_crunch->delta(),_crunch->conform());
-                    _current = value;
-                    return _fields;
+                    return fields_at(value);
                 }
 
                 //______________________________________________________________
@@ -120,6 +130,12 @@ namespace upsylon
                     _solver->start(_fields.size());
                     _crunch->setup(_fields);
                     _current = _crunch->begin();
+                    return _fields;
+                }
+
+                inline const array<type> & fields_at( const_type value ) throw()
+                {
+                    _current = value;
                     return _fields;
                 }
 

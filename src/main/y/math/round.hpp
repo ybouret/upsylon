@@ -13,9 +13,9 @@ namespace upsylon
         inline T log_round_floor( T a ) throw()
         {
             assert( a > 0 );
-            const T a_log = __floor( __log10(a) );
-            const T a_one = __floor( a * __pow( T(10.0),-a_log));
-            return  a_one * __pow( T(10.0),a_log);
+            const T a_log = floor_of( log10_of(a) );
+            const T a_one = floor_of( a * pow_of( T(10.0),-a_log));
+            return  a_one * pow_of( T(10.0),a_log);
         }
 
         //! round to a upper integer*exponent10
@@ -23,9 +23,9 @@ namespace upsylon
         inline T log_round_ceil( T a ) throw()
         {
             assert( a > 0 );
-            const T a_log = __floor( __log10(a) );
-            const T a_one = __ceil( a * __pow( T(10.0),-a_log));
-            return  a_one * __pow( T(10.0),a_log);
+            const T a_log = floor_of( log10_of(a) );
+            const T a_one = ceil_of( a * pow_of( T(10.0),-a_log));
+            return  a_one * pow_of( T(10.0),a_log);
         }
 
         //! return every time step to save around each dt_save, updated
@@ -37,7 +37,7 @@ namespace upsylon
             {
                 dt_save = dt;
             }
-            size_t every = max_of<size_t>(__anint(dt_save/dt),1);
+            size_t every = max_of<size_t>( anint_of(dt_save/dt),1);
             dt_save = every*dt;
             return every;
         }
@@ -56,7 +56,7 @@ namespace upsylon
         inline size_t simulation_iter( const T t_run, const T dt, const size_t every ) throw()
         {
             assert(dt>0);
-            size_t iter = size_t(__ceil(__fabs(t_run/dt)));
+            size_t iter = size_t( ceil_of(fabs_of(t_run/dt)));
             if(iter<every) { iter = every; }
             while( 0 != (iter%every) ) ++iter;
             return iter;

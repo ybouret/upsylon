@@ -33,7 +33,7 @@ namespace upsylon
                 static const real_t PGROW  = REAL(-0.25);
                 static const real_t SHRNK  = REAL(0.5);
                 static const real_t PSHRNK = REAL(-1.0)/REAL(3.0);
-                static const real_t ERRCON = __pow( GROW/SAFETY, (REAL(1.0)/PGROW) );
+                static const real_t ERRCON = pow_of( GROW/SAFETY, (REAL(1.0)/PGROW) );
                 
                 const size_t n = y.size();
                 assert( n > 0 );

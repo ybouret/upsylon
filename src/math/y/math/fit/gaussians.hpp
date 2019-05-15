@@ -36,7 +36,7 @@ namespace upsylon
                         const T sig2 = sig*sig;
                         const T dx = x-mu;
                         const T den2 = sig2+sig2;
-                        ans += a*__exp(-(dx*dx)/den2)/sqrt_of(numeric<T>::pi*den2);
+                        ans += a* exp_of(-(dx*dx)/den2)/sqrt_of(numeric<T>::pi*den2);
                     }
                     return ans;
                 }

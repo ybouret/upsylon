@@ -82,8 +82,8 @@ namespace upsylon
         
 
         
-        inline float  __pow( const float  x, const float  p) throw() { return powf(x,p); } //!< pow
-        inline double __pow( const double x, const double p) throw() { return pow(x,p); }  //!< pow
+        inline float  pow_of( const float  x, const float  p) throw() { return powf(x,p); } //!< pow
+        inline double pow_of( const double x, const double p) throw() { return pow(x,p); }  //!< pow
         
         inline float   __mod2(const float  x) throw() { return x*x; }               //!< |x|^2
         inline double  __mod2(const double x) throw() { return x*x; }               //!< |x|^2
@@ -91,25 +91,25 @@ namespace upsylon
         inline float   __mod2(const complex<float>  x) throw() { return x.mod2(); } //!< |x|^2
         inline double  __mod2(const complex<double> x) throw() { return x.mod2(); } //!< |x|^2
         
-        inline float  __floor( const float  x ) throw() { return floorf(x); } //!< floor
-        inline double __floor( const double x ) throw() { return floor(x);  } //!< floor
-        inline unit_t __floor( const unit_t x ) throw() { return x; }         //!< floor
+        inline float  floor_of( const float  x ) throw() { return floorf(x); } //!< floor
+        inline double floor_of( const double x ) throw() { return floor(x);  } //!< floor
+        inline unit_t floor_of( const unit_t x ) throw() { return x; }         //!< floor
         
-        inline float  __ceil( const float  x ) throw() { return ceilf(x); } //!< floor
-        inline double __ceil( const double x ) throw() { return ceil(x);  } //!< floor
-        inline unit_t __ceil( const unit_t x ) throw() { return x; }        //!< ceil
+        inline float  ceil_of( const float  x ) throw() { return ceilf(x); } //!< floor
+        inline double ceil_of( const double x ) throw() { return ceil(x);  } //!< floor
+        inline unit_t ceil_of( const unit_t x ) throw() { return x; }        //!< ceil
         
-        inline float  __log10( const float  x ) throw() { return log10f(x); } //!< log10
-        inline double __log10( const double x ) throw() { return log10(x); }  //!< log10
+        inline float  log10_of( const float  x ) throw() { return log10f(x); }  //!< log10
+        inline double log10_of( const double x ) throw() { return log10(x);  }  //!< log10
         
-        inline float  __anint( const float  x ) throw() { return floorf(x+0.5f); } //!< nearest integer
-        inline double __anint( const double x ) throw() { return floor(x+0.5); }   //!< nearest integer
+        inline float  anint_of( const float  x ) throw() { return floorf(x+0.5f); } //!< nearest integer
+        inline double anint_of( const double x ) throw() { return floor(x+0.5); }   //!< nearest integer
 
-        inline float  __log(const float x) throw() { return logf(x); } //!< natural log
-        inline double __log(const double x) throw() { return log(x); } //!< natural log
+        inline float  log_of(const float x) throw()  { return logf(x); } //!< natural log
+        inline double log_of(const double x) throw() { return log(x); } //!< natural log
 
-        inline float  __exp(const float  x) throw() { return expf(x); } //!< exp
-        inline double __exp(const double x) throw() { return exp(x);  } //!< exp
+        inline float  exp_of(const float  x) throw() { return expf(x); } //!< exp
+        inline double exp_of(const double x) throw() { return exp(x);  } //!< exp
 
         inline float  cos_of( const float  x ) throw() { return cosf(x); } //!< cosine
         inline double cos_of( const double x ) throw() { return cos(x);  } //!< cosine
@@ -130,7 +130,7 @@ namespace upsylon
         }
         
         //! hypothenuse withouth underflow or overflowe
-        inline float __hypotenuse( float a, float b) throw()
+        inline float hypotenuse_of( float a, float b) throw()
         {
             const float absa=fabsf(a);
             const float absb=fabsf(b);
@@ -145,7 +145,7 @@ namespace upsylon
         }
         
         //! hypothenuse withouth underflow or overflowe
-        inline double __hypotenuse( double a, double b) throw()
+        inline double hypotenuse_of( double a, double b) throw()
         {
             const double absa=fabs(a);
             const double absb=fabs(b);
@@ -158,8 +158,8 @@ namespace upsylon
                 return (absb <= 0.0 ? 0.0 : absb*sqrt(1.0+square_of(absa/absb)));
             }
         }
-        inline float  fabs_of( const complex<float>  c) throw() { return __hypotenuse(c.re,c.im);  } //!< fabs
-        inline double fabs_of( const complex<double> c) throw() { return __hypotenuse(c.re,c.im);  } //!< fabs
+        inline float  fabs_of( const complex<float>  c) throw() { return hypotenuse_of(c.re,c.im);  } //!< fabs
+        inline double fabs_of( const complex<double> c) throw() { return hypotenuse_of(c.re,c.im);  } //!< fabs
 
         template <typename T>
         inline typename real_for<T>::type __abs( const T &f ) { return fabs_of(f); } //!< absolute value operator

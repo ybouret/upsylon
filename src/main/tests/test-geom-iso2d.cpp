@@ -52,8 +52,8 @@ Y_UTEST(geom_iso2d)
             X[i] = double(i-1)/(nx-1);
             const double xx1 = X[i]-0.8;
             const double xx2 = X[i]-0.2;
-            const double r1 = math::__hypotenuse(yy,xx1);
-            const double r2 = math::__hypotenuse(yy,xx2);
+            const double r1 = math::hypotenuse_of(yy,xx1);
+            const double r2 = math::hypotenuse_of(yy,xx2);
             const double V  = 1.0/(r1+0.1)-1.0/(r2+0.1);
             M[j][i] = V;
         }
@@ -110,8 +110,8 @@ Y_UTEST(geom_iso2d)
         {
             const double xx1 = X[i]-0.8;
             const double xx2 = X[i]-0.2;
-            const double r1 = math::__hypotenuse(yy,xx1);
-            const double r2 = math::__hypotenuse(yy,xx2);
+            const double r1 = math::hypotenuse_of(yy,xx1);
+            const double r2 = math::hypotenuse_of(yy,xx2);
             const double V  = 1.0/(r1+0.1)+1.0/(r2+0.1);
             M[j][i] = V;
         }
@@ -209,10 +209,10 @@ Y_UTEST(geom_iso2d)
         {
             const double xx1 = X[i]-0.25;
             const double xx2 = X[i]-0.75;
-            const double r1 = math::__hypotenuse(xx1,yy1);
-            const double r2 = math::__hypotenuse(xx2,yy1);
-            const double r3 = math::__hypotenuse(xx2,yy2);
-            const double r4 = math::__hypotenuse(xx1,yy2);
+            const double r1 = math::hypotenuse_of(xx1,yy1);
+            const double r2 = math::hypotenuse_of(xx2,yy1);
+            const double r3 = math::hypotenuse_of(xx2,yy2);
+            const double r4 = math::hypotenuse_of(xx1,yy2);
             const double V  = 1.0/(r1+0.1)-1.0/(r2+0.1)+1.0/(r3+0.1)-1.0/(r4+0.1);
             M[j][i] = V;
         }

@@ -85,6 +85,16 @@ Y_UTEST(types)
     
     math::show::info();
 
+    std::cerr << math::log_round_floor(0.12) << std::endl;
+    std::cerr << math::log_round_ceil(0.12)  << std::endl;
+
+    float dt   = 0.11f;
+    float save = 0.3f;
+    std::cerr << "dt=" << dt << ", save=" << save << std::endl;
+    const size_t every = simulation_save_every(dt,save);
+    std::cerr << "dt=" << dt << ", save=" << save << " every " << every << std::endl;
+    const size_t iters = simulation_iter(1.0f, dt, every);
+    std::cerr << "Running #" << iters << std::endl;
     
     
 }

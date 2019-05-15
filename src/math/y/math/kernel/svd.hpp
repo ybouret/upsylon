@@ -176,7 +176,7 @@ namespace upsylon
                                 rv1[i]=c*rv1[i];
                                 if ((T)(fabs_of(f)+anorm) == anorm) break;
                                 g=w[i];
-                                h=__hypotenuse(f,g);
+                                h=hypotenuse_of(f,g);
                                 w[i]=h;
                                 h=T(1)/h;
                                 c=g*h;
@@ -207,7 +207,7 @@ namespace upsylon
                         g=rv1[nm];
                         h=rv1[k];
                         f=((y-z)*(y+z)+(g-h)*(g+h))/(T(2)*h*y);
-                        g=__hypotenuse(f,T(1));
+                        g=hypotenuse_of(f,T(1));
                         f=((x-z)*(x+z)+h*((y/(f+__sgn(g,f)))-h))/x;
                         c=s=T(1); /* Next QR transformation: */
                         for(size_t j=l;j<=nm;j++)
@@ -217,7 +217,7 @@ namespace upsylon
                             y=w[i];
                             h=s*g;
                             g=c*g;
-                            z=__hypotenuse(f,h);
+                            z=hypotenuse_of(f,h);
                             rv1[j]=z;
                             c=f/z;
                             s=h/z;
@@ -232,7 +232,7 @@ namespace upsylon
                                 v[jj][j]=x*c+z*s;
                                 v[jj][i]=z*c-x*s;
                             }
-                            z=__hypotenuse(f,h);
+                            z=hypotenuse_of(f,h);
                             w[j]=z; /* Rotation can be arbitrary if z = 0. */
                             if(z>0) {
                                 z=T(1)/z;
