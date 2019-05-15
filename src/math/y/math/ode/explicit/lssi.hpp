@@ -13,6 +13,38 @@ namespace upsylon
             //! Limited Step Size Integrator
             struct LSSI
             {
+
+                template <typename T>
+                static inline
+                size_t ComputeSteps(const T sgn_width,
+                                    T      &delta)
+                {
+                    const T abs_width = fabs_of(sgn_width);
+                    if(abs_width<=0)
+                    {
+                        delta = 0;
+                        return 0;
+                    }
+                    else
+                    {
+                        const T      abs_delta = fabs_of(delta);
+                        assert(abs_delta>0);
+                        if(abs_delta>=abs_width)
+                        {
+                            delta = sgn_width;
+                            return 1;
+                        }
+                        else
+                        {
+                            assert(abs_delta<abs_width);
+                            const size_t num_steps = static_cast<size_t>( ceil_of(abs_width/abs_delta) );
+                            delta = sgn_width/num_steps;
+                            return num_steps;
+                        }
+                    }
+
+                }
+
                 //! integrate linear step x1->x2, not faster than dx_safe
                 template <
                 typename T,
@@ -23,33 +55,17 @@ namespace upsylon
                                array<T>                    &ystart,
                                const T                      x1,
                                const T                      x2,
-                               const T                      dx_safe,
+                               T                            dx,
                                typename Field<T>::Callback *cb)
                 {
-                    assert(fabs_of(dx_safe)>0);
-                    
+
                     //__________________________________________________________
                     //
                     // adjust number of steps
                     //__________________________________________________________
-                    const T signed_length = x2-x1;
-                    const T length        = fabs_of(signed_length);
-                    const T abs_dx        = fabs_of(dx_safe);
-                    
-                    size_t  ns            = 0;
-                    T       dx            = 0;
-                    if(length<=abs_dx)
-                    {
-                        ns     = 1;
-                        dx     = signed_length;
-                    }
-                    else
-                    {
-                        assert(abs_dx<length);
-                        ns     = static_cast<size_t>( ceil(length/abs_dx) );
-                        dx     = signed_length/ns;
-                    }
-                    
+                    const T      sw = x2-x1;
+                    const size_t ns = ComputeSteps<T>(sw,dx);
+
                     //__________________________________________________________
                     //
                     // initialize
@@ -63,7 +79,7 @@ namespace upsylon
                     //__________________________________________________________
                     for(size_t i=1;i<ns;++i)
                     {
-                        const T xnext = x1 + (i*signed_length)/ns;
+                        const T xnext = x1 + (i*sw)/ns;
                         driver(eqdiff,ystart,xcurr,xnext,ctrl,cb);
                         xcurr = xnext;
                     }
@@ -86,30 +102,15 @@ namespace upsylon
                                     array<T>                    &ystart,
                                     const T                      lnMin,
                                     const T                      lnMax,
-                                    const T                      lnStep,
+                                    T                            lnStep,
                                     typename Field<T>::Callback  *cb)
                 {
                     //__________________________________________________________
                     //
                     // compute internal steps
                     //__________________________________________________________
-                    assert(lnMax>=lnMin);
-                    assert(lnStep>0);
-                    const T length  = lnMax-lnMin;
-                    size_t  ns      = 0;
-                    T       dl      = 0;
-                    if(length<=lnStep)
-                    {
-                        ns = 1;
-                        dl = length;
-                    }
-                    else
-                    {
-                        assert(lnStep<length);
-                        ns     = static_cast<size_t>( ceil(length/lnStep) );
-                        dl     = length/ns;
-                    }
-                    assert(ns>0);
+                    const T      sw = lnMax-lnMin;
+                    const size_t ns = ComputeSteps<T>(sw,lnStep);
                     
                     //__________________________________________________________
                     //
@@ -123,10 +124,10 @@ namespace upsylon
                     //
                     // internal steps
                     //__________________________________________________________
-                    ctrl = dl/2;
+                    ctrl = lnStep/2;
                     for(size_t i=1;i<ns;++i)
                     {
-                        const T lnext = lnMin + (i*length)/ns;
+                        const T lnext = lnMin + (i*sw)/ns;
                         const T xnext = exp_of(lnext);
                         driver(eqdiff,ystart,xcurr,xnext,ctrl,cb);
                         xcurr = xnext;

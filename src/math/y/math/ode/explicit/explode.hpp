@@ -69,7 +69,11 @@ namespace upsylon
                 
                 //______________________________________________________________
                 //
-                //! perform integration from begin() to value, return phase space
+                //! perform integration from begin() to value
+                /**
+                 initialize at begin(), then solve up to value using internal
+                 problem->delta() to control
+                 */
                 //______________________________________________________________
                 const array<type> & at(const_type value)
                 {
@@ -77,12 +81,23 @@ namespace upsylon
                     return fields_at(value);
                 }
 
-                const array<type> & ln_at(const_type value)
+                //______________________________________________________________
+                //
+                //! perform logarihtmic integration from begin() to value
+                /**
+                 intialize at begin(), then logarithminc run
+                 using a first begin()->ln(vmin)
+                 */
+                //______________________________________________________________
+                const array<type> & lnRun(const_type vmin, const_type vmax)
                 {
-                    assert(value>0);
+                    assert(vmin>0);
+                    assert(vmax>0);
                     const_type lnStep = _crunch->delta();
-                    const_type lnVmax = log_of(value);
-                    return fields_at(value);
+                    const type lnVmin = log_of(vmin);
+                    const_type lnVmax = log_of(vmax);
+                    LSSI::LogarithmicRun(*_solver,_diffeq,initialize(), lnVmin, lnVmax, lnStep, _crunch->conform() );
+                    return fields_at(vmax);
                 }
 
                 //______________________________________________________________
