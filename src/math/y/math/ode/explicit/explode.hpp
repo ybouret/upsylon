@@ -34,6 +34,7 @@ namespace upsylon
                 typedef arc_ptr<ProblemType>         Problem;     //!< shared problem
                 typedef typename Field<T>::Equation  Equation;    //!< alias for equation
                 typedef typename Field<T>::Callback  Callback;    //!< alias for callback
+                typedef typename Field<T>::Collect   Collect;     //!< alias for collect
                 typedef ExplicitSolver<T>            SolverType;  //!< alias
                 typedef typename SolverType::Pointer Solver;      //!< alias for shared solver
 
@@ -75,9 +76,9 @@ namespace upsylon
                  problem->delta() to control
                  */
                 //______________________________________________________________
-                const array<type> & at(const_type value)
+                const array<type> & at(const_type value, Collect *com=0)
                 {
-                    LSSI::LinearRun<type,SolverType>(*_solver,_diffeq,initialize(),_crunch->begin(),value,_crunch->delta(),_crunch->conform());
+                    LSSI::LinearRun<type,SolverType>(*_solver,_diffeq,initialize(),_crunch->begin(),value,_crunch->delta(),_crunch->conform(),com);
                     return fields_at(value);
                 }
 
@@ -89,14 +90,14 @@ namespace upsylon
                  using a first begin()->ln(vmin)
                  */
                 //______________________________________________________________
-                const array<type> & lnRun(const_type vmin, const_type vmax)
+                const array<type> & lnRun(const_type vmin, const_type vmax, Collect *com=0)
                 {
                     assert(vmin>0);
                     assert(vmax>0);
                     const_type lnStep = _crunch->delta();
                     const type lnVmin = log_of(vmin);
                     const_type lnVmax = log_of(vmax);
-                    LSSI::LogarithmicRun(*_solver,_diffeq,initialize(), lnVmin, lnVmax, lnStep, _crunch->conform() );
+                    LSSI::LogarithmicRun(*_solver,_diffeq,initialize(), lnVmin, lnVmax, lnStep, _crunch->conform(),com);
                     return fields_at(vmax);
                 }
 

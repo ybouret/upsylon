@@ -56,7 +56,8 @@ namespace upsylon
                                const T                      x1,
                                const T                      x2,
                                T                            dx,
-                               typename Field<T>::Callback *cb)
+                               typename Field<T>::Callback *cb,
+                               typename Field<T>::Collect  *com=0)
                 {
 
                     //__________________________________________________________
@@ -82,6 +83,7 @@ namespace upsylon
                         const T xnext = x1 + (i*sw)/ns;
                         driver(eqdiff,ystart,xcurr,xnext,ctrl,cb);
                         xcurr = xnext;
+                        if(com) (*com)(xcurr,ystart);
                     }
                     
                     //__________________________________________________________
@@ -89,6 +91,7 @@ namespace upsylon
                     // final step
                     //__________________________________________________________
                     driver(eqdiff,ystart,xcurr,x2,ctrl,cb);
+                    if(com) (*com)(x2,ystart);
                     
                 }
                 
@@ -103,7 +106,8 @@ namespace upsylon
                                     const T                      lnMin,
                                     const T                      lnMax,
                                     T                            lnStep,
-                                    typename Field<T>::Callback  *cb)
+                                    typename Field<T>::Callback  *cb,
+                                    typename Field<T>::Collect   *com=0)
                 {
                     //__________________________________________________________
                     //
@@ -119,7 +123,8 @@ namespace upsylon
                     T xcurr = exp( lnMin );
                     T ctrl  = xcurr/2;
                     driver(eqdiff,ystart,0,xcurr,ctrl,cb);
-                    
+                    if(com) (*com)(xcurr,ystart);
+
                     //__________________________________________________________
                     //
                     // internal steps
@@ -131,14 +136,16 @@ namespace upsylon
                         const T xnext = exp_of(lnext);
                         driver(eqdiff,ystart,xcurr,xnext,ctrl,cb);
                         xcurr = xnext;
+                        if(com) (*com)(xcurr,ystart);
                     }
                     
                     //__________________________________________________________
                     //
                     //final step
                     //__________________________________________________________
-                    driver(eqdiff,ystart,xcurr,exp_of(lnMax),ctrl,cb);
-                    
+                    const T xmax = exp_of(lnMax);
+                    driver(eqdiff,ystart,xcurr,xmax,ctrl,cb);
+                    if(com) (*com)(xmax,ystart);
                 }
                 
             };

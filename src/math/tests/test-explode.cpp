@@ -1,12 +1,13 @@
 #include "y/math/ode/explicit/explode.hpp"
 #include "y/math/ode/explicit/driver-ck.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/sequence/list.hpp"
+#include "y/type/point2d.hpp"
 
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
 using namespace math;
-
 
 namespace
 {
@@ -43,7 +44,7 @@ namespace
         }
 
 
-        virtual double delta() const throw() { return 0.01; }
+        virtual double delta() const throw() { return 0.05; }
 
         virtual void compute( array<double> &dydx, double x, const array<double> &y )
         {
@@ -56,7 +57,25 @@ namespace
         Y_DISABLE_COPY_AND_ASSIGN(Something);
     };
 
-    
+    typedef point2d<double> Point;
+    typedef list<Point>     Points;
+
+    class Collector : public Points
+    {
+    public:
+
+        inline  Collector() throw() {}
+        inline ~Collector() throw() {}
+
+        void Get( double x, const array<double> &Y )
+        {
+            const Point P(x,Y[1]);
+            push_back(P);
+        }
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Collector);
+    };
     
 
 }
@@ -73,6 +92,9 @@ Y_UTEST(explode)
     // create the integrator
     IODE                            iode(solver,problem.pointer);
 
+
+
+
     // tune the solver if needed
     solver->eps = 1e-5;
     
@@ -87,6 +109,8 @@ Y_UTEST(explode)
             fp("%g %g\n",x,Y[1]);
         }
     }
+
+
 
     {
         std::cerr << "Compute Full/Log" << std::endl;
@@ -112,6 +136,29 @@ Y_UTEST(explode)
 
     }
 
+    Collector     out;
+    IODE::Collect com( & out, & Collector::Get );
+    {
+        std::cerr << "Collecting Linear" << std::endl;
+        out.free();
+        (void) iode.at(10, &com);
+        ios::ocstream fp("iode_com_lin.dat");
+        for( Collector::iterator p = out.begin(); p != out.end(); ++p )
+        {
+            fp("%g %g\n", p->x, p->y );
+        }
+    }
+
+    {
+        std::cerr << "Collecting Logarithmic" << std::endl;
+        out.free();
+        (void) iode.lnRun(1e-3,10, &com);
+        ios::ocstream fp("iode_com_log.dat");
+        for( Collector::iterator p = out.begin(); p != out.end(); ++p )
+        {
+            fp("%g %g\n", p->x, p->y );
+        }
+    }
 
 
 }
