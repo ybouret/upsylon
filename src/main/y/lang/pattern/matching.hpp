@@ -24,7 +24,7 @@ namespace upsylon
             bool         partly(const string &s);                    //!< the string must partly   match the pattern
             size_t       find( sequence<Token> &, const string &s ); //!< free and find all consecutive, non overlapping occurences
             const Token *first_in(const string &s);                  //!< first in string, NULL if none
-
+            
         private:
             const arc_ptr<const Pattern> motif;
             Y_DISABLE_ASSIGN(Matching);
@@ -39,7 +39,7 @@ namespace upsylon
             virtual ~MatchString() throw();            //!< destructor
             MatchString(const MatchString &) throw();  //!< copy
             
-            //! functionoid call
+            //! functionoid call for exactly
             bool operator()( const string &s );
 
             //! find all occurences
