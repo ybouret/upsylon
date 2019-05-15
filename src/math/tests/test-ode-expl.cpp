@@ -156,7 +156,7 @@ namespace
                                            L,
                                            0.10,
                                            NULL);
-            std::cerr << "lineary run     : " << y << std::endl;
+            std::cerr << "linear  run     : " << y << std::endl;
             y[1] = 1;
             y[2] = 0;
             ODE::LSSI::LogarithmicRun<T,SOLVER>(odeint,

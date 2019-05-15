@@ -66,10 +66,14 @@ Y_UTEST(explode)
 
     // get a solver
     IODE::Solver                    solver  = ODE::DriverCK<double>::New();
+
     // create a problem ( here using new Something() )
     IODE::Embedded<Something>::Type problem;
+
     // create the integrator
     IODE                            iode(solver,problem.pointer);
+
+    // tune the solver if needed
     solver->eps = 1e-5;
     
     const double dx = 0.01;
@@ -83,6 +87,17 @@ Y_UTEST(explode)
             fp("%g %g\n",x,Y[1]);
         }
     }
+
+    {
+        std::cerr << "Compute Full/Log" << std::endl;
+        ios::ocstream fp("iode_flog.dat");
+        for(double x=dx;x<=10;x+=dx)
+        {
+            const array<double> &Y = iode.lnRun(dx,x);
+            fp("%g %g\n",x,Y[1]);
+        }
+    }
+
     
     {
         std::cerr << "Compute Fast" << std::endl;
