@@ -25,7 +25,7 @@ namespace upsylon
         template <> const real_t numeric<real_t>::gold         = REAL(0.5) * ( REAL(sqrt)( REAL(5.0) ) + REAL(1.0) );
 
 
-        real_t __atan2( real_t y, real_t x )
+        real_t atan2_of( real_t y, real_t x )
         {
             static const real_t full_pi = numeric<real_t>::pi;
             static const real_t half_pi = numeric<real_t>::half_pi;
@@ -48,7 +48,7 @@ namespace upsylon
             }
         }
 
-        real_t __angle_of( real_t c, real_t s ) throw()
+        real_t angle_of( real_t c, real_t s ) throw()
         {
             std::cerr << "c=" << c << ", s=" << s << std::endl;
             const real_t den = hypotenuse_of(c,s); assert(den>REAL(0.0));

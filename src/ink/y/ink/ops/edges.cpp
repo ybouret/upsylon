@@ -149,7 +149,7 @@ namespace upsylon
                     const float gx = Gx[x];
                     const float gy = Gy[x];
                     const float g  = sqrt(gx*gx+gy*gy);
-                    const float a  = math::__atan2(gy,gx);
+                    const float a  = math::atan2_of(gy,gx);
 
                     G[x] = g;
                     A[x] = a;

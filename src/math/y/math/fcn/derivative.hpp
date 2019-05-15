@@ -2,7 +2,7 @@
 #ifndef Y_MATH_FCN_DERIVATIVE_INCLUDED
 #define Y_MATH_FCN_DERIVATIVE_INCLUDED 1
 
-#include "y/math/round.hpp"
+#include "y/math/timings.hpp"
 #include "y/container/matrix.hpp"
 #include "y/exceptions.hpp"
 #include <cerrno>
@@ -37,7 +37,7 @@ namespace upsylon
             //! step scaling w.r.t characteristic scale of 1
             static inline T unit_step_size() throw()
             {
-                static const T value = log_round_floor( pow_of(numeric<T>::epsilon,T(1.0)/T(3.0)) );
+                static const T value = timings::round_floor<T>( pow_of(numeric<T>::epsilon,T(1.0)/T(3.0)) );
                 return value;
             }
 
@@ -90,7 +90,7 @@ namespace upsylon
             template <typename FUNC>
             inline T diff( FUNC &f, const T x, T h )
             {
-                static const T max_ftol = log_round_ceil( sqrt_of( numeric<T>::epsilon ) );
+                static const T max_ftol = timings::round_ceil<T>( sqrt_of( numeric<T>::epsilon ) );
                 static const T CON = T(1.2);
                 // initialize
                 T err  = 0;
@@ -152,7 +152,7 @@ namespace upsylon
             template <typename FUNC>
             inline T diff2( FUNC &f, const T x, T h )
             {
-                static const T max_ftol = log_round_ceil( sqrt_of( numeric<T>::epsilon ) );
+                static const T max_ftol = timings::round_ceil<T>( sqrt_of( numeric<T>::epsilon ) );
                 static const T CON(1.2);
                 // initialize
                 const T f0     = f(x);

@@ -114,7 +114,7 @@ Y_UTEST(fit_conic)
             std::cerr << "radii =" << fc.radii  << std::endl;
             const matrix<double> &R = fc.rotation();
             std::cerr << "rotation=" << R << std::endl;
-            const double angle = __angle_of(R[1][1], R[2][1]);
+            const double angle = angle_of(R[1][1], R[2][1]);
             std::cerr << "angle=" << rad2deg(angle) << " / phi=" << rad2deg(phi) << ", delta=" << rad2deg(fabs_of(angle-phi)) << std::endl;
 
             ios::ocstream fp("ellipse.dat");

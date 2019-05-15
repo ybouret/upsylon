@@ -116,11 +116,12 @@ namespace upsylon
 
         inline float  sin_of( const float  x ) throw() { return sinf(x); } //!< sine
         inline double sin_of( const double x ) throw() { return sin(x);  } //!< sine
-        inline float  __atan(const float  x) { return atanf(x); } //!< arc tangent
-        inline double __atan(const double x) { return atan(x); }  //!< arc tangent
 
-        float  __atan2(float y,float x);     //!< in \f$]-\pi,\pi]\f$
-        double __atan2(double y,double x);   //!< in \f$]-\pi,\pi]\f$
+        inline float  atan_of(const float  x) { return atanf(x); } //!< arc tangent
+        inline double atan_of(const double x) { return atan(x); }  //!< arc tangent
+
+        float  atan2_of(float y,float x);     //!< in \f$]-\pi,\pi]\f$
+        double atan2_of(double y,double x);   //!< in \f$]-\pi,\pi]\f$
 
         template <typename T>
         static inline bool almost_equal( const T X, const T Y) throw()
@@ -164,8 +165,8 @@ namespace upsylon
         template <typename T>
         inline typename real_for<T>::type __abs( const T &f ) { return fabs_of(f); } //!< absolute value operator
 
-        float  __angle_of(float  c,float  s) throw(); //!< c=cos(phi), s=sin(phi)
-        double __angle_of(double c,double s) throw(); //!< c=cos(phi), s=sin(phi)
+        float  angle_of(float  c,float  s) throw(); //!< c=cos(phi), s=sin(phi)
+        double angle_of(double c,double s) throw(); //!< c=cos(phi), s=sin(phi)
 
 
     }

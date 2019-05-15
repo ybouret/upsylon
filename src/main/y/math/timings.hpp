@@ -57,7 +57,7 @@ namespace upsylon
                 return iter;
             }
 
-            //! one call setup
+            //! one call setup to adjust timings
             template <typename T> static inline
             size_t setup(T      &t_run,
                          T      &dt,

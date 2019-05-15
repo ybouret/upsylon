@@ -1,11 +1,11 @@
 #include "y/math/utils.hpp"
 #include "y/math/show.hpp"
-#include "y/math/round.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/list.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
 #include "y/math/gaussian.hpp"
+#include "y/math/timings.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -14,8 +14,8 @@ namespace
 {
 #define ROUND(VAR) \
 std::cerr << #VAR << "=" << VAR << std::endl; \
-std::cerr << "\tlog_round_floor=" << log_round_floor(VAR) << std::endl;\
-std::cerr << "\tlog_round_ceil =" << log_round_ceil(VAR) << std::endl
+std::cerr << "\tlog_round_floor=" << timings::round_floor(VAR) << std::endl;\
+std::cerr << "\tlog_round_ceil =" << timings::round_ceil(VAR) << std::endl
 
     template <typename T>
     void do_round()
@@ -85,16 +85,17 @@ Y_UTEST(types)
     
     math::show::info();
 
-    std::cerr << math::log_round_floor(0.12) << std::endl;
-    std::cerr << math::log_round_ceil(0.12)  << std::endl;
+    std::cerr << timings::round_floor(0.12) << std::endl;
+    std::cerr << timings::round_ceil(0.12)  << std::endl;
 
-    float dt   = 0.11f;
-    float save = 0.3f;
+    float dt    = 0.11f;
+    float save  = 0.3f;
+    float t_run = 1.0f;
     std::cerr << "dt=" << dt << ", save=" << save << std::endl;
-    const size_t every = simulation_save_every(dt,save);
+    const size_t every = timings::save_every(dt,save);
     std::cerr << "dt=" << dt << ", save=" << save << " every " << every << std::endl;
-    const size_t iters = simulation_iter(1.0f, dt, every);
-    std::cerr << "Running #" << iters << std::endl;
+    const size_t iters = timings::iterations(t_run, dt, every);
+    std::cerr << "Running #" << iters << " up to " << t_run << std::endl;
     
     
 }
