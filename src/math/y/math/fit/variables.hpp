@@ -217,11 +217,7 @@ namespace upsylon
                     ld<bool>(flags,id,true);
                 }
 
-                //! boolean helpers, set false
-                inline void off( array<bool> &flags, const string &id ) const
-                {
-                    ld<bool>(flags,id,false);
-                }
+
 
                 //! boolean helpers, reset and set true
                 inline void only_on(array<bool> &flags, const string &id ) const
@@ -236,9 +232,28 @@ namespace upsylon
                 }
 
                 //! boolean helpers, set false
+                inline void off( array<bool> &flags, const string &id ) const
+                {
+                    ld<bool>(flags,id,false);
+                }
+
+                //! boolean helpers, set false
                 inline void off( array<bool> &flags, const char *id ) const
                 {
                     ld<bool>(flags,id,false);
+                }
+
+
+                //! boolean helpers, all true then set false
+                inline void only_off( array<bool> &flags, const string &id ) const
+                {
+                    flags.ld(true); off(flags,id);
+                }
+
+                //! boolean helpers, all true then set false, wrapper
+                inline void only_off( array<bool> &flags, const char *id ) const
+                {
+                    flags.ld(true); off(flags,id);
                 }
 
                 //! get max(name.size())
