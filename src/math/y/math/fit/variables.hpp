@@ -223,6 +223,18 @@ namespace upsylon
                     ld<bool>(flags,id,false);
                 }
 
+                //! boolean helpers, reset and set true
+                inline void only_on(array<bool> &flags, const string &id ) const
+                {
+                    flags.ld(false); on(flags,id);
+                }
+
+                //! boolean helpers, reset and set true, wrapper
+                inline void only_on(array<bool> &flags, const char *id ) const
+                {
+                    flags.ld(false); on(flags,id);
+                }
+
                 //! boolean helpers, set false
                 inline void off( array<bool> &flags, const char *id ) const
                 {
