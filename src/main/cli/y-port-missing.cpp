@@ -27,122 +27,129 @@ Y_PROGRAM_START()
     vfs         &fs  = local_fs::instance();
 
     // extract all deps
+    try
     {
-
-        // forge command
-        string       cmd = "port deps";
-        for(int iarg=1;iarg<argc;++iarg)
         {
-            cmd << ' ' << argv[iarg];
-        }
 
-        // forge temporary name
-        fs.try_remove_file(tmp);
-        cmd << " &> " << tmp;
-        
-        // execute cmd
-        {
-            ios::ocstream::overwrite(tmp);
-            const int ret = system(*cmd);
-            if(0!=ret)
+            // forge command
+            string       cmd = "port deps";
+            for(int iarg=1;iarg<argc;++iarg)
             {
-                throw exception("invalid return code from '%s'", *cmd);
+                cmd << ' ' << argv[iarg];
             }
-        }
 
-        // parse result
-        {
-            Lang::Matching isDep = "[Dd]ependencies:";
-            string line;
-            ios::icstream fp(tmp);
-            while( fp.gets(line) )
+            // forge temporary name
+            fs.try_remove_file(tmp);
+            cmd << " &> " << tmp;
+
+            // execute cmd
             {
-                if( isDep.partly(line) )
+                ios::ocstream::overwrite(tmp);
+                const int ret = system(*cmd);
+                if(0!=ret)
                 {
-                    const char *org = *line;
-                    const char *sep = strchr(org, ':');
-                    if(!sep)
+                    throw exception("invalid return code from '%s'", *cmd);
+                }
+            }
+
+            // parse result
+            {
+                Lang::Matching isDep = "[Dd]ependencies:";
+                string line;
+                ios::icstream fp(tmp);
+                while( fp.gets(line) )
+                {
+                    if( isDep.partly(line) )
                     {
-                        throw exception("unexpected failure in looking for ':'");
-                    }
-                    line.skip(sep-org+2);
-                    tokenizer<char> tkn(line);
-                    while( tkn.next(isSepV1) )
-                    {
-                        const string dep = tkn.to_string();
-                        deps.push_back(dep);
+                        const char *org = *line;
+                        const char *sep = strchr(org, ':');
+                        if(!sep)
+                        {
+                            throw exception("unexpected failure in looking for ':'");
+                        }
+                        line.skip(sep-org+2);
+                        tokenizer<char> tkn(line);
+                        while( tkn.next(isSepV1) )
+                        {
+                            const string dep = tkn.to_string();
+                            deps.push_back(dep);
+                        }
                     }
                 }
             }
+            fs.try_remove_file(tmp);
         }
-        fs.try_remove_file(tmp);
-    }
-    unique(deps);
+        unique(deps);
 
-    if(deps.size())
-    {
-        vector<string,memory::pooled> installed(deps.size(),as_capacity);
-
-        // query
+        if(deps.size())
         {
-            string cmd = "port installed";
+            vector<string,memory::pooled> installed(deps.size(),as_capacity);
+
+            // query
+            {
+                string cmd = "port installed";
+                for(size_t i=1;i<=deps.size();++i)
+                {
+                    cmd << ' ' << deps[i];
+                }
+                cmd << " &> " << tmp;
+                ios::ocstream::overwrite(tmp);
+                {
+                    const int ret = system( *cmd );
+                    if( ret != 0 ) throw exception("couldn't query dependencies!!!");
+                }
+            }
+
+            // parse installed
+            {
+                ios::icstream fp(tmp);
+                string line;
+                if(!fp.gets(line)) throw exception("no header line!!!");
+
+                while( fp.gets(line) )
+                {
+                    tokenizer<char> tkn(line);
+                    if( !tkn.next(isSepV2) )
+                    {
+                        throw exception("missing port name!");
+                    }
+                    const string id = tkn.to_string();
+                    installed.push_back(id);
+                }
+
+            }
+            fs.try_remove_file(tmp);
+            unique(installed);
+
+            // cross databases
+            size_t count = 0;
             for(size_t i=1;i<=deps.size();++i)
             {
-                cmd << ' ' << deps[i];
-            }
-            cmd << " &> " << tmp;
-            ios::ocstream::overwrite(tmp);
-            {
-                const int ret = system( *cmd );
-                if( ret != 0 ) throw exception("couldn't query dependencies!!!");
-            }
-        }
+                const string &dep   = deps[i];
+                bool          found = false;
 
-        // parse installed
-        {
-            ios::icstream fp(tmp);
-            string line;
-            if(!fp.gets(line)) throw exception("no header line!!!");
-
-            while( fp.gets(line) )
-            {
-                tokenizer<char> tkn(line);
-                if( !tkn.next(isSepV2) )
+                for(size_t j=1;j<=installed.size();++j)
                 {
-                    throw exception("missing port name!");
+                    if(dep==installed[j])
+                    {
+                        found = true;
+                        break;
+                    }
                 }
-                const string id = tkn.to_string();
-                installed.push_back(id);
-            }
-
-        }
-        fs.try_remove_file(tmp);
-        unique(installed);
-
-        // cross databases
-        size_t count = 0;
-        for(size_t i=1;i<=deps.size();++i)
-        {
-            const string &dep   = deps[i];
-            bool          found = false;
-
-            for(size_t j=1;j<=installed.size();++j)
-            {
-                if(dep==installed[j])
+                if(!found)
                 {
-                    found = true;
-                    break;
+                    if(count++>0) std::cout << ' ';
+                    std::cout << dep;
                 }
             }
-            if(!found)
-            {
-                if(count++>0) std::cout << ' ';
-                std::cout << dep;
-            }
+            if(count>0) std::cout << std::endl;
         }
-        if(count>0) std::cout << std::endl;
     }
-
+    catch(...)
+    {
+        fs.try_remove_file(tmp);
+        throw;
+    }
 #else
     throw exception("%s not valid on %s", program, platform() );
 #endif
