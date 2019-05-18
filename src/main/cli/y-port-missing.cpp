@@ -10,6 +10,7 @@
 
 #if defined(Y_BSD)
 #include <unistd.h>
+#include <cstdlib>
 #endif
 using namespace upsylon;
 
