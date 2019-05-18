@@ -8,7 +8,7 @@
 #include "y/string/tokenizer.hpp"
 #include "y/sort/unique.hpp"
 
-#if defined(YBSD)
+#if defined(Y_BSD)
 #include <unistd.h>
 #endif
 using namespace upsylon;
