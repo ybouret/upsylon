@@ -15,8 +15,8 @@
 using namespace upsylon;
 
 
-static bool isSepV1( const char C ) { return C == ' ' || C == ','; }
-static bool isSepV2( const char C ) { return C == ' '; }
+static inline bool isSepV1( const char C ) { return C == ' ' || C == ','; }
+static inline bool isSepV2( const char C ) { return C == ' '; }
 
 Y_PROGRAM_START()
 {
