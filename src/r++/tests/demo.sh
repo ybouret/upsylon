@@ -1,3 +1,3 @@
-R CMD SHLIB --preclean --clean vecsum.cpp 
-R --no-save --slave < vecsum.R 
+R CMD SHLIB --preclean --clean rmodule.cpp 
+R --no-save --slave < rmodule.R 
 
