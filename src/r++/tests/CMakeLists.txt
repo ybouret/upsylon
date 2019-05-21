@@ -23,6 +23,12 @@ IF(Y_LINUX)
 	ENDIF()
 ENDIF()
 
+IF(Y_DARWIN)
+	IF(Y_GNU)
+	SET(R_STDCXX "/opt/local/lib/libgcc/libstdc++.6.dylib")
+	ENDIF()
+ENDIF()
+
 MESSAGE( STATUS "R_STDCXX=<${R_STDCXX}>" )
 ADD_CUSTOM_TARGET(rmodule
 COMMAND ${R} CMD SHLIB --preclean --clean ${HERE}/rmodule.cpp $<TARGET_FILE:y> ${R_STDCXX}
