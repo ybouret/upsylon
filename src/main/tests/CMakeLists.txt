@@ -138,7 +138,7 @@ ADD_TEST(mp:q         test-main mpq)
 ADD_TEST(mp:pfd       test-main pfd 10 20 30 40 50)
 ADD_TEST(mp:pfq       test-main pfq 110 221 348 417)
 ADD_TEST(mp:prm       test-main mprm 512)
-ADD_TEST(mp:prm1000   test-main mprm1000 ${HERE}/../1000.txt)
+ADD_TEST(mp:prm1000   test-main mprm1000 ${HERE}/1000.txt)
 ADD_TEST(mp:ilog      test-main ilog)
 
 
