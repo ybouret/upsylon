@@ -69,7 +69,7 @@ Y_UTEST(dyn)
 
         il->graphViz("il0.dot");
         auto_ptr<Syntax::Parser> P = dynGen.build( *il, &symbols );
-        //il->graphViz("il1.dot");
+        
         std::cerr << "symbols.terminals=" << symbols.terminals << std::endl;
         std::cerr << "symbols.internals=" << symbols.internals << std::endl;
 
@@ -87,12 +87,7 @@ Y_UTEST(dyn)
             std::cerr << "rule '" << di.rule.name << "' -> " << H(di.rule.name) << std::endl;
         }
 
-        if(false)
-        {
-            MatchString cut = "lxr|plg|cmd|aka";
-            XNode::RemoveFrom(*g,cut);
-            g->graphViz( "dynamo_cut.dot" );
-        }
+
 
         if(argc>2)
         {

@@ -7,7 +7,7 @@
 #include <iostream>
 
 //! test prolog
-#define Y_UTEST(NAME)                            \
+#define Y_UTEST(NAME)                             \
 int upsylon_test_##NAME(int argc, char **argv) {  \
 (void)argc; (void)argv;
 
@@ -15,13 +15,14 @@ int upsylon_test_##NAME(int argc, char **argv) {  \
 #define Y_UTEST_DONE() return 0; }
 
 //! display and check
-#define Y_CHECK(CODE) do {                           \
-std::cerr << "CHECK: " #CODE << std::endl;            \
+#define Y_CHECK(CODE) do {                             \
+std::cerr << "CHECK << " #CODE " >>";                  \
 if(!(CODE)) throw upsylon::exception("FAILED " #CODE); \
+std::cerr << " -> PASSED" << std::endl;                \
 } while(false)
 
 //! just assert
-#define Y_ASSERT(CODE) do {                             \
+#define Y_ASSERT(CODE) do {                              \
 if(!(CODE)) throw upsylon::exception("FAILED " #CODE);   \
 } while(false)
 
