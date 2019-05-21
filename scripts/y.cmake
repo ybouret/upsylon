@@ -125,11 +125,11 @@ IF( "${Y_CC}" MATCHES "^gcc.*" )
 		#SET(SPECIFIC_CXX_FLAGS "${SPECIFIC_CXX_FLAGS} -std=c++11 -U__STDC_NO_ATOMICS__")
 	ENDIF()
         
-	SET(COMMON_C_FLAGS        "-Wall -Wextra -pipe" )
+	SET(COMMON_C_FLAGS        "-Wall -Wextra -pipe -fPIC" )
 	SET(CMAKE_C_FLAGS_DEBUG   "${COMMON_C_FLAGS} -g -O0" )
 	SET(CMAKE_C_FLAGS_RELEASE "${COMMON_C_FLAGS} -O2 -DNDEBUG=1 -D_FORTIFY_SOURCE=2")
 	
-	SET(COMMON_CXX_FLAGS        "-Wall -Wextra -pipe -fexceptions -Weffc++ ${SPECIFIC_CXX_FLAGS}" )
+	SET(COMMON_CXX_FLAGS        "-Wall -Wextra -pipe -fexceptions -Weffc++ ${SPECIFIC_CXX_FLAGS} -fPIC" )
 	SET(CMAKE_CXX_FLAGS_DEBUG   "${COMMON_CXX_FLAGS} -g -O0" )
 	SET(CMAKE_CXX_FLAGS_RELEASE "${COMMON_CXX_FLAGS} -O2 -DNDEBUG=1 -D_FORTIFY_SOURCE=2")
 ENDIF()
@@ -144,11 +144,11 @@ IF( "${Y_CC}" MATCHES "^clang.*" )
 	SET(Y_CLANG          ON)
 	Y_FIND_COMPILER_VERSION()
 
-	SET(COMMON_C_FLAGS        "-Wall -Wextra -pipe" )
+	SET(COMMON_C_FLAGS        "-Wall -Wextra -pipe -fPIC" )
 	SET(CMAKE_C_FLAGS_DEBUG   "${COMMON_C_FLAGS} -g -O0" )
 	SET(CMAKE_C_FLAGS_RELEASE "${COMMON_C_FLAGS} -O2 -DNDEBUG=1 -D_FORTIFY_SOURCE=2")
 
-	SET(COMMON_CXX_FLAGS        "-Wall -Wextra -pipe -fexceptions -Weffc++")
+	SET(COMMON_CXX_FLAGS        "-Wall -Wextra -pipe -fexceptions -Weffc++ -fPIC")
 	SET(CMAKE_CXX_FLAGS_DEBUG   "${COMMON_CXX_FLAGS} -g -O0" )
 	SET(CMAKE_CXX_FLAGS_RELEASE "${COMMON_CXX_FLAGS} -O2 -DNDEBUG=1 -D_FORTIFY_SOURCE=2")
 	
