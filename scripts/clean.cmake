@@ -33,8 +33,8 @@ FILE(GLOB_RECURSE tmp "src/*~")
 SET(to_remove ${to_remove} ${tmp})
 
 #specific stuff
-LIST( APPEND to_remove "src/R++/rcode.so"  )
-LIST( APPEND to_remove "src/R++/rcode.dll" )
+LIST( APPEND to_remove "src/r++/tests/rmodule.so"  )
+LIST( APPEND to_remove "src/r++/tests/rmodule.dll" )
 
 FOREACH(item IN LISTS to_remove)
 	IF(EXISTS "${item}")
