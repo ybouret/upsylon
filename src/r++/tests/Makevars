@@ -1,0 +1,5 @@
+Y_INCLUDE    := -I.. -I../../main
+
+
+PKG_CXXFLAGS += $(Y_INCLUDE)
+PKG_CFLAGS   += $(Y_INCLUDE)

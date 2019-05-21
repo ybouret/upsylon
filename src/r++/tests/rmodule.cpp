@@ -1,3 +1,4 @@
+#include "y/r++/r.hpp"
 #include <R.h>
 #include <Rinternals.h>
 
