@@ -1,6 +1,5 @@
 #include "y/r++/r.hpp"
-#include <R.h>
-#include <Rinternals.h>
+
 
 extern "C" SEXP vecsum(SEXP Rvec)
 {
