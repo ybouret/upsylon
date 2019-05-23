@@ -30,6 +30,34 @@ Y_UTEST(init)
     MPI.print(stderr, "final   value=%d\n", value);
 
 
+    std::cerr << "checking data types..." << std::endl;
+    (void) MPI.get_data_type_for<char>();
+    (void) MPI.get_data_type_for<short>();
+    (void) MPI.get_data_type_for<int>();
+    (void) MPI.get_data_type_for<long>();
+    (void) MPI.get_data_type_for<long long>();
+    (void) MPI.get_data_type_for<ptrdiff_t>();
+    (void) MPI.get_data_type_for<int8_t>();
+    (void) MPI.get_data_type_for<int16_t>();
+    (void) MPI.get_data_type_for<int32_t>();
+    (void) MPI.get_data_type_for<int64_t>();
+
+    (void) MPI.get_data_type_for<unsigned char>();
+    (void) MPI.get_data_type_for<unsigned short>();
+    (void) MPI.get_data_type_for<unsigned int>();
+    (void) MPI.get_data_type_for<unsigned long>();
+    (void) MPI.get_data_type_for<unsigned long long>();
+    (void) MPI.get_data_type_for<size_t>();
+    (void) MPI.get_data_type_for<uint8_t>();
+    (void) MPI.get_data_type_for<uint16_t>();
+    (void) MPI.get_data_type_for<uint32_t>();
+    (void) MPI.get_data_type_for<uint64_t>();
+
+    (void) MPI.get_data_type_for<float>();
+    (void) MPI.get_data_type_for<double>();
+    std::cerr << "...checked" << std::endl;
+
+
 
 }
 Y_UTEST_DONE()
