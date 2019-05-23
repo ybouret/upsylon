@@ -30,7 +30,7 @@ Y_UTEST(init)
     MPI.print(stderr, "final   value=%d\n", value);
 
 
-    std::cerr << "checking data types..." << std::endl;
+    MPI.print(stderr,"Checking Data Type\n");
     (void) MPI.get_data_type_for<char>();
     (void) MPI.get_data_type_for<short>();
     (void) MPI.get_data_type_for<int>();
@@ -55,10 +55,7 @@ Y_UTEST(init)
 
     (void) MPI.get_data_type_for<float>();
     (void) MPI.get_data_type_for<double>();
-    std::cerr << "...checked" << std::endl;
-
-
-
+    MPI.print(stderr,"Checking Data Type: OK\n");
 }
 Y_UTEST_DONE()
 
