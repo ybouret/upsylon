@@ -228,29 +228,7 @@ default: break;\
             __register<float >(types,MPI_FLOAT);
             __register<double>(types,MPI_DOUBLE);
 
-            //std::cerr << "types=" << types << std::endl;
 
-
-#if 0
-            __register<int8_t >(types,MPI_INT8_T);
-            __register<int16_t>(types,MPI_INT16_T);
-            __register<int32_t>(types,MPI_INT32_T);
-            __register<int64_t>(types,MPI_INT64_T);
-
-            __register<uint8_t >(types,MPI_UINT8_T);
-            __register<uint16_t>(types,MPI_UINT16_T);
-            __register<uint32_t>(types,MPI_UINT32_T);
-            __register<uint64_t>(types,MPI_UINT64_T);
-            {
-                const MPI_Datatype idt[4] = {MPI_INT8_T,MPI_INT16_T,MPI_INT32_T,MPI_INT64_T};
-                __register<ptrdiff_t>(types,idt[ ilog2<sizeof(ptrdiff_t)>::value ]);
-            }
-
-            {
-                const MPI_Datatype udt[4] = {MPI_UINT8_T,MPI_UINT16_T,MPI_UINT32_T,MPI_UINT64_T};
-                __register<size_t>(types,udt[ ilog2<sizeof(ptrdiff_t)>::value ]);
-            }
-#endif
 
         }
         catch(...)
