@@ -13,15 +13,7 @@ namespace upsylon
     {
         template <typename T> struct Info;
 
-        template <> struct Info<double> {
-            enum { Value = REALSXP };
-            static inline double *Get(SEXP Rvec) throw() { return REAL(Rvec); }
-        };
 
-        template <> struct Info<int> {
-            enum { Value = INTSXP  };
-            static inline int *Get(SEXP Rvec) throw() { return INTEGER(Rvec); }
-        };
 
         template <typename T>
         class Vector : public lightweight_array<T>
@@ -47,6 +39,15 @@ namespace upsylon
 
     };
 
+    template <> struct R::Info<double> {
+        enum { Value = REALSXP };
+        static inline double *Get(SEXP Rvec) throw() { return REAL(Rvec); }
+    };
+
+    template <> struct R::Info<int> {
+        enum { Value = INTSXP  };
+        static inline int *Get(SEXP Rvec) throw() { return INTEGER(Rvec); }
+    };
 }
 
 #endif
