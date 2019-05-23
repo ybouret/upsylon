@@ -1,12 +1,12 @@
 #include "y/r++/r.hpp"
+#include "y/sort/sorted-sum.hpp"
 
+using namespace upsylon;
 
 extern "C" SEXP vecsum(SEXP Rvec)
 {
-	const double *a = REAL(Rvec);
-	const size_t  n = length(Rvec);
-	double        sum = 0;
-	for(size_t i=0;i<n;++i) sum += a[i];
+    R::Vector<double> a(Rvec);
+    const double sum = sorted_sum(a);
 	Rprintf("sum=%g\n",sum);
 	return R_NilValue;
 }

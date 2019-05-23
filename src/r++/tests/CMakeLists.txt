@@ -5,8 +5,9 @@ SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
 ADD_CUSTOM_TARGET(rmodule ALL
 COMMAND ${R} CMD SHLIB --preclean --clean ${HERE}/rmodule.cpp $<TARGET_FILE:y> ${R_STDCXX}
 WORKING_DIRECTORY ${HERE}
-SOURCES rmodule.cpp ../y/r++/r.hpp
-DEPENDS ${HERE}/Makevars y
+SOURCES rmodule.cpp ../y/r++/r.hpp ${HERE}/rmodule.R ${HERE}/Makevars
+DEPENDS
+y
 COMMENT "Building R module"
 )
 
