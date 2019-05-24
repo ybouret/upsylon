@@ -1,5 +1,4 @@
 #include "y/mpi/mpi.hpp"
-#include "y/code/ilog2.hpp"
 #include <cstdarg>
 #include <cerrno>
 
