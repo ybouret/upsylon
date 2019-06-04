@@ -10,23 +10,15 @@ namespace upsylon
                                      const shared_disk_buffer &sdb ) :
         istream(),
         disk_stream( src, sdb ),
-        rdf( src ),
-        curr( buf->entry ),
-        next( curr ),
-        last( curr + buf->bytes )
+        rdf( src )
         {
-            assert( !available() );
         }
 
         disk_istream:: ~disk_istream() throw()
         {
         }
 
-        size_t disk_istream:: available() const throw()
-        {
-            assert(next>=curr);
-            return static_cast<size_t>(next-curr);
-        }
+
 
         bool disk_istream:: load()
         {
@@ -53,7 +45,7 @@ namespace upsylon
                 {
                     throw exception("disk_istream.store: full buffer");
                 }
-                const size_t n = available();
+                const size_t n = used();
                 memmove(curr+1,curr,n);
                 ++curr;
                 ++next;
@@ -66,24 +58,16 @@ namespace upsylon
             *(--curr) = C;
         }
 
-        void disk_istream:: defrag() throw()
-        {
-            const size_t n = available();
-            memmove(buf->entry, curr, n);
-            curr = buf->entry;
-            next = curr+n;
-            assert(available()==n);
-        }
-
+        
         bool disk_istream:: query(char &C)
         {
-            if(!available() && !load() )
+            if(!used() && !load() )
             {
                 return false;
             }
             else
             {
-                assert( available() > 0 );
+                assert( used() > 0 );
                 C = *(curr++);
                 return true;
             }

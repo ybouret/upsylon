@@ -17,18 +17,13 @@ namespace upsylon
             explicit disk_istream(const readable_disk_file &src,
                                   const shared_disk_buffer &sdb);
 
-            size_t available() const throw();
             virtual void store(char  C);
             virtual bool query(char &C);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(disk_istream);
             readable_disk_file rdf;
-            uint8_t           *curr;
-            uint8_t           *next;
-            const uint8_t     *last;
-
-            void defrag() throw();
+            
             void push1();
 
             bool load();

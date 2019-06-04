@@ -1,5 +1,8 @@
 #include "y/fs/disk-istream.hpp"
+#include "y/fs/disk-ostream.hpp"
 #include "y/utest/run.hpp"
+#include "y/memory/pooled.hpp"
+
 #include <cstdio>
 
 using namespace upsylon;
@@ -56,16 +59,23 @@ Y_UTEST(disk_file)
     }
 
 
-    ios::shared_disk_buffer sh = new ios::disk_buffer<>(BUFSIZ);
+    ios::shared_disk_buffer ish = new ios::disk_buffer<>(BUFSIZ);
+    ios::shared_disk_buffer osh = new ios::disk_buffer<memory::pooled>(32);
+
     if(argc>1)
     {
         ios::readable_disk_file src( argv[1] );
-        ios::disk_istream       inp(src,sh);
+        ios::disk_istream       inp(src,ish);
+        const string            outname = "wdf.bin";
+        ios::writable_disk_file tgt(outname,false);
+        ios::disk_ostream       out(tgt,osh );
         string line;
         while( inp.gets(line) )
         {
             std::cerr << line << std::endl;
+            out << line << '\n';
         }
+        out.flush();
     }
 }
 Y_UTEST_DONE()

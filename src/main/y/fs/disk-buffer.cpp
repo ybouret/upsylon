@@ -18,9 +18,13 @@ namespace upsylon
         }
 
 
+
         disk_stream:: disk_stream( const disk_file &df, const shared_disk_buffer &sdb ) :
         pos( ((disk_file &)df)->tell() ),
-        buf( sdb )
+        buf( sdb ),
+        curr(buf->entry),
+        next(curr),
+        last(curr+buf->bytes)
         {
         }
 
@@ -28,6 +32,20 @@ namespace upsylon
         {
         }
 
+
+        size_t disk_stream:: used() const throw()
+        {
+            return static_cast<size_t>(next-curr);
+        }
+
+        void disk_stream:: defrag() throw()
+        {
+            const size_t n = used();
+            memmove(buf->entry, curr, n);
+            curr = buf->entry;
+            next = curr+n;
+            assert(used()==n);
+        }
 
     }
 

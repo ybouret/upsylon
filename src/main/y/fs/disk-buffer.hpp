@@ -55,10 +55,15 @@ namespace upsylon
         public:
             virtual ~disk_stream() throw();
 
-
+            size_t used() const throw();
+            void   defrag() throw();
+            
         protected:
             offset_t           pos;
             shared_disk_buffer buf;
+            uint8_t           *curr;
+            uint8_t           *next;
+            const uint8_t     *last;
 
             explicit disk_stream( const disk_file &df, const shared_disk_buffer &sdb );
             
