@@ -19,12 +19,14 @@ namespace upsylon
             virtual ~on_disk() throw();                                     //!< destructor
             explicit on_disk( const string &filename, const unsigned mode); //!< open a local file
             explicit on_disk( const char   *filename, const unsigned mode); //!< open wrapper
-            concurrent::mutex        access;                                //!< mutex
+            concurrent::mutex access;                                       //!< mutex
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(on_disk);
             friend class disk_file;
         };
+
+
 
         //! disk file pointer
         class disk_file : public on_disk::pointer
@@ -40,6 +42,7 @@ namespace upsylon
         private:
             Y_DISABLE_ASSIGN(disk_file);
         };
+
 
         //! random access disk file
         class rw_disk_file : public disk_file
@@ -82,8 +85,8 @@ namespace upsylon
             explicit writable_disk_file( const string &filename, const bool append ); //!< open to write, truncate if not append
             explicit writable_disk_file( const char   *filename, const bool append ); //!< open wrapper
             writable_disk_file(const writable_disk_file &other) throw();              //!< shared copy
-            writable_disk_file(const rw_disk_file &other) throw(); //!< shared copy
-            size_t put(const void *data, const size_t size); //!< put at most size bytes
+            writable_disk_file(const rw_disk_file &other) throw();                    //!< shared copy
+            size_t put(const void *data, const size_t size);                          //!< put at most size bytes
 
         private:
             Y_DISABLE_ASSIGN(writable_disk_file);
