@@ -20,13 +20,7 @@ namespace upsylon
         access()
         {
         }
-
-        on_disk::r_file::  r_file() throw() {}
-        on_disk::r_file:: ~r_file() throw() {}
-
-        on_disk::w_file::  w_file() throw() {}
-        on_disk::w_file:: ~w_file() throw() {}
-
+        
     }
 }
 
