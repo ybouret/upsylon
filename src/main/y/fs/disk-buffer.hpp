@@ -49,7 +49,23 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(disk_buffer);
         };
 
-    
+
+        class disk_stream
+        {
+        public:
+            virtual ~disk_stream() throw();
+
+
+        protected:
+            offset_t           pos;
+            shared_disk_buffer buf;
+
+            explicit disk_stream( const disk_file &df, const shared_disk_buffer &sdb );
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(disk_stream);
+        };
+
         
     }
 }

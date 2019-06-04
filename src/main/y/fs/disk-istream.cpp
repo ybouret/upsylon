@@ -9,9 +9,8 @@ namespace upsylon
         disk_istream :: disk_istream(const readable_disk_file &src,
                                      const shared_disk_buffer &sdb ) :
         istream(),
+        disk_stream( src, sdb ),
         rdf( src ),
-        pos( rdf->tell() ),
-        buf( sdb ),
         curr( buf->entry ),
         next( curr ),
         last( curr + buf->bytes )

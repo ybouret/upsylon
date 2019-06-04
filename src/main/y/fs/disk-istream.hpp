@@ -10,7 +10,7 @@ namespace upsylon
 {
     namespace ios
     {
-        class disk_istream : public istream
+        class disk_istream : public istream, public disk_stream
         {
         public:
             virtual ~disk_istream() throw();
@@ -24,8 +24,6 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(disk_istream);
             readable_disk_file rdf;
-            ios::offset_t      pos;
-            shared_disk_buffer buf;
             uint8_t           *curr;
             uint8_t           *next;
             const uint8_t     *last;
