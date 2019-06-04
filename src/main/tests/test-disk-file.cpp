@@ -1,5 +1,6 @@
 #include "y/fs/disk-istream.hpp"
 #include "y/utest/run.hpp"
+#include <cstdio>
 
 using namespace upsylon;
 
@@ -55,7 +56,7 @@ Y_UTEST(disk_file)
     }
 
 
-    ios::shared_disk_buffer sh = new ios::disk_buffer<>(100);
+    ios::shared_disk_buffer sh = new ios::disk_buffer<>(BUFSIZ);
     if(argc>1)
     {
         ios::readable_disk_file src( argv[1] );
