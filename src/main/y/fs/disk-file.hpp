@@ -63,7 +63,8 @@ namespace upsylon
             virtual ~writable_disk_file() throw();                                    //!< destructor
             explicit writable_disk_file( const string &filename, const bool append ); //!< open to write, truncate if not append
             explicit writable_disk_file( const char   *filename, const bool append ); //!< open wrapper
-
+            writable_disk_file(const writable_disk_file &other) throw();              //!< shared copy
+            
             size_t put(const void *data, const size_t size);
 
         private:

@@ -125,6 +125,12 @@ namespace upsylon
             return done;
         }
 
+        writable_disk_file:: writable_disk_file(const writable_disk_file &other) throw() :
+        disk_file(other)
+        {
+        }
+        
+
     }
 }
 
