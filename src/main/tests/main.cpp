@@ -95,6 +95,8 @@ Y_UTEST_INIT(128)
     Y_UTEST(bwt);
     
     Y_UTEST(local_file);
+    Y_UTEST(disk_file);
+
     Y_UTEST(bin2dat);
     Y_UTEST(digest);
     Y_UTEST(locate);
