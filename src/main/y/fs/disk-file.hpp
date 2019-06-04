@@ -21,6 +21,29 @@ namespace upsylon
             explicit on_disk( const char   *filename, const unsigned mode); //!< open wrapper
             concurrent::mutex access;                                       //!< mutex
 
+            class r_file
+            {
+            public:
+                virtual size_t get(void       *data, const size_t size) = 0; //!< get at most size bytes
+                virtual ~r_file() throw();
+            protected:
+                explicit r_file() throw();
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(r_file);
+            };
+
+            class w_file
+            {
+            public:
+                virtual size_t put(const void *data, const size_t size) = 0; //!< put at mist size bytes
+                virtual ~w_file() throw();
+            protected:
+                explicit w_file() throw();
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(w_file);
+            };
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(on_disk);
             friend class disk_file;
@@ -45,7 +68,7 @@ namespace upsylon
 
 
         //! random access disk file
-        class rw_disk_file : public disk_file
+        class rw_disk_file : public disk_file, public on_disk::r_file, public on_disk::w_file
         {
         public:
             virtual ~rw_disk_file() throw();                //!< destructor
@@ -53,8 +76,8 @@ namespace upsylon
             explicit rw_disk_file(const char   *filename);  //!< open
             rw_disk_file( const rw_disk_file & ) throw();   //!< shared copy
 
-            size_t get(void       *data, const size_t size); //!< get at most size bytes
-            size_t put(const void *data, const size_t size); //!< put at most size bytes
+            virtual size_t get(void       *data, const size_t size); //!< get at most size bytes
+            virtual size_t put(const void *data, const size_t size); //!< put at most size bytes
 
         private:
             Y_DISABLE_ASSIGN(rw_disk_file);
@@ -62,7 +85,7 @@ namespace upsylon
 
 
         //! read only disk file
-        class readable_disk_file : public disk_file
+        class readable_disk_file : public disk_file, public on_disk::r_file
         {
         public:
             virtual ~readable_disk_file() throw();                  //!< destructor
@@ -71,14 +94,14 @@ namespace upsylon
             readable_disk_file(const readable_disk_file &) throw(); //!< shared copy
             readable_disk_file(const rw_disk_file &) throw();       //!< shared copy
 
-            size_t get( void *data, const size_t size ); //!< get at most size bytes
+            virtual size_t get( void *data, const size_t size );    //!< get at most size bytes
 
         private:
             Y_DISABLE_ASSIGN(readable_disk_file);
         };
 
         //! write only disk file
-        class writable_disk_file : public disk_file
+        class writable_disk_file : public disk_file, public on_disk::w_file
         {
         public:
             virtual ~writable_disk_file() throw();                                    //!< destructor
@@ -86,7 +109,7 @@ namespace upsylon
             explicit writable_disk_file( const char   *filename, const bool append ); //!< open wrapper
             writable_disk_file(const writable_disk_file &other) throw();              //!< shared copy
             writable_disk_file(const rw_disk_file &other) throw();                    //!< shared copy
-            size_t put(const void *data, const size_t size);                          //!< put at most size bytes
+            virtual size_t put(const void *data, const size_t size);                  //!< put at most size bytes
 
         private:
             Y_DISABLE_ASSIGN(writable_disk_file);
