@@ -22,7 +22,7 @@ namespace upsylon
             class Problem : public counted_object
             {
             public:
-                typedef typename Field<T>::Callback Callback;
+                typedef typename Field<T>::Callback Callback; //!< alias
 
                 //______________________________________________________________
                 //

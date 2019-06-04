@@ -20,7 +20,7 @@ namespace upsylon
             class ExplicitSolver : public counted_object, public SolverData<T>
             {
             public:
-                typedef arc_ptr< ExplicitSolver<T> > Pointer;
+                typedef arc_ptr< ExplicitSolver<T> > Pointer;  //!< shared solver alias
                 typedef typename Field<T>::Equation  Equation; //!< equation alias
                 typedef typename Field<T>::Callback  Callback; //!< callback alias
                 

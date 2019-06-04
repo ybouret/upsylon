@@ -13,7 +13,7 @@ namespace upsylon
             //! Limited Step Size Integrator
             struct LSSI
             {
-
+                //! compute number of steps
                 template <typename T>
                 static inline
                 size_t ComputeSteps(const T sgn_width,

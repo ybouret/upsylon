@@ -64,6 +64,48 @@ namespace upsylon
 {
     namespace ios
     {
+        rw_disk_file:: ~rw_disk_file() throw()
+        {
+        }
+
+        rw_disk_file:: rw_disk_file( const string &filename ) :
+        disk_file(filename,ios::readable|ios::writable)
+        {
+            
+        }
+
+        rw_disk_file:: rw_disk_file( const char *filename ) :
+        disk_file(filename,ios::readable|ios::writable)
+        {
+
+        }
+
+        rw_disk_file:: rw_disk_file( const rw_disk_file &other ) throw() :
+        disk_file( other )
+        {
+        }
+
+        size_t rw_disk_file:: get( void *data, const size_t size )
+        {
+            size_t done = 0;
+            descriptor::get( fd(), data, size, done);
+            return done;
+        }
+
+        size_t  rw_disk_file:: put(const void *data, const size_t size)
+        {
+            size_t done = 0;
+            descriptor::put( fd(), data, size, done);
+            return done;
+        }
+    }
+
+}
+
+namespace upsylon
+{
+    namespace ios
+    {
         readable_disk_file:: ~readable_disk_file() throw()
         {}
 
@@ -81,6 +123,12 @@ namespace upsylon
         disk_file(other)
         {
         }
+
+        readable_disk_file:: readable_disk_file(const rw_disk_file &other) throw() :
+        disk_file( other )
+        {
+        }
+
 
         size_t readable_disk_file:: get( void *data, const size_t size )
         {
@@ -129,7 +177,12 @@ namespace upsylon
         disk_file(other)
         {
         }
-        
+
+        writable_disk_file:: writable_disk_file(const rw_disk_file &other) throw() :
+        disk_file(other)
+        {
+        }
+
 
     }
 }
