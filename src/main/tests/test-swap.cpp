@@ -5,8 +5,19 @@
 #include <cstdio>
 
 using namespace upsylon;
+
+
 namespace
 {
+    
+#if defined(NDEBUG)
+    static const char b_id[] = "bswap.dat";
+    static const char m_id[] = "mswap.dat";
+#else
+    static const char b_id[] = "bswapd.dat";
+    static const char m_id[] = "mswapd.dat";
+#endif
+    
     static const size_t N=128;
     static uint8_t arr[N] = {};
     static uint8_t brr[N] = {};
@@ -31,14 +42,24 @@ double speed=0;\
 Y_TIMINGS(speed,D,core::bswap<Q>(arr,brr));\
 speed *= (1e-6);\
 std::cerr << "speed" #Q "=" << speed << std::endl;\
-if(fp) fprintf(fp,#Q " %.15g\n",speed);\
+FILE *fp = fopen(b_id,"ab");\
+if(fp) { fprintf(fp,#Q " %.15g\n",speed); fclose(fp); } \
+if(Q<=0) continue;\
+speed=0;\
+Y_TIMINGS(speed,D,mswap(arr,brr,Q));\
+speed *= (1e-6);\
+fp = fopen(m_id,"ab");\
+if(fp) { fprintf(fp,#Q " %.15g\n",speed); fclose(fp); } \
 } while(false)
 
     static void do_test(const double D)
     {
 
-        FILE *fp = fopen("bswap.dat","wb");
-
+        FILE *fp = fopen(b_id,"wb");
+        if(fp) fclose(fp);
+        fp = fopen(m_id,"wb");
+        if(fp) fclose(fp);
+        
         _SWAP(0);  _SWAP(1);  _SWAP(2);  _SWAP(3);  _SWAP(4);  _SWAP(5);  _SWAP(6);   _SWAP(7);  _SWAP(8);  _SWAP(9);
         _SWAP(10); _SWAP(11); _SWAP(12); _SWAP(13); _SWAP(14); _SWAP(15); _SWAP(16);  _SWAP(17); _SWAP(18); _SWAP(19);
         _SWAP(20); _SWAP(21); _SWAP(22); _SWAP(23); _SWAP(24); _SWAP(25); _SWAP(26);  _SWAP(27); _SWAP(28); _SWAP(29);

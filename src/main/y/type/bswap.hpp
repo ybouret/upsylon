@@ -50,24 +50,80 @@ namespace upsylon
         // full word
         //______________________________________________________________________
 
+        //! cast using a base type
         template <typename T>
-        inline void cast_swap(void *a,void *b) throw()
+        inline void swap_cast(void *a,void *b) throw()
         {
             const T tmp = *static_cast<T*>(a);
             *static_cast<T*>(a)= *static_cast<T*>(b);
             *static_cast<T*>(b)=tmp;;
         }
 
+#define Y_SWAP_CAST(T,a,b) const T tmp = *((T *)(a)); *((T *)(a)) = *((T *)(b)); *((T *)(b)) = tmp
+        
         //! do nothing for no bytes
         template <> inline void bswap<0>(void*,void*)   throw() {}
-        template <> inline void bswap<1>(void*a,void*b) throw() { cast_swap<uint8_t>(a,b);  }
-        template <> inline void bswap<2>(void*a,void*b) throw() { cast_swap<uint16_t>(a,b); }
-        template <> inline void bswap<4>(void*a,void*b) throw() { cast_swap<uint32_t>(a,b); }
+        
+        //! swap using uint8
+        template <> inline void bswap<1>(void*a,void*b) throw() { Y_SWAP_CAST(uint8_t,a,b);  }
+        
+        //! swap using uint16
+        template <> inline void bswap<2>(void*a,void*b) throw() { Y_SWAP_CAST(uint16_t,a,b);  }
+        
+        //! swap using uint32
+        template <> inline void bswap<4>(void*a,void*b) throw() { Y_SWAP_CAST(uint32_t,a,b);  }
 
-        template <> inline void bswap<3>(void*a,void*b) throw() {}
-        template <> inline void bswap<5>(void*a,void*b) throw() {}
-        template <> inline void bswap<6>(void*a,void*b) throw() {}
-        template <> inline void bswap<7>(void*a,void*b) throw() {}
+        //! uint16 + uint8
+        template <> inline void bswap<3>(void*a,void*b) throw()
+        {
+            uint16_t *p = (uint16_t *) a;
+            uint16_t *q = (uint16_t *) b;
+            {
+                const uint16_t tmp = p[0];
+                p[0] = q[0];
+                q[0] = tmp;
+            }
+            Y_SWAP_CAST(uint8_t,&p[1],&q[1]);
+        }
+        
+        //! uint32+uint8
+        template <> inline void bswap<5>(void*a,void*b) throw()
+        {
+            uint32_t *p = (uint32_t *) a;
+            uint32_t *q = (uint32_t *) b;
+            {
+                const uint32_t tmp = p[0];
+                p[0] = q[0];
+                q[0] = tmp;
+            }
+            Y_SWAP_CAST(uint8_t,&p[1],&q[1]);
+        }
+        
+        //! uint32+uint16
+        template <> inline void bswap<6>(void*a,void*b) throw()
+        {
+            uint32_t *p = (uint32_t *) a;
+            uint32_t *q = (uint32_t *) b;
+            {
+                const uint32_t tmp = p[0];
+                p[0] = q[0];
+                q[0] = tmp;
+            }
+            Y_SWAP_CAST(uint16_t,&p[1],&q[1]);
+        }
+        
+        //! uint32 + bswap<3>
+        template <> inline void bswap<7>(void*a,void*b) throw()
+        {
+            uint32_t *p = (uint32_t *) a;
+            uint32_t *q = (uint32_t *) b;
+            {
+                const uint32_t tmp = p[0];
+                p[0] = q[0];
+                q[0] = tmp;
+            }
+            bswap<3>(&p[1],&q[1]);
+        }
 
 
 

@@ -3,7 +3,7 @@
 #define Y_CORE_POOL_INCLUDED 1
 
 
-#include "y/type/bswap.hpp"
+#include "y/type/cswap.hpp"
 
 namespace upsylon
 {

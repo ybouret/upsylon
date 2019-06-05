@@ -2,7 +2,7 @@
 #ifndef Y_CORE_LOCATE_INCLUDED
 #define Y_CORE_LOCATE_INCLUDED 1
 
-#include "y/type/bswap.hpp"
+#include "y/os/platform.hpp"
 #include <iostream>
 
 namespace upsylon

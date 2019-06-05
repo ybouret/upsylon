@@ -7,6 +7,7 @@
 #include "y/type/utils.hpp"
 #include "y/container/container.hpp"
 #include "y/sort/merge.hpp"
+#include "y/type/bswap.hpp"
 
 namespace upsylon
 {

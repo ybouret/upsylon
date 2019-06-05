@@ -4,7 +4,7 @@
 
 #include "y/memory/pooled.hpp"
 #include "y/memory/buffer.hpp"
-#include "y/type/bswap.hpp"
+#include "y/type/cswap.hpp"
 
 namespace upsylon
 {

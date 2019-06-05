@@ -4,6 +4,7 @@
 
 #include "y/dynamic.hpp"
 #include "y/type/args.hpp"
+#include "y/type/bswap.hpp"
 #include "y/memory/buffer.hpp"
 #include <iostream>
 

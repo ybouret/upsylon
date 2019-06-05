@@ -5,7 +5,7 @@
 
 #include "y/ptr/ptr.hpp"
 #include "y/object.hpp"
-#include "y/type/bswap.hpp"
+#include "y/type/cswap.hpp"
 
 namespace upsylon
 {
