@@ -61,7 +61,7 @@ namespace upsylon
                 }
                 else
                 {
-                    const size_t to_read = limit-count;
+                    const size_t to_read = static_cast<size_t>(limit-count);
                     rdf->seek(pos,from_set);
                     return update(rdf.get(curr,min_of(to_read,buf->bytes)));
                 }
