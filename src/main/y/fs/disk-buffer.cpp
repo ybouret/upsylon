@@ -1,4 +1,5 @@
 #include "y/fs/disk-buffer.hpp"
+#include "y/code/round.hpp"
 
 namespace upsylon
 {
@@ -15,6 +16,12 @@ namespace upsylon
         bytes(0),
         allocated(0)
         {
+        }
+
+        size_t disk_buffer_:: check(size_t n) throw()
+        {
+            if(n<=0) n=1;
+            return Y_ROUND32(n);
         }
 
 
