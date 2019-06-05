@@ -173,6 +173,12 @@ SET(fs_srcs ${fs_decl} ${fs_code})
 SOURCE_GROUP( fs FILES ${fs_srcs} )
 INSTALL( FILES ${fs_decl} DESTINATION include/y/fs )
 
+FILE(GLOB fs_disk_decl y/fs/disk/*.hpp)
+FILE(GLOB fs_disk_code y/fs/disk/*.cpp)
+SET(fs_disk_srcs ${fs_disk_decl} ${fs_disk_code})
+SOURCE_GROUP( fs/disk FILES ${fs_disk_srcs} )
+INSTALL( FILES ${fs_disk_decl} DESTINATION include/y/fs/disk )
+
 FILE(GLOB ipso_decl y/ipso/*.hpp)
 FILE(GLOB ipso_code y/ipso/*.cpp)
 SET(ipso_srcs ${ipso_decl} ${ipso_code})
@@ -256,6 +262,7 @@ ${mpl_natural_srcs}
 ${math_srcs}
 ${functor_srcs}
 ${fs_srcs}
+${fs_disk_srcs}
 ${ipso_srcs}
 ${rtld_srcs}
 ${lang_srcs} ${lang_pattern_srcs} ${lang_lexical_srcs} ${lexical_plugin_srcs}

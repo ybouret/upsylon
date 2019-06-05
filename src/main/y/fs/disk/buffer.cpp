@@ -1,4 +1,4 @@
-#include "y/fs/disk-buffer.hpp"
+#include "y/fs/disk/buffer.hpp"
 #include "y/code/round.hpp"
 
 namespace upsylon

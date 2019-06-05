@@ -4,7 +4,7 @@
 #ifndef Y_FS_DISK_OSTREAM_INCLUDED
 #define Y_FS_DISK_OSTREAM_INCLUDED 1
 
-#include "y/fs/disk-buffer.hpp"
+#include "y/fs/disk/buffer.hpp"
 #include "y/ios/ostream.hpp"
 
 namespace upsylon

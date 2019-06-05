@@ -3,7 +3,7 @@
 #ifndef Y_FS_DISK_BUFFER_INCLUDED
 #define Y_FS_DISK_BUFFER_INCLUDED 1
 
-#include "y/fs/disk-file.hpp"
+#include "y/fs/disk/file.hpp"
 
 namespace upsylon
 {

@@ -1,4 +1,4 @@
-#include "y/fs/disk-istream.hpp"
+#include "y/fs/disk/istream.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon

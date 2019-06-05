@@ -3,7 +3,7 @@
 #ifndef Y_FS_DISK_ISTREAM_INCLUDED
 #define Y_FS_DISK_ISTREAM_INCLUDED 1
 
-#include "y/fs/disk-buffer.hpp"
+#include "y/fs/disk/buffer.hpp"
 #include "y/ios/istream.hpp"
 
 namespace upsylon
