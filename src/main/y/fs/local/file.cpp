@@ -1,4 +1,4 @@
-#include "y/fs/local-file.hpp"
+#include "y/fs/local/file.hpp"
 #include "y/exceptions.hpp"
 #include "y/type/utils.hpp"
 
@@ -49,7 +49,7 @@ namespace upsylon
         type( is_regular ),
         status(NULL)
         {
-#include "local-file.cxx"
+#include "file.cxx"
         }
 
         local_file:: local_file( const char   *_,
@@ -61,7 +61,7 @@ namespace upsylon
         status(NULL)
         {
             const string filename(_);
-#include "local-file.cxx"
+#include "file.cxx"
         }
 
         local_file:: local_file( handle_t user_handle, size_t user_access ) throw() :

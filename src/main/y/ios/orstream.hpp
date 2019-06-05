@@ -4,7 +4,7 @@
 #define Y_IOS_ORSTREAM_INCLUDED 1
 
 #include "y/ios/ostream.hpp"
-#include "y/fs/local-file.hpp"
+#include "y/fs/local/file.hpp"
 
 namespace upsylon
 {

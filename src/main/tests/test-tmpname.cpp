@@ -1,6 +1,6 @@
 #include "y/string/temporary-name.hpp"
 #include "y/utest/run.hpp"
-#include "y/fs/local.hpp"
+#include "y/fs/local/fs.hpp"
 #include "y/ios/ocstream.hpp"
 
 using namespace upsylon;

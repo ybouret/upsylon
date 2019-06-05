@@ -1,4 +1,4 @@
-#include "y/fs/local.hpp"
+#include "y/fs/local/fs.hpp"
 #include "y/exceptions.hpp"
 
 #if defined(Y_BSD)

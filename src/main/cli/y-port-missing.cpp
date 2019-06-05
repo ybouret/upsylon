@@ -1,6 +1,6 @@
 #include "y/program.hpp"
 #include "y/string/temporary-name.hpp"
-#include "y/fs/local.hpp"
+#include "y/fs/local/fs.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/lang/pattern/matching.hpp"

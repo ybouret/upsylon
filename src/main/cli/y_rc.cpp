@@ -6,7 +6,7 @@
 
 #include "y/program.hpp"
 #include "y/ios/rc/io.hpp"
-#include "y/fs/local.hpp"
+#include "y/fs/local/fs.hpp"
 
 using namespace upsylon;
 

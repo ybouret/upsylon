@@ -3,7 +3,7 @@
 #ifndef Y_FS_DISK_FILE_INCLUDED
 #define Y_FS_DISK_FILE_INCLUDED 1
 
-#include "y/fs/local-file.hpp"
+#include "y/fs/local/file.hpp"
 #include "y/ptr/arc.hpp"
 
 namespace upsylon

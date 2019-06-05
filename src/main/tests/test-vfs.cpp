@@ -1,4 +1,4 @@
-#include "y/fs/local.hpp"
+#include "y/fs/local/fs.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/list.hpp"
 

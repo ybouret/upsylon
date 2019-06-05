@@ -1,5 +1,5 @@
 #include "y/ios/graphviz.hpp"
-#include "y/fs/local.hpp"
+#include "y/fs/local/fs.hpp"
 #include "y/exception.hpp"
 #include <cstdlib>
 

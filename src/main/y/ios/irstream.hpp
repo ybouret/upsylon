@@ -4,7 +4,7 @@
 
 
 #include "y/ios/istream.hpp"
-#include "y/fs/local-file.hpp"
+#include "y/fs/local/file.hpp"
 
 namespace upsylon
 {

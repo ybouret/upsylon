@@ -3,7 +3,7 @@
 #include "y/memory/buffers.hpp"
 
 #include "y/exceptions.hpp"
-#include "y/fs/local.hpp"
+#include "y/fs/local/fs.hpp"
 
 #if defined(Y_BSD)
 #include <unistd.h>
