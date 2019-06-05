@@ -1,5 +1,6 @@
 #include "y/fs/disk/istream.hpp"
 #include "y/exception.hpp"
+#include "y/type/utils.hpp"
 
 namespace upsylon
 {
@@ -7,10 +8,14 @@ namespace upsylon
     {
 
         disk_istream :: disk_istream(const readable_disk_file &src,
-                                     const shared_disk_buffer &sdb ) :
+                                     const shared_disk_buffer &sdb,
+                                     const offset_t            len) :
         istream(),
         disk_stream( src, sdb ),
-        rdf( src )
+        rdf( src ),
+        count(0),
+        limit(len),
+        bound(limit>=0)
         {
         }
 
@@ -19,21 +24,56 @@ namespace upsylon
         }
 
 
-
-        bool disk_istream:: load()
+        bool disk_istream:: update(const size_t nr)
         {
-            curr = next = buf->entry;
-            rdf->seek(pos,from_set);
-            const size_t nr = rdf.get(curr,buf->bytes);
-            pos = rdf->tell();
             if(nr>0)
             {
-                next = curr+nr; assert(next<=last);
+                // something was read!
+                pos   =  rdf->tell();
+                count += nr;
+                next  =  curr+nr; assert(next<=last);
                 return true;
             }
             else
             {
+                // got nothing
                 return false;
+            }
+        }
+
+        bool disk_istream:: load()
+        {
+            //__________________________________________________________________
+            //
+            // initialize
+            //__________________________________________________________________
+            curr = next = buf->entry;
+            if(bound)
+            {
+                //______________________________________________________________
+                //
+                // bound state
+                //______________________________________________________________
+                assert(count<=limit);
+                if(count>=limit)
+                {
+                    return false;
+                }
+                else
+                {
+                    const size_t to_read = limit-count;
+                    rdf->seek(pos,from_set);
+                    return update(rdf.get(curr,min_of(to_read,buf->bytes)));
+                }
+            }
+            else
+            {
+                //______________________________________________________________
+                //
+                // ubbound state
+                //______________________________________________________________
+                rdf->seek(pos,from_set);
+                return update(rdf.get(curr,buf->bytes));
             }
         }
 
@@ -56,6 +96,7 @@ namespace upsylon
         {
             push1();
             *(--curr) = C;
+            --count;
         }
 
         

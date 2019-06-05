@@ -59,8 +59,24 @@ Y_UTEST(disk_file)
     }
 
 
+
+
     ios::shared_disk_buffer ish = new ios::disk_buffer<>(BUFSIZ);
     ios::shared_disk_buffer osh = new ios::disk_buffer<memory::pooled>(32);
+
+    {
+        ios::readable_disk_file src(id);
+        ios::disk_istream       fp(src,ish,4);
+        string line;
+        char C=0;
+        while(fp.query(C))
+        {
+            std::cerr << C;
+            line += C;
+        }
+        std::cerr << std::endl;
+        Y_CHECK("Hell" == line);
+    }
 
     if(argc>1)
     {

@@ -19,17 +19,24 @@ namespace upsylon
 
             //! constructor
             explicit disk_istream(const readable_disk_file &src,
-                                  const shared_disk_buffer &sdb);
+                                  const shared_disk_buffer &sdb,
+                                  const offset_t            len=-1);
 
             virtual void store(char  C); //!< istream interface
             virtual bool query(char &C); //!< istream interface
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(disk_istream);
-            readable_disk_file rdf;
+            readable_disk_file rdf;    //!< handle to the file
+            offset_t           count;   //!< number of read bytes
+            const offset_t     limit;   //!< limit of read bytes
+            const bool         bound;   //!< limit>=0
             
             void push1(); //!< try to make some space to store something
             bool load();  //!< read data from file
+
+            bool update( const size_t nr);
+
 
         };
 
