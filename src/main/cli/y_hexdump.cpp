@@ -7,13 +7,21 @@ using namespace upsylon;
 static size_t   width = 16;
 
 static inline
-void display(  string &line, ios::ostream &fp )
+void display(  string &line, ios::ostream &fp, const unsigned long count )
 {
     assert(line.size()<=width);
     const size_t n = line.size();
+    //--------------------------------------------------------------------------
+    //
     // prolog
-
+    //
+    //--------------------------------------------------------------------------
+    fp("%10lu| ",count);
+    //--------------------------------------------------------------------------
+    //
     // bulk
+    //
+    //--------------------------------------------------------------------------
     for(size_t i=0;i<n;++i)
     {
         uint8_t C = uint8_t(line[i]);
@@ -26,7 +34,12 @@ void display(  string &line, ios::ostream &fp )
         fp << "   ";
         line << ' ';
     }
+
+    //--------------------------------------------------------------------------
+    //
     // epilog
+    //
+    //--------------------------------------------------------------------------
     fp << ' ' << '|' << line << '|' << '\n';
 }
 
@@ -54,20 +67,20 @@ Y_PROGRAM_START()
     auto_ptr<ios::ocstream> out = new ios::ocstream( ios::cstdout );
     char   C = 0;
     string line(width,as_capacity);
-    size_t count = 0;
+    unsigned long count = 0;
     while( inp->query(C) )
     {
         ++count;
         line << C;
         if(line.size()>=width)
         {
-            display(line,*out);
+            display(line,*out,count);
             line.clear();
         }
     }
     if(line.size()>0)
     {
-        display(line,*out);
+        display(line,*out,count);
     }
     out->flush();
 
