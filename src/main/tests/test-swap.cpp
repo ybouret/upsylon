@@ -24,11 +24,12 @@ namespace
 std::cerr << "bswap<" #Q ">" << std::endl;\
 init(); core::bswap<Q>(arr,brr);\
 for(int i=0;i<Q;++i) {\
-Y_ASSERT(arr[i]==uint8_t(i+1)&&brr[i]==0);\
+Y_ASSERT(arr[i]==uint8_t(i+1));\
+Y_ASSERT(brr[i]==0);\
 }\
 double speed=0;\
 Y_TIMINGS(speed,D,core::bswap<Q>(arr,brr));\
-speed /= (1e6);\
+speed *= (1e-6);\
 std::cerr << "speed" #Q "=" << speed << std::endl;\
 if(fp) fprintf(fp,#Q " %.15g\n",speed);\
 } while(false)
