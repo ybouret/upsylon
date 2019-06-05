@@ -19,6 +19,9 @@ namespace upsylon
             virtual ~on_disk() throw();                                     //!< destructor
             explicit on_disk( const string &filename, const unsigned mode); //!< open a local file
             explicit on_disk( const char   *filename, const unsigned mode); //!< open wrapper
+            explicit on_disk( const cstdin_t  &);                           //!< open wrapper
+            explicit on_disk( const cstderr_t &);                           //!< open wrapper
+            explicit on_disk( const cstdout_t &);                           //!< open wrapper
             concurrent::mutex access;                                       //!< mutex
 
         private:
@@ -37,6 +40,10 @@ namespace upsylon
             disk_file( const disk_file & ) throw();      //!< shared copy
             disk_file(const string  &, const unsigned ); //!< setup
             disk_file(const char    *, const unsigned ); //!< setup wrapper
+            disk_file(const cstdin_t &);                 //!< setup wrapper
+            disk_file(const cstdout_t &);                //!< setup wrapper
+            disk_file(const cstderr_t &);                //!< setup wrapper
+
             descriptor::type & fd();                     //!< get file descriptor
 
         private:
@@ -68,10 +75,10 @@ namespace upsylon
             virtual ~readable_disk_file() throw();                  //!< destructor
             explicit readable_disk_file( const string &filename );  //!< open
             explicit readable_disk_file( const char   *filename );  //!< open wrapper
+            explicit readable_disk_file( const cstdin_t & );        //!< open cstdin
             readable_disk_file(const readable_disk_file &) throw(); //!< shared copy
             readable_disk_file(const rw_disk_file &) throw();       //!< shared copy
-
-            size_t get( void *data, const size_t size );    //!< get at most size bytes
+            size_t get( void *data, const size_t size );            //!< get at most size bytes
 
         private:
             Y_DISABLE_ASSIGN(readable_disk_file);
@@ -84,9 +91,11 @@ namespace upsylon
             virtual ~writable_disk_file() throw();                                    //!< destructor
             explicit writable_disk_file( const string &filename, const bool append ); //!< open to write, truncate if not append
             explicit writable_disk_file( const char   *filename, const bool append ); //!< open wrapper
+            explicit writable_disk_file( const cstdout_t &);                          //!< open stdout
+            explicit writable_disk_file( const cstderr_t &);                          //!< open stderr
             writable_disk_file(const writable_disk_file &other) throw();              //!< shared copy
-            writable_disk_file(const rw_disk_file &other) throw();                    //!< shared copy
-            size_t put(const void *data, const size_t size);                  //!< put at most size bytes
+            writable_disk_file(const rw_disk_file       &other) throw();              //!< shared copy
+            size_t put(const void *data, const size_t size);                          //!< put at most size bytes
 
         private:
             Y_DISABLE_ASSIGN(writable_disk_file);

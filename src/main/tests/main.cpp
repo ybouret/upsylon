@@ -96,6 +96,7 @@ Y_UTEST_INIT(128)
     
     Y_UTEST(local_file);
     Y_UTEST(disk_file);
+    Y_UTEST(disk_std);
 
     Y_UTEST(bin2dat);
     Y_UTEST(digest);
@@ -111,7 +112,6 @@ Y_UTEST_INIT(128)
     Y_UTEST(progress);
     Y_UTEST(dll);
     Y_UTEST(timings);
-    Y_UTEST(ichannel);
     Y_UTEST(rc);
     Y_UTEST(sobol);
 

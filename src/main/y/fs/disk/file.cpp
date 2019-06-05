@@ -20,7 +20,27 @@ namespace upsylon
         access()
         {
         }
-        
+
+        on_disk:: on_disk( const cstdin_t &_) :
+        local_file(_),
+        access()
+        {
+        }
+
+        on_disk:: on_disk( const cstdout_t &_) :
+        local_file(_),
+        access()
+        {
+        }
+
+        on_disk:: on_disk( const cstderr_t &_) :
+        local_file(_),
+        access()
+        {
+        }
+
+
+
     }
 }
 
@@ -48,6 +68,23 @@ namespace upsylon
         on_disk::pointer( new on_disk(filename,mode) )
         {
         }
+
+        disk_file:: disk_file(const cstdin_t &_) :
+        on_disk::pointer( new on_disk(_) )
+        {
+        }
+
+        disk_file:: disk_file(const cstdout_t &_) :
+        on_disk::pointer( new on_disk(_) )
+        {
+        }
+
+        disk_file:: disk_file(const cstderr_t &_) :
+        on_disk::pointer( new on_disk(_) )
+        {
+        }
+
+
 
         descriptor::type & disk_file:: fd()
         {
@@ -118,6 +155,12 @@ namespace upsylon
         {
         }
 
+        readable_disk_file:: readable_disk_file( const cstdin_t &_ ) :
+        disk_file(_)
+        {
+
+        }
+
         readable_disk_file:: readable_disk_file( const readable_disk_file &other ) throw() :
         disk_file(other)
         {
@@ -163,6 +206,16 @@ namespace upsylon
             {
                 (*this)->unwind();
             }
+        }
+
+        writable_disk_file:: writable_disk_file( const cstderr_t &_ ) :
+        disk_file(_)
+        {
+        }
+
+        writable_disk_file:: writable_disk_file( const cstdout_t &_ ) :
+        disk_file(_)
+        {
         }
 
         size_t  writable_disk_file:: put(const void *data, const size_t size)
