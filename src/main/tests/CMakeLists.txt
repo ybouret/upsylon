@@ -29,7 +29,7 @@ ADD_TEST(os:spec        test-main spec)
 ADD_TEST(os:chkbnd      test-main chkbnd)
 
 SOURCE_GROUP(core FILES test-ppty.cpp test-lockable.cpp test-swap.cpp test-zset.cpp test-code.cpp test-bits.cpp test-core.cpp test-progress.cpp
- test-functor.cpp test-tuple.cpp test-traits.cpp)
+ test-functor.cpp test-tuple.cpp test-traits.cpp test-bswap.cpp)
 ADD_TEST(core:ppty     test-main ppty)
 ADD_TEST(core:lockable test-main lockable)
 ADD_TEST(core:swap        test-main swap)
