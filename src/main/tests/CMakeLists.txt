@@ -162,7 +162,7 @@ ADD_TEST(codec:asf    test-main asf)
 ADD_TEST(codec:bwt    test-main bwt)
 ADD_TEST(codec:b64id  test-main b64id)
 
-SOURCE_GROUP(data FILES test-associative.cpp test-set.cpp test-map.cpp test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp)
+SOURCE_GROUP(data FILES test-associative.cpp test-set.cpp test-map.cpp test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp)
 ADD_TEST(data:associative test-main associative)
 ADD_TEST(data:set         test-main set)
 ADD_TEST(data:map         test-main map)
@@ -171,6 +171,7 @@ ADD_TEST(data:slots       test-main slots)
 ADD_TEST(data:sequence    test-main sequence)
 ADD_TEST(data:pipe        test-main pipe)
 ADD_TEST(data:arrays      test-main arrays)
+ADD_TEST(data:heap        test-main heap)
 
 
 

@@ -88,6 +88,12 @@ SET(sequence_srcs ${sequence_decl} ${sequence_code})
 SOURCE_GROUP( sequence FILES ${sequence_srcs} )
 INSTALL( FILES ${sequence_decl} DESTINATION include/y/sequence )
 
+FILE(GLOB ordered_decl   y/ordered/*.hpp)
+FILE(GLOB ordered_code y/ordered/*.cpp)
+SET(ordered_srcs ${ordered_decl} ${ordered_code})
+SOURCE_GROUP( ordered FILES ${ordered_srcs} )
+INSTALL( FILES ${ordered_decl} DESTINATION include/y/ordered )
+
 FILE(GLOB associative_decl   y/associative/*.hpp)
 FILE(GLOB associative_code y/associative/*.cpp)
 SET(associative_srcs ${associative_decl} ${associative_code})
@@ -256,6 +262,7 @@ ${ptr_srcs}
 ${iterate_srcs}
 ${container_srcs}
 ${sequence_srcs}
+${ordered_srcs}
 ${associative_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}

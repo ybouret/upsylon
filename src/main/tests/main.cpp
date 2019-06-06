@@ -45,6 +45,7 @@ Y_UTEST_INIT(128)
     Y_UTEST(arrays);
     Y_UTEST(dyadic);
     Y_UTEST(endian);
+    Y_UTEST(heap);
 
     Y_UTEST(parallel);
     Y_UTEST(threads);
