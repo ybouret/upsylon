@@ -46,12 +46,16 @@ namespace upsylon
         template <const size_t N>
         void bswap(void *a,void *b) throw()
         {
+
             static const size_t Q = N/sizeof(bswap_t);
             static const size_t R = N&(sizeof(bswap_t)-1);
+
+
             bswap_t *A = static_cast<bswap_t *>(a);
             bswap_t *B = static_cast<bswap_t *>(b);
             bswap_blocks<Q>(A,B);
             bswap_bytes<R>(A+Q,B+Q);
+
         }
 
     }

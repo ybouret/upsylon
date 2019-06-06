@@ -116,7 +116,7 @@ Y_PROGRAM_START()
 	if (argc > 1)
 	{
 		const string filename = argv[1];
-		const string output = vfs::with_new_extension(filename, "hpp");
+		const string output   = vfs::with_new_extension(filename, "hpp");
 		std::cerr << "input : " << filename << std::endl;
 		std::cerr << "output: " << output << std::endl;
 

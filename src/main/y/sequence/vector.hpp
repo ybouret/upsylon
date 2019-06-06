@@ -149,16 +149,10 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
 
 
         //! container interface: free
-        virtual void free() throw()
-        {
-            __free();
-        }
+        virtual void free() throw() { __free(); }
 
         //! container interface: release
-        virtual void release() throw()
-        {
-            __release();
-        }
+        virtual void release() throw() { __release(); }
 
         //! container interface: reserve
         virtual void reserve(const size_t n)

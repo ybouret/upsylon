@@ -3,21 +3,24 @@
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/sequence/vector.hpp"
+#include <typeinfo>
 
 using namespace upsylon;
 
+#if 1
 namespace
 {
     template <typename T>
     static inline void do_test()
     {
-        
+        const char *id = typeid(T).name();
+
         vector<T>      v( nwsrt::max_size, as_capacity);
         vector<size_t> w( nwsrt::max_size, as_capacity);
 
         for(size_t n=0;n<=nwsrt::max_size;++n)
         {
-            std::cerr << "n=" << n << std::endl;
+            std::cerr << "n=" << n << ", <" << id << ">" << std::endl;
             for(size_t iter=0;iter<16;++iter)
             {
                 v.free();
@@ -32,15 +35,15 @@ namespace
                 for(size_t jter=0;jter<16;++jter)
                 {
                     alea.shuffle(*v,n);
-                    if(n<=3)
-                        std::cerr << "\tv0=" << v << std::endl;
+                    if(n<=3) std::cerr << "\tv0=" << v << std::endl;
                     nwsrt::on(*v,n);
-                    if(n<=3)
-                        std::cerr << "\tv1=" << v << std::endl;
+                    if(n<=3) std::cerr << "\tv1=" << v << std::endl;
+
                     for(size_t j=1;j<n;++j)
                     {
                         Y_ASSERT(v[j]<=v[j+1]);
                     }
+
                     if(false)
                     {
                         alea.shuffle(*v,n);
@@ -64,12 +67,15 @@ namespace
         
     }
 }
+#endif
 
 Y_UTEST(nwsrt)
 {
+#if 1
     do_test<int32_t>();
     do_test<double>();
     do_test<string>();
+#endif
 }
 Y_UTEST_DONE()
 
