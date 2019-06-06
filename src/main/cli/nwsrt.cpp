@@ -111,6 +111,7 @@ static inline int __compare_swaps_ptr(const swaps_ptr &lhs, const swaps_ptr &rhs
 	return comparison::increasing(lhs->count, rhs->count);
 }
 
+
 Y_PROGRAM_START()
 {
 	if (argc > 1)
@@ -160,18 +161,12 @@ Y_PROGRAM_START()
 			fp << "#define Y_NWSRT_INCLUDED 1\n";
 			fp << "#include \"y/type/bswap.hpp\"\n";
 
-#if 0
-            fp << "#if defined(Y_NWSRT_VERBOSE)\n";
-            fp << "#   include <iostream>\n";
-            fp << "#   define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) { std::cerr << \"a[\" << J << \"]=\" << a[J] << \"<\" << \"a[\" << I << \"]=\" << a[I] << std::endl; core::bswap< sizeof(T) >( &aI, &aJ ); } }\n";
-            fp << "#else\n";
-            fp << "#   define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) core::bswap< sizeof(T) >( &aI, &aJ ); }\n";
-            fp << "#endif\n";
-#endif
+            
             
             fp << "//! swapping the pair I,J\n";
             fp << "#define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) core::bswap< sizeof(T) >( &aI, &aJ ); }\n";
-            //fp << "#define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) bswap(aI,aJ); }\n";
+            fp << "//! swapping two pairs I,J\n";
+            fp << "#define Y_NWSRT_SWP2(I,J) { const unsigned II = I; const unsigned JJ = J; T &aI = a[II]; T &aJ = a[JJ]; if(aJ<aI) { core::bswap< sizeof(T) >( &aI, &aJ ); core::bswap< sizeof(U) >( &b[II],&b[JJ]); } }\n";
 
             
 			fp << "namespace upsylon {\n";
@@ -194,12 +189,31 @@ Y_PROGRAM_START()
 						fp("\t\ttemplate <typename T> static inline void on%u(T *a) {\n", count);
 						fp << "\t\t\tassert(a);\n";
 						const array<swap> &tests = Swaps[i]->tests;
-						const size_t       nt = tests.size();
+						const size_t       nt    = tests.size();
+                        fp("\t\t\tstatic const unsigned I[%u] = {",unsigned(nt));
+                        for (size_t j = 1; j <= nt; ++j)
+                        {
+                            const swap &swp = tests[j];
+                            fp("%u",swp.I);
+                            if(j<nt) fp << ',';
+                        }
+                        fp("};\n");
+                        fp("\t\t\tstatic const unsigned J[%u] = {",unsigned(nt));
+                        for (size_t j = 1; j <= nt; ++j)
+                        {
+                            const swap &swp = tests[j];
+                            fp("%u",swp.J);
+                            if(j<nt) fp << ',';
+                        }
+                        fp("};\n");
+#if 0
 						for (size_t j = 1; j <= nt; ++j)
 						{
 							const swap &swp = tests[j];
                             fp("\t\t\tY_NWSRT_SWAP(%2u,%2u)\n", swp.I, swp.J);
 						}
+#endif
+                        fp("\t\t\tfor(size_t k=0;k<%u;++k) { Y_NWSRT_SWAP(I[k],J[k]); }\n", unsigned(nt) );
 						fp << "\t\t}\n";
 					}
 
@@ -232,11 +246,31 @@ Y_PROGRAM_START()
 						fp << "\t\t\tassert(a); assert(b);\n";
 						const array<swap> &tests = Swaps[i]->tests;
 						const size_t       nt = tests.size();
+                        fp("\t\t\tstatic const unsigned I[%u] = {",unsigned(nt));
+                        for (size_t j = 1; j <= nt; ++j)
+                        {
+                            const swap &swp = tests[j];
+                            fp("%u",swp.I);
+                            if(j<nt) fp << ',';
+                        }
+                        fp("};\n");
+                        fp("\t\t\tstatic const unsigned J[%u] = {",unsigned(nt));
+                        for (size_t j = 1; j <= nt; ++j)
+                        {
+                            const swap &swp = tests[j];
+                            fp("%u",swp.J);
+                            if(j<nt) fp << ',';
+                        }
+                        fp("};\n");
+                        fp("\t\t\tfor(size_t k=0;k<%u;++k) { Y_NWSRT_SWP2(I[k],J[k]); }\n", unsigned(nt) );
+
+#if 0
 						for (size_t j = 1; j <= nt; ++j)
 						{
 							const swap &swp = tests[j];
-                            fp("\t\t\t{ T &aI = a[%2u]; T &aJ = a[%2u]; if(aJ<aI) { core::bswap<sizeof(T)>(&aI,&aJ); core::bswap<sizeof(U)>(&b[%2d],&b[%2d]); } }\n", swp.I, swp.J, swp.I, swp.J);
+                            fp("\t\t\t{ T &aI = a[%2u]; T &aJ = a[%2u]; if(aJ<aI) { bswap_safe(aI,aJ); bswap_safe(b[%2d],b[%2d]); } }\n", swp.I, swp.J, swp.I, swp.J);
 						}
+#endif
 						fp << "\t\t}\n";
 					}
 
