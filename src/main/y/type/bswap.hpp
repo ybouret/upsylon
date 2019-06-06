@@ -11,10 +11,11 @@ namespace upsylon
 
     namespace core
     {
+#if 0
         typedef unsigned_int<sizeof(ptrdiff_t)>::type bswap_t; //!< word type for bswap
 
         //! inline type exchange
-#define Y_BSWAP_TYPE(T,I) const T tmp = A[I]; A[I] = B[I]; B[I] = tmp
+#define Y_BSWAP_TYPE(T,I) volatile const T tmp = A[I]; A[I] = B[I]; B[I] = tmp
         //! inline block exchange
 #define Y_BSWAP_BLOCK(I)  Y_BSWAP_TYPE(bswap_t,I)
         //! inline byte exchange
@@ -22,13 +23,13 @@ namespace upsylon
 
         //! swap BLOCKS blocks
         template <const size_t BLOCKS>
-        inline void bswap_blocks(bswap_t *A, bswap_t *B) throw()
+        inline void bswap_blocks(volatile bswap_t *A, volatile bswap_t *B) throw()
         {
             Y_LOOP_FUNC_STATIC_(BLOCKS,Y_BSWAP_BLOCK,0);
         }
 
         //! swap no blocks
-        template < > inline void bswap_blocks<0>(bswap_t *, bswap_t *) throw() {}
+        template < > inline void bswap_blocks<0>(volatile bswap_t *, volatile bswap_t *) throw() {}
 
         //! swap BYTES bytes
         template <const size_t BYTES>
@@ -50,13 +51,29 @@ namespace upsylon
             static const size_t Q = N/sizeof(bswap_t);
             static const size_t R = N&(sizeof(bswap_t)-1);
 
-
-            bswap_t *A = static_cast<bswap_t *>(a);
-            bswap_t *B = static_cast<bswap_t *>(b);
+            volatile bswap_t *A = static_cast<bswap_t *>(a);
+            volatile bswap_t *B = static_cast<bswap_t *>(b);
             bswap_blocks<Q>(A,B);
-            bswap_bytes<R>(A+Q,B+Q);
+            bswap_bytes<R>((void*)(A+Q),(void*)(B+Q));
 
         }
+#endif
+
+#define Y_BSWAP_BYTE(I) const uint8_t tmp = A[I]; A[I] = B[I]; B[I] = tmp
+
+        //! swap bytes
+        template <const size_t N>
+        void bswap(void *a,void *b) throw()
+        {
+            uint8_t *A = (uint8_t *)a;
+            uint8_t *B = (uint8_t *)b;
+            Y_LOOP_FUNC_STATIC_(N,Y_BSWAP_BYTE,0);
+        }
+
+        //! special no bytes
+        template <>
+        inline void bswap<0>(void *, void *) throw() {}
+
 
     }
 

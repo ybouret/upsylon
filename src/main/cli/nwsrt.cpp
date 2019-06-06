@@ -171,6 +171,7 @@ Y_PROGRAM_START()
             
             fp << "//! swapping the pair I,J\n";
             fp << "#define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) core::bswap< sizeof(T) >( &aI, &aJ ); }\n";
+            //fp << "#define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) bswap(aI,aJ); }\n";
 
             
 			fp << "namespace upsylon {\n";
