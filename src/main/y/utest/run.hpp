@@ -17,13 +17,13 @@ int upsylon_test_##NAME(int argc, char **argv) {  \
 //! display and check
 #define Y_CHECK(CODE) do {                             \
 std::cerr << "CHECK << " #CODE " >>";                  \
-if(!(CODE)) throw upsylon::exception("FAILED " #CODE); \
+if(!(CODE)) throw upsylon::exception("FAILED <<" #CODE ">>"); \
 std::cerr << " -> PASSED" << std::endl;                \
 } while(false)
 
 //! just assert
-#define Y_ASSERT(CODE) do {                              \
-if(!(CODE)) throw upsylon::exception("FAILED " #CODE);   \
+#define Y_ASSERT(CODE) do {                                     \
+if(!(CODE)) throw upsylon::exception("FAILED <<" #CODE ">>");   \
 } while(false)
 
 #endif

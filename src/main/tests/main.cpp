@@ -6,7 +6,6 @@ Y_UTEST_INIT(128)
     Y_UTEST(types);
     Y_UTEST(chkbnd);
     Y_UTEST(lockable);
-    Y_UTEST(swap);
     Y_UTEST(bswap);
     Y_UTEST(zset);
     Y_UTEST(at_exit);

@@ -111,9 +111,9 @@ namespace
     
     template <typename T>
     void do_perf(sequence<unsigned> &count,
-                 sequence<double> &hspd,
-                 sequence<double> &qspd,
-                 sequence<double> &yspd)
+                 sequence<double>   &hspd,
+                 sequence<double>   &qspd,
+                 sequence<double>   &yspd)
     {
         const size_t ITER = 1024;
         rt_clock clk;
