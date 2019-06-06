@@ -65,15 +65,7 @@ namespace upsylon
     {
         core::bswap<sizeof(T)>( &a, &b );
     }
-
-    template <typename T>
-    void bswap_safe( T &a, T &b ) throw()
-    {
-        uint8_t *A = (uint8_t *)&a;
-        uint8_t *B = (uint8_t *)&b;
-        Y_LOOP_FUNC_STATIC_(sizeof(T),Y_BSWAP_BYTE,0);
-    }
-
+    
     //! memory swap
     inline void mswap(void *a,void *b, const size_t n) throw()
     {

@@ -9,25 +9,29 @@ Y_UTEST(heap)
 {
     vector<int> data;
 
-    for(size_t i=0;i<10;++i)
+    for(size_t i=0;i<20;++i)
     {
         data << i;
     }
 
-    alea.shuffle(*data,data.size());
-    std::cerr << "data=" << data << std::endl;
-    
-    heap<int>   H;
-    for(size_t i=1;i<=data.size();++i)
-    {
-        std::cerr << "inserting " << data[i] << std::endl;
-        H.insert( &data[i] );
-        std::cerr << "|_peek=" << H.peek() << std::endl;
-    }
 
-    while( H.size() )
+    heap<int>   H;
+
+    for(size_t iter=0;iter<16;++iter)
     {
-        std::cerr << "extract: " << * H.pop() << std::endl;
+        alea.shuffle(*data,data.size());
+        for(size_t i=1;i<=data.size();++i)
+        {
+            H.insert( &data[i] );
+            std::cerr << " +(" << data[i] << "):" << H.peek();
+        }
+        std::cerr << std::endl;
+
+        while( H.size() )
+        {
+            std::cerr << " " << * H.pop();
+        }
+        std::cerr << std::endl;
     }
 
 }

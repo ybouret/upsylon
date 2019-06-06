@@ -18,18 +18,21 @@ namespace upsylon
     class heap : public container
     {
     public:
-        Y_DECL_ARGS(T,type);
-        
+        Y_DECL_ARGS(T,type); //!< alias
+
+        //! setup empty
         inline explicit heap() : hmem( ALLOCATOR::instance() ), slots(0), bytes(0), slot(0), count(0), compare()
         {
         }
 
+        //! setup with capacity
         inline explicit heap(const size_t n, const as_capacity_t & ) :
         hmem( ALLOCATOR::instance() ), slots(n), bytes(0), slot( hmem.template acquire_as<slot_t>(slots,bytes) ), count(0), compare()
         {
 
         }
 
+        //! copy
         inline explicit heap(const heap &other ) :
         hmem( ALLOCATOR::instance() ), slots(other.count), bytes(0), slot( hmem.template acqurire_as<slot_t>(slots,bytes) ), count(other.count), compare()
         {
@@ -38,24 +41,25 @@ namespace upsylon
         }
 
 
+        //! desctruct
         inline virtual ~heap() throw()
         {
             __release();
         }
 
-        inline size_t size()     const throw() { return count; }
-        inline size_t capacity() const throw() { return slots; }
+        inline size_t size()     const throw() { return count; } //!< dynamic interface: size
+        inline size_t capacity() const throw() { return slots; } //!< dynamic interface: capacity
 
-        inline virtual void free()    throw() { __free();    }
-        inline virtual void release() throw() { __release(); }
+        inline virtual void free()    throw() { __free();    }   //!< free content
+        inline virtual void release() throw() { __release(); }   //!< free and release resources
+
+        //! reserve extra slots
         inline virtual void reserve(const size_t n)
         {
-            if(n>0)
-            {
-                __reserve(n);
-            }
+            if(n>0)  __reserve(n);
         }
 
+        //! no-throw swap
         inline void swap_with( heap &other ) throw()
         {
             cswap(slots,other.slots);
@@ -64,20 +68,32 @@ namespace upsylon
             cswap(count,other.count);
         }
 
+        //! insertion of an address
         inline void insert( type *addr )
         {
+            //__________________________________________________________________
+            //
+            // check memory
+            //__________________________________________________________________
             assert(addr!=NULL);
             if(count>=slots)
             {
                 __reserve( next_increase(count) );
             }
             assert(count<slots);
+
+            //__________________________________________________________________
+            //
             // place at the end
+            //__________________________________________________________________
             size_t ipos = count;
             size_t ppos = (ipos-1)>>1;
             slot[ipos] = addr;
 
+            //__________________________________________________________________
+            //
             // update
+            //__________________________________________________________________
             while( (ipos>0) && ( compare( *slot[ppos], *slot[ipos] ) < 0 ) )
             {
                 cswap( slot[ppos], slot[ipos] );
@@ -88,30 +104,41 @@ namespace upsylon
             ++count;
         }
 
+        //! peek top data
         const_type & peek() const throw()
         {
             assert(count>0);
             return *slot[0];
         }
 
+        //! extract top data
         type * pop() throw()
         {
             assert(count>0);
             type *ans = slot[0];
 
+            //__________________________________________________________________
+            //
             // move last node at top
+            //__________________________________________________________________
             slot[0] = slot[--count];
 
             if(count>0)
             {
+                //______________________________________________________________
+                //
                 // update
+                //______________________________________________________________
                 size_t ipos = 0;
                 size_t lpos = (ipos<<1) + 1;
                 size_t rpos = lpos      + 1;
 
                 while(true)
                 {
+                    //__________________________________________________________
+                    //
                     // find would be position
+                    //__________________________________________________________
                     size_t mpos = ipos;
                     if(lpos<count && compare( *slot[ipos], *slot[lpos] ) < 0 )
                     {
@@ -122,7 +149,10 @@ namespace upsylon
                         mpos =rpos;
                     }
 
+                    //__________________________________________________________
+                    //
                     // check positions
+                    //__________________________________________________________
                     if(ipos==mpos)
                     {
                         break; // balanced
@@ -145,7 +175,7 @@ namespace upsylon
 
     private:
         Y_DISABLE_ASSIGN(heap);
-        
+
         typedef mutable_type *slot_t;
         ALLOCATOR &hmem;
         size_t     slots;
