@@ -16,15 +16,52 @@ namespace upsylon
     public:
         Y_DECL_ARGS(T,type); //!< alias
 
-        inline   comparator() throw() {} //!< setup
-        inline  ~comparator() throw() {} //!< cleanup
+        inline  virtual ~comparator() throw() {} //!< cleanup
+        virtual int operator()(const_type &lhs, const_type &rhs) = 0;//!< return comparison
 
-        //! return comparison
-        inline   int operator()(const_type &lhs, const_type &rhs) { return comparison::increasing<T>(lhs,rhs); }
+    protected:
+        inline  explicit comparator() throw() {} //!< setup
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(comparator);
     };
+    
+    //! implementation: increasing
+    template <typename T>
+    class increasing_comparator : public comparator<T>
+    {
+    public:
+        Y_DECL_ARGS(T,type); //!< alias
+
+        inline virtual ~increasing_comparator() throw() {} //!< cleanup
+        inline explicit increasing_comparator() throw() {} //!< setup
+        
+        //! increasing
+        virtual int operator()(const_type &lhs, const_type &rhs) { return comparison::increasing<T>(lhs,rhs); }
+        
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(increasing_comparator);
+
+    };
+    
+    //! implementation: decreasing
+    template <typename T>
+    class decreasing_comparator : public comparator<T>
+    {
+    public:
+        Y_DECL_ARGS(T,type); //!< alias
+        
+        inline virtual ~decreasing_comparator() throw() {} //!< cleanup
+        inline explicit decreasing_comparator() throw() {} //!< setup
+        
+        //! decreasing
+        virtual int operator()(const_type &lhs, const_type &rhs) { return comparison::decreasing<T>(lhs,rhs); }
+        
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(decreasing_comparator);
+        
+    };
+    
     
 }
 

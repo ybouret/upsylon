@@ -59,7 +59,7 @@ namespace upsylon
 
     }
 
-    //! binary swap of tyoes
+    //! binary swap of types
     template <typename T>
     void bswap( T &a, T &b ) throw()
     {

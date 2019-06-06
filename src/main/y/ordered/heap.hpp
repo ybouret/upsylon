@@ -12,7 +12,7 @@ namespace upsylon
 
     //! heap built from addresses
     template <typename T,
-    typename COMPARATOR = comparator<T>,
+    typename COMPARATOR = increasing_comparator<T>,
     typename ALLOCATOR  = memory::global
     >
     class heap : public container
@@ -21,15 +21,13 @@ namespace upsylon
         Y_DECL_ARGS(T,type); //!< alias
 
         //! setup empty
-        inline explicit heap() : hmem( ALLOCATOR::instance() ), slots(0), bytes(0), slot(0), count(0), compare()
-        {
-        }
+        inline explicit heap() : hmem( ALLOCATOR::instance() ), slots(0), bytes(0), slot(0), count(0), compare() {}
+       
 
         //! setup with capacity
         inline explicit heap(const size_t n, const as_capacity_t & ) :
         hmem( ALLOCATOR::instance() ), slots(n), bytes(0), slot( hmem.template acquire_as<slot_t>(slots,bytes) ), count(0), compare()
         {
-
         }
 
         //! copy
@@ -41,11 +39,8 @@ namespace upsylon
         }
 
 
-        //! desctruct
-        inline virtual ~heap() throw()
-        {
-            __release();
-        }
+        //! destruct
+        inline virtual ~heap() throw() { __release(); }
 
         inline size_t size()     const throw() { return count; } //!< dynamic interface: size
         inline size_t capacity() const throw() { return slots; } //!< dynamic interface: capacity
@@ -67,9 +62,37 @@ namespace upsylon
             cswap(slot,other.slot);
             cswap(count,other.count);
         }
-
-        //! insertion of an address
-        inline void insert( type *addr )
+    
+        //! insertion of an address with enough memory
+        inline void push_( type *addr )
+        {
+            assert(addr!=NULL);
+            assert(count<slots);
+            
+            //__________________________________________________________________
+            //
+            // place at the end
+            //__________________________________________________________________
+            size_t ipos = count;
+            slot[ipos]  = addr;
+            
+            //__________________________________________________________________
+            //
+            // update
+            //__________________________________________________________________
+        CYCLE:
+            size_t ppos = (ipos-1)>>1;
+            if( (ipos>0) && ( compare( *slot[ppos], *slot[ipos] ) < 0 ) )
+            {
+                cswap( slot[ppos], slot[ipos] );
+                ipos = ppos;
+                goto CYCLE;
+            }
+            ++count;
+        }
+        
+        //! insertion of an address with memory check
+        inline void push( type *addr )
         {
             //__________________________________________________________________
             //
@@ -81,27 +104,8 @@ namespace upsylon
                 __reserve( next_increase(count) );
             }
             assert(count<slots);
-
-            //__________________________________________________________________
-            //
-            // place at the end
-            //__________________________________________________________________
-            size_t ipos = count;
-            size_t ppos = (ipos-1)>>1;
-            slot[ipos] = addr;
-
-            //__________________________________________________________________
-            //
-            // update
-            //__________________________________________________________________
-            while( (ipos>0) && ( compare( *slot[ppos], *slot[ipos] ) < 0 ) )
-            {
-                cswap( slot[ppos], slot[ipos] );
-                ipos = ppos;
-                ppos = (ipos-1)>>1;
-            }
-
-            ++count;
+            
+            push_(addr);
         }
 
         //! peek top data
@@ -114,6 +118,10 @@ namespace upsylon
         //! extract top data
         type * pop() throw()
         {
+            //__________________________________________________________________
+            //
+            // save top data to return
+            //__________________________________________________________________
             assert(count>0);
             type *ans = slot[0];
 
@@ -123,17 +131,25 @@ namespace upsylon
             //__________________________________________________________________
             slot[0] = slot[--count];
 
-            if(count>0)
+            if(count<=0)
+            {
+                //______________________________________________________________
+                //
+                // nothing to do
+                //______________________________________________________________
+                return ans;
+            }
+            else
             {
                 //______________________________________________________________
                 //
                 // update
                 //______________________________________________________________
                 size_t ipos = 0;
+            CYCLE:
                 size_t lpos = (ipos<<1) + 1;
                 size_t rpos = lpos      + 1;
 
-                while(true)
                 {
                     //__________________________________________________________
                     //
@@ -155,20 +171,16 @@ namespace upsylon
                     //__________________________________________________________
                     if(ipos==mpos)
                     {
-                        break; // balanced
+                        return ans; // balanced
                     }
                     else
                     {
                         cswap(slot[ipos],slot[mpos]);
                         ipos = mpos;
-                        lpos = (ipos<<1) + 1;
-                        rpos = lpos      + 1;
+                        goto CYCLE;
                     }
                 }
-
             }
-
-            return ans;
         }
 
 
