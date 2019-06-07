@@ -8,7 +8,6 @@
 
 using namespace upsylon;
 
-#if 1
 namespace
 {
     static const size_t nmax  = 4;
@@ -83,15 +82,12 @@ namespace
         
     }
 }
-#endif
 
 Y_UTEST(nwsrt)
 {
-#if 1
     do_test<int32_t>();
     do_test<double>();
     do_test<string>();
-#endif
 }
 Y_UTEST_DONE()
 
