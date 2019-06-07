@@ -19,18 +19,24 @@ namespace upsylon
         void sort( LIST &source, compare_node_proc proc, void *args)
         {
             assert(proc);
-            if( source.size > 1 )
+            switch(source.size)
             {
-                sub_list L;
-                sub_list R;
-                const size_t        mid = source.size >> 1;
-                for( size_t i=source.size-mid;i>0;--i) L.push_front( source.pop_back() );
-                for( size_t i=mid;i>0;--i)             R.push_front( source.pop_back() );
-                assert(0==source.size);
+                case 0: return;
+                case 1: return;
+                default:
+                {
+                    assert(source.size>1);
+                    sub_list L;
+                    sub_list R;
+                    const size_t        mid = source.size >> 1;
+                    for( size_t i=source.size-mid;i>0;--i) L.push_front( source.pop_back() );
+                    for( size_t i=mid;i>0;--i)             R.push_front( source.pop_back() );
+                    assert(0==source.size);
 
-                merging<NODE>::template sort<sub_list>(L,proc,args);
-                merging<NODE>::template sort<sub_list>(R,proc,args);
-                merging<NODE>::template fusion<LIST>(source,L,R,proc,args);
+                    merging<NODE>::template sort<sub_list>(L,proc,args);
+                    merging<NODE>::template sort<sub_list>(R,proc,args);
+                    merging<NODE>::template fusion<LIST>(source,L,R,proc,args);
+                }
             }
         }
 
@@ -42,7 +48,7 @@ namespace upsylon
         {
             //! while we can compare two nodes
             assert(0==target.size);
-            while( L.size > 0 && R.size > 0 )
+            while( (L.size>0) && (R.size>0) )
             {
                 if( proc(L.head,R.head,args) < 0 )
                 {

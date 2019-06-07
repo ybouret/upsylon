@@ -3,6 +3,7 @@
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/hashing/sha1.hpp"
 #include <typeinfo>
 
 using namespace upsylon;
@@ -10,9 +11,11 @@ using namespace upsylon;
 #if 1
 namespace
 {
+    static const size_t nmax  = 4;
     template <typename T>
     static inline void do_test()
     {
+        hashing::sha1 H;
         const char *id = typeid(T).name();
 
         vector<T>      v( nwsrt::max_size, as_capacity);
@@ -25,26 +28,35 @@ namespace
             {
                 v.free();
                 w.free();
+                // creating data
                 for(size_t j=0;j<n;++j)
                 {
                     const T x = support::get<T>();
                     v.push_back(x);
                     w.push_back(0);
                 }
+                Y_ASSERT(v.size()==n);
                 
                 for(size_t jter=0;jter<16;++jter)
                 {
+                    // shuffling
                     alea.shuffle(*v,n);
-                    if(n<=3) std::cerr << "\tv0=" << v << std::endl;
+                    if(n<=nmax) std::cerr << "\tv0=" << v << std::endl;
+                    // sorting
                     nwsrt::on(*v,n);
-                    if(n<=3) std::cerr << "\tv1=" << v << std::endl;
+                    if(n<=nmax) std::cerr << "\tv1=" << v << std::endl;
 
                     for(size_t j=1;j<n;++j)
                     {
+                        if(v[j]>v[j+1])
+                        {
+                            std::cerr << "v[" << j << "]=" << v[j] << ">v[" << j+1 << "]=" << v[j+1] << std::endl;
+                            throw exception("nwsrt%u failure", unsigned(n));
+                        }
                         Y_ASSERT(v[j]<=v[j+1]);
                     }
 
-                    if(false)
+                    if(true)
                     {
                         alea.shuffle(*v,n);
                         for(size_t j=1;j<=n;++j) w[j] = j;
@@ -59,6 +71,7 @@ namespace
                             std::cerr << "v_srt=" << v << std::endl;
                             std::cerr << "w_srt=" << w << std::endl;
                         }
+                        nwsrt::on(*w,*v,n);
                     }
                 }
             }

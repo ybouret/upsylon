@@ -26,7 +26,11 @@ namespace
         const size_t n = arr.size();
         for(size_t i=1;i<n;++i)
         {
-            if(arr[i]>arr[i+1]) return false;
+            if(arr[i]>arr[i+1])
+            {
+                std::cerr << "!!! arr[" << i << "/ " << arr.size() << "]=" << arr[i] << ">arr[" << i+1 << "]=" << arr[i+1] << std::endl;
+                return false;
+            }
         }
         return true;
     }
@@ -103,7 +107,9 @@ namespace
 
             std::cerr << "\tysort" << std::endl;
             alea.shuffle(*V,V.size());
+            std::cerr << "V1=" << V << std::endl;
             ysort(V);
+            std::cerr << "V2=" << V << std::endl;
             Y_ASSERT(check_sorted(V));
         }
     }

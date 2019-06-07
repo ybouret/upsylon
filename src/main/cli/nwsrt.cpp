@@ -119,7 +119,7 @@ void write_indices( ios::ostream &fp, const array<swap> &tests )
     for (size_t j = 1; j <= nt; ++j)
     {
         const swap &swp = tests[j];
-        fp("0x%02u",swp.I);
+        fp("0x%02x",swp.I);
         if(j<nt) fp << ',';
     }
     fp("};\n");
@@ -127,7 +127,7 @@ void write_indices( ios::ostream &fp, const array<swap> &tests )
     for (size_t j = 1; j <= nt; ++j)
     {
         const swap &swp = tests[j];
-        fp("0x%02u",swp.J);
+        fp("0x%02x",swp.J);
         if(j<nt) fp << ',';
     }
     fp("};\n");

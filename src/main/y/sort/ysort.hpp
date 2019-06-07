@@ -62,7 +62,7 @@ MACRO(31); MACRO(32)
     inline void ysort(array<T> &arr)
     {
         unit_t n = unit_t(arr.size());
-        _ysort<T>(*arr,0,--n);
+        _ysort<T>(*arr,0,n-1);
     }
 }
 

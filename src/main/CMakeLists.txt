@@ -42,7 +42,7 @@ INSTALL( FILES ${core_decl} DESTINATION include/y/core )
 
 FILE(GLOB sort_decl y/sort/*.hpp)
 FILE(GLOB sort_code y/sort/*.cpp)
-SET(sort_srcs ${sort_decl} ${sort_code})
+SET(sort_srcs ${sort_decl} ${sort_code} y/sort/nwsrt.db)
 SOURCE_GROUP( sort FILES ${sort_srcs} )
 INSTALL( FILES ${sort_decl} DESTINATION include/y/sort )
 
