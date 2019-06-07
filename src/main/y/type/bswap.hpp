@@ -63,7 +63,7 @@ namespace upsylon
     template <typename T>
     void bswap( T &a, T &b ) throw()
     {
-        core::bswap<sizeof(T)>( &a, &b );
+        core::bswap<sizeof(T)>( (void *)&a, (void *)&b );
     }
     
     //! memory swap

@@ -111,6 +111,27 @@ static inline int __compare_swaps_ptr(const swaps_ptr &lhs, const swaps_ptr &rhs
 	return comparison::increasing(lhs->count, rhs->count);
 }
 
+static inline
+void write_indices( ios::ostream &fp, const array<swap> &tests )
+{
+    const size_t       nt    = tests.size();
+    fp("\t\t\tstatic const unsigned I[%u] = {",unsigned(nt));
+    for (size_t j = 1; j <= nt; ++j)
+    {
+        const swap &swp = tests[j];
+        fp("0x%02u",swp.I);
+        if(j<nt) fp << ',';
+    }
+    fp("};\n");
+    fp("\t\t\tstatic const unsigned J[%u] = {",unsigned(nt));
+    for (size_t j = 1; j <= nt; ++j)
+    {
+        const swap &swp = tests[j];
+        fp("0x%02u",swp.J);
+        if(j<nt) fp << ',';
+    }
+    fp("};\n");
+}
 
 Y_PROGRAM_START()
 {
@@ -162,7 +183,10 @@ Y_PROGRAM_START()
 			fp << "#include \"y/type/bswap.hpp\"\n";
 
             
-            
+            //__________________________________________________________________
+            //
+            // macros
+            //__________________________________________________________________
             fp << "//! swapping the pair I,J\n";
             fp << "#define Y_NWSRT_SWAP(I,J) { T &aI = a[I]; T &aJ = a[J]; if(aJ<aI) core::bswap< sizeof(T) >( &aI, &aJ ); }\n";
             fp << "//! swapping two pairs I,J\n";
@@ -189,31 +213,8 @@ Y_PROGRAM_START()
 						fp("\t\ttemplate <typename T> static inline void on%u(T *a) {\n", count);
 						fp << "\t\t\tassert(a);\n";
 						const array<swap> &tests = Swaps[i]->tests;
-						const size_t       nt    = tests.size();
-                        fp("\t\t\tstatic const unsigned I[%u] = {",unsigned(nt));
-                        for (size_t j = 1; j <= nt; ++j)
-                        {
-                            const swap &swp = tests[j];
-                            fp("%u",swp.I);
-                            if(j<nt) fp << ',';
-                        }
-                        fp("};\n");
-                        fp("\t\t\tstatic const unsigned J[%u] = {",unsigned(nt));
-                        for (size_t j = 1; j <= nt; ++j)
-                        {
-                            const swap &swp = tests[j];
-                            fp("%u",swp.J);
-                            if(j<nt) fp << ',';
-                        }
-                        fp("};\n");
-#if 0
-						for (size_t j = 1; j <= nt; ++j)
-						{
-							const swap &swp = tests[j];
-                            fp("\t\t\tY_NWSRT_SWAP(%2u,%2u)\n", swp.I, swp.J);
-						}
-#endif
-                        fp("\t\t\tfor(size_t k=0;k<%u;++k) { Y_NWSRT_SWAP(I[k],J[k]); }\n", unsigned(nt) );
+                        write_indices(fp,tests);
+                        fp("\t\t\tfor(size_t k=0;k<%u;++k) { Y_NWSRT_SWAP(I[k],J[k]); }\n", unsigned(tests.size()) );
 						fp << "\t\t}\n";
 					}
 
@@ -245,35 +246,11 @@ Y_PROGRAM_START()
 						fp("\t\ttemplate <typename T,typename U> static inline void on%u(T *a, U *b) {\n", count);
 						fp << "\t\t\tassert(a); assert(b);\n";
 						const array<swap> &tests = Swaps[i]->tests;
-						const size_t       nt = tests.size();
-                        fp("\t\t\tstatic const unsigned I[%u] = {",unsigned(nt));
-                        for (size_t j = 1; j <= nt; ++j)
-                        {
-                            const swap &swp = tests[j];
-                            fp("%u",swp.I);
-                            if(j<nt) fp << ',';
-                        }
-                        fp("};\n");
-                        fp("\t\t\tstatic const unsigned J[%u] = {",unsigned(nt));
-                        for (size_t j = 1; j <= nt; ++j)
-                        {
-                            const swap &swp = tests[j];
-                            fp("%u",swp.J);
-                            if(j<nt) fp << ',';
-                        }
-                        fp("};\n");
-                        fp("\t\t\tfor(size_t k=0;k<%u;++k) { Y_NWSRT_SWP2(I[k],J[k]); }\n", unsigned(nt) );
-
-#if 0
-						for (size_t j = 1; j <= nt; ++j)
-						{
-							const swap &swp = tests[j];
-                            fp("\t\t\t{ T &aI = a[%2u]; T &aJ = a[%2u]; if(aJ<aI) { bswap_safe(aI,aJ); bswap_safe(b[%2d],b[%2d]); } }\n", swp.I, swp.J, swp.I, swp.J);
-						}
-#endif
-						fp << "\t\t}\n";
+                        write_indices(fp,tests);
+                        fp("\t\t\tfor(size_t k=0;k<%u;++k) { Y_NWSRT_SWP2(I[k],J[k]); }\n", unsigned(tests.size()) );
+                        fp << "\t\t}\n";
 					}
-
+                    
 					//__________________________________________________________
 					//
 					// gather

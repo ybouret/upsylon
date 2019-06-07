@@ -61,8 +61,8 @@ MACRO(31); MACRO(32)
     template <typename T>
     inline void ysort(array<T> &arr)
     {
-        const unit_t n = unit_t(arr.size());
-        _ysort<T>(*arr,0,n-1);
+        unit_t n = unit_t(arr.size());
+        _ysort<T>(*arr,0,--n);
     }
 }
 
