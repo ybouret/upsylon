@@ -65,6 +65,7 @@ namespace
                             std::cerr << "v_raw=" << v << std::endl;
                             std::cerr << "w_raw=" << w << std::endl;
                         }
+                        const digest h0 = H.md(w);
                         nwsrt::on(*v,*w,n);
                         if(jter<=0&&iter<=0)
                         {
@@ -72,6 +73,8 @@ namespace
                             std::cerr << "w_srt=" << w << std::endl;
                         }
                         nwsrt::on(*w,*v,n);
+                        const digest h1 = H.md(w);
+                        Y_ASSERT(h1==h0);
                     }
                 }
             }
