@@ -2,14 +2,14 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/memory/pooled.hpp"
-
+#include "y/hashing/sha1.hpp"
 using namespace upsylon;
 
 
 Y_UTEST(heap)
 {
-    vector<int> data;
-
+    vector<int>   data;
+    hashing::sha1 h;
     
     heap<int>   H;
     heap<int,decreasing_comparator<int>,memory::pooled> D;
@@ -17,8 +17,8 @@ Y_UTEST(heap)
     for(size_t iter=0;iter<16;++iter)
     {
         data.free();
-        D.free();
-        H.free();
+        D.release();
+        H.release();
         for(size_t i=1+alea.leq(31);i>0;--i)
         {
             data << alea.partial<int>(12);
@@ -29,9 +29,30 @@ Y_UTEST(heap)
         {
             H.push( &data[i] );
             D.push( &data[i] );
-            std::cerr << " +(" << data[i] << "):" << H.peek() << "/" << D.peek() << std::endl;
+            std::cerr << " +(" << data[i] << "):";
+            std::cerr << "[" << H.peek();
+            if(i>1)
+            {
+                std::cerr << "->" << H.second();
+            }
+            std::cerr << "] / [" << D.peek();
+            if(i>1)
+            {
+                std::cerr << "->" << D.second();
+            }
+
+            std::cerr << "]" << std::endl;
         }
-        
+
+        {
+            const digest h1 = h.md(H);
+            heap<int> H2(H);
+            const digest h2 = h.md(H2);
+            std::cerr << "h1=" << h1 << std::endl;
+            std::cerr << "h2=" << h2 << std::endl;
+            Y_ASSERT(h1==h2);
+        }
+
         std::cerr << H.size() << "/" << H.capacity();
         while( H.size() )
         {

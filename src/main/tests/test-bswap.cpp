@@ -81,7 +81,7 @@ using namespace upsylon;
 
 Y_UTEST(bswap)
 {
-    double D = 0.1;
+    double D = 0.02;
     if(argc>1)
     {
         D = string_convert::to<double>(argv[1]);
