@@ -10,7 +10,7 @@ using namespace upsylon;
 
 namespace
 {
-    static const size_t nmax  = 4;
+    static const size_t nmax  = 2;
     template <typename T>
     static inline void do_test()
     {
@@ -52,7 +52,6 @@ namespace
                             std::cerr << "v[" << j << "]=" << v[j] << ">v[" << j+1 << "]=" << v[j+1] << std::endl;
                             throw exception("nwsrt%u failure", unsigned(n));
                         }
-                        Y_ASSERT(v[j]<=v[j+1]);
                     }
 
                     if(true)
@@ -62,14 +61,14 @@ namespace
                         if(jter<=0&&iter<=0)
                         {
                             std::cerr << "v_raw=" << v << std::endl;
-                            std::cerr << "w_raw=" << w << std::endl;
+                            //std::cerr << "w_raw=" << w << std::endl;
                         }
                         const digest h0 = H.md(w);
                         nwsrt::on(*v,*w,n);
                         if(jter<=0&&iter<=0)
                         {
                             std::cerr << "v_srt=" << v << std::endl;
-                            std::cerr << "w_srt=" << w << std::endl;
+                            //std::cerr << "w_srt=" << w << std::endl;
                         }
                         nwsrt::on(*w,*v,n);
                         const digest h1 = H.md(w);
