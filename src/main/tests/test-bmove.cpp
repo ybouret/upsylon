@@ -15,7 +15,7 @@ namespace
     inline void __bmove(T *target, const U *source)
     {
         struct mocking { char data[BYTES]; };
-        *(reinterpret_cast<mocking *>(target)) =   *(reinterpret_cast<const mocking *>(source));
+        *(mocking *)target =   *(const mocking *)source;
         char       *t = (char *) target;
         const char *s = (const char *) source;
         for(size_t i=0;i<BYTES;++i)
@@ -30,14 +30,14 @@ namespace
     namespace core
     {
         template <const size_t BYTES>
-        inline void bmove(void *a, const void *b)
+        inline void bmove(void *a, const void *b) throw()
         {
             struct mocking { char data[BYTES]; };
-            *(reinterpret_cast<mocking *>(a)) =   *(reinterpret_cast<const mocking *>(b));
+            *(mocking *)a = *(const mocking *)b;
         }
 
         template <>
-        inline void bmove<0>(void *,const void *)
+        inline void bmove<0>(void *,const void *) throw()
         {
         }
 
