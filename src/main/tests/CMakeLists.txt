@@ -29,11 +29,12 @@ ADD_TEST(os:spec        test-main spec)
 ADD_TEST(os:chkbnd      test-main chkbnd)
 
 SOURCE_GROUP(core FILES test-ppty.cpp test-lockable.cpp test-zset.cpp test-code.cpp test-bits.cpp test-core.cpp test-progress.cpp
- test-functor.cpp test-tuple.cpp test-traits.cpp test-bswap.cpp)
+ test-functor.cpp test-tuple.cpp test-traits.cpp test-bswap.cpp test-bmove.cpp)
 ADD_TEST(core:ppty     test-main ppty)
 ADD_TEST(core:lockable test-main lockable)
 ADD_TEST(core:zset        test-main zset)
 ADD_TEST(core:bswap       test-main bswap)
+ADD_TEST(core:bmove       test-main bmove)
 ADD_TEST(core:code        test-main code)
 ADD_TEST(core:bits        test-main bits)
 ADD_TEST(core:main        test-main core)
