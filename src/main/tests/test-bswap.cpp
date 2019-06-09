@@ -6,6 +6,17 @@
 
 using namespace upsylon;
 
+namespace
+{
+    template <const size_t BYTES>
+    void xswap(void *a,void *b) throw()
+    {
+        struct mocking { char data[BYTES]; };
+        const mocking tmp = *(mocking *)a;
+        *(mocking *)a = *(mocking *)b;
+        *(mocking *)b = tmp;
+    }
+}
 
 namespace
 {
@@ -67,9 +78,20 @@ namespace
         m_speed *= 1e-6;
         std::cerr << "\tmswap: " << m_speed << std::endl;
 
+        double x_speed = 0;
         if(N>0)
         {
-            ios::ocstream::echo(fn, "%lu %g %g\n", (unsigned long)N, b_speed, m_speed);
+            init(a,b,N);
+            xswap<N>(a,b);
+            check(a,b,N);
+            Y_TIMINGS(x_speed,D, xswap<N>(a,b));
+        }
+        x_speed *= 1e-6;
+        std::cerr << "\txswap: " << x_speed << std::endl;
+
+        if(N>0)
+        {
+            ios::ocstream::echo(fn, "%lu %g %g %g\n", (unsigned long)N, b_speed, m_speed, x_speed);
         }
     }
 
