@@ -39,7 +39,7 @@ namespace upsylon
                 // prepare boundary conditions
                 //______________________________________________________________
                 const size_t     nm1 = n-1;
-                vector<double> u(nm1);
+                vector<T>        u(nm1);
 
                 if(lower_natural)
                 {

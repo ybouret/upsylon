@@ -18,8 +18,8 @@ ADD_TEST(mk:diag     test-m diag)
 ADD_TEST(mk:lu       test-m LU)
 ADD_TEST(mk:svd      test-m svd)
 ADD_TEST(mk:tao      test-m tao)
-ADD_TEST(mk:tao2     test-m tao2)
-ADD_TEST(mk:tao3     test-m tao3)
+#ADD_TEST(mk:tao2     test-m tao2)
+#ADD_TEST(mk:tao3     test-m tao3)
 
 SOURCE_GROUP(ode FILES test-michaelis.cpp test-ode.cpp test-rk4.cpp
 test-ode-expl.cpp test-ode-impl.cpp test-explode.cpp)
