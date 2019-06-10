@@ -49,7 +49,7 @@ namespace upsylon
             typedef node<T> node_type; //!< alias
 
             //! setup
-            inline explicit tree() throw() : root(0), nodes(0), pool_node(0), pool_size(0)
+            inline explicit tree() throw() : root(0), nodes(0), pool_node(0), pool_size(0), compare()
             {
             }
 
