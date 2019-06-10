@@ -8,24 +8,28 @@
 namespace upsylon
 {
 
+    //! avl trees
     struct avl
     {
-        static const int at_left  = -1;
-        static const int balanced =  0;
-        static const int at_right =  1;
+        static const int at_left  = -1; //!< indicator
+        static const int balanced =  0; //!< indicator
+        static const int at_right =  1; //!< indicator
 
+        //! generic node
         template <typename T>
         class node
         {
         public:
-            Y_DECL_ARGS(T,type);
-            node      *parent;
-            node      *left;
-            node      *right;
-            int        weight;
-            const_type data;
+            Y_DECL_ARGS(T,type); //!< alias
+            node      *parent;   //!< parent node
+            node      *left;     //!< left child node
+            node      *right;    //!< right child node
+            int        factor;   //!< current factor
+            const_type data;     //!< user data hard copy
 
-            inline node(param_type user_data) : parent(0), left(0), right(0), weight(balanced), data(user_data) {}
+            //! setup
+            inline  node(param_type user_data) : parent(0), left(0), right(0), factor(balanced), data(user_data) {}
+            //! cleanup
             inline ~node() throw() {  }
 
         private:
@@ -33,6 +37,7 @@ namespace upsylon
         };
 
 
+        //! generic tree
         template <
         typename T,
         typename COMPARATOR = increasing_comparator<T>
@@ -43,21 +48,24 @@ namespace upsylon
             Y_DECL_ARGS(T,type);       //!< alias
             typedef node<T> node_type; //!< alias
 
+            //! setup
             inline explicit tree() throw() : root(0), nodes(0), pool_node(0), pool_size(0)
             {
             }
 
+            //! cleanup
             inline virtual ~tree() throw()
             {
                 release__();
             }
 
-            inline virtual size_t size()     const throw() { return nodes; }
-            inline virtual size_t capacity() const throw() { return nodes+pool_size; }
-            inline virtual void   free()     throw()       { free__(root); }
-            inline virtual void   release()  throw()       { release__();  }
-            inline virtual void   reserve(const size_t n)  { for(size_t i=n;i>0;--i) store( new_node() ); }
+            inline virtual size_t size()     const throw() { return nodes; }            //!< dynamic interface: size
+            inline virtual size_t capacity() const throw() { return nodes+pool_size; }  //!< dynanic interface: capacity
+            inline virtual void   free()     throw()       { free__(root); }            //!< container interface: free data, keep memoru
+            inline virtual void   release()  throw()       { release__();  }            //!< container interface, release resources
+            inline virtual void   reserve(const size_t n)  { for(size_t i=n;i>0;--i) store( new_node() ); } //!< reserve nodes
 
+            //! insert data
             inline void insert(param_type data)
             {
                 node_type *node = create_node_for(data); assert(NULL==node->parent);
@@ -73,19 +81,20 @@ namespace upsylon
                 ++nodes;
             }
 
-            template <typename FUNCTION> inline void inorder(FUNCTION &F)   const { inorder<FUNCTION>(F,root,0);   }
-            template <typename FUNCTION> inline void preorder(FUNCTION &F)  const { preorder<FUNCTION>(F,root,0);  }
-            template <typename FUNCTION> inline void postorder(FUNCTION &F) const { postorder<FUNCTION>(F,root,0); }
+
+            template <typename FUNCTION> inline void inorder(FUNCTION &F)   const { inorder<FUNCTION>(F,root,0);   } //!< in   order traversal
+            template <typename FUNCTION> inline void preorder(FUNCTION &F)  const { preorder<FUNCTION>(F,root,0);  } //!< pre  order traversal
+            template <typename FUNCTION> inline void postorder(FUNCTION &F) const { postorder<FUNCTION>(F,root,0); } //!< post order traversal
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tree);
-            node_type *root;
-            size_t     nodes;
-
-            node_type *pool_node;
-            size_t     pool_size;
-
-            mutable COMPARATOR compare;
+            node_type *root;            //!< tree root
+            size_t     nodes;           //!< nodes in tree
+            node_type *pool_node;       //!< top of the pool
+            size_t     pool_size;       //!< pool size
+        public:                         //|
+            mutable COMPARATOR compare; //!< data comparator
+        private:
 
             inline void insert__( node_type *node, node_type * curr )
             {
@@ -96,7 +105,7 @@ namespace upsylon
                     // should insert at left
                     if(0==curr->left)
                     {
-                        curr->left  = node;
+                        curr->left   = node;
                         node->parent = curr;
                     }
                     else
@@ -109,7 +118,7 @@ namespace upsylon
                     // should insert at right
                     if(0==curr->right)
                     {
-                        curr->right = node;
+                        curr->right  = node;
                         node->parent = curr;
                     }
                     else
