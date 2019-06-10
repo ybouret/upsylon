@@ -4,15 +4,31 @@
 
 using namespace upsylon;
 
+namespace
+{
+    template <typename T>
+    void display( const T &data, const size_t level )
+    {
+        for(size_t i=0;i<level;++i) std::cerr << ".";
+        std::cerr << "[" << data << "]" << std::endl;
+    }
+}
+
 Y_UTEST(avl)
 {
 
     avl::tree<int>    itree;
-    avl::tree<string> stree;
 
-    itree.reserve(100);
-    stree.reserve(1000);
-
+    for(size_t i=10;i>0;--i)
+    {
+        itree.insert( alea.partial<int>(10) );
+    }
+    std::cerr << "inorder" << std::endl;
+    itree.inorder(display<int>);
+    std::cerr << "preorder" << std::endl;
+    itree.preorder(display<int>);
+    std::cerr << "postorder" << std::endl;
+    itree.postorder(display<int>);
 
 }
 Y_UTEST_DONE()
