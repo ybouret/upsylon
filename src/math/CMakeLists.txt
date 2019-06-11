@@ -70,6 +70,12 @@ SET(stat_srcs ${stat_decl} ${stat_cstat})
 SOURCE_GROUP( stat FILES ${stat_srcs} )
 INSTALL( FILES ${stat_decl} DESTINATION include/y/math/stat )
 
+FILE(GLOB geom_decl y/math/geom/*.hpp)
+FILE(GLOB geom_cgeom y/math/geom/*.cpp)
+SET(geom_srcs ${geom_decl} ${geom_cgeom})
+SOURCE_GROUP( geom FILES ${geom_srcs} )
+INSTALL( FILES ${geom_decl} DESTINATION include/y/math/geom )
+
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
 ${kernel_srcs}
@@ -80,6 +86,7 @@ ${fit_srcs}
 ${opt_srcs}
 ${signal_srcs}
 ${stat_srcs}
+${geom_srcs}
 )
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
 
