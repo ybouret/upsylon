@@ -34,7 +34,21 @@ and a speed approximation:
 		  - \dfrac{3A_i^2-1}{6}(x_{i+1}-x_{i}) \vec{Q}_i
 		  + \dfrac{3B_i^2-1}{6}(x_{i+1}-x_{i}) \vec{Q}_{i+1}
 \end{equation}
-since:
+and the boundary values
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\vec{S}'_1(0) & = & \dfrac{1}{x_{2}-x_{1}} \left(\vec{P}_{2}-\vec{P}_1\right)
+		  - \dfrac{1}{3}(x_{2}-x_{1}) \vec{Q}_1
+		  - \dfrac{1}{6}(x_{2}-x_{1}) \vec{Q}_{2}\\
+		  \\
+		 \vec{S}'_{N-1}(t_N) & = &  \dfrac{1}{x_{N}-x_{N-1}} \left(\vec{P}_{N}-\vec{P}_{N-1}\right)  + \dfrac{1}{6}(x_{N}-x_{N-1}) \vec{Q}_{N-1}
+		  + \dfrac{1}{3}(x_{N}-x_{N-1}) \vec{Q}_{N} \\
+\end{array}
+\right.
+\end{equation}
+
+We have as well:
 \begin{equation}	
 		\forall t \in [t_{i};t_{i+1}],
 		 \;\; \vec{S}''_i(t) = A_i \vec{Q}_i + B_i \vec{Q}_{i+1}
@@ -58,5 +72,30 @@ The speed continuity yields:
 \\
 \end{array}
 \end{equation}
+
+and we have $N-2$ tridiagonal equations that shall be completed by 2 boundary conditions:
+\begin{itemize}
+\item The natural condition: 
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+\vec{Q}_1 & = &\vec{0} \\
+\text{or/and}\\
+\vec{Q}_2 & = & \vec{0}\\
+\end{array}
+\right.
+\end{equation}
+
+\item The fixed derivative condition:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\vec{Q}_1 + \dfrac{1}{2}\vec{Q}_2 & = &\dfrac{3}{x_2-x_1} \left[ \dfrac{1}{x_2-x_1} \left(\vec{P}_2-\vec{P}_1\right) - \partial_t \vec{P}_1 \right]\\
+	\text{or/and}\\
+	\dfrac{1}{2}\vec{Q}_{N-1} +\vec{Q}_N& =& \dfrac{3}{x_N-x_{N-1}} \left[\partial_t \vec{P}_{N-1} - \dfrac{1}{x_N-x_{N-1}}\left(\vec{P}_N - \vec{P}_{N-1}\right)\right]\\
+\end{array}
+\right.
+\end{equation}
+\end{itemize}
 
 \end{document}
