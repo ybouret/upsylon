@@ -1,0 +1,62 @@
+\documentclass[aps,11pt]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+
+\begin{document}
+
+We have a set of $N$ points $\vec{P}_1,\ldots,\vec{P}_N$ at different times $t_1,\ldots,t_N$.
+On each interval, we define the formal terms:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	A_i & = &\dfrac{t_{i+1}-t}{t_{i+1}-t_{i}}\\
+	\\
+	B_i & = &\dfrac{t-t_{i}}{t_{i+1}-t{i}} = 1-A_i\\
+	\\
+	C_i & = & \dfrac{1}{6}\left(A_i^3-A_i\right)\left(t_{i+1}-t_{i}\right)^2\\
+	\\
+	D_i & = & \dfrac{1}{6}\left(B_i^3-B_i\right)\left(t_{i+1}-t_{i}\right)^2\\
+\end{array}
+\right.
+\end{equation}
+so that we have  $N-1$ spline approximations:
+\begin{equation}
+	\forall t \in [t_{i};t_{i+1}], \;\; \vec{S}_i = A_i \vec{P}_{i} + B_i \vec{P}_{i+1} + C_i \vec{Q}_i + D_i \vec{Q}_{i+1}
+\end{equation}
+and a speed approximation:
+\begin{equation}	
+		\forall t \in [t_{i};t_{i+1}],
+		 \;\; \vec{S}'_i(t) = 
+		 \dfrac{1}{x_{i+1}-x_{i}} \left(\vec{P}_{i+1}-\vec{P}_i\right)
+		  - \dfrac{3A_i^2-1}{6}(x_{i+1}-x_{i}) \vec{Q}_i
+		  + \dfrac{3B_i^2-1}{6}(x_{i+1}-x_{i}) \vec{Q}_{i+1}
+\end{equation}
+since:
+\begin{equation}	
+		\forall t \in [t_{i};t_{i+1}],
+		 \;\; \vec{S}''_i(t) = A_i \vec{Q}_i + B_i \vec{Q}_{i+1}
+\end{equation}
+We have $N$ values $\vec{Q}_1,\ldots,\vec{Q}_N$ to compute.
+The speed continuity yields:
+
+\begin{equation}
+\begin{array}{rl}
+ &\forall i \in [2;N-1],\;\; \vec{S}_{i-1}(t_{i}) = \vec{S}_{i}(t_i)\\
+\Leftrightarrow &  
+ \dfrac{1}{x_{i}-x_{i-1}} \left(\vec{P}_{i}-\vec{P}_{i-1}\right)
+		  + \dfrac{1}{6}(x_{i}-x_{i-1}) \vec{Q}_{i-1}
+		  + \dfrac{1}{3}(x_{i}-x_{i-1}) \vec{Q}_{i}\\	  
+ & = \dfrac{1}{x_{i+1}-x_{i}} \left(\vec{P}_{i+1}-\vec{P}_i\right)
+		  - \dfrac{1}{3}(x_{i+1}-x_{i}) \vec{Q}_i
+		  - \dfrac{1}{6}(x_{i+1}-x_{i}) \vec{Q}_{i+1}  \\
+		  \\
+\Leftrightarrow & \dfrac{1}{x_{i+1}-x_{i}} \left(\vec{P}_{i+1}-\vec{P}_i\right) - \dfrac{1}{x_{i}-x_{i-1}} \left(\vec{P}_{i}-\vec{P}_{i-1}\right)
+= \dfrac{1}{6}(x_{i}-x_{i-1}) \vec{Q}_{i-1} + \dfrac{1}{3}(x_{i+1}-x_{i-1}) \vec{Q}_{i} + \dfrac{1}{6}(x_{i+1}-x_{i}) \vec{Q}_{i+1} 
+\\
+\end{array}
+\end{equation}
+
+\end{document}
