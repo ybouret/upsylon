@@ -18,7 +18,6 @@ static inline void show_info()
 static inline void handle_curve( curve::interface &C )
 {
     std::cerr << "#points=" << C.size() << std::endl;
-
 }
 
 Y_UTEST(curve)
@@ -36,20 +35,26 @@ Y_UTEST(curve)
 
     for(size_t i=10+alea.leq(10);i>0;--i)
     {
-        const float x = alea.symm<float>();
-        const float y = alea.symm<float>();
-        const float z = alea.symm<float>();
-        C1f.add(x);
-        C2f.add(x,y);
-        C3f.add(x,y,z);
+        {
+            const float x = alea.symm<float>();
+            const float y = alea.symm<float>();
+            const float z = alea.symm<float>();
 
-        C1d.add(x);
-        C2d.add(x,y);
-        C3d.add(x,y,z);
+            C1f.add(x);
+            C2f.add(x,y);
+            C3f.add(x,y,z);
+
+            C1d.add(x);
+            C2d.add(x,y);
+            C3d.add(x,y,z);
+        }
+        
     }
+
     handle_curve(C1f);
     handle_curve(C2f);
     handle_curve(C3f);
+
     handle_curve(C1d);
     handle_curve(C2d);
     handle_curve(C3d);

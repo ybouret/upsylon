@@ -29,7 +29,7 @@ namespace upsylon
                 static const T two   = T(2);
                 static const T six   = T(6);
 
-                assert(x.size()>0);
+                assert(x.size()>1);
                 assert(x.size()==y.size());
                 assert(x.size()==y2.size());
                 const size_t   n=x.size();
