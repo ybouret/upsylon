@@ -22,11 +22,13 @@ namespace upsylon
             virtual ~tridiag() throw() {}
 
             explicit tridiag(const size_t n) :
-            arrays<T>(4,n),
+            arrays<T>(6,n),
             a( this->next() ),
             b( this->next() ),
             c( this->next() ),
-            g( this->next() )
+            g( this->next() ),
+            _r(this->next() ),
+            _u(this->next() )
             {
 
             }
@@ -119,6 +121,7 @@ namespace upsylon
                     u[j] -= g[jp]*u[jp];
                 }
             }
+            
 
             inline void mul( array<T> &target, const array<T> &source ) const
             {
@@ -145,6 +148,9 @@ namespace upsylon
 
         private:
             array<T> &g;
+        public:
+            array<T> &_r;
+            array<T> &_u;
         };
     }
 }

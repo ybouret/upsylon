@@ -33,7 +33,7 @@ Y_UTEST(curve)
     curve::points< point2d<double> > C2d;
     curve::points< point3d<double> > C3d;
 
-    for(size_t i=10+alea.leq(10);i>0;--i)
+    for(size_t i=3;i>0;--i)
     {
         {
             const float x = alea.symm<float>();
@@ -59,6 +59,8 @@ Y_UTEST(curve)
     handle_curve(C2d);
     handle_curve(C3d);
 
+    C1f.compute(false,0,false,0);
+    C2f.compute(true,0,true,0);
 
 }
 Y_UTEST_DONE()

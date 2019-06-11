@@ -30,20 +30,20 @@ and a speed approximation:
 \begin{equation}	
 		\forall t \in [t_{i};t_{i+1}],
 		 \;\; \vec{S}'_i(t) = 
-		 \dfrac{1}{x_{i+1}-x_{i}} \left(\vec{P}_{i+1}-\vec{P}_i\right)
-		  - \dfrac{3A_i^2-1}{6}(x_{i+1}-x_{i}) \vec{Q}_i
-		  + \dfrac{3B_i^2-1}{6}(x_{i+1}-x_{i}) \vec{Q}_{i+1}
+		 \dfrac{1}{t_{i+1}-t_{i}} \left(\vec{P}_{i+1}-\vec{P}_i\right)
+		  - \dfrac{3A_i^2-1}{6}(t_{i+1}-t_{i}) \vec{Q}_i
+		  + \dfrac{3B_i^2-1}{6}(t_{i+1}-t_{i}) \vec{Q}_{i+1}
 \end{equation}
 and the boundary values
 \begin{equation}
 \left\lbrace
 \begin{array}{rcl}
-	\vec{S}'_1(0) & = & \dfrac{1}{x_{2}-x_{1}} \left(\vec{P}_{2}-\vec{P}_1\right)
-		  - \dfrac{1}{3}(x_{2}-x_{1}) \vec{Q}_1
-		  - \dfrac{1}{6}(x_{2}-x_{1}) \vec{Q}_{2}\\
+	\vec{S}'_1(0) & = & \dfrac{1}{t_{2}-t_{1}} \left(\vec{P}_{2}-\vec{P}_1\right)
+		  - \dfrac{1}{3}(t_{2}-t_{1}) \vec{Q}_1
+		  - \dfrac{1}{6}(t_{2}-t_{1}) \vec{Q}_{2}\\
 		  \\
-		 \vec{S}'_{N-1}(t_N) & = &  \dfrac{1}{x_{N}-x_{N-1}} \left(\vec{P}_{N}-\vec{P}_{N-1}\right)  + \dfrac{1}{6}(x_{N}-x_{N-1}) \vec{Q}_{N-1}
-		  + \dfrac{1}{3}(x_{N}-x_{N-1}) \vec{Q}_{N} \\
+		 \vec{S}'_{N-1}(t_N) & = &  \dfrac{1}{t_{N}-t_{N-1}} \left(\vec{P}_{N}-\vec{P}_{N-1}\right)  + \dfrac{1}{6}(t_{N}-t_{N-1}) \vec{Q}_{N-1}
+		  + \dfrac{1}{3}(t_{N}-t_{N-1}) \vec{Q}_{N} \\
 \end{array}
 \right.
 \end{equation}
@@ -60,15 +60,15 @@ The speed continuity yields:
 \begin{array}{rl}
  &\forall i \in [2;N-1],\;\; \vec{S}_{i-1}(t_{i}) = \vec{S}_{i}(t_i)\\
 \Leftrightarrow &  
- \dfrac{1}{x_{i}-x_{i-1}} \left(\vec{P}_{i}-\vec{P}_{i-1}\right)
-		  + \dfrac{1}{6}(x_{i}-x_{i-1}) \vec{Q}_{i-1}
-		  + \dfrac{1}{3}(x_{i}-x_{i-1}) \vec{Q}_{i}\\	  
- & = \dfrac{1}{x_{i+1}-x_{i}} \left(\vec{P}_{i+1}-\vec{P}_i\right)
-		  - \dfrac{1}{3}(x_{i+1}-x_{i}) \vec{Q}_i
-		  - \dfrac{1}{6}(x_{i+1}-x_{i}) \vec{Q}_{i+1}  \\
+ \dfrac{1}{t_{i}-t_{i-1}} \left(\vec{P}_{i}-\vec{P}_{i-1}\right)
+		  + \dfrac{1}{6}(t_{i}-t_{i-1}) \vec{Q}_{i-1}
+		  + \dfrac{1}{3}(t_{i}-t_{i-1}) \vec{Q}_{i}\\	  
+ & = \dfrac{1}{t_{i+1}-t_{i}} \left(\vec{P}_{i+1}-\vec{P}_i\right)
+		  - \dfrac{1}{3}(t_{i+1}-t_{i}) \vec{Q}_i
+		  - \dfrac{1}{6}(t_{i+1}-t_{i}) \vec{Q}_{i+1}  \\
 		  \\
-\Leftrightarrow & \dfrac{1}{x_{i+1}-x_{i}} \left(\vec{P}_{i+1}-\vec{P}_i\right) - \dfrac{1}{x_{i}-x_{i-1}} \left(\vec{P}_{i}-\vec{P}_{i-1}\right)
-= \dfrac{1}{6}(x_{i}-x_{i-1}) \vec{Q}_{i-1} + \dfrac{1}{3}(x_{i+1}-x_{i-1}) \vec{Q}_{i} + \dfrac{1}{6}(x_{i+1}-x_{i}) \vec{Q}_{i+1} 
+\Leftrightarrow & \dfrac{1}{t_{i+1}-t_{i}} \left(\vec{P}_{i+1}-\vec{P}_i\right) - \dfrac{1}{t_{i}-t_{i-1}} \left(\vec{P}_{i}-\vec{P}_{i-1}\right)
+= \dfrac{1}{6}(t_{i}-t_{i-1}) \vec{Q}_{i-1} + \dfrac{1}{3}(t_{i+1}-t_{i-1}) \vec{Q}_{i} + \dfrac{1}{6}(t_{i+1}-t_{i}) \vec{Q}_{i+1} 
 \\
 \end{array}
 \end{equation}
@@ -90,9 +90,9 @@ and we have $N-2$ tridiagonal equations that shall be completed by 2 boundary co
 \begin{equation}
 \left\lbrace
 \begin{array}{rcl}
-	\vec{Q}_1 + \dfrac{1}{2}\vec{Q}_2 & = &\dfrac{3}{x_2-x_1} \left[ \dfrac{1}{x_2-x_1} \left(\vec{P}_2-\vec{P}_1\right) - \partial_t \vec{P}_1 \right]\\
+	\vec{Q}_1 + \dfrac{1}{2}\vec{Q}_2 & = &\dfrac{3}{t_2-t_1} \left[ \dfrac{1}{t_2-t_1} \left(\vec{P}_2-\vec{P}_1\right) - \partial_t \vec{P}_1 \right]\\
 	\text{or/and}\\
-	\dfrac{1}{2}\vec{Q}_{N-1} +\vec{Q}_N& =& \dfrac{3}{x_N-x_{N-1}} \left[\partial_t \vec{P}_{N-1} - \dfrac{1}{x_N-x_{N-1}}\left(\vec{P}_N - \vec{P}_{N-1}\right)\right]\\
+	\dfrac{1}{2}\vec{Q}_{N-1} +\vec{Q}_N& =& \dfrac{3}{t_N-t_{N-1}} \left[\partial_t \vec{P}_{N-1} - \dfrac{1}{t_N-t_{N-1}}\left(\vec{P}_N - \vec{P}_{N-1}\right)\right]\\
 \end{array}
 \right.
 \end{equation}
