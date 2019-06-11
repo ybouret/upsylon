@@ -24,7 +24,9 @@ namespace upsylon
         
         //! zero
         inline point2d(): x(0), y(0) {}
-        //! by values
+        //! by 1 value
+        inline point2d( param_type X ) throw() : x(X), y(0) {}
+        //! by 2 values
         inline point2d( param_type X, param_type Y) throw() : x(X), y(Y) {}
         //! copy
         inline point2d( const point2d &p ) : x(p.x), y(p.y) {}

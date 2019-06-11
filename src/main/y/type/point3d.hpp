@@ -22,9 +22,13 @@ namespace upsylon
             return (os << '[' << p.x << ' ' << p.y << ' ' << p.z << ']' << '\'');
         }
 
-        //! default ctor, zero
+        //! default constructor, zero
         inline point3d() : x(0), y(0), z(0) {}
-        //! construct by values
+        //! construct by 1 value
+        inline point3d( param_type X) : x(X), y(0), z(0) {}
+        //! construct by 2 values
+        inline point3d( param_type X, param_type Y) : x(X), y(Y), z(0) {}
+        //! construct by 3 values
         inline point3d( param_type X, param_type Y, param_type Z) : x(X), y(Y), z(Z) {}
         //! copy constructor
         inline point3d( const point3d &p ) : x(p.x), y(p.y), z(p.z) {}
