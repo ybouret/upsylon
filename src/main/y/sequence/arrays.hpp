@@ -106,17 +106,17 @@ namespace upsylon
         }
 
         //! array access
-        inline array_type & operator[](const size_t i) throw()
+        inline virtual array_type & operator[](const size_t i) throw()
         {
             assert(i<count); return _array[i];
         }
 
         //! array access, const
-        inline const array_type & operator[](const size_t i) const throw()
+        inline virtual const array_type & operator[](const size_t i) const throw()
         {
             assert(i<count); return _array[i];
         }
-
+        
         //! common size
         inline size_t size() const throw() { return sizes; }
 

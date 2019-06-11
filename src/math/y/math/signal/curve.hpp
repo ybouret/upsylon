@@ -6,6 +6,7 @@
 #include "y/type/point3d.hpp"
 #include "y/math/kernel/tridiag.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/ios/ostream.hpp"
 
 namespace upsylon
 {
@@ -13,6 +14,7 @@ namespace upsylon
     {
         struct curve
         {
+            //! template to extract info from types
             template <typename T> struct info_for;
 
             template <> struct info_for<float>
@@ -22,6 +24,12 @@ namespace upsylon
             };
 
             template <> struct info_for< point2d<float> >
+            {
+                static const size_t dim = 2;
+                typedef float       real;
+            };
+            
+            template <> struct info_for< complex<float> >
             {
                 static const size_t dim = 2;
                 typedef float       real;
@@ -45,6 +53,12 @@ namespace upsylon
                 typedef double       real;
             };
 
+            template <> struct info_for< complex<double> >
+            {
+                static const size_t dim = 2;
+                typedef double      real;
+            };
+            
             template <> struct info_for< point3d<double> >
             {
                 static const size_t dim = 3;
@@ -54,22 +68,54 @@ namespace upsylon
             class interface
             {
             public:
+                const size_t dimensions;
+                const size_t real_bytes;
+                const size_t point_size; //!< dimensions * real_bytes
+                
                 virtual ~interface() throw();
-                virtual size_t size() const throw() = 0;
-
+                virtual size_t      size() const throw() = 0;
+                virtual const void *addr(const size_t index) const throw() = 0;
+                
+                void save_point( ios::ostream &fp, const void *p ) const;
+                void save( ios::ostream &fp ) const;
+                
+                //! 'time' to 'index' to output points coordinate
+                template <typename T>
+                T t2i( const T t ) const throw()
+                {
+                    const size_t n = size();
+                    const size_t nm1 = n-1;
+                    return clamp<T>(1,T(1)+ t * nm1,n);
+                }
+                
+                
+                
             protected:
-                explicit interface() throw();
-                bool         ok;  //!< keep track
+                explicit interface(const size_t d, const size_t r) throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(interface);
             };
-
+            
+            template <typename T>
+            class interface_for : public interface
+            {
+            public:
+                inline virtual ~interface_for() throw() {}
+                
+            protected:
+                explicit interface_for( const size_t d ) throw() : interface(d, sizeof(T)) {}
+                
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(interface_for);
+            };
+            
             template <
             typename POINT,
             typename ALLOCATOR= memory::global
             >
-            class points : public interface
+            class points : public interface_for< typename info_for<POINT>::real >
             {
             public:
                 typedef info_for<POINT>          info_type;
@@ -78,57 +124,70 @@ namespace upsylon
                 typedef typename info_type::real real;
                 typedef vector<point,ALLOCATOR>  vector_type;
 
-                inline explicit points() throw() : P(), Q(), zp(0) {}
+                inline explicit points() throw() :
+                interface_for<real>(dim), P(), Q(), zp(0),
+                lower_natural(true),
+                upper_natural(true),
+                lower_tangent(0),
+                upper_tangent(0)
+                {}
+                
                 inline virtual ~points() throw() {}
 
 
-                inline void append( const point &p )         { P.push_back(p); ok = false; }
-                inline points & operator<<( const point &p ) { append(p);    return *this; }
+                inline void append( const point &p )         { P.push_back(p);}
+                inline points & operator<<( const point &p ) { append(p); return *this; }
 
                 inline void add(const real x)                             { const POINT p(x);     append(p); }
                 inline void add(const real x, const real y)               { const POINT p(x,y);   append(p); }
                 inline void add(const real x, const real y, const real z) { const POINT p(x,y,z); append(p); }
 
                 inline virtual size_t size() const throw() { return P.size(); }
-
-                inline point & operator[](const size_t index) throw()
-                {
-                    assert(index>0); assert(index<=P.size());
-                    ok = false;
-                    return P[index];
-                }
-
+                
                 inline const point & operator[](const size_t index) const throw()
                 {
                     assert(index>0); assert(index<=P.size());
                     return P[index];
                 }
 
-                void compute(const bool   lower_natural,
-                             const point &lower_tangent,
-                             const bool   upper_natural,
-                             const point &upper_tangent)
+                virtual const void *addr(const size_t index) const throw()
+                {
+                    assert(index>0); assert(index<=P.size());
+                    return  &P[index];
+                }
+
+                
+                virtual void compute()
                 {
                     static const real half(0.5);
                     static const real six(6);
                     static const real three(3);
-
+                    static const real one(1);
+                    static const real four(4);
+                    
                     const size_t n = this->size();
-                    if(ok||n<=1)
+                    if(n<=1)
+                    {
+                        Q.free();
                         return;
+                    }
                     else
                     {
                         Q.make(n,zp);
                         tridiag<real> t(n);
-                        array<real>  &r = t._r;
-                        array<real>  &u = t._u;
+                        arrays<real>  arr(2,n);
+                        array<real>  &r = arr[0];
+                        array<real>  &u = arr[1];
 
-                        t.b[1] = t.b[n] = 1;
-                        r[1]   = r[n]   = 0;
+                        //______________________________________________________
+                        //
+                        // compute the matrix
+                        //______________________________________________________
+                        t.b[1] = t.b[n] = one;
                         for(size_t i=2;i<n;++i)
                         {
-                            t.a[i] = t.c[i] = 1;
-                            t.b[i] = 4;
+                            t.a[i] = t.c[i] = one;
+                            t.b[i] = four;
                         }
                         if(!lower_natural)
                         {
@@ -138,17 +197,20 @@ namespace upsylon
                         {
                             t.a[n] = half;
                         }
-                        std::cerr << "t=" << t << std::endl;
-
+                        
+                        //______________________________________________________
+                        //
+                        // compute dimension wise
+                        //______________________________________________________
                         for(size_t d=0;d<dim;++d)
                         {
                             r[1] = r[n] =0;
                             for(size_t i=2;i<n;++i)
                             {
-                                const real  _pm = * ( (const real *)&P[i-1] + d);
-                                const real  _p0 = * ( (const real *)&P[i]   + d);
-                                const real  _pp = * ( (const real *)&P[i+1] + d);
-                                r[i] = six * (_pm+_pp-(_p0+_p0));
+                                const real  pm = * ( (const real *)&P[i-1] + d);
+                                const real  p0 = * ( (const real *)&P[i]   + d);
+                                const real  pp = * ( (const real *)&P[i+1] + d);
+                                r[i] = six * (pm+pp-(p0+p0));
                             }
                             if(!lower_natural)
                             {
@@ -166,32 +228,59 @@ namespace upsylon
                                 r[n] = three*( ut - (pN-pNm1) );
                             }
 
-
-                            std::cerr << "\tr=" << r << std::endl;
                             t.solve(u,r);
-                            std::cerr << "\tu=" << u << std::endl;
                             for(size_t i=n;i>0;--i)
                             {
                                 point &q = Q[i];
                                 *((real *)&q + d) = u[i];
                             }
                         }
-                        std::cerr << "Q=" << Q << std::endl;
                     }
                 }
 
+                //! t in [0:1] P1->PN
                 inline point operator()(const real t) const
                 {
                     const size_t n = this->size();
-
-                    return zp;
+                    switch(n)
+                    {
+                        case 0: return zp;
+                        case 1: return P[1];
+                        default:break;
+                    }
+                    assert(n>=2);
+                    if(t<=0)
+                    {
+                        return P[1];
+                    }
+                    else if(t>=1)
+                    {
+                        return P[n];
+                    }
+                    else
+                    {
+                        static const real six(6);
+                        const size_t nm1 = n-1;
+                        const real   tt  = real(1) + t*nm1;
+                        const size_t jlo = min_of<real>(nm1,floor_of(tt));
+                        const real   B   = (tt-jlo);
+                        const size_t jup = jlo+1;
+                        const real   A   = 1-B;
+                        return A*P[jlo]+B*P[jup] + ((A*A*A-A) * Q[jlo] + (B*B*B-B) * Q[jup])/six;
+                    }
                 }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(points);
                 vector_type  P;   //!< points
-                vector_type  Q;  //!< second derivatives
+                vector_type  Q;   //!< second derivatives
+            public:
                 const point  zp;
+                bool  lower_natural;
+                bool  upper_natural;
+                point lower_tangent;
+                point upper_tangent;
+    
             };
 
         };

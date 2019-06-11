@@ -36,10 +36,6 @@ namespace
             *(mocking *)a = *(const mocking *)b;
         }
 
-        template <>
-        inline void bmove<0>(void *,const void *) throw()
-        {
-        }
 
     }
 

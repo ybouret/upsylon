@@ -17,18 +17,17 @@ namespace upsylon
         class tridiag : public arrays<T>
         {
         public:
+            typedef typename arrays<T>::array_type  array_type;
             typedef typename real_for<T>::type      scalar_type;
 
             virtual ~tridiag() throw() {}
 
             explicit tridiag(const size_t n) :
-            arrays<T>(6,n),
+            arrays<T>(4,n),
             a( this->next() ),
             b( this->next() ),
             c( this->next() ),
-            g( this->next() ),
-            _r(this->next() ),
-            _u(this->next() )
+            g( this->next() )
             {
 
             }
@@ -82,11 +81,10 @@ namespace upsylon
             }
 
 
-            array<T> &a; //!< a[2]..a[size]
-            array<T> &b; //!< b[1]..b[size]
-            array<T> &c; //!< c[1]..c[size-1]
-
-
+            array_type &a; //!< a[2]..a[size]
+            array_type &b; //!< b[1]..b[size]
+            array_type &c; //!< c[1]..c[size-1]
+            
             inline void solve( array<T> &u, const array<T> &r )
             {
                 assert(this->size()>0);
@@ -147,10 +145,8 @@ namespace upsylon
             }
 
         private:
-            array<T> &g;
-        public:
-            array<T> &_r;
-            array<T> &_u;
+            array_type &g;
+            
         };
     }
 }
