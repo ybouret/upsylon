@@ -102,31 +102,7 @@ namespace upsylon
                     assert(index>0); assert(index<=P.size());
                     return P[index];
                 }
-
-                inline virtual void compute(const bool   lower_natural,
-                                            const point &lower_slope,
-                                            const bool   upper_natural,
-                                            const point &upper_slope)
-                {
-                    static const real half  = real(0.5);
-                    static const real three = real(3);
-
-                    if(ok)
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        const size_t n = P.size();
-                        if(n>1)
-                        {
-                            
-                        }
-                        ok = true;
-                    }
-                }
-
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(points);
                 vector_type  P;   //!< points

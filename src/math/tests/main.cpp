@@ -15,6 +15,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(svd);
     Y_UTEST(cholesky);
     Y_UTEST(diag);
+    Y_UTEST(tridiag);
 
     Y_UTEST(ode);
     Y_UTEST(rk4);
