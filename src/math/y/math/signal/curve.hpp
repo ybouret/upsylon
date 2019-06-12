@@ -18,61 +18,7 @@ namespace upsylon
             //! template to extract info from types
             template <typename T> struct info_for;
 
-            //! using float
-            template <> struct info_for<float>
-            {
-                static const size_t dim = 1; //!< dim
-                typedef float       real;    //!< real
-            };
 
-            //! using point2d<float>
-            template <> struct info_for< point2d<float> >
-            {
-                static const size_t dim = 2; //!< dim
-                typedef float       real;    //!< real
-            };
-
-            //! using complex<float>
-            template <> struct info_for< complex<float> >
-            {
-                static const size_t dim = 2; //!< dim
-                typedef float       real;    //!< real
-            };
-
-            //! using point2d<float>
-            template <> struct info_for< point3d<float> >
-            {
-                static const size_t dim = 3;//!< dim
-                typedef float       real;   //!< real
-            };
-
-            //! using double
-            template <> struct info_for<double>
-            {
-                static const size_t dim = 1;//!< dim
-                typedef double      real;   //!< real
-            };
-
-            //! using point2d<double>
-            template <> struct info_for< point2d<double> >
-            {
-                static const size_t  dim = 2; //!< dim
-                typedef double       real;    //!< real
-            };
-
-            //! using complex<double>
-            template <> struct info_for< complex<double> >
-            {
-                static const size_t dim = 2; //!< dim
-                typedef double      real;    //!< real
-            };
-
-            //! using point3d<double>
-            template <> struct info_for< point3d<double> >
-            {
-                static const size_t dim = 3; //!< dim
-                typedef double      real;    //!< real
-            };
 
             //! for boundaries
             enum style
@@ -457,8 +403,62 @@ namespace upsylon
                 }
             };
 
+        };
 
+        //! using float
+        template <> struct curve:: info_for<float>
+        {
+            static const size_t dim = 1; //!< dim
+            typedef float       real;    //!< real
+        };
 
+        //! using point2d<float>
+        template <> struct curve:: info_for< point2d<float> >
+        {
+            static const size_t dim = 2; //!< dim
+            typedef float       real;    //!< real
+        };
+
+        //! using complex<float>
+        template <> struct curve:: info_for< complex<float> >
+        {
+            static const size_t dim = 2; //!< dim
+            typedef float       real;    //!< real
+        };
+
+        //! using point2d<float>
+        template <> struct curve:: info_for< point3d<float> >
+        {
+            static const size_t dim = 3;//!< dim
+            typedef float       real;   //!< real
+        };
+
+        //! using double
+        template <> struct curve:: info_for<double>
+        {
+            static const size_t dim = 1;//!< dim
+            typedef double      real;   //!< real
+        };
+
+        //! using point2d<double>
+        template <> struct curve:: info_for< point2d<double> >
+        {
+            static const size_t  dim = 2; //!< dim
+            typedef double       real;    //!< real
+        };
+
+        //! using complex<double>
+        template <> struct curve:: info_for< complex<double> >
+        {
+            static const size_t dim = 2; //!< dim
+            typedef double      real;    //!< real
+        };
+
+        //! using point3d<double>
+        template <> struct curve:: info_for< point3d<double> >
+        {
+            static const size_t dim = 3; //!< dim
+            typedef double      real;    //!< real
         };
     }
 }
