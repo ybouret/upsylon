@@ -13,13 +13,18 @@ namespace upsylon
         curve:: interface:: interface(const size_t d, const size_t r) throw() :
         dimensions(d),
         real_bytes(r),
-        point_size(dimensions*real_bytes)
+        point_size(dimensions*real_bytes),
+        computed(false)
         {
             assert(d>0);
             assert(r>0);
         }
 
-        
+        void curve:: interface:: set_computed(bool flag) throw()
+        {
+            (bool &)computed = flag;
+        }
+
         template <typename T>
         static inline void __print( ios::ostream &fp, const void *p, const size_t d)
         {
