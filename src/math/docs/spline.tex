@@ -6,7 +6,10 @@
 \usepackage{pslatex}
 
 \begin{document}
+\title{Splines for curves 1D/2D/3D/...}
+\maketitle
 
+\section{Definitions}
 We have a set of $N$ points $\vec{P}_1,\ldots,\vec{P}_N$ at different times $t_1,\ldots,t_N$.
 On each interval, we define the formal terms:
 \begin{equation}
@@ -72,8 +75,11 @@ The speed continuity yields:
 \\
 \end{array}
 \end{equation}
+and we have $N-2$ tridiagonal equations that shall be completed by 2 boundary conditions.
 
-and we have $N-2$ tridiagonal equations that shall be completed by 2 boundary conditions:
+\section{Boundary conditions}
+
+\subsection{Standard Splines}
 \begin{itemize}
 \item The natural condition: 
 \begin{equation}
@@ -97,5 +103,7 @@ and we have $N-2$ tridiagonal equations that shall be completed by 2 boundary co
 \right.
 \end{equation}
 \end{itemize}
+
+\subsection{Periodic Splines}
 
 \end{document}

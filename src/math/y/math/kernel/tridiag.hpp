@@ -13,15 +13,21 @@ namespace upsylon
     namespace math
     {
 
+        //! tridiagonal matrix interface and solver
+        /**
+         works for float, double, complexes, mpq
+        */
         template <typename T>
         class tridiag : public arrays<T>
         {
         public:
-            typedef typename arrays<T>::array_type  array_type;
-            typedef typename real_for<T>::type      scalar_type;
+            typedef typename arrays<T>::array_type  array_type;  //!< alias
+            typedef typename real_for<T>::type      scalar_type; //!< alias
 
+            //! destructor
             virtual ~tridiag() throw() {}
 
+            //! setup with size=n, 4 arrays
             explicit tridiag(const size_t n) :
             arrays<T>(4,n),
             a( this->next() ),
@@ -32,6 +38,7 @@ namespace upsylon
 
             }
 
+            //! get value at row i, column j
             inline T operator()(const size_t i, const size_t j) const throw()
             {
                 assert(i>0); assert(i<=this->size());
@@ -64,6 +71,7 @@ namespace upsylon
                 }
             }
 
+            //! display
             inline friend std::ostream & operator<<( std::ostream &os, const tridiag &tri )
             {
                 os << '[';
@@ -84,7 +92,8 @@ namespace upsylon
             array_type &a; //!< a[2]..a[size]
             array_type &b; //!< b[1]..b[size]
             array_type &c; //!< c[1]..c[size-1]
-            
+
+            //! solve (*this)*u = r
             inline void solve( array<T> &u, const array<T> &r )
             {
                 assert(this->size()>0);
@@ -120,7 +129,7 @@ namespace upsylon
                 }
             }
             
-
+            //! target = (*this)*source
             inline void mul( array<T> &target, const array<T> &source ) const
             {
                 assert(target.size()==this->size());

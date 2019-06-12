@@ -21,61 +21,67 @@ namespace upsylon
             //! using float
             template <> struct info_for<float>
             {
-                static const size_t dim = 1;
-                typedef float       real;
+                static const size_t dim = 1; //!< dim
+                typedef float       real;    //!< real
             };
 
             //! using point2d<float>
             template <> struct info_for< point2d<float> >
             {
-                static const size_t dim = 2;
-                typedef float       real;
+                static const size_t dim = 2; //!< dim
+                typedef float       real;    //!< real
             };
 
             //! using complex<float>
             template <> struct info_for< complex<float> >
             {
-                static const size_t dim = 2;
-                typedef float       real;
+                static const size_t dim = 2; //!< dim
+                typedef float       real;    //!< real
             };
 
+            //! using point2d<float>
             template <> struct info_for< point3d<float> >
             {
-                static const size_t dim = 3;
-                typedef float       real;
+                static const size_t dim = 3;//!< dim
+                typedef float       real;   //!< real
             };
 
+            //! using double
             template <> struct info_for<double>
             {
-                static const size_t dim = 1;
-                typedef double      real;
+                static const size_t dim = 1;//!< dim
+                typedef double      real;   //!< real
             };
 
+            //! using point2d<double>
             template <> struct info_for< point2d<double> >
             {
-                static const size_t  dim = 2;
-                typedef double       real;
+                static const size_t  dim = 2; //!< dim
+                typedef double       real;    //!< real
             };
 
+            //! using complex<double>
             template <> struct info_for< complex<double> >
             {
-                static const size_t dim = 2;
-                typedef double      real;
+                static const size_t dim = 2; //!< dim
+                typedef double      real;    //!< real
             };
-            
+
+            //! using point3d<double>
             template <> struct info_for< point3d<double> >
             {
-                static const size_t dim = 3;
-                typedef double      real;
+                static const size_t dim = 3; //!< dim
+                typedef double      real;    //!< real
             };
 
+            //! for boundaries
             enum style
             {
-                standard,
-                periodic
+                standard, //!< standard spline
+                periodic  //!< periodic spline
             };
 
-            template <class> class spline;
+            template <class> class spline; //!< forward declaration
 
             //! interface class for run-time info
             class interface
@@ -83,12 +89,13 @@ namespace upsylon
             public:
                 //______________________________________________________________
                 //
-                // data
+                // members
                 //______________________________________________________________
                 const size_t   dimensions; //!< number of components
                 const size_t   real_bytes; //!< sizeof(real)
                 const size_t   point_size; //!< dimensions * real_bytes
-                const bool     computed;
+                const bool     computed;   //!< status flag
+
                 //______________________________________________________________
                 //
                 // virtual interface
@@ -102,34 +109,11 @@ namespace upsylon
                 // non virtual interface
                 //______________________________________________________________
                 void save_point( ios::ostream &fp, const void *p ) const;       //!< save a point
-                void save( ios::ostream &fp ) const;                            //!< save #point point.x ...
-
-#if 0
-                //! 'time' to 'index' to output points coordinate
-                template <typename T> T t2i( const T t, const style boundaries) const throw()
-                {
-                    const size_t n = size();
-                    const size_t nm1 = n-1;
-                    switch(boundaries)
-                    {
-                        case periodic:
-                        {
-                            T tt = T(1) + t *nm1;
-                            while( tt > n ) tt -= n;
-                            while( tt < 1 ) tt += n;
-                            return tt;
-                        }
-                        default:
-                            break;
-                    }
-                    return clamp<T>(1,T(1)+ t * nm1,n);
-                }
-#endif
+                void save( ios::ostream &fp ) const;                            //!< save point_index point.x [point.y...]
 
             protected:
-                //! setup
-                explicit interface(const size_t d, const size_t r) throw();
-                void set_computed(bool flag) throw();
+                explicit interface(const size_t d, const size_t r) throw();     //!< setup
+                void set_computed(bool flag) throw();                           //!< change status
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(interface);
@@ -159,14 +143,22 @@ namespace upsylon
             class points : public interface_for< typename info_for<POINT>::real >
             {
             public:
-                typedef info_for<POINT>          info_type;
-                static const size_t              dim = info_type::dim;
-                typedef POINT                    point;
-                typedef typename info_type::real real;
-                typedef vector<point,ALLOCATOR>  vector_type;
+                //______________________________________________________________
+                //
+                // definitions
+                //______________________________________________________________
+                typedef info_for<POINT>          info_type;            //!< alias
+                static const size_t              dim = info_type::dim; //!< dimension
+                typedef POINT                    point;                //!< alias
+                typedef typename info_type::real real;                 //!< alias
+                typedef vector<point,ALLOCATOR>  vector_type;          //!< alias
 
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
                 inline virtual       ~points() throw() {} //!< destructor
-                inline points &       operator<<( const point &p ) { P.push_back(p); this->set_computed(false); return *this;}     //<! appending a point
+                inline points &       operator<<( const point &p ) { P.push_back(p); this->set_computed(false); return *this;}     //!< appending a point
                 inline points &       add(const real x)                             { const POINT p(x);     return (*this) << p; } //!< append x
                 inline points &       add(const real x, const real y)               { const POINT p(x,y);   return (*this) << p; } //!< append x,y
                 inline points &       add(const real x, const real y, const real z) { const POINT p(x,y,z); return (*this) << p; } //!< append x,y,z
@@ -226,25 +218,41 @@ namespace upsylon
                 friend class spline<POINT>;
 
             public:
-                const point  zp;
+                const point  zp;  //!< zero point
             };
 
+            //! spline base class
             template <typename POINT>
             class spline
             {
             public:
-                typedef points<POINT>              points_type;
-                typedef typename points_type::real real;
+                //______________________________________________________________
+                //
+                // definitions
+                //______________________________________________________________
+                typedef points<POINT>              points_type; //!< alias
+                typedef typename points_type::real real;        //!< alias
 
-                const style boundaries;
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const style boundaries; //!< run-time style
 
+                //______________________________________________________________
+                //
+                // virtual interface
+                //______________________________________________________________
+                //! destructor
                 inline virtual ~spline() throw() {}
-
 
                 //! 'time' to 'index' to save coordinates
                 virtual real t2i( const real t, const size_t n) const throw() = 0;
 
-
+                //______________________________________________________________
+                //
+                // non virtual interface
+                //______________________________________________________________
                 //! compute coefficients
                 inline void compute( points_type &source )
                 {
@@ -256,6 +264,7 @@ namespace upsylon
                     source.set_computed(true);
                 }
 
+                //! compute a point from data
                 inline POINT compute( const real t, const points_type &source) const
                 {
                     assert(source.computed);
@@ -263,14 +272,18 @@ namespace upsylon
                 }
 
             protected:
+                //! constructor
                 inline explicit spline(const style s) throw() : boundaries(s) {}
+                //! compute coefficients
                 virtual void  __compute( array<POINT> &Q, const array<POINT> &P ) = 0;
+                //! interpolation
                 virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const = 0;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(spline);
             };
 
+            //! standard spline
             template <typename POINT>
             class standard_spline : public spline<POINT>
             {
@@ -279,24 +292,25 @@ namespace upsylon
                 //
                 // definitions
                 //______________________________________________________________
-                typedef typename spline<POINT>::real real;
-                static const size_t                  dim = info_for<POINT>::dim ;
+                typedef typename spline<POINT>::real real;                       //!< alias
+                static const size_t                  dim = info_for<POINT>::dim; //!< static dimension
 
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
-
-                bool  lower_natural;
-                bool  upper_natural;
-                POINT lower_tangent;
-                POINT upper_tangent;
+                bool  lower_natural; //!< if lower boundary is natural, default=true
+                bool  upper_natural; //!< if lower boundary is natural, default=true
+                POINT lower_tangent; //!< lower tangent for non natural lower boundary
+                POINT upper_tangent; //!< upper tangent for non natural upper boundary
 
                 //______________________________________________________________
                 //
                 // virtual interface
                 //______________________________________________________________
+                //! destructor
                 inline virtual ~standard_spline() throw() {}
+                //! map t [0:1] to [1:N]
                 inline virtual real t2i( const real t, const size_t n) const throw()
                 {
                     static const real one(1);
