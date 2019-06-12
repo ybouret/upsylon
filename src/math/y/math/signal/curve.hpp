@@ -310,6 +310,7 @@ namespace upsylon
                 //______________________________________________________________
                 //! destructor
                 inline virtual ~standard_spline() throw() {}
+                
                 //! map t [0:1] to [1:N]
                 inline virtual real t2i( const real t, const size_t n) const throw()
                 {
