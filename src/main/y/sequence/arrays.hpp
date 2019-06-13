@@ -98,23 +98,36 @@ namespace upsylon
             format();
         }
 
-        //! one time get new array
+        //! one time raw get new array
         inline array_type & next() throw()
         {
             assert(indx<count);
             return _array[indx++];
         }
 
-        //! array access
-        inline virtual array_type & operator[](const size_t i) throw()
+        //! raw get array
+        const array_type & raw_get( const size_t i ) const throw()
         {
-            assert(i<count); return _array[i];
+            assert(i<count);
+            return _array[i];
+        }
+
+        //! virtual get array, default is raw_get
+        virtual const array_type &get_array( const size_t i) const throw()
+        {
+            return raw_get(i);
+        }
+
+        //! array access
+        inline array_type & operator[](const size_t i) throw()
+        {
+            return (array_type&)get_array(i);
         }
 
         //! array access, const
-        inline virtual const array_type & operator[](const size_t i) const throw()
+        inline const array_type & operator[](const size_t i) const throw()
         {
-            assert(i<count); return _array[i];
+            return get_array(i);
         }
         
         //! common size

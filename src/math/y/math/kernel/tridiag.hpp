@@ -13,12 +13,27 @@ namespace upsylon
     namespace math
     {
 
+        class tridiag_info
+        {
+        public:
+            static const size_t reserved = 4;
+
+            const size_t        extraneous;
+            virtual ~tridiag_info() throw();
+
+        protected:
+            explicit tridiag_info(const size_t extra_arrays) throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(tridiag_info);
+        };
+
         //! tridiagonal matrix interface and solver
         /**
          works for float, double, complexes, mpq
         */
         template <typename T>
-        class tridiag : public arrays<T>
+        class tridiag : public tridiag_info, public arrays<T>
         {
         public:
             typedef typename arrays<T>::array_type  array_type;  //!< alias
@@ -28,8 +43,9 @@ namespace upsylon
             virtual ~tridiag() throw() {}
 
             //! setup with size=n, 4 arrays
-            explicit tridiag(const size_t n) :
-            arrays<T>(4,n),
+            explicit tridiag(const size_t n, const size_t extra_arrays = 0) :
+            tridiag_info(extra_arrays),
+            arrays<T>(reserved+extra_arrays,n),
             a( this->next() ),
             b( this->next() ),
             c( this->next() ),
@@ -38,6 +54,13 @@ namespace upsylon
 
             }
 
+            //! get array [0..extraneous-1]
+            inline virtual const array_type & get_array(const size_t i) const throw()
+            {
+                assert(i<extraneous);
+                return this->raw_get(i+reserved);
+            }
+            
             //! get value at row i, column j
             inline T operator()(const size_t i, const size_t j) const throw()
             {

@@ -119,39 +119,6 @@ namespace upsylon
                 virtual const void *addr(const size_t index) const throw()
                 { assert(index>0); assert(index<=P.size()); return  &P[index]; }
 
-
-                //! t in [0:1] P1->PN
-                inline point operator()(const real t) const
-                {
-                    const size_t n = this->size();
-                    switch(n)
-                    {
-                        case 0: return zp;
-                        case 1: return P[1];
-                        default:break;
-                    }
-                    assert(n>=2);
-                    if(t<=0)
-                    {
-                        return P[1];
-                    }
-                    else if(t>=1)
-                    {
-                        return P[n];
-                    }
-                    else
-                    {
-                        static const real six(6);
-                        const size_t nm1 = n-1;
-                        const real   tt  = real(1) + t*nm1;
-                        const size_t jlo = min_of<real>(nm1,floor_of(tt));
-                        const real   B   = (tt-jlo);
-                        const size_t jup = jlo+1;
-                        const real   A   = 1-B;
-                        return A*P[jlo]+B*P[jup] + ((A*A*A-A) * Q[jlo] + (B*B*B-B) * Q[jup])/six;
-                    }
-                }
-
                 //! constructor
                 inline explicit points()  throw() :
                 interface_for<real>(dim), P(), Q(), zp(0)
@@ -203,10 +170,15 @@ namespace upsylon
                 inline void compute( points_type &source )
                 {
                     source.set_computed(false);
+
                     const array<POINT> &P = source.P;
-                    source.Q.make(P.size(),source.zp);
-                    array<POINT>       &Q = source.Q;
-                    __compute(Q,P);
+                    const size_t n = P.size();
+                    if(n>1)
+                    {
+                        source.Q.make(P.size(),source.zp);
+                        array<POINT>       &Q = source.Q;
+                        __compute(Q,P);
+                    }
                     source.set_computed(true);
                 }
 
@@ -214,15 +186,22 @@ namespace upsylon
                 inline POINT compute( const real t, const points_type &source) const
                 {
                     assert(source.computed);
-                    return __compute(t,source.P,source.Q);
+                    const array<POINT> &P = source.P;
+                    switch( P.size() )
+                    {
+                        case 0: return source.zp;
+                        case 1: return P[1];
+                        default: break;
+                    }
+                    return __compute(t,P,source.Q);
                 }
 
             protected:
                 //! constructor
                 inline explicit spline(const style s) throw() : boundaries(s) {}
-                //! compute coefficients
+                //! compute coefficients for more than 1 point
                 virtual void  __compute( array<POINT> &Q, const array<POINT> &P ) = 0;
-                //! interpolation
+                //! interpolation for more than one point
                 virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const = 0;
 
             private:
@@ -289,80 +268,75 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(standard_spline);
                 virtual void __compute( array<POINT> &Q, const array<POINT> &P )
                 {
+                    static const real half(0.5);
+                    static const real six(6);
+                    static const real three(3);
+                    static const real one(1);
+                    static const real four(4);
+                    assert(P.size()>1);
                     assert(Q.size()==P.size());
                     const size_t n = P.size();
-                    if(n<=1)
+                    
+                    tridiag<real> t(n,2);
+                    //arrays<real>  arr(2,n);
+                    array<real>  &r = t[0];
+                    array<real>  &u = t[1];
+
+                    //______________________________________________________
+                    //
+                    // compute the matrix
+                    //______________________________________________________
+                    t.b[1] = t.b[n] = one;
+                    for(size_t i=2;i<n;++i)
                     {
-                        return;
+                        t.a[i] = t.c[i] = one;
+                        t.b[i] = four;
                     }
-                    else
+                    if(!lower_natural)
                     {
-                        static const real half(0.5);
-                        static const real six(6);
-                        static const real three(3);
-                        static const real one(1);
-                        static const real four(4);
+                        t.c[1] = half;
+                    }
+                    if(!upper_natural)
+                    {
+                        t.a[n] = half;
+                    }
 
-                        tridiag<real> t(n);
-                        arrays<real>  arr(2,n);
-                        array<real>  &r = arr[0];
-                        array<real>  &u = arr[1];
-
-                        //______________________________________________________
-                        //
-                        // compute the matrix
-                        //______________________________________________________
-                        t.b[1] = t.b[n] = one;
+                    //______________________________________________________
+                    //
+                    // compute dimension wise
+                    //______________________________________________________
+                    for(size_t d=0;d<dim;++d)
+                    {
+                        r[1] = r[n] =0;
                         for(size_t i=2;i<n;++i)
                         {
-                            t.a[i] = t.c[i] = one;
-                            t.b[i] = four;
+                            const real  pm = * ( (const real *)&P[i-1] + d);
+                            const real  p0 = * ( (const real *)&P[i]   + d);
+                            const real  pp = * ( (const real *)&P[i+1] + d);
+                            r[i] = six * (pm+pp-(p0+p0));
                         }
+
                         if(!lower_natural)
                         {
-                            t.c[1] = half;
+                            const real lt = *( (const real *)&lower_tangent + d);
+                            const real p1 = *( (const real *)&P[1]+d);
+                            const real p2 = *( (const real *)&P[2]+d);
+                            r[1] = three*( (p2-p1) - lt );
                         }
-                        if(!upper_natural)
+
+                        if(!lower_natural)
                         {
-                            t.a[n] = half;
+                            const real ut   =  *( (const real *)&upper_tangent + d);
+                            const real pNm1 = * ( (const real *)&P[n-1]+d);
+                            const real pN   = * ( (const real *)&P[n]+d);
+                            r[n] = three*( ut - (pN-pNm1) );
                         }
 
-                        //______________________________________________________
-                        //
-                        // compute dimension wise
-                        //______________________________________________________
-                        for(size_t d=0;d<dim;++d)
+                        t.solve(u,r);
+                        for(size_t i=n;i>0;--i)
                         {
-                            r[1] = r[n] =0;
-                            for(size_t i=2;i<n;++i)
-                            {
-                                const real  pm = * ( (const real *)&P[i-1] + d);
-                                const real  p0 = * ( (const real *)&P[i]   + d);
-                                const real  pp = * ( (const real *)&P[i+1] + d);
-                                r[i] = six * (pm+pp-(p0+p0));
-                            }
-                            if(!lower_natural)
-                            {
-                                const real lt = *( (const real *)&lower_tangent + d);
-                                const real p1 = * ( (const real *)&P[1]+d);
-                                const real p2 = * ( (const real *)&P[2]+d);
-                                r[1] = three*( (p2-p1) - lt );
-                            }
-
-                            if(!lower_natural)
-                            {
-                                const real ut   =  *( (const real *)&upper_tangent + d);
-                                const real pNm1 = * ( (const real *)&P[n-1]+d);
-                                const real pN   = * ( (const real *)&P[n]+d);
-                                r[n] = three*( ut - (pN-pNm1) );
-                            }
-
-                            t.solve(u,r);
-                            for(size_t i=n;i>0;--i)
-                            {
-                                POINT &q = Q[i];
-                                *((real *)&q + d) = u[i];
-                            }
+                            POINT &q = Q[i];
+                            *((real *)&q + d) = u[i];
                         }
                     }
                 }
@@ -402,6 +376,64 @@ namespace upsylon
                     }
                 }
             };
+
+
+            //! standard spline
+            template <typename POINT>
+            class periodic_spline : public spline<POINT>
+            {
+            public:
+                //______________________________________________________________
+                //
+                // definitions
+                //______________________________________________________________
+                typedef typename spline<POINT>::real real;                       //!< alias
+                static const size_t                  dim = info_for<POINT>::dim; //!< static dimension
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+
+
+                //______________________________________________________________
+                //
+                // virtual interface
+                //______________________________________________________________
+                //! destructor
+                inline virtual ~periodic_spline() throw() {}
+
+                //! map t [0:1] to [1:N]
+                inline virtual real t2i( const real t, const size_t n) const throw()
+                {
+                    static const real one(1);
+                    if(n<=1)
+                    {
+                        return one;
+                    }
+                    else
+                    {
+                        const size_t nm1 = n-1;
+                        return clamp<real>(one,one + t * nm1,n);
+                    }
+                }
+
+                //______________________________________________________________
+                //
+                // non virtual interface
+                //______________________________________________________________
+                //! setup
+                inline explicit periodic_spline() throw() :
+                spline<POINT>(periodic)
+                {}
+
+
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(periodic_spline);
+            };
+
 
         };
 
