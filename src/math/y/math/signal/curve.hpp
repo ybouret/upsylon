@@ -97,6 +97,19 @@ namespace upsylon
                 typedef typename info_type::real real;                 //!< alias
                 typedef vector<point,ALLOCATOR>  vector_type;          //!< alias
 
+                static inline real norm2(const POINT &p) throw()
+                {
+                    const real *c = (const real *)&p;
+                    real ans = square_of(c[0]);
+                    for(size_t i=1;i<dim;++i) ans += square_of(c[i]);
+                    return ans;
+                }
+
+                static inline real norm1(const POINT &p) throw()
+                {
+                    return sqrt_of( norm2(p) );
+                }
+
                 //______________________________________________________________
                 //
                 // methods
