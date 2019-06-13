@@ -12,17 +12,16 @@ namespace upsylon
 {
     namespace math
     {
-
+        //! tridiagonal info
         class tridiag_info
         {
         public:
-            static const size_t tridiag_reserved = 4;
-
-            const size_t        tridiag_extraneous;
-            virtual ~tridiag_info() throw();
+            static const size_t  reserved = 4; //!< internal arrays
+            const size_t         extraneous;   //!< extraneaous arrays
+            virtual ~tridiag_info() throw();   //!< cleaup
 
         protected:
-            explicit tridiag_info(const size_t extra_arrays) throw();
+            explicit tridiag_info(const size_t extra) throw(); //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tridiag_info);
@@ -45,7 +44,7 @@ namespace upsylon
             //! setup with size=n, 4 arrays
             explicit tridiag(const size_t n, const size_t extra_arrays = 0) :
             tridiag_info(extra_arrays),
-            arrays<T>(tridiag_reserved+extra_arrays,n),
+            arrays<T>(reserved+extra_arrays,n),
             a( this->next() ),
             b( this->next() ),
             c( this->next() ),
@@ -57,8 +56,8 @@ namespace upsylon
             //! get array [0..extraneous-1]
             inline virtual const array_type & get_array(const size_t i) const throw()
             {
-                assert(i<tridiag_extraneous);
-                return this->raw_get(i+tridiag_reserved);
+                assert(i<extraneous);
+                return this->raw_get(i+reserved);
             }
             
             //! get value at row i, column j

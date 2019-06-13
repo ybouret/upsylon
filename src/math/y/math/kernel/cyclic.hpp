@@ -3,54 +3,43 @@
 #define Y_MATH_KERNEL_CYCLIC_INCLUDED 1
 
 #include "y/math/kernel/tridiag.hpp"
-
+#include "y/math/kernel/lu.hpp"
 
 namespace upsylon
 {
     namespace math
     {
 
-        class cyclic_info
-        {
-        public:
-            static const size_t cyclic_reserved = 3;
-            const size_t        cyclic_offset;
-            const size_t        cyclic_extraneous;
-
-            virtual ~cyclic_info() throw();
-
-        protected:
-            explicit cyclic_info(const size_t internal, const size_t avail) throw();
-
-            static size_t check_size(const size_t n); //!< n>=3
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(cyclic_info);
-        };
-
+        //! 3-cyclic system, using Woodbury
         template <typename T>
-        class cyclic :  public tridiag<T>, public cyclic_info
+        class cyclic : public tridiag<T>
         {
         public:
-            Y_DECL_ARGS(T,type);
-
+            Y_DECL_ARGS(T,type);                                 //!< alias
             typedef typename arrays<T>::array_type  array_type;  //!< alias
             typedef typename real_for<T>::type      scalar_type; //!< alias
+            static const  size_t                    space = 2;   //!< number of extra values
 
+            //! cleanup
             inline virtual ~cyclic() throw() {}
 
+            //! allocated resources
             inline cyclic(const size_t n, const size_t extra=0) :
-            tridiag<T>(check_size(n),cyclic_reserved+extra),
-            cyclic_info(this->tridiag_reserved+cyclic_reserved,extra),
-            bb( this->next() ),
-            u(  this->next() ),
-            z(  this->next() ),
+            tridiag<T>(check_size(n),extra),
+            U(space,n),
+            V(space,n),
+            Z(space,n),
+            H(space,space),
             one(1)
             {
+                U[1][1] = one;
+                U[2][n] = one;
             }
 
+            //! set cyclic A,B,C
             inline void set( param_type A, param_type B, param_type C )
             {
+                assert(this->size()>=3);
                 for(size_t i=this->size();i>0;--i)
                 {
                     this->a[i] = A;
@@ -59,41 +48,76 @@ namespace upsylon
                 }
             }
 
-            //! get array [0..extraneous-1]
-            inline virtual const array_type & get_array(const size_t i) const throw()
-            {
-                assert(i<cyclic_extraneous);
-                return this->raw_get(i+cyclic_offset);
-            }
 
             //! solve (*this)*x = r
             inline void solve( array<T> &x, const array<T> &r )
             {
                 assert( this->size() == x.size() );
                 assert( this->size() == r.size() );
+                assert(this->size()>=3);
+                
+                // setup V
+                const size_t n = this->size();
+                V[1][n] = this->a[1];
+                V[2][1] = this->c[n];
 
-                const scalar_type amin  = xnumeric<scalar_type>::abs_minimum();
-                const size_t      n     = this->size();
-                const_type       &alpha = this->c[n];
-                const_type       &beta  = this->a[1];
-
-                const_type gamma = - this->b[1];
+                // compute Z
+                for(size_t i=space;i>0;--i)
                 {
-                    const scalar_type agam = fabs_of(gamma);
-                    if(agam<=amin) throw libc::exception(EDOM,"singular cyclic system");
+                    array<T>  &Zi = Z[i];
+                    tridiag<T>::solve(Zi,U[i]);
                 }
 
-                bb[1]= this->b[1]-gamma;
-                bb[n]= this->b[n]-alpha*beta/gamma;
-                for(size_t i=2;i<n;i++) bb[i]=this->b[i];
+                // compute H = inv(1+V'*Z)
+                for(size_t i=space;i>0;--i)
+                {
+                    array<T>       &Hi = H[i];
+                    const array<T> &Vi = V[i];
+                    for(size_t j=space;j>0;--j)
+                    {
+                        type ans = 0;
+                        {
+                            const array<T> &Zj = Z[j];
+                            for(size_t k=n;k>0;--k)
+                            {
+                                ans += Vi[k] * Zj[k];
+                            }
+                        }
+                        Hi[j] = ans;
+                    }
+                    Hi[i] += one;
+                }
+
+                if( !LU::build(H) )
+                {
+                    throw libc::exception(EDOM,"singular cyclic system");
+                }
+
+                // raw solution in x
                 tridiag<T>::solve(x,r);
-                u[1]=gamma;
-                u[n]=alpha;
-                for(size_t i=2;i<n;i++) u[i]=0;
-                tridiag<T>::solve(z,u);
-                const T fact=(x[1]+beta*x[n]/gamma)/
-                (one+z[1]+beta*z[n]/gamma);
-                for(size_t i=n;i>0;--i) x[i] -= fact*z[i];
+
+                // compute H * V' * x
+                array<T> &HVx = H.c_aux2;
+                for(size_t i=space;i>0;--i)
+                {
+                    const array<T> &Vi = V[i];
+                    type ans = 0;
+                    for(size_t k=n;k>0;--k)
+                    {
+                        ans += Vi[k] * x[k];
+                    }
+                    HVx[i] = ans;
+                }
+                LU::solve(H,HVx);
+
+                // substact Z * (H * V' * x )
+                for(size_t k=n;k>0;--k)
+                {
+                    for(size_t j=space;j>0;--j)
+                    {
+                        x[k] -= Z[j][k] * HVx[j];
+                    }
+                }
             }
 
             //! get value at row i, column j
@@ -141,7 +165,7 @@ namespace upsylon
                     }
                     else if(j==n-1)
                     {
-                        return this->a[j];
+                        return this->a[n];
                     }
                     else
                     {
@@ -204,21 +228,21 @@ namespace upsylon
             //! target = (*this)*source
             inline void mul( array<T> &target, const array<T> &source ) const
             {
-                std::cerr << "cyclic mul" << std::endl;
+                assert(this->size()>=3);
                 assert(target.size()==this->size());
                 assert(source.size()==this->size());
                 const size_t n = this->size();
 
                 // first row
-                target[1] = this->b[1] * source[1] + this->c[1] * source[2] + this->a[n] * source[n];
+                target[1] = this->b[1] * source[1] + this->c[1] * source[2] + this->a[1] * source[n];
 
                 // last row
-                target[n] = this->a[n-1] * source[n-1] + this->b[n] * source[n] + this->c[n] * source[1];
+                target[n] = this->a[n] * source[n-1] + this->b[n] * source[n] + this->c[n] * source[1];
 
                 // bulk
                 for(size_t i=2;i<n;++i)
                 {
-                    target[i] = this->a[i] * source[i-1] + this->b[i]  * source[i] + this->c[i] * source[i+1];
+                    target[i] = this->a[i] * source[i-1] + this->b[i] * source[i] + this->c[i] * source[i+1];
                 }
 
             }
@@ -226,10 +250,17 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(cyclic);
-            array_type &bb;
-            array_type &u;
-            array_type &z;
-            const T     one;
+            matrix<T>  U;   //!< matrix of column position, made of ones
+            matrix<T>  V;   //!< matrix of rows position+values
+            matrix<T>  Z;   //!< local problems
+            matrix<T>  H;   //!< dispatch matrix
+            const_type one; //!< precomputed 1
+
+            static inline size_t check_size(const size_t n)
+            {
+                if(n<3) throw libc::exception(EDOM,"cyclic is too small");
+                return n;
+            }
         };
 
     }
