@@ -16,9 +16,9 @@ namespace upsylon
         class tridiag_info
         {
         public:
-            static const size_t reserved = 4;
+            static const size_t tridiag_reserved = 4;
 
-            const size_t        extraneous;
+            const size_t        tridiag_extraneous;
             virtual ~tridiag_info() throw();
 
         protected:
@@ -45,7 +45,7 @@ namespace upsylon
             //! setup with size=n, 4 arrays
             explicit tridiag(const size_t n, const size_t extra_arrays = 0) :
             tridiag_info(extra_arrays),
-            arrays<T>(reserved+extra_arrays,n),
+            arrays<T>(tridiag_reserved+extra_arrays,n),
             a( this->next() ),
             b( this->next() ),
             c( this->next() ),
@@ -57,8 +57,8 @@ namespace upsylon
             //! get array [0..extraneous-1]
             inline virtual const array_type & get_array(const size_t i) const throw()
             {
-                assert(i<extraneous);
-                return this->raw_get(i+reserved);
+                assert(i<tridiag_extraneous);
+                return this->raw_get(i+tridiag_reserved);
             }
             
             //! get value at row i, column j
