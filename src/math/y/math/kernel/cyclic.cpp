@@ -16,6 +16,13 @@ namespace upsylon
         {
 
         }
+
+        size_t cyclic_info:: check_size(const size_t n)
+        {
+            if(n<3) throw libc::exception(EDOM,"not enough point for cyclic system");
+            return n;
+        }
+
     }
 }
 
