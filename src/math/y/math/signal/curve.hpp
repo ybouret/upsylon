@@ -80,10 +80,7 @@ namespace upsylon
 
 
             //! points to build spline, with delta_t = 1 for computations
-            template <
-            typename POINT,
-            typename ALLOCATOR= memory::global
-            >
+            template <typename POINT>
             class points : public interface_for< typename info_for<POINT>::real >
             {
             public:
@@ -95,7 +92,7 @@ namespace upsylon
                 static const size_t              dim = info_type::dim; //!< dimension
                 typedef POINT                    point;                //!< alias
                 typedef typename info_type::real real;                 //!< alias
-                typedef vector<point,ALLOCATOR>  vector_type;          //!< alias
+                typedef vector<point>            vector_type;          //!< alias
 
                 static inline real norm2(const POINT &p) throw()
                 {
@@ -105,7 +102,7 @@ namespace upsylon
                     return ans;
                 }
 
-                static inline real norm1(const POINT &p) throw()
+                static inline real norm(const POINT &p) throw()
                 {
                     return sqrt_of( norm2(p) );
                 }
@@ -208,7 +205,7 @@ namespace upsylon
                 }
 
                 //! compute celerity from data
-                inline POINT celerity( const real t, const points_type &source ) const
+                inline POINT tangent( const real t, const points_type &source ) const
                 {
                     assert(source.computed);
                     const array<POINT> &P = source.P;
@@ -218,9 +215,18 @@ namespace upsylon
                         case 1: return source.zp;
                         default: break;
                     }
-                    return __celerity(t,P,source.Q);
+                    return __tangent(t,P,source.Q);
                 }
-
+                
+                //! compute local speed
+                inline real speed(const real t, const points_type &source ) const
+                {
+                    const POINT c = tangent(t,source);
+                    return norm(c);
+                }
+                
+                
+                
             protected:
                 //! constructor
                 inline explicit spline(const style s) throw() : boundaries(s) {}
@@ -232,7 +238,7 @@ namespace upsylon
                 virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw() = 0;
 
                 //! celerity for more than one point
-                virtual POINT __celerity( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw() = 0;
+                virtual POINT __tangent( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw() = 0;
 
 
             private:
@@ -401,7 +407,7 @@ namespace upsylon
                     }
                 }
 
-                virtual POINT __celerity( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
+                virtual POINT __tangent( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
                 {
                     static const real zero(0);
                     static const real one(1);
@@ -559,9 +565,25 @@ namespace upsylon
                     return A*P[jlo]+B*P[jup] + ((A*A*A-A) * Q[jlo] + (B*B*B-B) * Q[jup])/six;
                 }
 
-                virtual POINT __celerity( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
+                virtual POINT __tangent( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
                 {
-                    return POINT(0);
+                    static const real one(1);
+                    static const real one_sixth = one/6;
+                    
+                    const size_t n = P.size();
+                    
+                    // map position
+                    real tt = one + t * n;
+                    const size_t np1 = n+1;
+                    while(tt<one) tt += n;
+                    while(tt>np1) tt -= n;
+                    
+                    // get bracketing indices
+                    const size_t  jlo = clamp<size_t>(1,floor_of(tt),n);
+                    size_t        jup = jlo+1; if(jup>n) jup = 1;
+                    const real    B   = (tt-jlo);
+                    const real    A   = one-B;
+                    return P[jup]-P[jlo] + one_sixth * ( (3*B*B-1) * Q[jup] - (3*A*A-1)*Q[jlo]);
                 }
             };
 
