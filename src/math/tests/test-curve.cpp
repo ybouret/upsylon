@@ -95,13 +95,18 @@ Y_UTEST(curve)
     curve::points< point2d<double> > C2d;
     curve::points< complex<float> >  C2cd;
     curve::points< point3d<double> > C3d;
-    
-    for(size_t i=3+alea.leq(10);i>0;--i)
+
+    const size_t np = 2 + alea.leq(10);
+    const float  dz = 1.0/np;
+    for(size_t i=0;i<np;++i)
     {
+
         {
-            const float x = alea.symm<float>();
-            const float y = alea.symm<float>();
-            const float z = alea.symm<float>();
+            const float theta = (i*numeric<float>::two_pi)/np*(1.0f+0.08f*alea.symm<float>());
+            const float radius = 1.0f+0.08f*alea.symm<float>();
+            const float x = radius * cosf(theta);
+            const float y = radius * sinf(theta);
+            const float z = (dz * i) * (1.0f+0.08f*alea.symm<float>());
             
             C1f.add(x);
             C2f.add(x,y);
@@ -116,15 +121,15 @@ Y_UTEST(curve)
         
     }
     
-    handle_curve(C1f,"c1f.dat");
-    handle_curve(C2f,"c2f.dat");
+    handle_curve(C1f, "c1f.dat");
+    handle_curve(C2f, "c2f.dat");
     handle_curve(C2cf,"c2cf.dat");
-    handle_curve(C3f,"c3f.dat");
+    handle_curve(C3f, "c3f.dat");
     
-    handle_curve(C1d,"c1d.dat");
-    handle_curve(C2d,"c2d.dat");
+    handle_curve(C1d, "c1d.dat");
+    handle_curve(C2d, "c2d.dat");
     handle_curve(C2cd,"c2cd.dat");
-    handle_curve(C3d,"c3d.dat");
+    handle_curve(C3d, "c3d.dat");
     
     
     

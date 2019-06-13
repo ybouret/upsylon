@@ -4,7 +4,7 @@
 #define Y_SIGNAL_CURVE_INCLUDED 1
 
 #include "y/type/point3d.hpp"
-#include "y/math/kernel/tridiag.hpp"
+#include "y/math/kernel/cyclic.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ios/ostream.hpp"
 
@@ -426,17 +426,60 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(periodic_spline);
+                inline real get_r(const size_t d,
+                                  const array<POINT> &P,
+                                  const size_t im, const size_t i0, const size_t ip) const throw()
+                {
+                    static const real six(6);
+                    const real pm = *( (real *) &P[im] + d);
+                    const real p0 = *( (real *) &P[i0] + d);
+                    const real pp = *( (real *) &P[ip] + d);
+                    return six * (pm - (p0+p0) + pp );
+                }
+
                 virtual void __compute( array<POINT> &Q, const array<POINT> &P )
                 {
                     assert(P.size()>1);
                     assert(Q.size()==P.size());
-                    //const size_t n = P.size();
+                    const size_t n = P.size();
+                    if(n>=3)
+                    {
+                        cyclic<real> cyc(n,2);
+                        array<real>  &u = cyc[0];
+                        array<real>  &r = cyc[1];
+                        cyc.set(1,4,1);
+
+                        for(size_t d=0;d<dim;++d)
+                        {
+                            // fill rhs
+                            r[1] = get_r(d,P,n,1,2);
+                            for(size_t im=1,i0=2,ip=3;;)
+                            {
+                                r[i0] = get_r(d,P,im,i0,ip);
+                                im = i0;
+                                i0 = ip;
+                                if(i0>=n) break;
+                                ++ip;
+                            }
+                            r[n] = get_r(d,P,n-1,n,1);
+
+                            // solve
+                            cyc.solve(u,r);
+
+                            // dispatch
+                            for(size_t i=n;i>0;--i)
+                            {
+                                *( (real *)&Q[i] + d) = u[i];
+                            }
+                        }
+                    }
                 }
 
                 virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const
                 {
                     static const real one(1);
-
+                    static const real six(6);
+                    
                     // get the sample size
                     assert(P.size()>1);
                     assert(P.size()==Q.size());
@@ -454,7 +497,7 @@ namespace upsylon
                     const real    B   = (tt-jlo);
                     const real    A   = one-B;
 
-                    return A*P[jlo]+B*P[jup];
+                    return A*P[jlo]+B*P[jup] + ((A*A*A-A) * Q[jlo] + (B*B*B-B) * Q[jup])/six;
                 }
             };
 
