@@ -100,7 +100,7 @@ and we have $N-2$ tridiagonal equations that shall be completed by 2 boundary co
 \begin{array}{rcl}
 	\vec{Q}_1 + \dfrac{1}{2}\vec{Q}_2 & = &\dfrac{3}{t_2-t_1} \left[ \dfrac{1}{t_2-t_1} \left(\vec{P}_2-\vec{P}_1\right) - \partial_t \vec{P}_1 \right]\\
 	\text{or/and}\\
-	\dfrac{1}{2}\vec{Q}_{N-1} +\vec{Q}_N& =& \dfrac{3}{t_N-t_{N-1}} \left[\partial_t \vec{P}_{N-1} - \dfrac{1}{t_N-t_{N-1}}\left(\vec{P}_N - \vec{P}_{N-1}\right)\right]\\
+	\dfrac{1}{2}\vec{Q}_{N-1} +\vec{Q}_N& =& \dfrac{3}{t_N-t_{N-1}} \left[\partial_t \vec{P}_{N} - \dfrac{1}{t_N-t_{N-1}}\left(\vec{P}_N - \vec{P}_{N-1}\right)\right]\\
 \end{array}
 \right.
 \end{equation}
@@ -120,5 +120,52 @@ We still have the $N-2$ conditions defined by Eq \eqref{eq:bulk} and we also get
 \right.
 \end{equation}
 where $t_0$ and $t_{N+1}$ are choosen to match the periodic boundary conditions.
+
+\section{Virtual Spline, $t_i=i$}
+
+\subsection{Standard Spline}
+The main $N-2$ relations become:
+\begin{equation}
+	\forall i \in[2;N-1],\;\;6\left[\vec{P}_{i+1} - 2 \vec{P}_i + \vec{P}_{i-1}\right] =  \vec{Q}_{i-1} + 4 \vec{Q}_i + \vec{Q}_{i+1}
+\end{equation}
+And we can fix:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+\vec{Q}_1 & = & \vec{0} \\
+\\
+\text{ or }\\
+\\
+\vec{Q}_1 + \dfrac{1}{2}\vec{Q}_2 & = & 3\left[\left(\vec{P}_2-\vec{P}_1\right) - \partial_t \vec{P}_1\right]\\
+\end{array}
+\right.
+\end{equation}
+and:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+\vec{Q}_N & = & \vec{0} \\
+\\
+\text{ or }\\
+\\
+\vec{Q}_N + \dfrac{1}{2}\vec{Q}_{N-1} & = & 3\left[\partial_t \vec{P}_{N} - \left(\vec{P}_N-\vec{P}_{N-1}\right)  \right]\\
+\end{array}
+\right.
+\end{equation}
+Hence, the derivatives $\partial_t \vec{P}_1$ and $\partial_t \vec{P}_N$ are also virtual, and should be chosen to adjust the initial or final metrics.
+
+\subsection{Periodic Spline}
+We obtain the periodic system:
+\begin{equation}
+\left\lbrace
+\begin{array}{lccl}
+ & \vec{Q}_{N} + 4 \vec{Q}_1 + \vec{Q}_{2} & = & 6\left[\vec{P}_{2} - 2 \vec{P}_1 + \vec{P}_{N}\right] \\
+ \\
+ \forall i \in[2;N-1], & \vec{Q}_{i-1} + 4 \vec{Q}_i + \vec{Q}_{i+1} & = & 6\left[\vec{P}_{i+1} - 2 \vec{P}_i + \vec{P}_{i-1}\right] \\
+ \\
+ & \vec{Q}_{N-1} + 4 \vec{Q}_N + \vec{Q}_{1} & = & 6\left[\vec{P}_{1} - 2 \vec{P}_N + \vec{P}_{N-1}\right] \\
+\end{array}
+\right.
+\end{equation}
 
 \end{document}
