@@ -278,7 +278,6 @@ namespace upsylon
                     const size_t n = P.size();
                     
                     tridiag<real> t(n,2);
-                    //arrays<real>  arr(2,n);
                     array<real>  &r = t[0];
                     array<real>  &u = t[1];
 
@@ -366,7 +365,7 @@ namespace upsylon
                         const size_t jlo = min_of<real>(nm1,floor_of(tt));
                         const real   B   = (tt-jlo);
                         const size_t jup = jlo+1;
-                        const real   A   = 1-B;
+                        const real   A   = one-B;
                         return A*P[jlo]+B*P[jup] + ((A*A*A-A) * Q[jlo] + (B*B*B-B) * Q[jup])/six;
                     }
                 }
@@ -431,12 +430,31 @@ namespace upsylon
                 {
                     assert(P.size()>1);
                     assert(Q.size()==P.size());
-                    const size_t n = P.size();
+                    //const size_t n = P.size();
                 }
 
                 virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const
                 {
-                    return POINT(0);
+                    static const real one(1);
+
+                    // get the sample size
+                    assert(P.size()>1);
+                    assert(P.size()==Q.size());
+                    const size_t n = P.size();
+
+                    // map position
+                    real tt = one + t * n;
+                    const size_t np1 = n+1;
+                    while(tt<one) tt += n;
+                    while(tt>np1) tt -= n;
+
+                    // get bracketing indices
+                    const size_t  jlo = clamp<size_t>(1,floor_of(tt),n);
+                    size_t        jup = jlo+1; if(jup>n) jup = 1;
+                    const real    B   = (tt-jlo);
+                    const real    A   = one-B;
+
+                    return A*P[jlo]+B*P[jup];
                 }
             };
 

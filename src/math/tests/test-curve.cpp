@@ -31,7 +31,6 @@ static inline void handle_curve( CURVE &C, const string &fn )
 
     {
         curve::standard_spline<point> sspl;
-
         sspl.compute(C);
         {
             const string  out = "std-ns-" + fn;
@@ -63,7 +62,19 @@ static inline void handle_curve( CURVE &C, const string &fn )
 
     {
         curve::periodic_spline<point> pspl;
-        
+        pspl.compute(C);
+        {
+            const string  out = "pbc-" + fn;
+            ios::ocstream fp(out);
+            for(real t=-1.0;t<=2.0;t+=0.01)
+            {
+                const point P = pspl.compute(t,C);
+                const real  I = pspl.t2i(t,C.size());
+                fp("%.15g", I);
+                C.save_point(fp,&P);
+                fp << '\n';
+            }
+        }
     }
 
 
