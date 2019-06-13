@@ -1,9 +1,10 @@
-\documentclass[aps,11pt]{revtex4}
+\documentclass[aps,10pt]{revtex4}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath,amsthm}
 \usepackage{chemarr}
 \usepackage{bm}
 \usepackage{pslatex}
+\usepackage{bookman}
 
 \begin{document}
 \title{Splines for curves 1D/2D/3D/...}
@@ -60,6 +61,7 @@ We have $N$ values $\vec{Q}_1,\ldots,\vec{Q}_N$ to compute.
 The speed continuity yields:
 
 \begin{equation}
+\label{eq:bulk}
 \begin{array}{rl}
  &\forall i \in [2;N-1],\;\; \vec{S}_{i-1}(t_{i}) = \vec{S}_{i}(t_i)\\
 \Leftrightarrow &  
@@ -105,5 +107,18 @@ and we have $N-2$ tridiagonal equations that shall be completed by 2 boundary co
 \end{itemize}
 
 \subsection{Periodic Splines}
+We still have the $N-2$ conditions defined by Eq \eqref{eq:bulk} and we also get
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+\dfrac{1}{t_{N+1}-t_{N}} \left(\vec{P}_{1}-\vec{P}_N\right) - \dfrac{1}{t_{N}-t_{N-1}} \left(\vec{P}_{N}-\vec{P}_{N-1}\right)
+ &= & \dfrac{1}{6}(t_{N}-t_{N-1}) \vec{Q}_{N-1} + \dfrac{1}{3}(t_{N+1}-t_{N-1}) \vec{Q}_{N} + \dfrac{1}{6}(t_{N+1}-t_{i}) \vec{Q}_{1}\\
+\\
+\dfrac{1}{t_{2}-t_{1}} \left(\vec{P}_{2}-\vec{P}_1\right) - \dfrac{1}{t_{1}-t_{0}} \left(\vec{P}_{1}-\vec{P}_{N}\right)
+ &=& \dfrac{1}{6}(t_{1}-t_{0}) \vec{Q}_{N} + \dfrac{1}{3}(t_{2}-t_{0}) \vec{Q}_{1} + \dfrac{1}{6}(t_{2}-t_{1}) \vec{Q}_{2} \\ 
+\end{array}
+\right.
+\end{equation}
+where $t_0$ and $t_{N+1}$ are choosen to match the periodic boundary conditions.
 
 \end{document}
