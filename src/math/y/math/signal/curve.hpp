@@ -194,13 +194,33 @@ namespace upsylon
                     return __compute(t,P,source.Q);
                 }
 
+                //! compute celerity from data
+                inline POINT celerity( const real t, const points_type &source ) const
+                {
+                    assert(source.computed);
+                    const array<POINT> &P = source.P;
+                    switch( P.size() )
+                    {
+                        case 0: return source.zp;
+                        case 1: return source.zp;
+                        default: break;
+                    }
+                    return __celerity(t,P,source.Q);
+                }
+
             protected:
                 //! constructor
                 inline explicit spline(const style s) throw() : boundaries(s) {}
+
                 //! compute coefficients for more than 1 point
                 virtual void  __compute( array<POINT> &Q, const array<POINT> &P ) = 0;
+
                 //! interpolation for more than one point
-                virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const = 0;
+                virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw() = 0;
+
+                //! celerity for more than one point
+                virtual POINT __celerity( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw() = 0;
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(spline);
@@ -338,14 +358,13 @@ namespace upsylon
                     }
                 }
 
-                virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const
+                virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
                 {
                     static const real zero(0);
                     static const real one(1);
 
                     assert(P.size()>1);
                     assert(P.size()==Q.size());
-                    const size_t n = P.size();
 
                     if( t<=zero )
                     {
@@ -353,11 +372,12 @@ namespace upsylon
                     }
                     else if(t>=one)
                     {
-                        return P[n];
+                        return P[P.size()];
                     }
                     else
                     {
                         static const real six(6);
+                        const size_t n   = P.size();
                         const size_t nm1 = n-1;
                         const real   tt  = real(1) + t*nm1;
                         const size_t jlo = min_of<real>(nm1,floor_of(tt));
@@ -365,6 +385,39 @@ namespace upsylon
                         const size_t jup = jlo+1;
                         const real   A   = one-B;
                         return A*P[jlo]+B*P[jup] + ((A*A*A-A) * Q[jlo] + (B*B*B-B) * Q[jup])/six;
+                    }
+                }
+
+                virtual POINT __celerity( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
+                {
+                    static const real zero(0);
+                    static const real one(1);
+                    static const real one_third = one/3;
+                    static const real one_sixth = one/6;
+
+                    assert(P.size()>1);
+                    assert(P.size()==Q.size());
+
+                    if( t <= zero )
+                    {
+                        return (P[2] - P[1]) - one_third * Q[1] - one_sixth * Q[2];
+                    }
+                    else if( t>= one )
+                    {
+                        const size_t n   = P.size();
+                        const size_t nm1 = n-1;
+                        return (P[n]-P[nm1]) + one_third * Q[n] + one_sixth * Q[nm1];
+                    }
+                    else
+                    {
+                        const size_t n   = P.size();
+                        const size_t nm1 = n-1;
+                        const real   tt  = real(1) + t*nm1;
+                        const size_t jlo = min_of<real>(nm1,floor_of(tt));
+                        const real   B   = (tt-jlo);
+                        const size_t jup = jlo+1;
+                        const real   A   = one-B;
+                        return P[jup]-P[jlo] + one_sixth * ( (3*B*B-1) * Q[jup] - (3*A*A-1)*Q[jlo]);
                     }
                 }
             };
@@ -468,7 +521,7 @@ namespace upsylon
                     }
                 }
 
-                virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const
+                virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
                 {
                     static const real one(1);
                     static const real six(6);
@@ -491,6 +544,11 @@ namespace upsylon
                     const real    A   = one-B;
 
                     return A*P[jlo]+B*P[jup] + ((A*A*A-A) * Q[jlo] + (B*B*B-B) * Q[jup])/six;
+                }
+
+                virtual POINT __celerity( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
+                {
+                    return POINT(0);
                 }
             };
 

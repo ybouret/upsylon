@@ -44,6 +44,20 @@ static inline void handle_curve( CURVE &C, const string &fn )
                 fp << '\n';
             }
         }
+
+        {
+            const string  out = "std-ns-v-" + fn;
+            ios::ocstream fp(out);
+            for(real t=0;t<=1.0;t+=0.01)
+            {
+                const point P = sspl.celerity(t,C);
+                const real  I = sspl.t2i(t,C.size());
+                fp("%.15g", I);
+                C.save_point(fp,&P);
+                fp << '\n';
+            }
+        }
+
         sspl.lower_natural = sspl.upper_natural = false;
         sspl.compute(C);
         {
@@ -52,6 +66,19 @@ static inline void handle_curve( CURVE &C, const string &fn )
             for(real t=0;t<=1.0;t+=0.01)
             {
                 const point P = sspl.compute(t,C);
+                const real  I = sspl.t2i(t,C.size());
+                fp("%.15g", I);
+                C.save_point(fp,&P);
+                fp << '\n';
+            }
+        }
+
+        {
+            const string  out = "std-zd-v-" + fn;
+            ios::ocstream fp(out);
+            for(real t=0;t<=1.0;t+=0.01)
+            {
+                const point P = sspl.celerity(t,C);
                 const real  I = sspl.t2i(t,C.size());
                 fp("%.15g", I);
                 C.save_point(fp,&P);
