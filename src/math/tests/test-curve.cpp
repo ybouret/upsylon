@@ -29,35 +29,43 @@ static inline void handle_curve( CURVE &C, const string &fn )
     typedef typename CURVE::point point;
     typedef typename CURVE::real  real;
 
-    curve::standard_spline<point> sspl;
+    {
+        curve::standard_spline<point> sspl;
 
-    sspl.compute(C);
-    {
-        const string  out = "std-ns-" + fn;
-        ios::ocstream fp(out);
-        for(real t=0;t<=1.0;t+=0.01)
+        sspl.compute(C);
         {
-            const point P = sspl.compute(t,C);
-            const real  I = sspl.t2i(t,C.size());
-            fp("%.15g", I);
-            C.save_point(fp,&P);
-            fp << '\n';
+            const string  out = "std-ns-" + fn;
+            ios::ocstream fp(out);
+            for(real t=0;t<=1.0;t+=0.01)
+            {
+                const point P = sspl.compute(t,C);
+                const real  I = sspl.t2i(t,C.size());
+                fp("%.15g", I);
+                C.save_point(fp,&P);
+                fp << '\n';
+            }
+        }
+        sspl.lower_natural = sspl.upper_natural = false;
+        sspl.compute(C);
+        {
+            const string  out = "std-zd-" + fn;
+            ios::ocstream fp(out);
+            for(real t=0;t<=1.0;t+=0.01)
+            {
+                const point P = sspl.compute(t,C);
+                const real  I = sspl.t2i(t,C.size());
+                fp("%.15g", I);
+                C.save_point(fp,&P);
+                fp << '\n';
+            }
         }
     }
-    sspl.lower_natural = sspl.upper_natural = false;
-    sspl.compute(C);
+
     {
-        const string  out = "std-zd-" + fn;
-        ios::ocstream fp(out);
-        for(real t=0;t<=1.0;t+=0.01)
-        {
-            const point P = sspl.compute(t,C);
-            const real  I = sspl.t2i(t,C.size());
-            fp("%.15g", I);
-            C.save_point(fp,&P);
-            fp << '\n';
-        }
+        curve::periodic_spline<point> pspl;
+        
     }
+
 
     
 }

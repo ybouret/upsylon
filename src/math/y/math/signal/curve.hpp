@@ -343,18 +343,13 @@ namespace upsylon
 
                 virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const
                 {
-                    assert(P.size()==Q.size());
-                    const size_t        n = P.size();
-                    switch(n)
-                    {
-                        case 0: return POINT(0);
-                        case 1: return P[1];
-                        default:
-                            break;
-                    }
-                    assert(n>=2);
                     static const real zero(0);
                     static const real one(1);
+
+                    assert(P.size()>1);
+                    assert(P.size()==Q.size());
+                    const size_t n = P.size();
+
                     if( t<=zero )
                     {
                         return P[1];
@@ -403,7 +398,7 @@ namespace upsylon
                 //! destructor
                 inline virtual ~periodic_spline() throw() {}
 
-                //! map t [0:1] to [1:N]
+                //! map t [0:1] to [1:N+1]
                 inline virtual real t2i( const real t, const size_t n) const throw()
                 {
                     static const real one(1);
@@ -413,8 +408,8 @@ namespace upsylon
                     }
                     else
                     {
-                        const size_t nm1 = n-1;
-                        return clamp<real>(one,one + t * nm1,n);
+                        real tt = one + t * n;
+                        return tt;
                     }
                 }
 
@@ -432,6 +427,17 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(periodic_spline);
+                virtual void __compute( array<POINT> &Q, const array<POINT> &P )
+                {
+                    assert(P.size()>1);
+                    assert(Q.size()==P.size());
+                    const size_t n = P.size();
+                }
+
+                virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const
+                {
+                    return POINT(0);
+                }
             };
 
 
