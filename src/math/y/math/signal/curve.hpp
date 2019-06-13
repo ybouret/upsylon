@@ -18,8 +18,6 @@ namespace upsylon
             //! template to extract info from types
             template <typename T> struct info_for;
 
-
-
             //! for boundaries
             enum style
             {
@@ -386,12 +384,6 @@ namespace upsylon
 
                 //______________________________________________________________
                 //
-                // members
-                //______________________________________________________________
-
-
-                //______________________________________________________________
-                //
                 // virtual interface
                 //______________________________________________________________
                 //! destructor
@@ -417,9 +409,7 @@ namespace upsylon
                 // non virtual interface
                 //______________________________________________________________
                 //! setup
-                inline explicit periodic_spline() throw() :
-                spline<POINT>(periodic)
-                {}
+                inline explicit periodic_spline() throw() : spline<POINT>(periodic) {}
 
 
 
@@ -445,8 +435,11 @@ namespace upsylon
                     if(n>=3)
                     {
                         cyclic<real> cyc(n,2);
-                        array<real>  &u = cyc[0];
-                        array<real>  &r = cyc[1];
+                        array<real>  &u   = cyc[0];
+                        array<real>  &r   = cyc[1];
+                        const size_t  nm1 = n-1;
+
+                        // prepare
                         cyc.set(1,4,1);
 
                         for(size_t d=0;d<dim;++d)
@@ -456,12 +449,12 @@ namespace upsylon
                             for(size_t im=1,i0=2,ip=3;;)
                             {
                                 r[i0] = get_r(d,P,im,i0,ip);
-                                im = i0;
-                                i0 = ip;
+                                im  = i0;
+                                i0  = ip;
                                 if(i0>=n) break;
                                 ++ip;
                             }
-                            r[n] = get_r(d,P,n-1,n,1);
+                            r[n] = get_r(d,P,nm1,n,1);
 
                             // solve
                             cyc.solve(u,r);

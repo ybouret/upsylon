@@ -102,7 +102,7 @@ Y_UTEST(curve)
     {
 
         {
-            const float theta = (i*numeric<float>::two_pi)/np*(1.0f+0.08f*alea.symm<float>());
+            const float theta  = (i*numeric<float>::two_pi)/np*(1.0f+0.08f*alea.symm<float>());
             const float radius = 1.0f+0.08f*alea.symm<float>();
             const float x = radius * cosf(theta);
             const float y = radius * sinf(theta);
