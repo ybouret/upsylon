@@ -54,7 +54,7 @@ static inline void handle_curve( CURVE &C, const string &fn )
                 const real  I = sspl.t2i(t,C.size());
                 fp("%.15g", I);
                 C.save_point(fp,&P);
-                fp(" %.15g", C.norm(P));
+                fp(" %.15g", sqrt_of( curve::norm2(P) ) );
                 fp << '\n';
             }
         }
@@ -83,7 +83,7 @@ static inline void handle_curve( CURVE &C, const string &fn )
                 const real  I = sspl.t2i(t,C.size());
                 fp("%.15g", I);
                 C.save_point(fp,&P);
-                fp(" %.15g", C.norm(P));
+                fp(" %.15g", sqrt_of(curve::norm2(P)));
                 fp << '\n';
             }
         }
@@ -100,15 +100,63 @@ static inline void handle_curve( CURVE &C, const string &fn )
                 const point P = pspl.compute(t,C);
                 const real  I = pspl.t2i(t,C.size());
                 fp("%.15g", I);
-                C.save_point(fp,&P);
-                fp << '\n';
+                C.save_point(fp,&P) << '\n';
             }
         }
     }
 
 
-    
 }
+
+
+template <typename CURVE>
+void metrics_for( CURVE &C, const string &fn )
+{
+    typedef typename CURVE::point point;
+    typedef typename CURVE::real  real;
+
+    {
+        ios::ocstream fp(fn);
+        for(size_t i=1;i<=C.size();++i)
+        {
+            C.save_point(fp, &C[i]) << '\n';
+        }
+    }
+
+    {
+        curve::standard_spline<point> spl;
+        spl.compute(C);
+        const string  out = "std-" + fn;
+        ios::ocstream fp(out);
+        for(real t=0;t<=1.0;t+=0.02)
+        {
+            point s;
+            point p = spl.compute(t,C,s);
+            C.save_point(fp,&p) << '\n';
+            p += s;
+            C.save_point(fp,&p) << '\n';
+            fp << '\n';
+        }
+    }
+
+    {
+        curve::periodic_spline<point> spl;
+        spl.compute(C);
+        const string  out = "pbc-" + fn;
+        ios::ocstream fp(out);
+        for(real t=0;t<=1.0;t+=0.02)
+        {
+            point s;
+            point p = spl.compute(t,C,s);
+            C.save_point(fp,&p) << '\n';
+            p += s;
+            C.save_point(fp,&p) << '\n';
+            fp << '\n';
+        }
+    }
+
+}
+
 
 Y_UTEST(curve)
 {
@@ -160,7 +208,8 @@ Y_UTEST(curve)
     handle_curve(C2cd,"c2cd.dat");
     handle_curve(C3d, "c3d.dat");
     
-    
+    metrics_for(C2f, "m2f.dat");
+
     
 }
 Y_UTEST_DONE()

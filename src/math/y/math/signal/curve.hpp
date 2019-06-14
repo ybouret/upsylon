@@ -18,6 +18,12 @@ namespace upsylon
             //! template to extract info from types
             template <typename T> struct info_for;
 
+            template <typename POINT> static inline
+            typename info_for<POINT>::real norm2( const POINT &P ) throw()
+            {
+                return info_for<POINT>::norm2(P);
+            }
+
             //! for boundaries
             enum style
             {
@@ -52,7 +58,7 @@ namespace upsylon
                 //
                 // non virtual interface
                 //______________________________________________________________
-                void save_point( ios::ostream &fp, const void *p ) const;       //!< save a point
+                ios::ostream &save_point( ios::ostream &fp, const void *p ) const;       //!< save a point
                 void save( ios::ostream &fp ) const;                            //!< save point_index point.x [point.y...]
 
             protected:
@@ -94,19 +100,7 @@ namespace upsylon
                 typedef typename info_type::real real;                 //!< alias
                 typedef vector<point>            vector_type;          //!< alias
 
-                static inline real norm2(const POINT &p) throw()
-                {
-                    const real *c = (const real *)&p;
-                    real ans = square_of(c[0]);
-                    for(size_t i=1;i<dim;++i) ans += square_of(c[i]);
-                    return ans;
-                }
-
-                static inline real norm(const POINT &p) throw()
-                {
-                    return sqrt_of( norm2(p) );
-                }
-
+                
                 //______________________________________________________________
                 //
                 // methods
@@ -217,15 +211,22 @@ namespace upsylon
                     }
                     return __tangent(t,P,source.Q);
                 }
-                
-                //! compute local speed
-                inline real speed(const real t, const points_type &source ) const
+
+
+
+                //! compute a point from data and derivative at once
+                inline POINT compute( const real t, const points_type &source, POINT &S) const
                 {
-                    const POINT c = tangent(t,source);
-                    return norm(c);
+                    assert(source.computed);
+                    const array<POINT> &P = source.P;
+                    switch( P.size() )
+                    {
+                        case 0: S=source.zp; return source.zp;
+                        case 1: S=source.zp; return P[1];
+                        default: break;
+                    }
+                    return __compute(t,P,source.Q,S);
                 }
-                
-                
                 
             protected:
                 //! constructor
@@ -237,9 +238,12 @@ namespace upsylon
                 //! interpolation for more than one point
                 virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw() = 0;
 
-                //! celerity for more than one point
+
+                //! tangent for more than one point
                 virtual POINT __tangent( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw() = 0;
 
+                //! interpolation and tangent
+                virtual POINT __compute(const real t, const array<POINT> &P, const array<POINT> &Q, POINT &S) const throw() = 0;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(spline);
@@ -298,11 +302,16 @@ namespace upsylon
                 lower_natural(true),
                 upper_natural(true),
                 lower_tangent(0),
-                upper_tangent(0)
+                upper_tangent(0),
+                S0(0),
+                SN(0)
                 {}
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(standard_spline);
+                POINT S0;
+                POINT SN;
+
                 virtual void __compute( array<POINT> &Q, const array<POINT> &P )
                 {
                     static const real half(0.5);
@@ -375,12 +384,22 @@ namespace upsylon
                             *((real *)&q + d) = u[i];
                         }
                     }
+                    //______________________________________________________
+                    //
+                    // compute boundary tangents
+                    //______________________________________________________
+                    static const real   one_third = one/3;
+                    static const real   one_sixth = one/6;
+                    const        size_t nm1       = n-1;
+                    S0 = (P[2] - P[1]) - one_third * Q[1] - one_sixth * Q[2];
+                    SN = (P[n]-P[nm1]) + one_third * Q[n] + one_sixth * Q[nm1];
                 }
 
-                virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
+                virtual inline POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
                 {
                     static const real zero(0);
                     static const real one(1);
+                    static const real one_sixth = one/6;
 
                     assert(P.size()>1);
                     assert(P.size()==Q.size());
@@ -395,7 +414,6 @@ namespace upsylon
                     }
                     else
                     {
-                        static const real six(6);
                         const size_t n   = P.size();
                         const size_t nm1 = n-1;
                         const real   tt  = real(1) + t*nm1;
@@ -403,15 +421,16 @@ namespace upsylon
                         const real   B   = (tt-jlo);
                         const size_t jup = jlo+1;
                         const real   A   = one-B;
-                        return A*P[jlo]+B*P[jup] + ((A*A*A-A) * Q[jlo] + (B*B*B-B) * Q[jup])/six;
+                        const real   A2  = A*A;
+                        const real   B2  = B*B;
+                        return A*P[jlo]+B*P[jup] + (A*(A2-one) * Q[jlo] + B*(B2-one) * Q[jup])*one_sixth;
                     }
                 }
 
-                virtual POINT __tangent( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
+                virtual inline POINT __tangent( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
                 {
                     static const real zero(0);
                     static const real one(1);
-                    static const real one_third = one/3;
                     static const real one_sixth = one/6;
 
                     assert(P.size()>1);
@@ -419,13 +438,11 @@ namespace upsylon
 
                     if( t <= zero )
                     {
-                        return (P[2] - P[1]) - one_third * Q[1] - one_sixth * Q[2];
+                        return S0;
                     }
                     else if( t>= one )
                     {
-                        const size_t n   = P.size();
-                        const size_t nm1 = n-1;
-                        return (P[n]-P[nm1]) + one_third * Q[n] + one_sixth * Q[nm1];
+                        return SN;
                     }
                     else
                     {
@@ -436,9 +453,47 @@ namespace upsylon
                         const real   B   = (tt-jlo);
                         const size_t jup = jlo+1;
                         const real   A   = one-B;
-                        return P[jup]-P[jlo] + one_sixth * ( (3*B*B-1) * Q[jup] - (3*A*A-1)*Q[jlo]);
+                        const real   B2  = B*B;
+                        const real   A2  = A*A;
+                        return P[jup]-P[jlo] + one_sixth * ( (3*B2-one) * Q[jup] - (3*A2-one)*Q[jlo]);
                     }
                 }
+
+                virtual inline POINT __compute(const real t, const array<POINT> &P, const array<POINT> &Q, POINT &S) const throw()
+                {
+                    static const real zero(0);
+                    static const real one(1);
+                    static const real one_sixth = one/6;
+
+                    assert(P.size()>1);
+                    assert(P.size()==Q.size());
+                    if( t <= zero )
+                    {
+                        S = S0;
+                        return P[1];
+                    }
+                    else if( t >= one )
+                    {
+                        S = SN;
+                        return P[ P.size() ];
+                    }
+                    else
+                    {
+                        const size_t n   = P.size();
+                        const size_t nm1 = n-1;
+                        const real   tt  = real(1) + t*nm1;
+                        const size_t jlo = min_of<real>(nm1,floor_of(tt));
+                        const real   B   = (tt-jlo);
+                        const size_t jup = jlo+1;
+                        const real   A   = one-B;
+                        const real   A2  = A*A;
+                        const real   B2  = B*B;
+
+                        S = P[jup]-P[jlo] + one_sixth * ( (3*B2-one) * Q[jup] - (3*A2-one)*Q[jlo]);
+                        return A*P[jlo]+B*P[jup] + (A*(A2-one) * Q[jlo] + B*(B2-one) * Q[jup])*one_sixth;
+                    }
+                }
+
             };
 
 
@@ -540,6 +595,16 @@ namespace upsylon
                     }
                 }
 
+                static inline real __map( const real t, const size_t n) throw()
+                {
+                    static const real one(1);
+                    real tt = one + t * n;
+                    const size_t np1 = n+1;
+                    while(tt<one) tt += n;
+                    while(tt>np1) tt -= n;
+                    return tt;
+                }
+
                 virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
                 {
                     static const real one(1);
@@ -551,10 +616,7 @@ namespace upsylon
                     const size_t n = P.size();
 
                     // map position
-                    real tt = one + t * n;
-                    const size_t np1 = n+1;
-                    while(tt<one) tt += n;
-                    while(tt>np1) tt -= n;
+                    const real tt = __map(t,n);
 
                     // get bracketing indices
                     const size_t  jlo = clamp<size_t>(1,floor_of(tt),n);
@@ -570,13 +632,10 @@ namespace upsylon
                     static const real one(1);
                     static const real one_sixth = one/6;
                     
-                    const size_t n = P.size();
-                    
+
                     // map position
-                    real tt = one + t * n;
-                    const size_t np1 = n+1;
-                    while(tt<one) tt += n;
-                    while(tt>np1) tt -= n;
+                    const size_t n = P.size();
+                    const real tt = __map(t,n);
                     
                     // get bracketing indices
                     const size_t  jlo = clamp<size_t>(1,floor_of(tt),n);
@@ -584,6 +643,29 @@ namespace upsylon
                     const real    B   = (tt-jlo);
                     const real    A   = one-B;
                     return P[jup]-P[jlo] + one_sixth * ( (3*B*B-1) * Q[jup] - (3*A*A-1)*Q[jlo]);
+                }
+
+                virtual inline POINT __compute(const real t, const array<POINT> &P, const array<POINT> &Q, POINT &S) const throw()
+                {
+                    static const real one(1);
+                    static const real one_sixth = one/6;
+
+                    assert(P.size()>1);
+                    assert(P.size()==Q.size());
+
+                    // map position
+                    const size_t n    = P.size();
+                    const real   tt   = __map(t,n);
+                    // get indices
+                    const size_t  jlo = clamp<size_t>(1,floor_of(tt),n);
+                    size_t        jup = jlo+1; if(jup>n) jup = 1;
+                    const real    B   = (tt-jlo);
+                    const real    A   = one-B;
+                    const real    A2  = A*A;
+                    const real    B2  = B*B;
+
+                    S = P[jup]-P[jlo] + one_sixth * ( (3*B2-one) * Q[jup] - (3*A2-one)*Q[jlo]);
+                    return A*P[jlo]+B*P[jup] + (A*(A2-one) * Q[jlo] + B*(B2-one) * Q[jup])*one_sixth;
                 }
             };
 
@@ -595,6 +677,7 @@ namespace upsylon
         {
             static const size_t dim = 1; //!< dim
             typedef float       real;    //!< real
+            static inline real norm2( const real p ) throw() { return p*p; }
         };
 
         //! using point2d<float>
@@ -602,6 +685,8 @@ namespace upsylon
         {
             static const size_t dim = 2; //!< dim
             typedef float       real;    //!< real
+            static inline real  norm2( const point2d<real> &p ) throw() { return p.x*p.x+p.y*p.y; }
+
         };
 
         //! using complex<float>
@@ -609,6 +694,8 @@ namespace upsylon
         {
             static const size_t dim = 2; //!< dim
             typedef float       real;    //!< real
+            static inline real  norm2( const complex<real> &p ) throw() { return p.re*p.re+p.im*p.im; }
+
         };
 
         //! using point2d<float>
@@ -616,6 +703,7 @@ namespace upsylon
         {
             static const size_t dim = 3;//!< dim
             typedef float       real;   //!< real
+            static inline real  norm2( const point3d<real> &p ) throw() { return p.x*p.x+p.y*p.y+p.z*p.z; }
         };
 
         //! using double
@@ -623,6 +711,8 @@ namespace upsylon
         {
             static const size_t dim = 1;//!< dim
             typedef double      real;   //!< real
+            static inline real norm2( const real p ) throw() { return p*p; }
+
         };
 
         //! using point2d<double>
@@ -630,6 +720,7 @@ namespace upsylon
         {
             static const size_t  dim = 2; //!< dim
             typedef double       real;    //!< real
+            static inline real   norm2( const point2d<real> &p ) throw() { return p.x*p.x+p.y*p.y; }
         };
 
         //! using complex<double>
@@ -637,6 +728,8 @@ namespace upsylon
         {
             static const size_t dim = 2; //!< dim
             typedef double      real;    //!< real
+            static inline real  norm2( const complex<real> &p ) throw() { return p.re*p.re+p.im*p.im; }
+
         };
 
         //! using point3d<double>
@@ -644,6 +737,8 @@ namespace upsylon
         {
             static const size_t dim = 3; //!< dim
             typedef double      real;    //!< real
+            static inline real  norm2( const point3d<real> &p ) throw() { return p.x*p.x+p.y*p.y+p.z*p.z; }
+
         };
     }
 }

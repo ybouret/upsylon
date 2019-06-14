@@ -35,7 +35,7 @@ namespace upsylon
             }
         }
         
-        void curve::interface:: save_point( ios::ostream &fp, const void *p ) const
+        ios::ostream & curve::interface:: save_point( ios::ostream &fp, const void *p ) const
         {
             assert(p);
             switch (real_bytes)
@@ -45,6 +45,7 @@ namespace upsylon
                 default:
                     break;
             }
+            return fp;
         }
         
         void curve:: interface:: save( ios::ostream &fp ) const
