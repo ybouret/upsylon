@@ -50,7 +50,7 @@ static inline void handle_curve( CURVE &C, const string &fn )
             ios::ocstream fp(out);
             for(real t=0;t<=1.0;t+=0.01)
             {
-                const point P = sspl.tangent(t,C);
+                const point P = sspl.tangent(t,C,NULL);
                 const real  I = sspl.t2i(t,C.size());
                 fp("%.15g", I);
                 C.save_point(fp,&P);
@@ -79,7 +79,7 @@ static inline void handle_curve( CURVE &C, const string &fn )
             ios::ocstream fp(out);
             for(real t=0;t<=1.0;t+=0.01)
             {
-                const point P = sspl.tangent(t,C);
+                const point P = sspl.tangent(t,C,NULL);
                 const real  I = sspl.t2i(t,C.size());
                 fp("%.15g", I);
                 C.save_point(fp,&P);

@@ -202,17 +202,17 @@ namespace upsylon
                 }
 
                 //! compute tangent from data
-                inline POINT tangent( const real t, const points_type &source ) const throw()
+                inline POINT tangent( const real t, const points_type &source, POINT *accel ) const throw()
                 {
                     assert(source.computed);
                     const array<POINT> &P = source.P;
                     switch( P.size() )
                     {
-                        case 0: return source.zp;
-                        case 1: return source.zp;
+                        case 0: if(accel) *accel = source.zp; return source.zp;
+                        case 1: if(accel) *accel = source.zp; return source.zp;
                         default: break;
                     }
-                    return __tangent(t,P,source.Q);
+                    return __tangent(t,P,source.Q,NULL);
                 }
 
                 //! compute a point from data and derivative at once
@@ -232,7 +232,7 @@ namespace upsylon
                 //! |tangent|
                 inline real speed( const real t, const points_type &source ) const throw()
                 {
-                    const POINT p = tangent(t,source);
+                    const POINT p = tangent(t,source,NULL);
                     return sqrt_of( norm2(p) );
                 }
 
@@ -256,7 +256,7 @@ namespace upsylon
 
 
                 //! tangent for more than one point
-                virtual POINT __tangent( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw() = 0;
+                virtual POINT __tangent( const real t, const array<POINT> &P, const array<POINT> &Q, POINT *accel) const throw() = 0;
 
                 //! interpolation and tangent
                 virtual POINT __compute(const real t, const array<POINT> &P, const array<POINT> &Q, POINT &S) const throw() = 0;
@@ -452,7 +452,7 @@ namespace upsylon
                     }
                 }
 
-                virtual inline POINT __tangent( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
+                inline virtual POINT __tangent( const real t, const array<POINT> &P, const array<POINT> &Q, POINT *accel ) const throw()
                 {
                     static const real zero(0);
                     static const real one(1);
@@ -463,10 +463,12 @@ namespace upsylon
 
                     if( t <= zero )
                     {
+                        if(accel) *accel = Q[1];
                         return S0;
                     }
                     else if( t>= one )
                     {
+                        if(accel) *accel = Q[Q.size()];
                         return SN;
                     }
                     else
@@ -480,11 +482,12 @@ namespace upsylon
                         const real   A   = one-B;
                         const real   B2  = B*B;
                         const real   A2  = A*A;
+                        if(accel) *accel = A*Q[jlo] + B*Q[jup];
                         return P[jup]-P[jlo] + one_sixth * ( (3*B2-one) * Q[jup] - (3*A2-one)*Q[jlo]);
                     }
                 }
 
-                virtual inline POINT __compute(const real t, const array<POINT> &P, const array<POINT> &Q, POINT &S) const throw()
+                inline virtual POINT __compute(const real t, const array<POINT> &P, const array<POINT> &Q, POINT &S) const throw()
                 {
                     static const real zero(0);
                     static const real one(1);
@@ -630,7 +633,7 @@ namespace upsylon
                     return tt;
                 }
 
-                virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
+                inline virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
                 {
                     static const real one(1);
                     static const real six(6);
@@ -652,7 +655,7 @@ namespace upsylon
                     return A*P[jlo]+B*P[jup] + ((A*A*A-A) * Q[jlo] + (B*B*B-B) * Q[jup])/six;
                 }
 
-                virtual POINT __tangent( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
+                inline virtual POINT __tangent( const real t, const array<POINT> &P, const array<POINT> &Q, POINT *accel ) const throw()
                 {
                     static const real one(1);
                     static const real one_sixth = one/6;
@@ -667,10 +670,11 @@ namespace upsylon
                     size_t        jup = jlo+1; if(jup>n) jup = 1;
                     const real    B   = (tt-jlo);
                     const real    A   = one-B;
+                    if(accel) *accel = A*Q[jlo] + B*Q[jup];
                     return P[jup]-P[jlo] + one_sixth * ( (3*B*B-1) * Q[jup] - (3*A*A-1)*Q[jlo]);
                 }
 
-                virtual inline POINT __compute(const real t, const array<POINT> &P, const array<POINT> &Q, POINT &S) const throw()
+                inline virtual POINT __compute(const real t, const array<POINT> &P, const array<POINT> &Q, POINT &S) const throw()
                 {
                     static const real one(1);
                     static const real one_sixth = one/6;
