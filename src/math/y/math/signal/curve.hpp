@@ -7,6 +7,7 @@
 #include "y/math/kernel/cyclic.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/math/fcn/integrate.hpp"
 
 namespace upsylon
 {
@@ -18,6 +19,7 @@ namespace upsylon
             //! template to extract info from types
             template <typename T> struct info_for;
 
+            //! wrapper to get squared norm of a point
             template <typename POINT> static inline
             typename info_for<POINT>::real norm2( const POINT &P ) throw()
             {
@@ -172,20 +174,21 @@ namespace upsylon
                 inline void compute( points_type &source )
                 {
                     source.set_computed(false);
-
-                    const array<POINT> &P = source.P;
-                    const size_t n = P.size();
-                    if(n>1)
                     {
-                        source.Q.make(P.size(),source.zp);
-                        array<POINT>       &Q = source.Q;
-                        __compute(Q,P);
+                        const array<POINT> &P = source.P;
+                        const size_t n = P.size();
+                        if(n>1)
+                        {
+                            source.Q.make(P.size(),source.zp);
+                            array<POINT>       &Q = source.Q;
+                            __compute(Q,P);
+                        }
                     }
                     source.set_computed(true);
                 }
 
                 //! compute a point from data
-                inline POINT compute( const real t, const points_type &source) const
+                inline POINT compute( const real t, const points_type &source) const throw()
                 {
                     assert(source.computed);
                     const array<POINT> &P = source.P;
@@ -198,8 +201,8 @@ namespace upsylon
                     return __compute(t,P,source.Q);
                 }
 
-                //! compute celerity from data
-                inline POINT tangent( const real t, const points_type &source ) const
+                //! compute tangent from data
+                inline POINT tangent( const real t, const points_type &source ) const throw()
                 {
                     assert(source.computed);
                     const array<POINT> &P = source.P;
@@ -212,10 +215,8 @@ namespace upsylon
                     return __tangent(t,P,source.Q);
                 }
 
-
-
                 //! compute a point from data and derivative at once
-                inline POINT compute( const real t, const points_type &source, POINT &S) const
+                inline POINT compute( const real t, const points_type &source, POINT &S) const throw()
                 {
                     assert(source.computed);
                     const array<POINT> &P = source.P;
@@ -227,6 +228,21 @@ namespace upsylon
                     }
                     return __compute(t,P,source.Q,S);
                 }
+
+                //! |tangent|
+                inline real speed( const real t, const points_type &source ) const throw()
+                {
+                    const POINT p = tangent(t,source);
+                    return sqrt_of( norm2(p) );
+                }
+
+                //! arc length
+                inline real arc_length(const real t0, const real t1, const points_type &source ) const
+                {
+                    d_arc F = { this, &source };
+                    return integrate::compute(F,t0,t1,real(1e-4));
+                }
+
                 
             protected:
                 //! constructor
@@ -247,6 +263,13 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(spline);
+                struct d_arc
+                {
+                    const spline      *self;
+                    const points_type *data;
+                    inline real operator()(const real t) const throw() { return self->speed(t,*data); }
+                };
+
             };
 
             //! standard spline
@@ -306,6 +329,8 @@ namespace upsylon
                 S0(0),
                 SN(0)
                 {}
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(standard_spline);
@@ -677,6 +702,7 @@ namespace upsylon
         {
             static const size_t dim = 1; //!< dim
             typedef float       real;    //!< real
+            //! |p|^2
             static inline real norm2( const real p ) throw() { return p*p; }
         };
 
@@ -685,8 +711,8 @@ namespace upsylon
         {
             static const size_t dim = 2; //!< dim
             typedef float       real;    //!< real
+            //! |p|^2
             static inline real  norm2( const point2d<real> &p ) throw() { return p.x*p.x+p.y*p.y; }
-
         };
 
         //! using complex<float>
@@ -694,8 +720,8 @@ namespace upsylon
         {
             static const size_t dim = 2; //!< dim
             typedef float       real;    //!< real
+            //! |p|^2
             static inline real  norm2( const complex<real> &p ) throw() { return p.re*p.re+p.im*p.im; }
-
         };
 
         //! using point2d<float>
@@ -703,6 +729,7 @@ namespace upsylon
         {
             static const size_t dim = 3;//!< dim
             typedef float       real;   //!< real
+            //! |p|^2
             static inline real  norm2( const point3d<real> &p ) throw() { return p.x*p.x+p.y*p.y+p.z*p.z; }
         };
 
@@ -711,8 +738,8 @@ namespace upsylon
         {
             static const size_t dim = 1;//!< dim
             typedef double      real;   //!< real
+            //! |p|^2
             static inline real norm2( const real p ) throw() { return p*p; }
-
         };
 
         //! using point2d<double>
@@ -720,6 +747,7 @@ namespace upsylon
         {
             static const size_t  dim = 2; //!< dim
             typedef double       real;    //!< real
+            //! |p|^2
             static inline real   norm2( const point2d<real> &p ) throw() { return p.x*p.x+p.y*p.y; }
         };
 
@@ -728,6 +756,7 @@ namespace upsylon
         {
             static const size_t dim = 2; //!< dim
             typedef double      real;    //!< real
+            //! |p|^2
             static inline real  norm2( const complex<real> &p ) throw() { return p.re*p.re+p.im*p.im; }
 
         };
@@ -737,6 +766,7 @@ namespace upsylon
         {
             static const size_t dim = 3; //!< dim
             typedef double      real;    //!< real
+            //! |p|^2
             static inline real  norm2( const point3d<real> &p ) throw() { return p.x*p.x+p.y*p.y+p.z*p.z; }
 
         };

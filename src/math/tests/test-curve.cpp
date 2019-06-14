@@ -126,34 +126,65 @@ void metrics_for( CURVE &C, const string &fn )
     {
         curve::standard_spline<point> spl;
         spl.compute(C);
-        const string  out = "std-" + fn;
-        ios::ocstream fp(out);
-        for(real t=0;t<=1.0;t+=0.02)
         {
-            point s;
-            point p = spl.compute(t,C,s);
-            C.save_point(fp,&p) << '\n';
-            p += s;
-            C.save_point(fp,&p) << '\n';
-            fp << '\n';
+            const string  out = "std-" + fn;
+            ios::ocstream fp(out);
+            for(real t=0;t<=1.0;t+=0.02)
+            {
+                point s;
+                point p = spl.compute(t,C,s);
+                C.save_point(fp,&p) << '\n';
+                p += s;
+                C.save_point(fp,&p) << '\n';
+                fp << '\n';
+            }
+        }
+
+        {
+            const string out = "std-arc-" + fn;
+            ios::ocstream fp(out);
+            size_t np=100;
+            for(size_t i=0;i<=np;++i)
+            {
+                const real t = real(i)/np;
+                const real s = spl.speed(t,C);
+                const real l = spl.arc_length(0,t,C);
+                fp("%g %g %g\n", t,s,l);
+            }
         }
     }
 
     {
         curve::periodic_spline<point> spl;
         spl.compute(C);
-        const string  out = "pbc-" + fn;
-        ios::ocstream fp(out);
-        for(real t=0;t<=1.0;t+=0.02)
         {
-            point s;
-            point p = spl.compute(t,C,s);
-            C.save_point(fp,&p) << '\n';
-            p += s;
-            C.save_point(fp,&p) << '\n';
-            fp << '\n';
+            const string  out = "pbc-" + fn;
+            ios::ocstream fp(out);
+            for(real t=0;t<=1.0;t+=0.02)
+            {
+                point s;
+                point p = spl.compute(t,C,s);
+                C.save_point(fp,&p) << '\n';
+                p += s;
+                C.save_point(fp,&p) << '\n';
+                fp << '\n';
+            }
+        }
+
+        {
+            const string out = "pbc-arc-" + fn;
+            ios::ocstream fp(out);
+            size_t np=100;
+            for(size_t i=0;i<=np;++i)
+            {
+                const real t = real(i)/np;
+                const real s = spl.speed(t,C);
+                const real l = spl.arc_length(0,t,C);
+                fp("%g %g %g\n", t,s,l);
+            }
         }
     }
+
 
 }
 
