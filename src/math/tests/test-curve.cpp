@@ -132,7 +132,7 @@ void metrics_for( CURVE &C, const string &fn )
             for(real t=0;t<=1.0;t+=0.02)
             {
                 point s;
-                point p = spl.compute(t,C,s);
+                point p = spl.compute(t,C,&s);
                 C.save_point(fp,&p) << '\n';
                 p += s;
                 C.save_point(fp,&p) << '\n';
@@ -146,8 +146,7 @@ void metrics_for( CURVE &C, const string &fn )
             for(real t=0;t<=1.0;t+=0.02)
             {
                 point a;
-                point p = spl.compute(t,C);
-                (void)spl.tangent(t,C,&a);
+                point p = spl.compute(t,C,NULL,&a);
                 C.save_point(fp,&p) << '\n';
                 p += a;
                 C.save_point(fp,&p) << '\n';
@@ -178,9 +177,23 @@ void metrics_for( CURVE &C, const string &fn )
             for(real t=0;t<=1.0;t+=0.02)
             {
                 point s;
-                point p = spl.compute(t,C,s);
+                point p = spl.compute(t,C,&s);
                 C.save_point(fp,&p) << '\n';
                 p += s;
+                C.save_point(fp,&p) << '\n';
+                fp << '\n';
+            }
+        }
+
+        {
+            const string  out = "pbc-a-" + fn;
+            ios::ocstream fp(out);
+            for(real t=0;t<=1.0;t+=0.02)
+            {
+                point a;
+                point p = spl.compute(t,C,NULL,&a);
+                C.save_point(fp,&p) << '\n';
+                p += a;
                 C.save_point(fp,&p) << '\n';
                 fp << '\n';
             }
@@ -199,7 +212,6 @@ void metrics_for( CURVE &C, const string &fn )
             }
         }
     }
-
 
 }
 
