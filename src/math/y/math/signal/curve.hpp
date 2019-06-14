@@ -284,6 +284,7 @@ namespace upsylon
                     }
                 }
 
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(spline);
                 struct d_arc
@@ -487,6 +488,7 @@ namespace upsylon
                         if(M)      *M      = A*PA + B*PB + (A*(A2-one) * QA + B*(B2-one) * QB)*one_sixth;
                         if(dMdt)   *dMdt   = nm1 * ( (PB-PA) + one_sixth * ( (3*B2-one) * QB - (3*A2-one)*QA) );
                         if(d2Mdt2) *d2Mdt2 = (nm1*nm1) * (A*QA+B*QB);
+
                     }
                 }
 
@@ -656,6 +658,7 @@ namespace upsylon
                     if(M)      *M      = A*PA + B*PB + (A*(A2-one) * QA + B*(B2-one) * QB)*one_sixth;
                     if(dMdt)   *dMdt   = n*( (PB-PA) + one_sixth * ( (3*B2-one) * QB - (3*A2-one)*QA) );
                     if(d2Mdt2) *d2Mdt2 = (n*n)*(A*QA+B*QB);
+
                 }
                 
 

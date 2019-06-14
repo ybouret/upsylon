@@ -212,6 +212,20 @@ void metrics_for( CURVE &C, const string &fn )
         }
 
         {
+            const string  out = "pbc-a-" + fn;
+            ios::ocstream fp(out);
+            for(real t=0;t<=1.0;t+=0.02)
+            {
+                point a;
+                point p = spl.compute(t,C,NULL,&a);
+                C.save_point(fp,&p) << '\n';
+                p += a;
+                C.save_point(fp,&p) << '\n';
+                fp << '\n';
+            }
+        }
+
+        {
             const string out = "pbc-arc-" + fn;
             ios::ocstream fp(out);
             size_t np=1000;
