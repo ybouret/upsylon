@@ -127,6 +127,17 @@ void metrics_for( CURVE &C, const string &fn )
         curve::standard_spline<point> spl;
         spl.compute(C);
         {
+            const string out = "std-" + fn;
+            ios::ocstream fp(out);
+            for(real t=0;t<=1.0;t+=0.01)
+            {
+                point p = spl.compute(t,C);
+                C.save_point(fp,&p) << '\n';
+            }
+        }
+
+
+        {
             const string  out = "std-v-" + fn;
             ios::ocstream fp(out);
             for(real t=0;t<=1.0;t+=0.02)

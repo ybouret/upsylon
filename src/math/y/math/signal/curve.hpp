@@ -334,8 +334,7 @@ namespace upsylon
                     }
                     else
                     {
-                        const size_t nm1 = n-1;
-                        return clamp<real>(one,one + t * nm1,n);
+                        return clamp<real>(one,one + t * (n-1),n);
                     }
                 }
 
@@ -350,16 +349,24 @@ namespace upsylon
                 upper_natural(true),
                 lower_tangent(0),
                 upper_tangent(0),
+                nm1(0),
+                nm1sq(0),
                 S1(0),
-                SN(0)
+                SN(0),
+                Q1(0),
+                QN(0)
                 {}
 
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(standard_spline);
+                size_t nm1;
+                size_t nm1sq;
                 POINT S1;
                 POINT SN;
+                POINT Q1;
+                POINT QN;
 
                 virtual void __compute( array<POINT> &Q, const array<POINT> &P )
                 {
@@ -371,7 +378,9 @@ namespace upsylon
                     assert(P.size()>1);
                     assert(Q.size()==P.size());
                     const size_t n = P.size();
-                    
+                    nm1   = n-1;
+                    nm1sq = square_of(nm1);
+
                     tridiag<real> t(n,2);
                     array<real>  &r = t[0];
                     array<real>  &u = t[1];
@@ -439,12 +448,14 @@ namespace upsylon
                     //______________________________________________________
                     static const real   one_third = one/3;
                     static const real   one_sixth = one/6;
-                    const        size_t nm1       = n-1;
                     S1 = (P[2] - P[1]) - one_third * Q[1] - one_sixth * Q[2];
                     SN = (P[n]-P[nm1]) + one_third * Q[n] + one_sixth * Q[nm1];
 
                     S1 *= nm1;
                     SN *= nm1;
+
+                    Q1 = nm1sq * Q[1];
+                    QN = nm1sq * Q[n];
                 }
 
 
@@ -456,24 +467,23 @@ namespace upsylon
 
                     assert(P.size()>1);
                     assert(P.size()==Q.size());
+                    assert(P.size()-1==nm1);
 
                     if( t<=zero )
                     {
                         if(M)      *M      = P[1];
                         if(dMdt)   *dMdt   = S1;
-                        if(d2Mdt2) *d2Mdt2 = Q[1];
+                        if(d2Mdt2) *d2Mdt2 = Q1;
                     }
                     else if(t>=one)
                     {
                         const size_t n      = P.size();
                         if(M)       *M      = P[n];
                         if(dMdt)    *dMdt   = SN;
-                        if(d2Mdt2)  *d2Mdt2 = Q[n];
+                        if(d2Mdt2)  *d2Mdt2 = QN;
                     }
                     else
                     {
-                        const size_t n   = P.size();
-                        const size_t nm1 = n-1;
                         const real   tt  = real(1) + t*nm1;
                         const size_t jlo = min_of<real>(nm1,floor_of(tt));
                         const real   B   = (tt-jlo);
@@ -487,8 +497,7 @@ namespace upsylon
                         const POINT  QB = Q[jup];
                         if(M)      *M      = A*PA + B*PB + (A*(A2-one) * QA + B*(B2-one) * QB)*one_sixth;
                         if(dMdt)   *dMdt   = nm1 * ( (PB-PA) + one_sixth * ( (3*B2-one) * QB - (3*A2-one)*QA) );
-                        if(d2Mdt2) *d2Mdt2 = (nm1*nm1) * (A*QA+B*QB);
-
+                        if(d2Mdt2) *d2Mdt2 = (nm1sq) * (A*QA+B*QB);
                     }
                 }
 
