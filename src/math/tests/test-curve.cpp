@@ -132,9 +132,9 @@ void metrics_for( CURVE &C, const string &fn )
             for(real t=0;t<=1.0;t+=0.02)
             {
                 point s;
-                point p = spl.compute(t,C,s);
+                point p = spl.compute(t,C,&s);
                 C.save_point(fp,&p) << '\n';
-                p += s;
+                p += s/(4*C.size());
                 C.save_point(fp,&p) << '\n';
                 fp << '\n';
             }
@@ -146,8 +146,7 @@ void metrics_for( CURVE &C, const string &fn )
             for(real t=0;t<=1.0;t+=0.02)
             {
                 point a;
-                point p = spl.compute(t,C);
-                (void)spl.tangent(t,C,&a);
+                point p = spl.compute(t,C,NULL,&a);
                 C.save_point(fp,&p) << '\n';
                 p += a;
                 C.save_point(fp,&p) << '\n';
@@ -158,13 +157,14 @@ void metrics_for( CURVE &C, const string &fn )
         {
             const string out = "std-arc-" + fn;
             ios::ocstream fp(out);
-            size_t np=100;
+            size_t np=1000;
             for(size_t i=0;i<=np;++i)
             {
                 const real t = real(i)/np;
                 const real s = spl.speed(t,C);
                 const real l = spl.arc_length(0,t,C);
-                fp("%g %g %g\n", t,s,l);
+                const real g = spl.curvature(t,C);
+                fp("%g %g %g %g\n", t,s,l,g);
             }
         }
     }
@@ -172,15 +172,40 @@ void metrics_for( CURVE &C, const string &fn )
     {
         curve::periodic_spline<point> spl;
         spl.compute(C);
+
+        {
+            const string out = "pbc-" + fn;
+            ios::ocstream fp(out);
+            for(real t=0;t<=1.0;t+=0.01)
+            {
+                point p = spl.compute(t,C);
+                C.save_point(fp,&p) << '\n';
+            }
+        }
+
         {
             const string  out = "pbc-v-" + fn;
             ios::ocstream fp(out);
             for(real t=0;t<=1.0;t+=0.02)
             {
                 point s;
-                point p = spl.compute(t,C,s);
+                point p = spl.compute(t,C,&s);
                 C.save_point(fp,&p) << '\n';
-                p += s;
+                p += s/(4*C.size());
+                C.save_point(fp,&p) << '\n';
+                fp << '\n';
+            }
+        }
+
+        {
+            const string  out = "pbc-a-" + fn;
+            ios::ocstream fp(out);
+            for(real t=0;t<=1.0;t+=0.02)
+            {
+                point a;
+                point p = spl.compute(t,C,NULL,&a);
+                C.save_point(fp,&p) << '\n';
+                p += a;
                 C.save_point(fp,&p) << '\n';
                 fp << '\n';
             }
@@ -189,20 +214,23 @@ void metrics_for( CURVE &C, const string &fn )
         {
             const string out = "pbc-arc-" + fn;
             ios::ocstream fp(out);
-            size_t np=100;
+            size_t np=1000;
             for(size_t i=0;i<=np;++i)
             {
                 const real t = real(i)/np;
                 const real s = spl.speed(t,C);
                 const real l = spl.arc_length(0,t,C);
-                fp("%g %g %g\n", t,s,l);
+                const real g = spl.curvature(t,C);
+                fp("%g %g %g %g\n", t,s,l,g);
             }
         }
+        std::cerr << "length = " << spl.arc_length(0, 1,C) << std::endl;
+        std::cerr << "area   = " << spl.area(C)            << std::endl;
     }
-
 
 }
 
+#include "y/string/convert.hpp"
 
 Y_UTEST(curve)
 {
@@ -219,17 +247,23 @@ Y_UTEST(curve)
     curve::points< complex<float> >  C2cd;
     curve::points< point3d<double> > C3d;
 
-    const size_t np = 2 + alea.leq(10);
+    size_t np = 3;
+    if(argc>1)
+    {
+        np = string_convert::to<size_t>(argv[1],"np");
+    }
+
     const float  dz = 1.0/np;
+    const float  noise = 0.01f;
     for(size_t i=0;i<np;++i)
     {
 
         {
-            const float theta  = (i*numeric<float>::two_pi)/np*(1.0f+0.08f*alea.symm<float>());
-            const float radius = 1.0f+0.08f*alea.symm<float>();
+            const float theta  = (i*numeric<float>::two_pi)/np*(1.0f+noise*alea.symm<float>());
+            const float radius = 1.0f+noise*alea.symm<float>();
             const float x = radius * cosf(theta);
             const float y = radius * sinf(theta);
-            const float z = (dz * i) * (1.0f+0.08f*alea.symm<float>());
+            const float z = (dz * i) * (1.0f+noise*alea.symm<float>());
             
             C1f.add(x);
             C2f.add(x,y);

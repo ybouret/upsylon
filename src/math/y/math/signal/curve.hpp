@@ -147,14 +147,16 @@ namespace upsylon
                 //
                 // definitions
                 //______________________________________________________________
-                typedef points<POINT>              points_type; //!< alias
-                typedef typename points_type::real real;        //!< alias
-
+                typedef points<POINT>              points_type;            //!< alias
+                typedef typename points_type::real real;                   //!< alias
+                static  const size_t               dim = points_type::dim; //!< alias
+                
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
                 const style boundaries; //!< run-time style
+                const POINT zp;         //!< zerop point
 
                 //______________________________________________________________
                 //
@@ -187,79 +189,100 @@ namespace upsylon
                     source.set_computed(true);
                 }
 
-                //! compute a point from data
-                inline POINT compute( const real t, const points_type &source) const throw()
+                //! all cases computation
+                inline void compute(POINT *M, POINT *dMdt, POINT *d2Mdt2, const real t, const points_type &source) const throw()
                 {
                     assert(source.computed);
                     const array<POINT> &P = source.P;
-                    switch( P.size() )
+                    switch(P.size())
                     {
-                        case 0: return source.zp;
-                        case 1: return P[1];
-                        default: break;
+                        case 0: if(M) *M=zp;   if(dMdt) *dMdt=zp; if(d2Mdt2) *d2Mdt2=zp; break;
+                        case 1: if(M) *M=P[1]; if(dMdt) *dMdt=zp; if(d2Mdt2) *d2Mdt2=zp; break;
+                        default:
+                            __compute(M,dMdt,d2Mdt2, t,P,source.Q);
                     }
-                    return __compute(t,P,source.Q);
                 }
 
-                //! compute tangent from data
-                inline POINT tangent( const real t, const points_type &source, POINT *accel ) const throw()
+                //! helper to get position
+                inline POINT compute(const real t, const points_type &source, POINT *dMdt=0, POINT *d2Mdt2=0) const throw()
                 {
-                    assert(source.computed);
-                    const array<POINT> &P = source.P;
-                    switch( P.size() )
-                    {
-                        case 0: if(accel) *accel = source.zp; return source.zp;
-                        case 1: if(accel) *accel = source.zp; return source.zp;
-                        default: break;
-                    }
-                    return __tangent(t,P,source.Q,NULL);
+                    POINT M = zp;
+                    compute(&M,dMdt,d2Mdt2,t,source);
+                    return M;
                 }
 
-                //! compute a point from data and derivative at once
-                inline POINT compute( const real t, const points_type &source, POINT &S) const throw()
+                //! helper to get tangent
+                inline POINT tangent(const real t, const points_type &source, POINT *d2Mdt2=0) const throw()
                 {
-                    assert(source.computed);
-                    const array<POINT> &P = source.P;
-                    switch( P.size() )
-                    {
-                        case 0: S=source.zp; return source.zp;
-                        case 1: S=source.zp; return P[1];
-                        default: break;
-                    }
-                    return __compute(t,P,source.Q,S);
+                    POINT dMdt = zp;
+                    compute(NULL,&dMdt,d2Mdt2,t,source);
+                    return dMdt;
                 }
 
                 //! |tangent|
                 inline real speed( const real t, const points_type &source ) const throw()
                 {
-                    const POINT p = tangent(t,source,NULL);
-                    return sqrt_of( norm2(p) );
+                    POINT dMdt = zp;
+                    compute(NULL,&dMdt,NULL,t,source);
+                    return sqrt_of( curve::norm2(dMdt) );
+                }
+
+                inline real curvature( const real t, const points_type &source ) const throw()
+                {
+                    return (source.P.size() > 1) ? __curvature<dim>(t,source) : 0;
                 }
 
                 //! arc length
                 inline real arc_length(const real t0, const real t1, const points_type &source ) const
                 {
                     d_arc F = { this, &source };
-                    return integrate::compute(F,t0,t1,real(1e-4));
+                    return integrate::compute<real,d_arc>(F,t0,t1,numeric<real>::sqrt_ftol);
                 }
 
                 
             protected:
                 //! constructor
-                inline explicit spline(const style s) throw() : boundaries(s) {}
+                inline explicit spline(const style s) throw() : boundaries(s), zp(0) {}
 
                 //! compute coefficients for more than 1 point
                 virtual void  __compute( array<POINT> &Q, const array<POINT> &P ) = 0;
 
                 //! interpolation for more than one point
-                virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw() = 0;
+                virtual void __compute( POINT *M, POINT *dMdt, POINT *d2Mdt2, const real t, const array<POINT> &P, const array<POINT> &Q ) const throw() = 0;
 
+                template <const size_t DIM>
+                real __curvature(const real, const points_type &) const throw();
 
-                //! tangent for more than one point
-                virtual POINT __tangent( const real t, const array<POINT> &P, const array<POINT> &Q, POINT *accel) const throw() = 0;
+                template <>
+                real __curvature<1>(const real t, const points_type &source) const throw()
+                {
+                    assert(source.P.size()>1);
+                    real v=0,a=0;
+                    __compute(NULL,&v,&a,t,source.P,source.Q);
+                    const real den2 = 1 + v*v;
+                    return a/sqrt_of(den2*den2*den2);
+                }
 
-                //! interpolation and tangent
-                virtual POINT __compute(const real t, const array<POINT> &P, const array<POINT> &Q, POINT &S) const throw() = 0;
+                template <>
+                real __curvature<2>(const real t, const points_type &source) const throw()
+                {
+                    assert(source.P.size()>1);
+                    POINT v,a;
+                    __compute(NULL,&v,&a,t,source.P,source.Q);
+                    const real *pv = (const real *) &v;
+                    const real *pa = (const real *) &a;
+                    const real  vx = pv[0], vy=pv[1];
+                    const real  ax = pa[0], ay=pa[1];
+                    const real  v2 = vx*vx + vy*vy;
+                    if(v2<=0)
+                    {
+                        return 0;
+                    }
+                    else
+                    {
+                        return (vx*ay-vy*ax)/sqrt_of( v2*v2*v2 );
+                    }
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(spline);
@@ -326,7 +349,7 @@ namespace upsylon
                 upper_natural(true),
                 lower_tangent(0),
                 upper_tangent(0),
-                S0(0),
+                S1(0),
                 SN(0)
                 {}
 
@@ -334,7 +357,7 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(standard_spline);
-                POINT S0;
+                POINT S1;
                 POINT SN;
 
                 virtual void __compute( array<POINT> &Q, const array<POINT> &P )
@@ -416,11 +439,15 @@ namespace upsylon
                     static const real   one_third = one/3;
                     static const real   one_sixth = one/6;
                     const        size_t nm1       = n-1;
-                    S0 = (P[2] - P[1]) - one_third * Q[1] - one_sixth * Q[2];
+                    S1 = (P[2] - P[1]) - one_third * Q[1] - one_sixth * Q[2];
                     SN = (P[n]-P[nm1]) + one_third * Q[n] + one_sixth * Q[nm1];
+
+                    S1 *= nm1;
+                    SN *= nm1;
                 }
 
-                virtual inline POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
+
+                virtual void __compute( POINT *M, POINT *dMdt, POINT *d2Mdt2, const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
                 {
                     static const real zero(0);
                     static const real one(1);
@@ -431,11 +458,16 @@ namespace upsylon
 
                     if( t<=zero )
                     {
-                        return P[1];
+                        if(M)      *M      = P[1];
+                        if(dMdt)   *dMdt   = S1;
+                        if(d2Mdt2) *d2Mdt2 = Q[1];
                     }
                     else if(t>=one)
                     {
-                        return P[P.size()];
+                        const size_t n      = P.size();
+                        if(M)       *M      = P[n];
+                        if(dMdt)    *dMdt   = SN;
+                        if(d2Mdt2)  *d2Mdt2 = Q[n];
                     }
                     else
                     {
@@ -448,79 +480,16 @@ namespace upsylon
                         const real   A   = one-B;
                         const real   A2  = A*A;
                         const real   B2  = B*B;
-                        return A*P[jlo]+B*P[jup] + (A*(A2-one) * Q[jlo] + B*(B2-one) * Q[jup])*one_sixth;
+                        const POINT  PA = P[jlo];
+                        const POINT  PB = P[jup];
+                        const POINT  QA = Q[jlo];
+                        const POINT  QB = Q[jup];
+                        if(M)      *M      = A*PA + B*PB + (A*(A2-one) * QA + B*(B2-one) * QB)*one_sixth;
+                        if(dMdt)   *dMdt   = nm1 * ( (PB-PA) + one_sixth * ( (3*B2-one) * QB - (3*A2-one)*QA) );
+                        if(d2Mdt2) *d2Mdt2 = (nm1*nm1) * (A*QA+B*QB);
                     }
                 }
 
-                inline virtual POINT __tangent( const real t, const array<POINT> &P, const array<POINT> &Q, POINT *accel ) const throw()
-                {
-                    static const real zero(0);
-                    static const real one(1);
-                    static const real one_sixth = one/6;
-
-                    assert(P.size()>1);
-                    assert(P.size()==Q.size());
-
-                    if( t <= zero )
-                    {
-                        if(accel) *accel = Q[1];
-                        return S0;
-                    }
-                    else if( t>= one )
-                    {
-                        if(accel) *accel = Q[Q.size()];
-                        return SN;
-                    }
-                    else
-                    {
-                        const size_t n   = P.size();
-                        const size_t nm1 = n-1;
-                        const real   tt  = real(1) + t*nm1;
-                        const size_t jlo = min_of<real>(nm1,floor_of(tt));
-                        const real   B   = (tt-jlo);
-                        const size_t jup = jlo+1;
-                        const real   A   = one-B;
-                        const real   B2  = B*B;
-                        const real   A2  = A*A;
-                        if(accel) *accel = A*Q[jlo] + B*Q[jup];
-                        return P[jup]-P[jlo] + one_sixth * ( (3*B2-one) * Q[jup] - (3*A2-one)*Q[jlo]);
-                    }
-                }
-
-                inline virtual POINT __compute(const real t, const array<POINT> &P, const array<POINT> &Q, POINT &S) const throw()
-                {
-                    static const real zero(0);
-                    static const real one(1);
-                    static const real one_sixth = one/6;
-
-                    assert(P.size()>1);
-                    assert(P.size()==Q.size());
-                    if( t <= zero )
-                    {
-                        S = S0;
-                        return P[1];
-                    }
-                    else if( t >= one )
-                    {
-                        S = SN;
-                        return P[ P.size() ];
-                    }
-                    else
-                    {
-                        const size_t n   = P.size();
-                        const size_t nm1 = n-1;
-                        const real   tt  = real(1) + t*nm1;
-                        const size_t jlo = min_of<real>(nm1,floor_of(tt));
-                        const real   B   = (tt-jlo);
-                        const size_t jup = jlo+1;
-                        const real   A   = one-B;
-                        const real   A2  = A*A;
-                        const real   B2  = B*B;
-
-                        S = P[jup]-P[jlo] + one_sixth * ( (3*B2-one) * Q[jup] - (3*A2-one)*Q[jlo]);
-                        return A*P[jlo]+B*P[jup] + (A*(A2-one) * Q[jlo] + B*(B2-one) * Q[jup])*one_sixth;
-                    }
-                }
 
             };
 
@@ -566,11 +535,38 @@ namespace upsylon
                 //! setup
                 inline explicit periodic_spline() throw() : spline<POINT>(periodic) {}
 
-
+                inline real area(const points<POINT> &source) const
+                {
+                    return __area<dim>(source);
+                }
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(periodic_spline);
+                struct d_area
+                {
+                    const periodic_spline *self;
+                    const points<POINT>   *data;
+                    inline real operator()(const real t) const throw()
+                    {
+                        POINT       p,v;
+                        self->compute(&p,&v,0,t,*data);
+                        const real *pp = (const real *)&p;
+                        const real *pv = (const real *)&v;
+                        const real x  = pp[0], y  = pp[1];
+                        const real vx = pv[0], vy = pv[1];
+                        return x*vy - y*vx;
+                    }
+                };
+
+                template <const size_t> real __area(const points<POINT> &source) const;
+                template <> real __area<2>(const points<POINT> &source) const
+                {
+                    d_area F = { this, &source };
+                    return fabs_of(integrate::compute<real,d_area>(F,0,1,numeric<real>::sqrt_ftol))/2;
+                }
+
+
                 inline real get_r(const size_t d,
                                   const array<POINT> &P,
                                   const size_t im, const size_t i0, const size_t ip) const throw()
@@ -633,11 +629,11 @@ namespace upsylon
                     return tt;
                 }
 
-                inline virtual POINT __compute( const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
+                virtual void __compute( POINT *M, POINT *dMdt, POINT *d2Mdt2, const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
                 {
                     static const real one(1);
-                    static const real six(6);
-                    
+                    static const real one_sixth = one/6;
+
                     // get the sample size
                     assert(P.size()>1);
                     assert(P.size()==Q.size());
@@ -651,51 +647,18 @@ namespace upsylon
                     size_t        jup = jlo+1; if(jup>n) jup = 1;
                     const real    B   = (tt-jlo);
                     const real    A   = one-B;
-
-                    return A*P[jlo]+B*P[jup] + ((A*A*A-A) * Q[jlo] + (B*B*B-B) * Q[jup])/six;
-                }
-
-                inline virtual POINT __tangent( const real t, const array<POINT> &P, const array<POINT> &Q, POINT *accel ) const throw()
-                {
-                    static const real one(1);
-                    static const real one_sixth = one/6;
-                    
-
-                    // map position
-                    const size_t n = P.size();
-                    const real tt = __map(t,n);
-                    
-                    // get bracketing indices
-                    const size_t  jlo = clamp<size_t>(1,floor_of(tt),n);
-                    size_t        jup = jlo+1; if(jup>n) jup = 1;
-                    const real    B   = (tt-jlo);
-                    const real    A   = one-B;
-                    if(accel) *accel = A*Q[jlo] + B*Q[jup];
-                    return P[jup]-P[jlo] + one_sixth * ( (3*B*B-1) * Q[jup] - (3*A*A-1)*Q[jlo]);
-                }
-
-                inline virtual POINT __compute(const real t, const array<POINT> &P, const array<POINT> &Q, POINT &S) const throw()
-                {
-                    static const real one(1);
-                    static const real one_sixth = one/6;
-
-                    assert(P.size()>1);
-                    assert(P.size()==Q.size());
-
-                    // map position
-                    const size_t n    = P.size();
-                    const real   tt   = __map(t,n);
-                    // get indices
-                    const size_t  jlo = clamp<size_t>(1,floor_of(tt),n);
-                    size_t        jup = jlo+1; if(jup>n) jup = 1;
-                    const real    B   = (tt-jlo);
-                    const real    A   = one-B;
                     const real    A2  = A*A;
                     const real    B2  = B*B;
-
-                    S = P[jup]-P[jlo] + one_sixth * ( (3*B2-one) * Q[jup] - (3*A2-one)*Q[jlo]);
-                    return A*P[jlo]+B*P[jup] + (A*(A2-one) * Q[jlo] + B*(B2-one) * Q[jup])*one_sixth;
+                    const POINT   PA  = P[jlo];
+                    const POINT   PB  = P[jup];
+                    const POINT   QA  = Q[jlo];
+                    const POINT   QB  = Q[jup];
+                    if(M)      *M      = A*PA + B*PB + (A*(A2-one) * QA + B*(B2-one) * QB)*one_sixth;
+                    if(dMdt)   *dMdt   = n*( (PB-PA) + one_sixth * ( (3*B2-one) * QB - (3*A2-one)*QA) );
+                    if(d2Mdt2) *d2Mdt2 = (n*n)*(A*QA+B*QB);
                 }
+                
+
             };
 
 
