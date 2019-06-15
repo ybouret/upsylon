@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/string/convert.hpp"
 #include "y/ios/ocstream.hpp"
+#include <typeinfo>
 
 using namespace upsylon;
 using namespace math;
@@ -14,8 +15,11 @@ namespace
     {
 
         typedef typename CURVE::point_type POINT;
+        typedef typename CURVE::real_type  REAL;
+        std::cerr << "arc of <" << typeid(POINT).name() << ">, based on <" << typeid(REAL).name() << ">" << std::endl;
+
         arc::standard_spline<POINT> NS;
-        arc::standard_spline<POINT> ZS;
+        arc::standard_spline<POINT> ZS(false,false);
         arc::periodic_spline<POINT> PS;
 
         {
@@ -26,6 +30,49 @@ namespace
                 fp("%u ",unsigned(i));
                 arc::save_point(fp,C[i]) << '\n';
             }
+        }
+
+        NS.compute(C);
+        ZS.compute(C);
+        PS.compute(C);
+
+        {
+            std::cerr << "\tnatural spline" << std::endl;
+            const string out = id + "-ns.dat";
+            ios::ocstream fp(out);
+            for(REAL t=1;t<=C.size();t+=0.02)
+            {
+                fp("%.15g ",t);
+                const POINT p = NS.position(t,C);
+                arc::save_point(fp,p) << '\n';
+            }
+            std::cerr << "\t\textent: " << NS.extent(1,C.size(),C) << std::endl;
+        }
+
+        {
+            std::cerr << "\tzero-derivative spline" << std::endl;
+            const string  out = id + "-zs.dat";
+            ios::ocstream fp(out);
+            for(REAL t=1;t<=C.size();t+=0.02)
+            {
+                fp("%.15g ",t);
+                const POINT p = ZS.position(t,C);
+                arc::save_point(fp,p) << '\n';
+            }
+            std::cerr << "\t\textent: " << ZS.extent(1,C.size(),C) << std::endl;
+        }
+
+        {
+            std::cerr << "\tperiodic spline" << std::endl;
+            const string  out = id + "-ps.dat";
+            ios::ocstream fp(out);
+            for(REAL t=1;t<=C.size()+1;t+=0.02)
+            {
+                fp("%.15g ",t);
+                const POINT p = PS.position(t,C);
+                arc::save_point(fp,p) << '\n';
+            }
+            std::cerr << "\t\textent: " << PS.extent(1,C.size()+1,C) << std::endl;
         }
 
 
