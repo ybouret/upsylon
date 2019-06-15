@@ -15,15 +15,20 @@ namespace upsylon
     namespace math
     {
 
+        //! build arc from points
         struct arc
         {
-            // utils
-            template <typename POINT> struct info;
 
-            template <typename T> static void save_real(ios::ostream &,const T &);
+            ////////////////////////////////////////////////////////////////////
+            //
+            // utility
+            //
+            ////////////////////////////////////////////////////////////////////
+            template <typename POINT> struct info;                                 //!< forward declaration
+            template <typename T> static void save_real(ios::ostream &,const T &); //!< save a [float|double]
 
-            template <typename POINT>
-            static ios::ostream & save_point(ios::ostream &fp, const POINT &p )
+            //! save a point
+            template <typename POINT>  static ios::ostream & save_point(ios::ostream &fp, const POINT &p )
             {
                 typedef typename info<POINT>::real_type real_type;
                 const real_type *r = (const real_type *)&p;
@@ -35,18 +40,18 @@ namespace upsylon
                 return fp;
             }
 
-            //! utility class
+            //! vector of points
             template <typename POINT>
             class points : public vector<POINT>
             {
             public:
-                typedef POINT                         point_type;
-                typedef info<POINT>                   info_type;
-                typedef typename info_type::real_type real_type;
+                typedef POINT                         point_type; //!< alias
+                typedef info<POINT>                   info_type;  //!< alias
+                typedef typename info_type::real_type real_type;  //!< alias
 
-                points & add(const real_type x)                                       { const POINT p(x);     this->push_back(p); return *this; }
-                points & add(const real_type x, const real_type y)                    { const POINT p(x,y);   this->push_back(p); return *this; }
-                points & add(const real_type x, const real_type y, const real_type z) { const POINT p(x,y,z); this->push_back(p); return *this; }
+                points & add(const real_type x)                                       { const POINT p(x);     this->push_back(p); return *this; } //!< add a point from 1 real
+                points & add(const real_type x, const real_type y)                    { const POINT p(x,y);   this->push_back(p); return *this; } //!< add a point from 2 reals
+                points & add(const real_type x, const real_type y, const real_type z) { const POINT p(x,y,z); this->push_back(p); return *this; } //!< add a point from 3 reals
 
                 inline explicit points() throw() : vector<POINT>() {}
                 inline virtual ~points() throw() {}
@@ -55,12 +60,17 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(points);
             };
 
-            template <typename POINT>
-            class spline : public vector<POINT>
+            ////////////////////////////////////////////////////////////////////
+            //
+            //! spline interface
+            //
+            ////////////////////////////////////////////////////////////////////
+            template <typename POINT> class spline : public vector<POINT>
             {
             public:
-                typedef typename info<POINT>::real_type real_type;
+                typedef typename info<POINT>::real_type real_type; //!< alias
 
+                //! destructor
                 inline virtual ~spline() throw() {}
 
                 //! interface to compute coefficients
@@ -127,6 +137,7 @@ namespace upsylon
 
 
             protected:
+                //! setup
                 inline explicit spline() throw() : vector<POINT>(), origin(0) {}
 
                 //! compute coefficients for more than one point
@@ -160,6 +171,11 @@ namespace upsylon
                     if(d2Mdt2) *d2Mdt2 = (A*QA+B*QB);
                 }
 
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(spline);
+
                 struct d_extent
                 {
                     const spline       *self;
@@ -170,30 +186,34 @@ namespace upsylon
                     }
                 };
 
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(spline);
-
             public:
-                const POINT origin;
+                const POINT origin; //!< point with zero coordinates
 
             };
 
+
+            ////////////////////////////////////////////////////////////////////
+            //
+            //! standard spline
+            //
+            ////////////////////////////////////////////////////////////////////
             template <typename POINT>
             class standard_spline : public spline<POINT>
             {
             public:
-                typedef typename     info<POINT>::real_type real_type;
-                static  const size_t                        dimension = info<POINT>::dimension;
+                typedef typename     info<POINT>::real_type   real_type; //!< alias
+                static  const size_t dimension = info<POINT>::dimension; //!< alias
 
-                bool  lower_natural;
-                bool  upper_natural;
-                POINT lower_tangent;
-                POINT upper_tangent;
-                POINT S1;
-                POINT SN;
-                POINT Q1;
-                POINT QN;
+                bool  lower_natural; //!< is lower natural ?
+                bool  upper_natural; //!< is upper natural ?
+                POINT lower_tangent; //!< tangent if lower natural
+                POINT upper_tangent; //!< tangent if upper natural
+                POINT S1;            //!< lower tangent
+                POINT SN;            //!< upper tangent
+                POINT Q1;            //!< lower second derivative
+                POINT QN;            //!< upper second derivative
 
+                //! setup
                 inline explicit standard_spline(const bool ln=true,const bool un=true) throw() :
                 spline<POINT>(),
                 lower_natural(ln),
@@ -206,6 +226,7 @@ namespace upsylon
                 QN(0)
                 {}
 
+                inline virtual ~standard_spline() throw() {}
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(standard_spline);
@@ -347,17 +368,23 @@ namespace upsylon
 
             };
 
+            ////////////////////////////////////////////////////////////////////
+            //
+            //! periodic spline
+            //
+            ////////////////////////////////////////////////////////////////////
             template <typename POINT>
             class periodic_spline : public spline<POINT>
             {
             public:
-                typedef typename     info<POINT>::real_type real_type;
-                static  const size_t                        dimension = info<POINT>::dimension;
+                typedef typename     info<POINT>::real_type   real_type; //!< alias
+                static  const size_t dimension = info<POINT>::dimension; //!< alias
 
-                inline explicit periodic_spline() throw() :
-                spline<POINT>()
-                {}
+                //! setup
+                inline explicit periodic_spline() throw() : spline<POINT>() {}
 
+                //! destructor
+                inline virtual ~periodic_spline() throw() {}
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(periodic_spline);
@@ -445,6 +472,7 @@ namespace upsylon
 
         };
 
+        //! info encoding
 #define  Y_MATH_ARC_INFO(TYPE,REAL,CODE)                           \
 template <> struct arc::info< TYPE > {                             \
 typedef TYPE            type;                                      \
@@ -452,20 +480,24 @@ typedef REAL            real_type;                                 \
 static const size_t     dimension = sizeof(type)/sizeof(real_type);\
 static inline real_type norm2( const type &p ) { return (CODE); }  \
 }
-
+        //! |real|^2
 #define Y_MATH_ARC_NORM2_REAL p*p
+        //! |point2d|^2
 #define Y_MATH_ARC_NORM2_PT2D (p.x*p.x)+(p.y*p.y)
+        //! |complex|^2
 #define Y_MATH_ARC_NORM2_CPLX (p.re*p.re)+(p.im*p.im)
+        //! |point2d|^2
 #define Y_MATH_ARC_NORM2_PT3D (p.x*p.x)+(p.y*p.y)+(p.z*p.z)
 
+        //! info implementation
 #define Y_MATH_ARC_INFO_IMPL(REAL) \
 Y_MATH_ARC_INFO(REAL,REAL,         Y_MATH_ARC_NORM2_REAL);\
 Y_MATH_ARC_INFO(point2d<REAL>,REAL,Y_MATH_ARC_NORM2_PT2D);\
 Y_MATH_ARC_INFO(complex<REAL>,REAL,Y_MATH_ARC_NORM2_CPLX);\
 Y_MATH_ARC_INFO(point3d<REAL>,REAL,Y_MATH_ARC_NORM2_PT3D)
 
-        Y_MATH_ARC_INFO_IMPL(float);
-        Y_MATH_ARC_INFO_IMPL(double);
+        Y_MATH_ARC_INFO_IMPL(float);  //!< for float-based types
+        Y_MATH_ARC_INFO_IMPL(double); //!< for double-based types
 
     }
 
