@@ -75,7 +75,78 @@ namespace
             std::cerr << "\t\textent: " << PS.extent(1,C.size()+1,C) << std::endl;
         }
 
+    }
 
+    // 2D
+    template <typename CURVE>
+    static inline void metrics_for( const CURVE &C, const string &id )
+    {
+
+        typedef typename CURVE::point_type POINT;
+        typedef typename CURVE::real_type  REAL;
+        std::cerr << "metrics for arc of <" << typeid(POINT).name() << ">, based on <" << typeid(REAL).name() << ">" << std::endl;
+
+        {
+            const string  out = id + ".dat";
+            ios::ocstream fp(out);
+            for(size_t i=1;i<=C.size();++i)
+            {
+                arc::save_point(fp,C[i]) << '\n';
+            }
+        }
+
+        arc::standard_spline<POINT> NS;
+        arc::standard_spline<POINT> ZS(false,false);
+        arc::periodic_spline<POINT> PS;
+
+        NS.compute(C);
+        ZS.compute(C);
+        PS.compute(C);
+
+        {
+            std::cerr << "\tnatural metrics" << std::endl;
+            const string  out = id + "-ns.dat";
+            ios::ocstream fp(out);
+            for(REAL t=1;t<=C.size();t+=0.02)
+            {
+                POINT s;
+                POINT p = NS.position(t,C,&s);
+                arc::save_point(fp,p) << '\n';
+                p+=s;
+                arc::save_point(fp,p) << '\n';
+                fp << '\n';
+            }
+        }
+
+        {
+            std::cerr << "\tzero-diff metrics" << std::endl;
+            const string  out = id + "-zs.dat";
+            ios::ocstream fp(out);
+            for(REAL t=1;t<=C.size();t+=0.02)
+            {
+                POINT s;
+                POINT p = ZS.position(t,C,&s);
+                arc::save_point(fp,p) << '\n';
+                p+=s;
+                arc::save_point(fp,p) << '\n';
+                fp << '\n';
+            }
+        }
+
+        {
+            std::cerr << "\tperiodic metrics" << std::endl;
+            const string  out = id + "-ps.dat";
+            ios::ocstream fp(out);
+            for(REAL t=1;t<=C.size()+1;t+=0.02)
+            {
+                POINT s;
+                POINT p = PS.position(t,C,&s);
+                arc::save_point(fp,p) << '\n';
+                p+=s;
+                arc::save_point(fp,p) << '\n';
+                fp << '\n';
+            }
+        }
 
     }
 
@@ -133,6 +204,9 @@ Y_UTEST(arc)
     handle_curve(c2d, "c2d");
     handle_curve(C2d, "q2d");
     handle_curve(c3d, "c3d");
+
+    metrics_for(c2f, "m2f");
+
 
 }
 Y_UTEST_DONE()
