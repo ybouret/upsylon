@@ -48,6 +48,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(stat);
    
     Y_UTEST(curve);
+    Y_UTEST(arc);
 
 }
 Y_UTEST_EXEC()
