@@ -164,9 +164,7 @@ namespace upsylon
                 //______________________________________________________________
                 //! destructor
                 inline virtual ~spline() throw() {}
-
-                //! 'time' to 'index' to save coordinates
-                virtual real t2i( const real t, const size_t n) const throw() = 0;
+                
 
                 //______________________________________________________________
                 //
@@ -196,10 +194,9 @@ namespace upsylon
                     const array<POINT> &P = source.P;
                     switch(P.size())
                     {
-                        case 0: if(M) *M=zp;   if(dMdt) *dMdt=zp; if(d2Mdt2) *d2Mdt2=zp; break;
-                        case 1: if(M) *M=P[1]; if(dMdt) *dMdt=zp; if(d2Mdt2) *d2Mdt2=zp; break;
-                        default:
-                            __compute(M,dMdt,d2Mdt2, t,P,source.Q);
+                        case 0:  if(M) *M=zp;   if(dMdt) *dMdt=zp; if(d2Mdt2) *d2Mdt2=zp; break;
+                        case 1:  if(M) *M=P[1]; if(dMdt) *dMdt=zp; if(d2Mdt2) *d2Mdt2=zp; break;
+                        default: __compute(M,dMdt,d2Mdt2, t,P,source.Q);
                     }
                 }
 
@@ -227,18 +224,21 @@ namespace upsylon
                     return sqrt_of( curve::norm2(dMdt) );
                 }
 
+                //! compute curvature
                 inline real curvature( const real t, const points_type &source ) const throw()
                 {
                     return (source.P.size() > 1) ? __curvature<dim>(t,source) : 0;
                 }
 
                 //! arc length
+#if 0
                 inline real arc_length(const real t0, const real t1, const points_type &source ) const
                 {
                     d_arc F = { this, &source };
-                    return integrate::compute<real,d_arc>(F,t0,t1,numeric<real>::sqrt_ftol);
+                    //return integrate::compute<real,d_arc>(F,t0,t1,numeric<real>::sqrt_ftol);
+                    return 0;
                 }
-
+#endif
                 
             protected:
                 //! constructor
@@ -249,6 +249,40 @@ namespace upsylon
 
                 //! interpolation for more than one point
                 virtual void __compute( POINT *M, POINT *dMdt, POINT *d2Mdt2, const real t, const array<POINT> &P, const array<POINT> &Q ) const throw() = 0;
+
+                inline void __get(POINT *M, POINT *dMdt, POINT *d2Mdt2,
+                                  const real   A,   const real   B,
+                                  const size_t jlo, const size_t jup,
+                                  const array<POINT> &P, const array<POINT> &Q) const throw()
+                {
+                    static const real one(1);
+                    static const real one_sixth = one/6;
+
+                    assert(jlo>=1);
+                    assert(jlo<=P.size());
+                    assert(jup>=1);
+                    assert(jup<=P.size());
+                    const real   A2  = A*A;
+                    const real   B2  = B*B;
+                    const POINT  PA = P[jlo];
+                    const POINT  PB = P[jup];
+                    const POINT  QA = Q[jlo];
+                    const POINT  QB = Q[jup];
+
+                    if(M)      *M      = A*PA + B*PB + (A*(A2-one) * QA + B*(B2-one) * QB)*one_sixth;
+                    if(dMdt)   *dMdt   = ( (PB-PA) + one_sixth * ( (3*B2-one) * QB - (3*A2-one)*QA) );
+                    if(d2Mdt2) *d2Mdt2 = (A*QA+B*QB);
+                }
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(spline);
+                struct d_arc
+                {
+                    const spline      *self;
+                    const points_type *data;
+                    inline real operator()(const real t) const throw() { return self->speed(t,*data); }
+                };
 
                 template <const size_t DIM>
                 real __curvature(const real, const points_type &) const throw();
@@ -284,16 +318,6 @@ namespace upsylon
                     }
                 }
 
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(spline);
-                struct d_arc
-                {
-                    const spline      *self;
-                    const points_type *data;
-                    inline real operator()(const real t) const throw() { return self->speed(t,*data); }
-                };
-
             };
 
             //! standard spline
@@ -324,19 +348,7 @@ namespace upsylon
                 //! destructor
                 inline virtual ~standard_spline() throw() {}
                 
-                //! map t [0:1] to [1:N]
-                inline virtual real t2i( const real t, const size_t n) const throw()
-                {
-                    static const real one(1);
-                    if(n<=1)
-                    {
-                        return one;
-                    }
-                    else
-                    {
-                        return clamp<real>(one,one + t * (n-1),n);
-                    }
-                }
+
 
                 //______________________________________________________________
                 //
@@ -349,8 +361,6 @@ namespace upsylon
                 upper_natural(true),
                 lower_tangent(0),
                 upper_tangent(0),
-                nm1(0),
-                nm1sq(0),
                 S1(0),
                 SN(0),
                 Q1(0),
@@ -377,9 +387,8 @@ namespace upsylon
                     static const real four(4);
                     assert(P.size()>1);
                     assert(Q.size()==P.size());
-                    const size_t n = P.size();
-                    nm1   = n-1;
-                    nm1sq = square_of(nm1);
+                    const size_t n   = P.size();
+                    const size_t nm1 = n-1;
 
                     tridiag<real> t(n,2);
                     array<real>  &r = t[0];
@@ -450,54 +459,36 @@ namespace upsylon
                     static const real   one_sixth = one/6;
                     S1 = (P[2] - P[1]) - one_third * Q[1] - one_sixth * Q[2];
                     SN = (P[n]-P[nm1]) + one_third * Q[n] + one_sixth * Q[nm1];
-
-                    S1 *= nm1;
-                    SN *= nm1;
-
-                    Q1 = nm1sq * Q[1];
-                    QN = nm1sq * Q[n];
                 }
 
 
                 virtual void __compute( POINT *M, POINT *dMdt, POINT *d2Mdt2, const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
                 {
-                    static const real zero(0);
                     static const real one(1);
-                    static const real one_sixth = one/6;
 
                     assert(P.size()>1);
                     assert(P.size()==Q.size());
-                    assert(P.size()-1==nm1);
-
-                    if( t<=zero )
+                    const size_t n = P.size();
+                    if( t<=1 )
                     {
                         if(M)      *M      = P[1];
                         if(dMdt)   *dMdt   = S1;
                         if(d2Mdt2) *d2Mdt2 = Q1;
                     }
-                    else if(t>=one)
+                    else if(t>=n)
                     {
-                        const size_t n      = P.size();
                         if(M)       *M      = P[n];
                         if(dMdt)    *dMdt   = SN;
                         if(d2Mdt2)  *d2Mdt2 = QN;
                     }
                     else
                     {
-                        const real   tt  = real(1) + t*nm1;
-                        const size_t jlo = min_of<real>(nm1,floor_of(tt));
-                        const real   B   = (tt-jlo);
+                        const size_t jlo = clamp<size_t>(1,floor_of(t),n-1);
+                        const real   B   = (t-jlo);
                         const size_t jup = jlo+1;
                         const real   A   = one-B;
-                        const real   A2  = A*A;
-                        const real   B2  = B*B;
-                        const POINT  PA = P[jlo];
-                        const POINT  PB = P[jup];
-                        const POINT  QA = Q[jlo];
-                        const POINT  QB = Q[jup];
-                        if(M)      *M      = A*PA + B*PB + (A*(A2-one) * QA + B*(B2-one) * QB)*one_sixth;
-                        if(dMdt)   *dMdt   = nm1 * ( (PB-PA) + one_sixth * ( (3*B2-one) * QB - (3*A2-one)*QA) );
-                        if(d2Mdt2) *d2Mdt2 = (nm1sq) * (A*QA+B*QB);
+
+                        this->__get(M, dMdt, d2Mdt2, A, B, jlo, jup, P, Q);
                     }
                 }
 
@@ -523,21 +514,6 @@ namespace upsylon
                 //______________________________________________________________
                 //! destructor
                 inline virtual ~periodic_spline() throw() {}
-
-                //! map t [0:1] to [1:N+1]
-                inline virtual real t2i( const real t, const size_t n) const throw()
-                {
-                    static const real one(1);
-                    if(n<=1)
-                    {
-                        return one;
-                    }
-                    else
-                    {
-                        real tt = one + t * n;
-                        return tt;
-                    }
-                }
 
                 //______________________________________________________________
                 //
@@ -574,7 +550,8 @@ namespace upsylon
                 template <> real __area<2>(const points<POINT> &source) const
                 {
                     d_area F = { this, &source };
-                    return fabs_of(integrate::compute<real,d_area>(F,0,1,numeric<real>::sqrt_ftol))/2;
+                    //return fabs_of(integrate::compute<real,d_area>(F,0,1,numeric<real>::sqrt_ftol))/2;
+                    return 0;
                 }
 
 
@@ -630,20 +607,10 @@ namespace upsylon
                     }
                 }
 
-                static inline real __map( const real t, const size_t n) throw()
-                {
-                    static const real one(1);
-                    real tt = one + t * n;
-                    const size_t np1 = n+1;
-                    while(tt<one) tt += n;
-                    while(tt>np1) tt -= n;
-                    return tt;
-                }
 
                 virtual void __compute( POINT *M, POINT *dMdt, POINT *d2Mdt2, const real t, const array<POINT> &P, const array<POINT> &Q ) const throw()
                 {
                     static const real one(1);
-                    static const real one_sixth = one/6;
 
                     // get the sample size
                     assert(P.size()>1);
@@ -651,23 +618,18 @@ namespace upsylon
                     const size_t n = P.size();
 
                     // map position
-                    const real tt = __map(t,n);
+                    real tt = t;
+                    while(tt>n) tt -= n;
+                    while(tt<1) tt += n;
 
                     // get bracketing indices
                     const size_t  jlo = clamp<size_t>(1,floor_of(tt),n);
                     size_t        jup = jlo+1; if(jup>n) jup = 1;
                     const real    B   = (tt-jlo);
                     const real    A   = one-B;
-                    const real    A2  = A*A;
-                    const real    B2  = B*B;
-                    const POINT   PA  = P[jlo];
-                    const POINT   PB  = P[jup];
-                    const POINT   QA  = Q[jlo];
-                    const POINT   QB  = Q[jup];
-                    if(M)      *M      = A*PA + B*PB + (A*(A2-one) * QA + B*(B2-one) * QB)*one_sixth;
-                    if(dMdt)   *dMdt   = n*( (PB-PA) + one_sixth * ( (3*B2-one) * QB - (3*A2-one)*QA) );
-                    if(d2Mdt2) *d2Mdt2 = (n*n)*(A*QA+B*QB);
 
+                    // compute all
+                    this->__get(M, dMdt, d2Mdt2, A, B, jlo, jup, P, Q);
                 }
                 
 
