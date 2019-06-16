@@ -71,6 +71,8 @@ namespace
                 fp("%.15g ",t);
                 const POINT p = PS.position(t,C);
                 arc::save_point(fp,p) << '\n';
+                volatile const REAL g = PS.curvature(t,C);
+                (void)g;
             }
             std::cerr << "\t\textent: " << PS.extent(1,C.size()+1,C) << std::endl;
         }
@@ -148,6 +150,52 @@ namespace
             }
         }
 
+        {
+            std::cerr << "\twriting speed" << std::endl;
+            const string  out = id + "-speed.dat";
+            ios::ocstream fp(out);
+            const REAL dt = 0.01;
+            for(REAL t=REAL(1)-dt;t<=C.size()+1;t+=dt)
+            {
+                fp("%g ",t);
+                fp(" %g", PS.speed(t,C));
+                fp(" %g", NS.speed(t,C));
+                fp(" %g", ZS.speed(t,C));
+                fp << '\n';
+            }
+        }
+
+        {
+            std::cerr << "\twriting curvature" << std::endl;
+            const string  out = id + "-curvature.dat";
+            ios::ocstream fp(out);
+            const REAL dt = 0.005;
+            for(REAL t=REAL(1)-dt;t<=C.size()+1;t+=dt)
+            {
+                fp("%g ",t);
+                fp(" %g", PS.curvature(t,C));
+                fp(" %g", NS.curvature(t,C));
+                //fp(" %g", ZS.curvature(t,C));
+                fp << '\n';
+            }
+        }
+
+        {
+            std::cerr << "\twriting developped" << std::endl;
+            const string  out = id + "-dev.dat";
+            ios::ocstream fp(out);
+            const REAL dt = 0.01;
+            for(REAL t=1;t<=C.size()+1;t+=dt)
+            {
+                POINT       p = PS.position(t,C);
+                POINT       u;
+                const REAL  g = PS.curvature(t,C,&u);
+                const POINT n = arc::tangent2normal<POINT,REAL>(u);
+                p += n/g;
+                arc::save_point(fp,p) << '\n';
+            }
+        }
+
     }
 
 }
@@ -178,9 +226,11 @@ Y_UTEST(arc)
 
         {
             const float theta  = (i*numeric<float>::two_pi)/np*(1.0f+noise*alea.symm<float>());
-            const float radius = 1.0f+noise*alea.symm<float>();
-            const float x = radius * cosf(theta);
-            const float y = radius * sinf(theta);
+            const float xradius = 1.0f+noise*alea.symm<float>();
+            const float yradius = 0.8f+noise*alea.symm<float>();
+
+            const float x = xradius * cosf(theta);
+            const float y = yradius * sinf(theta);
             const float z = (dz * i) * (1.0f+noise*alea.symm<float>());
 
             c1f.add(x);

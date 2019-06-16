@@ -40,6 +40,14 @@ namespace upsylon
                 return fp;
             }
 
+            //! direct 90degrees rotation
+            template <typename POINT, typename REAL>
+            static inline POINT tangent2normal( const POINT &T ) throw()
+            {
+                const  REAL *p = (const REAL *)&T;
+                return POINT( -p[1], p[0] );
+            }
+
             //! vector of points
             template <typename POINT>
             class points : public vector<POINT>
@@ -68,7 +76,8 @@ namespace upsylon
             template <typename POINT> class spline : public vector<POINT>
             {
             public:
-                typedef typename info<POINT>::real_type real_type; //!< alias
+                typedef typename info<POINT>::real_type       real_type; //!< alias
+                static  const size_t dimension = info<POINT>::dimension; //!< alias
 
                 //! destructor
                 inline virtual ~spline() throw() {}
@@ -128,11 +137,20 @@ namespace upsylon
                     return sqrt_of(s2);
                 }
 
+
                 //! extent
                 inline real_type extent(const real_type t0, const real_type t1,const array<POINT> &P) const
                 {
                     const d_extent f = { this,&P };
                     return integrate::compute<real_type,const d_extent>(f,t0,t1,1e-4);
+                }
+
+                //! curvature
+                inline real_type curvature(const real_type t, const array<POINT> &P, POINT *T=0 ) const throw()
+                {
+                    POINT v,a;
+                    compute(NULL,&v,&a,t,P);
+                    return __curvature(v,a, int2type<dimension>(), T);
                 }
 
 
@@ -185,6 +203,63 @@ namespace upsylon
                         return self->speed(t,*data);
                     }
                 };
+
+                inline real_type __curvature( const POINT &v, const POINT &a, int2type<1> , POINT *T) const throw()
+                {
+                    const real_type nrm = real_type(1) + v*v;
+                    if(T) *T=1;
+                    return a/sqrt_of(nrm*nrm*nrm);
+                }
+
+                inline real_type __curvature( const POINT &v, const POINT &a, int2type<2>, POINT *T) const throw()
+                {
+                    const real_type *pv = (const real_type *) &v;
+                    const real_type *pa = (const real_type *) &a;
+                    const real_type  vx = pv[0], vy=pv[1];
+                    const real_type  ax = pa[0], ay=pa[1];
+
+                    const real_type  nrm2 = vx*vx + vy*vy;
+                    if(nrm2<=0)
+                    {
+                        if(T) *T = origin;
+                        return 0;
+                    }
+                    else
+                    {
+                        const real_type nrm = sqrt_of(nrm2);
+                        if(T)
+                        {
+                            real_type      *ptr = (real_type *)T;
+                            ptr[0] = vx/nrm;
+                            ptr[1] = vy/nrm;
+                        }
+                        return (vx*ay-vy*ax)/(nrm*nrm*nrm);
+                    }
+                }
+
+                inline real_type __curvature( const POINT &v, const POINT &a, int2type<3>, POINT *T) const throw()
+                {
+                    const point3d<real_type> &v3d = *(const point3d<real_type> *)&v;
+                    const point3d<real_type> &a3d = *(const point3d<real_type> *)&a;
+
+                    const real_type nrm2 = v3d.norm2();
+                    if(nrm2<=0)
+                    {
+                        if(T)
+                        {
+                            *T = origin;
+                        }
+                        return 0;
+                    }
+                    else
+                    {
+                        const real_type nrm = sqrt_of(nrm2);
+                        if(T) *T /= nrm;
+                        const point3d<real_type> cp = v3d^a3d;
+                        return sqrt_of(cp.norm2())/(nrm*nrm*nrm);
+                    }
+
+                }
 
             public:
                 const POINT origin; //!< point with zero coordinates
