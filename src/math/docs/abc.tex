@@ -8,6 +8,7 @@
 
 \newcommand{\myvec}[1]{\overrightarrow{#1}}
 \newcommand{\mynorm}[1]{\left\vert#1\right\vert}
+\newcommand{\myunit}[1]{\dfrac{{#1}}{\mynorm{{#1}}}}
 
 \begin{document}
 \title{Local Curve Approximations}
@@ -16,10 +17,18 @@
 
 Let us assume that we have three different points $\vec{A}$, $\vec{B}$, $\vec{C}$.
 
-\section{Unit Tangent Vector}
+\section{Unit Tangent Vectors}
 
 \begin{equation}
-	\vec{T}_B = \dfrac{1}{\mynorm{\myvec{AC}}}\myvec{AC}
+\left\lbrace
+\begin{array}{rcl}
+	\vec{T}_A & = & \myunit{4\vec{B}-3\vec{A}-\vec{C}}\\
+	\\
+	\vec{T}_B & = & \myunit{\vec{C}-\vec{A}}  \\
+	\\
+	\vec{T}_C & = & \myunit{3\vec{C}+\vec{A}-4\vec{B}}\\
+\end{array}
+\right.
 \end{equation}
 
 \end{document}
