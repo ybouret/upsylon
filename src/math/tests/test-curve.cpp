@@ -1,5 +1,6 @@
 #include "y/math/signal/curve.hpp"
 #include "y/utest/run.hpp"
+#include "support.hpp"
 #include <typeinfo>
 
 using namespace upsylon;
@@ -12,7 +13,15 @@ static inline void do_curve()
     std::cerr << "point = <" << typeid(POINT<T>).name() << ">" << std::endl;
     std::cerr << "\tsizeof(NODE)=" << sizeof( curve::node<T,POINT> ) << std::endl;
 
+    curve::points<T,POINT> C;
 
+    for(size_t i=1+alea.leq(10);i>0;--i)
+    {
+        C << support::get< POINT<T> >();
+    }
+    std::cerr << "#nodes=" << C.size() << std::endl;
+    C.update( curve::standard );
+    
     std::cerr << std::endl;
 }
 

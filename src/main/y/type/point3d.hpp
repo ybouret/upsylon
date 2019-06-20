@@ -30,6 +30,8 @@ namespace upsylon
         inline point3d( param_type X, param_type Y) : x(X), y(Y), z(0) {}
         //! construct by 3 values
         inline point3d( param_type X, param_type Y, param_type Z) : x(X), y(Y), z(Z) {}
+        //! construct a vector
+        inline point3d( const point3d &A, const point3d &B ) throw() : x(B.x-A.x), y(B.y-A.y), z(B.z-A.z) {}
         //! copy constructor
         inline point3d( const point3d &p ) : x(p.x), y(p.y), z(p.z) {}
         //! assign
@@ -44,7 +46,7 @@ namespace upsylon
         //! in place sub
         inline point3d & operator-=( const point3d p ) { x-=p.x; y-=p.y; z-=p.z; return *this; }
         //! unary -
-        inline point3d   operator-() { return point3d(-x,-y,-z); }
+        inline point3d   operator-() const { return point3d(-x,-y,-z); }
         //! sub
         inline friend point3d   operator-(const point3d lhs, const point3d rhs) { return point3d(lhs.x-rhs.x,lhs.y-rhs.y,lhs.z-rhs.z); }
 

@@ -30,6 +30,8 @@ namespace upsylon
         inline point2d( param_type X, param_type Y) throw() : x(X), y(Y) {}
         //! copy
         inline point2d( const point2d &p ) : x(p.x), y(p.y) {}
+        //! construct a vector
+        inline point2d( const point2d &A, const point2d &B ) throw() : x(B.x-A.x), y(B.y-A.y) {}
         //! assign
         inline point2d  & operator=( const point2d p ) { x=p.x;y=p.y;return *this; }
 
@@ -43,7 +45,7 @@ namespace upsylon
         //! in place sub
         inline point2d & operator-=( const point2d p ) { x-=p.x; y-=p.y; return *this; }
         //! unary -
-        inline point2d   operator-() { return point2d(-x,-y); }
+        inline point2d   operator-() const { return point2d(-x,-y); }
         //! sub
         inline friend point2d   operator-(const point2d lhs, const point2d rhs) { return point2d(lhs.x-rhs.x,lhs.y-rhs.y); }
 
