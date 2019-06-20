@@ -117,7 +117,6 @@ namespace upsylon
                             bulk_tangent(self[n],self[1],self[2]);
                             bulk_tangent(self[nm1],self[n],self[1]);
                             break;
-
                     }
 
                     // in bulk
@@ -131,7 +130,7 @@ namespace upsylon
                 {
                     const point_type AC(nA.r,nC.r);
                     const_type       AC2 = AC.norm2(); if(AC2<=0) throw libc::exception(EDOM,"null norm");
-                    const point_type t = AC/sqrt_of(AC2);
+                    const point_type t   = AC/sqrt_of(AC2);
                     nB.t = t;
                 }
 
