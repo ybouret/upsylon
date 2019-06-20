@@ -359,6 +359,32 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
         }
     };
 
+    //! wrapper for template class
+    template <typename ALLOCATOR = memory::global >
+    struct vector_for
+    {
+        //! the internal class
+        template <typename T> class device : public vector<T,ALLOCATOR>
+        {
+        public:
+            typedef vector<T,ALLOCATOR> self_type;                              //!< alias
+            Y_DECL_ARGS(T,type);                                                //!< aliases
+            inline explicit device(): self_type() {}                            //!< setup
+            inline explicit device( const size_t n, const as_capacity_t &_) :   //|
+            self_type(n,_) {}                                                   //!< setup with capacity
+            inline explicit device( const size_t n, param_type args) :          //|
+            self_type(n,args) {}                                                //!< setup with same value
+            inline virtual ~device() throw() {}                                 //!< cleanup
+            inline          device(const device &other) : device(other) {}      //!< copy
+            inline          device & operator=( const device &other)            //|
+            {                                                                   //|
+                self_type       & target = *this;                               //|
+                const self_type & source = other;                               //|
+                target = source;                                                //|
+                return *this;                                                   //|
+            }                                                                   //!< assign
+        };
+    };
 }
 #endif
 
