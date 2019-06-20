@@ -73,7 +73,7 @@ INSTALL( FILES ${stat_decl} DESTINATION include/y/math/stat )
 FILE(GLOB geom_decl y/math/geometric/*.hpp)
 FILE(GLOB geom_cgeom y/math/geometric/*.cpp)
 SET(geom_srcs ${geom_decl} ${geom_cgeom})
-SOURCE_GROUP( geom FILES ${geom_srcs} )
+SOURCE_GROUP( geometric FILES ${geom_srcs} )
 INSTALL( FILES ${geom_decl} DESTINATION include/y/math/geometric )
 
 ADD_LIBRARY(y-m STATIC

@@ -1,4 +1,4 @@
-#include "y/math/geometric/points.hpp"
+#include "y/math/geometric/ops.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/list.hpp"
 #include "y/memory/pooled.hpp"
@@ -49,7 +49,8 @@ static inline void do_points(const size_t np)
         const CorePoint &c = PointInfo::Type2Core(p);
         std::cerr << "\t" << p << " / " <<  c << std::endl;
     }
-    std::cerr << "Barycenter: " << points.barycenter() << std::endl;
+    
+    std::cerr << "Barycenter: " << Geometric::Ops::Barycenter(points) << std::endl;
     std::cerr << std::endl;
 
 }

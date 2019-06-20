@@ -13,9 +13,15 @@ namespace upsylon
     {
         namespace Geometric
         {
-
+            
+            enum Boundaries
+            {
+                Standard,
+                Periodic
+            };
+            
             template <const size_t DIM,typename T> struct InfoFor;
-
+            
             template <typename T,template <typename> class POINT>
             struct PointInfoFor
             {
@@ -24,41 +30,45 @@ namespace upsylon
                 static const size_t                     Dimension = sizeof(Type)/sizeof(type); //!< the point dimension
                 typedef InfoFor<Dimension,mutable_type> InfoType;                              //!< info for this topolgy
                 typedef typename InfoType::PointType    Core;                                  //!< internal representation
-
+                
                 static inline Core &Type2Core(  Type &t ) throw()
                 {
                     return *(Core *)&t;
                 }
-
+                
                 static inline const Core &Type2Core( const Type &t ) throw()
                 {
                     return *(const Core *)&t;
                 }
-
+                
                 static inline Type & Core2Type( Core &c ) throw()
                 {
                     return *(Type *)&c;
                 }
-
+                
                 static inline const Type & Core2Type( const Core &c ) throw()
                 {
                     return *(const Type *)&c;
                 }
-
-
-
+                
+                static inline Core Origin() throw()
+                {
+                    return Core();
+                }
+                
+                
             };
-
+            
             template <typename T> struct InfoFor<2,T>
             {
                 typedef point2d<T> PointType;
             };
-
+            
             template <typename T> struct InfoFor<3,T>
             {
                 typedef point3d<T> PointType;
             };
-
+            
             // utility collection of points
             template <
             typename                  T,
@@ -74,40 +84,22 @@ namespace upsylon
                 typedef SEQUENCE<PointType>                   SequenceType;
                 typedef typename SequenceType::iterator       iterator;
                 typedef typename SequenceType::const_iterator const_iterator;
-
-
+                
+                
                 inline explicit Points() : origin() {}
                 inline virtual ~Points() throw() {}
-
+                
                 inline Points & add(param_type x, param_type y)               { const PointType p(x,y);   this->push_back(p); return *this; }
                 inline Points & add(param_type x, param_type y, param_type z) { const PointType p(x,y,z); this->push_back(p); return *this; }
-
-                inline PointType barycenter() const
-                {
-                    const size_t n = this->size();
-                    switch(n)
-                    {
-                        case 0:  return PointInfo::Core2Type(origin);
-                        case 1:  return this->front();
-                        default: break;
-                    }
-                    CorePoint      bar;
-                    const_iterator i=this->begin();
-                    for(size_t count=n;count>0;--count,++i)
-                    {
-                        bar += PointInfo::Type2Core(*i);
-                    }
-                    bar /= n;
-                    return PointInfo::Core2Type(bar);
-                }
-
+                
+                
             private:
                 Y_DISABLE_ASSIGN(Points);
                 
             public:
                 const CorePoint origin;
             };
-
+            
         }
     }
 }
