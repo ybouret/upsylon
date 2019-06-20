@@ -2,11 +2,12 @@
 #ifndef Y_SIGNAL_CURVE_INCLUDED
 #define Y_SIGNAL_CURVE_INCLUDED 1
 
+
+#include "y/math/types.hpp"
 #include "y/type/point3d.hpp"
 #include "y/type/bzset.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/exceptions.hpp"
-#include "y/math/types.hpp"
 
 namespace upsylon
 {
@@ -71,7 +72,6 @@ namespace upsylon
                 //! void compute metrics
                 void update( const boundaries bnd )
                 {
-                    // fist pass tangents
                     switch( this->size() )
                     {
                         case 0:  return;
@@ -128,10 +128,16 @@ namespace upsylon
 
                 static inline void bulk_tangent( const node_type &nA , node_type &nB,  const node_type &nC )
                 {
-                    const point_type AC(nA.r,nC.r);
+                    const point_type A = nA.r;
+                    const point_type B = nB.r;
+                    const point_type C = nC.r;
+                    const point_type AC(A,C);
                     const_type       AC2 = AC.norm2(); if(AC2<=0) throw libc::exception(EDOM,"null norm");
-                    const point_type t   = AC/sqrt_of(AC2);
-                    nB.t = t;
+                    const_type       ac  = sqrt_of(AC2);
+                    nB.t = AC/ac;
+                    const point_type ApCm2B = A+C-(B+B);
+                    const type       num    = 4 * point_type::det(AC,ApCm2B);
+                    nB.C = num/(ac*ac*ac);
                 }
 
             };

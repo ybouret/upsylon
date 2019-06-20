@@ -110,6 +110,13 @@ namespace upsylon
             assert(index>=1); assert(index<=3);
             return *(((&x)-1) + index);
         }
+
+        //! determinant: include math/types.hpp to use
+        static inline type det( const point3d &lhs, const point3d &rhs ) throw()
+        {
+            const point3d tmp = cross(lhs,rhs);
+            return math::sqrt_of(tmp.norm2());
+        }
     };
 }
 
