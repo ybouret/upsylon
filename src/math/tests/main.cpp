@@ -49,6 +49,7 @@ Y_UTEST_INIT(64)
    
     Y_UTEST(arc);
     Y_UTEST(curve);
+    Y_UTEST(points);
 
 }
 Y_UTEST_EXEC()

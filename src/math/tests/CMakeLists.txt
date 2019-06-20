@@ -68,9 +68,10 @@ SOURCE_GROUP(io FILES test-data-set.cpp)
 ADD_TEST(io:ds   test-m data_set ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
 
 
-SOURCE_GROUP(geom FILES test-arc.cpp test-curve.cpp)
+SOURCE_GROUP(geom FILES test-arc.cpp test-curve.cpp test-points.cpp)
 ADD_TEST(geom:arc    test-m arc)
 ADD_TEST(geom:curv   test-m curve)
+ADD_TEST(geom:points test-m points)
 
 ADD_CUSTOM_TARGET(utest-m
 COMMAND ${CMAKE_CTEST_COMMAND} -V

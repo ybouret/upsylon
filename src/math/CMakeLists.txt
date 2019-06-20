@@ -70,13 +70,11 @@ SET(stat_srcs ${stat_decl} ${stat_cstat})
 SOURCE_GROUP( stat FILES ${stat_srcs} )
 INSTALL( FILES ${stat_decl} DESTINATION include/y/math/stat )
 
-IF(FALSE)
-FILE(GLOB geom_decl y/math/geom/*.hpp)
-FILE(GLOB geom_cgeom y/math/geom/*.cpp)
+FILE(GLOB geom_decl y/math/geometric/*.hpp)
+FILE(GLOB geom_cgeom y/math/geometric/*.cpp)
 SET(geom_srcs ${geom_decl} ${geom_cgeom})
 SOURCE_GROUP( geom FILES ${geom_srcs} )
-INSTALL( FILES ${geom_decl} DESTINATION include/y/math/geom )
-ENDIF()
+INSTALL( FILES ${geom_decl} DESTINATION include/y/math/geometric )
 
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
@@ -88,7 +86,7 @@ ${fit_srcs}
 ${opt_srcs}
 ${signal_srcs}
 ${stat_srcs}
-#${geom_srcs}
+${geom_srcs}
 )
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
 
