@@ -8,6 +8,7 @@
 #include "y/type/bzset.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/exceptions.hpp"
+#include <cerrno>
 
 namespace upsylon
 {
