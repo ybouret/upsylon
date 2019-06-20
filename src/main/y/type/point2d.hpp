@@ -72,6 +72,12 @@ namespace upsylon
         //! swap x and y coordinates
         inline point2d & swap_xy() throw() { bswap(x,y); return *this; }
 
+        //! direct normal
+        inline point2d   direct_normal() const throw()
+        {
+            return point2d(-y,x);
+        }
+
         //! x*y=n, x<=y, starting from x=isqrt(n);
         inline static point2d sqrt_of( param_type n ) throw()
         {
@@ -116,6 +122,13 @@ namespace upsylon
             if(rhs.y>lhs.y) lhs.y = rhs.y;
             return lhs;
         }
+
+        //! determinant
+        static inline type det( const point2d &lhs, const point2d &rhs ) throw()
+        {
+            return lhs.x*rhs.y-lhs.y*rhs.x;
+        }
+
 
         //! dimension as size
         inline size_t size() const throw() { return 2; }
