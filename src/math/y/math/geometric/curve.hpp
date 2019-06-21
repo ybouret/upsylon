@@ -84,6 +84,28 @@ namespace upsylon
 
                 }
 
+                inline void compute_head(const PointType &PA, const PointType &PB, const PointType &PC)
+                {
+                    const CorePoint A = PointInfo::Type2Core(PA);
+                    const CorePoint B = PointInfo::Type2Core(PB);
+                    const CorePoint C = PointInfo::Type2Core(PC);
+                    Node node;
+
+                    nodes.push_back_(node);
+
+                }
+
+                inline void compute_tail(const PointType &PA, const PointType &PB, const PointType &PC)
+                {
+                    const CorePoint A = PointInfo::Type2Core(PA);
+                    const CorePoint B = PointInfo::Type2Core(PB);
+                    const CorePoint C = PointInfo::Type2Core(PC);
+                    
+                    Node node;
+
+                    nodes.push_back_(node);
+                }
+
                 inline void compute_bulk( const PointType &PA, const PointType &PB, const PointType &PC )
                 {
                     const CorePoint A = PointInfo::Type2Core(PA);
@@ -98,8 +120,6 @@ namespace upsylon
                     node.t = AC/sqrt_of(ac2);
 
                     nodes.push_back_(node);
-
-
                 }
 
                 template <typename SEQUENCE>
@@ -118,7 +138,7 @@ namespace upsylon
                     switch(boundaries)
                     {
                         case Periodic: compute_bulk(*tail,*prev,*curr); break;
-                        case Standard: break;
+                        case Standard: compute_head(*prev,*curr,*next); break;
                     }
 
                     // bulk
@@ -131,7 +151,7 @@ namespace upsylon
                     switch(boundaries)
                     {
                         case Periodic: compute_bulk(*prev,*curr,*head); break;
-                        case Standard: break;
+                        case Standard: next=prev; --prev; compute_tail(*next,*prev,*curr); break;
                     }
                 }
 
