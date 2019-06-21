@@ -1,24 +1,42 @@
 #include "y/math/geometric/ops.hpp"
+#include "y/math/geometric/curve.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/list.hpp"
 #include "y/memory/pooled.hpp"
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 using namespace math;
 
-template <typename T> struct dummy
+template <typename T> struct dummy2
 {
     T u, v;
-    inline dummy( T a=0, T b=0) : u(a), v(b)
+    inline dummy2( T a=0, T b=0) : u(a), v(b)
     {
     }
 
-    friend inline std::ostream &operator<<( std::ostream &os, const dummy &d )
+    friend inline std::ostream &operator<<( std::ostream &os, const dummy2 &d )
     {
         os << "{" << d.u << "," << d.v<< "}";
         return os;
     }
 };
+
+template <typename T> struct dummy3
+{
+    T u, v, w;
+    inline dummy3( T a=0, T b=0, T c=0) : u(a), v(b), w(c)
+    {
+    }
+
+    friend inline std::ostream &operator<<( std::ostream &os, const dummy3 &d )
+    {
+        os << "{" << d.u << "," << d.v<< "," << d.w <<  "}";
+        return os;
+    }
+};
+
+
 
 template <typename T,
 template <typename> class POINT,
@@ -53,13 +71,33 @@ static inline void do_points(const size_t np)
     std::cerr << "Barycenter: " << Geometric::Ops::Barycenter(points) << std::endl;
     std::cerr << std::endl;
 
+    typedef Geometric::Curve<T,POINT> CurveType;
+    typedef typename CurveType::Node  CurveNode;
+    CurveType curve;
+
+    curve. template compute(points,Geometric::Periodic);
+
+    ios::ocstream fp("curve.dat");
+    for(size_t i=1;i<=np;++i)
+    {
+        const PointType  &p    = points[i];
+        CorePoint         c    = PointInfo::Type2Core(p);
+        const CurveNode  &node = curve.nodes[i];
+        fp("%g %g\n", c.x, c.y);
+        c += node.t;
+        fp("%g %g\n\n", c.x, c.y);
+
+    }
+
+
 }
 
 #define DO_POINTS__(TYPE,SEQ)    \
 do_points<TYPE,point2d,SEQ>(np); \
 do_points<TYPE,complex,SEQ>(np); \
 do_points<TYPE,point3d,SEQ>(np); \
-do_points<TYPE,dummy,SEQ>(np)
+do_points<TYPE,dummy2,SEQ>(np);  \
+do_points<TYPE,dummy3,SEQ>(np)
 
 #define DO_POINTS_(SEQ) \
 DO_POINTS__(float,SEQ); \
@@ -78,7 +116,6 @@ Y_UTEST(points)
     DO_POINTS_(vector_for<memory::global>::device);
     DO_POINTS_(vector_for<memory::pooled>::device);
 
-    do_points<float,dummy,list>(np);
 }
 Y_UTEST_DONE()
 

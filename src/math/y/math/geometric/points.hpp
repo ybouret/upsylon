@@ -13,23 +13,26 @@ namespace upsylon
     {
         namespace Geometric
         {
-            
+
+            //! generic boundaries for operations
             enum Boundaries
             {
                 Standard,
                 Periodic
             };
-            
+
+            //! contains dedicated types
             template <const size_t DIM,typename T> struct InfoFor;
-            
+
+            //! handle point[2|3]d<T> and POINT<T>
             template <typename T,template <typename> class POINT>
             struct PointInfoFor
             {
                 Y_DECL_ARGS(T,type);
-                typedef POINT<mutable_type>             Type;                                  //!< user point type
+                typedef POINT<type>                     Type;                                  //!< user point type
                 static const size_t                     Dimension = sizeof(Type)/sizeof(type); //!< the point dimension
                 typedef InfoFor<Dimension,mutable_type> InfoType;                              //!< info for this topolgy
-                typedef typename InfoType::PointType    Core;                                  //!< internal representation
+                typedef typename InfoType::PointType    Core;                                  //!< internal point[2|3]d<T>
                 
                 static inline Core &Type2Core(  Type &t ) throw()
                 {
@@ -86,18 +89,18 @@ namespace upsylon
                 typedef typename SequenceType::const_iterator const_iterator;
                 
                 
-                inline explicit Points() : origin() {}
+                inline explicit Points() {}
+                inline explicit Points(const size_t n, const as_capacity_t &_) : SequenceType(n,_) {}
                 inline virtual ~Points() throw() {}
-                
+                inline Points( const Points &other ) : SequenceType(other) {}
+
                 inline Points & add(param_type x, param_type y)               { const PointType p(x,y);   this->push_back(p); return *this; }
                 inline Points & add(param_type x, param_type y, param_type z) { const PointType p(x,y,z); this->push_back(p); return *this; }
                 
                 
             private:
                 Y_DISABLE_ASSIGN(Points);
-                
-            public:
-                const CorePoint origin;
+
             };
             
         }
