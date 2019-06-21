@@ -7,15 +7,66 @@
 \usepackage{bookman}
 
 \newcommand{\myvec}[1]{\overrightarrow{#1}}
-\newcommand{\mynorm}[1]{\left\vert#1\right\vert}
+%\newcommand{\mynorm}[1]{\left\vert#1\right\vert}
+\newcommand{\mynorm}[1]{{\parallel{#1}\parallel}}
 \newcommand{\myunit}[1]{\dfrac{{#1}}{\mynorm{{#1}}}}
 
 \begin{document}
 \title{Local Curve Approximations}
 \maketitle
 
+\section{Description}
 
 Let us assume that we have three different points $\vec{A}$, $\vec{B}$, $\vec{C}$.
+
+\section{Parametrization}
+
+\subsection{Bulk Expression}
+\subsubsection{2D/3D Case}
+\begin{equation}
+	\vec{M} = \vec{B} + x \vec{V} + \dfrac{1}{2}x^2 \vec{W}
+\end{equation}
+leading to
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\vec{A} & = & \vec{B} - \vec{V} + \dfrac{1}{2}\vec{W}\\
+	\\
+	\vec{C} & = & \vec{B} + \vec{V} + \dfrac{1}{2}\vec{W}\\
+\end{array}
+\right.
+\Rightarrow
+\left\lbrace
+\begin{array}{rcl}
+	\vec{V} & = & \dfrac{1}{2}\left(\vec{C}-\vec{A}\right)\\
+	\\
+	\vec{W} & = &  \left(\vec{A}+\vec{C}-2\vec{B}\right)\\
+\end{array}
+\right.
+\end{equation}
+so that the tangent vector is:
+\begin{equation}
+	\vec{T}_B = \myunit{\vec{V}} = \myunit{\vec{C}-\vec{A}}
+\end{equation}
+
+\subsubsection{In 2D}
+\begin{equation}
+	\gamma = \dfrac{\det\left(\vec{V},\vec{W}\right)}{\mynorm{\vec{V}}^3} = \dfrac{4\det\left(\vec{C}-\vec{A},\vec{A}+\vec{C}-2\vec{B}\right)}{\mynorm{\vec{C}-\vec{A}}^3}
+\end{equation}
+
+\begin{equation}
+	\vec{N}_{B} = \mathrm{rotate}_{\frac{\pi}{2}} \left(\vec{T}_B\right)
+\end{equation}
+
+\subsubsection{In 3D}
+
+\begin{equation}
+	\gamma = \dfrac{\mynorm{\vec{V}\wedge\vec{W}}}{\mynorm{\vec{V}}^3} = 
+	\dfrac{4\mynorm{\left(\vec{C}-\vec{A}\right)\wedge\left(\vec{A}+\vec{C}-2\vec{B}\right)}}
+	{\mynorm{\vec{C}-\vec{A}}^3}
+\end{equation}
+
+
 
 \section{Unit Tangent Vectors}
 

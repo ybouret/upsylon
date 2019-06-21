@@ -60,6 +60,8 @@ static inline void do_curve(const size_t np)
         }
     }
 
+   
+
     std::cerr << std::endl;
 }
 

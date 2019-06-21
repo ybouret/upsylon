@@ -90,6 +90,17 @@ static inline void do_points(const size_t np)
         }
     }
 
+    {
+        ios::ocstream fp("curvature.dat");
+        for(size_t i=1;i<=np;++i)
+        {
+            const CurveNode  &node = curve.nodes[i];
+            fp("%u %g\n", unsigned(i), node.curvature);
+        }
+    }
+
+
+
     curve. template compute(points,Geometric::Standard);
     {
         ios::ocstream fp("curve-standard.dat");
@@ -103,6 +114,7 @@ static inline void do_points(const size_t np)
             fp("%g %g\n\n", c.x, c.y);
         }
     }
+
 
 
 }

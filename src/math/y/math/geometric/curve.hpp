@@ -29,14 +29,14 @@ namespace upsylon
                 class Node
                 {
                 public:
-                    CorePoint    t; //!< tangent
-                    CorePoint    n; //!< normal
-                    mutable_type C; //!< curvature
+                    CorePoint    t;         //!< tangent
+                    CorePoint    n;         //!< normal
+                    mutable_type curvature; //!< curvature
 
-                    inline  Node() throw() :  t(), n(), C(0) {}
-                    inline  Node(const CorePoint tt) throw() : t(tt), n(), C(0) {}
+                    inline  Node() throw() :  t(), n(), curvature(0) {}
+                    inline  Node(const CorePoint tt) throw() : t(tt), n(), curvature(0) {}
                     inline ~Node() throw() {}
-                    inline  Node(const Node &node) throw() :   t(node.t), n(node.n), C(node.C) {}
+                    inline  Node(const Node &node) throw() :   t(node.t), n(node.n), curvature(node.curvature) {}
 
                 private:
                     Y_DISABLE_ASSIGN(Node);
@@ -117,8 +117,13 @@ namespace upsylon
                     if(ac2<=0) throw libc::exception( EDOM, "null norm" );
 
                     Node node;
+                    const_type ac = sqrt_of(ac2);
                     node.t = AC/sqrt_of(ac2);
 
+
+                    const CorePoint W = A+C-(B+B);
+                    node.curvature = 4 * CorePoint::det(AC,W)/(ac*ac*ac);
+                    
                     nodes.push_back_(node);
                 }
 
