@@ -75,7 +75,7 @@ static inline void do_points(const size_t np)
     typedef typename CurveType::Node  CurveNode;
     CurveType curve;
 
-    curve. template compute(points,Geometric::Periodic);
+    curve. template compute< SEQUENCE< POINT<T> > >(points,Geometric::Periodic);
 
     {
         ios::ocstream fp("curve-periodic.dat");
@@ -101,7 +101,7 @@ static inline void do_points(const size_t np)
 
 
 
-    curve. template compute(points,Geometric::Standard);
+    curve. template  compute< SEQUENCE< POINT<T> > >(points,Geometric::Standard);
     {
         ios::ocstream fp("curve-standard.dat");
         for(size_t i=1;i<=np;++i)
