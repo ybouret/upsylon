@@ -89,7 +89,7 @@ namespace upsylon
                     const CorePoint A = PointInfo::Type2Core(PA);
                     const CorePoint B = PointInfo::Type2Core(PB);
                     const CorePoint C = PointInfo::Type2Core(PC);
-                    Node node;
+                    Node            node;
 
                     nodes.push_back_(node);
 
