@@ -89,7 +89,11 @@ namespace upsylon
                     const CorePoint A = PointInfo::Type2Core(PA);
                     const CorePoint B = PointInfo::Type2Core(PB);
                     const CorePoint C = PointInfo::Type2Core(PC);
-                    Node            node;
+                    const CorePoint tt = 4*B-3*A-C;
+                    const_type      tt2 = tt.norm2();
+                    if(tt2<=0) throw libc::exception(EDOM,"null norm");
+
+                    Node            node( tt/sqrt_of(tt2) );
 
                     nodes.push_back_(node);
 
@@ -97,11 +101,14 @@ namespace upsylon
 
                 inline void compute_tail(const PointType &PA, const PointType &PB, const PointType &PC)
                 {
-                    const CorePoint A = PointInfo::Type2Core(PA);
-                    const CorePoint B = PointInfo::Type2Core(PB);
-                    const CorePoint C = PointInfo::Type2Core(PC);
-                    
-                    Node node;
+                    const CorePoint A   = PointInfo::Type2Core(PA);
+                    const CorePoint B   = PointInfo::Type2Core(PB);
+                    const CorePoint C   = PointInfo::Type2Core(PC);
+                    const CorePoint tt  = 3*C+A-4*B;
+                    const_type      tt2 = tt.norm2();
+                    if(tt2<=0) throw libc::exception(EDOM,"null norm");
+
+                    Node node( tt/sqrt_of(tt2) );
 
                     nodes.push_back_(node);
                 }
@@ -156,7 +163,7 @@ namespace upsylon
                     switch(boundaries)
                     {
                         case Periodic: compute_bulk(*prev,*curr,*head); break;
-                        case Standard: next=prev; --prev; compute_tail(*next,*prev,*curr); break;
+                        case Standard: next=prev; --next; compute_tail(*next,*prev,*curr); break;
                     }
                 }
 
