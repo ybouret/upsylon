@@ -48,7 +48,9 @@ static inline void do_points(const size_t np)
     typedef Geometric::PointInfoFor<T,POINT>     PointInfo;
     typedef typename PointInfo::Type             PointType;
     typedef typename PointInfo::Core             CorePoint;
-    
+
+    const string suffix = vformat("%ud.dat", unsigned( PointInfo::Dimension ));
+
     PointsType points;
     const float noise = 0.01f;
     const float radius = 5.0;
@@ -78,7 +80,8 @@ static inline void do_points(const size_t np)
     curve. template compute< SEQUENCE< POINT<T> > >(points,Geometric::Periodic);
 
     {
-        ios::ocstream fp("curve-periodic.dat");
+        const string  fn = "curve-periodic" + suffix;
+        ios::ocstream fp(fn);
         for(size_t i=1;i<=np;++i)
         {
             const PointType  &p    = points[i];
@@ -90,8 +93,24 @@ static inline void do_points(const size_t np)
         }
     }
 
+    if( 2 == PointInfo::Dimension )
     {
-        ios::ocstream fp("curvature.dat");
+        const string  fn = "normal-periodic" + suffix;
+        ios::ocstream fp(fn);
+        for(size_t i=1;i<=np;++i)
+        {
+            const PointType  &p    = points[i];
+            CorePoint         c    = PointInfo::Type2Core(p);
+            const CurveNode  &node = curve.nodes[i];
+            fp("%g %g\n", c.x, c.y);
+            c += node.n;
+            fp("%g %g\n\n", c.x, c.y);
+        }
+    }
+
+    {
+        const string  fn = "curvature" + suffix;
+        ios::ocstream fp(fn);
         for(size_t i=1;i<=np;++i)
         {
             const CurveNode  &node = curve.nodes[i];
@@ -103,7 +122,8 @@ static inline void do_points(const size_t np)
 
     curve. template  compute< SEQUENCE< POINT<T> > >(points,Geometric::Standard);
     {
-        ios::ocstream fp("curve-standard.dat");
+        const string  fn = "curve-standard" + suffix;
+        ios::ocstream fp(fn);
         for(size_t i=1;i<=np;++i)
         {
             const PointType  &p    = points[i];

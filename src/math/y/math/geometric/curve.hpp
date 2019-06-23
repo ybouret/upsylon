@@ -22,9 +22,10 @@ namespace upsylon
             {
             public:
                 Y_DECL_ARGS(T,type);
-                typedef PointInfoFor<T,POINT>    PointInfo;
+                typedef PointInfoFor<T,POINT>    PointInfo; //!< alias
                 typedef typename PointInfo::Type PointType; //!< user point type
                 typedef typename PointInfo::Core CorePoint; //!< matching point[2|3]d<mutable_type>
+                static  const    size_t          Dimension = PointInfo::Dimension; //!< [2|3]
 
                 class Node
                 {
@@ -50,9 +51,18 @@ namespace upsylon
                 template <typename SEQUENCE>
                 inline void compute( const SEQUENCE &points, const Boundaries boundaries )
                 {
+                    //__________________________________________________________
+                    //
+                    // acquire resources
+                    //__________________________________________________________
                     const size_t n = points.size();
                     nodes.free();
                     nodes.ensure(n);
+
+                    //__________________________________________________________
+                    //
+                    // create nodes with tangents
+                    //__________________________________________________________
                     switch(n)
                     {
                         case 0:
@@ -61,11 +71,29 @@ namespace upsylon
                         default: compute_all(points,boundaries); break;
                     }
                     assert(nodes.size()==n);
+
+                    //__________________________________________________________
+                    //
+                    // create normals and curvatures
+                    //__________________________________________________________
+                    switch(n)
+                    {
+                        case 0:
+                        case 1:
+                            break;
+                        case 2:  update_two(int2type<Dimension>(),boundaries); break;
+                        default: update_all(int2type<Dimension>(),boundaries); break;
+                    }
                 }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Curve);
 
+                //--------------------------------------------------------------
+                //
+                // computing tangents
+                //
+                //--------------------------------------------------------------
                 template <typename SEQUENCE>
                 void compute_two( const SEQUENCE &points, const Boundaries boundaries )
                 {
@@ -81,7 +109,6 @@ namespace upsylon
                         case Standard: nodes.push_back_(node);                   break;
                         case Periodic: node.t = -node.t; nodes.push_back_(node); break;
                     }
-
                 }
 
                 inline void compute_head(const PointType &PA, const PointType &PB, const PointType &PC)
@@ -123,47 +150,140 @@ namespace upsylon
                     const_type      ac2 = AC.norm2();
                     if(ac2<=0) throw libc::exception( EDOM, "null norm" );
 
-                    Node node;
-                    const_type ac = sqrt_of(ac2);
+                    Node       node;
                     node.t = AC/sqrt_of(ac2);
-
-
-                    const CorePoint W = A+C-(B+B);
-                    node.curvature = 4 * CorePoint::det(AC,W)/(ac*ac*ac);
-                    
                     nodes.push_back_(node);
                 }
 
                 template <typename SEQUENCE>
                 void compute_all( const SEQUENCE &points, const Boundaries boundaries )
                 {
+                    //__________________________________________________________
+                    //
+                    // prepare for scanning
+                    //__________________________________________________________
                     const size_t   n = points.size(); assert(n>=3);
-                    const typename SEQUENCE::const_iterator head = points.begin();
-                    typename       SEQUENCE::const_iterator prev = head;
-                    typename       SEQUENCE::const_iterator curr = head;
-                    ++curr;
-                    typename       SEQUENCE::const_iterator next = curr;
-                    ++next;
-
+                    const typename SEQUENCE::const_iterator         head = points.begin();
                     const typename SEQUENCE::const_reverse_iterator tail = points.rbegin();
+                    typename       SEQUENCE::const_iterator         prev = head;
+                    typename       SEQUENCE::const_iterator         curr = head; ++curr;
+                    typename       SEQUENCE::const_iterator         next = curr; ++next;
+
+                    //__________________________________________________________
+                    //
                     // head
+                    //__________________________________________________________
                     switch(boundaries)
                     {
                         case Periodic: compute_bulk(*tail,*prev,*curr); break;
                         case Standard: compute_head(*prev,*curr,*next); break;
                     }
 
+                    //__________________________________________________________
+                    //
                     // bulk
+                    //__________________________________________________________
                     for(size_t i=2;i<n;++i,++prev,++curr,++next)
                     {
                         compute_bulk(*prev,*curr,*next);
                     }
 
+                    //__________________________________________________________
+                    //
                     // tail
+                    //__________________________________________________________
                     switch(boundaries)
                     {
                         case Periodic: compute_bulk(*prev,*curr,*head); break;
                         case Standard: next=prev; --next; compute_tail(*next,*prev,*curr); break;
+                    }
+                }
+
+                //--------------------------------------------------------------
+                //
+                // computing normals and curvature
+                //
+                //--------------------------------------------------------------
+                inline void update_two( int2type<2>,  const Boundaries)
+                {
+                    for(size_t i=2;i>0;--i)
+                    {
+                        Node &node = nodes[i];
+                        node.n = node.t.direct_normal();
+                    }
+                }
+
+                inline void update_two( int2type<3>, const Boundaries)
+                {
+                    // nothing to do
+                }
+
+                inline void update_all( int2type<2>, const Boundaries boundaries)
+                {
+                    const size_t n = nodes.size();
+                    // head
+                    {
+                        Node &node = nodes[1];
+                        node.n = node.t.direct_normal();
+                        switch( boundaries )
+                        {
+                            case Standard: break;
+                            case Periodic: break;
+                        }
+                    }
+
+                    // bulk
+                    for(size_t i=n-1;i>1;--i)
+                    {
+                        //const Node &prev = nodes[i-1];
+                        Node       &node = nodes[i];
+                        //const Node &next = nodes[i+1];
+
+                        node.n = node.t.direct_normal();
+                    }
+
+                    // tail
+                    {
+                        Node &node = nodes[n];
+                        node.n = node.t.direct_normal();
+                        switch( boundaries )
+                        {
+                            case Standard: break;
+                            case Periodic: break;
+                        }
+                    }
+                }
+
+                inline void update_all( int2type<3>, const Boundaries boundaries)
+                {
+                    const size_t n = nodes.size();
+                    // head
+                    {
+                        //Node &node = nodes[1];
+                        switch( boundaries )
+                        {
+                            case Standard: break;
+                            case Periodic: break;
+                        }
+                    }
+
+                    // bulk
+                    for(size_t i=n-1;i>1;--i)
+                    {
+                        //const Node &prev = nodes[i-1];
+                        //Node       &node = nodes[i];
+                        //const Node &next = nodes[i+1];
+                    }
+
+                    // tail
+                    {
+                        //Node &node = nodes[n];
+                        // node.n = node.t.direct_normal();
+                        switch( boundaries )
+                        {
+                            case Standard: break;
+                            case Periodic: break;
+                        }
                     }
                 }
 
