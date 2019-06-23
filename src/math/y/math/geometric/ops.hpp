@@ -39,7 +39,7 @@ namespace upsylon
                         const PointType &p = *i;
                         bar += PointInfo::Type2Core(p);
                     }
-                    bar /= n;
+                    bar /= T(n);
                     return PointInfo::Core2Type(bar);
                 }
 
