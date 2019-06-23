@@ -11,15 +11,16 @@ using namespace math;
 template <typename T> struct dummy2
 {
     T u, v;
-    inline dummy2( T a=0, T b=0) : u(a), v(b)
-    {
-    }
+    inline  dummy2( T a=0, T b=0) : u(a), v(b) {}
+    //inline  dummy2(const dummy2 &other) throw() : u(other.u), v(other.v) {}
+    //inline ~dummy2() throw() {}
 
     friend inline std::ostream &operator<<( std::ostream &os, const dummy2 &d )
     {
         os << "{" << d.u << "," << d.v<< "}";
         return os;
     }
+
 };
 
 template <typename T> struct dummy3
@@ -29,11 +30,13 @@ template <typename T> struct dummy3
     {
     }
 
+
     friend inline std::ostream &operator<<( std::ostream &os, const dummy3 &d )
     {
         os << "{" << d.u << "," << d.v<< "," << d.w <<  "}";
         return os;
     }
+ 
 };
 
 
@@ -87,9 +90,9 @@ static inline void do_points(const size_t np)
             const PointType  &p    = points[i];
             CorePoint         c    = PointInfo::Type2Core(p);
             const CurveNode  &node = curve.nodes[i];
-            fp("%g %g\n", c.x, c.y);
+            PointInfo::SaveType(fp,p) << '\n';
             c += node.t;
-            fp("%g %g\n\n", c.x, c.y);
+            PointInfo::SaveCore(fp,c) << '\n' << '\n';
         }
     }
 
@@ -102,9 +105,9 @@ static inline void do_points(const size_t np)
             const PointType  &p    = points[i];
             CorePoint         c    = PointInfo::Type2Core(p);
             const CurveNode  &node = curve.nodes[i];
-            fp("%g %g\n", c.x, c.y);
+            PointInfo::SaveType(fp,p) << '\n';
             c += node.n;
-            fp("%g %g\n\n", c.x, c.y);
+            PointInfo::SaveCore(fp,c) << '\n' << '\n';
         }
     }
 
@@ -129,9 +132,9 @@ static inline void do_points(const size_t np)
             const PointType  &p    = points[i];
             CorePoint         c    = PointInfo::Type2Core(p);
             const CurveNode  &node = curve.nodes[i];
-            fp("%g %g\n", c.x, c.y);
+            PointInfo::SaveType(fp,p) << '\n';
             c += node.t;
-            fp("%g %g\n\n", c.x, c.y);
+            PointInfo::SaveCore(fp,c) << '\n' << '\n';
         }
     }
 

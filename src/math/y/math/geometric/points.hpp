@@ -5,6 +5,7 @@
 #include "y/math/types.hpp"
 #include "y/type/point3d.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/ios/ostream.hpp"
 
 namespace upsylon
 {
@@ -21,7 +22,8 @@ namespace upsylon
             };
 
             //! throw exception if value<=0
-            template <typename T> T CheckNorm2(const T value, const char *ctx);
+            template <typename T> T    CheckNorm2(const T value, const char *ctx);
+            template <typename T> void SaveReal(ios::ostream &fp, const T value);
 
             //! contains dedicated types
             template <const size_t DIM,typename T> struct InfoFor;
@@ -41,6 +43,23 @@ namespace upsylon
                 static inline Type &       Core2Type( Core       &c ) throw() { return *(Type *)&c;       } //!< point[2|3] -> POINT
                 static inline const Type & Core2Type( const Core &c ) throw() { return *(const Type *)&c; } //!< point[2|3] -> POINT, const
                 static inline Core         Origin()                   throw() { return Core();            } //!< [(0,0)|(0,0,0)]
+
+                //! save Dimension reals
+                static inline void SaveReals( ios::ostream &fp, const_type *r )
+                {
+                    assert(r!=NULL);
+                    SaveReal(fp,r[0]);
+                    for(size_t i=1;i<Dimension;++i)
+                    {
+                        fp << ' '; SaveReal(fp,r[i]);
+                    }
+                }
+
+                //! save Type
+                static inline ios::ostream & SaveType( ios::ostream &fp, const Type &t ) { SaveReals(fp,(const_type *)&t); return fp; }
+
+                //! save Core
+                static inline ios::ostream & SaveCore( ios::ostream &fp, const Core &c ) { SaveReals(fp,(const_type *)&c); return fp; }
 
             };
 

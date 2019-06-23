@@ -30,6 +30,24 @@ namespace upsylon  {
                 if(value<=0) throw_null_norm(ctx);
                 return value;
             }
+
+            static inline void save_double( ios::ostream &fp, const double value )
+            {
+                fp("%.15g",value);
+
+            }
+
+            template <>
+            void SaveReal( ios::ostream &fp, const float value )
+            {
+                save_double(fp,value);
+            }
+
+            template <>
+            void SaveReal( ios::ostream &fp, const double value )
+            {
+                save_double(fp,value);
+            }
         }
 
     }
