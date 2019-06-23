@@ -17,16 +17,18 @@ namespace upsylon
         namespace Geometric
         {
 
+            //! a generic curve of POINT<T>
             template <typename T, template <class> class POINT, class ALLOCATOR=memory::global>
             class Curve
             {
             public:
-                Y_DECL_ARGS(T,type);
-                typedef PointInfoFor<T,POINT>    PointInfo; //!< alias
-                typedef typename PointInfo::Type PointType; //!< user point type
-                typedef typename PointInfo::Core CorePoint; //!< matching point[2|3]d<mutable_type>
+                Y_DECL_ARGS(T,type);                                               //!< aliases
+                typedef PointInfoFor<T,POINT>    PointInfo;                        //!< alias
+                typedef typename PointInfo::Type PointType;                        //!< user point type
+                typedef typename PointInfo::Core CorePoint;                        //!< matching point[2|3]d<mutable_type>
                 static  const    size_t          Dimension = PointInfo::Dimension; //!< [2|3]
 
+                //! internal node, one for each point
                 class Node
                 {
                 public:
@@ -35,7 +37,6 @@ namespace upsylon
                     mutable_type curvature; //!< curvature
 
                     inline  Node() throw() :  t(), n(), curvature(0) {}
-                    inline  Node(const CorePoint tt) throw() : t(tt), n(), curvature(0) {}
                     inline ~Node() throw() {}
                     inline  Node(const Node &node) throw() :   t(node.t), n(node.n), curvature(node.curvature) {}
 

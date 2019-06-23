@@ -11,8 +11,10 @@ namespace upsylon
     {
         namespace Geometric
         {
+            //! operations on sequence of points
             struct Ops
             {
+                //! compute barycenter
                 template <typename T,
                 template <typename> class POINT,
                 template <typename> class SEQUENCE> static inline
@@ -40,7 +42,8 @@ namespace upsylon
                     bar /= n;
                     return PointInfo::Core2Type(bar);
                 }
-                
+
+                //! compute barycenter on Points
                 template <typename T,
                 template <typename> class POINT,
                 template <typename> class SEQUENCE> static inline
