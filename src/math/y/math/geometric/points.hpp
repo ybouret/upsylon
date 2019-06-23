@@ -5,7 +5,6 @@
 #include "y/math/types.hpp"
 #include "y/type/point3d.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/os/static-check.hpp"
 
 namespace upsylon
 {
@@ -20,6 +19,9 @@ namespace upsylon
                 Standard, //!< for standard curve
                 Periodic  //!< for periodic curve
             };
+
+            //! throw exception if value<=0
+            template <typename T> T CheckNorm2(const T value, const char *ctx);
 
             //! contains dedicated types
             template <const size_t DIM,typename T> struct InfoFor;

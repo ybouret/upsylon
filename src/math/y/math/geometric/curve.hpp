@@ -1,12 +1,8 @@
-
 //! \file
 #ifndef Y_GEOMETRIC_CURVE_INCLUDED
 #define Y_GEOMETRIC_CURVE_INCLUDED 1
 
-
 #include "y/math/geometric/points.hpp"
-#include "y/exceptions.hpp"
-#include <cerrno>
 
 namespace upsylon
 {
@@ -36,19 +32,27 @@ namespace upsylon
                     CorePoint    n;         //!< normal
                     mutable_type curvature; //!< curvature
 
-                    inline  Node() throw() :  t(), n(), curvature(0) {}
-                    inline ~Node() throw() {}
-                    inline  Node(const Node &node) throw() :   t(node.t), n(node.n), curvature(node.curvature) {}
+                    inline  Node() throw() :
+                    t(), n(), curvature(0) {}                       //!< setup
+                    inline  Node(const CorePoint tt) throw() :      //|
+                    t(tt), n(), curvature(0) {}                     //!< setup with tangent
+                    inline ~Node() throw() {}                       //!< cleanup
+                    inline  Node(const Node &node) throw() :        //|
+                    t(node.t), n(node.n), curvature(node.curvature) //|
+                    {}                                              //!< copy
 
                 private:
                     Y_DISABLE_ASSIGN(Node);
                 };
+                //! internal vector of nodes type
                 typedef vector<Node,ALLOCATOR> Nodes;
-                Nodes nodes;
 
-                inline explicit Curve() : nodes() {}
-                inline virtual ~Curve() throw() {}
+                Nodes nodes; //!< the nodes
 
+                inline explicit Curve() : nodes() {} //!< setup
+                inline virtual ~Curve() throw() {}   //!< cleanup
+
+                //! compute tangents, normals and curvatures
                 template <typename SEQUENCE>
                 inline void compute( const SEQUENCE &points, const Boundaries boundaries )
                 {
@@ -101,8 +105,7 @@ namespace upsylon
                     const CorePoint A = PointInfo::Type2Core( points.front() );
                     const CorePoint B = PointInfo::Type2Core( points.back()  );
                     const CorePoint AB(A,B);
-                    const_type      ab2 = AB.norm2();
-                    if(ab2<=0) throw libc::exception( EDOM, "null norm" );
+                    const_type      ab2 = CheckNorm2(AB.norm2(),"AB");
                     Node node(AB/sqrt_of(ab2));
                     nodes.push_back_(node);
                     switch(boundaries)
@@ -114,17 +117,13 @@ namespace upsylon
 
                 inline void compute_head(const PointType &PA, const PointType &PB, const PointType &PC)
                 {
-                    const CorePoint A = PointInfo::Type2Core(PA);
-                    const CorePoint B = PointInfo::Type2Core(PB);
-                    const CorePoint C = PointInfo::Type2Core(PC);
-                    const CorePoint tt = 4*B-3*A-C;
-                    const_type      tt2 = tt.norm2();
-                    if(tt2<=0) throw libc::exception(EDOM,"null norm");
-
+                    const CorePoint A   = PointInfo::Type2Core(PA);
+                    const CorePoint B   = PointInfo::Type2Core(PB);
+                    const CorePoint C   = PointInfo::Type2Core(PC);
+                    const CorePoint tt  = 4*B-3*A-C;
+                    const_type      tt2 = CheckNorm2(tt.norm2(),"head");
                     Node            node( tt/sqrt_of(tt2) );
-
                     nodes.push_back_(node);
-
                 }
 
                 inline void compute_tail(const PointType &PA, const PointType &PB, const PointType &PC)
@@ -133,11 +132,8 @@ namespace upsylon
                     const CorePoint B   = PointInfo::Type2Core(PB);
                     const CorePoint C   = PointInfo::Type2Core(PC);
                     const CorePoint tt  = 3*C+A-4*B;
-                    const_type      tt2 = tt.norm2();
-                    if(tt2<=0) throw libc::exception(EDOM,"null norm");
-
+                    const_type      tt2 = CheckNorm2(tt.norm2(),"tail");
                     Node node( tt/sqrt_of(tt2) );
-
                     nodes.push_back_(node);
                 }
 
@@ -146,13 +142,9 @@ namespace upsylon
                     const CorePoint A = PointInfo::Type2Core(PA);
                     const CorePoint B = PointInfo::Type2Core(PB);
                     const CorePoint C = PointInfo::Type2Core(PC);
-
                     const CorePoint AC(A,C);
-                    const_type      ac2 = AC.norm2();
-                    if(ac2<=0) throw libc::exception( EDOM, "null norm" );
-
-                    Node       node;
-                    node.t = AC/sqrt_of(ac2);
+                    const_type      ac2 = CheckNorm2(AC.norm2(),"AC");
+                    Node            node(AC/sqrt_of(ac2));
                     nodes.push_back_(node);
                 }
 
