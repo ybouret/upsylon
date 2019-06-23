@@ -16,7 +16,7 @@ Y_UTEST(curve)
     {
         np = string_convert::to<size_t>(argv[1],"np");
     }
-
+    (void)np;
 }
 Y_UTEST_DONE()
 

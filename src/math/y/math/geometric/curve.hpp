@@ -44,13 +44,12 @@ namespace upsylon
                 private:
                     Y_DISABLE_ASSIGN(Node);
                 };
-                //! internal vector of nodes type
-                typedef vector<Node,ALLOCATOR> Nodes;
 
-                Nodes nodes; //!< the nodes
+                typedef vector<Node,ALLOCATOR> Nodes; //!< internal vector of nodes type
+                Nodes nodes;                          //!< the nodes
 
-                inline explicit Curve() : nodes() {} //!< setup
-                inline virtual ~Curve() throw() {}   //!< cleanup
+                inline explicit Curve() : nodes() {}  //!< setup
+                inline virtual ~Curve() throw() {}    //!< cleanup
 
                 //! compute tangents, normals and curvatures
                 template <typename SEQUENCE>
@@ -137,10 +136,10 @@ namespace upsylon
                     nodes.push_back_(node);
                 }
 
-                inline void compute_bulk( const PointType &PA, const PointType &PB, const PointType &PC )
+                inline void compute_bulk( const PointType &PA, const PointType &, const PointType &PC )
                 {
                     const CorePoint A = PointInfo::Type2Core(PA);
-                    const CorePoint B = PointInfo::Type2Core(PB);
+                    //const CorePoint B = PointInfo::Type2Core(PB);
                     const CorePoint C = PointInfo::Type2Core(PC);
                     const CorePoint AC(A,C);
                     const_type      ac2 = CheckNorm2(AC.norm2(),"AC");

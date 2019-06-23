@@ -52,8 +52,8 @@ static inline void do_points(const size_t np)
     const string suffix = vformat("%ud.dat", unsigned( PointInfo::Dimension ));
 
     PointsType points;
-    const float noise = 0.01f;
-    const float radius = 5.0;
+    const float noise  = 0.01f;
+    const float radius = 5.0f;
     for(size_t i=0;i<np;++i)
     {
         const float theta = ((numeric<float>::two_pi*i)/np) * (1.0f+noise*alea.symm<float>() );
