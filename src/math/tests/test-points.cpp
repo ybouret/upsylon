@@ -103,8 +103,8 @@ static inline void do_points(const size_t np)
         ios::ocstream fp(fn);
         for(size_t i=1;i<=np;++i)
         {
-            const PointType  &p    = points[i];
-            CorePoint         c    = PointInfo::Type2Core(p);
+            //const PointType  &p    = points[i];
+            //CorePoint         c    = PointInfo::Type2Core(p);
             const CurveNode  &node = curve.nodes[i];
             PointInfo::SaveCore( fp("%u ", unsigned(i)),node.t)(" %15g\n", node.speed);
         }
@@ -157,8 +157,8 @@ static inline void do_points(const size_t np)
         ios::ocstream fp(fn);
         for(size_t i=1;i<=np;++i)
         {
-            const PointType  &p    = points[i];
-            CorePoint         c    = PointInfo::Type2Core(p);
+            //const PointType  &p    = points[i];
+            //CorePoint         c    = PointInfo::Type2Core(p);
             const CurveNode  &node = curve.nodes[i];
             PointInfo::SaveCore( fp("%u ", unsigned(i)),node.t)(" %15g\n", node.speed);
         }
