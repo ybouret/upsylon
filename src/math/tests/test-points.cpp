@@ -36,7 +36,7 @@ template <typename T> struct dummy3
         os << "{" << d.u << "," << d.v<< "," << d.w <<  "}";
         return os;
     }
- 
+
 };
 
 
@@ -57,7 +57,7 @@ static inline void do_points(const size_t np)
     PointsType points;
     const float noise   = 0.01f;
     const float xradius = 5.0f;
-    const float yradius = 3.0f;
+    const float yradius = 5.0f;
 
     for(size_t i=0;i<np;++i)
     {
@@ -85,7 +85,7 @@ static inline void do_points(const size_t np)
     curve. template compute< SEQUENCE< POINT<T> > >(points,Geometric::Periodic);
 
     {
-        const string  fn = "curve-periodic" + suffix;
+        const string  fn = "periodic-curve" + suffix;
         ios::ocstream fp(fn);
         for(size_t i=1;i<=np;++i)
         {
@@ -98,9 +98,21 @@ static inline void do_points(const size_t np)
         }
     }
 
-    if( 2 == PointInfo::Dimension )
     {
-        const string  fn = "normal-periodic" + suffix;
+        const string  fn = "periodic-angle" + suffix;
+        ios::ocstream fp(fn);
+        for(size_t i=1;i<=np;++i)
+        {
+            const PointType  &p    = points[i];
+            CorePoint         c    = PointInfo::Type2Core(p);
+            const CurveNode  &node = curve.nodes[i];
+            PointInfo::SaveCore( fp("%u ", unsigned(i)),node.t)(" %15g\n", node.speed);
+        }
+    }
+
+
+    {
+        const string  fn = "periodic-normal" + suffix;
         ios::ocstream fp(fn);
         for(size_t i=1;i<=np;++i)
         {
@@ -114,7 +126,7 @@ static inline void do_points(const size_t np)
     }
 
     {
-        const string  fn = "curvature" + suffix;
+        const string  fn = "periodic-curvature" + suffix;
         ios::ocstream fp(fn);
         for(size_t i=1;i<=np;++i)
         {
@@ -127,7 +139,7 @@ static inline void do_points(const size_t np)
 
     curve. template  compute< SEQUENCE< POINT<T> > >(points,Geometric::Standard);
     {
-        const string  fn = "curve-standard" + suffix;
+        const string  fn = "standard-curve" + suffix;
         ios::ocstream fp(fn);
         for(size_t i=1;i<=np;++i)
         {
@@ -140,6 +152,41 @@ static inline void do_points(const size_t np)
         }
     }
 
+    {
+        const string  fn = "standard-angle" + suffix;
+        ios::ocstream fp(fn);
+        for(size_t i=1;i<=np;++i)
+        {
+            const PointType  &p    = points[i];
+            CorePoint         c    = PointInfo::Type2Core(p);
+            const CurveNode  &node = curve.nodes[i];
+            PointInfo::SaveCore( fp("%u ", unsigned(i)),node.t)(" %15g\n", node.speed);
+        }
+    }
+
+    {
+        const string  fn = "standard-normal" + suffix;
+        ios::ocstream fp(fn);
+        for(size_t i=1;i<=np;++i)
+        {
+            const PointType  &p    = points[i];
+            CorePoint         c    = PointInfo::Type2Core(p);
+            const CurveNode  &node = curve.nodes[i];
+            PointInfo::SaveType(fp,p) << '\n';
+            c += node.n;
+            PointInfo::SaveCore(fp,c) << '\n' << '\n';
+        }
+    }
+
+    {
+        const string  fn = "standard-curvature" + suffix;
+        ios::ocstream fp(fn);
+        for(size_t i=1;i<=np;++i)
+        {
+            const CurveNode  &node = curve.nodes[i];
+            fp("%u %g\n", unsigned(i), node.curvature);
+        }
+    }
 
 
 }

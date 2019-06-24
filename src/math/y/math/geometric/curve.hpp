@@ -124,7 +124,7 @@ namespace upsylon
                     const CorePoint TT  = 4*B-3*A-C;
                     const_type      tt  = sqrt_of(CheckNorm2(TT.norm2(),"head"));
                     Node node;
-                    node.t     = TT;
+                    node.t     = TT/tt;
                     node.speed = tt/2;
                     nodes.push_back_(node);
                 }
@@ -137,7 +137,7 @@ namespace upsylon
                     const CorePoint TT  = 3*C+A-4*B;
                     const_type      tt  = sqrt_of( CheckNorm2(TT.norm2(),"tail") );
                     Node node;
-                    node.t     = TT;
+                    node.t     = TT/tt;
                     node.speed = tt/2;
                     nodes.push_back_(node);
                 }
@@ -218,38 +218,62 @@ namespace upsylon
                     // nothing to do
                 }
 
+
+                static inline void update2d_head( Node &nA, const Node &nB, const Node &nC )
+                {
+                    const CorePoint TA = nA.t;
+                    const CorePoint TB = nB.t;
+                    const CorePoint TC = nC.t;
+                    nA.n = TA.direct_normal();
+                    const_type      dsdu = nA.speed;
+                    const CorePoint dTds = (4*TB-3*TA-TC)/(dsdu+dsdu);
+                    nA.curvature = dTds * nA.n;
+                }
+
+                static inline void update2d_bulk( const Node &prev, Node &node, const Node &next )
+                {
+                    node.n = node.t.direct_normal();
+                    const_type      dsdu = node.speed;
+                    const CorePoint dTds = (next.t-prev.t)/(dsdu+dsdu);
+                    node.curvature = dTds*node.n;
+                }
+
+                static inline void update2d_tail( const Node &nA, const Node &nB, Node &nC )
+                {
+                    const CorePoint TA = nA.t;
+                    const CorePoint TB = nB.t;
+                    const CorePoint TC = nC.t;
+                    nC.n = TC.direct_normal();
+                    const_type      dsdu = nC.speed; assert(dsdu>0);
+                    const CorePoint dTds = (3*TC+TA-4*TB)/(dsdu+dsdu);
+                    nC.curvature = dTds * nC.n;
+                }
+
                 inline void update_all( int2type<2>, const Boundaries boundaries)
                 {
-                    const size_t n = nodes.size();
+                    const size_t n   = nodes.size();
+                    const size_t nm1 = n-1;
                     // head
                     {
-                        Node &node = nodes[1];
-                        node.n = node.t.direct_normal();
                         switch( boundaries )
                         {
-                            case Standard: break;
-                            case Periodic: break;
+                            case Standard: update2d_head(nodes[1],nodes[2],nodes[3]); break;
+                            case Periodic: update2d_bulk(nodes[n],nodes[1],nodes[2]); break;
                         }
                     }
 
                     // bulk
-                    for(size_t i=n-1;i>1;--i)
+                    for(size_t i=nm1;i>1;--i)
                     {
-                        //const Node &prev = nodes[i-1];
-                        Node       &node = nodes[i];
-                        //const Node &next = nodes[i+1];
-
-                        node.n = node.t.direct_normal();
+                        update2d_bulk(nodes[i-1],nodes[i],nodes[i+1]);
                     }
 
                     // tail
                     {
-                        Node &node = nodes[n];
-                        node.n = node.t.direct_normal();
                         switch( boundaries )
                         {
-                            case Standard: break;
-                            case Periodic: break;
+                            case Standard: update2d_tail(nodes[nm1-1],nodes[nm1],nodes[n]); break;
+                            case Periodic: update2d_bulk(nodes[nm1],nodes[n],nodes[1]);   break;
                         }
                     }
                 }
