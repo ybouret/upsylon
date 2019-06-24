@@ -121,7 +121,7 @@ namespace upsylon
                     const CorePoint A   = PointInfo::Type2Core(PA);
                     const CorePoint B   = PointInfo::Type2Core(PB);
                     const CorePoint C   = PointInfo::Type2Core(PC);
-                    const CorePoint TT  = 4*B-3*A-C;
+                    const CorePoint TT  = 4*B-(3*A+C);
                     const_type      tt  = sqrt_of(CheckNorm2(TT.norm2(),"head"));
                     Node node;
                     node.t     = TT/tt;
@@ -134,7 +134,7 @@ namespace upsylon
                     const CorePoint A   = PointInfo::Type2Core(PA);
                     const CorePoint B   = PointInfo::Type2Core(PB);
                     const CorePoint C   = PointInfo::Type2Core(PC);
-                    const CorePoint TT  = 3*C+A-4*B;
+                    const CorePoint TT  = (3*C+A)-4*B;
                     const_type      tt  = sqrt_of( CheckNorm2(TT.norm2(),"tail") );
                     Node node;
                     node.t     = TT/tt;
@@ -145,7 +145,6 @@ namespace upsylon
                 inline void compute_bulk( const PointType &PA, const PointType &, const PointType &PC )
                 {
                     const CorePoint A = PointInfo::Type2Core(PA);
-                    //const CorePoint B = PointInfo::Type2Core(PB);
                     const CorePoint C = PointInfo::Type2Core(PC);
                     const CorePoint AC(A,C);
                     const_type      ac  = sqrt_of(CheckNorm2(AC.norm2(),"AC"));
