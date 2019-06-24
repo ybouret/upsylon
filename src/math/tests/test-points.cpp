@@ -55,13 +55,15 @@ static inline void do_points(const size_t np)
     const string suffix = vformat("%ud.dat", unsigned( PointInfo::Dimension ));
 
     PointsType points;
-    const float noise  = 0.01f;
-    const float radius = 5.0f;
+    const float noise   = 0.01f;
+    const float xradius = 5.0f;
+    const float yradius = 3.0f;
+
     for(size_t i=0;i<np;++i)
     {
         const float theta = ((numeric<float>::two_pi*i)/np) * (1.0f+noise*alea.symm<float>() );
-        const float x     = radius * cosf( theta ) * (1.0f+noise*alea.symm<float>() );
-        const float y     = radius * sinf( theta ) * (1.0f+noise*alea.symm<float>() );
+        const float x     = 8.0f + xradius * cosf( theta ) * (1.0f+noise*alea.symm<float>() );
+        const float y     = yradius * sinf( theta ) * (1.0f+noise*alea.symm<float>() );
         points.add(x,y);
     }
 
@@ -91,7 +93,7 @@ static inline void do_points(const size_t np)
             CorePoint         c    = PointInfo::Type2Core(p);
             const CurveNode  &node = curve.nodes[i];
             PointInfo::SaveType(fp,p) << '\n';
-            c += node.t;
+            c += node.speed * node.t;
             PointInfo::SaveCore(fp,c) << '\n' << '\n';
         }
     }
@@ -133,7 +135,7 @@ static inline void do_points(const size_t np)
             CorePoint         c    = PointInfo::Type2Core(p);
             const CurveNode  &node = curve.nodes[i];
             PointInfo::SaveType(fp,p) << '\n';
-            c += node.t;
+            c += node.t * node.speed;
             PointInfo::SaveCore(fp,c) << '\n' << '\n';
         }
     }

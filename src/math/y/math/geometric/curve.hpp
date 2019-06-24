@@ -30,15 +30,15 @@ namespace upsylon
                 public:
                     CorePoint    t;         //!< tangent
                     CorePoint    n;         //!< normal
+                    mutable_type speed;     //!< |dM/du|
                     mutable_type curvature; //!< curvature
 
                     inline  Node() throw() :
-                    t(), n(), curvature(0) {}                       //!< setup
-                    inline  Node(const CorePoint tt) throw() :      //|
-                    t(tt), n(), curvature(0) {}                     //!< setup with tangent
+                    t(), n(), speed(0), curvature(0) {}             //!< setup
                     inline ~Node() throw() {}                       //!< cleanup
                     inline  Node(const Node &node) throw() :        //|
-                    t(node.t), n(node.n), curvature(node.curvature) //|
+                    t(node.t), n(node.n),                           //|
+                    speed(node.speed), curvature(node.curvature)    //|
                     {}                                              //!< copy
 
                 private:
@@ -104,8 +104,10 @@ namespace upsylon
                     const CorePoint A = PointInfo::Type2Core( points.front() );
                     const CorePoint B = PointInfo::Type2Core( points.back()  );
                     const CorePoint AB(A,B);
-                    const_type      ab2 = CheckNorm2(AB.norm2(),"AB");
-                    Node node(AB/sqrt_of(ab2));
+                    const_type      speed = sqrt_of( CheckNorm2(AB.norm2(),"AB") );
+                    Node node;
+                    node.t     = AB/speed;
+                    node.speed = speed;
                     nodes.push_back_(node);
                     switch(boundaries)
                     {
@@ -119,9 +121,11 @@ namespace upsylon
                     const CorePoint A   = PointInfo::Type2Core(PA);
                     const CorePoint B   = PointInfo::Type2Core(PB);
                     const CorePoint C   = PointInfo::Type2Core(PC);
-                    const CorePoint tt  = 4*B-3*A-C;
-                    const_type      tt2 = CheckNorm2(tt.norm2(),"head");
-                    Node            node( tt/sqrt_of(tt2) );
+                    const CorePoint TT  = 4*B-3*A-C;
+                    const_type      tt  = sqrt_of(CheckNorm2(TT.norm2(),"head"));
+                    Node node;
+                    node.t     = TT;
+                    node.speed = tt/2;
                     nodes.push_back_(node);
                 }
 
@@ -130,9 +134,11 @@ namespace upsylon
                     const CorePoint A   = PointInfo::Type2Core(PA);
                     const CorePoint B   = PointInfo::Type2Core(PB);
                     const CorePoint C   = PointInfo::Type2Core(PC);
-                    const CorePoint tt  = 3*C+A-4*B;
-                    const_type      tt2 = CheckNorm2(tt.norm2(),"tail");
-                    Node node( tt/sqrt_of(tt2) );
+                    const CorePoint TT  = 3*C+A-4*B;
+                    const_type      tt  = sqrt_of( CheckNorm2(TT.norm2(),"tail") );
+                    Node node;
+                    node.t     = TT;
+                    node.speed = tt/2;
                     nodes.push_back_(node);
                 }
 
@@ -142,8 +148,10 @@ namespace upsylon
                     //const CorePoint B = PointInfo::Type2Core(PB);
                     const CorePoint C = PointInfo::Type2Core(PC);
                     const CorePoint AC(A,C);
-                    const_type      ac2 = CheckNorm2(AC.norm2(),"AC");
-                    Node            node(AC/sqrt_of(ac2));
+                    const_type      ac  = sqrt_of(CheckNorm2(AC.norm2(),"AC"));
+                    Node            node;
+                    node.t     = AC/ac;
+                    node.speed = ac/2;
                     nodes.push_back_(node);
                 }
 
