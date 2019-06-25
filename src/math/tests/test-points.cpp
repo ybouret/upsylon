@@ -51,6 +51,14 @@ static inline void do_points(const size_t np)
     typedef Geometric::PointInfoFor<T,POINT>     PointInfo;
     typedef typename PointInfo::Type             PointType;
     typedef typename PointInfo::Core             CorePoint;
+    typedef Geometric::Curve<T,POINT>            CurveType;
+    typedef typename CurveType::Node             CurveNode;
+    std::cerr << "\tsizeof(T)         = " << sizeof(T)         << std::endl;
+    std::cerr << "\tDimension         = " << PointInfo::Dimension << std::endl;
+    std::cerr << "\tsizeof(PointType) = " << sizeof(PointType) << std::endl;
+    std::cerr << "\tsizeof(CorePoint) = " << sizeof(CorePoint) << std::endl;
+    std::cerr << "\tsizeof(CurveType) = " << sizeof(CurveType) << std::endl;
+    std::cerr << "\tsizeof(CurveNode) = " << sizeof(CurveNode) << std::endl;
 
     const string suffix = vformat("%ud.dat", unsigned( PointInfo::Dimension ));
 
@@ -78,8 +86,7 @@ static inline void do_points(const size_t np)
     std::cerr << "Barycenter: " << Geometric::Ops::Barycenter(points) << std::endl;
     std::cerr << std::endl;
 
-    typedef Geometric::Curve<T,POINT> CurveType;
-    typedef typename CurveType::Node  CurveNode;
+
     CurveType curve;
 
     curve. template compute< SEQUENCE< POINT<T> > >(points,Geometric::Periodic);
@@ -92,6 +99,7 @@ static inline void do_points(const size_t np)
             const PointType  &p    = points[i];
             CorePoint         c    = PointInfo::Type2Core(p);
             const CurveNode  &node = curve.nodes[i];
+            Y_ASSERT((c-node.r).norm2()<=0);
             PointInfo::SaveType(fp,p) << '\n';
             c += node.speed * node.t;
             PointInfo::SaveCore(fp,c) << '\n' << '\n';
@@ -146,6 +154,7 @@ static inline void do_points(const size_t np)
             const PointType  &p    = points[i];
             CorePoint         c    = PointInfo::Type2Core(p);
             const CurveNode  &node = curve.nodes[i];
+            Y_ASSERT((c-node.r).norm2()<=0);
             PointInfo::SaveType(fp,p) << '\n';
             c += node.t * node.speed;
             PointInfo::SaveCore(fp,c) << '\n' << '\n';
