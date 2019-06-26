@@ -40,17 +40,22 @@ namespace upsylon
                     CorePoint    r;         //!< position
                     CorePoint    t;         //!< tangent
                     CorePoint    n;         //!< normal
+                    CorePoint    speed;     //!< celerity*n
                     mutable_type celerity;  //!< |dr/du|
                     mutable_type curvature; //!< curvature
 
                     inline  Node(const CorePoint &pos) throw() :
-                    r(pos), t(), n(), celerity(0), curvature(0) {}     //!< setup
-                    inline ~Node() throw() {}                           //!< cleanup
-                    inline  Node(const Node &node) throw() :            //|
-                    r(node.r), t(node.t), n(node.n),                    //|
-                    celerity(node.celerity), curvature(node.curvature)  //|
-                    {}                                                  //!< copy
-
+                    r(pos), t(), n(), speed(),
+                    celerity(0), curvature(0) {}                         //!< setup
+                    inline ~Node() throw() {}                            //!< cleanup
+                    inline  Node(const Node &node) throw() :             //|
+                    r(node.r), t(node.t), n(node.n), speed(node.speed),  //|
+                    celerity(node.celerity), curvature(node.curvature)   //|
+                    {}                                                   //!< copy
+                    inline void finalize() throw()                       //!< adjust
+                    {
+                        speed = celerity * t;
+                    }
                 private:
                     Y_DISABLE_ASSIGN(Node);
                 };
@@ -61,25 +66,52 @@ namespace upsylon
                 public:
                     const Node *P; //!< head node
                     const Node *Q; //!< tail node
+                    const CorePoint PQ;
+                    const CorePoint U; //!< internal value
+                    const CorePoint V; //!< internal value
 
                     //! prepare segment
                     inline Segment(const Node &nodeP, const Node &nodeQ ) throw() :
-                    P( &nodeP ), Q( &nodeQ )
+                    P( &nodeP ), Q( &nodeQ ),
+                    PQ(P->r,Q->r), U(), V()
                     {
+                        const CorePoint rhs1(P->speed,PQ); assert( P->speed.norm2()>0 );
+                        const CorePoint rhs2(PQ,Q->speed); assert( Q->speed.norm2()>0 );
+                        (CorePoint &)U = 2 * ( (rhs1+rhs1) - rhs2 );
+                        (CorePoint &)V = 2 * ( (rhs2+rhs2) - rhs1 );
                     }
 
                     //! copy
                     inline  Segment( const Segment &s ) throw() :
-                    P(s.P), Q(s.Q) {}
+                    P(s.P), Q(s.Q), PQ(s.PQ), U(s.U), V(s.V) {}
+
+                    //! destruct
                     inline ~Segment() throw() { }
 
                     //! return interpolated value
-                    inline CorePoint compute( const_type A, const_type B ) const throw()
+                    inline CorePoint compute_position( const_type A, const_type B ) const throw()
                     {
-                        const CorePoint & p = P->r;
-                        const CorePoint & q = Q->r;
-                        return A*p + B*q;
+                        static const_type one       = T(1);
+                        static const_type one_sixth = T(1)/6;
+                        const CorePoint & p  = P->r;
+                        const CorePoint & q  = Q->r;
+                        const_type        A2 = A*A;
+                        const_type        B2 = B*B;
+                        const CorePoint   M1 = A*p + B*q;
+                        const CorePoint   M3 = one_sixth * ( A*(A2-one)*U + B*(B2-one)*V );
+                        return  M1 + M3;
                     }
+
+                    //! return interpolated speed
+                    inline CorePoint compute_speed( const_type A, const_type B ) const throw()
+                    {
+                        static const_type one       = T(1);
+                        static const_type one_sixth = T(1)/6;
+                        const_type        A2 = A*A;
+                        const_type        B2 = B*B;
+                        return PQ + one_sixth * ( (one-3*A2) * U + (3*B2-one) * V );
+                    }
+
 
                 private:
                     Y_DISABLE_ASSIGN(Segment);
@@ -134,7 +166,10 @@ namespace upsylon
                         default: compute_all(points,boundaries); break;
                     }
                     assert(nodes.size()==n);
-
+                    for(size_t i=n;i>0;--i)
+                    {
+                        nodes[i].finalize();
+                    }
                     //__________________________________________________________
                     //
                     // create normals and curvatures
@@ -207,7 +242,7 @@ namespace upsylon
                     const size_t j   = clamp<size_t>(1, floor_of(x), n );
                     const_type   B   = x-const_type(j);
                     const_type   A   = const_type(1)-B;
-                    return segments[j].compute(A,B);
+                    return segments[j].compute_position(A,B);
                 }
 
                 inline CorePoint get_standard(mutable_type x, const size_t n) const throw()
@@ -227,7 +262,7 @@ namespace upsylon
                         const size_t j   = clamp<size_t>(1, floor_of(x), n-1 );
                         const_type   B   = x-const_type(j);
                         const_type   A   = const_type(1)-B;
-                        return segments[j].compute(A,B);
+                        return segments[j].compute_position(A,B);
                     }
                 }
 

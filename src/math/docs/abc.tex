@@ -66,6 +66,9 @@ so that the tangent vector is:
 	{\mynorm{\vec{C}-\vec{A}}^3}
 \end{equation}
 
+\subsection{Head Expression}
+
+\subsection{Tail Expression}
 
 
 \section{Unit Tangent Vectors}
@@ -80,6 +83,59 @@ so that the tangent vector is:
 	\vec{T}_C & = & \myunit{3\vec{C}+\vec{A}-4\vec{B}}\\
 \end{array}
 \right.
+\end{equation}
+
+\section{Extrapolation}
+
+Let us assume that we now have a segment starting from $\vec{P}$ and going to $\vec{Q}$, with an initial derivative $\vec{S}_P$ and a final derivative $\vec{S}_Q$.
+The expression of the interpolating function is
+\begin{equation}
+	\vec{M} = A \vec{P} + B \vec{Q} + C \vec{U} + D \vec{V}
+\end{equation}
+with, using $p$ as the index of $\vec{P}$ and $x\in[p,p+1]$,
+\begin{equation}
+	B = x-p,\; A=1-B,\; C = \frac{1}{6}(A^3-A), \; D=\frac{1}{6}(B^3-B)
+\end{equation}
+leading to
+\begin{equation}
+	\partial_x \vec{M} = \overrightarrow{PQ} - \frac{3A^2-1}{6} \vec{U} + \frac{3B^2-1}{6} \vec{V}
+\end{equation}
+and we got the system
+\begin{equation}
+\left\lbrace
+\begin{array}{rcrcl}
+	\vec{S}_P & = & \partial_x\vec{M}|_{(A=1,B=0)} & = & \overrightarrow{PQ} - \dfrac{2}{6}\vec{U} - \dfrac{1}{6}\vec{V} \\
+	\\
+	\vec{S}_Q & = & \partial_x\vec{M}|_{(A=0,B=1)} & = & \overrightarrow{PQ} + \dfrac{1}{6}\vec{U} + \dfrac{2}{6}\vec{V} \\
+
+\end{array}
+\right.
+\end{equation}
+or
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	6\left[\overrightarrow{PQ} - \vec{S}_P \right] & = & 2\vec{U} + \vec{V}\\
+	\\
+	6\left[\vec{S}_Q - \overrightarrow{PQ} \right] & = & \vec{U} + 2\vec{V}\\
+	\end{array}
+\right.
+\end{equation}
+
+\begin{equation}
+	\begin{bmatrix}
+	\vec{U}\\
+	\vec{V}\\
+	\end{bmatrix}
+	= 2 
+	\begin{bmatrix}
+	2 & -1\\
+	-1 & 2\\
+	\end{bmatrix}
+	\begin{bmatrix}
+	 \overrightarrow{PQ} - \vec{S}_P  \\
+	 \vec{S}_Q - \overrightarrow{PQ}  \\
+	\end{bmatrix}
 \end{equation}
 
 \end{document}
