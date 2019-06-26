@@ -89,7 +89,15 @@ namespace upsylon
 
             void Variables::create_from_list(const string &ids)
             {
-                
+                const size_t nv = tokenizer<char>::count_for(ids, is_colon);
+                free();
+                ensure(nv);
+                tokenizer<char> tkn(ids);
+                while( tkn.next(is_colon) )
+                {
+                    const string id( tkn.token(), tkn.units() );
+                    (*this) << id;
+                }
             }
 
 
