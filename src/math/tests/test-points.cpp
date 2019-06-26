@@ -109,13 +109,16 @@ static inline void do_points(const size_t np)
     {
         const string  fn = "periodic-approx" + suffix;
         ios::ocstream fp(fn);
-        const T step = T(0.01);
+        const T step = T(0.05);
         const T xmax = T(np)+step;
         const T xmin = -step;
         for(T x=xmin;x<=xmax;x+=step)
         {
-            const PointType p = curve.get(x);
+            PointType p,dp;
+            curve.get(x,&p,&dp);
             PointInfo::SaveType(fp,p) << '\n';
+            const CorePoint c = PointInfo::Type2Core(p)+PointInfo::Type2Core(dp);
+            PointInfo::SaveCore(fp,c) << '\n' << '\n';
         }
     }
 
@@ -178,13 +181,17 @@ static inline void do_points(const size_t np)
     {
         const string  fn = "standard-approx" + suffix;
         ios::ocstream fp(fn);
-        const T step = T(0.01);
+        const T step = T(0.05);
         const T xmax = T(np)+step;
         const T xmin = -step;
         for(T x=xmin;x<=xmax;x+=step)
         {
-            const PointType p = curve.get(x);
+            PointType p,dp;
+            curve.get(x,&p,&dp);
             PointInfo::SaveType(fp,p) << '\n';
+            const CorePoint c = PointInfo::Type2Core(p)+PointInfo::Type2Core(dp);
+            PointInfo::SaveCore(fp,c) << '\n' << '\n';
+
         }
     }
 

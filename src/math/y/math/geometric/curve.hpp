@@ -3,6 +3,7 @@
 #define Y_GEOMETRIC_CURVE_INCLUDED 1
 
 #include "y/math/geometric/points.hpp"
+#include "y/type/bzset.hpp"
 
 namespace upsylon
 {
@@ -88,28 +89,14 @@ namespace upsylon
                     //! destruct
                     inline ~Segment() throw() { }
 
-                    //! return interpolated value
-                    inline CorePoint compute_position( const_type A, const_type B ) const throw()
-                    {
-                        static const_type one       = T(1);
-                        static const_type one_sixth = T(1)/6;
-                        const CorePoint & p  = P->r;
-                        const CorePoint & q  = Q->r;
-                        const_type        A2 = A*A;
-                        const_type        B2 = B*B;
-                        const CorePoint   M1 = A*p + B*q;
-                        const CorePoint   M3 = one_sixth * ( A*(A2-one)*U + B*(B2-one)*V );
-                        return  M1 + M3;
-                    }
-
-                    //! return interpolated speed
-                    inline CorePoint compute_speed( const_type A, const_type B ) const throw()
+                    inline void compute(const_type A, const_type B, CorePoint *M, CorePoint *S) const throw()
                     {
                         static const_type one       = T(1);
                         static const_type one_sixth = T(1)/6;
                         const_type        A2 = A*A;
                         const_type        B2 = B*B;
-                        return PQ + one_sixth * ( (one-3*A2) * U + (3*B2-one) * V );
+                        if(M)   *M = A * (P->r) + B * (Q->r) + one_sixth * ( A*(A2-one)*U + B*(B2-one)*V );
+                        if(S)   *S = PQ + one_sixth * ( (one-3*A2) * U + (3*B2-one) * V );
                     }
 
 
@@ -119,7 +106,7 @@ namespace upsylon
 
                 typedef vector<Node,ALLOCATOR>    Nodes;    //!< internal vector of nodes type
                 typedef vector<Segment,ALLOCATOR> Segments; //!< internal vector of segments type
-                typedef CorePoint (Curve::*get_proc)(type,const size_t) const;
+                typedef void (Curve::*get_proc)(type,CorePoint*,CorePoint*) const; //!< compute interface
 
                 //______________________________________________________________
                 //
@@ -210,59 +197,113 @@ namespace upsylon
                 }
 
                 //! interpolation
-                inline PointType get(const_type x) const throw()
+                inline void get(const_type x, PointType *M, PointType *S) const throw()
                 {
+                    static const int none = 0x00;
+                    static const int hasM = 0x01;
+                    static const int hasS = 0x02;
+                    static const int both = hasM | hasS;
                     const size_t n = nodes.size();
+
+                    int   flag  = none;
+                    if(M) flag |= hasM;
+                    if(S) flag |= hasS;
+
                     switch(n)
                     {
-                        case 0:
-                        {
-                            const CorePoint origin = PointInfo::Origin();
-                            return PointInfo::Core2Type(origin);
-                        }
-                        case 1: return PointInfo::Core2Type(nodes[1].r);
+                        case 0: {
+                            switch(flag)
+                            {
+                                case hasM : bzset(*M);            break;
+                                case hasS : bzset(*S);            break;
+                                case both : bzset(*M); bzset(*S); break;
+                                default: break;
+                            }
+                        } break;
+
+                        case 1: {
+                            switch(flag)
+                            {
+                                case hasM: *M = PointInfo::Core2Type(nodes[1].r);           break;
+                                case hasS: bzset(*S);                                       break;
+                                case both: bzset(*S);*M = PointInfo::Core2Type(nodes[1].r); break;
+                            }
+                        }  break;
+
                         default: break;
 
                     }
                     assert(get_addr);
-                    const CorePoint c = ((*this).*get_addr)(x,n);
-                    return PointInfo::Core2Type(c);
+
+                    switch(flag)
+                    {
+                        case hasM: {
+                            CorePoint m; ((*this).*get_addr)(x,&m,0); *M = PointInfo::Core2Type(m);
+                        } break;
+
+                        case hasS: {
+                            CorePoint s; ((*this).*get_addr)(x,0,&s); *S = PointInfo::Core2Type(s);
+                        } break;
+
+                        case both: {
+                            CorePoint m;
+                            CorePoint s;
+                            ((*this).*get_addr)(x,&m,&s);
+                            *M = PointInfo::Core2Type(m);
+                            *S = PointInfo::Core2Type(s);
+                        } break;
+                    }
                 }
+
+                //! get position only
+                inline PointType position(const_type x, PointType *S=NULL) const throw()
+                {
+                    PointType M; get(x,&M,S); return M;
+                }
+
+                //! get speed only
+                inline PointType speed(const_type x, PointType *M=NULL) const throw()
+                {
+                    PointType S; get(x,M,&S); return S;
+                }
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Curve);
 
-                inline CorePoint get_periodic(mutable_type x, const size_t n) const throw()
+                inline void get_periodic(mutable_type x, CorePoint *M, CorePoint *S) const throw()
                 {
-                    assert(n>=2);
-                    assert(n==segments.size());
+                    const size_t n = segments.size();
                     const_type shift(n);
                     while(x>=n) x-=shift;
                     while(x<=1) x+=shift;
                     const size_t j   = clamp<size_t>(1, floor_of(x), n );
                     const_type   B   = x-const_type(j);
                     const_type   A   = const_type(1)-B;
-                    return segments[j].compute_position(A,B);
+                    segments[j].compute (A,B,M,S);
                 }
 
-                inline CorePoint get_standard(mutable_type x, const size_t n) const throw()
+                inline void get_standard(mutable_type x, CorePoint *M, CorePoint *S) const throw()
                 {
-                    assert(n>=2);
+                    const size_t n = nodes.size();
                     assert(n-1==segments.size());
                     if(x<=1)
                     {
-                        return nodes[1].r;
+                        if(M) *M = nodes[1].r;
+                        if(S) *S = nodes[1].speed;
                     }
                     else if(x>=n)
                     {
-                        return nodes[n].r;
+                        if(M) *M = nodes[n].r;
+                        if(S) *S = nodes[n].speed;
                     }
                     else
                     {
-                        const size_t j   = clamp<size_t>(1, floor_of(x), n-1 );
+                        const size_t j   = clamp<size_t>(1, floor_of(x),segments.size());
                         const_type   B   = x-const_type(j);
                         const_type   A   = const_type(1)-B;
-                        return segments[j].compute_position(A,B);
+                        segments[j].compute(A,B,M,S);
                     }
                 }
 
