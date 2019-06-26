@@ -18,11 +18,20 @@ namespace upsylon
             class Curve
             {
             public:
+                //______________________________________________________________
+                //
+                // aliases
+                //______________________________________________________________
                 Y_DECL_ARGS(T,type);                                               //!< aliases
                 typedef PointInfoFor<T,POINT>    PointInfo;                        //!< alias
                 typedef typename PointInfo::Type PointType;                        //!< user point type
                 typedef typename PointInfo::Core CorePoint;                        //!< matching point[2|3]d<mutable_type>
                 static  const    size_t          Dimension = PointInfo::Dimension; //!< [2|3]
+
+                //______________________________________________________________
+                //
+                // internal type definitions
+                //______________________________________________________________
 
                 //! internal node, one for each point
                 class Node
@@ -46,21 +55,25 @@ namespace upsylon
                     Y_DISABLE_ASSIGN(Node);
                 };
 
+                //! internal segment between pair of nodes
                 class Segment
                 {
                 public:
-                    const Node *P;
-                    const Node *Q;
+                    const Node *P; //!< head node
+                    const Node *Q; //!< tail node
 
+                    //! prepare segment
                     inline Segment(const Node &nodeP, const Node &nodeQ ) throw() :
                     P( &nodeP ), Q( &nodeQ )
                     {
                     }
 
+                    //! copy
                     inline  Segment( const Segment &s ) throw() :
                     P(s.P), Q(s.Q) {}
                     inline ~Segment() throw() { }
 
+                    //! return interpolated value
                     inline CorePoint compute( const_type A, const_type B ) const throw()
                     {
                         const CorePoint & p = P->r;
@@ -75,10 +88,20 @@ namespace upsylon
                 typedef vector<Node,ALLOCATOR>    Nodes;    //!< internal vector of nodes type
                 typedef vector<Segment,ALLOCATOR> Segments; //!< internal vector of segments type
 
-                Nodes    nodes;                       //!< the nodes
-                Segments segments;                    //!< the segments
-                inline explicit Curve() : nodes() {}  //!< setup
-                inline virtual ~Curve() throw() {}    //!< cleanup
+                //______________________________________________________________
+                //
+                // data
+                //______________________________________________________________
+                Nodes    nodes;                             //!< the nodes
+                Segments segments;                          //!< the segments
+
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                inline explicit Curve() :
+                nodes(), segments() {}                      //!< setup
+                inline virtual ~Curve() throw() {}          //!< cleanup
 
                 //! compute tangents, normals and curvatures
                 template <typename SEQUENCE>
@@ -135,6 +158,7 @@ namespace upsylon
                     }
                 }
 
+                //! interpolation
                 inline PointType get(const_type x) const throw()
                 {
                     const size_t n = nodes.size();

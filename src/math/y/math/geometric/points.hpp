@@ -23,6 +23,8 @@ namespace upsylon
 
             //! throw exception if value<=0
             template <typename T> T    CheckNorm2(const T value, const char *ctx);
+            
+            //! save float as generic value
             template <typename T> void SaveReal(ios::ostream &fp, const T value);
 
             //! contains dedicated types
