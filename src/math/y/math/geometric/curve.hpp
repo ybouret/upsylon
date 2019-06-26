@@ -31,16 +31,16 @@ namespace upsylon
                     CorePoint    r;         //!< position
                     CorePoint    t;         //!< tangent
                     CorePoint    n;         //!< normal
-                    mutable_type speed;     //!< |dr/du|
+                    mutable_type celerity;  //!< |dr/du|
                     mutable_type curvature; //!< curvature
 
                     inline  Node(const CorePoint &pos) throw() :
-                    r(pos), t(), n(), speed(0), curvature(0) {}     //!< setup
-                    inline ~Node() throw() {}                       //!< cleanup
-                    inline  Node(const Node &node) throw() :        //|
-                    r(node.r), t(node.t), n(node.n),                //|
-                    speed(node.speed), curvature(node.curvature)    //|
-                    {}                                              //!< copy
+                    r(pos), t(), n(), celerity(0), curvature(0) {}     //!< setup
+                    inline ~Node() throw() {}                           //!< cleanup
+                    inline  Node(const Node &node) throw() :            //|
+                    r(node.r), t(node.t), n(node.n),                    //|
+                    celerity(node.celerity), curvature(node.curvature)  //|
+                    {}                                                  //!< copy
 
                 private:
                     Y_DISABLE_ASSIGN(Node);
@@ -107,8 +107,8 @@ namespace upsylon
                     const CorePoint AB(A,B);
                     const_type      speed = sqrt_of( CheckNorm2(AB.norm2(),"AB") );
                     Node node(A);
-                    node.t     = AB/speed;
-                    node.speed = speed;
+                    node.t        = AB/speed;
+                    node.celerity = speed;
                     nodes.push_back_(node);
                     node.r = B;
                     switch(boundaries)
@@ -126,8 +126,8 @@ namespace upsylon
                     const CorePoint TT  = 4*B-(3*A+C);
                     const_type      tt  = sqrt_of(CheckNorm2(TT.norm2(),"head"));
                     Node node(A);
-                    node.t     = TT/tt;
-                    node.speed = tt/2;
+                    node.t        = TT/tt;
+                    node.celerity = tt/2;
                     nodes.push_back_(node);
                 }
 
@@ -139,8 +139,8 @@ namespace upsylon
                     const CorePoint AC(A,C);
                     const_type      ac  = sqrt_of(CheckNorm2(AC.norm2(),"AC"));
                     Node            node(B);
-                    node.t     = AC/ac;
-                    node.speed = ac/2;
+                    node.t        = AC/ac;
+                    node.celerity = ac/2;
                     nodes.push_back_(node);
                 }
 
@@ -152,8 +152,8 @@ namespace upsylon
                     const CorePoint TT  = (3*C+A)-4*B;
                     const_type      tt  = sqrt_of( CheckNorm2(TT.norm2(),"tail") );
                     Node node(C);
-                    node.t     = TT/tt;
-                    node.speed = tt/2;
+                    node.t        = TT/tt;
+                    node.celerity = tt/2;
                     nodes.push_back_(node);
                 }
 
@@ -227,7 +227,7 @@ namespace upsylon
                     const CorePoint TB = nB.t;
                     const CorePoint TC = nC.t;
                     nA.n = TA.direct_normal();
-                    const_type      dsdu = nA.speed;
+                    const_type      dsdu = nA.celerity;
                     const CorePoint dTds = (4*TB-3*TA-TC)/(dsdu+dsdu);
                     nA.curvature = dTds * nA.n;
                 }
@@ -235,7 +235,7 @@ namespace upsylon
                 static inline void update2d_bulk( const Node &prev, Node &node, const Node &next )
                 {
                     node.n = node.t.direct_normal();
-                    const_type      dsdu = node.speed;
+                    const_type      dsdu = node.celerity;
                     const CorePoint dTds = (next.t-prev.t)/(dsdu+dsdu);
                     node.curvature = dTds*node.n;
                 }
@@ -246,7 +246,7 @@ namespace upsylon
                     const CorePoint TB = nB.t;
                     const CorePoint TC = nC.t;
                     nC.n = TC.direct_normal();
-                    const_type      dsdu = nC.speed; assert(dsdu>0);
+                    const_type      dsdu = nC.celerity; assert(dsdu>0);
                     const CorePoint dTds = (3*TC+TA-4*TB)/(dsdu+dsdu);
                     nC.curvature = dTds * nC.n;
                 }

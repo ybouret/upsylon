@@ -101,7 +101,7 @@ static inline void do_points(const size_t np)
             const CurveNode  &node = curve.nodes[i];
             Y_ASSERT((c-node.r).norm2()<=0);
             PointInfo::SaveType(fp,p) << '\n';
-            c += node.speed * node.t;
+            c += node.celerity * node.t;
             PointInfo::SaveCore(fp,c) << '\n' << '\n';
         }
     }
@@ -114,7 +114,7 @@ static inline void do_points(const size_t np)
             //const PointType  &p    = points[i];
             //CorePoint         c    = PointInfo::Type2Core(p);
             const CurveNode  &node = curve.nodes[i];
-            PointInfo::SaveCore( fp("%u ", unsigned(i)),node.t)(" %15g\n", node.speed);
+            PointInfo::SaveCore( fp("%u ", unsigned(i)),node.t)(" %15g\n", node.celerity);
         }
     }
 
@@ -156,7 +156,7 @@ static inline void do_points(const size_t np)
             const CurveNode  &node = curve.nodes[i];
             Y_ASSERT((c-node.r).norm2()<=0);
             PointInfo::SaveType(fp,p) << '\n';
-            c += node.t * node.speed;
+            c += node.t * node.celerity;
             PointInfo::SaveCore(fp,c) << '\n' << '\n';
         }
     }
@@ -169,7 +169,7 @@ static inline void do_points(const size_t np)
             //const PointType  &p    = points[i];
             //CorePoint         c    = PointInfo::Type2Core(p);
             const CurveNode  &node = curve.nodes[i];
-            PointInfo::SaveCore( fp("%u ", unsigned(i)),node.t)(" %15g\n", node.speed);
+            PointInfo::SaveCore( fp("%u ", unsigned(i)),node.t)(" %15g\n", node.celerity);
         }
     }
 
