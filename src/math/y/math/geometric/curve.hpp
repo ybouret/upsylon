@@ -46,9 +46,37 @@ namespace upsylon
                     Y_DISABLE_ASSIGN(Node);
                 };
 
-                typedef vector<Node,ALLOCATOR> Nodes; //!< internal vector of nodes type
-                Nodes nodes;                          //!< the nodes
+                class Segment
+                {
+                public:
+                    const Node *P;
+                    const Node *Q;
 
+                    inline Segment(const Node &nodeP, const Node &nodeQ ) throw() :
+                    P( &nodeP ), Q( &nodeQ )
+                    {
+                    }
+
+                    inline  Segment( const Segment &s ) throw() :
+                    P(s.P), Q(s.Q) {}
+                    inline ~Segment() throw() { }
+
+                    inline CorePoint compute( const_type A, const_type B ) const throw()
+                    {
+                        const CorePoint & p = P->r;
+                        const CorePoint & q = Q->r;
+                        return A*p + B*q;
+                    }
+
+                private:
+                    Y_DISABLE_ASSIGN(Segment);
+                };
+
+                typedef vector<Node,ALLOCATOR>    Nodes;    //!< internal vector of nodes type
+                typedef vector<Segment,ALLOCATOR> Segments; //!< internal vector of segments type
+
+                Nodes    nodes;                       //!< the nodes
+                Segments segments;                    //!< the segments
                 inline explicit Curve() : nodes() {}  //!< setup
                 inline virtual ~Curve() throw() {}    //!< cleanup
 
@@ -61,8 +89,10 @@ namespace upsylon
                     // acquire resources
                     //__________________________________________________________
                     const size_t n = points.size();
+                    segments.free();
                     nodes.free();
                     nodes.ensure(n);
+                    segments.ensure(n);
 
                     //__________________________________________________________
                     //
@@ -89,10 +119,80 @@ namespace upsylon
                         case 2:  update_two(int2type<Dimension>(),boundaries); break;
                         default: update_all(int2type<Dimension>(),boundaries); break;
                     }
+
+                    //__________________________________________________________
+                    //
+                    // create segments
+                    //__________________________________________________________
+                    for(size_t i=1;i<n;++i)
+                    {
+                        create_segment( nodes[i], nodes[i+1] );
+                    }
+                    switch (boundaries)
+                    {
+                        case Periodic: create_segment(nodes[n],nodes[1]); break;
+                        default: break;
+                    }
+                }
+
+                inline PointType get(const_type x) const throw()
+                {
+                    const size_t n = nodes.size();
+                    const size_t s = segments.size();
+                    switch(n)
+                    {
+                        case 0:
+                        {
+                            const CorePoint origin = PointInfo::Origin();
+                            return PointInfo::Core2Type(origin);
+                        }
+                        case 1: return PointInfo::Core2Type(nodes[1].r);
+                        default: break;
+
+                    }
+
+                    const CorePoint c = ( (n==s) ? get_periodic(x,n) : get_standard(x,n));
+                    return PointInfo::Core2Type(c);
                 }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Curve);
+
+                inline CorePoint get_periodic(mutable_type x, const size_t n) const throw()
+                {
+                    const_type shift(n);
+                    while(x>=n) x-=shift;
+                    while(x<=1) x+=shift;
+                    const size_t j   = clamp<size_t>(1, floor_of(x), n );
+                    const_type   B   = x-const_type(j);
+                    const_type   A   = const_type(1)-B;
+                    return segments[j].compute(A,B);
+                }
+
+                inline CorePoint get_standard(mutable_type x, const size_t n) const throw()
+                {
+                    if(x<=1)
+                    {
+                        return nodes[1].r;
+                    }
+                    else if(x>=n)
+                    {
+                        return nodes[n].r;
+                    }
+                    else
+                    {
+                        const size_t j   = clamp<size_t>(1, floor_of(x), n-1 );
+                        const_type   B   = x-const_type(j);
+                        const_type   A   = const_type(1)-B;
+                        return segments[j].compute(A,B);
+                    }
+                }
+
+                inline void create_segment(const Node &P, const Node &Q)
+                {
+                    const Segment segment(P,Q);
+                    segments.push_back_(segment);
+                }
 
                 //--------------------------------------------------------------
                 //

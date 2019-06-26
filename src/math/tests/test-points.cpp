@@ -107,6 +107,20 @@ static inline void do_points(const size_t np)
     }
 
     {
+        const string  fn = "periodic-approx" + suffix;
+        ios::ocstream fp(fn);
+        const T step = T(0.01);
+        const T xmax = T(np)+step;
+        const T xmin = -step;
+        for(T x=xmin;x<=xmax;x+=step)
+        {
+            const PointType p = curve.get(x);
+            PointInfo::SaveType(fp,p) << '\n';
+        }
+    }
+
+
+    {
         const string  fn = "periodic-angle" + suffix;
         ios::ocstream fp(fn);
         for(size_t i=1;i<=np;++i)
@@ -160,6 +174,20 @@ static inline void do_points(const size_t np)
             PointInfo::SaveCore(fp,c) << '\n' << '\n';
         }
     }
+
+    {
+        const string  fn = "standard-approx" + suffix;
+        ios::ocstream fp(fn);
+        const T step = T(0.01);
+        const T xmax = T(np)+step;
+        const T xmin = -step;
+        for(T x=xmin;x<=xmax;x+=step)
+        {
+            const PointType p = curve.get(x);
+            PointInfo::SaveType(fp,p) << '\n';
+        }
+    }
+
 
     {
         const string  fn = "standard-angle" + suffix;
