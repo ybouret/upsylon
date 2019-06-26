@@ -87,6 +87,7 @@ namespace upsylon
 
                 typedef vector<Node,ALLOCATOR>    Nodes;    //!< internal vector of nodes type
                 typedef vector<Segment,ALLOCATOR> Segments; //!< internal vector of segments type
+                typedef CorePoint (Curve::*get_proc)(type,const size_t) const;
 
                 //______________________________________________________________
                 //
@@ -94,13 +95,13 @@ namespace upsylon
                 //______________________________________________________________
                 Nodes    nodes;                             //!< the nodes
                 Segments segments;                          //!< the segments
-
+                get_proc get_addr;
                 //______________________________________________________________
                 //
                 // methods
                 //______________________________________________________________
                 inline explicit Curve() :
-                nodes(), segments() {}                      //!< setup
+                nodes(),segments(),get_addr(0) {}          //!< setup
                 inline virtual ~Curve() throw() {}          //!< cleanup
 
                 //! compute tangents, normals and curvatures
@@ -116,6 +117,9 @@ namespace upsylon
                     nodes.free();
                     nodes.ensure(n);
                     segments.ensure(n);
+                    get_addr = 0;
+
+
 
                     //__________________________________________________________
                     //
@@ -156,13 +160,23 @@ namespace upsylon
                         case Periodic: create_segment(nodes[n],nodes[1]); break;
                         default: break;
                     }
+
+                    //__________________________________________________________
+                    //
+                    // internal linking
+                    //__________________________________________________________
+                    switch (boundaries)
+                    {
+                        case Periodic: get_addr = & Curve::get_periodic; break;
+                        case Standard: get_addr = & Curve::get_standard; break;
+                    }
+
                 }
 
                 //! interpolation
                 inline PointType get(const_type x) const throw()
                 {
                     const size_t n = nodes.size();
-                    const size_t s = segments.size();
                     switch(n)
                     {
                         case 0:
@@ -174,8 +188,8 @@ namespace upsylon
                         default: break;
 
                     }
-
-                    const CorePoint c = ( (n==s) ? get_periodic(x,n) : get_standard(x,n));
+                    assert(get_addr);
+                    const CorePoint c = ((*this).*get_addr)(x,n);
                     return PointInfo::Core2Type(c);
                 }
 
@@ -184,6 +198,8 @@ namespace upsylon
 
                 inline CorePoint get_periodic(mutable_type x, const size_t n) const throw()
                 {
+                    assert(n>=2);
+                    assert(n==segments.size());
                     const_type shift(n);
                     while(x>=n) x-=shift;
                     while(x<=1) x+=shift;
@@ -195,6 +211,8 @@ namespace upsylon
 
                 inline CorePoint get_standard(mutable_type x, const size_t n) const throw()
                 {
+                    assert(n>=2);
+                    assert(n-1==segments.size());
                     if(x<=1)
                     {
                         return nodes[1].r;
