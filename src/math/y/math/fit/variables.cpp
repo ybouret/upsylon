@@ -86,6 +86,25 @@ namespace upsylon
 
             }
 
+
+            void Variables::create_from_list(const string &ids)
+            {
+                
+            }
+
+
+            Variables:: Variables(const string &var_list) : Variable::Set()
+            {
+                create_from_list(var_list);
+            }
+
+            Variables:: Variables(const char *var_list) : Variable::Set()
+            {
+                const string _(var_list);
+                create_from_list(_);
+            }
+
+
             Variables:: ~Variables() throw() {}
 
             Variables:: Variables(const Variables &other) : dynamic(), object(), Variable::Set(other) {}

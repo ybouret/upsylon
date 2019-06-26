@@ -94,6 +94,10 @@ namespace upsylon
             public:
                 //! constructor, may reserve memory
                 Variables(const size_t n=0);
+                //! constructor from list
+                Variables( const string &var_list);
+                //! constructor form list
+                Variables( const char   *var_list );
                 //! destructor
                 virtual ~Variables() throw();
                 //! copy
@@ -334,7 +338,8 @@ namespace upsylon
                     }
                 }
 
-
+            private:
+                void create_from_list(const string &ids );
             };
 
 

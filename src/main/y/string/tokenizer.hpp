@@ -14,7 +14,7 @@ namespace upsylon
     public:
 
         //! initialize from a string, must not change!
-        inline explicit tokenizer( const core::string<T> &input) throw():
+        inline explicit tokenizer( const core::string<T> &input ) throw():
         curr_( *input ),
         last_( curr_+input.size() ),
         token_(NULL),
@@ -88,6 +88,16 @@ namespace upsylon
                 words.push_back(s);
             }
             return words.size();
+        }
+
+        //! one pass count
+        template<typename FUNC> static inline
+        size_t count_for( const core::string<T> &input, FUNC &is_sep ) throw()
+        {
+            tokenizer self(input);
+            while( self.next(is_sep) )
+                ;
+            return self.count_;
         }
 
     private:
