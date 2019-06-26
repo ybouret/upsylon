@@ -97,6 +97,8 @@ namespace upsylon
                         const_type        B2 = B*B;
                         if(M)   *M = A * (P->r) + B * (Q->r) + one_sixth * ( A*(A2-one)*U + B*(B2-one)*V );
                         if(S)   *S = PQ + one_sixth * ( (one-3*A2) * U + (3*B2-one) * V );
+                        if(S)   *S = A * (P->speed) + B * (Q->speed);
+
                     }
 
 
