@@ -95,7 +95,8 @@ namespace upsylon
                 //______________________________________________________________
                 Nodes    nodes;                             //!< the nodes
                 Segments segments;                          //!< the segments
-                get_proc get_addr;
+                get_proc get_addr;                          //!< address of get function
+
                 //______________________________________________________________
                 //
                 // methods
