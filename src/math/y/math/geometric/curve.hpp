@@ -384,7 +384,7 @@ namespace upsylon
                 inline void compute_bulk( const PointType &PA, const PointType &PB, const PointType &PC )
                 {
                     const CorePoint A = PointInfo::Type2Core(PA);
-                    const CorePoint B  = PointInfo::Type2Core(PB);
+                    const CorePoint B = PointInfo::Type2Core(PB);
                     const CorePoint C = PointInfo::Type2Core(PC);
                     const CorePoint AC(A,C);
                     const_type      ac  = sqrt_of(CheckNorm2(AC.norm2(),"AC"));

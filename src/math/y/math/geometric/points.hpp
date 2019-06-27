@@ -82,13 +82,15 @@ namespace upsylon
                         theta = a.theta;
                         return *this;
                     }
+                    
                     inline void find( const PointType &u, const PointType &v) throw()
                     {
                         const T c = u.x*v.x + u.y*v.y;
                         const T s = u.x*v.y - u.y*v.x;
                         theta = acos_of(c);
-                        if(s<0) theta=numeric<T>::pi-theta;
+                        if(s<0) theta=numeric<T>::two_pi-theta;
                     }
+                    
                     inline PointType rotate(const PointType &u, const T factor) const throw()
                     {
                         const T tt = theta*factor;
