@@ -59,7 +59,6 @@ namespace upsylon
                     inline void finalize() throw()                       //!< adjust
                     {
                         speed = celerity * t;
-                        angle.set(t);
                     }
                 private:
                     Y_DISABLE_ASSIGN(Node);
@@ -72,23 +71,26 @@ namespace upsylon
                     const Node *P; //!< head node
                     const Node *Q; //!< tail node
                     const CorePoint PQ;
-                    const CorePoint U; //!< internal value
-                    const CorePoint V; //!< internal value
-
+                    const CorePoint U;     //!< internal value
+                    const CorePoint V;     //!< internal value
+                    const AngleType angle; //!< rotation from P to Q
+                    
                     //! prepare segment
                     inline Segment(const Node &nodeP, const Node &nodeQ ) throw() :
                     P( &nodeP ), Q( &nodeQ ),
-                    PQ(P->r,Q->r), U(), V()
+                    PQ(P->r,Q->r), U(), V(), angle()
                     {
                         const CorePoint rhs1(P->speed,PQ); assert( P->speed.norm2()>0 );
                         const CorePoint rhs2(PQ,Q->speed); assert( Q->speed.norm2()>0 );
                         (CorePoint &)U = 2 * ( (rhs1+rhs1) - rhs2 );
                         (CorePoint &)V = 2 * ( (rhs2+rhs2) - rhs1 );
+                        ((AngleType &)angle).find(P->t,Q->t);
                     }
 
                     //! copy
                     inline  Segment( const Segment &s ) throw() :
-                    P(s.P), Q(s.Q), PQ(s.PQ), U(s.U), V(s.V) {}
+                    P(s.P), Q(s.Q), PQ(s.PQ), U(s.U), V(s.V), angle(s.angle)
+                    {}
 
                     //! destruct
                     inline ~Segment() throw() { }
@@ -101,7 +103,12 @@ namespace upsylon
                         const_type        B2 = B*B;
                         if(M)   *M = A * (P->r) + B * (Q->r) + one_sixth * ( A*(A2-one)*U + B*(B2-one)*V );
                         //if(S)   *S = PQ + one_sixth * ( (one-3*A2) * U + (3*B2-one) * V );
-                        if(S)   *S = A * (P->speed) + B * (Q->speed);
+                        if(S)
+                        {
+                            const CorePoint direction = angle.rotate(P->t,B);
+                            const_type      celerity  = A * P->celerity + B * Q->celerity;
+                            *S = celerity * direction;
+                        }
 
                     }
 

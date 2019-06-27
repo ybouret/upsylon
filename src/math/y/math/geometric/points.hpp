@@ -82,11 +82,19 @@ namespace upsylon
                         theta = a.theta;
                         return *this;
                     }
-                    //! set from unit vector
-                    inline void set( const PointType &u ) throw()
+                    inline void find( const PointType &u, const PointType &v) throw()
                     {
-                        theta = acos( clamp<T>(-1,u.x,1) );
-                        if(u.y<=0) theta = numeric<T>::pi - theta;
+                        const T c = u.x*v.x + u.y*v.y;
+                        const T s = u.x*v.y - u.y*v.x;
+                        theta = acos_of(c);
+                        if(s<0) theta=numeric<T>::pi-theta;
+                    }
+                    inline PointType rotate(const PointType &u, const T factor) const throw()
+                    {
+                        const T tt = theta*factor;
+                        const T c  = cos_of(tt);
+                        const T s  = sin_of(tt);
+                        return PointType( u.x*c-u.y*s, u.x*s + u.y*c);
                     }
                 };
             };
@@ -109,10 +117,13 @@ namespace upsylon
                         phi   = a.phi;
                         return *this;
                     }
-
-                    inline void set( const PointType & ) const throw()
+                    inline void find( const PointType &u, const PointType &v) throw()
                     {
-                        // TODO
+                    }
+                    
+                    inline PointType rotate(const PointType &u, const T factor) const throw()
+                    {
+                        
                     }
                 };
             };

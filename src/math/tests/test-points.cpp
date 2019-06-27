@@ -63,7 +63,7 @@ static inline void do_points(const size_t np)
     const string suffix = vformat("%ud.dat", unsigned( PointInfo::Dimension ));
 
     PointsType points;
-    const float noise   = 0.00f;
+    const float noise   = 0.01f;
     const float xradius = 5.0f;
     const float yradius = 5.0f;
 
