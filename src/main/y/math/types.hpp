@@ -114,8 +114,14 @@ namespace upsylon
         inline float  cos_of( const float  x ) throw() { return cosf(x); } //!< cosine
         inline double cos_of( const double x ) throw() { return cos(x);  } //!< cosine
 
+        inline float  acos_of( const float  x ) throw() { return acosf(x); } //!< arc cosine
+        inline double acos_of( const double x ) throw() { return acos(x);  } //!< arc cosine
+
         inline float  sin_of( const float  x ) throw() { return sinf(x); } //!< sine
         inline double sin_of( const double x ) throw() { return sin(x);  } //!< sine
+
+        inline float  asin_of( const float  x ) throw() { return asinf(x); } //!< arc sine
+        inline double asin_of( const double x ) throw() { return asin(x);  } //!< arc sine
 
         inline float  atan_of(const float  x) { return atanf(x); } //!< arc tangent
         inline double atan_of(const double x) { return atan(x); }  //!< arc tangent

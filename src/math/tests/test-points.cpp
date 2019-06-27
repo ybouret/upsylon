@@ -63,7 +63,7 @@ static inline void do_points(const size_t np)
     const string suffix = vformat("%ud.dat", unsigned( PointInfo::Dimension ));
 
     PointsType points;
-    const float noise   = 0.01f;
+    const float noise   = 0.00f;
     const float xradius = 5.0f;
     const float yradius = 5.0f;
 
@@ -161,6 +161,20 @@ static inline void do_points(const size_t np)
     }
 
 
+    {
+        const string  fn = "periodic-speed" + suffix;
+        ios::ocstream fp(fn);
+        const T step = T(0.05);
+        const T xmax = T(np)+step;
+        const T xmin = -step;
+        for(T x=xmin;x<=xmax;x+=step)
+        {
+            CorePoint s = curve.speed_(x);
+            fp("%g %g\n",x,sqrt_of(s.norm2()));
+        }
+    }
+
+
 
     curve. template  compute< SEQUENCE< POINT<T> > >(points,Geometric::Standard);
     {
@@ -192,6 +206,19 @@ static inline void do_points(const size_t np)
             const CorePoint c = PointInfo::Type2Core(p)+PointInfo::Type2Core(dp);
             PointInfo::SaveCore(fp,c) << '\n' << '\n';
 
+        }
+    }
+
+    {
+        const string  fn = "standard-speed" + suffix;
+        ios::ocstream fp(fn);
+        const T step = T(0.05);
+        const T xmax = T(np)+step;
+        const T xmin = -step;
+        for(T x=xmin;x<=xmax;x+=step)
+        {
+            CorePoint s = curve.speed_(x);
+            fp("%g %g\n",x,sqrt_of(s.norm2()));
         }
     }
 

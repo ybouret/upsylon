@@ -24,10 +24,11 @@ namespace upsylon
                 // aliases
                 //______________________________________________________________
                 Y_DECL_ARGS(T,type);                                               //!< aliases
-                typedef PointInfoFor<T,POINT>    PointInfo;                        //!< alias
-                typedef typename PointInfo::Type PointType;                        //!< user point type
-                typedef typename PointInfo::Core CorePoint;                        //!< matching point[2|3]d<mutable_type>
-                static  const    size_t          Dimension = PointInfo::Dimension; //!< [2|3]
+                typedef PointInfoFor<T,POINT>               PointInfo;                        //!< alias
+                typedef typename PointInfo::Type            PointType;                        //!< user point type
+                typedef typename PointInfo::Core            CorePoint;                        //!< matching point[2|3]d<mutable_type>
+                typedef typename PointInfo::Angle           AngleType;
+                static  const    size_t                     Dimension = PointInfo::Dimension; //!< [2|3]
 
                 //______________________________________________________________
                 //
@@ -38,24 +39,27 @@ namespace upsylon
                 class Node
                 {
                 public:
-                    CorePoint    r;         //!< position
-                    CorePoint    t;         //!< tangent
-                    CorePoint    n;         //!< normal
-                    CorePoint    speed;     //!< celerity*n
-                    mutable_type celerity;  //!< |dr/du|
-                    mutable_type curvature; //!< curvature
+                    CorePoint    r;             //!< position
+                    CorePoint    t;             //!< tangent
+                    CorePoint    n;             //!< normal
+                    CorePoint    speed;         //!< celerity*n
+                    mutable_type celerity;      //!< |dr/du|
+                    mutable_type curvature;     //!< curvature
+                    AngleType    angle;         //!< tangent angle
 
                     inline  Node(const CorePoint &pos) throw() :
                     r(pos), t(), n(), speed(),
-                    celerity(0), curvature(0) {}                         //!< setup
+                    celerity(0), curvature(0), angle() {}                //!< setup
                     inline ~Node() throw() {}                            //!< cleanup
                     inline  Node(const Node &node) throw() :             //|
                     r(node.r), t(node.t), n(node.n), speed(node.speed),  //|
-                    celerity(node.celerity), curvature(node.curvature)   //|
+                    celerity(node.celerity), curvature(node.curvature),  //|
+                    angle(node.angle)                                    //|
                     {}                                                   //!< copy
                     inline void finalize() throw()                       //!< adjust
                     {
                         speed = celerity * t;
+                        angle.set(t);
                     }
                 private:
                     Y_DISABLE_ASSIGN(Node);
@@ -257,16 +261,34 @@ namespace upsylon
                     }
                 }
 
+                //! get core point
+                inline void get_(const_type x, CorePoint *M, CorePoint *S) const throw()
+                {
+                    return get(x, (PointType *)M, (PointType *)S );
+                }
+
                 //! get position only
                 inline PointType position(const_type x, PointType *S=NULL) const throw()
                 {
                     PointType M; get(x,&M,S); return M;
                 }
 
+                //! get position only, core point
+                inline CorePoint position_(const_type x, CorePoint *S=NULL) const throw()
+                {
+                    CorePoint M; get_(x,&M,S); return M;
+                }
+
                 //! get speed only
                 inline PointType speed(const_type x, PointType *M=NULL) const throw()
                 {
                     PointType S; get(x,M,&S); return S;
+                }
+
+                //! get speed only
+                inline CorePoint speed_(const_type x, CorePoint *M=NULL) const throw()
+                {
+                    CorePoint S; get_(x,M,&S); return S;
                 }
 
 

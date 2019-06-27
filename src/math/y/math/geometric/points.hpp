@@ -39,6 +39,7 @@ namespace upsylon
                 static const size_t                     Dimension = sizeof(Type)/sizeof(type); //!< the point dimension
                 typedef InfoFor<Dimension,mutable_type> InfoType;                              //!< info for this topolgy
                 typedef typename InfoType::PointType    Core;                                  //!< internal point[2|3]d<T>
+                typedef typename InfoType::Angle        Angle;
                 
                 static inline Core       & Type2Core( Type       &t ) throw() { return *(Core *)&t;       } //!< POINT -> point[2|3]
                 static inline const Core & Type2Core( const Type &t ) throw() { return *(const Core *)&t; } //!< POINT -> point[2|3], const
@@ -69,12 +70,51 @@ namespace upsylon
             template <typename T> struct InfoFor<2,T>
             {
                 typedef point2d<T> PointType; //!< core point type
+                class Angle
+                {
+                public:
+                    T theta;
+                    inline  Angle( T t=0 ) throw() : theta(t) {}
+                    inline ~Angle() throw() {}
+                    inline  Angle(const Angle &a) throw() : theta(a.theta) {}
+                    inline  Angle & operator=( const Angle &a ) throw()
+                    {
+                        theta = a.theta;
+                        return *this;
+                    }
+                    //! set from unit vector
+                    inline void set( const PointType &u ) throw()
+                    {
+                        theta = acos( clamp<T>(-1,u.x,1) );
+                        if(u.y<=0) theta = numeric<T>::pi - theta;
+                    }
+                };
             };
 
             //! 3D type
             template <typename T> struct InfoFor<3,T>
             {
                 typedef point3d<T> PointType; //!< core point type
+                class Angle
+                {
+                public:
+                    T theta;
+                    T phi;
+                    inline  Angle( T t=0, T p=0) throw() : theta(t), phi(p) {}
+                    inline ~Angle() throw() {}
+                    inline  Angle(const Angle &a) throw() : theta(a.theta), phi(a.phi) {}
+                    inline  Angle & operator=( const Angle &a ) throw()
+                    {
+                        theta = a.theta;
+                        phi   = a.phi;
+                        return *this;
+                    }
+
+                    inline void set( const PointType & ) const throw()
+                    {
+                        // TODO
+                    }
+                };
             };
             
             //! utility collection of points
