@@ -107,7 +107,8 @@ namespace upsylon
                 //______________________________________________________________
                 const array<type> & update(const_type value)
                 {
-                    _solver->start(_fields.size());
+                    assert( _fields.size() == _crunch->dimension() );
+                    //_solver->start(_fields.size());
                     LSSI::LinearRun<type,SolverType>(*_solver,_diffeq,_fields,_current,value,_crunch->delta(),_crunch->conform());
                     return fields_at(value);
                 }

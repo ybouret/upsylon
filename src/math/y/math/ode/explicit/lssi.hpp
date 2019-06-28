@@ -92,7 +92,6 @@ namespace upsylon
                     //__________________________________________________________
                     driver(eqdiff,ystart,xcurr,x2,ctrl,cb);
                     if(com) (*com)(x2,ystart);
-                    
                 }
                 
                 //! integrate from 0 to exp(lnMax), first step is 0->exp(lnMin), and not greater step than lnStep
