@@ -119,13 +119,14 @@ namespace upsylon
                         phi   = a.phi;
                         return *this;
                     }
-                    inline void find( const PointType &u, const PointType &v) throw()
+
+                    inline void find( const PointType &, const PointType &) throw()
                     {
                     }
                     
-                    inline PointType rotate(const PointType &u, const T factor) const throw()
+                    inline PointType rotate(const PointType &u, const T ) const throw()
                     {
-                        
+                        return u;
                     }
                 };
             };

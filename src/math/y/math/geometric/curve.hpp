@@ -47,16 +47,18 @@ namespace upsylon
                     mutable_type curvature;     //!< curvature
                     AngleType    angle;         //!< tangent angle
 
+                    //! initialize
                     inline  Node(const CorePoint &pos) throw() :
-                    r(pos), t(), n(), speed(),
-                    celerity(0), curvature(0), angle() {}                //!< setup
-                    inline ~Node() throw() {}                            //!< cleanup
-                    inline  Node(const Node &node) throw() :             //|
-                    r(node.r), t(node.t), n(node.n), speed(node.speed),  //|
-                    celerity(node.celerity), curvature(node.curvature),  //|
-                    angle(node.angle)                                    //|
-                    {}                                                   //!< copy
-                    inline void finalize() throw()                       //!< adjust
+                    r(pos), t(), n(), speed(), celerity(0), curvature(0), angle()
+                    {}
+                    //! cleanup
+                    inline ~Node() throw() {}
+                    //! copy
+                    inline  Node(const Node &node) throw() :
+                    r(node.r), t(node.t), n(node.n), speed(node.speed), celerity(node.celerity), curvature(node.curvature), angle(node.angle)
+                    {}
+                    //! update
+                    inline void finalize() throw()
                     {
                         speed = celerity * t;
                     }
@@ -68,20 +70,19 @@ namespace upsylon
                 class Segment
                 {
                 public:
-                    const Node *P; //!< head node
-                    const Node *Q; //!< tail node
-                    const CorePoint PQ;
+                    const Node     *P;     //!< head node
+                    const Node     *Q;     //!< tail node
+                    const CorePoint PQ;    //!< the vector
                     const CorePoint U;     //!< internal value
                     const CorePoint V;     //!< internal value
-                    const AngleType angle; //!< rotation from P to Q
+                    const AngleType angle; //!< rotation of tangent from P to Q
                     
                     //! prepare segment
                     inline Segment(const Node &nodeP, const Node &nodeQ ) throw() :
-                    P( &nodeP ), Q( &nodeQ ),
-                    PQ(P->r,Q->r), U(), V(), angle()
+                    P( &nodeP ), Q( &nodeQ ), PQ(P->r,Q->r), U(), V(), angle()
                     {
-                        const CorePoint rhs1(P->speed,PQ); assert( P->speed.norm2()>0 );
-                        const CorePoint rhs2(PQ,Q->speed); assert( Q->speed.norm2()>0 );
+                        const CorePoint rhs1(P->speed,PQ);
+                        const CorePoint rhs2(PQ,Q->speed);
                         (CorePoint &)U = 2 * ( (rhs1+rhs1) - rhs2 );
                         (CorePoint &)V = 2 * ( (rhs2+rhs2) - rhs1 );
                         ((AngleType &)angle).find(P->t,Q->t);
@@ -95,6 +96,7 @@ namespace upsylon
                     //! destruct
                     inline ~Segment() throw() { }
 
+                    //! interpolate
                     inline void compute(const_type A, const_type B, CorePoint *M, CorePoint *S) const throw()
                     {
                         static const_type one       = T(1);
@@ -134,7 +136,7 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
                 inline explicit Curve() :
-                nodes(),segments(),get_addr(0) {}          //!< setup
+                nodes(),segments(),get_addr(0) {}           //!< setup
                 inline virtual ~Curve() throw() {}          //!< cleanup
 
                 //! compute tangents, normals and curvatures
