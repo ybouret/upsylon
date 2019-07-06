@@ -23,11 +23,11 @@ namespace upsylon
                 //
                 // aliases
                 //______________________________________________________________
-                Y_DECL_ARGS(T,type);                                               //!< aliases
+                Y_DECL_ARGS(T,type);                                                          //!< aliases
                 typedef PointInfoFor<T,POINT>               PointInfo;                        //!< alias
                 typedef typename PointInfo::Type            PointType;                        //!< user point type
                 typedef typename PointInfo::Core            CorePoint;                        //!< matching point[2|3]d<mutable_type>
-                typedef typename PointInfo::Angle           AngleType;
+                typedef typename PointInfo::Angle           AngleType;                        //!< internal angle(s)
                 static  const    size_t                     Dimension = PointInfo::Dimension; //!< [2|3]
 
                 //______________________________________________________________

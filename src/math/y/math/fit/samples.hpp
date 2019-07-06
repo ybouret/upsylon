@@ -29,7 +29,7 @@ namespace upsylon
                 //
                 // types
                 //______________________________________________________________
-                typedef   vector<size_t> Indices;
+                typedef   vector<size_t> Indices; //!< indices for ordered evaluations
 
                 //______________________________________________________________
                 //
@@ -42,7 +42,7 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                Variables variables;           //!< local or global variables
+                Variables variables; //!< local or global variables
 
             protected: explicit SampleInfo(const size_t nvar_max);  //!< initialize
             public:    virtual ~SampleInfo() throw();               //!< destructor
@@ -64,6 +64,58 @@ namespace upsylon
                 typedef matrix<T> Matrix;  //!< matrix
                 typedef functor<T,TL3(T,const Array&,const Variables&)> Function; //!< fit function  prototype
                 typedef T (*CFunction)(T,const Array&,const Variables&);          //!< fit CFunction prototype
+
+                //! interface for sequent call
+                class Sequent
+                {
+                public:
+                    const T current; //!< currently called position
+                    inline virtual ~Sequent() throw() { (T&)current=0; } //!< cleanup
+
+                    //! make a first call
+                    inline T initialize(T x, const Array &aorg, const Variables &vars)
+                    {
+                        const T  ans = on_initialize(x,aorg,vars);
+                        (T &)current = x;
+                        return ans;
+                    }
+
+                    //! update value from previous call
+                    inline T compute_to(T x, const Array &aorg, const Variables &vars)
+                    {
+                        const T  ans = on_compute_to(x,aorg,vars);
+                        (T &)current = x;
+                        return ans;
+                    }
+
+
+                protected:
+                    //! setup
+                    inline explicit Sequent() throw() : current(0)
+                    {
+                    }
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Sequent);
+                    virtual T on_initialize(T, const Array &,const Variables &) = 0;
+                    virtual T on_compute_to(T, const Array &,const Variables &) = 0;
+                };
+
+                //! lightweight proxy for function
+                class SequentFunction : public Sequent
+                {
+                public:
+                    inline explicit SequentFunction( Function &F ) throw() : host(F) {} //!< setup
+                    inline virtual ~SequentFunction() throw() {}                        //!< cleanup
+                    Function &host; //!< reference to external function
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(SequentFunction);
+                    inline virtual T on_initialize(T x, const Array &aorg, const Variables &vars) { return host(x,aorg,vars); }
+                    inline virtual T on_compute_to(T x, const Array &aorg, const Variables &vars) { return host(x,aorg,vars); }
+
+                };
+
 
                 //! compute gradient of fit function
                 class Gradient : public derivative<T>
@@ -219,7 +271,7 @@ namespace upsylon
                 const Array &X;  //!< X values
                 const Array &Y;  //!< Y values
                 Array       &Yf; //!< Yf = F(x,...) values
-                Indices      J;
+                Indices      J;  //!< ranks of X in decreasing order to call j=J[count()]...J[1]
 
                 //! destructor
                 inline virtual ~Sample() throw() {}
@@ -285,25 +337,50 @@ namespace upsylon
                     SSR += ssr;
                 }
 
-                //! compute D2 only
-                virtual T computeD2(Function     &F,
-                                    const Array  &aorg)
+
+
+                //! compute D2 only from a subsequent call
+                virtual T computeD2(typename Type<T>::Sequent &F,
+                                    const Array               &aorg)
                 {
                     assert(X.size()==Y.size());
                     assert(X.size()==Yf.size());
                     assert(J.size()==X.size());
-
+                    assert(this->rc.capacity()>=X.size());
                     const size_t n = X.size();
-                    this->rc.free();
-                    this->rc.ensure(n);
-
-                    for(size_t i=n;i>0;--i)
+                    if(n>0)
                     {
-                        const size_t j=J[i];
-                        const T Fj = (Yf[j]=F(X[j],aorg,this->variables));
-                        this->rc.push_back_( square_of(Y[j]-Fj) );
+                        this->rc.free();
+                        size_t i=n;
+                        // initialize
+                        {
+                            const size_t j = J[i];
+                            const T      Fj = (Yf[j]=F.initialize(X[j],aorg,this->variables));
+                            this->rc.push_back_( square_of(Y[j]-Fj) );
+                        }
+                        // subsequent
+                        for(--i;i>0;--i)
+                        {
+                            const size_t j=J[i];
+                            assert(X[j]>=F.current);
+                            const T Fj = (Yf[j]=F.compute_to(X[j],aorg,this->variables));
+                            this->rc.push_back_( square_of(Y[j]-Fj) );
+                        }
+                        // sum
+                        return sorted_sum(this->rc);
                     }
-                    return sorted_sum(this->rc);
+                    else
+                    {
+                        return 0;
+                    }
+                }
+
+                //! compute D2 only
+                virtual T computeD2(Function     &F,
+                                    const Array  &aorg)
+                {
+                    typename Type<T>::SequentFunction SF(F);
+                    return computeD2(SF,aorg);
                 }
 
                 //! compute D2 and sum differential values
