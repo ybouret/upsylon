@@ -9,6 +9,7 @@
 #include "y/math/fcn/derivative.hpp"
 #include "y/math/stat/metrics.hpp"
 #include "y/sort/sorted-sum.hpp"
+#include "y/sort/index.hpp"
 
 namespace upsylon
 {
@@ -24,14 +25,27 @@ namespace upsylon
             class SampleInfo : public counted_object
             {
             public:
-                Variables variables;           //!< local or global variables
-                virtual ~SampleInfo() throw(); //!< destructor
+                //______________________________________________________________
+                //
+                // types
+                //______________________________________________________________
+                typedef   vector<size_t> Indices;
 
+                //______________________________________________________________
+                //
+                // virtual interface
+                //______________________________________________________________
                 virtual size_t count() const throw() = 0; //!< number of points
+                virtual void   start()               = 0; //!< prepare resources
 
-            protected:
-                //! initialize
-                explicit SampleInfo(const size_t nvar_max);
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                Variables variables;           //!< local or global variables
+
+            protected: explicit SampleInfo(const size_t nvar_max);  //!< initialize
+            public:    virtual ~SampleInfo() throw();               //!< destructor
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(SampleInfo);
@@ -39,7 +53,7 @@ namespace upsylon
 
             ////////////////////////////////////////////////////////////////////
             //
-            //! Type definitions
+            //! Type dependent definitions
             //
             ////////////////////////////////////////////////////////////////////
             template <typename T>
@@ -48,8 +62,8 @@ namespace upsylon
                 typedef array<T>  Array;   //!< array interface
                 typedef vector<T> Vector;  //!< sequence
                 typedef matrix<T> Matrix;  //!< matrix
-                typedef functor<T,TL3(T,const Array&,const Variables&)> Function; //!< fit function prototype!
-                typedef T (*CFunction)(T,const Array&,const Variables&); //!< fit CFunction prototyp
+                typedef functor<T,TL3(T,const Array&,const Variables&)> Function; //!< fit function  prototype
+                typedef T (*CFunction)(T,const Array&,const Variables&);          //!< fit CFunction prototype
 
                 //! compute gradient of fit function
                 class Gradient : public derivative<T>
@@ -172,7 +186,7 @@ namespace upsylon
                 //! initialize
                 inline explicit SampleType(const size_t nvar_max) :
                 SampleInfo(nvar_max),
-                rc()
+                rc(nvar_max,as_capacity)
                 {
                 }
 
@@ -199,10 +213,13 @@ namespace upsylon
                 typedef typename Type<T>::Array    Array;      //!< alias
                 typedef typename Type<T>::Matrix   Matrix;     //!< alias
                 typedef typename Type<T>::Gradient Gradient;   //!< alias
+                typedef SampleInfo::Indices        Indices;    //!< alias
+
 
                 const Array &X;  //!< X values
                 const Array &Y;  //!< Y values
                 Array       &Yf; //!< Yf = F(x,...) values
+                Indices      J;
 
                 //! destructor
                 inline virtual ~Sample() throw() {}
@@ -215,7 +232,8 @@ namespace upsylon
                 SampleType<T>(nvar_max),
                 X(userX),
                 Y(userY),
-                Yf(userYf)
+                Yf(userYf),
+                J(nvar_max,as_capacity)
                 {}
 
                 //! X.size()
@@ -224,6 +242,16 @@ namespace upsylon
                     assert(X.size()==Y.size());
                     assert(X.size()==Yf.size());
                     return X.size();
+                }
+
+                //! prepare resources for fit sessions
+                virtual void start()
+                {
+                    const size_t n = this->count();
+                    this->rc.free();
+                    this->rc.ensure(n);
+                    J.make(n,0);
+                    indexing::make(J, comparison::decreasing<T>, X);
                 }
 
                 //! implementation for one sample
@@ -263,12 +291,17 @@ namespace upsylon
                 {
                     assert(X.size()==Y.size());
                     assert(X.size()==Yf.size());
+                    assert(J.size()==X.size());
+
+                    const size_t n = X.size();
                     this->rc.free();
-                    this->rc.ensure(X.size());
-                    for(size_t i=X.size();i>0;--i)
+                    this->rc.ensure(n);
+
+                    for(size_t i=n;i>0;--i)
                     {
-                        const T Fi = (Yf[i]=F(X[i],aorg,this->variables));
-                        this->rc.push_back_( square_of(Y[i]-Fi) );
+                        const size_t j=J[i];
+                        const T Fj = (Yf[j]=F(X[j],aorg,this->variables));
+                        this->rc.push_back_( square_of(Y[j]-Fj) );
                     }
                     return sorted_sum(this->rc);
                 }
@@ -380,7 +413,7 @@ namespace upsylon
                                     const Array  &aorg)
                 {
                     typename Sample<T>::Collection &self = *this;
-                    const size_t n = this->size();
+                    const size_t                    n    = this->size();
                     this->rc.free();
                     this->rc.ensure(n);
                     for(size_t k=n;k>0;--k)
@@ -400,6 +433,17 @@ namespace upsylon
                         ans += self[k]->count();
                     }
                     return ans;
+                }
+
+
+                //! prepare all samples
+                virtual void start()
+                {
+                    typename Sample<T>::Collection &self = *this;
+                    for(size_t k=self.size();k>0;--k)
+                    {
+                        self[k]->start();
+                    }
                 }
 
                 //! gather from samples

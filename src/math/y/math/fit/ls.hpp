@@ -79,6 +79,7 @@ namespace upsylon
                     assert(used.size()==aorg.size());
                     const size_t nvar = aorg.size();
                     aerr.ld(0);
+                    sample.start();
 
                     //__________________________________________________________
                     //

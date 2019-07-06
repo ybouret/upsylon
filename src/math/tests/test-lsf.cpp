@@ -67,8 +67,10 @@ Y_UTEST(lsf)
 
     std::cerr << std::endl;
     std::cerr << "-- building samples" << std::endl;
-    const double _t1[] = { 30,80,140,200,270,320,430,550,640,720,830,890 };
-    const double _x1[] = { 4.414520,5.011710,5.632319,6.194379,6.721311,7.330211,8.009368,8.735363,9.297424,9.707260,10.339578,10.878220};
+
+    // not const for reordering
+    double _t1[] = { 30,80,140,200,270,320,430,550,640,720,830,890 };
+    double _x1[] = { 4.414520,5.011710,5.632319,6.194379,6.721311,7.330211,8.009368,8.735363,9.297424,9.707260,10.339578,10.878220};
 
     const double _t2[] = { 60,120,200,270,360,460,580,670,790,920,1040 };
     const double _x2[] = { 5.199063,5.854801,6.662763,7.365340,8.067916,8.782201,9.578454,10.175644,10.878220,11.651054,12.213115};
@@ -137,6 +139,16 @@ Y_UTEST(lsf)
     SS2.variables("t0")("slope",SSf.variables["slope2"]);
     std::cerr << "SS2.variables=" << SS2.variables << std::endl;
 
+    std::cerr << "Shuffling..." << std::endl;
+    alea.shuffle(*S1.X,*S1.Y,S1.count());
+    std::cerr << "Shuffled...." << std::endl;
+
+    S1.start();
+    S2.start();
+    SSf.start();
+
+    std::cerr << "S1.X=" << S1.X << std::endl;
+    std::cerr << "S1.J=" << S1.J << std::endl;
 
     diffusion DD;
     Fit::Type<double>::Function F(&DD, & diffusion::compute );

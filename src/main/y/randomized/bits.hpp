@@ -123,6 +123,7 @@ namespace upsylon
             inline void shuffle( T *a, U *b, const size_t n) throw()
             {
                 assert(!(NULL==a&&n>0));
+                assert(!(NULL==b&&n>0));
                 if( n > 1 )
                 {
                     for( size_t i=n-1;i>0;--i)
