@@ -20,10 +20,11 @@ namespace upsylon
             class LeastSquares : public arrays<T>
             {
             public:
-                typedef typename Type<T>::Function Function; //!< alias
-                typedef typename Type<T>::Array    Array;    //!< alias
-                typedef typename Type<T>::Matrix   Matrix;   //!< alias
-                typedef typename Type<T>::Gradient Gradient; //!< alias
+                typedef typename Type<T>::Function   Function;   //!< alias
+                typedef typename Type<T>::Sequential Sequential; //!< alias
+                typedef typename Type<T>::Array      Array;      //!< alias
+                typedef typename Type<T>::Matrix     Matrix;     //!< alias
+                typedef typename Type<T>::Gradient   Gradient;   //!< alias
 
                 int      p;       //!< controlled power for lam
                 T        lam;     //!< lam=10^p
@@ -70,7 +71,7 @@ namespace upsylon
 
                 //! try to fit sample
                 inline bool fit(SampleType<T>     &sample,
-                                Function          &F,
+                                Sequential        &F,
                                 Array             &aorg,
                                 Array             &aerr,
                                 const array<bool> &used)
@@ -117,6 +118,7 @@ namespace upsylon
                     //----------------------------------------------------------
                     alpha.ld(0);
                     beta.ld(0);
+                    Y_LSF_OUT(std::cerr << "[LSF] initial gradient..." << std::endl);
                     T D2 = sample.computeD2(F,aorg,beta,alpha,grad,used);
 
                     while(true)
@@ -234,6 +236,7 @@ namespace upsylon
                         decrease_lambda();
                         alpha.ld(0);
                         beta.ld(0);
+                        Y_LSF_OUT(std::cerr << "[LSF] updating gradient..." << std::endl);
                         D2 = sample.computeD2(F,aorg,beta,alpha,grad,used);
                     }
 
@@ -286,6 +289,17 @@ namespace upsylon
                         if(used[i]) aerr[i] = sqrt_of( max_of<T>(0,dS*curv[i][i]) );
                     }
                     return true;
+                }
+
+                //! wrapper to use regular function
+                inline bool fit(SampleType<T>     &sample,
+                                Function          &F,
+                                Array             &aorg,
+                                Array             &aerr,
+                                const array<bool> &used)
+                {
+                    typename Type<T>::SequentialFunction SF(F);
+                    return fit(sample,SF,aorg,aerr,used);
                 }
 
 

@@ -12,6 +12,7 @@ namespace upsylon
 
     namespace math
     {
+        //! step size reduction control
 #define Y_MATH_DRVS_CTRL 1.414213
 
         //! derivative computation

@@ -59,11 +59,20 @@ namespace upsylon
             template <typename T>
             struct Type
             {
+                //______________________________________________________________
+                //
+                // aliases
+                //______________________________________________________________
                 typedef array<T>  Array;   //!< array interface
                 typedef vector<T> Vector;  //!< sequence
                 typedef matrix<T> Matrix;  //!< matrix
                 typedef functor<T,TL3(T,const Array&,const Variables&)> Function; //!< fit function  prototype
                 typedef T (*CFunction)(T,const Array&,const Variables&);          //!< fit CFunction prototype
+
+                //______________________________________________________________
+                //
+                // Sequential Call
+                //______________________________________________________________
 
                 //! interface for sequent call
                 class Sequential
@@ -101,7 +110,7 @@ namespace upsylon
                     virtual T on_compute_to(T, const Array &,const Variables &) = 0;
                 };
 
-                //! lightweight proxy for function
+                //! lightweight proxy for regular function
                 class SequentialFunction : public Sequential
                 {
                 public:
@@ -121,6 +130,8 @@ namespace upsylon
                 class Gradient : public derivative<T>
                 {
                 public:
+                    typedef typename Type<T>::Sequential Sequential; //!< alias
+
                     T scale; //!< parameters scaling, default=1e-4
 
                     //! initialize
@@ -129,12 +140,12 @@ namespace upsylon
                     inline virtual ~Gradient() throw() {}
 
                     //! compute all active components
-                    inline void operator()(Array             &dFda,
-                                           Function          &F,
-                                           const T            x,
-                                           const Array       &aorg,
-                                           const Variables   &vars,
-                                           const array<bool> &used)
+                    inline void operator()(Array              &dFda,
+                                           Sequential         &F,
+                                           const T             x,
+                                           const Array        &aorg,
+                                           const Variables    &vars,
+                                           const array<bool>  &used)
                     {
                         assert(dFda.size()==aorg.size());
                         assert(used.size()==aorg.size());
@@ -159,22 +170,22 @@ namespace upsylon
                         T                xvalue;
                         const Array     *aorg_p;
                         const Variables *vars_p;
-                        Function        *func_p;
+                        Sequential      *func_p;
                         size_t           ivar;
                         inline T operator()( T atry )
                         {
                             assert(aorg_p); assert(vars_p); assert(func_p);
                             assert(ivar>0);
                             assert(ivar<=aorg_p->size());
-                            Array           &a = (Array &)(*aorg_p);
-                            const Variables &v = *vars_p;
-                            Function        &F = *func_p;
+                            Array           &a  = (Array &)(*aorg_p);
+                            const Variables &v  = *vars_p;
+                            Sequential      &F  = *func_p;
                             T               &ai = a[ivar];
                             const T          a0 = ai;
                             try
                             {
                                 ai = atry;
-                                const T ans = F(xvalue,a,v);
+                                const T ans = F.initialize(xvalue,a,v);
                                 ai = a0;
                                 return ans;
                             }
@@ -198,21 +209,33 @@ namespace upsylon
             class SampleType : public SampleInfo
             {
             public:
-                typedef typename Type<T>::Function   Function; //!< alias
-                typedef typename Type<T>::Array      Array;    //!< alias
-                typedef typename Type<T>::Matrix     Matrix;   //!< alias
-                typedef typename Type<T>::Gradient   Gradient; //!< alias
+                //______________________________________________________________
+                //
+                // types
+                //______________________________________________________________
+                typedef typename Type<T>::Function   Function;   //!< alias
+                typedef typename Type<T>::Sequential Sequential; //!< alias
+                typedef typename Type<T>::Array      Array;      //!< alias
+                typedef typename Type<T>::Matrix     Matrix;     //!< alias
+                typedef typename Type<T>::Gradient   Gradient;   //!< alias
 
-                //! desctructor
+                //______________________________________________________________
+                //
+                // virtual interface
+                //______________________________________________________________
+                //! destructor
                 inline virtual ~SampleType() throw() {}
 
+                //! compute D2 only, for a prepared sample
+                /**
+                 Yf must be computed along
+                 */
+                virtual T computeD2(typename Type<T>::Sequential &F,
+                                    const Array                  &aorg) = 0;
 
-                //! compute D2 only
-                virtual T computeD2(Function     &F,
-                                    const Array  &aorg) = 0;
 
-                //! compute D2, beta and alpha, beta and alpha initialy empty
-                virtual T computeD2(Function          &F,
+                //! compute D2, beta and alpha, beta and alpha initialy empty, for a prepared sample
+                virtual T computeD2(Sequential        &F,
                                     const Array       &aorg,
                                     Array             &beta,
                                     Matrix            &alpha,
@@ -222,6 +245,23 @@ namespace upsylon
                 //! add Sum of Squared Errors (SSE) and Sum of Square Residuals (SSR) and Degrees of Freedom
                 virtual void add_SSE_SSR( T &SSE, T &SSR ) const = 0;
 
+
+
+                //! compute correlation
+                virtual T compute_correlation( correlation<T> &corr ) const = 0;
+
+                //______________________________________________________________
+                //
+                // non-virtual interface
+                //______________________________________________________________
+                //! compute D2 only, wrapper for function
+                inline T computeD2_(Function     &F,
+                                    const Array  &aorg)
+                {
+                    typename Type<T>::SequentialFunction SF(F);
+                    return computeD2(SF,aorg);
+                }
+
                 //! compute R2 after a D2 is computed
                 inline T computeR2() const
                 {
@@ -229,10 +269,6 @@ namespace upsylon
                     add_SSE_SSR(SSE,SSR);
                     return SSR/(SSR+SSE+numeric<T>::tiny);
                 }
-
-                //! compute correlation
-                virtual T compute_correlation( correlation<T> &corr ) const = 0;
-
 
             protected:
                 //! initialize
@@ -259,13 +295,14 @@ namespace upsylon
             class Sample : public SampleType<T>
             {
             public:
-                typedef arc_ptr<Sample>            Pointer;    //!< smart pointer
-                typedef vector<Pointer>            Collection; //!< for multiple samples
-                typedef typename Type<T>::Function Function;   //!< alias
-                typedef typename Type<T>::Array    Array;      //!< alias
-                typedef typename Type<T>::Matrix   Matrix;     //!< alias
-                typedef typename Type<T>::Gradient Gradient;   //!< alias
-                typedef SampleInfo::Indices        Indices;    //!< alias
+                typedef arc_ptr<Sample>              Pointer;    //!< smart pointer
+                typedef vector<Pointer>              Collection; //!< for multiple samples
+                typedef typename Type<T>::Function   Function;   //!< alias
+                typedef typename Type<T>::Sequential Sequential; //!< alias
+                typedef typename Type<T>::Array      Array;      //!< alias
+                typedef typename Type<T>::Matrix     Matrix;     //!< alias
+                typedef typename Type<T>::Gradient   Gradient;   //!< alias
+                typedef SampleInfo::Indices          Indices;    //!< alias
 
 
                 const Array &X;  //!< X values
@@ -340,8 +377,8 @@ namespace upsylon
 
 
                 //! compute D2 only from a subsequent call
-                virtual T computeD2(typename Type<T>::Sequential &F,
-                                    const Array                  &aorg)
+                virtual T computeD2(Sequential  &F,
+                                    const Array &aorg)
                 {
                     assert(X.size()==Y.size());
                     assert(X.size()==Yf.size());
@@ -375,16 +412,10 @@ namespace upsylon
                     }
                 }
 
-                //! compute D2 only
-                virtual T computeD2(Function     &F,
-                                    const Array  &aorg)
-                {
-                    typename Type<T>::SequentialFunction SF(F);
-                    return computeD2(SF,aorg);
-                }
+
 
                 //! compute D2 and sum differential values
-                virtual T computeD2(Function          &F,
+                virtual T computeD2(Sequential        &F,
                                     const Array       &aorg,
                                     Array             &beta,
                                     Matrix            &alpha,
@@ -397,16 +428,16 @@ namespace upsylon
                     assert(alpha.cols ==nvar);
                     assert(X.size()==Y.size());
                     assert(X.size()==Yf.size());
+                    assert(this->rc.capacity()>=X.size());
+
+                    //! compute D2 and fill in Yf[i]
+                    const T ans = computeD2(F,aorg);
 
                     Array &dFda = alpha.r_aux1;
-                    this->rc.free();
-                    this->rc.ensure(X.size());
                     for(size_t i=X.size();i>0;--i)
                     {
                         const T Xi  = X[i];
-                        const T Fi  = (Yf[i]=F(Xi,aorg,this->variables));
-                        const T dFi = Y[i]-Fi;
-                        this->rc.push_back_( square_of(dFi) );
+                        const T dFi = Y[i]-Yf[i]; //!< recompute difference
                         grad(dFda,F,Xi,aorg,this->variables,used);
                         for(size_t j=nvar;j>0;--j)
                         {
@@ -425,7 +456,7 @@ namespace upsylon
                             }
                         }
                     }
-                    return sorted_sum(this->rc);
+                    return ans;
                 }
 
                 //! correlation from fitted and source data
@@ -474,25 +505,27 @@ namespace upsylon
             class Samples : public SampleType<T>, public Sample<T>::Collection
             {
             public:
-                typedef typename Type<T>::Function  Function; //!< alias
-                typedef typename Type<T>::Array     Array;    //!< alias
-                typedef typename Type<T>::Matrix    Matrix;   //!< alias
-                typedef typename Sample<T>::Pointer Pointer;  //!< alias
-                typedef typename Type<T>::Gradient  Gradient; //!< alias
+                typedef typename Sample<T>::Collection SelfType;   //!< alias
+                typedef typename Type<T>::Function     Function;   //!< alias
+                typedef typename Type<T>::Sequential   Sequential; //!< alias
+                typedef typename Type<T>::Array        Array;      //!< alias
+                typedef typename Type<T>::Matrix       Matrix;     //!< alias
+                typedef typename Sample<T>::Pointer    Pointer;    //!< alias
+                typedef typename Type<T>::Gradient     Gradient;   //!< alias
 
                 //! destructor
                 inline virtual ~Samples() throw() {}
                 //! initialize
-                inline explicit Samples(const size_t nvar_max=0,const size_t size_max=0) : SampleType<T>(nvar_max), Sample<T>::Collection(size_max,as_capacity) {}
+                inline explicit Samples(const size_t nvar_max=0,const size_t size_max=0) : SampleType<T>(nvar_max), SelfType(size_max,as_capacity) {}
 
-                //! compute D2 by summation
-                virtual T computeD2(Function     &F,
-                                    const Array  &aorg)
+
+
+                virtual T computeD2(typename Type<T>::Sequential &F,
+                                    const Array                  &aorg)
                 {
-                    typename Sample<T>::Collection &self = *this;
-                    const size_t                    n    = this->size();
-                    this->rc.free();
-                    this->rc.ensure(n);
+                    SelfType    &self = *this;
+                    const size_t n    = this->size();
+                    this->rc.free(); assert(this->rc.capacity()>=n);
                     for(size_t k=n;k>0;--k)
                     {
                         this->rc.push_back_( self[k]->computeD2(F,aorg) );
@@ -503,8 +536,8 @@ namespace upsylon
                 //! sum of all counts
                 virtual size_t count() const throw()
                 {
-                    const typename Sample<T>::Collection &self = *this;
-                    size_t ans = 0;
+                    const SelfType &self = *this;
+                    size_t          ans  = 0;
                     for(size_t k=self.size();k>0;--k)
                     {
                         ans += self[k]->count();
@@ -513,11 +546,14 @@ namespace upsylon
                 }
 
 
-                //! prepare all samples
+                //! prepare all samples and self resources
                 virtual void start()
                 {
                     typename Sample<T>::Collection &self = *this;
-                    for(size_t k=self.size();k>0;--k)
+                    const size_t n = self.size();
+                    this->rc.free();
+                    this->rc.ensure(n);
+                    for(size_t k=n;k>0;--k)
                     {
                         self[k]->start();
                     }
@@ -526,7 +562,7 @@ namespace upsylon
                 //! gather from samples
                 virtual inline void add_SSE_SSR( T &SSE, T &SSR ) const
                 {
-                    const typename Sample<T>::Collection &self = *this;
+                    const SelfType &self = *this;
                     for(size_t k=self.size();k>0;--k)
                     {
                         self[k]->add_SSE_SSR(SSE,SSR);
@@ -536,7 +572,7 @@ namespace upsylon
                 //! gather from all samples and get global correlation
                 virtual T compute_correlation( correlation<T> &corr ) const
                 {
-                    const typename Sample<T>::Collection &self = *this;
+                    const SelfType &self = *this;
                     corr.free();
                     for(size_t k=self.size();k>0;--k)
                     {
@@ -561,17 +597,17 @@ namespace upsylon
                 }
 
                 //! compute D2 and sum all differential values
-                virtual T computeD2(Function          &F,
+                virtual T computeD2(Sequential       &F,
                                     const Array       &aorg,
                                     Array             &beta,
                                     Matrix            &alpha,
                                     Gradient          &grad,
                                     const array<bool> &used)
                 {
-                    typename Sample<T>::Collection &self = *this;
-                    const size_t n = self.size();
-                    this->rc.free();
-                    this->rc.ensure(n);
+                    SelfType    &self = *this;
+                    const size_t n    = self.size();
+                    
+                    this->rc.free(); assert(this->rc.capacity()>=n);
                     for(size_t k=n;k>0;--k)
                     {
                         this->rc.push_back_( self[k]->computeD2(F,aorg,beta,alpha,grad,used) );

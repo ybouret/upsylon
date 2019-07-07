@@ -153,16 +153,16 @@ Y_UTEST(lsf)
     diffusion DD;
     Fit::Type<double>::Function F(&DD, & diffusion::compute );
 
-    const double D21 = S1.computeD2(F,a1); std::cerr << "D21=" << D21 << std::endl;
-    const double D22 = S2.computeD2(F,a2); std::cerr << "D22=" << D22 << std::endl;
+    const double D21 = S1.computeD2_(F,a1); std::cerr << "D21=" << D21 << std::endl;
+    const double D22 = S2.computeD2_(F,a2); std::cerr << "D22=" << D22 << std::endl;
 
-    const double DD21 = SS1.computeD2(F,aa); std::cerr << "DD21=" << DD21 << std::endl;
-    const double DD22 = SS2.computeD2(F,aa); std::cerr << "DD22=" << DD22 << std::endl;
+    const double DD21 = SS1.computeD2_(F,aa); std::cerr << "DD21=" << DD21 << std::endl;
+    const double DD22 = SS2.computeD2_(F,aa); std::cerr << "DD22=" << DD22 << std::endl;
 
     Y_CHECK( fabs(D21-DD21)<=0 );
     Y_CHECK( fabs(D22-DD22)<=0 );
 
-    const double DD2 = SSf.computeD2(F,aa);
+    const double DD2 = SSf.computeD2_(F,aa);
     std::cerr << "DD2=" << DD2 << std::endl;
 
     vector<bool>   used(2,true);
