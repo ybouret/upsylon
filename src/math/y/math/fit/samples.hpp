@@ -36,7 +36,7 @@ namespace upsylon
                 // virtual interface
                 //______________________________________________________________
                 virtual size_t count() const throw() = 0; //!< number of points
-                virtual void   start()               = 0; //!< prepare resources
+                virtual void   prepare()             = 0; //!< prepare resources
 
                 //______________________________________________________________
                 //
@@ -334,7 +334,7 @@ namespace upsylon
                 }
 
                 //! prepare resources for fit sessions
-                virtual void start()
+                virtual void prepare()
                 {
                     const size_t n = this->count();
                     this->rc.free();
@@ -547,7 +547,7 @@ namespace upsylon
 
 
                 //! prepare all samples and self resources
-                virtual void start()
+                virtual void prepare()
                 {
                     typename Sample<T>::Collection &self = *this;
                     const size_t n = self.size();
@@ -555,7 +555,7 @@ namespace upsylon
                     this->rc.ensure(n);
                     for(size_t k=n;k>0;--k)
                     {
-                        self[k]->start();
+                        self[k]->prepare();
                     }
                 }
 

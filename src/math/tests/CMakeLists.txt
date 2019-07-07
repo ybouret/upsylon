@@ -43,11 +43,12 @@ ADD_TEST(fcn:func    test-m functions)
 ADD_TEST(fcn:zfind   test-m zfind)
 
 SOURCE_GROUP(fit FILES test-fit-gauss.cpp test-fit-poly.cpp test-ls-rescale.cpp
-test-lsf.cpp test-lsf2.cpp test-lsf3.cpp
+test-lsf.cpp test-lsf2.cpp test-lsf3.cpp test-lsf-ode.cpp
 test-shapes2d.cpp)
 ADD_TEST(fit:lsf      test-m lsf)
 ADD_TEST(fit:lsf2     test-m lsf2)
 ADD_TEST(fit:lsf3     test-m lsf3 ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
+ADD_TEST(fit:ode      test-m lsf_ode)
 ADD_TEST(fit:gauss    test-m fit_gauss)
 ADD_TEST(fit:poly     test-m fit_poly)
 ADD_TEST(fit:rescale  test-m ls_rescale)

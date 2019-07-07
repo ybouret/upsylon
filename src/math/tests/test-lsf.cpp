@@ -143,9 +143,9 @@ Y_UTEST(lsf)
     alea.shuffle(*S1.X,*S1.Y,S1.count());
     std::cerr << "Shuffled...." << std::endl;
 
-    S1.start();
-    S2.start();
-    SSf.start();
+    S1.prepare();
+    S2.prepare();
+    SSf.prepare();
 
     std::cerr << "S1.X=" << S1.X << std::endl;
     std::cerr << "S1.J=" << S1.J << std::endl;
