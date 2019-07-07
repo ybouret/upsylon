@@ -4,5 +4,5 @@ all: lsf.pdf shapes.pdf
 	pdflatex $< && pdflatex $<
 
 clean:
-	rm -f *.aux *.log *.synctex.gz lsf.pdf shapes.pdf ilog.pdf spline.pdf abc.pdf
+	rm -f *.aux *.log *.synctex.gz lsf.pdf shapes.pdf ilog.pdf spline.pdf abc.pdf drvs.pdf
 

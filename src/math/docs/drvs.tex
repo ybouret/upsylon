@@ -1,0 +1,56 @@
+\documentclass[aps,10pt]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{bookman}
+
+\newcommand{\drvs}[2]{{#1}^{\lbrack #2 \rbrack}}
+
+\begin{document}
+\title{Compact derivatives}
+\maketitle
+
+\begin{equation}
+	\delta_\alpha = f(x+\alpha h) - f(x-\alpha h) = 2 \alpha h f' + \dfrac{\alpha^3h^3}{3} \drvs{f}{3}  - \alpha^4 h^4 E_\alpha
+\end{equation}
+We get
+\begin{equation}
+\begin{bmatrix}
+2h & \dfrac{h^3}{3}\\
+\\
+2\alpha h & \dfrac{\alpha^3h^3}{3}\\
+\end{bmatrix}
+\begin{bmatrix}
+f'\\
+\drvs{f}{3}\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+	\delta_1 + h^4 E_1\\
+	\delta_\alpha + \alpha^4 h^4 E_4\\
+\end{bmatrix}
+\end{equation}
+and
+\begin{equation}
+\begin{array}{rcl}
+	f' & = &\dfrac{1}{2h(\alpha^3-\alpha)}\left[ \alpha^3 (\delta_1+h^4 E_1) - (\delta_\alpha+\alpha^4h^4 E_\alpha) \right]\\
+	   & = &\dfrac{1}{2h\alpha(1-\alpha^2)}\left[ (\delta_\alpha - \alpha^3 \delta_1) + h^4 \left( \alpha^4 E_\alpha - \alpha^3 E_1 \right)\right]
+\end{array}
+\end{equation}
+The error is
+\begin{equation}
+	\eta_\alpha^f =  \dfrac{h^3\alpha^2}{2} \dfrac{\left( \alpha  E_\alpha -  E_1 \right)}{1-\alpha^2}
+\end{equation}
+
+If we define
+\begin{equation}
+	g(\alpha) = \dfrac{\delta_\alpha}{2h\alpha} = f' + \dfrac{\alpha^2h^2}{6} \drvs{f}{3}  - \dfrac{\alpha^3 h^3}{2} E_\alpha = g_0 + g_1 \alpha^2
+\end{equation}
+then
+\begin{equation}
+	g_0 = \dfrac{g(\alpha)-\alpha^2g(1)}{1-\alpha^2} = f' + \dfrac{h^3\alpha^2}{2(1-\alpha^2)}\left( E_1 - \alpha  E_\alpha \right)
+\end{equation}
+\end{document}
+
