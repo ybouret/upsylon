@@ -66,11 +66,11 @@ namespace upsylon
                 typedef T (*CFunction)(T,const Array&,const Variables&);          //!< fit CFunction prototype
 
                 //! interface for sequent call
-                class Sequent
+                class Sequential
                 {
                 public:
                     const T current; //!< currently called position
-                    inline virtual ~Sequent() throw() { (T&)current=0; } //!< cleanup
+                    inline virtual ~Sequential() throw() { (T&)current=0; } //!< cleanup
 
                     //! make a first call
                     inline T initialize(T x, const Array &aorg, const Variables &vars)
@@ -91,26 +91,26 @@ namespace upsylon
 
                 protected:
                     //! setup
-                    inline explicit Sequent() throw() : current(0)
+                    inline explicit Sequential() throw() : current(0)
                     {
                     }
 
                 private:
-                    Y_DISABLE_COPY_AND_ASSIGN(Sequent);
+                    Y_DISABLE_COPY_AND_ASSIGN(Sequential);
                     virtual T on_initialize(T, const Array &,const Variables &) = 0;
                     virtual T on_compute_to(T, const Array &,const Variables &) = 0;
                 };
 
                 //! lightweight proxy for function
-                class SequentFunction : public Sequent
+                class SequentialFunction : public Sequential
                 {
                 public:
-                    inline explicit SequentFunction( Function &F ) throw() : host(F) {} //!< setup
-                    inline virtual ~SequentFunction() throw() {}                        //!< cleanup
+                    inline explicit SequentialFunction( Function &F ) throw() : host(F) {} //!< setup
+                    inline virtual ~SequentialFunction() throw() {}                        //!< cleanup
                     Function &host; //!< reference to external function
 
                 private:
-                    Y_DISABLE_COPY_AND_ASSIGN(SequentFunction);
+                    Y_DISABLE_COPY_AND_ASSIGN(SequentialFunction);
                     inline virtual T on_initialize(T x, const Array &aorg, const Variables &vars) { return host(x,aorg,vars); }
                     inline virtual T on_compute_to(T x, const Array &aorg, const Variables &vars) { return host(x,aorg,vars); }
 
@@ -340,8 +340,8 @@ namespace upsylon
 
 
                 //! compute D2 only from a subsequent call
-                virtual T computeD2(typename Type<T>::Sequent &F,
-                                    const Array               &aorg)
+                virtual T computeD2(typename Type<T>::Sequential &F,
+                                    const Array                  &aorg)
                 {
                     assert(X.size()==Y.size());
                     assert(X.size()==Yf.size());
@@ -379,7 +379,7 @@ namespace upsylon
                 virtual T computeD2(Function     &F,
                                     const Array  &aorg)
                 {
-                    typename Type<T>::SequentFunction SF(F);
+                    typename Type<T>::SequentialFunction SF(F);
                     return computeD2(SF,aorg);
                 }
 
