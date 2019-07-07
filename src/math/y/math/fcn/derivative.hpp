@@ -12,6 +12,8 @@ namespace upsylon
 
     namespace math
     {
+#define Y_MATH_DRVS_CTRL 1.414213
+
         //! derivative computation
         template <typename T,const size_t NTAB=16>
         class derivative
@@ -49,7 +51,7 @@ namespace upsylon
             template <typename FUNC>
             inline T diff( FUNC &f, const T x, const T h, T &err )
             {
-                static const T CON = T(1.2);
+                static const T CON  = T(Y_MATH_DRVS_CTRL);
                 static const T CON2 = CON*CON;
                 assert(h>=0);
                 T    hh  = regularize(x,h);
@@ -91,7 +93,6 @@ namespace upsylon
             inline T diff( FUNC &f, const T x, T h )
             {
                 static const T max_ftol = timings::round_ceil<T>( sqrt_of( numeric<T>::epsilon ) );
-                static const T CON = T(1.2);
                 // initialize
                 T err  = 0;
                 T dFdx = diff(f,x,h,err);
@@ -99,7 +100,7 @@ namespace upsylon
                 while(err>max_ftol*fabs_of(dFdx) )
                 {
                     T       new_err  = 0;
-                    const T new_dFdx = diff(f,x,h/=CON,new_err);
+                    const T new_dFdx = diff(f,x,h/=2,new_err);
                     if(new_err>=err)
                     {
                         break; // not better
@@ -115,7 +116,7 @@ namespace upsylon
             template <typename FUNC>
             inline T diff2( const T f0, FUNC &f, const T x, const T h, T &err )
             {
-                static const T CON = T(1.2);
+                static const T CON = T(Y_MATH_DRVS_CTRL);
                 static const T CON2 = CON*CON;
                 assert(h>=0);
                 T    hh  = regularize(x,h);
@@ -153,7 +154,6 @@ namespace upsylon
             inline T diff2( FUNC &f, const T x, T h )
             {
                 static const T max_ftol = timings::round_ceil<T>( sqrt_of( numeric<T>::epsilon ) );
-                static const T CON(1.2);
                 // initialize
                 const T f0     = f(x);
                 T       err    = 0;
@@ -162,12 +162,12 @@ namespace upsylon
                 while(err>max_ftol*fabs_of(d2Fdx2) )
                 {
                     T       new_err  = 0;
-                    const T new_d2Fdx2 = diff2(f0,f,x,h/=CON,new_err);
+                    const T new_d2Fdx2 = diff2(f0,f,x,h/=2,new_err);
                     if(new_err>=err)
                     {
                         break; // not better
                     }
-                    err  = new_err;
+                    err    = new_err;
                     d2Fdx2 = new_d2Fdx2;
                 }
                 return d2Fdx2;
