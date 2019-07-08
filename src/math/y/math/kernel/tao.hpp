@@ -278,10 +278,31 @@ namespace upsylon
             template <typename T, typename U, typename V> static inline
             void setprobe( array<T> &b, const array<U> &a, typename type_traits<T>::parameter_type x, const array<V> & step )
             {
+                assert(a.size()==b.size());
+                assert(a.size()==step.size());
+
                 for(size_t i=b.size();i>0;--i)
                 {
                     b[i] = static_cast<T>(a[i]) + x * static_cast<T>(step[i]);
                 }
+            }
+
+            //! compute the maximum fractional error of |a-b|
+            template <typename T> static inline
+            T fractional_error( const array<T> &a, const array<T> &b )
+            {
+                assert(a.size()==b.size());
+
+                T ans = 0;
+                for(size_t i=a.size();i>0;--i)
+                {
+                    const T aa    = a[i];
+                    const T bb    = b[i];
+                    const T delta = fabs_of(aa-bb);
+                    const T err   = (delta+delta)/( fabs_of(aa) + fabs_of(bb) + numeric<T>::tiny );
+                    ans = max_of(ans,err);
+                }
+                return ans;
             }
             ////////////////////////////////////////////////////////////////////
             //

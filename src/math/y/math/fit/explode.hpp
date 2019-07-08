@@ -42,7 +42,7 @@ namespace upsylon
 
         namespace Fit
         {
-
+            //! macro to construct ExplODE
 #define Y_MATH_FIT_EXPLODE_CTOR(ARG)   \
 ESP(ARG),                              \
 sys(sys_),                             \

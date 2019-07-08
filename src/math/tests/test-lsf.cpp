@@ -172,47 +172,52 @@ Y_UTEST(lsf)
 
     //ls.verbose = true;
     std::cerr << "Fit 1" << std::endl;
-    if(ls.fit(S1,F,a1,aerr,used))
     {
-        S1.variables.display(std::cerr,a1,aerr,"\t\t");
-        save("fit1.dat",t1,z1);
-        std::cerr << "\t\t\tS1.R2   =" << S1.computeR2() << std::endl;
-        std::cerr << "\t\t\tS1.corr =" << S1.compute_correlation(corr) << std::endl;
+        if(ls.fit(S1,F,a1,aerr,used))
+        {
+            S1.variables.display(std::cerr,a1,aerr,"\t\t");
+            save("fit1.dat",t1,z1);
+            std::cerr << "\t\t\tS1.R2   =" << S1.computeR2() << std::endl;
+            std::cerr << "\t\t\tS1.corr =" << S1.compute_correlation(corr) << std::endl;
 
-    }
-    else
-    {
-        std::cerr << "S1 failure" << std::endl;
+        }
+        else
+        {
+            std::cerr << "S1 failure" << std::endl;
+        }
     }
 
     std::cerr << "Fit 2" << std::endl;
-    if(ls.fit(S2,F,a2,aerr,used))
     {
-        S2.variables.display(std::cerr,a2,aerr,"\t\t");
-        save("fit2.dat",t2,z2);
-        std::cerr << "\t\t\tS2.R2   =" << S2.computeR2() << std::endl;
-        std::cerr << "\t\t\tS2.corr =" << S2.compute_correlation(corr) << std::endl;
+        if(ls.fit(S2,F,a2,aerr,used))
+        {
+            S2.variables.display(std::cerr,a2,aerr,"\t\t");
+            save("fit2.dat",t2,z2);
+            std::cerr << "\t\t\tS2.R2   =" << S2.computeR2() << std::endl;
+            std::cerr << "\t\t\tS2.corr =" << S2.compute_correlation(corr) << std::endl;
+        }
+        else
+        {
+            std::cerr << "S2 failure" <<std::endl;
+        }
     }
-    else
-    {
-        std::cerr << "S2 failure" <<std::endl;
-    }
-
     std::cerr << "Fit 1&2" << std::endl;
     aerr.make(3,0);
     used.make(3,true);
-    if(ls.fit(SSf,F,aa,aerr,used))
     {
-        SSf.variables.display(std::cerr,aa,aerr,"\t\t");
-        save("fit1b.dat",t1,z1);
-        save("fit2b.dat",t2,z2);
-        std::cerr << "\t\t\tSSf.R2  =" << SSf.computeR2() << std::endl;
-        std::cerr << "\t\t\tS2.corr =" << SSf.compute_correlation(corr) << std::endl;
+        if(ls.fit(SSf,F,aa,aerr,used))
+        {
+            SSf.variables.display(std::cerr,aa,aerr,"\t\t");
+            save("fit1b.dat",t1,z1);
+            save("fit2b.dat",t2,z2);
+            std::cerr << "\t\t\tSSf.R2  =" << SSf.computeR2() << std::endl;
+            std::cerr << "\t\t\tS2.corr =" << SSf.compute_correlation(corr) << std::endl;
 
-    }
-    else
-    {
-        std::cerr << "SSf failure" <<std::endl;
+        }
+        else
+        {
+            std::cerr << "SSf failure" <<std::endl;
+        }
     }
 
     

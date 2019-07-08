@@ -82,6 +82,8 @@ Y_UTEST(lsf2)
     vars.display(std::cerr,aorg);
 
     Fit::LeastSquares<double> LS;
+    LS.verbose = true;
+    
     dummy dum;
     Fit::LeastSquares<double>::Function F( &dum, & dummy::f );
 

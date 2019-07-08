@@ -118,19 +118,21 @@ Y_UTEST(lsf_ode)
     vars.on(used, "omega");
     
     ls.verbose = true;
-    
-    if( !ls.fit(sample, F, aorg, aerr, used) )
     {
-        throw exception("couldn't fit");
+        if( !ls.fit(sample, F, aorg, aerr, used ) )
+        {
+            throw exception("couldn't fit");
+        }
     }
-    
     vars.display(std::cerr, aorg, aerr);
     Fit::IO::Save("ode-fit1.dat",sample,true);
 
     vars.on(used, "lambda");
-    if( !ls.fit(sample, F, aorg, aerr, used) )
     {
-        throw exception("couldn't fit");
+        if( !ls.fit(sample, F, aorg, aerr, used) )
+        {
+            throw exception("couldn't fit");
+        }
     }
 
     vars.display(std::cerr, aorg, aerr);
