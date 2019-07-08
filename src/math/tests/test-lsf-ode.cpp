@@ -37,10 +37,11 @@ namespace
             assert(dydx.size()==2);
             assert(y.size()==2);
             
-            const double omega = vars(aorg,"omega");
-            
+            const double omega  = vars(aorg,"omega");
+            const double lambda = vars(aorg,"lambda");
+
             dydx[1] = y[2];
-            dydx[2] = - omega*omega * y[1];
+            dydx[2] = - omega*omega * y[1] - lambda * y[2];
         }
         
         virtual double start() const throw()
@@ -69,44 +70,50 @@ Y_UTEST(lsf_ode)
     
     Shape                       shape;
     ODE::DriverCK<double>::Type driver;
-    
+
+    driver.eps = 1e-3;
+
     Fit::ExplODE<double> F(shape,driver);
     
    
     
-    const size_t NP    = 10 + alea.leq(30);
+    const size_t NP    = 50 + alea.leq(50);
     const double range = 5+alea.leq(10);
-    double noise = 0.1;
+    double       noise = 0.1;
     
     vector<double> X,Y,Yf;
     Fit::Sample<double> sample(X,Y,Yf);
     
-    Fit::Variables &vars = sample.variables; vars << "omega";
+    Fit::Variables &vars = sample.variables; vars << "omega" << "lambda";
     const size_t    nvar = vars.size();
     std::cerr << "vars=" << vars << std::endl;
     vector<double> aorg(nvar,0);
     vector<double> aerr(nvar,0);
     vector<bool>   used(nvar,0);
     
-    double &omega = vars(aorg,"omega");
-    omega = 2.0;
-    
+    double &omega  = vars(aorg,"omega");
+    double &lambda = vars(aorg,"lambda");
+    omega  = 8.0;
+    lambda = 0.3;
+
     for(size_t i=NP;i>0;--i)
     {
         X.push_back( range * alea.to<double>() );
-        Y.push_back( cos( omega * X.back()) * (1.0+noise*alea.symm<double>()) );
+        Y.push_back( cos( omega * X.back()) * (1.0+noise*alea.symm<double>()) * exp(-lambda*X.back()) );
         Yf.push_back(0);
     }
     
     sample.prepare();
+    omega  *= 0.9;
+    lambda *= 1.1;
+
     std::cerr << "D2=" << sample.computeD2(F, aorg) << std::endl;
-    Fit::IO::Save("ode-fit0.dat",sample);
+    Fit::IO::Save("ode-fit0.dat",sample,true);
 
     
     Fit::LeastSquares<double> ls;
     
-    omega *= 0.9;
-    
+
     vars.on(used, "omega");
     
     ls.verbose = true;
@@ -117,9 +124,29 @@ Y_UTEST(lsf_ode)
     }
     
     vars.display(std::cerr, aorg, aerr);
-    Fit::IO::Save("ode-fit1.dat",sample);
+    Fit::IO::Save("ode-fit1.dat",sample,true);
 
-    
+    vars.on(used, "lambda");
+    if( !ls.fit(sample, F, aorg, aerr, used) )
+    {
+        throw exception("couldn't fit");
+    }
+
+    vars.display(std::cerr, aorg, aerr);
+    Fit::IO::Save("ode-fit2.dat",sample,true);
+
+
+    {
+        ios::ocstream fp("ode-func.dat");
+        double y = F.initialize(0, aorg, vars);
+        fp("%g %g\n", 0.0, y);
+        double dx = 0.01;
+        for(double x=dx;x<=range;x+=dx)
+        {
+            y = F.compute_to(x, aorg,vars);
+            fp("%g %g\n", x, y);
+        }
+    }
     
 
 }

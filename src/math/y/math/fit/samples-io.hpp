@@ -17,29 +17,45 @@ namespace upsylon
             //! wrappers to simplify I/O of samples
             struct IO
             {
+                static inline void __save( ios::ostream &fp, const double a, const double b, const double c)
+                {
+                    fp("%.15g %.15g %.15g\n",a,b,c);
+                }
 
                 //! save X/Y/Yfit
                 template <typename T> static inline
-                void Save( ios::ostream &fp, const Sample<T> &sample )
+                void Save( ios::ostream &fp, const Sample<T> &sample, const bool sorted )
                 {
-                    for(size_t i=1;i<=sample.count();++i)
+                    assert(sample.J.size()==sample.X.size());
+                    if(sorted)
                     {
-                        fp("%.15g %.15g %.15g\n", double(sample.X[i]), double(sample.Y[i]), double(sample.Yf[i]));
+                        for(size_t i=sample.count();i>0;--i)
+                        {
+                            const size_t j = sample.J[i];
+                            __save(fp,sample.X[j], sample.Y[j], sample.Yf[j] );
+                        }
+                    }
+                    else
+                    {
+                        for(size_t i=1;i<=sample.count();++i)
+                        {
+                            __save(fp,sample.X[i],sample.Y[i],sample.Yf[i]);
+                        }
                     }
                 }
 
                 //! save wrapper
                 template <typename T> static inline
-                void Save( const string &filename, const Sample<T> &sample )
+                void Save( const string &filename, const Sample<T> &sample, const bool sorted  )
                 {
-                    ios::ocstream fp(filename); Save(fp,sample);
+                    ios::ocstream fp(filename); Save(fp,sample,sorted);
                 }
 
                 //! save wrapper
                 template <typename T> static inline
-                void Save( const char *filename, const Sample<T> &sample )
+                void Save( const char *filename, const Sample<T> &sample, const bool sorted )
                 {
-                    const string _(filename); Save(_,sample);
+                    const string _(filename); Save(_,sample,sorted);
                 }
 
 

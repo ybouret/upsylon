@@ -26,7 +26,7 @@ namespace upsylon
                 
                 virtual ~ExplicitSolver() throw();  //!< cleanup
 
-                virtual void start(size_t nvar) = 0; //!< allocate internal data
+                virtual void start(size_t dim) = 0; //!< allocate internal data
 
                 //! call operator
                 /**
