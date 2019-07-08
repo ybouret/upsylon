@@ -53,7 +53,7 @@ namespace
             return 0.1;
         }
         
-        virtual double query( const array<double> &y )
+        virtual double query( const double, const array<double> &y )
         {
             return y[1];
         }

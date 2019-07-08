@@ -25,7 +25,7 @@ namespace upsylon
                 virtual size_t    dimension() const throw()                 = 0;    //!< dimensionality
                 virtual void      setup( array<T> & ) const throw()         = 0;    //!< initialize internal variables at initial coordinate
                 virtual T         start() const throw()                     = 0;    //!< return linear=starting point
-                virtual T         query( const array<T> &Y )                = 0;    //!< extract scalar data from state
+                virtual T         query( const T x, const array<T> &Y )     = 0;    //!< extract scalar data from state
                 virtual void      rates(Array &dYdx, T x, const Array &Y,           //|
                                      const Array &aorg, const Variables &vars) = 0; //!< differential rates
                 virtual T         delta() const throw() = 0;                        //!< initial time step
@@ -117,7 +117,7 @@ ctrl(0)
                     (**this)( ode, arr, sys.start(), x1, ctrl, sys.adapt() );
                     
                     // done
-                    return sys.query(arr);
+                    return sys.query(x1,arr);
                 }
 
                 //! update protocol
@@ -132,7 +132,7 @@ ctrl(0)
                     (**this)( ode, arr, this->current, x1, ctrl,  sys.adapt());
                     
                     // done
-                    return sys.query(arr);
+                    return sys.query(x1,arr);
                 }
             };
 
