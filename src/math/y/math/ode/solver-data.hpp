@@ -27,7 +27,7 @@ namespace upsylon
                 inline explicit SolverData() :
                 Field<T>::Arrays( 3 ),
                 hmin( 0 ),
-                eps(  numeric<T>::ftol ),
+                eps(  numeric<T>::sqrt_ftol ),
                 TINY( T(1e-30) ),
                 y(     this->next() ),
                 dydx(  this->next() ),

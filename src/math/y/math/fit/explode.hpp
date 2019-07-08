@@ -3,7 +3,7 @@
 #define Y_MATH_FIT_EXPLODE_INCLUDED 1
 
 #include "y/math/fit/samples.hpp"
-#include "y/math/ode/explicit/solver.hpp"
+#include "y/math/ode/explicit/driver-ck.hpp"
 
 namespace upsylon
 {
@@ -21,15 +21,15 @@ namespace upsylon
                 typedef typename Fit::Type<T>::Array  Array;     //!< alias
                 typedef Fit::Variables                Variables; //!< alias
 
-                virtual size_t dimension() const throw()                 = 0;       //!< dimensionality
-                virtual void   setup( array<T> & ) const throw()         = 0;       //!< initialize internal variables at initial coordinate
-                virtual T      start() const throw()                     = 0;       //!< return linear=starting point
-                virtual T      query( const array<T> &Y )                = 0;       //!< extract scalar data from state
-                virtual void   rates(Array &dYdx, T x, const Array &Y,              //|
+                virtual size_t    dimension() const throw()                 = 0;    //!< dimensionality
+                virtual void      setup( array<T> & ) const throw()         = 0;    //!< initialize internal variables at initial coordinate
+                virtual T         start() const throw()                     = 0;    //!< return linear=starting point
+                virtual T         query( const array<T> &Y )                = 0;    //!< extract scalar data from state
+                virtual void      rates(Array &dYdx, T x, const Array &Y,           //|
                                      const Array &aorg, const Variables &vars) = 0; //!< differential rates
                 virtual T         delta() const throw() = 0;                        //!< initial time step
                 virtual Callback *adapt() throw() { return NULL; }                  //!< callback to correct internal phase space
-                inline virtual ~System() throw() {}                                 //!< destructor
+                inline virtual   ~System() throw() {}                               //!< destructor
 
             protected:
                 inline explicit System() throw() {} //!< setup
@@ -41,27 +41,43 @@ namespace upsylon
 
         namespace Fit
         {
-            
+
+#define Y_MATH_FIT_EXPLODE_CTOR()   \
+ode( this, & ExplODE<T>::compute ), \
+arr( sys.dimension() ),             \
+p_aorg(0),                          \
+p_vars(0),                          \
+ctrl(0)
+
             //! wrapper to provide sequential call
             template <typename T>
-            class ExplODE : public Type<T>::Sequential
+            class ExplODE : public ODE::ExplicitSolver<T>::Pointer, public Type<T>::Sequential
             {
             public:
-                typedef typename ODE::Field<T>::Equation Equation; //!< alias
-                typedef typename Type<T>::Array          Array;    //!< alias
+                typedef typename ODE::Field<T>::Equation          Equation;  //!< alias
+                typedef typename ODE::ExplicitSolver<T>::Pointer  ESP;       //!< alias
+                typedef typename Type<T>::Array                   Array;     //!< alias
 
                 //! initialize internal state
-                inline explicit ExplODE(ODE::System<T>         &sys_,
-                                        ODE::ExplicitSolver<T> &slv_) :
+                inline explicit ExplODE(const ESP      &esp_,
+                                        ODE::System<T> &sys_) :
+                ESP(esp_),
                 sys(sys_),
-                slv(slv_),
-                ode( this, & ExplODE<T>::compute ),
-                arr( sys.dimension() ),
-                p_aorg(0),
-                p_vars(0)
+                Y_MATH_FIT_EXPLODE_CTOR()
                 {
-                    slv.start( sys.dimension() );
+                    finalize();
                 }
+
+                //! default setup
+                inline explicit ExplODE(ODE::System<T>         &sys_,
+                                        ODE::ExplicitSolver<T> *esp_ = NULL) :
+                ESP( esp_ ? esp_ : ODE::DriverCK<T>::New() ),
+                sys(sys_),
+                Y_MATH_FIT_EXPLODE_CTOR()
+                {
+                    finalize();
+                }
+
 
                 //! access to current state
                 inline const array<T> &fields() const throw() { return arr; }
@@ -70,11 +86,18 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ExplODE);
                 ODE::System<T>         &sys;
-                ODE::ExplicitSolver<T> &slv;
                 Equation                ode;
                 vector<T>               arr;
                 const Array            *p_aorg;
                 const Variables        *p_vars;
+                T                       ctrl;
+
+                //! finalize construct
+                inline void finalize()
+                {
+                    (**this).start( sys.dimension() );
+
+                }
 
                 //! ODE wrapper
                 inline void compute( Array &dYdx, T x, const Array &Y)
@@ -90,14 +113,14 @@ namespace upsylon
                     // link
                     p_aorg = &aorg;
                     p_vars = &vars;
-                    
+
                     // initialize up to x1
                     sys.setup(arr);
-                    T x0    = sys.start();
-                    T ctrl  = sys.delta();
-                    
+                    ctrl   = sys.delta();
+                    T x0   = sys.start();
+
                     // differential step
-                    slv( ode, arr, x0, x1, ctrl, NULL);
+                    (**this)( ode, arr, x0, x1, ctrl, sys.adapt() );
                     
                     // done
                     return sys.query(arr);
@@ -111,15 +134,15 @@ namespace upsylon
                     p_vars = &vars;
                     
                     const T x0   = this->current;
-                    T       ctrl = sys.delta();
                     
                     // differential step
-                    slv( ode, arr, x0, x1, ctrl, NULL);
+                    (**this)( ode, arr, x0, x1, ctrl,  sys.adapt());
                     
                     // done
                     return sys.query(arr);
                 }
             };
+
 
         }
     }

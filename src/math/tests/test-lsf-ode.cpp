@@ -2,7 +2,6 @@
 #include "y/math/fit/explode.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
-#include "y/math/ode/explicit/driver-ck.hpp"
 #include "y/math/fit/samples-io.hpp"
 #include "y/math/fit/ls.hpp"
 
@@ -68,13 +67,15 @@ namespace
 Y_UTEST(lsf_ode)
 {
     
-    Shape                       shape;
-    ODE::DriverCK<double>::Type driver;
+    Shape                                      shape;
+    {
+        const ODE::ExplicitSolver<double>::Pointer driver0 = ODE::DriverCK<double>::New();
+        Fit::ExplODE<double>                       F0(driver0,shape);
+        F0->eps = 1e-3;
+    }
 
-    driver.eps = 1e-3;
-
-    Fit::ExplODE<double> F(shape,driver);
-    
+    Fit::ExplODE<double>  F(shape);
+    F->eps = 1e-3;
    
     
     const size_t NP    = 50 + alea.leq(50);
