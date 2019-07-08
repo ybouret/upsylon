@@ -223,6 +223,7 @@ namespace upsylon
                         //______________________________________________________
                         tao::set(aorg,atry);
                         const T D2_err = fabs_of(D2 - D2_try);
+                        Y_LSF_OUT(std::cerr << "[LSF] least squares fractional update: " << D2_err/D2 << std::endl);
                         if( D2_err <= numeric<T>::sqrt_ftol * D2 )
                         {
                             Y_LSF_OUT(std::cerr << "[LSF] least squares convergence" << std::endl);
@@ -237,7 +238,7 @@ namespace upsylon
                         alpha.ld(0);
                         beta.ld(0);
                         Y_LSF_OUT(std::cerr << "[LSF] updating gradient..." << std::endl);
-                        D2 = sample.computeD2(F,aorg,beta,alpha,grad,used);
+                        D2 = sample.computeD2(F,aorg,beta,alpha,grad,used); // will be D2_try
                     }
 
                 CONVERGED:
