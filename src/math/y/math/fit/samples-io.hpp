@@ -17,6 +17,7 @@ namespace upsylon
             //! wrappers to simplify I/O of samples
             struct IO
             {
+                //! save triplet of double
                 static inline void __save( ios::ostream &fp, const double a, const double b, const double c)
                 {
                     fp("%.15g %.15g %.15g\n",a,b,c);

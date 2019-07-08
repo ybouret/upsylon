@@ -12,25 +12,27 @@ namespace upsylon
 
         namespace ODE
         {
+            //! differential system interface
             template <typename T>
             class System
             {
             public:
-                typedef typename Field<T>::Callback   Callback; //!< alias
-                typedef typename Fit::Type<T>::Array  Array;    //!< alias
+                typedef typename Field<T>::Callback   Callback;  //!< alias
+                typedef typename Fit::Type<T>::Array  Array;     //!< alias
                 typedef Fit::Variables                Variables; //!< alias
-                inline virtual ~System() throw() {}
 
-                virtual size_t dimension() const throw()                 = 0; //!< dimensionality
-                virtual void   setup( array<T> & ) const throw()         = 0; //!< initialize internal variables at initial coordinate
-                virtual T      start() const throw()                     = 0; //!< return linear=starting point
-                virtual T      query( const array<T> &Y )                = 0; //!< extract scalar data from state
-                virtual void   rates(Array &dYdx, T x, const Array &Y,                   //|
+                virtual size_t dimension() const throw()                 = 0;       //!< dimensionality
+                virtual void   setup( array<T> & ) const throw()         = 0;       //!< initialize internal variables at initial coordinate
+                virtual T      start() const throw()                     = 0;       //!< return linear=starting point
+                virtual T      query( const array<T> &Y )                = 0;       //!< extract scalar data from state
+                virtual void   rates(Array &dYdx, T x, const Array &Y,              //|
                                      const Array &aorg, const Variables &vars) = 0; //!< differential rates
-                virtual T      delta() const throw() = 0;
+                virtual T         delta() const throw() = 0;                        //!< initial time step
+                virtual Callback *adapt() throw() { return NULL; }                  //!< callback to correct internal phase space
+                inline virtual ~System() throw() {}                                 //!< destructor
 
             protected:
-                inline explicit System() throw() {}
+                inline explicit System() throw() {} //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(System);
@@ -45,9 +47,10 @@ namespace upsylon
             class ExplODE : public Type<T>::Sequential
             {
             public:
-                typedef typename ODE::Field<T>::Equation Equation;
-                typedef typename Type<T>::Array          Array;
+                typedef typename ODE::Field<T>::Equation Equation; //!< alias
+                typedef typename Type<T>::Array          Array;    //!< alias
 
+                //! initialize internal state
                 inline explicit ExplODE(ODE::System<T>         &sys_,
                                         ODE::ExplicitSolver<T> &slv_) :
                 sys(sys_),
@@ -60,6 +63,7 @@ namespace upsylon
                     slv.start( sys.dimension() );
                 }
 
+                //! access to current state
                 inline const array<T> &fields() const throw() { return arr; }
 
 
@@ -72,6 +76,7 @@ namespace upsylon
                 const Array            *p_aorg;
                 const Variables        *p_vars;
 
+                //! ODE wrapper
                 inline void compute( Array &dYdx, T x, const Array &Y)
                 {
                     assert(p_aorg);
@@ -79,6 +84,7 @@ namespace upsylon
                     return sys.rates(dYdx, x, Y, *p_aorg, *p_vars);
                 }
 
+                //! initialize protocol
                 inline virtual T on_initialize(T x1, const Array &aorg, const Variables &vars)
                 {
                     // link
@@ -97,6 +103,7 @@ namespace upsylon
                     return sys.query(arr);
                 }
 
+                //! update protocol
                 inline virtual T on_compute_to(T x1, const Array &aorg, const Variables &vars)
                 {
                     // link
@@ -112,8 +119,8 @@ namespace upsylon
                     // done
                     return sys.query(arr);
                 }
-
             };
+
         }
     }
 }
