@@ -153,13 +153,14 @@ namespace upsylon
                         size_t    &i     = proxy.ivar;
                         for(i=aorg.size();i>0;--i)
                         {
-                            if(used[i])
+                            const size_t ii = i;
+                            if(used[ii])
                             {
-                                dFda[i] = this->diff(proxy,aorg[i],scale);
+                                dFda[ii] = this->diff(proxy,aorg[ii],scale);
                             }
                             else
                             {
-                                dFda[i] = 0;
+                                dFda[ii] = 0;
                             }
                         }
                     }
@@ -175,23 +176,21 @@ namespace upsylon
                         inline T operator()( T atry )
                         {
                             assert(aorg_p); assert(vars_p); assert(func_p);
-                            assert(ivar>0);
-                            assert(ivar<=aorg_p->size());
+                            assert(ivar>0); assert(ivar<=aorg_p->size());
+
                             Array           &a  = (Array &)(*aorg_p);
-                            const Variables &v  = *vars_p;
-                            Sequential      &F  = *func_p;
                             T               &ai = a[ivar];
                             const T          a0 = ai;
                             try
                             {
                                 ai = atry;
-                                const T ans = F.initialize(xvalue,a,v);
+                                const T ans = func_p->initialize(xvalue,a,*vars_p);
                                 ai = a0;
                                 return ans;
                             }
                             catch(...)
                             {
-                                a[ivar] = a0; throw;
+                                ai = a0; throw;
                             }
                         }
                     };

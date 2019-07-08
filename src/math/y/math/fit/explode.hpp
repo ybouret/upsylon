@@ -14,9 +14,10 @@ namespace upsylon
         {
             //! differential system interface
             template <typename T>
-            class System
+            class System : public counted_object
             {
             public:
+                typedef arc_ptr< System<T> >          Pointer;   //!< alias
                 typedef typename Field<T>::Callback   Callback;  //!< alias
                 typedef typename Fit::Type<T>::Array  Array;     //!< alias
                 typedef Fit::Variables                Variables; //!< alias
@@ -42,11 +43,13 @@ namespace upsylon
         namespace Fit
         {
 
-#define Y_MATH_FIT_EXPLODE_CTOR()   \
-ode( this, & ExplODE<T>::compute ), \
-arr( sys.dimension() ),             \
-p_aorg(0),                          \
-p_vars(0),                          \
+#define Y_MATH_FIT_EXPLODE_CTOR(ARG)   \
+ESP(ARG),                              \
+sys(sys_),                             \
+ode( this, & ExplODE<T>::compute ),    \
+arr( sys.dimension() ),                \
+p_aorg(0),                             \
+p_vars(0),                             \
 ctrl(0)
 
             //! wrapper to provide sequential call
@@ -61,9 +64,7 @@ ctrl(0)
                 //! initialize internal state
                 inline explicit ExplODE(const ESP      &esp_,
                                         ODE::System<T> &sys_) :
-                ESP(esp_),
-                sys(sys_),
-                Y_MATH_FIT_EXPLODE_CTOR()
+                Y_MATH_FIT_EXPLODE_CTOR(esp_)
                 {
                     finalize();
                 }
@@ -71,9 +72,7 @@ ctrl(0)
                 //! default setup
                 inline explicit ExplODE(ODE::System<T>         &sys_,
                                         ODE::ExplicitSolver<T> *esp_ = NULL) :
-                ESP( esp_ ? esp_ : ODE::DriverCK<T>::New() ),
-                sys(sys_),
-                Y_MATH_FIT_EXPLODE_CTOR()
+                Y_MATH_FIT_EXPLODE_CTOR(esp_ ? esp_ : ODE::DriverCK<T>::New())
                 {
                     finalize();
                 }
@@ -93,11 +92,7 @@ ctrl(0)
                 T                       ctrl;
 
                 //! finalize construct
-                inline void finalize()
-                {
-                    (**this).start( sys.dimension() );
-
-                }
+                inline void finalize() { (**this).start( sys.dimension() ); }
 
                 //! ODE wrapper
                 inline void compute( Array &dYdx, T x, const Array &Y)
@@ -114,13 +109,12 @@ ctrl(0)
                     p_aorg = &aorg;
                     p_vars = &vars;
 
-                    // initialize up to x1
+                    // setup state and step
                     sys.setup(arr);
-                    ctrl   = sys.delta();
-                    T x0   = sys.start();
+                    ctrl = sys.delta();
 
-                    // differential step
-                    (**this)( ode, arr, x0, x1, ctrl, sys.adapt() );
+                    // differential step up to x1
+                    (**this)( ode, arr, sys.start(), x1, ctrl, sys.adapt() );
                     
                     // done
                     return sys.query(arr);
@@ -133,10 +127,9 @@ ctrl(0)
                     p_aorg = &aorg;
                     p_vars = &vars;
                     
-                    const T x0   = this->current;
-                    
+
                     // differential step
-                    (**this)( ode, arr, x0, x1, ctrl,  sys.adapt());
+                    (**this)( ode, arr, this->current, x1, ctrl,  sys.adapt());
                     
                     // done
                     return sys.query(arr);
