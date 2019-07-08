@@ -27,7 +27,7 @@ namespace upsylon
             inline explicit node_of( param_type args ) : next(0), prev(0), data(args) {}
 
             //! destructor
-            inline virtual ~node_of() throw() {}
+            inline virtual ~node_of() throw() { assert(0==next); assert(0==prev); }
 
             //! copy, if T has a copy constructor
             inline node_of(const node_of &other) : next(0), prev(0), data(other.data) {}
@@ -45,8 +45,8 @@ namespace upsylon
             mutable_type *next;  //!< mutable object for a list
             mutable_type *prev;  //!< mutable object for a list
 
-            inline explicit inode() throw() : next(0), prev(0) {} //!< initialize
-            inline virtual ~inode() throw() {}                    //!< destructor
+            inline explicit inode() throw() : next(0), prev(0) {}                        //!< initialize
+            inline virtual ~inode() throw() {assert(0==next); assert(0==prev);}          //!< destructor
             inline bool     is_linked() const throw() { return (0!=next) || (0!=prev); } //!< linked to another
             inline bool     is_single() const throw() { return (0==next) && (0==prev); } //!< not in list
         private:

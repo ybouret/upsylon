@@ -23,7 +23,7 @@ namespace upsylon
             //! store the address
             inline explicit addr_node( type *args ) throw() : next(0), prev(0), addr( args ) {}
             //! destructor
-            inline virtual ~addr_node() throw() {}
+            inline virtual ~addr_node() throw() { assert(0==next); assert(0==prev); addr=0; }
 
 
         private:

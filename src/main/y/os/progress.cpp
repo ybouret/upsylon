@@ -23,6 +23,10 @@ namespace upsylon
     progress:: ~progress() throw()
     {
         mark=0;
+        bips=0;
+        (double&)percent = 0;
+        (double&)done    = 0;
+        (double&)left    = 0;
     }
 
     void progress:: start() throw()

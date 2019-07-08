@@ -1,4 +1,5 @@
 #include "y/randomized/mersenne-twister.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -13,6 +14,8 @@ namespace upsylon
 
         mersenne_twister:: ~mersenne_twister() throw()
         {
+            memset(mt,0,sizeof(mt));
+            mti=0;
         }
 
         mersenne_twister:: mersenne_twister() throw():

@@ -18,7 +18,7 @@ namespace upsylon
 		template <>
 		isaac<RANDSIZL>:: ~isaac() throw()
 		{
-			
+            memset( &ctx_, 0, sizeof(ctx_) );
 		}
 		
 #define ind(mm,x)  (*(uint32_t *)((uint8_t *)(mm) + ((x) & ((RANDSIZ-1)<<2))))

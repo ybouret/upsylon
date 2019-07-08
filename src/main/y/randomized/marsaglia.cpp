@@ -1,4 +1,5 @@
 #include "y/randomized/marsaglia.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -68,6 +69,8 @@ namespace upsylon
 
         Marsaglia:: ~Marsaglia() throw()
         {
+            memset(t,0,sizeof(t));
+            z=w=jsr=jcong=a=b=x=y=bro=c=0;
         }
 
         uint32_t Marsaglia:: mwc() throw()

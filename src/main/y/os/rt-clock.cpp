@@ -119,7 +119,7 @@ namespace upsylon
 
     rt_clock:: ~rt_clock() throw()
     {
-
+        freq=0;
     }
 
     void rt_clock:: sleep(const double nsec) const

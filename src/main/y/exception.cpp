@@ -6,6 +6,7 @@
 
 namespace upsylon
 {
+
     
     exception:: exception() throw() : when_()
     {
