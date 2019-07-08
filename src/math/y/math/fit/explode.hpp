@@ -23,14 +23,24 @@ namespace upsylon
                 typedef Fit::Variables                Variables; //!< alias
 
                 virtual size_t    dimension() const throw()                 = 0;    //!< dimensionality
+
                 virtual void      setup(Array           &Y,                         //|
                                         const Array     &aorg,                      //|
                                         const Variables &vars) const        = 0;    //!< initialize internal variables at initial coordinate
+
                 virtual T         start() const throw()                     = 0;    //!< return  starting point
-                virtual T         query( const T x, const array<T> &Y )     = 0;    //!< extract scalar data from state
-                virtual void      rates(Array &dYdx, T x, const Array &Y,           //|
+
+                virtual T         query( const T        x,                          //|
+                                        const array<T> &Y,                          //|
+                                        const Array     &aorg,                      //|
+                                        const Variables &vars   )           = 0;    //!< extract scalar data from state
+
+                virtual void      rates(Array           &dYdx,                      //|
+                                        T                x,                         //|
+                                        const Array     &Y,                         //|
                                         const Array     &aorg,                      //|
                                         const Variables &vars)              = 0;    //!< differential rates
+
                 virtual T         delta() const throw()                     = 0;    //!< initial time step
                 virtual Callback *adapt() throw() { return NULL; }                  //!< callback to correct internal phase space
                 inline virtual   ~System() throw() {}                               //!< destructor
@@ -120,7 +130,7 @@ ctrl(0)
                     (**this)( ode, arr, sys.start(), x1, ctrl, sys.adapt() );
                     
                     // done
-                    return sys.query(x1,arr);
+                    return sys.query(x1,arr,aorg,vars);
                 }
 
                 //! update protocol
@@ -135,7 +145,7 @@ ctrl(0)
                     (**this)( ode, arr, this->current, x1, ctrl,  sys.adapt());
                     
                     // done
-                    return sys.query(x1,arr);
+                    return sys.query(x1,arr,aorg,vars);
                 }
             };
 
