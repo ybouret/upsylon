@@ -21,7 +21,7 @@ namespace
             return 2;
         }
         
-        virtual void setup( Array &y ) const throw()
+        virtual void setup( Array &y, const Array &, const Variables &) const throw()
         {
             y[1] = 1;
             y[2] = 0;

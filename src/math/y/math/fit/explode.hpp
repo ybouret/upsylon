@@ -23,11 +23,12 @@ namespace upsylon
                 typedef Fit::Variables                Variables; //!< alias
 
                 virtual size_t    dimension() const throw()                 = 0;    //!< dimensionality
-                virtual void      setup( array<T> & ) const throw()         = 0;    //!< initialize internal variables at initial coordinate
-                virtual T         start() const throw()                     = 0;    //!< return linear=starting point
+                virtual void      setup( array<T> &,
+                                        const Array &aorg, const Variables &vars) const throw() = 0;    //!< initialize internal variables at initial coordinate
+                virtual T         start() const throw()                     = 0;    //!< return  starting point
                 virtual T         query( const T x, const array<T> &Y )     = 0;    //!< extract scalar data from state
                 virtual void      rates(Array &dYdx, T x, const Array &Y,           //|
-                                     const Array &aorg, const Variables &vars) = 0; //!< differential rates
+                                        const Array &aorg, const Variables &vars) = 0; //!< differential rates
                 virtual T         delta() const throw() = 0;                        //!< initial time step
                 virtual Callback *adapt() throw() { return NULL; }                  //!< callback to correct internal phase space
                 inline virtual   ~System() throw() {}                               //!< destructor
@@ -110,7 +111,7 @@ ctrl(0)
                     p_vars = &vars;
 
                     // setup state and step
-                    sys.setup(arr);
+                    sys.setup(arr,aorg,vars);
                     ctrl = sys.delta();
 
                     // differential step up to x1
