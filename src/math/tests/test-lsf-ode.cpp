@@ -21,9 +21,10 @@ namespace
             return 2;
         }
         
-        virtual void setup( Array &y, const Array &, const Variables &) const throw()
+        virtual void setup( Array &y, const Array &aorg, const Variables &vars) const throw()
         {
-            y[1] = 1;
+            const double phi = vars(aorg,"phi");
+            y[1] = cos( start() + phi );
             y[2] = 0;
         }
         
@@ -53,7 +54,10 @@ namespace
             return 0.1;
         }
         
-        virtual double query( const double, const array<double> &y, const array<double> &, const Variables & )
+        virtual double query(const double,
+                             const array<double> &y,
+                             const array<double> &,
+                             const Variables & ) const
         {
             return y[1];
         }
@@ -76,7 +80,7 @@ Y_UTEST(lsf_ode)
 
     Fit::ExplODE<double>  F(shape);
     F->eps = 1e-3;
-   
+
     
     const size_t NP    = 50 + alea.leq(50);
     const double range = 5+alea.leq(10);
@@ -85,7 +89,7 @@ Y_UTEST(lsf_ode)
     vector<double> X,Y,Yf;
     Fit::Sample<double> sample(X,Y,Yf);
     
-    Fit::Variables &vars = sample.variables; vars << "omega" << "lambda";
+    Fit::Variables &vars = sample.variables; vars << "omega" << "lambda" << "phi";;
     const size_t    nvar = vars.size();
     std::cerr << "vars=" << vars << std::endl;
     vector<double> aorg(nvar,0);
@@ -94,13 +98,16 @@ Y_UTEST(lsf_ode)
     
     double &omega  = vars(aorg,"omega");
     double &lambda = vars(aorg,"lambda");
+    double &phi    = vars(aorg,"phi");
+
     omega  = 8.0;
     lambda = 0.3;
+    phi    = 0.8;
 
     for(size_t i=NP;i>0;--i)
     {
         X.push_back( range * alea.to<double>() );
-        Y.push_back( cos( omega * X.back()) * (1.0+noise*alea.symm<double>()) * exp(-lambda*X.back()) );
+        Y.push_back( cos( omega * X.back() + phi ) * (1.0+noise*alea.symm<double>()) * exp(-lambda*X.back()) );
         Yf.push_back(0);
     }
     
@@ -137,6 +144,20 @@ Y_UTEST(lsf_ode)
 
     vars.display(std::cerr, aorg, aerr);
     Fit::IO::Save("ode-fit2.dat",sample,true);
+
+    if(false)
+    {
+        vars.on(used, "phi");
+        {
+            if( !ls.fit(sample, F, aorg, aerr, used) )
+            {
+                throw exception("couldn't fit");
+            }
+        }
+
+        vars.display(std::cerr, aorg, aerr);
+        Fit::IO::Save("ode-fit3.dat",sample,true);
+    }
 
 
     {

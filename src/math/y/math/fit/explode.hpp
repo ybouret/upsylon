@@ -30,10 +30,10 @@ namespace upsylon
 
                 virtual T         start() const throw()                     = 0;    //!< return  starting point
 
-                virtual T         query( const T        x,                          //|
+                virtual T         query(const T         x,                          //|
                                         const array<T> &Y,                          //|
                                         const Array     &aorg,                      //|
-                                        const Variables &vars   )           = 0;    //!< extract scalar data from state
+                                        const Variables &vars   ) const     = 0;    //!< extract scalar data from state
 
                 virtual void      rates(Array           &dYdx,                      //|
                                         T                x,                         //|
