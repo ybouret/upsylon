@@ -4,7 +4,6 @@
 #include "y/sequence/vector.hpp"
 #include "y/ios/ocstream.hpp"
 #include <typeinfo>
-#include "y/math/ode/explicit/lssi.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -146,27 +145,6 @@ namespace
                 std::cerr << "count=" << pb.count << std::endl;
             }
             
-            std::cerr << "full equation   : " << y << std::endl;
-            y[1] = 1;
-            y[2] = 0;
-            ODE::LSSI::LinearRun<T,SOLVER>(odeint,
-                                           EqCos,
-                                           y,
-                                           0,
-                                           L,
-                                           0.10,
-                                           NULL);
-            std::cerr << "linear  run     : " << y << std::endl;
-            y[1] = 1;
-            y[2] = 0;
-            ODE::LSSI::LogarithmicRun<T,SOLVER>(odeint,
-                                                EqCos,
-                                                y,
-                                                log(1e-3),
-                                                log(L),
-                                                0.01,
-                                                NULL);
-            std::cerr << "logarithmic run : " << y << std::endl;
         }
         
         std::cerr << "LV" << std::endl;
@@ -194,10 +172,7 @@ namespace
                 }
                 std::cerr << "count=" << pb.count << std::endl;
             }
-            
-            {
 
-            }
         }
         
         
