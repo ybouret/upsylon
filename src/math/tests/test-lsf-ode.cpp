@@ -1,5 +1,5 @@
 
-#include "y/math/fit/explode.hpp"
+#include "y/math/ode/explicit/explode.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/math/fit/samples-io.hpp"
@@ -10,7 +10,7 @@ using namespace math;
 
 namespace
 {
-    class Shape : public ODE::System<double>
+    class Shape : public ODE::ExplicitProblem<double>
     {
     public:
         explicit Shape() throw() {}
@@ -21,7 +21,7 @@ namespace
             return 2;
         }
         
-        virtual void setup( Array &y, const Array &aorg, const Variables &vars) const throw()
+        virtual void setup(array<double> &y, const array<double> &aorg, const Fit::Variables &vars) const throw()
         {
             const double phi = vars(aorg,"phi");
             y[1] = cos( start() + phi );
@@ -30,9 +30,9 @@ namespace
         
         virtual void rates(array<double> &dydx,
                            double ,
-                           const array<double> &y,
-                           const array<double> &aorg,
-                           const Variables     &vars)
+                           const array<double>  &y,
+                           const array<double>  &aorg,
+                           const Fit::Variables &vars)
         {
             assert(dydx.size()==2);
             assert(y.size()==2);
@@ -55,9 +55,9 @@ namespace
         }
         
         virtual double query(const double,
-                             const array<double> &y,
-                             const array<double> &,
-                             const Variables & ) const
+                             const array<double>  &y,
+                             const array<double>  &,
+                             const Fit::Variables & ) const
         {
             return y[1];
         }
@@ -75,15 +75,16 @@ Y_UTEST(lsf_ode)
 
     {
         const ODE::ExplicitSolver<double>::Pointer driver0 = ODE::DriverCK<double>::New();
-        Fit::ExplODE<double>                       F0(driver0,shape);
+        ODE::ExplODE<double>                       F0(shape,driver0);
         F0->eps = 1e-3;
     }
 
+
     // create the associated Explicit ODE
-    Fit::ExplODE<double>  F(shape);
+    ODE::ExplODE<double>  F(shape);
     F->eps = 1e-3;
 
-    
+
     const size_t NP    = 50 + alea.leq(50);
     const double range = 5+alea.leq(10);
     double       noise = 0.1;

@@ -4,6 +4,8 @@
 
 #include "y/math/fit/samples.hpp"
 #include "y/sequence/arrays.hpp"
+#include "y/math/kernel/lu.hpp"
+#include "y/math/kernel/tao.hpp"
 
 namespace upsylon
 {
