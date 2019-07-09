@@ -13,6 +13,7 @@ namespace upsylon
         namespace ODE
         {
 
+            //! macro to setup ExplODE
 #define Y_MATH_EXPLODE_CTOR(ARG)       \
 ExplicitSolver<T>::Pointer( ARG ),     \
 crunch( host ),                        \

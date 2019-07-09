@@ -70,7 +70,7 @@ namespace
 
 Y_UTEST(lsf_ode)
 {
-    // create a shape that implements the System API
+    // create a shape that implements the ExplicitProblem
     Shape                                      shape;
 
     {

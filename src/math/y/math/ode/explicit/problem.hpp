@@ -10,13 +10,16 @@ namespace upsylon
     {
         namespace ODE
         {
+            //! a problem to be solved with an explicit solver
             template <typename T>
             class ExplicitProblem : public Problem<T>
             {
             public:
+                //! destructor
                 inline virtual ~ExplicitProblem() throw() {}
 
             protected:
+                //! constructor
                 inline explicit ExplicitProblem() throw() : Problem<T>() {}
                 
             private:
