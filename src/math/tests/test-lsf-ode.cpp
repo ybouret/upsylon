@@ -28,7 +28,7 @@ namespace
             y[2] = 0;
         }
         
-        virtual void rates( array<double> &dydx,
+        virtual void rates(array<double> &dydx,
                            double ,
                            const array<double> &y,
                            const array<double> &aorg,
@@ -70,14 +70,16 @@ namespace
 
 Y_UTEST(lsf_ode)
 {
-    
+    // create a shape that implements the System API
     Shape                                      shape;
+
     {
         const ODE::ExplicitSolver<double>::Pointer driver0 = ODE::DriverCK<double>::New();
         Fit::ExplODE<double>                       F0(driver0,shape);
         F0->eps = 1e-3;
     }
 
+    // create the associated Explicit ODE
     Fit::ExplODE<double>  F(shape);
     F->eps = 1e-3;
 
@@ -85,7 +87,8 @@ Y_UTEST(lsf_ode)
     const size_t NP    = 50 + alea.leq(50);
     const double range = 5+alea.leq(10);
     double       noise = 0.1;
-    
+
+    // create the sample
     vector<double> X,Y,Yf;
     Fit::Sample<double> sample(X,Y,Yf);
     
@@ -107,7 +110,7 @@ Y_UTEST(lsf_ode)
     for(size_t i=NP;i>0;--i)
     {
         X.push_back( range * alea.to<double>() );
-        Y.push_back( cos( omega * X.back() + phi ) * (1.0+noise*alea.symm<double>()) * exp(-lambda*X.back()) );
+        Y.push_back( cos( omega * X.back() + phi ) * exp(-lambda*X.back()) + noise*alea.symm<double>()) ;
         Yf.push_back(0);
     }
     
