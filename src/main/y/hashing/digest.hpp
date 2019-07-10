@@ -17,10 +17,10 @@ namespace upsylon
     public:
         static bool UPPER_CASE; //!< global flag for an upper case output, default is false
         
-        explicit digest( const size_t n, const uint8_t b=0 ); //!< a zero digest with n bytes equal to b
-        digest( const digest & );                     //!< copy
-        virtual ~digest() throw();                    //!< destructor
-        digest & operator=( const digest & ) throw(); //!< assign WITH TRUNCATION
+        explicit digest( const size_t n, const uint8_t b=0 );   //!< a zero digest with n bytes equal to b
+        digest( const digest & );                               //!< copy
+        virtual ~digest() throw();                              //!< destructor
+        digest & operator=( const digest & ) throw();           //!< assign WITH TRUNCATION
         digest & operator=( const memory::ro_buffer &) throw(); //!< assign WITH TRUNCATION
 
         void ldz() throw();                         //!< set to zero
@@ -46,7 +46,7 @@ namespace upsylon
         static digest hex(const char *text);
 
         //! set hexadecimal value
-        static digest hex( const string &);
+        static digest hex(const string &);
 
         //! randomize the value
         void rand() throw();

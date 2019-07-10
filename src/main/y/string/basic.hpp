@@ -14,6 +14,12 @@
 
 namespace upsylon
 {
+    ////////////////////////////////////////////////////////////////////////////
+    //
+    // utility functions
+    //
+    ////////////////////////////////////////////////////////////////////////////
+
     //! secured string length
     template <typename T>
     size_t length_of( const T *s ) throw()
@@ -30,21 +36,26 @@ namespace upsylon
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    //
+    // core string macros
+    //
+    ////////////////////////////////////////////////////////////////////////////
+
 #if defined(NDEBUG)
 #define Y_CORE_STRING_CHECK(S)
 #else
     //! sanity check of a core string
-#define Y_CORE_STRING_CHECK(S)              \
-assert( (S).addr_ );                        \
-assert( (S).items>0 );                      \
-assert( (S).bytes>=(S).items*sizeof(T) );   \
-assert( (S).items-1==(S).maxi_ );           \
-assert( (S).size_<=(S).maxi_ );             \
-assert( 0 == (S).addr_[ (S).size_ ] );      \
-do { for(size_t izero=(S).size_;izero<=(S).maxi_;++izero) { assert(0==(S).addr_[izero]); } } while(false)
+#define Y_CORE_STRING_CHECK(S)                     \
+assert( (S).addr_ );                                \
+assert( (S).items>0 );                               \
+assert( (S).bytes>=(S).items*sizeof(T) );             \
+assert( (S).items-1==(S).maxi_ );                      \
+assert( (S).size_<=(S).maxi_ );                         \
+assert( 0 == (S).addr_[ (S).size_ ] );                   \
+do { for(size_t izero=(S).size_;izero<=(S).maxi_;++izero) \
+{ assert(0==(S).addr_[izero]); } } while(false)
 #endif
-
-
 
     //! default fields initialisation
 #define Y_CORE_STRING_CTOR0()      object(), memory::rw_buffer(), dynamic(), counted(), ios::serializable(), addr_(0)
@@ -60,6 +71,13 @@ maxi_ = items-1
 
     //! string padding with zero after a random operation
 #define Y_CORE_STRING_ZPAD() do { assert(bytes>=sizeof(T)*size_); memset(addr_+size_,0,bytes-sizeof(T)*size_); } while(false)
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //
+    // core string implementation
+    //
+    ////////////////////////////////////////////////////////////////////////////
 
     namespace core
     {
@@ -89,7 +107,7 @@ maxi_ = items-1
             //! dynamic interface: the size method...
             inline  virtual size_t size()     const throw() { return size_; }
 
-            //! dynami interface: the capacity method
+            //! dynamic interface: the capacity method
             inline  virtual size_t capacity() const throw() { return maxi_; }
             
             //! destroy memory
@@ -101,10 +119,7 @@ maxi_ = items-1
             }
 
             //! set as empty
-            inline void clear() throw()
-            {
-                force(0);
-            }
+            inline void clear() throw() { force(0); }
 
             //! force size
             inline void force( const size_t n ) throw()
