@@ -193,6 +193,35 @@ namespace upsylon
                     indexing::make(J, comparison::decreasing<T>, X);
                 }
 
+                //! get min coordinate
+                inline const T lower() const throw()
+                {
+                    const size_t n = this->count();
+                    if(n>0)
+                    {
+                        assert( n == J.size() );
+                        return X[ J[n] ];
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+
+                inline const T upper() const throw()
+                {
+                    const size_t n = this->count();
+                    if(n>0)
+                    {
+                        assert( n == J.size() );
+                        return X[ J[1] ];
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+
                 //! implementation for one sample
                 virtual inline void add_SSE_SSR( T &SSE, T &SSR ) const
                 {
