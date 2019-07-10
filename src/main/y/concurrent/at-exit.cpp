@@ -17,6 +17,7 @@ namespace upsylon
 
             static __at_exit tasks[at_exit::stack_size];
             static size_t    count;
+            static bool      registered;
 
             static inline void call() throw()
             {
@@ -51,14 +52,14 @@ namespace upsylon
 
         };
 
-        size_t    __at_exit:: count   = 0 ;
-        __at_exit __at_exit:: tasks[] = {};
-
+        size_t    __at_exit:: count      = 0 ;
+        __at_exit __at_exit:: tasks[]    = {};
+        bool      __at_exit:: registered = false;
     }
 
     void at_exit:: perform(procedure proc, const longevity when) throw()
     {
-        static bool registerd = false;
+
 
         //______________________________________________________________________
         //
@@ -75,14 +76,15 @@ namespace upsylon
         // status check
         //______________________________________________________________________
         Y_GIANT_LOCK();
-        if(!registerd)
+        if(! __at_exit::registered)
         {
             Y_GIANT_LOCK();
             if( 0 != atexit(__at_exit::call) )
             {
                 libc::critical_error(errno,"atexit");
             }
-            registerd = true;
+            memset( __at_exit::tasks, 0, sizeof(__at_exit::tasks) );
+            __at_exit::registered = true;
         }
 
         // create a task at last position

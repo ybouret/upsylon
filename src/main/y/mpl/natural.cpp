@@ -70,7 +70,10 @@ namespace upsylon
         natural:: ~natural() throw()
         {
             static manager &mgr = manager::location();
-            Y_MPN_CHECK(this); mgr.__release(byte,allocated);
+            Y_MPN_CHECK(this);
+            mgr.__release(byte,allocated);
+            bytes=0;
+            item =0;
         }
 
         natural:: natural(const natural &other) : Y_MPN_CTOR(other.bytes,bytes)

@@ -469,8 +469,8 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //__________________________________________________________________
             static natural mod_inv( const natural &b, const natural &n );                     //!< modular inverse
             static natural mod_exp( const natural &b, const natural &e, const natural &n );   //!< modular exponentiation (b^e)[n]
-            static bool    are_coprimes(const natural &, const natural &); //!< test co-primailty
-            static natural factorial(const natural &n); //!< factorial computation, recurvsive algorithm
+            static bool    are_coprimes(const natural &, const natural &);                    //!< test co-primailty
+            static natural factorial(const natural &n);                                       //!< factorial computation, recursive algorithm
 
             //__________________________________________________________________
             //
