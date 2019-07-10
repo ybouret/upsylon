@@ -132,7 +132,9 @@ Y_UTEST(lsf_ode)
     {
         if( !ls.fit(sample, F, aorg, aerr, used ) )
         {
-            throw exception("couldn't fit");
+            vars.display(std::cerr,used);
+            std::cerr << "Couldn't fit..." << std::endl;
+            return 0;
         }
     }
     vars.display(std::cerr, aorg, aerr);
@@ -142,7 +144,9 @@ Y_UTEST(lsf_ode)
     {
         if( !ls.fit(sample, F, aorg, aerr, used) )
         {
-            throw exception("couldn't fit");
+            vars.display(std::cerr,used);
+            std::cerr << "Couldn't fit..." << std::endl;
+            return 0;
         }
     }
 
@@ -155,7 +159,9 @@ Y_UTEST(lsf_ode)
         {
             if( !ls.fit(sample, F, aorg, aerr, used) )
             {
-                throw exception("couldn't fit");
+                vars.display(std::cerr,used);
+                std::cerr << "Couldn't fit..." << std::endl;
+                return 0;
             }
         }
 

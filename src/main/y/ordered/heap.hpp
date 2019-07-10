@@ -208,7 +208,8 @@ namespace upsylon
         Y_DISABLE_ASSIGN(heap);
 
         typedef mutable_type *slot_t;
-        ALLOCATOR &hmem;
+
+        ALLOCATOR         &hmem;
         size_t             slots; //!< maximum number of slots
         size_t             bytes;
         slot_t            *slot;

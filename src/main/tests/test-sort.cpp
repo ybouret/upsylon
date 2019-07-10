@@ -105,6 +105,11 @@ namespace
             std::cerr << "V=" << V << std::endl;
             std::cerr << "I=" << indx << std::endl;
 
+            for(size_t i=1;i<n;++i)
+            {
+                Y_ASSERT(V[indx[i]]<=V[indx[i+1]]);
+            }
+            
             std::cerr << "\tysort" << std::endl;
             alea.shuffle(*V,V.size());
             std::cerr << "V1=" << V << std::endl;
@@ -177,11 +182,15 @@ namespace
 
             if( 0 == (n&15) )
             {
+                std::cerr.flush();
+                fprintf( stderr, "spead@%6u | heap: %7.3f | quick: %7.3f | y: %7.3f\n",  unsigned(n), hspd.back(), qspd.back(), yspd.back() );
+                /*
                 std::cerr
                 << n
                 << " | heap : " << hspd.back()
                 << " | quick: " << qspd.back()
                 << " | y    : " << yspd.back() << std::endl;
+                 */
             }
         }
     }
@@ -199,7 +208,7 @@ Y_UTEST(sort)
     vector<double>   qspd;
     vector<double>   yspd;
 #define DO_PERF(CLASS) do {\
-std::cerr << "Performances for " << #CLASS << std::endl;\
+std::cerr << "Speeds for " << #CLASS << std::endl;\
 do_perf<CLASS>(count,hspd,qspd,yspd);\
 ios::ocstream fp( #CLASS ".dat");\
 for(size_t i=1;i<=count.size();++i) {\

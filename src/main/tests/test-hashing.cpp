@@ -95,6 +95,8 @@ std::cerr << "sizeof(key_hasher." #CLASS ")=" << sizeof(key_hasher<string,hashin
     {
         std::cerr << phash[i]->name() << std::endl;
     }
+
+    
     if(argc>1)
     {
         vector<string> lines;
@@ -116,12 +118,17 @@ std::cerr << "sizeof(key_hasher." #CLASS ")=" << sizeof(key_hasher<string,hashin
         }
     }
 
-    key_hasher<string>               skh_default;
-    key_hasher<string,hashing::sha1> skh_crypto;
     const string s = "Hello, World";
-    std::cerr << "default=" << skh_default(s) << std::endl;
-    std::cerr << "crypto =" << skh_crypto(s)  << std::endl;
 
+    {
+        std::cerr << "Testing Key Hasher: " << std::endl;
+        key_hasher<string>               skh_default;
+        key_hasher<string,hashing::sha1> skh_crypto;
+        std::cerr << "default=" << skh_default(s) << std::endl;
+        std::cerr << "crypto =" << skh_crypto(s)  << std::endl;
+    }
+
+    std::cerr << "Testing Message Digest" << std::endl;
     digest d(8);
     for(size_t i=1;i<=phash.size();++i)
     {
@@ -133,9 +140,7 @@ std::cerr << "sizeof(key_hasher." #CLASS ")=" << sizeof(key_hasher<string,hashin
         H.set();
         H(s);
         const digest D = H.md();
-        std::cerr << d << "@" << H.name() << " =>\t" << D << std::endl;
-
-
+        std::cerr << d << "@" << H.name() << "\t=>\t" << D << std::endl;
     }
 
 }

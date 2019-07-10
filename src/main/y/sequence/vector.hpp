@@ -356,6 +356,7 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
         {
             __free();
             hmem_.release_as(this->addr_,maxi_,bytes);
+            this->item_ = 0;
         }
     };
 

@@ -14,11 +14,12 @@ namespace upsylon
         template <typename T,typename FUNC> static inline
         void make( array<size_t> &idx, FUNC &compare,  const array<T> &ra  ) throw()
         {
+
+            // initialize indices
             const size_t n = idx.size(); assert( ra.size() == idx.size() );
+            for(size_t i=n;i>0;--i) idx[i] = i;
 
-            for( size_t i=1; i <= n; ++i )
-                idx[i] = i;
-
+            // sort routine
             size_t   inc = 1;
             do
             {

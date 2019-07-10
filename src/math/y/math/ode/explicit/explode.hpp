@@ -31,7 +31,10 @@ x_ctrl(0)
             {
             public:
                 //! cleanup
-                inline virtual ~ExplODE() throw() {}
+                inline virtual ~ExplODE() throw()
+                {
+                    
+                }
 
                 //! setup with shared solver
                 explicit ExplODE(ExplicitProblem<T>                        &host,

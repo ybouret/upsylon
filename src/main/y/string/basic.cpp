@@ -30,6 +30,15 @@ namespace upsylon
             return os;
         }
 
+        template<>
+        std::ostream & string<char>:: align(std::ostream &os,size_t width) const
+        {
+            const size_t n = size_;
+            for(size_t i=0;i<n;++i) os << addr_[i];
+            while(width-->n) os << ' ';
+            return os;
+        }
+
 
         template <>
         std::ostream & string<char>:: display_visible(std::ostream &os) const

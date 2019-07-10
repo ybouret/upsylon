@@ -50,6 +50,7 @@ namespace upsylon
             {
                 delete (this->pointee);
             }
+            this->zero();
         }
 
         //! transitive key access

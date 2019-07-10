@@ -15,7 +15,7 @@ namespace upsylon
 		{
 		public:
 			Y_HASHING_FUNCTION_DECL(rmd160,20,64); //!< specs
-			static const size_t RMDsize=160; //!< bits
+			static const size_t RMDsize=160;       //!< bits
             
             
 		private:

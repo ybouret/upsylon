@@ -1,6 +1,5 @@
 #include "y/hashing/rmd128.hpp"
-#include <cstring>
-#include <iostream>
+#include "y/type/bzset.hpp"
 
 namespace upsylon
 {
@@ -229,10 +228,10 @@ namespace upsylon
             }
             
             static inline
-            void MDfinish(uint32_t *MDbuf,
+            void MDfinish(uint32_t      *MDbuf,
                           const uint8_t *strptr,
-                          uint32_t lswlen,
-                          uint32_t mswlen)
+                          uint32_t       lswlen,
+                          uint32_t       mswlen)
             {
                 unsigned int i;                                 /* counter       */
                 uint32_t     X[16];                             /* message words */
@@ -273,9 +272,13 @@ namespace upsylon
         RMD(),
         MDbuf()
         {
+            Y_BZSET_STATIC(MDbuf);
         }
         
-        rmd128:: ~rmd128() throw() {}
+        rmd128:: ~rmd128() throw()
+        {
+            Y_BZSET_STATIC(MDbuf);
+        }
         
         const char * rmd128:: name()   const throw()
         {

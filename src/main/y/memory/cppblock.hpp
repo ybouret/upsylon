@@ -4,6 +4,7 @@
 
 #include "y/memory/global.hpp"
 #include "y/type/args.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -17,22 +18,27 @@ namespace upsylon
             Y_DECL_ARGS(T,type); //!< aliases
             const size_t size;   //!< number of items
             const size_t bytes;  //!< allocated bytes
+        private:
+            mutable_type *wksp;  //!< for memory
+        public:
             T           *data;   //!< data[1..size]
 
             //! acquire all
             inline explicit cppblock_of(const size_t n) :
             size(n),
             bytes(0),
-            data( ALLOCATOR::instance().template acquire_as<T>((size_t&)size,(size_t&)bytes))
+            wksp(ALLOCATOR::instance().template acquire_as<mutable_type>((size_t&)size,(size_t&)bytes) ),
+            data(wksp-1)
             {
-                --data;
+
             }
 
             //! release all
             inline virtual ~cppblock_of() throw()
             {
-                ++data;
-                ALLOCATOR::location().template release_as<T>(data,(size_t&)size,(size_t&)bytes);
+                clear();
+                ALLOCATOR::location().template release_as<mutable_type>(wksp,(size_t&)size,(size_t&)bytes);
+                data = 0;
             }
 
             //! access [1..size]
@@ -40,6 +46,10 @@ namespace upsylon
             //! const access[1..size]
             inline const type & operator[](size_t indx) const throw() { assert(indx>0); assert(indx<=size); return data[indx]; }
 
+            inline void clear() throw()
+            {
+                memset((void*)wksp,0,bytes);
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(cppblock_of);

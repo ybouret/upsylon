@@ -1,6 +1,5 @@
 #include "y/hashing/rmd160.hpp"
-#include <cstring>
-#include <iostream>
+#include "y/type/bzset.hpp"
 
 namespace upsylon
 {
@@ -330,9 +329,13 @@ namespace upsylon
         RMD(),
         MDbuf()
         {
+            Y_BZSET_STATIC(MDbuf);
         }
         
-        rmd160:: ~rmd160() throw() {}
+        rmd160:: ~rmd160() throw()
+        {
+            Y_BZSET_STATIC(MDbuf);
+        }
         
         const char * rmd160:: name()   const throw()
         {

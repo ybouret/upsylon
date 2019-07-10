@@ -18,7 +18,11 @@ namespace upsylon
         Y_DECL_ARGS(T,type); //!< aliases
 
         //! destructor
-        inline virtual ~array() throw() {}
+        inline virtual ~array() throw()
+        {
+            assert(0==item_);
+            assert(0==size_);
+        }
         
         //! inline access
         inline  type       & operator[](const size_t i) throw() { assert(i>0);assert(i<=size()); assert(item_); return item_[i]; }
@@ -98,10 +102,13 @@ namespace upsylon
     public:
         //! default empty array
         inline explicit lightweight_array() throw() : dynamic(), array<T>()  {}
+
         //! C++ array on a C array
         inline explicit lightweight_array(T *p,const size_t n) throw() : array<T>(p,n) { assert(!(p==NULL&&n>0)); }
+
         //! destructor
-        inline virtual ~lightweight_array() throw() {}
+        inline virtual ~lightweight_array() throw() { this->item_=0; this->size_=0; }
+
         //! dynamic interface: size
         inline virtual size_t size() const throw() { return this->size_; }
 

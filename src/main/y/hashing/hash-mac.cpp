@@ -9,6 +9,8 @@ namespace upsylon
 		
 		hash_mac:: ~hash_mac() throw()
 		{
+            (size_t&)L = 0;
+            (size_t&)B = 0;
 		}
 		
 		hash_mac:: hash_mac( function &H, const memory::ro_buffer &key ) :

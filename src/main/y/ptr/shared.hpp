@@ -54,6 +54,7 @@ namespace upsylon
                 object::release1(nref);
                 delete this->pointee;
             }
+            this->zero();
         }
 
         //! return the number of references

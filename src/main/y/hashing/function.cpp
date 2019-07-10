@@ -7,7 +7,11 @@ namespace upsylon
 	namespace hashing
 	{
 
-		function:: ~function() throw() {}
+		function:: ~function() throw()
+        {
+            (size_t &)length = 0;
+            (size_t &)window = 0;
+        }
 
 		function:: function( size_t L, size_t W ) throw() : length(L), window(W)
 		{

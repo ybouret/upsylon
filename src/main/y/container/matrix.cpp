@@ -3,6 +3,7 @@
 #include "y/exceptions.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/cswap.hpp"
+#include "y/type/bzset.hpp"
 
 #include <cerrno>
 
@@ -18,6 +19,18 @@ namespace upsylon
     matrix_data:: ~matrix_data() throw()
     {
         __kill();
+        bzset_(rows);
+        bzset_(cols);
+        bzset_(items);
+        bzset_(is_square);
+        bzset_(largest);
+        bzset_(total_items);
+        bzset_(data_offset);
+        bzset_(data_length);
+        bzset_(rows_offset);
+        bzset_(rows_length);
+        bzset_(indx_offset);
+        bzset_(indx_length);
     }
 
 

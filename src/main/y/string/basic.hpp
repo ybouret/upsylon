@@ -224,6 +224,9 @@ maxi_ = items-1
                 return s.std_display(os);
             }
 
+            //! align output
+            std::ostream & align(std::ostream &,size_t width) const;
+
             //! visible chars
             std::ostream & display_visible(std::ostream &) const;
 

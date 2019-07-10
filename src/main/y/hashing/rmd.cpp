@@ -1,6 +1,5 @@
 #include "y/hashing/rmd.hpp"
-#include <cstdio>
-#include <iostream>
+#include "y/type/bzset.hpp"
 
 namespace upsylon
 {
@@ -9,6 +8,9 @@ namespace upsylon
     {
         rmd:: ~rmd() throw()
         {
+            reset();
+            Y_BZSET_STATIC(X);
+            Y_BZSET_STATIC(B);
         }
         
 #if defined(_MSC_VER)
@@ -22,12 +24,15 @@ namespace upsylon
         X(),
         B()
         {
+            Y_BZSET_STATIC(X);
+            Y_BZSET_STATIC(B);
         }
         
         
         void rmd:: reset() throw()
         {
             (size_t&)length = nx = nb = 0;
+
         }
         
 #define B2X() ( ( uint32_t(B[3]) << 24 ) |  ( uint32_t(B[2]) << 16 ) |  ( uint32_t(B[1]) << 8 ) | uint32_t(B[0]) )

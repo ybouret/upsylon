@@ -76,11 +76,21 @@ namespace upsylon
 
     }
 
+    //! bzset blocks like 'TYPE BLK[N];'
+#define Y_BZSET_STATIC(BLK) core::bzset<sizeof(BLK)>(BLK)
+
     //! zero the memory area of an object
     template <typename T>
     inline void bzset( T &args ) throw()
     {
         core::bzset<sizeof(T)>(&args);
+    }
+
+    //! force zero memory
+    template <typename T>
+    inline void bzset_( const T &args ) throw()
+    {
+        core::bzset<sizeof(T)>( (void *)&((T&)args) );
     }
 
     //! test that a given block is zeroed

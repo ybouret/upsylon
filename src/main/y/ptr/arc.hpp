@@ -46,6 +46,7 @@ namespace upsylon
             {
                 delete (this->pointee);
             }
+            this->zero();
         }
 
         //! get pointee reference count
