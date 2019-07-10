@@ -29,7 +29,14 @@ namespace upsylon
             inline const_key_type & key() const throw() { return key_; }
 
             //! destructor
-            inline ~map_node() throw() {}
+            inline ~map_node() throw()
+            {
+                assert(NULL==next);
+                assert(NULL==prev);
+                meta = NULL;
+                (size_t&)hkey = 0;
+            }
+
             //! build
             inline  map_node(param_key_type k, const size_t h, param_type args) :
             next(0), prev(0), key_(k), hkey(h), data(args), meta(0) {}

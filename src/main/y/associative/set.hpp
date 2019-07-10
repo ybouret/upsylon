@@ -28,7 +28,14 @@ namespace upsylon
             //! for hash table code
             inline const_key_type & key() const throw() { return data.key(); }
             //! destructpr
-            inline ~set_node() throw() {}
+            inline ~set_node() throw()
+            {
+                assert(NULL==next);
+                assert(NULL==prev);
+                meta = NULL;
+                (size_t&)hkey = 0;
+            }
+
             //! constructor
             inline  set_node(param_key_type,const size_t h,param_type args) :
             next(0),prev(0),hkey(h),data(args),meta(0)

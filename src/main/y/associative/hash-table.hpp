@@ -116,7 +116,6 @@ namespace upsylon
                 metas.swap_with(other.metas);
                 upsylon::cswap(buffer,other.buffer);
                 upsylon::cswap(allocated,other.allocated);
-
             }
 
             //! creation/insertion of a new node with enough space
