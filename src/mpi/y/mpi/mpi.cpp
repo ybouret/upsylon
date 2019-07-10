@@ -1,4 +1,6 @@
 #include "y/mpi/mpi.hpp"
+#include "y/type/bzset.hpp"
+
 #include <cstdarg>
 #include <cerrno>
 
@@ -12,7 +14,7 @@ namespace upsylon
         va_list ap;
         va_start(ap,fmt);
         format(fmt,&ap);
-        memset( string_, 0, sizeof(string_) );
+        Y_BZSET_STATIC(string_);
         int errlen = 0;
         (void)MPI_Error_string(err,string_,&errlen);
     }
@@ -27,6 +29,7 @@ namespace upsylon
 
     mpi:: exception:: ~exception() throw()
     {
+        Y_BZSET_STATIC(string_);
     }
 
     const char * mpi:: exception:: what() const throw()

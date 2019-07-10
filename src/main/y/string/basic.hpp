@@ -30,6 +30,13 @@ namespace upsylon
         }
     }
 
+#if defined(NDEBUG)
+#define Y_CORE_STRING_CHECK_Z(S)
+#else
+    //! checking bytes from size_ to items are 0
+#define Y_CORE_STRING_CHECK_Z(S) do { for(size_t izero=(S).size_;izero<=(S).maxi_;++izero) { assert(0==addr_[izero]); } } while(false)
+#endif
+
     //! sanity check of a core string
 #define Y_CORE_STRING_CHECK(S)              \
 assert( (S).addr_ );                        \
@@ -37,7 +44,8 @@ assert( (S).items>0 );                      \
 assert( (S).bytes>=(S).items*sizeof(T) );   \
 assert( (S).items-1==(S).maxi_ );           \
 assert( (S).size_<=(S).maxi_ );             \
-assert( 0 == (S).addr_[ (S).size_ ] )
+assert( 0 == (S).addr_[ (S).size_ ] );\
+Y_CORE_STRING_CHECK_Z(S)
 
     //! default fields initialisation
 #define Y_CORE_STRING_CTOR0()      object(), memory::rw_buffer(), dynamic(), counted(), ios::serializable(), addr_(0)
@@ -51,12 +59,18 @@ static memory::allocator &hmem = string_allocator_instance(); \
 addr_ = hmem.acquire_as<T>(items,bytes);                      \
 maxi_ = items-1
 
+    //! string padding with zero after a random operation
+#define Y_CORE_STRING_ZPAD() do { memset(addr_+size_,0,bytes-sizeof(T)*size_); } while(false)
+
     namespace core
     {
         memory::allocator & string_allocator_instance();          //!< call to internal pooled memory
         memory::allocator & string_allocator_location() throw();  //!< call to internal pooled memory
 
         //! string on a base class
+        /**
+         assuming that all chars after size() are '0'
+         */
         template <typename T>
         class string :
         public memory::rw_buffer,
@@ -88,20 +102,20 @@ maxi_ = items-1
             }
 
             //! set as empty
-            inline void clear() throw() { addr_[(size_=0)]=0; }
-
-            //! force 0
-            inline void ldz() throw()
+            inline void clear() throw()
             {
-                size_=0;
-                memset(addr_,0,bytes);
+                force(0);
             }
 
             //! force size
             inline void force( const size_t n ) throw()
             {
-                assert(n<=maxi_);
-                addr_[ (size_=n) ] = 0;
+                Y_CORE_STRING_CHECK(*this);
+                while(size_>n)
+                {
+                    addr_[--size_]=0;
+                }
+                Y_CORE_STRING_CHECK(*this);
             }
 
             //! default constructor
@@ -134,7 +148,7 @@ maxi_ = items-1
                     else
                     {
                         memcpy(addr_,other.addr_,(size_=other.size_)*sizeof(T));
-                        addr_[size_] = 0;
+                        Y_CORE_STRING_ZPAD();
                         Y_CORE_STRING_CHECK(*this);
                     }
                 }
@@ -151,7 +165,7 @@ maxi_ = items-1
                     {
                         addr_[i] = s[i];
                     }
-                    addr_[size_]=0;
+                    memset(addr_+size_,0,bytes-sizeof(T)*size_);
                     Y_CORE_STRING_CHECK(*this);
                 }
                 else
@@ -343,9 +357,13 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
             Y_CORE_STRING_CMP(>)
 
             //! trim n last chars
-            inline string & trim(const size_t n) throw()
+            inline string & trim(size_t n) throw()
             {
-                addr_[ (size_ = (n>=size_) ? 0 : size_-n) ]=0;
+                Y_CORE_STRING_CHECK(*this);
+                while(n-->0 && size_>0)
+                {
+                    addr_[--size_] = 0;
+                }
                 Y_CORE_STRING_CHECK(*this);
                 return *this;
             }
@@ -354,6 +372,7 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
             template <typename FUNC> //bool (*is_bad)(const char C)
             inline string &trim( FUNC &is_bad ) throw()
             {
+                Y_CORE_STRING_CHECK(*this);
                 while(size_>0)
                 {
                     const size_t i = size_-1;
@@ -363,28 +382,39 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
                     }
                     else
                     {
-                        addr_[i] = 0;
-                        size_ = i;
+                        addr_[ (size_=i) ]=0;
                     }
                 }
+                Y_CORE_STRING_CHECK(*this);
                 return *this;
             }
 
             //! skip n first chars
             inline string & skip(const size_t n) throw()
             {
+                Y_CORE_STRING_CHECK(*this);
                 if(n>=size_)
                 {
                     clear();
                 }
                 else
                 {
+                    assert(n<size_);
+                    //std::cerr << "skip " << n << "/" << size_ << std::endl;
+                    //const size_t old_size = size_;
                     size_ -= n;
                     for(size_t i=0,j=n;i<size_;++i,++j)
                     {
                         addr_[i] = addr_[j];
                     }
-                    addr_[size_] = 0;
+                    Y_CORE_STRING_ZPAD();
+#if 0
+                    for(size_t i=size_;i<=old_size;++i)
+                    {
+                        assert(i<items);
+                        addr_[i] = 0;
+                    }
+#endif
                     Y_CORE_STRING_CHECK(*this);
                 }
                 return *this;
@@ -479,13 +509,13 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
                         p[i] = s[i];
                     }
                     addr_[ (size_ = new_size) ] = 0;
+                    Y_CORE_STRING_CHECK(*this);
                 }
                 else
                 {
                     string tmp(addr_,size_,s,n);
                     swap_with(tmp);
                 }
-                Y_CORE_STRING_CHECK(*this);
             }
 
 
