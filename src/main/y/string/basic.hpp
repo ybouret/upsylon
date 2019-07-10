@@ -31,12 +31,8 @@ namespace upsylon
     }
 
 #if defined(NDEBUG)
-#define Y_CORE_STRING_CHECK_Z(S)
+#define Y_CORE_STRING_CHECK(S)
 #else
-    //! checking bytes from size_ to items are 0
-#define Y_CORE_STRING_CHECK_Z(S) do { for(size_t izero=(S).size_;izero<=(S).maxi_;++izero) { assert(0==addr_[izero]); } } while(false)
-#endif
-
     //! sanity check of a core string
 #define Y_CORE_STRING_CHECK(S)              \
 assert( (S).addr_ );                        \
@@ -44,8 +40,11 @@ assert( (S).items>0 );                      \
 assert( (S).bytes>=(S).items*sizeof(T) );   \
 assert( (S).items-1==(S).maxi_ );           \
 assert( (S).size_<=(S).maxi_ );             \
-assert( 0 == (S).addr_[ (S).size_ ] );\
-Y_CORE_STRING_CHECK_Z(S)
+assert( 0 == (S).addr_[ (S).size_ ] );      \
+do { for(size_t izero=(S).size_;izero<=(S).maxi_;++izero) { assert(0==(S).addr_[izero]); } } while(false)
+#endif
+
+
 
     //! default fields initialisation
 #define Y_CORE_STRING_CTOR0()      object(), memory::rw_buffer(), dynamic(), counted(), ios::serializable(), addr_(0)
@@ -165,7 +164,7 @@ maxi_ = items-1
                     {
                         addr_[i] = s[i];
                     }
-                    memset(addr_+size_,0,bytes-sizeof(T)*size_);
+                    Y_CORE_STRING_ZPAD();
                     Y_CORE_STRING_CHECK(*this);
                 }
                 else
@@ -186,11 +185,15 @@ maxi_ = items-1
             //! no-throw swap
             inline void swap_with(string &other) throw()
             {
+                Y_CORE_STRING_CHECK(*this);
+                Y_CORE_STRING_CHECK(other);
                 cswap(addr_,other.addr_);
                 cswap(size_,other.size_);
                 cswap(maxi_,other.maxi_);
                 cswap(items,other.items);
                 cswap(bytes,other.bytes);
+                Y_CORE_STRING_CHECK(*this);
+                Y_CORE_STRING_CHECK(other);
             }
 
             //! content operator
@@ -204,6 +207,7 @@ maxi_ = items-1
             {
                 Y_CORE_STRING_ALLOC();
                 memcpy(addr_,s,size_*sizeof(T));
+                Y_CORE_STRING_CHECK(*this);
             }
 
             //! C-style with forced length buffer constructor
@@ -219,6 +223,7 @@ maxi_ = items-1
             Y_CORE_STRING_CTOR0(), size_(0), maxi_(0), items(n+1), bytes(0)
             {
                 Y_CORE_STRING_ALLOC();
+                Y_CORE_STRING_CHECK(*this);
             }
 
             //! construct with a single char
@@ -400,21 +405,17 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
                 else
                 {
                     assert(n<size_);
-                    //std::cerr << "skip " << n << "/" << size_ << std::endl;
-                    //const size_t old_size = size_;
+                    const size_t old_size=size_;
                     size_ -= n;
                     for(size_t i=0,j=n;i<size_;++i,++j)
                     {
                         addr_[i] = addr_[j];
                     }
-                    Y_CORE_STRING_ZPAD();
-#if 0
                     for(size_t i=size_;i<=old_size;++i)
                     {
                         assert(i<items);
                         addr_[i] = 0;
                     }
-#endif
                     Y_CORE_STRING_CHECK(*this);
                 }
                 return *this;
@@ -500,6 +501,7 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
             //! add a buffer
             inline void add(const T *s, const size_t n)
             {
+                Y_CORE_STRING_CHECK(*this);
                 const size_t new_size = size_ + n;
                 if(new_size<=maxi_)
                 {
