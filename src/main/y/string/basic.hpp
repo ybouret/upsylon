@@ -60,7 +60,7 @@ addr_ = hmem.acquire_as<T>(items,bytes);                      \
 maxi_ = items-1
 
     //! string padding with zero after a random operation
-#define Y_CORE_STRING_ZPAD() do { memset(addr_+size_,0,bytes-sizeof(T)*size_); } while(false)
+#define Y_CORE_STRING_ZPAD() do { assert(bytes>=sizeof(T)*size_); memset(addr_+size_,0,bytes-sizeof(T)*size_); } while(false)
 
     namespace core
     {
