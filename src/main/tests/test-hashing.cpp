@@ -140,7 +140,7 @@ std::cerr << "sizeof(key_hasher." #CLASS ")=" << sizeof(key_hasher<string,hashin
         H.set();
         H(s);
         const digest D = H.md();
-        std::cerr << d << "@" << H.name() << "\t=>\t" << D << std::endl;
+        display_align( std::cerr << d << "@", H.name(),8) << " => " << D << std::endl;
     }
 
 }
