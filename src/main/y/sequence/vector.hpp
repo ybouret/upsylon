@@ -376,7 +376,7 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
             inline explicit device( const size_t n, param_type args) :          //|
             self_type(n,args) {}                                                //!< setup with same value
             inline virtual ~device() throw() {}                                 //!< cleanup
-            inline          device(const device &other) : device(other) {}      //!< copy
+            inline          device(const device &other) : self_type(other) {}   //!< copy
             inline          device & operator=( const device &other)            //|
             {                                                                   //|
                 self_type       & target = *this;                               //|
