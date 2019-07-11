@@ -208,6 +208,7 @@ namespace upsylon
                     }
                 }
 
+                //! get max coordinate
                 inline const T upper() const throw()
                 {
                     const size_t n = this->count();

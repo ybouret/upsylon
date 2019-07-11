@@ -43,9 +43,11 @@ namespace upsylon
 
             //! access [1..size]
             inline type       & operator[](size_t indx) throw()       { assert(indx>0); assert(indx<=size); return data[indx]; }
+
             //! const access[1..size]
             inline const type & operator[](size_t indx) const throw() { assert(indx>0); assert(indx<=size); return data[indx]; }
 
+            //! reset memory content
             inline void clear() throw()
             {
                 memset((void*)wksp,0,bytes);

@@ -24,6 +24,8 @@
 #include "y/utest/timings.hpp"
 #include "y/hashing/key-hasher.hpp"
 
+#include "y/string/display.hpp"
+
 using namespace upsylon;
 
 namespace
@@ -140,7 +142,7 @@ std::cerr << "sizeof(key_hasher." #CLASS ")=" << sizeof(key_hasher<string,hashin
         H.set();
         H(s);
         const digest D = H.md();
-        display_align( std::cerr << d << "@", H.name(),8) << " => " << D << std::endl;
+        string_display::align( std::cerr << d << "@", H.name(),8) << " => " << D << std::endl;
     }
 
 }
