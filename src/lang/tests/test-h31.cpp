@@ -5,6 +5,7 @@
 #include "y/ptr/auto.hpp"
 #include "y/ptr/intr.hpp"
 #include "y/associative/set.hpp"
+#include "y/string.hpp"
 
 using namespace upsylon;
 using namespace Lang;

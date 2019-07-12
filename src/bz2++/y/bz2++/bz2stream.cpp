@@ -1,5 +1,6 @@
 #include "y/bz2++/bz2stream.hpp"
 #include "y/exception.hpp"
+#include "y/string.hpp"
 
 #include <iostream>
 

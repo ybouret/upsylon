@@ -2,14 +2,13 @@
 #ifndef Y_MP_NATURAL_INCLUDED
 #define Y_MP_NATURAL_INCLUDED 1
 
-#include "y/string.hpp"
+#include "y/strfwd.hpp"
 #include "y/type/utils.hpp"
 #include "y/os/endian.hpp"
-#include "y/comparison.hpp"
-#include "y/code/utils.hpp"
 #include "y/randomized/bits.hpp"
-#include "y/ios/ostream.hpp"
+#include "y/ios/serializable.hpp"
 #include "y/ios/istream.hpp"
+#include "y/memory/buffer.hpp"
 
 #include <iostream>
 
@@ -19,20 +18,28 @@ namespace upsylon
     {
 
         typedef uint64_t word_t;    //!< integral type for drop in replacement
-        typedef int64_t  integer_t; //!< sgined integral type
+        typedef int64_t  integer_t; //!< signed integral type
 
+        ////////////////////////////////////////////////////////////////////////
+        //
         //! base class to clarify hierarchy
-        class base_class : public counted_object
+        //
+        ////////////////////////////////////////////////////////////////////////
+        class number_type : public counted_object
         {
         public:
-            explicit base_class() throw(); //!< setup
-            virtual ~base_class() throw(); //!< destructor
+            explicit number_type() throw(); //!< setup
+            virtual ~number_type() throw(); //!< destructor
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(base_class);
+            Y_DISABLE_COPY_AND_ASSIGN(number_type);
         };
 
+        ////////////////////////////////////////////////////////////////////////
+        //
         //! dedicated memory manager
+        //
+        ////////////////////////////////////////////////////////////////////////
         class manager : public singleton<manager>, public memory::allocator
         {
         public:
@@ -50,6 +57,12 @@ namespace upsylon
             static const at_exit::longevity life_time = object::life_time - 1; //!< need only objects
         };
 
+        ////////////////////////////////////////////////////////////////////////
+        //
+        // multiple precision natural
+        //
+        ////////////////////////////////////////////////////////////////////////
+
         //! check natural sanity
 #define Y_MPN_CHECK(PTR)                                        \
 assert( is_a_power_of_two((PTR)->allocated) );                  \
@@ -58,12 +71,12 @@ assert( (PTR)->byte-1==(PTR)->item );                           \
 assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
 
         //! in place constructor
-#define Y_MPN_CTOR(SZ,MX) object(), base_class(), memory::ro_buffer(), ios::serializable(), bytes(SZ), allocated(MX), byte( __acquire(allocated) ), item(byte-1)
+#define Y_MPN_CTOR(SZ,MX) object(), number_type(), memory::ro_buffer(), ios::serializable(), bytes(SZ), allocated(MX), byte( __acquire(allocated) ), item(byte-1)
 
         class integer; //!< forward declaration
 
         //! big natural number
-        class natural : public base_class, public memory::ro_buffer, public ios::serializable
+        class natural : public number_type, public memory::ro_buffer, public ios::serializable
         {
         public:
             static const char CLASS_NAME[]; //!< for serializable
@@ -157,66 +170,33 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             //__________________________________________________________________
 
             //! fast checking against 0
-            inline bool is_zero() const throw()     { return (bytes<=0); }
+            bool is_zero() const throw();
 
             //! fast checking greater than zero
-            inline bool is_positive() const throw() { return (bytes>0);  }
+            bool is_positive() const throw();
 
             //! fast checking against a byte
-            inline bool is_byte(const uint8_t x) const throw() { return (x<=0) ? (bytes<=0) : ((1==bytes) && (x==byte[0])); }
+            bool is_byte(const uint8_t x) const throw();
 
             //! fast setting to a byte
-            inline void set_byte(const uint8_t x) throw()
-            {
-                if(x<=0)
-                {
-                    bytes=0;
-                }
-                else
-                {
-                    bytes   = 1;
-                    byte[0] = x;
-                }
-            }
+            void set_byte(const uint8_t x) throw();
 
             //! test if even
-            inline bool is_even() const throw()
-            {
-                return (bytes<=0) || ( 0 == (byte[0] & 0x01) );
-            }
+            bool is_even() const throw();
 
             //! test if odd
-            inline bool is_odd() const throw()
-            {
-                return (bytes>0) && ( 0 != (byte[0]&0x01) );
-            }
+            bool is_odd() const throw();
 
             //! comparison
-            static inline
+            static
             int compare_blocks(const uint8_t *l,
                                const size_t   nl,
                                const uint8_t *r,
-                               const size_t   nr) throw()
-            {
-                assert(l);assert(r);
-                if(nl<nr)      { return -1; }
-                else if(nr<nl) { return  1; }
-                else
-                {
-                    assert(nr==nl);
-                    size_t i=nl;
-                    while(i-->0)
-                    {
-                        const uint8_t L = l[i];
-                        const uint8_t R = r[i];
-                        if(L<R) return -1; else if(R<L) return 1; // else continue
-                    }
-                    return 0;
-                }
-            }
+                               const size_t   nr) throw();
 
             //! inline preparation of a word
 #define Y_MPN_PREPARE(W) size_t nw = 0; const uint8_t *pw = prepare(W,nw)
+
             //! multiple overloaded prototypes, no throw
 #define Y_MPN_DEFINE_NOTHROW(RET,BODY,CALL) \
 static inline RET BODY(const natural &lhs, const natural &rhs) throw() { return CALL(lhs.byte,lhs.bytes,rhs.byte,rhs.bytes);      }\
@@ -446,9 +426,9 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             // io
             //
             //__________________________________________________________________
-            virtual const char *className() const throw(); //!< "mpn"
-            virtual size_t      serialize( ios::ostream &fp ) const; //!< write binary
-            static natural read( ios::istream &fp, size_t *nr=0); //!< ready binary, number of bytes is saved if possibler
+            virtual const char *className() const throw();             //!< "mpn"
+            virtual size_t      serialize( ios::ostream &fp ) const;   //!< write binary
+            static natural      read( ios::istream &fp, size_t *nr=0); //!< read binary, number of bytes is saved if possible
 
         private:
             size_t   bytes;     //!< active bytes
@@ -521,16 +501,11 @@ static inline natural __##CALL(const uint8_t *l, const size_t nl, const uint8_t 
             Y_MPN_BOOL(or,|)
             Y_MPN_BOOL(xor,^)
 
-
-
             friend class integer;
         };
 
     }
 }
-
-
-
 
 
 #include "y/type/xnumeric.hpp"

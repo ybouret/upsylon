@@ -6,6 +6,7 @@
 #include "y/ios/ocstream.hpp"
 #include "y/math/types.hpp"
 #include "y/sort/heap.hpp"
+#include "y/comparison.hpp"
 
 using namespace upsylon;
 

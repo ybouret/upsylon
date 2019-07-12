@@ -4,6 +4,7 @@
 
 #include "y/ios/istream.hpp"
 #include "y/memory/buffer.hpp"
+
 namespace upsylon
 {
     namespace ios

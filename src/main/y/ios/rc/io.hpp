@@ -8,6 +8,7 @@
 #include "y/hashing/sha1.hpp"
 #include "y/associative/set.hpp"
 #include "y/ptr/intr.hpp"
+#include "y/string.hpp"
 
 namespace upsylon
 {

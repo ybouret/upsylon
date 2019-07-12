@@ -9,7 +9,7 @@ namespace upsylon
     namespace mpl
     {
         //! multiple precision rational
-        class rational : public base_class
+        class rational : public number_type
         {
         public:
             const integer num; //!< numerator
@@ -19,19 +19,19 @@ namespace upsylon
             void check();
 
             //! default constructor, zero
-            inline rational() : base_class(), num(),den(1) {}
+            inline rational() : number_type(), num(),den(1) {}
             //! destructor
             inline virtual ~rational() throw() {}
             //! from integral type
-            inline rational( const integer_t i ) :  object(), base_class(), num(i), den(1) {}
+            inline rational( const integer_t i ) :  object(), number_type(), num(i), den(1) {}
             //! from mpz
-            inline rational( const integer & z ) :  object(), base_class(), num(z), den(1) {}
+            inline rational( const integer & z ) :  object(), number_type(), num(z), den(1) {}
             //! from mpn
-            inline rational( const natural & n ) :  object(), base_class(), num(n), den(1) {}
+            inline rational( const natural & n ) :  object(), number_type(), num(n), den(1) {}
             //! from integral fraction
-            inline rational( const integer_t n, const word_t  d) :  object(), base_class(), num(n), den(d) { check(); }
+            inline rational( const integer_t n, const word_t  d) :  object(), number_type(), num(n), den(d) { check(); }
             //! from mpz/mpn
-            inline rational( const integer &z, const natural &u) :  object(), base_class(), num(z), den(u) { check(); }
+            inline rational( const integer &z, const natural &u) :  object(), number_type(), num(z), den(u) { check(); }
 
             //! output
             inline friend std::ostream & operator<<( std::ostream &os, const rational &q )
@@ -71,7 +71,7 @@ namespace upsylon
             }
 
             //! copy
-            inline rational( const rational &q ) :  object(), base_class(), num(q.num), den(q.den) {}
+            inline rational( const rational &q ) :  object(), number_type(), num(q.num), den(q.den) {}
 
             //! no throw exchange
             inline void xch( rational &q ) throw()

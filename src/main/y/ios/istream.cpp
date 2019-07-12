@@ -1,5 +1,6 @@
 
 #include "y/ios/istream.hpp"
+#include "y/string.hpp"
 #include "y/exceptions.hpp"
 #include <cerrno>
 

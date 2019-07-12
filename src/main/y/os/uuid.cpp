@@ -3,6 +3,7 @@
 #include "y/code/utils.hpp"
 #include "y/randomized/bits.hpp"
 #include "y/os/rt-clock.hpp"
+#include "y/string.hpp"
 
 namespace upsylon
 {

@@ -2,6 +2,7 @@
 #include "y/fs/disk/ostream.hpp"
 #include "y/utest/run.hpp"
 #include "y/memory/pooled.hpp"
+#include "y/string.hpp"
 
 #include <cstdio>
 

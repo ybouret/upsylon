@@ -2,12 +2,12 @@
 #ifndef Y_IOS_OSTREAM_INCLUDED
 #define Y_IOS_OSTREAM_INCLUDED 1
 
-#include "y/string.hpp"
+#include "y/strfwd.hpp"
 #include "y/ios/stream.hpp"
 #include "y/os/endian.hpp"
 #include "y/os/static-check.hpp"
-
-
+#include "y/os/printf-check.hpp"
+#include "y/memory/buffer.hpp"
 
 namespace upsylon
 {
@@ -52,11 +52,8 @@ namespace upsylon
             }
             
             //! output text
-            inline ostream & operator<<( const char *buffer )
-            {
-                output(buffer,length_of(buffer));
-                return *this;
-            }
+            ostream & operator<<( const char *buffer );
+
 
             //! output buffer
             inline ostream & operator<<(const memory::ro_buffer &buffer)
@@ -140,16 +137,10 @@ namespace upsylon
             }
 
             //! pad text
-            inline ostream & align(const char *text,const size_t aligned,const char C=' ')
-            {
-                return align(text,length_of(text),aligned,C);
-            }
+            ostream & align(const char *text,const size_t aligned,const char C=' ');
 
             //! pad text
-            inline ostream & align(const string &s,const size_t aligned,const char C=' ')
-            {
-                return align(*s,s.size(),aligned,C);
-            }
+            ostream & align(const string &s,const size_t aligned,const char C=' ');
 
             //! emit a binary block, return written bytes
             size_t emit_block( const void *data, const size_t size );
@@ -157,7 +148,7 @@ namespace upsylon
             //! emit a binary block, return written bytes
             size_t emit_block( const memory::ro_buffer  &buff );
 
-            //! emit a binary texr
+            //! emit a binary text
             size_t emit_block( const char *text );
 
         protected:

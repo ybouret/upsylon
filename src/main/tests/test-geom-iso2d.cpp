@@ -4,6 +4,7 @@
 #include "y/ios/ocstream.hpp"
 #include "y/ptr/shared.hpp"
 #include "y/sequence/list.hpp"
+#include "y/string.hpp"
 
 using namespace upsylon;
 using namespace geometry;

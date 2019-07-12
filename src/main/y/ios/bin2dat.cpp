@@ -1,5 +1,6 @@
 #include "y/ios/bin2dat.hpp"
 #include "y/type/utils.hpp"
+#include "y/string.hpp"
 
 namespace upsylon
 {
@@ -12,14 +13,14 @@ namespace upsylon
         bin2dat:: bin2dat(const size_t w) :
         count(0),
         width( max_of<size_t>(w,1) ),
-        human(width,as_capacity)
+        human( new string(width,as_capacity) )
         {
         }
 
         void bin2dat:: reset() throw()
         {
             count = 0;
-            human.clear();
+            human->clear();
         }
 
 
@@ -31,17 +32,17 @@ namespace upsylon
 
             if(C>=32&&C<127)
             {
-                human << C;
+                (*human) << C;
             }
             else
             {
-                human << '.';
+                (*human) << '.';
             }
 
             ++count;
             if(count>=width||isLast)
             {
-                assert(human.size()==count);
+                assert(human->size()==count);
                 for(size_t i=count;i<width;++i)
                 {
                     fp << "     ";
@@ -51,7 +52,7 @@ namespace upsylon
                     fp << "  ";
                 }
                 fp << " // |";
-                fp << human;
+                fp << *human;
                 for(size_t i=count;i<width;++i) fp << ' ';
                 fp << "|\n";
                 reset();

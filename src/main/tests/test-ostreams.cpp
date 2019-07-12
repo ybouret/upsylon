@@ -4,6 +4,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/ios/imstream.hpp"
 #include "y/ios/icstream.hpp"
+#include "y/string.hpp"
 
 using namespace upsylon;
 

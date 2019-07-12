@@ -3,6 +3,8 @@
 #include "y/zlib/zlib.h"
 #include "y/exceptions.hpp"
 #include "y/memory/global.hpp"
+#include "y/string.hpp"
+
 #include <cerrno>
 
 
@@ -34,7 +36,7 @@ namespace upsylon
         static inline void * __input_gz( const string &file_name )
         {
             Y_GIANT_LOCK();
-            void *h = gzopen( &file_name[0], "rb" );
+            void *h = gzopen( *file_name, "rb" );
             if( !h )
             {
                 const int err = errno;

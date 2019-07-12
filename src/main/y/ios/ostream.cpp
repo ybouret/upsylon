@@ -1,10 +1,11 @@
 #include "y/ios/ostream.hpp"
 #include "y/memory/buffers.hpp"
 #include "y/exceptions.hpp"
+#include "y/code/utils.hpp"
+#include "y/string.hpp"
 #include <cerrno>
 #include <cstdarg>
 #include <cstdio>
-#include "y/code/utils.hpp"
 
 namespace upsylon
 {
@@ -71,6 +72,22 @@ namespace upsylon
         size_t ostream:: emit_block( const char *text )
         {
             return emit_block( text, length_of(text) );
+        }
+
+        ostream & ostream:: operator<<( const char *buffer )
+        {
+            output(buffer,length_of(buffer));
+            return *this;
+        }
+
+        ostream & ostream:: align(const char *text,const size_t aligned,const char C)
+        {
+            return align(text,length_of(text),aligned,C);
+        }
+
+        ostream & ostream:: align(const string &s,const size_t aligned,const char C)
+        {
+            return align(*s,s.size(),aligned,C);
         }
 
     }

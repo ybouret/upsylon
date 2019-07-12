@@ -2,6 +2,8 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/hashing/sha1.hpp"
+#include "y/string.hpp"
+
 using namespace upsylon;
 
 Y_UTEST(pfd)

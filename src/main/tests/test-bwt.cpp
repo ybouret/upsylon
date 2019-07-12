@@ -3,6 +3,7 @@
 #include "y/ios/icstream.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/string.hpp"
 
 using namespace upsylon;
 

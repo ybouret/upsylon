@@ -1,6 +1,7 @@
 #include "y/fs/local/file.hpp"
 #include "y/exceptions.hpp"
 #include "y/type/utils.hpp"
+#include "y/string.hpp"
 
 #if defined(Y_BSD)
 #include <unistd.h>

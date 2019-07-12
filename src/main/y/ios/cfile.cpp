@@ -1,6 +1,8 @@
 
 #include "y/ios/cfile.hpp"
 #include "y/exceptions.hpp"
+#include "y/string.hpp"
+
 #include <cerrno>
 namespace upsylon
 {

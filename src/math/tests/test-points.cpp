@@ -4,6 +4,7 @@
 #include "y/sequence/list.hpp"
 #include "y/memory/pooled.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/string.hpp"
 
 using namespace upsylon;
 using namespace math;

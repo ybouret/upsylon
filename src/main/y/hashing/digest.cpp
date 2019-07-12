@@ -1,7 +1,9 @@
 #include "y/hashing/digest.hpp"
 #include "y/code/utils.hpp"
+#include "y/string.hpp"
 #include "y/exception.hpp"
 #include "y/memory/pooled.hpp"
+#include "y/ios/ostream.hpp"
 
 namespace upsylon
 {

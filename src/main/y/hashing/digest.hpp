@@ -2,9 +2,11 @@
 #ifndef Y_DIGEST_INCLUDED
 #define Y_DIGEST_INCLUDED 1
 
-#include "y/string.hpp"
-#include "y/ios/ostream.hpp"
+#include "y/strfwd.hpp"
+#include "y/ios/serializable.hpp"
 #include "y/ios/istream.hpp"
+#include "y/memory/buffer.hpp"
+#include <iostream>
 
 namespace upsylon
 {

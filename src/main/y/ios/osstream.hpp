@@ -1,4 +1,3 @@
-
 //! \file
 #ifndef Y_OSSTREAM_INCLUDED
 #define Y_OSSTREAM_INCLUDED 1
@@ -20,7 +19,8 @@ namespace upsylon
             inline explicit osstream( string &s ) throw() : host(s) {}
 
             //! write
-            inline void write(char C) { host << C; }
+            void write(char C);
+
             //! do nothing...
             inline virtual void flush(){}
 

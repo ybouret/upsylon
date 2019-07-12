@@ -2,8 +2,8 @@
 #ifndef Y_IOS_ISTREAM_INCLUDED
 #define Y_IOS_ISTREAM_INCLUDED 1
 
+#include "y/strfwd.hpp"
 #include "y/ios/stream.hpp"
-#include "y/string.hpp"
 #include "y/os/endian.hpp"
 #include "y/os/static-check.hpp"
 

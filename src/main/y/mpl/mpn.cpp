@@ -323,6 +323,11 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
         }
     }
 
+}
+
+#include "y/ios/ostream.hpp"
+namespace upsylon
+{
     const char   MPN:: CLASS_NAME[] = "MPN";
 
     const char * MPN:: className() const throw()

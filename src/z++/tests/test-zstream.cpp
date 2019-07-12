@@ -3,6 +3,7 @@
 #include "y/ios/ocstream.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/z++/zpipe.hpp"
+#include "y/string.hpp"
 
 #include <cstdlib>
 

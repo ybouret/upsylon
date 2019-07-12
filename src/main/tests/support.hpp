@@ -2,10 +2,12 @@
 #ifndef SUPPORT_INCLUDED
 #define SUPPORT_INCLUDED 1
 
+
 #include "y/mpl/rational.hpp"
 #include "y/type/complex.hpp"
 #include "y/type/point3d.hpp"
 #include "y/alea.hpp"
+#include "y/string.hpp"
 
 using namespace upsylon;
 

@@ -23,7 +23,7 @@ namespace upsylon
         private:
             size_t       count;
             const size_t width;
-            string       human;
+            string      *human;
             
             Y_DISABLE_COPY_AND_ASSIGN(bin2dat);
         };

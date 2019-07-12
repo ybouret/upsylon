@@ -3,6 +3,7 @@
 
 #include "y/hashing/digest.hpp"
 #include "y/ptr/intr.hpp"
+#include "y/string.hpp"
 
 namespace upsylon
 {

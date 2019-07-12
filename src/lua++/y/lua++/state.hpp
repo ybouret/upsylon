@@ -6,6 +6,7 @@
 #include "y/ptr/arc.hpp"
 #include "y/ios/istream.hpp"
 #include "y/exception.hpp"
+#include "y/string.hpp"
 
 namespace upsylon
 {

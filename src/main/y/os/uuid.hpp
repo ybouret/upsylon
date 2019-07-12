@@ -2,7 +2,9 @@
 #ifndef Y_OS_UUID_INCLUDED
 #define Y_OS_UUID_INCLUDED 1
 
-#include "y/string.hpp"
+#include "y/strfwd.hpp"
+#include "y/memory/buffer.hpp"
+#include <iostream>
 
 namespace upsylon
 {

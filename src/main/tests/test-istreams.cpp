@@ -2,6 +2,7 @@
 #include "y/ios/icstream.hpp"
 #include "y/ios/imstream.hpp"
 #include "y/utest/run.hpp"
+#include "y/string.hpp"
 
 using namespace upsylon;
 

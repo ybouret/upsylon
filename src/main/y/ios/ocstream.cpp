@@ -1,6 +1,7 @@
 
 #include "y/ios/ocstream.hpp"
 #include "y/exceptions.hpp"
+#include "y/string.hpp"
 #include <cerrno>
 #include <cstdarg>
 

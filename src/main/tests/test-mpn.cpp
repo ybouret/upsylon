@@ -4,6 +4,9 @@
 #include "y/sequence/vector.hpp"
 #include "y/code/primality.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/code/utils.hpp"
+#include "y/comparison.hpp"
+#include "y/string.hpp"
 
 using namespace upsylon;
 

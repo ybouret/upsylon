@@ -6,6 +6,7 @@
 #include "y/ios/imstream.hpp"
 #include "y/ios/osstream.hpp"
 #include "y/hashing/sha1.hpp"
+#include "y/string.hpp"
 
 using namespace upsylon;
 

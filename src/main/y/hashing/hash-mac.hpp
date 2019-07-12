@@ -4,6 +4,7 @@
 
 #include "y/hashing/digest.hpp"
 #include "y/hashing/function.hpp"
+#include "y/string.hpp"
 
 namespace upsylon
 {

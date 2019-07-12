@@ -2,7 +2,8 @@
 #ifndef Y_IOS_CFILE_INCLUDED
 #define Y_IOS_CFILE_INCLUDED 1
 
-#include "y/string.hpp"
+#include "y/strfwd.hpp"
+#include "y/object.hpp"
 #include <cstdio>
 
 namespace upsylon

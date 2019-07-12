@@ -1,6 +1,7 @@
 #include "y/bz2++/bz2stream.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/string.hpp"
 
 
 using namespace upsylon;

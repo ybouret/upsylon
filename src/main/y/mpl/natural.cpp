@@ -55,8 +55,8 @@ namespace upsylon
             IO.release((void * &)p,n);
         }
 
-        base_class::  base_class() throw() {}
-        base_class:: ~base_class() throw() {}
+        number_type::  number_type() throw() {}
+        number_type:: ~number_type() throw() {}
     }
 }
 
@@ -148,6 +148,57 @@ namespace upsylon
         std::ostream & operator<<( std::ostream &os, const natural &n)
         {
             return n.display(os);
+        }
+
+        bool natural:: is_zero() const throw()     { return (bytes<=0); }
+
+        bool natural:: is_positive() const throw() { return (bytes>0);  }
+
+        bool natural:: is_byte(const uint8_t x) const throw() { return (x<=0) ? (bytes<=0) : ((1==bytes) && (x==byte[0])); }
+
+        void natural:: set_byte(const uint8_t x) throw()
+        {
+            if(x<=0)
+            {
+                bytes=0;
+            }
+            else
+            {
+                bytes   = 1;
+                byte[0] = x;
+            }
+        }
+
+        bool natural:: is_even() const throw()
+        {
+            return (bytes<=0) || ( 0 == (byte[0] & 0x01) );
+        }
+
+        bool natural:: is_odd() const throw()
+        {
+            return (bytes>0) && ( 0 != (byte[0]&0x01) );
+        }
+
+        int natural:: compare_blocks(const uint8_t *l,
+                                     const size_t   nl,
+                                     const uint8_t *r,
+                                     const size_t   nr) throw()
+        {
+            assert(l);assert(r);
+            if(nl<nr)      { return -1; }
+            else if(nr<nl) { return  1; }
+            else
+            {
+                assert(nr==nl);
+                size_t i=nl;
+                while(i-->0)
+                {
+                    const uint8_t L = l[i];
+                    const uint8_t R = r[i];
+                    if(L<R) return -1; else if(R<L) return 1; // else continue
+                }
+                return 0;
+            }
         }
 
     }

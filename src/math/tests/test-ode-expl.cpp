@@ -4,6 +4,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/ios/ocstream.hpp"
 #include <typeinfo>
+#include "y/string.hpp"
 
 using namespace upsylon;
 using namespace math;

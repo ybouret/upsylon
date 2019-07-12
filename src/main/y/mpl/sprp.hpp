@@ -12,7 +12,7 @@ namespace upsylon
     {
 
         //! Strong PRobable Prime
-        class sprp : public base_class
+        class sprp : public number_type
         {
         public:
             //! internal node to store exponents

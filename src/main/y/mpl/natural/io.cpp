@@ -2,6 +2,9 @@
 #include "y/mpl/mpn.hpp"
 #include "y/exceptions.hpp"
 #include "y/code/utils.hpp"
+#include "y/string.hpp"
+#include "y/ios/ostream.hpp"
+
 #include <cerrno>
 
 namespace upsylon
