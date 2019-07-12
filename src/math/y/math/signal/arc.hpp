@@ -142,7 +142,7 @@ namespace upsylon
                 inline real_type extent(const real_type t0, const real_type t1,const array<POINT> &P) const
                 {
                     const d_extent f = { this,&P };
-                    return integrate::compute<real_type,const d_extent>(f,t0,t1,1e-4);
+                    return integrate::compute<real_type,const d_extent>(f,t0,t1,real_type(1e-4));
                 }
 
                 //! curvature
@@ -431,7 +431,7 @@ namespace upsylon
                     }
                     else
                     {
-                        const size_t    jlo = clamp<size_t>(1,floor_of(t),n-1);
+                        const size_t    jlo = clamp<size_t>(1,size_t(floor_of(t)),n-1);
                         const real_type B   = (t-jlo);
                         const size_t    jup = jlo+1;
                         const real_type A   = one-B;
@@ -533,7 +533,7 @@ namespace upsylon
                     while(tt<1) tt += n;
 
                     // get bracketing indices
-                    const size_t    jlo = clamp<size_t>(1,floor_of(tt),n);
+                    const size_t    jlo = clamp<size_t>(1,size_t(floor_of(tt)),n);
                     size_t          jup = jlo+1; if(jup>n) jup = 1;
                     const real_type B   = (tt-jlo);
                     const real_type A   = one-B;

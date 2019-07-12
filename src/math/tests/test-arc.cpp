@@ -13,9 +13,12 @@ namespace
     template <typename CURVE>
     static inline void handle_curve( const CURVE &C, const string &id )
     {
-
+		
         typedef typename CURVE::point_type POINT;
         typedef typename CURVE::real_type  REAL;
+		static const     REAL              one(1);
+		const            REAL              end = REAL(C.size());
+
         std::cerr << "arc of <" << typeid(POINT).name() << ">, based on <" << typeid(REAL).name() << ">" << std::endl;
 
         arc::standard_spline<POINT> NS;
@@ -40,33 +43,33 @@ namespace
             std::cerr << "\tnatural spline" << std::endl;
             const string out = id + "-ns.dat";
             ios::ocstream fp(out);
-            for(REAL t=1;t<=C.size();t+=0.02)
+            for(REAL t=1;t<=C.size();t+=REAL(0.02))
             {
                 fp("%.15g ",t);
                 const POINT p = NS.position(t,C);
                 arc::save_point(fp,p) << '\n';
             }
-            std::cerr << "\t\textent: " << NS.extent(1,C.size(),C) << std::endl;
+            std::cerr << "\t\textent: " << NS.extent(one,end,C) << std::endl;
         }
 
         {
             std::cerr << "\tzero-derivative spline" << std::endl;
             const string  out = id + "-zs.dat";
             ios::ocstream fp(out);
-            for(REAL t=1;t<=C.size();t+=0.02)
+            for(REAL t=1;t<=C.size();t+=REAL(0.02))
             {
                 fp("%.15g ",t);
                 const POINT p = ZS.position(t,C);
                 arc::save_point(fp,p) << '\n';
             }
-            std::cerr << "\t\textent: " << ZS.extent(1,C.size(),C) << std::endl;
+            std::cerr << "\t\textent: " << ZS.extent(one,end,C) << std::endl;
         }
 
         {
             std::cerr << "\tperiodic spline" << std::endl;
             const string  out = id + "-ps.dat";
             ios::ocstream fp(out);
-            for(REAL t=1;t<=C.size()+1;t+=0.02)
+            for(REAL t=1;t<=C.size()+1;t+=REAL(0.02))
             {
                 fp("%.15g ",t);
                 const POINT p = PS.position(t,C);
@@ -74,7 +77,7 @@ namespace
                 volatile const REAL g = PS.curvature(t,C);
                 (void)g;
             }
-            std::cerr << "\t\textent: " << PS.extent(1,C.size()+1,C) << std::endl;
+            std::cerr << "\t\textent: " << PS.extent(one,end+one,C) << std::endl;
         }
 
     }
@@ -109,7 +112,7 @@ namespace
             std::cerr << "\tnatural metrics" << std::endl;
             const string  out = id + "-ns.dat";
             ios::ocstream fp(out);
-            for(REAL t=1;t<=C.size();t+=0.02)
+            for(REAL t=1;t<=C.size();t+=REAL(0.02))
             {
                 POINT s;
                 POINT p = NS.position(t,C,&s);
@@ -124,7 +127,7 @@ namespace
             std::cerr << "\tzero-diff metrics" << std::endl;
             const string  out = id + "-zs.dat";
             ios::ocstream fp(out);
-            for(REAL t=1;t<=C.size();t+=0.02)
+            for(REAL t=1;t<=C.size();t+=REAL(0.02))
             {
                 POINT s;
                 POINT p = ZS.position(t,C,&s);
@@ -139,7 +142,7 @@ namespace
             std::cerr << "\tperiodic metrics" << std::endl;
             const string  out = id + "-ps.dat";
             ios::ocstream fp(out);
-            for(REAL t=1;t<=C.size()+1;t+=0.02)
+            for(REAL t=1;t<=C.size()+1;t+=REAL(0.02))
             {
                 POINT s;
                 POINT p = PS.position(t,C,&s);
@@ -154,7 +157,7 @@ namespace
             std::cerr << "\twriting speed" << std::endl;
             const string  out = id + "-speed.dat";
             ios::ocstream fp(out);
-            const REAL dt = 0.01;
+            const REAL dt = REAL(0.01);
             for(REAL t=REAL(1)-dt;t<=C.size()+1;t+=dt)
             {
                 fp("%g ",t);
@@ -169,7 +172,7 @@ namespace
             std::cerr << "\twriting curvature" << std::endl;
             const string  out = id + "-curvature.dat";
             ios::ocstream fp(out);
-            const REAL dt = 0.005;
+            const REAL dt = REAL(0.005);
             for(REAL t=REAL(1)-dt;t<=C.size()+1;t+=dt)
             {
                 fp("%g ",t);
@@ -184,7 +187,7 @@ namespace
             std::cerr << "\twriting developped" << std::endl;
             const string  out = id + "-dev.dat";
             ios::ocstream fp(out);
-            const REAL dt = 0.01;
+            const REAL dt = REAL(0.01);
             for(REAL t=1;t<=C.size()+1;t+=dt)
             {
                 POINT       p = PS.position(t,C);
@@ -219,7 +222,7 @@ Y_UTEST(arc)
         np = string_convert::to<size_t>(argv[1],"np");
     }
 
-    const float  dz    = 1.0/np;
+    const float  dz    = 1.0f/np;
     const float  noise = 0.01f;
     for(size_t i=0;i<np;++i)
     {

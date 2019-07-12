@@ -307,11 +307,11 @@ namespace upsylon
 
                 inline void get_periodic(mutable_type x, CorePoint *M, CorePoint *S) const throw()
                 {
-                    const size_t n = segments.size();
-                    const_type shift(n);
+                    const size_t n     = segments.size();
+					const_type   shift = const_type(n);
                     while(x>=n) x-=shift;
                     while(x<=1) x+=shift;
-                    const size_t j   = clamp<size_t>(1, floor_of(x), n );
+                    const size_t j   = clamp<size_t>(1, size_t(floor_of(x)), n );
                     const_type   B   = x-const_type(j);
                     const_type   A   = const_type(1)-B;
                     segments[j].compute (A,B,M,S);
@@ -333,7 +333,7 @@ namespace upsylon
                     }
                     else
                     {
-                        const size_t j   = clamp<size_t>(1, floor_of(x),segments.size());
+                        const size_t j   = clamp<size_t>(1, size_t(floor_of(x)),segments.size());
                         const_type   B   = x-const_type(j);
                         const_type   A   = const_type(1)-B;
                         segments[j].compute(A,B,M,S);

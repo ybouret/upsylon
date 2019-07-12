@@ -46,7 +46,11 @@ Y_UTEST(iso)
                 std::cerr << "    |_curve[" << j << "]: " << curve.size() << std::endl;
                 for(size_t k=1;k<curve.size();++k)
                 {
-                    Draw::Line(pxm, curve[k].x, curve[k].y, curve[k+1].x, curve[k+1].y, C, 200);
+                    Draw::Line(pxm, 
+						unit_t(curve[k].x), 
+						unit_t(curve[k].y), 
+						unit_t(curve[k+1].x), 
+						unit_t(curve[k+1].y), C, 200);
                 }
             }
         }

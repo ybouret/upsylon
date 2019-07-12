@@ -21,7 +21,7 @@ namespace
             vector<T> r(n);
             vector<T> u(n);
             vector<T> v(n);
-            const T   xtra = n;
+            const T   xtra = T(n);
             for(size_t iter=0;iter<16;++iter)
             {
                 for(size_t i=1;i<=n;++i)
