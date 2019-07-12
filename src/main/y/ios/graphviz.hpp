@@ -2,7 +2,7 @@
 #ifndef Y_IOS_GRAPHVIZ_INCLUDED
 #define Y_IOS_GRAPHVIZ_INCLUDED 1
 
-#include "y/string.hpp"
+#include "y/strfwd.hpp"
 
 namespace upsylon
 {
