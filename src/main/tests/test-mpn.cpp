@@ -19,7 +19,7 @@ Y_UTEST(mpn)
         ios::ocstream fp("miller.dat");
         for(size_t i=1;i<=10000;++i)
         {
-            const double x = i;
+            const double x = double(i);
             const double l = 2*square_of(log(x));
             fp("%g %g %g\n", x,l,ceil(l));
         }

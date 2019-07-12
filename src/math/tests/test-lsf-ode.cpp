@@ -86,7 +86,7 @@ Y_UTEST(lsf_ode)
 
 
     const size_t NP    = 50 + alea.leq(50);
-    const double range = 5+alea.leq(10);
+	const double range = double(5 + alea.leq(10));
     double       noise = 0.1;
 
     // create the sample

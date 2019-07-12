@@ -119,7 +119,7 @@ namespace
             double sum = 0;
             for(size_t i=nmin;i<nmax;++i)
             {
-                const double d = i;
+                const double d = double(i);
                 sum += 1.0 / (d*d);
             }
             target = sum;

@@ -66,7 +66,7 @@ namespace upsylon
 
             // loop on desriptors
             assert(lua_istable(L,-1));
-            const unsigned n = lua_rawlen(L,-1);
+			const unsigned n = unsigned(lua_rawlen(L, -1));
             for(unsigned i=2,j=1;i<=n;++i,++j)
             {
                 // get the descriptor

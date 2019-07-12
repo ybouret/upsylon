@@ -15,13 +15,14 @@ namespace
     void do_test()
     {
         std::cerr << "tridiag<" << typeid(T).name() << ">" << std::endl;
+		T xtra = 0;
         for(size_t n=1;n<=3;++n)
         {
             tridiag<T> t(n);
-            vector<T> r(n);
-            vector<T> u(n);
-            vector<T> v(n);
-            const T   xtra = T(n);
+            vector<T>  r(n);
+            vector<T>  u(n);
+            vector<T>  v(n);
+			xtra += T(1);
             for(size_t iter=0;iter<16;++iter)
             {
                 for(size_t i=1;i<=n;++i)
