@@ -70,6 +70,18 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             //__________________________________________________________________
             //
             //
+            // virtual interface
+            //
+            //__________________________________________________________________
+            //! buffer interface : ro
+            virtual const void  *ro() const throw();
+
+            //! buffer interface : length
+            virtual size_t length() const throw();
+
+            //__________________________________________________________________
+            //
+            //
             // setup
             //
             //__________________________________________________________________
@@ -90,69 +102,28 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             natural(word_t w);
 
             //! copy from raw memory
-            inline natural( const void  *buffer, size_t buflen) : Y_MPN_CTOR(buflen,buflen)
-            {
-                assert(bytes==buflen);
-                memcpy(byte,buffer,buflen);
-                update();
-            }
+            natural( const void  *buffer, size_t buflen);
 
             //! assign
-            natural & operator=( const natural &other )
-            {
-                natural tmp(other); xch(tmp); return *this;
-            }
+            natural & operator=( const natural &other );
 
             //! assign from word_type
-            natural & operator=( const word_t w )
-            {
-                natural tmp(w); xch(tmp); return *this;
-            }
+            natural & operator=( const word_t w );
 
             //! no throw exchange
-            inline void xch( natural &other ) throw()
-            {
-                cswap(bytes,other.bytes); cswap(allocated,other.allocated);
-                cswap(byte,other.byte);   cswap(item,other.item);
-            }
+            void xch( natural &other ) throw();
 
             //! Least Significant Word
-            inline word_t lsw() const throw()
-            {
-                word_t       w = 0;
-                const size_t n = min_of(bytes,sizeof(word_t));
-                for(size_t i=n;i>0;--i)
-                {
-                    (w <<= 8) |= item[i];
-                }
-                return w;
-            }
+            word_t lsw() const throw();
             
-            //! buffer interface : ro
-            inline virtual const void  *ro() const throw() { return byte;   }
-
-            //! buffer interface : length
-            inline virtual size_t length() const throw() { return bytes;  }
-
             //! prepare a scalar type
-            static inline const uint8_t * prepare( word_t &w, size_t &wb ) throw()
-            {
-                w = swap_le(w);
-                const uint8_t *p = (const uint8_t*)&w;
-                const uint8_t *q = p-1;
-                wb = sizeof(word_t);
-                while(wb>0&&q[wb]<=0)
-                {
-                    --wb;
-                }
-                return p;
-            }
+            static  const uint8_t * prepare( word_t &w, size_t &wb ) throw();
 
             //! get number of bits
-            inline size_t bits() const throw() { return (bytes<=0) ? 0 : ( (bytes-1) << 3 ) + bits_table::count_for_byte[ item[bytes] ]; }
+            size_t bits() const throw();
 
             //! clear memory
-            inline void clr() throw() { bytes = 0; memset(byte,0,allocated); }
+            void clr() throw();
 
             //! generate a random number
             natural(const size_t nbit, randomized::bits &gen );
@@ -167,10 +138,7 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             std::ostream & display( std::ostream &) const;
 
             //! operator to std::ostream
-            inline friend std::ostream & operator<<( std::ostream &os, const natural &n)
-            {
-                return n.display(os);
-            }
+            friend std::ostream & operator<<( std::ostream &os, const natural &n);
 
             //! convert to real value
             double to_real() const;

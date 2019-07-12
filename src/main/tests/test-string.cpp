@@ -1,3 +1,5 @@
+
+#include "y/strfwd.hpp"
 #include "support.hpp"
 #include "y/utest/run.hpp"
 #include "y/core/node.hpp"

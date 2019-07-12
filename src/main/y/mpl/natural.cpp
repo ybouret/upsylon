@@ -87,6 +87,68 @@ namespace upsylon
         }
 
         
+        natural:: natural( const void  *buffer, size_t buflen) : Y_MPN_CTOR(buflen,buflen)
+        {
+            assert(bytes==buflen);
+            memcpy(byte,buffer,buflen);
+            update();
+        }
+
+        natural & natural:: operator=( const natural &other )
+        {
+            natural tmp(other); xch(tmp); return *this;
+        }
+
+        natural & natural:: operator=( const word_t w )
+        {
+            natural tmp(w); xch(tmp); return *this;
+        }
+
+        void natural:: xch( natural &other ) throw()
+        {
+            cswap(bytes,other.bytes); cswap(allocated,other.allocated);
+            cswap(byte,other.byte);   cswap(item,other.item);
+        }
+
+        word_t natural:: lsw() const throw()
+        {
+            word_t       w = 0;
+            const size_t n = min_of(bytes,sizeof(word_t));
+            for(size_t i=n;i>0;--i)
+            {
+                (w <<= 8) |= item[i];
+            }
+            return w;
+        }
+
+        const uint8_t * natural:: prepare( word_t &w, size_t &wb ) throw()
+        {
+            w = swap_le(w);
+            const uint8_t *p = (const uint8_t*)&w;
+            const uint8_t *q = p-1;
+            wb = sizeof(word_t);
+            while(wb>0&&q[wb]<=0)
+            {
+                --wb;
+            }
+            return p;
+        }
+
+        void natural:: clr() throw() { bytes = 0; memset(byte,0,allocated); }
+
+        size_t natural:: bits() const throw()
+        {
+            return (bytes<=0) ? 0 : ( (bytes-1) << 3 ) + bits_table::count_for_byte[ item[bytes] ];
+        }
+
+        const void  * natural:: ro() const throw() { return byte;   }
+
+        size_t natural:: length() const throw() { return bytes;  }
+
+        std::ostream & operator<<( std::ostream &os, const natural &n)
+        {
+            return n.display(os);
+        }
 
     }
 }

@@ -12,9 +12,9 @@ namespace upsylon
         //! size_t,unit_t,float,double \todo complexes?
         template <typename T> static
         T to( const string &data, const char *name=NULL);
-        template <typename T> static inline
 
         //! wrapper
+        template <typename T> static inline
         T to( const char   *text, const char *name=NULL)
         {
             const string data(text); return to<T>(data,name);
