@@ -1,5 +1,6 @@
 #include "y/fs/disk/buffer.hpp"
 #include "y/code/round.hpp"
+#include <cstring>
 
 namespace upsylon
 {
