@@ -9,7 +9,7 @@ namespace upsylon
     //! string to numeric
     struct string_convert
     {
-        //! size_t,unit_t,float,double \todo complexes?
+        //! size_t (decimal/hexadecimal),unit_t,float,double \todo complexes?
         template <typename T> static
         T to( const string &data, const char *name=NULL);
 

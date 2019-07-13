@@ -117,10 +117,22 @@ namespace upsylon {
         return envmgr::instance().query( value, name );
     }
 
+    bool environment::get( string &value, const char *name )
+    {
+        const string _(name);
+        return get(value,_);
+    }
+
 
     void environment::set( const string &name, const string &value)
     {
         envmgr::instance().store( name, value );
+    }
+
+    void environment::set( const char *name, const string &value)
+    {
+        const string _(name);
+        set(_,value);
     }
 
 
@@ -194,52 +206,93 @@ namespace upsylon {
 #endif
     }
 
-
 }
 
-#if 0
-#include "yocto/string/conv.hpp"
+#include "y/string/convert.hpp"
 
-namespace yocto
+namespace upsylon
 {
-    template <>
-    bool environment:: check<bool>( bool &value, const string &name)
-    {
-        string s;
-        if( get(s, name) )
-        {
 
-            if(s=="false"||s=="FALSE"||s=="0")
+    static inline bool is_blank( char C ) throw()
+    {
+        switch(C)
+        {
+            case ' ':
+            case '\t':
+                return true;
+
+            default: break;
+        }
+        return true;
+    }
+
+    static inline bool env_get_clean( string &content, const string &name )
+    {
+        if( environment::get(content,name) )
+        {
+            content.clean(is_blank);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
+    template <>
+    bool environment:: check<bool>( bool &value, const string &name )
+    {
+        string content;
+        if( env_get_clean(content,name) )
+        {
+            string_convert::to_lower(content);
+            if( content == "false" || content == "0" )
             {
                 value = false;
-                return true;
             }
-
-            if(s=="true"||s=="TRUE"||s=="1")
+            else if( content == "true" || content == "1" )
             {
                 value = true;
-                return true;
+            }
+            else
+            {
+                throw exception("environment::check<bool>: invalid '%s'='%s' )", *name, *content);
             }
 
-            throw imported::exception("environment::check<bool>","invalid value '%s'", s.c_str());
+            return true;
         }
         else
+        {
             return false;
+        }
     }
 
-    template <>
-    bool environment:: check<int>( int &value, const string &name)
-    {
-        string s;
-        if( get(s,name) )
-        {
-            value = strconv::to<int>(value,"environment::check<int>");
-            return true;
-        }
-        else
-            return true;
-    }
+
+#define Y_ENV_CHECK_FOR(TYPE) \
+template <>\
+bool environment:: check<TYPE>( TYPE &value, const string &name )\
+{\
+string content;\
+if( env_get_clean(content,name) )\
+{\
+value = string_convert::to<TYPE>(content,"environment::check<" #TYPE ">");\
+return true;\
+}\
+else\
+{\
+return false;\
+}\
+}
+    
+    Y_ENV_CHECK_FOR(unit_t)
+    Y_ENV_CHECK_FOR(size_t)
+    Y_ENV_CHECK_FOR(float)
+    Y_ENV_CHECK_FOR(double)
+
+
 
 }
-#endif
+
+
 

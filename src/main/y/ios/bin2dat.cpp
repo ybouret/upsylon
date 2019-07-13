@@ -8,6 +8,8 @@ namespace upsylon
     {
         bin2dat:: ~bin2dat() throw()
         {
+            delete human;
+            human = 0;
         }
 
         bin2dat:: bin2dat(const size_t w) :
