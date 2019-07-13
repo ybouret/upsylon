@@ -25,6 +25,7 @@ namespace upsylon
         manager:: ~manager() throw()
         {
             destruct( __IO() );
+            memset(___IO,0,sizeof(___IO));
         }
 
         void * manager:: acquire( size_t &n )
@@ -64,6 +65,16 @@ namespace upsylon
 {
     namespace mpl
     {
+
+        void natural:: update()  throw() { while(bytes>0&&item[bytes]<=0) --bytes; }
+        void natural:: upgrade() throw() { bytes = allocated; update(); }
+
+        uint8_t * natural:: __acquire(size_t &n)
+        {
+            static manager &mgr = manager::instance();
+            return mgr.__acquire(n);
+        }
+
         natural:: natural() : Y_MPN_CTOR(0,0) { Y_MPN_CHECK(this); }
         natural:: natural(size_t n, const as_capacity_t &) : Y_MPN_CTOR(0,n) { Y_MPN_CHECK(this); }
 
@@ -216,6 +227,99 @@ namespace upsylon
         natural & natural:: operator--() { natural tmp = __dec(); xch(tmp); return *this; }
 
         natural natural:: operator--(int) { natural tmp = __dec(); xch(tmp); return tmp; }
+
+        // BITS
+        uint8_t natural:: operator[](size_t indx) const throw() { return (indx>=bytes) ? 0 : byte[indx]; }
+
+        uint8_t natural:: get_bit(const size_t ibit) const throw() { assert(ibit<=bits()); return bits_table::_true[ byte[ibit>>3] & bits_table::value[ibit&7] ]; }
+
+        bool natural:: has_bit(const size_t ibit) const throw() { assert(ibit<=bits()); return 0!=(byte[ibit>>3] & bits_table::value[ibit&7]); }
+
+        natural natural:: shl(const size_t shift) const { return (shift>0&&bytes>0) ? __shl(shift) : *this; }
+
+        natural & natural:: shl()
+        {
+            if(bytes>0) { natural tmp = __shl(1); xch(tmp); }
+            return *this;
+        }
+
+        natural & natural:: operator<<=(const size_t shift) { natural ans = shl(shift); xch(ans); return *this; }
+
+        natural operator<<(const natural &n,const size_t shift) { return n.shl(shift); }
+
+        natural natural:: shr(const size_t shift) const
+        {
+            const size_t old_bits = bits();
+            if(shift>=old_bits)
+            {
+                return natural();
+            }
+            else
+            {
+                const size_t new_bits  = old_bits - shift;
+                const size_t new_bytes = Y_BYTES_FOR(new_bits);
+                natural ans(new_bytes,as_capacity);
+                ans.bytes = new_bytes;
+
+                for(size_t i=shift,j=0;i<old_bits;++i,++j)
+                {
+                    if(has_bit(i))
+                    {
+                        ans.byte[j>>3] |= bits_table::value[j&7];
+                    }
+                }
+                assert(ans.item[new_bytes]>0);
+                return ans;
+            }
+        }
+
+        natural & natural:: shr() { natural tmp = shr(1); xch(tmp); return *this; }
+
+        natural & natural:: operator>>=(const size_t shift) { natural ans = shr(shift); xch(ans); return *this; }
+
+        natural operator>>(const natural &n, const size_t shift){ return n.shr(shift); }
+
+        natural natural:: exp2( const size_t j )
+        {
+            const size_t num_bits  = j+1;
+            const size_t new_bytes = Y_BYTES_FOR(num_bits);
+            natural ans(new_bytes,as_capacity);
+            ans.byte[ j>>3 ] = bits_table::value[j&7];
+            ans.bytes = new_bytes;
+            assert(ans.item[new_bytes]>0);
+            return ans;
+        }
+
+        natural natural:: __shl(const size_t shift) const
+        {
+            assert(shift>0);
+            assert(bytes>0);
+            const size_t old_bits  = bits();
+            const size_t new_bits  = old_bits + shift;
+            const size_t new_bytes = Y_BYTES_FOR(new_bits);
+            natural ans(new_bytes,as_capacity);
+            ans.bytes = new_bytes;
+
+            for(size_t i=0,j=shift;i<old_bits;++i,++j)
+            {
+                if(has_bit(i))
+                {
+                    ans.byte[j>>3] |= bits_table::value[j&7];
+                }
+            }
+            assert(ans.item[new_bytes]>0);
+            return ans;
+        }
+
+        // DVS
+        bool natural:: is_divisible_by( const natural &rhs ) const { return __dvs(byte,bytes,rhs.byte,rhs.bytes); }
+
+        bool natural:: is_divisible_by(word_t w) const { Y_MPN_PREPARE(w); return __dvs(byte,bytes,pw,nw); }
+
+        bool natural:: is_divisible_by_byte(const uint8_t b) const { return __dvs(byte,bytes,&b,1); }
+
+        void natural::  split( natural &q, natural &r, const natural &num, const natural &den ) { r = num - ( (q=num/den) * den ); }
+
     }
 }
 

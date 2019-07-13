@@ -288,77 +288,40 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //__________________________________________________________________
 
             //! ready any byte
-            uint8_t operator[](size_t indx) const throw() { return (indx>=bytes) ? 0 : byte[indx]; }
+            uint8_t operator[](size_t indx) const throw();
 
             //! ready valid bit to 0 or 1
-            inline uint8_t get_bit(const size_t ibit) const throw() { assert(ibit<=bits()); return bits_table::_true[ byte[ibit>>3] & bits_table::value[ibit&7] ]; }
+            uint8_t get_bit(const size_t ibit) const throw();
 
             //! test a valid bit
-            inline bool has_bit(const size_t ibit) const throw() { assert(ibit<=bits()); return 0!=(byte[ibit>>3] & bits_table::value[ibit&7]); }
+            bool has_bit(const size_t ibit) const throw();
 
             //! left shift
-            natural shl(const size_t shift) const { return (shift>0&&bytes>0) ? __shl(shift) : *this; }
+            natural shl(const size_t shift) const;
 
             //! in place left shift
-            natural & shl()
-            {
-                if(bytes>0) { natural tmp = __shl(1); xch(tmp); }
-                return *this;
-            }
+            natural & shl();
 
             //! in place left shift operator
-            inline natural & operator<<=(const size_t shift) { natural ans = shl(shift); xch(ans); return *this; }
+            natural & operator<<=(const size_t shift);
 
             //! left shift operator
-            inline friend natural operator<<(const natural &n,const size_t shift) { return n.shl(shift); }
+            friend natural operator<<(const natural &n,const size_t shift);
 
             //! right shift
-            inline natural shr(const size_t shift) const
-            {
-                const size_t old_bits = bits();
-                if(shift>=old_bits)
-                {
-                    return natural();
-                }
-                else
-                {
-                    const size_t new_bits  = old_bits - shift;
-                    const size_t new_bytes = Y_BYTES_FOR(new_bits);
-                    natural ans(new_bytes,as_capacity);
-                    ans.bytes = new_bytes;
-
-                    for(size_t i=shift,j=0;i<old_bits;++i,++j)
-                    {
-                        if(has_bit(i))
-                        {
-                            ans.byte[j>>3] |= bits_table::value[j&7];
-                        }
-                    }
-                    assert(ans.item[new_bytes]>0);
-                    return ans;
-                }
-            }
+            natural shr(const size_t shift) const;
 
             //! in place right shift
-            natural & shr() { natural tmp = shr(1); xch(tmp); return *this; }
+            natural & shr();
 
             //! in place right shift operator
-            inline natural & operator>>=(const size_t shift) { natural ans = shr(shift); xch(ans); return *this; }
+            natural & operator>>=(const size_t shift);
 
             //! left shift operator
-            inline friend natural operator>>(const natural &n, const size_t shift){ return n.shr(shift); }
+            friend natural operator>>(const natural &n, const size_t shift);
 
             //! 2^j
-            static inline natural exp2( const size_t j )
-            {
-                const size_t num_bits  = j+1;
-                const size_t new_bytes = Y_BYTES_FOR(num_bits);
-                natural ans(new_bytes,as_capacity);
-                ans.byte[ j>>3 ] = bits_table::value[j&7];
-                ans.bytes = new_bytes;
-                assert(ans.item[new_bytes]>0);
-                return ans;
-            }
+            static natural exp2( const size_t j );
 
             //__________________________________________________________________
             //
@@ -368,7 +331,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //__________________________________________________________________
             Y_MPN_WRAP(/,__div)
             //! num = q*den+r
-            static inline void split( natural &q, natural &r, const natural &num, const natural &den ) { r = num - ( (q=num/den) * den ); }
+            static  void split( natural &q, natural &r, const natural &num, const natural &den );
 
             //__________________________________________________________________
             //
@@ -386,13 +349,13 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //__________________________________________________________________
 
             //! test divisibility
-            inline bool is_divisible_by( const natural &rhs ) const { return __dvs(byte,bytes,rhs.byte,rhs.bytes); }
+            bool is_divisible_by( const natural &rhs ) const;
 
             //! test divisibility
-            inline bool is_divisible_by(word_t w) const { Y_MPN_PREPARE(w); return __dvs(byte,bytes,pw,nw); }
+            bool is_divisible_by(word_t w) const;
 
             //! test divisibility
-            inline bool is_divisible_by_byte(const uint8_t b) const { return __dvs(byte,bytes,&b,1); }
+            bool is_divisible_by_byte(const uint8_t b) const;
 
             //__________________________________________________________________
             //
@@ -433,36 +396,12 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             uint8_t *byte;      //!< byte[0..allocated-1]
             uint8_t *item;      //!< item[1..allocated]
 
-            inline void update() throw() { while(bytes>0&&item[bytes]<=0) --bytes; }
+            void update()  throw();
+            void upgrade() throw();
 
-            inline void upgrade() throw() { bytes = allocated; update(); }
+            static  uint8_t * __acquire(size_t &n);
 
-            static inline uint8_t * __acquire(size_t &n)
-            {
-                static manager &mgr = manager::instance();
-                return mgr.__acquire(n);
-            }
-
-            inline natural __shl(const size_t shift) const
-            {
-                assert(shift>0);
-                assert(bytes>0);
-                const size_t old_bits  = bits();
-                const size_t new_bits  = old_bits + shift;
-                const size_t new_bytes = Y_BYTES_FOR(new_bits);
-                natural ans(new_bytes,as_capacity);
-                ans.bytes = new_bytes;
-
-                for(size_t i=0,j=shift;i<old_bits;++i,++j)
-                {
-                    if(has_bit(i))
-                    {
-                        ans.byte[j>>3] |= bits_table::value[j&7];
-                    }
-                }
-                assert(ans.item[new_bytes]>0);
-                return ans;
-            }
+            natural __shl(const size_t shift) const;
 
             static natural __add(const uint8_t *l,
                                  const size_t   nl,
@@ -514,7 +453,7 @@ namespace upsylon
     namespace math
     {
         inline mpn fabs_of(const mpn &u) { return u;   } //!< overloaded __fabs function
-        inline mpn __mod2(const mpn &u)  { return u*u; } //!< overloaded __mod2 function
+        inline mpn  __mod2(const mpn &u) { return u*u; } //!< overloaded __mod2 function
     }
 
     //! extended numeric for mpn
