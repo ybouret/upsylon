@@ -201,6 +201,21 @@ namespace upsylon
             }
         }
 
+        // ADD
+        natural natural:: operator+() const { return *this; }
+
+        natural natural:: __inc() const { static const uint8_t __one = 0x01; return __add(byte,bytes,&__one,1); }
+
+        natural & natural:: operator++() { natural tmp = __inc(); xch(tmp); return *this; }
+
+        natural natural:: operator++(int) { natural tmp = __inc(); xch(tmp); return tmp; }
+
+        // SUB
+        natural natural:: __dec() const { static const uint8_t __one = 0x01; return __sub(byte,bytes,&__one,1); }
+
+        natural & natural:: operator--() { natural tmp = __dec(); xch(tmp); return *this; }
+
+        natural natural:: operator--(int) { natural tmp = __dec(); xch(tmp); return tmp; }
     }
 }
 

@@ -86,11 +86,8 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             // virtual interface
             //
             //__________________________________________________________________
-            //! buffer interface : ro
-            virtual const void  *ro() const throw();
-
-            //! buffer interface : length
-            virtual size_t length() const throw();
+            virtual const void  *ro()     const throw(); //!< buffer interface : ro
+            virtual size_t       length() const throw(); //!< buffer interface : length
 
             //__________________________________________________________________
             //
@@ -244,33 +241,33 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             Y_MPN_WRAP(+,__add)
 
             //! unary plus
-            natural operator+() { return *this; }
+            natural operator+() const;
 
             //! increase by 1
-            inline natural __inc() const { static const uint8_t __one = 0x01; return __add(byte,bytes,&__one,1); }
+            natural __inc() const;
 
-            //! increase operator
-            inline natural & operator++() { natural tmp = __inc(); xch(tmp); return *this; }
+            //! prefix increase operator
+            natural & operator++();
 
-            //! increase operator
-            natural operator++(int) { natural tmp = __inc(); xch(tmp); return tmp; }
+            //! postfix increase operator
+            natural operator++(int);
             
             //__________________________________________________________________
             //
             //
-            // SUB
+            // SUB, no unary '-'
             //
             //__________________________________________________________________
             Y_MPN_WRAP(-,__sub)
 
             //! decrease by 1
-            inline natural __dec() const { static const uint8_t __one = 0x01; return __sub(byte,bytes,&__one,1); }
+            natural __dec() const;
 
-            //! decrease operator
-            inline natural & operator--() { natural tmp = __dec(); xch(tmp); return *this; }
+            //! prefix decrease operator
+            natural & operator--();
 
-            //! decrease operator
-            natural operator--(int) { natural tmp = __dec(); xch(tmp); return tmp; }
+            //! postfix decrease operator
+            natural operator--(int);
 
             //__________________________________________________________________
             //
