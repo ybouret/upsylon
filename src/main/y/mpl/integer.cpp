@@ -60,7 +60,7 @@ namespace upsylon
 
         integer::  integer() : s(__zero), n() {}
 
-        integer:: ~integer() throw() {}
+        integer:: ~integer() throw() { (sign_type&)s = __zero; }
 
         integer::  integer(const integer &z) : object(), number_type(), s(z.s), n(z.n) {}
 
@@ -139,7 +139,7 @@ namespace upsylon
                 }
             }
 
-            fatal_error("corrupted code@mpl.interger.compare_blocks");
+            fatal_error("corrupted code@mpl.integer.compare_blocks");
             return 0;
         }
 
