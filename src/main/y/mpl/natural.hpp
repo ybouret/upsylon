@@ -14,6 +14,14 @@
 
 namespace upsylon
 {
+
+
+    namespace randomized
+    {
+        class bits; //!< forward declaration
+    }
+
+
     namespace mpl
     {
 
@@ -95,48 +103,20 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             // setup
             //
             //__________________________________________________________________
-
-            //! a zero natural
-            natural();
-
-            //! a zero with any memory
-            natural(size_t n, const as_capacity_t &);
-
-            //! release memory
-            virtual ~natural() throw();
-
-            //! copy
-            natural(const natural &other);
-
-            //! setup from a word_type
-            natural(word_t w);
-
-            //! copy from raw memory
-            natural( const void  *buffer, size_t buflen);
-
-            //! assign
-            natural & operator=( const natural &other );
-
-            //! assign from word_type
-            natural & operator=( const word_t w );
-
-            //! no throw exchange
-            void xch( natural &other ) throw();
-
-            //! Least Significant Word
-            word_t lsw() const throw();
-            
-            //! prepare a scalar type
-            static  const uint8_t * prepare( word_t &w, size_t &wb ) throw();
-
-            //! get number of bits
-            size_t bits() const throw();
-
-            //! clear memory
-            void clr() throw();
-
-            //! generate a random number
-            natural(const size_t nbit, randomized::bits &gen );
+            natural();                                                    //!< a zero natural
+            natural(size_t n, const as_capacity_t &);                     //!< a zero with any memory
+            virtual ~natural() throw();                                   //!< release memory
+            natural(const natural &other);                                //!< copy
+            natural(word_t w);                                            //!<setup from a word_type
+            natural( const void  *buffer, size_t buflen);                 //!< copy from raw memory
+            natural & operator=( const natural &other );                  //!< assign
+            natural & operator=( const word_t w );                        //!< assign from word_type
+            natural(const size_t nbit, randomized::bits &gen );           //!< generate a random number
+            void   xch( natural &other ) throw();                         //!< no throw exchange
+            word_t lsw() const throw();                                   //!< Least Significant Word
+            size_t bits() const throw();                                  //!< get number of bits
+            void   clr() throw();                                         //!< clear memory
+            static const uint8_t * prepare( word_t &, size_t & ) throw(); //! prepare a scalar type
 
             //__________________________________________________________________
             //
@@ -165,24 +145,12 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             // comparisons
             //
             //__________________________________________________________________
-
-            //! fast checking against 0
-            bool is_zero() const throw();
-
-            //! fast checking greater than zero
-            bool is_positive() const throw();
-
-            //! fast checking against a byte
-            bool is_byte(const uint8_t x) const throw();
-
-            //! fast setting to a byte
-            void set_byte(const uint8_t x) throw();
-
-            //! test if even
-            bool is_even() const throw();
-
-            //! test if odd
-            bool is_odd() const throw();
+            bool is_zero() const throw();                //!< fast checking against 0
+            bool is_positive() const throw();            //!< fast checking greater than zero
+            bool is_byte(const uint8_t x) const throw(); //!< fast checking against a byte
+            void set_byte(const uint8_t x) throw();      //!< fast setting to a byte
+            bool is_even() const throw();                //!< test if even
+            bool is_odd() const throw();                 //!< test if odd
 
             //! comparison
             static
@@ -239,18 +207,10 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //
             //__________________________________________________________________
             Y_MPN_WRAP(+,__add)
-
-            //! unary plus
-            natural operator+() const;
-
-            //! increase by 1
-            natural __inc() const;
-
-            //! prefix increase operator
-            natural & operator++();
-
-            //! postfix increase operator
-            natural operator++(int);
+            natural   operator+() const; //!< unary plus
+            natural   __inc() const;     //!< increase by 1
+            natural & operator++();      //!< prefix increase operator
+            natural   operator++(int);   //!< postfix increase operator
             
             //__________________________________________________________________
             //
@@ -259,15 +219,9 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //
             //__________________________________________________________________
             Y_MPN_WRAP(-,__sub)
-
-            //! decrease by 1
-            natural __dec() const;
-
-            //! prefix decrease operator
-            natural & operator--();
-
-            //! postfix decrease operator
-            natural operator--(int);
+            natural   __dec() const;   //!< decrease by 1
+            natural & operator--();    //!< prefix decrease operator
+            natural   operator--(int); //!< postfix decrease operator
 
             //__________________________________________________________________
             //
@@ -276,9 +230,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //
             //__________________________________________________________________
             Y_MPN_WRAP(*,__mul)
-
-            //! fast square
-            static natural square_of( const natural &n );
+            static natural square_of( const natural &n ); //!< fast square
 
             //__________________________________________________________________
             //
@@ -286,42 +238,18 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             // Bits shifting
             //
             //__________________________________________________________________
-
-            //! ready any byte
-            uint8_t operator[](size_t indx) const throw();
-
-            //! ready valid bit to 0 or 1
-            uint8_t get_bit(const size_t ibit) const throw();
-
-            //! test a valid bit
-            bool has_bit(const size_t ibit) const throw();
-
-            //! left shift
-            natural shl(const size_t shift) const;
-
-            //! in place left shift
-            natural & shl();
-
-            //! in place left shift operator
-            natural & operator<<=(const size_t shift);
-
-            //! left shift operator
-            friend natural operator<<(const natural &n,const size_t shift);
-
-            //! right shift
-            natural shr(const size_t shift) const;
-
-            //! in place right shift
-            natural & shr();
-
-            //! in place right shift operator
-            natural & operator>>=(const size_t shift);
-
-            //! left shift operator
-            friend natural operator>>(const natural &n, const size_t shift);
-
-            //! 2^j
-            static natural exp2( const size_t j );
+            uint8_t        operator[](size_t indx)    const throw();         //!< ready any byte
+            uint8_t        get_bit(const size_t ibit) const throw();         //!< ready valid bit to 0 or 1
+            bool           has_bit(const size_t ibit) const throw();         //!< test a valid bit
+            natural        shl(const size_t shift) const;                    //!< left shift
+            natural &      shl();                                            //!< in place left shift
+            natural &      operator<<=(const size_t shift);                  //!< in place left shift operator
+            friend natural operator<<(const natural &n,const size_t shift);  //!< left shift operator
+            natural        shr(const size_t shift) const;                    //!< right shift
+            natural &      shr();                                            //!< in place right shift
+            natural &      operator>>=(const size_t shift);                  //!< in place right shift operator
+            friend natural operator>>(const natural &n, const size_t shift); //!< left shift operator
+            static natural exp2( const size_t j );                           //!< 2^j
 
             //__________________________________________________________________
             //
@@ -347,15 +275,9 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             // DIVISIBILITY
             //
             //__________________________________________________________________
-
-            //! test divisibility
-            bool is_divisible_by( const natural &rhs ) const;
-
-            //! test divisibility
-            bool is_divisible_by(word_t w) const;
-
-            //! test divisibility
-            bool is_divisible_by_byte(const uint8_t b) const;
+            bool is_divisible_by( const natural &rhs ) const; //!< test divisibility
+            bool is_divisible_by(word_t w) const;             //!< test divisibility
+            bool is_divisible_by_byte(const uint8_t b) const; //!< test divisibility
 
             //__________________________________________________________________
             //
@@ -396,8 +318,8 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             uint8_t *byte;      //!< byte[0..allocated-1]
             uint8_t *item;      //!< item[1..allocated]
 
-            void update()  throw();
-            void upgrade() throw();
+            void update()  throw(); //!< from bytes
+            void upgrade() throw(); //!< set bytes to allocated and update
 
             static  uint8_t * __acquire(size_t &n);
 
