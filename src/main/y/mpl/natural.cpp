@@ -66,8 +66,8 @@ namespace upsylon
     namespace mpl
     {
 
-        void natural:: update()  throw() { while(bytes>0&&item[bytes]<=0) --bytes; }
-        void natural:: upgrade() throw() { bytes = allocated; update(); }
+        void natural:: update()  throw() { while(bytes>0&&item[bytes]<=0) --bytes; Y_MPN_CHECK(this); }
+        void natural:: upgrade() throw() { bytes = allocated; update();                               }
 
         uint8_t * natural:: __acquire(size_t &n)
         {
@@ -117,8 +117,10 @@ namespace upsylon
 
         void natural:: xch( natural &other ) throw()
         {
-            cswap(bytes,other.bytes); cswap(allocated,other.allocated);
-            cswap(byte,other.byte);   cswap(item,other.item);
+            cswap(bytes,other.bytes);
+            cswap(allocated,other.allocated);
+            cswap(byte,other.byte);
+            cswap(item,other.item);
         }
 
         word_t natural:: lsw() const throw()

@@ -136,7 +136,7 @@ ADD_TEST(geom:iso2d test-main geom_iso2d)
 
 SOURCE_GROUP(mp FILES test-mpn.cpp test-mpz.cpp test-mpq.cpp test-pfd.cpp test-pfq.cpp test-mprm.cpp test-ilog.cpp)
 ADD_TEST(mp:n         test-main mpn)
-ADD_TEST(mp:fact      test-main mpn_fact 1 10 20 30 50)
+ADD_TEST(mp:fact      test-main mpn_fact 1 0x0a 20 30 50)
 ADD_TEST(mp:z         test-main mpz)
 ADD_TEST(mp:q         test-main mpq)
 ADD_TEST(mp:pfd       test-main pfd 10 20 30 40 50)

@@ -224,14 +224,12 @@ Y_UTEST(mpn)
             const mpn Num = num;
             for( uint64_t den=1; den<=1024+256;++den )
             {
-                const mpn Den = den;
+                const mpn  Den = den;
                 const bool res = 0 == (num%den);
-                //std::cerr << num << "/" << den << std::endl;
                 Y_ASSERT( res == Num.is_divisible_by(Den) );
             }
         }
     }
-    //exit(0);
 
     std::cerr << "-- boolean" << std::endl;
     for(size_t iter=0;iter<ITERS;++iter)
@@ -285,7 +283,7 @@ Y_UTEST(mpn)
         }
         
     }
-
+    
     std::cerr << "-- primality" << std::endl;
     vector<uint64_t> p;
     {
@@ -382,7 +380,7 @@ Y_UTEST(mpn_fact)
     for(int i=1;i<argc;++i)
     {
         const string s = argv[i];
-        const mpn    n = mpn::dec(s);
+        const mpn    n = mpn::parse(s);
         const mpn    f = mpn::factorial(n);
         std::cerr << "factorial(" << n << ")=" << f << std::endl;
     }

@@ -72,11 +72,15 @@ namespace upsylon
         ////////////////////////////////////////////////////////////////////////
 
         //! check natural sanity
-#define Y_MPN_CHECK(PTR)                                        \
-assert( is_a_power_of_two((PTR)->allocated) );                  \
-assert( (PTR)->bytes<=(PTR)->allocated );                       \
-assert( (PTR)->byte-1==(PTR)->item );                           \
-assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
+#define Y_MPN_CHECK(PTR)   do {                             \
+assert(PTR); const natural &host = *PTR;                    \
+assert( is_a_power_of_two(host.allocated) );                \
+assert( host.bytes  <= host.allocated     );                \
+assert( host.byte-1 == host.item          );                \
+assert( (0 == host.bytes) || host.item[ host.bytes ]> 0 );  \
+for(size_t ii=host.bytes;ii<host.allocated;++ii)            \
+{ assert(0==host.byte[ii]); }                               \
+} while(false)
 
         //! in place constructor
 #define Y_MPN_CTOR(SZ,MX) object(), number_type(), memory::ro_buffer(), ios::serializable(), bytes(SZ), allocated(MX), byte( __acquire(allocated) ), item(byte-1)
@@ -137,7 +141,11 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             static double ratio_of(const natural &num,const natural &den);
 
             static natural dec( const string &s ); //!< parse decimal string
+            static natural dec( const char   *s ); //!< parse decimal text
             static natural hex( const string &s ); //!< parse hexadecimal string
+            static natural hex( const char   *s ); //!< parse hexadecimal text
+            static natural parse( const string &s ); //!< hexadecimal string if "0[xX]*", decimal otherwise
+            static natural parse( const char   *s ); //!< parse text
 
             //__________________________________________________________________
             //

@@ -134,6 +134,13 @@ namespace upsylon
             return ans;
         }
 
+        natural natural:: hex( const char *s )
+        {
+            const string _(s);
+            return hex(_);
+        }
+
+
         natural natural:: dec( const string &s )
         {
             if(s.size()<=0) throw libc::exception(EDOM,"natural.dec(empty.string)");
@@ -148,6 +155,31 @@ namespace upsylon
                 ans += d;
             }
             return ans;
+        }
+
+        natural natural:: dec( const char *s )
+        {
+            const string _(s);
+            return dec(_);
+        }
+
+        natural natural:: parse( const string &s )
+        {
+            if( (s.size()>=2) && ('0' == s[0]) && ('x' == s[1] || 'X' == s[1] ) )
+            {
+                const string _( &s[2], s.size()-2 );
+                return hex(_);
+            }
+            else
+            {
+                return dec(s);
+            }
+        }
+
+        natural natural:: parse( const char *s )
+        {
+            const string _(s);
+            return parse(_);
         }
 
         size_t natural:: serialize( ios::ostream &fp ) const
