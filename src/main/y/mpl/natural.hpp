@@ -116,7 +116,7 @@ assert( (0 == (PTR)->bytes) || (PTR)->item[ (PTR)->bytes ] >0 )
             word_t lsw() const throw();                                   //!< Least Significant Word
             size_t bits() const throw();                                  //!< get number of bits
             void   clr() throw();                                         //!< clear memory
-            static const uint8_t * prepare( word_t &, size_t & ) throw(); //! prepare a scalar type
+            static const uint8_t * prepare( word_t &, size_t & ) throw(); //!< prepare a scalar type
 
             //__________________________________________________________________
             //

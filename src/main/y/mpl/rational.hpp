@@ -3,6 +3,7 @@
 #define Y_RATIONAL_INCLUDED 1
 
 #include "y/mpl/integer.hpp"
+#include "y/os/error.hpp"
 
 namespace upsylon
 {
@@ -186,7 +187,7 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
             //! unary minus
             rational operator-() const
             {
-                const integer new_num( sign_neg(num.s), num.n );
+                const  integer new_num( sign_ops::neg(num.s), num.n );
                 return rational(new_num,den);
             }
 
@@ -247,7 +248,7 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
             {
                 const integer i_num = lhs.num * rhs.den;
                 const integer i_den = lhs.den * rhs.num;
-                const integer o_num( sign_product(i_num.s,i_den.s), i_num.n);
+                const integer o_num( sign_ops::product(i_num.s,i_den.s), i_num.n);
                 return rational(o_num,i_den.n);
             }
             
