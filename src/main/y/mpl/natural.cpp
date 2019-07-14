@@ -81,9 +81,8 @@ namespace upsylon
         natural:: ~natural() throw()
         {
             static manager &mgr = manager::location();
-            Y_MPN_CHECK(this);
+            clr();
             mgr.__release(byte,allocated);
-            bytes=0;
             item =0;
         }
 
@@ -147,7 +146,13 @@ namespace upsylon
             return p;
         }
 
-        void natural:: clr() throw() { bytes = 0; memset(byte,0,allocated); }
+        void natural:: clr() throw()
+        {
+            Y_MPN_CHECK(this);
+            memset(byte,0,bytes);
+            bytes = 0;
+            Y_MPN_CHECK(this);
+        }
 
         size_t natural:: bits() const throw()
         {
@@ -171,15 +176,19 @@ namespace upsylon
 
         void natural:: set_byte(const uint8_t x) throw()
         {
+            Y_MPN_CHECK(this);
             if(x<=0)
             {
                 bytes=0;
+                memset(byte,0,allocated);
             }
             else
             {
                 bytes   = 1;
                 byte[0] = x;
+                memset(byte+1,0,allocated-1);
             }
+            Y_MPN_CHECK(this);
         }
 
         bool natural:: is_even() const throw()
