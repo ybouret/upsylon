@@ -1,5 +1,7 @@
 #include "y/mpl/rational.hpp"
 #include "y/exceptions.hpp"
+#include "y/os/error.hpp"
+
 #include <cerrno>
 
 namespace upsylon
@@ -57,5 +59,152 @@ namespace upsylon
                 }
             }
         }
+
+        rational rational:: __add( const rational &lhs, const rational &rhs )
+        {
+            const natural dd = lhs.den * rhs.den;
+            const integer ad = lhs.num * rhs.den;
+            const integer cb = rhs.num * lhs.den;
+            const integer nn = ad+cb;
+            return rational(nn,dd);
+        }
+
+        rational rational::__sub( const rational &lhs, const rational &rhs )
+        {
+            const natural dd = lhs.den * rhs.den;
+            const integer ad = lhs.num * rhs.den;
+            const integer cb = rhs.num * lhs.den;
+            const integer nn = ad-cb;
+            return rational(nn,dd);
+        }
+
+        rational rational::__mul( const rational &lhs, const rational &rhs )
+        {
+            const integer new_num = lhs.num * rhs.num;
+            const natural new_den = lhs.den * rhs.den;
+            return rational(new_num,new_den);
+        }
+
+        rational rational::__div( const rational &lhs, const rational &rhs )
+        {
+            const integer i_num = lhs.num * rhs.den;
+            const integer i_den = lhs.den * rhs.num;
+            const integer o_num( sign_ops::product(i_num.s,i_den.s), i_num.n);
+            return rational(o_num,i_den.n);
+        }
+
+
+        rational::rational() : number_type(), num(),den(1) {}
+        rational::~rational() throw() {}
+        rational::rational( const integer_t i ) :  object(), number_type(), num(i), den(1) {}
+        rational::rational( const integer & z ) :  object(), number_type(), num(z), den(1) {}
+        rational::rational( const natural & n ) :  object(), number_type(), num(n), den(1) {}
+        rational::rational( const integer_t n, const word_t  d) :  object(), number_type(), num(n), den(d) { check(); }
+        rational::rational( const integer &z, const natural &u) :  object(), number_type(), num(z), den(u) { check(); }
+
+        std::ostream & operator<<( std::ostream &os, const rational &q )
+        {
+            if(q.den.is_byte(1))
+            {
+                os << q.num;
+            }
+            else
+            {
+                os << '(' << q.num << '/' << q.den << ')';
+            }
+            return os;
+        }
+
+        double rational:: to_real() const throw()
+        {
+            switch(num.s)
+            {
+                case __negative: return -natural::ratio_of(num.n,den);
+                case __positive: return  natural::ratio_of(num.n,den);
+                case __zero:     return 0;
+            }
+#if defined(__ICC)
+            fatal_error("intel corrupted code@mpl.rational.to_real");
+            return 0;
+#endif
+#if defined(__GNUC__)
+            fatal_error("gnu corrupted code@mpl.rational.to_real");
+            return 0;
+#endif
+#if defined(_MSC_VER)
+            fatal_error("MSC corrupted code@mpl.rational.to_real");
+            return 0;
+#endif
+        }
+
+        rational:: rational( const rational &q ) :  object(), number_type(), num(q.num), den(q.den) {}
+
+        void rational::xch( rational &q ) throw()
+        {
+            ( (integer &)num ).xch( (integer &)(q.num) );
+            ( (natural &)den ).xch( (natural &)(q.den) );
+        }
+
+        rational & rational:: operator=( const rational &q )
+        {
+            rational tmp(q);
+            xch(tmp);
+            return *this;
+        }
+
+        rational & rational:: operator=( const integer_t i )
+        {
+            rational tmp(i); xch(tmp); return *this;
+        }
+
+        rational & rational:: operator=( const integer & z )
+        {
+            rational tmp(z); xch(tmp); return *this;
+        }
+
+        rational & rational:: operator=( const natural & n )
+        {
+            rational tmp(n); xch(tmp); return *this;
+        }
+
+
+        int rational::compare( const rational &lhs, const rational &rhs)
+        {
+            const integer L = lhs.num * rhs.den;
+            const integer R = rhs.num * lhs.den;
+            return integer::compare(L,R);
+        }
+
+        rational rational::operator+() const
+        {
+            return *this;
+        }
+
+        rational rational::__inc() const
+        {
+            const integer new_num = num + den;
+            return rational(new_num,den);
+        }
+
+        rational & rational::operator++()  { rational tmp = __inc(); xch(tmp); return *this; }
+
+        rational rational::operator++(int) { rational tmp = __inc(); xch(tmp); return tmp; }
+
+
+        rational rational:: operator-() const
+        {
+            const  integer new_num( sign_ops::neg(num.s), num.n );
+            return rational(new_num,den);
+        }
+
+        rational rational:: __dec() const
+        {
+            const integer new_num = num - den;
+            return rational(new_num,den);
+        }
+
+        rational & rational::operator--()  { rational tmp = __dec(); xch(tmp); return *this; }
+
+        rational rational::operator--(int) { rational tmp = __dec(); xch(tmp); return tmp; }
     }
 }

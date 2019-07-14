@@ -3,7 +3,6 @@
 #define Y_RATIONAL_INCLUDED 1
 
 #include "y/mpl/integer.hpp"
-#include "y/os/error.hpp"
 
 namespace upsylon
 {
@@ -16,102 +15,32 @@ namespace upsylon
             const integer num; //!< numerator
             const natural den; //!< denominator>0
 
-            //! update to simplified form
-            void check();
-
-            //! default constructor, zero
-            inline rational() : number_type(), num(),den(1) {}
-            //! destructor
-            inline virtual ~rational() throw() {}
-            //! from integral type
-            inline rational( const integer_t i ) :  object(), number_type(), num(i), den(1) {}
-            //! from mpz
-            inline rational( const integer & z ) :  object(), number_type(), num(z), den(1) {}
-            //! from mpn
-            inline rational( const natural & n ) :  object(), number_type(), num(n), den(1) {}
-            //! from integral fraction
-            inline rational( const integer_t n, const word_t  d) :  object(), number_type(), num(n), den(d) { check(); }
-            //! from mpz/mpn
-            inline rational( const integer &z, const natural &u) :  object(), number_type(), num(z), den(u) { check(); }
+            virtual ~rational() throw();                   //!< destructor
+            rational();                                    //!< default constructor, zero
+            rational(const integer_t);                     //!< from integral type
+            rational( const integer & z );                 //!< from mpz
+            rational( const natural & n );                 //!< from mpn
+            rational( const integer_t n, const word_t  d); //!< from integral fraction
+            rational( const integer &z, const natural &u); //!< from mpz/mpn
+            rational( const rational &q );                 //!< copy
+            rational & operator=( const rational &q );     //!< assign
+            rational & operator=( const integer_t i );     //!< assign from integral type
+            rational & operator=( const integer & z );     //!< assign from integer type
+            rational & operator=( const natural & n );     //!< assign from natural
+            void       check();                            //!< update to simplified form
+            double     to_real() const throw();            //!< conversion
+            void       xch( rational &q ) throw();         //!< no throw exchange
 
             //! output
-            inline friend std::ostream & operator<<( std::ostream &os, const rational &q )
-            {
-                if(q.den.is_byte(1))
-                {
-                    os << q.num;
-                }
-                else
-                {
-                    os << '(' << q.num << '/' << q.den << ')';
-                }
-                return os;
-            }
-
-            //! conversion
-            inline double to_real() const throw()
-            {
-                switch(num.s)
-                {
-                    case __negative: return -natural::ratio_of(num.n,den);
-                    case __positive: return  natural::ratio_of(num.n,den);
-                    case __zero:     return 0;
-                }
-#if defined(__ICC)
-                fatal_error("intel corrupted code@mpl.rational.to_real");
-                return 0;
-#endif
-#if defined(__GNUC__)
-                fatal_error("gnu corrupted code@mpl.rational.to_real");
-                return 0;
-#endif
-#if defined(_MSC_VER)
-				fatal_error("MSC corrupted code@mpl.rational.to_real");
-				return 0;
-#endif
-            }
-
-            //! copy
-            inline rational( const rational &q ) :  object(), number_type(), num(q.num), den(q.den) {}
-
-            //! no throw exchange
-            inline void xch( rational &q ) throw()
-            {
-                ( (integer &)num ).xch( (integer &)(q.num) );
-                ( (natural &)den ).xch( (natural &)(q.den) );
-            }
-
-            //!assign
-            inline rational & operator=( const rational &q )
-            {
-                rational tmp(q);
-                xch(tmp);
-                return *this;
-            }
-
-            //! assign from integral type
-            inline rational & operator=( const integer_t i )
-            {
-                rational tmp(i); xch(tmp); return *this;
-            }
-
-            //! assign from integer type
-            inline rational & operator=( const integer & z )
-            {
-                rational tmp(z); xch(tmp); return *this;
-            }
+            friend std::ostream & operator<<(std::ostream &, const rational &);
 
             //__________________________________________________________________
             //
             // comparisons
             //__________________________________________________________________
-            //! basic comparions function
-            static inline int compare( const rational &lhs, const rational &rhs)
-            {
-                const integer L = lhs.num * rhs.den;
-                const integer R = rhs.num * lhs.den;
-                return integer::compare(L,R);
-            }
+
+            //! basic comparison function
+            static int compare( const rational &lhs, const rational &rhs);
 
             //! changing RHS args
 #define Y_MPQ_DEFINE_RHS(RET,BODY,CALL,TYPE)  inline RET BODY( const rational &lhs, const TYPE      rhs ) { const rational R(rhs); return CALL(lhs,R); }
@@ -158,51 +87,20 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
             // ADD
             //__________________________________________________________________
             Y_MPQ_WRAP(+,__add)
-
-            //! unary plus
-            rational operator+() const
-            {
-                return *this;
-            }
-
-            //! increment
-            inline rational __inc() const
-            {
-                const integer new_num = num + den;
-                return rational(new_num,den);
-            }
-
-            //! pre increment operator
-            inline rational & operator++()  { rational tmp = __inc(); xch(tmp); return *this; }
-
-            //! post increment operator
-            inline rational operator++(int) { rational tmp = __inc(); xch(tmp); return tmp; }
+            rational   operator+() const; //!< unary plus
+            rational    __inc() const;    //!< increment
+            rational & operator++();      //!< pre increment operator
+            rational   operator++(int);   //!< post increment operator
 
             //__________________________________________________________________
             //
             // SUB
             //__________________________________________________________________
             Y_MPQ_WRAP(-,__sub)
-
-            //! unary minus
-            rational operator-() const
-            {
-                const  integer new_num( sign_ops::neg(num.s), num.n );
-                return rational(new_num,den);
-            }
-
-            //! increment
-            rational __dec() const
-            {
-                const integer new_num = num - den;
-                return rational(new_num,den);
-            }
-
-            //! pre increment operator
-            rational & operator--()  { rational tmp = __dec(); xch(tmp); return *this; }
-
-            //! post increment operator
-            rational operator--(int) { rational tmp = __dec(); xch(tmp); return tmp; }
+            rational   operator-() const; //!< unary minus
+            rational   __dec() const;     //!< increment
+            rational & operator--();      //!< pre increment operator
+            rational   operator--(int);   //!< post increment operator
 
             
             //__________________________________________________________________
@@ -219,38 +117,10 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
 
         private:
             void __simplify();
-            static inline rational __add( const rational &lhs, const rational &rhs )
-            {
-                const natural dd = lhs.den * rhs.den;
-                const integer ad = lhs.num * rhs.den;
-                const integer cb = rhs.num * lhs.den;
-                const integer nn = ad+cb;
-                return rational(nn,dd);
-            }
-
-            static inline rational __sub( const rational &lhs, const rational &rhs )
-            {
-                const natural dd = lhs.den * rhs.den;
-                const integer ad = lhs.num * rhs.den;
-                const integer cb = rhs.num * lhs.den;
-                const integer nn = ad-cb;
-                return rational(nn,dd);
-            }
-            
-            static inline rational __mul( const rational &lhs, const rational &rhs )
-            {
-                const integer new_num = lhs.num * rhs.num;
-                const natural new_den = lhs.den * rhs.den;
-                return rational(new_num,new_den);
-            }
-            
-            static inline rational __div( const rational &lhs, const rational &rhs )
-            {
-                const integer i_num = lhs.num * rhs.den;
-                const integer i_den = lhs.den * rhs.num;
-                const integer o_num( sign_ops::product(i_num.s,i_den.s), i_num.n);
-                return rational(o_num,i_den.n);
-            }
+            static  rational __add( const rational &lhs, const rational &rhs );
+            static  rational __sub( const rational &lhs, const rational &rhs );
+            static  rational __mul( const rational &lhs, const rational &rhs );
+            static  rational __div( const rational &lhs, const rational &rhs );
             
         };
     }
@@ -259,7 +129,7 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
     namespace math
     {
         inline mpq fabs_of( const mpq &q ) { return mpq( fabs_of(q.num), q.den ); } //!< overload __fabs function
-        inline mpq __mod2( const mpq &q )  { return q*q;                         } //!< overload __mod2 function
+        inline mpq __mod2( const mpq &q )  { return q*q;                         }  //!< overload __mod2 function
     }
     
     //! extended numeric for mpq
