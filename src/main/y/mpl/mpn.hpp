@@ -27,7 +27,7 @@ namespace upsylon
         class PrimeInfo
         {
         public:
-            typedef list<const PrimeInfo> List; //!< alis
+            typedef list<const PrimeInfo> List; //!< alias
             PrimeInfo(const mpn &n);            //!< setup
             PrimeInfo(const uint64_t n);        //!< setup
             PrimeInfo(const PrimeInfo &);       //!< hard copy
@@ -63,7 +63,7 @@ namespace upsylon
             typedef const mpn *Slot; //!< alias
 
             explicit MetaPrimeVector(const size_t n=0); //!< setup
-            virtual ~MetaPrimeVector() throw();         //!< destryuctor
+            virtual ~MetaPrimeVector() throw();         //!< destructor
 
             Slot   *slot;     //!< slot[1.size]
             size_t  size;     //!< 0..capacity

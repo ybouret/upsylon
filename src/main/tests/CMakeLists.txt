@@ -134,7 +134,7 @@ ADD_TEST(Lang:Lex      test-main  lex     NULL)
 SOURCE_GROUP(geom FILES test-geom-iso2d.cpp)
 ADD_TEST(geom:iso2d test-main geom_iso2d)
 
-SOURCE_GROUP(mp FILES test-mpn.cpp test-mpz.cpp test-mpq.cpp test-pfd.cpp test-pfq.cpp test-mprm.cpp test-ilog.cpp)
+SOURCE_GROUP(mp FILES test-mpn.cpp test-mpz.cpp test-mpq.cpp test-pfd.cpp test-pfq.cpp test-mprm.cpp test-ilog.cpp test-prime-factor.cpp) 
 ADD_TEST(mp:n         test-main mpn)
 ADD_TEST(mp:fact      test-main mpn_fact 1 0x0a 20 30 50)
 ADD_TEST(mp:z         test-main mpz)
@@ -144,7 +144,7 @@ ADD_TEST(mp:pfq       test-main pfq 110 221 348 417)
 ADD_TEST(mp:prm       test-main mprm 512)
 ADD_TEST(mp:prm1000   test-main mprm1000 ${HERE}/1000.txt)
 ADD_TEST(mp:ilog      test-main ilog)
-
+ADD_TEST(mp:primes    test-main prime_factor 0 1 2 3 4 0x3E8 0x2711)
 
 SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-nwsrt.cpp test-locate.cpp)
 ADD_TEST(sort:sort        test-main sort)
