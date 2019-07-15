@@ -159,6 +159,12 @@ SET(mpl_natural_srcs ${mpl_natural_decl} ${mpl_natural_code})
 SOURCE_GROUP( mpl/natural FILES ${mpl_natural_srcs} )
 INSTALL( FILES ${mpl_natural_decl} DESTINATION include/y/mpl/natural )
 
+FILE(GLOB mpl_prime_decl y/mpl/prime/*.hpp)
+FILE(GLOB mpl_prime_code y/mpl/prime/*.cpp)
+SET(mpl_prime_srcs ${mpl_prime_decl} ${mpl_prime_code})
+SOURCE_GROUP( mpl/prime FILES ${mpl_prime_srcs} )
+INSTALL( FILES ${mpl_prime_decl} DESTINATION include/y/mpl/prime )
+
 
 FILE(GLOB math_decl y/math/*.hpp)
 FILE(GLOB math_code y/math/*.cpp)
@@ -272,6 +278,7 @@ ${codec_srcs} ${lzo_srcs}
 ${fft_srcs}
 ${mpl_srcs}
 ${mpl_natural_srcs}
+${mpl_prime_srcs}
 ${math_srcs}
 ${functor_srcs}
 ${fs_srcs}

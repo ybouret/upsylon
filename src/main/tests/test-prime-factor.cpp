@@ -1,4 +1,4 @@
-#include "y/mpl/prime-factor.hpp"
+#include "y/mpl/prime/factors.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 #include "y/mpl/mpn.hpp"

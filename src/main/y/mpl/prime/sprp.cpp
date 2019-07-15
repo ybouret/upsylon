@@ -1,4 +1,4 @@
-#include "y/mpl/sprp.hpp"
+#include "y/mpl/prime/sprp.hpp"
 #include "y/exceptions.hpp"
 #include <cerrno>
 

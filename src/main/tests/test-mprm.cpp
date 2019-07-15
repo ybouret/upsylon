@@ -46,7 +46,7 @@ void check_consistency(const size_t count,
 
 }
 
-#include "y/mpl/sprp.hpp"
+#include "y/mpl/prime/sprp.hpp"
 
 Y_UTEST(mprm)
 {

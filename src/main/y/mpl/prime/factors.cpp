@@ -1,70 +1,4 @@
-
-#include "y/mpl/prime-factor.hpp"
-
-namespace upsylon
-{
-    namespace mpl
-    {
-
-        prime_factor:: ~prime_factor() throw()
-        {
-            n = 0;
-        }
-
-        prime_factor:: prime_factor( const natural &prm, const size_t num ) :
-        p(prm),
-        n(num)
-        {
-            assert(n>0);
-        }
-
-        prime_factor:: prime_factor( const prime_factor &other ) :
-        p( other.p ),
-        n( other.n )
-        {
-        }
-
-
-        std::ostream & operator<<( std::ostream &os, const prime_factor &pf )
-        {
-            const size_t n = pf.n;
-            if(n>1)
-            {
-                os << '(' << pf.p << '^' << n << ')';
-            }
-            else
-            {
-                os << pf.p;
-            }
-            return os;
-        }
-
-        const natural & prime_factor:: key() const throw()
-        {
-            return p;
-        }
-
-        int prime_factor:: compare_keys( const natural &lhs, const natural &rhs ) throw()
-        {
-            return natural::compare(lhs,rhs);
-        }
-
-        natural prime_factor:: get() const
-        {
-            natural ans = p;
-            size_t  i   = n;
-            for(--i;i>0;--i)
-            {
-                ans *= p;
-            }
-            return ans;
-        }
-
-
-    }
-
-}
-
+#include "y/mpl/prime/factors.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon
@@ -288,19 +222,6 @@ namespace upsylon
                 throw exception("prime_factors unexpected copy/insertion failure");
             }
         }
-
-#if 0
-        static inline
-        void __ins( prime_factor::db &pf, const natural &p, const size_t n )
-        {
-            assert(n>=2);
-            const prime_factor::pointer q = new prime_factor(p,n);
-            if(!pf.insert(q))
-            {
-                throw exception("prime_factors unexpected create/insertion failure");
-            }
-        }
-#endif
         
         void prime_factors:: mul_by( const prime_factors &other )
         {
@@ -354,7 +275,7 @@ namespace upsylon
             prod.swap_table_with(factors);
             update();
         }
-        
+
         prime_factors prime_factors:: factorial(const natural &n)
         {
             prime_factors p = 1;
