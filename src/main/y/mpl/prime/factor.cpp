@@ -12,6 +12,7 @@ namespace upsylon
         }
 
         prime_factor:: prime_factor( const natural &prm, const size_t num ) :
+        number_type(),
         p(prm),
         n(num)
         {
@@ -19,6 +20,7 @@ namespace upsylon
         }
 
         prime_factor:: prime_factor( const prime_factor &other ) :
+        number_type(),
         p( other.p ),
         n( other.n )
         {

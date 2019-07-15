@@ -14,7 +14,7 @@ namespace upsylon
     {
 
         //! a prime factor p^n
-        class prime_factor : public counted_object
+        class prime_factor : public number_type
         {
         public:
             //------------------------------------------------------------------

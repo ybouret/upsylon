@@ -5,16 +5,54 @@ namespace upsylon
 {
     namespace mpl
     {
+
+        size_t prime_factors:: count() const throw()
+        {
+            return factors.size();
+        }
+
+        prime_factors::const_iterator prime_factors::begin() const throw()
+        {
+            return factors.begin();
+        }
+
+        prime_factors::const_iterator prime_factors::end() const throw()
+        {
+            return factors.end();
+        }
+
+        bool prime_factors:: is_zero() const throw()
+        {
+            return 0 == factors.size();
+        }
+
+
+        bool prime_factors:: is_one()  const throw()
+        {
+            if( factors.size() == 1)
+            {
+                const prime_factor &f = **begin();
+                return f.p.is_byte(1);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         prime_factors:: ~prime_factors() throw()
         {
         }
 
-        prime_factors:: prime_factors() throw() : factors()
+        prime_factors:: prime_factors() throw() :
+        number_type(),
+        factors()
         {
 
         }
 
         prime_factors:: prime_factors(const prime_factors &other) :
+        number_type(),
         factors( other.factors.size(), as_capacity )
         {
             size_t         nf = other.factors.size();

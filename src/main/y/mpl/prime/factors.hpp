@@ -9,7 +9,7 @@ namespace upsylon
     namespace mpl
     {
         //! unique prime factor decomposition
-        class prime_factors : public counted_object
+        class prime_factors : public number_type
         {
         public:
             typedef prime_factor::db::const_iterator const_iterator; //!< alias
@@ -36,12 +36,20 @@ namespace upsylon
             //! factorial
             static prime_factors factorial(const natural &n);
 
+            size_t         count() const throw(); //!< factors.size()
+            const_iterator begin() const throw(); //!< factors.begin()
+            const_iterator end()   const throw(); //!< factors.end()
+
+            bool is_zero() const throw();
+            bool is_one()  const throw();
+
         private:
             prime_factor::db factors;
             void update();
             void setup( const natural & );
             void __add( const natural &p, const size_t n);
 
+            friend class prime_factors_ratio;
         };
     }
 

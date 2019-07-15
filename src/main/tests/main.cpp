@@ -66,6 +66,7 @@ Y_UTEST_INIT(128)
     Y_UTEST(mprm);
     Y_UTEST(mprm1000);
     Y_UTEST(prime_factor);
+    Y_UTEST(prime_ratio);
     Y_UTEST(ilog);
 
     Y_UTEST(hashing);
