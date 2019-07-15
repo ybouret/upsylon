@@ -23,6 +23,9 @@ namespace upsylon
             prime_factors_ratio( const natural &n );
             prime_factors_ratio( const natural &n, const natural &d);
 
+            prime_factors_ratio( const word_t n);
+            prime_factors_ratio( const word_t n, const word_t d);
+
 
             virtual ~prime_factors_ratio() throw();
 
