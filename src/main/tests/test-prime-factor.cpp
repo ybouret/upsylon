@@ -1,11 +1,15 @@
 #include "y/mpl/prime-factor.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
+#include "y/mpl/mpn.hpp"
 
 using namespace upsylon;
 
 Y_UTEST(prime_factor)
 {
+
+    MPN::instance().createPrimes(100);
+
     // first loop: individual
     for(int i=1;i<argc;++i)
     {
