@@ -9,6 +9,26 @@ namespace upsylon
     namespace mpl
     {
 
+        void prime_factors_ratio:: xch( prime_factors_ratio &Q ) throw()
+        {
+            ((prime_factors &)num).xch( (prime_factors &)(Q.num));
+            ((prime_factors &)den).xch( (prime_factors &)(Q.den));
+        }
+
+        prime_factors_ratio:: prime_factors_ratio( const prime_factors_ratio &Q ) :
+        num( Q.num ),
+        den( Q.den )
+        {
+        }
+
+        prime_factors_ratio &  prime_factors_ratio::  operator=( const prime_factors_ratio &Q )
+        {
+            prime_factors_ratio tmp(Q);
+            xch(tmp);
+            return *this;
+        }
+
+
         std::ostream & operator<<( std::ostream &os, const prime_factors_ratio &Q )
         {
             assert( !Q.den.is_zero() );
@@ -208,11 +228,37 @@ namespace upsylon
             }
 
         }
-            
 
 
+        void prime_factors_ratio:: mul_by( const prime_factors_ratio &x )
+        {
+            prime_factors new_num = num; new_num.mul_by(x.num);
+            prime_factors new_den = den; new_den.mul_by(x.den);
+            prime_factors_ratio Q(new_num,new_den);
+            xch(Q);
+        }
 
+        void prime_factors_ratio:: div_by( const prime_factors_ratio &x )
+        {
+            prime_factors       new_num = num;      new_num.mul_by(x.den);
+            prime_factors       new_den = den;      new_den.mul_by(x.num);
+            prime_factors_ratio Q(new_num,new_den); xch(Q);
+        }
 
+#define Y_PFQ_MULOPS_BY(TYPE) \
+void prime_factors_ratio:: mul_by( const TYPE x )\
+{\
+prime_factors       new_num = x;    new_num.mul_by(num);\
+prime_factors_ratio Q(new_num,den); xch(Q);\
+}\
+void prime_factors_ratio :: div_by( const TYPE x )\
+{\
+prime_factors       new_den = x;    new_den.mul_by(den);\
+prime_factors_ratio Q(num,new_den); xch(Q);\
+}
+        Y_PFQ_MULOPS_BY(prime_factors&)
+        Y_PFQ_MULOPS_BY(natural&)
+        Y_PFQ_MULOPS_BY(word_t)
 
 
     }

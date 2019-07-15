@@ -325,6 +325,18 @@ namespace upsylon
             update();
         }
 
+        void prime_factors:: mul_by( const natural &other )
+        {
+            const prime_factors pf = other;
+            mul_by(pf);
+        }
+
+        void prime_factors:: mul_by( const word_t other )
+        {
+            const prime_factors pf = other;
+            mul_by(pf);
+        }
+
         prime_factors prime_factors:: factorial(const natural &n)
         {
             prime_factors p = 1;

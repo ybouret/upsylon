@@ -30,8 +30,12 @@ namespace upsylon
             //! compute
             natural get() const;
 
-            //! multiplication
-            void mul_by( const prime_factors &other );
+
+            void mul_by( const prime_factors &other ); //!< multiplication
+            void mul_by( const natural       &other ); //!< multiplication
+            void mul_by( const word_t         other ); //!< multiplication
+
+
 
             //! factorial
             static prime_factors factorial(const natural &n);
