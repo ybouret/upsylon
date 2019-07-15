@@ -261,6 +261,42 @@ prime_factors_ratio Q(num,new_den); xch(Q);\
         Y_PFQ_MULOPS_BY(word_t)
 
 
+        prime_factors prime_factors:: perm(const natural &n, const natural &k)
+        {
+            if(k>n)
+            {
+                return prime_factors();
+            }
+            else
+            {
+                const natural             nmk = n-k;
+                const prime_factors       num = factorial(n);
+                const prime_factors       den = factorial(n-k);
+                const prime_factors_ratio Q(num,den);
+                if( !Q.den.is_one() ) throw libc::exception( EDOM, "prime_factor::perm failure");
+                return Q.num;
+            }
+        }
+
+        prime_factors prime_factors:: comb(const natural &n, const natural &k)
+        {
+            if(k>n)
+            {
+                return prime_factors();
+            }
+            else
+            {
+                const natural             nmk = n-k;
+                const prime_factors       num = factorial(n);
+                const prime_factors       den = factorial(n-k);
+                prime_factors_ratio       Q(num,den);
+                const prime_factors       kf  = factorial(k);
+                Q.div_by(kf);
+                if( !Q.den.is_one() ) throw libc::exception( EDOM, "prime_factor::comb failure");
+                return Q.num;
+            }
+        }
+
     }
 
 }

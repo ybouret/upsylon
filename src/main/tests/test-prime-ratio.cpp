@@ -38,6 +38,33 @@ Y_UTEST(prime_ratio)
         std::cerr << "/=" << d << " => " << Q << std::endl;
     }
 
+    // permutation
+    std::cerr << "Permutations: " << std::endl;
+    for(mpn n;n<=16;++n)
+    {
+        std::cerr << "perm(" << n << "):";
+        for(mpn k;k<=n;++k)
+        {
+            const mpl::prime_factors np = mpl::prime_factors::perm(n,k);
+            const mpn                hp = np.get();
+            std::cerr << " " << k << ":" << hp;
+        }
+        std::cerr << std::endl;
+    }
+    // permutation
+    std::cerr << "Combinations: " << std::endl;
+    for(mpn n;n<=16;++n)
+    {
+        std::cerr << "comb(" << n << "):";
+        for(mpn k;k<=n;++k)
+        {
+            const mpl::prime_factors np = mpl::prime_factors::comb(n,k);
+            const mpn                hp = np.get();
+            std::cerr << " " << k << ":" << hp;
+        }
+        std::cerr << std::endl;
+    }
+
 
 }
 Y_UTEST_DONE()

@@ -37,18 +37,21 @@ namespace upsylon
 
 
 
-            //! factorial
-            static prime_factors factorial(const natural &n);
 
             size_t         count() const throw(); //!< factors.size()
             const_iterator begin() const throw(); //!< factors.begin()
             const_iterator end()   const throw(); //!< factors.end()
 
-            bool is_zero() const throw();
-            bool is_one()  const throw();
+            bool is_zero() const throw(); //!< check if 0
+            bool is_one()  const throw(); //!< check if 1
 
             void xch( prime_factors &other ) throw(); //!< no throw swap
 
+            //! factorial
+            static prime_factors factorial(const natural &n);
+            static prime_factors perm(const natural &n, const natural &k);
+            static prime_factors comb(const natural &n, const natural &k);
+            
         private:
             prime_factor::db factors;
             void update();
