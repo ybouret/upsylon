@@ -179,7 +179,10 @@ Y_UTEST(lsf)
             save("fit1.dat",t1,z1);
             std::cerr << "\t\t\tS1.R2   =" << S1.computeR2() << std::endl;
             std::cerr << "\t\t\tS1.corr =" << S1.compute_correlation(corr) << std::endl;
-
+            {
+                ios::ocstream fp( ios::cstdout );
+                S1.writeLog(fp,a1,aerr,used);
+            }
         }
         else
         {
@@ -195,6 +198,10 @@ Y_UTEST(lsf)
             save("fit2.dat",t2,z2);
             std::cerr << "\t\t\tS2.R2   =" << S2.computeR2() << std::endl;
             std::cerr << "\t\t\tS2.corr =" << S2.compute_correlation(corr) << std::endl;
+            {
+                ios::ocstream fp( ios::cstdout );
+                S2.writeLog(fp,a2,aerr,used);
+            }
         }
         else
         {
@@ -212,13 +219,17 @@ Y_UTEST(lsf)
             save("fit2b.dat",t2,z2);
             std::cerr << "\t\t\tSSf.R2  =" << SSf.computeR2() << std::endl;
             std::cerr << "\t\t\tS2.corr =" << SSf.compute_correlation(corr) << std::endl;
-
+            {
+                ios::ocstream fp( ios::cstdout );
+                SSf.writeLog(fp,aa,aerr,used);
+            }
         }
         else
         {
             std::cerr << "SSf failure" <<std::endl;
         }
     }
+
 
     
 }

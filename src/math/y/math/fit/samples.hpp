@@ -6,6 +6,7 @@
 #include "y/math/stat/metrics.hpp"
 #include "y/sort/sorted-sum.hpp"
 #include "y/sort/index.hpp"
+#include "y/ios/ostream.hpp"
 
 namespace upsylon
 {
@@ -118,6 +119,84 @@ namespace upsylon
                     T SSE=0, SSR=0;
                     add_SSE_SSR(SSE,SSR);
                     return SSR/(SSR+SSE+numeric<T>::tiny);
+                }
+
+                //! save to logfile
+                inline
+                void writeLog(ios::ostream     &fp,
+                              const Array       &aorg,
+                              const Array       &aerr,
+                              const array<bool> &used,
+                              const char         com = '#') const
+                {
+                    long   dof         = this->count();
+                    size_t name_maxlen = 0;
+                    size_t aorg_maxlen = 0;
+                    size_t aerr_maxlen = 0;
+                    size_t dim         = 0;
+                    vector<string>    aVal( variables.size(), as_capacity );
+                    vector<string>    eVal( variables.size(), as_capacity );
+
+                    // first pass
+                    for( Variables::const_iterator i=variables.begin();i!=variables.end();++i)
+                    {
+                        const Variable &v = **i;
+                        name_maxlen = max_of(name_maxlen,v.name.size());
+                        if( used[v.check_index(used.size()) ] )
+                        {
+                            --dof;
+                            ++dim;
+                        }
+
+                        {
+                            const string value = vformat("%.15g", aorg[ v.check_index( aorg.size() ) ] );
+                            aVal.push_back(value);
+                            aorg_maxlen = max_of( aorg_maxlen, value.size() );
+                        }
+
+                        {
+                            const string value = vformat("%.15g", aerr[ v.check_index( aerr.size() ) ] );
+                            eVal.push_back(value);
+                            aerr_maxlen = max_of( aerr_maxlen, value.size() );
+                        }
+
+                    }
+                    // header
+                    fp << com << " #data      = "; fp("%u",unsigned(this->count()))    << '\n';
+                    fp << com << " #variables = "; fp("%u",unsigned(variables.size())) << '\n';
+                    fp << com << " #dimension = "; fp("%u",unsigned(dim))              << '\n';
+                    fp << com << " #dof       = "; fp("%ld",dof)                       << '\n';
+                    correlation<T> corr;
+                    fp << com << "       corr = "; fp("%.15g",this->compute_correlation(corr)) << '\n';
+                    fp << com << "         R2 = "; fp("%.15g",this->computeR2())               << '\n';
+                    
+                    // second pass save variables
+                    size_t iv = 0;
+                    for( Variables::const_iterator i=variables.begin();i!=variables.end();++i )
+                    {
+                        ++iv;
+                        const Variable &v    = **i;
+                        const string    name = v.name;
+                        const string   &val  = aVal[iv];
+                        const string   &err  = eVal[iv];
+                        const bool      use  = used[ v.check_index( used.size() ) ];
+                        fp << name;          for(size_t j=name.size();j<=name_maxlen;++j) fp << ' ';
+                        fp << "= " << val;    for(size_t j=val.size(); j<=aorg_maxlen;++j) fp << ' ';
+                        fp << "+/- " << err; for(size_t j=err.size(); j<=aerr_maxlen;++j) fp << ' ';
+                        if(use)
+                        {
+                            const T re = variables.compute_relative_error(aorg[ v.check_index( aorg.size() ) ],aerr[ v.check_index( aerr.size() ) ]);
+                            fp("(%6.2f%%)",re);
+                        }
+                        else
+                        {
+                            fp << "( fixed )";
+                        }
+                        fp << '\n';
+                    }
+
+
+
                 }
 
             protected:
