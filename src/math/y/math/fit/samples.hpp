@@ -131,40 +131,37 @@ namespace upsylon
                 {
                     static const size_t nsep = 64;
 
-                    long   dof         = this->count();
-                    size_t name_maxlen = 0;
-                    size_t aorg_maxlen = 0;
-                    size_t aerr_maxlen = 0;
-                    size_t dim         = 0;
-                    vector<string>    aVal( variables.size(), as_capacity );
-                    vector<string>    eVal( variables.size(), as_capacity );
+                    //__________________________________________________________
+                    //
+                    // preparing strings to display
+                    //__________________________________________________________
+                    Variables::Strings  aVal;
+                    Variables::Strings  eVal;
+                    const size_t        am = variables.fillStrings(aVal,aorg);
+                    const size_t        em = variables.fillStrings(eVal,aerr);
+                    const size_t        nm = variables.get_max_name_size();
 
-                    // first pass
+                    //__________________________________________________________
+                    //
+                    // degrees of freedom
+                    //__________________________________________________________
+                    long   dof         = this->count();
+                    size_t dim         = 0;
                     for( Variables::const_iterator i=variables.begin();i!=variables.end();++i)
                     {
                         const Variable &v = **i;
-                        name_maxlen = max_of(name_maxlen,v.name.size());
                         if( used[v.check_index(used.size()) ] )
                         {
                             --dof;
                             ++dim;
                         }
 
-                        {
-                            const string value = vformat("%.15g", aorg[ v.check_index( aorg.size() ) ] );
-                            aVal.push_back(value);
-                            aorg_maxlen = max_of( aorg_maxlen, value.size() );
-                        }
-
-                        {
-                            const string value = vformat("%.15g", aerr[ v.check_index( aerr.size() ) ] );
-                            eVal.push_back(value);
-                            aerr_maxlen = max_of( aerr_maxlen, value.size() );
-                        }
-
                     }
                     for(size_t i=nsep;i>0;--i) fp << com; fp << '\n';
+                    //__________________________________________________________
+                    //
                     // header
+                    //__________________________________________________________
                     fp << com << " #data      = "; fp("%u",unsigned(this->count()))    << '\n';
                     fp << com << " #variables = "; fp("%u",unsigned(variables.size())) << '\n';
                     fp << com << " #dimension = "; fp("%u",unsigned(dim))              << '\n';
@@ -173,7 +170,10 @@ namespace upsylon
                     fp << com << "       corr = "; fp("%.15g",this->compute_correlation(corr)) << '\n';
                     fp << com << "         R2 = "; fp("%.15g",this->computeR2())               << '\n';
 
-                    // second pass save variables
+                    //__________________________________________________________
+                    //
+                    // save variables
+                    //__________________________________________________________
                     size_t iv = 0;
                     for( Variables::const_iterator i=variables.begin();i!=variables.end();++i )
                     {
@@ -183,9 +183,11 @@ namespace upsylon
                         const string   &val  = aVal[iv];
                         const string   &err  = eVal[iv];
                         const bool      use  = used[ v.check_index( used.size() ) ];
-                        fp << name;          for(size_t j=name.size();j<=name_maxlen;++j) fp << ' ';
-                        fp << "= " << val;    for(size_t j=val.size(); j<=aorg_maxlen;++j) fp << ' ';
-                        fp << "+/- " << err; for(size_t j=err.size(); j<=aerr_maxlen;++j) fp << ' ';
+
+                        fp << name;            for(size_t j=name.size();j<=nm;++j) fp << ' ';
+                        fp << "= "    << val;  for(size_t j=val.size(); j<=am;++j) fp << ' ';
+                        fp << "\\pm " << err;  for(size_t j=err.size(); j<=em;++j) fp << ' ';
+
                         if(use)
                         {
                             const T re = variables.compute_relative_error(aorg[ v.check_index( aorg.size() ) ],aerr[ v.check_index( aerr.size() ) ]);
@@ -195,6 +197,7 @@ namespace upsylon
                         {
                             fp << "( fixed )";
                         }
+                        
                         fp << '\n';
                     }
                     for(size_t i=nsep;i>0;--i) fp << com; fp << '\n';

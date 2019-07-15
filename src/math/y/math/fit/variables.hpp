@@ -92,6 +92,8 @@ namespace upsylon
             class Variables : public Variable::Set
             {
             public:
+                typedef vector<string,memory::pooled> Strings;
+
                 //! constructor, may reserve memory
                 Variables(const size_t n=0);
                 //! constructor from list
@@ -289,31 +291,34 @@ namespace upsylon
                     return 100 * ratio;
                 }
 
+                //! convert reals to strings, return max string lenght
+                template <typename T>
+                size_t fillStrings( Strings &strings, const array<T> &arr ) const
+                {
+                    const Variables &self = *this;
+                    strings.free();
+                    strings.ensure( self.size() );
+                    size_t max_length = 0;
+                    for(const_iterator i=begin();i!=end();++i)
+                    {
+                        const string &name  = (**i).name;
+                        const string  s     = vformat( "%.15g", double( self(arr,name) ) );
+                        strings.push_back_(s);
+                        max_length = max_of(max_length,s.size());
+                    }
+                    return max_length;
+                }
+
                 //! display named values and errors
                 template <typename T> inline
                 void display(std::ostream &os, const array<T> &aorg, const array<T> &aerr, const char *pfx=NULL) const
                 {
                     const size_t sz = get_max_name_size();
                     const size_t nv = this->size();
-                    vector<string,memory::pooled> astr(nv,as_capacity);
-                    vector<string,memory::pooled> estr(nv,as_capacity);
-                    size_t       am = 0;
-                    size_t       em = 0;
-
-                    for(const_iterator i=begin();i!=end();++i)
-                    {
-                        const string &name  = (**i).name;
-                        {
-                            const string  s     = vformat("%.15g",double( (*this)(aorg,name) ));
-                            astr.push_back(s);
-                            am = max_of(am,s.size());
-                        }
-                        {
-                            const string  s     = vformat("%.15g",double( (*this)(aerr,name) ));
-                            estr.push_back(s);
-                            em = max_of(em,s.size());
-                        }
-                    }
+                    Strings astr(nv,as_capacity);
+                    Strings estr(nv,as_capacity);
+                    const size_t am = fillStrings( astr, aorg);
+                    const size_t em = fillStrings( estr, aerr);
                     size_t iv=1;
                     for(const_iterator i=begin();i!=end();++i,++iv)
                     {
