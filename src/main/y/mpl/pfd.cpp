@@ -368,7 +368,7 @@ namespace upsylon
         {
             if( is_zero() )
             {
-                return mpn(0);
+                return mpn();
             }
             else if( is_one() )
             {
@@ -380,7 +380,7 @@ namespace upsylon
                 for( table_t::const_iterator i = table.begin();i!=table.end();++i)
                 {
                     const _pfd &F = **i;
-                    for(mpn j=0;j<F.q;++j)
+                    for(mpn j;j<F.q;++j)
                     {
                         ans *= F.p;
                     }

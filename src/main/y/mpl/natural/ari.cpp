@@ -13,7 +13,7 @@ namespace upsylon
             //std::cerr << "Computing " << b << "^(-1)[" << n << "]" << std::endl;
             natural n0 = n;
             natural b0 = b;
-            natural t0 = 0;
+            natural t0;// = 0;
             natural t  = 1;
             natural q  = n0/b0;
             natural r  = n0 - q*b0;

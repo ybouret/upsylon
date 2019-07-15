@@ -355,7 +355,18 @@ namespace upsylon
             update();
         }
         
-
+        prime_factors prime_factors:: factorial(const natural &n)
+        {
+            prime_factors p = 1;
+            natural i = n;
+            while( i > 0 )
+            {
+                const prime_factors rhs(i);
+                p.mul_by(rhs);
+                --i;
+            }
+            return p;
+        }
 
     }
 }

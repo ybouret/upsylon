@@ -28,7 +28,7 @@ namespace upsylon
         number_type(),
         n(value),
         m(n),
-        s(0),
+        s(),
         l()
         {
             setup();
@@ -94,7 +94,7 @@ namespace upsylon
         number_type(),
         n(value),
         m(n),
-        s(0),
+        s(),
         l()
         {
             setup();

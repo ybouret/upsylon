@@ -32,7 +32,7 @@ void check_consistency(const size_t count,
         uint64_t  count2 = 0;
         for(size_t j=0;j<cycle;++j)
         {
-            for(mpn i=0;i<=n;++i)
+            for(mpn i;i<=n;++i)
             {
                 mpn np = i;
                 Y_TIMINGS_TICKS(count1,Y_ASSERT(mgr.locateNextPrime(np)) );

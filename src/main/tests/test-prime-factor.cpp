@@ -30,13 +30,20 @@ Y_UTEST(prime_factor)
         {
             const string              s = argv[i];
             const mpl::prime_factors  a = s;
-            const  mpn                A = mpn::parse(s);
+            const mpn                 A = mpn::parse(s);
             p.mul_by(a);
             P *= A;
             const mpn p_value = p.get();
             std::cerr << "p=" << p <<  " (" << p_value << ")" << " (" << P << ") " << std::endl;
             Y_ASSERT(P==p_value);
         }
+    }
+
+    // factorial
+    for(mpn i;i<=20;++i)
+    {
+        const mpl::prime_factors p = mpl::prime_factors::factorial(i);
+        std::cerr << i << "! = " << p << std::endl;
     }
 }
 Y_UTEST_DONE()

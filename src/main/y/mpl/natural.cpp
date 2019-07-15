@@ -104,6 +104,34 @@ namespace upsylon
             update();
         }
 
+        natural:: natural(const char   *s) :  Y_MPN_CTOR(0,0)
+        {
+            Y_MPN_CHECK(this);
+            natural _ = parse(s);
+            xch(_);
+        }
+
+        natural:: natural(const string &s ) : Y_MPN_CTOR(0,0)
+        {
+            Y_MPN_CHECK(this);
+            natural _ = parse(s);
+            xch(_);
+        }
+
+        natural & natural:: operator=( const char   *s )
+        {
+            natural _ = parse(s);
+            xch(_);
+            return *this;
+        }
+
+        natural & natural:: operator=( const string &s )
+        {
+            natural _ = parse(s);
+            xch(_);
+            return *this;
+        }
+
         natural & natural:: operator=( const natural &other )
         {
             natural tmp(other); xch(tmp); return *this;

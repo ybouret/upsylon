@@ -33,6 +33,12 @@ Y_UTEST(mpn)
     mpn a;
     mpn b(a);
     mpn c(10);
+
+    {
+        mpn aa = "12";
+        mpn bb = "0x10";
+    }
+
     std::cerr << std::hex;
     std::cerr << "-- I/O with words" << std::endl;
     for(size_t iter=0;iter<ITERS;++iter)
@@ -111,13 +117,13 @@ Y_UTEST(mpn)
     }
     std::cerr << std::dec;
     std::cerr << "++loop" << std::endl;
-    for( mpn i=0;i<30;++i)
+    for( mpn i;i<30;++i)
     {
         std::cerr << i << "/";
     }
     std::cerr << std::endl;
     std::cerr << "loop++" << std::endl;
-    for( mpn i=0;i<30;i++)
+    for( mpn i;i<30;i++)
     {
         std::cerr << i << "/";
     }
@@ -297,7 +303,7 @@ Y_UTEST(mpn)
     }
     vector<mpn> P;
     {
-        mpn i=0;
+        mpn i;
         while(P.size()<=100)
         {
             i = mgr.nextPrime(i+1);
@@ -380,7 +386,7 @@ Y_UTEST(mpn_fact)
     for(int i=1;i<argc;++i)
     {
         const string s = argv[i];
-        const mpn    n = mpn::parse(s);
+        const mpn    n = s;
         const mpn    f = mpn::factorial(n);
         std::cerr << "factorial(" << n << ")=" << f << std::endl;
     }

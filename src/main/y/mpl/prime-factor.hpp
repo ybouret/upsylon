@@ -22,7 +22,7 @@ namespace upsylon
             // types
             //
             //------------------------------------------------------------------
-            typedef intr_ptr<const natural,prime_factor>                     pointer;
+            typedef intr_ptr<const natural,prime_factor>                     pointer; //!< shared pointer
             typedef memory::pooled                                           memType; //!< medium sized factors
             typedef hashing::fnv                                             hfnType; //!< hashing
             typedef key_hasher<const natural,hfnType>                        pkhType; //!< prime key hasher
@@ -38,6 +38,7 @@ namespace upsylon
             prime_factor( const prime_factor &);                  //!< copy
             virtual ~prime_factor() throw();                      //!< cleanup
             const natural & key() const throw();                  //!< for database
+            natural       get() const;                            //!< compute product
 
             //! output
             friend std::ostream & operator<<( std::ostream &os, const prime_factor & );
@@ -53,7 +54,6 @@ namespace upsylon
             const natural p; //!< prime
             size_t        n; //!< count > 0
 
-            natural       get() const;
 
         private:
             Y_DISABLE_ASSIGN(prime_factor);
@@ -64,17 +64,17 @@ namespace upsylon
         class prime_factors : public counted_object
         {
         public:
-            typedef prime_factor::db::const_iterator const_iterator;
+            typedef prime_factor::db::const_iterator const_iterator; //!< alias
 
             virtual ~prime_factors() throw();                         //!< cleanup
             prime_factors() throw();                                  //!< would be 0
             prime_factors(const prime_factors &other);                //!< copy
             prime_factors & operator=( const prime_factors &other );  //!< assign
 
-            prime_factors( const natural &x );
-            prime_factors( const word_t   x );
-            prime_factors( const char    *s );
-            prime_factors( const string  &s );
+            prime_factors( const natural &x ); //!< setup from mpn
+            prime_factors( const word_t   x ); //!< setup from integral typ
+            prime_factors( const char    *s ); //!< setup from text
+            prime_factors( const string  &s ); //!< setup from string
 
             //! output
             friend std::ostream & operator<<( std::ostream &, const prime_factors &pfs );
@@ -84,7 +84,9 @@ namespace upsylon
 
             //! multiplication
             void mul_by( const prime_factors &other );
-            
+
+            //! factorial
+            static prime_factors factorial(const natural &n);
 
         private:
             prime_factor::db factors;
