@@ -14,7 +14,12 @@ namespace upsylon
             assert( !Q.den.is_zero() );
             if( !Q.den.is_one() )
             {
-                os << '(' << Q.num << '/' << '(' << Q.den << ')' << ')';
+                const bool paren = ( Q.den.count() > 1);
+                os << '(' << Q.num << '/';
+                if(paren) os << '(';
+                os << Q.den;
+                if(paren) os << ')';
+                os << ')';
             }
             else
             {
@@ -81,97 +86,133 @@ namespace upsylon
 
         void prime_factors_ratio:: update()
         {
-            if( den.is_zero() ) throw exception("prime_factors_ratio division by zero");
+            //------------------------------------------------------------------
+            // sanity check
+            //------------------------------------------------------------------
+            if( den.is_zero() )
+            {
+                throw exception("prime_factors_ratio division by zero");
+            }
 
+            //------------------------------------------------------------------
+            // local constants
+            //------------------------------------------------------------------
             static const MPN     &mp  = MPN::instance();
             static const natural &one = mp._1;
 
+            //------------------------------------------------------------------
+            // get N and D
+            //------------------------------------------------------------------
             prime_factors &N = (prime_factors &)num;
             prime_factors &D = (prime_factors &)den;
 
             if( N.is_zero() )
             {
                 //--------------------------------------------------------------
-                // zero numerator => force denominator=1
+                /// zero numerator: force denominator to 1
                 //--------------------------------------------------------------
-                if( ! D.is_one() )
+                if(!D.is_one())
                 {
-                    D = one;
+                    prime_factors tmp = one;
+                    D.xch(tmp);
                 }
             }
             else if( N.is_one() )
             {
                 //--------------------------------------------------------------
-                // do nothing
+                // do nothing for numerator is 1
                 //--------------------------------------------------------------
             }
             else
             {
+                //--------------------------------------------------------------
+                // N >= 2 at this point
+                //--------------------------------------------------------------
                 if( D.is_one() )
                 {
                     //----------------------------------------------------------
-                    // do nothing!
+                    // do nothing since D=1
                     //----------------------------------------------------------
                 }
                 else
                 {
                     //----------------------------------------------------------
-                    // N>=2 and D>=2
+                    // N>=2, Q>=2
                     //----------------------------------------------------------
-                    prime_factor::db &ndb = N.factors;
-                    prime_factor::db &ddb = D.factors;
-                    assert( !ndb.search(one) );
-                    assert( !ddb.search(one) );
+                    prime_factors new_num = 1;
+                    prime_factors new_den = 1;
 
-                    list<const natural> removeN;
-                    list<const natural> removeD;
+                    size_t nn = N.count();
+                    size_t nd = D.count();
+                    prime_factors::const_iterator in = N.begin();
+                    prime_factors::const_iterator id = D.begin();
 
-                    //----------------------------------------------------------
-                    // first pass: scan numerator and record
-                    //----------------------------------------------------------
-                    const size_t                nn=ndb.size();
-                    prime_factor::db::iterator  in=ndb.begin();
-                    for(size_t i=nn;i>0;--i,++in)
+                    // check common part
+                    while( (nd>0) && (nn>0) )
                     {
-                        prime_factor          &n   = **in;
-                        prime_factor::pointer *ppD = ddb.search(n.p);
-                        if(ppD)
+                        const prime_factor &fn = **in;
+                        const prime_factor &fd = **id;
+
+                        if( fn.p == fd.p )
                         {
-                            // matching primes
-                            prime_factor &d = **ppD;
-                            assert(d.p==n.p);
-
-                            if(n.n>d.n)
+                            const natural &p = fn.p;
+                            if( fn.n < fd.n )
                             {
-
+                                // only on den
+                                new_den.__add(p,fd.n-fn.n);
                             }
-                            else if( n.n<d.n )
+                            else if(fd.n<fn.n)
                             {
-
+                                // only on num
+                                new_num.__add(p,fn.n-fd.n);
                             }
                             else
                             {
-                                // same power
+                                assert(fn.n==fd.n); // do nothing
                             }
-
-
                         }
-                        // else do nothing
+                        else
+                        {
+                            new_num.__add(fn.p,fn.n);
+                            new_den.__add(fd.p,fd.n);
+                        }
+
+                        --nd; ++id;
+                        --nn; ++in;
                     }
 
-                    //----------------------------------------------------------
-                    // second pass: update
-                    //----------------------------------------------------------
+                    // then fill up denominator
+                    while(nd>0)
+                    {
+                        const prime_factor &fd = **id;
+                        new_den.__add(fd.p,fd.n);
+                        --nd;++id;
+                    }
 
+                    // and fill up numerator
+                    while(nn>0)
+                    {
+                        const prime_factor &fn = **in;
+                        new_num.__add(fn.p,fn.n);
+                        --nn;++in;
+                    }
+
+                    new_num.update();
+                    new_den.update();
+
+                    N.xch(new_num);
+                    D.xch(new_den);
 
                 }
 
             }
+
+        }
             
 
 
 
-        }
+
 
 
     }

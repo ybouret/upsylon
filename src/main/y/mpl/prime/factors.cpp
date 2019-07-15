@@ -6,6 +6,11 @@ namespace upsylon
     namespace mpl
     {
 
+        void prime_factors:: xch( prime_factors &other ) throw()
+        {
+            factors.swap_table_with(other.factors);
+        }
+
         size_t prime_factors:: count() const throw()
         {
             return factors.size();
@@ -72,7 +77,7 @@ namespace upsylon
         {
 
             prime_factors tmp( other );
-            factors.swap_table_with(tmp.factors);
+            xch(tmp);
             return *this;
         }
 
@@ -185,7 +190,6 @@ namespace upsylon
         size_t __count( const natural &p, natural &a )
         {
             assert(p<=a);
-            //std::cerr << "testing " << a << "/" << p << std::endl;
             size_t ans = 0;
             while( a.is_divisible_by(p) )
             {
@@ -195,15 +199,22 @@ namespace upsylon
             return ans;
         }
 
-        void prime_factors:: __add( const natural &p, const size_t n)
+
+        void prime_factors:: __add(const natural &p, const size_t n)
+        {
+            assert(n>0);
+            const prime_factor::pointer q = new prime_factor(p,n);
+            if(!factors.insert(q))
+            {
+                throw exception("prime_factors unexpected setup failure");
+            }
+        }
+
+        void prime_factors:: __add_safe( const natural &p, const size_t n)
         {
             if(n>0)
             {
-                const prime_factor::pointer q = new prime_factor(p,n);
-                if(!factors.insert(q))
-                {
-                    throw exception("prime_factors unexpected setup failure");
-                }
+                __add(p,n);
             }
         }
 
@@ -216,7 +227,7 @@ namespace upsylon
             }
             else if( x.is_byte(1) )
             {
-                __add(x,1);
+                __add_safe(x,1);
                 return;
             }
             else
@@ -228,13 +239,13 @@ namespace upsylon
 
                 // start with 2
                 natural p = mp._2;
-                __add(p,__count(p,a));
+                __add_safe(p,__count(p,a));
 
                 // loop from 3
                 p = mp._3;
                 while(p<=a)
                 {
-                    __add(p,__count(p,a));
+                    __add_safe(p,__count(p,a));
                     p = mp.nextPrime(p+=mp._2);
                 }
 

@@ -43,11 +43,14 @@ namespace upsylon
             bool is_zero() const throw();
             bool is_one()  const throw();
 
+            void xch( prime_factors &other ) throw(); //!< no throw swap
+
         private:
             prime_factor::db factors;
             void update();
             void setup( const natural & );
-            void __add( const natural &p, const size_t n);
+            void __add( const natural &p, const size_t n );
+            void __add_safe( const natural &p, const size_t n);
 
             friend class prime_factors_ratio;
         };
