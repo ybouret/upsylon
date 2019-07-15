@@ -104,10 +104,7 @@ namespace upsylon
             return *this;
         }
 
-        void prime_factors:: update()
-        {
-            factors.sort_keys( prime_factor::compare_keys );
-        }
+
 
         std::ostream & operator<<( std::ostream &os, const prime_factors &pfs )
         {
@@ -188,6 +185,30 @@ namespace upsylon
 {
     namespace mpl
     {
+        void prime_factors:: update()
+        {
+            static MPN           &mp = MPN::instance();
+            static const natural &one = mp._1;
+
+            const size_t nf = factors.size();
+            if(nf>0)
+            {
+                factors.sort_keys( prime_factor::compare_keys );
+                prime_factor::pointer *pp = factors.search(one);
+                if(pp)
+                {
+                    if(nf>1)
+                    {
+                        factors.no(one);
+                    }
+                    else
+                    {
+                        (**pp).n = 1;
+                    }
+                }
+            }
+
+        }
 
         size_t __count( const natural &p, natural &a )
         {
@@ -206,7 +227,6 @@ namespace upsylon
         {
             if(n>0)
             {
-                assert( !(p.is_byte(1) && n!=1) );
                 const prime_factor::pointer q = new prime_factor(p,n);
                 if(!factors.insert(q))
                 {
@@ -253,4 +273,89 @@ namespace upsylon
 
     }
 
+}
+
+namespace upsylon
+{
+    namespace mpl
+    {
+        static inline
+        void   __ins( prime_factor::db &pf, const prime_factor &f )
+        {
+            const prime_factor::pointer q = new prime_factor(f);
+            if(!pf.insert(q))
+            {
+                throw exception("prime_factors unexpected copy/insertion failure");
+            }
+        }
+
+#if 0
+        static inline
+        void __ins( prime_factor::db &pf, const natural &p, const size_t n )
+        {
+            assert(n>=2);
+            const prime_factor::pointer q = new prime_factor(p,n);
+            if(!pf.insert(q))
+            {
+                throw exception("prime_factors unexpected create/insertion failure");
+            }
+        }
+#endif
+        
+        void prime_factors:: mul_by( const prime_factors &other )
+        {
+            prime_factor::db        prod;
+            {
+                const prime_factor::db &lhs = factors;
+                size_t                  nl  = lhs.size();
+                if( nl>0 )
+                {
+                    const prime_factor::db &rhs = other.factors;
+                    size_t                  nr  = rhs.size();
+                    if( nr>0 )
+                    {
+
+                        // hard copy nl
+                        {
+                            const_iterator il = lhs.begin();
+                            while(nl>0)
+                            {
+                                __ins(prod,**il);
+                                --nl; ++il;
+                            }
+                        }
+
+                        // multiply
+                        {
+                            const_iterator ir = rhs.begin();
+                            while(nr>0)
+                            {
+                                const prime_factor    &r   = **ir;
+                                prime_factor::pointer *ppL = prod.search(r.p);
+                                if(ppL)
+                                {
+                                    prime_factor &l = **ppL;
+                                    l.n += r.n;
+                                }
+                                else
+                                {
+                                    __ins(prod,r);
+                                }
+                                --nr; ++ir;
+                            }
+                        }
+
+                    }
+                }
+
+            }
+
+
+            prod.swap_table_with(factors);
+            update();
+        }
+        
+
+
+    }
 }

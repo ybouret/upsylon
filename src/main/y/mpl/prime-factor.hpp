@@ -82,6 +82,10 @@ namespace upsylon
             //! compute
             natural get() const;
 
+            //! multiplication
+            void mul_by( const prime_factors &other );
+            
+
         private:
             prime_factor::db factors;
             void update();
