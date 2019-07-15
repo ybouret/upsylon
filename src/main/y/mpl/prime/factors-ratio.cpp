@@ -16,6 +16,7 @@ namespace upsylon
         }
 
         prime_factors_ratio:: prime_factors_ratio( const prime_factors_ratio &Q ) :
+        number_type(),
         num( Q.num ),
         den( Q.den )
         {
