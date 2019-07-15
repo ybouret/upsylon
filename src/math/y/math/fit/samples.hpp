@@ -129,6 +129,8 @@ namespace upsylon
                               const array<bool> &used,
                               const char         com = '#') const
                 {
+                    static const size_t nsep = 64;
+
                     long   dof         = this->count();
                     size_t name_maxlen = 0;
                     size_t aorg_maxlen = 0;
@@ -161,6 +163,7 @@ namespace upsylon
                         }
 
                     }
+                    for(size_t i=nsep;i>0;--i) fp << com; fp << '\n';
                     // header
                     fp << com << " #data      = "; fp("%u",unsigned(this->count()))    << '\n';
                     fp << com << " #variables = "; fp("%u",unsigned(variables.size())) << '\n';
@@ -169,7 +172,7 @@ namespace upsylon
                     correlation<T> corr;
                     fp << com << "       corr = "; fp("%.15g",this->compute_correlation(corr)) << '\n';
                     fp << com << "         R2 = "; fp("%.15g",this->computeR2())               << '\n';
-                    
+
                     // second pass save variables
                     size_t iv = 0;
                     for( Variables::const_iterator i=variables.begin();i!=variables.end();++i )
@@ -194,9 +197,7 @@ namespace upsylon
                         }
                         fp << '\n';
                     }
-
-
-
+                    for(size_t i=nsep;i>0;--i) fp << com; fp << '\n';
                 }
 
             protected:
