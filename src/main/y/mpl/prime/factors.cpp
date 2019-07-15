@@ -131,17 +131,17 @@ namespace upsylon
             setup(_);
         }
 
-        natural prime_factors:: get() const
+        natural prime_factors:: value() const
         {
             size_t nf = factors.size();
             if(nf>0)
             {
                 const_iterator it   = factors.begin();
-                natural        prod = (**it).get();
+                natural        prod = (**it).value();
                 for(--nf;nf>0;--nf)
                 {
                     ++it;
-                    prod *= (**it).get();
+                    prod *= (**it).value();
                 }
                 return prod;
             }
@@ -149,6 +149,31 @@ namespace upsylon
             {
                 return natural();
             }
+        }
+
+        bool operator==( const prime_factors &lhs, const prime_factors &rhs ) throw()
+        {
+            const size_t nl = lhs.count();
+            const size_t nr = rhs.count();
+            if( nl == nr )
+            {
+                prime_factors::const_iterator il = lhs.begin();
+                prime_factors::const_iterator ir = rhs.begin();
+                for(size_t i=nl;i>0;--i,++il,++ir)
+                {
+                    if( **ir != **il ) return false;
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        bool operator!=(const prime_factors &lhs, const prime_factors &rhs ) throw()
+        {
+            return !(lhs==rhs);
         }
 
 

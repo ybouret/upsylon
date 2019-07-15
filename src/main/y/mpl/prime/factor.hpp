@@ -38,7 +38,7 @@ namespace upsylon
             prime_factor( const prime_factor &);                  //!< copy
             virtual ~prime_factor() throw();                      //!< cleanup
             const natural & key() const throw();                  //!< for database
-            natural       get() const;                            //!< compute product
+            natural         value() const;                            //!< compute product
 
             //! output
             friend std::ostream & operator<<( std::ostream &os, const prime_factor & );
@@ -54,6 +54,8 @@ namespace upsylon
             const natural p; //!< prime
             size_t        n; //!< count > 0
 
+            friend bool operator==( const prime_factor &lhs, const prime_factor &rhs ) throw();
+            friend bool operator!=( const prime_factor &lhs, const prime_factor &rhs ) throw();
 
         private:
             Y_DISABLE_ASSIGN(prime_factor);

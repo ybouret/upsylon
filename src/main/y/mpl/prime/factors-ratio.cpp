@@ -297,6 +297,14 @@ prime_factors_ratio Q(num,new_den); xch(Q);\
             }
         }
 
+
+        rational prime_factors_ratio:: value() const
+        {
+            const natural n = num.value();
+            const natural d = den.value();
+            return rational(n,d);
+        }
+
     }
 
 }

@@ -51,7 +51,7 @@ namespace upsylon
             return natural::compare(lhs,rhs);
         }
 
-        natural prime_factor:: get() const
+        natural prime_factor:: value() const
         {
             natural ans = p;
             size_t  i   = n;
@@ -62,7 +62,15 @@ namespace upsylon
             return ans;
         }
 
+        bool operator==( const prime_factor &lhs, const prime_factor &rhs ) throw()
+        {
+            return (lhs.n==rhs.n) && (lhs.p==rhs.p);
+        }
 
+        bool operator!=( const prime_factor &lhs, const prime_factor &rhs ) throw()
+        {
+            return (lhs.n!=rhs.n) || (lhs.p!=rhs.p);
+        }
     }
 
 }

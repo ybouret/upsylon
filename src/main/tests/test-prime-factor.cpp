@@ -15,7 +15,7 @@ Y_UTEST(prime_factor)
     {
         const mpl::prime_factors p = argv[i];
         const mpn                a = mpn::parse(argv[i]);
-        const mpn                q = p.get();
+        const mpn                q = p.value();
 
         std::cerr << argv[i] << " = " << p << " (" << q << ")" << std::endl;
         Y_ASSERT(q==a);
@@ -33,7 +33,7 @@ Y_UTEST(prime_factor)
             const mpn                 A = mpn::parse(s);
             p.mul_by(a);
             P *= A;
-            const mpn p_value = p.get();
+            const mpn p_value = p.value();
             std::cerr << "p=" << p <<  " (" << p_value << ")" << " (" << P << ") " << std::endl;
             Y_ASSERT(P==p_value);
         }

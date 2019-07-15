@@ -4,6 +4,7 @@
 #define Y_MPL_PRIME_FACTORS_RATIO_INCLUDED 1
 
 #include "y/mpl/prime/factors.hpp"
+#include "y/mpl/rational.hpp"
 
 namespace upsylon
 {
@@ -48,6 +49,7 @@ namespace upsylon
             void mul_by( const word_t n );
             void div_by( const word_t d );
 
+            rational value() const;
 
         private:
             void update();

@@ -28,7 +28,7 @@ namespace upsylon
             friend std::ostream & operator<<( std::ostream &, const prime_factors &pfs );
 
             //! compute
-            natural get() const;
+            natural value() const;
 
 
             void mul_by( const prime_factors &other ); //!< multiplication
@@ -47,11 +47,13 @@ namespace upsylon
 
             void xch( prime_factors &other ) throw(); //!< no throw swap
 
-            //! factorial
-            static prime_factors factorial(const natural &n);
-            static prime_factors perm(const natural &n, const natural &k);
-            static prime_factors comb(const natural &n, const natural &k);
-            
+            static prime_factors factorial(const natural &n);              //!< factorial
+            static prime_factors perm(const natural &n, const natural &k); //!< permutations
+            static prime_factors comb(const natural &n, const natural &k); //!< combinations
+
+            friend bool operator==( const prime_factors &lhs, const prime_factors &rhs ) throw();
+            friend bool operator!=( const prime_factors &lhs, const prime_factors &rhs ) throw();
+
         private:
             prime_factor::db factors;
             void update();
