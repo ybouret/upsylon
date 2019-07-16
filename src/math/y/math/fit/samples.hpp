@@ -173,11 +173,11 @@ namespace upsylon
                     //
                     // header
                     //__________________________________________________________
-                    fp << com << " #data      = "; fp("%u",unsigned(this->count()))    << '\n';
-                    fp << com << " #parameter = "; fp("%u",unsigned(nprm))             << '\n';
-                    fp << com << " #dof       = "; fp("%ld",ndof)                      << '\n';
-                    fp << com << "       corr = "; fp("%.15g",cf)                      << '\n';
-                    fp << com << "         R2 = "; fp("%.15g",this->computeR2())       << '\n';
+                    fp << com << " #data      = "; fp("%u",unsigned(ndat))       << '\n';
+                    fp << com << " #parameter = "; fp("%u",unsigned(nprm))       << '\n';
+                    fp << com << " #dof       = "; fp("%ld",ndof)                << '\n';
+                    fp << com << "       corr = "; fp("%.15g",cf)                << '\n';
+                    fp << com << "         R2 = "; fp("%.15g",this->computeR2()) << '\n';
 
                     //__________________________________________________________
                     //
