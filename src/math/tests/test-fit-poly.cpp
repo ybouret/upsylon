@@ -40,25 +40,29 @@ Y_UTEST(fit_poly)
 
     matrix<double> Z(4,N);
     matrix<double> Zf(Z.rows,N);
-    for(size_t n=1;n<=Z.rows;++n)
     {
-        Fit::Sample<double> sample(X,Y,Zf[n]);
-        Fit::Polynomial::Create(sample.variables,n);
-        vector<double>      aorg(n);
-        vector<double>      aerr(n);
-        vector<bool>        used(n,true);
-        Fit::Polynomial::Initialize(aorg,sample);
-        std::cerr << "aorg=" << aorg << std::endl;
-        for(size_t i=1;i<=N;++i)
+        ios::ocstream fp("poly.log.dat");
+        for(size_t n=1;n<=Z.rows;++n)
         {
-            Z[n][i] = polynomial::eval(X[i],aorg);
+            Fit::Sample<double> sample(X,Y,Zf[n]);
+            Fit::Polynomial::Create(sample.variables,n);
+            vector<double>      aorg(n);
+            vector<double>      aerr(n);
+            vector<bool>        used(n,true);
+            Fit::Polynomial::Initialize(aorg,sample);
+            std::cerr << "aorg=" << aorg << std::endl;
+            for(size_t i=1;i<=N;++i)
+            {
+                Z[n][i] = polynomial::eval(X[i],aorg);
+            }
+            if( !ls.fit(sample,F,aorg,aerr,used) )
+            {
+                throw exception("Couldn't poly-fit n=%u", unsigned(n));
+            }
+            sample.variables.display(std::cerr,aorg,aerr);
+            sample.writeLog(fp,aorg,aerr,used);
         }
-        if( !ls.fit(sample,F,aorg,aerr,used) )
-        {
-            throw exception("Couldn't poly-fit n=%u", unsigned(n));
-        }
-        sample.variables.display(std::cerr,aorg,aerr);
-        
+
     }
 
     {
