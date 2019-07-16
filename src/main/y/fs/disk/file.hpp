@@ -47,8 +47,12 @@ namespace upsylon
 
             descriptor::type & fd();                     //!< get file descriptor
 
+
         private:
             Y_DISABLE_ASSIGN(disk_file);
+        public:
+            //! direct copy using BUFSIZ memory block
+            static void copy( const string &target, const string &source, bool append);
         };
 
 
@@ -97,7 +101,7 @@ namespace upsylon
             writable_disk_file(const writable_disk_file &other) throw();              //!< shared copy
             writable_disk_file(const rw_disk_file       &other) throw();              //!< shared copy
             size_t put(const void *data, const size_t size);                          //!< put at most size bytes
-
+            void   put_all(const void *data, const size_t size);                      //!< put all or error
         private:
             Y_DISABLE_ASSIGN(writable_disk_file);
         };

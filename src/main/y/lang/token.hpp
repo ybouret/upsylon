@@ -10,7 +10,6 @@ namespace upsylon
     namespace Lang
     {
 
-
         //! full fledge token
         class Token : public Object, public Char::List
         {
@@ -52,7 +51,6 @@ namespace upsylon
 
             //! convert to visible string
             string to_visible()  const;
-
 
             //! write content as GraphViz
             void   viz( ios::ostream &fp ) const;

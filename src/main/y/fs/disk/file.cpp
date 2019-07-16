@@ -182,6 +182,9 @@ namespace upsylon
     }
 }
 
+#include "y/exceptions.hpp"
+#include <cerrno>
+
 namespace upsylon
 {
     namespace ios
@@ -225,6 +228,19 @@ namespace upsylon
             return done;
         }
 
+        void   writable_disk_file:: put_all(const void *data, const size_t size)
+        {
+            const uint8_t *buff = (const uint8_t *)data;
+            size_t         todo = size;
+            while(todo>0)
+            {
+                const size_t nw = put(buff,todo);
+                if(nw<=0) throw libc::exception( EIO, "writable_disk_file.put_all()" );
+                buff += nw;
+                todo -= nw;
+            }
+        }
+
         writable_disk_file:: writable_disk_file(const writable_disk_file &other) throw() :
         disk_file(other)
         {
@@ -237,5 +253,31 @@ namespace upsylon
 
 
     }
+}
+
+#include "y/memory/cblock.hpp"
+
+namespace upsylon
+{
+    namespace ios
+    {
+        void disk_file:: copy( const string &target, const string &source, bool append)
+        {
+            memory::cblock_of<char> blk( BUFSIZ );
+            char                   *buf = blk.data;
+            const size_t            len = blk.size;
+
+            readable_disk_file src(source);
+            writable_disk_file tgt(target,append);
+            while(true)
+            {
+                const size_t nr = src.get(buf,len);
+                if(nr<=0) break;
+                tgt.put_all(buf,len);
+            }
+        }
+
+    }
+
 }
 

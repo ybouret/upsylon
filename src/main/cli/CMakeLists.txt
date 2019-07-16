@@ -19,11 +19,15 @@ ADD_EXECUTABLE(y_hexdump y_hexdump.cpp)
 TARGET_LINK_Y(y_hexdump)
 INSTALL( TARGETS y_hexdump RUNTIME DESTINATION bin)
 
+
+
 IF(Y_DARWIN)
 
 ADD_EXECUTABLE(y_port_missing y-port-missing.cpp)
 TARGET_LINK_Y(y_port_missing)
-
 INSTALL( TARGETS y_port_missing RUNTIME DESTINATION bin)
+
+ADD_EXECUTABLE(get-kde-wallpapers get-kde-wallpapers.cpp)
+TARGET_LINK_Y(get-kde-wallpapers)
 
 ENDIF()
