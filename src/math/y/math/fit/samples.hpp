@@ -48,7 +48,7 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(SampleInfo);
             };
 
-           
+
 
 
             ////////////////////////////////////////////////////////////////////
@@ -96,8 +96,6 @@ namespace upsylon
                 //! add Sum of Squared Errors (SSE) and Sum of Square Residuals (SSR) and Degrees of Freedom
                 virtual void add_SSE_SSR( T &SSE, T &SSR ) const = 0;
 
-
-
                 //! compute correlation
                 virtual T compute_correlation( correlation<T> &corr ) const = 0;
 
@@ -121,101 +119,117 @@ namespace upsylon
                     return SSR/(SSR+SSE+numeric<T>::tiny);
                 }
 
-                //! save to logfile
-                inline
-                void writeLog(ios::ostream     &fp,
-                              const Array       &aorg,
-                              const Array       &aerr,
-                              const array<bool> &used,
-                              const char         com = '#') const
+                //! save to logfile with optional comment char
+                inline void writeLog(ios::ostream      &fp,
+                                     const Array       &aorg,
+                                     const Array       &aerr,
+                                     const array<bool> &used,
+                                     const char         com = '#') const
                 {
-                    static const size_t nsep = 64;
+                    static const size_t nsep = 72;
+
+                    //__________________________________________________________
+                    //
+                    // compute correlation
+                    //__________________________________________________________
+                    T cf = 0;
+                    {
+                        correlation<T> corr;
+                        cf = this->compute_correlation(corr);
+                    }
 
                     //__________________________________________________________
                     //
                     // preparing strings to display
                     //__________________________________________________________
-                    Variables::Strings  aVal;
-                    Variables::Strings  eVal;
-                    const size_t        am = variables.fillStrings(aVal,aorg);
-                    const size_t        em = variables.fillStrings(eVal,aerr);
+                    Variables::Strings  astr;
+                    Variables::Strings  estr;
+                    const size_t        am = variables.fillStrings(astr,aorg);
+                    const size_t        em = variables.fillStrings(estr,aerr);
                     const size_t        nm = variables.get_max_name_size();
 
                     //__________________________________________________________
                     //
                     // degrees of freedom
                     //__________________________________________________________
-                    long   dof         = this->count();
-                    size_t dim         = 0;
+                    const size_t  ndat = this->count();
+                    long          ndof = ndat;
+                    size_t        nprm = 0;
+                    const  size_t nvar = variables.size();
+
                     for( Variables::const_iterator i=variables.begin();i!=variables.end();++i)
                     {
                         const Variable &v = **i;
                         if( used[v.check_index(used.size()) ] )
                         {
-                            --dof;
-                            ++dim;
+                            --ndof;
+                            ++nprm;
                         }
-
                     }
-                    for(size_t i=nsep;i>0;--i) fp << com; fp << '\n';
+                    assert(nprm<=nvar);
+
+                    fp.repeat(nsep,com) << '\n';
                     //__________________________________________________________
                     //
                     // header
                     //__________________________________________________________
                     fp << com << " #data      = "; fp("%u",unsigned(this->count()))    << '\n';
-                    fp << com << " #variables = "; fp("%u",unsigned(variables.size())) << '\n';
-                    fp << com << " #dimension = "; fp("%u",unsigned(dim))              << '\n';
-                    fp << com << " #dof       = "; fp("%ld",dof)                       << '\n';
-                    correlation<T> corr;
-                    fp << com << "       corr = "; fp("%.15g",this->compute_correlation(corr)) << '\n';
-                    fp << com << "         R2 = "; fp("%.15g",this->computeR2())               << '\n';
+                    fp << com << " #parameter = "; fp("%u",unsigned(nprm))             << '\n';
+                    fp << com << " #dof       = "; fp("%ld",ndof)                      << '\n';
+                    fp << com << "       corr = "; fp("%.15g",cf)                      << '\n';
+                    fp << com << "         R2 = "; fp("%.15g",this->computeR2())       << '\n';
 
                     //__________________________________________________________
                     //
-                    // save variables
+                    // save fixed variables
                     //__________________________________________________________
-                    size_t iv = 0;
-                    for( Variables::const_iterator i=variables.begin();i!=variables.end();++i )
+                    fp << com << " <fixed variables> : "; fp("%u/%u\n",unsigned(nvar-nprm),unsigned(nvar));
                     {
-                        ++iv;
-                        const Variable &v    = **i;
-                        const string    name = v.name;
-                        const string   &val  = aVal[iv];
-                        const string   &err  = eVal[iv];
-                        const bool      use  = used[ v.check_index( used.size() ) ];
-
-                        fp << name;            for(size_t j=name.size();j<=nm;++j) fp << ' ';
-                        fp << "= "    << val;  for(size_t j=val.size(); j<=am;++j) fp << ' ';
-                        fp << "\\pm " << err;  for(size_t j=err.size(); j<=em;++j) fp << ' ';
-
-                        if(use)
+                        size_t iv = 0;
+                        for( Variables::const_iterator i=variables.begin();i!=variables.end();++i )
                         {
-                            const T re = variables.compute_relative_error(aorg[ v.check_index( aorg.size() ) ],aerr[ v.check_index( aerr.size() ) ]);
-                            fp("(%6.2f%%)",re);
+                            ++iv;
+                            const Variable &v    = **i;
+                            const string   &name = v.name;
+                            if(variables(used,name)) continue;
+                            (fp << '\t').align(name,nm) << " = " << astr[iv] << '\n';
                         }
-                        else
-                        {
-                            fp << "( fixed )";
-                        }
-                        
-                        fp << '\n';
                     }
-                    for(size_t i=nsep;i>0;--i) fp << com; fp << '\n';
+
+                    //__________________________________________________________
+                    //
+                    // save used parameters
+                    //__________________________________________________________
+                    fp << com << " <used parameters> : "; fp("%u/%u\n",unsigned(nprm),unsigned(nvar));
+                    {
+                        size_t iv = 0;
+                        for( Variables::const_iterator i=variables.begin();i!=variables.end();++i )
+                        {
+                            ++iv;
+                            const Variable &v    = **i;
+                            const string   &name = v.name;
+                            if(!variables(used,name)) continue;
+
+                            (fp << '\t').align(name,nm) << " = ";
+                            fp.align(astr[iv],am)       << " \\pm ";
+                            fp.align(estr[iv],em);
+                            fp(" (%6.2f%%)",variables.compute_relative_error(variables(aorg,name),variables(aerr,name))) << '\n';
+                        }
+                    }
+                    fp.repeat(nsep,com) << '\n';
                 }
 
             protected:
                 //! initialize
                 inline explicit SampleType(const size_t nvar_max) :
-                SampleInfo(nvar_max),
-                rc(nvar_max,as_capacity)
-                {
-                }
+                SampleInfo(nvar_max), rc(nvar_max,as_capacity) { }
 
                 vector<T>    rc; //!< resources
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(SampleType);
+
             };
 
 

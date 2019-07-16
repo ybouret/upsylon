@@ -82,7 +82,7 @@ Y_UTEST(lsf2)
     vars.display(std::cerr,aorg);
 
     Fit::LeastSquares<double> LS;
-    LS.verbose = true;
+    //LS.verbose = true;
     
     dummy dum;
     Fit::LeastSquares<double>::Function F( &dum, & dummy::f );
@@ -109,6 +109,10 @@ Y_UTEST(lsf2)
         }
     }
 
+    {
+        ios::ocstream fp( ios::cstdout );
+        samples.writeLog(fp,aorg,aerr,used);
+    }
 
 
 }

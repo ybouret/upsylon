@@ -8,6 +8,7 @@
 #include "y/ptr/intr.hpp"
 #include "y/math/types.hpp"
 #include "y/string/tokenizer.hpp"
+#include "y/string/display.hpp"
 #include "y/memory/pooled.hpp"
 
 namespace upsylon
@@ -22,30 +23,42 @@ namespace upsylon
             class Variable : public counted_object
             {
             public:
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
+
                 //! type of variables
                 enum Type
                 {
                     IsGlobal, //!< attached to global parameters
                     IsLocal   //!< attached to a global variable for local fit
                 };
-                typedef intr_ptr<string,Variable>   Pointer; //!< shared pointer
-                typedef set<string,Pointer>         Set;     //!< for database
+                typedef memory::pooled                       Memory;     //!< handling memory
+                typedef intr_ptr<string,Variable>            Pointer;    //!< shared pointer
+                typedef key_hasher<string>                   KeyHasher;  //!< for database
+                typedef set<string,Pointer,KeyHasher,Memory> Set;        //!< database type
 
-                const   string  name;                      //!< unique name
-                const   Type    type;                      //!< keep track
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
                 const   string &key()   const throw();     //!< name
                 virtual size_t  index() const throw() = 0; //!< global index
-                virtual ~Variable() throw();               //!< destructor
-
-                //! display
-                inline friend std::ostream & operator<<( std::ostream &os, const Variable &var )
-                {
-                    os << var.name << '@' << var.index();
-                    return os;
-                }
+                virtual        ~Variable() throw();        //!< destructor
 
                 //! check index() is valid
-                size_t check_index( const size_t against_size ) const;
+                size_t          check_index( const size_t against_size) const;
+
+                //! display
+                friend std::ostream & operator<<( std::ostream &, const Variable &);
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const   string  name;                      //!< unique name
+                const   Type    type;                      //!< keep track
 
             protected:
                 //! constructor
@@ -60,11 +73,10 @@ namespace upsylon
             class GlobalVariable : public Variable
             {
             public:
-                //! constructor, index must be > 0
                 explicit GlobalVariable(const string &__name,
-                                        const size_t  __indx);
-                virtual ~GlobalVariable() throw();    //!< destructor
-                virtual size_t index() const throw(); //!< return indx
+                                        const size_t  __indx); //! constructor, index must be > 0
+                virtual ~GlobalVariable() throw();             //!< destructor
+                virtual size_t index() const throw();          //!< return indx
 
                 const size_t indx; //!< global index
 
@@ -76,13 +88,11 @@ namespace upsylon
             class LocalVariable : public Variable
             {
             public:
-                //! constructor, attach to a link
-                explicit LocalVariable( const string & __name, const Variable::Pointer &__link );
-                //! desctrutor
-                virtual ~LocalVariable() throw();
-
-                const Variable::Pointer link;         //!< the link
-                virtual size_t index() const throw(); //!< return link->index()
+                explicit LocalVariable(const string &           __name,
+                                       const Variable::Pointer &__link);  //!< constructor, attach to a link
+                virtual ~LocalVariable() throw();                         //!< destructor
+                virtual size_t index() const throw();                     //!< return link->index()
+                const Variable::Pointer link;                             //!< the link
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(LocalVariable);
@@ -273,12 +283,8 @@ namespace upsylon
                     for(const_iterator i=begin();i!=end();++i)
                     {
                         const string &name  = (**i).name;
-                        const T      &value = (*this)(arr,name);
                         if(pfx) os << pfx;
-                        os << name;
-                        for(size_t j=sz;j>name.size();--j) os << ' ';
-                        os << " = ";
-                        os << value << std::endl;
+                        string_display::align(os,name,sz) << " = " << (*this)(arr,name) << std::endl;
                     }
                 }
 
@@ -291,9 +297,9 @@ namespace upsylon
                     return 100 * ratio;
                 }
 
-                //! convert reals to strings, return max string lenght
-                template <typename T>
-                size_t fillStrings( Strings &strings, const array<T> &arr ) const
+                //! convert reals to strings, return max strings length
+                template <typename T> inline
+                 size_t fillStrings( Strings &strings, const array<T> &arr ) const
                 {
                     const Variables &self = *this;
                     strings.free();
@@ -313,32 +319,22 @@ namespace upsylon
                 template <typename T> inline
                 void display(std::ostream &os, const array<T> &aorg, const array<T> &aerr, const char *pfx=NULL) const
                 {
-                    const size_t sz = get_max_name_size();
-                    const size_t nv = this->size();
-                    Strings astr(nv,as_capacity);
-                    Strings estr(nv,as_capacity);
-                    const size_t am = fillStrings( astr, aorg);
-                    const size_t em = fillStrings( estr, aerr);
+                    const Variables &self = *this;
+                    const size_t     sz   = self.get_max_name_size();
+                    const size_t     nv   = self.size();
+                    Strings          astr(nv,as_capacity); const size_t am = fillStrings(astr,aorg);
+                    Strings          estr(nv,as_capacity); const size_t em = fillStrings(estr,aerr);
+
                     size_t iv=1;
                     for(const_iterator i=begin();i!=end();++i,++iv)
                     {
                         const string &name  = (**i).name;
                         if(pfx) os << pfx;
-                        os << name;
-                        for(size_t j=sz;j>name.size();--j) os << ' ';
-                        os << " = ";
-                        {
-                            const string &value = astr[iv];
-                            os << value; for(size_t j=am;j>value.size();--j) os << ' ';
-                            os << " +/- ";
-                        }
-                        {
-                            const string &value = estr[iv];
-                            os << value; for(size_t j=em;j>value.size();--j) os << ' ';
-                            os << ' ';
-                            const string percent = vformat( "%6.2f", double(compute_relative_error((*this)(aorg,name) , (*this)(aerr,name))) );
-                            os << '(' << percent << '%' << ')';
-                        }
+                        string_display::align(os,name,sz);
+                        string_display::align(os << " = ",astr[iv],am) << " +/- ";
+                        string_display::align(os,estr[iv],em) << ' ';
+                        const string percent = vformat( "%6.2f", double(compute_relative_error(self(aorg,name),self(aerr,name))) );
+                        os << '(' << percent << '%' << ')';
                         os << std::endl;
                     }
                 }

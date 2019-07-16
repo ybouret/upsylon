@@ -25,6 +25,12 @@ namespace upsylon
                 }
                 return indx;
             }
+
+            std::ostream & operator<<( std::ostream &os, const Variable &var )
+            {
+                os << var.name << '@' << var.index();
+                return os;
+            }
         }
 
     }
