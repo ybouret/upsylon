@@ -261,7 +261,9 @@ namespace upsylon
 {
     namespace ios
     {
-        void disk_file:: copy( const string &target, const string &source, bool append)
+        void disk_file:: copy(const string &target,
+                              const string &source,
+                              const bool    append)
         {
             memory::cblock_of<char> blk( BUFSIZ );
             char                   *buf = blk.data;

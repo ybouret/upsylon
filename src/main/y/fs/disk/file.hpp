@@ -52,7 +52,7 @@ namespace upsylon
             Y_DISABLE_ASSIGN(disk_file);
         public:
             //! direct copy using BUFSIZ memory block
-            static void copy( const string &target, const string &source, bool append);
+            static void copy( const string &target, const string &source, const bool append);
         };
 
 

@@ -60,6 +60,7 @@ Y_UTEST(disk_file)
     }
 
 
+    std::cerr << "BUFSIZ=" << BUFSIZ << std::endl;
 
 
     ios::shared_disk_buffer ish = new ios::disk_buffer<>(BUFSIZ);

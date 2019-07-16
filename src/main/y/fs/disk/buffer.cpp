@@ -25,6 +25,10 @@ namespace upsylon
             return Y_ROUND32(n);
         }
 
+        void disk_buffer_:: clear() throw()
+        {
+            memset(entry,0,allocated);
+        }
 
 
         disk_stream:: disk_stream( const disk_file &df, const shared_disk_buffer &sdb ) :

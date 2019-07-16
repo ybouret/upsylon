@@ -17,6 +17,8 @@ namespace upsylon
             virtual      ~disk_buffer_() throw();  //!< cleanup
             uint8_t      *entry;                   //!< first byte address
             const size_t  bytes;                   //!< effective size
+            void          clear() throw();         //!< zero the block
+
         protected:                                 //|
             explicit      disk_buffer_() throw();  //!< constructor
             size_t        allocated;               //!< from allocator
@@ -36,6 +38,7 @@ namespace upsylon
             //! release memory
             inline virtual ~disk_buffer() throw()
             {
+                clear();
                 ALLOCATOR::location().release_bytes(entry,allocated);
             }
 

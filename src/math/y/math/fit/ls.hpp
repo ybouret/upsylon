@@ -71,12 +71,11 @@ namespace upsylon
                     return int(numeric<T>::max_10_exp);
                 }
 
-                //! p initial
+                //! initial p value
                 static inline int get_pini() throw()
                 {
                     return -4;
                 }
-
 
                 //! try to fit sample
                 inline bool fit(SampleType<T>     &sample,
@@ -232,7 +231,6 @@ namespace upsylon
                         //
                         // successfull step: update and test convergence
                         //______________________________________________________
-                        //const T a_ferr = tao::fractional_error(aorg,atry);
                         tao::set(aorg,atry);
                         const T D2_err = fabs_of(D2 - D2_try);
                         Y_LSF_OUT(std::cerr << "[LSF] \tLeastSquares Error : [ " << D2_err/D2 << " ]" << std::endl);
