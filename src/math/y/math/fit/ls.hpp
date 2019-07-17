@@ -7,6 +7,8 @@
 #include "y/math/kernel/lu.hpp"
 #include "y/math/kernel/tao.hpp"
 
+#include "y/math/triplet.hpp"
+
 namespace upsylon
 {
     namespace math
@@ -74,9 +76,9 @@ namespace upsylon
                 inline virtual ~LeastSquares() throw() {}
 
                 //! p < pmin => lam = 0
-                static inline int get_pmin() throw() { return -int(numeric<T>::dig); }
+                static inline int get_pmin() throw() { return -int(numeric<T>::dig);       }
 
-                //! p > pmax => rise overflow exception in code
+                //! p > pmax => overflow and early return
                 static inline int get_pmax() throw() { return int(numeric<T>::max_10_exp); }
 
                 //! initial p value
@@ -236,7 +238,18 @@ namespace upsylon
                         //
                         // successfull step: update and test convergence
                         //______________________________________________________
+                        {
+                            callD2     G = { &sample, &F, &aorg, &delta, &atry, 0 };
+                            std::cerr << "G(1)=" << G(1) << "/" << D2_try << std::endl;
+                            triplet<T> u = { T(0), T(1), T(1.1) };
+                            triplet<T> g = { D2, D2_try, G(u.c) };
+                            std::cerr << "u=" << u << std::endl;
+                            std::cerr << "g=" << g << std::endl;
+                            exit(-1);
+                        }
                         tao::set(aorg,atry);
+
+
                         const T D2_err = fabs_of(D2 - D2_try);
                         Y_LSF_OUT(std::cerr << "[LSF] \tLeastSquares Error : [ " << D2_err/D2 << " ]" << std::endl);
 
@@ -344,6 +357,7 @@ namespace upsylon
                     }
                 }
 
+                //! increase lambda with overflow control
                 bool increase_lambda() throw()
                 {
                     static const int pmax = get_pmax();
@@ -353,6 +367,7 @@ namespace upsylon
                     return true;
                 }
 
+                //! decrease lambda with underflow control
                 void decrease_lambda() throw()
                 {
                     static const int pmin = get_pmin();
@@ -369,6 +384,7 @@ namespace upsylon
                     Y_LSF_OUT(std::cerr << "[LSF] \t(-) lam=" << lam << "/p=" << p << std::endl);
                 }
 
+                //! compute curvature according to current lamnda
                 inline bool compute_curvature()
                 {
                     const size_t nvar = alpha.rows;
@@ -394,6 +410,25 @@ namespace upsylon
                         return true;
                     }
                 }
+
+                //! structure to get 1D function along descent step
+                struct callD2
+                {
+                    SampleType<T>  *sample;
+                    Sequential     *seqfcn;
+                    const Array    *aorg;
+                    const Array    *delta;
+                    Array          *atry;
+                    unsigned        calls;
+
+                    inline T operator()( const T u )
+                    {
+                        ++calls;
+                        assert(sample); assert(seqfcn); assert(aorg); assert(delta); assert(atry);
+                        tao::setprobe(*atry,*aorg,u,*delta);
+                        return sample->computeD2(*seqfcn,*atry);
+                    }
+                };
             };
 
         }

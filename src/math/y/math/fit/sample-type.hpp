@@ -49,6 +49,10 @@ namespace upsylon
 
 
                 //! compute D2, beta and alpha, beta and alpha initialy empty, for a prepared sample
+                /**
+                 this is a time consuming step, and the Gradient should be well
+                 parametrized (check scaling)
+                 */
                 virtual T computeD2(Sequential        &F,
                                     const Array       &aorg,
                                     Array             &beta,

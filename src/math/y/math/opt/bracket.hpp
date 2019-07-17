@@ -156,9 +156,9 @@ namespace upsylon
                         triplet<T> & f )
             {
 
-                static const T SHRINK = T(0.3819660112501051);
-                static const int GTA = 1;
-                static const int GTC = 2;
+                static const T   SHRINK = T(0.3819660112501051);
+                static const int GTA    = 1;
+                static const int GTC    = 2;
                 //______________________________________________________________
                 //
                 // ordering..
@@ -168,7 +168,7 @@ namespace upsylon
                     cswap(x.a, x.c);
                     cswap(f.a, f.c);
                 }
-                assert(x.is_ordered());
+                assert(x.a<=x.c);
 
                 //______________________________________________________________
                 //
@@ -181,17 +181,20 @@ namespace upsylon
                     if(f.a < f.c )
                     {
                         x.b = clamp<T>(x.a,x.a + SHRINK*(x.c-x.a),x.c);
+                        assert(x.is_ordered());
                     }
                     else
                     {
                         if(f.c<f.a)
                         {
                             x.b = clamp<T>(x.a,x.c - SHRINK*(x.c-x.a),x.c);
+                            assert(x.is_ordered());
                         }
                         else
                         {
                             // f.c==f.a numerically
                             x.b = clamp<T>(x.a,x.a + T(0.5) * (x.c-x.a),x.c);
+                            assert(x.is_ordered());
                         }
                     }
                     f.b = func(x.b);
