@@ -14,20 +14,36 @@ namespace upsylon
         namespace Fit
         {
 
+            ////////////////////////////////////////////////////////////////////
+            //
             //! macro to activate output on verbose flag
 #define Y_LSF_OUT(CODE)     if(verbose) do { CODE; } while(false)
-
+            //
             //! Least Squares fit
+            //
+            ////////////////////////////////////////////////////////////////////
             template <typename T>
             class LeastSquares : public arrays<T>
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // types and definition
+                //
+                //______________________________________________________________
                 typedef typename Type<T>::Function   Function;   //!< alias
                 typedef typename Type<T>::Sequential Sequential; //!< alias
                 typedef typename Type<T>::Array      Array;      //!< alias
                 typedef typename Type<T>::Matrix     Matrix;     //!< alias
                 typedef typename Type<T>::Gradient   Gradient;   //!< alias
 
+                //______________________________________________________________
+                //
+                //
+                // members
+                //
+                //______________________________________________________________
                 int      p;       //!< controlled power for lam
                 T        lam;     //!< lam=10^p
                 Matrix   alpha;   //!< Jacobian of beta
@@ -37,6 +53,7 @@ namespace upsylon
                 Array   &atry;    //!< trial position
                 Gradient grad;    //!< gradient computation
                 bool     verbose; //!< verbosity flag
+
 
                 //! initialize LeastSquares
                 inline explicit LeastSquares(const bool is_verbose=false) :
@@ -54,28 +71,16 @@ namespace upsylon
                 }
 
                 //! destructor
-                inline virtual ~LeastSquares() throw()
-                {
-                }
-
+                inline virtual ~LeastSquares() throw() {}
 
                 //! p < pmin => lam = 0
-                static inline int get_pmin() throw()
-                {
-                    return -int(numeric<T>::dig);
-                }
+                static inline int get_pmin() throw() { return -int(numeric<T>::dig); }
 
-                //! p > pmax => overflow
-                static inline int get_pmax() throw()
-                {
-                    return int(numeric<T>::max_10_exp);
-                }
+                //! p > pmax => rise overflow exception in code
+                static inline int get_pmax() throw() { return int(numeric<T>::max_10_exp); }
 
                 //! initial p value
-                static inline int get_pini() throw()
-                {
-                    return -4;
-                }
+                static inline int get_pini() throw() { return -4; }
 
                 //! try to fit sample
                 inline bool fit(SampleType<T>     &sample,
@@ -115,7 +120,7 @@ namespace upsylon
                     // check space size
                     //----------------------------------------------------------
                     this->acquire(nvar);   // vectors
-                    alpha.make(nvar,nvar); // jacobian
+                    alpha.make(nvar,nvar); // hessian
                     curv. make(nvar,nvar); // curvature
 
                     //----------------------------------------------------------
@@ -132,12 +137,12 @@ namespace upsylon
                     beta.ld(0);
                     Y_LSF_OUT(std::cerr << "[LSF] \tComputing initial gradient..." << std::endl);
                     T D2 = sample.computeD2(F,aorg,beta,alpha,grad,used);
-                    unsigned count = 0;
+                    unsigned cycle = 0;
                     Y_LSF_OUT(std::cerr << "[LSF] \tReady for first cycle!" << std::endl);
 
                     while(true)
                     {
-                        ++count;
+                        ++cycle;
                         //______________________________________________________
                         //
                         //
@@ -145,7 +150,7 @@ namespace upsylon
                         //
                         //______________________________________________________
                         Y_LSF_OUT(std::cerr << "|" << std::endl;
-                                  std::cerr << "[LSF] \t<cycle #" << count << ">" << std::endl;
+                                  std::cerr << "[LSF] \t<cycle #" << cycle << ">" << std::endl;
                                   std::cerr << "[LSF] \tD2=" << D2 << " @" << aorg << std::endl);
                         for(size_t i=nvar;i>0;--i)
                         {
@@ -251,7 +256,7 @@ namespace upsylon
                         beta.ld(0);
                         Y_LSF_OUT(std::cerr << "[LSF] \tUpdating gradient..." << std::endl);
                         D2 = sample.computeD2(F,aorg,beta,alpha,grad,used); // will be D2_try
-                        Y_LSF_OUT(std::cerr << "[LSF] \t<cycle #" << count << "/>" << std::endl);
+                        Y_LSF_OUT(std::cerr << "[LSF] \t<cycle #" << cycle << "/>" << std::endl);
                     }
 
                 CONVERGED:
@@ -259,7 +264,7 @@ namespace upsylon
                     //
                     // D2_org, aorg and alpha are computed
                     //__________________________________________________________
-                    Y_LSF_OUT(std::cerr<<"[LSF] \tAnalysis after #cycles="<< count << std::endl);
+                    Y_LSF_OUT(std::cerr<<"[LSF] \tAnalysis after #cycles="<< cycle << std::endl);
                     const size_t ndat = sample.count();
 
                     size_t nprm = nvar;
