@@ -197,9 +197,9 @@ namespace upsylon
                             assert(x.is_ordered());
                         }
                     }
+                    assert(x.is_ordered());
                     f.b = func(x.b);
-                    assert(x.a<=x.b);
-                    assert(x.b<=x.c);
+
                     int flag = 0;
                     if(f.b>f.c) flag |= GTC;
                     if(f.b>f.a) flag |= GTA;
@@ -243,6 +243,7 @@ namespace upsylon
                         default:
                             assert(f.b<=f.a);
                             assert(f.b<=f.c);
+                            // early return
                             return;
                     }
 

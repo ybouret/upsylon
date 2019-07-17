@@ -7,7 +7,8 @@
 #include "y/math/kernel/lu.hpp"
 #include "y/math/kernel/tao.hpp"
 
-#include "y/math/triplet.hpp"
+#include "y/math/opt/minimize.hpp"
+#include "y/math/opt/bracket.hpp"
 
 namespace upsylon
 {
@@ -133,6 +134,11 @@ namespace upsylon
                     Y_LSF_OUT(std::cerr << "[LSF] \tStarting with lambda=" << lam << "/p=" << p << std::endl);
 
                     //----------------------------------------------------------
+                    // one dimensional call
+                    //----------------------------------------------------------
+                    callD2     G = { &sample, &F, &aorg, &delta, &atry, 0 };
+
+                    //----------------------------------------------------------
                     // full initial metrics
                     //----------------------------------------------------------
                     alpha.ld(0);
@@ -199,7 +205,8 @@ namespace upsylon
                         // probe new value
                         //______________________________________________________
                         tao::add(atry,aorg,delta);
-                        const T D2_try = sample.computeD2(F,atry);
+                        G.calls  = 0;
+                        T D2_try = G(1); //sample.computeD2(F,atry);
                         Y_LSF_OUT(std::cerr << "[LSF] \tD2_try=" << D2_try << "@" << atry << " / D2=" << D2 << std::endl);
 
                         //______________________________________________________
@@ -238,14 +245,27 @@ namespace upsylon
                         //
                         // successfull step: update and test convergence
                         //______________________________________________________
+                        assert(D2_try<D2);
                         {
-                            callD2     G = { &sample, &F, &aorg, &delta, &atry, 0 };
-                            std::cerr << "G(1)=" << G(1) << "/" << D2_try << std::endl;
-                            triplet<T> u = { T(0), T(1), T(1.1) };
-                            triplet<T> g = { D2, D2_try, G(u.c) };
+                            triplet<T> u = { 0,  0.99, 1 };
+                            triplet<T> g = { D2, G(u.b), D2_try };
+                            assert(2==G.calls);
                             std::cerr << "u=" << u << std::endl;
                             std::cerr << "g=" << g << std::endl;
-                            exit(-1);
+                            if( g.b < D2_try )
+                            {
+                                std::cerr << "Should backtrack" << std::endl;
+                                minimize::run(G,u,g,1e-4);
+                                std::cerr << "u=" << u << std::endl;
+                                std::cerr << "g=" << g << std::endl;
+                                std::cerr << "calls=" << G.calls << std::endl;
+                                D2_try = G(u.b);
+                                //exit(1);
+                            }
+                            else
+                            {
+                                D2_try = G(1);
+                            }
                         }
                         tao::set(aorg,atry);
 

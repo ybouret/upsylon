@@ -81,13 +81,13 @@ namespace upsylon
             template <typename T, typename FUNC> static inline
             T run(FUNC       &func,
                   triplet<T> &x,
-                  triplet<T> &f //, T           xtol = 0
+                  triplet<T> &f,
+                  T           xtol = 0
                   )
             {
                 static const T ftol     = numeric<T>::ftol;
                 static const T xtol_min = numeric<T>::sqrt_ftol;
-                //xtol = max_of( fabs_of(xtol), xtol_min );
-                const T xtol = xtol_min;
+                xtol = max_of( fabs_of(xtol), xtol_min );
 
                 assert(x.is_ordered());
                 x.co_sort(f);
