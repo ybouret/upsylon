@@ -23,7 +23,7 @@ namespace upsylon
             class Variables : public Variable::Set
             {
             public:
-                typedef vector<string,memory::pooled> Strings;
+                typedef vector<string,memory::pooled> Strings; //!< for parsing
 
                 //! constructor, may reserve memory
                 Variables(const size_t n=0);

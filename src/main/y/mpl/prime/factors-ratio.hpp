@@ -11,45 +11,48 @@ namespace upsylon
     namespace mpl
     {
 
+        //! rational fraction of prime factors
         class prime_factors_ratio : public number_type
         {
         public:
-            const prime_factors num;
-            const prime_factors den;
+            const prime_factors num; //!< numerator
+            const prime_factors den; //!< denominator
 
-            prime_factors_ratio();
-            prime_factors_ratio( const prime_factors &n );
-            prime_factors_ratio( const prime_factors &n, const prime_factors &d );
+            prime_factors_ratio();   //!< 0/1
+            prime_factors_ratio( const prime_factors &n ); //!< n/1
+            prime_factors_ratio( const prime_factors &n, const prime_factors &d ); //!< n/d
 
-            prime_factors_ratio( const natural &n );
-            prime_factors_ratio( const natural &n, const natural &d);
+            prime_factors_ratio( const natural &n ); //!< n/1
+            prime_factors_ratio( const natural &n, const natural &d); //!< n/d
 
-            prime_factors_ratio( const word_t n);
-            prime_factors_ratio( const word_t n, const word_t d);
+            prime_factors_ratio( const word_t n); //!< n/1
+            prime_factors_ratio( const word_t n, const word_t d); //!< n/d
 
-            void xch( prime_factors_ratio &Q ) throw();
+            void xch( prime_factors_ratio &Q ) throw(); //!< no-throw swap
 
-            prime_factors_ratio( const prime_factors_ratio & );
-            prime_factors_ratio & operator=( const prime_factors_ratio & );
+            prime_factors_ratio( const prime_factors_ratio & ); //!< copy
+            prime_factors_ratio & operator=( const prime_factors_ratio & ); //!< assign
 
-            virtual ~prime_factors_ratio() throw();
+            virtual ~prime_factors_ratio() throw(); //!< destructor
 
+
+            void mul_by( const prime_factors_ratio &x ); //!< *= x
+            void div_by( const prime_factors_ratio &x ); //!< /= x
+
+
+            void mul_by( const prime_factors &n ); //!< *= n
+            void div_by( const prime_factors &d ); //!< /= d
+
+            void mul_by( const natural &n ); //!< *= n
+            void div_by( const natural &d ); //!< /= d
+
+            void mul_by( const word_t n ); //!< *= n
+            void div_by( const word_t d ); //!< /= d
+
+            rational value() const; //!< convert to rational
+
+            //! output
             friend std::ostream & operator<<( std::ostream &, const prime_factors_ratio &Q );
-
-            void mul_by( const prime_factors_ratio &x );
-            void div_by( const prime_factors_ratio &x );
-
-
-            void mul_by( const prime_factors &n );
-            void div_by( const prime_factors &d );
-
-            void mul_by( const natural &n );
-            void div_by( const natural &d );
-
-            void mul_by( const word_t n );
-            void div_by( const word_t d );
-
-            rational value() const;
 
         private:
             void update();

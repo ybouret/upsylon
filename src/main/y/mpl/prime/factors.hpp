@@ -51,7 +51,9 @@ namespace upsylon
             static prime_factors perm(const natural &n, const natural &k); //!< permutations
             static prime_factors comb(const natural &n, const natural &k); //!< combinations
 
+            //! test equality
             friend bool operator==( const prime_factors &lhs, const prime_factors &rhs ) throw();
+            //! test difference
             friend bool operator!=( const prime_factors &lhs, const prime_factors &rhs ) throw();
 
         private:

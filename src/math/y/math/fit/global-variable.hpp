@@ -19,7 +19,7 @@ namespace upsylon
             {
             public:
                 explicit GlobalVariable(const string &__name,
-                                        const size_t  __indx); //! constructor, index must be > 0
+                                        const size_t  __indx); //!< constructor, index must be > 0
                 virtual ~GlobalVariable() throw();             //!< destructor
                 virtual size_t index() const throw();          //!< return indx
 

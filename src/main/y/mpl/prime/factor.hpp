@@ -54,7 +54,9 @@ namespace upsylon
             const natural p; //!< prime
             size_t        n; //!< count > 0
 
+            //! test equality
             friend bool operator==( const prime_factor &lhs, const prime_factor &rhs ) throw();
+            //! test difference
             friend bool operator!=( const prime_factor &lhs, const prime_factor &rhs ) throw();
 
         private:

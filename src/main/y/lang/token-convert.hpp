@@ -12,8 +12,8 @@ namespace upsylon
         //! fast conversion with stringify
         struct TokenConvert
         {
-            static unit_t ToUnit( const Token &token, const char *context=NULL);
-            static size_t ToSize( const Token &token, const char *context=NULL);
+            static unit_t ToUnit( const Token &token, const char *context=NULL); //!< signed   type
+            static size_t ToSize( const Token &token, const char *context=NULL); //!< unsigned type
         };
     }
 }
