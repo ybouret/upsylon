@@ -16,8 +16,10 @@ namespace upsylon
             T a; //!< first
             T b; //!< second
             T c; //!< third
+
             //! inline sorting
             inline void sort() throw() { nwsrt::on3( &a ); }
+
             //! inline co-sorting
             template <typename U>
             inline void co_sort( triplet<U> &other ) throw()
@@ -53,7 +55,7 @@ namespace upsylon
 
             //! shift value a <- b <- c <- d
             inline void shift(const T d) throw() { a=b; b=c; c=d; }
-
+            
         };
     }
 }

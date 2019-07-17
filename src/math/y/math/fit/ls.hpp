@@ -246,27 +246,7 @@ namespace upsylon
                         // successfull step: update and test convergence
                         //______________________________________________________
                         assert(D2_try<D2);
-                        {
-                            triplet<T> u = { 0,  0.99, 1 };
-                            triplet<T> g = { D2, G(u.b), D2_try };
-                            assert(2==G.calls);
-                            std::cerr << "u=" << u << std::endl;
-                            std::cerr << "g=" << g << std::endl;
-                            if( g.b < D2_try )
-                            {
-                                std::cerr << "Should backtrack" << std::endl;
-                                minimize::run(G,u,g,1e-4);
-                                std::cerr << "u=" << u << std::endl;
-                                std::cerr << "g=" << g << std::endl;
-                                std::cerr << "calls=" << G.calls << std::endl;
-                                D2_try = G(u.b);
-                                //exit(1);
-                            }
-                            else
-                            {
-                                D2_try = G(1);
-                            }
-                        }
+                        D2_try = G.damp(D2, D2_try,verbose);
                         tao::set(aorg,atry);
 
 
@@ -439,8 +419,9 @@ namespace upsylon
                     const Array    *aorg;
                     const Array    *delta;
                     Array          *atry;
-                    unsigned        calls;
+                    unsigned        calls; //!< for one cycle
 
+                    //! build a trial and get D2@atry
                     inline T operator()( const T u )
                     {
                         ++calls;
@@ -448,7 +429,41 @@ namespace upsylon
                         tao::setprobe(*atry,*aorg,u,*delta);
                         return sample->computeD2(*seqfcn,*atry);
                     }
+
+                    //! check if not too fast and slow down
+                    inline T damp(const T    D2,
+                                  const T    D2_try,
+                                  const bool verbose)
+                    {
+                        static const T utol = T(1e-3);
+                        static const T uchk = T(1)-utol;
+
+                        assert(1==calls);                       // reset in cycle
+                        assert(D2_try<D2);                      // after a successfull step
+                        callD2    &G = *this;                   // alias
+                        triplet<T> u = { 0,  uchk,   1      };  assert(u.b>0);assert(u.b<1);
+                        triplet<T> g = { D2, G(u.b), D2_try };
+
+                        Y_LSF_OUT(std::cerr << "[LSF] \t\tprobes=" << u << std::endl);
+                        Y_LSF_OUT(std::cerr << "[LSF] \t\tD2_try=" << g << std::endl);
+
+                        if( g.b < D2_try )
+                        {
+                            Y_LSF_OUT(std::cerr << "[LSF] \t\t[+ DAMPING +]" << std::endl);
+                            minimize::run(G,u,g,utol);
+                            const T ans = G(u.b);
+                            Y_LSF_OUT(std::cerr << "[LSF] \t\tdamped = " << u.b << std::endl);
+                            Y_LSF_OUT(std::cerr << "[LSF] \t\tD2_try = " << g.b << ", #calls=" << calls << std::endl);
+                            return ans;
+                        }
+                        else
+                        {
+                            Y_LSF_OUT(std::cerr << "[LSF] \t\t[+ ACCEPT +]" << std::endl);
+                            return G(1);
+                        }
+                    }
                 };
+
             };
 
         }

@@ -170,7 +170,7 @@ Y_UTEST(lsf)
 
     Fit::LeastSquares<double> ls;
 
-    //ls.verbose = true;
+    ls.verbose = true;
     std::cerr << "Fit 1" << std::endl;
     {
         if(ls.fit(S1,F,a1,aerr,used))
