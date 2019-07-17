@@ -2,82 +2,8 @@
 #include "y/exception.hpp"
 #include "y/code/utils.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
-        namespace Fit
-        {
-            Variable:: ~Variable() throw() {}
-            
-            Variable:: Variable(const string & __name, const Type __type) :
-            name( __name ), type( __type ) {}
-
-            const string & Variable:: key() const throw() { return name; }
 
 
-            size_t Variable:: check_index( const size_t against_size ) const
-            {
-                const size_t indx = index();
-                if(indx<=0||indx>against_size)
-                {
-                    throw exception("Invalid index %u/%u for Variable '%s'", unsigned(indx), unsigned(against_size), *name );
-                }
-                return indx;
-            }
-
-            std::ostream & operator<<( std::ostream &os, const Variable &var )
-            {
-                os << var.name << '@' << var.index();
-                return os;
-            }
-        }
-
-    }
-}
-
-namespace upsylon
-{
-    namespace math
-    {
-        namespace Fit
-        {
-            GlobalVariable:: GlobalVariable(const string & __name, const size_t __indx ) :
-            Variable(__name,IsGlobal),
-            indx(__indx)
-            {
-                if(indx<=0) throw exception("%s.indx<=0", *name );
-            }
-
-            GlobalVariable:: ~GlobalVariable() throw()
-            {
-            }
-
-            size_t GlobalVariable:: index() const throw() { return indx; }
-
-        }
-
-    }
-}
-
-namespace upsylon
-{
-    namespace math
-    {
-        namespace Fit
-        {
-            LocalVariable:: LocalVariable( const string & __name, const Variable::Pointer &__link ) :
-            Variable( __name, IsLocal ),
-            link(__link)
-            {
-            }
-
-            LocalVariable:: ~LocalVariable() throw() {}
-            
-            size_t LocalVariable:: index() const throw() { return link->index(); }
-        }
-    }
-}
 
 
 namespace upsylon

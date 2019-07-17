@@ -128,7 +128,8 @@ Y_UTEST_INIT(128)
     Y_UTEST(matching);
     Y_UTEST(scanner);
     Y_UTEST(lex);
-    
+    Y_UTEST(token_convert);
+
     Y_UTEST(geom_iso2d);
 
     Y_UTEST(kr_bc);

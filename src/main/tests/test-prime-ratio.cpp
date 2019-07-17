@@ -47,7 +47,7 @@ Y_UTEST(prime_ratio)
         {
             const mpl::prime_factors np = mpl::prime_factors::perm(n,k);
             const mpn                hp = np.value();
-            std::cerr << " " << k << ":" << hp;
+            std::cerr << ' ' << hp;
         }
         std::cerr << std::endl;
     }
@@ -60,7 +60,7 @@ Y_UTEST(prime_ratio)
         {
             const mpl::prime_factors np = mpl::prime_factors::comb(n,k);
             const mpn                hp = np.value();
-            std::cerr << " " << k << ":" << hp;
+            std::cerr << ' ' << hp;
         }
         std::cerr << std::endl;
     }

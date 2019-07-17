@@ -2,14 +2,11 @@
 #ifndef Y_MATH_FIT_VARIABLES_INCLUDED
 #define Y_MATH_FIT_VARIABLES_INCLUDED 1
 
-#include "y/string.hpp"
-#include "y/associative/set.hpp"
+#include "y/math/fit/local-variable.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/ptr/intr.hpp"
-#include "y/math/types.hpp"
 #include "y/string/tokenizer.hpp"
 #include "y/string/display.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/math/types.hpp"
 
 namespace upsylon
 {
@@ -17,88 +14,12 @@ namespace upsylon
     {
         namespace Fit
         {
-
-
-            //! Variable Interface
-            class Variable : public counted_object
-            {
-            public:
-                //______________________________________________________________
-                //
-                // types and definitions
-                //______________________________________________________________
-
-                //! type of variables
-                enum Type
-                {
-                    IsGlobal, //!< attached to global parameters
-                    IsLocal   //!< attached to a global variable for local fit
-                };
-                typedef memory::pooled                       Memory;     //!< handling memory
-                typedef intr_ptr<string,Variable>            Pointer;    //!< shared pointer
-                typedef key_hasher<string>                   KeyHasher;  //!< for database
-                typedef set<string,Pointer,KeyHasher,Memory> Set;        //!< database type
-
-                //______________________________________________________________
-                //
-                // methods
-                //______________________________________________________________
-                const   string &key()   const throw();     //!< name
-                virtual size_t  index() const throw() = 0; //!< global index
-                virtual        ~Variable() throw();        //!< destructor
-
-                //! check index() is valid
-                size_t          check_index( const size_t against_size) const;
-
-                //! display
-                friend std::ostream & operator<<( std::ostream &, const Variable &);
-
-                //______________________________________________________________
-                //
-                // members
-                //______________________________________________________________
-                const   string  name;                      //!< unique name
-                const   Type    type;                      //!< keep track
-
-            protected:
-                //! constructor
-                explicit Variable(const string &__name,
-                                  const Type    __type);
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Variable);
-            };
-
-            //! a global,top level variable
-            class GlobalVariable : public Variable
-            {
-            public:
-                explicit GlobalVariable(const string &__name,
-                                        const size_t  __indx); //! constructor, index must be > 0
-                virtual ~GlobalVariable() throw();             //!< destructor
-                virtual size_t index() const throw();          //!< return indx
-
-                const size_t indx; //!< global index
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(GlobalVariable);
-            };
-
-            //! a local variable, linked to another variable
-            class LocalVariable : public Variable
-            {
-            public:
-                explicit LocalVariable(const string &           __name,
-                                       const Variable::Pointer &__link);  //!< constructor, attach to a link
-                virtual ~LocalVariable() throw();                         //!< destructor
-                virtual size_t index() const throw();                     //!< return link->index()
-                const Variable::Pointer link;                             //!< the link
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(LocalVariable);
-            };
-
+            
+            ////////////////////////////////////////////////////////////////////
+            //
             //! Variables management
+            //
+            ////////////////////////////////////////////////////////////////////
             class Variables : public Variable::Set
             {
             public:
@@ -299,7 +220,7 @@ namespace upsylon
 
                 //! convert reals to strings, return max strings length
                 template <typename T> inline
-                 size_t fillStrings( Strings &strings, const array<T> &arr ) const
+                size_t fillStrings( Strings &strings, const array<T> &arr ) const
                 {
                     const Variables &self = *this;
                     strings.free();

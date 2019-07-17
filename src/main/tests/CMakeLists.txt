@@ -119,7 +119,7 @@ ADD_TEST(ipso:dct    test-main  ipso_dct)
 ADD_TEST(ipso:c2d    test-main  ipso_c2d)
 
 SOURCE_GROUP(lang FILES test-token.cpp test-source.cpp test-pattern.cpp 
-test-posix.cpp test-regex.cpp test-matching.cpp test-scanner.cpp test-lex.cpp test-common.cpp)
+test-posix.cpp test-regex.cpp test-matching.cpp test-scanner.cpp test-lex.cpp test-common.cpp test-token-convert.cpp)
 ADD_TEST(Lang:Token    test-main  token)
 ADD_TEST(Lang:Source   test-main  source NULL)
 ADD_TEST(Lang:Pattern  test-main  pattern)
@@ -129,7 +129,7 @@ ADD_TEST(Lang:RegEx    test-main  regex)
 ADD_TEST(Lang:Matching test-main  matching)
 ADD_TEST(Lang:Scanner  test-main  scanner NULL)
 ADD_TEST(Lang:Lex      test-main  lex     NULL)
-
+ADD_TEST(Lang:Convert  test-main  token_convert -1 1 0 1234 -4321)
 
 SOURCE_GROUP(geom FILES test-geom-iso2d.cpp)
 ADD_TEST(geom:iso2d test-main geom_iso2d)
