@@ -21,12 +21,13 @@ namespace upsylon
             class LeastSquares_
             {
             public:
-                virtual ~LeastSquares_() throw();
+                virtual ~LeastSquares_() throw(); //!< destructor
 
+                //! shared text
                 static const char *converged_text(const bool flag) throw();
 
             protected:
-                explicit LeastSquares_() throw();
+                explicit LeastSquares_() throw(); //!< constructor
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(LeastSquares_);
