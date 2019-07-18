@@ -17,6 +17,21 @@ namespace upsylon
         namespace Fit
         {
 
+            //! base class for utilities
+            class LeastSquares_
+            {
+            public:
+                virtual ~LeastSquares_() throw();
+
+                static const char *converged_text(const bool flag) throw();
+
+            protected:
+                explicit LeastSquares_() throw();
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(LeastSquares_);
+            };
+
             ////////////////////////////////////////////////////////////////////
             //
             //! macro to activate output on verbose flag
@@ -26,7 +41,7 @@ namespace upsylon
             //
             ////////////////////////////////////////////////////////////////////
             template <typename T>
-            class LeastSquares : public arrays<T>
+            class LeastSquares : public LeastSquares_, public arrays<T>
             {
             public:
                 //______________________________________________________________
@@ -92,7 +107,7 @@ namespace upsylon
                                 Array             &aerr,
                                 const array<bool> &used)
                 {
-                    static const T  ftol = T(1e-4);
+                    static const T  ftol = T(1e-5);
 
                     assert(aerr.size()==aorg.size());
                     assert(used.size()==aorg.size());
@@ -106,7 +121,7 @@ namespace upsylon
                     // initialize dynamic data and lambda
                     //
                     //__________________________________________________________
-                    Y_LSF_OUT(std::cerr << "[LSF] \tInitializing for #variables=" << nvar << std::endl);
+                    Y_LSF_OUT(std::cerr << "[LSF] \tinitializing for #variables=" << nvar << std::endl);
                     aerr.ld(0);        // no error
                     sample.prepare();  // internal memory and indexing
 
@@ -115,7 +130,7 @@ namespace upsylon
                     //----------------------------------------------------------
                     if(nvar<=0)
                     {
-                        Y_LSF_OUT(std::cerr << "[LSF] \t[- No Variables -]" << std::endl);
+                        Y_LSF_OUT(std::cerr << "[LSF] \t[- no variables -]" << std::endl);
                         return true;
                     }
 
@@ -131,7 +146,7 @@ namespace upsylon
                     //----------------------------------------------------------
                     p   = get_pini();
                     compute_lam();
-                    Y_LSF_OUT(std::cerr << "[LSF] \tStarting with lambda=" << lam << "/p=" << p << std::endl);
+                    Y_LSF_OUT(std::cerr << "[LSF] \tstarting with lambda=" << lam << "/p=" << p << std::endl);
 
                     //----------------------------------------------------------
                     // one dimensional call
@@ -143,10 +158,10 @@ namespace upsylon
                     //----------------------------------------------------------
                     alpha.ld(0);
                     beta.ld(0);
-                    Y_LSF_OUT(std::cerr << "[LSF] \tComputing initial gradient..." << std::endl);
-                    T D2 = sample.computeD2(F,aorg,beta,alpha,grad,used);
+                    Y_LSF_OUT(std::cerr << "[LSF] \tcomputing initial gradient..." << std::endl);
+                    T        D2    = sample.computeD2(F,aorg,beta,alpha,grad,used);
                     unsigned cycle = 0;
-                    Y_LSF_OUT(std::cerr << "[LSF] \tReady for first cycle!" << std::endl);
+                    Y_LSF_OUT(std::cerr << "[LSF] \tready for first cycle" << std::endl);
 
                     while(true)
                     {
@@ -159,7 +174,7 @@ namespace upsylon
                         //______________________________________________________
                         Y_LSF_OUT(std::cerr << "|" << std::endl;
                                   std::cerr << "[LSF] \t<cycle #" << cycle << ">" << std::endl;
-                                  std::cerr << "[LSF] \tD2=" << D2 << " @" << aorg << std::endl);
+                                  std::cerr << "[LSF] \tD2     = " << D2 << " @" << aorg << std::endl);
                         for(size_t i=nvar;i>0;--i)
                         {
                             if(used[i])
@@ -175,9 +190,8 @@ namespace upsylon
                                 beta[i]     = 0; // mandatory
                             }
                         }
-                        Y_LSF_OUT(std::cerr << "[LSF] \tDescent, Hessian and Step:" << std::endl;
-                                  std::cerr << "      \tbeta  = "  << beta  << std::endl;
-                                  std::cerr << "      \talpha = " << alpha << std::endl);
+                        Y_LSF_OUT(std::cerr << "      \t beta  = "  << beta  << std::endl);
+                        Y_LSF_OUT(std::cerr << "      \t alpha = " << alpha << std::endl);
 
                         //______________________________________________________
                         //
@@ -188,7 +202,7 @@ namespace upsylon
                     FIND_STEP:
                         if( !compute_curvature() )
                         {
-                            Y_LSF_OUT(std::cerr << "[LSF] \tSingular Parameters" << std::endl);
+                            Y_LSF_OUT(std::cerr << "[LSF] \t[- singular sarameters -]" << std::endl);
                             return false;
                         }
 
@@ -198,16 +212,15 @@ namespace upsylon
                         //______________________________________________________
                         tao::set(delta,beta);
                         LU::solve(curv,delta);
-                        Y_LSF_OUT(std::cerr << "      \tdelta = " << delta << std::endl);
+                        Y_LSF_OUT(std::cerr << "      \t delta = " << delta << std::endl);
 
                         //______________________________________________________
                         //
-                        // probe new value
+                        // probe new value atry=aorg+delta at first
                         //______________________________________________________
-                        tao::add(atry,aorg,delta);
                         G.calls  = 0;
-                        T D2_try = G(1); //sample.computeD2(F,atry);
-                        Y_LSF_OUT(std::cerr << "[LSF] \tD2_try=" << D2_try << "@" << atry << " / D2=" << D2 << std::endl);
+                        T D2_try = G(1); assert(1==G.calls);
+                        Y_LSF_OUT(std::cerr << "[LSF] \tD2_try = " << D2_try << "@" << atry << std::endl);
 
                         //______________________________________________________
                         //
@@ -215,18 +228,18 @@ namespace upsylon
                         //______________________________________________________
                         if(D2_try>=D2)
                         {
-                            Y_LSF_OUT(std::cerr << "[LSF] \tLocal Extremum:" << std::endl);
+                            Y_LSF_OUT(std::cerr << "[LSF] \tlocal extremum:" << std::endl);
                             
                             //__________________________________________________
                             //
                             // test variable convergence on INCREASING D2
                             //__________________________________________________
                             const T ferr = tao::fractional_error(aorg,atry);
-                            Y_LSF_OUT(std::cerr << "[LSF] \tError on Parameters: [ " << ferr << " ]" << std::endl);
+                            Y_LSF_OUT(std::cerr << "[LSF] \terror on parameters: [ " << ferr << " ]" << std::endl);
 
                             if(ferr<=numeric<T>::sqrt_ftol)
                             {
-                                Y_LSF_OUT(std::cerr << "[LSF] \t[- Convergence of Parameters -]" << std::endl);
+                                Y_LSF_OUT(std::cerr << "[LSF] \t[- convergence of parameters -]" << std::endl);
                                 goto CONVERGED;
                             }
                             //__________________________________________________
@@ -235,7 +248,7 @@ namespace upsylon
                             //__________________________________________________
                             if(!increase_lambda())
                             {
-                                Y_LSF_OUT(std::cerr << "[LSF] \t[- Spurious Parameters -]" << std::endl);
+                                Y_LSF_OUT(std::cerr << "[LSF] \t[- spurious parameters -]" << std::endl);
                                 goto CONVERGED; // local minimum...
                             }
                             goto FIND_STEP;
@@ -246,16 +259,27 @@ namespace upsylon
                         // successfull step: update and test convergence
                         //______________________________________________________
                         assert(D2_try<D2);
-                        D2_try = G.damp(D2, D2_try,verbose);
+                        D2_try       = G.damp(D2, D2_try,verbose);
+#if 0
+                        const T ferr = tao::fractional_error(aorg,atry);
+                        const bool var_cvg = (ferr<=numeric<T>::sqrt_ftol);
+                        Y_LSF_OUT(std::cerr << "[LSF] \tvariables error : [ " << ferr       << " ]"      << std::endl);
+                        Y_LSF_OUT(std::cerr << "[LSF]                     |_" << converged_text(var_cvg) << std::endl);
+#endif
                         tao::set(aorg,atry);
 
 
-                        const T D2_err = fabs_of(D2 - D2_try);
-                        Y_LSF_OUT(std::cerr << "[LSF] \tLeastSquares Error : [ " << D2_err/D2 << " ]" << std::endl);
+                        const T    D2_err  = fabs_of(D2 - D2_try);
+                        const bool lss_cvg = (D2_err <= ftol * D2);
 
-                        if( D2_err <= ftol * D2 )
+
+                        Y_LSF_OUT(std::cerr << "[LSF] \tsquares   error : [ " << D2_err/D2 << " ]"       << std::endl);
+                        Y_LSF_OUT(std::cerr << "[LSF]                     |_" << converged_text(lss_cvg) << std::endl);
+
+
+
+                        if( lss_cvg )
                         {
-                            Y_LSF_OUT(std::cerr << "[LSF] \t[+ Least Squares Convergence +]" << std::endl);
                             goto CONVERGED;
                         }
 
@@ -267,7 +291,7 @@ namespace upsylon
                         decrease_lambda();
                         alpha.ld(0);
                         beta.ld(0);
-                        Y_LSF_OUT(std::cerr << "[LSF] \tUpdating gradient..." << std::endl);
+                        Y_LSF_OUT(std::cerr << "[LSF] \tupdating gradient..." << std::endl);
                         D2 = sample.computeD2(F,aorg,beta,alpha,grad,used); // will be D2_try
                         Y_LSF_OUT(std::cerr << "[LSF] \t<cycle #" << cycle << "/>" << std::endl);
                     }
@@ -277,7 +301,8 @@ namespace upsylon
                     //
                     // D2_org, aorg and alpha are computed
                     //__________________________________________________________
-                    Y_LSF_OUT(std::cerr<<"[LSF] \tAnalysis after #cycles="<< cycle << std::endl);
+                    Y_LSF_OUT(std::cerr << "|" << std::endl);
+                    Y_LSF_OUT(std::cerr << "[LSF] \tanalysis after #cycles="<< cycle << std::endl);
                     const size_t ndat = sample.count();
 
                     size_t nprm = nvar;
@@ -291,13 +316,13 @@ namespace upsylon
 
                     if(nprm>ndat)
                     {
-                        Y_LSF_OUT(std::cerr<< "[LSF] \tMore parameters than data"<<std::endl);
+                        Y_LSF_OUT(std::cerr<< "[LSF] \tmore parameters than data"<<std::endl);
                         aerr.ld(-1);
                         return false;
                     }
                     else if(nprm==ndat)
                     {
-                        Y_LSF_OUT(std::cerr<< "[LSF] \tNo degree of freedom: interpolation"<<std::endl);
+                        Y_LSF_OUT(std::cerr<< "[LSF] \tno degree of freedom: interpolation"<<std::endl);
                         aerr.ld(0);
                         return true;
                     }
@@ -444,12 +469,12 @@ namespace upsylon
                         triplet<T> u = { 0,  uchk,   1      };  assert(u.b>0);assert(u.b<1);
                         triplet<T> g = { D2, G(u.b), D2_try };
 
-                        Y_LSF_OUT(std::cerr << "[LSF] \t\tprobes=" << u << std::endl);
-                        Y_LSF_OUT(std::cerr << "[LSF] \t\tD2_try=" << g << std::endl);
+                        //Y_LSF_OUT(std::cerr << "[LSF] \t\tprobes=" << u << std::endl);
+                        //Y_LSF_OUT(std::cerr << "[LSF] \t\tD2_try=" << g << std::endl);
 
                         if( g.b < D2_try )
                         {
-                            Y_LSF_OUT(std::cerr << "[LSF] \t\t[+ DAMPING +]" << std::endl);
+                            Y_LSF_OUT(std::cerr << "[LSF] \t[+ DAMPING +]" << std::endl);
                             minimize::run(G,u,g,utol);
                             const T ans = G(u.b);
                             Y_LSF_OUT(std::cerr << "[LSF] \t\tdamped = " << u.b << std::endl);
@@ -458,7 +483,7 @@ namespace upsylon
                         }
                         else
                         {
-                            Y_LSF_OUT(std::cerr << "[LSF] \t\t[+ ACCEPT +]" << std::endl);
+                            Y_LSF_OUT(std::cerr << "[LSF] \t[+ ACCEPT +]" << std::endl);
                             return G(1);
                         }
                     }
