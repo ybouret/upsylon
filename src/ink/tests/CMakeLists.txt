@@ -23,5 +23,5 @@ ADD_TEST(Crop    test-ink crop)
 ADD_TEST(Sub     test-ink sub)
 
 ADD_CUSTOM_TARGET(utest-ink
-COMMAND ${CMAKE_CTEST_COMMAND}
+COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-ink)

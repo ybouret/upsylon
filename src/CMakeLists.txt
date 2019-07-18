@@ -160,6 +160,6 @@ COMMENT "Built Core Libraries"
 )
 
 ADD_CUSTOM_TARGET(regression
-DEPENDS utest-main utest-m utest-chem utest-net
+DEPENDS utest-main utest-m utest-chem utest-lang utest-net utest-ink
 COMMENT "Performed Regression Tests" )
 
