@@ -13,8 +13,8 @@ ADD_TEST(Addr    test-net addr)
 ADD_TEST(Resolve test-net resolve localhost@8080)
 ADD_TEST(Info    test-net info)
 ADD_TEST(SockSet test-net sockset)
-ADD_TEST(IO      test-net IO)
+ADD_TEST(IO      test-net io)
 
 ADD_CUSTOM_TARGET(utest-net
-COMMAND ${CMAKE_CTEST_COMMAND} -V
+COMMAND ${CMAKE_CTEST_COMMAND}
 DEPENDS test-net)

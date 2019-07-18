@@ -14,7 +14,7 @@ Y_UTEST(io)
     }
 
 
-    net::socket_delay d = -1;
+    net::socket_delay d = 0.5;
     E.cycle(d);
 
 

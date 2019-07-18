@@ -35,7 +35,7 @@ Y_UTEST(fit_poly)
 
     Fit::Type<double>::CFunction f = Fit::Polynomial::Compute<double>;
     Fit::Type<double>::Function  F(f);
-    Fit::LeastSquares<double>    ls(false);
+    Fit::LeastSquares<double>    ls(true);
 
 
     matrix<double> Z(4,N);

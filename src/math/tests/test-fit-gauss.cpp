@@ -70,6 +70,12 @@ Y_UTEST(fit_gauss)
             const double y = F(x,aorg,sample.variables);
             fp("%g %g\n",x,y);
         }
+
+        {
+            ios::ocstream lfp(ios::cstderr);
+            sample.writeLog(lfp,aorg,aerr,used);
+        }
+
     }
     else
     {

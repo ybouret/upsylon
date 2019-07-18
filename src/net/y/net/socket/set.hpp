@@ -15,7 +15,6 @@ namespace upsylon
         class socket_set : public net_object
         {
         public:
-
             static const size_t capacity = FD_SETSIZE;  //!< system settings
 
             explicit socket_set();                      //!< allocate memory

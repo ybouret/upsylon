@@ -105,12 +105,12 @@ namespace upsylon
 
             //! Knuth shuffle of a[0..n-1]
             template <typename T>
-            inline void shuffle( T *a, const size_t n ) throw()
+            inline void shuffle( T *a, size_t n ) throw()
             {
                 assert(!(NULL==a&&n>0));
-                if( n > 1 )
+                if( n-- > 1 )
                 {
-                    for( size_t i=n-1;i>0;--i)
+                    for( size_t i=n;i>0;--i)
                     {
                         const size_t j   = leq(i);
                         bswap( a[i], a[j] );

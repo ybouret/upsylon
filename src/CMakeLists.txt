@@ -158,3 +158,8 @@ ADD_CUSTOM_TARGET(core
 DEPENDS y y-lang y-m y-chem y-net
 COMMENT "Built Core Libraries"
 )
+
+ADD_CUSTOM_TARGET(regression
+DEPENDS utest-main utest-m utest-chem utest-net
+COMMENT "Performed Regression Tests" )
+

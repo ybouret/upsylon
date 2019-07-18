@@ -93,6 +93,7 @@ namespace upsylon
             //Y_NET_OUT();
             Y_NET_CHK();
 #endif
+
         }
 
 
@@ -115,11 +116,13 @@ namespace upsylon
 
 
             const socket_type lhs = s.sock;
+
             // low-level check
             if( FD_ISSET(lhs,ufd) )
             {
                 throw upsylon::exception("%s(multiple system descriptor)",fn);
             }
+            
             // high-level check
             size_t            idx = 0;
             if( core::locate(lhs,sock,size,__compare_socks, idx) )

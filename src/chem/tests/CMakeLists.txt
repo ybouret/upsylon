@@ -23,5 +23,5 @@ ADD_TEST(Kinetics    test-chem kinetics ${HERE}/acetic.lua)
 ADD_TEST(Fluo        test-chem fluo)
 
 ADD_CUSTOM_TARGET(utest-chem
-COMMAND ${CMAKE_CTEST_COMMAND} -V
+COMMAND ${CMAKE_CTEST_COMMAND}
 DEPENDS test-chem)
