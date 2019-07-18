@@ -15,9 +15,17 @@ namespace upsylon
             {
             }
 
-            const char * LeastSquares_:: converged_text(const bool flag) throw()
+            const char * LeastSquares_:: ConvergedText(const bool flag) throw()
             {
-                return (flag? "converged" : "not converged");
+                return (flag?
+                        "<  converged  >" :
+                        "<not converged>");
+            }
+
+            std::ostream & LeastSquares_:: OutputLine(std::ostream &os, size_t n)
+            {
+                while(n-->0) os << '_';
+                return os;
             }
         }
 

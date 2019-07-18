@@ -21,10 +21,16 @@ namespace upsylon
             class LeastSquares_
             {
             public:
+                static const int    initial_exponent = -4; //!< initial bias
+                static const size_t num_arrays       =  3; //!< beta/delta/atry
                 virtual ~LeastSquares_() throw(); //!< destructor
 
                 //! shared text
-                static const char *converged_text(const bool flag) throw();
+                static const char *ConvergedText(const bool flag) throw();
+
+                //! draw sep line
+                static std::ostream &OutputLine( std::ostream &, size_t n );
+
 
             protected:
                 explicit LeastSquares_() throw(); //!< constructor
@@ -76,7 +82,7 @@ namespace upsylon
 
                 //! initialize LeastSquares
                 inline explicit LeastSquares(const bool is_verbose=false) :
-                arrays<T>(3),
+                arrays<T>(num_arrays),
                 p(0),
                 lam(0),
                 alpha(),
@@ -93,13 +99,13 @@ namespace upsylon
                 inline virtual ~LeastSquares() throw() {}
 
                 //! p < pmin => lam = 0
-                static inline int get_pmin() throw() { return -int(numeric<T>::dig);       }
+                static inline int get_min_exponent() throw() { return -int(numeric<T>::dig);       }
 
                 //! p > pmax => overflow and early return
-                static inline int get_pmax() throw() { return int(numeric<T>::max_10_exp); }
+                static inline int get_max_exponent() throw() { return int(numeric<T>::max_10_exp); }
 
                 //! initial p value
-                static inline int get_pini() throw() { return -4; }
+                static inline int get_ini_exponent() throw() { return initial_exponent; }
 
                 //! try to fit sample
                 inline bool fit(SampleType<T>     &sample,
@@ -145,7 +151,7 @@ namespace upsylon
                     //----------------------------------------------------------
                     // initial step damping
                     //----------------------------------------------------------
-                    p   = get_pini();
+                    p   = get_ini_exponent();
                     compute_lam();
                     Y_LSF_OUT(std::cerr << "[LSF] \tstarting with lambda=" << lam << "/p=" << p << std::endl);
 
@@ -257,27 +263,16 @@ namespace upsylon
 
                         //______________________________________________________
                         //
-                        // successfull step: update and test convergence
+                        // successfull step: check numeric damping
                         //______________________________________________________
                         assert(D2_try<D2);
-                        D2_try       = G.damp(D2, D2_try,verbose);
-#if 0
-                        const T ferr = tao::fractional_error(aorg,atry);
-                        const bool var_cvg = (ferr<=numeric<T>::sqrt_ftol);
-                        Y_LSF_OUT(std::cerr << "[LSF] \tvariables error : [ " << ferr       << " ]"      << std::endl);
-                        Y_LSF_OUT(std::cerr << "[LSF]                     |_" << converged_text(var_cvg) << std::endl);
-#endif
+                        D2_try       = G.lookForDamping(D2, D2_try,verbose);
                         tao::set(aorg,atry);
-
-
                         const T    D2_err  = fabs_of(D2 - D2_try);
                         const bool lss_cvg = (D2_err <= ftol * D2);
 
-
                         Y_LSF_OUT(std::cerr << "[LSF] \tsquares   error : [ " << D2_err/D2 << " ]"       << std::endl);
-                        Y_LSF_OUT(std::cerr << "[LSF]                     |_" << converged_text(lss_cvg) << std::endl);
-
-
+                        Y_LSF_OUT(std::cerr << "[LSF]                     |_" << ConvergedText(lss_cvg) << std::endl);
 
                         if( lss_cvg )
                         {
@@ -302,7 +297,7 @@ namespace upsylon
                     //
                     // D2_org, aorg and alpha are computed
                     //__________________________________________________________
-                    Y_LSF_OUT(std::cerr << "|" << std::endl);
+                    Y_LSF_OUT(OutputLine(std::cerr << "|",72) << std::endl);
                     Y_LSF_OUT(std::cerr << "[LSF] \tanalysis after #cycles="<< cycle << std::endl);
                     const size_t ndat = sample.count();
 
@@ -345,6 +340,8 @@ namespace upsylon
                     {
                         if(used[i]) aerr[i] = sqrt_of( max_of<T>(0,dS*curv[i][i]) );
                     }
+                    Y_LSF_OUT(std::cerr<< "[LSF]"<<std::endl);
+                    Y_LSF_OUT(OutputLine(std::cerr << "|",72) << std::endl << std::endl);
                     return true;
                 }
 
@@ -386,17 +383,17 @@ namespace upsylon
                 //! increase lambda with overflow control
                 bool increase_lambda() throw()
                 {
-                    static const int pmax = get_pmax();
+                    static const int pmax = get_max_exponent();
                     if(++p>pmax) return false; //!< overflow
                     compute_lam();
-                    Y_LSF_OUT(std::cerr << "[LSF] \t(+) lam=" << lam << "/p=" << p << std::endl);
+                    Y_LSF_OUT(std::cerr << "[LSF] \t(+) lambda=" << lam  << std::endl);
                     return true;
                 }
 
                 //! decrease lambda with underflow control
                 void decrease_lambda() throw()
                 {
-                    static const int pmin = get_pmin();
+                    static const int pmin = get_min_exponent();
 
                     if(--p<pmin)
                     {
@@ -407,7 +404,7 @@ namespace upsylon
                     {
                         compute_lam();
                     }
-                    Y_LSF_OUT(std::cerr << "[LSF] \t(-) lam=" << lam << "/p=" << p << std::endl);
+                    Y_LSF_OUT(std::cerr << "[LSF] \t(-) lambda="  << lam << std::endl);
                 }
 
                 //! compute curvature according to current lamnda
@@ -457,9 +454,9 @@ namespace upsylon
                     }
 
                     //! check if not too fast and slow down
-                    inline T damp(const T    D2,
-                                  const T    D2_try,
-                                  const bool verbose)
+                    inline T lookForDamping(const T    D2,
+                                            const T    D2_try,
+                                            const bool verbose)
                     {
                         static const T utol = T(1e-3);
                         static const T uchk = T(1)-utol;
@@ -470,12 +467,9 @@ namespace upsylon
                         triplet<T> u = { 0,  uchk,   1      };  assert(u.b>0);assert(u.b<1);
                         triplet<T> g = { D2, G(u.b), D2_try };
 
-                        //Y_LSF_OUT(std::cerr << "[LSF] \t\tprobes=" << u << std::endl);
-                        //Y_LSF_OUT(std::cerr << "[LSF] \t\tD2_try=" << g << std::endl);
-
                         if( g.b < D2_try )
                         {
-                            Y_LSF_OUT(std::cerr << "[LSF] \t[+ DAMPING +]" << std::endl);
+                            Y_LSF_OUT(std::cerr << "[LSF] \t[ increasing => damping ]" << std::endl);
                             minimize::run(G,u,g,utol);
                             const T ans = G(u.b);
                             Y_LSF_OUT(std::cerr << "[LSF] \t\tdamped = " << u.b << std::endl);
@@ -484,7 +478,7 @@ namespace upsylon
                         }
                         else
                         {
-                            Y_LSF_OUT(std::cerr << "[LSF] \t[+ ACCEPT +]" << std::endl);
+                            Y_LSF_OUT(std::cerr << "[LSF] \t[ decreasing => forward ]" << std::endl);
                             return G(1);
                         }
                     }
