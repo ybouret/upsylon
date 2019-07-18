@@ -176,5 +176,5 @@ ADD_TEST(data:heap        test-main heap)
 ADD_TEST(data:avl         test-main avl)
 
 ADD_CUSTOM_TARGET(utest-main
-COMMAND ${CMAKE_CTEST_COMMAND}
+COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-main)
