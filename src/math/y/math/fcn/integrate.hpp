@@ -68,10 +68,11 @@ namespace upsylon
                                         const T w,
                                         FUNC  & F)
             {
+                static const T      half  = T(0.5);
                 static const size_t iter  = 1 << (n-2);
                 T                   value[iter];
                 const T             delta = w/iter;
-                T                   x     = a + T(0.5) * delta;
+                T                   x     = a + half*delta;
                 for(size_t j=0;j<iter;++j,x+=delta)
                 {
                     value[j] = F(x);
@@ -82,7 +83,7 @@ namespace upsylon
                 {
                     sum += value[j];
                 }
-                return T(0.5)*(s+(w*sum)/iter);
+                return half*(s+(w*sum)/iter);
             }
 
 
@@ -198,7 +199,7 @@ Y_INTG_EPILOG()
                     auto_ptr< range<T> > curr = todo.query();
                     if( quad(curr->sum,F,curr->ini,curr->end,ftol) )
                     {
-                        //std::cerr << "[*] count=" << count << " for [" << curr->ini << ":" << curr->end << "]" << std::endl;
+                        std::cerr << "[*] count=" << count << " for [" << curr->ini << ":" << curr->end << "]" << std::endl;
                         done.push_back( curr.yield() );
                     }
                     else
@@ -206,7 +207,7 @@ Y_INTG_EPILOG()
                         const T mid = (curr->ini+curr->end)/2;
                         todo.store( new range<T>(mid,curr->end) ); ++count;
                         todo.store( new range<T>(curr->ini,mid) ); ++count;
-                        //std::cerr << "[+] count=" << count << " for [" << curr->ini << ":" << curr->end << "]" << ", mid=" << mid << std::endl;
+                        std::cerr << "[+] count=" << count << " for [" << curr->ini << ":" << curr->end << "]" << ", mid=" << mid << std::endl;
                     }
                 }
                 assert(done.size>0);
