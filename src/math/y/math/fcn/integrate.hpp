@@ -95,11 +95,11 @@ namespace upsylon
         {
 
 //! the integration routine
-#define Y_INTG_KERNEL trpz
-//#define Y_INTG_KERNEL trapezoidal
+//#define Y_INTG_KERNEL trpz
+#define Y_INTG_KERNEL trapezoidal
 
             //! prolog of quad step
-#define Y_INTG_PROLOG(N)                    \
+#define Y_INTG_PROLOG(N)                             \
 st = kernel::Y_INTG_KERNEL<T,FUNC,N>(st,a,w,F);      \
 s  = ( T(4.0) * st - old_st )/T(3.0)
 
@@ -199,7 +199,7 @@ Y_INTG_EPILOG()
                     auto_ptr< range<T> > curr = todo.query();
                     if( quad(curr->sum,F,curr->ini,curr->end,ftol) )
                     {
-                        std::cerr << "[*] count=" << count << " for [" << curr->ini << ":" << curr->end << "]" << std::endl;
+                        //std::cerr << "[*] count=" << count << " for [" << curr->ini << ":" << curr->end << "]" << std::endl;
                         done.push_back( curr.yield() );
                     }
                     else
