@@ -260,6 +260,35 @@ namespace upsylon
                     }
                 }
 
+                //! display status
+                template <typename T> inline
+                void display_status(std::ostream &os, const array<T> &aorg, const array<bool> &used, const char *pfx=NULL) const
+                {
+                    const Variables &self = *this;
+                    const size_t     sz   = self.get_max_name_size();
+                    const size_t     nv   = self.size();
+                    Strings          astr(nv,as_capacity); const size_t am = fillStrings(astr,aorg);
+
+                    size_t iv = 1;
+                    for(const_iterator i=begin();i!=end();++i,++iv)
+                    {
+                        const string &name  = (**i).name;
+                        if(pfx) os << pfx;
+                        string_display::align(os,name,sz);
+                        string_display::align(os << " = ",astr[iv],am);
+                        const bool    active = self(used,name);
+                        if(active)
+                        {
+                            os << "[ USED  ]";
+                        }
+                        else
+                        {
+                            os << "[ FIXED ]";
+                        }
+                        os << std::endl;
+                    }
+                }
+
             private:
                 void create_from_list(const string &ids );
             };
