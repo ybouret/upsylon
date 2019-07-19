@@ -166,11 +166,11 @@ Y_INTG_EPILOG()
             template <typename T> class range : public object
             {
             public:
-                const T ini;  //!< start point
-                const T end;  //!< end point
-                T       sum;  //!< local sum
-                range  *next; //!< for list/pool
-                range  *prev; //!< for list
+                const T ini;   //!< start point
+                const T end;   //!< end point
+                T       sum;   //!< local sum
+                range  *next;  //!< for list/pool
+                range  *prev;  //!< for list
 
                 //! constructor
                 inline explicit range(const T a,const T b) throw() :
@@ -205,8 +205,23 @@ Y_INTG_EPILOG()
                     else
                     {
                         const T mid = (curr->ini+curr->end)/2;
-                        todo.store( new range<T>(mid,curr->end) ); ++count;
-                        todo.store( new range<T>(curr->ini,mid) ); ++count;
+                        {
+                            const T end   = curr->end;
+                            const T width = abs_of(end-mid);
+                            if(width>numeric<T>::minimum)
+                            {
+                                todo.store( new range<T>(mid,end) ); ++count;
+                            }
+                        }
+
+                        {
+                            const T ini   = curr->ini;
+                            const T width = abs_of(mid-ini);
+                            if(width>numeric<T>::minimum)
+                            {
+                                todo.store( new range<T>(ini,mid) ); ++count;
+                            }
+                        }
                         std::cerr << "[+] count=" << count << " for [" << curr->ini << ":" << curr->end << "]" << ", mid=" << mid << std::endl;
                     }
                 }
