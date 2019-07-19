@@ -13,6 +13,7 @@ namespace upsylon
 {
     namespace math
     {
+
         namespace kernel
         {
             //! summation for trapeze rule
@@ -64,10 +65,10 @@ namespace upsylon
             }
 
             template <typename T,typename FUNC,const size_t n>
-            static inline T trapezoidal(const T s,
-                                        const T a,
-                                        const T w,
-                                        FUNC  & F)
+            static inline T trapezes(const T s,
+                                     const T a,
+                                     const T w,
+                                     FUNC  & F)
             {
                 static const T      half  = T(0.5);
                 static const size_t iter  = 1 << (n-2);
@@ -93,21 +94,33 @@ namespace upsylon
         //! functions for integration
         struct integrate
         {
-            static const size_t max_calls = 11; // 2^(nmax-1)-1 calls
-            static const size_t max_iters = 1 << (max_calls-2);
 
+            static const size_t min_level = 2;  // 2
+            static const size_t max_level = 11; // 2^(max_level-1)-1 calls
+            static const size_t max_iters = 1 << (max_level-2);
+            static const size_t warmup    = (max_level+min_level)>>1-1;
+
+            //! refine a value, initialized with 0.5*w*(F(a)+F(b))
             template <typename T,typename FUNC> static inline
-            T trapezes( const T s, const T a, const T w, FUNC &F, const size_t n)
+            T trapezes(const T      s,
+                       const T      a,
+                       const T      w,
+                       FUNC        &F,
+                       const size_t level)
             {
-                assert(n<=max_calls);
+                assert(level>=min_level);
+                assert(level<=max_level);
                 static const T      half  = T(0.5);
-                const  size_t       iter  = 1 << (n-2);
-                T                   value[max_iters];
-                const T             delta = w/iter;
-                T                   x     = a + half*delta;
-                for(size_t j=0;j<iter;++j,x+=delta)
+                const  size_t       iter  = 1 << (level-2);  // local number of iterations
+                T                   value[max_iters];        // local stack
+
                 {
-                    value[j] = F(x);
+                    const T             delta = w/iter;
+                    T                   x     = a + half*delta;
+                    for(size_t j=0;j<iter;++j,x+=delta)
+                    {
+                        value[j] = F(x);
+                    }
                 }
                 qsort(value,iter,sizeof(T),kernel::cmp_incr_abs<T>);
                 T sum = 0;
@@ -116,6 +129,35 @@ namespace upsylon
                     sum += value[j];
                 }
                 return half*(s+(w*sum)/iter);
+            }
+
+            template <typename T, typename FUNC> static inline
+            bool try_quad(T &s, FUNC &F, const T a, const T b, const T ftol )
+            {
+                static const T four  = T(4);
+                static const T three = T(3);
+
+                // initialize at level 1
+                const T w         = b-a;
+                T       sum_trapz = (s=T(0.5) * w * (F(b)+F(a)));
+                T       sum_accel = sum_trapz;
+                T       old_trapz = sum_trapz;
+                T       old_accel = sum_accel;
+
+                for(size_t level=2;level<=max_level;++level)
+                {
+                    sum_trapz = trapezes(sum_trapz, a, w, F, level);
+                    sum_accel = (s=(four*sum_trapz-old_trapz)/three);
+                    if(level>warmup)
+                    {
+                        // test convergences
+                    }
+                    old_trapz = sum_trapz;
+                    old_accel = sum_accel;
+                }
+
+                return false;
+
             }
 
             //! the integration routine
@@ -179,7 +221,7 @@ Y_INTG_EPILOG()
                     ds     = ds_new;
                     old_st = st;
                     old_s  = s;
-                    if(++n>max_calls) return false;
+                    if(++n>max_level) return false;
                     if(n>5&&decreased)     break;
                 }
 
@@ -194,7 +236,7 @@ Y_INTG_EPILOG()
                     {
                         return true;
                     }
-                    if(++n>max_calls) return false;
+                    if(++n>max_level) return false;
                     ds     = ds_new;
                     old_st = st;
                     old_s  = s;
