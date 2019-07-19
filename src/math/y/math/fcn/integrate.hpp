@@ -7,6 +7,7 @@
 #include "y/ptr/auto.hpp"
 #include "y/core/list.hpp"
 #include <cstdlib>
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -95,14 +96,14 @@ namespace upsylon
         {
 
 //! the integration routine
-//#define Y_INTG_KERNEL trpz
-#define Y_INTG_KERNEL trapezoidal
+#define Y_INTG_KERNEL trpz
+//#define Y_INTG_KERNEL trapezoidal
 
             //! prolog of quad step
 #define Y_INTG_PROLOG(N)                             \
 st = kernel::Y_INTG_KERNEL<T,FUNC,N>(st,a,w,F);      \
-s  = ( T(4.0) * st - old_st )/T(3.0)
-
+s  = ( T(4.0) * st - old_st )/T(3.0);\
+s  = ( (st-old_st) + (st+st) )/T(3.0)
             //! epilog for quad step
 #define Y_INTG_EPILOG()                     \
 old_st  = st;                               \
@@ -151,11 +152,11 @@ Y_INTG_EPILOG()
                 Y_INTG_PROLOG(11);// +512: 1025 evals
                 Y_INTG_CHECK();
 
-#if 0
+#if 1
                 {
-                    const T err       = __fabs(s-old_s);       \
-                    const T threshold = __fabs( ftol *old_s ); \
-                    fprintf( stderr, "s=%.15g/old_s=%.15g: err=%.15g | thr=%.15g on [%.15g:%.15g]\n", s, old_s, err, threshold,a,b);
+                    const T err       = fabs_of(s-old_s);       \
+                    const T threshold = fabs_of( ftol *old_s ); \
+                    fprintf( stderr, "s=%.5e/old_s=%.5e: err=%.5e | thr=%.5e on [%.5e:%.5e]\n", s, old_s, err, threshold,a,b);
                 }
 #endif
                 
@@ -196,6 +197,7 @@ Y_INTG_EPILOG()
                 ++count;
                 while(todo.size>0)
                 {
+			if(count>1000) throw exception("fuck");
                     auto_ptr< range<T> > curr = todo.query();
                     if( quad(curr->sum,F,curr->ini,curr->end,ftol) )
                     {
