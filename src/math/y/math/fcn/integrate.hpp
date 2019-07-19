@@ -86,14 +86,37 @@ namespace upsylon
                 }
                 return half*(s+(w*sum)/iter);
             }
-
-
-
         }
+
+
 
         //! functions for integration
         struct integrate
         {
+            static const size_t max_calls = 11; // 2^(nmax-1)-1 calls
+            static const size_t max_iters = 1 << (max_calls-2);
+
+            template <typename T,typename FUNC> static inline
+            T trapezes( const T s, const T a, const T w, FUNC &F, const size_t n)
+            {
+                assert(n<=max_calls);
+                static const T      half  = T(0.5);
+                const  size_t       iter  = 1 << (n-2);
+                T                   value[max_iters];
+                const T             delta = w/iter;
+                T                   x     = a + half*delta;
+                for(size_t j=0;j<iter;++j,x+=delta)
+                {
+                    value[j] = F(x);
+                }
+                qsort(value,iter,sizeof(T),kernel::cmp_incr_abs<T>);
+                T sum = 0;
+                for(size_t j=0;j<iter;++j)
+                {
+                    sum += value[j];
+                }
+                return half*(s+(w*sum)/iter);
+            }
 
             //! the integration routine
 #define Y_INTG_KERNEL trpz
@@ -102,7 +125,8 @@ namespace upsylon
             //! prolog of quad step
 #define Y_INTG_PROLOG(N)                             \
 st = kernel::Y_INTG_KERNEL<T,FUNC,N>(st,a,w,F);      \
-s  = ( T(4.0) * st - old_st )/T(3.0)
+s  = ( T(4.0) * st - old_st )/T(3.0);                \
+ds = fabs_of(s-old_s)
 
             //! epilog for quad step
 #define Y_INTG_EPILOG()                     \
@@ -110,9 +134,10 @@ old_st  = st;                               \
 old_s   = s
             //! check convergence in quad step
 #define Y_INTG_CHECK() \
-if( fabs_of(s-old_s) <= fabs_of( ftol *old_s ) ) { \
+if( ds <= fabs_of( ftol *old_s ) ) { \
 return true;\
 }
+
 
             //! warm up step
 #define Y_INTG_FAST(N)                      \
@@ -129,16 +154,53 @@ Y_INTG_EPILOG()
             template <typename T,typename FUNC> static inline
             bool quad( T &s, FUNC &F, const T a, const T b, const T ftol )
             {
+                static const T four  = T(4);
+                static const T three = T(3);
+
                 const T w       = b-a;
                 // initialize sum with trapezoidal
                 T       st      = T(0.5) * w * (F(b)+F(a));
                 s               = st;
+                T       ds      = 0;
 
                 // previous values
                 T       old_st  = st;
                 T       old_s   = s;
 
+                // while error increases
+                size_t n = 2;
+                while(true)
+                {
+                    st = trapezes(st,a,w,F,n);
+                    s  = (four*st-old_st)/three;
+                    const T    ds_new    = fabs_of(s-old_s);
+                    const bool decreased = (ds_new <= ds);
+                    //std::cerr << "s=" << old_s << "-> " << s << ", ds=" << ds << "->" << ds_new << std::endl;
+                    ds     = ds_new;
+                    old_st = st;
+                    old_s  = s;
+                    if(++n>max_calls) return false;
+                    if(n>5&&decreased)     break;
+                }
 
+                // while error decreases of tolerance reached
+                while(true)
+                {
+                    st = trapezes(st,a,w,F,n);
+                    s  = (four*st-old_st)/three;
+                    const T    ds_new    = fabs_of(s-old_s);
+                    //std::cerr << "s=" << old_s << "-> " << s << ", ds=" << ds << "->" << ds_new << std::endl;
+                    if( (ds_new >= ds) ||  ds <= fabs_of( ftol * old_s ) )
+                    {
+                        return true;
+                    }
+                    if(++n>max_calls) return false;
+                    ds     = ds_new;
+                    old_st = st;
+                    old_s  = s;
+                }
+
+#if 0
                 Y_INTG_FAST(2); // +1 : 3  evals
                 Y_INTG_FAST(3); // +2 : 5  evals
                 Y_INTG_FAST(4); // +4 : 9  evals
@@ -151,6 +213,7 @@ Y_INTG_EPILOG()
                 Y_INTG_TEST(10); // +256: 513 evals
                 Y_INTG_PROLOG(11);// +512: 1025 evals
                 Y_INTG_CHECK();
+#endif
 
 #if 0
                 {
