@@ -12,7 +12,7 @@ namespace {
         return square_of(cos_of(x))/(2*numeric<T>::pi);
     }
 
-
+    // intg(0->10) : 0.5836707004343648
     template <typename T>
     static inline T g(const T x )
     {
@@ -55,10 +55,12 @@ namespace {
     static inline void do_test()
     {
         std::cerr << std::endl << "-- testing with " << sizeof(T)*8 << " bits" << std::endl;
+
         T sum = 0;
         {
-            const T a = T(0);
-            const T b = T(2*numeric<T>::pi);
+            std::cerr << " |_f: 0.5" << std::endl;
+            const T a    = T(0);
+            const T b    = T(2*numeric<T>::pi);
             const T ftol = T(1e-4);
             if(integrate::quad(sum,f<T>,a,b,ftol))
             {
@@ -75,8 +77,9 @@ namespace {
         }
 
         {
-            const T a = T(0);
-            const T b = T(10);
+            std::cerr << " |_g: 0.5836707004343648" << std::endl;
+            const T a    = T(0);
+            const T b    = T(10);
             const T ftol = T(1e-12);
             if(integrate::quad(sum,g<T>,a,b,ftol))
             {
