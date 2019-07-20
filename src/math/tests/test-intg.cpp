@@ -16,7 +16,7 @@ namespace {
     template <typename T>
     static inline T g(const T x )
     {
-        return sin_of(x*x);
+        return sin_of(T(0.2)*x*x);
     }
 
 
@@ -77,9 +77,9 @@ namespace {
         }
 
         {
-            std::cerr << " |_g: 0.5836707004343648" << std::endl;
+            std::cerr << " |_g:  " << std::endl;
             const T a    = T(0);
-            const T b    = T(10);
+            const T b    = T(4);
             const T ftol = T(1e-12);
             if(integrate::quad(sum,g<T>,a,b,ftol))
             {
@@ -92,7 +92,7 @@ namespace {
             std::cerr << "sum1=" << sum << std::endl;
 
             size_t  count = 0;
-            sum = integrate::compute(f<T>,a,b,ftol,&count);
+            sum = integrate::compute(g<T>,a,b,ftol,&count);
             std::cerr << "sum2=" << sum << ", count=" << count << std::endl;
         }
     }

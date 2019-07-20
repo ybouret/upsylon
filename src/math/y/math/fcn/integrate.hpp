@@ -81,23 +81,28 @@ namespace upsylon
                 T       old_accel = 0;
 
                 // iterate
+                //std::cerr << "quad([" << a << ":" << b << "])" << std::endl;
                 for(size_t level=2;level<=max_level;++level)
                 {
                     sum_trapz = trapezes(sum_trapz, a, w, F, level);  // trapezes at this level
                     sum_accel = (s=(four*sum_trapz-old_trapz)/three); // Simpson's at this level
                     if(level>warmup)
                     {
+
                         // test convergences
                         {
                             const T delta_trapz = fabs_of( sum_trapz - old_trapz );
+                            //std::cerr << "\ttrapz: " << old_trapz << "-> " << sum_trapz << ", delta=" << delta_trapz << std::endl;
                             if( delta_trapz <= fabs( ftol * old_trapz ) )
                             {
                                 return true;
                             }
                         }
 
+                        if(true)
                         {
                             const T delta_accel = fabs_of( sum_accel - old_accel );
+                            //std::cerr << "\taccel: " << old_accel << "-> " << sum_accel << ", delta=" << delta_accel << std::endl;
                             if( delta_accel <= fabs( ftol * old_accel ) )
                             {
                                 return true;
@@ -148,7 +153,7 @@ namespace upsylon
                 ++count;
                 while(todo.size>0)
                 {
-                    if(count>1000) throw exception("fuck");
+                    if(count>1000) throw exception("intg failure");
                     auto_ptr< range<T> > curr = todo.query();
                     if( quad(curr->sum,F,curr->ini,curr->end,ftol) )
                     {
@@ -157,6 +162,7 @@ namespace upsylon
                     }
                     else
                     {
+                        // failure => split
                         const T mid = (curr->ini+curr->end)/2;
                         {
                             const T end   = curr->end;
@@ -179,12 +185,12 @@ namespace upsylon
                     }
                 }
                 assert(done.size>0);
-                std::cerr << "sum of " << done.size << " ranges" << std::endl;
+                //std::cerr << "sum of " << done.size << " ranges" << std::endl;
                 T sum = 0;
                 while(done.size>0)
                 {
-                    T tmp = 0; quad(tmp, F, done.head->ini, done.head->end, ftol);
-                    std::cerr << "[" << done.head->ini << ":" << done.head->end << "]\t:\t" << done.head->sum << " /\t" << tmp << std::endl;
+                    T tmp = 0; assert(quad(tmp, F, done.head->ini, done.head->end, ftol));
+                    //std::cerr << "[" << done.head->ini << ":" << done.head->end << "]\t:\t" << done.head->sum << " /\t" << tmp << std::endl;
                     sum += done.head->sum;
                     delete done.pop_front();
                 }
