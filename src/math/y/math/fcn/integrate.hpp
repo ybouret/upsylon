@@ -181,16 +181,12 @@ namespace upsylon
                                 todo.store( new range<T>(ini,mid) ); ++count;
                             }
                         }
-                        //std::cerr << "[+] count=" << count << " for [" << curr->ini << ":" << curr->end << "]" << ", mid=" << mid << std::endl;
                     }
                 }
                 assert(done.size>0);
-                //std::cerr << "sum of " << done.size << " ranges" << std::endl;
                 T sum = 0;
                 while(done.size>0)
                 {
-                    T tmp = 0; assert(quad(tmp, F, done.head->ini, done.head->end, ftol));
-                    //std::cerr << "[" << done.head->ini << ":" << done.head->end << "]\t:\t" << done.head->sum << " /\t" << tmp << std::endl;
                     sum += done.head->sum;
                     delete done.pop_front();
                 }
