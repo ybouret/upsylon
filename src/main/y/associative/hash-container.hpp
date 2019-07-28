@@ -181,9 +181,9 @@ namespace upsylon
             return table.allocated_bytes();
         }
 
-        //! fast removal
+        //! fast removal of bad data
         template <typename FUNC>
-        inline void remove_if( FUNC &is_bad )
+        inline void remove_data_if( FUNC &is_bad_data )
         {
             for(size_t i=0;i<table.slots;++i)
             {
@@ -193,8 +193,40 @@ namespace upsylon
                 {
                     while(src.size)
                     {
-                        type       &data = src.head->data;
-                        if(is_bad(data))
+                        const_type &data = src.head->data;
+                        if(is_bad_data(data))
+                        {
+                            table.__free( src.pop_front() );
+                        }
+                        else
+                        {
+                            tmp.push_back( src.pop_front() );
+                        }
+                    }
+                    src.swap_with(tmp);
+                }
+                catch(...)
+                {
+                    src.merge_front(tmp);
+                    throw;
+                }
+            }
+        }
+
+        //! fast removal of bad data
+        template <typename FUNC>
+        inline void remove_key_if( FUNC &is_bad_key )
+        {
+            for(size_t i=0;i<table.slots;++i)
+            {
+                slot_type &src = table.slot[i];
+                slot_type  tmp;
+                try
+                {
+                    while(src.size)
+                    {
+                        const_key_type &key = src.head->key();
+                        if(is_bad_key(key))
                         {
                             table.__free( src.pop_front() );
                         }

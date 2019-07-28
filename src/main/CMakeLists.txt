@@ -252,6 +252,12 @@ SET(kr_bc_srcs ${kr_bc_decl} ${kr_bc_code})
 SOURCE_GROUP( kr/bc FILES ${kr_bc_srcs} )
 INSTALL( FILES ${kr_bc_decl} DESTINATION include/y/kr/bc )
 
+FILE(GLOB sparse_decl y/sparse/*.h*)
+FILE(GLOB sparse_code y/sparse/*.cpp)
+SET(sparse_srcs ${sparse_decl} ${sparse_code})
+SOURCE_GROUP( sparse FILES ${sparse_srcs} )
+INSTALL( FILES ${sparse_decl} DESTINATION include/y/sparse )
+
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
 ${os_srcs}
@@ -289,6 +295,7 @@ ${rtld_srcs}
 ${lang_srcs} ${lang_pattern_srcs} ${lang_lexical_srcs} ${lexical_plugin_srcs}
 ${geometry_srcs}
 ${kr_sc_srcs} ${kr_bc_srcs}
+${sparse_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )

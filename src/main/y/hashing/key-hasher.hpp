@@ -47,6 +47,17 @@ namespace upsylon
 
     };
 
+    //! dumping an index as a key
+    class key_dumper
+    {
+    public:
+        inline  key_dumper() throw() {} //!< constructor
+        inline ~key_dumper() throw() {} //!< destructor
+        inline size_t operator()(size_t k) const throw() { return k; } //!< dumping...
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(key_dumper);
+    };
+
 }
 #endif
 

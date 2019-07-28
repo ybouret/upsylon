@@ -175,6 +175,9 @@ ADD_TEST(data:arrays      test-main arrays)
 ADD_TEST(data:heap        test-main heap)
 ADD_TEST(data:avl         test-main avl)
 
+SOURCE_GROUP(sparse FILES test-sparse-array.cpp)
+ADD_TEST(sparse:array test-main sparse_array)
+
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-main)

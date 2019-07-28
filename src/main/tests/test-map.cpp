@@ -123,7 +123,7 @@ namespace
 
         }
         std::cerr << "..ini=" << db.size() << std::endl;
-        db.remove_if( is_bad<T>  );
+        db.remove_data_if( is_bad<T>  );
         std::cerr << "..end=" << db.size() << std::endl;
     }
     

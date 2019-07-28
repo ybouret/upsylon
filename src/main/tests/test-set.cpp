@@ -153,7 +153,7 @@ namespace
                 }
             }
             std::cerr << "..ini=" << db.size() << std::endl;
-            db.remove_if( is_bad< dummy<KEY,T> > );
+            db.remove_data_if( is_bad< dummy<KEY,T> > );
             std::cerr << "..end=" << db.size() << std::endl;
 
         }

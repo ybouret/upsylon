@@ -455,7 +455,7 @@ namespace upsylon
             }
         }
 
-        //! default initialisation
+        //! default initialisation on a zero memory
         inline void init0()
         {
             size_t        count = 0;

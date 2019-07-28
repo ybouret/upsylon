@@ -135,6 +135,8 @@ Y_UTEST_INIT(128)
     Y_UTEST(kr_bc);
     Y_UTEST(kr_sc);
     Y_UTEST(uuid);
+
+    Y_UTEST(sparse_array);
 }
 Y_UTEST_EXEC()
 
