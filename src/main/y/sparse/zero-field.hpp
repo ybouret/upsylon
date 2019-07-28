@@ -29,8 +29,8 @@ namespace upsylon
         class zero_field : public zero_field_
         {
         public:
-            Y_DECL_ARGS(T,type);
-            const_type &zero;
+            Y_DECL_ARGS(T,type); //!< aliases
+            const_type &zero;    //!< the 'zero' object for the implementation
 
             //! C++ setup
             inline explicit zero_field() :

@@ -15,14 +15,13 @@ namespace upsylon
         class array_info
         {
         public:
-            virtual ~array_info() throw();
+            virtual ~array_info() throw(); //!< cleanup
 
         protected:
-            explicit array_info(const size_t n);
-            size_t       size_; //!< virtual size
-
-            void   check_index(const size_t n) const;
-            void   insert_failure(const size_t i) const;
+            explicit array_info(const size_t n);           //!< initialize virtual size
+            size_t   size_;                                //!< virtual size
+            void     check_index(const size_t n)    const; //!< throw exception on bad index
+            void     insert_failure(const size_t i) const; //!< throw exception on insert failure (unexpected)
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(array_info);
@@ -38,8 +37,7 @@ namespace upsylon
     class sparse_array : public sparse::array_info, public sparse::zero_field<T>
     {
     public:
-        Y_DECL_ARGS(T,type);
-
+        Y_DECL_ARGS(T,type);                                               //!< aliases
         typedef sparse::dok<size_t,T,key_dumper,ALLOCATOR> dok_type;       //!< alias
         typedef typename dok_type::iterator                iterator;       //!< alias
         typedef typename dok_type::const_iterator          const_iterator; //!< alias

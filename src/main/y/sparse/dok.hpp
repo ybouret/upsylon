@@ -52,11 +52,11 @@ namespace upsylon
         class dok_base
         {
         public:
-            virtual ~dok_base() throw();
+            virtual ~dok_base() throw(); //!< cleanup
 
         protected:
-            explicit dok_base() throw();
-            void     throw_bad_copy() const;
+            explicit dok_base() throw();     //!< setup
+            void     throw_bad_copy() const; //!< throw exception on bad copy
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(dok_base);
@@ -98,8 +98,8 @@ namespace upsylon
                 return this->insert(p);
             }
 
-            // hard copy
-            inline explicit dok( const dok &other) : self_type(other.size(),as_capacity), dok_base()
+            //! hard copy
+            inline explicit dok( const dok &other) : dynamic(), self_type(other.size(),as_capacity), dok_base()
             {
                 for( const_iterator i = other.begin(); i != other.end(); ++i )
                 {
