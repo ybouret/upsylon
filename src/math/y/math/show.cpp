@@ -10,6 +10,7 @@ namespace upsylon
 #define SHOW_FOR(T) \
 SHOW(T,minimum);    \
 SHOW(T,maximum);    \
+SHOW(T,mant_dig);   \
 SHOW(T,epsilon);    \
 SHOW(T,pi);         \
 SHOW(T,two_pi);     \

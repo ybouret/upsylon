@@ -40,6 +40,7 @@ namespace upsylon
             static const T      minimum;    //!< minimum representable value
             static const T      maximum;    //!< maximum representable value
             static const T      epsilon;    //!< \f$1+\epsilon\simeq1\f$
+            static const size_t mant_dig;   //!< mantissa digit
             static const T      pi;         //!< \f$\pi\f$
             static const T      two_pi;     //!< \f$2\pi\f$
             static const T      half_pi;    //!< \f$\pi/2\f$

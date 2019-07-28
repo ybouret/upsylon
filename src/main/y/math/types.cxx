@@ -10,6 +10,7 @@ namespace upsylon
         template <> const real_t numeric<real_t>::minimum      = REAL_MIN;
         template <> const real_t numeric<real_t>::epsilon      = REAL_EPSILON;
         template <> const real_t numeric<real_t>::maximum      = REAL_MAX;
+        template <> const size_t numeric<real_t>::mant_dig   = REAL_MANT_DIG;
         template <> const real_t numeric<real_t>::pi           = REAL_PI;
         template <> const real_t numeric<real_t>::two_pi       = REAL_TWO_PI;
         template <> const real_t numeric<real_t>::half_pi      = REAL_PI*REAL(0.5);

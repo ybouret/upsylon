@@ -71,9 +71,8 @@ namespace {
                 std::cerr << "failure" << std::endl;
             }
             std::cerr << "sum1=" << sum << std::endl;
-            size_t  count = 0;
-            sum = integrate::compute(f<T>,a,b,ftol,&count);
-            std::cerr << "sum2=" << sum << ", count=" << count << std::endl;
+            sum = integrate::compute(f<T>,a,b,ftol);
+            std::cerr << "sum2=" << sum <<  std::endl;
         }
 
         {
@@ -91,9 +90,8 @@ namespace {
             }
             std::cerr << "sum1=" << sum << std::endl;
 
-            size_t  count = 0;
-            sum = integrate::compute(g<T>,a,b,ftol,&count);
-            std::cerr << "sum2=" << sum << ", count=" << count << std::endl;
+            sum = integrate::compute(g<T>,a,b,ftol);
+            std::cerr << "sum2=" << sum << std::endl;
         }
     }
 
@@ -102,8 +100,15 @@ namespace {
 
 Y_UTEST(intg)
 {
+
+    std::cerr << "sizeof(range<float>) =" << sizeof(integrate::range<float> ) << std::endl;
+    std::cerr << "sizeof(range<double>)=" << sizeof(integrate::range<double>) << std::endl;
+
     do_test<float>();
     do_test<double>();
+
+
+
     return 0;
     
     std::cerr << "multi-dimensional integral" << std::endl;
@@ -113,6 +118,7 @@ Y_UTEST(intg)
     //return 0;
     const double mu1 = integrate::compute2(radius,-1.0,1.0,lower_y,upper_y,0.8*1e-5);
     std::cerr << "mu1=" << mu1 << "/" << (2*numeric<double>::pi/3) << std::endl;
+
 
 }
 Y_UTEST_DONE()
