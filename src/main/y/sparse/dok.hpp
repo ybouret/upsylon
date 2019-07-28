@@ -95,12 +95,8 @@ namespace upsylon
                 }
             }
 
-
-
         private:
             Y_DISABLE_ASSIGN(dok);
-
-
         };
     }
 }
