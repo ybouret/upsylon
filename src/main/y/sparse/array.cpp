@@ -8,16 +8,11 @@ namespace upsylon
     {
         array_info:: ~array_info() throw()
         {
-            object:: operator delete(item_,itsz_);
-            item_ = 0;
-            itsz_ = 0;
             size_ = 0;
         }
 
-        array_info:: array_info(const size_t n, const size_t item_size)  :
-        size_(n),
-        itsz_( item_size ),
-        item_( object:: operator new(itsz_) )
+        array_info:: array_info(const size_t n)  :
+        size_(n)
         {
         }
 

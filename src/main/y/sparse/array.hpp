@@ -1,7 +1,9 @@
+//! \file
 #ifndef Y_SPARSE_ARRAY_INCLUDED
 #define Y_SPARSE_ARRAY_INCLUDED 1
 
 #include "y/sparse/dok.hpp"
+#include "y/sparse/zero-field.hpp"
 #include "y/comparison.hpp"
 
 namespace upsylon
@@ -9,16 +11,15 @@ namespace upsylon
 
     namespace sparse
     {
+        //! info for a sparse array
         class array_info
         {
         public:
             virtual ~array_info() throw();
 
         protected:
-            explicit array_info(const size_t n, const size_t item_size);
+            explicit array_info(const size_t n);
             size_t       size_; //!< virtual size
-            size_t       itsz_; //!< item size
-            void        *item_; //!< 'zero'
 
             void   check_index(const size_t n) const;
             void   insert_failure(const size_t i) const;
@@ -29,40 +30,31 @@ namespace upsylon
     }
 
 
+    //! sparse array implementation
     template <
     typename T,
     typename ALLOCATOR  = memory::global
     >
-    class sparse_array : public sparse::array_info
+    class sparse_array : public sparse::array_info, public sparse::zero_field<T>
     {
     public:
         Y_DECL_ARGS(T,type);
 
-        typedef sparse::dok<size_t,T,key_dumper,ALLOCATOR> dok_type;
-        typedef typename dok_type::iterator       iterator;
-        typedef typename dok_type::const_iterator const_iterator;
+        typedef sparse::dok<size_t,T,key_dumper,ALLOCATOR> dok_type;       //!< alias
+        typedef typename dok_type::iterator                iterator;       //!< alias
+        typedef typename dok_type::const_iterator          const_iterator; //!< alias
 
+        //! destructor
         inline virtual ~sparse_array() throw()
         {
-            kill_();
         }
 
-        const_type & zero() const throw()
-        {
-            return zero_;
-        }
 
-        inline explicit sparse_array() throw() :
-        sparse::array_info(0,sizeof(T)),
-        items(),
-        zero_( live_() )
-        {
-        }
-
-        inline explicit sparse_array(const size_t n) :
-        sparse::array_info(n,sizeof(T)),
-        items(),
-        zero_( live_() )
+        //! initialize woth a virtual size
+        inline explicit sparse_array(const size_t n=0) :
+        sparse::array_info(n),
+        sparse::zero_field<T>(),
+        items()
         {
         }
 
@@ -71,7 +63,7 @@ namespace upsylon
         {
             if(n>=size_)
             {
-                
+                // ok
             }
             else
             {
@@ -82,8 +74,10 @@ namespace upsylon
             size_ = n;
         }
 
+        //! virtual size
         inline size_t size() const throw() { return size_; }
 
+        //! sort keys by increasing ordere
         inline void   update()
         {
             items.sort_keys( comparison::increasing<size_t> );
@@ -100,7 +94,7 @@ namespace upsylon
             }
             else
             {
-                typename dok_type::item_ptr p = new typename dok_type::item_type(i,zero_);
+                typename dok_type::item_ptr p = new typename dok_type::item_type(i,this->zero);
                 if(!items.insert(p)) insert_failure(i);
                 return p->value;
             }
@@ -117,10 +111,11 @@ namespace upsylon
             }
             else
             {
-                return zero_;
+                return this->zero;
             }
         }
 
+        //! display
         inline friend std::ostream & operator<<( std::ostream &os, const sparse_array &arr )
         {
             os << '[';
@@ -134,24 +129,20 @@ namespace upsylon
             return os;
         }
 
-        inline iterator       begin() throw() { return items.begin(); }
-        inline iterator       end()   throw() { return items.end();   }
+        inline iterator       begin() throw() { return items.begin(); } //!< forward
+        inline iterator       end()   throw() { return items.end();   } //!< forward
 
-        inline const_iterator begin() const throw() { return items.begin(); }
-        inline const_iterator end()   const throw() { return items.end();   }
+        inline const_iterator begin() const throw() { return items.begin(); } //!< forward, const
+        inline const_iterator end()   const throw() { return items.end();   } //!< forward, const
 
-        container &       core()       throw() { return items; }
-        const container & core() const throw() { return items; }
+        container &       core()       throw() { return items; } //!< manual memory management
+        const container & core() const throw() { return items; } //!< manyal memory info
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(sparse_array);
         dok_type    items; //!< data handling
-        const_type &zero_; //!< one shared zero
 
-        inline const_type &live_()         { return * ( new (item_) type() );                }
-        inline void        kill_() throw() { destruct( static_cast<mutable_type *>(item_) ); }
-
-
+        //! wrapper to adjust size
         struct is_bad_key
         {
             size_t n;

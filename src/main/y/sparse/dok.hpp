@@ -1,4 +1,4 @@
-
+//! \file
 #ifndef Y_SPARSE_DOK_INCLUDED
 #define Y_SPARSE_DOK_INCLUDED 1
 
@@ -11,6 +11,7 @@ namespace upsylon
 
     namespace sparse
     {
+        //! dictionary of key item
         template <typename KEY,
         typename T>
         class dok_item : public counted_object
@@ -20,18 +21,23 @@ namespace upsylon
             Y_DECL_ARGS(KEY,key_type);              //!< alias
             typedef intr_ptr<KEY,dok_item> pointer; //!< alias
 
-            const_key_type __key;
-            type           value;
+            const_key_type __key; //!< unique key
+            type           value; //!< associated value
 
+            //! initialize
             inline explicit dok_item(param_key_type k, param_type v) :
             __key(k),
             value(v)
             {
             }
 
+            //! desctructor
             inline virtual ~dok_item() throw() {}
+
+            //! key() API
             inline const_key_type & key() const throw() { return __key; }
 
+            //! display
             inline friend std::ostream & operator<<( std::ostream &os, const dok_item &item)
             {
                 os << item.__key << ':' << item.value;
@@ -42,6 +48,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(dok_item);
         };
 
+        //! base class for dictionary of keys
         class dok_base
         {
         public:
@@ -55,12 +62,16 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(dok_base);
         };
 
+
+        //! dictionary of keys = set of items
         template <
         typename KEY,
         typename T,
         typename KEY_HASHER = key_hasher<KEY,hashing::fnv>,
         typename ALLOCATOR  = memory::global >
-        class dok : public set<KEY, typename dok_item<KEY,T>::pointer, KEY_HASHER, ALLOCATOR>, public dok_base
+        class dok :
+        public set<KEY, typename dok_item<KEY,T>::pointer, KEY_HASHER, ALLOCATOR>,
+        public dok_base
         {
         public:
             Y_DECL_ARGS(T,type);                                         //!< alias
@@ -71,13 +82,16 @@ namespace upsylon
             typedef typename self_type::iterator           iterator;       //!< alias
             typedef typename self_type::const_iterator     const_iterator; //!< alias
 
+            //! initalize with empty memory
             inline explicit dok() throw() : self_type(), dok_base()   {  }
 
+            //! initialize with some memory
             inline explicit dok(const size_t n) : self_type(n,as_capacity), dok_base() {}
 
-
+            //! cleanup
             inline virtual ~dok() throw() {}
 
+            //! try to create a new entry
             inline bool create(param_key_type k, param_type v)
             {
                 const item_ptr p = new item_type(k,v);
