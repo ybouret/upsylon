@@ -60,7 +60,7 @@ namespace upsylon
                 columns.sort_keys( comparison::increasing<size_t> );
 
                 unsigned iline = 1;
-                string   line(255);
+                string   line(255,as_capacity);
                 for(;iline<=skip;++iline)
                 {
                     if(!fp.gets(line)) throw exception("data_set: EOF while skipping line %u/%u", iline, unsigned(skip));
