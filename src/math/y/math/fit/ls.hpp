@@ -17,6 +17,24 @@ namespace upsylon
         namespace Fit
         {
 
+            //! fractional tolerance on least-square
+            /**
+             not necessary to be too demanding for a decrease around the
+             minimum is not statistically significant.
+             */
+#define Y_LSF_FTOL 1e-5
+
+            //! fractional tolerance for damping
+            /**
+             I test if D2 is decreasing at a fraction (1-Y_LSF_UTOL) of the full
+             step. If so, I backtrack to optimize the cost of the gradient computation
+             and to avoid wandering.
+             */
+#define Y_LSF_UTOL 1e-3
+
+            //! line size in case of verbosity
+#define Y_LSF_LINE 72
+
             //! base class for utilities
             class LeastSquares_
             {
@@ -114,13 +132,11 @@ namespace upsylon
                                 Array             &aerr,
                                 const array<bool> &used)
                 {
-                    static const T  ftol = T(1e-5);
+                    static const T  ftol = T(Y_LSF_FTOL);
 
                     assert(aerr.size()==aorg.size());
                     assert(used.size()==aorg.size());
                     const size_t nvar = aorg.size();
-
-
 
                     //__________________________________________________________
                     //
@@ -176,7 +192,7 @@ namespace upsylon
                         //______________________________________________________
                         //
                         //
-                        // start cycle: normalize alpha
+                        // start cycle: normalize alpha and beta
                         //
                         //______________________________________________________
                         Y_LSF_OUT(std::cerr << "|" << std::endl;
@@ -295,10 +311,17 @@ namespace upsylon
                 CONVERGED:
                     //__________________________________________________________
                     //
+                    //
                     // D2_org, aorg and alpha are computed
+                    //
                     //__________________________________________________________
-                    Y_LSF_OUT(OutputLine(std::cerr << "|",72) << std::endl);
+                    Y_LSF_OUT(OutputLine(std::cerr << "|",Y_LSF_LINE) << std::endl);
                     Y_LSF_OUT(std::cerr << "[LSF] \tanalysis after #cycles="<< cycle << std::endl);
+
+                    //__________________________________________________________
+                    //
+                    // compute the d.o.f
+                    //__________________________________________________________
                     const size_t ndat = sample.count();
 
                     size_t nprm = nvar;
@@ -312,36 +335,44 @@ namespace upsylon
 
                     if(nprm>ndat)
                     {
-                        Y_LSF_OUT(std::cerr<< "[LSF] \tmore parameters than data"<<std::endl);
+                        Y_LSF_OUT(std::cerr<< "[LSF] \tmore parameters than data" << std::endl);
                         aerr.ld(-1);
                         return false;
                     }
                     else if(nprm==ndat)
                     {
-                        Y_LSF_OUT(std::cerr<< "[LSF] \tno degree of freedom: interpolation"<<std::endl);
-                        aerr.ld(0);
+                        Y_LSF_OUT(std::cerr<< "[LSF] \tno degree of freedom: interpolation" << std::endl);
                         return true;
                     }
                     assert(ndat>nprm);
                     const size_t ndof = ndat-nprm;
                     Y_LSF_OUT(std::cerr << "    |_#dof        = " << ndof << std::endl);
                     Y_LSF_OUT(std::cerr << "    |_alpha=" << alpha << std::endl);
+
+                    //__________________________________________________________
+                    //
+                    // compute the curvarure matrix
+                    //__________________________________________________________
                     if(!LU::build(alpha))
                     {
                         Y_LSF_OUT(std::cerr << "[LSF] unexpected singular minimum" << std::endl);
                         return false;
                     }
 
-
                     LU::inverse(alpha,curv);
                     Y_LSF_OUT(std::cerr<< "    |_curv=" << curv << std::endl);
+
+                    //__________________________________________________________
+                    //
+                    // estimate the variance on parameters
+                    //__________________________________________________________
                     const T dS = D2/ndof;
                     for(size_t i=nvar;i>0;--i)
                     {
                         if(used[i]) aerr[i] = sqrt_of( max_of<T>(0,dS*curv[i][i]) );
                     }
                     Y_LSF_OUT(std::cerr<< "[LSF]"<<std::endl);
-                    Y_LSF_OUT(OutputLine(std::cerr << "|",72) << std::endl << std::endl);
+                    Y_LSF_OUT(OutputLine(std::cerr << "|",Y_LSF_LINE) << std::endl << std::endl);
                     return true;
                 }
 
@@ -458,7 +489,7 @@ namespace upsylon
                                             const T    D2_try,
                                             const bool verbose)
                     {
-                        static const T utol = T(1e-3);
+                        static const T utol = T(Y_LSF_UTOL);
                         static const T uchk = T(1)-utol;
 
                         assert(1==calls);                       // reset in cycle
