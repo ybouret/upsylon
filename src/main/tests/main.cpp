@@ -48,6 +48,7 @@ Y_UTEST_INIT(128)
     Y_UTEST(endian);
     Y_UTEST(heap);
     Y_UTEST(avl);
+    Y_UTEST(zero_field);
 
     Y_UTEST(parallel);
     Y_UTEST(threads);

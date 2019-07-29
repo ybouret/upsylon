@@ -3,7 +3,7 @@
 #define Y_SPARSE_ARRAY_INCLUDED 1
 
 #include "y/sparse/dok.hpp"
-#include "y/sparse/zero-field.hpp"
+#include "y/container/zero-field.hpp"
 #include "y/comparison.hpp"
 
 namespace upsylon
@@ -34,7 +34,7 @@ namespace upsylon
     typename T,
     typename ALLOCATOR  = memory::global
     >
-    class sparse_array : public sparse::array_info, public sparse::zero_field<T>
+    class sparse_array : public sparse::array_info, public zero_field<T>
     {
     public:
         Y_DECL_ARGS(T,type);                                               //!< aliases
@@ -51,8 +51,9 @@ namespace upsylon
         //! initialize woth a virtual size
         inline explicit sparse_array(const size_t n=0) :
         sparse::array_info(n),
-        sparse::zero_field<T>(),
-        items()
+        zero_field<T>(),
+        items(),
+        core(items)
         {
         }
 
@@ -127,14 +128,11 @@ namespace upsylon
             return os;
         }
 
-        inline iterator       begin() throw() { return items.begin(); } //!< forward
-        inline iterator       end()   throw() { return items.end();   } //!< forward
+        inline iterator       begin() throw() { return items.begin(); } //!< forward iterator begin
+        inline iterator       end()   throw() { return items.end();   } //!< forward iterator end
 
-        inline const_iterator begin() const throw() { return items.begin(); } //!< forward, const
-        inline const_iterator end()   const throw() { return items.end();   } //!< forward, const
-
-        container &       core()       throw() { return items; } //!< manual memory management
-        const container & core() const throw() { return items; } //!< manyal memory info
+        inline const_iterator begin() const throw() { return items.begin(); } //!< forward iterator begin, const
+        inline const_iterator end()   const throw() { return items.end();   } //!< forward iterator end, const
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(sparse_array);
@@ -146,6 +144,8 @@ namespace upsylon
             size_t n;
             inline bool operator()(const size_t k) const throw() { return (k>n); }
         };
+    public:
+        container & core; //!< interface for internal memory management
     };
 
 }

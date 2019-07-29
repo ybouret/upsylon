@@ -1,24 +1,22 @@
 //! \file
-#ifndef Y_SPARSE_ZERO_FIELD_INCLUDED
-#define Y_SPARSE_ZERO_FIELD_INCLUDED 1
+#ifndef Y_ZERO_FIELD_INCLUDED
+#define Y_ZERO_FIELD_INCLUDED 1
 
 #include "y/type/args.hpp"
 
 namespace upsylon
 {
 
-    namespace sparse
-    {
         //! memory for a zero field
         class zero_field_
         {
         public:
-            virtual ~zero_field_() throw();               //!< cleanup
+            virtual ~zero_field_() throw();           //!< cleanup
 
-        protected:
-            explicit zero_field_(const size_t item_size); //!< initialize
-            size_t   itsz_;                               //!< item size
-            void    *item_;                               //!< item memory
+            const size_t   item_size;                 //!< item size
+        protected:                                    //|
+            void           *item_addr;                //!< item memory
+            explicit zero_field_(const size_t bytes); //!< initialize
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(zero_field_);
@@ -35,7 +33,7 @@ namespace upsylon
             //! C++ setup
             inline explicit zero_field() :
             zero_field_(sizeof(type)),
-            zero( *( new (item_) type() ) )
+            zero( *( new (item_addr) type() ) )
             {
 
             }
@@ -43,14 +41,13 @@ namespace upsylon
             //! C++ cleanup
             inline virtual ~zero_field() throw()
             {
-                destruct( static_cast<mutable_type *>(item_) );
+                destruct( static_cast<mutable_type *>(item_addr) );
             }
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(zero_field);
         };
 
-    }
 }
 
 #endif

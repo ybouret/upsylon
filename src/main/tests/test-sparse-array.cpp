@@ -27,12 +27,12 @@ static inline void fill( SP_ARR &arr )
         arr[j] = tmp;
     }
     query(arr);
-    std::cerr << "arr = " << arr << " #" << arr.core().size() << "/" << arr.size() << std::endl;
+    std::cerr << "arr = " << arr << " #" << arr.core.size() << "/" << arr.size() << std::endl;
     arr.set_size( arr.size()/2 );
     query(arr);
     arr.update();
     query(arr);
-    std::cerr << "arr = " << arr << " #" << arr.core().size() << "/" << arr.size() << std::endl;
+    std::cerr << "arr = " << arr << " #" << arr.core.size() << "/" << arr.size() << std::endl;
 
 
     std::cerr << std::endl;
