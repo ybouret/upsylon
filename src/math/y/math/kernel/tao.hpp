@@ -89,7 +89,7 @@ namespace upsylon
                 }
             }
 
-            //! a[1..size()] += b[1..a.size()] + c[]
+            //! a[1..size()] = b[1..a.size()] + c[]
             template <typename T,typename U,typename V> static inline
             void add( array<T> &a, const array<U> &b, const array<V> &c)
             {
@@ -122,7 +122,7 @@ namespace upsylon
                 }
             }
 
-            //! a[1..size()] += b[1..a.size()] - c[]
+            //! a[1..size()] = b[1..a.size()] - c[]
             template <typename T,typename U,typename V> static inline
             void sub( array<T> &a, const array<U> &b, const array<V> &c)
             {

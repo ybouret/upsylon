@@ -35,6 +35,8 @@ namespace upsylon
             //! line size in case of verbosity
 #define Y_LSF_LINE 72
 
+#define Y_LSF_CTRL(p,v) do { if(ctrl) (*ctrl)(p,v); } while(false)
+
             //! base class for utilities
             class LeastSquares_
             {
@@ -80,6 +82,7 @@ namespace upsylon
                 typedef typename Type<T>::Array      Array;      //!< alias
                 typedef typename Type<T>::Matrix     Matrix;     //!< alias
                 typedef typename Type<T>::Gradient   Gradient;   //!< alias
+                typedef typename Type<T>::Callback   Callback;   //!< alias
 
                 //______________________________________________________________
                 //
@@ -130,7 +133,8 @@ namespace upsylon
                                 Sequential        &F,
                                 Array             &aorg,
                                 Array             &aerr,
-                                const array<bool> &used)
+                                const array<bool> &used,
+                                Callback          *ctrl=0)
                 {
                     static const T  ftol = T(Y_LSF_FTOL);
 
@@ -182,6 +186,7 @@ namespace upsylon
                     alpha.ld(0);
                     beta.ld(0);
                     Y_LSF_OUT(std::cerr << "[LSF] \tcomputing initial gradient..." << std::endl);
+                    Y_LSF_CTRL(aorg,sample.variables);
                     T        D2    = sample.computeD2(F,aorg,beta,alpha,grad,used);
                     unsigned cycle = 0;
                     Y_LSF_OUT(std::cerr << "[LSF] \tready for first cycle" << std::endl);
@@ -197,7 +202,7 @@ namespace upsylon
                         //______________________________________________________
                         Y_LSF_OUT(std::cerr << "|" << std::endl;
                                   std::cerr << "[LSF] \t<cycle #" << cycle << ">" << std::endl;
-                                  std::cerr << "[LSF] \tD2     = " << D2 << " @" << aorg << std::endl);
+                                  std::cerr << "[LSF] \t D2    = " << D2 << " @" << aorg << std::endl);
                         for(size_t i=nvar;i>0;--i)
                         {
                             if(used[i])
@@ -236,6 +241,19 @@ namespace upsylon
                         tao::set(delta,beta);
                         LU::solve(curv,delta);
                         Y_LSF_OUT(std::cerr << "      \t delta = " << delta << std::endl);
+
+                        //______________________________________________________
+                        //
+                        // check acceptable step
+                        //______________________________________________________
+                        if(ctrl)
+                        {
+                            tao::add(atry, aorg, delta);
+                            (*ctrl)(atry,sample.variables);
+                            tao::sub(delta, atry, aorg);
+                            Y_LSF_OUT(std::cerr << "      \t delta = " << delta << std::endl);
+                        }
+
 
                         //______________________________________________________
                         //
@@ -351,7 +369,7 @@ namespace upsylon
 
                     //__________________________________________________________
                     //
-                    // compute the curvarure matrix
+                    // compute the curvature matrix
                     //__________________________________________________________
                     if(!LU::build(alpha))
                     {
@@ -381,10 +399,11 @@ namespace upsylon
                                 Function          &F,
                                 Array             &aorg,
                                 Array             &aerr,
-                                const array<bool> &used)
+                                const array<bool> &used,
+                                Callback          *ctrl=0)
                 {
                     typename Type<T>::SequentialFunction SF(F);
-                    return fit(sample,SF,aorg,aerr,used);
+                    return fit(sample,SF,aorg,aerr,used,ctrl);
                 }
 
 

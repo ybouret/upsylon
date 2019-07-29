@@ -25,11 +25,12 @@ namespace upsylon
                 //
                 // aliases
                 //______________________________________________________________
-                typedef array<T>  Array;   //!< array interface
-                typedef vector<T> Vector;  //!< sequence
-                typedef matrix<T> Matrix;  //!< matrix
-                typedef functor<T,TL3(T,const Array&,const Variables&)> Function; //!< fit function  prototype
-                typedef T (*CFunction)(T,const Array&,const Variables&);          //!< fit CFunction prototype
+                typedef array<T>                                         Array;    //!< array interface
+                typedef vector<T>                                        Vector;   //!< sequence
+                typedef matrix<T>                                        Matrix;   //!< matrix
+                typedef functor<T,TL3(T,const Array&,const Variables&)>  Function; //!< fit function  prototype
+                typedef T (*CFunction)(T,const Array&,const Variables&);           //!< fit CFunction prototype
+                typedef functor<void,TL2(const Array&,const Variables&)> Callback; //!< do something with variables, return false to interrupt
 
                 //______________________________________________________________
                 //
