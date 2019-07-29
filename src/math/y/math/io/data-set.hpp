@@ -60,7 +60,7 @@ namespace upsylon
                 columns.sort_keys( comparison::increasing<size_t> );
 
                 unsigned iline = 1;
-                string   line;
+                string   line(255);
                 for(;iline<=skip;++iline)
                 {
                     if(!fp.gets(line)) throw exception("data_set: EOF while skipping line %u/%u", iline, unsigned(skip));
@@ -69,30 +69,32 @@ namespace upsylon
                 while(fp.gets(line))
                 {
                     // check content
-                    if(line.size()<=0) continue;
-                    if(line[0] == '#') continue;
+                    if(line.size()<=0) goto NEXT_LINE;
+                    if(line[0] == '#') goto NEXT_LINE;
 
-
-                    // now parse!
-                    tokenizer<char> tkn(line);
-                    for(typename colmap::iterator i=columns.begin();i!=columns.end();++i)
                     {
-                        const size_t idx = i.key();
-                        while( tkn.count() != idx )
+                        // now parse!
+                        tokenizer<char> tkn(line);
+                        for(typename colmap::iterator i=columns.begin();i!=columns.end();++i)
                         {
-                            if(!tkn.next(kernel::data_set_separator))
+                            const size_t idx = i.key();
+                            while( tkn.count() != idx )
                             {
-                                throw exception("%u:data_set missing column #%u",iline,unsigned(idx));
+                                if(!tkn.next(kernel::data_set_separator))
+                                {
+                                    throw exception("%u:data_set missing column #%u",iline,unsigned(idx));
+                                }
                             }
+                            const string word  = tkn.to_string();
+                            const T      value = string_convert::to<T>(word); // todo: add field?
+                            (**i).push_back(value);
                         }
-                        const string word  = tkn.to_string();
-                        const T      value = string_convert::to<T>(word); // todo: add field?
-                        (**i).push_back(value);
+                        if(nmax>0&&++loaded>=nmax)
+                        {
+                            break;
+                        }
                     }
-                    if(nmax>0&&++loaded>=nmax)
-                    {
-                        break;
-                    }
+                NEXT_LINE:
                     ++iline;
                 }
             }
