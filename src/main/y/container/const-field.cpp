@@ -1,10 +1,10 @@
-#include "y/container/zero-field.hpp"
+#include "y/container/const-field.hpp"
 #include "y/object.hpp"
 #include <cstring>
 
 namespace upsylon
 {
-    zero_field_:: ~zero_field_() throw()
+    const_field_:: ~const_field_() throw()
     {
         memset(item_addr,0,item_size);
         object:: operator delete(item_addr,item_size);
@@ -12,7 +12,7 @@ namespace upsylon
         (size_t&)item_size = 0;
     }
 
-    zero_field_:: zero_field_( const size_t bytes ) :
+    const_field_:: const_field_( const size_t bytes ) :
     item_size(bytes),
     item_addr( object::operator new(item_size) )
     {
