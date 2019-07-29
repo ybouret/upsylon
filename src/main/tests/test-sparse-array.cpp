@@ -14,27 +14,42 @@ static inline void query( const SP_ARR &arr )
         std::cerr << ' ' << *i;
     }
     std::cerr << std::endl;
+    std::cerr << "arr = " << arr << " #" << arr.core.size() << "/" << arr.size() << std::endl;
 }
 
 template <typename SP_ARR>
 static inline void fill( SP_ARR &arr )
 {
     std::cerr << "-- fill and ops" << std::endl;
-    for(size_t i=arr.size()/2;i>0;--i)
+    const size_t original_size = arr.size();
+    for(size_t i=original_size/2;i>0;--i)
     {
         const typename SP_ARR::type tmp = support::get< typename SP_ARR::mutable_type >();
         const size_t j = 1 + alea.lt(arr.size());
         arr[j] = tmp;
     }
     query(arr);
-    std::cerr << "arr = " << arr << " #" << arr.core.size() << "/" << arr.size() << std::endl;
     arr.set_size( arr.size()/2 );
     query(arr);
     arr.update();
     query(arr);
-    std::cerr << "arr = " << arr << " #" << arr.core.size() << "/" << arr.size() << std::endl;
 
+    arr.clear();
+    query(arr);
 
+    arr.set_size(original_size);
+    for(size_t i=arr.size();i>0;--i)
+    {
+        const size_t j = 1 + alea.lt(arr.size());
+        if( ! arr(j) )
+        {
+            const typename SP_ARR::type tmp = support::get< typename SP_ARR::mutable_type >();
+            (void) arr(j,tmp);
+        }
+    }
+    query(arr);
+    arr.update();
+    query(arr);
     std::cerr << std::endl;
 }
 
@@ -43,7 +58,7 @@ static inline void fill( SP_ARR &arr )
 Y_UTEST(sparse_array)
 {
 
-    if(false)
+    if(true)
     {
         sparse::dok<size_t,string> sm;
         sparse::dok<size_t,double> sd(8);

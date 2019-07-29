@@ -22,7 +22,7 @@ namespace upsylon
             size_t   size_;                                //!< virtual size
             void     check_index(const size_t n)    const; //!< throw exception on bad index
             void     insert_failure(const size_t i) const; //!< throw exception on insert failure (unexpected)
-
+            void     create_failure(const size_t i) const; //!< throw exception on create failure (multiple index)
         private:
             Y_DISABLE_COPY_AND_ASSIGN(array_info);
         };
@@ -43,12 +43,10 @@ namespace upsylon
         typedef typename dok_type::const_iterator          const_iterator; //!< alias
 
         //! destructor
-        inline virtual ~sparse_array() throw()
-        {
-        }
+        inline virtual ~sparse_array() throw(){}
 
 
-        //! initialize woth a virtual size
+        //! initialize with a virtual size
         inline explicit sparse_array(const size_t n=0) :
         sparse::array_info(n),
         const_field<T>(),
@@ -76,11 +74,40 @@ namespace upsylon
         //! virtual size
         inline size_t size() const throw() { return size_; }
 
+        //! remove content, meaning every item is seen as 'zero'
+        inline void clear() throw() { items.free(); }
+
         //! sort keys by increasing ordere
-        inline void   update()
+        inline void update()
         {
             items.sort_keys( comparison::increasing<size_t> );
         }
+
+        //! direct creation, no multiple indices
+        type & operator()( const size_t i, param_type args )
+        {
+            check_index(i);
+            typename dok_type::item_ptr *ppI = items.search(i);
+            if(ppI) create_failure(i);
+            typename dok_type::item_ptr p = new typename dok_type::item_type(i,args);
+            if(!items.insert(p)) insert_failure(i);
+            return p->value;
+        }
+
+        //! look for existence
+        type * operator()(const size_t i) throw()
+        {
+            typename dok_type::item_ptr *ppI = items.search(i);
+            return (ppI ? & (**ppI).value : NULL );
+        }
+
+        //! look for existence, const
+        const_type * operator()(const size_t i) const throw()
+        {
+            const typename dok_type::item_ptr *ppI = items.search(i);
+            return (ppI ? & (**ppI).value : NULL );
+        }
+
 
         //! access or on the fly 'zero' creation
         type & operator[]( const size_t i)

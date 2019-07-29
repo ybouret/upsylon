@@ -27,5 +27,10 @@ namespace upsylon
         {
             throw exception("%sunexpected failure while inserting item@%u", fn, unsigned(i));
         }
+
+        void array_info:: create_failure(const size_t i) const
+        {
+            throw exception("%smultiple indices=%u", fn, unsigned(i));
+        }
     }
 }
