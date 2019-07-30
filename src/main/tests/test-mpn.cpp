@@ -7,6 +7,7 @@
 #include "y/code/utils.hpp"
 #include "y/comparison.hpp"
 #include "y/string.hpp"
+#include "y/type/utils.hpp"
 
 using namespace upsylon;
 
@@ -375,12 +376,17 @@ Y_UTEST(mpn)
     }
 
     std::cerr << "-- square root" << std::endl;
-    for(mpn i;i<=100;++i)
-    {
-        mpn s = isqrt(i);
-        std::cerr << "sqrt(" << i << ")=" << s << std::endl;
-    }
 
+    std::cerr << "bits:" << std::endl;
+    for(size_t iter=100;iter>0;--iter)
+    {
+        const mpn n( 10 + alea.leq(80), alea );
+        const mpn n2 = mpn::square_of(n);
+        const mpn s  = math::sqrt_of(n2);
+        std::cerr << n2.bits() << "/";
+        Y_ASSERT(s==n);
+    }
+    std::cerr << std::endl;
 
     std::cerr << "sizeof(mpn)=" << sizeof(mpn) << std::endl;
 

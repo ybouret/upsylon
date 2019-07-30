@@ -1,6 +1,8 @@
 
 #include "y/mpl/natural.hpp"
 #include "y/exceptions.hpp"
+#include "y/type/utils.hpp"
+
 #include <cerrno>
 
 namespace upsylon

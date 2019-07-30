@@ -3,7 +3,6 @@
 #define Y_MP_NATURAL_INCLUDED 1
 
 #include "y/strfwd.hpp"
-#include "y/type/utils.hpp"
 #include "y/os/endian.hpp"
 #include "y/randomized/bits.hpp"
 #include "y/ios/serializable.hpp"
@@ -115,7 +114,7 @@ for(size_t ii=host.bytes;ii<host.allocated;++ii)            \
             natural( const void  *buffer, size_t buflen);                 //!< copy from raw memory
             natural & operator=( const natural &other );                  //!< assign
             natural & operator=( const word_t w );                        //!< assign from word_type
-            natural(const size_t nbit, randomized::bits &gen );           //!< generate a random number
+            natural(const size_t nbit, randomized::bits &gen);            //!< generate a random number
             void   xch( natural &other ) throw();                         //!< no throw exchange
             word_t lsw() const throw();                                   //!< Least Significant Word
             size_t bits() const throw();                                  //!< get number of bits
@@ -314,6 +313,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             static natural mod_exp( const natural &b, const natural &e, const natural &n );   //!< modular exponentiation (b^e)[n]
             static bool    are_coprimes(const natural &, const natural &);                    //!< test co-primailty
             static natural factorial(const natural &n);                                       //!< factorial computation, recursive algorithm
+            static natural square_root_of(const natural &n);                                  //!< integer square root of n
 
             //__________________________________________________________________
             //
@@ -389,6 +389,7 @@ namespace upsylon
     {
         inline mpn fabs_of(const mpn &u) { return u;   } //!< overloaded __fabs function
         inline mpn  __mod2(const mpn &u) { return u*u; } //!< overloaded __mod2 function
+        inline mpn sqrt_of(const mpn &u) { return mpn::square_root_of(u); } //!< overloaded sqrt_of function
     }
 
     //! extended numeric for mpn

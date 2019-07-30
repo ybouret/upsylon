@@ -2,6 +2,7 @@
 #include "y/exception.hpp"
 #include "y/memory/vein.hpp"
 #include "y/memory/io.hpp"
+#include "y/type/utils.hpp"
 
 namespace upsylon
 {

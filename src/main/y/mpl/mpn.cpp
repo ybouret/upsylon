@@ -55,6 +55,8 @@ namespace upsylon
 
 }
 
+#include "y/type/utils.hpp"
+
 namespace upsylon
 {
     MPN:: MetaPrimeVector:: ~MetaPrimeVector() throw()

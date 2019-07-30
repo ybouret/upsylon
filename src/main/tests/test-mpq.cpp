@@ -1,6 +1,7 @@
 #include "y/mpl/rational.hpp"
 #include "y/utest/run.hpp"
 #include "y/code/arith.hpp"
+#include "y/type/utils.hpp"
 
 using namespace upsylon;
 

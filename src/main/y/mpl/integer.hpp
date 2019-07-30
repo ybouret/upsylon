@@ -34,18 +34,19 @@ namespace upsylon
             const natural   n; //!< it natural value
 
 
-            virtual ~integer() throw();                     //!< destructor
-            integer();                                      //!< zero constructor
-            integer(const integer   &z);                    //!< copy constructor
-            integer(const integer_t &i);                    //!<  constructor from integral
-            integer(const natural   &u);                    //!< constructor from natural
-            integer(const sign_type _s, const natural &u ); //!< create from a natural and a given sign
-            void      update() throw();                     //!< status update
-            integer_t lsi() const throw();                  //!< least significant int
-            void      xch( integer &other ) throw();        //!< no throw exchange
-            integer & operator=( const integer   &z);       //!< assign
-            integer & operator=( const integer_t  i);       //!< assign
-            integer & operator=( const natural   &u);       //!< assign
+            virtual ~integer() throw();                        //!< destructor
+            integer();                                         //!< zero constructor
+            integer(const integer   &z);                       //!< copy constructor
+            integer(const integer_t &i);                       //!<  constructor from integral
+            integer(const natural   &u);                       //!< constructor from natural
+            integer(const sign_type _s, const natural &u );    //!< create from a natural and a given sign
+            integer(const size_t nbit, randomized::bits &gen); //!< random integer
+            void      update() throw();                        //!< status update
+            integer_t lsi() const throw();                     //!< least significant int
+            void      xch( integer &other ) throw();           //!< no throw exchange
+            integer & operator=( const integer   &z);          //!< assign
+            integer & operator=( const integer_t  i);          //!< assign
+            integer & operator=( const natural   &u);          //!< assign
 
             //! output
             friend std::ostream & operator<<( std::ostream &, const integer &);
@@ -154,6 +155,7 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
             // MUL
             //__________________________________________________________________
             Y_MPZ_WRAP(*,__mul)
+            static integer square_of( const integer &z ); //!< fast square
 
             //__________________________________________________________________
             //
@@ -198,6 +200,7 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
     {
         inline mpz fabs_of(const mpz &z) { return mpz(z.n); } //!< overloaded __fabs function
         inline mpz  __mod2(const mpz &z) { return z*z;      } //!< overloaded __mod2 function
+        mpz        sqrt_of(const mpz &z);                     //!< overloaded sqrt_of
     }
 
     //! extended numeric for mpz

@@ -92,5 +92,18 @@ Y_UTEST(mpz)
         Y_ASSERT(Q.lsi()==q);
     }
 
+    std::cerr << "-- mpz square roots" << std::endl;
+    std::cerr << "bits:";
+    for(size_t iter=0;iter<100;++iter)
+    {
+        const mpz z( 10 + alea.leq(80), alea);
+        const mpz z2 = mpz::square_of(z);
+        const mpz s  = math::sqrt_of(z2);
+        std::cerr << z2.n.bits() << "/";
+        //std::cerr << z << "->" << z2 << "->" << s << std::endl;
+        Y_ASSERT(s.n==z.n);
+    }
+    std::cerr << std::endl;
+    
 }
 Y_UTEST_DONE()

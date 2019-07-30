@@ -3,6 +3,7 @@
 #include "y/exceptions.hpp"
 #include <cerrno>
 #include "y/code/arith.hpp"
+#include "y/type/utils.hpp"
 
 namespace upsylon
 {
@@ -93,50 +94,6 @@ namespace upsylon
             return result;
         }
 
-#if 0
-        bool natural:: is_prime( const natural &n )
-        {
-            static const MPN &_ = MPN::instance();
-
-            if(n<=_._1)
-                return false; //!< for 0 and 1
-            else if(n<=_._3)
-                return true;  //!< for 2 and 3
-            else if( n.is_divisible_by_byte(2) || n.is_divisible_by_byte(3) ) //! for 2,4,6,8,9...
-                return false;
-            else
-            {
-                assert(n>=_._5);
-                natural i = _._5;
-                for(;;)
-                {
-                    const natural isq = natural::square_of(i);
-                    if(isq>n) break;
-                    if( n.is_divisible_by(i) ) return false;
-                    const natural j=i+_._2;
-                    if( n.is_divisible_by(j) )  return false;
-                    i += _._6;
-                }
-                return true;
-            }
-        }
-
-        natural natural:: next_prime(const natural &n)
-        {
-            static const MPN &_ = MPN::instance();
-            if(n<=_._2)
-            {
-                return _._2;
-            }
-            else
-            {
-                natural p = n|_._1;
-                while( !is_prime(p) ) p+= _._2;
-                return p;
-            }
-        }
-#endif
-
         bool natural:: are_coprimes(const natural &a, const natural &b)
         {
             if(a.bytes>0&&b.bytes>0)
@@ -161,6 +118,32 @@ namespace upsylon
             {
                 const natural m = n.__dec();
                 return n * factorial( m );
+            }
+        }
+
+        natural natural:: square_root_of(const natural &n)
+        {
+            if(n.bytes<=sizeof(word_t))
+            {
+                word_t w = 0;
+                memcpy(&w,n.byte,sizeof(word_t));
+                w = swap_le(w);
+                //std::cerr << "sqrt_fast: n=" << n << ", w=" << std::endl;
+                return natural( isqrt(w) );
+            }
+            else
+            {
+                //natural x0 = n;
+                natural x1 = (n>>1);
+                while(true)
+                {
+                    const natural x0 = x1;
+                    x1 = ((x0+n/x0)>>1);
+                    if(x1>=x0)
+                    {
+                        return x0;
+                    }
+                }
             }
         }
 

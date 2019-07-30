@@ -70,6 +70,12 @@ namespace upsylon
 
         integer::integer(const sign_type _s, const natural &u ) : object(), number_type(), s( u.is_zero() ? __zero : _s), n(u) {}
 
+        integer:: integer(const size_t nbit, randomized::bits &gen) : object(), number_type(), s( gen.choice() ? __negative : __positive ), n(nbit,gen)
+        {
+            update();
+        }
+
+
         void  integer::update() throw()
         {
             if(n.is_zero()) (sign_type &)s = __zero;
@@ -310,6 +316,28 @@ namespace upsylon
             throw libc::exception(EDOM,"mpl.integer(division by zero)");
         }
 
+        integer integer:: square_of( const integer &z )
+        {
+            const natural n2 = natural::square_of(z.n);
+            return integer(n2);
+        }
+
+
+    }
+
+    
+
+    namespace math
+    {
+        mpz sqrt_of(const mpz &z)
+        {
+            if( mpl::__negative == z.s )
+            {
+                throw libc::exception(EDOM,"mpl.integer(square root of negative value)");
+            }
+            const  mpn sz = sqrt_of(z.n);
+            return mpz(z.s,sz);
+        }
     }
 }
 
