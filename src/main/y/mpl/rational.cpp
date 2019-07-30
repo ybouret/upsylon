@@ -85,6 +85,15 @@ namespace upsylon
             return rational(new_num,new_den);
         }
 
+        rational rational:: square_of(const rational &q)
+        {
+            const integer new_num = integer::square_of(q.num);
+            const natural new_den = natural::square_of(q.den);
+            return rational(new_num,new_den);
+        }
+
+
+
         rational rational::__div( const rational &lhs, const rational &rhs )
         {
             const integer i_num = lhs.num * rhs.den;

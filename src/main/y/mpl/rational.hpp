@@ -108,6 +108,7 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
             // MUL
             //__________________________________________________________________
             Y_MPQ_WRAP(*,__mul)
+            static rational square_of(const rational &q); //!< fast square
 
             //__________________________________________________________________
             //
