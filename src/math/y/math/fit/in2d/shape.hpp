@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_FIT_SHAPES2D_INCLUDED
-#define Y_FIT_SHAPES2D_INCLUDED 1
+#ifndef Y_FIT_IN2D_SHAPE_INCLUDED
+#define Y_FIT_IN2D_SHAPE_INCLUDED 1
 
 #include "y/type/point2d.hpp"
 #include "y/sequence/arrays.hpp"

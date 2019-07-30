@@ -1,4 +1,4 @@
-#include "y/math/fit/shapes2d.hpp"
+#include "y/math/fit/in2d/shape.hpp"
 
 namespace upsylon
 {

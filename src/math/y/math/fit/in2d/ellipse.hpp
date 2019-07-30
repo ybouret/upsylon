@@ -3,7 +3,7 @@
 #ifndef Y_FIT_ELLIPSE_INCLUDED
 #define Y_FIT_ELLIPSE_INCLUDED 1
 
-#include "y/math/fit/fit-conic.hpp"
+#include "y/math/fit/in2d/conic.hpp"
 
 namespace upsylon
 {

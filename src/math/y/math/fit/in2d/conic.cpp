@@ -1,5 +1,5 @@
 
-#include "y/math/fit/fit-conic.hpp"
+#include "y/math/fit/in2d/conic.hpp"
 #include "y/sort/sorted-sum.hpp"
 #include "y/math/kernel/lu.hpp"
 #include "y/exception.hpp"

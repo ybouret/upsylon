@@ -1,4 +1,4 @@
-#include "y/math/fit/fit-ellipse.hpp"
+#include "y/math/fit/in2d/ellipse.hpp"
 #include "y/math/kernel/lu.hpp"
 #include "y/math/kernel/tao.hpp"
 #include "y/math/kernel/diag-symm.hpp"

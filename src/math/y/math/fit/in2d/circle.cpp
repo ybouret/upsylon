@@ -1,4 +1,4 @@
-#include "y/math/fit/fit-circle.hpp"
+#include "y/math/fit/in2d/circle.hpp"
 #include "y/sort/sorted-sum.hpp"
 #include "y/math/kernel/lu.hpp"
 #include "y/exception.hpp"

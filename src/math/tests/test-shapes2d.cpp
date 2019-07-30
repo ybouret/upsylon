@@ -1,5 +1,5 @@
-#include "y/math/fit/fit-circle.hpp"
-#include "y/math/fit/fit-ellipse.hpp"
+#include "y/math/fit/in2d/circle.hpp"
+#include "y/math/fit/in2d/ellipse.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/list.hpp"
 #include "y/ios/ocstream.hpp"

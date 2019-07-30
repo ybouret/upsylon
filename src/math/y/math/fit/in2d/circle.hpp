@@ -2,7 +2,7 @@
 #ifndef Y_FIT_CIRCLE_INCLUDED
 #define Y_FIT_CIRCLE_INCLUDED 1
 
-#include "y/math/fit/shapes2d.hpp"
+#include "y/math/fit/in2d/shape.hpp"
 
 namespace upsylon
 {
