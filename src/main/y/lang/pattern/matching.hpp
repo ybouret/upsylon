@@ -42,6 +42,9 @@ namespace upsylon
             //! functionoid call for exactly
             bool operator()( const string &s );
 
+            //! call wrapper
+            bool operator()( const char   *s );
+
             //! find all occurences
             size_t operator()( sequence<Token> &m, const string &s );
 

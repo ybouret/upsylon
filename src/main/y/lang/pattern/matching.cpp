@@ -111,6 +111,9 @@ namespace upsylon
 
         bool MatchString::  operator()( const string &s ) { return exactly(s); }
 
+        bool MatchString::  operator()( const char   *s ) { const string _(s); return exactly(_); }
+
+
         size_t MatchString:: operator()( sequence<Token> &m, const string &s ) { return find(m,s); }
     }
 }

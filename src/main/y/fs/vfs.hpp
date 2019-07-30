@@ -117,6 +117,9 @@ namespace upsylon {
         // non virtual interface
         //
         //==================================================================
+        scanner *scan( const string &dirname ) const; //!< wrapper
+        scanner *scan( const char   *dirname ) const; //!< wrapper
+
         //! mkdir -p dirname
         void         create_sub_dir( const string &dirname );
         //! test if regilar file
@@ -125,10 +128,16 @@ namespace upsylon {
         bool         is_dir( const string &path ) const throw();
         //! try to remove a file
         void         try_remove_file( const string &path) throw();
-        
+
+
         //! remove file matching filter in dirname
+        /**
+         bool to_remove( const vfs::entry & )
+         */
         template <typename ACCEPT>
-        inline void remove_files( const string &dirname, ACCEPT &to_remove )
+        inline void remove_files(const string &dirname,
+                                 ACCEPT       &to_remove,
+                                 bool          apply = true)
         {
             list<string> matching;
             //__________________________________________________________________
@@ -151,11 +160,24 @@ namespace upsylon {
             //
             // remove selected, shouldn't complain!
             //__________________________________________________________________
-            while( matching.size() )
+            if(apply)
             {
-                remove_file( matching.back() );
-                matching.pop_back();
+                while( matching.size() )
+                {
+                    remove_file( matching.back() );
+                    matching.pop_back();
+                }
             }
+        }
+
+        //! wrapper
+        template <typename ACCEPT>
+        inline void remove_files(const char   *dirname,
+                                 ACCEPT       &to_remove,
+                                 bool          apply = true)
+        {
+            const string _(dirname);
+            remove_files(_,to_remove,apply);
         }
         
         //! remove files with given extension in dirname

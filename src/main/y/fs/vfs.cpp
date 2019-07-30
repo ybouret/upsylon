@@ -10,7 +10,18 @@ namespace upsylon
     vfs::  vfs() throw() {}
     vfs:: ~vfs() throw() {}
     
-    
+    vfs::scanner * vfs::scan( const string &dirname ) const
+    {
+        return new_scanner(dirname);
+    }
+
+    vfs::scanner * vfs::scan( const char *dirname ) const
+    {
+        const string _(dirname);
+        return scan(_);
+    }
+
+
     
     void vfs:: create_sub_dir( const string &dirName )
     {

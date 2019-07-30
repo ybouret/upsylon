@@ -35,7 +35,7 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(data_set_);
         public:
-            static const char fn[];
+            static const char fn[]; //!< "data_set: "
         };
 
         //! temporaty object to load data files
