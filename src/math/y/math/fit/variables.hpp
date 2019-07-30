@@ -279,11 +279,11 @@ namespace upsylon
                         const bool    active = self(used,name);
                         if(active)
                         {
-                            os << "[ USED  ]";
+                            os << " [ USED  ]";
                         }
                         else
                         {
-                            os << "[ FIXED ]";
+                            os << " [ FIXED ]";
                         }
                         os << std::endl;
                     }

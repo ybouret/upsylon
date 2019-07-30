@@ -57,6 +57,13 @@ namespace
             return sqrt( slope*fabs(t-t0) );
         }
 
+        bool check( const array<double> &a, const array<bool> &u, const Fit::Variables &var, const size_t cycle)
+        {
+            std::cerr << "<check @cycle=" << cycle << ">" << std::endl;
+            var.display_status(std::cerr,a,u,"\t(*) ");
+            std::cerr << "<check/>" << std::endl;
+            return cycle<=2 || cycle>=5;
+        }
     };
 }
 Y_UTEST(lsf)
@@ -152,6 +159,7 @@ Y_UTEST(lsf)
 
     diffusion DD;
     Fit::Type<double>::Function F(&DD, & diffusion::compute );
+    Fit::Type<double>::Validate check( &DD, & diffusion::check);
 
     const double D21 = S1.computeD2_(F,a1); std::cerr << "D21=" << D21 << std::endl;
     const double D22 = S2.computeD2_(F,a2); std::cerr << "D22=" << D22 << std::endl;
@@ -212,7 +220,7 @@ Y_UTEST(lsf)
     aerr.make(3,0);
     used.make(3,true);
     {
-        if(ls.fit(SSf,F,aa,aerr,used))
+        if(ls.fit(SSf,F,aa,aerr,used,&check))
         {
             SSf.variables.display(std::cerr,aa,aerr,"\t\t");
             save("fit1b.dat",t1,z1);

@@ -35,8 +35,6 @@ namespace upsylon
             //! line size in case of verbosity
 #define Y_LSF_LINE 72
 
-#define Y_LSF_CTRL(p,v) do { if(ctrl) (*ctrl)(p,v); } while(false)
-
             //! base class for utilities
             class LeastSquares_
             {
@@ -47,6 +45,9 @@ namespace upsylon
 
                 //! shared text
                 static const char *ConvergedText(const bool flag) throw();
+
+                //! yes or no
+                static const char *YesOrNoText(const bool flag) throw();
 
                 //! draw sep line
                 static std::ostream &OutputLine( std::ostream &, size_t n );
@@ -82,7 +83,7 @@ namespace upsylon
                 typedef typename Type<T>::Array      Array;      //!< alias
                 typedef typename Type<T>::Matrix     Matrix;     //!< alias
                 typedef typename Type<T>::Gradient   Gradient;   //!< alias
-                typedef typename Type<T>::Callback   Callback;   //!< alias
+                typedef typename Type<T>::Validate   Validate;   //!< alias
 
                 //______________________________________________________________
                 //
@@ -136,7 +137,7 @@ namespace upsylon
                                 Array             &aorg,
                                 Array             &aerr,
                                 const array<bool> &used,
-                                Callback          *ctrl=0)
+                                Validate         *check=0)
                 {
                     static const T  ftol = T(Y_LSF_FTOL);
                     static const T  zero(0);
@@ -144,7 +145,8 @@ namespace upsylon
 
                     assert(aerr.size()==aorg.size());
                     assert(used.size()==aorg.size());
-                    const size_t nvar = aorg.size();
+                    const size_t nvar  = aorg.size();
+                    size_t       cycle = 0;
 
                     //__________________________________________________________
                     //
@@ -166,7 +168,16 @@ namespace upsylon
                     }
 
                     //----------------------------------------------------------
-                    // check space size
+                    // validate guess
+                    //----------------------------------------------------------
+                    if(check && !(*check)(aorg,used,sample.variables,cycle) )
+                    {
+                        Y_LSF_OUT(std::cerr << "[LSF] \t[- invalid first guess -]" << std::endl);
+                        return false;
+                    }
+
+                    //----------------------------------------------------------
+                    // acquire memory
                     //----------------------------------------------------------
                     this->acquire(nvar);   // vectors
                     alpha.make(nvar,nvar); // hessian
@@ -188,10 +199,9 @@ namespace upsylon
                     //----------------------------------------------------------
                     alpha.ld(zero);
                     beta.ld(zero);
+
                     Y_LSF_OUT(std::cerr << "[LSF] \tcomputing initial gradient..." << std::endl);
-                    Y_LSF_CTRL(aorg,sample.variables);
-                    T        D2    = sample.computeD2(F,aorg,beta,alpha,grad,used);
-                    unsigned cycle = 0;
+                    T        D2 = sample.computeD2(F,aorg,beta,alpha,grad,used);
                     Y_LSF_OUT(std::cerr << "[LSF] \tready for first cycle" << std::endl);
 
                     while(true)
@@ -208,17 +218,18 @@ namespace upsylon
                                   std::cerr << "[LSF] \t D2    = " << D2 << " @" << aorg << std::endl);
                         for(size_t i=nvar;i>0;--i)
                         {
+                            Array &alpha_i = alpha[i];
                             if(used[i])
                             {
                                 for(size_t j=i-1;j>0;--j)
                                 {
-                                    alpha[j][i] = alpha[i][j];
+                                    alpha[j][i] = alpha_i[j];
                                 }
                             }
                             else
                             {
-                                alpha[i][i] = one;  // for a null gradient
-                                beta[i]     = zero; // mandatory
+                                alpha_i[i] = one;  // for a null gradient
+                                beta[i]    = zero; // mandatory
                             }
                         }
                         Y_LSF_OUT(std::cerr << "      \t beta  = "  << beta  << std::endl);
@@ -233,7 +244,7 @@ namespace upsylon
                     FIND_STEP:
                         if( !compute_curvature() )
                         {
-                            Y_LSF_OUT(std::cerr << "[LSF] \t[- singular sarameters -]" << std::endl);
+                            Y_LSF_OUT(std::cerr << "[LSF] \t[- singular parameters -]" << std::endl);
                             return false;
                         }
 
@@ -249,13 +260,31 @@ namespace upsylon
                         //
                         // check acceptable step
                         //______________________________________________________
-                        if(ctrl)
+                        bool ok = true;
+                        if(check)
                         {
                             tao::add(atry, aorg, delta);
-                            (*ctrl)(atry,sample.variables);
-                            tao::sub(bound, atry, aorg);
-                            Y_LSF_OUT(std::cerr << "      \t bound = " << delta << std::endl);
-                            T factor = one;
+                            if( !(*check)(atry,used,sample.variables,cycle) )
+                            {
+                                ok = false;
+                                //----------------------------------------------
+                                // trial is not valid
+                                //----------------------------------------------
+                                tao::sub(bound, atry, aorg);
+                                Y_LSF_OUT(std::cerr << "      \t bound = " << bound << std::endl);
+                                T scale = one;
+                                for(size_t i=nvar;i>0;--i)
+                                {
+                                    if(!used[i]) continue;
+                                    const T dmax = fabs_of(bound[i]);
+                                    const T dcur = fabs_of(delta[i]);
+                                    if(dmax<dcur) scale = min_of(dmax/dcur,scale);
+                                }
+                                Y_LSF_OUT(std::cerr << "      \t scale = " << scale << std::endl);
+                                scale/=2;
+                                Y_LSF_OUT(std::cerr << "      \t scale = " << scale << std::endl);
+                                tao::mulset(delta,scale,delta);
+                            }
                         }
 
 
@@ -311,8 +340,9 @@ namespace upsylon
 
                         Y_LSF_OUT(std::cerr << "[LSF] \tsquares   error : [ " << D2_err/D2 << " ]"       << std::endl);
                         Y_LSF_OUT(std::cerr << "[LSF]                     |_" << ConvergedText(lss_cvg) << std::endl);
+                        Y_LSF_OUT(std::cerr << "[LSF]                     |_<  valid= " << YesOrNoText(ok)  << " >" << std::endl);
 
-                        if( lss_cvg )
+                        if( lss_cvg && ok )
                         {
                             goto CONVERGED;
                         }
@@ -393,6 +423,8 @@ namespace upsylon
                     {
                         if(used[i]) aerr[i] = sqrt_of( max_of(zero,dS*curv[i][i]) );
                     }
+                    Y_LSF_OUT(std::cerr<< "    |_opt=" << aorg << std::endl);
+                    Y_LSF_OUT(std::cerr<< "    |_err=" << aerr << std::endl);
                     Y_LSF_OUT(std::cerr<< "[LSF]"<<std::endl);
                     Y_LSF_OUT(OutputLine(std::cerr << "|",Y_LSF_LINE) << std::endl << std::endl);
                     return true;
@@ -404,12 +436,34 @@ namespace upsylon
                                 Array             &aorg,
                                 Array             &aerr,
                                 const array<bool> &used,
-                                Callback          *ctrl=0)
+                                Validate          *check=0)
                 {
                     typename Type<T>::SequentialFunction SF(F);
-                    return fit(sample,SF,aorg,aerr,used,ctrl);
+                    return fit(sample,SF,aorg,aerr,used,check);
                 }
 
+                //! prototype to check positive used values
+                bool CheckAllPositive( Array &aorg, const array<bool> &used, const Variables &vars, const size_t cycle )
+                {
+                    Y_LSF_OUT(std::cerr<< "[LSF] <check @cycle=" << cycle << ">" <<std::endl);
+                    bool ans = true;
+                    for( Variables::const_iterator i=vars.begin();i!=vars.end();++i)
+                    {
+                        const string &id = (**i).name;
+                        if( vars(used,id) )
+                        {
+                            T &a = vars(aorg,id);
+                            if(a<0)
+                            {
+                                Y_LSF_OUT(std::cerr<< "[LSF] [" << id << ": " << a << " -> 0" << "]" << std::endl);
+                                a   = 0;
+                                ans = false;
+                            }
+                        }
+                    }
+                    Y_LSF_OUT(std::cerr<< "[LSF] <check/>" <<std::endl);
+                    return ans;
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(LeastSquares);
@@ -520,7 +574,7 @@ namespace upsylon
                         callD2    &G = *this;                   // alias
                         triplet<T> u = { 0,  uchk,   1      };  assert(u.b>0);assert(u.b<1);
                         triplet<T> g = { D2, G(u.b), D2_try };
-
+                        
                         if( g.b < D2_try )
                         {
                             Y_LSF_OUT(std::cerr << "[LSF] \t[ increasing => damping ]" << std::endl);

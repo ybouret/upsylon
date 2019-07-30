@@ -22,6 +22,11 @@ namespace upsylon
                         "<not converged>");
             }
 
+            const char * LeastSquares_:: YesOrNoText(const bool flag) throw()
+            {
+                return (flag? "yes" : "no ");
+            }
+
             std::ostream & LeastSquares_:: OutputLine(std::ostream &os, size_t n)
             {
                 while(n-->0) os << '_';
