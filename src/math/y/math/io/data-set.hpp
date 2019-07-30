@@ -34,6 +34,8 @@ namespace upsylon
             strings labels;                                 //!< temporary column labels
         private:
             Y_DISABLE_COPY_AND_ASSIGN(data_set_);
+        public:
+            static const char fn[];
         };
 
         //! temporaty object to load data files
@@ -52,10 +54,10 @@ namespace upsylon
             //! link a column index to a columnx
             inline void use( const size_t column_index, sequence<type> &seq )
             {
-                if(column_index<=0) throw exception("data_set: column index <= 0");
+                if(column_index<=0) throw exception("%scolumn index <= 0",fn);
                 if(!columns.insert(column_index,&seq))
                 {
-                    throw exception("data_set: multiple column #%u", unsigned(column_index));
+                    throw exception("%smultiple column #%u",fn,unsigned(column_index));
                 }
             }
 
@@ -87,7 +89,7 @@ namespace upsylon
                 string   line(255,as_capacity);
                 for(;iline<=skip;++iline)
                 {
-                    if(!fp.gets(line)) throw exception("data_set: EOF while skipping line %u/%u", iline, unsigned(skip));
+                    if(!fp.gets(line)) throw exception("%sEOF while skipping line %u/%u", fn, iline, unsigned(skip));
                 }
 
                 size_t loaded = 0;
@@ -108,7 +110,7 @@ namespace upsylon
                             {
                                 if(!tkn.next(kernel::data_set_separator))
                                 {
-                                    throw exception("%u:data_set missing %s",iline,*labels[j]);
+                                    throw exception("%u:%smissing %s",iline,fn,*labels[j]);
                                 }
                             }
                             const string word  = tkn.to_string();
