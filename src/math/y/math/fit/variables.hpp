@@ -39,7 +39,7 @@ namespace upsylon
                 Variables & operator=( const Variables &other );
 
                 //! create a global variable, assigning current size+1 as index
-                Variables        & create_global(const string &name);
+                Variables & create_global(const string &name);
 
                 //! create a global variable, wrapper
                 Variables & create_global(const char *name);
@@ -79,6 +79,51 @@ namespace upsylon
 
                 //!create "prefix" in this local variables, and "prefix_index" for global, wrapper
                 Variables & operator()(const char *prefix, Variables &global, const size_t index);
+
+
+                //! safe access
+                template <typename T> inline
+                T *look_for( array<T> &arr, const string &name ) const
+                {
+                    const Variable::Pointer *ppv = this->search(name);
+                    if(ppv)
+                    {
+                        return & arr[ (**ppv).check_index( arr.size() ) ];
+                    }
+                    else
+                    {
+                        return NULL;
+                    }
+                }
+
+                //! safe access wrapper
+                template <typename T> inline
+                T *look_for( array<T> &arr, const char *name) const
+                {
+                    const string _(name); return look_for<T>(arr,_);
+                }
+
+                //! safe access, const
+                template <typename T> inline
+                const T *look_for( const array<T> &arr, const string &name ) const
+                {
+                    const Variable::Pointer *ppv = this->search(name);
+                    if(ppv)
+                    {
+                        return & arr[ (**ppv).check_index( arr.size() ) ];
+                    }
+                    else
+                    {
+                        return NULL;
+                    }
+                }
+
+                //! safe access, const, wrapper
+                template <typename T> inline
+                const T *look_for( const array<T> &arr, const char *name) const
+                {
+                    const string _(name); return look_for<T>(arr,_);
+                }
 
 
                 //! access named variables

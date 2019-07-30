@@ -13,6 +13,15 @@ namespace upsylon
     {
         namespace Fit
         {
+            //! C++ fit function prototype
+#define Y_FIT_FUNCTION_PROTO  TL3(T,const Array&,const Variables&)
+            //! C fit function arguments
+#define Y_FIT_CFUNCTION_ARGS      T,const Array&,const Variables&
+            //! C++ validate prototype
+#define Y_FIT_VALIDATE_PROTO  TL4(Array&,const array<bool>&,const Variables &,const size_t)
+            //! C validate arguments
+#define Y_FIT_CVALIDATE_ARGS      Array&,const array<bool>&,const Variables &,const size_t
+
             ////////////////////////////////////////////////////////////////////
             //
             //! Type dependent definitions
@@ -25,13 +34,13 @@ namespace upsylon
                 //
                 // aliases
                 //______________________________________________________________
-                typedef array<T>                                             Array;    //!< array interface
-                typedef vector<T>                                            Vector;   //!< sequence
-                typedef matrix<T>                                            Matrix;   //!< matrix
-                typedef functor<T,TL3(T,const Array&,const Variables&)>      Function; //!< fit function  prototype
-                typedef functor<bool,TL4(Array&,const array<bool>&,const Variables &,size_t)> Validate; //!< do something with variables, return false to modify
-                typedef T (*CFunction)(T,const Array&,const Variables&);            //!< fit CFunction prototype
-
+                typedef array<T>                           Array;    //!< array interface
+                typedef vector<T>                          Vector;   //!< sequence
+                typedef matrix<T>                          Matrix;   //!< matrix
+                typedef functor<T,Y_FIT_FUNCTION_PROTO>    Function; //!< fit function  prototype
+                typedef functor<bool,Y_FIT_VALIDATE_PROTO> Validate; //!< do something with variables, return false to modify
+                typedef T    (*CFunction)(Y_FIT_CFUNCTION_ARGS);     //!< fit CFunction
+                typedef bool (*CValidate)(Y_FIT_CVALIDATE_ARGS);     //!< fit CValidate
                 //______________________________________________________________
                 //
                 // Sequential Call
