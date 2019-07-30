@@ -42,7 +42,7 @@ namespace upsylon
             {
             public:
                 static const int    initial_exponent = -4; //!< initial bias
-                static const size_t num_arrays       =  3; //!< beta/delta/atry
+                static const size_t num_arrays       =  4; //!< beta/delta/atry/delta_cut
                 virtual ~LeastSquares_() throw(); //!< destructor
 
                 //! shared text
@@ -90,15 +90,16 @@ namespace upsylon
                 // members
                 //
                 //______________________________________________________________
-                int      p;       //!< controlled power for lam
-                T        lam;     //!< lam=10^p
-                Matrix   alpha;   //!< Jacobian of beta
-                Matrix   curv;    //!< almost inverse of alpha
-                Array   &beta;    //!< D2 descent direction
-                Array   &delta;   //!< predicted step
-                Array   &atry;    //!< trial position
-                Gradient grad;    //!< gradient computation
-                bool     verbose; //!< verbosity flag
+                int      p;         //!< controlled power for lam
+                T        lam;       //!< lam=10^p
+                Matrix   alpha;     //!< Jacobian of beta
+                Matrix   curv;      //!< almost inverse of alpha
+                Array   &beta;      //!< D2 descent direction
+                Array   &delta;     //!< predicted step
+                Array   &atry;      //!< trial position
+                Array   &bound;     //!< in case of control
+                Gradient grad;      //!< gradient computation
+                bool     verbose;   //!< verbosity flag
 
 
                 //! initialize LeastSquares
@@ -111,6 +112,7 @@ namespace upsylon
                 beta(  this->next() ),
                 delta( this->next() ),
                 atry(  this->next() ),
+                bound( this->next() ),
                 grad(),
                 verbose(is_verbose)
                 {
@@ -137,6 +139,8 @@ namespace upsylon
                                 Callback          *ctrl=0)
                 {
                     static const T  ftol = T(Y_LSF_FTOL);
+                    static const T  zero(0);
+                    static const T  one(1);
 
                     assert(aerr.size()==aorg.size());
                     assert(used.size()==aorg.size());
@@ -169,10 +173,9 @@ namespace upsylon
                     curv. make(nvar,nvar); // curvature
 
                     //----------------------------------------------------------
-                    // initial step damping
+                    // initial step scaling
                     //----------------------------------------------------------
-                    p   = get_ini_exponent();
-                    compute_lam();
+                    p   = get_ini_exponent(); compute_lam();
                     Y_LSF_OUT(std::cerr << "[LSF] \tstarting with lambda=" << lam << "/p=" << p << std::endl);
 
                     //----------------------------------------------------------
@@ -183,8 +186,8 @@ namespace upsylon
                     //----------------------------------------------------------
                     // full initial metrics
                     //----------------------------------------------------------
-                    alpha.ld(0);
-                    beta.ld(0);
+                    alpha.ld(zero);
+                    beta.ld(zero);
                     Y_LSF_OUT(std::cerr << "[LSF] \tcomputing initial gradient..." << std::endl);
                     Y_LSF_CTRL(aorg,sample.variables);
                     T        D2    = sample.computeD2(F,aorg,beta,alpha,grad,used);
@@ -214,8 +217,8 @@ namespace upsylon
                             }
                             else
                             {
-                                alpha[i][i] = 1; // for a null gradient
-                                beta[i]     = 0; // mandatory
+                                alpha[i][i] = one;  // for a null gradient
+                                beta[i]     = zero; // mandatory
                             }
                         }
                         Y_LSF_OUT(std::cerr << "      \t beta  = "  << beta  << std::endl);
@@ -250,8 +253,9 @@ namespace upsylon
                         {
                             tao::add(atry, aorg, delta);
                             (*ctrl)(atry,sample.variables);
-                            tao::sub(delta, atry, aorg);
-                            Y_LSF_OUT(std::cerr << "      \t delta = " << delta << std::endl);
+                            tao::sub(bound, atry, aorg);
+                            Y_LSF_OUT(std::cerr << "      \t bound = " << delta << std::endl);
+                            T factor = one;
                         }
 
 
@@ -260,7 +264,7 @@ namespace upsylon
                         // probe new value atry=aorg+delta at first
                         //______________________________________________________
                         G.calls  = 0;
-                        T D2_try = G(1); assert(1==G.calls);
+                        T D2_try = G(one); assert(1==G.calls);
                         Y_LSF_OUT(std::cerr << "[LSF] \tD2_try = " << D2_try << "@" << atry << std::endl);
 
                         //______________________________________________________
@@ -319,8 +323,8 @@ namespace upsylon
                         // prepare next step: full computation
                         //______________________________________________________
                         decrease_lambda();
-                        alpha.ld(0);
-                        beta.ld(0);
+                        alpha.ld(zero);
+                        beta.ld(zero);
                         Y_LSF_OUT(std::cerr << "[LSF] \tupdating gradient..." << std::endl);
                         D2 = sample.computeD2(F,aorg,beta,alpha,grad,used); // will be D2_try
                         Y_LSF_OUT(std::cerr << "[LSF] \t<cycle #" << cycle << "/>" << std::endl);
@@ -354,7 +358,7 @@ namespace upsylon
                     if(nprm>ndat)
                     {
                         Y_LSF_OUT(std::cerr<< "[LSF] \tmore parameters than data" << std::endl);
-                        aerr.ld(-1);
+                        aerr.ld(-one);
                         return false;
                     }
                     else if(nprm==ndat)
@@ -387,7 +391,7 @@ namespace upsylon
                     const T dS = D2/ndof;
                     for(size_t i=nvar;i>0;--i)
                     {
-                        if(used[i]) aerr[i] = sqrt_of( max_of<T>(0,dS*curv[i][i]) );
+                        if(used[i]) aerr[i] = sqrt_of( max_of(zero,dS*curv[i][i]) );
                     }
                     Y_LSF_OUT(std::cerr<< "[LSF]"<<std::endl);
                     Y_LSF_OUT(OutputLine(std::cerr << "|",Y_LSF_LINE) << std::endl << std::endl);
