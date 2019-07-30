@@ -21,18 +21,17 @@ namespace upsylon
             inline bool data_set_separator(const int C) { return ' '==C || '\t' == C; }
         }
 
+        //! base class for data_set
         class data_set_
         {
         public:
-            typedef memory::pooled             memory_type;
-            typedef key_dumper                 hasher_type;
-            typedef vector<string,memory_type> strings;
-            virtual ~data_set_() throw();
-
-        protected:
-            explicit data_set_() throw();
-            strings labels;
-            
+            typedef memory::pooled             memory_type; //!< small sizes
+            typedef key_dumper                 hasher_type; //!< key is index
+            typedef vector<string,memory_type> strings;     //!< temporary formating
+            virtual ~data_set_() throw();                   //!< destructor
+        protected:                                          //|
+            explicit data_set_() throw();                   //!< setup
+            strings labels;                                 //!< temporary column labels
         private:
             Y_DISABLE_COPY_AND_ASSIGN(data_set_);
         };

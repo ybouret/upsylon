@@ -374,6 +374,12 @@ Y_UTEST(mpn)
         std::cerr << std::dec << "n=" << n << std::endl;
     }
 
+    std::cerr << "-- square root" << std::endl;
+    for(mpn i;i<=100;++i)
+    {
+        mpn s = isqrt(i);
+        std::cerr << "sqrt(" << i << ")=" << s << std::endl;
+    }
 
 
     std::cerr << "sizeof(mpn)=" << sizeof(mpn) << std::endl;

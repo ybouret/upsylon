@@ -18,7 +18,14 @@ namespace upsylon
 
 
     //! default absolute value
-    template <typename T> inline T abs_of(const T a) { return (a<=T(0)) ? -a : a; }
+    template <typename T> inline T abs_of(const T a) { return (a<T(0)) ? -a : a; }
+
+    //! max_of(0,a)
+    template <typename T> inline T geqz(const T a)
+    {
+        static const T zero(0);
+        return (a<=zero) ? zero : a;
+    }
 
     //! default sign value
     template <typename T> inline int sign_of( const T a ) { return (a<0) ? -1 : (  (0<a) ? 1 : 0 );     }
