@@ -15,11 +15,7 @@ namespace upsylon
 {
     namespace math
     {
-        namespace kernel
-        {
-            //! separators for columns
-            inline bool data_set_separator(const int C) { return ' '==C || '\t' == C; }
-        }
+
 
         //! base class for data_set
         class data_set_
@@ -36,6 +32,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(data_set_);
         public:
             static const char fn[]; //!< "data_set: "
+            static bool separator(const int C) throw(); //!< space or tab
         };
 
         //! temporaty object to load data files
@@ -108,7 +105,7 @@ namespace upsylon
                             const size_t idx = i.key();
                             while( tkn.count() != idx )
                             {
-                                if(!tkn.next(kernel::data_set_separator))
+                                if(!tkn.next(separator))
                                 {
                                     throw exception("%u:%smissing %s",iline,fn,*labels[j]);
                                 }

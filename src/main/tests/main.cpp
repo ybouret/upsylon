@@ -75,6 +75,7 @@ Y_UTEST_INIT(128)
     Y_UTEST(fft);
     Y_UTEST(sort);
     Y_UTEST(unique);
+    Y_UTEST(classes);
     Y_UTEST(maintain);
     Y_UTEST(associative);
     Y_UTEST(map);
@@ -138,6 +139,7 @@ Y_UTEST_INIT(128)
     Y_UTEST(uuid);
 
     Y_UTEST(sparse_array);
+    Y_UTEST(sparse_matrix);
 }
 Y_UTEST_EXEC()
 

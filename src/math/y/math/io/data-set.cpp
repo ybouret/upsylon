@@ -14,6 +14,12 @@ namespace upsylon
         }
 
         const char data_set_:: fn[] = "data_set: ";
+
+        bool data_set_:: separator(const int C) throw()
+        {
+            return ' '==C || '\t' == C;
+        }
+
     }
 }
 

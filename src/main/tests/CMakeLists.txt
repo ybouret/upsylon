@@ -146,12 +146,13 @@ ADD_TEST(mp:ilog      test-main ilog)
 ADD_TEST(mp:primes    test-main prime_factor 0 1 2 3 4 0x3E8 0x2711)
 ADD_TEST(mp:primesQ   test-main prime_ratio)
 
-SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-nwsrt.cpp test-locate.cpp)
+SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-nwsrt.cpp test-locate.cpp test-classes.cpp)
 ADD_TEST(sort:sort        test-main sort)
 ADD_TEST(sort:unique      test-main unique)
 ADD_TEST(sort:maintain    test-main maintain)
 ADD_TEST(sort:nw          test-main nwsrt)
 ADD_TEST(sort:locate      test-main locate)
+ADD_TEST(sort:classes     test-main classes)
 
 SOURCE_GROUP(codec FILES test-iobits.cpp test-base64.cpp test-lzo.cpp test-mtf.cpp test-delta.cpp test-asf.cpp test-bwt.cpp)
 ADD_TEST(codec:iobits test-main iobits)
@@ -177,8 +178,9 @@ ADD_TEST(data:heap        test-main heap)
 ADD_TEST(data:avl         test-main avl)
 ADD_TEST(data:const-field test-main const_field)
 
-SOURCE_GROUP(sparse FILES test-sparse-array.cpp)
-ADD_TEST(sparse:array test-main sparse_array)
+SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)
+ADD_TEST(sparse:array  test-main sparse_array)
+ADD_TEST(sparse:matrix test-main sparse_matrix)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

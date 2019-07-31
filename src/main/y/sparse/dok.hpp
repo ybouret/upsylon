@@ -4,7 +4,6 @@
 
 #include "y/associative/set.hpp"
 #include "y/ptr/intr.hpp"
-#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -26,10 +25,7 @@ namespace upsylon
 
             //! initialize
             inline explicit dok_item(param_key_type k, param_type v) :
-            __key(k),
-            value(v)
-            {
-            }
+            __key(k), value(v) { }
 
             //! desctructor
             inline virtual ~dok_item() throw() {}
@@ -74,8 +70,8 @@ namespace upsylon
         public dok_base
         {
         public:
-            Y_DECL_ARGS(T,type);                                         //!< alias
-            Y_DECL_ARGS(KEY,key_type);                                   //!< alias
+            Y_DECL_ARGS(T,type);                                           //!< alias
+            Y_DECL_ARGS(KEY,key_type);                                     //!< alias
             typedef dok_item<KEY,T>                        item_type;      //!< alias
             typedef typename item_type::pointer            item_ptr;       //!< alias
             typedef set<KEY,item_ptr,KEY_HASHER,ALLOCATOR> self_type;      //!< alias
@@ -91,7 +87,7 @@ namespace upsylon
             //! cleanup
             inline virtual ~dok() throw() {}
 
-            //! try to create a new entry
+            //! manually try to create a new entry
             inline bool create(param_key_type k, param_type v)
             {
                 const item_ptr p = new item_type(k,v);

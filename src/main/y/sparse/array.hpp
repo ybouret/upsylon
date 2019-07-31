@@ -171,6 +171,7 @@ namespace upsylon
             size_t n;
             inline bool operator()(const size_t k) const throw() { return (k>n); }
         };
+        
     public:
         container & core; //!< interface for internal memory management
     };
