@@ -11,6 +11,10 @@ namespace upsylon
     {
 
         //! count classes on a SORTED range
+        /**
+         assume that the range is sorted and that
+         the content of the iterator has a '!=' operator
+         */
         template <typename ITERATOR>
         size_t __classes( ITERATOR curr, const ITERATOR last )
         {

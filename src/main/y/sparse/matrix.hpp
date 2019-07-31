@@ -15,18 +15,18 @@ namespace upsylon
         class matrix_key
         {
         public:
-            typedef key_hasher<matrix_key,hashing::fnv> hasher; //!< alias
-            const size_t r;                                     //!< row index
-            const size_t c;                                     //!< column index
-            matrix_key(const size_t R, const size_t C) throw(); //!< setup
-            ~matrix_key() throw();                              //!< cleanup
-            matrix_key(const matrix_key &other) throw();        //!< copy
+            typedef key_hasher<matrix_key,hashing::fnv> hasher;                     //!< alias
+            const size_t r;                                                         //!< row index
+            const size_t c;                                                         //!< column index
+            matrix_key(const size_t R, const size_t C) throw();                     //!< setup
+            ~matrix_key() throw();                                                  //!< cleanup
+            matrix_key(const matrix_key &other) throw();                            //!< copy
             friend bool operator==(const matrix_key &, const matrix_key &) throw(); //!< equality
             friend bool operator!=(const matrix_key &, const matrix_key &) throw(); //!< difference
             friend bool operator< (const matrix_key &, const matrix_key &) throw(); //!< lexicographic
 
+            //! display
             friend std::ostream & operator<<( std::ostream &os, const matrix_key &k );
-
 
         private:
             Y_DISABLE_ASSIGN(matrix_key);
@@ -36,11 +36,12 @@ namespace upsylon
         class matrix_info
         {
         public:
-            virtual ~matrix_info() throw(); //!< cleanup
-            explicit matrix_info(const size_t nr, const size_t nc); //!< setup
+            virtual ~matrix_info() throw();        //!< cleanup
+            explicit matrix_info(const size_t nr,  //|
+                                 const size_t nc); //!< setup
 
-            const size_t rows; //!< number of rows
-            const size_t cols; //!< number of columns
+            const size_t rows;  //!< number of rows
+            const size_t cols;  //!< number of columns
             const size_t count; //!< rows*cols
             
             void check_indices(const size_t r,const size_t c) const; //!< check indices
@@ -51,6 +52,7 @@ namespace upsylon
         };
     }
 
+    //! front-end to an internal dictionay of keys
     template <typename T, typename ALLOCATOR = memory::global>
     class sparse_matrix :
     public sparse::matrix_info,
@@ -65,15 +67,16 @@ namespace upsylon
         typedef typename dok_type::item_type                       item_type;      //!< alias
         typedef typename dok_type::item_ptr                        item_ptr;       //!< alias
 
+        //! setup with rows=nr and cols=nc
         inline explicit sparse_matrix( const size_t nr, const size_t nc ) :
         sparse::matrix_info(nr,nc), const_field<T>(), items(), core(items)
         {
         }
 
-        inline virtual ~sparse_matrix() throw()
-        {
-        }
+        //! cleainp
+        inline virtual ~sparse_matrix() throw() {}
 
+        //! access with on-the-fly creation
         inline type & operator()(const size_t r, const size_t c)
         {
             check_indices(r,c);
@@ -91,6 +94,7 @@ namespace upsylon
             }
         }
 
+        //! access with 'zero' by default
         inline const_type & operator()(const size_t r, const size_t c) const
         {
             check_indices(r,c);
@@ -113,6 +117,7 @@ namespace upsylon
         inline const_iterator begin() const throw() { return items.begin(); } //!< forward iterator begin, const
         inline const_iterator end()   const throw() { return items.end();   } //!< forward iterator end, const
 
+        //! display as a dense matrix
         inline friend std::ostream & operator<<( std::ostream &os, const sparse_matrix &M )
         {
             os << '[';
