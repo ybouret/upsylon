@@ -27,7 +27,7 @@ namespace
         std::cerr << "| checking with " << h.name() << " | #keys=" << nk << std::endl;
         db.free();
         double spd = 0;
-        Y_TIMINGS(spd,1,
+        Y_TIMINGS(spd,0.5,
                   for(size_t i=nk;i>0;--i)
                   {
                       (void) h.key<size_t>( &mk[i], sizeof(sparse::matrix_key) );
@@ -65,11 +65,21 @@ namespace
         }
         std::cerr << "sm.core.size()=" << sm.core.size() << "/" << sm.count << std::endl;
 
+        std::cerr << "raw:";
         for( typename sparse_matrix<T>::iterator i=sm.begin(); i!=sm.end();++i)
         {
             std::cerr << ' ' << **i;
         }
         std::cerr << std::endl;
+        sm.update();
+        std::cerr << "srt:";
+        for( typename sparse_matrix<T>::iterator i=sm.begin(); i!=sm.end();++i)
+        {
+            std::cerr << ' ' << **i;
+        }
+        std::cerr << std::endl;
+
+
         std::cerr << "sm=" << sm << std::endl;
     }
 }
@@ -79,7 +89,7 @@ namespace
 Y_UTEST(sparse_matrix)
 {
 
-    size_t n = 100;
+    size_t n = 10;
     if(argc>1) n = string_convert::to<size_t>( argv[1], "n" );
 
     std::cerr << "| sizeof(sparse::matrix_key)=" << sizeof(sparse::matrix_key) << std::endl;
@@ -143,6 +153,18 @@ Y_UTEST(sparse_matrix)
     fill_sparse<mpn>();
     fill_sparse<mpz>();
     fill_sparse<mpq>();
+
+    std::cerr << std::endl;
+    {
+        sparse_matrix<double> M(2,2);
+        std::cerr << "M=" << M << std::endl;
+        M(1,1) = 11;
+        M(1,2) = 12;
+        M(2,1) = 21;
+        M(2,2) = 22;
+        std::cerr << "M=" << M << std::endl;
+
+    }
 
 
 }

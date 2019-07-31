@@ -99,15 +99,15 @@ namespace upsylon
         {
             check_indices(r,c);
             const key_type  ik(r,c);
-            const item_ptr *ppI = items.search( ik );
-            if(ppI)
-            {
-                return (**ppI).value;
-            }
-            else
-            {
-                return this->value;
-            }
+            const item_ptr *pp = items.search( ik );
+            return (pp!=NULL) ? (**pp).value : this->value;
+        }
+
+
+        //! sort keys by increasing ordere
+        inline void update()
+        {
+            items.sort_keys( comparison::increasing<key_type> );
         }
 
 
@@ -125,7 +125,8 @@ namespace upsylon
             {
                 for(size_t c=1;c<=M.cols;++c)
                 {
-                    os << ' ' << M(r,c);
+                    if(c>1) os << ' ';
+                    os << M(r,c);
                 }
                 if(r<M.rows) os << ';';
             }
