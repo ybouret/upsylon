@@ -46,7 +46,11 @@ namespace upsylon
             }
         }
 
-
+        std::ostream & operator<<( std::ostream &os, const matrix_key &k )
+        {
+            os << '(' << k.r << '.' << k.c << ')';
+            return os;
+        }
     }
 
     namespace sparse
@@ -55,19 +59,31 @@ namespace upsylon
         {
             (size_t&)rows = 0;
             (size_t&)cols = 0;
-
+            (size_t&)count = 0;
         }
 
         static const char fn[] = "sparse_matrix: ";
 
         matrix_info:: matrix_info( const size_t nr, const size_t nc ) :
         rows(nr),
-        cols(nc)
+        cols(nc),
+        count(rows*cols)
         {
             if( ((rows<=0) || (cols<=0)) && (rows||cols) )
             {
                 throw exception("%sbad dimensions %ux%u",fn,unsigned(rows),unsigned(cols));
             }
+        }
+
+        void matrix_info:: check_indices(const size_t r,const size_t c) const
+        {
+            if( (r<=0) || (r>rows) || (c<=0) || (c>cols) )
+                throw exception("%sinvalid indices (%u,%u) not in [1:%u]x[1:%u]", fn, unsigned(r), unsigned(c), unsigned(rows), unsigned(cols) );
+        }
+
+        void matrix_info:: insert_failure(const sparse::matrix_key  &k) const
+        {
+            throw exception("%s: unexpected failure to insert item@(%u,%u)",fn,unsigned(k.r),unsigned(k.c));
         }
 
     }
