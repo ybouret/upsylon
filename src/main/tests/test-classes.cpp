@@ -1,11 +1,7 @@
 #include "y/sort/classes.hpp"
-#include "y/sparse/matrix.hpp"
 #include "y/utest/run.hpp"
 
 #include "y/sequence/vector.hpp"
-#include "y/sequence/list.hpp"
-
-#include "y/sort/sequence.hpp"
 #include "y/mpl/rational.hpp"
 
 using namespace upsylon;

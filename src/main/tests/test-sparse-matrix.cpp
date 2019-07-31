@@ -8,7 +8,7 @@
 #include "y/hashing/crc32.hpp"
 #include "y/hashing/bjh32.hpp"
 
-#include "y/sort/heap.hpp"
+#include "y/sort/classes.hpp"
 
 
 using namespace upsylon;
@@ -25,9 +25,7 @@ namespace
         const size_t nk = mk.size();
         db.ensure(nk);
         std::cerr << "| checking with " << h.name() << " | #keys=" << nk << std::endl;
-        std::cerr << "| free db" << std::endl;
         db.free();
-        std::cerr << "| running" << std::endl;
         double spd = 0;
         Y_TIMINGS(spd,1,
                   for(size_t i=nk;i>0;--i)
@@ -39,14 +37,16 @@ namespace
         spd /= 1e6;
         std::cerr << "| |_speed   = " << spd << " M/s" << std::endl;
 
-        std::cerr << "| collecting..." << std::endl;
+       // std::cerr << "| collecting..." << std::endl;
         for(size_t i=nk;i>0;--i)
         {
             const size_t k = h.key<size_t>( &mk[i], sizeof(sparse::matrix_key) );
             db.push_back_( k );
         }
-        std::cerr << "| sorting..." << std::endl;
-        hsort(db,comparison::increasing<size_t>);
+        //std::cerr << "| counting classes" << std::endl;
+        const size_t ncls = sort_classes(db);
+        //std::cerr << "| |_#class   = " << ncls << std::endl;
+        std::cerr << "| |_collide = " << nk-ncls << std::endl;
 
 
         std::cerr << "|" << std::endl;

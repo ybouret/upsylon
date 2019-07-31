@@ -2,7 +2,8 @@
 #ifndef Y_SORT_CLASSES_INCLUDED
 #define Y_SORT_CLASSES_INCLUDED 1
 
-#include "y/os/platform.hpp"
+#include "y/sort/sequence.hpp"
+#include "y/comparison.hpp"
 
 namespace upsylon
 {
@@ -41,6 +42,14 @@ namespace upsylon
     size_t classes( const SEQUENCE &seq )
     {
         return core::__classes(seq.begin(),seq.end());
+    }
+
+    //! sort and count classes
+    template <typename SEQUENCE>
+    size_t sort_classes( SEQUENCE &seq )
+    {
+        sort_sequence(seq,comparison::increasing<typename SEQUENCE::type>);
+        return classes(seq);
     }
 
 }
