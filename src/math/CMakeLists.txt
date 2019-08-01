@@ -16,6 +16,12 @@ SET(kernel_srcs ${kernel_decl} ${kernel_code})
 SOURCE_GROUP( kernel FILES ${kernel_srcs} )
 INSTALL( FILES ${kernel_decl} DESTINATION include/y/math/kernel )
 
+FILE(GLOB kernel_tao_decl y/math/kernel/tao/*.hxx)
+FILE(GLOB kernel_tao_code y/math/kernel/tao/*.cpp)
+SET(kernel_tao_srcs ${kernel_tao_decl} ${kernel_tao_code})
+SOURCE_GROUP( kernel/tao FILES ${kernel_tao_srcs} )
+INSTALL( FILES ${kernel_tao_decl} DESTINATION include/y/math/kernel/tao )
+
 FILE(GLOB io_decl y/math/io/*.hpp)
 FILE(GLOB io_code y/math/io/*.cpp)
 SET(io_srcs ${io_decl} ${io_code})

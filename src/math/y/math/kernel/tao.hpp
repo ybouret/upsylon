@@ -25,7 +25,7 @@ namespace upsylon
             //
             // ld
             //__________________________________________________________________
-#include "tao-ld.hxx"
+#include "tao/ld.hxx"
             //! a[1..size()]=v
             template <typename T> static inline
             void ld( array<T> &a, typename type_traits<T>::parameter_type v, concurrent::for_each *loop=0)
@@ -44,7 +44,7 @@ namespace upsylon
             //
             // set
             //__________________________________________________________________
-#include "tao-set.hxx"
+#include "tao/set.hxx"
             //! a[1..size()] = b[1..a.size()]
             template <typename T,typename U> static inline
             void set( array<T> &a, const array<U> &b, concurrent::for_each *loop=0)
@@ -74,7 +74,7 @@ namespace upsylon
             //
             // add
             //__________________________________________________________________
-#include "tao-add.hxx"
+#include "tao/add.hxx"
             //! a[1..size()] += b[1..a.size()]
             template <typename T,typename U> static inline
             void add( array<T> &a, const array<U> &b, concurrent::for_each *loop=0)
@@ -107,7 +107,7 @@ namespace upsylon
             //
             // sub
             //__________________________________________________________________
-#include "tao-sub.hxx"
+#include "tao/sub.hxx"
             //! a[1..size()] -= b[1..a.size()]
             template <typename T,typename U> static inline
             void sub( array<T> &a, const array<U> &b, concurrent::for_each *loop=0)
@@ -139,7 +139,7 @@ namespace upsylon
             //
             // muladd
             //__________________________________________________________________
-#include "tao-muladd.hxx"
+#include "tao/muladd.hxx"
             //! a[1..size()] += x * b[1..a.size()]
             template <typename T,typename U> static inline
             void muladd( array<T> &a, typename type_traits<T>::parameter_type x, const array<U> &b, concurrent::for_each *loop=0)
@@ -195,7 +195,7 @@ namespace upsylon
             //
             // dot product
             //__________________________________________________________________
-#include "tao-dot.hxx"
+#include "tao/dot.hxx"
             //! a*b, don't use concurrent version on compound types!
             template <typename T,typename U,typename V> static inline
             T dot( const array<U> &a, const array<V> &b, concurrent::for_each *loop=0)
@@ -216,7 +216,7 @@ namespace upsylon
             //
             // rms
             //__________________________________________________________________
-#include "tao-rms.hxx"
+#include "tao/rms.hxx"
             //! single vector
             template <typename T> static inline
             typename real_for<T>::type rms( const array<T> &a, concurrent::for_each *loop=0)
@@ -309,7 +309,7 @@ namespace upsylon
             // level-2 : matrix/array ops
             //
             ////////////////////////////////////////////////////////////////////
-#include "tao-mul.hxx"
+#include "tao/mul.hxx"
             
             //! a = M*b
             template <typename T,typename U,typename V> static inline
@@ -382,7 +382,7 @@ namespace upsylon
             // level-3 : matrix/matrix ops
             //
             ////////////////////////////////////////////////////////////////////
-#include "tao-mmul.hxx"
+#include "tao/mmul.hxx"
             //! M=A*B
             template <typename T,typename U,typename V> static inline
             void mmul(matrix<T>       &M,

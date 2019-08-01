@@ -8,7 +8,7 @@ TARGET_LINK_Y(test-m m)
 ENABLE_TESTING()
 SOURCE_GROUP(mk FILES test-types.cpp test-adjoint.cpp test-cholesky.cpp
 test-diag-symm.cpp test-diag.cpp test-lu.cpp test-svd.cpp test-tao.cpp
-test-tao2.cpp test-tao3.cpp test-tridiag.cpp test-cyclic.cpp
+test-tao2.cpp test-tao3.cpp test-tridiag.cpp test-cyclic.cpp test-sparse.cpp
 )
 ADD_TEST(mk:types    test-m types)
 ADD_TEST(mk:adjoint  test-m adjoint)
@@ -22,6 +22,7 @@ ADD_TEST(mk:cyclic   test-m cyclic)
 ADD_TEST(mk:tao      test-m tao)
 #ADD_TEST(mk:tao2     test-m tao2)
 #ADD_TEST(mk:tao3     test-m tao3)
+ADD_TEST(mk:sparse   test-m sparse)
 
 SOURCE_GROUP(ode FILES test-michaelis.cpp test-ode.cpp test-rk4.cpp
 test-ode-expl.cpp test-ode-impl.cpp)
