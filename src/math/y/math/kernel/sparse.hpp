@@ -19,23 +19,7 @@ namespace upsylon
             {
                 assert(a.size()==b.size());
 
-#if 0
-                typename sparse_array<T>::iterator       ia = a.begin();
-                size_t                                   na = a.core.size();
-                typename sparse_array<U>::const_iterator ib = b.begin();
-                size_t                                   nb = b.core.size();
-
-                while(na>0&&nb>0)
-                {
-
-
-                    --na;++ia;
-                    --nb;++ib;
-                }
-#endif
-
-#if 1
-                // add to a the shared indices
+                // add to a the common indices
                 {
                     typename sparse_array<T>::iterator ia = a.begin();
                     size_t na = a.core.size();
@@ -61,10 +45,45 @@ namespace upsylon
                         --nb;++ib;
                     }
                 }
-#endif
-
-
             }
+
+            //! a -= b;
+            template <typename T, typename U> static inline
+            void sub( sparse_array<T> &a, const sparse_array<U> &b )
+            {
+                assert(a.size()==b.size());
+
+                // add to a the common indices
+                {
+                    typename sparse_array<T>::iterator ia = a.begin();
+                    size_t na = a.core.size();
+                    while(na>0)
+                    {
+                        const U *pb = b( ia.key() );
+                        if(pb) { (**ia).value -= (*pb); }
+                        --na;++ia;
+                    }
+                }
+
+                //! set in a the remaining indices
+                {
+                    size_t                                   nb = b.core.size();
+                    typename sparse_array<U>::const_iterator ib = b.begin();
+                    while(nb>0)
+                    {
+                        const size_t k = ib.key();
+                        if( ! a(k) )
+                        {
+                            const U &val = (**ib).value;
+                            const U  tmp = -val;
+                            (void) a(k,tmp);
+                        }
+                        --nb;++ib;
+                    }
+                }
+            }
+
+
 
         };
 

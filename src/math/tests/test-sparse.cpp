@@ -27,6 +27,10 @@ namespace {
         std::cerr << "b   = " << b << std::endl;
         spark::add(a,b);
         std::cerr << "a+b = " << a << std::endl;
+        spark::sub(a,b);
+        std::cerr << "a-b = " << a << std::endl;
+        std::cerr << "a   = " << a << std::endl;
+
     }
 
 

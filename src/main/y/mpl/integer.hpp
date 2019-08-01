@@ -139,7 +139,7 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
             Y_MPZ_WRAP(-,__sub)
 
             //! unary minus
-            integer operator-();
+            integer operator-() const;
 
             //! increment
             integer __dec() const;

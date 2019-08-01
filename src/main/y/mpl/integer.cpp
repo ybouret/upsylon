@@ -183,7 +183,7 @@ namespace upsylon
         integer   integer::operator++(int) { integer tmp = __inc(); xch(tmp); return tmp;   }
         
 
-        integer integer::operator-() { return integer(sign_ops::neg(s),n); }
+        integer integer::operator-() const { return integer(sign_ops::neg(s),n); }
 
         integer integer::__dec() const
         {
