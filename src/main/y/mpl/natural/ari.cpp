@@ -123,17 +123,12 @@ namespace upsylon
 
         natural natural:: square_root_of(const natural &n)
         {
-            if(n.bytes<=sizeof(word_t)/2)
+            if( n.is_zero() || n.is_byte(1) )
             {
-                word_t w = 0;
-                memcpy(&w,n.byte,sizeof(word_t));
-                w = swap_le(w);
-                std::cerr << "[sqrt_fast: n=" << n << ", w=" << w << "]" << std::endl;
-                return natural( isqrt(w) );
+                return n;
             }
             else
             {
-                //natural x0 = n;
                 natural x1 = (n>>1);
                 while(true)
                 {
