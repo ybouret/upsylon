@@ -53,7 +53,7 @@ namespace upsylon
             {
                 assert(a.size()==b.size());
 
-                // add to a the common indices
+                // sub to a the common indices
                 {
                     typename sparse_array<T>::iterator ia = a.begin();
                     size_t na = a.core.size();
@@ -65,7 +65,7 @@ namespace upsylon
                     }
                 }
 
-                //! set in a the remaining indices
+                //! set in a the remaining indices, negative
                 {
                     size_t                                   nb = b.core.size();
                     typename sparse_array<U>::const_iterator ib = b.begin();
