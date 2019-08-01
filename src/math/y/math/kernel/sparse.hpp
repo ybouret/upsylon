@@ -49,7 +49,7 @@ namespace upsylon
                     const U *pb = b( ia.key() );
                     if(pb)
                     {
-                        ans += (**ia).value * (*pb);
+                        ans += (***ia) * (*pb);
                     }
                     --na; ++ia;
                 }
@@ -64,10 +64,9 @@ namespace upsylon
                 {
                     ***i *= X;
                 }
-
             }
 
-
+            
             //! matrix vector product
             template <typename T, typename U, typename V> static inline
             void mul( sparse_array<T> &a, const sparse_matrix<U> &M, const sparse_array<V> &b )
