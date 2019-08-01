@@ -96,14 +96,14 @@ namespace upsylon
         type * operator()(const size_t i) throw()
         {
             typename dok_type::item_ptr *ppI = items.search(i);
-            return (ppI ? & (**ppI).value : NULL );
+            return (ppI ? & (***ppI) : NULL );
         }
 
         //! look for existence, const
         const_type * operator()(const size_t i) const throw()
         {
             const typename dok_type::item_ptr *ppI = items.search(i);
-            return (ppI ? & (**ppI).value : NULL );
+            return (ppI ? & (***ppI) : NULL );
         }
 
 
@@ -114,7 +114,7 @@ namespace upsylon
             typename dok_type::item_ptr *ppI = items.search(i);
             if(ppI)
             {
-                return (**ppI).value;
+                return ***ppI;
             }
             else
             {
@@ -131,7 +131,7 @@ namespace upsylon
             const typename dok_type::item_ptr *ppI = items.search(i);
             if(ppI)
             {
-                return (**ppI).value;
+                return ***ppI;
             }
             else
             {
@@ -149,7 +149,7 @@ namespace upsylon
                 os << arr[i];
                 if(i<n) os << ' ';
             }
-            os << ']';
+            os << ']' << '\'';
             return os;
         }
 

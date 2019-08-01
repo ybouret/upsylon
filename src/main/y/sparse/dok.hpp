@@ -23,6 +23,9 @@ namespace upsylon
             const_key_type __key; //!< unique key
             type           value; //!< associated value
 
+            inline type       & operator*() throw()       { return value; } //!< content
+            inline const_type & operator*() const throw() { return value; } //!< content, const
+
             //! initialize
             inline explicit dok_item(param_key_type k, param_type v) :
             __key(k), value(v) { }

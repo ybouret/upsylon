@@ -84,7 +84,7 @@ namespace upsylon
             item_ptr *ppI = items.search( ik );
             if( ppI )
             {
-                return (**ppI).value;
+                return ***ppI;
             }
             else
             {
@@ -100,7 +100,7 @@ namespace upsylon
             check_indices(r,c);
             const key_type  ik(r,c);
             const item_ptr *pp = items.search( ik );
-            return (pp!=NULL) ? (**pp).value : this->value;
+            return (pp!=NULL) ? (***pp) : this->value;
         }
 
 
