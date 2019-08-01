@@ -128,7 +128,7 @@ namespace upsylon
                 word_t w = 0;
                 memcpy(&w,n.byte,sizeof(word_t));
                 w = swap_le(w);
-                //std::cerr << "sqrt_fast: n=" << n << ", w=" << std::endl;
+                std::cerr << "[sqrt_fast: n=" << n << ", w=" << w << "]" << std::endl;
                 return natural( isqrt(w) );
             }
             else
