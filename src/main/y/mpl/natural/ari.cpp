@@ -123,7 +123,7 @@ namespace upsylon
 
         natural natural:: square_root_of(const natural &n)
         {
-            if(n.bytes<=sizeof(word_t))
+            if(n.bytes<=sizeof(word_t)/2)
             {
                 word_t w = 0;
                 memcpy(&w,n.byte,sizeof(word_t));
