@@ -87,8 +87,6 @@ namespace upsylon
         type & operator()( const size_t i, param_type args )
         {
             check_index(i);
-            typename dok_type::item_ptr *ppI = items.search(i);
-            if(ppI) create_failure(i);
             typename dok_type::item_ptr p = new typename dok_type::item_type(i,args);
             if(!items.insert(p)) insert_failure(i);
             return p->value;
@@ -160,6 +158,16 @@ namespace upsylon
 
         inline const_iterator begin() const throw() { return items.begin(); } //!< forward iterator begin, const
         inline const_iterator end()   const throw() { return items.end();   } //!< forward iterator end, const
+
+        //! no throw swap
+        inline void swap_with( sparse_array &other ) throw()
+        {
+            if( this != &other)
+            {
+                cswap(size_,other.size_);
+                items.swap_table_with(other.items);
+            }
+        }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(sparse_array);

@@ -50,6 +50,12 @@ static inline void fill( SP_ARR &arr )
     query(arr);
     arr.update();
     query(arr);
+
+    SP_ARR tmp;
+    tmp.swap_with(arr);
+    std::cerr << "--> swapped:" << std::endl;
+    query(arr);
+    query(tmp);
     std::cerr << std::endl;
 }
 
