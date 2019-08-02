@@ -56,6 +56,28 @@ namespace upsylon
                 return ans;
             }
 
+            //! norm squared
+            template <typename T> static inline
+            T norm2( const sparse_array<T> &a )
+            {
+                size_t na = a.core.size();
+                if(na>0)
+                {
+                    typename sparse_array<T>::const_iterator ia = a.begin();
+                    T ans = square_of( ***ia );
+                    while(--na>0)
+                    {
+                        ++ia;
+                        ans += square_of( ***ia );
+                    }
+                    return ans;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
             //! multiply by a scalar
             template <typename T> static inline
             void mul( sparse_array<T> &a, typename type_traits<T>::parameter_type X )

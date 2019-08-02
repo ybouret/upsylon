@@ -34,15 +34,15 @@ namespace {
             const size_t    n = 1 + alea.leq(20);
             sparse_array<T> a(n); fill(a);
             sparse_array<T> b(n); fill(b);
-            std::cerr << "a   = " << a << std::endl;
-            std::cerr << "b   = " << b << std::endl;
+            std::cerr << "a     = " << a << std::endl;
+            std::cerr << "b     = " << b << std::endl;
             spark::add(a,b);
-            std::cerr << "a+b = " << a << std::endl;
+            std::cerr << "a+b   = " << a << std::endl;
             spark::sub(a,b);
-            std::cerr << "a-b = " << a << std::endl;
-            std::cerr << "a   = " << a << std::endl;
-
-            std::cerr << "a.b = " << spark::dot(a,b) << std::endl;
+            std::cerr << "a-b   = "   << a << std::endl;
+            std::cerr << "a     = "   << a << std::endl;
+            std::cerr << "a.b   = "   << spark::dot(a,b) << std::endl;
+            std::cerr << "|a|^2 = "   << spark::norm2(a) << std::endl;
         }
 
         {
