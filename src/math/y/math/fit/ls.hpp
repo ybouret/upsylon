@@ -40,8 +40,8 @@ namespace upsylon
             {
             public:
                 static const int    initial_exponent = -4; //!< initial bias
-                static const size_t num_arrays       =  4; //!< beta/delta/atry/delta_cut
-                virtual ~LeastSquares_() throw(); //!< destructor
+                static const size_t num_arrays       =  4; //!< sub arrays: beta/delta/atry/delta_cut
+                virtual ~LeastSquares_() throw();          //!< destructor
 
                 //! shared text
                 static const char *ConvergedText(const bool flag) throw();
@@ -49,7 +49,7 @@ namespace upsylon
                 //! yes or no
                 static const char *YesOrNoText(const bool flag) throw();
 
-                //! draw sep line
+                //! draw separator line
                 static std::ostream &OutputLine( std::ostream &, size_t n );
 
 
@@ -122,10 +122,10 @@ namespace upsylon
                 //! destructor
                 inline virtual ~LeastSquares() throw() {}
 
-                //! p < pmin => lam = 0
+                //! (p < pmin) => (lam = 0)
                 static inline int get_min_exponent() throw() { return -int(numeric<T>::dig);       }
 
-                //! p > pmax => overflow and early return
+                //! (p > pmax) => overflow and early return
                 static inline int get_max_exponent() throw() { return int(numeric<T>::max_10_exp); }
 
                 //! initial p value
