@@ -56,7 +56,11 @@ namespace upsylon
             
             virtual const char *className() const throw();            //!< CLASS_NAME
             virtual size_t      serialize( ios::ostream &fp ) const;  //!< number of factors and factors
-            static const char   CLASS_NAME[];                         //!< "prmQ"
+            static const char   CLASS_NAME[];                         //!< "mpQ"
+            static prime_factors_ratio read( ios::istream &fp);       //!< read from serialize()
+
+            friend bool operator==( const prime_factors_ratio &, const prime_factors_ratio &) throw();
+            friend bool operator!=( const prime_factors_ratio &, const prime_factors_ratio &) throw();
 
 
         private:
@@ -64,6 +68,8 @@ namespace upsylon
         };
 
     }
+
+    typedef mpl::prime_factors_ratio mpQ; //!< alias
 
 }
 

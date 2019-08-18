@@ -75,7 +75,6 @@ namespace upsylon
 
         prime_factors & prime_factors:: operator=( const prime_factors &other )
         {
-
             prime_factors tmp( other );
             xch(tmp);
             return *this;
@@ -379,26 +378,31 @@ namespace upsylon
 
 }
 
-#include "y/ios/ostream.hpp"
+#include "y/ios/serializer.hpp"
+
 namespace upsylon
 {
     namespace mpl
     {
-        const char  prime_factors:: CLASS_NAME[] = "prmF";
+        const char  prime_factors:: CLASS_NAME[] = "mpF";
         const char *prime_factors:: className() const throw() { return CLASS_NAME; }
 
         size_t prime_factors:: serialize(ios::ostream &fp) const
         {
-            size_t total = 0;
-            fp.emit_upack(factors.size(),&total);
-
-            for( prime_factor::db::const_iterator i=factors.begin(); i != factors.end(); ++i)
-            {
-                total += (**i).serialize(fp);
-            }
-            
-            return total;
+            return ios::serializer::write_meta(fp,factors);
         }
 
+
+        prime_factors prime_factors:: read(ios::istream &fp)
+        {
+            prime_factors ans;
+            for(size_t count=fp.read_upack<size_t>(); count>0; --count)
+            {
+                const prime_factor f = prime_factor::read(fp);
+                __ins( ans.factors, f );
+            }
+            ans.update();
+            return ans;
+        }
     }
 }

@@ -59,7 +59,8 @@ namespace upsylon
             
             virtual const char *className() const throw();            //!< CLASS_NAME
             virtual size_t      serialize( ios::ostream &fp ) const;  //!< number of factors and factors
-            static const char   CLASS_NAME[];                         //!< "prmF"
+            static const char   CLASS_NAME[];                         //!< "mpF"
+            static prime_factors read(ios::istream &fp);              //!< read from serialize
 
         private:
             prime_factor::db factors;
@@ -71,6 +72,8 @@ namespace upsylon
             friend class prime_factors_ratio;
         };
     }
+
+    typedef mpl::prime_factors mpF; //!< alias
 
 }
 

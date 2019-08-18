@@ -306,7 +306,7 @@ prime_factors_ratio Q(num,new_den); xch(Q);\
             return rational(n,d);
         }
 
-        const char   prime_factors_ratio:: CLASS_NAME[] = "prmQ";
+        const char   prime_factors_ratio:: CLASS_NAME[] = "mpQ";
         const char * prime_factors_ratio:: className() const throw() { return CLASS_NAME; }
 
         size_t prime_factors_ratio:: serialize(ios::ostream &fp) const
@@ -316,6 +316,22 @@ prime_factors_ratio Q(num,new_den); xch(Q);\
             return bytes_for_den+bytes_for_num;
         }
 
+        prime_factors_ratio prime_factors_ratio::  read( ios::istream &fp)
+        {
+            const prime_factors _num = mpF::read(fp);
+            const prime_factors _den = mpF::read(fp);
+            return prime_factors_ratio(_num,_den);
+        }
+
+        bool operator==( const prime_factors_ratio &lhs, const prime_factors_ratio &rhs) throw()
+        {
+            return (lhs.num==rhs.num) && (lhs.den==rhs.den);
+        }
+
+        bool operator!=( const prime_factors_ratio &lhs, const prime_factors_ratio &rhs) throw()
+        {
+            return (lhs.num!=rhs.num) || (lhs.den!=rhs.den);
+        }
 
     }
 

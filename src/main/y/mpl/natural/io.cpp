@@ -201,7 +201,7 @@ namespace upsylon
             const size_t num_bytes = fp.read_upack<size_t>(nr);
             mpn          ans(num_bytes,as_capacity);
             fp.input(ans.byte,(ans.bytes=num_bytes));
-            ans.update();
+            ans.upgrade();
             if(ans.bytes!=num_bytes) throw exception("mpn.read(corrupted bytes)");
             if(nr) *nr += num_bytes;
             return ans;

@@ -105,6 +105,7 @@ Y_UTEST_INIT(128)
     Y_UTEST(local_file);
     Y_UTEST(disk_file);
     Y_UTEST(disk_std);
+    Y_UTEST(serializer);
 
     Y_UTEST(bin2dat);
     Y_UTEST(digest);

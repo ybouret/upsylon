@@ -1,6 +1,7 @@
 
 #include "y/mpl/prime/factor.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -84,6 +85,15 @@ namespace upsylon
             fp.emit_upack(n,&bytes_for_n);
             return bytes_for_n+bytes_for_p;
         }
+
+        prime_factor prime_factor:: read( ios::istream &fp )
+        {
+            const natural prm = natural::read(fp);       if(prm<=0) throw exception("%s::read(invalid prime)",    CLASS_NAME);
+            const size_t  num = fp.read_upack<size_t>(); if(num<=0) throw exception("%s::read(invalid exponent)", CLASS_NAME);
+
+            return prime_factor(prm,num);
+        }
+
     }
 
 }
