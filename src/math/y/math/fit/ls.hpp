@@ -146,7 +146,8 @@ namespace upsylon
                     assert(aerr.size()==aorg.size());
                     assert(used.size()==aorg.size());
                     const size_t nvar  = aorg.size();
-                    size_t       cycle = 0;
+                    size_t       cycle = 0;             // number of cycles
+                    size_t       nbad  = 0;             // number of successive bad steps
 
                     //__________________________________________________________
                     //
@@ -267,10 +268,12 @@ namespace upsylon
                             if( !(*check)(atry,used,sample.variables,cycle) )
                             {
                                 ok = false;
+                                ++nbad;
                                 //----------------------------------------------
                                 // trial is not valid
                                 //----------------------------------------------
                                 tao::sub(bound, atry, aorg);
+                                Y_LSF_OUT(std::cerr << "      \t #bad  = " << nbad  << std::endl);
                                 Y_LSF_OUT(std::cerr << "      \t bound = " << bound << std::endl);
                                 T scale = one;
                                 for(size_t i=nvar;i>0;--i)
@@ -285,6 +288,10 @@ namespace upsylon
                                 Y_LSF_OUT(std::cerr << "      \t scale = " << scale << std::endl);
                                 tao::mulset(delta,scale,delta);
                             }
+                        }
+                        if(ok)
+                        {
+                            nbad = 0;
                         }
 
 
