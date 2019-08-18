@@ -2,7 +2,7 @@
 #ifndef Y_MATH_FIT_SAMPLE_INCLUDED
 #define Y_MATH_FIT_SAMPLE_INCLUDED 1
 
-#include "y/math/fit/sample-type.hpp"
+#include "y/math/fit/sample/type.hpp"
 #include "y/sort/sorted-sum.hpp"
 #include "y/sort/index.hpp"
 

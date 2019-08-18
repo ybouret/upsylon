@@ -1,9 +1,9 @@
-
 //! \file
+
 #ifndef Y_MATH_FIT_SAMPLE_TYPE_INCLUDED
 #define Y_MATH_FIT_SAMPLE_TYPE_INCLUDED 1
 
-#include "y/math/fit/sample-info.hpp"
+#include "y/math/fit/sample/info.hpp"
 #include "y/math/fit/types.hpp"
 #include "y/math/stat/metrics.hpp"
 #include "y/ios/ostream.hpp"

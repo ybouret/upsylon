@@ -1,4 +1,4 @@
-#include "y/math/fit/sample-info.hpp"
+#include "y/math/fit/sample/info.hpp"
 
 namespace upsylon
 {

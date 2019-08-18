@@ -2,7 +2,7 @@
 #include "y/math/ode/explicit/explode.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
-#include "y/math/fit/samples-io.hpp"
+#include "y/math/fit/sample/io.hpp"
 #include "y/math/fit/ls.hpp"
 
 using namespace upsylon;
