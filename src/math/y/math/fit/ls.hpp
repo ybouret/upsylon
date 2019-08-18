@@ -551,7 +551,12 @@ namespace upsylon
                     }
                 }
 
+
+                //--------------------------------------------------------------
+                //
                 //! structure to get 1D function along descent step
+                //
+                //--------------------------------------------------------------
                 struct callD2
                 {
                     SampleType<T>  *sample;
@@ -587,8 +592,8 @@ namespace upsylon
                         if( g.b < D2_try )
                         {
                             Y_LSF_OUT(std::cerr << "[LSF] \t[ increasing => damping ]" << std::endl);
-                            minimize::run(G,u,g,utol);
-                            const T ans = G(u.b);
+                            minimize::run(G,u,g,utol); // perform minimisation
+                            const T ans = G(u.b);      // recompute final point
                             Y_LSF_OUT(std::cerr << "[LSF] \t\tdamped = " << u.b << std::endl);
                             Y_LSF_OUT(std::cerr << "[LSF] \t\tD2_try = " << g.b << ", #calls=" << calls << std::endl);
                             return ans;
@@ -596,7 +601,7 @@ namespace upsylon
                         else
                         {
                             Y_LSF_OUT(std::cerr << "[LSF] \t[ decreasing => forward ]" << std::endl);
-                            return G(1);
+                            return G(1); // recompute final point
                         }
                     }
                 };
