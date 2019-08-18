@@ -56,6 +56,11 @@ namespace upsylon
             //! test difference
             friend bool operator!=( const prime_factors &lhs, const prime_factors &rhs ) throw();
 
+            
+            virtual const char *className() const throw();            //!< CLASS_NAME
+            virtual size_t      serialize( ios::ostream &fp ) const;  //!< number of factors and factors
+            static const char   CLASS_NAME[];                         //!< "prmF"
+
         private:
             prime_factor::db factors;
             void update();

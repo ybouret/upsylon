@@ -12,7 +12,7 @@ namespace upsylon
     {
 
         //! Strong PRobable Prime
-        class sprp : public number_type
+        class sprp //: public number_type
         {
         public:
             //! internal node to store exponents
@@ -50,6 +50,8 @@ namespace upsylon
 
             //! Miller's test
             bool testPrime() const;
+
+            
 
         private:
             Y_DISABLE_ASSIGN(sprp);

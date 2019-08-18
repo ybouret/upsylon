@@ -38,7 +38,7 @@ namespace upsylon
             prime_factor( const prime_factor &);                  //!< copy
             virtual ~prime_factor() throw();                      //!< cleanup
             const natural & key() const throw();                  //!< for database
-            natural         value() const;                            //!< compute product
+            natural         value() const;                        //!< compute product
 
             //! output
             friend std::ostream & operator<<( std::ostream &os, const prime_factor & );
@@ -58,6 +58,14 @@ namespace upsylon
             friend bool operator==( const prime_factor &lhs, const prime_factor &rhs ) throw();
             //! test difference
             friend bool operator!=( const prime_factor &lhs, const prime_factor &rhs ) throw();
+
+            //__________________________________________________________________
+            //
+            // Serialize
+            //__________________________________________________________________
+            virtual const char *className() const throw();            //!< CLASS_NAME
+            virtual size_t      serialize( ios::ostream &fp ) const;  //!< num and den
+            static const char   CLASS_NAME[];                         //!< "prmf"
 
         private:
             Y_DISABLE_ASSIGN(prime_factor);

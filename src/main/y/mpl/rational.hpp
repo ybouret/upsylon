@@ -116,6 +116,15 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
             //__________________________________________________________________
             Y_MPQ_WRAP(/,__div)
 
+            //__________________________________________________________________
+            //
+            // Serialize
+            //__________________________________________________________________
+            virtual const char *className() const throw();            //!< CLASS_NAME
+            virtual size_t      serialize( ios::ostream &fp ) const;  //!< num and den
+            static  const char  CLASS_NAME[];                         //!< "mpq"
+            static  rational    read( ios::istream &fp);              //!< read from serialized
+            
         private:
             void __simplify();
             static  rational __add( const rational &lhs, const rational &rhs );

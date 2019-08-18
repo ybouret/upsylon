@@ -53,6 +53,11 @@ namespace upsylon
 
             //! output
             friend std::ostream & operator<<( std::ostream &, const prime_factors_ratio &Q );
+            
+            virtual const char *className() const throw();            //!< CLASS_NAME
+            virtual size_t      serialize( ios::ostream &fp ) const;  //!< number of factors and factors
+            static const char   CLASS_NAME[];                         //!< "prmQ"
+
 
         private:
             void update();

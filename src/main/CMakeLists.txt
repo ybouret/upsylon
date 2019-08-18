@@ -165,6 +165,13 @@ SET(mpl_prime_srcs ${mpl_prime_decl} ${mpl_prime_code})
 SOURCE_GROUP( mpl/prime FILES ${mpl_prime_srcs} )
 INSTALL( FILES ${mpl_prime_decl} DESTINATION include/y/mpl/prime )
 
+FILE(GLOB mpl_rsa_decl y/mpl/rsa/*.hpp)
+FILE(GLOB mpl_rsa_code y/mpl/rsa/*.cpp)
+SET(mpl_rsa_srcs ${mpl_rsa_decl} ${mpl_rsa_code})
+SOURCE_GROUP( mpl/rsa FILES ${mpl_rsa_srcs} )
+INSTALL( FILES ${mpl_rsa_decl} DESTINATION include/y/mpl/rsa )
+
+
 
 FILE(GLOB math_decl y/math/*.hpp)
 FILE(GLOB math_code y/math/*.cpp)
@@ -282,9 +289,7 @@ ${ios_srcs}
 ${ios_rc_srcs}
 ${codec_srcs} ${lzo_srcs}
 ${fft_srcs}
-${mpl_srcs}
-${mpl_natural_srcs}
-${mpl_prime_srcs}
+${mpl_srcs} ${mpl_natural_srcs} ${mpl_prime_srcs} ${mpl_rsa_srcs}
 ${math_srcs}
 ${functor_srcs}
 ${fs_srcs}

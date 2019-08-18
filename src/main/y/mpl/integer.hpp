@@ -163,6 +163,16 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
             //__________________________________________________________________
             Y_MPZ_WRAP(/,__div)
 
+            //__________________________________________________________________
+            //
+            // Serialize
+            //__________________________________________________________________
+            virtual const char *className() const throw();            //!< CLASS_NAME
+            virtual size_t      serialize( ios::ostream &fp ) const;  //!< s and n
+            static const char   CLASS_NAME[];                         //!< "mpz"
+
+            static integer      read( ios::istream & );
+
         private:
             static integer __add(const sign_type ls,
                                  const uint8_t  *l,

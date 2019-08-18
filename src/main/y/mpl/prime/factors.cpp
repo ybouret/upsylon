@@ -376,4 +376,29 @@ namespace upsylon
         }
 
     }
+
+}
+
+#include "y/ios/ostream.hpp"
+namespace upsylon
+{
+    namespace mpl
+    {
+        const char  prime_factors:: CLASS_NAME[] = "prmF";
+        const char *prime_factors:: className() const throw() { return CLASS_NAME; }
+
+        size_t prime_factors:: serialize(ios::ostream &fp) const
+        {
+            size_t total = 0;
+            fp.emit_upack(factors.size(),&total);
+
+            for( prime_factor::db::const_iterator i=factors.begin(); i != factors.end(); ++i)
+            {
+                total += (**i).serialize(fp);
+            }
+            
+            return total;
+        }
+
+    }
 }

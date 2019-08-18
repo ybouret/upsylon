@@ -306,6 +306,17 @@ prime_factors_ratio Q(num,new_den); xch(Q);\
             return rational(n,d);
         }
 
+        const char   prime_factors_ratio:: CLASS_NAME[] = "prmQ";
+        const char * prime_factors_ratio:: className() const throw() { return CLASS_NAME; }
+
+        size_t prime_factors_ratio:: serialize(ios::ostream &fp) const
+        {
+            const size_t bytes_for_num = num.serialize(fp);
+            const size_t bytes_for_den = den.serialize(fp);
+            return bytes_for_den+bytes_for_num;
+        }
+
+
     }
 
 }

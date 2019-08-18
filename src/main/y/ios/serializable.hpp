@@ -26,7 +26,7 @@ namespace upsylon
             //
             // virtual interface
             //__________________________________________________________________
-            virtual const char *className() const throw() = 0;           //!< class name, should be unique
+            virtual const char *className() const throw() = 0;      //!< class name, should be unique
             virtual size_t      serialize( ostream &fp ) const = 0; //!< write binary data and return written bytes
 
             //__________________________________________________________________

@@ -20,6 +20,22 @@ namespace upsylon
             if(addr) (*addr) += value;
         }
 
+        //! right shift 8 bits sizeof(T)>1
+        template <typename T>
+        inline void __shr8( T &x, int2type<true> ) throw()
+        {
+            assert(sizeof(T)>1);
+            x >>= 8;
+        }
+
+        //! right shift 8 bits sizeof(T)<=1
+        template <typename T>
+        inline void __shr8( T &x, int2type<false> ) throw()
+        {
+            assert(sizeof(T)<=1);
+            x=0;
+        }
+
         //! interface for output streams
         class ostream : public stream
         {
@@ -109,7 +125,8 @@ namespace upsylon
                     {
                         const uint8_t B = uint8_t(x&T(0xff));
                         write(B);
-                        x >>= 8;
+                        __shr8<T>(x, int2type< (sizeof(T)>1) >() );
+                        //x >>= 8;
                         if(shift) ++(*shift);
                     }
                     assert(0==x);

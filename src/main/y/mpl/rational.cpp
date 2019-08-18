@@ -215,5 +215,26 @@ namespace upsylon
         rational & rational::operator--()  { rational tmp = __dec(); xch(tmp); return *this; }
 
         rational rational::operator--(int) { rational tmp = __dec(); xch(tmp); return tmp; }
+
+        const char rational:: CLASS_NAME[] = "mpq";
+
+        const char * rational:: className() const throw()
+        {
+            return CLASS_NAME;
+        }
+
+        size_t rational:: serialize( ios::ostream &fp ) const
+        {
+            const size_t bytes_for_num = num.serialize(fp);
+            const size_t bytes_for_den = den.serialize(fp);
+            return bytes_for_num+bytes_for_den;
+        }
+
+        rational rational:: read( ios::istream &fp)
+        {
+            const integer _num = integer::read(fp);
+            const natural _den = natural::read(fp);
+            return rational(_num,_den);
+        }
     }
 }

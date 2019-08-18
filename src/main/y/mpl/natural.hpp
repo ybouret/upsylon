@@ -32,7 +32,7 @@ namespace upsylon
         //! base class to clarify hierarchy
         //
         ////////////////////////////////////////////////////////////////////////
-        class number_type : public counted_object
+        class number_type : public counted_object, public ios::serializable
         {
         public:
             explicit number_type() throw(); //!< setup
@@ -82,15 +82,15 @@ for(size_t ii=host.bytes;ii<host.allocated;++ii)            \
 } while(false)
 
         //! in place constructor
-#define Y_MPN_CTOR(SZ,MX) object(), number_type(), memory::ro_buffer(), ios::serializable(), bytes(SZ), allocated(MX), byte( __acquire(allocated) ), item(byte-1)
+#define Y_MPN_CTOR(SZ,MX) object(), number_type(), memory::ro_buffer(),  bytes(SZ), allocated(MX), byte( __acquire(allocated) ), item(byte-1)
 
         class integer; //!< forward declaration
 
         //! big natural number
-        class natural : public number_type, public memory::ro_buffer, public ios::serializable
+        class natural : public number_type, public memory::ro_buffer
         {
         public:
-            static const char CLASS_NAME[]; //!< for serializable
+            static const char CLASS_NAME[]; //!< "mpn"
             //__________________________________________________________________
             //
             //

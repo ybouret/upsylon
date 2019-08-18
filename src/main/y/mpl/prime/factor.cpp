@@ -1,5 +1,6 @@
 
 #include "y/mpl/prime/factor.hpp"
+#include "y/ios/ostream.hpp"
 
 namespace upsylon
 {
@@ -70,6 +71,18 @@ namespace upsylon
         bool operator!=( const prime_factor &lhs, const prime_factor &rhs ) throw()
         {
             return (lhs.n!=rhs.n) || (lhs.p!=rhs.p);
+        }
+
+        const char prime_factor:: CLASS_NAME[] = "prmf";
+
+        const char * prime_factor:: className() const throw() { return CLASS_NAME; }
+
+        size_t prime_factor:: serialize(ios::ostream &fp) const
+        {
+            const size_t bytes_for_p = p.serialize(fp);
+            size_t       bytes_for_n = 0;
+            fp.emit_upack(n,&bytes_for_n);
+            return bytes_for_n+bytes_for_p;
         }
     }
 

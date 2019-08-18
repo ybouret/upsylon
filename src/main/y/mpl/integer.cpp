@@ -23,12 +23,12 @@ namespace upsylon
 
         sign_type sign_ops:: of(const integer_t i) throw()
         {
-             return (i<0) ? __negative : ( (0<i)  ? __positive : __zero );
+            return (i<0) ? __negative : ( (0<i)  ? __positive : __zero );
         }
 
         sign_type sign_ops:: of(const natural &u)  throw()
         {
-             return (u.is_zero()) ? __zero : __positive;
+            return (u.is_zero()) ? __zero : __positive;
         }
 
         word_t  sign_ops:: i2w(const integer_t i) throw()
@@ -115,11 +115,11 @@ namespace upsylon
 
         //! signed comparison
         int integer::compare_blocks(const sign_type ls,
-                                  const uint8_t  *l,
-                                  const size_t    nl,
-                                  const sign_type rs,
-                                  const uint8_t  *r,
-                                  const size_t    nr) throw()
+                                    const uint8_t  *l,
+                                    const size_t    nl,
+                                    const sign_type rs,
+                                    const uint8_t  *r,
+                                    const size_t    nr) throw()
         {
             switch(ls)
             {
@@ -196,11 +196,11 @@ namespace upsylon
         integer   integer::operator--(int) { integer tmp = __dec(); xch(tmp); return tmp; }
 
         integer integer:: __add(const sign_type ls,
-                      const uint8_t  *l,
-                      const size_t    nl,
-                      const sign_type rs,
-                      const uint8_t  *r,
-                      const size_t    nr)
+                                const uint8_t  *l,
+                                const size_t    nl,
+                                const sign_type rs,
+                                const uint8_t  *r,
+                                const size_t    nr)
         {
             switch(ls)
             {
@@ -323,10 +323,15 @@ namespace upsylon
         }
 
 
+
+
     }
 
-    
+}
 
+
+namespace upsylon
+{
     namespace math
     {
         mpz sqrt_of(const mpz &z)
@@ -341,4 +346,52 @@ namespace upsylon
     }
 }
 
+#include "y/ios/ostream.hpp"
+#include "y/ios/istream.hpp"
+
+namespace upsylon
+{
+    namespace mpl
+    {
+        const char integer:: CLASS_NAME[] = "mpz";
+
+        const char * integer:: className() const throw()
+        {
+            return CLASS_NAME;
+        }
+
+        size_t integer:: serialize( ios::ostream &fp ) const
+        {
+            size_t       bytes_for_s = 0;
+            switch(s)
+            {
+                case __negative: (void) fp.emit_upack<uint8_t>( 0xff, &bytes_for_s); break;
+                case __zero:     (void) fp.emit_upack<uint8_t>( 0x00, &bytes_for_s); break;
+                case __positive: (void) fp.emit_upack<uint8_t>( 0x01, &bytes_for_s); break;
+            }
+            const size_t bytes_for_n = n.serialize(fp);
+
+            return bytes_for_n + bytes_for_s;
+        }
+
+        integer integer:: read(ios::istream &fp)
+        {
+            sign_type      _s = __zero;
+            {
+                const unsigned  u = fp.read_upack<unsigned>();
+                switch(u)
+                {
+                    case 0xff: _s = __negative; break;
+                    case 0x00: _s = __zero;     break;
+                    case 0x01: _s = __positive; break;
+                    default:
+                        throw exception("integer::read(invalid %s sign=%u)", CLASS_NAME, u );
+                }
+            }
+            const mpn _n = mpn::read(fp);
+            return integer(_s,_n);
+        }
+    }
+
+}
 
