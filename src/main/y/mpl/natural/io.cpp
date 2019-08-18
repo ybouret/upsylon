@@ -196,6 +196,7 @@ namespace upsylon
         }
 
         
+#if 0
         natural natural:: read( ios::istream &fp, size_t *nr)
         {
             const size_t num_bytes = fp.read_upack<size_t>(nr);
@@ -206,6 +207,18 @@ namespace upsylon
             if(nr) *nr += num_bytes;
             return ans;
         }
+#endif
+        
+        natural natural:: read( ios::istream &fp )
+        {
+            const size_t num_bytes = fp.read_upack<size_t>();
+            mpn          ans(num_bytes,as_capacity);
+            fp.input(ans.byte,(ans.bytes=num_bytes));
+            ans.upgrade();
+            if(ans.bytes!=num_bytes) throw exception("mpn.read(corrupted bytes)");
+            return ans;
+        }
+        
     }
 
 }

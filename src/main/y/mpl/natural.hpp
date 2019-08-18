@@ -321,10 +321,10 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             // io
             //
             //__________________________________________________________________
-            virtual const char *className() const throw();             //!< "mpn"
-            virtual size_t      serialize( ios::ostream &fp ) const;   //!< write binary
-            static natural      read( ios::istream &fp, size_t *nr=0); //!< read binary, number of bytes is saved if possible
-
+            virtual const char *className() const throw();              //!< "mpn"
+            virtual size_t      serialize( ios::ostream &fp ) const;    //!< write binary
+            static natural      read(ios::istream &fp);               //!< reload
+            
         private:
             size_t   bytes;     //!< active bytes
             size_t   allocated; //!< allocated bytes

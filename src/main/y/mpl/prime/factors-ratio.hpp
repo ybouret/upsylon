@@ -59,7 +59,10 @@ namespace upsylon
             static const char   CLASS_NAME[];                         //!< "mpQ"
             static prime_factors_ratio read( ios::istream &fp);       //!< read from serialize()
 
+            //! test for equality
             friend bool operator==( const prime_factors_ratio &, const prime_factors_ratio &) throw();
+          
+            //! test for difference
             friend bool operator!=( const prime_factors_ratio &, const prime_factors_ratio &) throw();
 
 

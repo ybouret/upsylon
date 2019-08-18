@@ -389,7 +389,7 @@ namespace upsylon
 
         size_t prime_factors:: serialize(ios::ostream &fp) const
         {
-            return ios::serializer::write_meta(fp,factors);
+            return ios::serializer::save_meta(fp,factors);
         }
 
 
