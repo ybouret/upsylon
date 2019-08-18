@@ -39,8 +39,8 @@ namespace upsylon
             class LeastSquares_
             {
             public:
-                static const int    initial_exponent = -4; //!< initial bias
-                static const size_t num_arrays       =  4; //!< sub arrays: beta/delta/atry/delta_cut
+                static const int    InitialExponent = -4; //!< initial bias
+                static const size_t InternalArrays  =  4; //!< sub arrays: beta/delta/atry/delta_cut
                 virtual ~LeastSquares_() throw();          //!< destructor
 
                 //! shared text
@@ -105,7 +105,7 @@ namespace upsylon
 
                 //! initialize LeastSquares
                 inline explicit LeastSquares(const bool is_verbose=false) :
-                arrays<T>(num_arrays),
+                arrays<T>(InternalArrays),
                 p(0),
                 lam(0),
                 alpha(),
@@ -129,7 +129,7 @@ namespace upsylon
                 static inline int get_max_exponent() throw() { return int(numeric<T>::max_10_exp); }
 
                 //! initial p value
-                static inline int get_ini_exponent() throw() { return initial_exponent; }
+                static inline int get_ini_exponent() throw() { return InitialExponent; }
 
                 //! try to fit sample
                 inline bool fit(SampleType<T>     &sample,
@@ -180,14 +180,15 @@ namespace upsylon
                     //----------------------------------------------------------
                     // acquire memory
                     //----------------------------------------------------------
-                    this->acquire(nvar);   // vectors
+                    this->acquire(nvar);   // internal arrays
                     alpha.make(nvar,nvar); // hessian
                     curv. make(nvar,nvar); // curvature
 
                     //----------------------------------------------------------
                     // initial step scaling
                     //----------------------------------------------------------
-                    p   = get_ini_exponent(); compute_lam();
+                    p   = get_ini_exponent();
+                    compute_lam();
                     Y_LSF_OUT(std::cerr << "[LSF] \tstarting with lambda=" << lam << "/p=" << p << std::endl);
 
                     //----------------------------------------------------------
@@ -234,7 +235,7 @@ namespace upsylon
                             }
                         }
                         Y_LSF_OUT(std::cerr << "      \t beta  = "  << beta  << std::endl);
-                        Y_LSF_OUT(std::cerr << "      \t alpha = " << alpha << std::endl);
+                        Y_LSF_OUT(std::cerr << "      \t alpha = "  << alpha << std::endl);
 
                         //______________________________________________________
                         //
@@ -270,7 +271,8 @@ namespace upsylon
                                 ok = false;
                                 ++nbad;
                                 //----------------------------------------------
-                                // trial is not valid
+                                // trial is not valid: decrease step after
+                                // analysis
                                 //----------------------------------------------
                                 tao::sub(bound, atry, aorg);
                                 Y_LSF_OUT(std::cerr << "      \t #bad  = " << nbad  << std::endl);
@@ -283,9 +285,9 @@ namespace upsylon
                                     const T dcur = fabs_of(delta[i]);
                                     if(dmax<dcur) scale = min_of(dmax/dcur,scale);
                                 }
-                                Y_LSF_OUT(std::cerr << "      \t scale = " << scale << std::endl);
-                                scale/=2;
-                                Y_LSF_OUT(std::cerr << "      \t scale = " << scale << std::endl);
+                                Y_LSF_OUT(std::cerr << "      \t scale@ini = " << scale << std::endl);
+                                scale = min_of(scale,one)/2;
+                                Y_LSF_OUT(std::cerr << "      \t scale@end = " << scale << std::endl);
                                 tao::mulset(delta,scale,delta);
                             }
                         }

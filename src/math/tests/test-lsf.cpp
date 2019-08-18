@@ -62,7 +62,7 @@ namespace
             std::cerr << "<check @cycle=" << cycle << ">" << std::endl;
             var.display_status(std::cerr,a,u,"\t(*) ");
             std::cerr << "<check/>" << std::endl;
-            return cycle<=2 || cycle>=5;
+            return cycle<=2 || cycle>=7;
         }
     };
 }

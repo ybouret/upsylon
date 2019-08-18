@@ -21,7 +21,7 @@ namespace upsylon
                 //! create the name for n variables (a)
                 static void Create( Variables &vars, const size_t n);
 
-                //! compute the sum of unerlying gaussians
+                //! evaluate the polynomial
                 template <typename T> static inline
                 T Compute( T x, const array<double> &aorg, const Variables & )
                 {
@@ -31,7 +31,7 @@ namespace upsylon
                 //! initialize with moments using simple sample
                 template <typename T> static inline
                 void Initialize(array<T>   &aorg,
-                                Sample<T> &sample)
+                                Sample<T>  &sample)
                 {
                     const size_t   n = aorg.size();
                     const size_t   N = sample.X.size();
