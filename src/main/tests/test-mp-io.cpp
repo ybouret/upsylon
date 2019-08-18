@@ -1,5 +1,6 @@
 
 #include "y/mpl/prime/factors-ratio.hpp"
+#include "y/mpl/mpn.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
@@ -10,6 +11,10 @@ using namespace  upsylon;
 
 Y_UTEST(mp_io)
 {
+
+    MPN &mp = MPN::instance();
+    mp.createPrimes(100);
+
     for(size_t iter=1+alea.leq(100);iter>0;--iter)
     {
         const mpn n(100,alea);

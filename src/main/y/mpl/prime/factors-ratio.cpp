@@ -160,69 +160,97 @@ namespace upsylon
                     //----------------------------------------------------------
                     // N>=2, Q>=2
                     //----------------------------------------------------------
-                    prime_factors new_num = 1;
-                    prime_factors new_den = 1;
 
-                    size_t nn = N.count();
-                    size_t nd = D.count();
-                    prime_factors::const_iterator in = N.begin();
-                    prime_factors::const_iterator id = D.begin();
+                    // construct biased factors
+                    prime_factors new_num = one;
+                    prime_factors new_den = one;
 
-                    // check common part
-                    while( (nd>0) && (nn>0) )
                     {
-                        const prime_factor &fn = **in;
-                        const prime_factor &fd = **id;
-
-                        if( fn.p == fd.p )
+                        for(prime_factors::const_iterator in=N.begin();in!=N.end();++in)
                         {
-                            const natural &p = fn.p;
-                            if( fn.n < fd.n )
+                            const prime_factor &fn = **in;
+                            if(fn.p!=one) new_num.__add(fn.p,fn.n);
+                        }
+
+
+                        for(prime_factors::const_iterator id=D.begin();id!=D.end();++id)
+                        {
+                            const prime_factor &fd = **id;
+                            if(fd.p!=one) new_den.__add(fd.p,fd.n);
+                        }
+                    }
+
+
+                    // first pass: detect common factors and adjust
+                    list<mpn> bad_all;
+                    list<mpn> bad_den;
+                    list<mpn> bad_num;
+
+                    prime_factors::const_iterator in=new_num.begin();
+                    assert( one == (**in).p );
+                    for(++in;in!=new_num.end();++in)
+                    {
+                        const prime_factor  &fn = **in;
+                        const natural       &p  = fn.p;
+                        const prime_factor::pointer *ppfd = new_den.factors.search(p);
+                        if(ppfd)
+                        {
+                            const prime_factor &fd = **ppfd;
+                            size_t             &nx = (size_t &)(fn.n);
+                            size_t             &dx = (size_t &)(fd.n);
+                            if(nx<dx)
                             {
-                                // only on den
-                                new_den.__add(p,fd.n-fn.n);
+                                bad_num.push_back(p);
+                                dx -= nx;
                             }
-                            else if(fd.n<fn.n)
+                            else if(dx<nx)
                             {
-                                // only on num
-                                new_num.__add(p,fn.n-fd.n);
+                                bad_den.push_back(p);
+                                nx -= dx;
                             }
                             else
                             {
-                                assert(fn.n==fd.n); // do nothing
+                                assert(nx==dx);
+                                bad_all.push_back(p);
                             }
                         }
-                        else
-                        {
-                            new_num.__add(fn.p,fn.n);
-                            new_den.__add(fd.p,fd.n);
-                        }
-
-                        --nd; ++id;
-                        --nn; ++in;
                     }
 
-                    // then fill up denominator
-                    while(nd>0)
+                    // second pass: remove factors
+                    while( bad_num.size() )
                     {
-                        const prime_factor &fd = **id;
-                        new_den.__add(fd.p,fd.n);
-                        --nd;++id;
+                        new_num.factors.no( bad_num.back() );
+                        bad_num.pop_back();
                     }
+                    bad_num.release();
 
-                    // and fill up numerator
-                    while(nn>0)
+                    while( bad_den.size() )
                     {
-                        const prime_factor &fn = **in;
-                        new_num.__add(fn.p,fn.n);
-                        --nn;++in;
+                        new_den.factors.no( bad_den.back() );
+                        bad_den.pop_back();
                     }
+                    bad_den.release();
 
+                    while( bad_all.size() )
+                    {
+                        const natural &p = bad_all.back();
+                        new_den.factors.no( p );
+                        new_num.factors.no( p );
+                        bad_all.pop_back();
+                    }
+                    bad_all.release();
+
+
+                    // then update all
                     new_num.update();
                     new_den.update();
 
+                    // and swap
                     N.xch(new_num);
                     D.xch(new_den);
+
+
+
 
                 }
 
