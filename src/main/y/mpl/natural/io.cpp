@@ -70,7 +70,7 @@ namespace upsylon
                             case 1: {
                                 const unsigned b = r.byte[0];
                                 if(b<=0||b>9) throw exception("mpn.display(remainder failure: r=%u)", b);
-                                s << ('0'+b);
+                                s << char('0'+b);
                             } break;
                             default:
                                 throw exception("mpn.display(remainder #bytes=%u failure)", unsigned(bytes));
@@ -150,7 +150,7 @@ namespace upsylon
             {
                 const char c = s[i];
                 if(c<'0'||c>'9') throw libc::exception(EDOM,"natural.dec(invalid char '%c')", c);
-                const mpn  d = c-'0';
+                const mpn  d = word_t(c-'0');
                 ans *= ten;
                 ans += d;
             }
