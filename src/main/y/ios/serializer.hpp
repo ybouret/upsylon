@@ -11,8 +11,9 @@ namespace upsylon
     namespace ios
     {
         //! routines to serialise containers...
-        struct serializer
+        class serializer
         {
+        public:
             //! save a range
             template <typename ITERATOR> static inline
             size_t save( ios::ostream &fp, size_t n, ITERATOR i )
@@ -66,7 +67,9 @@ namespace upsylon
                     seq.push_back(tmp);
                 }
             }
-            
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(serializer);
         };
     }
 }
