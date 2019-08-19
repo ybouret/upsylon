@@ -60,8 +60,7 @@ namespace upsylon
             template <typename SEQUENCE, typename LOADER> static inline
             void load( SEQUENCE &seq, ios::istream &fp, LOADER &loader)
             {
-                const size_t n = fp.read_upack<size_t>();
-                for(size_t i=1;i<=n;++i)
+                for(size_t n = fp.read_upack<size_t>();n>0;--n)
                 {
                     typename SEQUENCE::const_type tmp = loader(fp);
                     seq.push_back(tmp);
