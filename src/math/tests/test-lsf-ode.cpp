@@ -153,6 +153,8 @@ Y_UTEST(lsf_ode)
     vars.display(std::cerr, aorg, aerr);
     Fit::IO::Save("ode-fit2.dat",sample,true);
 
+    (void) ls.compute_individual_errors(sample, F, aorg, aerr, used);
+
     if(false)
     {
         vars.on(used, "phi");

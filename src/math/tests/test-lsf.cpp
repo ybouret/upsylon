@@ -231,6 +231,7 @@ Y_UTEST(lsf)
                 ios::ocstream fp( ios::cstdout );
                 SSf.writeLog(fp,aa,aerr,used);
             }
+            (void) ls.compute_individual_errors(SSf, F, aa, aerr, used);
         }
         else
         {

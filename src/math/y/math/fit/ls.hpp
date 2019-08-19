@@ -223,7 +223,7 @@ namespace upsylon
                         //______________________________________________________
                         //
                         //
-                        // compute curvature if possible, using current lam
+                        // compute curvature if possible, using current lambda
                         //
                         //______________________________________________________
                     FIND_STEP:
@@ -359,7 +359,7 @@ namespace upsylon
                     //__________________________________________________________
                     Y_LSF_OUT(OutputLine(std::cerr << "|",Y_LSF_LINE) << std::endl);
                     Y_LSF_OUT(std::cerr << "[LSF] \tanalysis after #cycles="<< cycle << std::endl);
-                    const bool ans = compute_errors(sample, F, aorg, aerr, used);
+                    const bool ans = compute_errors(sample, F, aorg, aerr, used, true);
                     Y_LSF_OUT(OutputLine(std::cerr << "|",Y_LSF_LINE) << std::endl << std::endl);
                     return ans;
                 }
@@ -413,12 +413,13 @@ namespace upsylon
                                            Sequential        &F,
                                            const Array       &aorg,
                                            Array             &aerr,
-                                           const array<bool> &used)
+                                           const array<bool> &used,
+                                           const bool         show=true)
                 {
                     static const T  zero(0);
                     static const T  one(1);
 
-                    Y_LSF_OUT(std::cerr << "[LSF] \tcompute errors" << std::endl);
+                    if(show) { Y_LSF_OUT(std::cerr << "[LSF] \tcompute errors" << std::endl); }
                     assert( aerr.size() == aorg.size() );
                     assert( used.size() == aorg.size() );
                     const size_t nvar = aorg.size();
@@ -444,9 +445,13 @@ namespace upsylon
                     {
                         if(!used[j]) --nprm;
                     }
-                    Y_LSF_OUT(std::cerr << "    |_#data       = " << ndat << std::endl);
-                    Y_LSF_OUT(std::cerr << "    |_#variables  = " << nvar << std::endl);
-                    Y_LSF_OUT(std::cerr << "    |_#parameters = " << nprm << std::endl);
+
+                    if(show)
+                    {
+                        Y_LSF_OUT(std::cerr << "    |_#data       = " << ndat << std::endl);
+                        Y_LSF_OUT(std::cerr << "    |_#variables  = " << nvar << std::endl);
+                        Y_LSF_OUT(std::cerr << "    |_#parameters = " << nprm << std::endl);
+                    }
 
                     if(nprm>ndat)
                     {
@@ -461,8 +466,11 @@ namespace upsylon
                     }
                     assert(ndat>nprm);
                     const size_t ndof = ndat-nprm;
-                    Y_LSF_OUT(std::cerr << "    |_#dof        = " << ndof << std::endl);
-                    Y_LSF_OUT(std::cerr << "    |_alpha=" << alpha << std::endl);
+                    if(show)
+                    {
+                        Y_LSF_OUT(std::cerr << "    |_#dof        = " << ndof << std::endl);
+                        Y_LSF_OUT(std::cerr << "    |_alpha=" << alpha << std::endl);
+                    }
 
                     //__________________________________________________________
                     //
@@ -475,7 +483,10 @@ namespace upsylon
                     }
 
                     LU::inverse(alpha,curv);
-                    Y_LSF_OUT(std::cerr<< "    |_curv=" << curv << std::endl);
+                    if(show)
+                    {
+                        Y_LSF_OUT(std::cerr<< "    |_curv=" << curv << std::endl);
+                    }
 
                     //__________________________________________________________
                     //
@@ -486,10 +497,14 @@ namespace upsylon
                     {
                         if(used[i]) aerr[i] = sqrt_of( max_of<T>(zero,dS*curv[i][i]) );
                     }
-                    Y_LSF_OUT(std::cerr<< "    |_opt=" << aorg << std::endl);
-                    Y_LSF_OUT(std::cerr<< "    |_err=" << aerr << std::endl);
-                    Y_LSF_OUT(std::cerr<< "[LSF]"<<std::endl);
 
+                    if(show)
+                    {
+                        Y_LSF_OUT(std::cerr<< "    |_opt=" << aorg << std::endl);
+                        Y_LSF_OUT(std::cerr<< "    |_err=" << aerr << std::endl);
+                        Y_LSF_OUT(std::cerr<< "[LSF]"<<std::endl);
+                    }
+                    
                     return true;
                 }
 
@@ -504,13 +519,68 @@ namespace upsylon
                                            Function          &F,
                                            const Array       &aorg,
                                            Array             &aerr,
-                                           const array<bool> &used)
+                                           const array<bool> &used,
+                                           const bool         show=true)
                 {
                     typename Type<T>::SequentialFunction SF(F);
                     return compute_errors(sample,SF,aorg,aerr,used);
                 }
 
+                //______________________________________________________________
+                //
+                //
+                //! computing individual errors
+                //
+                //______________________________________________________________
+                inline bool compute_individual_errors(SampleType<T>     &sample,
+                                                      Sequential        &F,
+                                                      const Array       &aorg,
+                                                      Array             &aerr,
+                                                      const array<bool> &used)
+                {
+                    Y_LSF_OUT(std::cerr<< "[LSF] computing individual errors" <<std::endl);
+                    aerr.ld(0);
+                    assert( aerr.size() == aorg.size() );
+                    assert( used.size() == aorg.size() );
+                    const size_t nvar = aorg.size();
+                    vector<bool> local_used(nvar,false);
+                    vector<T>    local_aerr(nvar,0);
 
+                    for(size_t i=1;i<=nvar;++i)
+                    {
+                        if(!used[i]) continue;
+
+                        local_used.ld(false);
+                        local_used[i] = true;
+                        if( !compute_errors(sample, F, aorg, local_aerr, local_used, false) )
+                        {
+                            return false;
+                        }
+                        aerr[i] = local_aerr[i];
+                    }
+
+                    if(verbose)
+                    {
+                        sample.variables.display(std::cerr,aorg,aerr,"[LSF] single error on ");
+                    }
+                    return true;
+                }
+
+                //______________________________________________________________
+                //
+                //
+                //! computing individual errors wrapper
+                //
+                //______________________________________________________________
+                inline bool compute_individual_errors(SampleType<T>     &sample,
+                                                      Function          &F,
+                                                      const Array       &aorg,
+                                                      Array             &aerr,
+                                                      const array<bool> &used)
+                {
+                    typename Type<T>::SequentialFunction SF(F);
+                    return compute_individual_errors(sample, SF, aorg, aerr, used);
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(LeastSquares);
