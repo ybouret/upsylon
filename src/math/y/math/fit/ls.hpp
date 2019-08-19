@@ -41,17 +41,11 @@ namespace upsylon
             public:
                 static const int    InitialExponent = -4; //!< initial bias
                 static const size_t InternalArrays  =  4; //!< sub arrays: beta/delta/atry/delta_cut
-                virtual ~LeastSquares_() throw();          //!< destructor
 
-                //! shared text
-                static const char *ConvergedText(const bool flag) throw();
-
-                //! yes or no
-                static const char *YesOrNoText(const bool flag) throw();
-
-                //! draw separator line
-                static std::ostream &OutputLine( std::ostream &, size_t n );
-
+                virtual              ~LeastSquares_() throw();                  //!< destructor
+                static const char *   ConvergedText(const bool flag) throw();   //!< converged or not
+                static const char *   YesOrNoText(const bool flag) throw();     //!< yes or no
+                static std::ostream & OutputLine( std::ostream &, size_t n );   //!< draw separator line
 
             protected:
                 explicit LeastSquares_() throw(); //!< constructor
@@ -63,7 +57,7 @@ namespace upsylon
             ////////////////////////////////////////////////////////////////////
             //
             //! macro to activate output on verbose flag
-#define Y_LSF_OUT(CODE)     if(verbose) do { CODE; } while(false)
+#define Y_LSF_OUT(CODE)    do { if(verbose) { CODE; } } while(false)
             //
             //! Least Squares fit
             //
@@ -91,8 +85,8 @@ namespace upsylon
                 // members
                 //
                 //______________________________________________________________
-                int      p;         //!< controlled power for lam
-                T        lam;       //!< lam=10^p
+                int      p;         //!< controlled exponent for lambda
+                T        lambda;    //!< lam=10^p
                 Matrix   alpha;     //!< Jacobian of beta
                 Matrix   curv;      //!< almost inverse of alpha
                 Array   &beta;      //!< D2 descent direction
@@ -107,7 +101,7 @@ namespace upsylon
                 inline explicit LeastSquares(const bool is_verbose=false) :
                 arrays<T>(InternalArrays),
                 p(0),
-                lam(0),
+                lambda(0),
                 alpha(),
                 curv(),
                 beta(  this->next() ),
@@ -188,8 +182,8 @@ namespace upsylon
                     // initial step scaling
                     //----------------------------------------------------------
                     p   = get_ini_exponent();
-                    compute_lam();
-                    Y_LSF_OUT(std::cerr << "[LSF] \tstarting with lambda=" << lam << "/p=" << p << std::endl);
+                    compute_lambda();
+                    Y_LSF_OUT(std::cerr << "[LSF] \tstarting with lambda=" << lambda << "/p=" << p << std::endl);
 
                     //----------------------------------------------------------
                     // one dimensional call
@@ -478,21 +472,21 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(LeastSquares);
 
                 //! initialize value of lam
-                inline void compute_lam()
+                inline void compute_lambda()
                 {
                     if(p<0)
                     {
-                        lam = ipower(T(0.1),size_t(-p));
+                        lambda = ipower(T(0.1),size_t(-p));
                     }
                     else
                     {
                         if(p>0)
                         {
-                            lam = ipower(T(10),size_t(p));
+                            lambda = ipower(T(10),size_t(p));
                         }
                         else
                         {
-                            lam = 1;
+                            lambda = 1;
                         }
                     }
                 }
@@ -502,8 +496,8 @@ namespace upsylon
                 {
                     static const int pmax = get_max_exponent();
                     if(++p>pmax) return false; //!< overflow
-                    compute_lam();
-                    Y_LSF_OUT(std::cerr << "[LSF] \t(+) lambda=" << lam  << std::endl);
+                    compute_lambda();
+                    Y_LSF_OUT(std::cerr << "[LSF] \t(+) lambda=" << lambda << std::endl);
                     return true;
                 }
 
@@ -514,14 +508,14 @@ namespace upsylon
 
                     if(--p<pmin)
                     {
-                        p   = pmin;
-                        lam = 0;
+                        p      = pmin;
+                        lambda = 0;
                     }
                     else
                     {
-                        compute_lam();
+                        compute_lambda();
                     }
-                    Y_LSF_OUT(std::cerr << "[LSF] \t(-) lambda="  << lam << std::endl);
+                    Y_LSF_OUT(std::cerr << "[LSF] \t(-) lambda="  << lambda << std::endl);
                 }
 
                 //! compute curvature according to current lamnda
@@ -531,7 +525,7 @@ namespace upsylon
                     while(true)
                     {
                         curv.assign( alpha );
-                        const T      fac = T(1) + lam;
+                        const T      fac = T(1) + lambda;
                         for(size_t i=nvar;i>0;--i)
                         {
                             curv[i][i] *= fac;
