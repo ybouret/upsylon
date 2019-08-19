@@ -193,11 +193,11 @@ namespace upsylon
                     //----------------------------------------------------------
                     // full initial metrics
                     //----------------------------------------------------------
-                    alpha.ld(zero);
-                    beta.ld(zero);
+
 
                     Y_LSF_OUT(std::cerr << "[LSF] \tcomputing initial gradient..." << std::endl);
-                    T        D2 = sample.computeD2(F,aorg,beta,alpha,grad,used);
+                    //T        D2 = sample.computeD2(F,aorg,beta,alpha,grad,used);
+                    T        D2 = compute_full_metrics(sample, F, aorg, used);
                     Y_LSF_OUT(std::cerr << "[LSF] \tready for first cycle" << std::endl);
 
                     while(true)
@@ -212,22 +212,6 @@ namespace upsylon
                         Y_LSF_OUT(std::cerr << "|" << std::endl;
                                   std::cerr << "[LSF] \t<cycle #" << cycle << ">" << std::endl;
                                   std::cerr << "[LSF] \t D2    = " << D2 << " @" << aorg << std::endl);
-                        for(size_t i=nvar;i>0;--i)
-                        {
-                            Array &alpha_i = alpha[i];
-                            if(used[i])
-                            {
-                                for(size_t j=i-1;j>0;--j)
-                                {
-                                    alpha[j][i] = alpha_i[j];
-                                }
-                            }
-                            else
-                            {
-                                alpha_i[i] = one;  // for a null gradient
-                                beta[i]    = zero; // mandatory
-                            }
-                        }
                         Y_LSF_OUT(std::cerr << "      \t beta  = "  << beta  << std::endl);
                         Y_LSF_OUT(std::cerr << "      \t alpha = "  << alpha << std::endl);
 
@@ -356,10 +340,8 @@ namespace upsylon
                         // prepare next step: full computation
                         //______________________________________________________
                         decrease_lambda();
-                        alpha.ld(zero);
-                        beta.ld(zero);
                         Y_LSF_OUT(std::cerr << "[LSF] \tupdating gradient..." << std::endl);
-                        D2 = sample.computeD2(F,aorg,beta,alpha,grad,used); // will be D2_try
+                        D2 = compute_full_metrics(sample, F, aorg, used); // will be D2_try
                         Y_LSF_OUT(std::cerr << "[LSF] \t<cycle #" << cycle << "/>" << std::endl);
                     }
 
@@ -367,12 +349,16 @@ namespace upsylon
                     //__________________________________________________________
                     //
                     //
-                    // D2_org, aorg and alpha are computed
+                    // full analysis at aorg
                     //
                     //__________________________________________________________
                     Y_LSF_OUT(OutputLine(std::cerr << "|",Y_LSF_LINE) << std::endl);
                     Y_LSF_OUT(std::cerr << "[LSF] \tanalysis after #cycles="<< cycle << std::endl);
 
+
+                    D2 = compute_full_metrics(sample, F, aorg, used);
+                    
+                    
                     //__________________________________________________________
                     //
                     // compute the d.o.f
@@ -516,6 +502,43 @@ namespace upsylon
                         compute_lambda();
                     }
                     Y_LSF_OUT(std::cerr << "[LSF] \t(-) lambda="  << lambda << std::endl);
+                }
+
+                //! compute full metrics
+                inline T compute_full_metrics(SampleType<T>     &sample,
+                                              Sequential        &F,
+                                              Array             &aorg,
+                                              const array<bool> &used )
+                {
+                    assert( aorg.size() == beta.size() );
+                    assert( alpha.rows  == aorg.size() );
+                    assert( alpha.cols  == aorg.size() );
+
+                    alpha.ld(0);
+                    beta. ld(0);
+
+                    // evaluate alpha and beta
+                    const T D2 = sample.computeD2(F,aorg,beta,alpha,grad,used);
+
+                    // normalize alpha and beta
+                    for(size_t i=aorg.size();i>0;--i)
+                    {
+                        Array &alpha_i = alpha[i];
+                        if(used[i])
+                        {
+                            for(size_t j=i-1;j>0;--j)
+                            {
+                                alpha[j][i] = alpha_i[j];
+                            }
+                        }
+                        else
+                        {
+                            alpha_i[i] = T(1);  // for a null gradient
+                            beta[i]    = T(0);  // mandatory
+                        }
+                    }
+
+                    return D2;
                 }
 
                 //! compute curvature according to current lamnda
