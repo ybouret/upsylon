@@ -40,7 +40,7 @@ namespace upsylon
             {
             public:
                 static const int    InitialExponent = -4; //!< initial bias
-                static const size_t InternalArrays  =  4; //!< sub arrays: beta/delta/atry/delta_cut
+                static const size_t InternalArrays  =  4; //!< sub arrays: beta/delta/atry/bound
 
                 virtual              ~LeastSquares_() throw();                  //!< destructor
                 static const char *   ConvergedText(const bool flag) throw();   //!< converged or not
@@ -357,7 +357,7 @@ namespace upsylon
 
 
                     D2 = compute_full_metrics(sample, F, aorg, used);
-                    
+
                     
                     //__________________________________________________________
                     //
