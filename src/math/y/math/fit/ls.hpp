@@ -504,7 +504,7 @@ namespace upsylon
                         Y_LSF_OUT(std::cerr<< "    |_err=" << aerr << std::endl);
                         Y_LSF_OUT(std::cerr<< "[LSF]"<<std::endl);
                     }
-                    
+
                     return true;
                 }
 
@@ -523,7 +523,7 @@ namespace upsylon
                                            const bool         show=true)
                 {
                     typename Type<T>::SequentialFunction SF(F);
-                    return compute_errors(sample,SF,aorg,aerr,used);
+                    return compute_errors(sample,SF,aorg,aerr,used,show);
                 }
 
                 //______________________________________________________________
