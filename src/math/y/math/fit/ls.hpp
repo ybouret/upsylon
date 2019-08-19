@@ -125,7 +125,12 @@ namespace upsylon
                 //! initial p value
                 static inline int get_ini_exponent() throw() { return InitialExponent; }
 
+                //______________________________________________________________
+                //
+                //
                 //! try to fit sample
+                //
+                //______________________________________________________________
                 inline bool fit(SampleType<T>     &sample,
                                 Sequential        &F,
                                 Array             &aorg,
@@ -150,7 +155,7 @@ namespace upsylon
                     //
                     //__________________________________________________________
                     Y_LSF_OUT(std::cerr << "[LSF] \tinitializing for #variables=" << nvar << std::endl);
-                    aerr.ld(0);        // no error
+                    aerr.ld(zero);        // no error
                     sample.prepare();  // internal memory and indexing
 
                     //----------------------------------------------------------
@@ -354,11 +359,80 @@ namespace upsylon
                     //__________________________________________________________
                     Y_LSF_OUT(OutputLine(std::cerr << "|",Y_LSF_LINE) << std::endl);
                     Y_LSF_OUT(std::cerr << "[LSF] \tanalysis after #cycles="<< cycle << std::endl);
+                    const bool ans = compute_errors(sample, F, aorg, aerr, used);
+                    Y_LSF_OUT(OutputLine(std::cerr << "|",Y_LSF_LINE) << std::endl << std::endl);
+                    return ans;
+                }
+
+                //______________________________________________________________
+                //
+                //! wrapper to use regular function
+                //______________________________________________________________
+                inline bool fit(SampleType<T>     &sample,
+                                Function          &F,
+                                Array             &aorg,
+                                Array             &aerr,
+                                const array<bool> &used,
+                                Validate          *check=0)
+                {
+                    typename Type<T>::SequentialFunction SF(F);
+                    return fit(sample,SF,aorg,aerr,used,check);
+                }
+
+                //! prototype to check positive used values
+                inline bool CheckAllPositive( Array &aorg, const array<bool> &used, const Variables &vars, const size_t cycle )
+                {
+                    Y_LSF_OUT(std::cerr<< "[LSF] <check @cycle=" << cycle << ">" <<std::endl);
+                    bool ans = true;
+                    for( Variables::const_iterator i=vars.begin();i!=vars.end();++i)
+                    {
+                        const string &id = (**i).name;
+                        if( vars(used,id) )
+                        {
+                            T &a = vars(aorg,id);
+                            if(a<0)
+                            {
+                                Y_LSF_OUT(std::cerr<< "[LSF] [" << id << ": " << a << " -> 0" << "]" << std::endl);
+                                a   = 0;
+                                ans = false;
+                            }
+                        }
+                    }
+                    Y_LSF_OUT(std::cerr<< "[LSF] <check/>" <<std::endl);
+                    return ans;
+                }
 
 
-                    D2 = compute_full_metrics(sample, F, aorg, used);
+                //______________________________________________________________
+                //
+                //
+                //! computing errors
+                //
+                //______________________________________________________________
+                inline bool compute_errors(SampleType<T>     &sample,
+                                           Sequential        &F,
+                                           const Array       &aorg,
+                                           Array             &aerr,
+                                           const array<bool> &used)
+                {
+                    static const T  zero(0);
+                    static const T  one(1);
 
-                    
+                    Y_LSF_OUT(std::cerr << "[LSF] \tcompute errors" << std::endl);
+                    assert( aerr.size() == aorg.size() );
+                    assert( used.size() == aorg.size() );
+                    const size_t nvar = aorg.size();
+
+                    //----------------------------------------------------------
+                    // acquire memory
+                    //----------------------------------------------------------
+                    this->acquire(nvar);   // internal arrays
+                    alpha.make(nvar,nvar); // hessian
+                    curv. make(nvar,nvar); // curvature
+                    sample.prepare();
+
+                    aerr.ld(zero);
+                    const T D2 = compute_full_metrics(sample, F, aorg, used);
                     //__________________________________________________________
                     //
                     // compute the d.o.f
@@ -410,49 +484,33 @@ namespace upsylon
                     const T dS = D2/ndof;
                     for(size_t i=nvar;i>0;--i)
                     {
-                        if(used[i]) aerr[i] = sqrt_of( max_of(zero,dS*curv[i][i]) );
+                        if(used[i]) aerr[i] = sqrt_of( max_of<T>(zero,dS*curv[i][i]) );
                     }
                     Y_LSF_OUT(std::cerr<< "    |_opt=" << aorg << std::endl);
                     Y_LSF_OUT(std::cerr<< "    |_err=" << aerr << std::endl);
                     Y_LSF_OUT(std::cerr<< "[LSF]"<<std::endl);
-                    Y_LSF_OUT(OutputLine(std::cerr << "|",Y_LSF_LINE) << std::endl << std::endl);
+
                     return true;
                 }
 
-                //! wrapper to use regular function
-                inline bool fit(SampleType<T>     &sample,
-                                Function          &F,
-                                Array             &aorg,
-                                Array             &aerr,
-                                const array<bool> &used,
-                                Validate          *check=0)
+
+                //______________________________________________________________
+                //
+                //
+                //! wrapper to compute errors
+                //
+                //______________________________________________________________
+                inline bool compute_errors(SampleType<T>     &sample,
+                                           Function          &F,
+                                           const Array       &aorg,
+                                           Array             &aerr,
+                                           const array<bool> &used)
                 {
                     typename Type<T>::SequentialFunction SF(F);
-                    return fit(sample,SF,aorg,aerr,used,check);
+                    return compute_errors(sample,SF,aorg,aerr,used);
                 }
 
-                //! prototype to check positive used values
-                bool CheckAllPositive( Array &aorg, const array<bool> &used, const Variables &vars, const size_t cycle )
-                {
-                    Y_LSF_OUT(std::cerr<< "[LSF] <check @cycle=" << cycle << ">" <<std::endl);
-                    bool ans = true;
-                    for( Variables::const_iterator i=vars.begin();i!=vars.end();++i)
-                    {
-                        const string &id = (**i).name;
-                        if( vars(used,id) )
-                        {
-                            T &a = vars(aorg,id);
-                            if(a<0)
-                            {
-                                Y_LSF_OUT(std::cerr<< "[LSF] [" << id << ": " << a << " -> 0" << "]" << std::endl);
-                                a   = 0;
-                                ans = false;
-                            }
-                        }
-                    }
-                    Y_LSF_OUT(std::cerr<< "[LSF] <check/>" <<std::endl);
-                    return ans;
-                }
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(LeastSquares);
@@ -507,17 +565,21 @@ namespace upsylon
                 //! compute full metrics
                 inline T compute_full_metrics(SampleType<T>     &sample,
                                               Sequential        &F,
-                                              Array             &aorg,
+                                              const Array       &aorg,
                                               const array<bool> &used )
                 {
+                    static const T  zero(0);
+                    static const T  one(1);
+
                     assert( aorg.size() == beta.size() );
                     assert( alpha.rows  == aorg.size() );
                     assert( alpha.cols  == aorg.size() );
 
-                    alpha.ld(0);
-                    beta. ld(0);
+                    // cleanup
+                    alpha.ld(zero);
+                    beta. ld(zero);
 
-                    // evaluate alpha and beta
+                    // accumulate alpha and beta
                     const T D2 = sample.computeD2(F,aorg,beta,alpha,grad,used);
 
                     // normalize alpha and beta
@@ -533,8 +595,8 @@ namespace upsylon
                         }
                         else
                         {
-                            alpha_i[i] = T(1);  // for a null gradient
-                            beta[i]    = T(0);  // mandatory
+                            alpha_i[i] = one;  // for a null gradient
+                            beta[i]    = zero;  // mandatory
                         }
                     }
 
