@@ -1,6 +1,6 @@
 #include "y/lang/syntax/rule.hpp"
 #include "y/exception.hpp"
-#include "y/ios/graphviz.hpp"
+#include "y/ios/tools/graphviz.hpp"
 #include "y/string/convert.hpp"
 #include "y/string/io.hpp"
 #include "y/ios/osstream.hpp"

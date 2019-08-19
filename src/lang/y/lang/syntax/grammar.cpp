@@ -1,6 +1,6 @@
 #include "y/lang/syntax/grammar.hpp"
 #include "y/exception.hpp"
-#include "y/ios/graphviz.hpp"
+#include "y/ios/tools/graphviz.hpp"
 
 namespace upsylon
 {

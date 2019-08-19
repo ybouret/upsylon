@@ -130,6 +130,12 @@ SET(ios_rc_srcs ${ios_rc_decl} ${ios_rc_code})
 SOURCE_GROUP( ios/rc FILES ${ios_rc_srcs} )
 INSTALL( FILES ${ios_rc_decl} DESTINATION include/y/ios/rc )
 
+FILE(GLOB ios_tools_decl y/ios/tools/*.hpp)
+FILE(GLOB ios_tools_code y/ios/tools/*.cpp)
+SET(ios_tools_srcs ${ios_tools_decl} ${ios_tools_code})
+SOURCE_GROUP( ios/tools FILES ${ios_tools_srcs} )
+INSTALL( FILES ${ios_tools_decl} DESTINATION include/y/ios/tools )
+
 FILE(GLOB codec_decl y/codec/*.hpp)
 FILE(GLOB codec_code y/codec/*.cpp)
 SET(codec_srcs ${codec_decl} ${codec_code})
@@ -285,8 +291,7 @@ ${ordered_srcs}
 ${associative_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
-${ios_srcs}
-${ios_rc_srcs}
+${ios_srcs} ${ios_rc_srcs} ${ios_tools_srcs}
 ${codec_srcs} ${lzo_srcs}
 ${fft_srcs}
 ${mpl_srcs} ${mpl_natural_srcs} ${mpl_prime_srcs} ${mpl_rsa_srcs}

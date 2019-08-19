@@ -443,7 +443,7 @@ namespace upsylon
 }
 
 #include "y/ios/ocstream.hpp"
-#include "y/ios/graphviz.hpp"
+#include "y/ios/tools/graphviz.hpp"
 namespace upsylon
 {
 
