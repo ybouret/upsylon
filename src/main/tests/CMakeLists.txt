@@ -11,7 +11,12 @@ COMMENT            "Testing LZO"
 FILE(GLOB srcs test-*.cpp)
 SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
 
-ADD_EXECUTABLE(test-main main.cpp ${srcs} support.hpp)
+ADD_CUSTOM_COMMAND( OUTPUT  ${HERE}/rsa-keys.inc
+COMMAND y_bin2dat ${HERE}/rsa-keys.bin ${HERE}/rsa-keys.inc
+DEPENDS y_bin2dat ${HERE}/rsa-keys.bin
+COMMENT "Generating Included RSA Keys" )
+
+ADD_EXECUTABLE(test-main main.cpp ${srcs} support.hpp rsa-keys.inc)
 TARGET_LINK_Y(test-main)
 
 ADD_LIBRARY(module MODULE module.cpp)

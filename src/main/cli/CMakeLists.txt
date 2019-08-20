@@ -15,6 +15,10 @@ ADD_EXECUTABLE(y_uniq y_uniq.cpp)
 TARGET_LINK_Y(y_uniq)
 INSTALL( TARGETS y_uniq RUNTIME DESTINATION bin)
 
+ADD_EXECUTABLE(y_bin2dat y_bin2dat.cpp)
+TARGET_LINK_Y(y_bin2dat)
+INSTALL( TARGETS y_bin2dat RUNTIME DESTINATION bin)
+
 ADD_EXECUTABLE(y_hexdump y_hexdump.cpp)
 TARGET_LINK_Y(y_hexdump)
 INSTALL( TARGETS y_hexdump RUNTIME DESTINATION bin)

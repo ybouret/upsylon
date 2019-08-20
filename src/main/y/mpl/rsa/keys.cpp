@@ -31,6 +31,7 @@ namespace upsylon
         
         Key:: Key( const Key &other ) :
         counted_object(),
+        ios::serializable(),
         modulus( other.modulus ),
         maximum( other.maximum ),
         maxbits( other.maxbits ),

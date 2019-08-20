@@ -71,6 +71,7 @@ Y_UTEST_INIT(150)
     Y_UTEST(mp_io);
     Y_UTEST(rsa);
     Y_UTEST(rsa_keys);
+    Y_UTEST(rsa_io);
 
 
     Y_UTEST(hashing);
