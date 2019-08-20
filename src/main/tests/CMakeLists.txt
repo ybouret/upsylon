@@ -169,7 +169,7 @@ ADD_TEST(codec:bwt    test-main bwt)
 ADD_TEST(codec:b64id  test-main b64id)
 
 SOURCE_GROUP(data FILES test-associative.cpp test-set.cpp test-map.cpp test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp test-avl.cpp
-test-const-field.cpp)
+test-const-field.cpp test-for-each.cpp)
 ADD_TEST(data:associative test-main associative)
 ADD_TEST(data:set         test-main set)
 ADD_TEST(data:map         test-main map)
@@ -181,6 +181,7 @@ ADD_TEST(data:arrays      test-main arrays)
 ADD_TEST(data:heap        test-main heap)
 ADD_TEST(data:avl         test-main avl)
 ADD_TEST(data:const-field test-main const_field)
+ADD_TEST(data:for_each    test-main for_each)
 
 SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)
 ADD_TEST(sparse:array  test-main sparse_array)

@@ -25,6 +25,7 @@ namespace upsylon
         }
         
         Key:: Key( const Key &other ) :
+        counted_object(),
         modulus( other.modulus ),
         maxbits( other.maxbits )
         {
