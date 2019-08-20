@@ -5,6 +5,9 @@
 #include "y/sequence/vector.hpp"
 #include "y/codec/base64.hpp"
 #include "y/string/convert.hpp"
+#include "y/ios/osstream.hpp"
+#include "y/ios/imstream.hpp"
+#include "y/hashing/sha1.hpp"
 
 using namespace upsylon;
 
@@ -30,6 +33,39 @@ Y_UTEST(rsa)
 
     std::cerr << "PrivateKey:" << std::endl;
     prv->print(std::cerr);
+
+    std::cerr << "Write Local" << std::endl;
+    {
+        string data;
+        {
+            ios::osstream fp(data);
+            size_t nw = 0;
+            nw += pub->serialize(fp);
+            nw += prv->serialize(fp);
+            Y_ASSERT(data.size()==nw);
+            std::cerr << "Wrote " << nw << " bytes" << std::endl;
+        }
+
+        hashing::sha1 H;
+        {
+            ios::imstream  fp(data);
+            RSA::SharedKey new_pub = RSA::Key::Read(fp);
+            RSA::SharedKey new_prv = RSA::Key::Read(fp);
+            Y_CHECK( RSA::Key::Public  == new_pub->type );
+            Y_CHECK( RSA::Key::Private == new_prv->type );
+            {
+                const digest pub1 = pub->md(H);
+                const digest pub2 = new_pub->md(H);
+                Y_CHECK(pub1==pub2);
+            }
+            {
+                const digest prv1 = prv->md(H);
+                const digest prv2 = new_prv->md(H);
+                Y_CHECK(prv1==prv2);
+            }
+
+        }
+    }
 
 
     std::cerr << "sizeof(RSA::PublicKey ) = " << sizeof( RSA::PublicKey  ) << std::endl;

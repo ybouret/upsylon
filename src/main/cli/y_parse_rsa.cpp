@@ -162,7 +162,7 @@ Y_PROGRAM_START()
                                              FETCH(exponent2),
                                              FETCH(coefficient)
                                              );
-    prv->print(std::cerr);
+    //prv->print(std::cerr);
 
 }
 Y_PROGRAM_END()

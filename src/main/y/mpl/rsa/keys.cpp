@@ -1,5 +1,6 @@
 #include "y/mpl/rsa/keys.hpp"
 #include "y/exception.hpp"
+#include "y/hashing/function.hpp"
 
 namespace upsylon
 {
@@ -19,19 +20,21 @@ namespace upsylon
             return mbits-1;
         }
 
-        Key:: Key( const mpn &m) :
+        Key:: Key( const mpn &m, const uint32_t t) :
         modulus(m),
         maximum( modulus.__dec() ),
-        maxbits( maxbits_for(maximum) )
+        maxbits( maxbits_for(maximum) ),
+        type(t)
         {
-            
+            assert(Private==type||Public==type);
         }
         
         Key:: Key( const Key &other ) :
         counted_object(),
         modulus( other.modulus ),
         maximum( other.maximum ),
-        maxbits( other.maxbits )
+        maxbits( other.maxbits ),
+        type( other.type )
         {
             
         }
@@ -48,17 +51,30 @@ namespace upsylon
         }
 
         
+
+        digest  Key:: md( hashing::function &H ) const
+        {
+            H.set();
+            H(modulus);
+            H(maximum);
+            H.run_type(maxbits);
+            H.run_type(type);
+            runHash(H);
+            return H.md();
+        }
+
     }
 }
 
 
+#include "y/ios/ostream.hpp"
 
 namespace upsylon
 {
     namespace RSA
     {
         PublicKey:: PublicKey( const mpn &m, const mpn &e ) :
-        Key(m),
+        Key(m,Public),
         publicExponent(e)
         {
         }
@@ -74,6 +90,11 @@ namespace upsylon
         }
         
         Key * PublicKey:: clone() const
+        {
+            return new PublicKey(*this);
+        }
+
+        Key * PublicKey:: clonePublic() const
         {
             return new PublicKey(*this);
         }
@@ -106,6 +127,26 @@ namespace upsylon
         {
             return prv(_);
         }
+
+        const char  PublicKey:: CLASS_NAME[] = "RSAPublicKey";
+        const char *PublicKey:: className() const throw() { return CLASS_NAME; }
+
+#define Y_RSA_SRZ(FIELD) total += FIELD.serialize(fp)
+
+        size_t PublicKey:: serialize(ios::ostream &fp) const
+        {
+            fp.emit(type);
+            size_t total = sizeof(type);
+            Y_RSA_SRZ(modulus);
+            Y_RSA_SRZ(publicExponent);
+            return total;
+        }
+
+
+        void PublicKey:: runHash(hashing::function &H) const throw()
+        {
+            H(publicExponent);
+        }
     }
     
 }
@@ -125,7 +166,7 @@ namespace upsylon
                                 const mpn &e1,
                                 const mpn &e2,
                                 const mpn &c) :
-        Key(m),
+        Key(m,Private),
         publicExponent(e),
         privateExponent(d),
         prime1(p1),
@@ -157,6 +198,12 @@ namespace upsylon
         Key * PrivateKey:: clone() const
         {
             return new PrivateKey( *this );
+        }
+
+
+        Key * PrivateKey:: clonePublic() const
+        {
+            return new PublicKey(modulus,publicExponent);
         }
 
         Key * PrivateKey:: Create(const mpn &p,
@@ -214,7 +261,79 @@ namespace upsylon
             return M2 + h*prime2;
         }
 
+
+        const char  PrivateKey:: CLASS_NAME[] = "RSAPrivateKey";
+        const char *PrivateKey:: className() const throw() { return CLASS_NAME; }
+
+        size_t PrivateKey:: serialize(ios::ostream &fp) const
+        {
+            fp.emit(type);
+            size_t total = sizeof(type);
+            Y_RSA_SRZ(modulus);
+            Y_RSA_SRZ(publicExponent);
+            Y_RSA_SRZ(privateExponent);
+            Y_RSA_SRZ(prime1);
+            Y_RSA_SRZ(prime2);
+            Y_RSA_SRZ(exponent1);
+            Y_RSA_SRZ(exponent2);
+            Y_RSA_SRZ(coefficient);
+            return total;
+        }
+
+        void PrivateKey:: runHash(hashing::function &H) const throw()
+        {
+            H(publicExponent);
+            H(privateExponent);
+            H(prime1);
+            H(prime2);
+            H(exponent1);
+            H(exponent2);
+            H(coefficient);
+        }
     }
 
 }
 
+namespace upsylon
+{
+    namespace RSA
+    {
+        Key * Key:: Read( ios::istream &fp, const ReadMode readMode )
+        {
+            const uint32_t tag = fp.read<uint32_t>();
+            switch(tag)
+            {
+                    //__________________________________________________________
+                    //
+                    // read a public key
+                    //__________________________________________________________
+                case Key::Public: {
+                    const mpn m = mpn::read(fp);
+                    const mpn e = mpn::read(fp);
+                    return new PublicKey(m,e);
+                }
+
+                case Key::Private:
+                {
+                    const mpn m  = mpn::read(fp);
+                    const mpn e  = mpn::read(fp);
+                    const mpn d  = mpn::read(fp);
+                    const mpn p1 = mpn::read(fp);
+                    const mpn p2 = mpn::read(fp);
+                    const mpn e1 = mpn::read(fp);
+                    const mpn e2 = mpn::read(fp);
+                    const mpn cf = mpn::read(fp);
+                    switch(readMode)
+                    {
+                        case ReadDefault:    return new PrivateKey(m,e,d,p1,p2,e1,e2,cf);
+                        case ReadPublicOnly: return new PublicKey(m,e);
+                    }
+                }
+                default:
+                    break;
+            }
+            throw exception("RSA.Key.read(invalid type)");
+            return NULL;
+        }
+    }
+}

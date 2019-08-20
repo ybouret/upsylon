@@ -102,6 +102,8 @@ ADD_TEST(crypto:uuid        test-main uuid)
 ADD_TEST(crypto:digest      test-main digest)
 ADD_TEST(crypto:rsa1        test-main rsa 11 3 3)
 ADD_TEST(crypto:rsa2        test-main rsa 62507 55487 65537)
+ADD_TEST(crypto:rsa3        test-main rsa 3935648537 3730255349 65537)
+ADD_TEST(crypto:rsa4        test-main rsa 18300546520784097569 16483490701427528033 65537)
 
 SOURCE_GROUP(mk FILES test-xbitrev.cpp test-fft.cpp test-triplet.cpp test-points.cpp test-primality.cpp test-complex.cpp test-sobol.cpp test-timings.cpp)
 ADD_TEST(mk:xbitrev     test-main xbitrev 0.0)
