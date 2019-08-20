@@ -1,6 +1,6 @@
 #include "y/utest/driver.hpp"
 
-Y_UTEST_INIT(128)
+Y_UTEST_INIT(150)
 {
     Y_UTEST(platform);
     Y_UTEST(types);
@@ -68,8 +68,9 @@ Y_UTEST_INIT(128)
     Y_UTEST(prime_factor);
     Y_UTEST(prime_ratio);
     Y_UTEST(ilog);
-    Y_UTEST(rsa);
     Y_UTEST(mp_io);
+    Y_UTEST(rsa);
+    Y_UTEST(rsa_keys);
 
 
     Y_UTEST(hashing);

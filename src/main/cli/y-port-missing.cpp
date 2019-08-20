@@ -23,7 +23,7 @@ Y_PROGRAM_START()
 #if defined(Y_BSD)
     // create cmd
     if(argc<=1) throw exception("usage : %s port_name [variants]",program);
-    const string                  tmp = temporary_name(8);
+    const string                  tmp = temporary_name::create(8);
     vector<string,memory::pooled> deps;
     vfs         &fs  = local_fs::instance();
 

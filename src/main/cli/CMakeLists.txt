@@ -24,6 +24,12 @@ ADD_EXECUTABLE(y_parse_rsa y_parse_rsa.cpp)
 TARGET_LINK_Y(y_parse_rsa)
 INSTALL( TARGETS y_parse_rsa RUNTIME DESTINATION bin )
 
+IF(NOT MSVC)
+ADD_EXECUTABLE(y_rsa_keys y_rsa_keys.cpp)
+TARGET_LINK_Y(y_rsa_keys)
+INSTALL( TARGETS y_rsa_keys RUNTIME DESTINATION bin )
+ENDIF()
+
 IF(Y_DARWIN)
 
 ADD_EXECUTABLE(y_port_missing y-port-missing.cpp)

@@ -88,6 +88,31 @@ Y_UTEST(rsa)
 }
 Y_UTEST_DONE()
 
+Y_UTEST(rsa_keys)
+{
+    if(argc>1)
+    {
+        vector<RSA::SharedKey> keys(128,as_capacity);
+        {
+            const string  datafile = argv[1];
+            ios::icstream fp(datafile);
+            char C = 0;
+            while( fp.query(C) )
+            {
+                fp.store(C);
+                const RSA::SharedKey key = RSA::Key::Read(fp);
+                keys.push_back(key);
+            }
+        }
+        const size_t nk = keys.size();
+        std::cerr << "Loaded " << nk << " keys" << std::endl;
+        for(size_t i=1;i<=nk;++i)
+        {
+            std::cerr << "..bits=" << keys[i]->modulus.bits() << std::endl;
+        }
+    }
+}
+Y_UTEST_DONE()
 
 
 
