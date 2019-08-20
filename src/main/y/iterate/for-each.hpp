@@ -2,19 +2,15 @@
 #ifndef Y_ITERATE_FOR_EACH_INCLUDED
 #define Y_ITERATE_FOR_EACH_INCLUDED 1
 
-#include "y/os/platform.hpp"
+#include "y/core/loop.hpp"
 
 namespace upsylon
 {
 
     template <typename ITERATOR, typename FUNC>
-    void for_each( size_t n, ITERATOR iter, FUNC &func )
+    void for_each(const size_t n, ITERATOR iter, FUNC &func )
     {
-        while(n-->0)
-        {
-            func( *iter );
-            ++iter;
-        }
+        Y_LOOP(n,func(*iter);++iter);
     }
 
     template <typename SEQUENCE, typename FUNC>
@@ -26,13 +22,9 @@ namespace upsylon
 
 
     template <typename ITERATOR, typename FUNC>
-    void for_each_meta( size_t n, ITERATOR iter, FUNC &func )
+    void for_each_meta(const size_t n, ITERATOR iter, FUNC &func )
     {
-        while(n-->0)
-        {
-            func( **iter );
-            ++iter;
-        }
+        Y_LOOP(n,func(**iter);++iter);
     }
 
     template <typename SEQUENCE, typename FUNC>
