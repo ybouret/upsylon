@@ -285,7 +285,7 @@ Y_PROGRAM_START()
     for(int i=1;i<argc;++i)
     {
         const size_t       nbits = string_convert::to<size_t>(argv[i],"nbits");
-        for(size_t j=1;j<=4;++j)
+        for(size_t j=1;j<=2;++j)
         {
             auto_ptr<RSA::Key> key   = generate_key(nbits);
             key->serialize( fp );

@@ -25,7 +25,26 @@ Y_UTEST(rsa_io)
         }
     }
     std::cerr << "Loaded " << keys.size() << " keys" << std::endl;
-    
+
+    for(size_t i=1;i<=keys.size();++i)
+    {
+        const RSA::Key &key = *keys[i];
+        std::cerr << "Testing Key with #bits=" << key.modulus.bits() << std::endl;
+        {
+            const mpn M( key.maxbits, alea );
+            const mpn C = key.pub(M);
+            const mpn D = key.prv(C);
+            Y_ASSERT(D==M);
+        }
+
+        {
+            const mpn M( key.maxbits, alea );
+            const mpn C = key.prv(M);
+            const mpn D = key.pub(C);
+            Y_ASSERT(D==M);
+        }
+    }
+
 }
 Y_UTEST_DONE()
 
