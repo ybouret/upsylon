@@ -16,15 +16,22 @@ namespace upsylon
             virtual ~Key() throw();
             
             const mpn    modulus;
-            const mpn    maxbits;
+            const mpn    maximum;
             
             virtual Key * clone()                 const = 0;
             virtual void  print(std::ostream &os) const = 0;
+            virtual mpn   pub( const mpn & )      const = 0;
+            virtual mpn   prv( const mpn & )      const = 0;
+
+            mpn __pub( const mpn &M, const mpn &publicExponent ) const;
+            const mpn & check( const mpn &M) const;
 
         protected:
             explicit Key(const mpn &m );
             explicit Key( const Key &other );
-            
+
+
+
         private:
             Y_DISABLE_ASSIGN(Key);
         };
@@ -42,6 +49,8 @@ namespace upsylon
             
             virtual Key  *clone()                   const;
             virtual void  print( std::ostream &os ) const;
+            virtual mpn   pub( const mpn &X )       const;
+            virtual mpn   prv( const mpn & )        const; //!< exception!
 
             static  Key *Create(const mpn &p, const mpn &q, const mpn &e);
 
@@ -76,7 +85,9 @@ namespace upsylon
 
             virtual Key  *clone()                   const;
             virtual void  print( std::ostream &os ) const;
-
+            virtual mpn   pub( const mpn &X )       const;
+            virtual mpn   prv( const mpn & )        const;
+            
             static  Key *Create(const mpn &p, const mpn &q, const mpn &e);
 
 

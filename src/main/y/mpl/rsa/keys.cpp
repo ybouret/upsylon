@@ -1,4 +1,5 @@
 #include "y/mpl/rsa/keys.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -9,17 +10,19 @@ namespace upsylon
         {
         }
         
-        
+
+#if 0
         static inline
         size_t maxbits_for(const mpn &modulus )
         {
             const mpn m = modulus.__dec();
             return m.bits();
         }
-        
+#endif
+
         Key:: Key( const mpn &m) :
         modulus(m),
-        maxbits( maxbits_for(modulus) )
+        maximum( modulus.__dec() )
         {
             
         }
@@ -27,13 +30,27 @@ namespace upsylon
         Key:: Key( const Key &other ) :
         counted_object(),
         modulus( other.modulus ),
-        maxbits( other.maxbits )
+        maximum( other.maximum )
         {
             
         }
+
+        const mpn & Key:: check( const mpn &M ) const
+        {
+            if(M>maximum) throw exception("RSA::Key(message overflow)");
+            return M;
+        }
+
+        mpn Key:: __pub( const mpn &M, const mpn &publicExponent ) const
+        {
+            return mpn::mod_exp( check(M),publicExponent,modulus);
+        }
+
         
     }
 }
+
+
 
 namespace upsylon
 {
@@ -73,12 +90,21 @@ namespace upsylon
             os << "publicExponent  : " << publicExponent << std::endl;
         }
 
+
+        mpn   PublicKey:: pub( const mpn &M ) const
+        {
+            return __pub(M,publicExponent);
+        }
+
+        mpn   PublicKey:: prv( const mpn & ) const
+        {
+            throw exception("No RSA::PublicKey::prv" );
+        }
     }
     
 }
 
 
-#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -161,6 +187,16 @@ namespace upsylon
 
         }
 
+        mpn   PrivateKey:: pub( const mpn &M ) const
+        {
+            return __pub(M,publicExponent);
+        }
+
+
+        mpn   PrivateKey:: prv( const mpn &M ) const
+        {
+            return mpn::mod_exp( check(M),privateExponent,modulus);
+        }
 
     }
 
