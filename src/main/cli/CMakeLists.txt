@@ -20,9 +20,9 @@ TARGET_LINK_Y(y_hexdump)
 INSTALL( TARGETS y_hexdump RUNTIME DESTINATION bin)
 
 #parsing rsa key from openssl generated output
-ADD_EXECUTABLE(y_parse_rsa y_parse_rsa.cpp)
-TARGET_LINK_Y(y_parse_rsa)
-INSTALL( TARGETS y_parse_rsa RUNTIME DESTINATION bin )
+#ADD_EXECUTABLE(y_parse_rsa y_parse_rsa.cpp)
+#TARGET_LINK_Y(y_parse_rsa)
+#INSTALL( TARGETS y_parse_rsa RUNTIME DESTINATION bin )
 
 IF(NOT MSVC)
 ADD_EXECUTABLE(y_rsa_keys y_rsa_keys.cpp)
