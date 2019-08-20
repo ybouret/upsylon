@@ -18,7 +18,8 @@ namespace upsylon
             const mpn    modulus;
             const mpn    maxbits;
             
-            virtual Key * clone() const = 0;
+            virtual Key * clone()                 const = 0;
+            virtual void  print(std::ostream &os) const = 0;
 
         protected:
             explicit Key(const mpn &m );
@@ -39,7 +40,9 @@ namespace upsylon
             explicit PublicKey( const mpn &m, const mpn &e );
             explicit PublicKey( const PublicKey &other );
             
-            virtual Key *clone() const;
+            virtual Key  *clone()                   const;
+            virtual void  print( std::ostream &os ) const;
+
             static  Key *Create(const mpn &p, const mpn &q, const mpn &e);
 
         private:
@@ -71,7 +74,9 @@ namespace upsylon
 
             explicit PrivateKey( const PrivateKey &other );
 
-            virtual Key *clone() const;
+            virtual Key  *clone()                   const;
+            virtual void  print( std::ostream &os ) const;
+
             static  Key *Create(const mpn &p, const mpn &q, const mpn &e);
 
 

@@ -65,6 +65,13 @@ namespace upsylon
             const mpn M = p*q;
             return new PublicKey(M,E);
         }
+
+        void PublicKey:: print( std::ostream &os ) const
+        {
+            os << "modulus         : " << modulus        << std::endl;
+            os << "publicExponent  : " << publicExponent << std::endl;
+        }
+
     }
     
 }
@@ -136,9 +143,23 @@ namespace upsylon
             const mpn E1  = mpn::mod_inv(E,PM1);
             const mpn E2  = mpn::mod_inv(E,QM1);
             const mpn CF  = mpn::mod_inv(Q,P);
-
+            
             return new PrivateKey(M,E,D,P,Q,E1,E2,CF);
         }
+
+        void PrivateKey:: print( std::ostream &os ) const
+        {
+            os << "modulus         : " << modulus         << std::endl;
+            os << "publicExponent  : " << publicExponent  << std::endl;
+            os << "privateExponent : " << privateExponent << std::endl;
+            os << "prime1          : " << prime1          << std::endl;
+            os << "prime2          : " << prime2          << std::endl;
+            os << "exponent1       : " << exponent1       << std::endl;
+            os << "exponent2       : " << exponent2       << std::endl;
+            os << "coefficient     : " << coefficient     << std::endl;
+
+        }
+
 
     }
 
