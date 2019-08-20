@@ -11,18 +11,18 @@ namespace upsylon
         }
         
 
-#if 0
         static inline
-        size_t maxbits_for(const mpn &modulus )
+        size_t maxbits_for(const mpn &m )
         {
-            const mpn m = modulus.__dec();
-            return m.bits();
+            const size_t mbits = m.bits();
+            if(mbits<=1) throw exception("RSA::Key(modulus too small!)");
+            return mbits-1;
         }
-#endif
 
         Key:: Key( const mpn &m) :
         modulus(m),
-        maximum( modulus.__dec() )
+        maximum( modulus.__dec() ),
+        maxbits( maxbits_for(maximum) )
         {
             
         }
@@ -30,7 +30,8 @@ namespace upsylon
         Key:: Key( const Key &other ) :
         counted_object(),
         modulus( other.modulus ),
-        maximum( other.maximum )
+        maximum( other.maximum ),
+        maxbits( other.maxbits )
         {
             
         }
@@ -99,6 +100,11 @@ namespace upsylon
         mpn   PublicKey:: prv( const mpn & ) const
         {
             throw exception("No RSA::PublicKey::prv" );
+        }
+
+        mpn   PublicKey:: prv_( const mpn &_ ) const
+        {
+            return prv(_);
         }
     }
     
@@ -193,9 +199,19 @@ namespace upsylon
         }
 
 
-        mpn   PrivateKey:: prv( const mpn &M ) const
+        mpn   PrivateKey:: prv_( const mpn &M ) const
         {
             return mpn::mod_exp( check(M),privateExponent,modulus);
+        }
+
+        mpn   PrivateKey:: prv( const mpn &C ) const
+        {
+            mpn       M1 = mpn::mod_exp(C,exponent1,prime1);
+            const mpn M2 = mpn::mod_exp(C,exponent2,prime2);
+            while(M1<M2) M1 += prime1;
+            const mpn H  = coefficient*(M1-M2);
+            const mpn h  = mpn::__mod(H,prime1);
+            return M2 + h*prime2;
         }
 
     }
