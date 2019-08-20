@@ -26,7 +26,7 @@ Y_UTEST(rsa_io)
     }
     std::cerr << "Loaded " << keys.size() << " keys" << std::endl;
 
-    for(size_t i=1;i<=keys.size();++i)
+    for(size_t i=1;i<=keys.size()/2;++i)
     {
         const RSA::Key &key = *keys[i];
         std::cerr << "Testing Key with #bits=" << key.modulus.bits() << std::endl;
