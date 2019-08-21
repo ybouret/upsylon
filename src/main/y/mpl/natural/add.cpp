@@ -18,10 +18,15 @@ namespace upsylon
                 cswap(small_data,large_data);
                 cswap(small_size,large_size);
             }
-            const size_t ns  = large_size+1;
+            const size_t ns    = large_size+1;
             natural      ans(ns,as_capacity);
-            uint8_t     *sum = ans.byte;
-            size_t carry = 0;
+            uint8_t     *sum   = ans.byte;
+            unsigned     carry = 0;
+
+            //__________________________________________________________________
+            //
+            // common part
+            //__________________________________________________________________
             for(size_t i=0;i<small_size;++i)
             {
                 carry += small_data[i] + large_data[i];
@@ -30,6 +35,10 @@ namespace upsylon
                 assert(carry<256);
             }
 
+            //__________________________________________________________________
+            //
+            // propagate carry
+            //__________________________________________________________________
             for(size_t i=small_size;i<large_size;++i)
             {
                 carry += large_data[i];

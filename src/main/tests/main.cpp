@@ -60,6 +60,7 @@ Y_UTEST_INIT(150)
     Y_UTEST(complex);
     Y_UTEST(xbitrev);
     Y_UTEST(mpn);
+    Y_UTEST(mpn_perf);
     Y_UTEST(mpn_fact);
     Y_UTEST(mpz);
     Y_UTEST(mpq);

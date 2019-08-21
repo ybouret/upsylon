@@ -147,8 +147,9 @@ SOURCE_GROUP(geom FILES test-geom-iso2d.cpp)
 ADD_TEST(geom:iso2d test-main geom_iso2d)
 
 SOURCE_GROUP(mp FILES test-mpn.cpp test-mpz.cpp test-mpq.cpp test-mprm.cpp test-ilog.cpp 
-test-prime-factor.cpp test-prime-ratio.cpp test-mp-io.cpp) 
+test-prime-factor.cpp test-prime-ratio.cpp test-mp-io.cpp test-mpn-perf.cpp) 
 ADD_TEST(mp:n         test-main mpn)
+ADD_TEST(mp:perf      test-main mpn_perf 0.01 1)
 ADD_TEST(mp:fact      test-main mpn_fact 1 0x0a 20 30 50)
 ADD_TEST(mp:z         test-main mpz)
 ADD_TEST(mp:q         test-main mpq)
