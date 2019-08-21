@@ -4,6 +4,7 @@
 #include "y/ios/ocstream.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/memory/pooled.hpp"
+#include "y/randomized/bits.hpp"
 #include <cstdlib>
 
 using namespace upsylon;
@@ -47,6 +48,7 @@ namespace
 
     string generate_openssl_private_key( const size_t bits )
     {
+        randomized::bits &ran = randomized::bits::crypto();
         vector<string,memory::pooled> filenames(3,as_capacity);
         temporary_name::create(filenames,3);
 
@@ -58,19 +60,26 @@ namespace
         {
             // get entropy
             {
-                const string cmd = "dd if=/dev/random bs=1024 count=1 of=" + randname + " &> /dev/null";
-                perform(cmd);
+                //const string cmd = "dd if=/dev/random bs=1024 count=1 of=" + randname + " &> /dev/null";
+                //perform(cmd);
+                const size_t bs = 4096;
+                ios::ocstream fp(randname);
+                for(size_t i=bs;i>0;--i)
+                {
+                    fp.write( ran.full<uint8_t>() );
+                }
+                fp.flush();
             }
 
             // generate binary key
             {
-                const string cmd = "openssl genrsa -out " + osslname + " -rand " + randname + vformat(" %u", unsigned(bits) ) + " &> /dev/null";
+                const string cmd = "openssl genrsa -out " + osslname + " -rand " + randname + vformat(" %u", unsigned(bits) ); //+ " &> /dev/null";
                 perform(cmd);
             }
 
             // generating test file now
             {
-                const string cmd = "openssl rsa -text -noout -in " + osslname + " -out " + filename + " &> /dev/null";
+                const string cmd = "openssl rsa -text -noout -in " + osslname + " -out " + filename;// + " &> /dev/null";
                 perform(cmd);
             }
 
