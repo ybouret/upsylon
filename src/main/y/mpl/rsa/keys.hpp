@@ -15,36 +15,32 @@ namespace upsylon
         class Key : public counted_object, public ios::serializable
         {
         public:
-            static const uint32_t Public  = Y_FOURCC('@','P','U','B');
-            static const uint32_t Private = Y_FOURCC('@','P','R','V');
+            static const uint32_t Public  = Y_FOURCC('@','P','U','B'); //!< tag for Public
+            static const uint32_t Private = Y_FOURCC('@','P','R','V'); //!< tag for Privat
 
-            virtual ~Key() throw();
-
-            //! data
-            const mpn      modulus;
-            const mpn      maximum;
-            const size_t   maxbits;
-            const uint32_t type;
+            //------------------------------------------------------------------
+            // common data
+            //------------------------------------------------------------------
+            const mpn      modulus; //!< product of two primes
+            const mpn      maximum; //!< modulus-1
+            const size_t   maxbits; //!< maximum.bits()-1
+            const uint32_t type;    //!< [Public|Private]
 
             //------------------------------------------------------------------
             // virtual interface
             //------------------------------------------------------------------
-            virtual Key * clone()                 const = 0;
-            virtual Key * clonePublic()           const = 0;
-            virtual void  print(std::ostream &os) const = 0;
-            virtual mpn   pub( const mpn & )      const = 0;
-            virtual mpn   prv( const mpn & )      const = 0;
-            virtual mpn   prv_( const mpn & )     const = 0;
+            virtual      ~Key() throw();                      //!< destructor
+            virtual Key * clone()                 const = 0;  //!< full clone
+            virtual Key * clonePublic()           const = 0;  //!< make a public key
+            virtual void  print(std::ostream &os) const = 0;  //!< display content
+            virtual mpn   pub( const mpn & )      const = 0;  //!< encode using public part
+            virtual mpn   prv( const mpn & )      const = 0;  //!< encode using private part, optimized
+            virtual mpn   prv_( const mpn & )     const = 0;  //!< raw encode using private part
 
             //------------------------------------------------------------------
             // non virtual interface
             //------------------------------------------------------------------
-            digest  md( hashing::function &H ) const;
-
-
-            //------------------------------------------------------------------
-            // common operations
-            //------------------------------------------------------------------
+            digest      md( hashing::function &H ) const;                       //!< get a message digest of the full key
             mpn         __pub( const mpn &M, const mpn &publicExponent ) const; //!< M^publicExponent [modulus]
             const mpn & check( const mpn &M) const;                             //!< M<=maximum
 
@@ -62,37 +58,38 @@ namespace upsylon
 
 
         protected:
-            explicit Key(const mpn &m, const uint32_t t);
-            explicit Key(const Key &other );
-            virtual void runHash(  hashing::function &H ) const throw() = 0;
-
+            explicit Key(const mpn &m, const uint32_t t); //!< initialize modulus and type
+            explicit Key(const Key &other );              //!< copy common part
 
         private:
+            virtual void runHash(  hashing::function &H ) const throw() = 0;
             Y_DISABLE_ASSIGN(Key);
         };
 
+        //! alias to handle dynamic keys
         typedef arc_ptr<Key> SharedKey;
-        
+
+        //! RSA Public Key implementation
         class PublicKey : public Key
         {
         public:
-            const mpn publicExponent;
+            const mpn publicExponent; //!< public Exponent
             
-            virtual ~PublicKey() throw();
-            explicit PublicKey( const mpn &m, const mpn &e );
-            explicit PublicKey( const PublicKey &other );
+            explicit PublicKey( const mpn &m, const mpn &e ); //!< constructor
+            explicit PublicKey( const PublicKey &other );     //!< full copy
 
             //------------------------------------------------------------------
             // virtual interface
             //------------------------------------------------------------------
-            virtual Key  *clone()                   const;
-            virtual Key * clonePublic()             const;
-            virtual void  print( std::ostream &os ) const;
-            virtual mpn   pub( const mpn &X )       const;
-            virtual mpn   prv( const mpn & )        const; //!< exception!
+            virtual      ~PublicKey() throw();             //!< destructor
+            virtual Key  *clone()                   const; //!< self copy
+            virtual Key * clonePublic()             const; //!< self copy
+            virtual void  print( std::ostream &os ) const; //!< print
+            virtual mpn   pub( const mpn &M )       const; //!< M^publicExponent [modulus]
+            virtual mpn   prv( const mpn &  )       const; //!< exception!
             virtual mpn   prv_( const mpn & )       const; //!< exception!
 
-
+            //! modulus=p*q, publicExponent = e
             static  Key *Create(const mpn &p, const mpn &q, const mpn &e);
 
             //------------------------------------------------------------------
@@ -109,19 +106,19 @@ namespace upsylon
         };
 
 
-
+        //! RSA Private Key implementation
         class PrivateKey : public Key
         {
         public:
-            const mpn publicExponent;
-            const mpn privateExponent;
-            const mpn prime1;
-            const mpn prime2;
-            const mpn exponent1;
-            const mpn exponent2;
-            const mpn coefficient;
+            const mpn publicExponent;      //!< public exponent
+            const mpn privateExponent;     //!< private exponent
+            const mpn prime1;              //!< first prime  prime1>prime2
+            const mpn prime2;              //!< second prime prime2<prime1
+            const mpn exponent1;           //!< (1/e) [prime1-1]
+            const mpn exponent2;           //!< (1/e) [prime2-1]
+            const mpn coefficient;         //!< (1/prime2) [prime1]
 
-            virtual ~PrivateKey() throw();
+            //! constructor
             explicit PrivateKey(const mpn &m,
                                 const mpn &e,
                                 const mpn &d,
@@ -131,18 +128,22 @@ namespace upsylon
                                 const mpn &e2,
                                 const mpn &c);
 
+            //! full copy
             explicit PrivateKey( const PrivateKey &other );
 
             //------------------------------------------------------------------
             // Key interface
             //------------------------------------------------------------------
-            virtual Key  *clone()                   const;
-            virtual Key * clonePublic()             const;
-            virtual void  print( std::ostream &os ) const;
-            virtual mpn   pub( const mpn &X )       const;
-            virtual mpn   prv( const mpn & )        const; //!< use CRT
-            virtual mpn   prv_( const mpn & )       const; //!< direct transform
-            static  Key *Create(const mpn &p, const mpn &q, const mpn &e);
+            virtual      ~PrivateKey() throw();              //!< destructor
+            virtual Key  *clone()                   const;   //!< self clone
+            virtual Key * clonePublic()             const;   //!< make a public key
+            virtual void  print( std::ostream &os ) const;   //!< print
+            virtual mpn   pub( const mpn &M )       const;   //!< C^e [modulus]
+            virtual mpn   prv( const mpn &C )        const;  //!< use CRT to compute C^d [modulus]
+            virtual mpn   prv_(const mpn &C )       const;   //!< C^d [modulus]
+
+            //! compute key according to formula
+            static  Key  *Create(const mpn &p, const mpn &q, const mpn &e);
 
             //------------------------------------------------------------------
             // I/O interface
