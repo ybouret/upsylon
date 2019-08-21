@@ -21,9 +21,9 @@ Y_UTEST(rsa)
 #endif
 
     if( argc < 3 ) return 0;
-    const mpn p = argv[1];
-    const mpn q = argv[2];
-    const mpn e = argv[3];
+    const mpn p(argv[1],as_string);
+    const mpn q(argv[2],as_string);
+    const mpn e(argv[3],as_string);
 
     RSA::SharedKey pub = RSA::PublicKey ::Create(p, q, e);
     RSA::SharedKey prv = RSA::PrivateKey::Create(p, q, e);

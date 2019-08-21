@@ -31,13 +31,16 @@ Y_UTEST(mpn)
 
     MPN &mgr = MPN::instance();
 
-    mpn a;
+    mpn a = 0;
     mpn b(a);
     mpn c(10);
 
     {
-        mpn aa = "12";
-        mpn bb = "0x10";
+        mpn aa("12",as_string);
+        mpn bb("0x10",as_string);
+        const string value = "0x123";
+        mpn cc = value;
+        cc = "0x321";
     }
 
     std::cerr << std::hex;

@@ -121,7 +121,7 @@ for(size_t ii=host.bytes;ii<host.allocated;++ii)            \
             void   clr() throw();                                         //!< clear memory
             static const uint8_t * prepare( word_t &, size_t & ) throw(); //!< prepare a scalar type
 
-            natural(const char   *);                                      //!< auto parsed text
+            natural(const char   *, const as_string_t &);                 //!< auto parsed text
             natural(const string &);                                      //!< auto parsed string
             natural & operator=( const char   * );                        //!< assign parsed text
             natural & operator=( const string & );                        //!< assign parsed text

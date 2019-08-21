@@ -2,6 +2,7 @@
 #include "y/string.hpp"
 #include "y/exceptions.hpp"
 #include "y/memory/buffers.hpp"
+#include "y/strfwd.hpp"
 
 #include <cerrno>
 #include <cstdarg>
@@ -37,6 +38,7 @@ namespace upsylon
 
     }
 
+    const as_string_t  as_string = {};
 
    
 }

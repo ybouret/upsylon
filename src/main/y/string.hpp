@@ -13,6 +13,7 @@ namespace upsylon
     //! make a string from printf like call
     string vformat( const char *fmt,... ) Y_PRINTF_CHECK(1,2);
 
+   
 }
 
 #endif

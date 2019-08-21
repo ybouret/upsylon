@@ -105,7 +105,7 @@ namespace upsylon
             update();
         }
 
-        natural:: natural(const char   *s) :  Y_MPN_CTOR(0,0)
+        natural:: natural(const char *s, const as_string_t &) :  Y_MPN_CTOR(0,0)
         {
             Y_MPN_CHECK(this);
             natural _ = parse(s);
