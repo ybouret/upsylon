@@ -34,10 +34,7 @@ namespace upsylon
             //
             // packing real data in fft1
             //__________________________________________________________________
-#define Y_MPN_SET_FFT_RE(J) fft1[     (J)<<1   ] = data1[J]
-#define Y_MPN_SET_FFT_IM(J) fft1[ 1+( (J)<<1 ) ] = data2[J]
-            //YOCTO_LOOP_FUNC_(size1,Y_MPN_SET_FFT_RE,0);
-            //YOCTO_LOOP_FUNC_(size2,Y_MPN_SET_FFT_IM,0);
+
             // set real part
             for(size_t i=0;i<size1;++i)
             {
@@ -88,8 +85,6 @@ namespace upsylon
                 fft2[nn3mj] =  rem;
             }
 
-#define Y_MPN_MUL_IN_PLACE(J) L[J] *= R[J]
-            //YOCTO_LOOP_FUNC_(n, Y_MPN_MUL_IN_PLACE, 0);
             for(size_t i=0;i<n;++i)
             {
                 L[i] *= R[i];
@@ -113,7 +108,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 //-- compute common power of two
                 //--------------------------------------------------------------
-                const size_t nn = P.allocated; assert(nn>=next_power_of_two(np));
+                const size_t nn = P.allocated; assert( is_a_power_of_two(nn) ); assert(nn>=np);
 
 
                 size_t       n2 = nn<<1;
@@ -153,17 +148,16 @@ namespace upsylon
             {
                 static memory::allocator &hmem = manager::instance();
 
-                const size_t np = nl << 1;             //-- product size
-                natural       P( np, as_capacity );    //-- product value
+                const size_t np = nl << 1;            //-- product size
+                natural      P( np, as_capacity );    //-- product value
                 //--------------------------------------------------------------
                 //-- compute power of two
                 //--------------------------------------------------------------
-                const size_t nn = next_power_of_two(np);
+                const size_t nn = P.allocated; assert( is_a_power_of_two(nn) ); assert(nn>=np);
 
                 //--------------------------------------------------------------
                 //- compute wokspace size and create it
                 //--------------------------------------------------------------
-                //array_of<cplx_t> L( nn );
                 size_t         workspace = 0;
                 size_t         nreq      = nn;
                 cplx_t        *L  = hmem.acquire_as<cplx_t>(nreq,workspace);

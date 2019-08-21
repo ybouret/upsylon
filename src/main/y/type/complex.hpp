@@ -129,7 +129,7 @@ namespace upsylon
         //
         // multiplication
         //______________________________________________________________________
-
+        
         //! in place mul
         inline complex & operator*=(const complex c) throw()
         {
@@ -166,7 +166,7 @@ namespace upsylon
             return complex(x*rhs.re,x*rhs.im);
         }
 
-        //! in splace square
+        //! in place square
         inline void __square() throw()
         {
             const real_type i_half = re*im;

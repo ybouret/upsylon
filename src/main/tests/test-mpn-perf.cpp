@@ -187,7 +187,7 @@ Y_UTEST(mpn_perf)
 
     for(size_t i=0;i<nop;++i)
     {
-        for(size_t nbits=32;nbits<=256;nbits <<= 1)
+        for(size_t nbits=32;nbits<=512;nbits <<= 1)
         {
             const binary_operator &op = *ops[i];
             ave = collect(op, count, nbits, delta, iterations, sig);
