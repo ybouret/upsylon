@@ -10,6 +10,8 @@ namespace upsylon
         natural natural:: __sub(const uint8_t *l, const size_t nl,
                                 const uint8_t *r, const size_t nr)
         {
+            typedef long int carry_t;
+
             if(nl<nr)
             {
                 throw libc::exception(EDOM,"mpl.natural.sub(lhs<rhs) [level-1]");
@@ -24,12 +26,12 @@ namespace upsylon
             //
             // firt loop: common bytes
             //__________________________________________________________________
-            ptrdiff_t   carry = 0;
+            carry_t   carry = 0;
             for( size_t i=nr; i>0; --i )
             {
-                const ptrdiff_t a = *(l++); // L[i];
-                const ptrdiff_t b = *(r++); // R[i];
-                ptrdiff_t       d = (a-b)-carry;
+                const carry_t a = *(l++); // L[i];
+                const carry_t b = *(r++); // R[i];
+                carry_t       d = (a-b)-carry;
                 if( d < 0 )
                 {
                     d    += 256;
@@ -51,8 +53,8 @@ namespace upsylon
             //__________________________________________________________________
             for( size_t i=nl-nr; i>0; --i )
             {
-                const ptrdiff_t a = *(l++);  //L[i];
-                ptrdiff_t       d = a-carry;
+                const carry_t a = *(l++);  //L[i];
+                carry_t       d = a-carry;
                 if( d < 0 )
                 {
                     d    += 256;

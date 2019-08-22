@@ -147,6 +147,12 @@ namespace
 }
 
 #include "y/string/convert.hpp"
+#include "y/string/env.hpp"
+#include "y/string/tokenizer.hpp"
+#include "y/sort/unique.hpp"
+#include "y/core/locate.hpp"
+
+static inline bool is_sep( const int C ) throw() { return C == ':'; }
 
 Y_UTEST(mpn_perf)
 {
@@ -184,14 +190,34 @@ Y_UTEST(mpn_perf)
 
     double sig = 0;
     double ave = 0;
+    vector<string> todo;
+    {
+        string ops_id;
+        if( !environment::get(ops_id,"ops") )
+        {
+            ops_id += ops[0]->name;
+            for(size_t i=1;i<nop;++i) ops_id << ':' << ops[i]->name;
+        }
+        tokenizer<char>::split(todo,ops_id, is_sep);
+        unique(todo);
+        std::cerr << "todo=" << todo << std::endl;
+    }
+
 
     for(size_t i=0;i<nop;++i)
     {
+        const binary_operator &op       = *ops[i];
+        const string           fileName = op.fileName();
+        const string           id       = op.name;
+        size_t                 idx      = 0;
+        if( !core::locate(id, *todo, todo.size(), comparison::increasing<string>,idx) )
+        {
+            continue;
+        }
+
         for(size_t nbits=32;nbits<=512;nbits <<= 1)
         {
-            const binary_operator &op = *ops[i];
             ave = collect(op, count, nbits, delta, iterations, sig);
-            const string fileName = op.fileName();
             ios::ocstream fp(fileName,true);
             fp("%u %g %g\n", unsigned(nbits), ave, sig);
         }

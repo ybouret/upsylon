@@ -112,8 +112,8 @@ namespace upsylon
 
 
                 size_t       n2 = nn<<1;
-                size_t       workspace = 0;
-                cplx_t      *L  = hmem.acquire_as<cplx_t>(n2,workspace);
+                size_t       ws = 0;
+                cplx_t      *L  = hmem.acquire_as<cplx_t>(n2,ws);
                 cplx_t      *R  = L+nn;
 
                 fft_mul(l,nl,r,nr,&L[0].re,&R[0].re,nn);
@@ -132,7 +132,7 @@ namespace upsylon
                 prod[top] = uint8_t(carry);
                 P.bytes   = np;
                 P.update();
-                hmem.release_as(L,n2,workspace);
+                hmem.release_as(L,n2,ws);
                 return P;
             }
             else
@@ -161,13 +161,16 @@ namespace upsylon
                 size_t         workspace = 0;
                 size_t         nreq      = nn;
                 cplx_t        *L  = hmem.acquire_as<cplx_t>(nreq,workspace);
-                const uint8_t *l = lhs.byte;
-                for(size_t i=0;i<nl;++i)
                 {
-                    L[i].re = l[i];
+                    const uint8_t *l = lhs.byte;
+                    for(size_t i=0;i<nl;++i)
+                    {
+                        L[i].re = l[i];
+                    }
                 }
+
                 //--------------------------------------------------------------
-                //-- forward
+                //-- forward transform
                 //--------------------------------------------------------------
                 real_t *data = &L[0].re-1;
                 fft<real_t>::forward( data,  nn  );

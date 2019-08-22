@@ -47,7 +47,7 @@ namespace upsylon
                         while( compare_blocks(probe.byte,probe.bytes,num,nn) <= 0 )
                         {
                             ++p;
-                            probe.shl();
+                            (void) probe.shl();
                         }
                         assert(  compare_blocks(probe.byte,probe.bytes,num,nn) >= 0 );
                     }
@@ -62,7 +62,7 @@ namespace upsylon
                     while( p-- > 0 )
                     {
 
-                        natural       mid = lo+hi; mid.shr();
+                        natural       mid = lo+hi; (void) mid.shr();
                         const natural tmp = __mul( mid.byte, mid.bytes, den, nd);
                         const int     chk = compare_blocks(tmp.byte,tmp.bytes,num,nn);
                         if(chk<0)
