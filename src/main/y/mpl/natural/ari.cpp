@@ -14,7 +14,7 @@ namespace upsylon
             //std::cerr << "Computing " << b << "^(-1)[" << n << "]" << std::endl;
             natural n0 = n;
             natural b0 = b;
-            natural t0;// = 0;
+            natural t0 = 0;
             natural t  = 1;
             natural q  = n0/b0;
             natural r  = n0 - q*b0;
@@ -68,14 +68,14 @@ namespace upsylon
                 for( size_t i=0; i < nbit; ++i )
                 {
 
-                    if( ebit[i>>3] & bits_table::value[ i & 7 ] )
+                    if( ebit[i>>3] & bits_table::value[ (i&0x7) ] )
                     {
                         //result = ( result * base ) % N;
-                        const natural rb = result * base;
-
-                        natural tmp1 = __mod( rb.byte, rb.bytes, N.byte, N.bytes );
+                        const natural rb   = result * base;
+                        natural       tmp1 = __mod( rb.byte, rb.bytes, N.byte, N.bytes );
                         tmp1.xch( result );
                     }
+
                     //base = ( base * base ) % N;
                     const natural bsq  = square_of(base);
                     natural       tmp2 = __mod(bsq.byte,bsq.bytes,N.byte,N.bytes);
@@ -83,12 +83,14 @@ namespace upsylon
                 }
 
                 //-- most significant bit !
-                assert( (ebit[nbit>>3] & bits_table::value[ nbit & 7 ]) != 0 );
+                assert( (ebit[nbit>>3] & bits_table::value[ (nbit&7) ]) != 0 );
 
                 //result = ( result * base ) % N;
-                const natural rb   = result * base;
-                natural       tmp3 = __mod( rb.byte, rb.bytes, N.byte, N.bytes );
-                tmp3.xch( result );
+                {
+                    const natural rb   = result * base;
+                    natural       tmp3 = __mod( rb.byte, rb.bytes, N.byte, N.bytes );
+                    tmp3.xch( result );
+                }
             }
 
             return result;
@@ -129,11 +131,14 @@ namespace upsylon
             }
             else
             {
-                natural x1 = (n>>1);
+                //natural x1 = (n>>1);
+                natural x1 = n;
+                (void) x1.shr();
                 while(true)
                 {
                     const natural x0 = x1;
-                    x1 = ((x0+n/x0)>>1);
+                    //x1 = ((x0+n/x0)>>1);
+                    x1 = n/x0; x1 += x0; (void) x1.shr();
                     if(x1>=x0)
                     {
                         return x0;
