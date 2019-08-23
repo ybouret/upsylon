@@ -14,20 +14,22 @@ namespace upsylon
         {
         public:
             Y_DECL_ARGS(T,type);
+            type      *entry;
+            
 
-            type *entry;
-
-            inline virtual ~FieldData() throw() { cleanup(); }
-
-            inline explicit FieldData(void *addr, const size_t count) :
+            inline  ~FieldData() throw() { cleanup(); }
+            
+            inline explicit FieldData(void        *addr,
+                                      const size_t size) :
             entry( static_cast<type*>(addr) ),
             built(0)
             {
-                assert( !(NULL==addr && count>0 ) );
+                assert( !(NULL==addr && size>0 ) );
+
                 try
                 {
                     mutable_type *p = static_cast<mutable_type*>(addr);
-                    while(built<count)
+                    while(built<size)
                     {
                         new (p+built) T();
                         ++built;
@@ -42,7 +44,8 @@ namespace upsylon
 
 
         private:
-            size_t built;
+            size_t     built;
+            
             inline void cleanup() throw()
             {
                 while(built>0)
