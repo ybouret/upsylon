@@ -271,6 +271,12 @@ SET(sparse_srcs ${sparse_decl} ${sparse_code})
 SOURCE_GROUP( sparse FILES ${sparse_srcs} )
 INSTALL( FILES ${sparse_decl} DESTINATION include/y/sparse )
 
+FILE(GLOB oxide_decl y/oxide/*.hpp)
+FILE(GLOB oxide_code y/oxide/*.cpp)
+SET(oxide_srcs ${oxide_decl} ${oxide_code})
+SOURCE_GROUP( oxide FILES ${oxide_srcs} )
+INSTALL( FILES ${oxide_decl} DESTINATION include/y/oxide )
+
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
 ${os_srcs}
@@ -306,6 +312,7 @@ ${lang_srcs} ${lang_pattern_srcs} ${lang_lexical_srcs} ${lexical_plugin_srcs}
 ${geometry_srcs}
 ${kr_sc_srcs} ${kr_bc_srcs}
 ${sparse_srcs}
+${oxide_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )

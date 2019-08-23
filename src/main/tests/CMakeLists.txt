@@ -197,6 +197,10 @@ SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)
 ADD_TEST(sparse:array  test-main sparse_array)
 ADD_TEST(sparse:matrix test-main sparse_matrix)
 
+SOURCE_GROUP(oxide FILES test-oxide.cpp)
+ADD_TEST(oxide:main   test-main  oxide)
+
+
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-main)
