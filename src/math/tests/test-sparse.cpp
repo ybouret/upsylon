@@ -10,6 +10,7 @@ namespace {
     template <typename T>
     static inline void fill(sparse_array<T> &a)
     {
+        a.ldz();
         for(size_t i=1+alea.leq(a.size()/2);i>0;--i)
         {
             const T tmp = support::get<T>();
@@ -43,6 +44,24 @@ namespace {
             std::cerr << "a     = "   << a << std::endl;
             std::cerr << "a.b   = "   << spark::dot(a,b) << std::endl;
             std::cerr << "|a|^2 = "   << spark::norm2(a) << std::endl;
+
+            fill(a);
+            fill(b);
+            spark::set(a,b);
+            
+            const T x = support::get<T>();
+            fill(a);
+            fill(b);
+            std::cerr << "a=" << a << std::endl;
+            std::cerr << "b=" << b << std::endl;
+            std::cerr << "x=" << x << std::endl;
+            spark::mul_add(a,x,b);
+            std::cerr << "c=" << a << std::endl;
+
+        }
+
+        {
+
         }
 
         {
@@ -53,6 +72,19 @@ namespace {
             sparse_array<T>  a(r);   fill(a);
 
             spark::mul(a,M,b);
+            std::cerr << "M=" << M << std::endl;
+            std::cerr << "b=" << b << std::endl;
+            std::cerr << "a=" << a << std::endl;
+        }
+
+        {
+            const size_t r = 1 + alea.leq(10);
+            const size_t c = 1 + alea.leq(10);
+            sparse_matrix<T> M(c,r); fill(M);
+            sparse_array<T>  b(c);   fill(b);
+            sparse_array<T>  a(r);   fill(a);
+
+            spark::mul_trn(a,M,b);
             std::cerr << "M=" << M << std::endl;
             std::cerr << "b=" << b << std::endl;
             std::cerr << "a=" << a << std::endl;

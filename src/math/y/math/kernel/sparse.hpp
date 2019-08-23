@@ -13,6 +13,22 @@ namespace upsylon
         //! SPArse Reusable Kernel
         struct spark
         {
+
+
+            //! a += b;
+            template <typename T, typename U> static inline
+            void set( sparse_array<T> &a, const sparse_array<U> &b )
+            {
+                assert(a.size()==b.size());
+                a.ldz();
+                a.core.ensure( b.core.size() );
+                typename sparse_array<U>::const_iterator i = b.begin();
+                for(size_t n=b.core.size();n>0;--n,++i)
+                {
+                    a[i.key()] = ***i;
+                }
+            }
+
             //! a += b;
             template <typename T, typename U> static inline
             void add( sparse_array<T> &a, const sparse_array<U> &b )
@@ -80,13 +96,36 @@ namespace upsylon
 
             //! multiply by a scalar
             template <typename T> static inline
-            void mul( sparse_array<T> &a, typename type_traits<T>::parameter_type X )
+            void mul( sparse_array<T> &a, typename type_traits<T>::parameter_type x )
             {
                 for(typename sparse_array<T>::iterator i=a.begin();i!=a.end();++i)
                 {
-                    ***i *= X;
+                    ***i *= x;
                 }
             }
+
+            template <typename T, typename U> static inline
+            void mul_add( sparse_array<T> &a, typename type_traits<T>::parameter_type x, const sparse_array<U> &b )
+            {
+                assert(a.size()==b.size());
+                typename sparse_array<U>::const_iterator i = b.begin();
+                for(size_t n=b.core.size();n>0;--n,++i)
+                {
+                    a[i.key()] += x * (***i);
+                }
+            }
+
+            template <typename T, typename U> static inline
+            void mul_sub( sparse_array<T> &a, typename type_traits<T>::parameter_type x, const sparse_array<U> &b )
+            {
+                assert(a.size()==b.size());
+                typename sparse_array<U>::const_iterator i = b.begin();
+                for(size_t n=b.core.size();n>0;--n,++i)
+                {
+                    a[i.key()] -= x * (***i);
+                }
+            }
+
 
             
             //! matrix vector product
@@ -95,7 +134,7 @@ namespace upsylon
             {
                 assert(a.size()==M.rows);
                 assert(b.size()==M.cols);
-                a.clear();
+                a.ldz();
                 typename sparse_matrix<U>::const_iterator k = M.begin();
                 for(size_t m=M.core.size();m>0;--m,++k)
                 {
@@ -104,6 +143,24 @@ namespace upsylon
                     a[K.r] += (***k) * (*B);
                 }
             }
+
+            //! matrix vector product, transpose
+            template <typename T, typename U, typename V> static inline
+            void mul_trn( sparse_array<T> &a, const sparse_matrix<U> &M, const sparse_array<V> &b )
+            {
+                assert(a.size()==M.cols);
+                assert(b.size()==M.rows);
+                a.ldz();
+                typename sparse_matrix<U>::const_iterator k = M.begin();
+                for(size_t m=M.core.size();m>0;--m,++k)
+                {
+                    const sparse::matrix_key &K = k.key();
+                    const V                  *B = b(K.r);  if(!B) continue;
+                    a[K.c] += (***k) * (*B);
+                }
+            }
+
+
 
 
         };

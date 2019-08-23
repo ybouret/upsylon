@@ -51,6 +51,27 @@ namespace upsylon
             os << '(' << k.r << '.' << k.c << ')';
             return os;
         }
+
+        bool  matrix_key:: is_diagonal() const throw()
+        {
+            return r==c;
+        }
+
+        bool matrix_key:: isDiagonal( const matrix_key &k ) throw()
+        {
+            return k.is_diagonal();
+        }
+
+        bool  matrix_key:: is_extra_diagonal() const throw()
+        {
+            return r!=c;
+        }
+
+        bool matrix_key:: isExtraDiagonal( const matrix_key &k ) throw()
+        {
+            return k.is_extra_diagonal();
+        }
+
     }
 
     namespace sparse
@@ -75,6 +96,15 @@ namespace upsylon
             }
         }
 
+        matrix_info:: matrix_info( const matrix_info &other ) throw() :
+        rows(  other.rows  ),
+        cols(  other.cols  ),
+        count( other.count )
+        {
+
+        }
+
+
         void matrix_info:: check_indices(const size_t r,const size_t c) const
         {
             if( (r<=0) || (r>rows) || (c<=0) || (c>cols) )
@@ -86,6 +116,18 @@ namespace upsylon
             throw exception("%s: unexpected failure to insert item@(%u,%u)",fn,unsigned(k.r),unsigned(k.c));
         }
 
+        bool matrix_info:: has_same_sizes_than(const matrix_info &other) const throw()
+        {
+            return rows==other.rows && cols==other.cols;
+        }
+
+        void matrix_info:: check_sames_sizes_than(const matrix_info &other) const
+        {
+            if( !has_same_sizes_than(other) )
+            {
+                throw exception("%s: [%ux%u] != [%ux%u]", fn, unsigned(rows), unsigned(cols), unsigned(other.rows), unsigned(other.cols) );
+            }
+        }
     }
 
 }

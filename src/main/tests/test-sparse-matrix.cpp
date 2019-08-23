@@ -52,17 +52,22 @@ namespace
         std::cerr << "|" << std::endl;
     }
 
-
     template <typename T>
-    void fill_sparse()
+    static inline void fill_default( sparse_matrix<T> &sm )
     {
-        sparse_matrix<T> sm( 1 + alea.leq(10), 1 + alea.leq(10) );
-        std::cerr << sm.rows << "x" << sm.cols << std::endl;
         for(size_t j=sm.count/2;j>0;--j)
         {
             const T tmp = support::get<T>();
             sm( alea.range<size_t>(1,sm.rows), alea.range<size_t>(1,sm.cols) ) = tmp;
         }
+    }
+
+    template <typename T>
+    static inline void fill_sparse()
+    {
+        sparse_matrix<T> sm( 1 + alea.leq(10), 1 + alea.leq(10) );
+        std::cerr << sm.rows << "x" << sm.cols << std::endl;
+        fill_default(sm);
         std::cerr << "sm.core.size()=" << sm.core.size() << "/" << sm.count << std::endl;
 
         std::cerr << "raw:";
@@ -79,8 +84,26 @@ namespace
         }
         std::cerr << std::endl;
 
+        {
+            sparse_matrix<T> sm2(sm);
+            std::cerr << "sm2=" << sm2 << std::endl;
+        }
 
         std::cerr << "sm=" << sm << std::endl;
+        sm.ldz();
+        std::cerr << "sm=" << sm << std::endl;
+        {
+            const T tmp = support::get<T>();
+            sm.load_diagonal(tmp);
+        }
+        std::cerr << "sm=" << sm << std::endl;
+        sm.ldz();
+        fill_default(sm);
+        std::cerr << "sm=" << sm << std::endl;
+        sm.keep_diagonal();
+        std::cerr << "sm=" << sm << std::endl;
+
+
     }
 }
 
@@ -163,7 +186,11 @@ Y_UTEST(sparse_matrix)
         M(2,1) = 21;
         M(2,2) = 22;
         std::cerr << "M=" << M << std::endl;
-
+        sparse_matrix<double> M2(2,2);
+        M2.copy_diagonal(M);
+        std::cerr << "M2=" << M2 << std::endl;
+        M.keep_diagonal();
+        std::cerr << "M3=" << M << std::endl;
     }
 
 

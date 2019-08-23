@@ -41,7 +41,9 @@ namespace upsylon
         typedef sparse::dok<size_t,T,key_dumper,ALLOCATOR> dok_type;       //!< alias
         typedef typename dok_type::iterator                iterator;       //!< alias
         typedef typename dok_type::const_iterator          const_iterator; //!< alias
-
+        typedef typename dok_type::item_type                item_type;      //!< alias
+        typedef typename dok_type::item_ptr                 item_ptr;       //!< alias
+        
         //! destructor
         inline virtual ~sparse_array() throw(){}
 
@@ -73,9 +75,6 @@ namespace upsylon
 
         //! virtual size
         inline size_t size() const throw() { return size_; }
-
-        //! remove content, meaning every item is seen as 'zero'
-        inline void clear() throw() { items.free(); }
 
         //! sort keys by increasing ordere
         inline void update()
@@ -168,6 +167,9 @@ namespace upsylon
                 items.swap_table_with(other.items);
             }
         }
+
+        //! set to '0'
+        inline void ldz() throw() { items.free(); }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(sparse_array);

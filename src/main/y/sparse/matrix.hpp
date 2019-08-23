@@ -28,6 +28,18 @@ namespace upsylon
             //! display
             friend std::ostream & operator<<( std::ostream &os, const matrix_key &k );
 
+            //! test if diagonal term
+            bool is_diagonal() const throw();
+
+            //! wrapper
+            static bool isDiagonal( const matrix_key &k ) throw();
+
+            //! test if extra diagonal
+            bool is_extra_diagonal() const throw();
+
+            //! wrapper
+            static bool isExtraDiagonal( const matrix_key & ) throw();
+
         private:
             Y_DISABLE_ASSIGN(matrix_key);
         };
@@ -36,9 +48,10 @@ namespace upsylon
         class matrix_info
         {
         public:
-            virtual ~matrix_info() throw();        //!< cleanup
-            explicit matrix_info(const size_t nr,  //|
-                                 const size_t nc); //!< setup
+            virtual ~matrix_info() throw();                    //!< cleanup
+            explicit matrix_info(const size_t nr,              //|
+                                 const size_t nc);             //!< setup
+            explicit matrix_info(const matrix_info &) throw(); //!< copy
 
             const size_t rows;  //!< number of rows
             const size_t cols;  //!< number of columns
@@ -47,8 +60,11 @@ namespace upsylon
             void check_indices(const size_t r,const size_t c) const; //!< check indices
             void insert_failure(const sparse::matrix_key  &k) const; //!< unexpected
 
+            bool has_same_sizes_than( const matrix_info &other) const throw(); //!< check same sizes
+            void check_sames_sizes_than(const matrix_info &other) const;       //!< exception if not
+            
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(matrix_info);
+            Y_DISABLE_ASSIGN(matrix_info);
         };
     }
 
@@ -59,6 +75,11 @@ namespace upsylon
     public const_field<T>
     {
     public:
+        //----------------------------------------------------------------------
+        //
+        // types
+        //
+        //----------------------------------------------------------------------
         Y_DECL_ARGS(T,type);                                                       //!< aliases
         typedef sparse::matrix_key                                 key_type;       //!< key type
         typedef sparse::dok<key_type,T,key_type::hasher,ALLOCATOR> dok_type;       //!< alias
@@ -67,14 +88,38 @@ namespace upsylon
         typedef typename dok_type::item_type                       item_type;      //!< alias
         typedef typename dok_type::item_ptr                        item_ptr;       //!< alias
 
+        //----------------------------------------------------------------------
+        //
+        // setup and access
+        //
+        //----------------------------------------------------------------------
+
         //! setup with rows=nr and cols=nc
         inline explicit sparse_matrix( const size_t nr, const size_t nc ) :
         sparse::matrix_info(nr,nc), const_field<T>(), items(), core(items)
         {
         }
 
-        //! cleainp
+
+        //! copy
+        inline explicit sparse_matrix( const sparse_matrix &other ) :
+        sparse::matrix_info(other), const_field<T>(), items(other.items), core(items)
+        {
+            
+        }
+
+
+
+        //! destructor
         inline virtual ~sparse_matrix() throw() {}
+
+        //! raw insertion
+        inline type & create_at(const key_type &k, param_type v)
+        {
+            item_ptr p = new item_type(k,v);
+            if(!items.insert(p)) insert_failure(k);
+            return p->value;
+        }
 
         //! access with on-the-fly creation
         inline type & operator()(const size_t r, const size_t c)
@@ -88,9 +133,7 @@ namespace upsylon
             }
             else
             {
-                item_ptr p = new item_type(ik,this->value);
-                if(!items.insert(p)) insert_failure(ik);
-                return p->value;
+                return create_at(ik,this->value);
             }
         }
 
@@ -104,7 +147,7 @@ namespace upsylon
         }
 
 
-        //! sort keys by increasing ordere
+        //! sort keys by increasing order
         inline void update()
         {
             items.sort_keys( comparison::increasing<key_type> );
@@ -134,10 +177,65 @@ namespace upsylon
             return os;
         }
 
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(sparse_matrix);
-        dok_type    items; //!< data handling
+        //----------------------------------------------------------------------
+        //
+        // algebraic tools
+        //
+        //----------------------------------------------------------------------
 
+        //! simulate cleanup
+        inline void ldz() { items.free(); }
+
+        //! load diagonal, doesn't remove other items
+        inline void load_diagonal( param_type value )
+        {
+            sparse_matrix &self = *this;
+            const size_t   m    = min_of(rows,cols);
+            for(size_t i=1;i<=m;++i)
+            {
+                self(i,i) = value;
+            }
+        }
+
+        //! remove diagonal terms
+        inline void keep_diagonal()
+        {
+            items.remove_key_if( key_type::isExtraDiagonal );
+        }
+
+        //! clean diagonal
+        inline void zero_diagonal()
+        {
+            items.remove_key_if( key_type::isDiagonal );
+        }
+
+        //! copy diagonal
+        inline void copy_diagonal( const sparse_matrix &other )
+        {
+            if(this!=&other)
+            {
+                sparse_matrix &self = *this;
+                self.check_sames_sizes_than(other);
+                self.zero_diagonal();
+                size_t         n    = other.items.size();
+                const_iterator i    = other.items.begin();
+                while(n-->0)
+                {
+                    const item_ptr &p = *i;
+                    const key_type &k = p->__key;
+                    if( k.is_diagonal() )
+                    {
+                        (void) create_at(k,p->value);
+                    }
+                    ++i;
+                }
+            }
+
+        }
+
+    private:
+        Y_DISABLE_ASSIGN(sparse_matrix);
+        dok_type    items; //!< data handling
 
     public:
         container & core; //!< interface for internal memory management
