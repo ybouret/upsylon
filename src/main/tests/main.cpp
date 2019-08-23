@@ -150,7 +150,6 @@ Y_UTEST_INIT(150)
     Y_UTEST(sparse_matrix);
 
     Y_UTEST(oxide);
-    Y_UTEST(oxide_data);
     Y_UTEST(oxide_fields);
 }
 Y_UTEST_EXEC()

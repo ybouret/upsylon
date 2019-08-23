@@ -3,7 +3,6 @@
 #define Y_OXIDE_FIELD1D_INCLUDED 1
 
 #include "y/oxide/field/info.hpp"
-#include "y/oxide/field/data.hpp"
 #include "y/oxide/layout.hpp"
 
 namespace upsylon
@@ -12,91 +11,61 @@ namespace upsylon
     namespace Oxide
     {
 
-        namespace Kernel
-        {
-            class Block1D
-            {
-            public:
-                virtual ~Block1D() throw();
-
-            private:
-                size_t privateMemory;
-
-            protected:
-                void  *dataAddress;
-
-                explicit Block1D(const size_t items,
-                                 const size_t item_size) ;
-
-                explicit Block1D() throw();
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Block1D);
-
-            };
-        }
-
-
-#define Y_OXIDE_FIELD1D_ITEM() item( this->entry - this->lower )
-
-#define Y_OXIDE_FIELD1D_CTOR()        \
-Field<T>(id),                          \
-LayoutType(L),                          \
-BlockType(this->items,sizeof(T)),        \
-FDataType(this->dataAddress,this->items), \
-Y_OXIDE_FIELD1D_ITEM()
 
         template <typename T>
-        class Field1D :
-        public Field<T>,
-        public Layout1D,
-        public Kernel::Block1D,
-        public FieldData<T>
+        class Field1D : public Layout1D, public Field<T>
         {
         public:
             Y_DECL_ARGS(T,type);
-            typedef Layout1D        LayoutType;
-            typedef Kernel::Block1D BlockType;
-            typedef FieldData<T>    FDataType;
 
             inline virtual ~Field1D() throw()
             {
             }
 
-            inline explicit Field1D(const string     &id,
-                                    const LayoutType &L) :
-            Y_OXIDE_FIELD1D_CTOR()
+            inline explicit Field1D(const string   &id,
+                                    const Layout1D &L) :
+            Layout1D(L),
+            Field<T>(id,*this),
+            shift(NULL)
             {
+                setup(NULL);
             }
 
+            //! constructor
             inline explicit Field1D(const char      *id,
-                                    const LayoutType &L) :
-            Y_OXIDE_FIELD1D_CTOR()
+                                    const Coord1D    lo,
+                                    const Coord1D    up) :
+            Layout1D(lo,up),
+            Field<T>(id,*this),
+            shift(NULL)
             {
+                setup(NULL);
             }
 
 
-            inline explicit Field1D(const string     &id,
-                                    const LayoutType &L,
-                                    void             *userData) :
-            FieldInfo(id),
-            LayoutType(L),
-            BlockType(),
-            FDataType(userData,0),
-            Y_OXIDE_FIELD1D_ITEM()
+            //! user data size must be greater than this->bytes
+            inline explicit Field1D(const string   &id,
+                                    const Layout1D &L,
+                                    void           *userData) :
+            Layout1D(L),
+            Field<T>(id,*this),
+            shift(NULL)
             {
+                assert(userData);
+                setup(userData);
             }
+
 
             inline type & operator[]( const Coord1D i ) throw()
             {
                 assert( this->has(i) );
-                return item[i];
+                return shift[i];
             }
 
             inline const_type & operator[]( const Coord1D i ) const throw()
             {
                 assert( this->has(i) );
-                return item[i];
+                return shift[i];
             }
 
             inline type & operator()(const Coord1D i) throw()
@@ -111,7 +80,23 @@ Y_OXIDE_FIELD1D_ITEM()
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Field1D);
-            type *item;
+            type  *shift;
+
+            inline void setup(void *addr)
+            {
+                // check memory
+                if(!addr)
+                {
+                    this->privateSize = this->bytes;
+                    this->acquirePrivate();
+                    this->makeData( (addr=this->privateData),*this);
+                }
+                assert(addr);
+
+                // update members
+                this->entry = static_cast<type *>(addr);
+                this->shift = this->entry - this->lower;
+            }
 
         };
 

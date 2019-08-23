@@ -1,6 +1,6 @@
 
 
-#include "y/oxide/field1d.hpp"
+#include "y/oxide/field2d.hpp"
 
 #include "y/utest/run.hpp"
 #include "support.hpp"
@@ -32,12 +32,23 @@ namespace {
         const string   id = typeid(T).name();
         Field1D<T>     F(id,L);
         std::cerr << "Field1D <" << F.name << ">: " << F << std::endl;
+        std::cerr << "sizeof=" << sizeof(Field1D<T>) << std::endl;
         testAccess(F);
+    }
+
+    template <typename T>
+    static inline void testField2D()
+    {
+        const Layout2D L( CoordOps::Integer<Coord2D>(20, alea),  CoordOps::Integer<Coord2D>(20, alea) );
+        const string   id = typeid(T).name();
+        //Field2D<T>     F(id,L);
+        //std::cerr << "Field2D <" << F.name << ">: " << F << std::endl;
+        //std::cerr << "sizeof=" << sizeof(Field2D<T>) << std::endl;
+        //testAccess(F);
     }
 
 
 }
-
 
 
 Y_UTEST(oxide_fields)
@@ -45,6 +56,10 @@ Y_UTEST(oxide_fields)
     testField1D<double>();
     testField1D<string>();
     testField1D<mpq>();
+
+    testField2D<double>();
+    //testField2D<string>();
+    //testField2D<mpq>();
 
 }
 Y_UTEST_DONE()
