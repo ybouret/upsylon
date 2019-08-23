@@ -15,19 +15,21 @@ namespace upsylon
         class FieldInfo : public counted_object
         {
         public:
-            const string name;
-            const size_t owned;
+            const string           name;
+            const size_t           ownedTypes; //!< built objects
+            const size_t           linearSize; //!< expeceted linear bytes
 
             virtual ~FieldInfo() throw();
             
         protected:
-            explicit FieldInfo( const string & );
-            explicit FieldInfo( const char   * );
+            explicit FieldInfo(const string &id,
+                               const size_t  nb);
+
             void    *privateData;
             size_t   privateSize;
 
-            void acquirePrivate();
-            void releasePrivate() throw();
+            void *acquirePrivate();
+            void  releasePrivate() throw();
 
 
         private:
@@ -40,53 +42,58 @@ namespace upsylon
         public:
             Y_DECL_ARGS(T,type);
             type        *entry; //!< linear data entry
-            const size_t bytes; //!< expected inear bytes
 
             inline virtual ~Field() throw()
             {
-                freeData( (void*) entry );
+                freeData();
             }
 
         protected:
-            inline explicit Field(const string &_, const LayoutInfo &l) : FieldInfo(_), entry(0), bytes(l.items*sizeof(T)) {}
-            inline explicit Field(const char *  _, const LayoutInfo &l) : FieldInfo(_), entry(0), bytes(l.items*sizeof(T)) {}
-
-            //! cleanup owned data
-            void freeData(void *addr) throw()
+            explicit Field<T>(const string &id, const LayoutInfo &L ) :
+            FieldInfo(id, L.items * sizeof(T) ),
+            entry(NULL),
+            _data(NULL)
             {
-
-                mutable_type *p = static_cast<mutable_type *>(addr);
-                size_t       &n = (size_t&)owned;
-                while(n>0)
-                {
-                    destruct( &p[--n] );
-                }
             }
 
-            //! build data at address
-            void makeData(void *addr, const LayoutInfo &l)
+            //! free registers data
+            void freeData() throw()
             {
-                assert(!owned);
-                mutable_type *p = static_cast<mutable_type *>(addr);
-                const size_t  m = l.items;
+                size_t      &n = (size_t&)ownedTypes;
+                while(n>0)
+                {
+                    assert(_data);
+                    destruct(& _data[--n] );
+                }
+                _data = 0;
+            }
+
+            //! create is necessary setup entry
+            void makeData(void *addr, const LayoutInfo &L)
+            {
+                assert(addr);
+                assert(0==ownedTypes);
+                _data = static_cast<mutable_type *>(addr);
+                size_t      &n = (size_t&)ownedTypes;
+                const size_t m = L.items;
                 try
                 {
-                    size_t &n = (size_t&)owned;
                     while(n<m)
                     {
-                        new (p+n) mutable_type();
+                        new (_data+n) mutable_type();
                         ++n;
                     }
                 }
                 catch(...)
                 {
-                    freeData(addr);
                     throw;
                 }
             }
 
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Field);
+            mutable_type * _data; //!< where objects were built
         };
 
 

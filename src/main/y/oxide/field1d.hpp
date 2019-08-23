@@ -11,7 +11,6 @@ namespace upsylon
     namespace Oxide
     {
 
-
         template <typename T>
         class Field1D : public Layout1D, public Field<T>
         {
@@ -20,6 +19,7 @@ namespace upsylon
 
             inline virtual ~Field1D() throw()
             {
+
             }
 
             inline explicit Field1D(const string   &id,
@@ -87,19 +87,16 @@ namespace upsylon
                 // check memory
                 if(!addr)
                 {
-                    this->privateSize = this->bytes;
-                    this->acquirePrivate();
-                    this->makeData( (addr=this->privateData),*this);
+                    this->privateSize = this->linearSize;
+                    this->makeData( ( addr=this->acquirePrivate() ),*this);
                 }
-                assert(addr);
-
+                
                 // update members
                 this->entry = static_cast<type *>(addr);
                 this->shift = this->entry - this->lower;
             }
 
         };
-
     }
 
 }

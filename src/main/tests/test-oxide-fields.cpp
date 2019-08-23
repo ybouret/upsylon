@@ -11,7 +11,7 @@ using namespace upsylon;
 using namespace Oxide;
 
 namespace {
-
+#if 1
     template <typename FIELD>
     static inline
     void testAccess( FIELD &F )
@@ -41,26 +41,27 @@ namespace {
     {
         const Layout2D L( CoordOps::Integer<Coord2D>(20, alea),  CoordOps::Integer<Coord2D>(20, alea) );
         const string   id = typeid(T).name();
-        //Field2D<T>     F(id,L);
-        //std::cerr << "Field2D <" << F.name << ">: " << F << std::endl;
-        //std::cerr << "sizeof=" << sizeof(Field2D<T>) << std::endl;
-        //testAccess(F);
+        Field2D<T>     F(id,L);
+        std::cerr << "Field2D <" << F.name << ">: " << F << std::endl;
+        std::cerr << "sizeof=" << sizeof(Field2D<T>) << std::endl;
+        testAccess(F);
     }
-
+#endif
 
 }
 
 
 Y_UTEST(oxide_fields)
 {
+#if 1
     testField1D<double>();
     testField1D<string>();
     testField1D<mpq>();
 
     testField2D<double>();
-    //testField2D<string>();
-    //testField2D<mpq>();
-
+    testField2D<string>();
+    testField2D<mpq>();
+#endif
 }
 Y_UTEST_DONE()
 

@@ -22,43 +22,102 @@ namespace upsylon
                              const Layout2D &L) :
             Layout2D(L),
             Field<T>(id,*this),
-            rows(0),
             row(0),
+            rows(0),
             rowLayout(this->lower.x,this->upper.x)
             {
                 setup(NULL,NULL);
             }
 
+            inline virtual ~Field2D() throw()
+            {
+                destructRows();
+            }
+
+            inline RowType & operator[]( const Coord1D j ) throw()
+            {
+                assert(j>=this->lower.y); assert(j<=this->upper.y);
+                return row[j];
+            }
+
+            inline const RowType & operator[]( const Coord1D j ) const throw()
+            {
+                assert(j>=this->lower.y); assert(j<=this->upper.y);
+                return row[j];
+            }
+
+            inline type & operator()( const Coord2D c ) throw()
+            {
+                assert( this->has(c) );
+                Field2D &self = *this;
+                return self[c.y][c.x];
+            }
+
+            inline const_type & operator()( const Coord2D c ) const throw()
+            {
+                assert( this->has(c) );
+                Field2D &self = *this;
+                return self[c.y][c.x];
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Field2D);
-            size_t   rows;
-            RowType *row;
-
+            RowType       *row;
         public:
+            const size_t   rows;      //!< currently built rows
             const Layout1D rowLayout;
 
         private:
-            inline void setup(void *rowsAddr,
-                              void *dataAddr )
+            void destructRows() throw()
             {
-                const size_t nr = static_cast<size_t>(this->width.y);
+                row        += this->lower.y;
+                size_t &r   = (size_t &)rows;
+                while(r>0)
+                {
+                    destruct( &row[--r] );
+                }
+            }
+
+            void setup(void *rowsAddr,
+                       void *dataAddr)
+            {
+                const size_t nr = size_t( this->width.y );
                 if(!rowsAddr)
                 {
                     assert(!dataAddr);
-                    const size_t rowsSize = memory::align( sizeof(RowType) * nr );
-                    const size_t dataSize = memory::align( this->bytes );
-                    this->privateSize = rowsSize + dataSize;
-                    this->acquirePrivate();
-                    rowsAddr = this->privateData;
-                    dataAddr = memory::io::__shift(rowsAddr,rowsSize);
+                    const size_t rowsSize = memory::align(sizeof(RowType)*nr);
+                    const size_t dataSize = memory::align(this->linearSize);
+                    this->privateSize     = rowsSize+dataSize;
+                    rowsAddr              = this->acquirePrivate();
+                    dataAddr              = memory::io::__shift( rowsAddr, rowsSize );
 
-                    // build owned
+                    // build local data
                     this->makeData(dataAddr,*this);
                 }
 
+                // build rows
+                try
+                {
+                    mutable_type *ptr = static_cast<mutable_type *>(dataAddr);
+                    const size_t  jmp = rowLayout.items;
+                    size_t       &r   = (size_t &)rows;
+                    row               = static_cast<RowType *>(rowsAddr) - this->lower.y;
 
-                this->entry = static_cast<type *>(dataAddr);
+                    for(Coord1D j=this->lower.y;j<=this->upper.y;++j)
+                    {
+                        const string id;
+                        new ( &row[j] ) RowType(id,rowLayout,ptr);
+                        ++r;
+                        ptr += jmp;
+                    }
+                }
+                catch(...)
+                {
+                    destructRows();
+                    throw;
+                }
+
 
             }
         };
