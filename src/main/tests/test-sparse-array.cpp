@@ -34,7 +34,7 @@ static inline void fill( SP_ARR &arr )
     arr.update();
     query(arr);
 
-    arr.clear();
+    arr.ldz();
     query(arr);
 
     arr.set_size(original_size);
