@@ -136,9 +136,15 @@ namespace
 
 }
 
+#include "y/string/convert.hpp"
+
 Y_UTEST(servpi)
 {
     size_t n=100;
+    if(argc>1)
+    {
+        n = string_convert::to<size_t>(argv[1],"n");
+    }
     vector<double>               target(n);
     vector<concurrent::job_uuid> uuids(n,0);
     vector<concurrent::job_type> batch(n,as_capacity);
