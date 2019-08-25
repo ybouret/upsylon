@@ -9,6 +9,7 @@ namespace upsylon
     namespace Oxide
     {
 
+        //! common data for layout
         class LayoutInfo
         {
         public:
@@ -25,6 +26,7 @@ namespace upsylon
             Y_DISABLE_ASSIGN(LayoutInfo);
         };
 
+        //! a layout is a metrics based on a coordinate
         template <typename COORD>
         class Layout : public LayoutInfo
         {
@@ -33,13 +35,15 @@ namespace upsylon
             typedef COORD       coord;
             typedef const coord const_coord;
 
-            const_coord lower;
-            const_coord upper;
-            const_coord width;
-            const_coord pitch;
-            
+            const_coord lower; //!< lower coordinate
+            const_coord upper; //!< upper coordinate
+            const_coord width; //!< witdh in each dimension
+            const_coord pitch; //!< pitch 1, nx, nx*ny to compute indices
+
+            //! cleanup
             inline virtual ~Layout() throw() {}
 
+            //! setup by two coordinates
             inline explicit Layout(const_coord lo,
                                    const coord up) throw() :
             LayoutInfo(Dimensions),
@@ -62,6 +66,7 @@ namespace upsylon
                 }
             }
 
+            //! copy
             inline Layout( const Layout &other ) throw() :
             LayoutInfo(other),
             lower( other.lower ),
@@ -71,12 +76,14 @@ namespace upsylon
             {
             }
 
+            //! display
             friend inline std::ostream & operator<<( std::ostream &os, const Layout &L )
             {
                 os << "{" << L.lower << "->" << L.upper << " : #" << L.width << "=" << L.items << "}";
                 return os;
             }
 
+            //! test if a coordinate is inside
             inline bool has( const_coord C ) const throw()
             {
                 for(size_t dim=0;dim<Dimensions;++dim)
@@ -89,6 +96,7 @@ namespace upsylon
                 return true;
             }
 
+            //! test if a sub-layout is contained
             inline bool contains( const Layout &sub ) const throw()
             {
                 return has( sub.lower ) && has( sub.upper );
@@ -106,6 +114,13 @@ namespace upsylon
                 return ans;
             }
 
+            //! coordinate of index
+            inline COORD coordOf(const Coord1D idx) const throw()
+            {
+                return COORD(0);
+            }
+
+            //! random coordinate within the layout
             inline COORD rand( randomized::bits &ran ) const throw()
             {
                 return CoordOps::Within(lower,upper,ran);
@@ -116,9 +131,9 @@ namespace upsylon
         };
 
 
-        typedef Layout<Coord1D> Layout1D;
-        typedef Layout<Coord2D> Layout2D;
-        typedef Layout<Coord3D> Layout3D;
+        typedef Layout<Coord1D> Layout1D; //!< 1D layout
+        typedef Layout<Coord2D> Layout2D; //!< 2D layout
+        typedef Layout<Coord3D> Layout3D; //!< 3D layout
         
     }
 }

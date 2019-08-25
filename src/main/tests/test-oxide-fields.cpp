@@ -1,6 +1,6 @@
 
 
-#include "y/oxide/field2d.hpp"
+#include "y/oxide/field3d.hpp"
 
 #include "y/utest/run.hpp"
 #include "support.hpp"
@@ -11,11 +11,12 @@ using namespace upsylon;
 using namespace Oxide;
 
 namespace {
-#if 1
+
     template <typename FIELD>
     static inline
     void testAccess( FIELD &F )
     {
+        Y_ASSERT(F.entry);
         for(size_t i=F.items*8;i>0;--i)
         {
             const typename FIELD::coord C = F.rand(alea);
@@ -32,7 +33,7 @@ namespace {
         const string   id = typeid(T).name();
         Field1D<T>     F(id,L);
         std::cerr << "Field1D <" << F.name << ">: " << F << std::endl;
-        std::cerr << "sizeof=" << sizeof(Field1D<T>) << std::endl;
+        std::cerr << "\tsizeof=" << sizeof(Field1D<T>) << std::endl;
         testAccess(F);
     }
 
@@ -43,25 +44,41 @@ namespace {
         const string   id = typeid(T).name();
         Field2D<T>     F(id,L);
         std::cerr << "Field2D <" << F.name << ">: " << F << std::endl;
-        std::cerr << "sizeof=" << sizeof(Field2D<T>) << std::endl;
+        std::cerr << "\tsizeof=" << sizeof(Field2D<T>) << std::endl;
         testAccess(F);
     }
-#endif
+
+
+    template <typename T>
+    static inline void testField3D()
+    {
+        const Layout3D L( CoordOps::Integer<Coord3D>(20, alea),  CoordOps::Integer<Coord3D>(20, alea) );
+        const string   id = typeid(T).name();
+        Field3D<T>     F(id,L);
+        std::cerr << "Field3D <" << F.name << ">: " << F << std::endl;
+        std::cerr << "\tsizeof=" << sizeof(Field3D<T>) << std::endl;
+        testAccess(F);
+    }
 
 }
 
 
 Y_UTEST(oxide_fields)
 {
-#if 1
     testField1D<double>();
     testField1D<string>();
     testField1D<mpq>();
+    std::cerr << std::endl;
 
     testField2D<double>();
     testField2D<string>();
     testField2D<mpq>();
-#endif
+    std::cerr << std::endl;
+
+    testField3D<double>();
+    testField3D<string>();
+    testField3D<mpq>();
+
 }
 Y_UTEST_DONE()
 

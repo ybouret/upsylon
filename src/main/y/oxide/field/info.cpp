@@ -7,6 +7,8 @@ namespace upsylon
     {
         FieldInfo:: ~FieldInfo() throw()
         {
+            (size_t &)ownedTypes = 0;
+            (size_t &)linearSize = 0;
             releasePrivate();
         }
 
@@ -34,6 +36,11 @@ namespace upsylon
                 static memory::allocator &mgr = memory::global::location();
                 mgr.release(privateData,privateSize);
             }
+        }
+
+        string FieldInfo:: subName( const Coord1D n ) const
+        {
+            return name + vformat("[%ld]", static_cast<long>(n) );
         }
         
     }

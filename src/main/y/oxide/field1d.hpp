@@ -11,17 +11,17 @@ namespace upsylon
     namespace Oxide
     {
 
+        //! 1D field
         template <typename T>
         class Field1D : public Layout1D, public Field<T>
         {
         public:
-            Y_DECL_ARGS(T,type);
+            Y_DECL_ARGS(T,type); //!< aliases
 
-            inline virtual ~Field1D() throw()
-            {
+            //! cleanup
+            inline virtual ~Field1D() throw(){}
 
-            }
-
+            //!  constructor with string and layout
             inline explicit Field1D(const string   &id,
                                     const Layout1D &L) :
             Layout1D(L),
@@ -31,7 +31,7 @@ namespace upsylon
                 setup(NULL);
             }
 
-            //! constructor
+            //! constructor with text and coordinates
             inline explicit Field1D(const char      *id,
                                     const Coord1D    lo,
                                     const Coord1D    up) :
@@ -55,24 +55,27 @@ namespace upsylon
                 setup(userData);
             }
 
-
+            //! access
             inline type & operator[]( const Coord1D i ) throw()
             {
                 assert( this->has(i) );
                 return shift[i];
             }
 
+            //! access, const
             inline const_type & operator[]( const Coord1D i ) const throw()
             {
                 assert( this->has(i) );
                 return shift[i];
             }
 
+            //! access by coordinate
             inline type & operator()(const Coord1D i) throw()
             {
                 Field1D &self = *this; return self[i];
             }
 
+            //! access by coordinate, const
             inline const_type & operator()(const Coord1D i) const throw()
             {
                 Field1D &self = *this; return self[i];
@@ -82,6 +85,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Field1D);
             type  *shift;
 
+            //! length_of(addr) >= linearSize (=bytes for all objects)
             inline void setup(void *addr)
             {
                 // check memory

@@ -69,6 +69,7 @@ namespace upsylon
             //! range(a,b)
             static Coord1D GetWithin( const Coord1D a, const Coord1D b, randomized::bits &ran) throw();
 
+            //! range(lo,up)
             template <typename COORD> static inline
             COORD Within( const COORD lo, const COORD up, randomized::bits &ran) throw()
             {

@@ -10,19 +10,23 @@ namespace upsylon
 {
     namespace Oxide
     {
+        //! common abstract API for fields
         template <typename T>
         class Field : public FieldInfo
         {
         public:
             Y_DECL_ARGS(T,type);
             type        *entry; //!< linear data entry
-            
+
+            //! cleanup
             inline virtual ~Field() throw()
             {
                 freeData();
+                entry = NULL;
             }
             
         protected:
+            //! initialize
             explicit Field<T>(const string &id, const LayoutInfo &L ) :
             FieldInfo(id, L.items * sizeof(T) ),
             entry(NULL),
@@ -30,8 +34,8 @@ namespace upsylon
             {
             }
             
-            //! free registers data
-            void freeData() throw()
+            //! free registered data
+            inline void freeData() throw()
             {
                 size_t      &n = (size_t&)ownedTypes;
                 while(n>0)
@@ -42,12 +46,14 @@ namespace upsylon
                 _data = 0;
             }
             
-            //! create is necessary setup entry
-            void makeData(void *addr, const LayoutInfo &L)
+            //! create L.items objects, becoming ownedTypes
+            inline void makeData(void *addr, const LayoutInfo &L)
             {
                 assert(addr);
                 assert(0==ownedTypes);
-                _data = static_cast<mutable_type *>(addr);
+                assert(0==entry);
+                assert(0==_data);
+                _data          = static_cast<mutable_type *>(addr);
                 size_t      &n = (size_t&)ownedTypes;
                 const size_t m = L.items;
                 try
