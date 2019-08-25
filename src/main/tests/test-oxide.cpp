@@ -22,6 +22,14 @@ namespace
             Y_ASSERT(I>=0);
             Y_ASSERT(I<Oxide::Coord1D(L.items));
         }
+        
+        std::cerr << "\ttesting conversion" << std::endl;
+        for(size_t idx=0;idx<L.items;++idx)
+        {
+            const coord  C   = L.coordOf(idx);
+            const size_t jdx = L.indexOf(C);
+            Y_ASSERT(idx==jdx);
+        }
 
     }
 

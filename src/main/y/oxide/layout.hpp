@@ -104,20 +104,35 @@ namespace upsylon
 
 
             //! index of a coordinate
-            inline Coord1D indexOf(const COORD q) const throw()
+            inline Coord1D indexOf(const_coord q) const throw()
             {
+                assert( has(q) );
                 Coord1D ans = CoordOf(q,0)-CoordOf(lower,0);
                 for(size_t dim=1;dim<Dimensions;++dim)
                 {
                     ans += (CoordOf(q,dim)-CoordOf(lower,dim))*CoordOf(pitch,dim);
                 }
+                assert(ans>=0); assert(ans<Coord1D(items));
                 return ans;
             }
 
             //! coordinate of index
-            inline COORD coordOf(const Coord1D idx) const throw()
+            inline coord coordOf(const Coord1D idx) const throw()
             {
-                return COORD(0);
+                assert(idx>=0);
+                assert(idx<Coord1D(items));
+                coord   q(0);
+                Coord1D rem = idx;
+                for(size_t dim=Dimensions-1;dim>0;--dim)
+                {
+                    const Coord1D den = CoordOf(pitch,dim);
+                    const Coord1D qot = rem / den;
+                    CoordOf(q,dim) = qot + CoordOf(lower,dim);
+                    rem -= qot * den;
+                }
+                CoordOf(q,0) = rem + CoordOf(lower,0);
+                
+                return q;
             }
 
             //! random coordinate within the layout
