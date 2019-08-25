@@ -25,8 +25,8 @@ namespace upsylon
 
         protected:
             //! setup name and number of linear byte
-            explicit FieldInfo(const string &id,
-                               const size_t  nb);
+            explicit FieldInfo(const string &id, const size_t  nb);
+            explicit FieldInfo(const char   *id, const size_t  nb);
 
             void    *privateData; //!< private data if dynamic
             size_t   privateSize; //!< private size if dynamic

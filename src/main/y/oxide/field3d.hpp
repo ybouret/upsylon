@@ -9,6 +9,12 @@ namespace upsylon
 
     namespace Oxide
     {
+#define Y_OXIDE_FIELD3D_CTOR()                     \
+Field<T>(id,*this),                                \
+slice(0), slices(0),                               \
+sliceLayout(this->lower.xy(),this->upper.xy()),    \
+rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
+        
         //! field in 3D
         template <typename T>
         class Field3D :
@@ -22,15 +28,20 @@ namespace upsylon
 
             inline explicit Field3D(const string  &id,
                                     const Layout3D &L ) :
-            Layout3D(L),
-            Field<T>(id,*this),
-            slice(0), slices(0),
-            sliceLayout(this->lower.xy(),this->upper.xy()),
-            rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
+            Layout3D(L), Y_OXIDE_FIELD3D_CTOR()
             {
                 setup();
             }
 
+            inline explicit Field3D(const char     *id,
+                                    const Coord3D   lo,
+                                    const Coord3D   hi) :
+            Layout3D(lo,hi), Y_OXIDE_FIELD3D_CTOR()
+            {
+                setup();
+            }
+
+            
             inline virtual ~Field3D() throw()
             {
                 destructSlices();
@@ -72,13 +83,11 @@ namespace upsylon
             const Layout1D   rowLayout;
 
         private:
-
-            void destructSlices() throw()
+            inline void destructSlices() throw()
             {
 
                 size_t &ns = (size_t &)slices;
                 slice += this->lower.z;
-                std::cerr << "-slice@" << (void *)slice << std::endl;
                 while(ns>0)
                 {
                     destruct( &slice[--ns] );
@@ -86,30 +95,29 @@ namespace upsylon
                 slice = 0;
             }
 
-            void setup()
+            inline void setup()
             {
+                //--------------------------------------------------------------
                 // compute needed memory
+                //--------------------------------------------------------------
                 const size_t num_slices     = size_t(this->width.z);
                 const size_t s_bytes        = memory::align( num_slices * sizeof(SliceType) );
                 const size_t data_per_slice = sliceLayout.items; assert( data_per_slice == size_t(this->width.x*this->width.y) );
-
                 const size_t rows_per_slice = size_t(this->width.y);
                 const size_t num_rows       = rows_per_slice * num_slices;
                 const size_t r_bytes        = memory::align( num_rows * sizeof(RowType) );
-
                 const size_t d_bytes        = memory::align( this->items * sizeof(T) );
+                this->privateSize           = s_bytes + r_bytes + d_bytes;
 
-                std::cerr << "s:" << s_bytes << " r:" << r_bytes << " d:" << d_bytes << std::endl;
-                this->privateSize = s_bytes + r_bytes + d_bytes;
-                void *addr = this->acquirePrivate();
-
+                //--------------------------------------------------------------
                 // link memory
+                //--------------------------------------------------------------
+                void *addr      = this->acquirePrivate();
                 slice           = static_cast<SliceType    *>( memory::io::__shift(addr,0)        );
                 RowType      *r = static_cast<RowType      *>( memory::io::__shift(slice,s_bytes) );
                 mutable_type *d = static_cast<mutable_type *>( memory::io::__shift(r,r_bytes)     );
-                std::cerr << "+slice@" << (void *)slice << std::endl;
                 slice -= this->lower.z;
-                this->entry = d;
+                this->makeData(d,*this);
                 try
                 {
                     size_t &ns = (size_t &)slices;
@@ -128,8 +136,7 @@ namespace upsylon
                     destructSlices();
                     throw;
                 }
-
-
+                this->entry = d;
             }
 
         };

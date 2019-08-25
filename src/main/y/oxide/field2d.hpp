@@ -9,7 +9,13 @@ namespace upsylon
 
     namespace Oxide
     {
-        //! field in 1D
+        
+#define Y_OXIDE_FIELD2D_CTOR()         \
+Field<T>(id,*this),                    \
+row(0), rows(0),                       \
+rowLayout(this->lower.x,this->upper.x)
+        
+        //! field in 2D
         template <typename T>
         class Field2D :
         public Layout2D,
@@ -22,11 +28,7 @@ namespace upsylon
             //! construct by string and layout
             explicit Field2D(const string   &id,
                              const Layout2D &L) :
-            Layout2D(L),
-            Field<T>(id,*this),
-            row(0),
-            rows(0),
-            rowLayout(this->lower.x,this->upper.x)
+            Layout2D(L), Y_OXIDE_FIELD2D_CTOR()
             {
                 setup(NULL,NULL);
             }
@@ -36,17 +38,19 @@ namespace upsylon
                              const Layout2D &L,
                              void           *rowsAddr,
                              void           *dataAddr) :
-            Layout2D(L),
-            Field<T>(id,*this),
-            row(0),
-            rows(0),
-            rowLayout(this->lower.x,this->upper.x)
+            Layout2D(L), Y_OXIDE_FIELD2D_CTOR()
             {
                 setup(rowsAddr,dataAddr);
             }
 
-
-
+            //! construct by string and layout
+            explicit Field2D(const char     *id,
+                             const Coord2D   lo,
+                             const Coord2D   hi) :
+            Layout2D(lo,hi), Y_OXIDE_FIELD2D_CTOR()
+            {
+                setup(NULL,NULL);
+            }
 
             //! cleanup
             inline virtual ~Field2D() throw()

@@ -10,6 +10,8 @@ namespace upsylon
 {
     namespace Oxide
     {
+#define Y_OXIDE_FIELD_CTOR() FieldInfo(id, L.items * sizeof(T) ), entry(NULL), _data(NULL)
+        
         //! common abstract API for fields
         template <typename T>
         class Field : public FieldInfo
@@ -28,11 +30,12 @@ namespace upsylon
         protected:
             //! initialize
             explicit Field<T>(const string &id, const LayoutInfo &L ) :
-            FieldInfo(id, L.items * sizeof(T) ),
-            entry(NULL),
-            _data(NULL)
-            {
-            }
+            Y_OXIDE_FIELD_CTOR() {}
+            
+            //! initialize
+            explicit Field<T>(const char *id, const LayoutInfo &L ) :
+            Y_OXIDE_FIELD_CTOR() {}
+            
             
             //! free registered data
             inline void freeData() throw()
@@ -51,7 +54,6 @@ namespace upsylon
             {
                 assert(addr);
                 assert(0==ownedTypes);
-                assert(0==entry);
                 assert(0==_data);
                 _data          = static_cast<mutable_type *>(addr);
                 size_t      &n = (size_t&)ownedTypes;

@@ -11,6 +11,8 @@ namespace upsylon
     namespace Oxide
     {
 
+#define Y_OXIDE_FIELD1D_CTOR() Field<T>(id,*this), shift(NULL)
+        
         //! 1D field
         template <typename T>
         class Field1D : public Layout1D, public Field<T>
@@ -25,10 +27,9 @@ namespace upsylon
             inline explicit Field1D(const string   &id,
                                     const Layout1D &L) :
             Layout1D(L),
-            Field<T>(id,*this),
-            shift(NULL)
+            Y_OXIDE_FIELD1D_CTOR()
             {
-                setup(NULL);
+                setupAt(NULL);
             }
 
             //! constructor with text and coordinates
@@ -36,10 +37,9 @@ namespace upsylon
                                     const Coord1D    lo,
                                     const Coord1D    up) :
             Layout1D(lo,up),
-            Field<T>(id,*this),
-            shift(NULL)
+            Y_OXIDE_FIELD1D_CTOR()
             {
-                setup(NULL);
+                setupAt(NULL);
             }
 
 
@@ -48,11 +48,10 @@ namespace upsylon
                                     const Layout1D &L,
                                     void           *userData) :
             Layout1D(L),
-            Field<T>(id,*this),
-            shift(NULL)
+            Y_OXIDE_FIELD1D_CTOR()
             {
                 assert(userData);
-                setup(userData);
+                setupAt(userData);
             }
 
             //! access
@@ -86,7 +85,7 @@ namespace upsylon
             type  *shift;
 
             //! length_of(addr) >= linearSize (=bytes for all objects)
-            inline void setup(void *addr)
+            inline void setupAt(void *addr)
             {
                 // check memory
                 if(!addr)
@@ -96,6 +95,7 @@ namespace upsylon
                 }
                 
                 // update members
+                assert(addr);
                 this->entry = static_cast<type *>(addr);
                 this->shift = this->entry - this->lower;
             }
