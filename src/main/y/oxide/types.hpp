@@ -13,15 +13,17 @@ namespace upsylon
 
     namespace Oxide
     {
-        typedef unit_t           Coord1D;
-        typedef point2d<Coord1D> Coord2D;
-        typedef point3d<Coord1D> Coord3D;
+        typedef unit_t           Coord1D; //!< 1D coordinate
+        typedef point2d<Coord1D> Coord2D; //!< 2D coordinate
+        typedef point3d<Coord1D> Coord3D; //!< 3D coordinate
 
+        //! extract dimensions
         template <typename COORD> struct DimensionsOf
         {
             static const size_t Value = sizeof(COORD)/sizeof(Coord1D);
         };
 
+        //! get specific coordinate
         template <typename COORD> inline
         Coord1D &CoordOf( COORD &c, const size_t dim ) throw()
         {
@@ -29,6 +31,7 @@ namespace upsylon
             return *( ((Coord1D *) &c) + dim );
         }
 
+        //! get specific const coodinate
         template <typename COORD> inline
         const Coord1D &CoordOf( const COORD &c, const size_t dim ) throw()
         {
@@ -36,6 +39,7 @@ namespace upsylon
             return *( ((const Coord1D *) &c) + dim );
         }
 
+        //! operations on coordinates
         struct CoordOps
         {
             static Coord1D GetNatural( const unit_t, randomized::bits &ran ) throw();

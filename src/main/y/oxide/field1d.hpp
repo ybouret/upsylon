@@ -2,7 +2,7 @@
 #ifndef Y_OXIDE_FIELD1D_INCLUDED
 #define Y_OXIDE_FIELD1D_INCLUDED 1
 
-#include "y/oxide/field/info.hpp"
+#include "y/oxide/field.hpp"
 #include "y/oxide/layout.hpp"
 
 namespace upsylon

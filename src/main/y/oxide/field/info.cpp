@@ -22,7 +22,8 @@ namespace upsylon
 
         void *   FieldInfo:: acquirePrivate()
         {
-            return (privateData = memory::global::instance().acquire(privateSize));
+            static memory::allocator &mgr = memory::global::instance();
+            return (privateData = mgr.acquire(privateSize));
         }
 
         void FieldInfo:: releasePrivate() throw()
@@ -30,7 +31,8 @@ namespace upsylon
             assert(ownedTypes==0);
             if(privateSize)
             {
-                memory::global::location().release(privateData,privateSize);
+                static memory::allocator &mgr = memory::global::location();
+                mgr.release(privateData,privateSize);
             }
         }
         
