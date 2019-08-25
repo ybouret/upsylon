@@ -6,33 +6,31 @@
 
 namespace upsylon
 {
-
+    
     namespace Oxide
     {
 #define Y_OXIDE_FIELD3D_CTOR()                     \
-Field<T>(id,*this),                                \
+Field<T>(id),                                      \
 slice(0), slices(0),                               \
 sliceLayout(this->lower.xy(),this->upper.xy()),    \
 rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
         
         //! field in 3D
         template <typename T>
-        class Field3D :
-        public Layout3D,
-        public Field<T>
+        class Field3D : public Layout3D, public Field<T>
         {
         public:
             Y_DECL_ARGS(T,type);                           //!< aliases
             typedef Field2D<T> SliceType;                  //!< a slice
             typedef typename   SliceType::RowType RowType; //!< alias
-
+            
             inline explicit Field3D(const string  &id,
                                     const Layout3D &L ) :
             Layout3D(L), Y_OXIDE_FIELD3D_CTOR()
             {
                 setup();
             }
-
+            
             inline explicit Field3D(const char     *id,
                                     const Coord3D   lo,
                                     const Coord3D   hi) :
@@ -40,40 +38,40 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
             {
                 setup();
             }
-
+            
             
             inline virtual ~Field3D() throw()
             {
                 destructSlices();
             }
-
+            
             SliceType & operator[]( const Coord1D k ) throw()
             {
                 assert(k>=this->lower.z); assert(k<=this->upper.z);
                 return slice[k];
             }
-
+            
             const SliceType & operator[]( const Coord1D k ) const throw()
             {
                 assert(k>=this->lower.z); assert(k<=this->upper.z);
                 return slice[k];
             }
-
+            
             type & operator()(const_coord C) throw()
             {
                 Field3D &self = *this;
                 return self[C.z][C.y][C.x];
             }
-
+            
             const_type & operator()(const_coord C) const throw()
             {
                 const Field3D &self = *this;
                 return self[C.z][C.y][C.x];
             }
-
-
-
-
+            
+            
+            
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Field3D);
             SliceType       *slice;  //!< location of slice
@@ -81,11 +79,11 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
             const size_t     slices;      //!< number of constructed slices
             const Layout2D   sliceLayout;
             const Layout1D   rowLayout;
-
+            
         private:
             inline void destructSlices() throw()
             {
-
+                
                 size_t &ns = (size_t &)slices;
                 slice += this->lower.z;
                 while(ns>0)
@@ -94,7 +92,7 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
                 }
                 slice = 0;
             }
-
+            
             inline void setup()
             {
                 //--------------------------------------------------------------
@@ -108,7 +106,7 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
                 const size_t r_bytes        = memory::align( num_rows * sizeof(RowType) );
                 const size_t d_bytes        = memory::align( this->items * sizeof(T) );
                 this->privateSize           = s_bytes + r_bytes + d_bytes;
-
+                
                 //--------------------------------------------------------------
                 // link memory
                 //--------------------------------------------------------------
@@ -129,7 +127,7 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
                         d += data_per_slice;
                         r += rows_per_slice;
                     }
-
+                    
                 }
                 catch(...)
                 {
@@ -138,11 +136,11 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
                 }
                 this->entry = d;
             }
-
+            
         };
-
+        
     }
-
+    
 }
 
 #endif

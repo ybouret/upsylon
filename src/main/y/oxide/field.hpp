@@ -10,7 +10,7 @@ namespace upsylon
 {
     namespace Oxide
     {
-#define Y_OXIDE_FIELD_CTOR() FieldInfo(id, L.items * sizeof(T) ), entry(NULL), _data(NULL)
+#define Y_OXIDE_FIELD_CTOR() FieldInfo(id, sizeof(T) ), entry(NULL), _data(NULL)
         
         //! common abstract API for fields
         template <typename T>
@@ -29,34 +29,35 @@ namespace upsylon
             
         protected:
             //! initialize
-            explicit Field<T>(const string &id, const LayoutInfo &L ) :
+            explicit Field<T>(const string &id) :
             Y_OXIDE_FIELD_CTOR() {}
             
             //! initialize
-            explicit Field<T>(const char *id, const LayoutInfo &L ) :
+            explicit Field<T>(const char *id) :
             Y_OXIDE_FIELD_CTOR() {}
             
             
             //! free registered data
             inline void freeData() throw()
             {
-                size_t      &n = (size_t&)ownedTypes;
+                size_t      &n = (size_t&)ownedObjects;
                 while(n>0)
                 {
                     assert(_data);
                     destruct(& _data[--n] );
                 }
                 _data = 0;
+                (size_t&) linearExtent = 0;
             }
             
             //! create L.items objects, becoming ownedTypes
             inline void makeData(void *addr, const LayoutInfo &L)
             {
                 assert(addr);
-                assert(0==ownedTypes);
+                assert(0==ownedObjects);
                 assert(0==_data);
                 _data          = static_cast<mutable_type *>(addr);
-                size_t      &n = (size_t&)ownedTypes;
+                size_t      &n = (size_t&)ownedObjects;
                 const size_t m = L.items;
                 try
                 {
@@ -70,6 +71,7 @@ namespace upsylon
                 {
                     throw;
                 }
+                (size_t&)linearExtent = ownedObjects * sizeof(T);
             }
             
             

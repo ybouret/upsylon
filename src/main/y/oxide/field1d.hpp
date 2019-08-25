@@ -11,7 +11,7 @@ namespace upsylon
     namespace Oxide
     {
 
-#define Y_OXIDE_FIELD1D_CTOR() Field<T>(id,*this), shift(NULL)
+#define Y_OXIDE_FIELD1D_CTOR() Field<T>(id), shift(NULL)
         
         //! 1D field
         template <typename T>
@@ -90,7 +90,7 @@ namespace upsylon
                 // check memory
                 if(!addr)
                 {
-                    this->privateSize = this->linearSize;
+                    this->privateSize = this->items * sizeof(T);
                     this->makeData( ( addr=this->acquirePrivate() ),*this);
                 }
                 

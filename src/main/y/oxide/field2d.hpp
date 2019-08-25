@@ -11,15 +11,13 @@ namespace upsylon
     {
         
 #define Y_OXIDE_FIELD2D_CTOR()         \
-Field<T>(id,*this),                    \
+Field<T>(id),                          \
 row(0), rows(0),                       \
 rowLayout(this->lower.x,this->upper.x)
         
         //! field in 2D
         template <typename T>
-        class Field2D :
-        public Layout2D,
-        public Field<T>
+        class Field2D : public Layout2D, public Field<T>
         {
         public:
             Y_DECL_ARGS(T,type);          //!< aliases
@@ -124,7 +122,7 @@ rowLayout(this->lower.x,this->upper.x)
                     //----------------------------------------------------------
                     assert(!dataAddr);
                     const size_t rowsSize = memory::align(sizeof(RowType)*nr);
-                    const size_t dataSize = memory::align(this->linearSize);
+                    const size_t dataSize = memory::align(this->items*sizeof(T));
                     this->privateSize     = rowsSize+dataSize;
                     rowsAddr              = this->acquirePrivate();
                     dataAddr              = memory::io::__shift( rowsAddr, rowsSize );

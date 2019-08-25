@@ -7,19 +7,26 @@ namespace upsylon
     {
         FieldInfo:: ~FieldInfo() throw()
         {
-            (size_t &)ownedTypes = 0;
-            (size_t &)linearSize = 0;
+            (size_t &)ownedObjects = 0;
+            (size_t &)linearExtent = 0;
+            (size_t &)sizeOfObject = 0;
             releasePrivate();
         }
         
 #define Y_OXIDE_FIELD_INFO_CTOR() \
 name(id),                         \
-ownedTypes(0),                    \
-linearSize(nb),                   \
+ownedObjects(0),                  \
+linearExtent(0),                  \
+sizeOfObject(szObj),              \
 privateData(0),                   \
 privateSize(0)
         
-        FieldInfo:: FieldInfo(const string &id, const size_t nb) :
+        FieldInfo:: FieldInfo(const string &id, const size_t szObj) :
+        Y_OXIDE_FIELD_INFO_CTOR()
+        {
+        }
+        
+        FieldInfo:: FieldInfo(const char *id,  const size_t szObj) :
         Y_OXIDE_FIELD_INFO_CTOR()
         {
         }
@@ -33,7 +40,7 @@ privateSize(0)
         
         void FieldInfo:: releasePrivate() throw()
         {
-            assert(ownedTypes==0);
+            assert(ownedObjects==0);
             if(privateSize)
             {
                 static memory::allocator &mgr = memory::global::location();

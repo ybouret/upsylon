@@ -15,9 +15,10 @@ namespace upsylon
         class FieldInfo : public counted_object
         {
         public:
-            const string           name;       //!< identifiers
-            const size_t           ownedTypes; //!< onwed built objects
-            const size_t           linearSize; //!< expeceted linear bytes
+            const string           name;         //!< identifiers
+            const size_t           ownedObjects; //!< onwed built objects
+            const size_t           linearExtent; //!< expected linear extent in bytes
+            const size_t           sizeOfObject; //!< sizeof(T)
 
             virtual ~FieldInfo() throw(); //!< cleanup and remove privateData
 
@@ -25,8 +26,8 @@ namespace upsylon
 
         protected:
             //! setup name and number of linear byte
-            explicit FieldInfo(const string &id, const size_t  nb);
-            explicit FieldInfo(const char   *id, const size_t  nb);
+            explicit FieldInfo(const string &id, const size_t szObj);
+            explicit FieldInfo(const char   *id, const size_t szObj);
 
             void    *privateData; //!< private data if dynamic
             size_t   privateSize; //!< private size if dynamic
