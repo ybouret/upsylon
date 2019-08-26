@@ -3,6 +3,9 @@
 #define Y_MULTI_LOOP_INCLUDED 1
 
 #include "y/type/args.hpp"
+#include "y/code/round.hpp"
+#include "y/memory/io.hpp"
+
 #include <cstring>
 
 namespace upsylon
@@ -38,7 +41,7 @@ namespace upsylon
                 assert(NULL!=upper);
                 assert(NULL!=lower);
                 assert(NULL!=indices);
-                start();
+                initialize();
             }
 
             inline virtual ~multi_loop() throw()
@@ -47,16 +50,16 @@ namespace upsylon
                 memset(indices,0,bytes);
             }
 
-            inline const_type *start() throw()
+            inline const_type *initialize() throw()
             {
                 (size_t &)index = 1;
                 memcpy(indices,lower,bytes);
                 return indices;
             }
 
-            const_type *next() throw()
+            const_type *compute_next() throw()
             {
-                assert(index<count);
+                assert(index<=count);
                 recursive_update(0);
 
                 ++( (size_t&)index );
@@ -68,6 +71,10 @@ namespace upsylon
                 return indices;
             }
 
+            inline bool active() const throw()
+            {
+                return index<=count;
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(multi_loop);
@@ -98,7 +105,67 @@ namespace upsylon
             }
 
         };
+
+        template <typename COORD>
+        class multi_loop_for
+        {
+        public:
+            inline virtual ~multi_loop_for() throw() {}
+
+            inline explicit multi_loop_for() throw() :
+            wksp(),
+            value( * memory::io::__force<COORD>( wksp ) )
+            {
+                memset(wksp,0,sizeof(wksp));
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(multi_loop_for);
+            uint64_t wksp[ Y_U64_FOR_ITEM(COORD) ];
+        public:
+            COORD   &value;
+        };
+
     }
+
+    template <
+    typename T,
+    typename COORD>
+    class multi_loop :
+    public core::multi_loop_for<COORD>,
+    public core::multi_loop<T>
+    {
+    public:
+        Y_DECL_ARGS(T,type);
+
+        inline virtual ~multi_loop() throw()
+        {
+        }
+
+        inline explicit multi_loop(const COORD &lo,
+                                   const COORD &up) throw() :
+        core::multi_loop_for<COORD>(),
+        core::multi_loop<T>(sizeof(COORD)/sizeof(T),
+                            (const_type  *)   &lo,
+                            (const_type  *)   &up,
+                            (mutable_type*)   &(this->value) )
+        {
+        }
+
+        inline void start() throw()
+        {
+            (void) this->initialize();
+        }
+
+        inline void next() throw()
+        {
+            (void) this->compute_next();
+        }
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(multi_loop);
+    };
+
 }
 
 #endif

@@ -31,6 +31,27 @@ namespace
             Y_ASSERT(idx==jdx);
         }
 
+        std::cerr << "\ttesting Loop" << std::endl;
+        typename LAYOUT::Loop mloop(L.lower,L.upper);
+
+        size_t nn = 0;
+        for( mloop.start(); mloop.active(); mloop.next() )
+        {
+            if(mloop.index==1)
+            {
+                std::cerr << "\t\tini=" << mloop.value << std::endl;
+            }
+            if(mloop.index==L.items)
+            {
+                std::cerr << "\t\tend=" << mloop.value << std::endl;
+            }
+            ++nn;
+        }
+        std::cerr << "\t\tnn=" << nn << "/" << L.items << std::endl;
+
+
+
+
     }
 
 }

@@ -3,6 +3,7 @@
 #define Y_OXIDE_LAYOUT_INCLUDED 1
 
 #include "y/oxide/types.hpp"
+#include "y/code/multi-loop.hpp"
 
 namespace upsylon
 {
@@ -34,6 +35,8 @@ namespace upsylon
             static const size_t Dimensions = DimensionsOf<COORD>::Value;
             typedef COORD       coord;
             typedef const coord const_coord;
+
+            typedef multi_loop<Coord1D,COORD> Loop;
 
             const_coord lower; //!< lower coordinate
             const_coord upper; //!< upper coordinate
