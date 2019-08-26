@@ -16,18 +16,17 @@ namespace upsylon
         {
         public:
             const string           name;         //!< identifiers
-            const size_t           ownedObjects; //!< onwed built objects
-            const size_t           linearExtent; //!< expected linear extent in bytes
+            const size_t           ownedObjects; //!< owned built objects
+            const size_t           linearExtent; //!< EXPECTED linear extent in bytes
             const size_t           sizeOfObject; //!< sizeof(T)
 
-            virtual ~FieldInfo() throw(); //!< cleanup and remove privateData
-
-            string subName( const Coord1D n ) const;
+            virtual ~FieldInfo() throw();            //!< cleanup and remove privateData
+            string subName( const Coord1D n ) const; //!< create 'name[n]'
 
         protected:
             //! setup name and number of linear byte
-            explicit FieldInfo(const string &id, const size_t szObj);
-            explicit FieldInfo(const char   *id, const size_t szObj);
+            explicit FieldInfo(const string &id, const LayoutInfo &L, const size_t szObj); //!< setup
+            explicit FieldInfo(const char   *id, const LayoutInfo &L, const size_t szObj); //!< setup
 
             void    *privateData; //!< private data if dynamic
             size_t   privateSize; //!< private size if dynamic

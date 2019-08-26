@@ -5,26 +5,27 @@
 #include "y/type/args.hpp"
 #include "y/code/round.hpp"
 #include "y/memory/io.hpp"
-
 #include <cstring>
 
 namespace upsylon
 {
     namespace core
     {
+        //! base class for looping over multiple indices
         template <typename T>
         class multi_loop
         {
         public:
-            Y_DECL_ARGS(T,type);
+            Y_DECL_ARGS(T,type); //!< aliases
 
             const size_t  dimensions; //!< how many dimensions
             const_type   *lower;      //!< lower bounds[0..dimensions-1]
             const_type   *upper;      //!< upper bounds[0..dimensions-1]
             const size_t  index;      //!< current index/count
             const size_t  count;      //!< product of all width
-            const size_t  bytes;
+            const size_t  bytes;      //!< indices workspace bytes
 
+            //! setup from user data, must be persistent
             inline explicit multi_loop(const size_t  nd,
                                        const_type   *lo,
                                        const_type   *up,
@@ -41,39 +42,41 @@ namespace upsylon
                 assert(NULL!=upper);
                 assert(NULL!=lower);
                 assert(NULL!=indices);
-                initialize();
+                start();
             }
 
+            //! destructor
             inline virtual ~multi_loop() throw()
             {
                 (size_t &)index = 0;
                 memset(indices,0,bytes);
             }
 
-            inline const_type *initialize() throw()
+            //! initialize indices
+            inline void start() throw()
             {
                 (size_t &)index = 1;
                 memcpy(indices,lower,bytes);
-                return indices;
             }
 
-            const_type *compute_next() throw()
+            //! compute next set of indices
+            inline void  next() throw()
             {
                 assert(index<=count);
                 recursive_update(0);
-
                 ++( (size_t&)index );
-                return indices;
             }
 
+            //! return current indices
             const_type *current() const throw()
             {
                 return indices;
             }
 
+            //! check if the loop is active
             inline bool active() const throw()
             {
-                return index<=count;
+                return (index<=count);
             }
 
         private:
@@ -106,28 +109,37 @@ namespace upsylon
 
         };
 
+        //! data for embedded loop
         template <typename COORD>
         class multi_loop_for
         {
         public:
-            inline virtual ~multi_loop_for() throw() {}
+            //! destructor
+            inline virtual ~multi_loop_for() throw()
+            {
+                clear();
+            }
 
+            //! setup
             inline explicit multi_loop_for() throw() :
             wksp(),
             value( * memory::io::__force<COORD>( wksp ) )
             {
-                memset(wksp,0,sizeof(wksp));
+                clear();
             }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(multi_loop_for);
             uint64_t wksp[ Y_U64_FOR_ITEM(COORD) ];
+            inline void     clear() throw() { memset(wksp,0,sizeof(wksp)); }
         public:
-            COORD   &value;
+            COORD   &value; //!< current indices
         };
 
     }
 
+
+    //! embedding loop for multidimensial indices
     template <
     typename T,
     typename COORD>
@@ -136,12 +148,14 @@ namespace upsylon
     public core::multi_loop<T>
     {
     public:
-        Y_DECL_ARGS(T,type);
-
+        Y_DECL_ARGS(T,type); //!< aliases
+        
+        //! destructor
         inline virtual ~multi_loop() throw()
         {
         }
 
+        //! user data must be persistent
         inline explicit multi_loop(const COORD &lo,
                                    const COORD &up) throw() :
         core::multi_loop_for<COORD>(),
@@ -152,15 +166,7 @@ namespace upsylon
         {
         }
 
-        inline void start() throw()
-        {
-            (void) this->initialize();
-        }
 
-        inline void next() throw()
-        {
-            (void) this->compute_next();
-        }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(multi_loop);

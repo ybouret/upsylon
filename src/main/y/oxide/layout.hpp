@@ -16,14 +16,13 @@ namespace upsylon
         class LayoutInfo
         {
         public:
-            const size_t dimension;   //!< [1|2|3]
-            const size_t items;       //!< linear items
-
-            virtual ~LayoutInfo() throw();
+            const size_t dimension;        //!< [1|2|3]
+            const size_t items;            //!< linear items
+            virtual ~LayoutInfo() throw(); //!< destructor
 
         protected:
-            explicit LayoutInfo(const size_t d ) throw();
-            explicit LayoutInfo( const LayoutInfo &other) throw();
+            explicit LayoutInfo(const size_t) throw();        //!< setup dimensions, no items
+            explicit LayoutInfo( const LayoutInfo &) throw(); //!< copy
 
         private:
             Y_DISABLE_ASSIGN(LayoutInfo);
@@ -34,11 +33,10 @@ namespace upsylon
         class Layout : public LayoutInfo
         {
         public:
-            static const size_t Dimensions = DimensionsOf<COORD>::Value;
-            typedef COORD       coord;
-            typedef const coord const_coord;
-
-            typedef multi_loop<Coord1D,COORD> Loop;
+            static const size_t Dimensions = DimensionsOf<COORD>::Value; //!< alias
+            typedef COORD       coord;                                   //!< alias
+            typedef const coord const_coord;                             //!< alias
+            typedef multi_loop<Coord1D,COORD> Loop;                      //!< loop over sub layout
 
             const_coord lower; //!< lower coordinate
             const_coord upper; //!< upper coordinate
@@ -162,6 +160,8 @@ namespace upsylon
                 {
                     indices.push_back( indexOf(loop.value) );
                 }
+
+                // stay sorted and unique
                 unique(indices);
             }
 

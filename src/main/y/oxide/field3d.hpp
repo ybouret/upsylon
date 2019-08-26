@@ -9,8 +9,9 @@ namespace upsylon
     
     namespace Oxide
     {
+        //! common constructor part
 #define Y_OXIDE_FIELD3D_CTOR()                     \
-Field<T>(id),                                      \
+Field<T>(id,*this),                                \
 slice(0), slices(0),                               \
 sliceLayout(this->lower.xy(),this->upper.xy()),    \
 rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
@@ -23,14 +24,16 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
             Y_DECL_ARGS(T,type);                           //!< aliases
             typedef Field2D<T> SliceType;                  //!< a slice
             typedef typename   SliceType::RowType RowType; //!< alias
-            
+
+            //! setup by string and full layout
             inline explicit Field3D(const string  &id,
                                     const Layout3D &L ) :
             Layout3D(L), Y_OXIDE_FIELD3D_CTOR()
             {
                 setup();
             }
-            
+
+            //! setup by text and coordinates
             inline explicit Field3D(const char     *id,
                                     const Coord3D   lo,
                                     const Coord3D   hi) :
@@ -39,46 +42,48 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
                 setup();
             }
             
-            
+            //! destruct
             inline virtual ~Field3D() throw()
             {
                 destructSlices();
             }
-            
+
+            //! slice access
             SliceType & operator[]( const Coord1D k ) throw()
             {
                 assert(k>=this->lower.z); assert(k<=this->upper.z);
                 return slice[k];
             }
-            
+
+            //! slice access, const
             const SliceType & operator[]( const Coord1D k ) const throw()
             {
                 assert(k>=this->lower.z); assert(k<=this->upper.z);
                 return slice[k];
             }
-            
+
+            //! direct access
             type & operator()(const_coord C) throw()
             {
                 Field3D &self = *this;
                 return self[C.z][C.y][C.x];
             }
-            
+
+            //! direct access, const
             const_type & operator()(const_coord C) const throw()
             {
                 const Field3D &self = *this;
                 return self[C.z][C.y][C.x];
             }
-            
-            
-            
+
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Field3D);
             SliceType       *slice;  //!< location of slice
         public:
             const size_t     slices;      //!< number of constructed slices
-            const Layout2D   sliceLayout;
-            const Layout1D   rowLayout;
+            const Layout2D   sliceLayout; //!< layout for one slice
+            const Layout1D   rowLayout;   //!< layout for one row
             
         private:
             inline void destructSlices() throw()
@@ -104,7 +109,7 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
                 const size_t rows_per_slice = size_t(this->width.y);
                 const size_t num_rows       = rows_per_slice * num_slices;
                 const size_t r_bytes        = memory::align( num_rows * sizeof(RowType) );
-                const size_t d_bytes        = memory::align( this->items * sizeof(T) );
+                const size_t d_bytes        = memory::align( this->linearExtent         );
                 this->privateSize           = s_bytes + r_bytes + d_bytes;
                 
                 //--------------------------------------------------------------

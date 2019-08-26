@@ -20,7 +20,7 @@ namespace upsylon
         //! extract dimensions
         template <typename COORD> struct DimensionsOf
         {
-            static const size_t Value = sizeof(COORD)/sizeof(Coord1D);
+            static const size_t Value = sizeof(COORD)/sizeof(Coord1D); //!< the value
         };
 
         //! get specific coordinate
@@ -42,8 +42,12 @@ namespace upsylon
         //! operations on coordinates
         struct CoordOps
         {
-            static Coord1D GetNatural( const unit_t, randomized::bits &ran ) throw();
-            static Coord1D GetInteger( const unit_t, randomized::bits &ran ) throw();
+            //! get a coordinate in [0..m]
+            static Coord1D GetNatural( const unit_t m, randomized::bits &ran ) throw();
+            //! get a coordinate in  [-m..m]
+            static Coord1D GetInteger( const unit_t m, randomized::bits &ran ) throw();
+
+            //! get a coordinate in [0..m]^DIM
             template <typename COORD> static inline
             COORD Natural( const unit_t m, randomized::bits &ran ) throw()
             {
@@ -55,6 +59,7 @@ namespace upsylon
                 return ans;
             }
 
+            //! get a coordinate in [-m..m]^DIM
             template <typename COORD> static inline
             COORD Integer( const unit_t m, randomized::bits &ran ) throw()
             {

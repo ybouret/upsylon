@@ -7,7 +7,7 @@ namespace upsylon
     {
         FieldInfo:: ~FieldInfo() throw()
         {
-            (size_t &)ownedObjects = 0;
+            assert(0==ownedObjects);
             (size_t &)linearExtent = 0;
             (size_t &)sizeOfObject = 0;
             releasePrivate();
@@ -16,21 +16,20 @@ namespace upsylon
 #define Y_OXIDE_FIELD_INFO_CTOR() \
 name(id),                         \
 ownedObjects(0),                  \
-linearExtent(0),                  \
+linearExtent(szObj*L.items),      \
 sizeOfObject(szObj),              \
 privateData(0),                   \
 privateSize(0)
         
-        FieldInfo:: FieldInfo(const string &id, const size_t szObj) :
+        FieldInfo:: FieldInfo(const string &id, const LayoutInfo &L, const size_t szObj) :
         Y_OXIDE_FIELD_INFO_CTOR()
         {
         }
         
-        FieldInfo:: FieldInfo(const char *id,  const size_t szObj) :
+        FieldInfo:: FieldInfo(const char *id, const LayoutInfo &L, const size_t szObj) :
         Y_OXIDE_FIELD_INFO_CTOR()
         {
         }
-        
         
         void *   FieldInfo:: acquirePrivate()
         {

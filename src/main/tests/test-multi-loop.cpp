@@ -27,11 +27,11 @@ namespace
     static inline
     void do_loop( core::multi_loop<T> &L )
     {
-        L.initialize();
+        L.start();
         do_print(L);
         while(L.index<L.count)
         {
-            L.compute_next();
+            L.next();
             do_print(L);
         }
     }

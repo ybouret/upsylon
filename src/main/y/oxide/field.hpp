@@ -10,15 +10,16 @@ namespace upsylon
 {
     namespace Oxide
     {
-#define Y_OXIDE_FIELD_CTOR() FieldInfo(id, sizeof(T) ), entry(NULL), _data(NULL)
+        //! common constructor part
+#define Y_OXIDE_FIELD_CTOR() FieldInfo(id, L, sizeof(T) ), entry(NULL), _data(NULL)
         
         //! common abstract API for fields
         template <typename T>
         class Field : public FieldInfo
         {
         public:
-            Y_DECL_ARGS(T,type);
-            type        *entry; //!< linear data entry
+            Y_DECL_ARGS(T,type); //!< aliases
+            type        *entry;  //!< linear data entry
 
             //! cleanup
             inline virtual ~Field() throw()
@@ -29,11 +30,11 @@ namespace upsylon
             
         protected:
             //! initialize
-            explicit Field<T>(const string &id) :
+            explicit Field<T>(const string &id, const LayoutInfo &L) :
             Y_OXIDE_FIELD_CTOR() {}
             
             //! initialize
-            explicit Field<T>(const char *id) :
+            explicit Field<T>(const char *id, const LayoutInfo  &L) :
             Y_OXIDE_FIELD_CTOR() {}
             
             
@@ -47,7 +48,6 @@ namespace upsylon
                     destruct(& _data[--n] );
                 }
                 _data = 0;
-                (size_t&) linearExtent = 0;
             }
             
             //! create L.items objects, becoming ownedTypes
@@ -71,7 +71,6 @@ namespace upsylon
                 {
                     throw;
                 }
-                (size_t&)linearExtent = ownedObjects * sizeof(T);
             }
             
             

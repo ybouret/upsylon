@@ -94,7 +94,7 @@ namespace upsylon
                 }
             }
 
-            //! multiply by a scalar
+            //! a *= x;
             template <typename T> static inline
             void mul( sparse_array<T> &a, typename type_traits<T>::parameter_type x )
             {
@@ -104,6 +104,7 @@ namespace upsylon
                 }
             }
 
+            //! a += x*b;
             template <typename T, typename U> static inline
             void mul_add( sparse_array<T> &a, typename type_traits<T>::parameter_type x, const sparse_array<U> &b )
             {
@@ -115,6 +116,7 @@ namespace upsylon
                 }
             }
 
+            //! a -= x*b;
             template <typename T, typename U> static inline
             void mul_sub( sparse_array<T> &a, typename type_traits<T>::parameter_type x, const sparse_array<U> &b )
             {

@@ -9,9 +9,9 @@ namespace upsylon
 
     namespace Oxide
     {
-        
+        //! common constructor part
 #define Y_OXIDE_FIELD2D_CTOR()         \
-Field<T>(id),                          \
+Field<T>(id,*this),                    \
 row(0), rows(0),                       \
 rowLayout(this->lower.x,this->upper.x)
         
@@ -93,7 +93,7 @@ rowLayout(this->lower.x,this->upper.x)
             RowType       *row;
         public:
             const size_t   rows;      //!< currently built rows
-            const Layout1D rowLayout;
+            const Layout1D rowLayout; //!< layout for a single row
 
         private:
             void destructRows() throw()
@@ -122,7 +122,7 @@ rowLayout(this->lower.x,this->upper.x)
                     //----------------------------------------------------------
                     assert(!dataAddr);
                     const size_t rowsSize = memory::align(sizeof(RowType)*nr);
-                    const size_t dataSize = memory::align(this->items*sizeof(T));
+                    const size_t dataSize = memory::align(this->linearExtent);
                     this->privateSize     = rowsSize+dataSize;
                     rowsAddr              = this->acquirePrivate();
                     dataAddr              = memory::io::__shift( rowsAddr, rowsSize );
