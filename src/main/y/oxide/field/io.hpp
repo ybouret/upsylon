@@ -80,8 +80,7 @@ namespace upsylon
 
                 virtual void write( char C ); //!< append C and adjuste size
                 virtual void flush();         //!< do nothing
-
-                void *format(const size_t n);
+                void *format(const size_t n); //!< set size to n zeroed bytes
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Block);

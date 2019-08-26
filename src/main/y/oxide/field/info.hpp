@@ -28,18 +28,45 @@ namespace upsylon
             //------------------------------------------------------------------
             // virtual interface
             //------------------------------------------------------------------
+            //! get address of an object by its index
             virtual const void *getObjectAddr( const Coord1D index ) const throw() = 0;
 
             //------------------------------------------------------------------
             // non-virtual interface
             //------------------------------------------------------------------
-            typedef void (*SaveProc)( ios::ostream &, const void *);
-            typedef void (*LoadProc)( ios::istream &, void *);
+            typedef void (*SaveProc)( ios::ostream &, const void *); //!< saving  prototype
+            typedef void (*LoadProc)( ios::istream &, void *);       //!< loading prototype
 
-            void    save( ios::ostream &fp, const Coord1D index, SaveProc proc ) const;
-            void    save( ios::ostream &fp, SaveProc proc) const;
-            void    load( ios::istream &fp, const Coord1D index, LoadProc proc);
-            void    load( ios::istream &fp, LoadProc proc);
+            void    save( ios::ostream &fp, const Coord1D index, SaveProc proc ) const; //!< save one object
+            void    save( ios::ostream &fp, SaveProc proc) const;                       //!< save all objects
+            void    load( ios::istream &fp, const Coord1D index, LoadProc proc);        //!< load one object
+            void    load( ios::istream &fp, LoadProc proc);                             //!< load all objects
+
+            //! saving objects from a sequence of indices
+            template <typename SEQUENCE> inline
+            void save_only(const SEQUENCE &indices, ios::ostream &fp, SaveProc proc) const
+            {
+                size_t n = indices.size();
+                for( typename SEQUENCE::const_iterator i=indices.begin(); n>0; --n, ++i)
+                {
+                    save(fp,*i,proc);
+                }
+            }
+
+            //! reload objects from a sequence of indices
+            template <typename SEQUENCE> inline
+            void load_only(const SEQUENCE &indices, ios::istream &fp, LoadProc proc )
+            {
+                size_t n = indices.size();
+                for( typename SEQUENCE::const_iterator i=indices.begin(); n>0; --n, ++i)
+                {
+                    load(fp,*i,proc);
+                }
+            }
+
+
+
+
 
 
         protected:

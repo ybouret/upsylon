@@ -4,6 +4,8 @@
 
 #include "y/utest/run.hpp"
 #include "support.hpp"
+#include "y/memory/pooled.hpp"
+
 #include <typeinfo>
 
 using namespace upsylon;
@@ -58,6 +60,40 @@ namespace
                 F3.load(inp,load);
                 std::cerr << "\treloaded..." << std::endl;
             }
+
+            io.free();
+            vector<Coord1D>                i1;
+            vector<Coord1D,memory::pooled> i2;
+            list<Coord1D>                  i3;
+            {
+                const Layout1D sub( F1.rand(alea), F1.rand(alea) );
+                F1.collect(i1,sub);
+                std::cerr << "#i1=" << i1.size() << std::endl;
+            }
+            {
+                const Layout2D sub( F2.rand(alea), F2.rand(alea) );
+                F2.collect(i2,sub);
+                std::cerr << "#i2=" << i2.size() << std::endl;
+            }
+            {
+                const Layout3D sub( F3.rand(alea), F3.rand(alea) );
+                F3.collect(i3,sub);
+                std::cerr << "#i3=" << i3.size() << std::endl;
+            }
+
+            F1.save_only(i1,io,save);
+            F2.save_only(i2,io,save);
+            F3.save_only(i3,io,save);
+            if(load)
+            {
+                ios::imstream inp( io );
+                F1.load_only(i1,inp,load);
+                F2.load_only(i2,inp,load);
+                F3.load_only(i3,inp,load);
+                std::cerr << "\treloaded..." << std::endl;
+            }
+
+
 
         }
     }
