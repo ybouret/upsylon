@@ -3,6 +3,7 @@
 #define Y_MULTI_LOOP_INCLUDED 1
 
 #include "y/type/args.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -19,6 +20,7 @@ namespace upsylon
             const_type   *upper;      //!< upper bounds[0..dimensions-1]
             const size_t  index;      //!< current index/count
             const size_t  count;      //!< product of all width
+            const size_t  bytes;
 
             inline explicit multi_loop(const size_t  nd,
                                        const_type   *lo,
@@ -29,6 +31,7 @@ namespace upsylon
             upper(up),
             index(1),
             count(extent()),
+            bytes( sizeof(T) * dimensions ),
             indices(in)
             {
                 assert(dimensions>0);
@@ -40,16 +43,14 @@ namespace upsylon
 
             inline virtual ~multi_loop() throw()
             {
-
+                (size_t &)index = 0;
+                memset(indices,0,bytes);
             }
 
             inline const_type *start() throw()
             {
                 (size_t &)index = 1;
-                for(size_t i=0;i<dimensions;++i)
-                {
-                    indices[i] = lower[i];
-                }
+                memcpy(indices,lower,bytes);
                 return indices;
             }
 
@@ -69,7 +70,7 @@ namespace upsylon
 
 
         private:
-            Y_DISABLE_ASSIGN(multi_loop);
+            Y_DISABLE_COPY_AND_ASSIGN(multi_loop);
 
             mutable_type *indices;    //!< indices[0..dimensions-1]
 
@@ -96,7 +97,6 @@ namespace upsylon
                 }
             }
 
-        public:
         };
     }
 }
