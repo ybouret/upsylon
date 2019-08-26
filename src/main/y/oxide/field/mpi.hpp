@@ -15,9 +15,19 @@ namespace upsylon
             static const int Tag = 0x07;
 
             static inline
-            void Send( const mpi &MPI, const IO::Block &block, const int target )
+            void SendFixed(mpi             &MPI,
+                           const IO::Block &block,
+                           const int        target )
             {
+                MPI.Send(block,target,Tag);
+            }
 
+            static inline
+            void RecvFixed(mpi       &MPI,
+                           IO::Block &block,
+                           const int source)
+            {
+                MPI.Recv(block, source, Tag);
             }
 
         };

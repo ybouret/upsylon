@@ -171,13 +171,13 @@ namespace upsylon
 
         //! Recv array of integral types
         template <typename T> inline
-        void Send( array<T> &arr, const int target, const int tag )
+        void Recv( array<T> &arr, const int source, const int tag )
         {
             static const MPI_Datatype _ = get_data_type_for<T>();
             const size_t n = arr.size();
             if(n>0)
             {
-                Recv(*arr,n,_,target,tag );
+                Recv(*arr,n,_,source,tag);
             }
         }
 
