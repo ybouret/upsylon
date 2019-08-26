@@ -27,6 +27,18 @@ namespace upsylon
                 freeData();
                 entry = NULL;
             }
+
+            //------------------------------------------------------------------
+            // virtual interface
+            //------------------------------------------------------------------
+            virtual const void *getObjectAddr( const Coord1D index ) const throw()
+            {
+                assert(entry);
+                assert(index>=0);
+                assert(size_t(index)<localObjects);
+                return &entry[index];
+            }
+
             
         protected:
             //! initialize
@@ -34,7 +46,7 @@ namespace upsylon
             
             //! initialize
             explicit Field<T>(const char *id, const LayoutInfo  &L) : Y_OXIDE_FIELD_CTOR() {}
-            
+
             //! free registered data
             inline void freeData() throw()
             {

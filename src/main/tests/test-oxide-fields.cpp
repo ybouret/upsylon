@@ -1,6 +1,7 @@
 
 
 #include "y/oxide/field3d.hpp"
+#include "y/oxide/field/io.hpp"
 
 #include "y/utest/run.hpp"
 #include "support.hpp"
@@ -65,9 +66,12 @@ namespace {
 
 Y_UTEST(oxide_fields)
 {
+
+    testField1D<unsigned>();
     testField1D<double>();
     testField1D<string>();
     testField1D<mpq>();
+
     std::cerr << std::endl;
 
     testField2D<double>();

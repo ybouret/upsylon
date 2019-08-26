@@ -16,6 +16,7 @@ namespace upsylon
         {
         public:
             const string           name;         //!< identifiers
+            const size_t           localObjects; //!< available local linear Objects
             const size_t           ownedObjects; //!< owned built objects
             const size_t           linearExtent; //!< EXPECTED linear extent in bytes
             const size_t           sizeOfObject; //!< sizeof(T)
@@ -23,6 +24,19 @@ namespace upsylon
             virtual ~FieldInfo() throw();            //!< cleanup and remove privateData
             string subName( const Coord1D n ) const; //!< create 'name[n]'
 
+            //------------------------------------------------------------------
+            // virtual interface
+            //------------------------------------------------------------------
+            virtual const void *getObjectAddr( const Coord1D index ) const throw() = 0;
+
+            //------------------------------------------------------------------
+            // non-virtual interface
+            //------------------------------------------------------------------
+            typedef void (*SaveProc)( ios::ostream &, const void *);
+
+            void    save( ios::ostream &fp, const Coord1D index, SaveProc proc ) const;
+            void    save( ios::ostream &fp, SaveProc proc) const;
+            
         protected:
             //! setup name and number of linear byte
             explicit FieldInfo(const string &id, const LayoutInfo &L, const size_t szObj); //!< setup

@@ -15,8 +15,9 @@ namespace upsylon
         
 #define Y_OXIDE_FIELD_INFO_CTOR() \
 name(id),                         \
+localObjects(L.items),            \
 ownedObjects(0),                  \
-linearExtent(szObj*L.items),      \
+linearExtent(szObj*localObjects), \
 sizeOfObject(szObj),              \
 privateData(0),                   \
 privateSize(0)
@@ -50,6 +51,21 @@ privateSize(0)
         string FieldInfo:: subName( const Coord1D n ) const
         {
             return name + vformat("[%ld]", static_cast<long>(n) );
+        }
+
+        void FieldInfo:: save(ios::ostream &fp, const Coord1D index, SaveProc proc) const
+        {
+            assert(proc);
+            proc(fp,getObjectAddr(index));
+        }
+
+        void FieldInfo:: save(ios::ostream &fp, SaveProc proc) const
+        {
+            assert(proc);
+            for(size_t index=0;index<localObjects;++index)
+            {
+                save(fp,index,proc);
+            }
         }
         
     }

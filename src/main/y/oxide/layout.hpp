@@ -150,13 +150,15 @@ namespace upsylon
                                 const Layout &sub) const
             {
                 assert(this->contains(sub));
-                Loop       loop(sub.lower,sub.upper);          // make the loop
-                indices.ensure( indices.size() + loop.count ); // adjust memory
-                for(loop.start();loop.active();loop.next())    // loop on sub coordinates
-                {                                              //
-                    indices.push_back( indexOf(loop.value) );  //
-                }                                              //
-                unique(indices);                               // stay sorted and unique
+                {                                                  //
+                    Loop       loop(sub.lower,sub.upper);          // make the loop
+                    indices.ensure( indices.size() + loop.count ); // adjust memory
+                    for(loop.start();loop.active();loop.next())    // loop on sub coordinates
+                    {                                              //
+                        indices.push_back( indexOf(loop.value) );  //
+                    }                                              //
+                }                                                  //
+                unique(indices);                                   // stay sorted and unique
             }
 
 
