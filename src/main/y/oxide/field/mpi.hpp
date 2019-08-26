@@ -35,7 +35,7 @@ namespace upsylon
                             const IO::Block &block,
                             const int        target )
             {
-                const uint32_t sz =mpi::SizeToUint32(block.size());
+                const uint32_t sz = mpi::SizeToUint32(block.size());
                 MPI.Send<uint32_t>( sz, target, Tag);
                 SendFixed(MPI,block,target);
 
@@ -47,7 +47,7 @@ namespace upsylon
                             const int  source)
             {
                 const uint32_t sz = MPI.Recv<uint32_t>(source,Tag);
-                block.make(sz,0);
+                block.adjust(sz,0);
                 RecvFixed(MPI,block,source);
             }
 

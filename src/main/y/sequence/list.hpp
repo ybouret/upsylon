@@ -128,6 +128,12 @@ namespace upsylon
             cache.store(node);
         }
 
+        //! adjust size and pad if needed
+        virtual void adjust( const size_t n, param_type pad )
+        {
+            while(nodes.size>n) destruct( cache.store( nodes.pop_back() ) );
+            while(nodes.size<n) nodes.push_back( query(pad) );
+        }
 
         typedef iterate::linked<type,node_type,iterate::forward>             iterator;        //!< forward iterator
         typedef iterate::linked<const_type,const node_type,iterate::forward> const_iterator;  //!< forward const iterator

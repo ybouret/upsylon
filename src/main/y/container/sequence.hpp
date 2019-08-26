@@ -43,6 +43,9 @@ namespace upsylon
         //! syntactic helper
         inline sequence & operator<<( param_type args ) { push_back(args); return *this; }
         
+        //! adjust size, pad if not enough
+        virtual void adjust( const size_t n, param_type pad ) = 0;
+        
     protected:
         //! constructor
         explicit sequence() throw() : container() {}

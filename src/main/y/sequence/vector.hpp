@@ -79,6 +79,14 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
             }
         }
 
+        //! adjust size and pad if needed
+        virtual void adjust( const size_t n, param_type pad )
+        {
+            while(this->size_>n) this->pop_back();
+            this->ensure(n);
+            while(this->size_<n) this->push_back_(pad);
+        }
+        
         //! make a vector of size n with same values
         inline void make(const size_t n, param_type v)
         {
