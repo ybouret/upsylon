@@ -98,6 +98,7 @@ namespace upsylon
 
             inline void recursive_update(size_t dim) throw()
             {
+                assert(dim<dimensions);
                 mutable_type &i = indices[dim];
                 if(++i>upper[dim])
                 {
