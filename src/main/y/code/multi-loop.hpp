@@ -107,11 +107,15 @@ namespace upsylon
                     i = lower[dim];
                     if(multi)
                     {
-                        if(++dim>=dimensions)
-                            dim=0;
+                        dim = next_dim(dim);
                         recursive_update(dim);
                     }
                 }
+            }
+
+            inline size_t next_dim(size_t dim) const throw()
+            {
+                return (++dim>dimensions) ? 0 : dim;
             }
 
         };
