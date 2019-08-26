@@ -31,6 +31,7 @@ namespace upsylon
             //------------------------------------------------------------------
             // virtual interface
             //------------------------------------------------------------------
+            //! get address of an object by its index
             virtual const void *getObjectAddr( const Coord1D index ) const throw()
             {
                 assert(entry);
@@ -42,6 +43,7 @@ namespace upsylon
             //------------------------------------------------------------------
             // non virtual interface
             //------------------------------------------------------------------
+            //! set every object to the same value
             inline void ld( param_type arg )
             {
                 for(size_t i=0;i<localObjects;++i)

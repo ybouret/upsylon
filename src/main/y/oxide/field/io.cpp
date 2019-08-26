@@ -26,6 +26,12 @@ namespace upsylon
             
         }
 
+        void * IO::Block:: format(const size_t n)
+        {
+            make(n,0);
+            return **this;
+        }
+
     }
 
 }

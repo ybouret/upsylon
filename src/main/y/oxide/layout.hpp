@@ -145,9 +145,9 @@ namespace upsylon
             }
 
             //! collecting indices
-            template <typename SEQUENCE>
-            inline void collect(SEQUENCE     &indices,
-                                const Layout &sub) const
+            template <typename SEQUENCE> inline
+            void collect(SEQUENCE     &indices,
+                         const Layout &sub) const
             {
                 assert(this->contains(sub));
                 {                                                  //
