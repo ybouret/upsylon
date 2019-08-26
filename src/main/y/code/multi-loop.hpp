@@ -21,6 +21,7 @@ namespace upsylon
             const size_t  dimensions; //!< how many dimensions
             const_type   *lower;      //!< lower bounds[0..dimensions-1]
             const_type   *upper;      //!< upper bounds[0..dimensions-1]
+            const bool    multi;      //!< dimensions>1
             const size_t  index;      //!< current index/count
             const size_t  count;      //!< product of all width
             const size_t  bytes;      //!< indices workspace bytes
@@ -33,6 +34,7 @@ namespace upsylon
             dimensions(nd),
             lower(lo),
             upper(up),
+            multi(dimensions>1),
             index(1),
             count(extent()),
             bytes( sizeof(T) * dimensions ),
@@ -103,8 +105,12 @@ namespace upsylon
                 if(++i>upper[dim])
                 {
                     i = lower[dim];
-                    if(++dim>=dimensions) dim=0;
-                    recursive_update(dim);
+                    if(multi)
+                    {
+                        if(++dim>=dimensions)
+                            dim=0;
+                        recursive_update(dim);
+                    }
                 }
             }
 
