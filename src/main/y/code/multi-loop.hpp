@@ -98,24 +98,37 @@ namespace upsylon
                 return ans;
             }
 
-            inline void recursive_update(size_t dim) throw()
+            inline void recursive_update(const size_t orgDim) throw()
             {
-                assert(dim<dimensions);
-                mutable_type &i = indices[dim];
-                if(++i>upper[dim])
+                assert(orgDim<dimensions);
+
+                // find next degree of freedom
+                size_t curDim = orgDim;
+            FIND_DOF:
                 {
-                    i = lower[dim];
-                    if(multi)
+                    const_type lo = lower[curDim];
+                    const_type up = upper[curDim];
+                    if(lo>=up)
                     {
-                        dim = next_dim(dim);
-                        recursive_update(dim);
+                        curDim = next_dim(curDim);
+                        if(orgDim==curDim) return; //!< no more d.o.f
+                        goto FIND_DOF;
+                    }
+                    else
+                    {
+                        mutable_type &i = indices[curDim];
+                        if(++i>up)
+                        {
+                            i = lo;
+                            recursive_update( next_dim(curDim) );
+                        }
                     }
                 }
             }
 
             inline size_t next_dim(size_t dim) const throw()
             {
-                return (++dim>dimensions) ? 0 : dim;
+                return (++dim>=dimensions) ? 0 : dim;
             }
 
         };

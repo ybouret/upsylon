@@ -47,20 +47,41 @@ Y_UTEST(mloop)
         unit_t up = 4;
         unit_t cr = 0;
 
-        core::multi_loop<unit_t> L(1,&lo,&up,&cr);
-        std::cerr << "#count=" << L.count << std::endl;
+        {
+            core::multi_loop<unit_t> L(1,&lo,&up,&cr);
+            std::cerr << "#count=" << L.count << std::endl;
+            do_loop(L);
+        }
 
-        do_loop(L);
+        {
+            core::multi_loop<unit_t> L(1,&lo,&up,&cr);
+            std::cerr << "#count=" << L.count << std::endl;
+            do_loop(L);
+        }
+
+
+        for(size_t iter=0;iter<100;++iter)
+        {
+            lo = alea.range<unit_t>(-10,10);
+            up = alea.range<unit_t>(-10,10);
+            if(lo>up) cswap(lo,up);
+            core::multi_loop<unit_t> L(1,&lo,&up,&cr);
+            do_loop(L);
+        }
+
     }
 
     {
-        const point2d<int> lo(1,1);
-        const point2d<int> up(5,3);
+        point2d<int> lo(1,1);
+        point2d<int> up(5,3);
         point2d<int>       cr;
-        core::multi_loop<int> L(2,&lo.x,&up.x,&cr.x);
-        std::cerr << "#count=" << L.count << std::endl;
 
-        do_loop(L);
+        {
+            core::multi_loop<int> L(2,&lo.x,&up.x,&cr.x);
+            std::cerr << "#count=" << L.count << std::endl;
+            do_loop(L);
+        }
+
 
     }
 

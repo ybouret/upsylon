@@ -13,7 +13,7 @@ namespace
     {
         typedef typename LAYOUT::coord coord;
         std::cerr << "-- Layout Dimensions=" << LAYOUT::Dimensions << std::endl;
-        for(size_t cycle=1;cycle<=8;++cycle)
+        for(size_t cycle=1;cycle<=32;++cycle)
         {
             const LAYOUT L( Oxide::CoordOps::Integer<coord>(30,alea), Oxide::CoordOps::Integer<coord>(30,alea) );
             std::cerr << "\tL=" << L << std::endl;
