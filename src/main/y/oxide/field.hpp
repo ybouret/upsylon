@@ -30,13 +30,10 @@ namespace upsylon
             
         protected:
             //! initialize
-            explicit Field<T>(const string &id, const LayoutInfo &L) :
-            Y_OXIDE_FIELD_CTOR() {}
+            explicit Field<T>(const string &id, const LayoutInfo &L) : Y_OXIDE_FIELD_CTOR() {}
             
             //! initialize
-            explicit Field<T>(const char *id, const LayoutInfo  &L) :
-            Y_OXIDE_FIELD_CTOR() {}
-            
+            explicit Field<T>(const char *id, const LayoutInfo  &L) : Y_OXIDE_FIELD_CTOR() {}
             
             //! free registered data
             inline void freeData() throw()
