@@ -8,6 +8,8 @@
 #include "y/type/spec.hpp"
 #include "y/associative/set.hpp"
 #include "y/sequence/array.hpp"
+#include "y/type/ints-chkbnd.hpp"
+
 #include <cstdio>
 
 //! avoir C++ from OpenMPI
@@ -275,6 +277,9 @@ namespace upsylon
         //! print only on node0
         void print0( FILE *fp, const char *fmt,...) Y_PRINTF_CHECK(3,4);
 
+        //! check that the size fits in a 32 bit value (should...)
+        static  uint32_t SizeToUint32( const size_t sz );
+
     private:
         data_type::db types;
 
@@ -301,11 +306,13 @@ namespace upsylon
 #define Y_MPI(LEVEL) mpi & MPI = mpi::init( &argc, &argv, MPI_THREAD_##LEVEL )
 
 
+
+
     //! send a string: size+data
     template <> inline
     void mpi:: Send<string>( const string &s, const int target, const int tag)
     {
-        const size_t sz = s.size();
+        const uint32_t sz = SizeToUint32(s.size());
         Send(sz,target,tag);
         if(sz>0)
         {
@@ -317,12 +324,12 @@ namespace upsylon
     template <> inline
     string mpi:: Recv<string>( const int source, const int tag )
     {
-        const size_t sz = Recv<size_t>(source,tag);
+        const size_t sz = Recv<uint32_t>(source,tag);
         if(sz>0)
         {
-            string ans(sz,as_capacity);
+            string ans(sz,as_capacity,true);
             Recv( *ans, sz, MPI_CHAR, source, tag );
-            ans.force(sz);
+            //ans.force(sz);
             return ans;
         }
         else

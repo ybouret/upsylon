@@ -27,7 +27,7 @@ namespace upsylon
     {
         string            org = dirName;
         const std::size_t len = vfs::as_directory( org ).size();
-        string            sub( len, as_capacity );
+        string            sub( len, as_capacity, false );
         std::size_t       idx = 0;
         while( idx < len )
         {

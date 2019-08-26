@@ -66,7 +66,7 @@ Y_PROGRAM_START()
     //--------------------------------------------------------------------------
     auto_ptr<ios::ocstream> out = new ios::ocstream( ios::cstdout );
     char   C = 0;
-    string line(width,as_capacity);
+    string line(width,as_capacity,false);
     unsigned long count = 0;
     while( inp->query(C) )
     {

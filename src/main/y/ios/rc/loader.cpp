@@ -119,7 +119,7 @@ namespace upsylon
             if(!ppItem) throw exception("%s(no <%s> in [%s])", fn, *id, *name );
 
             const item &it = **ppItem;
-            string ans(it.bytes,as_capacity);
+            string ans(it.bytes,as_capacity,false);
             fp.seek(it.start,from_set);
             size_t n = it.bytes;
             char   C = 0;

@@ -15,7 +15,7 @@ namespace  upsylon
 	string string_io::load_binary(ios::istream &fp)
 	{
 		size_t n = fp.read_upack<size_t>();
-		string ans(n, as_capacity);
+		string ans(n,as_capacity,false);
 		while (n-- > 0)
 		{
 			char C = 0;
@@ -31,7 +31,7 @@ namespace  upsylon
 		string<char> string<char>::read(ios::istream &fp)
 		{
 			size_t n = fp.read_upack<size_t>();
-			string ans(n, as_capacity);
+			string ans(n, as_capacity, false);
 			while (n-- > 0)
 			{
 				char C = 0;

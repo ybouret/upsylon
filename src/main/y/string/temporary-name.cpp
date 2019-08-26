@@ -23,7 +23,7 @@ namespace upsylon
         static randomized::bits &ran = randomized::bits::crypto();
         static const size_t      nch = length_of(file_name_chars);
         const size_t n = max_of<size_t>(1,length);
-        string       ans(n+4,as_capacity);
+        string       ans(n+4,as_capacity,false);
         for(size_t i=0;i<n;++i)
         {
             ans += file_name_chars[ ran.lt(nch) ];

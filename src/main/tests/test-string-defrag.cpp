@@ -34,7 +34,7 @@ Y_UTEST(string_defrag)
         vector<string> tmp(ns,as_capacity);
         for(size_t i=0;i<ns;++i)
         {
-            const string s( alea.leq(100), as_capacity );
+            const string s( alea.leq(100), as_capacity, false);
             tmp.push_back(s);
         }
 

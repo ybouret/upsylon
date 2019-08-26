@@ -83,7 +83,7 @@ namespace upsylon
                 }
 
                 unsigned iline = 1;
-                string   line(255,as_capacity);
+                string   line(255,as_capacity,false);
                 for(;iline<=skip;++iline)
                 {
                     if(!fp.gets(line)) throw exception("%sEOF while skipping line %u/%u", fn, iline, unsigned(skip));

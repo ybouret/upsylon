@@ -29,7 +29,10 @@ namespace
         std::cerr << "   Decrypt=" << dec->name   << std::endl;
 
         const size_t n = enc->size();
-        string       P(n,as_capacity), C(n,as_capacity), D(n,as_capacity);
+        string
+        P(n,as_capacity,false),
+        C(n,as_capacity,false),
+        D(n,as_capacity,false);
         for(size_t i=0;i<n;++i)
         {
             P += alea.range('a','z');
@@ -90,9 +93,9 @@ namespace
             alea.fill( c->last_plain.rw(), c->block_size );
             c->sync_crypt();
 
-            string ini(c->block_size,as_capacity);
-            string enc(c->block_size,as_capacity);
-            string dec(c->block_size,as_capacity);
+            string ini(c->block_size,as_capacity,false);
+            string enc(c->block_size,as_capacity,false);
+            string dec(c->block_size,as_capacity,false);
 
             for(size_t length=0;length<c->block_size-1;++length)
             {

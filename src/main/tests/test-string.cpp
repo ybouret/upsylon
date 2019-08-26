@@ -40,7 +40,7 @@ Y_UTEST(string)
     // constructor
     std::cerr << std::endl;
     string s1; Y_CHECK(s1.size()==0);__DISP(s1);
-    string s2(12,as_capacity);Y_CHECK(s2.size()==0);Y_CHECK(s2.capacity()>=12);
+    string s2(12,as_capacity,false);Y_CHECK(s2.size()==0);Y_CHECK(s2.capacity()>=12);
     string s3( "Hello" );  Y_CHECK(s3.size()==5); __DISP(s3);
     string s4 = "World";   Y_CHECK(s4.size()==5); __DISP(s4);
     string s5 = (char *)0; Y_CHECK(s5.size()==0);

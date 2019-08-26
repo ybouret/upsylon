@@ -11,16 +11,16 @@ static inline
 void do_bwt(const string &input)
 {
     const size_t n = input.size();
-    string output(n,as_capacity);
-    for(size_t i=n;i>0;--i) output << '\0';
+    string output(n,as_capacity,true);
+    //for(size_t i=n;i>0;--i) output << '\0';
     assert(output.size()==input.size());
     vector<size_t> indices(n,0);
     const size_t pidx = codec::bwt::encode(*output,*input,n,*indices);
     std::cerr << "input   = [" << input  << "]" << std::endl;
     std::cerr << "output  = [" << output << "]@" << pidx << std::endl;
 
-    string recover(n,as_capacity);
-    for(size_t i=n;i>0;--i) recover << '\0';
+    string recover(n,as_capacity,true);
+    //for(size_t i=n;i>0;--i) recover << '\0';
     assert(recover.size()==input.size());
     codec::bwt::decode(*recover, *output, n, *indices, pidx);
     std::cerr << "recover = [" << recover << "]" << std::endl;

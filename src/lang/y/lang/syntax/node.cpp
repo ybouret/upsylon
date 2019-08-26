@@ -172,7 +172,7 @@ namespace upsylon
             
             string Node:: toBinary() const
             {
-                string ans( outputBytes(), as_capacity);
+                string ans( outputBytes(), as_capacity, false);
                 {
                     ios::osstream fp(ans);
                     save(fp);

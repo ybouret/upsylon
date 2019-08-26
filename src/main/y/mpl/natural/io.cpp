@@ -34,7 +34,7 @@ namespace upsylon
                 }
                 else
                 {
-                    string s(2+(bytes<<1),as_capacity);
+                    string s(2+(bytes<<1),as_capacity,false);
                     for(size_t i=0;i<bytes;++i)
                     {
                         const char *h = hexadecimal::lowercase[byte[i]];

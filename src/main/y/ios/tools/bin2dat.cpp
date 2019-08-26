@@ -15,7 +15,7 @@ namespace upsylon
         bin2dat:: bin2dat(const size_t w) :
         count(0),
         width( max_of<size_t>(w,1) ),
-        human( new string(width,as_capacity) )
+        human( new string(width,as_capacity,false) )
         {
         }
 

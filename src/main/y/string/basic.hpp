@@ -240,10 +240,12 @@ maxi_ = items-1
             }
 
             //! memory reserve
-            inline string( const size_t n, const as_capacity_t &) :
+            inline string( const size_t n, const as_capacity_t &, bool filled) :
             Y_CORE_STRING_CTOR0(), size_(0), maxi_(0), items(n+1), bytes(0)
             {
                 Y_CORE_STRING_ALLOC();
+                Y_CORE_STRING_CHECK(*this);
+                if(filled) size_ = n;
                 Y_CORE_STRING_CHECK(*this);
             }
 

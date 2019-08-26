@@ -68,7 +68,7 @@ namespace upsylon
 
     string uuid:: to_string() const
     {
-        string ans(35,as_capacity);
+        string ans(35,as_capacity,false);
         for(size_t i=0;i<uuid::BYTES;++i)
         {
             ans << hexadecimal::uppercase[byte[i]];

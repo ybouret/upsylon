@@ -95,7 +95,7 @@ lzo_align_t __LZO_MMODEL var [ ((size) + (sizeof(lzo_align_t) - 1)) / sizeof(lzo
         miniLZO_Buffer   input(inlen);
         fp.input(*input,inlen);
 
-        string ans(outlen,as_capacity);
+        string ans(outlen,as_capacity,false);
         Decompress(*ans,outlen,*input,inlen);
         ans.force(outlen);
         return ans;

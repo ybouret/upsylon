@@ -15,7 +15,7 @@ namespace upsylon
             else
             {
                 const size_t n = size-ndrop;
-                string       ans(n,as_capacity);
+                string       ans(n,as_capacity,false);
                 const Char  *ch = head;
 
                 for(size_t i=0;i<nskip;++i)
@@ -34,7 +34,7 @@ namespace upsylon
 
         string Token::to_print() const
         {
-            string ans(2*size,as_capacity);
+            string ans(2*size,as_capacity,false);
             for(const Char *ch=head;ch;ch=ch->next)
             {
                 ans << printable_char[ch->code];
@@ -44,7 +44,7 @@ namespace upsylon
 
         string Token::to_visible() const
         {
-            string ans(3*size,as_capacity);
+            string ans(3*size,as_capacity,false);
             for(const Char *ch=head;ch;ch=ch->next)
             {
                 ans << visible_char[ch->code];

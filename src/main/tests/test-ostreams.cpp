@@ -42,7 +42,7 @@ Y_UTEST(ostreams)
     {
         vector<uint64_t> data;
 
-        string s(16,as_capacity);
+        string s(16,as_capacity,false);
         {
             ios::ocstream op("upack.dat");
 

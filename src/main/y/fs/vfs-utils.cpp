@@ -137,7 +137,7 @@ namespace upsylon
             path = "./";
         else
         {
-            string  temp( path.size()+1, as_capacity);
+            string  temp( path.size()+1, as_capacity, false);
             char last = path[0];
             switch( last ) {
                 case '/':
@@ -226,7 +226,7 @@ namespace upsylon
         "._-";
 
         const size_t n = name.size();
-        string       ans(n,as_capacity);
+        string       ans(n,as_capacity,false);
 
         for(size_t i=0;i<n;++i)
         {
@@ -250,7 +250,7 @@ namespace upsylon
         "_";
 
         const size_t n = name.size();
-        string       ans(n+1,as_capacity);
+        string       ans(n+1,as_capacity,false);
         ans += '_';
         for(size_t i=0;i<n;++i)
         {
@@ -273,7 +273,7 @@ namespace upsylon
         "_";
 
         const size_t n = name.size();
-        string       ans(n,as_capacity);
+        string       ans(n,as_capacity,false);
 
         for(size_t i=0;i<n;++i)
         {

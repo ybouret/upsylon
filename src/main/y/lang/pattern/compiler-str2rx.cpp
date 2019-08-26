@@ -8,7 +8,7 @@ namespace upsylon
         string StringToRegExp(const char *text, const size_t size)
         {
             assert( !(NULL==text&&size>0) );
-            string ans(size*4,as_capacity);
+            string ans(size*4,as_capacity,false);
             for(size_t i=0;i<size;++i)
             {
                 const uint8_t B = text[i];

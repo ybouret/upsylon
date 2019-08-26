@@ -364,6 +364,12 @@ namespace upsylon
 
     }
 
-
+    uint32_t mpi:: SizeToUint32( const size_t sz )
+    {
+        const uint32_t sz32 = check_bound<uint32_t,size_t>(sz);
+        const size_t   szx  = sz32;
+        if(szx<sz32) throw upsylon::exception("mpi.SizeToUint32 overflow!");
+        return sz32;
+    }
 }
 

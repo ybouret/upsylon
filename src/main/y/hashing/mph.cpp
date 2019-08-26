@@ -304,7 +304,7 @@ namespace upsylon
         static inline
         string def2cpp( const string &def )
         {
-            string ans(def.size(),as_capacity);
+            string ans(def.size(),as_capacity,false);
             const size_t n = def.size();
             for(size_t i=0;i<n;++i)
             {
