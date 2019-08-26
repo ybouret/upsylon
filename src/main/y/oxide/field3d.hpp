@@ -31,6 +31,7 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
             Layout3D(L), Y_OXIDE_FIELD3D_CTOR()
             {
                 setup();
+                assert(this->entry);
             }
 
             //! setup by text and coordinates
@@ -40,6 +41,7 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
             Layout3D(lo,hi), Y_OXIDE_FIELD3D_CTOR()
             {
                 setup();
+                assert(this->entry);
             }
             
             //! destruct
@@ -121,6 +123,7 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
                 mutable_type *d = static_cast<mutable_type *>( memory::io::__shift(r,r_bytes)     );
                 slice -= this->lower.z;
                 this->makeData(d,*this);
+                this->entry = d;
                 try
                 {
                     size_t &ns = (size_t &)slices;
@@ -139,7 +142,6 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
                     destructSlices();
                     throw;
                 }
-                this->entry = d;
             }
             
         };

@@ -161,8 +161,11 @@ rowLayout(this->lower.x,this->upper.x)
                     destructRows();
                     throw;
                 }
-                this->entry = static_cast<type *>(dataAddr);
 
+                //--------------------------------------------------------------
+                // link entry
+                //--------------------------------------------------------------
+                this->entry = static_cast<type *>(dataAddr);
             }
         };
 

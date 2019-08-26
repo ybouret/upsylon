@@ -25,30 +25,37 @@ namespace
     template <typename T>
     static inline void run_with( FieldInfo::SaveProc proc )
     {
-        IO::Block io(16*1024);
-        const Coord1D m = 20;
-        Field1D<T> F1( "F1",  CoordOps::Integer<Coord1D>(m, alea),  CoordOps::Integer<Coord1D>(m, alea) );
-        Field2D<T> F2( "F2",  CoordOps::Integer<Coord2D>(m, alea),  CoordOps::Integer<Coord2D>(m, alea) );
-        Field3D<T> F3( "F3",  CoordOps::Integer<Coord3D>(m, alea),  CoordOps::Integer<Coord3D>(m, alea) );
+        IO::Block io(1024*1024);
 
-        fill(F1);
-        fill(F2);
-        fill(F3);
-        std::cerr << "F1=" << F1 << std::endl;
-        std::cerr << "F2=" << F2 << std::endl;
-        std::cerr << "F3=" << F3 << std::endl;
+        for(size_t cycle=0;cycle<100;++cycle)
+        {
+            io.free();
+            const Coord1D m = 20;
+            Field1D<T> F1( "F1",  CoordOps::Integer<Coord1D>(m, alea),  CoordOps::Integer<Coord1D>(m, alea) );
+            Field2D<T> F2( "F2",  CoordOps::Integer<Coord2D>(m, alea),  CoordOps::Integer<Coord2D>(m, alea) );
+            Field3D<T> F3( "F3",  CoordOps::Integer<Coord3D>(m, alea),  CoordOps::Integer<Coord3D>(m, alea) );
 
-        F1.save(io,proc);
-        F2.save(io,proc);
-        F3.save(io,proc);
+            fill(F1);
+            fill(F2);
+            fill(F3);
+            std::cerr << "F1=" << F1 << std::endl;
+            std::cerr << "F2=" << F2 << std::endl;
+            std::cerr << "F3=" << F3 << std::endl;
 
-        std::cerr << "#io=" << io.size() << std::endl;
+            F1.save(io,proc);
+            F2.save(io,proc);
+            F3.save(io,proc);
+
+            std::cerr << "#io=" << io.size() << "/" << io.capacity() << std::endl;
+        }
     }
 }
 
 Y_UTEST(oxide_io)
 {
-    run_with<double>( IO::SaveBlock<double>        );
+    run_with<double>( IO::SaveBlock<double>      );
+    run_with<float>( IO::SaveIntegral<float>     );
+
     run_with<string>( IO::SaveSerializable<string> );
 
 }
