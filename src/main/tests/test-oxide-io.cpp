@@ -34,11 +34,22 @@ namespace
         fill(F1);
         fill(F2);
         fill(F3);
+        std::cerr << "F1=" << F1 << std::endl;
+        std::cerr << "F2=" << F2 << std::endl;
+        std::cerr << "F3=" << F3 << std::endl;
+
+        F1.save(io,proc);
+        F2.save(io,proc);
+        F3.save(io,proc);
+
+        std::cerr << "#io=" << io.size() << std::endl;
     }
 }
 
 Y_UTEST(oxide_io)
 {
-    run_with<double>( IO::SaveBlock<double> );
+    run_with<double>( IO::SaveBlock<double>        );
+    run_with<string>( IO::SaveSerializable<string> );
+
 }
 Y_UTEST_DONE()
