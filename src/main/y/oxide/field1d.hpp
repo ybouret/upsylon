@@ -92,7 +92,7 @@ namespace upsylon
                 if(!addr)
                 {
                     this->privateSize = this->linearExtent;
-                    this->makeData( ( addr=this->acquirePrivate() ),*this);
+                    this->makeData( ( addr=this->acquirePrivate() ) );
                 }
                 
                 // update members

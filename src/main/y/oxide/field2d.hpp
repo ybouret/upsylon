@@ -131,7 +131,7 @@ rowLayout(this->lower.x,this->upper.x)
                     // build local data@dataAddr,
                     // that shall be released by ~Field
                     //----------------------------------------------------------
-                    this->makeData(dataAddr,*this);
+                    this->makeData(dataAddr);
                 }
                 else
                 {

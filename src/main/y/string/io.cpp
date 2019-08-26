@@ -25,6 +25,21 @@ namespace  upsylon
         return ans;
     }
 
+    template<>
+    string string:: read(ios::istream &fp)
+    {
+        size_t n = fp.read_upack<size_t>();
+        string ans(n,as_capacity);
+        while(n-->0)
+        {
+            char C = 0;
+            fp.input(&C,1);
+            ans << C;
+        }
+        return ans;
+    }
+
+
     static inline void __emit_hexa(ios::ostream &fp, const uint8_t B)
     {
         fp << '\\' << 'x' << hexadecimal::lowercase[B];

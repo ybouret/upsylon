@@ -5,6 +5,7 @@
 
 #include "y/oxide/layout.hpp"
 #include "y/string.hpp"
+#include "y/ios/istream.hpp"
 
 namespace upsylon
 {
@@ -33,10 +34,14 @@ namespace upsylon
             // non-virtual interface
             //------------------------------------------------------------------
             typedef void (*SaveProc)( ios::ostream &, const void *);
+            typedef void (*LoadProc)( ios::istream &, void *);
 
             void    save( ios::ostream &fp, const Coord1D index, SaveProc proc ) const;
             void    save( ios::ostream &fp, SaveProc proc) const;
-            
+            void    load( ios::istream &fp, const Coord1D index, LoadProc proc);
+            void    load( ios::istream &fp, LoadProc proc);
+
+
         protected:
             //! setup name and number of linear byte
             explicit FieldInfo(const string &id, const LayoutInfo &L, const size_t szObj); //!< setup

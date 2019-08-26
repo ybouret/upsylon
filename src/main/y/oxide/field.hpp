@@ -39,6 +39,17 @@ namespace upsylon
                 return &entry[index];
             }
 
+            //------------------------------------------------------------------
+            // non virtual interface
+            //------------------------------------------------------------------
+            inline void ld( param_type arg )
+            {
+                for(size_t i=0;i<localObjects;++i)
+                {
+                    entry[i] = arg;
+                }
+            }
+
             
         protected:
             //! initialize
@@ -60,14 +71,14 @@ namespace upsylon
             }
             
             //! create L.items objects, becoming ownedTypes
-            inline void makeData(void *addr, const LayoutInfo &L)
+            inline void makeData(void *addr)
             {
                 assert(addr);
                 assert(0==ownedObjects);
                 assert(0==_data);
                 _data          = static_cast<mutable_type *>(addr);
                 size_t      &n = (size_t&)ownedObjects;
-                const size_t m = L.items;
+                const size_t m = localObjects;
                 try
                 {
                     while(n<m)
@@ -75,6 +86,7 @@ namespace upsylon
                         new (_data+n) mutable_type();
                         ++n;
                     }
+                    assert(localObjects==ownedObjects);
                 }
                 catch(...)
                 {

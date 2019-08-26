@@ -4,6 +4,7 @@
 
 #include "y/oxide/types.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/ios/istream.hpp"
 #include "y/ios/serializable.hpp"
 #include "y/sequence/vector.hpp"
 
@@ -13,31 +14,54 @@ namespace upsylon
     {
         struct IO
         {
-            template <typename T>
-            static void SaveIntegral( ios::ostream &fp, const void *addr )
+            template <typename T>  static inline
+            void SaveIntegral( ios::ostream &fp, const void *addr )
             {
                 assert(addr);
                 fp.emit<T>(*static_cast<const T*>(addr));
             }
 
-            template <typename T>
-            static void SaveBlock( ios::ostream &fp, const void *addr )
+            template <typename T> static inline
+            void LoadIntegral( ios::istream &fp, void *addr )
             {
-                const T *ptr = static_cast<const T *>(addr);
-                for(size_t i=sizeof(T);i>0;--i,++ptr)
-                {
-                    fp.write(*ptr);
-                }
+                assert(addr);
+                *static_cast<T *>(addr) = fp.read<T>();
             }
 
-            template <typename T>
-            static void SaveSerializable( ios::ostream &fp, const void *addr )
+
+            template <typename T> static inline
+            void SaveBlock( ios::ostream &fp, const void *addr )
+            {
+                assert(addr);
+                fp.output((const char *)addr,sizeof(T));
+            }
+
+            template <typename T> static inline
+            void LoadBlock( ios::istream &fp, void *addr )
+            {
+                assert(addr);
+                fp.input(addr,sizeof(T));
+            }
+
+            //! assuming serializable conversion exists...
+            template <typename T> static inline
+            void SaveSerializable( ios::ostream &fp, const void *addr )
             {
                 assert(addr);
                 const T                 *pObj = static_cast<const T*>(addr);
                 const ios::serializable *pSrz = pObj;
                 pSrz->serialize(fp);
             }
+
+            //! based on a T::read function
+            template <typename T> static inline
+            void LoadSerialized( ios::istream &fp, void *addr )
+            {
+                assert(addr);
+                const T tmp = T::read(fp);
+                *static_cast<T *>(addr) = tmp;
+            }
+
 
             typedef vector<uint8_t,memory::global> Bytes;
 

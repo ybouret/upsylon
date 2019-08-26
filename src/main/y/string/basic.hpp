@@ -14,6 +14,12 @@
 
 namespace upsylon
 {
+
+    namespace ios
+    {
+        class istream; //!< forward declaration
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     //
     // utility functions
@@ -476,6 +482,9 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
 
             //! write
             virtual size_t serialize( ios::ostream &fp ) const;
+
+            //! reload
+            static string      read(ios::istream &fp);
 
             //! compact in memory
             bool compact() throw();

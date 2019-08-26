@@ -67,7 +67,23 @@ privateSize(0)
                 save(fp,index,proc);
             }
         }
-        
+
+        void FieldInfo:: load( ios::istream &fp, const Coord1D index, LoadProc proc)
+        {
+            assert(proc);
+            proc(fp,(void*)getObjectAddr(index));
+        }
+
+        void FieldInfo:: load(ios::istream &fp, LoadProc proc)
+        {
+            assert(proc);
+            for(size_t index=0;index<localObjects;++index)
+            {
+                load(fp,index,proc);
+            }
+        }
+
+
     }
 }
 

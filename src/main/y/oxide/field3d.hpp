@@ -122,7 +122,7 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
                 RowType      *r = static_cast<RowType      *>( memory::io::__shift(slice,s_bytes) );
                 mutable_type *d = static_cast<mutable_type *>( memory::io::__shift(r,r_bytes)     );
                 slice -= this->lower.z;
-                this->makeData(d,*this);
+                this->makeData(d);
                 this->entry = d;
                 try
                 {
