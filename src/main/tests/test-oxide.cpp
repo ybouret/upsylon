@@ -1,5 +1,7 @@
 #include "y/oxide/layout.hpp"
 #include "y/utest/run.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/sequence/list.hpp"
 
 using namespace upsylon;
 
@@ -49,7 +51,18 @@ namespace
         }
         std::cerr << "\t\tnn=" << nn << "/" << L.items << std::endl;
 
+        vector<Oxide::Coord1D> iv;
+        list<Oxide::Coord1D>   il;
 
+        for(size_t iter=0;iter<2;++iter)
+        {
+            const LAYOUT sub( L.rand(alea), L.rand(alea) );
+            std::cerr << "\tsub=" << sub << std::endl;
+            L.collect(iv,sub);
+            L.collect(il,sub);
+            Y_ASSERT(iv.size()==il.size());
+        }
+        std::cerr << "\t\tcollected: " << iv.size() << "/" << il.size() << std::endl;
 
 
     }

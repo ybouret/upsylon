@@ -4,6 +4,8 @@
 
 #include "y/oxide/types.hpp"
 #include "y/code/multi-loop.hpp"
+#include "y/sort/unique.hpp"
+#include "y/sort/sequence.hpp"
 
 namespace upsylon
 {
@@ -143,6 +145,26 @@ namespace upsylon
             {
                 return CoordOps::Within(lower,upper,ran);
             }
+
+            //! collecting indices
+            template <typename SEQUENCE>
+            inline void collect(SEQUENCE     &indices,
+                                const Layout &sub) const
+            {
+                assert(this->contains(sub));
+                // make the loop
+                Loop       loop(sub.lower,sub.upper);
+                // adjust memory
+                indices.ensure( indices.size() + loop.count );
+
+                // loop on sub coordinates
+                for(loop.start();loop.active();loop.next())
+                {
+                    indices.push_back( indexOf(loop.value) );
+                }
+                unique(indices);
+            }
+
 
         private:
             Y_DISABLE_ASSIGN(Layout);
