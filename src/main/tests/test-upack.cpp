@@ -4,6 +4,8 @@
 #include "y/string.hpp"
 #include "y/ios/imstream.hpp"
 
+#include "y/ios/upack.hpp"
+
 using namespace upsylon;
 
 namespace
@@ -36,8 +38,15 @@ namespace
             Y_CHECK( limit_of<T>::maximum == inp.read_upack<T>() );
         }
 
+        std::cerr << "sizeof(upack)  =" << sizeof(ios::upack<T>)    << std::endl;
+        std::cerr << "upack.type_size=" << ios::upack<T>::type_size << std::endl;
+        std::cerr << "upack.requested=" << ios::upack<T>::requested << std::endl;
+        std::cerr << "upack.workspace=" << ios::upack<T>::workspace << std::endl;
+
+        ios::upack<T> pak;
+
         std::cerr << "..." << std::endl;
-        for(size_t iter=0;iter<1024*1024;++iter)
+        for(size_t iter=0;iter<1024*128;++iter)
         {
             count = 0;
             output.clear();
@@ -46,8 +55,10 @@ namespace
             fp.emit_upack<T>( tmp, &count );
             ios::imstream inp(output);
             Y_ASSERT( tmp == inp.read_upack<T>() );
+            pak(tmp);
+            Y_ASSERT(pak.size==count);
+            Y_ASSERT( 0 == memcmp( *output, *pak, pak.size ) );
         }
-
 
 
 
