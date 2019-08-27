@@ -66,9 +66,11 @@ namespace upsylon
 
             //! load from read-only buffer
             void load(const memory::ro_buffer &buff, const Coord1D index, LoadProc proc);
+            
+            //! load all from read-only buffer
             void load(const memory::ro_buffer &buff, LoadProc proc);
 
-            //! reload objects from a sequence of indices
+            //! reload objects from a sequence of indices and a read-only buffer
             template <typename SEQUENCE> inline
             void load_only(const SEQUENCE &indices, const memory::ro_buffer &buff, LoadProc proc )
             {
