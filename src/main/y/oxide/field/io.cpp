@@ -26,10 +26,16 @@ namespace upsylon
             
         }
 
-        void * IO::Block:: format(const size_t n)
+        IO::Block &   IO::Block:: setFast(const size_t n)
+        {
+            adjust(n,0);
+            return *this;
+        }
+
+        IO::Block &  IO::Block:: setZero(const size_t n)
         {
             make(n,0);
-            return **this;
+            return *this;
         }
 
     }

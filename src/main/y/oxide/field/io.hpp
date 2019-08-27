@@ -80,9 +80,10 @@ namespace upsylon
                 //! destruct
                 virtual ~Block() throw();
 
-                virtual void write( char C ); //!< append C and adjuste size
-                virtual void flush();         //!< do nothing
-                void *format(const size_t n); //!< set size to n zeroed bytes
+                virtual void write( char C );         //!< append C and adjuste size
+                virtual void flush();                 //!< do nothing
+                Block   &    setFast(const size_t n); //!< adjust size, padded with zero
+                Block   &    setZero(const size_t n); //!< adjust size, all zero
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Block);

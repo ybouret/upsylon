@@ -62,11 +62,14 @@ Y_UTEST(oxide)
             {
                 // first send, used packed
                 Comm::Send(MPI,send_block,r,Comm::Packed);
+                // second send
+                Comm::Send(MPI,send_block,r,Comm::Static);
             }
         }
         else
         {
             Comm::Recv(MPI,recv_block,0,Comm::Packed);
+            Comm::Recv(MPI,recv_block,0,Comm::Static);
             ios::imstream fp(recv_block);
             F.load_only(indices,fp,IO::LoadBlock<double>);
         }

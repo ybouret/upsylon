@@ -14,10 +14,11 @@ namespace upsylon
         struct Comm
         {
             static const int Tag = 0x07; //!< default tag
+            //! transfert mode
             enum Mode
             {
-                Static,
-                Packed
+                Static, //!< assume the size is fixed
+                Packed  //!< the size is send before
             };
 
             //! send a block
@@ -32,7 +33,7 @@ namespace upsylon
                     case Packed: {
                         const uint32_t sz = mpi::size_to_uint32(block.size());
                         MPI.Send<uint32_t>( sz, target, Tag);
-                    }
+                    }/* FALLTHRU */
                     case Static:
                         MPI.Send( static_cast<const IO::Array &>(block),target,Tag);
                 }
@@ -50,11 +51,33 @@ namespace upsylon
                     case Packed:
                     {
                         const uint32_t sz = MPI.Recv<uint32_t>(source,Tag);
-                        block.adjust(sz,0);
-                    }
+                        block.setFast(sz);
+                    }/* FALLTHRU */
                     case Static:
                         MPI.Recv( static_cast<IO::Array &>(block), source, Tag);
                 }
+            }
+
+            //! sendrecv
+            static inline
+            void Sendrecv(mpi             & MPI,
+                          const IO::Block & sendBlock,
+                          const int         target,
+                          IO::Block       & recvBlock,
+                          const int         source,
+                          const Mode        mode)
+            {
+
+                switch(mode)
+                {
+                    case Packed:
+                    {
+                    } /* FALLTHRU */
+                    case Static:
+                        MPI.Sendrecv(*sendBlock, sendBlock.size(), MPI_BYTE, target, Tag,
+                                     *recvBlock, recvBlock.size(), MPI_BYTE, source, Tag);
+                }
+
             }
 
         };
