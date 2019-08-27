@@ -72,9 +72,18 @@ namespace
                     seq.push_front(args);
                 }
             }
-            seq.reserve( alea.leq(32) );
+
+
+            seq.reserve( alea.leq(100) );
             std::cerr << "seq.size     = " << seq.size() << std::endl;
             std::cerr << "seq.capacity = " << seq.capacity() << std::endl;
+            {
+                const ptrdiff_t sz       = seq.size()/4;
+                const size_t    new_size = seq.size() + alea.range<ptrdiff_t>(-sz,sz);
+                std::cerr << "seq.new_size=" << new_size << std::endl;
+                typename SEQ::const_type pad = support::get<typename SEQ::mutable_type>();
+                seq.adjust(new_size,pad);
+            }
             scan(seq);
             scan_const(seq);
             while(seq.size())
