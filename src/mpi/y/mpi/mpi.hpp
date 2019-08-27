@@ -281,7 +281,7 @@ namespace upsylon
         void print0( FILE *fp, const char *fmt,...) Y_PRINTF_CHECK(3,4);
 
         //! check that the size fits in a 32 bit value (should...)
-        static  uint32_t SizeToUint32( const size_t sz );
+        static  uint32_t size_to_uint32( const size_t sz );
 
     private:
         data_type::db types;
@@ -315,7 +315,7 @@ namespace upsylon
     template <> inline
     void mpi:: Send<string>( const string &s, const int target, const int tag)
     {
-        const uint32_t sz = SizeToUint32(s.size());
+        const uint32_t sz = size_to_uint32(s.size());
         Send(sz,target,tag);
         if(sz>0)
         {

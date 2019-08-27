@@ -66,8 +66,10 @@ namespace upsylon
                 *static_cast<T *>(addr) = tmp;
             }
 
-            //! base type for derived type
+            //! base type for derived memory
             typedef vector<uint8_t,memory::global> Bytes;
+            //! interface
+            typedef array<uint8_t>                 Array;
 
             //! variable length block type, usable with ios::imstream for input
             class Block : public Bytes, public ios::ostream

@@ -10,48 +10,52 @@ namespace upsylon
 {
     namespace Oxide
     {
+        //! MPI related routines
         struct Comm
         {
-            static const int Tag = 0x07;
-
-            static inline
-            void SendFixed(mpi             &MPI,
-                           const IO::Block &block,
-                           const int        target )
+            static const int Tag = 0x07; //!< default tag
+            enum Mode
             {
-                MPI.Send(block,target,Tag);
+                Static,
+                Packed
+            };
+
+            //! send a block
+            static inline
+            void Send(mpi             &MPI,
+                      const IO::Block &block,
+                      const int        target,
+                      const Mode       mode)
+            {
+                switch(mode)
+                {
+                    case Packed: {
+                        const uint32_t sz = mpi::size_to_uint32(block.size());
+                        MPI.Send<uint32_t>( sz, target, Tag);
+                    }
+                    case Static:
+                        MPI.Send( static_cast<const IO::Array &>(block),target,Tag);
+                }
             }
 
+            //! recv a block
             static inline
-            void RecvFixed(mpi       &MPI,
-                           IO::Block &block,
-                           const int source)
+            void Recv(mpi       &MPI,
+                      IO::Block &block,
+                      const int  source,
+                      const Mode mode)
             {
-                MPI.Recv(block, source, Tag);
+                switch(mode)
+                {
+                    case Packed:
+                    {
+                        const uint32_t sz = MPI.Recv<uint32_t>(source,Tag);
+                        block.adjust(sz,0);
+                    }
+                    case Static:
+                        MPI.Recv( static_cast<IO::Array &>(block), source, Tag);
+                }
             }
-
-            static inline
-            void SendPacked(mpi             &MPI,
-                            const IO::Block &block,
-                            const int        target )
-            {
-                const uint32_t sz = mpi::SizeToUint32(block.size());
-                MPI.Send<uint32_t>( sz, target, Tag);
-                SendFixed(MPI,block,target);
-
-            }
-
-            static inline
-            void RecvPacked(mpi       &MPI,
-                            IO::Block &block,
-                            const int  source)
-            {
-                const uint32_t sz = MPI.Recv<uint32_t>(source,Tag);
-                block.adjust(sz,0);
-                RecvFixed(MPI,block,source);
-            }
-
-
 
         };
     }
