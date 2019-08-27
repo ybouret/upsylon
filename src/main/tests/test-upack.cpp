@@ -21,7 +21,7 @@ namespace
             output.clear();
             ios::osstream fp(output);
             fp.emit_upack<T>( 0, &count );
-            std::cerr << "output.size=" << output.size() << "/" << count << std::endl;
+            std::cerr << "output.size=" << output.size() << "/" << count << " ";
             ios::imstream inp(output);
             Y_CHECK( 0 == inp.read_upack<T>() );
         }
@@ -31,12 +31,22 @@ namespace
             output.clear();
             ios::osstream fp(output);
             fp.emit_upack<T>( limit_of<T>::maximum, &count );
-            std::cerr << "output.size=" << output.size() << "/" << count << std::endl;
+            std::cerr << "output.size=" << output.size() << "/" << count << " ";
             ios::imstream inp(output);
             Y_CHECK( limit_of<T>::maximum == inp.read_upack<T>() );
         }
 
-
+        std::cerr << "..." << std::endl;
+        for(size_t iter=0;iter<1024*1024;++iter)
+        {
+            count = 0;
+            output.clear();
+            ios::osstream fp(output);
+            const T tmp = alea.full<T>();
+            fp.emit_upack<T>( tmp, &count );
+            ios::imstream inp(output);
+            Y_ASSERT( tmp == inp.read_upack<T>() );
+        }
 
 
 
