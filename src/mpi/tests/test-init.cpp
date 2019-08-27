@@ -45,6 +45,14 @@ Y_UTEST(init)
     MPI.Bcast(value,0);
     MPI.print(stderr, "final   value=%d\n", value);
 
+    {
+        const double value = alea.to<double>();
+        double       sum   = MPI.Reduce(value, MPI_SUM, 0);
+        MPI.print(stderr, "    reduce sum: %g -> %g\n", value, sum);
+        sum   = MPI.Allreduce(value, MPI_SUM);
+        MPI.print(stderr, "all reduce sum: %g -> %g\n", value, sum);
+    }
+    MPI.print(stderr,"I/O time: %gms\n", MPI.getCommMilliseconds() );
 
     MPI.print(stderr,"Checking Data Type\n");
     (void) MPI.get_data_type_for<char>();

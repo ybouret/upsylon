@@ -1,4 +1,3 @@
-
 #include "y/oxide/field/info.hpp"
 
 namespace upsylon
@@ -74,6 +73,9 @@ privateSize(0)
             proc(fp,(void*)getObjectAddr(index));
         }
 
+       
+        
+        
         void FieldInfo:: load(ios::istream &fp, LoadProc proc)
         {
             assert(proc);
@@ -81,6 +83,18 @@ privateSize(0)
             {
                 load(fp,index,proc);
             }
+        }
+
+        void FieldInfo:: load(const memory::ro_buffer &buff, const Coord1D index, LoadProc proc)
+        {
+            ios::imstream fp(buff);
+            load(fp,index,proc);
+        }
+        
+        void FieldInfo:: load(const memory::ro_buffer &buff, LoadProc proc)
+        {
+            ios::imstream fp(buff);
+            load(fp,proc);
         }
 
 

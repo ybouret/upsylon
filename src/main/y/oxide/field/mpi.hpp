@@ -14,6 +14,7 @@ namespace upsylon
         struct Comm
         {
             static const int Tag = 0x07; //!< default tag
+            
             //! transfert mode
             enum Mode
             {
@@ -36,6 +37,7 @@ namespace upsylon
                     }/* FALLTHRU */
                     case Static:
                         MPI.Send( static_cast<const IO::Array &>(block),target,Tag);
+                        break;
                 }
             }
 
@@ -50,11 +52,12 @@ namespace upsylon
                 {
                     case Packed:
                     {
-                        const uint32_t sz = MPI.Recv<uint32_t>(source,Tag);
-                        block.setFast(sz);
+                        const uint32_t recv32 = MPI.Recv<uint32_t>(source,Tag);
+                        block.setFast(recv32);
                     }/* FALLTHRU */
                     case Static:
                         MPI.Recv( static_cast<IO::Array &>(block), source, Tag);
+                        break;
                 }
             }
 
@@ -72,10 +75,14 @@ namespace upsylon
                 {
                     case Packed:
                     {
+                        const uint32_t send32 = mpi::size_to_uint32(sendBlock.size());
+                        const uint32_t recv32 = MPI.Sendrecv<uint32_t>(send32, target, Tag, source, Tag);
+                        recvBlock.setFast(recv32);
                     } /* FALLTHRU */
                     case Static:
                         MPI.SendRecv(sendBlock, target, Tag,
                                      recvBlock, source, Tag);
+                        break;
                 }
 
             }

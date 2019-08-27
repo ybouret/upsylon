@@ -279,7 +279,62 @@ namespace upsylon
             }
         }
 
-
+        //! Reduce operation
+        inline void Reduce(const void  * send_data,
+                           void        * recv_data,
+                           const size_t  count,
+                           MPI_Datatype datatype,
+                           MPI_Op       op,
+                           const int    root )
+        {
+            assert(!(0==send_data&&count>0));
+            const uint64_t mark = rt_clock::ticks();
+            Y_MPI_CHECK(MPI_Reduce(send_data, recv_data,count,datatype, op, root, MPI_COMM_WORLD));
+            comTicks += rt_clock::ticks() - mark;
+        }
+        
+        //! Reduce wrapper
+        template <typename T>
+        inline T Reduce(const T &x, MPI_Op op, const int root)
+        {
+            static const MPI_Datatype _ = get_data_type_for<T>();
+            T ans(0);
+            Reduce( &x, &ans, 1, _, op, root);
+            return ans;
+        }
+        
+        //! Allreduce operation
+        inline void Allreduce(const void  * send_data,
+                              void        * recv_data,
+                              const size_t  count,
+                              MPI_Datatype datatype,
+                              MPI_Op       op)
+        {
+            assert(!(0==send_data&&count>0));
+            const uint64_t mark = rt_clock::ticks();
+            Y_MPI_CHECK(MPI_Allreduce(send_data, recv_data,count,datatype, op, MPI_COMM_WORLD));
+            comTicks += rt_clock::ticks() - mark;
+        }
+        
+        //! Allreduce wrapper
+        template <typename T>
+        inline T Allreduce(const T &x, MPI_Op op)
+        {
+            static const MPI_Datatype _ = get_data_type_for<T>();
+            T ans(0);
+            Allreduce( &x, &ans, 1, _, op);
+            return ans;
+        }
+        
+        //! helper to get commTime in ms
+        double getCommMilliseconds()
+        {
+            rt_clock     clk;
+            const double thisTime = clk( comTicks );
+            const double maxiTime = Allreduce(thisTime,MPI_MAX);
+            return maxiTime * 1000.0;
+        }
+        
         //______________________________________________________________________
         //
         // I/O helpers

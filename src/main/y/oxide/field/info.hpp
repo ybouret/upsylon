@@ -5,7 +5,7 @@
 
 #include "y/oxide/layout.hpp"
 #include "y/string.hpp"
-#include "y/ios/istream.hpp"
+#include "y/ios/imstream.hpp"
 
 namespace upsylon
 {
@@ -64,9 +64,17 @@ namespace upsylon
                 }
             }
 
+            //! load from read-only buffer
+            void load(const memory::ro_buffer &buff, const Coord1D index, LoadProc proc);
+            void load(const memory::ro_buffer &buff, LoadProc proc);
 
-
-
+            //! reload objects from a sequence of indices
+            template <typename SEQUENCE> inline
+            void load_only(const SEQUENCE &indices, const memory::ro_buffer &buff, LoadProc proc )
+            {
+                ios::imstream fp(buff);
+                load_only<SEQUENCE>(indices,fp,proc);
+            }
 
 
         protected:

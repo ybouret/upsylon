@@ -68,15 +68,44 @@ Y_UTEST(oxide)
         }
         else
         {
+            F.ld(0);
             Comm::Recv(MPI,recv_block,0,Comm::Packed);
             Comm::Recv(MPI,recv_block,0,Comm::Static);
-            ios::imstream fp(recv_block);
-            F.load_only(indices,fp,IO::LoadBlock<double>);
+            F.load_only(indices,recv_block,IO::LoadBlock<double>);
         }
+        
+        MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
+        
+        MPI.print0(stderr, "Send/Recv Init\n" );
+        send_block.free();
+        recv_block.free();
+
+        fill(F);
+        F.save_only(indices,send_block, IO::SaveBlock<double> );
         MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
 
+        MPI.print0(stderr, "Send/Recv Exec\n" );
+        if(MPI.isHead)
+        {
+            for(int r=1;r<MPI.size;++r)
+            {
+                Comm::Sendrecv(MPI, send_block, r, recv_block, r, Comm::Packed);
+                Comm::Sendrecv(MPI, send_block, r, recv_block, r, Comm::Static);
+            }
+        }
+        else
+        {
+            Comm::Sendrecv(MPI, send_block, 0, recv_block, 0, Comm::Packed);
+            Comm::Sendrecv(MPI, send_block, 0, recv_block, 0, Comm::Static);
+        }
+        MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
+        F.load_only(indices,recv_block,IO::LoadBlock<double>);
     }
     
+    
+    rt_clock clk;
+    const double ellapsed = clk( MPI.comTicks );
+    MPI.print(stderr, "Ellaped: %gms\n", ellapsed*1000.0);
     
 }
 Y_UTEST_DONE()

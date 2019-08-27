@@ -86,10 +86,9 @@ namespace
             F3.save_only(i3,io,save);
             if(load)
             {
-                ios::imstream inp( io );
-                F1.load_only(i1,inp,load);
-                F2.load_only(i2,inp,load);
-                F3.load_only(i3,inp,load);
+                F1.load_only(i1,io,load);
+                F2.load_only(i2,io,load);
+                F3.load_only(i3,io,load);
                 std::cerr << "\treloaded..." << std::endl;
             }
 
