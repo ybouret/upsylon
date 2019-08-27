@@ -227,6 +227,17 @@ namespace upsylon
                      &y,1,_,source, recvtag);
             return y;
         }
+        
+        //! arrays send/recv
+        template <typename T, typename U>
+        inline void SendRecv(const array<T> &x, const int target, const int sendtag,
+                             array<U>       &y, const int source, const int recvtag)
+        {
+            static const MPI_Datatype _t = get_data_type_for<T>();
+            static const MPI_Datatype _u = get_data_type_for<U>();
+            Sendrecv(*x, x.size(), _t, target, sendtag,
+                     *y, y.size(), _u, source, recvtag);
+        }
 
         //______________________________________________________________________
         //

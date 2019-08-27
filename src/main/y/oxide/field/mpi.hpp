@@ -74,8 +74,8 @@ namespace upsylon
                     {
                     } /* FALLTHRU */
                     case Static:
-                        MPI.Sendrecv(*sendBlock, sendBlock.size(), MPI_BYTE, target, Tag,
-                                     *recvBlock, recvBlock.size(), MPI_BYTE, source, Tag);
+                        MPI.SendRecv(sendBlock, target, Tag,
+                                     recvBlock, source, Tag);
                 }
 
             }
