@@ -12,7 +12,7 @@ namespace upsylon
 {
     namespace Oxide
     {
-        //! I/O on objects
+        //! I/O on objects in fields
         struct IO
         {
             //! assuming integral type

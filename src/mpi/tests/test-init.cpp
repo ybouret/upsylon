@@ -24,6 +24,22 @@ Y_UTEST(init)
         MPI.Send(MPI.nodeName,0,mpi::io_tag);
     }
 
+    if(MPI.isHead)
+    {
+        int self = MPI.rank;
+        for(int r=1;r<MPI.size;++r)
+        {
+            const int peer = MPI.Sendrecv(self, r, mpi::io_tag, r, mpi::io_tag);
+            MPI.print0(stderr,"sendrecv: %d\n",peer);
+        }
+    }
+    else
+    {
+        const int self = MPI.rank;
+        const int host = MPI.Sendrecv(self, 0, mpi::io_tag, 0, mpi::io_tag);
+        Y_ASSERT(host==0);
+    }
+
     int value = int(alea.leq(100));
     MPI.print(stderr, "initial value=%d\n", value);
     MPI.Bcast(value,0);

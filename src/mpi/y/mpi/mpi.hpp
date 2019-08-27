@@ -37,11 +37,8 @@ namespace upsylon
             explicit exception( int err, const char *fmt,... ) throw(); //!< initialize
             exception( const exception & ) throw();                     //!< copy
             virtual ~exception() throw();                               //!< destructor
-
-            virtual const char *what() const throw(); //!< Uses MPI_Error_string(...) to format the error code.
-
-            const int code; //!< MPI error
-
+            virtual const char *what() const throw();                   //!< Uses MPI_Error_string(...) to format the error code.
+            const int code;                                             //!< MPI error
         private:
             Y_DISABLE_ASSIGN(exception);
             static const size_t elen = MPI_MAX_ERROR_STRING + 1;
@@ -56,16 +53,22 @@ namespace upsylon
         class data_type : public type_spec
         {
         public:
-            typedef const MPI_Datatype                      value_type; //!< value type
-            typedef type_traits<value_type>::parameter_type param_type; //!< for passing parameters
-            typedef set<string,data_type>                   db;         //!< database
+            //------------------------------------------------------------------
+            // types
+            //------------------------------------------------------------------
+            typedef const MPI_Datatype                      value_type;  //!< value type
+            typedef type_traits<value_type>::parameter_type param_type;  //!< for passing parameters
+            typedef set<string,data_type>                   db;          //!< database
 
-            value_type value; //!< wrapped value
-
+            //------------------------------------------------------------------
+            // methods
+            //------------------------------------------------------------------
             explicit data_type( const std::type_info &t, param_type v ); //!< initialize
-            virtual ~data_type() throw();      //!< desctructor
-            data_type(const data_type &other); //!< copy
-            
+            virtual ~data_type() throw();                                //!< desctructor
+            data_type(const data_type &other);                           //!< copy
+
+            value_type value;                                            //!< wrapped value
+
         private:
             Y_DISABLE_ASSIGN(data_type);
         };
@@ -108,7 +111,7 @@ namespace upsylon
 
         //______________________________________________________________________
         //
-        // point to point
+        // point to point communication
         //______________________________________________________________________
 
         //! MPI_Send
@@ -138,7 +141,7 @@ namespace upsylon
         void Send( const array<T> &arr, const int target, const int tag )
         {
             static const MPI_Datatype _ = get_data_type_for<T>();
-            const size_t n = arr.size();
+            const  size_t             n = arr.size();
             if(n>0)
             {
                 Send(*arr,n,_,target,tag );
@@ -154,7 +157,7 @@ namespace upsylon
         {
             assert(!(0==buffer&&count>0));
             const uint64_t mark = rt_clock::ticks();
-            MPI_Status status;
+            MPI_Status     status;
             Y_MPI_CHECK(MPI_Recv(buffer, int(count), type, source, tag, MPI_COMM_WORLD, &status) );
             comTicks += rt_clock::ticks() - mark;
         }
@@ -174,7 +177,7 @@ namespace upsylon
         void Recv( array<T> &arr, const int source, const int tag )
         {
             static const MPI_Datatype _ = get_data_type_for<T>();
-            const size_t n = arr.size();
+            const size_t              n = arr.size();
             if(n>0)
             {
                 Recv(*arr,n,_,source,tag);
@@ -258,7 +261,7 @@ namespace upsylon
                           const int root)
         {
             static const MPI_Datatype _ = get_data_type_for<T>();
-            const size_t n = arr.size();
+            const size_t              n = arr.size();
             if(n>0)
             {
                 Bcast(*arr,n,_,root);
@@ -329,7 +332,6 @@ namespace upsylon
         {
             string ans(sz,as_capacity,true);
             Recv( *ans, sz, MPI_CHAR, source, tag );
-            //ans.force(sz);
             return ans;
         }
         else
