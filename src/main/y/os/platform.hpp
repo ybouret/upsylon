@@ -43,16 +43,6 @@ namespace upsylon
     typedef type2type<size_t>   as_capacity_t; //!< for constructors
     extern const as_capacity_t  as_capacity;   //!< for constructors
 
-    
-
-    //! destructor disambiguation
-    template <typename T>
-    inline void destruct( T *item ) throw()
-    {
-        assert(item);
-        item->~T();
-    }
-
     //! for verbose assert
     inline bool die( const char *) throw() { return false; }
 

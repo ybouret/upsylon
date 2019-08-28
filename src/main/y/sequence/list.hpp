@@ -8,6 +8,7 @@
 #include "y/iterate/linked.hpp"
 #include <iostream>
 #include "y/sort/merge.hpp"
+#include "y/type/self-destruct.hpp"
 
 namespace upsylon
 {
@@ -115,23 +116,19 @@ namespace upsylon
         inline virtual void pop_back() throw()
         {
             assert(nodes.size>0);
-            node_type *node = nodes.pop_back();
-            destruct(node);
-            cache.store(node);
+           __kill( cache.store( nodes.pop_back() )->data );
         }
         //! sequence interface : pop_front()
         inline virtual void pop_front() throw()
         {
             assert(nodes.size>0);
-            node_type *node = nodes.pop_front();
-            destruct(node);
-            cache.store(node);
+            __kill( cache.store(nodes.pop_front())->data );
         }
 
         //! adjust size and pad if needed
         virtual void adjust( const size_t n, param_type pad )
         {
-            while(nodes.size>n) destruct( cache.store( nodes.pop_back() ) );
+            while(nodes.size>n) pop_back();
             while(nodes.size<n) nodes.push_back( query(pad) );
         }
 
@@ -217,7 +214,7 @@ namespace upsylon
         //! delete cache
         inline void trim() throw()
         {
-            while( cache.size )
+            while(cache.size>0)
             {
                 node_type *node = cache.query();
                 object::release1(node);
@@ -227,6 +224,12 @@ namespace upsylon
     private:
         nodes_list nodes;
         nodes_pool cache;
+
+        inline void __kill( type &data ) throw()
+        {
+            destruct( (mutable_type *) &data );
+        }
+
         inline node_type *query(param_type args)
         {
             node_type *node = (cache.size>0) ? cache.query() : object::acquire1<node_type>();
@@ -251,21 +254,23 @@ namespace upsylon
         {
             while( nodes.size )
             {
-                node_type *node = nodes.pop_back();
-                destruct(node);
-                cache.store(node);
+                self_destruct( cache.store( nodes.pop_back() )->data );
             }
         }
 
         inline void __release() throw()
         {
-            while( nodes.size )
+            std::cerr << "..release active" << std::endl;
+            while(nodes.size>0)
             {
+
                 node_type *node = nodes.pop_back();
                 destruct(node);
                 object::release1(node);
             }
+            std::cerr << "..release cache" << std::endl;
             trim();
+            std::cerr << "..done" << std::endl;
         }
 
         template <typename FUNC> static inline

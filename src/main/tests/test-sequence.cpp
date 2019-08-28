@@ -15,18 +15,23 @@ namespace
     {
         std::cerr << "scanning #" << seq.size() << std::endl;
         std::cerr << "forward:";
+        size_t j = 0;
         for( typename SEQ::iterator i=seq.begin(); i != seq.end(); ++i )
         {
-            std::cerr << *i << "/";
+            ++j;
+            std::cerr << '[' << j << ']' << '=' << *i << '/';
         }
         std::cerr << "." << std::endl;
 
         std::cerr << "reverse:";
+        j = seq.size();
         for( typename SEQ::reverse_iterator i=seq.rbegin(); i != seq.rend(); ++i )
         {
-            std::cerr << *i << "/";
+            std::cerr << '[' << j << ']' << '=' << *i << '/';
+            --j;
         }
         std::cerr << "." << std::endl;
+        std::cerr << "test access..." << std::endl;
         for(size_t i=seq.size();i>0;--i)
         {
             (void) seq[i];
@@ -37,18 +42,27 @@ namespace
     static inline void scan_const( const SEQ &seq )
     {
         std::cerr << "scanning #" << seq.size() << "/const" << std::endl;
+        size_t j=0;
         for( typename SEQ::const_iterator i=seq.begin(); i != seq.end(); ++i )
         {
-            std::cerr << *i << "/";
+            ++j;
+            std::cerr << '[' << j << ']' << '=' << *i << '/';
         }
         std::cerr << "." << std::endl;
 
         std::cerr << "reverse:";
+        j = seq.size();
         for( typename SEQ::const_reverse_iterator i=seq.rbegin(); i != seq.rend(); ++i )
         {
-            std::cerr << *i << "/";
+            std::cerr << '[' << j << ']' << '=' << *i << '/';
+            --j;
         }
         std::cerr << "." << std::endl;
+        std::cerr << "test access..." << std::endl;
+        for(size_t i=seq.size();i>0;--i)
+        {
+            (void) seq[i];
+        }
     }
 
     template <typename SEQ>
@@ -129,9 +143,11 @@ namespace
 }
 
 
+#include "y/os/confirm.hpp"
 
 Y_UTEST(sequence)
 {
+
     std::cerr << "-- next_capacity" << std::endl;
     do_capa(0);
     for(size_t iter=0;iter<10;++iter)
@@ -141,6 +157,8 @@ Y_UTEST(sequence)
 
     do_test< list<uint16_t> >();
     do_test< list<string> >();
+
+    return 0;
 
     {
         vector<uint16_t,memory::global> cvg(1,as_capacity); std::cerr << "cvg.capacity=" << cvg.capacity() << std::endl;

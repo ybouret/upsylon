@@ -5,6 +5,7 @@
 #include "y/container/sequence.hpp"
 #include "y/sequence/array.hpp"
 #include "y/iterate/linear.hpp"
+#include "y/type/self-destruct.hpp"
 #include <cstring>
 
 namespace upsylon
@@ -291,14 +292,14 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
         inline virtual void pop_back() throw()
         {
             assert(this->size_>0);
-            destruct( & this->item_[this->size_--] );
+            self_destruct( this->item_[this->size_--] );
         }
 
         //! sequence interface
         inline virtual void pop_front() throw()
         {
             assert(this->size_>0);
-            destruct(this->addr_);
+            self_destruct( *(this->addr_) );
             memmove( static_cast<void *>(this->addr_), static_cast<const void *>(this->addr_+1), --(this->size_) * sizeof(T) );
         }
 
@@ -356,7 +357,7 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
         {
             while(this->size_>0)
             {
-                destruct(&addr_[--(this->size_)]);
+                self_destruct(addr_[--(this->size_)]);
             }
         }
 
