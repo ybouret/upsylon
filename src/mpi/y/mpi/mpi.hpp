@@ -323,11 +323,23 @@ namespace upsylon
                              const int target, const int sendtag,
                              const int source, const int recvtag);
 
-
-    private:
-        data_type::db   types;
+#if 0
+        //______________________________________________________________________
+        //
+        // higher level
+        //______________________________________________________________________
+        template <typename ITERATOR> inline
+        void SendRange( ITERATOR i, size_t n, const int target, const int tag)
+        {
+            SendSize(n,target,tag);
+        }
+#endif
+        
         ios::upack_size send_pack;
         ios::upack_size recv_pack;
+    private:
+        data_type::db   types;
+
 
         explicit mpi();
         virtual ~mpi() throw();
@@ -350,7 +362,6 @@ namespace upsylon
      - MULTIPLE
      */
 #define Y_MPI(LEVEL) mpi & MPI = mpi::init( &argc, &argv, MPI_THREAD_##LEVEL )
-
 
     //! send a string: size+data
     template <> inline
@@ -380,6 +391,7 @@ namespace upsylon
             return string();
         }
     }
+
 
 }
 

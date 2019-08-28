@@ -144,9 +144,9 @@ namespace upsylon
     comTicks(0),
     processorName(),
     nodeName(),
-    types(32,as_capacity),
     send_pack(),
-    recv_pack()
+    recv_pack(),
+    types(32,as_capacity)
     {
         //______________________________________________________________________
         //
@@ -465,6 +465,7 @@ namespace upsylon
 }
 
 
+#include "y/code/utils.hpp"
 
 namespace upsylon
 {

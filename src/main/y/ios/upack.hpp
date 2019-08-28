@@ -80,7 +80,7 @@ namespace upsylon
             //! reset clean, ready data, to be filled by I/O (a.k.a MPI...)
             inline void reset() throw() { clear(requested,data,requested); }
 
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(upack);
             char data[ workspace ];
