@@ -83,6 +83,7 @@ namespace
                 std::cerr << "seq.new_size=" << new_size << std::endl;
                 typename SEQ::const_type pad = support::get<typename SEQ::mutable_type>();
                 seq.adjust(new_size,pad);
+                Y_ASSERT(seq.size()==new_size);
             }
             scan(seq);
             scan_const(seq);
