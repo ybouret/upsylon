@@ -265,6 +265,15 @@ namespace upsylon
             Bcast(&x,1,_,root);
         }
 
+        //! array of integral types
+        template <typename T>
+        inline void Bcast(T           *arr,
+                          const size_t num,
+                          const int    root)
+        {
+            static const MPI_Datatype _ = get_data_type_for<T>();
+            Bcast(arr,num,_,root);
+        }
 
         //! array of integral broadcast
         template <typename T>
@@ -348,7 +357,7 @@ namespace upsylon
 
         //! check that the size fits in a 32 bit value (should...)
         static  uint32_t size_to_uint32( const size_t sz );
-
+        
     private:
         data_type::db types;
 
@@ -373,8 +382,6 @@ namespace upsylon
      - MULTIPLE
      */
 #define Y_MPI(LEVEL) mpi & MPI = mpi::init( &argc, &argv, MPI_THREAD_##LEVEL )
-
-
 
 
     //! send a string: size+data

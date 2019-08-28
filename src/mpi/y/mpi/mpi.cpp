@@ -371,5 +371,8 @@ namespace upsylon
         if(szx<sz32) throw upsylon::exception("mpi::size_to_uint32 overflow!");
         return sz32;
     }
+
 }
+
+
 

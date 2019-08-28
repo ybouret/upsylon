@@ -52,8 +52,8 @@ namespace
             F3.save(io,save);
 
             std::cerr << "#io=" << io.size() << "/" << io.capacity() << std::endl;
-            io.encodePrologue();
-            Y_ASSERT(io.size()==io.decodePrologue());
+            io.encodeHeader();
+            Y_ASSERT(io.size()==io.header());
             
             if(load)
             {
@@ -107,7 +107,7 @@ Y_UTEST(oxide_io)
     run_with<double>( IO::SaveBlock<double>       , IO::LoadBlock<double>       );
     run_with<float>(  IO::SaveIntegral<float>     , IO::LoadIntegral<float>     );
     run_with<string>( IO::SaveSerializable<string>, IO::LoadSerialized<string>  );
-    std::cerr << "IO::Block::Prologue=" << IO::Block::Prologue << std::endl;
-    std::cerr << "IO::Block::Reserved=" << IO::Block::Reserved << std::endl;
+
+    std::cerr << "IO::Header::requested=" << IO::Header::requested << std::endl;
 }
 Y_UTEST_DONE()

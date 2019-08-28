@@ -39,7 +39,7 @@ namespace
         }
 
         std::cerr << "sizeof(upack)  =" << sizeof(ios::upack<T>)    << std::endl;
-        std::cerr << "upack.type_size=" << ios::upack<T>::type_size << std::endl;
+        std::cerr << "upack.type_size=" << ios::upack<T>::word_size << std::endl;
         std::cerr << "upack.requested=" << ios::upack<T>::requested << std::endl;
         std::cerr << "upack.workspace=" << ios::upack<T>::workspace << std::endl;
 
@@ -55,9 +55,10 @@ namespace
             fp.emit_upack<T>( tmp, &count );
             ios::imstream inp(output);
             Y_ASSERT( tmp == inp.read_upack<T>() );
-            pak(tmp);
+            pak.encode(tmp);
             Y_ASSERT(pak.size==count);
-            Y_ASSERT( 0 == memcmp( *output, *pak, pak.size ) );
+            Y_ASSERT( 0 == memcmp( *output, pak.ro(), pak.size ) );
+            assert( tmp == pak.template decode<T>() );
         }
 
 
@@ -71,6 +72,17 @@ Y_UTEST(upack)
     do_upack<uint16_t>();
     do_upack<uint32_t>();
     do_upack<uint64_t>();
+
+    std::cerr << "encoding/decoding sizes" << std::endl;
+
+    ios::upack_size szpak;
+
+    for(size_t iter=100000;iter>0;--iter)
+    {
+        const size_t sz = alea.partial<size_t>( alea.leq(8*sizeof(size_t)) );
+        szpak.encode(sz);
+        Y_ASSERT(szpak()==sz);
+    }
 
 }
 Y_UTEST_DONE()

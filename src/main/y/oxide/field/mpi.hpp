@@ -13,8 +13,9 @@ namespace upsylon
         //! MPI related routines
         struct Comm
         {
-            static const int Tag = 0x07; //!< default tag
-            
+            static const int    Tag        = 0x07; //!< default tag
+            static const size_t HeaderSize = IO::Header::requested; //!< byte for Headers I/O
+
             //! transfert mode
             enum Mode
             {
@@ -24,22 +25,23 @@ namespace upsylon
 
             //! send encode size of block
             static inline
-            void SendPrologue(mpi             &MPI,
-                              const IO::Block &block,
-                              const int        target)
+            void SendHeader(mpi             &MPI,
+                            const IO::Block &block,
+                            const int        target)
             {
-                block.encodePrologue();
-                MPI.Send(block.prologue,IO::Block::Prologue, MPI_BYTE, target,Tag);
+                const IO::Header & header = block.encodeHeader();
+                MPI.Send(header.ro(),HeaderSize, MPI_BYTE, target,Tag);
             }
 
             //! recv encoded size of block
             static inline
-            void RecvPrologue(mpi       &MPI,
-                              IO::Block &block,
-                              const int  source)
+            void RecvHeader(mpi       &MPI,
+                            IO::Block &block,
+                            const int  source)
             {
-                MPI.Recv(block.prologue,IO::Block::Prologue,MPI_BYTE,source,Tag);
-                block.setFast( block.decodePrologue() );
+                IO::Header & header = block.header.get();
+                MPI.Recv(header.rw(),HeaderSize,MPI_BYTE,source,Tag);
+                block.decodeHeader();
             }
 
             //! send a block
@@ -51,8 +53,8 @@ namespace upsylon
             {
                 switch(mode)
                 {
-                    case Packed: SendPrologue(MPI,block,target);                              /* FALLTHRU */
-                    case Static: MPI.Send( block.interface(),target,Tag); break;
+                    case Packed: SendHeader(MPI,block,target);                              /* FALLTHRU */
+                    case Static: MPI.Send( block._(),target,Tag); break;
                 }
             }
 
@@ -65,28 +67,29 @@ namespace upsylon
             {
                 switch(mode)
                 {
-                    case Packed: RecvPrologue(MPI,block,source);                          /* FALLTHRU */
-                    case Static: MPI.Recv( block.interface(), source, Tag); break;
+                    case Packed: RecvHeader(MPI,block,source);                          /* FALLTHRU */
+                    case Static: MPI.Recv( block._(), source, Tag); break;
                 }
             }
 
             //! exchange and adjust blocks
             static inline
-            void SendrecvPrologue(mpi             & MPI,
-                                  const IO::Block & sendBlock,
-                                  const int         target,
-                                  IO::Block       & recvBlock,
-                                  const int         source)
+            void SendRecvHeaders(mpi             & MPI,
+                                 const IO::Block & sendBlock,
+                                 const int         target,
+                                 IO::Block       & recvBlock,
+                                 const int         source)
             {
-                sendBlock.encodePrologue();
-                MPI.Sendrecv(sendBlock.prologue, IO::Block::Prologue, MPI_BYTE, target, Tag,
-                             recvBlock.prologue, IO::Block::Prologue, MPI_BYTE, source, Tag);
-                recvBlock.setFast( recvBlock.decodePrologue() );
+                const IO::Header & sendHeader = sendBlock.encodeHeader();
+                IO::Header       & recvHeader = recvBlock.header.get();
+                MPI.Sendrecv(sendHeader.ro(),HeaderSize, MPI_BYTE, target, Tag,
+                             recvHeader.rw(), HeaderSize, MPI_BYTE, source, Tag);
+                recvBlock.decodeHeader();
             }
 
             //! sendrecv
             static inline
-            void Sendrecv(mpi             & MPI,
+            void SendRecv(mpi             & MPI,
                           const IO::Block & sendBlock,
                           const int         target,
                           IO::Block       & recvBlock,
@@ -95,7 +98,7 @@ namespace upsylon
             {
                 switch(mode)
                 {
-                    case Packed: SendrecvPrologue(MPI,sendBlock,target,recvBlock,source);      /* FALLTHRU */
+                    case Packed: SendRecvHeaders(MPI,sendBlock,target,recvBlock,source);      /* FALLTHRU */
                     case Static: MPI.SendRecv(sendBlock, target, Tag, recvBlock, source, Tag); break;
                 }
             }

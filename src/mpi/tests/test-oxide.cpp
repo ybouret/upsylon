@@ -24,7 +24,9 @@ Y_UTEST(oxide)
     Y_MPI(SINGLE);
     IO::Block send_block(1024);
     IO::Block recv_block(1024);
+    vector<Coord1D> indices;
 
+    MPI.print0(stderr,"-------- 1D --------\n");
     {
         MPI.print0(stderr, "Setup\n" );
         Coord1D  lo = CoordOps::Integer<Coord1D>(20,alea);
@@ -40,7 +42,6 @@ Y_UTEST(oxide)
         const Layout1D s(lo,up);
         MPI.print(stderr, "sub:  lo=%ld, hi=%ld\n", long(s.lower), long(s.upper) );
 
-        vector<Coord1D> indices;
         L.collect(indices,s);
 
 
@@ -92,20 +93,20 @@ Y_UTEST(oxide)
             {
                 for(int r=1;r<MPI.size;++r)
                 {
-                    Comm::Sendrecv(MPI, send_block, r, recv_block, r, Comm::Packed);
-                    Comm::Sendrecv(MPI, send_block, r, recv_block, r, Comm::Static);
+                    Comm::SendRecv(MPI, send_block, r, recv_block, r, Comm::Packed);
+                    Comm::SendRecv(MPI, send_block, r, recv_block, r, Comm::Static);
                 }
             }
             else
             {
-                Comm::Sendrecv(MPI, send_block, 0, recv_block, 0, Comm::Packed);
-                Comm::Sendrecv(MPI, send_block, 0, recv_block, 0, Comm::Static);
+                Comm::SendRecv(MPI, send_block, 0, recv_block, 0, Comm::Packed);
+                Comm::SendRecv(MPI, send_block, 0, recv_block, 0, Comm::Static);
             }
         }
         else
         {
-            Comm::Sendrecv(MPI, send_block, 0, recv_block, 0, Comm::Packed);
-            Comm::Sendrecv(MPI, send_block, 0, recv_block, 0, Comm::Static);
+            Comm::SendRecv(MPI, send_block, 0, recv_block, 0, Comm::Packed);
+            Comm::SendRecv(MPI, send_block, 0, recv_block, 0, Comm::Static);
         }
         MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
         F.load_only(indices,recv_block,IO::LoadBlock<double>);
@@ -115,7 +116,12 @@ Y_UTEST(oxide)
     rt_clock clk;
     const double ellapsed = clk( MPI.comTicks );
     MPI.print(stderr, "Ellaped: %gms\n", ellapsed*1000.0);
-    
+
+
+    MPI.print0(stderr,"-------- 2D --------\n");
+    {
+        
+    }
 }
 Y_UTEST_DONE()
 

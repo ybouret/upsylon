@@ -126,7 +126,6 @@ namespace upsylon
                         const uint8_t B = uint8_t(x&T(0xff));
                         write(B);
                         __shr8<T>(x, int2type< (sizeof(T)>1) >() );
-                        //x >>= 8;
                         if(shift) ++(*shift);
                     }
                     assert(0==x);
