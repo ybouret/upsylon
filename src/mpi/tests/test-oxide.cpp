@@ -113,9 +113,8 @@ Y_UTEST(oxide)
     }
     
     
-    rt_clock clk;
-    const double ellapsed = clk( MPI.comTicks );
-    MPI.print(stderr, "Ellaped: %gms\n", ellapsed*1000.0);
+
+    MPI.print(stderr, "Ellaped: %gms\n", MPI.getCommMilliseconds() );
 
 
     MPI.print0(stderr,"-------- 2D --------\n");

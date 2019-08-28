@@ -79,10 +79,6 @@ namespace upsylon
             class Block : public Bytes, public ios::ostream
             {
             public:
-                Array       & _() throw();         //!< for low level MPI ops
-                const Array & _() const throw();   //!< for low level MPI ops
-
-
                 explicit Block( const size_t n); //!< prepare with n bytes as capacity
                 virtual ~Block() throw();        //!< destruct
 
@@ -91,10 +87,6 @@ namespace upsylon
                 Block   &    setFast(const size_t n); //!< adjust size, padded with zero
                 Block   &    setZero(const size_t n); //!< adjust size, all zero
 
-                mutable Header header;                //!< header to transfer sizes info
-
-                const Header & encodeHeader() const throw(); //!< header(size())
-                void           decodeHeader();               //!< setFast( header() )
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Block);

@@ -4,11 +4,10 @@
 #define Y_MPI_INCLUDED 1
 
 #include "y/exception.hpp"
-#include "y/os/rt-clock.hpp"
 #include "y/type/spec.hpp"
 #include "y/associative/set.hpp"
 #include "y/sequence/array.hpp"
-#include "y/type/ints-chkbnd.hpp"
+#include "y/ios/upack.hpp"
 
 #include <cstdio>
 
@@ -20,6 +19,7 @@
 namespace upsylon
 {
 
+
     //! check a MPI function retuns MPI_SUCCESS
 #define Y_MPI_CHECK(CALL) do { const int err = CALL; if(MPI_SUCCESS!=err) throw mpi::exception(err,#CALL); } while(false)
 
@@ -27,6 +27,8 @@ namespace upsylon
     class mpi : public singleton<mpi>
     {
     public:
+        static const int io_tag = 7; //!< default channel
+
         //______________________________________________________________________
         //
         //! dedicated error handling
@@ -73,6 +75,7 @@ namespace upsylon
             Y_DISABLE_ASSIGN(data_type);
         };
 
+
         //______________________________________________________________________
         //
         // data and initialization
@@ -106,26 +109,18 @@ namespace upsylon
             return get_data_type( typeid(T) );
         }
 
-        //! internal default channel
-        static const int io_tag = 7;
-
+        
         //______________________________________________________________________
         //
         // point to point communication
         //______________________________________________________________________
 
         //! MPI_Send
-        inline void Send(const void        *buffer,
-                         const size_t       count,
-                         const MPI_Datatype type,
-                         const int          target,
-                         const int          tag)
-        {
-            assert(!(0==buffer&&count>0));
-            const uint64_t mark = rt_clock::ticks();
-            Y_MPI_CHECK(MPI_Send((void*)buffer, int(count), type, target, tag, MPI_COMM_WORLD) );
-            comTicks += rt_clock::ticks() - mark;
-        }
+        void Send(const void        *buffer,
+                  const size_t       count,
+                  const MPI_Datatype type,
+                  const int          target,
+                  const int          tag);
 
 
         //! Send integral type, to be specialized
@@ -136,9 +131,9 @@ namespace upsylon
             Send( &x, 1, _, target, tag);
         }
 
-        //! Send array of integral types
+        //! Send array of integral types, known size
         template <typename T> inline
-        void Send( const array<T> &arr, const int target, const int tag )
+        void SendAll( const array<T> &arr, const int target, const int tag )
         {
             static const MPI_Datatype _ = get_data_type_for<T>();
             const  size_t             n = arr.size();
@@ -149,18 +144,11 @@ namespace upsylon
         }
 
         //! MPI_Recv
-        inline void Recv(void              *buffer,
-                         const size_t       count,
-                         const MPI_Datatype type,
-                         const int          source,
-                         const int          tag)
-        {
-            assert(!(0==buffer&&count>0));
-            const uint64_t mark = rt_clock::ticks();
-            MPI_Status     status;
-            Y_MPI_CHECK(MPI_Recv(buffer, int(count), type, source, tag, MPI_COMM_WORLD, &status) );
-            comTicks += rt_clock::ticks() - mark;
-        }
+        void Recv(void              *buffer,
+                  const size_t       count,
+                  const MPI_Datatype type,
+                  const int          source,
+                  const int          tag);
 
         //! Recv integral type, to be specialized
         template <typename T>
@@ -174,7 +162,7 @@ namespace upsylon
 
         //! Recv array of integral types
         template <typename T> inline
-        void Recv( array<T> &arr, const int source, const int tag )
+        void RecvAll( array<T> &arr, const int source, const int tag )
         {
             static const MPI_Datatype _ = get_data_type_for<T>();
             const size_t              n = arr.size();
@@ -184,29 +172,21 @@ namespace upsylon
             }
         }
 
-        //! Sendrecv
-        inline void Sendrecv(const void        *sendbuf,
-                             const size_t       sendcount,
-                             const MPI_Datatype sendtype,
-                             const int          target,
-                             const int          sendtag,
-                             void              *recvbuf,
-                             const size_t       recvcount,
-                             const MPI_Datatype recvtype,
-                             const int          source,
-                             const int          recvtag)
-        {
-            const uint64_t mark = rt_clock::ticks();
-            MPI_Status status;
-            Y_MPI_CHECK(MPI_Sendrecv((void*)sendbuf, int(sendcount), sendtype, target, sendtag,
-                                     recvbuf,        int(recvcount), recvtype, source, recvtag,
-                                     MPI_COMM_WORLD, &status) );
-            comTicks += rt_clock::ticks() - mark;
-        }
+        //! SendRecv
+        void SendRecv(const void        *sendbuf,
+                      const size_t       sendcount,
+                      const MPI_Datatype sendtype,
+                      const int          target,
+                      const int          sendtag,
+                      void              *recvbuf,
+                      const size_t       recvcount,
+                      const MPI_Datatype recvtype,
+                      const int          source,
+                      const int          recvtag);
 
         //! integral send/recv
         template <typename T,typename U>
-        inline void Sendrecv(const T &x, const int target, const int sendtag,
+        inline void SendRecv(const T &x, const int target, const int sendtag,
                              U       &y, const int source, const int recvtag)
         {
             static const MPI_Datatype _t = get_data_type_for<T>();
@@ -217,25 +197,25 @@ namespace upsylon
 
         //! integral send/recv
         template <typename T>
-        inline T  Sendrecv(const T &x,
+        inline T  SendRecv(const T &x,
                            const int target, const int sendtag,
                            const int source, const int recvtag)
         {
             static const MPI_Datatype _ = get_data_type_for<T>();
             T y(0);
-            Sendrecv(&x,1,_,target, sendtag,
+            SendRecv(&x,1,_,target, sendtag,
                      &y,1,_,source, recvtag);
             return y;
         }
         
         //! arrays send/recv
         template <typename T, typename U>
-        inline void SendRecv(const array<T> &x, const int target, const int sendtag,
-                             array<U>       &y, const int source, const int recvtag)
+        inline void SendRecvAll(const array<T> &x, const int target, const int sendtag,
+                                array<U>       &y, const int source, const int recvtag)
         {
             static const MPI_Datatype _t = get_data_type_for<T>();
             static const MPI_Datatype _u = get_data_type_for<U>();
-            Sendrecv(*x, x.size(), _t, target, sendtag,
+            SendRecv(*x, x.size(), _t, target, sendtag,
                      *y, y.size(), _u, source, recvtag);
         }
 
@@ -245,16 +225,10 @@ namespace upsylon
         //______________________________________________________________________
 
         //! generic wrapper
-        inline void Bcast(void              *buffer,
-                          const size_t       count,
-                          const MPI_Datatype type,
-                          const int          root)
-        {
-            assert(!(0==buffer&&count>0));
-            const uint64_t mark = rt_clock::ticks();
-            Y_MPI_CHECK(MPI_Bcast(buffer,int(count),type,root,MPI_COMM_WORLD));
-            comTicks += rt_clock::ticks() - mark;
-        }
+        void Bcast(void              *buffer,
+                   const size_t       count,
+                   const MPI_Datatype type,
+                   const int          root);
 
         //! integral type wrapper
         template <typename T>
@@ -289,18 +263,12 @@ namespace upsylon
         }
 
         //! Reduce operation
-        inline void Reduce(const void  * send_data,
-                           void        * recv_data,
-                           const size_t  count,
-                           MPI_Datatype datatype,
-                           MPI_Op       op,
-                           const int    root )
-        {
-            assert(!(0==send_data&&count>0));
-            const uint64_t mark = rt_clock::ticks();
-            Y_MPI_CHECK(MPI_Reduce(send_data, recv_data,count,datatype, op, root, MPI_COMM_WORLD));
-            comTicks += rt_clock::ticks() - mark;
-        }
+        void Reduce(const void  * send_data,
+                    void        * recv_data,
+                    const size_t  count,
+                    MPI_Datatype datatype,
+                    MPI_Op       op,
+                    const int    root );
         
         //! Reduce wrapper
         template <typename T>
@@ -313,17 +281,11 @@ namespace upsylon
         }
         
         //! Allreduce operation
-        inline void Allreduce(const void  * send_data,
-                              void        * recv_data,
-                              const size_t  count,
-                              MPI_Datatype datatype,
-                              MPI_Op       op)
-        {
-            assert(!(0==send_data&&count>0));
-            const uint64_t mark = rt_clock::ticks();
-            Y_MPI_CHECK(MPI_Allreduce(send_data, recv_data,count,datatype, op, MPI_COMM_WORLD));
-            comTicks += rt_clock::ticks() - mark;
-        }
+        void Allreduce(const void  * send_data,
+                       void        * recv_data,
+                       const size_t  count,
+                       MPI_Datatype datatype,
+                       MPI_Op       op);
         
         //! Allreduce wrapper
         template <typename T>
@@ -336,13 +298,7 @@ namespace upsylon
         }
         
         //! helper to get commTime in ms
-        double getCommMilliseconds()
-        {
-            rt_clock     clk;
-            const double thisTime = clk( comTicks );
-            const double maxiTime = Allreduce(thisTime,MPI_MAX);
-            return maxiTime * 1000.0;
-        }
+        double getCommMilliseconds();
         
         //______________________________________________________________________
         //
@@ -355,11 +311,23 @@ namespace upsylon
         //! print only on node0
         void print0( FILE *fp, const char *fmt,...) Y_PRINTF_CHECK(3,4);
 
-        //! check that the size fits in a 32 bit value (should...)
-        static  uint32_t size_to_uint32( const size_t sz );
-        
+
+        //! portable size send
+        void   SendSize( const size_t value, const int target, const int tag);
+
+        //! portable size release
+        size_t RecvSize( const int source, const int tag);
+
+        //! portable SendRecv of sizes
+        size_t SendRecvSizes(const size_t value,
+                             const int target, const int sendtag,
+                             const int source, const int recvtag);
+
+
     private:
-        data_type::db types;
+        data_type::db   types;
+        ios::upack_size send_pack;
+        ios::upack_size recv_pack;
 
         explicit mpi();
         virtual ~mpi() throw();
@@ -388,8 +356,8 @@ namespace upsylon
     template <> inline
     void mpi:: Send<string>( const string &s, const int target, const int tag)
     {
-        const uint32_t sz = size_to_uint32(s.size());
-        Send(sz,target,tag);
+        const size_t sz = s.size();
+        SendSize(sz,target,tag);
         if(sz>0)
         {
             Send(*s,sz,MPI_CHAR,target,tag);
@@ -400,7 +368,7 @@ namespace upsylon
     template <> inline
     string mpi:: Recv<string>( const int source, const int tag )
     {
-        const size_t sz = Recv<uint32_t>(source,tag);
+        const size_t sz = RecvSize(source,tag);
         if(sz>0)
         {
             string ans(sz,as_capacity,true);

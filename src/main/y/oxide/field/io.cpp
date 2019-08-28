@@ -7,20 +7,9 @@ namespace upsylon
 {
     namespace Oxide
     {
-        IO::Array & IO::Block:: _() throw()
-        {
-            return *this;
-        }
-
-        const IO::Array & IO::Block:: _() const throw()
-        {
-            return *this;
-        }
-
 
         IO::Block:: Block( const size_t n) :
-        Bytes(n,as_capacity),
-        header()
+        Bytes(n,as_capacity)
         {
         }
 
@@ -50,16 +39,7 @@ namespace upsylon
             return *this;
         }
 
-        const IO::Header & IO::Block:: encodeHeader() const throw()
-        {
-            header( size() );
-            return header;
-        }
-
-        void IO::Block:: decodeHeader()
-        {
-            setFast( header() );
-        }
+        
 
 
     }

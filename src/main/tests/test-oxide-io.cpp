@@ -52,8 +52,7 @@ namespace
             F3.save(io,save);
 
             std::cerr << "#io=" << io.size() << "/" << io.capacity() << std::endl;
-            io.encodeHeader();
-            Y_ASSERT(io.size()==io.header());
+            
             
             if(load)
             {
