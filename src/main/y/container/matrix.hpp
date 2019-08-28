@@ -5,6 +5,7 @@
 #include "y/sequence/array.hpp"
 #include "y/ptr/counted.hpp"
 #include "y/type/bswap.hpp"
+#include "y/type/self-destruct.hpp"
 #include <cstdlib>
 
 namespace upsylon
@@ -451,7 +452,7 @@ namespace upsylon
             mutable_type *entry = memory::io::cast<mutable_type>(workspace,data_offset);
             while(count-->0)
             {
-                destruct(entry+count);
+                self_destruct(entry[count]);
             }
         }
 

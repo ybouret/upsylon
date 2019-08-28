@@ -36,7 +36,7 @@ namespace upsylon
             {
                 for(coord1D k=upper.z;k>=lower.z;--k)
                 {
-                    destruct( &slices[k] );
+                    self_destruct( slices[k] );
                 }
                 this->__release(items);
             }
@@ -112,7 +112,7 @@ namespace upsylon
                     {
                         while(--k>lower.z)
                         {
-                            destruct( &slices[k] );
+                            self_destruct( slices[k] );
                         }
                         this->__release(items);
                         throw;

@@ -2,6 +2,7 @@
 #include "y/memory/carver.hpp"
 #include "y/memory/io.hpp"
 #include "y/object.hpp"
+#include "y/type/self-destruct.hpp"
 
 namespace upsylon
 {
@@ -27,7 +28,7 @@ namespace upsylon
 
         pooled:: ~pooled() throw()
         {
-            destruct(__carver());
+            self_destruct( *__carver());
             __zcarver();
         }
 

@@ -8,7 +8,6 @@ namespace upsylon
 
         dispatcher:: jnode:: ~jnode() throw()
         {
-            (int&)valid = 0;
         }
 
         dispatcher:: jnode:: jnode( const job_uuid u, const job_type &J ) :
@@ -16,6 +15,14 @@ namespace upsylon
         {
         }
 
+        dispatcher::jnode * dispatcher::jnode:: destruct() throw()
+        {
+            self_destruct(call);
+            (job_uuid&)uuid = 0;
+            (int     &)valid = 0;
+            return this;
+        }
+        
     }
 
 }
@@ -24,7 +31,11 @@ namespace upsylon
 {
     namespace concurrent
     {
-        dispatcher:: jpool:: jpool() throw()  : jpool_type() {}
+        dispatcher:: jpool:: jpool() throw()  : jpool_type()
+        {
+            assert(!top);
+            assert(0==size);
+        }
 
         dispatcher:: jpool::  ~jpool() throw()
         {
@@ -47,6 +58,7 @@ namespace upsylon
         {
             while(size)
             {
+                assert(top);
                 jnode *j = checked( query() );
                 object::release1(j);
             }
@@ -62,8 +74,7 @@ namespace upsylon
         dispatcher::jnode * dispatcher:: jpool:: checked( jnode *j ) throw()
         {
             assert(j);
-            if(j->valid) { destruct(j); assert(0==j->valid); }
-            return j;
+            return (j->valid) ? j->destruct() : j;
         }
 
     }
@@ -120,9 +131,11 @@ namespace upsylon
             Y_LOCK(access);
             while( pending.size )
             {
-                jnode *j = pending.pop_back();
-                destruct(j);
-                storage.store(j);
+                assert(pending.tail);
+                assert(pending.tail->valid);
+                storage.store( pending.pop_back()->destruct() );
+                assert(storage.top);
+                assert(!storage.top->valid);
             }
         }
 
@@ -132,6 +145,8 @@ namespace upsylon
             while(n-->0)
             {
                 storage.store( object::acquire1<jnode>() );
+                assert(storage.top);
+                assert(!storage.top->valid);
             }
         }
 
@@ -256,8 +271,7 @@ namespace upsylon
             //__________________________________________________________________
             while( pending.size )
             {
-                jnode *j = pending.pop_back();
-                destruct(j);
+                jnode *j = pending.pop_back()->destruct();
                 object::release1(j);
             }
 

@@ -3,6 +3,7 @@
 #define Y_ARRAYS_INCLUDED 1
 
 #include "y/sequence/array.hpp"
+#include "y/type/self-destruct.hpp"
 
 namespace upsylon
 {
@@ -151,7 +152,7 @@ namespace upsylon
             mutable_type *dat = static_cast<mutable_type *>(entry);
             while(n-->0)
             {
-                destruct(dat+n);
+                self_destruct(dat[n]);
             }
         }
 

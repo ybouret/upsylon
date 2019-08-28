@@ -4,6 +4,7 @@
 
 #include "y/dynamic.hpp"
 #include "y/type/args.hpp"
+#include "y/type/self-destruct.hpp"
 
 namespace upsylon {
 
@@ -98,7 +99,7 @@ namespace upsylon {
         {
             while(size_>0)
             {
-                destruct( &addr[--size_] );
+                self_destruct( addr[--size_] );
             }
             void *entry = addr;
             ALLOCATOR::location().release(entry,bytes);

@@ -95,7 +95,7 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
                 slice += this->lower.z;
                 while(ns>0)
                 {
-                    destruct( &slice[--ns] );
+                    self_destruct( slice[--ns] );
                 }
                 slice = 0;
             }

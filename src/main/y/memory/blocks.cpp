@@ -3,6 +3,7 @@
 #include "y/type/utils.hpp"
 #include "y/os/static-check.hpp"
 #include "y/memory/arena-of.hpp"
+#include "y/type/self-destruct.hpp"
 
 #include <cstring>
 
@@ -28,11 +29,11 @@ namespace upsylon
                     while(slot.size)
                     {
                         arena *a = slot.pop_back();
-                        destruct(a);
+                        self_destruct(*a);
                         cache->release(a);
                     }
                 }
-                destruct(cache);
+                self_destruct(*cache);
                 memset(hidden,0,sizeof(hidden));
             }
             _.__free(htable,chunk_size);

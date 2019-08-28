@@ -116,13 +116,13 @@ namespace upsylon
         inline virtual void pop_back() throw()
         {
             assert(nodes.size>0);
-           __kill( cache.store( nodes.pop_back() )->data );
+            self_destruct( cache.store( nodes.pop_back() )->data );
         }
         //! sequence interface : pop_front()
         inline virtual void pop_front() throw()
         {
             assert(nodes.size>0);
-            __kill( cache.store(nodes.pop_front())->data );
+            self_destruct( cache.store(nodes.pop_front())->data );
         }
 
         //! adjust size and pad if needed
@@ -225,11 +225,13 @@ namespace upsylon
         nodes_list nodes;
         nodes_pool cache;
 
+#if 0
         inline void __kill( type &data ) throw()
         {
             destruct( (mutable_type *) &data );
         }
-
+#endif
+        
         inline node_type *query(param_type args)
         {
             node_type *node = (cache.size>0) ? cache.query() : object::acquire1<node_type>();
@@ -260,17 +262,15 @@ namespace upsylon
 
         inline void __release() throw()
         {
-            std::cerr << "..release active" << std::endl;
+            // remove active nodes
             while(nodes.size>0)
             {
-
                 node_type *node = nodes.pop_back();
-                destruct(node);
+                self_destruct(node->data);
                 object::release1(node);
             }
-            std::cerr << "..release cache" << std::endl;
+            // remove cached nodes
             trim();
-            std::cerr << "..done" << std::endl;
         }
 
         template <typename FUNC> static inline

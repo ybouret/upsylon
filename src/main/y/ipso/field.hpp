@@ -4,6 +4,7 @@
 
 #include "y/ipso/layout.hpp"
 #include "y/string.hpp"
+#include "y/type/self-destruct.hpp"
 
 namespace upsylon
 {
@@ -122,8 +123,7 @@ namespace upsylon
             {
                 assert(entry);
                 assert(allocated);
-                mutable_type *p = (mutable_type *)entry;
-                while(count-->0) destruct( &p[count] );
+                while(count-->0) self_destruct( entry[count] );
             }
 
             //! release count and memory

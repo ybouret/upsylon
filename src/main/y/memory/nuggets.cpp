@@ -1,6 +1,7 @@
 #include "y/memory/nuggets.hpp"
 #include "y/memory/global.hpp"
 #include "y/memory/arena.hpp"
+#include "y/type/self-destruct.hpp"
 
 namespace upsylon
 {
@@ -15,7 +16,7 @@ namespace upsylon
 
         nuggets:: ~nuggets() throw()
         {
-            destruct( (arena *)( impl) );
+            self_destruct( *(arena *)( impl) );
             clr();
         }
 

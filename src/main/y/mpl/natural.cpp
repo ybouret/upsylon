@@ -3,6 +3,7 @@
 #include "y/memory/vein.hpp"
 #include "y/memory/io.hpp"
 #include "y/type/utils.hpp"
+#include "y/type/self-destruct.hpp"
 
 namespace upsylon
 {
@@ -25,7 +26,7 @@ namespace upsylon
 
         manager:: ~manager() throw()
         {
-            destruct( __IO() );
+            self_destruct( *__IO() );
             memset(___IO,0,sizeof(___IO));
         }
 

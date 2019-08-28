@@ -102,7 +102,7 @@ rowLayout(this->lower.x,this->upper.x)
                 size_t &r   = (size_t &)rows;
                 while(r>0)
                 {
-                    destruct( &row[--r] );
+                    self_destruct( row[--r] );
                 }
                 row = 0;
             }

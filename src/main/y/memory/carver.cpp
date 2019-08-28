@@ -4,6 +4,7 @@
 #include "y/type/utils.hpp"
 #include "y/exception.hpp"
 #include "y/os/static-check.hpp"
+#include "y/type/self-destruct.hpp"
 
 #include <iostream>
 #include <cstring>
@@ -54,7 +55,7 @@ namespace upsylon
                 hmem.__free(s->entry,io::delta(s->entry,s->guard));
                 a.release(s);
             }
-            destruct( &a );
+            self_destruct( a );
             clr();
         }
         

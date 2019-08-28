@@ -16,6 +16,8 @@ namespace upsylon
         class dispatcher : public server
         {
         public:
+            class jpool;
+            
             //! internal node to hold a job
             class jnode
             {
@@ -28,9 +30,12 @@ namespace upsylon
 
                 ~jnode() throw();                         //!< destructor
                 jnode(const job_uuid, const job_type &J); //!< initialize
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(jnode);
+                jnode *destruct() throw();
+                friend class jpool;
+                friend class dispatcher;
             };
 
             typedef core::list_of<jnode> jlist;      //!< alias

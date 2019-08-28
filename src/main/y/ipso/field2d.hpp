@@ -3,6 +3,7 @@
 #define Y_IPSO_FIELD2D_INCLUDED 1
 
 #include "y/ipso/field1d.hpp"
+#include "y/type/self-destruct.hpp"
 
 namespace upsylon
 {
@@ -45,7 +46,7 @@ namespace upsylon
                 assert(rows);
                 for(coord1D j=upper.y;j>=lower.y;--j)
                 {
-                    destruct( &rows[j] );
+                    self_destruct( rows[j] );
                 }
                 if(this->allocated)
                 {
@@ -134,7 +135,7 @@ namespace upsylon
                     {
                         while(--j>=lower.y)
                         {
-                            destruct( &rows[j] );
+                            self_destruct( rows[j] );
                         }
                         if(this->allocated)
                         {

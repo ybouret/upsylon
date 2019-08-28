@@ -1,6 +1,7 @@
 #include "y/memory/dyadic.hpp"
 #include "y/memory/vein.hpp"
 #include "y/memory/io.hpp"
+#include "y/type/self-destruct.hpp"
 
 namespace upsylon
 {
@@ -25,7 +26,7 @@ namespace upsylon
         
         dyadic:: ~dyadic() throw()
         {
-            destruct( __vein() );
+            self_destruct( *__vein() );
         }
 
         void * dyadic:: acquire(size_t &n)

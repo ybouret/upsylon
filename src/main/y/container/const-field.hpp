@@ -3,6 +3,7 @@
 #define Y_CONST_FIELD_INCLUDED 1
 
 #include "y/type/args.hpp"
+#include "y/type/self-destruct.hpp"
 
 namespace upsylon
 {
@@ -58,7 +59,7 @@ namespace upsylon
             //! C++ cleanup
             inline virtual ~const_field() throw()
             {
-                destruct( static_cast<mutable_type *>(item_addr) );
+                self_destruct( *static_cast<mutable_type *>(item_addr) );
             }
             
         private:

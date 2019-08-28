@@ -9,6 +9,7 @@
 
 #include "y/memory/arena-of.hpp"
 #include "y/memory/io.hpp"
+#include "y/type/self-destruct.hpp"
 
 namespace upsylon
 {
@@ -50,7 +51,7 @@ namespace upsylon
         // cleanup local stuff...
         //
         //----------------------------------------------------------------------
-        destruct( memory::io::__force<byte_node_arena>(__byte_node_arena) );
+        self_destruct( * memory::io::__force<byte_node_arena>(__byte_node_arena) );
         memset( __byte_node_arena, 0, sizeof(__byte_node_arena) );
 
 

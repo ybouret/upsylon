@@ -4,6 +4,8 @@
 #include "y/memory/global.hpp"
 #include "y/os/static-check.hpp"
 #include "y/exceptions.hpp"
+#include "y/type/self-destruct.hpp"
+
 #include <cerrno>
 
 namespace upsylon
@@ -25,7 +27,7 @@ namespace upsylon
 
                 static inline void kill( char *base ) throw()
                 {
-                    destruct( (nuggets_for<N> *)base );
+                    self_destruct( *(nuggets_for<N> *)base );
                 }
             };
 
@@ -42,7 +44,7 @@ namespace upsylon
                 {
                     // post-order kill
                     char *addr = base +(N-NMIN)*sizeof(nuggets_for<N>);
-                    destruct( (nuggets_for<N> *)addr );
+                    self_destruct( *(nuggets_for<N> *)addr );
 
                     nuggets_ops<NMIN,N-1>::kill(base);
                 }

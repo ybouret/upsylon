@@ -67,7 +67,7 @@ namespace upsylon
                 while(n>0)
                 {
                     assert(_data);
-                    destruct(& _data[--n] );
+                    self_destruct( _data[--n] );
                 }
                 _data = 0;
             }
