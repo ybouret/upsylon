@@ -11,7 +11,7 @@ namespace upsylon
     namespace ios
     {
 
-        //! base class for unsigned type pack/unpack
+        //! base class for portable unsigned type pack/unpack
         class upack_
         {
         public:
@@ -51,11 +51,8 @@ namespace upsylon
                 return data[i];
             }
 
-            //! field access
-            inline const char * operator*() const throw()
-            {
-                return data;
-            }
+            //! content access
+            const char * operator*()  const throw() { return data; }
 
             //! encore a type
             void operator()( const_type u ) throw()

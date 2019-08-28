@@ -19,39 +19,35 @@ namespace upsylon
             memset(p,0,n);
         }
 
+#define Y_IOS_UPACK_ARGS(N) void *addr, const void *u, int2type<N>
 #define Y_IOS_UPACK_ENCODE(TYPE)                     \
 static const size_t length = upack<TYPE>::requested; \
 clear(addr,length);                                  \
 ios::omstream fp( addr, length );                    \
-(void) fp.emit_upack<TYPE>( *static_cast<const TYPE*>(u) , (size_t *)&size );
+(void) fp.emit_upack<TYPE>( *static_cast<const TYPE*>(u) , (size_t *)&size )
 
 
-        void upack_:: encode (void       *addr,
-                              const void *u,
-                              int2type<1> ) throw()
+        void upack_:: encode( Y_IOS_UPACK_ARGS(1) ) throw()
         {
-            Y_IOS_UPACK_ENCODE(uint8_t)
+            Y_IOS_UPACK_ENCODE(uint8_t);
         }
 
-        void upack_:: encode (void       *addr,
-                              const void *u,
-                              int2type<2> ) throw()
+        void upack_:: encode( Y_IOS_UPACK_ARGS(2) ) throw()
+
         {
-            Y_IOS_UPACK_ENCODE(uint16_t)
+            Y_IOS_UPACK_ENCODE(uint16_t);
         }
 
-        void upack_:: encode (void       *addr,
-                              const void *u,
-                              int2type<4> ) throw()
+        void upack_:: encode( Y_IOS_UPACK_ARGS(4) ) throw()
+
         {
-            Y_IOS_UPACK_ENCODE(uint32_t)
+            Y_IOS_UPACK_ENCODE(uint32_t);
         }
 
-        void upack_:: encode (void       *addr,
-                              const void *u,
-                              int2type<8> ) throw()
+        void upack_:: encode( Y_IOS_UPACK_ARGS(8) ) throw()
+
         {
-            Y_IOS_UPACK_ENCODE(uint64_t)
+            Y_IOS_UPACK_ENCODE(uint64_t);
         }
 
     }

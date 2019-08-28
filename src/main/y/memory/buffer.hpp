@@ -12,26 +12,21 @@ namespace upsylon
         class ro_buffer : public virtual object
         {
         public:
-            virtual ~ro_buffer() throw(); //!< destructor
-
-            //! read only memory of length()
-            virtual const void *ro()     const throw() = 0;
-
-            //! valid length() byte
-            virtual size_t      length() const throw() = 0;
-
-            //! endless byte reading
-            inline uint8_t get_byte(const size_t i) const throw()
-            {
-                return (i>=length()) ? 0 : *(static_cast<const uint8_t*>(ro())+i);
-            }
-            
+            //------------------------------------------------------------------
+            // virtual interface
+            //------------------------------------------------------------------
+            virtual            ~ro_buffer()             throw();     //!< destructor
+            virtual const void *ro()              const throw() = 0; //!< read only memory of length()
+            virtual size_t      length()          const throw() = 0; //!< valid length() byte
+            //------------------------------------------------------------------
+            // non virtual interface
+            //------------------------------------------------------------------
+            uint8_t             byte_at(size_t i) const throw();     //!< virtual never ending byte access
         protected:
-            explicit ro_buffer() throw(); //!< constructor
+            explicit ro_buffer() throw();                            //!< constructor
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ro_buffer);
-
         };
 
         //! read-write buffer
@@ -39,9 +34,9 @@ namespace upsylon
         {
         public:
             virtual ~rw_buffer() throw(); //!< destructor
+            void *   rw()        throw(); //!< assuming writable area
+            void     reverse()   throw(); //!< using mreverse
 
-            void *rw() throw(); //!< assuming writable area
-            void  reverse() throw(); //!< using mreverse
         protected:
             explicit rw_buffer() throw(); //!< constructor
 

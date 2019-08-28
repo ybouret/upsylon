@@ -22,6 +22,26 @@ namespace upsylon
                 Packed  //!< the size is send before
             };
 
+            //! send encode size of block
+            static inline
+            void SendPrologue(mpi             &MPI,
+                              const IO::Block &block,
+                              const int        target)
+            {
+                block.encodePrologue();
+                MPI.Send(block.prologue,IO::Block::Prologue, MPI_BYTE, target,Tag);
+            }
+
+            //! recv encoded size of block
+            static inline
+            void RecvPrologue(mpi       &MPI,
+                              IO::Block &block,
+                              const int  source)
+            {
+                MPI.Recv(block.prologue,IO::Block::Prologue,MPI_BYTE,source,Tag);
+                block.setFast( block.decodePrologue() );
+            }
+
             //! send a block
             static inline
             void Send(mpi             &MPI,
@@ -31,13 +51,8 @@ namespace upsylon
             {
                 switch(mode)
                 {
-                    case Packed: {
-                        const uint32_t sz = mpi::size_to_uint32(block.size());
-                        MPI.Send<uint32_t>( sz, target, Tag);
-                    }/* FALLTHRU */
-                    case Static:
-                        MPI.Send( static_cast<const IO::Array &>(block),target,Tag);
-                        break;
+                    case Packed: SendPrologue(MPI,block,target);                              /* FALLTHRU */
+                    case Static: MPI.Send( block.interface(),target,Tag); break;
                 }
             }
 
@@ -50,15 +65,23 @@ namespace upsylon
             {
                 switch(mode)
                 {
-                    case Packed:
-                    {
-                        const uint32_t recv32 = MPI.Recv<uint32_t>(source,Tag);
-                        block.setFast(recv32);
-                    }/* FALLTHRU */
-                    case Static:
-                        MPI.Recv( static_cast<IO::Array &>(block), source, Tag);
-                        break;
+                    case Packed: RecvPrologue(MPI,block,source);                          /* FALLTHRU */
+                    case Static: MPI.Recv( block.interface(), source, Tag); break;
                 }
+            }
+
+            //! exchange and adjust blocks
+            static inline
+            void SendrecvPrologue(mpi             & MPI,
+                                  const IO::Block & sendBlock,
+                                  const int         target,
+                                  IO::Block       & recvBlock,
+                                  const int         source)
+            {
+                sendBlock.encodePrologue();
+                MPI.Sendrecv(sendBlock.prologue, IO::Block::Prologue, MPI_BYTE, target, Tag,
+                             recvBlock.prologue, IO::Block::Prologue, MPI_BYTE, source, Tag);
+                recvBlock.setFast( recvBlock.decodePrologue() );
             }
 
             //! sendrecv
@@ -70,21 +93,11 @@ namespace upsylon
                           const int         source,
                           const Mode        mode)
             {
-
                 switch(mode)
                 {
-                    case Packed:
-                    {
-                        const uint32_t send32 = mpi::size_to_uint32(sendBlock.size());
-                        const uint32_t recv32 = MPI.Sendrecv<uint32_t>(send32, target, Tag, source, Tag);
-                        recvBlock.setFast(recv32);
-                    } /* FALLTHRU */
-                    case Static:
-                        MPI.SendRecv(sendBlock, target, Tag,
-                                     recvBlock, source, Tag);
-                        break;
+                    case Packed: SendrecvPrologue(MPI,sendBlock,target,recvBlock,source);      /* FALLTHRU */
+                    case Static: MPI.SendRecv(sendBlock, target, Tag, recvBlock, source, Tag); break;
                 }
-
             }
 
         };

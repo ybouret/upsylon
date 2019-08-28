@@ -174,10 +174,10 @@ h^=a>>9;  c+=h; a+=b; \
 			for( size_t i=0; i < RANDSIZ; ++i )
 			{
 				const size_t   j = i << 2;
-				const uint32_t a = key.get_byte(j );
-				const uint32_t b = key.get_byte(j+1);
-				const uint32_t c = key.get_byte(j+2);
-				const uint32_t d = key.get_byte(j+3);
+				const uint32_t a = key.byte_at(j );
+				const uint32_t b = key.byte_at(j+1);
+				const uint32_t c = key.byte_at(j+2);
+				const uint32_t d = key.byte_at(j+3);
 				ctx_.randrsl[i]  = ( a << 24 ) | ( b << 16 ) | ( c << 8 ) | d;
 				
 			}

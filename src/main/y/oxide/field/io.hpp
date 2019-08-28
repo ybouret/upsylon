@@ -75,18 +75,30 @@ namespace upsylon
             class Block : public Bytes, public ios::ostream
             {
             public:
-                //! prepare with n bytes as capacity
-                explicit Block( const size_t n);
-                //! destruct
-                virtual ~Block() throw();
+                typedef uint64_t     Unsigned;                        //!< largest handled unsigned int
+                static const size_t  Prologue = sizeof(Unsigned)+1;   //!< maximum bytes to encode
+                static const size_t  Reserved = Y_MEMALIGN(Prologue); //!< workspace size for encoding
+
+                Array       & interface() throw();         //!< for low level MPI ops
+                const Array & interface() const throw();   //!< for low level MPI ops
+
+
+                explicit Block( const size_t n); //!< prepare with n bytes as capacity
+                virtual ~Block() throw();        //!< destruct
 
                 virtual void write( char C );         //!< append C and adjuste size
                 virtual void flush();                 //!< do nothing
                 Block   &    setFast(const size_t n); //!< adjust size, padded with zero
                 Block   &    setZero(const size_t n); //!< adjust size, all zero
 
+
+                void   encodePrologue() const; //!< encode this->size()
+                size_t decodePrologue() const; //!< decode content
+
+                mutable char prologue[ Reserved ]; //!< for encoding/decoding length
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Block);
+
             };
         };
 

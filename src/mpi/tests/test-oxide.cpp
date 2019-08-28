@@ -85,12 +85,21 @@ Y_UTEST(oxide)
         MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
 
         MPI.print0(stderr, "Send/Recv Exec\n" );
-        if(MPI.isHead)
+
+        if(MPI.parallel)
         {
-            for(int r=1;r<MPI.size;++r)
+            if(MPI.isHead)
             {
-                Comm::Sendrecv(MPI, send_block, r, recv_block, r, Comm::Packed);
-                Comm::Sendrecv(MPI, send_block, r, recv_block, r, Comm::Static);
+                for(int r=1;r<MPI.size;++r)
+                {
+                    Comm::Sendrecv(MPI, send_block, r, recv_block, r, Comm::Packed);
+                    Comm::Sendrecv(MPI, send_block, r, recv_block, r, Comm::Static);
+                }
+            }
+            else
+            {
+                Comm::Sendrecv(MPI, send_block, 0, recv_block, 0, Comm::Packed);
+                Comm::Sendrecv(MPI, send_block, 0, recv_block, 0, Comm::Static);
             }
         }
         else

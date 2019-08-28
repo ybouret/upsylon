@@ -11,6 +11,12 @@ namespace upsylon
         ro_buffer:: ro_buffer() throw()
         {
         }
+
+        uint8_t ro_buffer:: byte_at(size_t i) const throw()
+        {
+            return (i>=length()) ? 0 : *(static_cast<const uint8_t *>( ro() ) + i);
+        }
+
     }
 }
 

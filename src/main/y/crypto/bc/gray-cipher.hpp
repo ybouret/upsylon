@@ -33,7 +33,7 @@ namespace upsylon
                 //-- truncated key, padded with 0
                 uint8_t *m = (uint8_t *)(void *)&mask_;
                 for( size_t i=0; i < BYTES; ++i )
-                    m[i] = k.get_byte(i);
+                    m[i] = k.byte_at(i);
 
             }
 
