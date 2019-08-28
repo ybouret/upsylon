@@ -1,5 +1,7 @@
 #include "y/mpi/mpi.hpp"
 #include "y/utest/run.hpp"
+#include "y/sequence/list.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace upsylon;
 
@@ -10,8 +12,15 @@ Y_UTEST(init)
 
     if(MPI.parallel)
     {
+        vector<float> vf;
         if(MPI.isHead)
         {
+            list<float> lf;
+            for(size_t i=1+alea.leq(100);i>0;--i)
+            {
+                lf.push_back( alea.to<float>() );
+                vf.push_back( lf.back() );
+            }
             for(int r=1;r<MPI.size;++r)
             {
                 const int    rank = MPI.Recv<int>(r, mpi::io_tag);
@@ -19,16 +28,18 @@ Y_UTEST(init)
                 const size_t sz   = MPI.RecvSize(r,mpi::io_tag); Y_ASSERT( sz == size_t(square_of(r)) );
                 const string node = MPI.Recv<string>(r,mpi::io_tag);
                 MPI.print0(stderr, "recv from %d: '%s'\n", r, *node);
+                MPI.SendSequence(lf,r, mpi::io_tag);
             }
         }
         else
         {
-            MPI.Send<int>(MPI.rank,    0,mpi::io_tag );
+            MPI.Send<int>(MPI.rank,          0,mpi::io_tag );
             MPI.SendSize(square_of(MPI.rank),0,mpi::io_tag);
-            MPI.Send<string>(MPI.nodeName,0,mpi::io_tag);
+            MPI.Send<string>(MPI.nodeName,   0,mpi::io_tag);
+            MPI.RecvSequence(vf, 0, mpi::io_tag);
         }
+        MPI.print(stderr,"#seq=%u\n", unsigned(vf.size()));
     }
-
 
     if(MPI.isHead)
     {

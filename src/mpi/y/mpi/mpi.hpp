@@ -311,11 +311,10 @@ namespace upsylon
         //! print only on node0
         void print0( FILE *fp, const char *fmt,...) Y_PRINTF_CHECK(3,4);
 
-
         //! portable size send
         void   SendSize( const size_t value, const int target, const int tag);
 
-        //! portable size release
+        //! portable size receive
         size_t RecvSize( const int source, const int tag);
 
         //! portable SendRecv of sizes
@@ -323,20 +322,46 @@ namespace upsylon
                              const int target, const int sendtag,
                              const int source, const int recvtag);
 
-#if 0
         //______________________________________________________________________
         //
         // higher level
         //______________________________________________________________________
+
+        //! send a range of iterated items
         template <typename ITERATOR> inline
         void SendRange( ITERATOR i, size_t n, const int target, const int tag)
         {
             SendSize(n,target,tag);
+            while(n-->0)
+            {
+                Send(*i,target,tag);
+                ++i;
+            }
         }
-#endif
+
+        //! send a full sequence
+        template <typename SEQUENCE> inline
+        void SendSequence( const SEQUENCE &seq, const int target, const int tag)
+        {
+            typename SEQUENCE::const_iterator i = seq.begin();
+            SendRange(i, seq.size(), target,tag);
+        }
+
+        //! recv a sequence, push_back
+        template <typename SEQUENCE> inline
+        void RecvSequence( SEQUENCE &seq, const int source, const int tag )
+        {
+            size_t n = RecvSize(source,tag);
+            while(n-->0)
+            {
+                const typename SEQUENCE::const_type tmp = Recv<typename SEQUENCE::mutable_type>(source,tag);
+                seq.push_back(tmp);
+            }
+        }
+
+        ios::upack_size send_pack; //!< used to send packed size of items
+        ios::upack_size recv_pack; //!< used to recv packed size of items
         
-        ios::upack_size send_pack;
-        ios::upack_size recv_pack;
     private:
         data_type::db   types;
 
