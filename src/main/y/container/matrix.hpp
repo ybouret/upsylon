@@ -478,8 +478,8 @@ namespace upsylon
     public:
         mutable row r_aux1;  //!< size() = rows
         mutable row c_aux1;  //!< size() = cols
-        row r_aux2;  //!< size() = rows
-        row c_aux2;  //!< size() = cols
+        row r_aux2;          //!< size() = rows
+        row c_aux2;          //!< size() = cols
     };
 
 }

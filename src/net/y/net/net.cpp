@@ -22,7 +22,7 @@ namespace upsylon
 #endif
 
         typedef memory::arena_of<net::byte_node> byte_node_arena;
-        uint64_t __byte_node_arena[Y_U64_FOR_ITEM(byte_node_arena)];
+        static uint64_t __byte_node_arena[Y_U64_FOR_ITEM(byte_node_arena)];
     }
 
     net::byte_node * network:: acquire_byte_node() const

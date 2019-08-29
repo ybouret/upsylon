@@ -13,7 +13,7 @@ namespace upsylon
     {
     public:
         Y_DECL_ARGS(T,type);                     //!< type alias
-        typedef lightweight_array<T> array_type; //!< array alias
+        typedef lightweight_array<T> array_type; //!< array interface alias
 
         const size_t count; //!< count of individual arrays
         
@@ -31,10 +31,7 @@ namespace upsylon
         entry(0),
         indx(0)
         {
-            try
-            {
-                acquire(array_size);
-            }
+            try { acquire(array_size); }
             catch(...)
             {
                 hmem_. template release_as<array_type>(_array,_count,_bytes);

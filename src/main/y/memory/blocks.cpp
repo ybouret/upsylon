@@ -19,7 +19,7 @@ namespace upsylon
 
         blocks:: ~blocks() throw()
         {
-            static global &_ = global::location();
+            static global &mgr = global::location();
             {
                 arena_list *slots = static_cast<arena_list *>(htable);
                 cache_type *cache = (cache_type *)cached;
@@ -36,7 +36,7 @@ namespace upsylon
                 self_destruct(*cache);
                 memset(hidden,0,sizeof(hidden));
             }
-            _.__free(htable,chunk_size);
+            mgr.__free(htable,chunk_size);
         }
 
         size_t blocks:: compute_chunk_size(const size_t the_chunk_size) throw()

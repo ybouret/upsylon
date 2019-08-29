@@ -291,6 +291,7 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
         //! sequence interface
         inline virtual void pop_back() throw()
         {
+            // destruct last object
             assert(this->size_>0);
             self_destruct( this->item_[this->size_--] );
         }
@@ -298,8 +299,10 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
         //! sequence interface
         inline virtual void pop_front() throw()
         {
+            // destruct first object
             assert(this->size_>0);
             self_destruct( *(this->addr_) );
+            // adjust memory
             memmove( static_cast<void *>(this->addr_), static_cast<const void *>(this->addr_+1), --(this->size_) * sizeof(T) );
         }
 
