@@ -87,7 +87,7 @@ namespace upsylon
             void    *privateData; //!< private data if dynamic
             size_t   privateSize; //!< private size if dynamic
 
-            void *acquirePrivate();          //!< allocate privateData
+            void *acquirePrivate();          //!< allocate privateData with privateSize
             void  releasePrivate() throw();  //!< release privateData
 
 

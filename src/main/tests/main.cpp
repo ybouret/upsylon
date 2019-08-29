@@ -28,6 +28,7 @@ Y_UTEST_INIT(150)
     Y_UTEST(buffers);
     Y_UTEST(xslot);
     Y_UTEST(mloop);
+    Y_UTEST(embed);
 
     Y_UTEST(string);
     Y_UTEST(string_convert);
