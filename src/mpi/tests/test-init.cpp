@@ -9,7 +9,7 @@ Y_UTEST(init)
 {
     Y_MPI(SINGLE);
     MPI.print0(stderr,"THREAD_LEVEL=%s\n\n", MPI.threadLevelText());
-
+    MPI.print(stderr, "processorName: %s\n", *MPI.processorName);
     if(MPI.parallel)
     {
         vector<float> vf;
