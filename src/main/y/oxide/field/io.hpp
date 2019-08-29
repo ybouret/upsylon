@@ -3,11 +3,10 @@
 #define Y_OXIDE_FIELD_IO_INCLUDED 1
 
 #include "y/oxide/types.hpp"
-#include "y/ios/ostream.hpp"
+#include "y/ios/ovstream.hpp"
 #include "y/ios/istream.hpp"
 #include "y/ios/serializable.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/ios/upack.hpp"
 
 namespace upsylon
 {
@@ -67,31 +66,8 @@ namespace upsylon
                 *static_cast<T *>(addr) = tmp;
             }
 
-            //! base type for derived memory
-            typedef vector<uint8_t,memory::global> Bytes;
-            //! interface
-            typedef array<uint8_t>                 Array;
-
-            //! header to encode/decode block size(s)
-            typedef ios::upack_size Header;
-
-            //! variable length block type, usable with ios::imstream for input
-            class Block : public Bytes, public ios::ostream
-            {
-            public:
-                explicit Block( const size_t n); //!< prepare with n bytes as capacity
-                virtual ~Block() throw();        //!< destruct
-
-                virtual void write( char C );         //!< append C and adjuste size
-                virtual void flush();                 //!< do nothing
-                Block   &    setFast(const size_t n); //!< adjust size, padded with zero
-                Block   &    setZero(const size_t n); //!< adjust size, all zero
-
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Block);
-
-            };
+            typedef ios::ovstream Block;
+            
         };
 
     }

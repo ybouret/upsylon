@@ -3,6 +3,7 @@
 #define Y_OSSTREAM_INCLUDED 1
 
 #include "y/ios/ostream.hpp"
+#include "y/string.hpp"
 
 namespace upsylon
 {
@@ -13,21 +14,33 @@ namespace upsylon
         {
         public:
             //! destructor
-            inline virtual ~osstream() throw() {}
+            virtual ~osstream() throw();
             
             //! temporary output stream on a more persistent string
-            inline explicit osstream( string &s ) throw() : host(s) {}
+            explicit osstream( string &s ) throw();
 
             //! write
             void write(char C);
 
             //! do nothing...
-            inline virtual void flush(){}
+            virtual void flush();
 
         private:
             string &host;
             Y_DISABLE_COPY_AND_ASSIGN(osstream);
         };
+
+        //! with own string
+        class embedded_osstream : public string, public osstream
+        {
+        public:
+            explicit embedded_osstream();
+            virtual ~embedded_osstream() throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(embedded_osstream);
+        };
+
     }
 }
 

@@ -12,7 +12,7 @@ namespace upsylon
     {
     public:
         static const size_t max_days    = 99;                   //!< days limit
-        static const size_t s_per_day   = 24 * 60 * 60;         //! seconds per day
+        static const size_t s_per_day   = 24 * 60 * 60;         //!< seconds per day
         static const size_t max_seconds = max_days * s_per_day; //!< seconds limit
         static const size_t format_size = 32;                   //!< char[format_size] for output
 

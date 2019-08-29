@@ -62,16 +62,16 @@ Y_UTEST(oxide)
             for(int r=1;r<MPI.size;++r)
             {
                 // first send, used packed
-                Comm::Send(MPI,send_block,r,Comm::Packed);
+                Comm::Send(MPI,send_block,r,mpi::Packed);
                 // second send
-                Comm::Send(MPI,send_block,r,Comm::Static);
+                Comm::Send(MPI,send_block,r,mpi::Static);
             }
         }
         else
         {
             F.ld(0);
-            Comm::Recv(MPI,recv_block,0,Comm::Packed);
-            Comm::Recv(MPI,recv_block,0,Comm::Static);
+            Comm::Recv(MPI,recv_block,0,mpi::Packed);
+            Comm::Recv(MPI,recv_block,0,mpi::Static);
             F.load_only(indices,recv_block,IO::LoadBlock<double>);
         }
         
@@ -93,20 +93,20 @@ Y_UTEST(oxide)
             {
                 for(int r=1;r<MPI.size;++r)
                 {
-                    Comm::SendRecv(MPI, send_block, r, recv_block, r, Comm::Packed);
-                    Comm::SendRecv(MPI, send_block, r, recv_block, r, Comm::Static);
+                    Comm::SendRecv(MPI, send_block, r, recv_block, r, mpi::Packed);
+                    Comm::SendRecv(MPI, send_block, r, recv_block, r, mpi::Static);
                 }
             }
             else
             {
-                Comm::SendRecv(MPI, send_block, 0, recv_block, 0, Comm::Packed);
-                Comm::SendRecv(MPI, send_block, 0, recv_block, 0, Comm::Static);
+                Comm::SendRecv(MPI, send_block, 0, recv_block, 0, mpi::Packed);
+                Comm::SendRecv(MPI, send_block, 0, recv_block, 0, mpi::Static);
             }
         }
         else
         {
-            Comm::SendRecv(MPI, send_block, 0, recv_block, 0, Comm::Packed);
-            Comm::SendRecv(MPI, send_block, 0, recv_block, 0, Comm::Static);
+            Comm::SendRecv(MPI, send_block, 0, recv_block, 0, mpi::Packed);
+            Comm::SendRecv(MPI, send_block, 0, recv_block, 0, mpi::Static);
         }
         MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
         F.load_only(indices,recv_block,IO::LoadBlock<double>);

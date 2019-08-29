@@ -9,6 +9,7 @@ namespace upsylon
 {
     namespace core
     {
+        //! sanity check for node
 #define Y_CORE_CHECK_POOL_NODE(node) \
 assert((node)!=NULL);                \
 assert((node)->next==NULL)

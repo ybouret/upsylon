@@ -80,6 +80,7 @@ Y_UTEST_INIT(150)
     Y_UTEST(hmac);
     Y_UTEST(ostreams);
     Y_UTEST(istreams);
+    Y_UTEST(mstreams);
     Y_UTEST(upack);
     Y_UTEST(fft);
     Y_UTEST(sort);

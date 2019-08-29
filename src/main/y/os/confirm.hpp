@@ -5,6 +5,7 @@
 #include <iostream>
 #include "y/os/error.hpp"
 
+//! permanent assert-like
 #define Y_CONFIRM(EXPR,WHEN) do {\
 if( !(EXPR) ) {\
 std::cerr << __FILE__ << ":" << __LINE__ << ": UNCONFIRMED <" << #EXPR << ">" << std::endl;\

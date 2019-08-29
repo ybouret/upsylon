@@ -6,9 +6,8 @@
 #include "y/exception.hpp"
 #include "y/type/spec.hpp"
 #include "y/associative/set.hpp"
-#include "y/sequence/array.hpp"
 #include "y/ios/upack.hpp"
-
+#include "y/ios/ovstream.hpp"
 #include <cstdio>
 
 //! avoir C++ from OpenMPI
@@ -361,7 +360,31 @@ namespace upsylon
 
         ios::upack_size send_pack; //!< used to send packed size of items
         ios::upack_size recv_pack; //!< used to recv packed size of items
-        
+
+        //! vector send/recv mode
+        enum vMode
+        {
+            Static, //!< known size
+            Packed  //!< need to check sizes
+        };
+
+        typedef array<uint8_t> vBytes; //!< variable number of bytes interface
+        typedef ios::ovstream  vBlock; //!< variable block  implementation
+
+        //! send variable number of bytes
+        void vSend( const vMode mode, const vBytes &v, const int target, const int tag);
+
+        //! recv variable numbe of bytes
+        void vRecv( const vMode mode, vBlock       &v, const int source, const int tag);
+
+        //! send/recv variable numberr of bytes
+        void vSendRecv(const vMode   mode,
+                       const vBytes &sendBytes, const int target, const int sendtag,
+                       vBlock       &recvBytes, const int source, const int recvtag);
+
+
+
+
     private:
         data_type::db   types;
 

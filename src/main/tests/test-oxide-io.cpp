@@ -107,6 +107,5 @@ Y_UTEST(oxide_io)
     run_with<float>(  IO::SaveIntegral<float>     , IO::LoadIntegral<float>     );
     run_with<string>( IO::SaveSerializable<string>, IO::LoadSerialized<string>  );
 
-    std::cerr << "IO::Header::requested=" << IO::Header::requested << std::endl;
 }
 Y_UTEST_DONE()

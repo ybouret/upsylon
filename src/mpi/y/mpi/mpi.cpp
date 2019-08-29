@@ -495,3 +495,51 @@ namespace upsylon
     }
 
 }
+
+
+namespace upsylon
+{
+    void mpi:: vSend(const vMode           mode,
+                     const vBytes         &v,
+                     const int             target,
+                     const int             tag)
+    {
+        const size_t n = v.size();
+        switch(mode)
+        {
+            case Packed: SendSize(v.size(),target,tag); /* FALLTHRU */
+            case Static: if(n>0) Send(*v,n, MPI_BYTE, target, tag); break;
+        }
+    }
+
+    void mpi:: vRecv( const vMode  mode,
+                     vBlock       &v,
+                     const int      source,
+                     const int      tag)
+    {
+        size_t n = v.size();
+        switch(mode)
+        {
+            case Packed: n = RecvSize(source,tag); v.set_fast(n); /* FALLTHRU */
+            case Static: if(n>0) Recv(*v,n,MPI_BYTE,source,tag); break;
+        }
+    }
+
+    void mpi:: vSendRecv(const vMode   mode,
+                         const vBytes &sendBytes, const int target, const int sendtag,
+                         vBlock       &recvBytes, const int source, const int recvtag)
+    {
+        const size_t ns = sendBytes.size();
+        size_t       nr = recvBytes.size();
+
+        switch (mode)
+        {
+            case Packed: recvBytes.set_fast( (nr = SendRecvSizes(ns, target, sendtag, source, recvtag) ) ); /* FALLTHRU */
+            case Static: SendRecv(*sendBytes, ns, MPI_BYTE, target, sendtag,
+                                  *recvBytes, nr, MPI_BYTE, source, recvtag); break;
+        }
+    }
+
+
+
+}
