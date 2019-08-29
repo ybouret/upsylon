@@ -14,13 +14,12 @@ namespace upsylon
     class comparator
     {
     public:
-        Y_DECL_ARGS(T,type); //!< alias
-
-        inline  virtual ~comparator() throw() {} //!< cleanup
-        virtual int operator()(const_type &lhs, const_type &rhs) = 0;//!< return comparison
+        Y_DECL_ARGS(T,type);                                         //!< aliases
+        inline  virtual ~comparator() throw() {}                     //!< cleanup
+        virtual int      operator()(const_type &, const_type &) = 0; //!< return comparison
 
     protected:
-        inline  explicit comparator() throw() {} //!< setup
+        inline  explicit comparator() throw() {}                     //!< setup
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(comparator);

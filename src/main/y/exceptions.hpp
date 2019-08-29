@@ -16,9 +16,8 @@ namespace upsylon
 		public:
             //! store the code and store printf style information
 			explicit exception( int err, const char *fmt, ... ) throw() Y_PRINTF_CHECK(3,4);
-			virtual ~exception() throw(); //!< default destructor
-			exception( const exception & ) throw(); //!< copy constructor
-
+            exception( const exception & )   throw(); //!< copy constructor
+			virtual            ~exception()  throw(); //!< default destructor
 			virtual const char *what() const throw(); //!< internal what_
 			int                 code() const throw(); //!< internal code_
 
@@ -38,9 +37,8 @@ namespace upsylon
 		public:
             //! store the code and store printf style information
 			explicit exception( uint32_t err, const char *fmt, ... ) throw() Y_PRINTF_CHECK(3,4);
-			virtual ~exception() throw(); //!< default destructor
-			exception( const exception & ) throw(); //!< copy constructor
-
+            exception( const exception & )   throw(); //!< copy constructor
+			virtual            ~exception()  throw(); //!< default destructor
 			virtual const char *what() const throw(); //!< internal what_
 			uint32_t            code() const throw(); //!< internal code_
 

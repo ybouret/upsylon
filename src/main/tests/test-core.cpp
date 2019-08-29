@@ -13,11 +13,11 @@ namespace
         int    data;
         aNode *next;
         aNode *prev;
+        static int count;
+        aNode() throw() : data( alea.full<int>() ), next(0), prev(0) { ++count; }
+        ~aNode() throw() { --count; }
 
-        aNode() throw() : data( alea.full<int>() ), next(0), prev(0) {}
-        ~aNode() throw() {}
-
-        aNode( const aNode &other ) throw() : data( other.data ), next(0), prev(0) {}
+        aNode( const aNode &other ) throw() : data( other.data ), next(0), prev(0) { ++count; }
 
         inline aNode * clone() const { return new aNode( *this ); }
 
@@ -25,6 +25,8 @@ namespace
     private:
         Y_DISABLE_ASSIGN(aNode);
     };
+
+    int aNode::count = 0;
 
     template <typename LIST>
     void do_list_test( LIST &l )
@@ -51,12 +53,17 @@ namespace
             Y_CHECK(l.size==l_copy.size);
             l.merge_back(l_copy);
         }
+        {
+            LIST l_copy(l);
+            Y_CHECK(l.size==l_copy.size);
+            l.merge_front(l_copy);
+        }
 
 
 
         core::pool_of_cpp<aNode> p;
         while( l.size ) p.store( l.pop_back() );
-
+        
         std::cerr << "MoveToFront 1->" << n << std::endl;
         for(size_t i=0;i<n;++i)
         {
@@ -72,6 +79,24 @@ namespace
             }
         }
 
+        std::cerr << "l.size=" << l.size << std::endl;
+        for(size_t i=5+alea.leq(30);i>0;--i)
+        {
+            aNode *node = new aNode();
+            aNode *scan = l.fetch( alea.lt(l.size) );
+            l.replace(scan,node);
+            Y_ASSERT(scan->next==0);
+            Y_ASSERT(scan->prev==0);
+            delete scan;
+        }
+        {
+            const size_t old_size = l.size;
+            l.reverse();
+            Y_CHECK(old_size==l.size);
+            l.reverse_last( l.size / 8 );
+            Y_CHECK(old_size==l.size);
+
+        }
     }
 
 
@@ -113,6 +138,7 @@ Y_UTEST(core)
     do_list_test(aList);
     core::list_of_cloneable<aNode> bList;
     do_list_test(bList);
+    std::cerr << "node.count=" << aNode::count << std::endl;
 }
 Y_UTEST_DONE()
 

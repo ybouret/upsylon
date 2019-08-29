@@ -17,12 +17,8 @@ namespace upsylon
         //
         // virtual interface
         //______________________________________________________________________
-
-        //! currently available objects
-        virtual size_t size()     const throw() = 0;
-
-        //! maximum available objects
-        virtual size_t capacity() const throw() = 0;
+        virtual size_t size()     const throw() = 0; //!< currently available objects
+        virtual size_t capacity() const throw() = 0; //!< maximum available objects
 
         //______________________________________________________________________
         //

@@ -10,8 +10,8 @@ namespace upsylon
     class lockable
     {
     public:
-        //! default destructor
-        inline virtual ~lockable() throw() {}
+        //!  destructor
+        virtual ~lockable() throw();
         
         //! must lock, critical error otherwise
         virtual void lock()     throw() = 0;
@@ -24,7 +24,7 @@ namespace upsylon
         
     protected:
         //! default constructor, do nothing
-        inline explicit lockable() throw() {}
+        explicit lockable() throw();
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(lockable);
@@ -34,12 +34,8 @@ namespace upsylon
     class scoped_lock
     {
     public:
-        //! lock host
-        inline explicit scoped_lock( lockable &host ) throw() : host_(host)
-        {  host_.lock(); }
-        
-        //! unlock host
-        inline ~scoped_lock() throw() { host_.unlock(); }
+        scoped_lock( lockable &host ) throw(); //!< lock host
+        ~scoped_lock() throw();                //!< unlock host
         
     private:
         lockable &host_;

@@ -51,11 +51,9 @@ head = tail = node; size = 1
             //! append a NODE
             inline NODE *push_back( NODE *node ) throw()
             {
-                assert(node);
                 Y_CORE_CHECK_LIST_NODE(node);
                 if( size <= 0 )
                 {
-                    //push_first(node);
                     Y_CORE_LIST_PUSH_FIRST(node);
                 }
                 else
@@ -77,11 +75,9 @@ head = tail = node; size = 1
             //! prepend a NODE
             inline NODE *push_front( NODE *node ) throw()
             {
-                assert(node);
                 Y_CORE_CHECK_LIST_NODE(node);
                 if( size <= 0 )
                 {
-                    //push_first(node);
                     Y_CORE_LIST_PUSH_FIRST(node);
                 }
                 else
@@ -113,6 +109,7 @@ head = tail = node; size = 1
                     tail->next = NULL;
                     node->prev = NULL;
                     --size;
+                    Y_CORE_CHECK_LIST_NODE(node);
                     return node;
                 }
             }
@@ -134,6 +131,7 @@ head = tail = node; size = 1
                     head->prev = NULL;
                     node->next = NULL;
                     --size;
+                    Y_CORE_CHECK_LIST_NODE(node);
                     return node;
                 }
             }
@@ -168,7 +166,7 @@ head = tail = node; size = 1
                 return false;
             }
 
-            //! hard reset
+            //! hard reset for embedded lists
             inline void reset() throw() { head = tail = NULL; size=0; }
 
 
@@ -196,6 +194,7 @@ head = tail = node; size = 1
                         node->next = NULL;
                         node->prev = NULL;
                         --size;
+                        Y_CORE_CHECK_LIST_NODE(node);
                         return node;
                     }
 
@@ -284,6 +283,7 @@ head = tail = node; size = 1
                 {
                     NODE *node = pop_front();
                     push_front(yours);
+                    Y_CORE_CHECK_LIST_NODE(node);
                     return node;
                 }
                 else
@@ -292,6 +292,7 @@ head = tail = node; size = 1
                     {
                         NODE *node = pop_back();
                         push_back(yours);
+                        Y_CORE_CHECK_LIST_NODE(node);
                         return node;
                     }
                     else
@@ -305,6 +306,7 @@ head = tail = node; size = 1
                         yours->next = next;
                         mine->next  = NULL;
                         mine->prev  = NULL;
+                        Y_CORE_CHECK_LIST_NODE(mine);
                         return mine;
                     }
                 }
@@ -324,10 +326,7 @@ head = tail = node; size = 1
             inline void reverse() throw()
             {
                 list_of tmp;
-                while( size )
-                {
-                    tmp.push_back( pop_back() );
-                }
+                while(size>0) tmp.push_back( pop_back() );
                 swap_with(tmp);
             }
             

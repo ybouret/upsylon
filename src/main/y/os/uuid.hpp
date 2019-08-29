@@ -18,8 +18,8 @@ namespace upsylon
         virtual ~uuid() throw();                    //!< destructor
         explicit uuid();                            //!< build from crypto bits
         uuid( const uuid &other ) throw();          //!< copy
-        virtual const void *ro() const throw();     //! byte address
-        virtual size_t      length() const throw(); //! bytes
+        virtual const void *ro() const throw();     //!< byte address
+        virtual size_t      length() const throw(); //!< bytes
 
         //! output
         friend std::ostream & operator<<( std::ostream &, const uuid &);

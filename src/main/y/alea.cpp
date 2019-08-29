@@ -5,7 +5,7 @@ namespace upsylon
 {
 
     static randomized::Kiss32 __alea;
-    randomized::bits &alea = __alea;
+    randomized::bits  &alea = __alea;
     void alea_init() throw()
     {
         __alea.initialize();
