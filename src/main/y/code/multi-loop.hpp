@@ -139,10 +139,7 @@ namespace upsylon
         {
         public:
             //! destructor
-            inline virtual ~multi_loop_for() throw()
-            {
-                clear();
-            }
+            inline virtual ~multi_loop_for() throw() { clear(); }
 
             //! setup
             inline explicit multi_loop_for() throw() :
@@ -163,7 +160,7 @@ namespace upsylon
     }
 
 
-    //! embedding loop for multidimensial indices
+    //! embedding loop for multidimensional indices
     template <
     typename T,
     typename COORD>
@@ -175,9 +172,7 @@ namespace upsylon
         Y_DECL_ARGS(T,type); //!< aliases
         
         //! destructor
-        inline virtual ~multi_loop() throw()
-        {
-        }
+        inline virtual ~multi_loop() throw() {}
 
         //! user data must be persistent
         inline explicit multi_loop(const COORD &lo,

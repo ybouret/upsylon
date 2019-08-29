@@ -14,6 +14,7 @@ namespace
         aNode *next;
         aNode *prev;
         static int count;
+
         aNode() throw() : data( alea.full<int>() ), next(0), prev(0) { ++count; }
         ~aNode() throw() { --count; }
 
@@ -63,7 +64,7 @@ namespace
 
         core::pool_of_cpp<aNode> p;
         while( l.size ) p.store( l.pop_back() );
-        
+
         std::cerr << "MoveToFront 1->" << n << std::endl;
         for(size_t i=0;i<n;++i)
         {
@@ -80,7 +81,8 @@ namespace
         }
 
         std::cerr << "l.size=" << l.size << std::endl;
-        for(size_t i=5+alea.leq(30);i>0;--i)
+        std::cerr << "Replacing..." << std::endl;
+        for(size_t i=10+alea.leq(90);i>0;--i)
         {
             aNode *node = new aNode();
             aNode *scan = l.fetch( alea.lt(l.size) );
@@ -89,14 +91,24 @@ namespace
             Y_ASSERT(scan->prev==0);
             delete scan;
         }
+
+        std::cerr << "Reversing..." << std::endl;
         {
             const size_t old_size = l.size;
             l.reverse();
             Y_CHECK(old_size==l.size);
             l.reverse_last( l.size / 8 );
             Y_CHECK(old_size==l.size);
-
         }
+
+        std::cerr << "Inserting..." << std::endl;
+        for(size_t i=10+alea.leq(90);i>0;--i)
+        {
+            l.insert_after( l.fetch( alea.lt(l.size) ), new aNode() );
+            l.insert_before( l.fetch( alea.lt(l.size) ), new aNode() );
+        }
+
+
     }
 
 
@@ -134,11 +146,13 @@ Y_UTEST(core)
 
     std::cerr << "---- Test List ----" << std::endl;
     std::cerr << "sizeof(core::list_of)=" << sizeof(core::list_of<aNode>) << std::endl;
-    core::list_of_cpp<aNode> aList;
-    do_list_test(aList);
-    core::list_of_cloneable<aNode> bList;
-    do_list_test(bList);
-    std::cerr << "node.count=" << aNode::count << std::endl;
+    {
+        core::list_of_cpp<aNode> aList;
+        do_list_test(aList);
+        core::list_of_cloneable<aNode> bList;
+        do_list_test(bList);
+    }
+    Y_CHECK(0==aNode::count);
 }
 Y_UTEST_DONE()
 

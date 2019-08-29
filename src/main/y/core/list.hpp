@@ -11,8 +11,8 @@ namespace upsylon
     {
         //! check provided node is valid
 #define Y_CORE_CHECK_LIST_NODE(node) \
-assert((node)!=NULL);\
-assert((node)->next==NULL);\
+assert((node)!=NULL);                \
+assert((node)->next==NULL);          \
 assert((node)->prev==NULL)
 
         //! list of nodes
@@ -409,9 +409,9 @@ head = tail = node; size = 1
             inline NODE *pop_last() throw()
             {
                 assert(NULL!=head); assert(NULL!=tail); assert(1==size); assert(head==tail);
+                Y_CORE_CHECK_LIST_NODE(head);
+                Y_CORE_CHECK_LIST_NODE(tail);
                 NODE *node = head;
-                assert( NULL == node->prev );
-                assert( NULL == node->next );
                 reset();
                 return node;
             }

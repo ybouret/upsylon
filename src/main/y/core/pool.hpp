@@ -9,6 +9,10 @@ namespace upsylon
 {
     namespace core
     {
+#define Y_CORE_CHECK_POOL_NODE(node) \
+assert((node)!=NULL);                \
+assert((node)->next==NULL)
+        
         //! core pool
         template <typename NODE>
         class pool_of
@@ -27,16 +31,14 @@ namespace upsylon
             //! push a valid node
             NODE *store( NODE *node ) throw()
             {
-                assert( NULL != node       );
-                assert( NULL == node->next );
-                //assert( ! owns(node)       );
+                Y_CORE_CHECK_POOL_NODE(node);
                 node->next = top;
                 top        = node;
                 ++size;
                 return node;
             }
 
-            //! query is size>0
+            //! query if size>0
             inline NODE *query() throw()
             {
                 assert(top != NULL);
@@ -45,6 +47,7 @@ namespace upsylon
                 top = top->next;
                 node->next = NULL;
                 --size;
+                Y_CORE_CHECK_POOL_NODE(node);
                 return node;
             }
 
