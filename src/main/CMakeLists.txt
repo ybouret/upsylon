@@ -336,6 +336,7 @@ DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/rc1.txt ${SUB_RC}
 COMMENT "Adding Resources to rc-demo")
 
 ADD_SUBDIRECTORY(tests)
+SET(UTESTS "${UTESTS} utest-main" PARENT_SCOPE)
 
 MESSAGE( STATUS "<Upsylon/>" )
 MESSAGE(STATUS "")

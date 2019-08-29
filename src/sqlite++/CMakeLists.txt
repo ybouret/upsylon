@@ -14,6 +14,7 @@ ADD_LIBRARY( y-sqlite++ STATIC ${srcs} )
 INSTALL( TARGETS y-sqlite++ ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
+SET(UTESTS "${UTESTS} utest-sqlite++" PARENT_SCOPE)
 MESSAGE( STATUS "<SQLite++/>" )
 MESSAGE( STATUS "" )
 

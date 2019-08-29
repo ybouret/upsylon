@@ -30,6 +30,8 @@ INSTALL( FILES ${SCRIPTS} DESTINATION share/y )
 ##
 ##
 ########################################################################
+SET(UTESTS "" )
+
 MESSAGE(STATUS "")
 Y_SEPLINE()
 MESSAGE( STATUS "<Scanning Libraries>" )
@@ -135,11 +137,6 @@ ADD_SUBDIRECTORY(sqlite++)
 ADD_SUBDIRECTORY(fltk)
 ADD_SUBDIRECTORY(r++)
 
-ADD_CUSTOM_TARGET(int 
-DEPENDS 
-test-z++ test-bz2++ test-lua++ test-sqlite++
-COMMENT "Built Interfaces Libraries")
-
 MESSAGE(STATUS "")
 Y_SEPLINE()
 MESSAGE( STATUS "<Scanning C++ Wrapping Libraries/>" )
@@ -159,7 +156,19 @@ DEPENDS y y-lang y-m y-chem y-net
 COMMENT "Built Core Libraries"
 )
 
+########################################################################
+##
+##
+## Gathering Tests
+##
+##
+########################################################################
+#SET(UTESTS  utest-main utest-m utest-chem utest-lang utest-net utest-ink)
+STRING( STRIP ${UTESTS} UTESTS)
+STRING( REPLACE " " ";" UTESTS ${UTESTS} )
+MESSAGE(STATUS "regression: <${UTESTS}>")
+
 ADD_CUSTOM_TARGET(regression
-DEPENDS utest-main utest-m utest-chem utest-lang utest-net utest-ink
+DEPENDS ${UTESTS}
 COMMENT "Performed Regression Tests" )
 
