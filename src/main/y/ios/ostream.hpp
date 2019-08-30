@@ -31,6 +31,7 @@ namespace upsylon
                 x=0;
             }
 
+            //! conditional add extra to count address
             template <typename T, typename U>
             inline void add_to( T *count, const U extra ) throw()
             {

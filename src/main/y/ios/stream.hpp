@@ -7,8 +7,16 @@
 
 namespace upsylon
 {
+    //! communication mode
+    enum comm_mode
+    {
+        comm_constant_size, //!< assuming host and peer know the size
+        comm_variable_size  //!< the size must be exchanged
+    };
+
     namespace ios
     {
+
         //! base class for streams
         class stream : public counted_object
         {

@@ -61,15 +61,15 @@ namespace
                     for(size_t iter=0;iter<cycles;++iter)
                     {
                         // upload
-                        MPI.vSend(mpi::Static, sndblk, r, mpi::io_tag);
+                        MPI.vSend(comm_constant_size, sndblk, r, mpi::io_tag);
                         tsnd[ir][ic] += MPI.lastCommTicks;
 
                         // download
-                        MPI.vRecv(mpi::Static, rcvblk, r, mpi::io_tag);
+                        MPI.vRecv(comm_constant_size, rcvblk, r, mpi::io_tag);
                         trcv[ir][ic] += MPI.lastCommTicks;
 
                         // exchange
-                        MPI.vSendRecv(mpi::Static,
+                        MPI.vSendRecv(comm_constant_size,
                                       sndblk, r, mpi::io_tag,
                                       rcvblk, r, mpi::io_tag);
                         txch[ir][ic] += MPI.lastCommTicks;
@@ -85,13 +85,13 @@ namespace
                     for(size_t iter=0;iter<cycles;++iter)
                     {
                         // dowload
-                        MPI.vRecv(mpi::Static, rcvblk, origin, mpi::io_tag);
+                        MPI.vRecv(comm_constant_size, rcvblk, origin, mpi::io_tag);
 
                         // upload
-                        MPI.vSend(mpi::Static,sndblk, origin, mpi::io_tag);
+                        MPI.vSend(comm_constant_size,sndblk, origin, mpi::io_tag);
 
                         // exchange
-                        MPI.vSendRecv(mpi::Static,
+                        MPI.vSendRecv(comm_constant_size,
                                       sndblk, origin, mpi::io_tag,
                                       rcvblk, origin, mpi::io_tag);
                     }

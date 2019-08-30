@@ -66,6 +66,7 @@ namespace upsylon
                 *static_cast<T *>(addr) = tmp;
             }
 
+            //! alias for block of data
             typedef ios::ovstream Block;
             
         };

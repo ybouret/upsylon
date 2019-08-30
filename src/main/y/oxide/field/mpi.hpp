@@ -20,7 +20,7 @@ namespace upsylon
             void Send(mpi             &MPI,
                       const IO::Block &block,
                       const int        target,
-                      const mpi::vMode mode)
+                      const comm_mode  mode)
             {
                 MPI.vSend(mode,block,target,Tag);
 
@@ -28,10 +28,10 @@ namespace upsylon
 
             //! recv a block
             static inline
-            void Recv(mpi       &MPI,
-                      IO::Block &block,
-                      const int  source,
-                      const mpi::vMode mode)
+            void Recv(mpi            &MPI,
+                      IO::Block      &block,
+                      const int       source,
+                      const comm_mode mode)
             {
                 MPI.vRecv(mode,block,source,Tag);
             }
@@ -44,7 +44,7 @@ namespace upsylon
                           const int         target,
                           IO::Block       & recvBlock,
                           const int         source,
-                          const mpi::vMode  mode)
+                          const comm_mode   mode)
             {
                 MPI.vSendRecv(mode,sendBlock,target,Tag,recvBlock,source,Tag);
             }

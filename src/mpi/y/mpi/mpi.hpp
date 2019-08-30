@@ -18,7 +18,6 @@
 namespace upsylon
 {
 
-
     //! check a MPI function retuns MPI_SUCCESS
 #define Y_MPI_CHECK(CALL) do { const int err = CALL; if(MPI_SUCCESS!=err) throw mpi::exception(err,#CALL); } while(false)
 
@@ -362,26 +361,20 @@ namespace upsylon
         ios::upack_size send_pack; //!< used to send packed size of items
         ios::upack_size recv_pack; //!< used to recv packed size of items
 
-        //! vector send/recv mode
-        enum vMode
-        {
-            Static, //!< known size
-            Packed  //!< need to check sizes
-        };
 
         typedef array<uint8_t> vBytes; //!< variable number of bytes interface
         typedef ios::ovstream  vBlock; //!< variable block  implementation
 
         //! send variable number of bytes
-        void vSend( const vMode mode, const vBytes &v, const int target, const int tag);
+        void vSend(const comm_mode mode, const vBytes &v, const int target, const int tag);
 
         //! recv variable numbe of bytes
-        void vRecv( const vMode mode, vBlock       &v, const int source, const int tag);
+        void vRecv(const comm_mode mode, vBlock       &v, const int source, const int tag);
 
         //! send/recv variable numberr of bytes
-        void vSendRecv(const vMode   mode,
-                       const vBytes &sendBytes, const int target, const int sendtag,
-                       vBlock       &recvBytes, const int source, const int recvtag);
+        void vSendRecv(const comm_mode mode,
+                       const vBytes   &sendBytes, const int target, const int sendtag,
+                       vBlock         &recvBytes, const int source, const int recvtag);
 
 
         //______________________________________________________________________

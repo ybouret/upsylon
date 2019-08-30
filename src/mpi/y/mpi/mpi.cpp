@@ -414,7 +414,7 @@ namespace upsylon
     void mpi:: Bcast(void              *buffer,
                      const size_t       count,
                      const MPI_Datatype type,
-               const int          root)
+                     const int          root)
     {
         assert(!(0==buffer&&count>0));
         const uint64_t mark = rt_clock::ticks();
@@ -503,44 +503,44 @@ namespace upsylon
 
 namespace upsylon
 {
-    void mpi:: vSend(const vMode           mode,
-                     const vBytes         &v,
-                     const int             target,
-                     const int             tag)
+    void mpi:: vSend(const comm_mode mode,
+                     const vBytes   &v,
+                     const int       target,
+                     const int       tag)
     {
         const size_t n = v.size();
         switch(mode)
         {
-            case Packed: SendSize(v.size(),target,tag); /* FALLTHRU */
-            case Static: if(n>0) Send(*v,n, MPI_BYTE, target, tag); break;
+            case comm_variable_size: SendSize(v.size(),target,tag); /* FALLTHRU */
+            case comm_constant_size: if(n>0) Send(*v,n, MPI_BYTE, target, tag); break;
         }
     }
 
-    void mpi:: vRecv( const vMode  mode,
-                     vBlock       &v,
-                     const int      source,
-                     const int      tag)
+    void mpi:: vRecv(const comm_mode  mode,
+                     vBlock          &v,
+                     const int        source,
+                     const int        tag)
     {
         size_t n = v.size();
         switch(mode)
         {
-            case Packed: n = RecvSize(source,tag); v.set_fast(n); /* FALLTHRU */
-            case Static: if(n>0) Recv(*v,n,MPI_BYTE,source,tag); break;
+            case comm_variable_size: n = RecvSize(source,tag); v.set_fast(n); /* FALLTHRU */
+            case comm_constant_size: if(n>0) Recv(*v,n,MPI_BYTE,source,tag); break;
         }
     }
 
-    void mpi:: vSendRecv(const vMode   mode,
-                         const vBytes &sendBytes, const int target, const int sendtag,
-                         vBlock       &recvBytes, const int source, const int recvtag)
+    void mpi:: vSendRecv(const comm_mode mode,
+                         const vBytes   &sendBytes, const int target, const int sendtag,
+                         vBlock         &recvBytes, const int source, const int recvtag)
     {
         const size_t ns = sendBytes.size();
         size_t       nr = recvBytes.size();
-
+        
         switch (mode)
         {
-            case Packed: recvBytes.set_fast( (nr = SendRecvSizes(ns, target, sendtag, source, recvtag) ) ); /* FALLTHRU */
-            case Static: SendRecv(*sendBytes, ns, MPI_BYTE, target, sendtag,
-                                  *recvBytes, nr, MPI_BYTE, source, recvtag); break;
+            case comm_variable_size: recvBytes.set_fast( (nr = SendRecvSizes(ns, target, sendtag, source, recvtag) ) ); /* FALLTHRU */
+            case comm_constant_size: SendRecv(*sendBytes, ns, MPI_BYTE, target, sendtag,
+                                              *recvBytes, nr, MPI_BYTE, source, recvtag); break;
         }
     }
 
