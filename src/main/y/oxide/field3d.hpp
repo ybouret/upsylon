@@ -103,39 +103,40 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
             inline void setup()
             {
                 //--------------------------------------------------------------
-                // compute needed memory
+                // create memory chunks
                 //--------------------------------------------------------------
-                const size_t num_slices     = size_t(this->width.z);
-                const size_t s_bytes        = memory::align( num_slices * sizeof(SliceType) );
-                const size_t data_per_slice = sliceLayout.items; assert( data_per_slice == size_t(this->width.x*this->width.y) );
+                RowType      *rowsAddr = NULL;
+                mutable_type *dataAddr = NULL;
                 const size_t rows_per_slice = size_t(this->width.y);
-                const size_t num_rows       = rows_per_slice * num_slices;
-                const size_t r_bytes        = memory::align( num_rows * sizeof(RowType) );
-                const size_t d_bytes        = memory::align( this->linearExtent         );
-                this->privateSize           = s_bytes + r_bytes + d_bytes;
-                
+                {
+                    const size_t  num_slices = size_t(this->width.z);
+                    memory::embed chunks[]   =
+                    {
+                        memory::embed::as<SliceType>    (slice,    num_slices               ),
+                        memory::embed::as<RowType>      (rowsAddr, num_slices*rows_per_slice),
+                        memory::embed::as<mutable_type> (dataAddr, this->linearExtent       )
+                    };
+                    this->privateData = memory::embed::create_global(chunks, sizeof(chunks)/sizeof(chunks[0]), this->privateSize);
+                }
+
                 //--------------------------------------------------------------
                 // link memory
                 //--------------------------------------------------------------
-                void *addr      = this->acquirePrivate();
-                slice           = static_cast<SliceType    *>( memory::io::__shift(addr,0)        );
-                RowType      *r = static_cast<RowType      *>( memory::io::__shift(slice,s_bytes) );
-                mutable_type *d = static_cast<mutable_type *>( memory::io::__shift(r,r_bytes)     );
                 slice -= this->lower.z;
-                this->makeData(d);
-                this->entry = d;
+                this->makeData(dataAddr);
+                this->entry = dataAddr;
                 try
                 {
-                    size_t &ns = (size_t &)slices;
+                    const size_t data_per_slice = sliceLayout.items; assert( data_per_slice == size_t(this->width.x*this->width.y) );
+                    size_t      &ns             = (size_t &)slices;
                     for(Coord1D k=this->lower.z;k<=this->upper.z;++k)
                     {
                         const string id = this->subName(k);
-                        new ( &slice[k] ) SliceType(id,sliceLayout,r,d);
+                        new ( &slice[k] ) SliceType(id,sliceLayout,rowsAddr,dataAddr);
                         ++ns;
-                        d += data_per_slice;
-                        r += rows_per_slice;
+                        dataAddr += data_per_slice;
+                        rowsAddr += rows_per_slice;
                     }
-                    
                 }
                 catch(...)
                 {

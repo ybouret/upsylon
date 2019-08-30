@@ -119,7 +119,7 @@ rowLayout(this->lower.x,this->upper.x)
                 if(!rowsAddr)
                 {
                     //----------------------------------------------------------
-                    // compute bytes for rows+data
+                    // fill embedded info
                     //----------------------------------------------------------
                     assert(!dataAddr);
                     {

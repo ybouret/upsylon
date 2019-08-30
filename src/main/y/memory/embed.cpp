@@ -2,7 +2,6 @@
 #include "y/memory/embed.hpp"
 #include "y/code/round.hpp"
 
-#include <iostream>
 
 namespace upsylon
 {
@@ -45,7 +44,7 @@ namespace upsylon
                 (size_t &)(em.offset) = bytes;
                 const size_t alen = memory::align(em.length);
                 bytes += alen;
-                std::cerr << "emb: @" << em.offset << "+" << alen << "/" << em.length << " -> " << bytes << std::endl;
+                //std::cerr << "emb: @" << em.offset << "+" << alen << "/" << em.length << " -> " << bytes << std::endl;
             }
 
             // allocated memory
