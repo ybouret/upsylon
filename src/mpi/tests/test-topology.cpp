@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/container/matrix.hpp"
 #include "y/os/rt-clock.hpp"
+#include "y/code/hr-ints.hpp"
 
 using namespace upsylon;
 
@@ -148,10 +149,18 @@ namespace
 
 #include "y/ios/ocstream.hpp"
 
-static inline double t2s( const uint64_t tmx, const unsigned nb )
+
+static inline human_readable t2hr(const uint64_t tmx, const unsigned nb )
 {
-    rt_clock     clk;
-    return  nb / clk(tmx) / (1024.0*1024.0);
+    rt_clock      clk;
+    const int64_t spd = ceil( nb/ clk(tmx) );
+    return human_readable(spd);
+}
+
+static inline void print_to( const char *sym, ios::ostream &fp, const unsigned r, const unsigned s, const uint64_t tmx, const unsigned nb )
+{
+    const human_readable hr = t2hr(tmx,nb);
+    fp(" | %2u%s%2u: %8.2f%c/s",r,sym,s, hr.value, hr.radix);
 }
 
 Y_UTEST(topology)
@@ -188,10 +197,10 @@ Y_UTEST(topology)
                 {
                     if(s==r) continue;
                     const unsigned is = s+1;
-                    fp(" | ");
-                    fp("%2u->%2u: %8.2f",    r,s, t2s( snd[ir][is], num_bytes) );
-                    fp(" | %2u<-%2u: %8.2f", r,s, t2s( rcv[ir][is], num_bytes) );
-                    fp(" | %2u<->%2u: %8.2f", r,s, t2s( xch[ir][is], num_bytes) );
+                    print_to("->",fp,r,s, snd[ir][is], num_bytes);
+                    print_to("<-",fp,r,s, rcv[ir][is], num_bytes);
+                    print_to("->",fp,r,s, xch[ir][is], num_bytes);
+
                     fp("\n");
                 }
             }
