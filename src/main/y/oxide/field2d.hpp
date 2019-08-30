@@ -3,6 +3,7 @@
 #define Y_OXIDE_FIELD2D_INCLUDED 1
 
 #include "y/oxide/field1d.hpp"
+#include "y/memory/embed.hpp"
 
 namespace upsylon
 {
@@ -121,12 +122,14 @@ rowLayout(this->lower.x,this->upper.x)
                     // compute bytes for rows+data
                     //----------------------------------------------------------
                     assert(!dataAddr);
-                    const size_t rowsSize = memory::align(sizeof(RowType)*nr);
-                    const size_t dataSize = memory::align(this->linearExtent);
-                    this->privateSize     = rowsSize+dataSize;
-                    rowsAddr              = this->acquirePrivate();
-                    dataAddr              = memory::io::__shift( rowsAddr, rowsSize );
-
+                    {
+                        memory::embed chunks[] =
+                        {
+                            memory::embed( &rowsAddr, sizeof(RowType)*nr ),
+                            memory::embed( &dataAddr, this->linearExtent )
+                        };
+                        this->privateData = memory::embed::create_global(chunks, sizeof(chunks)/sizeof(chunks[0]),this->privateSize);
+                    }
                     //----------------------------------------------------------
                     // build local data@dataAddr,
                     // that shall be released by ~Field

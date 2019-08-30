@@ -67,21 +67,29 @@ namespace {
 Y_UTEST(oxide_fields)
 {
 
-    testField1D<unsigned>();
-    testField1D<double>();
-    testField1D<string>();
-    testField1D<mpq>();
-
+    for(size_t iter=0;iter<16;++iter)
+    {
+        testField1D<unsigned>();
+        testField1D<double>();
+        testField1D<string>();
+        testField1D<mpq>();
+    }
     std::cerr << std::endl;
 
-    testField2D<double>();
-    testField2D<string>();
-    testField2D<mpq>();
+    for(size_t iter=0;iter<4;++iter)
+    {
+        testField2D<double>();
+        testField2D<string>();
+        testField2D<mpq>();
+    }
     std::cerr << std::endl;
 
-    testField3D<double>();
-    testField3D<string>();
-    testField3D<mpq>();
+    for(size_t iter=1;iter<2;++iter)
+    {
+        testField3D<double>();
+        testField3D<string>();
+        testField3D<mpq>();
+    }
 
 }
 Y_UTEST_DONE()
