@@ -117,7 +117,8 @@ namespace upsylon
         Y_MPI_CLEAN(isTail);
         Y_MPI_CLEAN(isBulk);
         Y_MPI_CLEAN(threadLevel);
-        Y_MPI_CLEAN(comTicks);
+        Y_MPI_CLEAN(fullCommTicks);
+        Y_MPI_CLEAN(lastCommTicks);
     }
 
     namespace
@@ -141,7 +142,8 @@ namespace upsylon
     isTail(false),
     isBulk(false),
     threadLevel(-1),
-    comTicks(0),
+    fullCommTicks(0),
+    lastCommTicks(0),
     processorName(),
     nodeName(),
     send_pack(),
@@ -377,10 +379,12 @@ namespace upsylon
     double mpi:: getCommMilliseconds()
     {
         rt_clock     clk;
-        const double thisTime = clk( comTicks );
+        const double thisTime = clk( fullCommTicks );
         const double maxiTime = Allreduce(thisTime,MPI_MAX);
         return maxiTime * 1000.0;
     }
+
+#define Y_MPI_TICKS() fullCommTicks += (lastCommTicks=rt_clock::ticks() - mark)
 
     void mpi::Send(const void        *buffer,
                    const size_t       count,
@@ -391,7 +395,7 @@ namespace upsylon
         assert(!(0==buffer&&count>0));
         const uint64_t mark = rt_clock::ticks();
         Y_MPI_CHECK(MPI_Send((void*)buffer, int(count), type, target, tag, MPI_COMM_WORLD) );
-        comTicks += rt_clock::ticks() - mark;
+        Y_MPI_TICKS();
     }
 
     void mpi:: Recv(void              *buffer,
@@ -404,7 +408,7 @@ namespace upsylon
         const uint64_t mark = rt_clock::ticks();
         MPI_Status     status;
         Y_MPI_CHECK(MPI_Recv(buffer, int(count), type, source, tag, MPI_COMM_WORLD, &status) );
-        comTicks += rt_clock::ticks() - mark;
+        Y_MPI_TICKS();
     }
 
     void mpi:: Bcast(void              *buffer,
@@ -415,7 +419,7 @@ namespace upsylon
         assert(!(0==buffer&&count>0));
         const uint64_t mark = rt_clock::ticks();
         Y_MPI_CHECK(MPI_Bcast(buffer,int(count),type,root,MPI_COMM_WORLD));
-        comTicks += rt_clock::ticks() - mark;
+        Y_MPI_TICKS();
     }
 
     void mpi:: Reduce(const void  * send_data,
@@ -428,7 +432,7 @@ namespace upsylon
         assert(!(0==send_data&&count>0));
         const uint64_t mark = rt_clock::ticks();
         Y_MPI_CHECK(MPI_Reduce(send_data, recv_data,count,datatype, op, root, MPI_COMM_WORLD));
-        comTicks += rt_clock::ticks() - mark;
+        Y_MPI_TICKS();
     }
 
     void mpi:: Allreduce(const void  * send_data,
@@ -440,7 +444,7 @@ namespace upsylon
         assert(!(0==send_data&&count>0));
         const uint64_t mark = rt_clock::ticks();
         Y_MPI_CHECK(MPI_Allreduce(send_data, recv_data,count,datatype, op, MPI_COMM_WORLD));
-        comTicks += rt_clock::ticks() - mark;
+        Y_MPI_TICKS();
     }
 
     void mpi:: SendRecv(const void        *sendbuf,
@@ -459,7 +463,7 @@ namespace upsylon
         Y_MPI_CHECK(MPI_Sendrecv((void*)sendbuf, int(sendcount), sendtype, target, sendtag,
                                  recvbuf,        int(recvcount), recvtype, source, recvtag,
                                  MPI_COMM_WORLD, &status) );
-        comTicks += rt_clock::ticks() - mark;
+        Y_MPI_TICKS();
     }
     
 }
@@ -541,5 +545,16 @@ namespace upsylon
     }
 
 
+
+}
+
+namespace upsylon
+{
+    void mpi:: Barrier()
+    {
+        const uint64_t mark = rt_clock::ticks();
+        Y_MPI_CHECK(MPI_Barrier(MPI_COMM_WORLD));
+        Y_MPI_TICKS();
+    }
 
 }

@@ -87,7 +87,8 @@ namespace upsylon
         const bool       isTail;        //!< last==rank
         const bool       isBulk;        //!< !(isHead) && !(isTail)
         const int        threadLevel;   //!< current thread level
-        uint64_t         comTicks;      //!< cumulative communication ticks
+        uint64_t         fullCommTicks; //!< cumulative communication ticks
+        uint64_t         lastCommTicks; //!< ticks for last operation
         const string     processorName; //!< the processor name
         const string     nodeName;      //!< size.rank
 
@@ -383,7 +384,13 @@ namespace upsylon
                        vBlock       &recvBytes, const int source, const int recvtag);
 
 
+        //______________________________________________________________________
+        //
+        // point to point communication
+        //______________________________________________________________________
 
+        //! MPI_Barrier(MPI_COMM_WORLD)
+        void Barrier();
 
     private:
         data_type::db   types;
