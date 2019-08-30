@@ -156,18 +156,19 @@ namespace upsylon
             (void)ios::GraphViz::Render(filename);
             
         }
+
         
         void DynamoNode:: save( ios::ostream &fp , size_t *bytes) const
         {
             const size_t nl = name.serialize(fp); //string_io::save_binary(fp,name);
-            ios::__add_to(bytes,nl);
+            ios::gist::add_to(bytes,nl);
             switch (type)
             {
                 case DynamoTerminal: {
                     fp.emit<uint8_t>(0);
                     const string s  = content();
                     const size_t sz = s.serialize(fp);
-                    ios::__add_to(bytes,sz+1);
+                    ios::gist::add_to(bytes,sz+1);
                 } break;
                     
                 case DynamoInternal: {
@@ -176,7 +177,7 @@ namespace upsylon
                     const size_t      nch = ch.size;
                     size_t            sz  = 0;
                     fp.emit_upack(nch,&sz);
-                    ios::__add_to(bytes,sz+1);
+                    ios::gist::add_to(bytes,sz+1);
                     for(const DynamoNode *node=ch.head;node;node=node->next)
                     {
                         node->save(fp,bytes);

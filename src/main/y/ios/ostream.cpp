@@ -14,6 +14,23 @@ namespace upsylon
         ostream:: ~ostream() throw() {}
         ostream::  ostream() throw() {}
 
+        ostream & ostream:: operator<<(const char C)
+        {
+            write(C);
+            return *this;
+        }
+
+        ostream & ostream:: operator<<(const memory::ro_buffer &buffer)
+        {
+            output( static_cast<const char *>(buffer.ro()), buffer.length() );
+            return *this;
+        }
+
+        void ostream:: output(const char *buffer, const size_t buflen)
+        {
+            assert(!(buffer==0&&buflen>0));
+            for(size_t i=0;i<buflen;++i) write(buffer[i]);
+        }
 
         ostream & ostream:: operator()(const char *fmt,...)
         {

@@ -13,33 +13,40 @@ namespace upsylon
 {
     namespace ios
     {
-        //! add value to addr if addr is valid
-        template <typename T, typename U>
-        inline void __add_to( T *addr, const U value ) throw()
+        namespace gist
         {
-            if(addr) (*addr) += value;
-        }
+            //! right shift 8 bits sizeof(T)>1
+            template <typename T>
+            inline void shr8( T &x, int2type<true> ) throw()
+            {
+                assert(sizeof(T)>1);
+                x >>= 8;
+            }
 
-        //! right shift 8 bits sizeof(T)>1
-        template <typename T>
-        inline void __shr8( T &x, int2type<true> ) throw()
-        {
-            assert(sizeof(T)>1);
-            x >>= 8;
-        }
+            //! right shift 8 bits sizeof(T)<=1
+            template <typename T>
+            inline void shr8( T &x, int2type<false> ) throw()
+            {
+                assert(sizeof(T)<=1);
+                x=0;
+            }
 
-        //! right shift 8 bits sizeof(T)<=1
-        template <typename T>
-        inline void __shr8( T &x, int2type<false> ) throw()
-        {
-            assert(sizeof(T)<=1);
-            x=0;
+            template <typename T, typename U>
+            inline void add_to( T *count, const U extra ) throw()
+            {
+                if(count) { *count += extra; }
+            }
         }
 
         //! interface for output streams
         class ostream : public stream
         {
         public:
+            //__________________________________________________________________
+            //
+            // Virtual Interface
+            //__________________________________________________________________
+
             //! destructor
             virtual ~ostream() throw();
 
@@ -52,31 +59,22 @@ namespace upsylon
             //! printf style, may be superseeded
             virtual ostream & operator()(const char *fmt,...) Y_PRINTF_CHECK(2,3);
 
+            //__________________________________________________________________
+            //
+            // Non-Virtual Interface
+            //__________________________________________________________________
 
             //! output large buffer
-            inline void output(const char *buffer, const size_t buflen)
-            {
-                assert(!(buffer==0&&buflen>0));
-                for(size_t i=0;i<buflen;++i) write(buffer[i]);
-            }
-            
+            void output(const char *buffer, const size_t buflen);
+
             //! flux for one char
-            inline ostream & operator<<( const char C )
-            {
-                write(C);
-                return *this;
-            }
+            ostream & operator<<( const char );
             
             //! output text
             ostream & operator<<( const char *buffer );
 
-
             //! output buffer
-            inline ostream & operator<<(const memory::ro_buffer &buffer)
-            {
-                output( static_cast<const char *>(buffer.ro()), buffer.length() );
-                return *this;
-            }
+            ostream & operator<<(const memory::ro_buffer &buffer);
 
             //! output binary address
             ostream & viz( const void *addr );
@@ -125,7 +123,7 @@ namespace upsylon
                     {
                         const uint8_t B = uint8_t(x&T(0xff));
                         write(B);
-                        __shr8<T>(x, int2type< (sizeof(T)>1) >() );
+                        gist::shr8<T>(x, int2type< (sizeof(T)>1) >() );
                         if(shift) ++(*shift);
                     }
                     assert(0==x);

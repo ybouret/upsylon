@@ -26,7 +26,6 @@ namespace upsylon
 
             virtual void write( char C ); //!< push_back
             virtual void flush();         //!< ...
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ovstream);
         };

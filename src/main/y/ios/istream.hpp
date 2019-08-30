@@ -11,26 +11,35 @@ namespace upsylon
 {
     namespace ios
     {
-        //! left shift 8 bits sizeof(T)>1
-        template <typename T>
-        inline void __shl8( T &x, int2type<true> ) throw()
+        namespace gist
         {
-            assert(sizeof(T)>1);
-            x <<= 8;
-        }
+            //! left shift 8 bits sizeof(T)>1
+            template <typename T>
+            inline void shl8( T &x, int2type<true> ) throw()
+            {
+                assert(sizeof(T)>1);
+                (x <<= 8);
+            }
 
-        //! left shift 8 bits sizeof(T)<=1
-        template <typename T>
-        inline void __shl8( T &x, int2type<false> ) throw()
-        {
-            assert(sizeof(T)<=1);
-            x=0;
+            //! left shift 8 bits sizeof(T)<=1
+            template <typename T>
+            inline void shl8( T &x, int2type<false> ) throw()
+            {
+                assert(sizeof(T)<=1);
+                x=0;
+            }
         }
 
         //! input stream interface
         class istream : public stream
         {
         public:
+            //------------------------------------------------------------------
+            //
+            // virtual interface
+            //
+            //------------------------------------------------------------------
+
             //! destructor
             virtual ~istream() throw();
 
@@ -42,6 +51,12 @@ namespace upsylon
 
             //! test at least one more char, default query/store
             virtual bool is_active();
+
+            //------------------------------------------------------------------
+            //
+            // non-virtual interface
+            //
+            //------------------------------------------------------------------
 
             //! get a new line
             bool gets( string &line );
@@ -73,8 +88,7 @@ namespace upsylon
                 T            ans(0);
                 while(extra_bytes-->0)
                 {
-                    //ans <<= 8;
-                    __shl8(ans,int2type< (sizeof(T)>1) >());
+                    gist::shl8(ans,int2type< (sizeof(T)>1) >());
                     ans |= store[extra_bytes];
                 }
                 {
