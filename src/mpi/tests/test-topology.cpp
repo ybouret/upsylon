@@ -98,12 +98,44 @@ namespace
         }
         //----------------------------------------------------------------------
         // all origins have been tested
+        // recomposing all matrices
         //----------------------------------------------------------------------
+        MPI.print0(stderr, "\treconstructing\n");
+        for(int origin=0;origin<MPI.size;++origin)
+        {
+            const size_t ir = origin+1;
+            if(MPI.rank==origin)
+            {
+                // store data from other nodes
+                for(int r=0;r<MPI.size;++r)
+                {
+                    if(r==origin) continue;
+                    MPI.SendAll(tsnd[ir], r, mpi::io_tag);
+                    MPI.SendAll(trcv[ir], r, mpi::io_tag);
+                    MPI.SendAll(txch[ir], r, mpi::io_tag);
+
+                }
+            }
+            else
+            {
+                // query data from origin
+                MPI.RecvAll(tsnd[ir], origin, mpi::io_tag);
+                MPI.RecvAll(trcv[ir], origin, mpi::io_tag);
+                MPI.RecvAll(txch[ir], origin, mpi::io_tag);
+            }
+        }
+
+        //const size_t num_bytes = blockSize * cycles;
+        //const double mega      = square_of( 1024.0 );
+
+
+
         if(MPI.isHead)
         {
             std::cerr << "tsnd=" << tsnd << std::endl;
             std::cerr << "trcv=" << trcv << std::endl;
             std::cerr << "txch=" << txch << std::endl;
+
         }
         MPI.Barrier();
     }
@@ -114,7 +146,7 @@ Y_UTEST(topology)
 {
     Y_MPI(SINGLE);
 
-    Star(MPI,12,8);
+    Star(MPI,12,32);
 
 }
 Y_UTEST_DONE()
