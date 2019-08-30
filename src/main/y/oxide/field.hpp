@@ -4,18 +4,18 @@
 #ifndef Y_OXIDE_FIELD_INCLUDED
 #define Y_OXIDE_FIELD_INCLUDED 1
 
-#include "y/oxide/field/info.hpp"
+#include "y/oxide/field/type.hpp"
 
 namespace upsylon
 {
     namespace Oxide
     {
         //! common constructor part
-#define Y_OXIDE_FIELD_CTOR() FieldInfo(id, L, sizeof(T) ), entry(NULL), _data(NULL)
+#define Y_OXIDE_FIELD_CTOR() FieldType(id, L, sizeof(T) ), entry(NULL), _data(NULL)
         
         //! common abstract API for fields
         template <typename T>
-        class Field : public FieldInfo
+        class Field : public FieldType
         {
         public:
             Y_DECL_ARGS(T,type); //!< aliases

@@ -1,10 +1,10 @@
-#include "y/oxide/field/info.hpp"
+#include "y/oxide/field/type.hpp"
 
 namespace upsylon
 {
     namespace Oxide
     {
-        FieldInfo:: ~FieldInfo() throw()
+        FieldType:: ~FieldType() throw()
         {
             assert(0==ownedObjects);
             (size_t &)linearExtent = 0;
@@ -21,23 +21,23 @@ sizeOfObject(szObj),              \
 privateData(0),                   \
 privateSize(0)
         
-        FieldInfo:: FieldInfo(const string &id, const LayoutInfo &L, const size_t szObj) :
+        FieldType:: FieldType(const string &id, const LayoutInfo &L, const size_t szObj) :
         Y_OXIDE_FIELD_INFO_CTOR()
         {
         }
         
-        FieldInfo:: FieldInfo(const char *id, const LayoutInfo &L, const size_t szObj) :
+        FieldType:: FieldType(const char *id, const LayoutInfo &L, const size_t szObj) :
         Y_OXIDE_FIELD_INFO_CTOR()
         {
         }
         
-        void *   FieldInfo:: acquirePrivate()
+        void *   FieldType:: acquirePrivate()
         {
             static memory::allocator &mgr = memory::global::instance();
             return (privateData = mgr.acquire(privateSize));
         }
         
-        void FieldInfo:: releasePrivate() throw()
+        void FieldType:: releasePrivate() throw()
         {
             assert(ownedObjects==0);
             if(privateSize)
@@ -47,18 +47,18 @@ privateSize(0)
             }
         }
         
-        string FieldInfo:: subName( const Coord1D n ) const
+        string FieldType:: subName( const Coord1D n ) const
         {
             return name + vformat("[%ld]", static_cast<long>(n) );
         }
 
-        void FieldInfo:: save(ios::ostream &fp, const Coord1D index, SaveProc proc) const
+        void FieldType:: save(ios::ostream &fp, const Coord1D index, SaveProc proc) const
         {
             assert(proc);
             proc(fp,getObjectAddr(index));
         }
 
-        void FieldInfo:: save(ios::ostream &fp, SaveProc proc) const
+        void FieldType:: save(ios::ostream &fp, SaveProc proc) const
         {
             assert(proc);
             for(size_t index=0;index<localObjects;++index)
@@ -67,7 +67,7 @@ privateSize(0)
             }
         }
 
-        void FieldInfo:: load( ios::istream &fp, const Coord1D index, LoadProc proc)
+        void FieldType:: load( ios::istream &fp, const Coord1D index, LoadProc proc)
         {
             assert(proc);
             proc(fp,(void*)getObjectAddr(index));
@@ -76,7 +76,7 @@ privateSize(0)
        
         
         
-        void FieldInfo:: load(ios::istream &fp, LoadProc proc)
+        void FieldType:: load(ios::istream &fp, LoadProc proc)
         {
             assert(proc);
             for(size_t index=0;index<localObjects;++index)
@@ -85,13 +85,13 @@ privateSize(0)
             }
         }
 
-        void FieldInfo:: load(const memory::ro_buffer &buff, const Coord1D index, LoadProc proc)
+        void FieldType:: load(const memory::ro_buffer &buff, const Coord1D index, LoadProc proc)
         {
             ios::imstream fp(buff);
             load(fp,index,proc);
         }
         
-        void FieldInfo:: load(const memory::ro_buffer &buff, LoadProc proc)
+        void FieldType:: load(const memory::ro_buffer &buff, LoadProc proc)
         {
             ios::imstream fp(buff);
             load(fp,proc);

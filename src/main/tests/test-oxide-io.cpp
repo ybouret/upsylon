@@ -26,8 +26,8 @@ namespace
     }
 
     template <typename T>
-    static inline void run_with(FieldInfo::SaveProc save,
-                                FieldInfo::LoadProc  load)
+    static inline void run_with(FieldType::SaveProc save,
+                                FieldType::LoadProc  load)
     {
         IO::Block io(1024*1024);
 
