@@ -29,6 +29,8 @@ CLI(y_port_missing)
 CLI(get-kde-wallpapers)
 ENDIF()
 
+CLI(y_mpi_xcopy)
+
 MESSAGE( STATUS "<Command Line Interface Tools/>" )
 MESSAGE( STATUS "")
 
