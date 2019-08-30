@@ -22,7 +22,7 @@ template <typename T>
 static inline void test_ints()
 {
     std::cerr << typeid(T).name() << std::endl;
-    std::cerr << "\tmin=" << limit_of<T>::minimun << std::endl;
+    std::cerr << "\tmin=" << limit_of<T>::minimum << std::endl;
     std::cerr << "\tmax=" << limit_of<T>::maximum << std::endl;
 }
 
