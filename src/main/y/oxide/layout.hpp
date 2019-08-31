@@ -242,7 +242,7 @@ namespace upsylon
                 }
             }
 
-
+            //! build partitions
             void buildPartition( sequence<Layout> &partition, const COORD &mapping ) const
             {
                 // check memory
@@ -268,10 +268,6 @@ namespace upsylon
                 assert( partition.size() == cores );
 
             }
-
-
-
-
 
         private:
             Y_DISABLE_ASSIGN(Layout);

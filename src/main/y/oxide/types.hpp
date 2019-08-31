@@ -140,6 +140,52 @@ namespace upsylon
                 Parse((Coord1D *)&ans, Get<COORD>::Dimensions, args);
                 return ans;
             }
+            
+            //! return global rank 1D: ranks.x
+            static inline Coord1D GlobalRank( const Coord1D &, const Coord1D &ranks ) throw()
+            {
+                return ranks;
+            }
+            
+            //! return global rank: 2D: ranks.x + ranks.y * sizes.x
+            static inline Coord1D GlobalRank( const Coord2D &sizes, const Coord2D &ranks ) throw()
+            {
+                return ranks.x + ranks.y * sizes.x;
+            }
+            
+            //!return global rank: 3D:ranks.x + ranks.y * sizes.x + ranks.z * sizes.x * sizes.y = ranks.x + sizes.x * ( ranks.y + sizes.y * ranks.z)
+            static inline Coord1D GlobalRank( const Coord3D &sizes, const Coord3D &ranks ) throw()
+            {
+                return ranks.x + sizes.x * ( ranks.y + sizes.y * ranks.z);
+            }
+            
+            //! return local ranks 1D: (ranks.x=r)
+            static inline Coord1D LocalRanks( const Coord1D &r, const Coord1D &) throw()
+            {
+                return r;
+            }
+            
+             //! return local ranks 2D: (ranks.y=r/sizes.x,ranks.x=r%sizes.x)
+            static inline Coord2D LocalRanks( const Coord1D &r, const Coord2D &sizes) throw()
+            {
+                const ldiv_t d = ldiv(r,sizes.x);
+                return Coord2D(d.rem,d.quot);
+            }
+            
+            //! return local ranks 3D:
+            /**
+             
+             */
+            static inline Coord3D LocalRanks( const Coord1D &r, const Coord3D &sizes) throw()
+            {
+                const ldiv_t d1 = ldiv(r,sizes.x);
+                const ldiv_t d2 = ldiv(d1.quot,sizes.y);
+                return Coord3D(d1.rem,d2.rem,d2.quot);
+            }
+            
+            
+            
+            
         };
         
         
