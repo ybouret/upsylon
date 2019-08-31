@@ -52,49 +52,57 @@ privateSize(0)
             return name + vformat("[%ld]", static_cast<long>(n) );
         }
 
-        void FieldType:: save(ios::ostream &fp, const Coord1D index, SaveProc proc) const
+        size_t FieldType:: save(ios::ostream &fp, const Coord1D index, SaveProc proc) const
         {
             assert(proc);
-            proc(fp,getObjectAddr(index));
+            size_t ns = 0;
+            proc(fp,getObjectAddr(index),&ns);
+            return ns;
         }
 
-        void FieldType:: save(ios::ostream &fp, SaveProc proc) const
+        size_t FieldType:: save(ios::ostream &fp, SaveProc proc) const
         {
             assert(proc);
+            size_t total = 0;
             for(size_t index=0;index<localObjects;++index)
             {
-                save(fp,index,proc);
+                total += save(fp,index,proc);
             }
+            return total;
         }
 
-        void FieldType:: load( ios::istream &fp, const Coord1D index, LoadProc proc)
+        size_t FieldType:: load( ios::istream &fp, const Coord1D index, LoadProc proc)
         {
             assert(proc);
-            proc(fp,(void*)getObjectAddr(index));
+            size_t nr = 0;
+            proc(fp,(void*)getObjectAddr(index),&nr);
+            return nr;
         }
 
        
         
         
-        void FieldType:: load(ios::istream &fp, LoadProc proc)
+        size_t FieldType:: load(ios::istream &fp, LoadProc proc)
         {
             assert(proc);
+            size_t total = 0;
             for(size_t index=0;index<localObjects;++index)
             {
-                load(fp,index,proc);
+                total += load(fp,index,proc);
             }
+            return total;
         }
 
-        void FieldType:: load(const memory::ro_buffer &buff, const Coord1D index, LoadProc proc)
+        size_t FieldType:: load(const memory::ro_buffer &buff, const Coord1D index, LoadProc proc)
         {
             ios::imstream fp(buff);
-            load(fp,index,proc);
+            return load(fp,index,proc);
         }
         
-        void FieldType:: load(const memory::ro_buffer &buff, LoadProc proc)
+        size_t FieldType:: load(const memory::ro_buffer &buff, LoadProc proc)
         {
             ios::imstream fp(buff);
-            load(fp,proc);
+            return load(fp,proc);
         }
 
 

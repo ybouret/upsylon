@@ -25,6 +25,7 @@ Y_UTEST(oxide)
     IO::Block send_block(1024);
     IO::Block recv_block(1024);
     vector<Coord1D> indices;
+    ios::plugin_raw<double> plg;
 
     MPI.print0(stderr,"-------- 1D --------\n");
     {
@@ -51,14 +52,16 @@ Y_UTEST(oxide)
         if(MPI.isHead)
         {
             fill(F);
-            F.save_only(indices, send_block, IO::SaveBlock<double> );
+            (void) F.save_only(indices, send_block, plg.save );
         }
         MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
         MPI.print0(stderr, "Exchange\n" );
         if(MPI.isHead)
         {
             fill(F);
-            F.save_only(indices, send_block, IO::SaveBlock<double> );
+            send_block.free();
+            const size_t nw = F.save_only(indices, send_block, plg.save );
+            Y_ASSERT(nw==send_block.size());
             for(int r=1;r<MPI.size;++r)
             {
                 // first send, used packed
@@ -72,7 +75,8 @@ Y_UTEST(oxide)
             F.ld(0);
             Comm::Recv(MPI,recv_block,0,comm_variable_size);
             Comm::Recv(MPI,recv_block,0,comm_constant_size);
-            F.load_only(indices,recv_block,IO::LoadBlock<double>);
+            const size_t nl = F.load_only(indices,recv_block,plg.load);
+            Y_ASSERT(nl==recv_block.size());
         }
         
         MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
@@ -82,7 +86,7 @@ Y_UTEST(oxide)
         recv_block.free();
 
         fill(F);
-        F.save_only(indices,send_block, IO::SaveBlock<double> );
+        F.save_only(indices,send_block, plg.save );
         MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
 
         MPI.print0(stderr, "Send/Recv Exec\n" );
@@ -109,18 +113,13 @@ Y_UTEST(oxide)
             Comm::SendRecv(MPI, send_block, 0, recv_block, 0,comm_constant_size);
         }
         MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
-        F.load_only(indices,recv_block,IO::LoadBlock<double>);
+        F.load_only(indices,recv_block,plg.load);
     }
     
     
 
     MPI.print(stderr, "Ellaped: %gms\n", MPI.getCommMilliseconds() );
 
-
-    MPI.print0(stderr,"-------- 2D --------\n");
-    {
-        
-    }
 }
 Y_UTEST_DONE()
 

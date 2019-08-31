@@ -5,6 +5,7 @@
 
 #include "y/oxide/layout.hpp"
 #include "y/string.hpp"
+#include "y/ios/plugin.hpp"
 #include "y/ios/imstream.hpp"
 
 namespace upsylon
@@ -34,48 +35,52 @@ namespace upsylon
             //------------------------------------------------------------------
             // non-virtual interface
             //------------------------------------------------------------------
-            typedef void (*SaveProc)( ios::ostream &, const void *); //!< saving  prototype
-            typedef void (*LoadProc)( ios::istream &, void *);       //!< loading prototype
+            typedef ios::plugin::save_proc SaveProc; //!< using ios::plugin::save_proc to save data to ostream
+            typedef ios::plugin::load_proc LoadProc; //!< using ios::plugin::load_proc to load data from istream
 
-            void    save( ios::ostream &fp, const Coord1D index, SaveProc proc ) const; //!< save one object
-            void    save( ios::ostream &fp, SaveProc proc) const;                       //!< save all objects
-            void    load( ios::istream &fp, const Coord1D index, LoadProc proc);        //!< load one object
-            void    load( ios::istream &fp, LoadProc proc);                             //!< load all objects
+            size_t    save( ios::ostream &fp, const Coord1D index, SaveProc proc ) const; //!< save one object
+            size_t    save( ios::ostream &fp, SaveProc proc) const;                       //!< save all objects
+            size_t    load( ios::istream &fp, const Coord1D index, LoadProc proc);        //!< load one object
+            size_t    load( ios::istream &fp, LoadProc proc);                             //!< load all objects
 
             //! saving objects from a sequence of indices
             template <typename SEQUENCE> inline
-            void save_only(const SEQUENCE &indices, ios::ostream &fp, SaveProc proc) const
+            size_t save_only(const SEQUENCE &indices, ios::ostream &fp, SaveProc proc) const
             {
+                size_t total = 0;
                 size_t n = indices.size();
                 for( typename SEQUENCE::const_iterator i=indices.begin(); n>0; --n, ++i)
                 {
-                    save(fp,*i,proc);
+                    total += save(fp,*i,proc);
                 }
+                return total;
             }
 
             //! reload objects from a sequence of indices
             template <typename SEQUENCE> inline
-            void load_only(const SEQUENCE &indices, ios::istream &fp, LoadProc proc )
+            size_t load_only(const SEQUENCE &indices, ios::istream &fp, LoadProc proc )
             {
+                size_t total = 0;
                 size_t n = indices.size();
                 for( typename SEQUENCE::const_iterator i=indices.begin(); n>0; --n, ++i)
                 {
-                    load(fp,*i,proc);
+                    total += load(fp,*i,proc);
                 }
+                return total;
             }
 
             //! load from read-only buffer
-            void load(const memory::ro_buffer &buff, const Coord1D index, LoadProc proc);
+            size_t load(const memory::ro_buffer &buff, const Coord1D index, LoadProc proc);
             
             //! load all  from read-only buffer
-            void load(const memory::ro_buffer &buff, LoadProc proc);
+            size_t load(const memory::ro_buffer &buff, LoadProc proc);
 
             //! reload objects from a sequence of indices and a read-only buffer
             template <typename SEQUENCE> inline
-            void load_only(const SEQUENCE &indices, const memory::ro_buffer &buff, LoadProc proc )
+            size_t load_only(const SEQUENCE &indices, const memory::ro_buffer &buff, LoadProc proc )
             {
                 ios::imstream fp(buff);
-                load_only<SEQUENCE>(indices,fp,proc);
+                return load_only<SEQUENCE>(indices,fp,proc);
             }
 
 

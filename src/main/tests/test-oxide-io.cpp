@@ -26,8 +26,7 @@ namespace
     }
 
     template <typename T>
-    static inline void run_with(FieldType::SaveProc save,
-                                FieldType::LoadProc  load)
+    static inline void run_with( ios::plugin &plg )
     {
         IO::Block io(1024*1024);
 
@@ -47,19 +46,19 @@ namespace
             std::cerr << "F2=" << F2 << std::endl;
             std::cerr << "F3=" << F3 << std::endl;
 
-            F1.save(io,save);
-            F2.save(io,save);
-            F3.save(io,save);
+            F1.save(io,plg.save);
+            F2.save(io,plg.save);
+            F3.save(io,plg.save);
 
             std::cerr << "#io=" << io.size() << "/" << io.capacity() << std::endl;
             
             
-            if(load)
+            if(plg.load)
             {
                 ios::imstream inp( io );
-                F1.load(inp,load);
-                F2.load(inp,load);
-                F3.load(inp,load);
+                F1.load(inp,plg.load);
+                F2.load(inp,plg.load);
+                F3.load(inp,plg.load);
                 std::cerr << "\treloaded..." << std::endl;
             }
 
@@ -83,14 +82,14 @@ namespace
                 std::cerr << "#i3=" << i3.size() << std::endl;
             }
 
-            F1.save_only(i1,io,save);
-            F2.save_only(i2,io,save);
-            F3.save_only(i3,io,save);
-            if(load)
+            F1.save_only(i1,io,plg.save);
+            F2.save_only(i2,io,plg.save);
+            F3.save_only(i3,io,plg.save);
+            if(plg.load)
             {
-                F1.load_only(i1,io,load);
-                F2.load_only(i2,io,load);
-                F3.load_only(i3,io,load);
+                F1.load_only(i1,io,plg.load);
+                F2.load_only(i2,io,plg.load);
+                F3.load_only(i3,io,plg.load);
                 std::cerr << "\treloaded..." << std::endl;
             }
 
@@ -103,9 +102,19 @@ namespace
 
 Y_UTEST(oxide_io)
 {
-    run_with<double>( IO::SaveBlock<double>       , IO::LoadBlock<double>       );
-    run_with<float>(  IO::SaveIntegral<float>     , IO::LoadIntegral<float>     );
-    run_with<string>( IO::SaveSerializable<string>, IO::LoadSerialized<string>  );
+    {
+        ios::plugin_raw<double> plg;
+        run_with<double>(plg);
+    }
+    {
+        ios::plugin_net<float> plg;
+        run_with<float>(plg);
+    }
+
+    {
+        ios::plugin_srz<string> plg;
+        run_with<string>(plg);
+    }
 
 }
 Y_UTEST_DONE()
