@@ -36,10 +36,10 @@ namespace upsylon
         class Layout : public LayoutInfo
         {
         public:
-            static const size_t Dimensions = DimensionsOf<COORD>::Value; //!< alias
-            typedef COORD       coord;                                   //!< alias
-            typedef const coord const_coord;                             //!< alias
-            typedef multi_loop<Coord1D,COORD> Loop;                      //!< loop over sub layout
+            static const size_t Dimensions = Coord::Get<COORD>::Dimensions; //!< alias
+            typedef COORD       coord;                                      //!< alias
+            typedef const coord const_coord;                                //!< alias
+            typedef multi_loop<Coord1D,COORD> Loop;                         //!< loop over sub layout
 
             const_coord lower; //!< lower coordinate
             const_coord upper; //!< upper coordinate
@@ -94,9 +94,9 @@ namespace upsylon
             {
                 for(size_t dim=0;dim<Dimensions;++dim)
                 {
-                    const Coord1D l = CoordOf(lower,dim);
-                    const Coord1D u = CoordOf(upper,dim);
-                    const Coord1D c = CoordOf(C,dim);
+                    const Coord1D l = Coord::Of(lower,dim);
+                    const Coord1D u = Coord::Of(upper,dim);
+                    const Coord1D c = Coord::Of(C,dim);
                     if(c<l||c>u) return false;
                 }
                 return true;
@@ -113,10 +113,10 @@ namespace upsylon
             inline Coord1D indexOf(const_coord q) const throw()
             {
                 assert( has(q) );
-                Coord1D ans = CoordOf(q,0)-CoordOf(lower,0);
+                Coord1D ans = Coord::Of(q,0)-Coord::Of(lower,0);
                 for(size_t dim=1;dim<Dimensions;++dim)
                 {
-                    ans += (CoordOf(q,dim)-CoordOf(lower,dim))*CoordOf(pitch,dim);
+                    ans += (Coord::Of(q,dim)-Coord::Of(lower,dim))*Coord::Of(pitch,dim);
                 }
                 assert(ans>=0); assert(ans<Coord1D(items));
                 return ans;
@@ -131,12 +131,12 @@ namespace upsylon
                 Coord1D rem = idx;
                 for(size_t dim=Dimensions-1;dim>0;--dim)
                 {
-                    const Coord1D den = CoordOf(pitch,dim);
+                    const Coord1D den = Coord::Of(pitch,dim);
                     const Coord1D qot = rem / den;
-                    CoordOf(q,dim) = qot + CoordOf(lower,dim);
+                    Coord::Of(q,dim) = qot + Coord::Of(lower,dim);
                     rem -= qot * den;
                 }
-                CoordOf(q,0) = rem + CoordOf(lower,0);
+                Coord::Of(q,0) = rem + Coord::Of(lower,0);
                 
                 return q;
             }
@@ -144,7 +144,7 @@ namespace upsylon
             //! random coordinate within the layout
             inline COORD rand( randomized::bits &ran ) const throw()
             {
-                return CoordOps::Within(lower,upper,ran);
+                return Coord::Within(lower,upper,ran);
             }
 
             //! collecting indices
@@ -172,17 +172,22 @@ namespace upsylon
                 coord lo = lower;
                 for(size_t dim=0;dim<Dimensions;++dim)
                 {
-                    Split1D(CoordOf(nn,dim),
-                            CoordOf(lo,dim ),
-                            CoordOf(sizes,dim),
-                            CoordOf(ranks,dim));
+                    Split1D(Coord::Of(nn,dim),
+                            Coord::Of(lo,dim ),
+                            Coord::Of(sizes,dim),
+                            Coord::Of(ranks,dim));
 
                 }
                 coord up = nn + lo;
-                return Layout(lo,CoordDecrease(up));
+                return Layout(lo,Coord::Decrease(up));
             }
             
             //! return matching mapping
+            /**
+             the product of a mapping coordinates is equal to
+             the number of cores, and each coordinate is strictly lower
+             than the layouy width in the same dimension
+             */
             inline void buildMappings( sequence<COORD> &mappings, const size_t cores ) const
             {
                 //--------------------------------------------------------------
@@ -196,10 +201,10 @@ namespace upsylon
                 //--------------------------------------------------------------
                 COORD org(0);
                 COORD top(0);
-                for(size_t dim=0;dim<DimensionsOf<COORD>::Value;++dim)
+                for(size_t dim=0;dim<Dimensions;++dim)
                 {
-                    CoordOf(org,dim) = 1;
-                    CoordOf(top,dim) = cores;
+                    Coord::Of(org,dim) = 1;
+                    Coord::Of(top,dim) = cores;
                 }
                 Loop   loop(org,top);
                 //--------------------------------------------------------------
@@ -210,17 +215,17 @@ namespace upsylon
                     //----------------------------------------------------------
                     // check number of cores
                     //----------------------------------------------------------
-                    const size_t local_cores = CoordProduct(loop.value);
-                    if(cores!=local_cores) continue;
+                    const size_t loopCores = Coord::Product(loop.value);
+                    if(cores!=loopCores) continue;
 
 
                     //----------------------------------------------------------
                     // check enough item in each dimension
                     //----------------------------------------------------------
                     bool valid = true;
-                    for(size_t dim=0;dim<DimensionsOf<COORD>::Value;++dim)
+                    for(size_t dim=0;dim<Dimensions;++dim)
                     {
-                        if( CoordOf(loop.value,dim)>CoordOf(width,dim) )
+                        if( Coord::Of(loop.value,dim)>Coord::Of(width,dim) )
                         {
                             valid = false;
                             break;
@@ -242,16 +247,16 @@ namespace upsylon
             {
                 // check memory
                 partition.free();
-                const size_t cores = CoordProduct(mapping); assert(cores>0);
+                const size_t cores = Coord::Product(mapping); assert(cores>0);
                 partition.ensure(cores);
 
                 // build look on local ranks
                 coord org(0);
                 coord top(0);
-                for(size_t dim=0;dim<DimensionsOf<COORD>::Value;++dim)
+                for(size_t dim=0;dim<Dimensions;++dim)
                 {
-                    CoordOf(org,dim) = 0;
-                    CoordOf(top,dim) = CoordOf(mapping,dim)-1;
+                    Coord::Of(org,dim) = 0;
+                    Coord::Of(top,dim) = Coord::Of(mapping,dim)-1;
                 }
 
                 Loop loop(org,top);

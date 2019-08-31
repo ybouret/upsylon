@@ -30,8 +30,8 @@ Y_UTEST(oxide)
     MPI.print0(stderr,"-------- 1D --------\n");
     {
         MPI.print0(stderr, "Setup\n" );
-        Coord1D  lo = CoordOps::Integer<Coord1D>(20,alea);
-        Coord1D  up = CoordOps::Integer<Coord1D>(20,alea);
+        Coord1D  lo = Coord::Integer<Coord1D>(20,alea);
+        Coord1D  up = Coord::Integer<Coord1D>(20,alea);
         MPI.Bcast(lo,0);
         MPI.Bcast(up,0);
         const Layout1D L(lo,up);

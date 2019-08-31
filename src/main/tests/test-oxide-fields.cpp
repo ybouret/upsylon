@@ -30,7 +30,7 @@ namespace {
     template <typename T>
     static inline void testField1D()
     {
-        const Layout1D L( CoordOps::Integer<Coord1D>(20, alea),  CoordOps::Integer<Coord1D>(20, alea) );
+        const Layout1D L( Coord::Integer<Coord1D>(20, alea),  Coord::Integer<Coord1D>(20, alea) );
         const string   id = typeid(T).name();
         Field1D<T>     F(id,L);
         std::cerr << "Field1D <" << F.name << ">: " << F << std::endl;
@@ -41,7 +41,7 @@ namespace {
     template <typename T>
     static inline void testField2D()
     {
-        const Layout2D L( CoordOps::Integer<Coord2D>(20, alea),  CoordOps::Integer<Coord2D>(20, alea) );
+        const Layout2D L( Coord::Integer<Coord2D>(20, alea),  Coord::Integer<Coord2D>(20, alea) );
         const string   id = typeid(T).name();
         Field2D<T>     F(id,L);
         std::cerr << "Field2D <" << F.name << ">: " << F << std::endl;
@@ -53,7 +53,7 @@ namespace {
     template <typename T>
     static inline void testField3D()
     {
-        const Layout3D L( CoordOps::Integer<Coord3D>(20, alea),  CoordOps::Integer<Coord3D>(20, alea) );
+        const Layout3D L( Coord::Integer<Coord3D>(20, alea),  Coord::Integer<Coord3D>(20, alea) );
         const string   id = typeid(T).name();
         Field3D<T>     F(id,L);
         std::cerr << "Field3D <" << F.name << ">: " << F << std::endl;

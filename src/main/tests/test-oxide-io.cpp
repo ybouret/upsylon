@@ -35,9 +35,9 @@ namespace
         {
             io.free();
             const Coord1D m = 20;
-            Field1D<T> F1( "F1",  CoordOps::Integer<Coord1D>(m, alea),  CoordOps::Integer<Coord1D>(m, alea) );
-            Field2D<T> F2( "F2",  CoordOps::Integer<Coord2D>(m, alea),  CoordOps::Integer<Coord2D>(m, alea) );
-            Field3D<T> F3( "F3",  CoordOps::Integer<Coord3D>(m, alea),  CoordOps::Integer<Coord3D>(m, alea) );
+            Field1D<T> F1( "F1",  Coord::Integer<Coord1D>(m, alea),  Coord::Integer<Coord1D>(m, alea) );
+            Field2D<T> F2( "F2",  Coord::Integer<Coord2D>(m, alea),  Coord::Integer<Coord2D>(m, alea) );
+            Field3D<T> F3( "F3",  Coord::Integer<Coord3D>(m, alea),  Coord::Integer<Coord3D>(m, alea) );
 
             fill(F1);
             fill(F2);
