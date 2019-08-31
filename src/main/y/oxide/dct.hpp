@@ -1,18 +1,18 @@
 //! \file
-#ifndef Y_IPSO_DCT_INCLUDED
-#define Y_IPSO_DCT_INCLUDED 1
+#ifndef Y_OXIDE_DCT_INCLUDED
+#define Y_OXIDE_DCT_INCLUDED 1
 
-#include "y/ipso/field2d.hpp"
+#include "y/oxide/field2d.hpp"
 
 namespace upsylon
 {
-    namespace ipso
+    namespace Oxide
     {
         //! Discret Cosine Transform base class
         class DCT
         {
         public:
-            typedef field2D<double> Table; //!< alias to store internal data
+            typedef Field2D<double> Table; //!< alias to store internal data
 
             virtual ~DCT() throw(); //!< cleanup
 
@@ -38,6 +38,12 @@ namespace upsylon
             explicit CommonDCT(const unit_t W,const unit_t H); //!< setup
 
             //! forward transform
+            /**
+             \param tgt a Table
+             \param src a 2D table kind
+             \param xx  offset for src
+             \param yy  offset for src
+             */
             template <typename TABLE>
             void forward(Table           &tgt,
                          const TABLE     &src,

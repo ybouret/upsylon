@@ -42,7 +42,7 @@ rowLayout(this->lower.x,this->upper.x)
                 setup(rowsAddr,dataAddr);
             }
 
-            //! construct by string and layout
+            //! construct by label and two coordinated
             explicit Field2D(const char     *id,
                              const Coord2D   lo,
                              const Coord2D   hi) :
@@ -50,6 +50,17 @@ rowLayout(this->lower.x,this->upper.x)
             {
                 setup(NULL,NULL);
             }
+
+
+            //! construct as matrix
+            explicit Field2D(const char     *id,
+                             const Coord1D   w,
+                             const Coord1D   h) :
+            Layout2D( Coord2D(0,0), Coord2D(w-1,h-1) ), Y_OXIDE_FIELD2D_CTOR()
+            {
+                setup(NULL,NULL);
+            }
+
 
             //! cleanup
             inline virtual ~Field2D() throw()

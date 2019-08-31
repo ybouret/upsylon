@@ -126,7 +126,6 @@ Y_UTEST_INIT(150)
     Y_UTEST(ipso);
     Y_UTEST(ipso_io);
     Y_UTEST(ipso_gh);
-    Y_UTEST(ipso_dct);
     Y_UTEST(ipso_c2d);
 
     Y_UTEST(progress);
@@ -159,6 +158,8 @@ Y_UTEST_INIT(150)
     Y_UTEST(oxide);
     Y_UTEST(oxide_fields);
     Y_UTEST(oxide_io);
+    Y_UTEST(oxide_dct);
+
 }
 Y_UTEST_EXEC()
 

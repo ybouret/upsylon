@@ -131,11 +131,10 @@ ADD_TEST(mk:sobol       test-main sobol)
 ADD_TEST(mk:timings     test-main timings)
 
 
-SOURCE_GROUP(ispo FILES test-ipso.cpp test-ipso-io.cpp test-ipso-gh.cpp test-ipso-dct.cpp test-ipso-c2d.cpp)
+SOURCE_GROUP(ispo FILES test-ipso.cpp test-ipso-io.cpp test-ipso-gh.cpp test-ipso-c2d.cpp)
 ADD_TEST(ipso:main   test-main  ipso)
 ADD_TEST(ipso:io     test-main  ipso_io)
 ADD_TEST(ipso:gh     test-main  ipso_gh)
-ADD_TEST(ipso:dct    test-main  ipso_dct)
 ADD_TEST(ipso:c2d    test-main  ipso_c2d)
 
 SOURCE_GROUP(lang FILES test-token.cpp test-source.cpp test-pattern.cpp 
@@ -205,10 +204,11 @@ SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)
 ADD_TEST(sparse:array  test-main sparse_array)
 ADD_TEST(sparse:matrix test-main sparse_matrix)
 
-SOURCE_GROUP(oxide FILES test-oxide.cpp test-oxide-fields.cpp test-oxide-io.cpp)
+SOURCE_GROUP(oxide FILES test-oxide.cpp test-oxide-fields.cpp test-oxide-io.cpp test-oxide-dct.cpp )
 ADD_TEST(oxide:main   test-main  oxide)
 ADD_TEST(oxide:fields test-main  oxide_fields)
 ADD_TEST(oxide:io     test-main  oxide_io)
+ADD_TEST(oxide:dct    test-main  oxide_dct)
 
 
 ADD_CUSTOM_TARGET(utest-main

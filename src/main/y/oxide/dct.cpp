@@ -1,9 +1,9 @@
-#include "y/ipso/dct.hpp"
+#include "y/oxide/dct.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon
 {
-    namespace ipso
+    namespace Oxide
     {
 
         DCT:: ~DCT() throw()
