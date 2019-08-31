@@ -10,6 +10,7 @@ namespace upsylon
     //! common parallel operations
     struct parops
     {
+        //! get local task from global info
         template <typename T, typename U>  static inline
         void split_any( T &length, T &offset, const U Size, const U Rank ) throw()
         {
@@ -24,6 +25,24 @@ namespace upsylon
                 todo    = length/(Size-r);
             }
             length = todo;
+        }
+        
+        //! next rank in one dimension
+        template <typename T> static inline
+        T rank_next(const T size, T rank) throw()
+        {
+            assert(size>0); assert(rank>=0); assert(rank<size);
+            if(++rank>=size) rank=0;
+            return rank;
+        }
+        
+        //! prev rank in one dimension
+        template <typename T> static inline
+        T rank_prev(const T size, T rank) throw()
+        {
+            assert(size>0); assert(rank>=0); assert(rank<size);
+            if(rank<=0) rank = size;
+            return --rank;
         }
     };
 }

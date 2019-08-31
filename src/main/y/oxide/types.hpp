@@ -19,13 +19,16 @@ namespace upsylon
         typedef point2d<Coord1D> Coord2D; //!< 2D coordinate
         typedef point3d<Coord1D> Coord3D; //!< 3D coordinate
         
+        //! operations on coordinates
         struct Coord
         {
+            //! get static info
             template <typename COORD> struct Get
             {
-                static const size_t Dimensions = sizeof(COORD)/sizeof(Coord1D); //!< the value
+                static const size_t Dimensions = sizeof(COORD)/sizeof(Coord1D); //!< the dimension
             };
             
+            //! get specific coordinate
             template <typename COORD> static inline
             Coord1D & Of( COORD &c, const size_t dim) throw()
             {
@@ -125,6 +128,7 @@ namespace upsylon
             //! parse wrapper
             static void Parse(Coord1D *p, const size_t n, const char   *text);
             
+            //! parse a full coodinate
             template <typename COORD> static inline
             COORD Parse( const string &args )
             {
@@ -133,6 +137,7 @@ namespace upsylon
                 return ans;
             }
             
+            //! parse a full coordinate
             template <typename COORD> static inline
             COORD Parse( const char *args )
             {
@@ -172,31 +177,18 @@ namespace upsylon
                 return Coord2D(d.rem,d.quot);
             }
             
-            //! return local ranks 3D:
-            /**
-             
-             */
+            //! return local ranks 3D
             static inline Coord3D LocalRanks( const Coord1D &r, const Coord3D &sizes) throw()
             {
-                const ldiv_t d1 = ldiv(r,sizes.x);
-                const ldiv_t d2 = ldiv(d1.quot,sizes.y);
-                return Coord3D(d1.rem,d2.rem,d2.quot);
+                const ldiv_t dx = ldiv(r,sizes.x);
+                const ldiv_t dy = ldiv(dx.quot,sizes.y);
+                return Coord3D(dx.rem,dy.rem,dy.quot);
             }
-            
-            
             
             
         };
         
-        
-        
-        
-        
-        
-        
-        
     }
-    
     
 }
 
