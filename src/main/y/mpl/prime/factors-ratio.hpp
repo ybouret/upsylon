@@ -54,10 +54,10 @@ namespace upsylon
             //! output
             friend std::ostream & operator<<( std::ostream &, const prime_factors_ratio &Q );
             
-            virtual const char *className() const throw();            //!< CLASS_NAME
-            virtual size_t      serialize( ios::ostream &fp ) const;  //!< number of factors and factors
-            static const char   CLASS_NAME[];                         //!< "mpQ"
-            static prime_factors_ratio read( ios::istream &fp);       //!< read from serialize()
+            virtual const char *className() const throw();                    //!< CLASS_NAME
+            virtual size_t      serialize( ios::ostream &fp ) const;          //!< number of factors and factors
+            static const char   CLASS_NAME[];                                 //!< "mpQ"
+            static prime_factors_ratio read(ios::istream &fp, size_t *shift); //!< read from serialize()
 
             //! test for equality
             friend bool operator==( const prime_factors_ratio &, const prime_factors_ratio &) throw();

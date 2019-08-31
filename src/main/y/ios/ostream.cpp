@@ -26,10 +26,11 @@ namespace upsylon
             return *this;
         }
 
-        void ostream:: output(const char *buffer, const size_t buflen)
+        void ostream:: output(const void *buffer, const size_t buflen)
         {
             assert(!(buffer==0&&buflen>0));
-            for(size_t i=0;i<buflen;++i) write(buffer[i]);
+            const char *p = static_cast<const char *>(buffer);
+            for(size_t i=0;i<buflen;++i) write(p[i]);
         }
 
         ostream & ostream:: operator()(const char *fmt,...)

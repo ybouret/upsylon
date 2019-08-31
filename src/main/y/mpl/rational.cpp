@@ -223,6 +223,16 @@ namespace upsylon
             return CLASS_NAME;
         }
 
+    }
+
+}
+
+#include "y/ios/ostream.hpp"
+
+namespace upsylon {
+
+    namespace mpl
+    {
         size_t rational:: serialize( ios::ostream &fp ) const
         {
             const size_t bytes_for_num = num.serialize(fp);
@@ -230,10 +240,12 @@ namespace upsylon
             return bytes_for_num+bytes_for_den;
         }
 
-        rational rational:: read( ios::istream &fp)
+        rational rational:: read( ios::istream &fp, size_t *shift)
         {
-            const integer _num = integer::read(fp);
-            const natural _den = natural::read(fp);
+            size_t nn = 0, nd=0;
+            const integer _num = integer::read(fp,&nn);
+            const natural _den = natural::read(fp,&nd);
+            ios::gist::assign(shift,nd+nn);
             return rational(_num,_den);
         }
     }

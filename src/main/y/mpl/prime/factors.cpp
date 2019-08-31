@@ -393,15 +393,19 @@ namespace upsylon
         }
 
 
-        prime_factors prime_factors:: read(ios::istream &fp)
+        prime_factors prime_factors:: read(ios::istream &fp, size_t *shift)
         {
             prime_factors ans;
-            for(size_t count=fp.read_upack<size_t>(); count>0; --count)
+            size_t        nb = 0;
+            for(size_t count=fp.read_upack<size_t>(&nb); count>0; --count)
             {
-                const prime_factor f = prime_factor::read(fp);
+                size_t np = 0;
+                const prime_factor f = prime_factor::read(fp,&np);
                 __ins( ans.factors, f );
+                nb += np;
             }
             ans.update();
+            if(shift) { *shift += nb; }
             return ans;
         }
     }

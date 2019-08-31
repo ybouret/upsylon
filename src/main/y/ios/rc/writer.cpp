@@ -28,13 +28,13 @@ namespace upsylon
 
         void rc::writer:: mark()
         {
-            fp.emit<uid_t>( magic );
+            fp.emit_net<uid_t>( magic );
             sz += sizeof(uid_t);
         }
 
         void rc:: writer:: sign()
         {
-            fp.emit<key_t>( hash.key<key_t>() );
+            fp.emit_net<key_t>( hash.key<key_t>() );
             sz += sizeof(key_t);
         }
 
@@ -121,7 +121,7 @@ namespace upsylon
             {
                 std::cerr << "** rc.finalize #total=" << sz << std::endl;
             }
-            fp.emit<len_t>(sz);
+            fp.emit_net<len_t>(sz);
             mark();
         }
 

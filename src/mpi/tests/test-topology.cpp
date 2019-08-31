@@ -39,14 +39,13 @@ namespace
 
         mpi::vBlock sndblk( blockSize, true);
         mpi::vBlock rcvblk( blockSize, true);
-        fillRan(sndblk);
 
         //----------------------------------------------------------------------
         // testing all origins
         //----------------------------------------------------------------------
         for(int origin=0;origin<MPI.size;++origin)
         {
-            const size_t ir = origin+1;
+            const size_t irow = origin+1;
             MPI.print0(stderr, "<Star Topology: origin=%d, blockSize=%u>\n", origin, unsigned(blockSize) );
             MPI.Barrier();
 
@@ -55,25 +54,26 @@ namespace
                 //--------------------------------------------------------------
                 // master node
                 //--------------------------------------------------------------
-                for(int r=0;r<MPI.size;++r)
+                for(int rank=0;rank<MPI.size;++rank)
                 {
-                    if(r==origin) continue;
-                    const size_t ic = r+1;
+                    if(rank==origin) continue;
+                    const size_t icol = rank+1;
                     for(size_t iter=0;iter<cycles;++iter)
                     {
+                        fillRan(sndblk);
                         // upload
-                        MPI.vSend(comm_constant_size, sndblk, r, mpi::io_tag);
-                        tsnd[ir][ic] += MPI.lastCommTicks;
+                        MPI.vSend(comm_constant_size, sndblk, rank, mpi::io_tag);
+                        tsnd[irow][icol] += MPI.lastCommTicks;
 
                         // download
-                        MPI.vRecv(comm_constant_size, rcvblk, r, mpi::io_tag);
-                        trcv[ir][ic] += MPI.lastCommTicks;
+                        MPI.vRecv(comm_constant_size, rcvblk, rank, mpi::io_tag);
+                        trcv[irow][icol] += MPI.lastCommTicks;
 
                         // exchange
                         MPI.vSendRecv(comm_constant_size,
-                                      sndblk, r, mpi::io_tag,
-                                      rcvblk, r, mpi::io_tag);
-                        txch[ir][ic] += MPI.lastCommTicks;
+                                      sndblk, rank, mpi::io_tag,
+                                      rcvblk, rank, mpi::io_tag);
+                        txch[irow][icol] += MPI.lastCommTicks;
                     }
                 }
             }
@@ -107,40 +107,29 @@ namespace
         //MPI.print0(stderr, "\treconstructing\n");
         for(int origin=0;origin<MPI.size;++origin)
         {
-            const size_t ir = origin+1;
+            const size_t irow = origin+1;
             if(MPI.rank==origin)
             {
                 // store data from other nodes
                 for(int r=0;r<MPI.size;++r)
                 {
                     if(r==origin) continue;
-                    MPI.SendAll(tsnd[ir], r, mpi::io_tag);
-                    MPI.SendAll(trcv[ir], r, mpi::io_tag);
-                    MPI.SendAll(txch[ir], r, mpi::io_tag);
+                    MPI.SendAll(tsnd[irow], r, mpi::io_tag);
+                    MPI.SendAll(trcv[irow], r, mpi::io_tag);
+                    MPI.SendAll(txch[irow], r, mpi::io_tag);
 
                 }
             }
             else
             {
                 // query data from origin
-                MPI.RecvAll(tsnd[ir], origin, mpi::io_tag);
-                MPI.RecvAll(trcv[ir], origin, mpi::io_tag);
-                MPI.RecvAll(txch[ir], origin, mpi::io_tag);
+                MPI.RecvAll(tsnd[irow], origin, mpi::io_tag);
+                MPI.RecvAll(trcv[irow], origin, mpi::io_tag);
+                MPI.RecvAll(txch[irow], origin, mpi::io_tag);
             }
         }
 
-        //const size_t num_bytes = blockSize * cycles;
-        //const double mega      = square_of( 1024.0 );
 
-
-
-        if(MPI.isHead)
-        {
-            //std::cerr << "tsnd=" << tsnd << std::endl;
-            //std::cerr << "trcv=" << trcv << std::endl;
-            //std::cerr << "txch=" << txch << std::endl;
-
-        }
         return blockSize;
     }
 
@@ -183,7 +172,7 @@ Y_UTEST(topology)
     for(size_t ln2=8;ln2<=20;++ln2)
     {
 
-        const unsigned blockSize = Star(MPI,ln2, snd,rcv,xch, cycles);
+        const unsigned blockSize = Star(MPI,ln2,snd,rcv,xch,cycles);
         const unsigned num_bytes = blockSize * cycles;
         if(MPI.isHead)
         {
@@ -200,7 +189,6 @@ Y_UTEST(topology)
                     print_to("->",fp,r,s, snd[ir][is], num_bytes);
                     print_to("<-",fp,r,s, rcv[ir][is], num_bytes);
                     print_to("->",fp,r,s, xch[ir][is], num_bytes);
-
                     fp("\n");
                 }
             }

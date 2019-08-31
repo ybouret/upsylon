@@ -58,7 +58,7 @@ Y_UTEST(mp_io)
                 {
                     throw exception("Couldn't read %s", mpn::CLASS_NAME );
                 }
-                const mpn nn = mpn::read(fp);
+                const mpn nn = mpn::read(fp,NULL);
                 Y_CHECK(nn==n);
             }
 
@@ -68,7 +68,7 @@ Y_UTEST(mp_io)
                 {
                     throw exception("Couldn't read %s", mpz::CLASS_NAME );
                 }
-                const mpz zz = mpz::read(fp);
+                const mpz zz = mpz::read(fp,NULL);
                 Y_CHECK(zz==z);
             }
 
@@ -79,7 +79,7 @@ Y_UTEST(mp_io)
                 {
                     throw exception("Couldn't read %s", mpq::CLASS_NAME );
                 }
-                const mpq qq = mpq::read(fp);
+                const mpq qq = mpq::read(fp,NULL);
                 Y_CHECK(qq==q);
             }
 
@@ -89,7 +89,7 @@ Y_UTEST(mp_io)
                 {
                     throw exception("Couldn't read %s", mpF::CLASS_NAME );
                 }
-                const mpF FF = mpF::read(fp);
+                const mpF FF = mpF::read(fp,NULL);
                 Y_CHECK(FF==F);
             }
 
@@ -99,7 +99,7 @@ Y_UTEST(mp_io)
                 {
                     throw exception("Couldn't read %s", mpQ::CLASS_NAME );
                 }
-                const mpQ QQ = mpQ::read(fp);
+                const mpQ QQ = mpQ::read(fp,NULL);
                 std::cerr << "QQ=" << QQ << std::endl;
                 Y_CHECK(QQ==Q);
             }

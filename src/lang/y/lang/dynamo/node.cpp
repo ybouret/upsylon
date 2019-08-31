@@ -165,14 +165,14 @@ namespace upsylon
             switch (type)
             {
                 case DynamoTerminal: {
-                    fp.emit<uint8_t>(0);
+                    fp.emit_net<uint8_t>(0);
                     const string s  = content();
                     const size_t sz = s.serialize(fp);
                     ios::gist::add_to(bytes,sz+1);
                 } break;
                     
                 case DynamoInternal: {
-                    fp.emit<uint8_t>(1);
+                    fp.emit_net<uint8_t>(1);
                     const DynamoList &ch = children();
                     const size_t      nch = ch.size;
                     size_t            sz  = 0;
@@ -221,7 +221,7 @@ namespace upsylon
             static const char fn[] = "DynamoNode::Load";
             
             const string   theName = string_io::load_binary(fp);
-            const unsigned theType = fp.read<uint8_t>();
+            const unsigned theType = fp.read_net<uint8_t>();
             switch( theType )
             {
                 case 0: // DynamoTerminal

@@ -323,7 +323,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //__________________________________________________________________
             virtual const char *className() const throw();              //!< "mpn"
             virtual size_t      serialize( ios::ostream &fp ) const;    //!< write binary
-            static natural      read(ios::istream &fp);                 //!< reload
+            static natural      read(ios::istream &fp, size_t *shift);  //!< reload
             
         private:
             size_t   bytes;     //!< active bytes

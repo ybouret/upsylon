@@ -268,7 +268,7 @@ namespace upsylon
             void TerminalNode:: emit(ios::ostream &fp, size_t *bytes) const
             {
                 assert(lx);
-                fp.emit(MAGIC_BYTE);
+                fp.emit_net(MAGIC_BYTE);
                 {
                     size_t sz=0;
                     fp.emit_upack(lx->size,&sz);
@@ -276,7 +276,7 @@ namespace upsylon
                 }
                 for(const Char *ch = lx->head;ch;ch=ch->next)
                 {
-                    fp.emit(ch->code);
+                    fp.emit_net(ch->code);
                 }
                 ios::gist::add_to(bytes,lx->size);
             }
@@ -359,7 +359,7 @@ namespace upsylon
             
             void InternalNode:: emit(ios::ostream &fp,size_t *bytes) const
             {
-                fp.emit(MAGIC_BYTE);
+                fp.emit_net(MAGIC_BYTE);
                 ios::gist::add_to(bytes,1);
                 emitList(fp,bytes);
             }
@@ -407,7 +407,7 @@ namespace upsylon
             
             void ExtendedNode:: emit(ios::ostream &fp, size_t *bytes) const
             {
-                fp.emit(MAGIC_BYTE);
+                fp.emit_net(MAGIC_BYTE);
                 const size_t sz = shared->serialize(fp);
                 ios::gist::add_to(bytes,sz+1);
                 emitList(fp,bytes);

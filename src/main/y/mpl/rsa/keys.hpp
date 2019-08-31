@@ -54,7 +54,7 @@ namespace upsylon
                 ReadDefault,    //!< any key
                 ReadPublicOnly  //!< Public part only
             };
-            static Key * Read( ios::istream &fp, const ReadMode readMode = ReadDefault); //!< reload key
+            static Key * Read( ios::istream &fp, size_t *shift, const ReadMode readMode = ReadDefault); //!< reload key
 
 
         protected:

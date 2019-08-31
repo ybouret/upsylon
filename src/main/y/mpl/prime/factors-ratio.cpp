@@ -344,12 +344,7 @@ prime_factors_ratio Q(num,new_den); xch(Q);\
             return bytes_for_den+bytes_for_num;
         }
 
-        prime_factors_ratio prime_factors_ratio::  read( ios::istream &fp)
-        {
-            const prime_factors _num = mpF::read(fp);
-            const prime_factors _den = mpF::read(fp);
-            return prime_factors_ratio(_num,_den);
-        }
+
 
         bool operator==( const prime_factors_ratio &lhs, const prime_factors_ratio &rhs) throw()
         {
@@ -365,3 +360,18 @@ prime_factors_ratio Q(num,new_den); xch(Q);\
 
 }
 
+#include "y/ios/ostream.hpp"
+namespace upsylon
+{
+    namespace mpl
+    {
+        prime_factors_ratio prime_factors_ratio::  read(ios::istream &fp, size_t *shift)
+        {
+            size_t nn = 0, nd=0;
+            const prime_factors _num = mpF::read(fp, &nn);
+            const prime_factors _den = mpF::read(fp, &nd);
+            ios::gist::assign(shift,nn+nd);
+            return prime_factors_ratio(_num,_den);
+        }
+    }
+}

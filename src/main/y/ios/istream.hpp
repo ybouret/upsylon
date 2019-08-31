@@ -67,9 +67,9 @@ namespace upsylon
             //! read at most bulen
             size_t try_get(void *buffer,const size_t buflen);
 
-            //! get an integral type
-            template <typename T>
-            inline T read() { T ans(0); input(&ans,sizeof(T)); return swap_be_as<T>(ans); }
+            //! get an integral type in network byte order
+            template <typename T> inline
+            T read_net() { T ans(0); input(&ans,sizeof(T)); return swap_be_as<T>(ans); }
 
             //! read a packed unsigned
             template <typename T>
@@ -77,12 +77,12 @@ namespace upsylon
             {
                 Y_STATIC_CHECK(sizeof(T)<=8,T_is_too_large);
                 uint8_t      store[8];
-                const size_t prolog      = read<uint8_t>();
+                const size_t prolog      = read_net<uint8_t>();
                 size_t       extra_bytes = (prolog&0x0f);
                 if(shift)   *shift       = 1;
                 for(size_t i=0;i<extra_bytes;++i)
                 {
-                    store[i] = read<uint8_t>();
+                    store[i] = read_net<uint8_t>();
                     if(shift) ++(*shift);
                 }
                 T            ans(0);

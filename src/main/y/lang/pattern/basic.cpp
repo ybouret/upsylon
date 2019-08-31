@@ -30,7 +30,7 @@ namespace upsylon
 
         void Any1:: write(ios::ostream &fp) const
         {
-            fp.emit(UUID);
+            fp.emit_net(UUID);
         }
 
         bool Any1:: univocal() const throw()
@@ -45,7 +45,7 @@ namespace upsylon
 
         void Single:: write(ios::ostream &fp) const
         {
-            fp.emit(UUID).emit(code);
+            fp.emit_net(UUID).emit_net(code);
         }
 
         bool Single:: univocal() const throw()
@@ -60,7 +60,7 @@ namespace upsylon
 
         void Range:: write(ios::ostream &fp) const
         {
-            fp.emit(UUID).emit(lower).emit(upper);
+            fp.emit_net(UUID).emit_net(lower).emit_net(upper);
         }
 
         bool Range:: univocal() const throw()

@@ -374,11 +374,12 @@ namespace upsylon
             return bytes_for_n + bytes_for_s;
         }
 
-        integer integer:: read(ios::istream &fp)
+        integer integer:: read(ios::istream &fp, size_t *shift)
         {
+            size_t         nr = 0;
             sign_type      _s = __zero;
             {
-                const unsigned  u = fp.read_upack<unsigned>();
+                const unsigned  u = fp.read_upack<unsigned>(&nr);
                 switch(u)
                 {
                     case 0xff: _s = __negative; break;
@@ -388,7 +389,9 @@ namespace upsylon
                         throw exception("integer::read(invalid %s sign=%u)", CLASS_NAME, u );
                 }
             }
-            const mpn _n = mpn::read(fp);
+            size_t    nn = 0;
+            const mpn _n = mpn::read(fp,&nn);
+            ios::gist::assign(shift,nn+nr);
             return integer(_s,_n);
         }
     }

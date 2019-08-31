@@ -4,13 +4,6 @@
 namespace  upsylon
 {
 
-#if 0
-	size_t string_io::save_binary(ios::ostream &fp,
-		const string &s)
-	{
-		return fp.emit_block(s);
-	}
-#endif
 
 	string string_io::load_binary(ios::istream &fp)
 	{
@@ -28,16 +21,19 @@ namespace  upsylon
 	namespace core
 	{
 		template<>
-		string<char> string<char>::read(ios::istream &fp)
+		string<char> string<char>::read(ios::istream &fp, size_t *shift)
 		{
-			size_t n = fp.read_upack<size_t>();
+            size_t count = 0;
+			size_t n = fp.read_upack<size_t>(&count);
 			string ans(n, as_capacity, false);
 			while (n-- > 0)
 			{
 				char C = 0;
 				fp.input(&C, 1);
 				ans << C;
+                ++count;
 			}
+            ios::gist::assign(shift,count);
 			return ans;
 		}
 	}

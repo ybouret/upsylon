@@ -58,13 +58,17 @@ namespace upsylon
 
             //!load a sequence
             template <typename SEQUENCE, typename LOADER> static inline
-            void load( SEQUENCE &seq, ios::istream &fp, LOADER &loader)
+            void load( SEQUENCE &seq, ios::istream &fp, LOADER &loader, size_t *shift)
             {
-                for(size_t n = fp.read_upack<size_t>();n>0;--n)
+                size_t total = 0;
+                for(size_t n = fp.read_upack<size_t>(&total);n>0;--n)
                 {
-                    typename SEQUENCE::const_type tmp = loader(fp);
+                    size_t nl = 0;
+                    typename SEQUENCE::const_type tmp = loader(fp,&nl);
                     seq.push_back(tmp);
+                    total += nl;
                 }
+                gist::assign(shift,total);
             }
 
         private:

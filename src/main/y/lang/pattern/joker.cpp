@@ -46,7 +46,7 @@ namespace upsylon
 
         void Optional:: write(ios::ostream &fp) const
         {
-            fp.emit(UUID);
+            fp.emit_net(UUID);
             motif->write(fp);
         }
 
@@ -108,7 +108,7 @@ namespace upsylon
 
         void Repeating:: write(ios::ostream &fp) const
         {
-            fp.emit(UUID);
+            fp.emit_net(UUID);
             fp.emit_upack(nmin);
             motif->write(fp);
         }
@@ -169,7 +169,7 @@ namespace upsylon
 
         void Counting:: write(ios::ostream &fp) const
         {
-            fp.emit(UUID);
+            fp.emit_net(UUID);
             fp.emit_upack(nmin);
             fp.emit_upack(nmax);
             motif->write(fp);

@@ -37,6 +37,15 @@ namespace upsylon
             {
                 if(count) { *count += extra; }
             }
+
+            //! conditional assign value to count address
+            template <typename T, typename U>
+            inline void assign( T *count, const U value ) throw()
+            {
+                if(count) { *count = value; }
+            }
+
+
         }
 
         //! interface for output streams
@@ -66,7 +75,7 @@ namespace upsylon
             //__________________________________________________________________
 
             //! output large buffer
-            void output(const char *buffer, const size_t buflen);
+            void output(const void *buffer, const size_t buflen);
 
             //! flux for one char
             ostream & operator<<( const char );
@@ -80,17 +89,17 @@ namespace upsylon
             //! output binary address
             ostream & viz( const void *addr );
 
-            //! emit integral types
-            template <typename T>
-            ostream & emit(T x)
+            //! emit integral types in network byte order
+            template <typename T> inline
+            ostream & emit_net(T x)
             {
                 x = swap_be_as<T>(x);
-                output((const char*)&x,sizeof(T));
+                output(&x,sizeof(T));
                 return *this;
             }
 
             //! emit compact unsigned
-            template <typename T>
+            template <typename T> inline
             ostream & emit_upack(T x, size_t *shift=NULL)
             {
                 //______________________________________________________________

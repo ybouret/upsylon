@@ -486,7 +486,7 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
             virtual size_t serialize( ios::ostream &fp ) const;
 
             //! reload
-            static string      read(ios::istream &fp);
+            static string      read(ios::istream &fp, size_t *shift);
 
             //! compact in memory
             bool compact() throw();

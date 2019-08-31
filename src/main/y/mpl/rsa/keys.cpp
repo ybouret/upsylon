@@ -136,7 +136,7 @@ namespace upsylon
 
         size_t PublicKey:: serialize(ios::ostream &fp) const
         {
-            fp.emit(type);
+            fp.emit_net(type);
             size_t total = sizeof(type);
             Y_RSA_SRZ(modulus);
             Y_RSA_SRZ(publicExponent);
@@ -268,7 +268,7 @@ namespace upsylon
 
         size_t PrivateKey:: serialize(ios::ostream &fp) const
         {
-            fp.emit(type);
+            fp.emit_net(type);
             size_t total = sizeof(type);
             Y_RSA_SRZ(modulus);
             Y_RSA_SRZ(publicExponent);
@@ -299,9 +299,11 @@ namespace upsylon
 {
     namespace RSA
     {
-        Key * Key:: Read( ios::istream &fp, const ReadMode readMode )
+        Key * Key:: Read( ios::istream &fp, size_t *shift, const ReadMode readMode )
         {
-            const uint32_t tag = fp.read<uint32_t>();
+            const uint32_t tag = fp.read_net<uint32_t>();
+            size_t         num = sizeof(uint32_t);
+            size_t         tmp = 0;
             switch(tag)
             {
                     //__________________________________________________________
@@ -309,21 +311,29 @@ namespace upsylon
                     // read a public key
                     //__________________________________________________________
                 case Key::Public: {
-                    const mpn m = mpn::read(fp);
-                    const mpn e = mpn::read(fp);
+                    const mpn m = mpn::read(fp,&tmp); num += tmp;
+                    const mpn e = mpn::read(fp,&tmp); num += tmp;
+                    if(shift)
+                    {
+                        *shift = num;
+                    }
                     return new PublicKey(m,e);
                 }
 
                 case Key::Private:
                 {
-                    const mpn m  = mpn::read(fp);
-                    const mpn e  = mpn::read(fp);
-                    const mpn d  = mpn::read(fp);
-                    const mpn p1 = mpn::read(fp);
-                    const mpn p2 = mpn::read(fp);
-                    const mpn e1 = mpn::read(fp);
-                    const mpn e2 = mpn::read(fp);
-                    const mpn cf = mpn::read(fp);
+                    const mpn m  = mpn::read(fp,&tmp); num += tmp;
+                    const mpn e  = mpn::read(fp,&tmp); num += tmp;
+                    const mpn d  = mpn::read(fp,&tmp); num += tmp;
+                    const mpn p1 = mpn::read(fp,&tmp); num += tmp;
+                    const mpn p2 = mpn::read(fp,&tmp); num += tmp;
+                    const mpn e1 = mpn::read(fp,&tmp); num += tmp;
+                    const mpn e2 = mpn::read(fp,&tmp); num += tmp;
+                    const mpn cf = mpn::read(fp,&tmp); num += tmp;
+                    if(shift)
+                    {
+                        *shift = num;
+                    }
                     switch(readMode)
                     {
                         case ReadDefault:    return new PrivateKey(m,e,d,p1,p2,e1,e2,cf);

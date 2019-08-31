@@ -40,7 +40,7 @@ namespace upsylon
             
             // goto end and look for magick
             fp.seek(-off_uid,from_end);
-            const uint32_t mark = fp.read<uint32_t>();
+            const uint32_t mark = fp.read_net<uint32_t>();
             if(mark!=magic)
             {
                 return;
@@ -53,7 +53,7 @@ namespace upsylon
 
             // read total written size
             const offset_t off_end = fp.seek(-off_len,from_end);
-            const len_t    total   = fp.read<len_t>();
+            const len_t    total   = fp.read_net<len_t>();
             const offset_t shift   = total+off_len;
 
             if(verbose)
@@ -65,7 +65,7 @@ namespace upsylon
             (void) fp.seek(-shift,from_end);
             while( fp.tell()<off_end )
             {
-                if( magic != fp.read<uint32_t>() )
+                if( magic != fp.read_net<uint32_t>() )
                 {
                     throw exception("%s([%s] bad magic header)",fn,*name);
                 }
@@ -90,7 +90,7 @@ namespace upsylon
                     hash(&C,1);
                 }
                 const key_t k = hash.key<key_t>();
-                if( k != fp.read<key_t>() )
+                if( k != fp.read_net<key_t>() )
                 {
                     throw exception("%s([%s] corrupted '%s')",fn,*name,*id);
                 }

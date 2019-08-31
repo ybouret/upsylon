@@ -23,7 +23,7 @@ namespace upsylon
 
         Pattern * Pattern::Load( ios::istream &fp )
         {
-            const uint32_t which = fp.read<uint32_t>();
+            const uint32_t which = fp.read_net<uint32_t>();
             switch(which)
             {
                     //__________________________________________________________
@@ -31,10 +31,10 @@ namespace upsylon
                     // basics
                     //__________________________________________________________
                 case Any1  ::UUID : return new Any1();
-                case Single::UUID : return new Single( fp.read<uint8_t>() );
+                case Single::UUID : return new Single( fp.read_net<uint8_t>() );
                 case Range ::UUID : {
-                    const uint8_t lo = fp.read<uint8_t>();
-                    const uint8_t hi = fp.read<uint8_t>();
+                    const uint8_t lo = fp.read_net<uint8_t>();
+                    const uint8_t hi = fp.read_net<uint8_t>();
                     return new Range(lo,hi); }
 
                     //__________________________________________________________

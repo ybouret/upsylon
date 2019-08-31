@@ -209,13 +209,15 @@ namespace upsylon
         }
 #endif
         
-        natural natural:: read( ios::istream &fp )
+        natural natural:: read( ios::istream &fp, size_t *shift )
         {
-            const size_t num_bytes = fp.read_upack<size_t>();
+            size_t        nr        = 0;
+            const  size_t num_bytes = fp.read_upack<size_t>( &nr );
             mpn          ans(num_bytes,as_capacity);
             fp.input(ans.byte,(ans.bytes=num_bytes));
             ans.upgrade();
             if(ans.bytes!=num_bytes) throw exception("mpn.read(corrupted bytes)");
+            ios::gist::assign(shift, nr+num_bytes);
             return ans;
         }
         

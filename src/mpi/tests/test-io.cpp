@@ -24,7 +24,7 @@ namespace
             {
                 const T tmp = support::get<T>();
                 primary.push_back(tmp);
-                sendBlock.emit(tmp);
+                sendBlock.emit_net(tmp);
             }
             MPI.print0(stderr,"Sending %u items, bytes=%u\n", unsigned(ns), unsigned( sendBlock.size() ));
         }
@@ -47,7 +47,7 @@ namespace
                     ios::imstream fp(recvBlock);
                     while( fp.is_active() )
                     {
-                        const T tmp = fp.read<T>();
+                        const T tmp = fp.read_net<T>();
                         received.push_back(tmp);
                     }
                     MPI.print0(stderr, "received from %d: #%u\n", r, unsigned(received.size()) );
@@ -60,7 +60,7 @@ namespace
                 ios::imstream fp(recvBlock);
                 while( fp.is_active() )
                 {
-                    const T tmp = fp.read<T>();
+                    const T tmp = fp.read_net<T>();
                     local.push_back(tmp);
                     ++nr;
                 }
@@ -82,7 +82,7 @@ namespace
         ios::imstream fp(data);
         while( fp.is_active() )
         {
-            const T tmp = T::read(fp);
+            const T tmp = T::read(fp,NULL);
             seq.push_back(tmp);
         }
     }

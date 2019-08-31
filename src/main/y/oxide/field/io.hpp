@@ -20,7 +20,7 @@ namespace upsylon
             void SaveIntegral( ios::ostream &fp, const void *addr )
             {
                 assert(addr);
-                fp.emit<T>(*static_cast<const T*>(addr));
+                fp.emit_net<T>(*static_cast<const T*>(addr));
             }
 
             //! reload from integral type
@@ -28,7 +28,7 @@ namespace upsylon
             void LoadIntegral( ios::istream &fp, void *addr )
             {
                 assert(addr);
-                *static_cast<T *>(addr) = fp.read<T>();
+                *static_cast<T *>(addr) = fp.read_net<T>();
             }
 
             //! assuming portable binary block
@@ -62,7 +62,7 @@ namespace upsylon
             void LoadSerialized( ios::istream &fp, void *addr )
             {
                 assert(addr);
-                const T tmp = T::read(fp);
+                const T tmp = T::read(fp,NULL);
                 *static_cast<T *>(addr) = tmp;
             }
 

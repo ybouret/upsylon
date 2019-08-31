@@ -89,7 +89,9 @@ ADD_TEST(str:defrag      test-main string_defrag)
 SOURCE_GROUP(ios FILES test-ostreams.cpp test-istreams.cpp
 test-vfs.cpp test-dll.cpp test-tmpname.cpp test-local-file.cpp
 test-bin2dat.cpp test-rc.cpp
-test-disk-file.cpp test-disk-std.cpp test-serializer.cpp test-upack.cpp test-memory-streams.cpp)
+test-disk-file.cpp test-disk-std.cpp test-serializer.cpp test-upack.cpp test-memory-streams.cpp
+test-ios-plugin.cpp
+)
 ADD_TEST(ios:ostreams    test-main ostreams)
 ADD_TEST(ios:istreams    test-main istreams)
 ADD_TEST(ios:mstreams    test-main mstreams)
@@ -102,6 +104,7 @@ ADD_TEST(ios:rc          test-main rc)
 ADD_TEST(ios:disk_file   test-main disk_file)
 ADD_TEST(ios:serializer  test-main serializer)
 ADD_TEST(ios:upack       test-main upack)
+ADD_TEST(ios:plugin      test-main ios_plugin)
 
 SOURCE_GROUP(crypto FILES test-hashing.cpp test-hmac.cpp test-kr-sc.cpp test-kr-bc.cpp test-uuid.cpp test-digest.cpp test-rsa.cpp test-rsa-io.cpp)
 ADD_TEST(crypto:hashing     test-main hashing)

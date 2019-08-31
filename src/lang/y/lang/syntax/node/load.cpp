@@ -39,7 +39,7 @@ namespace upsylon
                 // read MAGIC to know if internal or terminal node
                 //
                 //--------------------------------------------------------------
-                const unsigned    magic     = source.read<uint8_t>();         //!< then read the type of node
+                const unsigned    magic     = source.read_net<uint8_t>();         //!< then read the type of node
 
                 switch( magic )
                 {
@@ -56,7 +56,7 @@ namespace upsylon
                             const CharInfo   info(tag,0,0);
                             for(size_t i=nch;i>0;--i)
                             {
-                                plx->push_back( new Char(source.read<uint8_t>(),info) );
+                                plx->push_back( new Char(source.read_net<uint8_t>(),info) );
                             }
                         }
                         return Node::Create(the_rule,plx.yield());

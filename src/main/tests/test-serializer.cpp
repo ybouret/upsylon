@@ -49,7 +49,7 @@ namespace {
         list<T> l;
         for(size_t iter=0;iter<3;++iter)
         {
-            ios::serializer::load(l, fp, loader);
+            ios::serializer::load(l, fp, loader, NULL);
         }
         
     }
@@ -70,7 +70,7 @@ Y_UTEST(serializer)
     std::cerr << "#written=" << total << std::endl;
     {
         ios::icstream fp("srz.dat");
-        do_ld<string>(fp, string_io::load_binary );
+        do_ld<string>(fp, string::read );
         do_ld<mpn>(fp, mpn::read );
         do_ld<mpq>(fp, mpq::read );
 

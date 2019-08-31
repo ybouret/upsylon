@@ -17,11 +17,9 @@ Y_UTEST(rsa_io)
     vector<RSA::SharedKey> keys;
     {
         ios::imstream fp( rsa_keys_inc, sizeof(rsa_keys_inc) );
-        char          C = 0;
-        while( fp.query(C) )
+        while( fp.is_active() )
         {
-            fp.store(C);
-            const RSA::SharedKey key = RSA::Key::Read(fp);
+            const RSA::SharedKey key = RSA::Key::Read(fp,NULL);
             keys.push_back(key);
         }
     }

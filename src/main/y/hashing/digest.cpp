@@ -286,7 +286,7 @@ byte( __digest_acquire(blen) )
         return fp.emit_block(*this);
     }
 
-    digest digest:: load(ios::istream &fp, size_t *nr)
+    digest digest:: read(ios::istream &fp, size_t *nr)
     {
         if(nr     ) *nr = 0;
         const size_t sz = fp.read_upack<size_t>(nr);

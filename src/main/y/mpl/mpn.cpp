@@ -384,19 +384,19 @@ namespace upsylon
                 mpn curr = _3;
                 for(size_t i=0;i<sz;++i)
                 {
-                    mpn code = mpn::read(fp);
+                    mpn code = mpn::read(fp,NULL);
                     H(code);
                     curr += ( (++code).shl() );
                     const PrimeInfo tmp(curr);
                     prm.push_back(tmp);
                 }
                 // probe
-                curr = mpn::read(fp);
+                curr = mpn::read(fp,NULL);
                 ( (mpn&) probe ).xch(curr);
                 H(probe);
 
                 // check
-                const digest md0 = digest::load(fp);
+                const digest md0 = digest::read(fp,NULL);
                 const digest md1 = H.md();
                 if(md0!=md1) throw exception("MPN.reload(currupted data)");
             }

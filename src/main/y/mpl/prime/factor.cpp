@@ -86,11 +86,12 @@ namespace upsylon
             return bytes_for_n+bytes_for_p;
         }
 
-        prime_factor prime_factor:: read( ios::istream &fp )
+        prime_factor prime_factor:: read( ios::istream &fp, size_t *shift)
         {
-            const natural prm = natural::read(fp);       if(prm<=0) throw exception("%s::read(invalid prime)",    CLASS_NAME);
-            const size_t  num = fp.read_upack<size_t>(); if(num<=0) throw exception("%s::read(invalid exponent)", CLASS_NAME);
-
+            size_t np = 0, nn=0;
+            const natural prm = natural::read(fp,&np);      if(prm<=0) throw exception("%s::read(invalid prime)",    CLASS_NAME);
+            const size_t  num = fp.read_upack<size_t>(&nn); if(num<=0) throw exception("%s::read(invalid exponent)", CLASS_NAME);
+            ios::gist::assign(shift,np+nn);
             return prime_factor(prm,num);
         }
 

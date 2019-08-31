@@ -84,6 +84,8 @@ Y_UTEST_INIT(150)
     Y_UTEST(istreams);
     Y_UTEST(mstreams);
     Y_UTEST(upack);
+    Y_UTEST(ios_plugin);
+
     Y_UTEST(fft);
     Y_UTEST(sort);
     Y_UTEST(unique);

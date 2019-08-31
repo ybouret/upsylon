@@ -49,8 +49,8 @@ Y_UTEST(rsa)
         hashing::sha1 H;
         {
             ios::imstream  fp(data);
-            RSA::SharedKey new_pub = RSA::Key::Read(fp);
-            RSA::SharedKey new_prv = RSA::Key::Read(fp);
+            RSA::SharedKey new_pub = RSA::Key::Read(fp,NULL);
+            RSA::SharedKey new_prv = RSA::Key::Read(fp,NULL);
             Y_CHECK( RSA::Key::Public  == new_pub->type );
             Y_CHECK( RSA::Key::Private == new_prv->type );
             {
@@ -100,7 +100,7 @@ Y_UTEST(rsa_keys)
             while( fp.query(C) )
             {
                 fp.store(C);
-                const RSA::SharedKey key = RSA::Key::Read(fp);
+                const RSA::SharedKey key = RSA::Key::Read(fp,NULL);
                 keys.push_back(key);
             }
         }
