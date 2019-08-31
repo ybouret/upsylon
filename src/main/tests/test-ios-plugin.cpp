@@ -60,6 +60,21 @@ Y_UTEST(ios_plugin)
         ios::plugin_srz<string> plg;
         do_plugin<string>( plg );
     }
+
+    {
+        ios::plugin_srz<mpn> plg;
+        do_plugin<mpn>( plg );
+    }
+
+    {
+        ios::plugin_srz<mpz> plg;
+        do_plugin<mpz>( plg );
+    }
+    
+    {
+        ios::plugin_srz<mpq> plg;
+        do_plugin<mpq>( plg );
+    }
 }
 Y_UTEST_DONE()
 
