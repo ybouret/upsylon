@@ -9,6 +9,7 @@ namespace upsylon
 {
     namespace ios
     {
+        //! utility function for I/O
         struct gist
         {
             //! right shift 8 bits sizeof(T)>1

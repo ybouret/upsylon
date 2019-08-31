@@ -46,9 +46,9 @@ namespace
             std::cerr << "F2=" << F2 << std::endl;
             std::cerr << "F3=" << F3 << std::endl;
 
-            F1.save(io,plg.save);
-            F2.save(io,plg.save);
-            F3.save(io,plg.save);
+            const size_t n1 = F1.save(io,plg.save); Y_ASSERT(n1==io.size());
+            const size_t n2 = F2.save(io,plg.save); Y_ASSERT(n1+n2==io.size());
+            const size_t n3 = F3.save(io,plg.save); Y_ASSERT(n1+n2+n3==io.size());
 
             std::cerr << "#io=" << io.size() << "/" << io.capacity() << std::endl;
             
@@ -56,9 +56,9 @@ namespace
             if(plg.load)
             {
                 ios::imstream inp( io );
-                F1.load(inp,plg.load);
-                F2.load(inp,plg.load);
-                F3.load(inp,plg.load);
+                const size_t r1 = F1.load(inp,plg.load); Y_ASSERT(r1==n1);
+                const size_t r2 = F2.load(inp,plg.load); Y_ASSERT(r2==n2);
+                const size_t r3 = F3.load(inp,plg.load); Y_ASSERT(r3==n3);
                 std::cerr << "\treloaded..." << std::endl;
             }
 

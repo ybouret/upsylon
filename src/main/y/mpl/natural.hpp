@@ -6,9 +6,8 @@
 #include "y/os/endian.hpp"
 #include "y/randomized/bits.hpp"
 #include "y/ios/serializable.hpp"
-#include "y/ios/istream.hpp"
 #include "y/memory/buffer.hpp"
-
+#include "y/ptr/counted.hpp"
 #include <iostream>
 
 namespace upsylon

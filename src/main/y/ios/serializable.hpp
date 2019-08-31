@@ -3,6 +3,7 @@
 #define Y_IOS_SERIALIZE_INCLUDED 1
 
 #include "y/os/platform.hpp"
+#include "y/ios/iosfwd.hpp"
 
 namespace upsylon
 {
@@ -14,7 +15,6 @@ namespace upsylon
 
     namespace ios
     {
-        class ostream; //!< forward declaration
 
         //! base class for portable binary object serialization
         class serializable
