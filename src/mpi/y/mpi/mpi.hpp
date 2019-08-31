@@ -323,7 +323,7 @@ namespace upsylon
 
         //______________________________________________________________________
         //
-        // higher level
+        // handling sequences
         //______________________________________________________________________
 
         //! send a range of iterated items
@@ -357,6 +357,11 @@ namespace upsylon
                 seq.push_back(tmp);
             }
         }
+
+        //______________________________________________________________________
+        //
+        // handling variable sized sequences
+        //______________________________________________________________________
 
         ios::upack_size send_pack; //!< used to send packed size of items
         ios::upack_size recv_pack; //!< used to recv packed size of items

@@ -2,6 +2,8 @@
 #include "y/utest/run.hpp"
 #include "y/type/ints.hpp"
 #include "y/string/convert.hpp"
+#include <cstdio>
+
 using namespace upsylon;
 
 static inline void display_hr( const human_readable &hr )
