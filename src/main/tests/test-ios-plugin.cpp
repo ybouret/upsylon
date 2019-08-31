@@ -3,6 +3,7 @@
 #include "y/ios/imstream.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
+#include <typeinfo>
 
 using namespace upsylon;
 
