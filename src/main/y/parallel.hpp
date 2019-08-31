@@ -4,7 +4,7 @@
 
 #include "y/object.hpp"
 #include "y/memory/xslot.hpp"
-#include <cstring>
+#include "y/parops.hpp"
 
 namespace upsylon
 {
@@ -33,19 +33,14 @@ namespace upsylon
         template <typename T>
         inline void split( T &length, T &offset ) const throw()
         {
-            T todo(length/size);
-            for(size_t r=1;r<=rank;++r)
-            {
-                length -= todo;
-                offset += todo;
-                todo    = length/(size-r);
-            }
-            length = todo;
+            parops::split_any(length,offset,size,rank);
         }
 
 
         //! compute efficiency, two significative figures
         double efficiency(const double speed_up) const;
+
+      
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(parallel);

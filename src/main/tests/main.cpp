@@ -159,6 +159,7 @@ Y_UTEST_INIT(150)
     Y_UTEST(oxide_fields);
     Y_UTEST(oxide_io);
     Y_UTEST(oxide_dct);
+    Y_UTEST(oxide_split);
 
 }
 Y_UTEST_EXEC()

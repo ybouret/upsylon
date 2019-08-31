@@ -3,9 +3,9 @@
 #define Y_OXIDE_LAYOUT_INCLUDED 1
 
 #include "y/oxide/types.hpp"
-#include "y/code/multi-loop.hpp"
 #include "y/sort/unique.hpp"
 #include "y/sort/sequence.hpp"
+#include "y/code/multi-loop.hpp"
 
 namespace upsylon
 {
@@ -23,6 +23,9 @@ namespace upsylon
         protected:
             explicit LayoutInfo(const size_t) throw();        //!< setup dimensions, no items
             explicit LayoutInfo( const LayoutInfo &) throw(); //!< copy
+
+            //! split in 1D
+            static void Split1D( Coord1D &length, Coord1D &offset, const Coord1D sz, const Coord1D rk);
 
         private:
             Y_DISABLE_ASSIGN(LayoutInfo);
@@ -160,6 +163,109 @@ namespace upsylon
                 }                                                  //
                 unique(indices);                                   // stay sorted and unique
             }
+
+            //! split this
+            Layout split(const_coord sizes,
+                         const_coord ranks) const
+            {
+                coord nn = width;
+                coord lo = lower;
+                for(size_t dim=0;dim<Dimensions;++dim)
+                {
+                    Split1D(CoordOf(nn,dim),
+                            CoordOf(lo,dim ),
+                            CoordOf(sizes,dim),
+                            CoordOf(ranks,dim));
+
+                }
+                coord up = nn + lo;
+                return Layout(lo,CoordDecrease(up));
+            }
+            
+            //! return matching mapping
+            inline void buildMappings( sequence<COORD> &mappings, const size_t cores ) const
+            {
+                //--------------------------------------------------------------
+                // cleanup
+                //--------------------------------------------------------------
+                assert(cores>0);
+                mappings.free();
+
+                //--------------------------------------------------------------
+                // build loop
+                //--------------------------------------------------------------
+                COORD org(0);
+                COORD top(0);
+                for(size_t dim=0;dim<DimensionsOf<COORD>::Value;++dim)
+                {
+                    CoordOf(org,dim) = 1;
+                    CoordOf(top,dim) = cores;
+                }
+                Loop   loop(org,top);
+                //--------------------------------------------------------------
+                // check all possible values
+                //--------------------------------------------------------------
+                for(loop.start();loop.active();loop.next())
+                {
+                    //----------------------------------------------------------
+                    // check number of cores
+                    //----------------------------------------------------------
+                    const size_t local_cores = CoordProduct(loop.value);
+                    if(cores!=local_cores) continue;
+
+
+                    //----------------------------------------------------------
+                    // check enough item in each dimension
+                    //----------------------------------------------------------
+                    bool valid = true;
+                    for(size_t dim=0;dim<DimensionsOf<COORD>::Value;++dim)
+                    {
+                        if( CoordOf(loop.value,dim)>CoordOf(width,dim) )
+                        {
+                            valid = false;
+                            break;
+                        }
+                    }
+
+                    //----------------------------------------------------------
+                    // keep it
+                    //----------------------------------------------------------
+                    if(valid)
+                    {
+                        mappings.push_back(loop.value);
+                    }
+                }
+            }
+
+
+            void buildPartition( sequence<Layout> &partition, const COORD &mapping ) const
+            {
+                // check memory
+                partition.free();
+                const size_t cores = CoordProduct(mapping); assert(cores>0);
+                partition.ensure(cores);
+
+                // build look on local ranks
+                coord org(0);
+                coord top(0);
+                for(size_t dim=0;dim<DimensionsOf<COORD>::Value;++dim)
+                {
+                    CoordOf(org,dim) = 0;
+                    CoordOf(top,dim) = CoordOf(mapping,dim)-1;
+                }
+
+                Loop loop(org,top);
+                for(loop.start();loop.active();loop.next())
+                {
+                    const Layout part = split(mapping,loop.value);
+                    partition.push_back(part);
+                }
+                assert( partition.size() == cores );
+
+            }
+
+
+
 
 
         private:

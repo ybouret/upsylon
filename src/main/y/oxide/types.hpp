@@ -3,6 +3,7 @@
 #define Y_OXIDE_TYPES_INCLUDED 1
 
 #include "y/type/point3d.hpp"
+#include "y/container/sequence.hpp"
 
 namespace upsylon
 {
@@ -39,6 +40,43 @@ namespace upsylon
             return *( ((const Coord1D *) &c) + dim );
         }
 
+        //! get product
+        template <typename COORD> inline
+        Coord1D CoordProduct( const COORD &c ) throw()
+        {
+            const Coord1D *p = (const Coord1D*)&c;
+            Coord1D ans = p[0];
+            for(size_t i=1;i<DimensionsOf<COORD>::Value;++i)
+            {
+                ans *= p[i];
+            }
+            return ans;
+        }
+
+        //! decrease all components
+        template <typename COORD> inline
+        COORD & CoordDecrease( COORD &c ) throw()
+        {
+            Coord1D *p = (Coord1D*)&c;
+            for(size_t i=0;i<DimensionsOf<COORD>::Value;++i)
+            {
+                --p[i];
+            }
+            return c;
+        }
+
+        //! return a decreased coordinate
+        template <typename COORD> inline
+        Coord1D  CoordDecreased( const COORD &c ) throw()
+        {
+            Coord1D  d = c;
+            return CoordDecrease(d);
+        }
+
+      
+
+
+        
         //! operations on coordinates
         struct CoordOps
         {
