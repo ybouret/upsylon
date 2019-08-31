@@ -8,45 +8,13 @@
 #include "y/os/static-check.hpp"
 #include "y/os/printf-check.hpp"
 #include "y/memory/buffer.hpp"
+#include "y/ios/gist.hpp"
 
 namespace upsylon
 {
     namespace ios
     {
-        namespace gist
-        {
-            //! right shift 8 bits sizeof(T)>1
-            template <typename T>
-            inline void shr8( T &x, int2type<true> ) throw()
-            {
-                assert(sizeof(T)>1);
-                x >>= 8;
-            }
-
-            //! right shift 8 bits sizeof(T)<=1
-            template <typename T>
-            inline void shr8( T &x, int2type<false> ) throw()
-            {
-                assert(sizeof(T)<=1);
-                x=0;
-            }
-
-            //! conditional add extra to count address
-            template <typename T, typename U>
-            inline void add_to( T *count, const U extra ) throw()
-            {
-                if(count) { *count += extra; }
-            }
-
-            //! conditional assign value to count address
-            template <typename T, typename U>
-            inline void assign( T *count, const U value ) throw()
-            {
-                if(count) { *count = value; }
-            }
-
-
-        }
+    
 
         //! interface for output streams
         class ostream : public stream
@@ -89,18 +57,19 @@ namespace upsylon
             //! output binary address
             ostream & viz( const void *addr );
 
-            //! emit integral types in network byte order
+            //! emit integral types in network byte order, optional ASSIGN count
             template <typename T> inline
-            ostream & emit_net(T x)
+            ostream & emit_net(T x, size_t *count=NULL)
             {
                 x = swap_be_as<T>(x);
                 output(&x,sizeof(T));
+                gist::assign(count,sizeof(T));
                 return *this;
             }
 
-            //! emit compact unsigned
+            //! emit compact unsigned, optional ASSIGN count
             template <typename T> inline
-            ostream & emit_upack(T x, size_t *shift=NULL)
+            ostream & emit_upack(T x, size_t *count=NULL)
             {
                 //______________________________________________________________
                 //
@@ -116,7 +85,7 @@ namespace upsylon
                     // 0 extra bytes!
                     //__________________________________________________________
                     write(last4shifted);
-                    if(shift) *shift = 1;
+                    gist::assign(count,1);
                 }
                 else
                 {
@@ -127,14 +96,14 @@ namespace upsylon
                     const size_t extra_bits  = num_bits - 4;
                     size_t       extra_bytes = Y_ROUND8(extra_bits)>>3; assert(extra_bytes<=8);
                     write( char(last4shifted | extra_bytes) );
-                    if(shift) *shift = 1;
+                    gist::assign(count,1);
                     x >>= 4;
                     while(extra_bytes-->0)
                     {
                         const uint8_t B = uint8_t(x&T(0xff));
                         write(B);
                         gist::shr8<T>(x, int2type< (sizeof(T)>1) >() );
-                        if(shift) ++(*shift);
+                        gist::add_to(count,1);
                     }
                     assert(0==x);
                 }

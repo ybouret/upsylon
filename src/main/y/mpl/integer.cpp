@@ -374,7 +374,7 @@ namespace upsylon
             return bytes_for_n + bytes_for_s;
         }
 
-        integer integer:: read(ios::istream &fp, size_t *shift)
+        integer integer:: read(ios::istream &fp, size_t *count)
         {
             size_t         nr = 0;
             sign_type      _s = __zero;
@@ -391,7 +391,7 @@ namespace upsylon
             }
             size_t    nn = 0;
             const mpn _n = mpn::read(fp,&nn);
-            ios::gist::assign(shift,nn+nr);
+            ios::gist::assign(count,nn+nr);
             return integer(_s,_n);
         }
     }

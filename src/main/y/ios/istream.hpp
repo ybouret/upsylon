@@ -6,29 +6,12 @@
 #include "y/ios/stream.hpp"
 #include "y/os/endian.hpp"
 #include "y/os/static-check.hpp"
+#include "y/ios/gist.hpp"
 
 namespace upsylon
 {
     namespace ios
     {
-        namespace gist
-        {
-            //! left shift 8 bits sizeof(T)>1
-            template <typename T>
-            inline void shl8( T &x, int2type<true> ) throw()
-            {
-                assert(sizeof(T)>1);
-                (x <<= 8);
-            }
-
-            //! left shift 8 bits sizeof(T)<=1
-            template <typename T>
-            inline void shl8( T &x, int2type<false> ) throw()
-            {
-                assert(sizeof(T)<=1);
-                x=0;
-            }
-        }
 
         //! input stream interface
         class istream : public stream
@@ -67,23 +50,25 @@ namespace upsylon
             //! read at most bulen
             size_t try_get(void *buffer,const size_t buflen);
 
-            //! get an integral type in network byte order
+            //! get an integral type in network byte order, with optional COUNT of read bytes=sizeofT()
             template <typename T> inline
-            T read_net() { T ans(0); input(&ans,sizeof(T)); return swap_be_as<T>(ans); }
+            T read_net(size_t *count=NULL)
+            { T ans(0); input(&ans,sizeof(T)); gist::assign(count,sizeof(T)); return swap_be_as<T>(ans); }
 
-            //! read a packed unsigned
+            //! read a packed unsigned, with optional COUNT of read byte
             template <typename T>
-            inline T read_upack(size_t *shift=NULL)
+            inline T read_upack(size_t *count=NULL)
             {
                 Y_STATIC_CHECK(sizeof(T)<=8,T_is_too_large);
                 uint8_t      store[8];
                 const size_t prolog      = read_net<uint8_t>();
                 size_t       extra_bytes = (prolog&0x0f);
-                if(shift)   *shift       = 1;
+                if(count)   *count       = 1;
+                gist::assign(count,1);
                 for(size_t i=0;i<extra_bytes;++i)
                 {
                     store[i] = read_net<uint8_t>();
-                    if(shift) ++(*shift);
+                    if(count) ++(*count);
                 }
                 T            ans(0);
                 while(extra_bytes-->0)

@@ -360,7 +360,7 @@ prime_factors_ratio Q(num,new_den); xch(Q);\
 
 }
 
-#include "y/ios/ostream.hpp"
+#include "y/ios/gist.hpp"
 namespace upsylon
 {
     namespace mpl

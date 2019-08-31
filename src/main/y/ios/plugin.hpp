@@ -34,8 +34,9 @@ namespace upsylon
             void save_net( ios::ostream &fp, const void *addr, size_t *ns )
             {
                 assert(addr);
-                fp.emit_net<T>( *static_cast<const T*>(addr) );
-                gist::add_to(ns,sizeof(T));
+                size_t tmp = 0;
+                fp.emit_net<T>( *static_cast<const T*>(addr), &tmp);
+                gist::add_to(ns,tmp);
             }
 
             //! load in network byte order
@@ -43,8 +44,9 @@ namespace upsylon
             void load_net( ios::istream &fp, void *addr, size_t *nl )
             {
                 assert(addr);
-                *static_cast<T*>(addr) = fp.read_net<T>();
-                gist::add_to(nl,sizeof(T));
+                size_t tmp = 0;
+                *static_cast<T*>(addr) = fp.read_net<T>(&tmp);
+                gist::add_to(nl,tmp);
             }
 
             //! save binary

@@ -196,20 +196,8 @@ namespace upsylon
         }
 
         
-#if 0
-        natural natural:: read( ios::istream &fp, size_t *nr)
-        {
-            const size_t num_bytes = fp.read_upack<size_t>(nr);
-            mpn          ans(num_bytes,as_capacity);
-            fp.input(ans.byte,(ans.bytes=num_bytes));
-            ans.upgrade();
-            if(ans.bytes!=num_bytes) throw exception("mpn.read(corrupted bytes)");
-            if(nr) *nr += num_bytes;
-            return ans;
-        }
-#endif
-        
-        natural natural:: read( ios::istream &fp, size_t *shift )
+
+        natural natural:: read( ios::istream &fp, size_t *count )
         {
             size_t        nr        = 0;
             const  size_t num_bytes = fp.read_upack<size_t>( &nr );
@@ -217,7 +205,7 @@ namespace upsylon
             fp.input(ans.byte,(ans.bytes=num_bytes));
             ans.upgrade();
             if(ans.bytes!=num_bytes) throw exception("mpn.read(corrupted bytes)");
-            ios::gist::assign(shift, nr+num_bytes);
+            ios::gist::assign(count, nr+num_bytes);
             return ans;
         }
         

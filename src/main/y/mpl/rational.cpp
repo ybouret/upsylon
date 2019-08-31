@@ -227,7 +227,7 @@ namespace upsylon
 
 }
 
-#include "y/ios/ostream.hpp"
+#include "y/ios/gist.hpp"
 
 namespace upsylon {
 

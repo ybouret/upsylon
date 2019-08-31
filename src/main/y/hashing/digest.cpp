@@ -288,11 +288,12 @@ byte( __digest_acquire(blen) )
 
     digest digest:: read(ios::istream &fp, size_t *nr)
     {
-        if(nr     ) *nr = 0;
-        const size_t sz = fp.read_upack<size_t>(nr);
+        size_t       tmp = 0;
+        const size_t sz = fp.read_upack<size_t>(&tmp);
         digest       md(sz,0); assert(sz==md.size);
         fp.input(md.byte,md.size);
-        if(nr) (*nr) += sz;
+        tmp += md.size;
+        ios::gist::assign(nr,tmp);
         return md;
     }
 
