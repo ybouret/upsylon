@@ -205,13 +205,14 @@ ADD_TEST(sparse:array  test-main sparse_array)
 ADD_TEST(sparse:matrix test-main sparse_matrix)
 
 SOURCE_GROUP(oxide FILES test-oxide.cpp test-oxide-fields.cpp
- test-oxide-io.cpp test-oxide-dct.cpp test-oxide-split.cpp test-oxide-ranks.cpp)
-ADD_TEST(oxide:main   test-main  oxide)
-ADD_TEST(oxide:fields test-main  oxide_fields)
-ADD_TEST(oxide:io     test-main  oxide_io)
-ADD_TEST(oxide:dct    test-main  oxide_dct)
-ADD_TEST(oxide:split  test-main  oxide_split)
-ADD_TEST(oxide:ranks  test-main  oxide_ranks)
+ test-oxide-io.cpp test-oxide-dct.cpp test-oxide-split.cpp test-oxide-ranks.cpp test-oxide-workspace.cpp)
+ADD_TEST(oxide:main      test-main  oxide)
+ADD_TEST(oxide:fields    test-main  oxide_fields)
+ADD_TEST(oxide:io        test-main  oxide_io)
+ADD_TEST(oxide:dct       test-main  oxide_dct)
+ADD_TEST(oxide:split     test-main  oxide_split)
+ADD_TEST(oxide:ranks     test-main  oxide_ranks)
+ADD_TEST(oxide:workspace test-main  oxide_workspace) 
 
 
 ADD_CUSTOM_TARGET(utest-main

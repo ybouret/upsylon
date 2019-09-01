@@ -161,6 +161,7 @@ Y_UTEST_INIT(150)
     Y_UTEST(oxide_dct);
     Y_UTEST(oxide_split);
     Y_UTEST(oxide_ranks);
+    Y_UTEST(oxide_workspace);
 
 }
 Y_UTEST_EXEC()

@@ -164,7 +164,7 @@ namespace upsylon
                 unique(indices);                                   // stay sorted and unique
             }
 
-            //! split this
+            //! split this according to local ranks among sizes
             Layout split(const_coord sizes,
                          const_coord ranks) const
             {
@@ -186,7 +186,7 @@ namespace upsylon
             /**
              the product of a mapping coordinates is equal to
              the number of cores, and each coordinate is strictly lower
-             than the layouy width in the same dimension
+             than the layout width in the same dimension
              */
             inline void buildMappings( sequence<COORD> &mappings, const size_t cores ) const
             {
