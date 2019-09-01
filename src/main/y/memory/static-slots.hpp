@@ -13,6 +13,7 @@ namespace upsylon
     namespace memory
     {
         
+        //! static slots to build local objects
         template <
         typename T,
         const size_t LENGTH,
@@ -21,12 +22,12 @@ namespace upsylon
         class static_slots
         {
         public:
-            Y_DECL_ARGS(T,type);
-            static const size_t capacity = LENGTH;
-            static const size_t offset   = OFFSET;
-            static const size_t bytes    = LENGTH * sizeof(type);
+            Y_DECL_ARGS(T,type);                    //!< alias
+            static const size_t capacity = LENGTH;  //!< maximum items
+            static const size_t offset   = OFFSET;  //!< initial index for access
+            static const size_t bytes    = LENGTH * sizeof(type); //!< minimal memory bytes
 
-            
+            //! setup
             explicit static_slots() throw() :
             wksp(),
             addr( io::__force<mutable_type>(wksp)-OFFSET ),
@@ -35,12 +36,14 @@ namespace upsylon
                 clr();
             }
             
+            //! cleanup
             inline ~static_slots() throw()
             {
                 free();
                 addr = 0;
             }
             
+            //! push back new object
             inline void push_back( param_type args )
             {
                 assert(size<capacity);
@@ -48,6 +51,7 @@ namespace upsylon
                 ++(size_t&)size;
             }
             
+            //! access
             inline type & operator[](const size_t indx) throw()
             {
                 assert(indx>=OFFSET);
@@ -55,6 +59,7 @@ namespace upsylon
                 return addr[indx];
             }
             
+            //! access
             inline const_type & operator[](const size_t indx) const throw()
             {
                 assert(indx>=OFFSET);
@@ -62,6 +67,7 @@ namespace upsylon
                 return addr[indx];
             }
             
+            //! free all objects
             inline void free() throw()
             {
                 mutable_type *temp = io::__force<mutable_type>(wksp);
@@ -79,7 +85,7 @@ namespace upsylon
             inline void clr() throw() { memset(wksp,0,sizeof(wksp) ); }
             
         public:
-            const size_t size;
+            const size_t size; //!< current number of items
             
         };
         

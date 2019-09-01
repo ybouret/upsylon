@@ -29,6 +29,7 @@ namespace upsylon
                 static const size_t Dimensions = sizeof(COORD)/sizeof(Coord1D); //!< the dimension
             };
             
+            //! x,y,z
             static const char *AxisName(const size_t dim) throw();
             
             
@@ -61,6 +62,7 @@ namespace upsylon
                 return ans;
             }
             
+            //! norm for coordinate
             template <typename COORD> static inline
             Coord1D Norm1( const COORD &c ) throw()
             {

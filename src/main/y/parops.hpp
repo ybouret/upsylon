@@ -36,6 +36,7 @@ namespace upsylon
             return rank;
         }
         
+        //! set in place next rank
         template <typename T> static inline
         void  set_rank_next(const T &size, T &rank ) throw()
         {
@@ -51,6 +52,7 @@ namespace upsylon
             return --rank;
         }
         
+        //! set in place prev rank
         template <typename T> static inline
         void  set_rank_prev(const T &size, T &rank ) throw()
         {
