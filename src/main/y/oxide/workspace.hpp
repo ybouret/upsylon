@@ -105,8 +105,12 @@ namespace upsylon
             rank( globalRank ),
             ranks( Coord::LocalRanks(rank,sizes) ),
             inner( full.split(sizes,ranks) ),
-            outer( inner )
+            outer( inner ),
+            links()
             {
+                //--------------------------------------------------------------
+                // find local topology
+                //--------------------------------------------------------------
                 Links &l = (Links &)links;
                 for(size_t dim=0;dim<Dimensions;++dim)
                 {
