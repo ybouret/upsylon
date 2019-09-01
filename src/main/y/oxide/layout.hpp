@@ -80,6 +80,7 @@ namespace upsylon
             width( other.width ),
             pitch( other.pitch )
             {
+                assert(items==other.items);
             }
 
             //! display
@@ -243,14 +244,14 @@ namespace upsylon
             }
 
             //! build partitions
-            void buildPartition( sequence<Layout> &partition, const COORD &mapping ) const
+            size_t buildPartition( sequence<Layout> &partition, const COORD &mapping ) const
             {
                 // check memory
                 partition.free();
                 const size_t cores = Coord::Product(mapping); assert(cores>0);
                 partition.ensure(cores);
 
-                // build look on local ranks
+                // build loop on local ranks
                 coord org(0);
                 coord top(0);
                 for(size_t dim=0;dim<Dimensions;++dim)
@@ -259,14 +260,16 @@ namespace upsylon
                     Coord::Of(top,dim) = Coord::Of(mapping,dim)-1;
                 }
 
+                size_t maxItems = 0;
                 Loop loop(org,top);
                 for(loop.start();loop.active();loop.next())
                 {
                     const Layout part = split(mapping,loop.value);
+                    if(part.items>maxItems) maxItems = part.items;
                     partition.push_back(part);
                 }
                 assert( partition.size() == cores );
-
+                return maxItems;
             }
 
         private:

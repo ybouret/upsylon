@@ -38,12 +38,13 @@ static inline void split_layout( const Layout<COORD> &L, const size_t nmax)
         {
             const COORD &mapping = mappings[i];
             std::cerr << "\t\t" << mapping << std::endl;
-            L.buildPartition(partition,mapping);
+            const size_t maxItems = L.buildPartition(partition,mapping);
             std::cerr << "\t\t"; Y_CHECK(cores==partition.size());
             for(size_t j=1;j<=partition.size();++j)
             {
                 std::cerr << "\t\t\t" << partition[j] << std::endl;
             }
+            std::cerr << "\t\t: maxItems=" << maxItems << std::endl;
 
         }
     }
