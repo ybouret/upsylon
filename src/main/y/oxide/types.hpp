@@ -29,6 +29,9 @@ namespace upsylon
                 static const size_t Dimensions = sizeof(COORD)/sizeof(Coord1D); //!< the dimension
             };
             
+            static const char *AxisName(const size_t dim) throw();
+            
+            
             //! get specific coordinate
             template <typename COORD> static inline
             Coord1D & Of( COORD &c, const size_t dim) throw()
@@ -54,6 +57,18 @@ namespace upsylon
                 for(size_t i=1;i<Get<COORD>::Dimensions;++i)
                 {
                     ans *= p[i];
+                }
+                return ans;
+            }
+            
+            template <typename COORD> static inline
+            Coord1D Norm1( const COORD &c ) throw()
+            {
+                const Coord1D *p = (const Coord1D*)&c;
+                Coord1D ans = abs_of(p[0]);
+                for(size_t i=1;i<Get<COORD>::Dimensions;++i)
+                {
+                    ans += abs_of(p[i]);
                 }
                 return ans;
             }
@@ -186,6 +201,7 @@ namespace upsylon
                 return Coord3D(dx.rem,dy.rem,dy.quot);
             }
             
+            //! get next local ranks in dimension dim
             template <typename COORD> static inline
             COORD NextRank( const COORD sizes,  COORD ranks, const size_t dim ) throw()
             {
@@ -193,6 +209,7 @@ namespace upsylon
                 return ranks;
             }
             
+            //! get prev local ranks in dimension dim
             template <typename COORD> static inline
             COORD PrevRank( const COORD sizes,  COORD ranks, const size_t dim ) throw()
             {
