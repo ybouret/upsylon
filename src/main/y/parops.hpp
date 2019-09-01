@@ -36,6 +36,12 @@ namespace upsylon
             return rank;
         }
         
+        template <typename T> static inline
+        void  set_rank_next(const T &size, T &rank ) throw()
+        {
+            rank = rank_next(size,rank);
+        }
+        
         //! prev rank in one dimension
         template <typename T> static inline
         T rank_prev(const T size, T rank) throw()
@@ -43,6 +49,12 @@ namespace upsylon
             assert(size>0); assert(rank>=0); assert(rank<size);
             if(rank<=0) rank = size;
             return --rank;
+        }
+        
+        template <typename T> static inline
+        void  set_rank_prev(const T &size, T &rank ) throw()
+        {
+            rank = rank_prev(size,rank);
         }
     };
 }

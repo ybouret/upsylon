@@ -5,6 +5,7 @@
 #include "y/type/point3d.hpp"
 #include "y/container/sequence.hpp"
 #include "y/strfwd.hpp"
+#include "y/parops.hpp"
 
 namespace upsylon
 {
@@ -185,8 +186,22 @@ namespace upsylon
                 return Coord3D(dx.rem,dy.rem,dy.quot);
             }
             
+            template <typename COORD> static inline
+            COORD NextRank( const COORD sizes,  COORD ranks, const size_t dim ) throw()
+            {
+                parops::set_rank_next( Coord::Of(sizes,dim), Coord::Of(ranks,dim));
+                return ranks;
+            }
+            
+            template <typename COORD> static inline
+            COORD PrevRank( const COORD sizes,  COORD ranks, const size_t dim ) throw()
+            {
+                parops::set_rank_prev( Coord::Of(sizes,dim), Coord::Of(ranks,dim));
+                return ranks;
+            }
             
         };
+        
         
     }
     

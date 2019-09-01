@@ -3,13 +3,17 @@
 #define Y_OXIDE_WORKSPACE_INCLUDED 1
 
 #include "y/oxide/layout.hpp"
-#include "y/parops.hpp"
 
 namespace upsylon
 {
     namespace Oxide
     {
 
+        template <typename COORD>
+        class Contact;
+        
+        
+        
         template <typename COORD>
         class Workspace
         {
@@ -26,6 +30,7 @@ namespace upsylon
             const LayoutType inner; //!< inner layout
             const LayoutType outer; //!< outer layout
             coord            next_ranks[Dimensions];
+            coord            prev_ranks[Dimensions];
 
             inline virtual ~Workspace() throw() {}
 
@@ -39,7 +44,14 @@ namespace upsylon
             inner( full.split(sizes,ranks) ),
             outer( inner )
             {
-                
+                for(size_t dim=0;dim<Dimensions;++dim)
+                {
+                    const Coord1D sz = Coord::Of(sizes,dim);
+                    next_ranks[dim]  = ranks;
+                    prev_ranks[dim]  = ranks;
+                    parops::set_next_rank( sz, Coord::Of(next_ranks[dim],dim) );
+                    parops::set_next_rank( sz, Coord::Of(prev_ranks[dim],dim) );
+                }
             }
 
 
