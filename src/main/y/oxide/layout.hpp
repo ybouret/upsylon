@@ -244,12 +244,12 @@ namespace upsylon
             }
 
             //! build partitions
-            size_t buildPartition( sequence<Layout> &partition, const COORD &mapping ) const
+            size_t buildPartition( sequence<Layout> *partition, const COORD &mapping ) const
             {
                 // check memory
-                partition.free();
+                if(partition) partition->free();
                 const size_t cores = Coord::Product(mapping); assert(cores>0);
-                partition.ensure(cores);
+                if(partition) partition->ensure(cores);
 
                 // build loop on local ranks
                 coord org(0);
@@ -266,9 +266,9 @@ namespace upsylon
                 {
                     const Layout part = split(mapping,loop.value);
                     if(part.items>maxItems) maxItems = part.items;
-                    partition.push_back(part);
+                    if(partition) partition->push_back(part);
                 }
-                assert( partition.size() == cores );
+                assert( 0==partition || partition->size() == cores );
                 return maxItems;
             }
 
