@@ -9,7 +9,7 @@ namespace upsylon
 {
     namespace Oxide
     {
-
+        //! finding an optimal mapping
         struct OptimalLayout
         {
 
@@ -67,16 +67,7 @@ namespace upsylon
                 Y_DISABLE_ASSIGN(Score);
             };
 
-            template <typename COORD>
-            static inline void AnalyzeMapping( const COORD &mapping, void *args )
-            {
-                assert(args);
 
-                Context<COORD>    &context  = *static_cast< Context<COORD> * >(args);
-                const size_t       maxItems = context.full->getPartitionMaxItems(mapping);
-                const Score<COORD> score(mapping,maxItems);
-                context.scores->push_back(score);
-            }
 
             template <typename COORD> static inline
             COORD Find( const Layout<COORD> &full, const size_t cores )
@@ -133,13 +124,21 @@ namespace upsylon
             }
 
         private:
-            template <typename COORD>
-            struct Context
+            template <typename COORD> struct Context
             {
                 const Layout<COORD>      *full;
                 sequence< Score<COORD> > *scores;
             };
 
+            template <typename COORD>
+            static inline void AnalyzeMapping( const COORD &mapping, void *args )
+            {
+                assert(args);
+                Context<COORD>    &context  = *static_cast< Context<COORD> * >(args);
+                const size_t       maxItems = context.full->getPartitionMaxItems(mapping);
+                const Score<COORD> score(mapping,maxItems);
+                context.scores->push_back(score);
+            }
         };
 
     }
