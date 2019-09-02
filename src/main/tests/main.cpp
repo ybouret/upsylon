@@ -30,6 +30,7 @@ Y_UTEST_INIT(150)
     Y_UTEST(static_slots);
 
     Y_UTEST(mloop);
+    Y_UTEST(comb);
     Y_UTEST(embed);
     Y_UTEST(hr_ints);
 
