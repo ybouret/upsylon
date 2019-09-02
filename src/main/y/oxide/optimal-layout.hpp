@@ -76,13 +76,15 @@ namespace upsylon
             template <typename COORD> static inline
             bool Find( const Layout<COORD> &full, const size_t cores )
             {
+                static const size_t initialCap[4] = { 0, 1, 16, 64 };
+
                 assert(cores>0);
                 //______________________________________________________________
                 //
                 // create score for each partition
                 //______________________________________________________________
                 typedef Score<COORD> ScoreType;
-                vector<ScoreType>    scores(cores,as_capacity);
+                vector<ScoreType>    scores(initialCap[Coord::Get<COORD>::Dimensions],as_capacity);
                 Context<COORD>       context = { &full, &scores };
                 full.forEachMapping(cores,AnalyzeMapping,&context);
                 if(scores.size()<=0)

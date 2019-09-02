@@ -10,49 +10,81 @@ using namespace upsylon;
 using namespace Oxide;
 
 
-template <typename COORD>
-static inline void split_layout( const Layout<COORD> &L, const size_t nmax)
+namespace
 {
-    std::cerr << "In " << L.Dimensions << "D" << std::endl;
-    std::cerr << "L=" << L << std::endl;
-    vector<COORD> mappings(nmax,as_capacity);
-    
-    for(size_t cores=1;cores<=nmax;++cores)
+    template <typename COORD> static inline
+    size_t maxSplits( const size_t cores )
     {
-        // let's take a given #cores
-        // and build the possible mappings for this layoyt
-        std::cerr << "\tcores=" << cores << std::endl;
-        L.buildMappings(mappings,cores);
-        std::cerr << "\tmappings=" << mappings << std::endl;
-        if(mappings.size()<=0)
+
+        size_t count = 0;
+
+        if(cores>0)
         {
-            std::cerr << "\t\tfailure" << std::endl;
-            continue;
-        }
-        
-        // for each valid mapping, compute associated partition
-        const size_t npart = mappings.size();
-        std::cerr << "\ttesting partitions: " << std::endl;
-        vector< Layout<COORD> > partition;
-        for(size_t i=1;i<=npart;++i)
-        {
-            const COORD &mapping = mappings[i];
-            std::cerr << "\t\t" << mapping << std::endl;
-            L.buildPartition(partition,mapping);
-            std::cerr << "\t\t"; Y_CHECK(cores==partition.size());
-            for(size_t j=1;j<=partition.size();++j)
+            COORD  org(0);
+            COORD  top(0);
+            Coord::LD(org,1);
+            Coord::LD(top,cores);
+            multi_loop<Coord1D,COORD> loop( org, top );
+
+            for( loop.start(); loop.active(); loop.next() )
             {
-                std::cerr << "\t\t\t" << partition[j] << std::endl;
+                if( cores == size_t( Coord::Product(loop.value) ) )
+                {
+                    ++count;
+                }
             }
-            std::cerr << "\t\t-> maxItems=" << L.getPartitionMaxItems(mapping) << std::endl;
 
         }
-
-        OptimalLayout::Find(L,cores);
+        return count;
     }
+
+
+    template <typename COORD>
+    static inline void split_layout( const Layout<COORD> &L, const size_t nmax)
+    {
+        std::cerr << "In " << L.Dimensions << "D" << std::endl;
+        std::cerr << "L=" << L << std::endl;
+        vector<COORD> mappings(nmax,as_capacity);
+
+        for(size_t cores=1;cores<=nmax;++cores)
+        {
+            // let's take a given #cores
+            // and build the possible mappings for this layoyt
+            std::cerr << "\tcores=" << cores << std::endl;
+            L.buildMappings(mappings,cores);
+            std::cerr << "\tmappings=" << mappings << std::endl;
+            if(mappings.size()<=0)
+            {
+                std::cerr << "\t\tfailure" << std::endl;
+                continue;
+            }
+
+            // for each valid mapping, compute associated partition
+            const size_t npart = mappings.size();
+            std::cerr << "\ttesting partitions: " << std::endl;
+            vector< Layout<COORD> > partition;
+            for(size_t i=1;i<=npart;++i)
+            {
+                const COORD &mapping = mappings[i];
+                std::cerr << "\t\t" << mapping << std::endl;
+                L.buildPartition(partition,mapping);
+                std::cerr << "\t\t"; Y_CHECK(cores==partition.size());
+                for(size_t j=1;j<=partition.size();++j)
+                {
+                    std::cerr << "\t\t\t" << partition[j] << std::endl;
+                }
+                std::cerr << "\t\t-> maxItems=" << L.getPartitionMaxItems(mapping) << std::endl;
+
+            }
+
+            OptimalLayout::Find(L,cores);
+        }
+    }
+
 }
 
 #include "y/string/convert.hpp"
+#include "y/ios/ocstream.hpp"
 
 Y_UTEST(oxide_split)
 {
@@ -86,3 +118,19 @@ Y_UTEST(oxide_split)
 }
 Y_UTEST_DONE()
 
+
+
+Y_UTEST(oxide_max_splits)
+{
+    std::cerr << "Computing MaxSplits" << std::endl;
+    ios::ocstream fp("splits.dat");
+    for(unsigned long cores=0;cores<=128;++cores)
+    {
+        const unsigned long m1 = maxSplits<Coord1D>(cores);
+        const unsigned long m2 = maxSplits<Coord2D>(cores);
+        const unsigned long m3 = maxSplits<Coord3D>(cores);
+        fp("%lu %lu %lu %lu\n",cores,m1,m2,m3);
+
+    }
+}
+Y_UTEST_DONE()

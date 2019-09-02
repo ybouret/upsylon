@@ -49,8 +49,20 @@ namespace upsylon
                 {
                     p[i] = 1;
                 }
-                return c;
             }
+
+            //! set coordinate to j[,j[,j]]
+            template <typename COORD> static inline
+            void LD( COORD &c, const Coord1D j ) throw()
+            {
+                Coord1D *p = (Coord1D*)&c;
+                for(size_t i=0;i<Get<COORD>::Dimensions;++i)
+                {
+                    p[i] = j;
+                }
+            }
+
+
 
             //! force zero
             template <typename COORD> static inline
