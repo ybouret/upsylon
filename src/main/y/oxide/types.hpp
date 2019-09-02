@@ -7,6 +7,7 @@
 #include "y/strfwd.hpp"
 #include "y/parops.hpp"
 #include <cstring>
+#include <cstdlib>
 
 namespace upsylon
 {
