@@ -66,18 +66,19 @@ namespace
             for(size_t i=1;i<=npart;++i)
             {
                 const COORD &mapping = mappings[i];
-                std::cerr << "\t\t" << mapping << std::endl;
+                std::cerr << "\t\t" << mapping << " [[";
                 L.buildPartition(partition,mapping);
-                std::cerr << "\t\t"; Y_CHECK(cores==partition.size());
+                Y_ASSERT(cores==partition.size());
                 for(size_t j=1;j<=partition.size();++j)
                 {
-                    std::cerr << "\t\t\t" << partition[j] << std::endl;
+                    std::cerr << " " << partition[j];
                 }
-                std::cerr << "\t\t-> maxItems=" << L.getPartitionMaxItems(mapping) << std::endl;
+                std::cerr << " ]] maxItems=" << L.getPartitionMaxItems(mapping) << std::endl;
 
             }
 
-            OptimalLayout::Find(L,cores);
+            const COORD opt = OptimalLayout::Find(L,cores);
+            std::cerr << "Found to be " << opt << std::endl;
         }
     }
 

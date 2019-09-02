@@ -57,6 +57,11 @@ namespace upsylon
                     return comparison::increasing(lhs.penality,rhs.penality);
                 }
 
+                static inline int CompareByMapping(const Score &lhs, const Score &rhs) throw()
+                {
+                    return Coord::Compare(lhs.mapping,rhs.mapping);
+                }
+
 
             private:
                 Y_DISABLE_ASSIGN(Score);
@@ -74,11 +79,12 @@ namespace upsylon
             }
 
             template <typename COORD> static inline
-            bool Find( const Layout<COORD> &full, const size_t cores )
+            COORD Find( const Layout<COORD> &full, const size_t cores )
             {
                 static const size_t initialCap[4] = { 0, 1, 16, 64 };
 
                 assert(cores>0);
+
                 //______________________________________________________________
                 //
                 // create score for each partition
@@ -89,7 +95,7 @@ namespace upsylon
                 full.forEachMapping(cores,AnalyzeMapping,&context);
                 if(scores.size()<=0)
                 {
-                    return false;
+                    return COORD(0);
                 }
 
                 //______________________________________________________________
@@ -117,8 +123,13 @@ namespace upsylon
                         scores.pop_back();
                     }
                 }
-                std::cerr << "scores: " << scores << std::endl;
-                return true;
+                //______________________________________________________________
+                //
+                // order by preferred dimension
+                //______________________________________________________________
+                hsort(scores,ScoreType::CompareByMapping);
+                while(scores.size()>1) scores.pop_back();
+                return scores.front().mapping;
             }
 
         private:

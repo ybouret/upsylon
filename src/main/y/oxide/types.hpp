@@ -100,7 +100,24 @@ namespace upsylon
                 }
                 return ans;
             }
-            
+
+            //! lexicographic compare
+            template <typename COORD> static inline
+            int Compare(const COORD &lhs, const COORD &rhs) throw()
+            {
+                const Coord1D *L = (const Coord1D *)&lhs;
+                const Coord1D *R = (const Coord1D *)&rhs;
+                for(size_t i=0;i<Get<COORD>::Dimensions;++i)
+                {
+                    const Coord1D l = L[i];
+                    const Coord1D r = R[i];
+                    if(l<r)       { return -1; }
+                    else if( r<l) { return  1; }
+                    else            continue;
+                }
+                return 0;
+            }
+
             //! norm for coordinate
             template <typename COORD> static inline
             Coord1D Norm1( const COORD &c ) throw()
