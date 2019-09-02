@@ -15,6 +15,6 @@ Y_MPI(io       test-mpi io)
 Y_MPI(topology test-mpi topology)
 
 ADD_CUSTOM_TARGET(utest-mpi
-COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
+COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
 DEPENDS test-mpi)
 

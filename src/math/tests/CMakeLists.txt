@@ -75,5 +75,5 @@ ADD_TEST(geom:curv   test-m curve)
 ADD_TEST(geom:points test-m points)
 
 ADD_CUSTOM_TARGET(utest-m
-COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
+COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
 DEPENDS test-m)

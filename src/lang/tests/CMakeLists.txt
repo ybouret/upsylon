@@ -27,5 +27,5 @@ ADD_TEST(Manager       test-lang manager)
 ADD_TEST(Dynamo:JSON   test-lang dyn ${HERE}/../../json/y/json/json.g)
 
 ADD_CUSTOM_TARGET(utest-lang
-COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
+COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
 DEPENDS test-lang)

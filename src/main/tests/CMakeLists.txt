@@ -217,5 +217,5 @@ ADD_TEST(oxide:workspace test-main  oxide_workspace)
 
 
 ADD_CUSTOM_TARGET(utest-main
-COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
+COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
 DEPENDS test-main)
