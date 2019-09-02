@@ -1,6 +1,6 @@
 #include "y/oxide/field3d.hpp"
 #include "y/oxide/field/io.hpp"
-
+#include "y/oxide/optimal-layout.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include <typeinfo>
@@ -44,9 +44,11 @@ static inline void split_layout( const Layout<COORD> &L, const size_t nmax)
             {
                 std::cerr << "\t\t\t" << partition[j] << std::endl;
             }
-            std::cerr << "\t\t: maxItems=" << L.getPartitionMaxItems(mapping) << std::endl;
+            std::cerr << "\t\t-> maxItems=" << L.getPartitionMaxItems(mapping) << std::endl;
 
         }
+
+        OptimalLayout::Find(L,cores);
     }
 }
 
