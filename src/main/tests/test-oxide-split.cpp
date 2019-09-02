@@ -1,6 +1,6 @@
 #include "y/oxide/field3d.hpp"
 #include "y/oxide/field/io.hpp"
-#include "y/oxide/optimal-layout.hpp"
+#include "y/oxide/optimal-mapping.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include <typeinfo>
@@ -77,7 +77,7 @@ namespace
 
             }
 
-            const COORD opt = OptimalLayout::Find(L,cores);
+            const COORD opt = OptimalMapping::Find(L,cores);
             std::cerr << "Found to be " << opt << std::endl;
         }
     }

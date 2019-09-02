@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_OXIDE_OPTIMAL_LAYOUT_INCLUDED
-#define Y_OXIDE_OPTIMAL_LAYOUT_INCLUDED 1
+#ifndef Y_OXIDE_OPTIMAL_MAPPING_INCLUDED
+#define Y_OXIDE_OPTIMAL_MAPPING_INCLUDED 1
 
 #include "y/oxide/layout.hpp"
 #include "y/sort/heap.hpp"
@@ -10,17 +10,18 @@ namespace upsylon
     namespace Oxide
     {
         //! finding an optimal mapping
-        struct OptimalLayout
+        struct OptimalMapping
         {
-
+            //! objective score for each mapping
             template <typename COORD>
             class Score
             {
             public:
-                const COORD   mapping;
-                const Coord1D penality;
-                const size_t  maxItems;
+                const COORD   mapping;  //!< mapping matching cores
+                const Coord1D penality; //!< favor for square
+                const size_t  maxItems; //!< max item in partition
 
+                //! initialize
                 inline Score(const COORD & userMapping, const size_t userMaxItems ) throw() :
                 mapping(  userMapping  ),
                 penality( Coord::Norm1(mapping) ),
@@ -28,6 +29,7 @@ namespace upsylon
                 {
                 }
 
+                //! copy
                 inline Score( const Score &_ ) throw() :
                 mapping(  _.mapping  ),
                 penality( _.penality ),
@@ -35,28 +37,34 @@ namespace upsylon
                 {
                 }
 
-
+                //! cleanup
                 inline ~Score() throw()
                 {
-
+                    Coord::LDZ_(mapping);
+                    Coord::LDZ_(penality);
+                    Coord::LDZ_(maxItems);
                 }
 
+                //! output
                 inline friend std::ostream & operator<<( std::ostream &os, const Score &s )
                 {
                     os << '(' << s.maxItems << '@' << '|' << s.mapping << '|' << '=' << s.penality << ')';
                     return os;
                 }
 
+                //! compare by increasing maxItems
                 static inline int CompareByMaxItems(const Score &lhs, const Score &rhs) throw()
                 {
                     return comparison::increasing(lhs.maxItems,rhs.maxItems);
                 }
 
+                //! compare by increasing penality
                 static inline int CompareByPenality(const Score &lhs, const Score &rhs) throw()
                 {
                     return comparison::increasing(lhs.penality,rhs.penality);
                 }
 
+                //! compare by lexicographic order
                 static inline int CompareByMapping(const Score &lhs, const Score &rhs) throw()
                 {
                     return Coord::Compare(lhs.mapping,rhs.mapping);
@@ -68,7 +76,7 @@ namespace upsylon
             };
 
 
-
+            //! find a mapping for a full layout and a given number of cores
             template <typename COORD> static inline
             COORD Find( const Layout<COORD> &full, const size_t cores )
             {
@@ -78,7 +86,7 @@ namespace upsylon
 
                 //______________________________________________________________
                 //
-                // create score for each partition
+                // create scores for each partition
                 //______________________________________________________________
                 typedef Score<COORD> ScoreType;
                 vector<ScoreType>    scores(initialCap[Coord::Get<COORD>::Dimensions],as_capacity);
