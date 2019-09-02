@@ -47,7 +47,13 @@ namespace upsylon
             const_coord pitch; //!< pitch 1, nx, nx*ny to compute indices
 
             //! cleanup
-            inline virtual ~Layout() throw() {}
+            inline virtual ~Layout() throw()
+            {
+                Coord::LDZ_(lower);
+                Coord::LDZ_(upper);
+                Coord::LDZ_(width);
+                Coord::LDZ_(pitch);
+            }
 
             //! setup by two coordinates
             inline explicit Layout(const_coord lo,
@@ -182,20 +188,28 @@ namespace upsylon
                 coord up = nn + lo;
                 return Layout(lo,Coord::Decrease(up));
             }
-            
-            //! return matching mapping
+
+            //! what to do with a mapping
+            typedef void (*MappingProc)( const COORD &, void * );
+
+            //! push back mapping into a sequence
+            static inline
+            void MappingPushBack( const COORD &mapping, void *args )
+            {
+                assert(args);
+                static_cast<sequence<COORD> *>(args)->push_back(mapping);
+            }
+
+            //! compute all valid mappings and call proc(mapping,args) on them
             /**
              the product of a mapping coordinates is equal to
              the number of cores, and each coordinate is strictly lower
              than the layout width in the same dimension
              */
-            inline void buildMappings( sequence<COORD> &mappings, const size_t cores ) const
+            inline void forEachMapping( const size_t cores, MappingProc proc, void *args ) const
             {
-                //--------------------------------------------------------------
-                // cleanup
-                //--------------------------------------------------------------
                 assert(cores>0);
-                mappings.free();
+                assert(proc);
 
                 //--------------------------------------------------------------
                 // build loop
@@ -238,18 +252,27 @@ namespace upsylon
                     //----------------------------------------------------------
                     if(valid)
                     {
-                        mappings.push_back(loop.value);
+                        proc(loop.value,args);
                     }
                 }
             }
 
-            //! build partitions
-            size_t buildPartition( sequence<Layout> *partition, const COORD &mapping ) const
+            //! return matching mapping
+            inline void buildMappings( sequence<COORD> &mappings, const size_t cores ) const
             {
-                // check memory
-                if(partition) partition->free();
-                const size_t cores = Coord::Product(mapping); assert(cores>0);
-                if(partition) partition->ensure(cores);
+                mappings.free();
+                forEachMapping(cores,MappingPushBack, &mappings);
+            }
+
+            //! what to do with a partition layout
+            typedef void (*PartitionProc)( const Layout &, void * );
+
+
+
+            //! build all partition layout from a valid mapping
+            inline void forEachPartition( const COORD &mapping, PartitionProc proc, void *args ) const
+            {
+                assert(Coord::Product(mapping)>0);
 
                 // build loop on local ranks
                 coord org(0);
@@ -259,18 +282,49 @@ namespace upsylon
                     Coord::Of(org,dim) = 0;
                     Coord::Of(top,dim) = Coord::Of(mapping,dim)-1;
                 }
-
-                size_t maxItems = 0;
                 Loop loop(org,top);
                 for(loop.start();loop.active();loop.next())
                 {
                     const Layout part = split(mapping,loop.value);
-                    if(part.items>maxItems) maxItems = part.items;
-                    if(partition) partition->push_back(part);
+                    proc(part,args);
                 }
-                assert( 0==partition || partition->size() == cores );
-                return maxItems;
             }
+
+            //! push back layout
+            static inline void PartitionPushBack(const Layout &L, void *args )
+            {
+                assert(args);
+                static_cast< sequence<Layout> *>(args)->push_back(L);
+            }
+
+            //! build partitions
+            inline void buildPartition( sequence<Layout> &partition, const COORD &mapping ) const
+            {
+                // check memory
+                partition.free();
+                const size_t cores = Coord::Product(mapping); assert(cores>0);
+                partition.ensure(cores);
+                forEachPartition(mapping, PartitionPushBack, &partition);
+            }
+
+            //! get max items for a part
+            static inline void PartitionMaxItems(const Layout &L, void *args ) throw()
+            {
+                assert(args);
+                size_t       &max_items = *static_cast<size_t *>(args);
+                const size_t  lay_items = L.items;
+                if(lay_items>max_items) max_items = lay_items;
+            }
+
+            //! get max items of all possible parts
+            inline size_t getPartitionMaxItems( const COORD &mapping ) const
+            {
+                size_t ans = 0;
+                forEachPartition(mapping,PartitionMaxItems,&ans);
+                return ans;
+            }
+
+
 
         private:
             Y_DISABLE_ASSIGN(Layout);

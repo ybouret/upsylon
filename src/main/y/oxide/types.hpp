@@ -6,6 +6,7 @@
 #include "y/container/sequence.hpp"
 #include "y/strfwd.hpp"
 #include "y/parops.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -23,6 +24,9 @@ namespace upsylon
         //! operations on coordinates
         struct Coord
         {
+
+
+
             //! get static info
             template <typename COORD> struct Get
             {
@@ -31,7 +35,33 @@ namespace upsylon
             
             //! x,y,z
             static const char *AxisName(const size_t dim) throw();
-            
+
+            //! zero
+            template <typename COORD> static inline
+            void LDZ( COORD &c ) throw()
+            {
+                memset( (void*)&c, 0, sizeof(COORD) );
+            }
+
+            //! set coordinate to 1[,1[,1]]
+            template <typename COORD> static inline
+            void LD1( COORD &c ) throw()
+            {
+                Coord1D *p = (Coord1D*)&c;
+                for(size_t i=0;i<Get<COORD>::Dimensions;++i)
+                {
+                    p[i] = 1;
+                }
+                return c;
+            }
+
+            //! force zero
+            template <typename COORD> static inline
+            void LDZ_( const COORD &c ) throw()
+            {
+                memset( (void*)&c, 0, sizeof(COORD) );
+            }
+
             
             //! get specific coordinate
             template <typename COORD> static inline

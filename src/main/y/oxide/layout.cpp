@@ -14,6 +14,8 @@ namespace upsylon
 
         LayoutInfo:: ~LayoutInfo() throw()
         {
+            Coord::LDZ_(dimension);
+            Coord::LDZ_(items);
         }
 
         LayoutInfo:: LayoutInfo( const LayoutInfo &other ) throw() :

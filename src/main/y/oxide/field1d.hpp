@@ -22,7 +22,7 @@ namespace upsylon
             Y_DECL_ARGS(T,type); //!< aliases
 
             //! cleanup
-            inline virtual ~Field1D() throw(){}
+            inline virtual ~Field1D() throw() { shift=0; }
 
             //!  constructor with string and layout
             inline explicit Field1D(const string   &id,
