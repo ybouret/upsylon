@@ -24,9 +24,6 @@ namespace upsylon
         //! operations on coordinates
         struct Coord
         {
-
-
-
             //! get static info
             template <typename COORD> struct Get
             {
