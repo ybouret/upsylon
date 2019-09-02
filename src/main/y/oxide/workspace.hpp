@@ -52,7 +52,8 @@ namespace upsylon
             const bool     parallel;      //!< is parallel in that dimension
             const bool     head;          //!< true if rank=0 in that dimension
             const bool     tail;          //!< true if rank=size-1 in that dimension
-            const bool     bulk;          //!< !head and !tail
+            const bool     bulk;          //!< !head and !tail, always false if not parallel
+
             //! cleanup
             inline ~Link() throw()
             {
@@ -155,7 +156,7 @@ namespace upsylon
             links()
             {
                 //--------------------------------------------------------------
-                // find local topology
+                // find local topology : links in each dimension
                 //--------------------------------------------------------------
                 Links &l = (Links &)links;
                 for(size_t dim=0;dim<Dimensions;++dim)
