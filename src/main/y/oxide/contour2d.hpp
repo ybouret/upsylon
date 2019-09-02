@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_IPSO_CONTOUR2D_INCLUDED
-#define Y_IPSO_CONTOUR2D_INCLUDED 1
+#ifndef Y_OXIDE_CONTOUR2D_INCLUDED
+#define Y_OXIDE_CONTOUR2D_INCLUDED 1
 
 #include "y/sequence/array.hpp"
 #include "y/type/utils.hpp"
@@ -12,11 +12,11 @@
 
 namespace upsylon
 {
-    namespace ipso
+    namespace Oxide
     {
 
         //! algorithm to find 2d contour segments
-        struct contour2d
+        struct Contour2D
         {
             //! called upon matching segment
             typedef void (*callback)(double x1,
@@ -43,7 +43,7 @@ namespace upsylon
             typename FIELD,
             typename ARRAY
             > static inline
-            void scan(const FIELD         &d,
+            void Scan(const FIELD         &d,
                       const unit_t         ilb,
                       const unit_t         iub,
                       const unit_t         jlb,
@@ -224,131 +224,7 @@ namespace upsylon
 #undef xsect
             }
 
-#if 0
-            //! point for segment
-            typedef point2d<double> point;
 
-            //! segment=two points
-            class segment : public object
-            {
-            public:
-                segment *next;
-                segment *prev;
-                const point a;
-                const point b;
-
-                inline explicit segment( const point _a, const point _b) throw() : next(0), prev(0), a(_a), b(_b) {}
-                inline virtual ~segment() throw() {}
-                inline void swap() const throw() { cswap(a,b); }
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(segment);
-            };
-
-            //! base class for segments
-            typedef core::list_of_cpp<segment> segments_type;
-
-            //! list of segments
-            class segments : public segments_type, public counted_object
-            {
-            public:
-                typedef intr_ptr<size_t,segments>   pointer;
-                typedef set<size_t,pointer>         database;
-                typedef core::list_of_cpp<segments> list_type;
-
-                const size_t indx;
-                const double level;
-                segments    *next;
-                segments    *prev;
-                inline explicit segments( const size_t id, const double value) throw() :
-                segments_type(), counted_object(), indx(id), level(value), next(0), prev(0) {}
-
-                inline virtual ~segments() throw() {}
-                inline const size_t & key() const throw() { return indx; }
-
-                void split( list_type &L )
-                {
-                    L.clear();
-                    while( size )
-                    {
-                        const point a = tail->a;
-                        const point b = tail->b;
-                        bool linked = false;
-                        for( segments *segs = L.head; segs; segs=segs->next )
-                        {
-
-                        }
-                        if(!linked)
-                        {
-                            segments *segs = new segments(indx,level);
-                            L.push_back(segs);
-                            segs->push_back( pop_back() );
-                        }
-                        // else continue
-                    }
-                }
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(segments);
-            };
-
-            class iso_segments : public segments::database
-            {
-            public:
-                inline explicit iso_segments(size_t n=0) : segments::database(n,as_capacity) {}
-                inline virtual ~iso_segments() throw() {}
-
-                template<
-                typename FIELD,
-                typename ARRAY
-                >  inline
-                void ld(const FIELD         &d,
-                        const unit_t         ilb,
-                        const unit_t         iub,
-                        const unit_t         jlb,
-                        const unit_t         jub,
-                        const ARRAY         &x,
-                        const ARRAY         &y,
-                        const array<double> &z)
-                {
-                    scan<FIELD,ARRAY>(d,ilb,iub,jlb,jub,x,y,z, cb, this );
-                }
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(iso_segments);
-                static inline void cb(double x1,
-                                      double y1,
-                                      double x2,
-                                      double y2,
-                                      double level,
-                                      size_t indx,
-                                      void  *args)
-                {
-                    const point   a(x1,y1);
-                    const point   b(x2,y2);
-                    iso_segments &self = *static_cast<iso_segments*>(args);
-                    segments     *pSeg = 0;
-                    {
-                        segments::pointer *ppSeg = self.search(indx);
-                        if(ppSeg)
-                        {
-                            pSeg = & **ppSeg;
-                        }
-                        else
-                        {
-                            pSeg = new segments(indx,level);
-                            const segments::pointer q = pSeg;
-                            if(!self.insert(q))
-                            {
-                                throw exception("unexpected failure to insert segments#%u", unsigned(indx) );
-                            }
-                        }
-                    }
-                    assert(pSeg);
-                    pSeg->push_back( new segment(a,b) );
-                }
-            };
-#endif
             
         };
 

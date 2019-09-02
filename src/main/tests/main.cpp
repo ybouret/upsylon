@@ -128,7 +128,6 @@ Y_UTEST_INIT(150)
     Y_UTEST(ipso);
     Y_UTEST(ipso_io);
     Y_UTEST(ipso_gh);
-    Y_UTEST(ipso_c2d);
 
     Y_UTEST(progress);
     Y_UTEST(dll);
@@ -165,6 +164,7 @@ Y_UTEST_INIT(150)
     Y_UTEST(oxide_max_splits);
     Y_UTEST(oxide_ranks);
     Y_UTEST(oxide_workspace);
+    Y_UTEST(oxide_contour2d);
 
 }
 Y_UTEST_EXEC()

@@ -132,11 +132,10 @@ ADD_TEST(mk:sobol       test-main sobol)
 ADD_TEST(mk:timings     test-main timings)
 
 
-SOURCE_GROUP(ispo FILES test-ipso.cpp test-ipso-io.cpp test-ipso-gh.cpp test-ipso-c2d.cpp)
+SOURCE_GROUP(ispo FILES test-ipso.cpp test-ipso-io.cpp test-ipso-gh.cpp)
 ADD_TEST(ipso:main   test-main  ipso)
 ADD_TEST(ipso:io     test-main  ipso_io)
 ADD_TEST(ipso:gh     test-main  ipso_gh)
-ADD_TEST(ipso:c2d    test-main  ipso_c2d)
 
 SOURCE_GROUP(lang FILES test-token.cpp test-source.cpp test-pattern.cpp 
 test-posix.cpp test-regex.cpp test-matching.cpp test-scanner.cpp test-lex.cpp test-common.cpp test-token-convert.cpp)
@@ -206,7 +205,9 @@ ADD_TEST(sparse:array  test-main sparse_array)
 ADD_TEST(sparse:matrix test-main sparse_matrix)
 
 SOURCE_GROUP(oxide FILES test-oxide.cpp test-oxide-fields.cpp
- test-oxide-io.cpp test-oxide-dct.cpp test-oxide-split.cpp test-oxide-ranks.cpp test-oxide-workspace.cpp)
+test-oxide-io.cpp test-oxide-dct.cpp test-oxide-split.cpp test-oxide-ranks.cpp test-oxide-workspace.cpp
+test-oxide-c2d.cpp
+)
 ADD_TEST(oxide:main      test-main  oxide)
 ADD_TEST(oxide:fields    test-main  oxide_fields)
 ADD_TEST(oxide:io        test-main  oxide_io)
@@ -214,7 +215,7 @@ ADD_TEST(oxide:dct       test-main  oxide_dct)
 ADD_TEST(oxide:split     test-main  oxide_split)
 ADD_TEST(oxide:ranks     test-main  oxide_ranks)
 ADD_TEST(oxide:workspace test-main  oxide_workspace) 
-
+ADD_TEST(oxide:contour2d test-main  oxide_contour2d)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>

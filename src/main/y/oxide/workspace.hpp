@@ -18,7 +18,7 @@ namespace upsylon
             const Coord1D globalRank; //!< global node rank
             
             //! setup
-            inline Node( const COORD &sizes, const COORD ranks ) throw() :
+            inline Node( const COORD &sizes, const COORD &ranks ) throw() :
             localRanks(ranks), globalRank( Coord::GlobalRank(sizes,localRanks) ) { }
             
             //! cleanup
@@ -142,13 +142,13 @@ namespace upsylon
                 Coord::LDZ_(ranks);
             }
             
-            //! setup
+            //! setup 
             inline explicit Workspace(const LayoutType &full,
                                       const_coord      &globalSizes,
                                       const size_t      globalRank) :
             sizes( globalSizes ),
-            size( Coord::Product(sizes) ),
-            rank( globalRank ),
+            size(  Coord::Product(sizes) ),
+            rank(  globalRank ),
             ranks( Coord::LocalRanks(rank,sizes) ),
             inner( full.split(sizes,ranks) ),
             outer( inner ),
