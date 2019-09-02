@@ -13,6 +13,7 @@ Y_MPI(init     test-mpi init)
 Y_MPI(oxide    test-mpi oxide)
 Y_MPI(io       test-mpi io)
 Y_MPI(topology test-mpi topology)
+Y_MPI(PI       test-mpi PI)
 
 ADD_CUSTOM_TARGET(utest-mpi
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
