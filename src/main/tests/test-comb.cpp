@@ -29,18 +29,19 @@ namespace
                 arithmetic::simplify(num,den);
             }
             
-            while(i<=nhi)
-            {
-                num *= i++;
-                arithmetic::simplify(num,den);
-            }
-            
             while(j<=dhi)
             {
                 den *= j++;
                 arithmetic::simplify(num,den);
             }
             
+            while(i<=nhi)
+            {
+                num *= i++;
+                arithmetic::simplify(num,den);
+            }
+            
+                
             assert(den==1);
             return num;
         }
