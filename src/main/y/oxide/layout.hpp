@@ -5,7 +5,7 @@
 #include "y/oxide/types.hpp"
 #include "y/sort/unique.hpp"
 #include "y/sort/sequence.hpp"
-#include "y/counting/multi-loop.hpp"
+#include "y/counting/mloop.hpp"
 
 namespace upsylon
 {
@@ -39,7 +39,7 @@ namespace upsylon
             static const size_t Dimensions = Coord::Get<COORD>::Dimensions; //!< alias
             typedef COORD       coord;                                      //!< alias
             typedef const coord const_coord;                                //!< alias
-            typedef multi_loop<Coord1D,COORD> Loop;                         //!< loop over sub layout
+            typedef mloop<Coord1D,COORD> Loop;                              //!< loop over sub layout
 
             const_coord lower; //!< lower coordinate
             const_coord upper; //!< upper coordinate
@@ -163,7 +163,7 @@ namespace upsylon
                 {                                                  //
                     Loop       loop(sub.lower,sub.upper);          // make the loop
                     indices.ensure( indices.size() + loop.count ); // adjust memory
-                    for(loop.start();loop.active();loop.next())    // loop on sub coordinates
+                    for(loop.start();loop.valid();loop.next())     // loop on sub coordinates
                     {                                              //
                         indices.push_back( indexOf(loop.value) );  //
                     }                                              //
@@ -225,7 +225,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // check all possible values
                 //--------------------------------------------------------------
-                for(loop.start();loop.active();loop.next())
+                for(loop.start();loop.valid();loop.next())
                 {
                     //----------------------------------------------------------
                     // check number of cores
@@ -283,7 +283,7 @@ namespace upsylon
                     Coord::Of(top,dim) = Coord::Of(mapping,dim)-1;
                 }
                 Loop loop(org,top);
-                for(loop.start();loop.active();loop.next())
+                for(loop.start();loop.valid();loop.next())
                 {
                     const Layout part = split(mapping,loop.value);
                     proc(part,args);

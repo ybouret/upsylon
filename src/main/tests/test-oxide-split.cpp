@@ -24,9 +24,9 @@ namespace
             COORD  top(0);
             Coord::LD(org,1);
             Coord::LD(top,cores);
-            multi_loop<Coord1D,COORD> loop( org, top );
+            mloop<Coord1D,COORD> loop( org, top );
 
-            for( loop.start(); loop.active(); loop.next() )
+            for( loop.start(); loop.valid(); loop.next() )
             {
                 if( cores == size_t( Coord::Product(loop.value) ) )
                 {

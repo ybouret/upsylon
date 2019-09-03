@@ -42,7 +42,7 @@ namespace
                 typename LAYOUT::Loop mloop(L.lower,L.upper);
 
                 size_t nn = 0;
-                for( mloop.start(); mloop.active(); mloop.next() )
+                for( mloop.start(); mloop.valid(); mloop.next() )
                 {
                     if(mloop.index==1)
                     {

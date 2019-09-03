@@ -29,9 +29,7 @@ Y_UTEST_INIT(150)
     Y_UTEST(xslot);
     Y_UTEST(static_slots);
 
-    Y_UTEST(multi_loop);
     Y_UTEST(mloops);
-    
     Y_UTEST(comb);
     Y_UTEST(perm);
     Y_UTEST(embed);
