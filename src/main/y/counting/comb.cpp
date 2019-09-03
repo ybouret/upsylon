@@ -47,7 +47,7 @@ namespace upsylon {
     void combination:: next() throw()
     {
         assert(index<=count);
-        if(++(size_t&)index>=count) return;
+        if(++(size_t&)index>count) return;
 
         size_t i=k;
         ++comb[i];

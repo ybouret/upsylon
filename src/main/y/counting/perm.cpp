@@ -57,7 +57,6 @@ namespace upsylon
 
         if(++(size_t&)index>count) return;
 
-        //std::cerr << "@index=" << index << std::endl;
 
         // find the largest perm[i]
         size_t i = nm1;
@@ -67,20 +66,20 @@ namespace upsylon
         }
 
         assert(i>0);
-        /* Find the largest element after perm[i] but not larger than perm[i] */
-        size_t k = n;
-        while (perm[i] > perm[k])
+        // Find the largest element after perm[i] but not larger than perm[i]
         {
-            --k;
+            size_t k = n;
+            while (perm[i] > perm[k])
+            {
+                --k;
+            }
+            SWAP(perm[i], perm[k]);
         }
-        SWAP(perm[i], perm[k]);
 
-        /* Swap the last n - i elements. */
-        //std::cerr << "i=" << i <<  ", n=" << n << std::endl;
-        k = 0;
-        for(size_t j = i+1; j <= (n + i) / 2; ++j, ++k)
+        // swap the last n - i elements
+        const size_t jmax=(n+i)>>1;
+        for(size_t k=0,j = i+1; j <= jmax; ++j, ++k)
         {
-            //std::cerr << "swap(" << j << "," << n-k << ")" << std::endl;
             SWAP(perm[j], perm[n-k]);
         }
 

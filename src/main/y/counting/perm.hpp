@@ -9,20 +9,19 @@
 namespace upsylon
 {
 
+    //! permutations
     class permutation : public counting
     {
     public:
+        explicit permutation(const size_t N);  //!< setup
+        virtual ~permutation() throw();        //!< cleanup
+        permutation(const permutation &other); //!< copy
 
-        explicit permutation(const size_t N);
-        virtual ~permutation() throw();
-        permutation(const permutation &other);
+        const size_t  n; //!< n!
+        static size_t compute_for(const size_t N); //!< check overflow
 
-        const size_t n;
-
-        static size_t compute_for(const size_t N);
-
-        virtual void start() throw();
-        virtual void next()  throw();
+        virtual void start() throw(); //!< index=1, perm=[1..n]
+        virtual void next()  throw(); //!< find next one
 
         //! display
         inline friend std::ostream & operator<<(std::ostream &os, const permutation &p) { return counting::display(os,p.perm,p.n); }
