@@ -58,10 +58,24 @@ namespace
     template <typename LOOP>
     static inline void doLoop( LOOP &loop )
     {
+        vector< core::mloop<typename LOOP::type> > loops(loop.count,as_capacity);
+
         for( loop.start(); loop.valid(); loop.next() )
         {
             std::cerr << "\t@" << loop.index << " : " << loop.value << std::endl;
+            loops.push_back_(loop);
         }
+        std::cerr << "checking..." << std::endl;
+        for(size_t i=1;i<=loops.size();++i)
+        {
+            Y_ASSERT(i==loops[i].index);
+            for(size_t j=i;j<=loops.size();++j)
+            {
+                Y_ASSERT(j==loops[j].index);
+                core::mloop<typename LOOP::type>::memchk(loops[i],loops[j]);
+            }
+        }
+
     }
 
 
@@ -89,17 +103,17 @@ Y_UTEST(mloops)
 
     {
         typedef point2d<int> p2d;
-        const p2d ini(-2,-3);
-        const p2d end(1,4);
-        mloop< int,p2d > loop(ini,end);
+        const p2d            ini(-2,-3);
+        const p2d            end(1,4);
+        mloop< int,p2d >     loop(ini,end);
         doLoop(loop);
     }
 
     {
         typedef point3d<int16_t> p3d;
-        const p3d ini(-1,-2,-3);
-        const p3d end(4,5,6);
-        mloop< int16_t,p3d > loop(ini,end);
+        const p3d                ini(-1,-2,-3);
+        const p3d                end(4,5,6);
+        mloop< int16_t,p3d >     loop(ini,end);
         doLoop(loop);
     }
 
