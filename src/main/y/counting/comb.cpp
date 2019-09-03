@@ -47,6 +47,8 @@ namespace upsylon {
     void combination:: next() throw()
     {
         assert(index<=count);
+        if(++(size_t&)index>=count) return;
+
         size_t i=k;
         ++comb[i];
         while( comb[i]>nmk+i )
@@ -59,8 +61,7 @@ namespace upsylon {
         {
             comb[i] = comb[i-1]+1;
         }
-
-        ++(size_t &)index;
+        
     }
 
     const size_t & combination:: operator[](const size_t j) const throw()

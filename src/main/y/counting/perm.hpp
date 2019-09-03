@@ -15,22 +15,27 @@ namespace upsylon
 
         explicit permutation(const size_t N);
         virtual ~permutation() throw();
-        
+        permutation(const permutation &other);
+
         const size_t n;
 
         static size_t compute_for(const size_t N);
 
         virtual void start() throw();
         virtual void next()  throw();
-        
+
         //! display
         inline friend std::ostream & operator<<(std::ostream &os, const permutation &p) { return counting::display(os,p.perm,p.n); }
 
-    private:
-        size_t  wlen;
-        size_t *perm;
+        //! check
+        static void memchk(const permutation &lhs, const permutation &rhs);
 
-        Y_DISABLE_COPY_AND_ASSIGN(permutation);
+    private:
+        const size_t nm1;
+        size_t       wlen;
+        size_t      *perm;
+
+        Y_DISABLE_ASSIGN(permutation);
     };
 
 }

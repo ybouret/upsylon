@@ -9,17 +9,29 @@ using namespace upsylon;
 
 Y_UTEST(perm)
 {
-    size_t n = 5;
-    if(argc>1)  n = string_convert::to<size_t>(argv[1]);
-
-    permutation perm(n);
-
-    std::cerr << "#perm(" << n << ")=" << perm.count << std::endl;
-    for( perm.start(); perm.valid(); perm.next() )
+    for(int iarg=1;iarg<argc;++iarg)
     {
-        std::cerr << "\t" << perm << std::endl;
+        const size_t n =  string_convert::to<size_t>(argv[iarg]);
+
+        permutation         perm(n);
+        vector<permutation> Perm( perm.count, as_capacity );
+
+        std::cerr << "#perm(" << n << ")=" << perm.count << std::endl;
+        for( perm.start(); perm.valid(); perm.next() )
+        {
+            std::cerr << "\t" << perm << std::endl;
+            Perm.push_back_(perm);
+        }
+        std::cerr << "#perm(" << n << ")=" << perm.count << std::endl;
+        std::cerr << "checking..." << std::endl;
+        for(size_t i=1;i<=Perm.size();++i)
+        {
+            for(size_t j=i;j<=Perm.size();++j)
+            {
+                permutation::memchk(Perm[i],Perm[j]);
+            }
+        }
     }
-    std::cerr << "#perm(" << n << ")=" << perm.count << std::endl;
 
 }
 Y_UTEST_DONE()

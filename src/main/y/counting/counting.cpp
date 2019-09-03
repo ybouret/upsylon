@@ -22,7 +22,7 @@ namespace upsylon
     bool counting:: valid() const throw()
     {
         assert(index>0);
-        return index<=count;
+        return (index<=count);
     }
 
 
