@@ -6,6 +6,8 @@
 #include "y/type/args.hpp"
 #include "y/memory/embed.hpp"
 
+#include <iostream>
+
 namespace upsylon
 {
 
@@ -22,6 +24,7 @@ namespace upsylon
                               const_type  *end) :
         counting(0),
         dimensions( chkdim(dim) ),
+        idim(0),
         curr(0),
         init(0),
         quit(0),
@@ -45,6 +48,7 @@ namespace upsylon
         virtual void start() throw()
         {
             (size_t&)index = 1;
+            idim = 0;
             for(size_t i=0;i<dimensions;++i)
             {
                 curr[i] = init[i];
@@ -53,15 +57,25 @@ namespace upsylon
 
         virtual void next() throw()
         {
+            assert(index<=count);
+            if(++(size_t&)index>count) return;
         }
 
+        inline const_type & operator[](const size_t dim) const throw()
+        {
+            assert(dim<dimensions);
+            return curr[dim];
 
+        }
         
     private:
         typedef void (*proc)(mutable_type &);
+        size_t        idim;
+    protected:
         mutable_type *curr;
         const_type   *init;
         const_type   *quit;
+    private:
         const bool   *move;
         proc         *iter;
         void         *wksp;
@@ -83,6 +97,8 @@ namespace upsylon
                 };
                 wksp = memory::embed::create(emb, sizeof(emb)/sizeof(emb[0]), mem, wlen);
             }
+            size_t &num = (size_t&)count;
+            num = 1;
             for(size_t i=0;i<dimensions;++i)
             {
                 const_type lo = ini[i];
@@ -90,8 +106,23 @@ namespace upsylon
                 *(mutable_type *) &init[i] = lo;
                 *(mutable_type *) &quit[i] = up;
                 *(bool         *) &move[i] = (lo!=up);
-                *(proc         *) &iter[i] = (lo<up) ? incr : decr;
+                if(lo<=up)
+                {
+                    *(proc         *) &iter[i] = incr;
+                    num *= (up-lo)+1;
+                }
+                else
+                {
+                    assert(lo>up);
+                    *(proc         *) &iter[i] = incr;
+                    num *= (lo-up)+1;
+                }
+                std::cerr << "dim#" << i;
+                std::cerr << " : " << int64_t(lo) << "->" << int64_t(up);
+                std::cerr << " : move=" << move[i];
+                std::cerr << std::endl;
             }
+            std::cerr << "count=" << count << std::endl;
         }
 
         static inline void incr(mutable_type&i) throw() { ++i; }
