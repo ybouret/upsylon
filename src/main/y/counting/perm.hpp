@@ -20,8 +20,6 @@ namespace upsylon
         const size_t  n; //!< n!
         static size_t compute_for(const size_t N); //!< check overflow
 
-        virtual void start() throw(); //!< index=1, perm=[1..n]
-        virtual void next()  throw(); //!< find next one
 
         //! display
         inline friend std::ostream & operator<<(std::ostream &os, const permutation &p) { return counting::display(os,p.perm,p.n); }
@@ -35,6 +33,8 @@ namespace upsylon
         size_t      *perm;
 
         Y_DISABLE_ASSIGN(permutation);
+        virtual void start_() throw(); //!< index=1, perm=[1..n]
+        virtual void next_()  throw(); //!< find next one
     };
 
 }

@@ -26,10 +26,7 @@ namespace upsylon
 
         //! compute the number of combinations using mpn
         static size_t compute_for(const size_t N, const size_t K);
-
-        virtual void start()  throw(); //!< initialize
-        virtual void next()   throw(); //!< update to next one
-
+        
         //! access C++ style
         const size_t & operator[](const size_t j) const throw();
 
@@ -44,7 +41,9 @@ namespace upsylon
         size_t       wlen; //!< internal bytes
         size_t      *comb; //! [1..k]
         Y_DISABLE_ASSIGN(combination);
-        
+        virtual void start_()  throw(); //!< initialize first combination
+        virtual void next_()   throw(); //!< update to next one
+
     };
 }
 

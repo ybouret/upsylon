@@ -26,17 +26,10 @@ namespace upsylon
         const size_t index; //!< index in 1..count
         const size_t count; //!< number of possible objects
 
-        //----------------------------------------------------------------------
-        // virtual interface
-        //----------------------------------------------------------------------
-        virtual void start()    throw() = 0; //!< initialize index and first objectg
-        virtual void next()     throw() = 0; //!< update index and next object
-        virtual     ~counting() throw();     //!< cleanup
-
-        //----------------------------------------------------------------------
-        // non-virtual interface
-        //----------------------------------------------------------------------
-        bool valid() const throw(); //!< index<=count after a start()
+        virtual     ~counting()    throw();  //!< cleanup
+        bool         valid() const throw(); //!< index<=count after a start()
+        void         start()       throw(); //!< set index to 1 and call start_()
+        void         next()        throw(); //!< update index and call next_() if valid
 
     protected:
         static size_t *acquire_( size_t &bytes );                      //!< acquire a count of bytes=workspace*sizeof(size_t)
@@ -57,8 +50,18 @@ namespace upsylon
         //! internal allocator location
         static memory::allocator & mem_location() throw();
 
+        //! check status
+        static
+        void check_contents(const char     *id,
+                            const counting &lhs, const void *l,
+                            const counting &rhs, const void *r,
+                            const size_t    length);
+        
     private:
         Y_DISABLE_ASSIGN(counting);
+        virtual void start_()    throw() = 0; //!< initialize first objects
+        virtual void next_()     throw() = 0; //!< update next objects, index<=count
+
     };
 
 };

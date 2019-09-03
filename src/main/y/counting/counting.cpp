@@ -52,6 +52,8 @@ namespace upsylon
         assert(0==comb);
         assert(0==bytes);
     }
+
+
 }
 
 #include "y/mpl/natural.hpp"
@@ -84,6 +86,17 @@ namespace upsylon
         return os;
     }
 
+    void counting:: start() throw()
+    {
+        (size_t &)index = 1;
+        start_();
+    }
+
+    void counting:: next() throw()
+    {
+        if( ++(size_t &)index <= count ) next_();
+    }
+
 }
 
 #include "y/exception.hpp"
@@ -96,6 +109,26 @@ namespace upsylon
         if(dim<=0) throw exception("counting: zero dimension!!!");
         return dim;
     }
+
+    void counting:: check_contents(const char     *id,
+                                   const counting &lhs, const void *l,
+                                   const counting &rhs, const void *r,
+                                   const size_t    length)
+    {
+        assert(id); assert(l); assert(r); assert(length>0);
+        assert(lhs.count==rhs.count);
+
+        const int status = memcmp(l,r,length);
+        if(lhs.index==rhs.index)
+        {
+            if(0!=status) throw exception("%s same index but different content!!",id);
+        }
+        else
+        {
+            if(0==status) throw exception("%s different indices (#lhs=%u,#rhs=%u) but same content!!",id, unsigned(lhs.index), unsigned(rhs.index) );
+        }
+    }
+
 
 
 }

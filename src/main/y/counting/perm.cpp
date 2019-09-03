@@ -43,22 +43,21 @@ namespace upsylon
         bzset_(n);
     }
 
-    void permutation:: start() throw()
+    void permutation:: start_() throw()
     {
-        (size_t&)index=1;
+        assert(1==index);
         for(size_t i=n;i>0;--i) perm[i] = i;
     }
 
 #define SWAP(a,b) cswap(a,b)
 
-    void permutation:: next()  throw()
+    void permutation:: next_()  throw()
     {
         assert(index<=count);
 
-        if(++(size_t&)index>count) return;
-
-
+        //----------------------------------------------------------------------
         // find the largest perm[i]
+        //----------------------------------------------------------------------
         size_t i = nm1;
         while(i>0&&perm[i]>perm[i+1])
         {
@@ -66,7 +65,9 @@ namespace upsylon
         }
 
         assert(i>0);
-        // Find the largest element after perm[i] but not larger than perm[i]
+        //----------------------------------------------------------------------
+        // find the largest element after perm[i] but not larger than perm[i]
+        //----------------------------------------------------------------------
         {
             size_t k = n;
             while (perm[i] > perm[k])
@@ -76,9 +77,11 @@ namespace upsylon
             SWAP(perm[i], perm[k]);
         }
 
+        //----------------------------------------------------------------------
         // swap the last n - i elements
+        //----------------------------------------------------------------------
         const size_t jmax=(n+i)>>1;
-        for(size_t k=0,j = i+1; j <= jmax; ++j, ++k)
+        for(size_t k=0,j= ++i; j <= jmax; ++j, ++k)
         {
             SWAP(perm[j], perm[n-k]);
         }
@@ -90,15 +93,7 @@ namespace upsylon
         assert(lhs.n==rhs.n);
         assert(lhs.count==rhs.count);
         assert(lhs.nm1==rhs.nm1);
-        const int value = memcmp( &lhs.perm[1], &rhs.perm[1], lhs.n * sizeof(size_t) );
-        if(lhs.index==rhs.index)
-        {
-            if(value!=0) throw exception("%ssame index, different components!",fn);
-        }
-        else
-        {
-            if(value==0) throw exception("%sdifferent indices, same components!",fn);
-        }
+        check_contents(fn, lhs, &lhs.perm[1], rhs, &rhs.perm[1], lhs.n * sizeof(size_t));
     }
 
 }

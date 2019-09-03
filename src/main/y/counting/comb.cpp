@@ -34,9 +34,9 @@ namespace upsylon {
         bzset_(k);
     }
 
-    void combination:: start() throw()
+    void combination:: start_() throw()
     {
-        (size_t&)index=1;
+        assert(1==index);
         for(size_t i=k;i>0;--i)
         {
             comb[i] = i;
@@ -44,11 +44,10 @@ namespace upsylon {
     }
 
     
-    void combination:: next() throw()
+    void combination:: next_() throw()
     {
         assert(index<=count);
-        if(++(size_t&)index>count) return;
-
+        
         size_t i=k;
         ++comb[i];
         while( comb[i]>nmk+i )
@@ -86,19 +85,18 @@ namespace upsylon
 
     void combination:: memchk(const combination &lhs, const combination &rhs)
     {
+
         assert(lhs.n==rhs.n);
         assert(lhs.k==rhs.k);
         assert(lhs.count==rhs.count);
         assert(lhs.nmk==rhs.nmk);
-        const int value = memcmp( &lhs.comb[1], &rhs.comb[1], lhs.k * sizeof(size_t) );
-        if(lhs.index==rhs.index)
-        {
-            if(value!=0) throw exception("%ssame index, different components!",fn);
-        }
-        else
-        {
-            if(value==0) throw exception("%sdifferent indices, same components!",fn);
-        }
+
+        check_contents(
+                       fn,
+                       lhs, &lhs.comb[1],
+                       rhs, &rhs.comb[1],
+                       lhs.k * sizeof(size_t)
+                       );
     }
 
 

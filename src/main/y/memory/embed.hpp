@@ -30,13 +30,21 @@ namespace upsylon
             void       **ppHead; //!< pointer to address
 
             //! acquire memory and dispatch chunks
+            /**
+             \param emb   an array of embedded info
+             \param num   number of fields
+             \param mem   memory allocator
+             \param bytes allocated data
+             \param data  effective space used by objects
+             */
             static void *create(embed             *emb,
                                 const size_t       num,
                                 memory::allocator &mem,
-                                size_t            &bytes);
+                                size_t            &bytes,
+                                size_t            *data = 0);
 
             //! use global memory
-            static void *create_global(embed *emb, const size_t num, size_t &bytes);
+            static void *create_global(embed *emb, const size_t num, size_t &bytes, size_t *data=0);
 
             //! named constructor
             template <typename T>

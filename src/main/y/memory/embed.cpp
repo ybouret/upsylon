@@ -31,7 +31,8 @@ namespace upsylon
         void * embed:: create(embed             *emb,
                               const size_t       num,
                               memory::allocator &mem,
-                              size_t            &bytes)
+                              size_t            &bytes,
+                              size_t            *data)
         {
             assert( emb != NULL );
             assert( num >  0    );
@@ -48,6 +49,7 @@ namespace upsylon
             }
 
             // allocated memory
+            if(data) *data = bytes;
             void *addr = mem.acquire(bytes);
 
             //link
@@ -73,10 +75,10 @@ namespace upsylon
 {
     namespace memory
     {
-        void *embed:: create_global(embed *emb, const size_t num, size_t &bytes)
+        void *embed:: create_global(embed *emb, const size_t num, size_t &bytes, size_t *data)
         {
             static memory::allocator &mem = memory::global::instance();
-            return embed::create(emb,num,mem,bytes);
+            return embed::create(emb,num,mem,bytes,data);
         }
     }
 }
