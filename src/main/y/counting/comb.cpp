@@ -1,52 +1,27 @@
 #include "y/counting/comb.hpp"
 #include "y/type/bzset.hpp"
-#include "y/memory/pooled.hpp"
 
-#include <iostream>
 
 namespace upsylon {
 
-    namespace
-    {
-        static inline size_t *comb_acquire( size_t &bytes )
-        {
-            static memory::allocator &mgr = memory::pooled::instance();
-            assert(bytes>0);
-            assert(0==(bytes%sizeof(size_t)));
-            return static_cast<size_t *>( mgr.acquire(bytes) )-1;
-        }
-
-        static inline void comb_release( size_t * &comb, size_t &bytes ) throw()
-        {
-            static memory::allocator &mgr = memory::pooled::location();
-            ++comb;
-            mgr.release(*(void **)&comb,bytes);
-            assert(0==comb);
-            assert(0==bytes);
-        }
-    }
-
-
     combination:: combination(const size_t N, const size_t K) :
+    counting(compute_for(N,K)),
     n(N),
     k(K),
-    index(0),
-    count( compute_for(n,k)  ),
     nmk(n-k),
     wlen( k * sizeof(size_t) ),
-    comb( comb_acquire(wlen) )
+    comb( acquire_(wlen) )
     {
         start();
     }
 
     combination:: combination(const combination &other) :
+    counting(other),
     n(other.n),
     k(other.k),
-    index(other.index),
-    count(other.count),
     nmk(other.nmk),
     wlen( k * sizeof(size_t) ),
-    comb( comb_acquire(wlen) )
+    comb(  acquire_(wlen) )
     {
         for(size_t i=k;i>0;--i) comb[i] = other.comb[i];
     }
@@ -54,11 +29,9 @@ namespace upsylon {
 
     combination:: ~combination() throw()
     {
-        comb_release(comb,wlen);
+        release_(comb,wlen);
         bzset_(n);
         bzset_(k);
-        bzset_(index);
-        bzset_(count);
     }
 
     void combination:: start() throw()
@@ -70,11 +43,7 @@ namespace upsylon {
         }
     }
 
-    bool combination:: active() const throw()
-    {
-        return (index<=count);
-    }
-
+    
     void combination:: next() throw()
     {
         assert(index<=count);
@@ -131,13 +100,7 @@ namespace upsylon
         }
     }
 
-    std::ostream &  operator<<( std::ostream &os, const combination &c)
-    {
-        os << '{' << c.comb[1];
-        for(size_t j=2;j<=c.k;++j) os << ',' << c.comb[j];
-        os << '}';
-        return os;
-    }
+
     size_t combination:: compute_for(const size_t N, const size_t K)
     {
         if(N<=0) throw exception("%s(N=0)",fn);
@@ -170,16 +133,11 @@ namespace upsylon
 
         if( ! q.den.is_byte(1) ) throw exception("%sFAILURE!",fn);
 
-        const mpn &ans = q.num.n;
-        if(ans.bits()>sizeof(size_t)*8) throw exception("%s(%lu,%lu) overflow!",fn,static_cast<unsigned long>(N), static_cast<unsigned long>(K));
-
-        size_t res = ans.byte_at(0);
-        for(size_t i=1;i<sizeof(size_t);++i)
+        size_t     res = 0;
+        if( !mpn2count(res,q.num.n) )
         {
-            const size_t B = ans.byte_at(i);
-            res |= (B << (i*8));
+            throw exception("%s(%lu,%lu) overflow!",fn,static_cast<unsigned long>(N), static_cast<unsigned long>(K));
         }
-        assert(res==ans);
         return res;
     }
 

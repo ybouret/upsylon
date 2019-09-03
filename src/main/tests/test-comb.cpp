@@ -9,12 +9,12 @@ using namespace upsylon;
 Y_UTEST(comb)
 {
     
-    int n = 5; /* The size of the set; for {1, 2, 3, 4} it's 4 */
-    int k = 3; /* The size of the subsets; for {1, 2}, {1, 3}, ... it's 2 */
+    size_t n = 5; /* The size of the set; for {1, 2, 3, 4} it's 4 */
+    size_t k = 3; /* The size of the subsets; for {1, 2}, {1, 3}, ... it's 2 */
    
     
-    if(argc>1) n = string_convert::to<unit_t>(argv[1]); Y_ASSERT(n>0);
-    if(argc>2) k = string_convert::to<unit_t>(argv[2]); Y_ASSERT(k>0); Y_ASSERT(k<=n);
+    if(argc>1) n = string_convert::to<size_t>(argv[1]); Y_ASSERT(n>0);
+    if(argc>2) k = string_convert::to<size_t>(argv[2]); Y_ASSERT(k>0); Y_ASSERT(k<=n);
     
 
     combination comb(n,k);
@@ -23,7 +23,7 @@ Y_UTEST(comb)
 
     vector<combination> Comb(comb.count,as_capacity);
 
-    for( comb.start(); comb.active(); comb.next() )
+    for( comb.start(); comb.valid(); comb.next() )
     {
         std::cerr << "\t" << comb << std::endl;
         Comb.push_back_(comb);
