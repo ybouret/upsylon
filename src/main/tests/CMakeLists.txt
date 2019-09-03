@@ -204,10 +204,11 @@ SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)
 ADD_TEST(sparse:array  test-main sparse_array)
 ADD_TEST(sparse:matrix test-main sparse_matrix)
 
-SOURCE_GROUP(counting FILES test-multi-loop.cpp test-comb.cpp test-perm.cpp)
+SOURCE_GROUP(counting FILES test-multi-loop.cpp test-comb.cpp test-perm.cpp test-mloop.cpp)
 ADD_TEST(counting:multi-loop   test-main multi_loop)
 ADD_TEST(counting:comb     test-main comb 1 2 3 4 5 6 7 8 9 10 11 12 13 14)
 ADD_TEST(counting:perm     test-main perm 1 2 3 4 5 6 7)
+ADD_TEST(counting:mloops   test-main mloops)
 
 SOURCE_GROUP(oxide FILES test-oxide.cpp test-oxide-fields.cpp
 test-oxide-io.cpp test-oxide-dct.cpp test-oxide-split.cpp test-oxide-ranks.cpp test-oxide-workspace.cpp

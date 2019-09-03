@@ -11,9 +11,9 @@ namespace
     {
         assert(lo.size()==dim);
         assert(hi.size()==dim);
-        mloop<T> loop(dim,*lo,*hi);
+        core::mloop<T> loop(dim,*lo,*hi);
 
-        vector< mloop<T> > loops(loop.count,as_capacity);
+        vector< core::mloop<T> > loops(loop.count,as_capacity);
 
         for( loop.start(); loop.valid(); loop.next() )
         {
@@ -24,13 +24,10 @@ namespace
         for(size_t i=1;i<=loops.size();++i)
         {
             Y_ASSERT(i==loops[i].index);
-            //std::cerr << "@" << i << ": " << loops[i] << std::endl;
-            
             for(size_t j=i;j<=loops.size();++j)
             {
                 Y_ASSERT(j==loops[j].index);
-                //std::cerr << "\t@" << j << ": " << loops[j] << std::endl;
-                mloop<T>::memchk(loops[i],loops[j]);
+                core::mloop<T>::memchk(loops[i],loops[j]);
             }
         }
 
@@ -58,24 +55,53 @@ namespace
         }
     }
 
+    template <typename LOOP>
+    static inline void doLoop( LOOP &loop )
+    {
+        for( loop.start(); loop.valid(); loop.next() )
+        {
+            std::cerr << "\t@" << loop.index << " : " << loop.value << std::endl;
+        }
+    }
+
+
 }
 
+#include "y/type/point3d.hpp"
 
 Y_UTEST(mloops)
 {
 
     do_loops<uint8_t>(0,10);
-    return 0;
-    
     do_loops<int8_t>(-5,5);
 
     do_loops<uint16_t>(0,10);
     do_loops<int16_t>(-5,5);
 
-    do_loops<size_t>(0,16);
-    do_loops<unit_t>(-8,8);
+    do_loops<size_t>(0,10);
+    do_loops<unit_t>(-5,5);
 
+    std::cerr << "named loops" << std::endl;
+    {
+        mloop<unit_t,unit_t> loop(-4,4);
+        doLoop(loop);
+    }
 
+    {
+        typedef point2d<int> p2d;
+        const p2d ini(-2,-3);
+        const p2d end(1,4);
+        mloop< int,p2d > loop(ini,end);
+        doLoop(loop);
+    }
+
+    {
+        typedef point3d<int16_t> p3d;
+        const p3d ini(-1,-2,-3);
+        const p3d end(4,5,6);
+        mloop< int16_t,p3d > loop(ini,end);
+        doLoop(loop);
+    }
 
 }
 Y_UTEST_DONE()
