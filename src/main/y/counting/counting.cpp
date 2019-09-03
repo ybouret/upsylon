@@ -25,10 +25,20 @@ namespace upsylon
         return (index<=count);
     }
 
+    memory::allocator & counting:: mem_instance()
+    {
+        return memory::pooled::instance();
+    }
+
+    memory::allocator & counting:: mem_location() throw()
+    {
+        return memory::pooled::location();
+    }
+
 
     size_t * counting:: acquire_( size_t &bytes )
     {
-        static memory::allocator &mgr = memory::pooled::instance();
+        static memory::allocator &mgr = mem_instance();
         assert(bytes>0);
         assert(0==(bytes%sizeof(size_t)));
         return static_cast<size_t *>( mgr.acquire(bytes) )-1;
@@ -36,7 +46,7 @@ namespace upsylon
 
     void counting:: release_( size_t * &comb, size_t &bytes ) throw()
     {
-        static memory::allocator &mgr = memory::pooled::location();
+        static memory::allocator &mgr = mem_location();
         ++comb;
         mgr.release(*(void **)&comb,bytes);
         assert(0==comb);
@@ -46,7 +56,8 @@ namespace upsylon
 
 #include "y/mpl/natural.hpp"
 
-namespace upsylon {
+namespace upsylon
+{
 
     bool counting:: mpn2count(size_t &sz, const mpl::natural &n )
     {
@@ -72,5 +83,19 @@ namespace upsylon {
         os << '}';
         return os;
     }
+
+}
+
+#include "y/exception.hpp"
+
+namespace upsylon
+{
+
+    size_t counting:: chkdim(const size_t dim)
+    {
+        if(dim<=0) throw exception("counting: zero dimension!!!");
+        return dim;
+    }
+
 
 }

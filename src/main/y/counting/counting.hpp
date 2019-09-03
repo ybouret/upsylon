@@ -13,6 +13,11 @@ namespace upsylon
         class natural; //!< forward declaration
     }
 
+    namespace memory
+    {
+        class allocator;
+    }
+
     //! base class for counting objects
     class counting
     {
@@ -42,6 +47,15 @@ namespace upsylon
 
         //! display arr[1..num]
         static std::ostream &display( std::ostream &, const size_t *arr, const size_t num );
+
+        //! check dimension
+        static size_t chkdim(const size_t);
+
+        //! internal allocator instance
+        static memory::allocator & mem_instance();
+
+        //! internal allocator location
+        static memory::allocator & mem_location() throw();
 
     private:
         Y_DISABLE_ASSIGN(counting);

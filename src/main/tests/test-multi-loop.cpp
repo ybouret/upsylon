@@ -40,7 +40,7 @@ namespace
 }
 
 
-Y_UTEST(mloop)
+Y_UTEST(multi_loop)
 {
     {
         unit_t lo = 1;
