@@ -5,7 +5,7 @@
 #include "y/oxide/types.hpp"
 #include "y/sort/unique.hpp"
 #include "y/sort/sequence.hpp"
-#include "y/code/multi-loop.hpp"
+#include "y/counting/multi-loop.hpp"
 
 namespace upsylon
 {

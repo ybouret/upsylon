@@ -123,6 +123,13 @@ namespace upsylon
             }
         }
 
+        natural natural:: factorial(const word_t n)
+        {
+            const natural _(n);
+            return factorial(_);
+        }
+
+
         natural natural:: square_root_of(const natural &n)
         {
             if( n.is_zero() || n.is_byte(1) )

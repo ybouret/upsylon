@@ -1,4 +1,4 @@
-#include "y/code/multi-loop.hpp"
+#include "y/counting/multi-loop.hpp"
 #include "y/utest/run.hpp"
 
 #include "y/type/point3d.hpp"

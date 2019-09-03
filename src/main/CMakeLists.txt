@@ -271,6 +271,12 @@ SET(sparse_srcs ${sparse_decl} ${sparse_code})
 SOURCE_GROUP( sparse FILES ${sparse_srcs} )
 INSTALL( FILES ${sparse_decl} DESTINATION include/y/sparse )
 
+FILE(GLOB counting_decl y/counting/*.h*)
+FILE(GLOB counting_code y/counting/*.cpp)
+SET(counting_srcs ${counting_decl} ${counting_code})
+SOURCE_GROUP( counting FILES ${counting_srcs} )
+INSTALL( FILES ${counting_decl} DESTINATION include/y/counting )
+
 FILE(GLOB oxide_decl y/oxide/*.hpp)
 FILE(GLOB oxide_code y/oxide/*.cpp)
 SET(oxide_srcs ${oxide_decl} ${oxide_code})
@@ -318,6 +324,7 @@ ${lang_srcs} ${lang_pattern_srcs} ${lang_lexical_srcs} ${lexical_plugin_srcs}
 ${geometry_srcs}
 ${kr_sc_srcs} ${kr_bc_srcs}
 ${sparse_srcs}
+${counting_srcs}
 ${oxide_srcs} ${oxide_field_srcs}
 )
  

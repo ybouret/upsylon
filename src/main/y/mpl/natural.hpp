@@ -312,6 +312,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             static natural mod_exp( const natural &b, const natural &e, const natural &n );   //!< modular exponentiation (b^e)[n]
             static bool    are_coprimes(const natural &, const natural &);                    //!< test co-primailty
             static natural factorial(const natural &n);                                       //!< factorial computation, recursive algorithm
+            static natural factorial(const word_t n);                                         //!< factorial computation, wrapper
             static natural square_root_of(const natural &n);                                  //!< integer square root of n
 
             //__________________________________________________________________
