@@ -1,4 +1,5 @@
 #include "y/oxide/topology.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -24,6 +25,17 @@ namespace upsylon
             }
             return Level0;
         }
+
+
+
+        void Topology:: CheckSameLevels( const Level lhs, const Level rhs )
+        {
+            if(0==(lhs&Levels)||0==(rhs&Levels) || (lhs!=rhs) )
+            {
+                throw exception("Oxide::Topology::CheckSameLevels(%u,%u) failure",lhs,rhs);
+            }
+        }
+
 
     }
 }

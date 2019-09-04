@@ -54,9 +54,9 @@ namespace upsylon
             
             //! setup 
             inline explicit Workspace(const LayoutType &full,
-                                      const_coord      &globalSizes,
+                                      const_coord      &localSizes,
                                       const size_t      globalRank) :
-            NodeType(globalSizes,globalRank),
+            NodeType(localSizes,globalRank),
             size(  Coord::Product(this->sizes) ),
             inner( full.split(this->sizes,this->ranks) ),
             outer( inner )
@@ -72,27 +72,29 @@ namespace upsylon
 
             void buildLinks()
             {
-                coord direction[LocalNodes];
-
+                coord           direction[LocalNodes];
+                Topology::Level level[LocalNodes];
                 {
                     coord lo(0); Coord::LD(lo,-1);
                     coord up(0); Coord::LD(up, 1);
                     Loop loop(lo,up);
                     for( loop.start(); loop.valid(); loop.next() )
                     {
-                        direction[loop.index-1] =  loop.value;
+                        const size_t j = loop.index-1;
+                        direction[j]   = loop.value;
+                        level[j]       = Topology::LevelOf(loop.value);
                     }
                 }
 
+                size_t n1 = 0;
+                size_t n2 = 0;
+                size_t n3 = 0;
                 for(size_t i=0,j=LocalNodes;i<Directions;++i)
                 {
                     --j;
+                    Topology::CheckSameLevels(level[i],level[j]);
                     const coord &lo = direction[i];
                     const coord &up = direction[j];
-                    
-                    Topology::Links<COORD> links(this->sizes,this->ranks, lo, up);
-                    std::cerr << "\tlinks:" << links.lower << " <-- rank(" << this->ranks << ")=" << this->rank <<" --> " << links.upper << std::endl;
-
                 }
 
             }
