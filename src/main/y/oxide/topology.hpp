@@ -83,15 +83,19 @@ namespace upsylon
 
                 const NodeType lower;
                 const NodeType upper;
+                const Level    level;
 
                 inline Links(const COORD &sizes,
                              const COORD &ranks,
                              const COORD &lo,
                              const COORD &up ) throw() :
                 lower(sizes,ranks,lo),
-                upper(sizes,ranks,up)
+                upper(sizes,ranks,up),
+                level( (lower.level+upper.level) >> 1 )
                 {
                     assert(lower.level==upper.level);
+                    assert(level==lower.level);
+                    assert(level==upper.level);
                 }
 
 
