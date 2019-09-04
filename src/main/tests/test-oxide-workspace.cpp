@@ -32,15 +32,20 @@ namespace
     }
 }
 
+#include "y/string/convert.hpp"
+
 Y_UTEST(oxide_workspace)
 {
-    const Coord3D  org(1,1,1);
-    const Coord3D  top(10,20,30);
+    size_t cores=2; if(argc>1) cores = string_convert::to<size_t>(argv[1],"cores");
+
+    const Coord3D org(1,1,1);
+    Coord3D       top(10,20,30);
+    if(argc>2)    top = Coord::Parse<Coord3D>(argv[2]);
+
     const Layout1D L1( org.x,    top.x    );
     const Layout2D L2( org.xy(), top.xy() );
     const Layout3D L3( org,      top );
 
-    size_t cores = 4;
     
     do_wksp<Coord1D>(L1,cores);
     do_wksp<Coord2D>(L2,cores);

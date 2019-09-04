@@ -48,17 +48,6 @@ namespace upsylon
                 memset( (void*)&c, 0, sizeof(COORD) );
             }
 
-            //! set coordinate to 1[,1[,1]]
-            template <typename COORD> static inline
-            void LD1( COORD &c ) throw()
-            {
-                Coord1D *p = (Coord1D*)&c;
-                for(size_t i=0;i<Get<COORD>::Dimensions;++i)
-                {
-                    p[i] = 1;
-                }
-            }
-
             //! set coordinate to j[,j[,j]]
             template <typename COORD> static inline
             void LD( COORD &c, const Coord1D j ) throw()
@@ -69,8 +58,6 @@ namespace upsylon
                     p[i] = j;
                 }
             }
-
-
 
             //! force zero
             template <typename COORD> static inline
@@ -266,22 +253,26 @@ namespace upsylon
                 const ldiv_t dy = ldiv(dx.quot,sizes.y);
                 return Coord3D(dx.rem,dy.rem,dy.quot);
             }
-            
-            //! get next local ranks in dimension dim
+
             template <typename COORD> static inline
-            COORD NextRank( const COORD sizes,  COORD ranks, const size_t dim ) throw()
+            COORD RegularizeRanks( COORD ranks, const COORD &sizes ) throw()
             {
-                parops::set_rank_next( Coord::Of(sizes,dim), Coord::Of(ranks,dim));
+                for(size_t dim=0;dim<Get<COORD>::Dimensions;++dim)
+                {
+                    Coord1D       &r = Coord::Of(ranks,dim);
+                    const Coord1D  s = Coord::Of(sizes,dim);
+                    if(r<0)
+                    {
+                        r=s-1;
+                    }
+                    else if(r>=s)
+                    {
+                        r=0;
+                    }
+                }
                 return ranks;
             }
             
-            //! get prev local ranks in dimension dim
-            template <typename COORD> static inline
-            COORD PrevRank( const COORD sizes,  COORD ranks, const size_t dim ) throw()
-            {
-                parops::set_rank_prev( Coord::Of(sizes,dim), Coord::Of(ranks,dim));
-                return ranks;
-            }
             
         };
         

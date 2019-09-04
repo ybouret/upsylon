@@ -2,7 +2,7 @@
 #ifndef Y_OXIDE_WORKSPACE_INCLUDED
 #define Y_OXIDE_WORKSPACE_INCLUDED 1
 
-#include "y/oxide/layout.hpp"
+#include "y/oxide/topology.hpp"
 #include "y/memory/static-slots.hpp"
 
 namespace upsylon
@@ -10,108 +10,10 @@ namespace upsylon
     namespace Oxide
     {
 
-
-        template <typename COORD>
-        class LocalNode
-        {
-        public:
-            const COORD   ranks; //!< local ranks
-            const Coord1D rank;  //!< global rank
-
-        };
-
-        //! MPI Node style information
-        template <typename COORD>
-        class Node
-        {
-        public:
-            const COORD   localRanks; //!< ranks local grid
-            const Coord1D globalRank; //!< global node rank
-            
-            //! setup
-            inline Node( const COORD &sizes, const COORD &ranks ) throw() :
-            localRanks(ranks), globalRank( Coord::GlobalRank(sizes,localRanks) ) { }
-            
-            //! cleanup
-            inline ~Node() throw()
-            {
-                Coord::LDZ_(localRanks);
-                Coord::LDZ_(globalRank);
-            }
-            
-            //! copy
-            inline Node( const Node &_ ) throw() :
-            localRanks(_.localRanks), globalRank(_.globalRank) { }
-            
-        private:
-            Y_DISABLE_ASSIGN(Node);
-        };
-        
-        
-        //! information on linked node
-        template <typename COORD>
-        class Link
-        {
-        public:
-            typedef Node<COORD> NodeType; //!< alias
-            
-            const size_t   dimension;     //!< the used dimension [0|1|2]
-            const Coord1D  size;          //!< size in that direction
-            const Coord1D  rank;          //!< rank in that direction
-            const NodeType next;          //!< next in that dimension
-            const NodeType prev;          //!< prev in that dimension
-            const bool     parallel;      //!< is parallel in that dimension
-            const bool     head;          //!< true if rank=0 in that dimension
-            const bool     tail;          //!< true if rank=size-1 in that dimension
-            const bool     bulk;          //!< !head and !tail, always false if not parallel
-
-            //! cleanup
-            inline ~Link() throw()
-            {
-                Coord::LDZ_(dimension);
-                Coord::LDZ_(size),
-                Coord::LDZ_(rank),
-                Coord::LDZ_(parallel);
-                Coord::LDZ_(head);
-                Coord::LDZ_(tail);
-                Coord::LDZ_(bulk);
-            }
-            
-            //! copy
-            inline Link( const Link &_ ) throw() :
-            dimension(_.dimension),
-            size(_.size),
-            rank(_.rank),
-            next(_.next),
-            prev(_.prev),
-            parallel(_.parallel),
-            head(_.head),
-            tail(_.tail),
-            bulk(_.bulk)
-            {}
-            
-            //! setup from a local position
-            inline Link( const size_t dim, const COORD &sizes, const COORD &ranks ) throw() :
-            dimension( dim ),
-            size( Coord::Of(sizes,dimension) ),
-            rank( Coord::Of(ranks,dimension) ),
-            next( sizes, Coord::NextRank(sizes,ranks,dimension) ),
-            prev( sizes, Coord::PrevRank(sizes,ranks,dimension) ),
-            parallel(  size > 1 ),
-            head( 0      == rank ),
-            tail( size-1 == rank ),
-            bulk( !head && !tail )
-            {
-                
-            }
-            
-        private:
-            Y_DISABLE_ASSIGN(Link);
-        };
         
         //! workspace metrics
         template <typename COORD>
-        class Workspace
+        class Workspace : public Topology::Node<COORD>
         {
         public:
             //------------------------------------------------------------------
@@ -127,16 +29,14 @@ namespace upsylon
             static  const size_t                              LocalNodes = Coord::Get<COORD>::LocalNodes; //!< alias
             static  const size_t                              Neighbours = Coord::Get<COORD>::Neighbours; //!< alias
             static  const size_t                              Directions = Neighbours/2;
+            typedef Topology::Node<COORD>                     NodeType;
 
             //------------------------------------------------------------------
             //
             // members
             //
             //------------------------------------------------------------------
-            const_coord      sizes; //!< local sizes
             const size_t     size;  //!< product of sizes
-            const size_t     rank;  //!< global rank
-            const_coord      ranks; //!< local ranks
             const LayoutType inner; //!< inner layout
             const LayoutType outer; //!< outer layout
 
@@ -149,21 +49,16 @@ namespace upsylon
             //! cleanup
             inline virtual ~Workspace() throw()
             {
-                Coord::LDZ_(sizes);
                 Coord::LDZ_(size);
-                Coord::LDZ_(rank);
-                Coord::LDZ_(ranks);
             }
             
             //! setup 
             inline explicit Workspace(const LayoutType &full,
                                       const_coord      &globalSizes,
                                       const size_t      globalRank) :
-            sizes( globalSizes ),
-            size(  Coord::Product(sizes) ),
-            rank(  globalRank ),
-            ranks( Coord::LocalRanks(rank,sizes) ),
-            inner( full.split(sizes,ranks) ),
+            NodeType(globalSizes,globalRank),
+            size(  Coord::Product(this->sizes) ),
+            inner( full.split(this->sizes,this->ranks) ),
             outer( inner )
             {
                 buildLinks();
@@ -192,9 +87,12 @@ namespace upsylon
                 for(size_t i=0,j=LocalNodes;i<Directions;++i)
                 {
                     --j;
-                    const coord &dir_lo = direction[i];
-                    const coord &dir_up = direction[j];
-                    std::cerr << "  link: " << dir_lo << "->" << dir_up << std::endl;
+                    const coord &lo = direction[i];
+                    const coord &up = direction[j];
+                    
+                    Topology::Links<COORD> links(this->sizes,this->ranks, lo, up);
+                    std::cerr << "\tlinks:" << links.lower << " <-- rank(" << this->ranks << ")=" << this->rank <<" --> " << links.upper << std::endl;
+
                 }
 
             }
