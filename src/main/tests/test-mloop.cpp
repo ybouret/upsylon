@@ -62,7 +62,7 @@ namespace
 
         for( loop.start(); loop.valid(); loop.next() )
         {
-            std::cerr << "\t@" << loop.index << " : " << loop.value << std::endl;
+            std::cerr << "\t@" << loop.index << " : " << loop.value << " <= " << loop << std::endl;
             loops.push_back_(loop);
         }
         std::cerr << "checking..." << std::endl;

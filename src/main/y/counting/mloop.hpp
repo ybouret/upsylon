@@ -5,14 +5,22 @@
 #include "y/counting/counting.hpp"
 #include "y/type/args.hpp"
 #include "y/memory/embed.hpp"
-#include <cstring>
+#include "y/type/ints-display.hpp"
 #include <iostream>
+#include <cstring>
 
 namespace upsylon
 {
 
     namespace core
     {
+        //! auxiliary stuff for mloop
+        struct mloop_
+        {
+            static const char fn[]; //!< "mloop: "
+        };
+
+        //! constructor setup
 #define Y_MLOOP_CTOR(COUNT,DIM) \
 counting(COUNT),               \
 dimensions(DIM),             \
@@ -26,14 +34,15 @@ wksp(0),      \
 wlen(0),    \
 data(0)
 
+        //! context for a multidimensional loop
         template <typename T>
         class mloop : public counting
         {
         public:
-            Y_DECL_ARGS(T,type);
+            Y_DECL_ARGS(T,type);      //!< alias
+            const size_t dimensions;  //!< number of dimensions to loop over
 
-            const size_t dimensions;
-
+            //! setup with dimensions and boundaries
             inline explicit mloop(const size_t dim,
                                   const_type  *ini,
                                   const_type  *end) :
@@ -44,6 +53,7 @@ data(0)
                 setup(ini,end);
             }
 
+            //! hard copy
             inline mloop( const mloop &other ) :
             Y_MLOOP_CTOR(other,other.dimensions)
             {
@@ -66,45 +76,48 @@ data(0)
             }
 
 
+            //! access [0..dimensions-1]
             inline const_type & operator[](const size_t dim) const throw()
             {
                 assert(dim<dimensions);
                 return curr[dim];
             }
 
+            //! memory check
             inline static void memchk(const mloop &lhs, const mloop &rhs)
             {
                 assert(lhs.dimensions==rhs.dimensions);
                 assert(lhs.count==rhs.count);
                 assert(lhs.data==rhs.data);
-                check_contents("mloop: ", lhs, lhs.wksp, rhs, rhs.wksp, lhs.data );
+                check_contents(mloop_::fn, lhs, lhs.wksp, rhs, rhs.wksp, lhs.data );
             }
 
+            //! display indices
             inline friend std::ostream & operator<<( std::ostream &os, const mloop &l )
             {
-                os << '{' << int64_t(l.curr[0]);
+                const_type *arr = l.curr;
+                core::display_int(os << '{',arr[0]);
                 for(size_t i=1;i<l.dimensions;++i)
                 {
-                    os << ',' << int64_t(l.curr[i]);
+                    core::display_int(os << ',',arr[i]);
                 }
-                os << '}';
-                return os;
+                return (os << '}');
             }
 
 
         private:
             typedef void (*proc)(mutable_type &);
         protected:
-            mutable_type *curr;
-            const_type   *head; //!< head value
-            const_type   *tail; //!< tail value
+            mutable_type *curr; //!< current indices
+            const_type   *head; //!< head value: starting
+            const_type   *tail; //!< tail value: finishing
             const_type   *quit; //!< value to quit local loop
         private:
-            const bool   *move;
-            const proc   *iter;
-            void         *wksp;
-            size_t        wlen;
-            size_t        data; //!< full data size
+            const bool   *move; //!< true if more than one step
+            const proc   *iter; //!< incr/decr
+            void         *wksp; //!< internal data
+            size_t        wlen; //!< allocated memory
+            size_t        data; //!< effective data size
             Y_DISABLE_ASSIGN(mloop);
 
 
@@ -130,9 +143,9 @@ data(0)
             FIND_DOF:
                 if(move[idim])
                 {
-                    //--------------------------------------------------------------
+                    //----------------------------------------------------------
                     // looping on movable coors
-                    //--------------------------------------------------------------
+                    //----------------------------------------------------------
                     mutable_type &value = curr[idim];
                     iter[idim](value);
                     if(quit[idim]==value)
@@ -143,9 +156,9 @@ data(0)
                 }
                 else
                 {
-                    //--------------------------------------------------------------
+                    //----------------------------------------------------------
                     // look for another D.O.F
-                    //--------------------------------------------------------------
+                    //----------------------------------------------------------
                     idim = next_dim(idim);
                     if(odim==idim) return; //!< no more d.o.f
                     goto FIND_DOF;
@@ -217,14 +230,16 @@ data(0)
 
     }
 
+    //! embedding mloop
     template <typename T, typename COORD>
     class mloop : public core::mloop<T>
     {
     public:
-        Y_DECL_ARGS(T,type);
-        typedef typename type_traits<COORD>::mutable_type coord;
-        typedef const coord                               const_coord;
+        Y_DECL_ARGS(T,type);                                            //!< alias
+        typedef typename type_traits<COORD>::mutable_type coord;        //!< alias
+        typedef const coord                               const_coord;  //!< alias
 
+        //! setup
         inline explicit mloop( const_coord &ini, const_coord &end ) :
         core::mloop<type>( sizeof(COORD)/sizeof(type),
                           (const type *)&ini,
@@ -233,11 +248,12 @@ data(0)
         {
         }
 
+        //! cleanup
         inline virtual ~mloop() throw()
         {
         }
 
-        const_coord &value;
+        const_coord &value; //!< apparent value
 
 
 
