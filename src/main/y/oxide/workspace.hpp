@@ -9,6 +9,17 @@ namespace upsylon
 {
     namespace Oxide
     {
+
+
+        template <typename COORD>
+        class LocalNode
+        {
+        public:
+            const COORD   ranks; //!< local ranks
+            const Coord1D rank;  //!< global rank
+
+        };
+
         //! MPI Node style information
         template <typename COORD>
         class Node
@@ -109,11 +120,13 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             typedef Layout<COORD>                             LayoutType; //!< alias
+            typedef typename LayoutType::Loop                 Loop;       //!< alias
             typedef typename LayoutType::coord                coord;      //!< alias
             typedef typename LayoutType::const_coord          const_coord;//!< alias
             static  const size_t                              Dimensions = Coord::Get<COORD>::Dimensions; //!< alias
-            typedef Link<COORD>                               LinkType; //!< alias
-            typedef memory::static_slots<LinkType,Dimensions> Links;    //!< alias
+            static  const size_t                              LocalNodes = Coord::Get<COORD>::LocalNodes; //!< alias
+            static  const size_t                              Neighbours = Coord::Get<COORD>::Neighbours; //!< alias
+            static  const size_t                              Directions = Neighbours/2;
 
             //------------------------------------------------------------------
             //
@@ -126,7 +139,6 @@ namespace upsylon
             const_coord      ranks; //!< local ranks
             const LayoutType inner; //!< inner layout
             const LayoutType outer; //!< outer layout
-            const Links      links; //!< info about local topology
 
             //------------------------------------------------------------------
             //
@@ -152,18 +164,9 @@ namespace upsylon
             rank(  globalRank ),
             ranks( Coord::LocalRanks(rank,sizes) ),
             inner( full.split(sizes,ranks) ),
-            outer( inner ),
-            links()
+            outer( inner )
             {
-                //--------------------------------------------------------------
-                // find local topology : links in each dimension
-                //--------------------------------------------------------------
-                Links &l = (Links &)links;
-                for(size_t dim=0;dim<Dimensions;++dim)
-                {
-                    const LinkType dim_link(dim,sizes,ranks);
-                    l.push_back( dim_link );
-                }
+                buildLinks();
             }
             
             
@@ -171,6 +174,30 @@ namespace upsylon
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Workspace);
+
+            void buildLinks()
+            {
+                coord direction[LocalNodes];
+
+                {
+                    coord lo(0); Coord::LD(lo,-1);
+                    coord up(0); Coord::LD(up, 1);
+                    Loop loop(lo,up);
+                    for( loop.start(); loop.valid(); loop.next() )
+                    {
+                        direction[loop.index-1] =  loop.value;
+                    }
+                }
+
+                for(size_t i=0,j=LocalNodes;i<Directions;++i)
+                {
+                    --j;
+                    const coord &dir_lo = direction[i];
+                    const coord &dir_up = direction[j];
+                    std::cerr << "  link: " << dir_lo << "->" << dir_up << std::endl;
+                }
+
+            }
         };
         
     }

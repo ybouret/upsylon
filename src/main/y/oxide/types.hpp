@@ -25,10 +25,17 @@ namespace upsylon
         //! operations on coordinates
         struct Coord
         {
+            template <size_t DIM> struct three_to_the;
+            template <> struct three_to_the<1> { static const size_t value = 3;     };
+            template <> struct three_to_the<2> { static const size_t value = 3*3;   };
+            template <> struct three_to_the<3> { static const size_t value = 3*3*3; };
+
             //! get static info
             template <typename COORD> struct Get
             {
-                static const size_t Dimensions = sizeof(COORD)/sizeof(Coord1D); //!< the dimension
+                static const size_t Dimensions = sizeof(COORD)/sizeof(Coord1D);   //!< the dimension
+                static const size_t LocalNodes = three_to_the<Dimensions>::value; //!< number of local nodes
+                static const size_t Neighbours = LocalNodes-1;                    //!< number of neigbors to comm with
             };
             
             //! x,y,z

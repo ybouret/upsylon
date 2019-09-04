@@ -72,6 +72,15 @@ namespace
 
     }
 
+#define DISPLAY_COORD(FIELD)\
+std::cerr << #FIELD << " : " << Oxide::Coord::Get<COORD>::FIELD << std::endl
+    template <typename COORD>
+    static inline void testCoord()
+    {
+        DISPLAY_COORD(Dimensions);
+        DISPLAY_COORD(LocalNodes);
+        DISPLAY_COORD(Neighbours);
+    }
 }
 
 
@@ -80,6 +89,11 @@ Y_UTEST(oxide)
     testLayout<Oxide::Layout1D>();
     testLayout<Oxide::Layout2D>();
     testLayout<Oxide::Layout3D>();
+
+    testCoord<Oxide::Coord1D>();
+    testCoord<Oxide::Coord2D>();
+    testCoord<Oxide::Coord3D>();
+
 
 }
 Y_UTEST_DONE()

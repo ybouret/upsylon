@@ -25,16 +25,6 @@ namespace
             {
                 const Workspace<COORD> W(full,sizes,rank);
                 std::cerr << "\t\ttile[" << rank << "]=" << W.inner << std::endl;
-                for(size_t dim=0;dim<W.Dimensions;++dim)
-                {
-                    const Link<COORD> &l = W.links[dim];
-                    std::cerr << "\t\t\t" << Coord::AxisName(dim)
-                    << ": next=" << l.next.globalRank
-                    << "  prev=" << l.prev.globalRank
-                    << " (parallel=" << l.parallel << ")"
-                    << " (head=" << l.head << ",tail=" << l.tail <<",bulk=" << l.bulk << ")"
-                    << std::endl;
-                }
             }
             std::cerr << std::endl;
         }

@@ -50,6 +50,7 @@ data(0)
             {
                 assert(ini);
                 assert(end);
+                setup_memory();
                 setup(ini,end);
             }
 
@@ -192,7 +193,6 @@ data(0)
 
             inline void setup(const_type *ini, const_type *end)
             {
-                setup_memory();
                 size_t &num = (size_t&)count;
                 num = 1;
                 for(size_t i=0;i<dimensions;++i)
@@ -215,12 +215,7 @@ data(0)
                         num *= (lo-up)+1;
                     }
                     iter[i](*(mutable_type *) &quit[i]);
-                    std::cerr << "dim#" << i;
-                    std::cerr << " : " << int64_t(lo) << "->" << int64_t(up) << ", quit@" << int64_t(quit[i]);
-                    std::cerr << " : move=" << move[i];
-                    std::cerr << std::endl;
                 }
-                std::cerr << "count=" << count << " (data:" << data << "/" << wlen << ")" << std::endl;
             }
             
             static inline void incr(mutable_type&i) throw() { ++i; }
