@@ -1,8 +1,6 @@
 #include "y/counting/dancing.hpp"
 #include "y/counting/comb.hpp"
-#include "y/ptr/auto.hpp"
 
-#include <iostream>
 
 namespace upsylon
 {
@@ -10,6 +8,7 @@ namespace upsylon
     dancing::guest:: ~guest() throw() {}
 }
 
+#include <iostream>
 
 namespace upsylon
 {
@@ -127,12 +126,23 @@ namespace upsylon
 
 }
 
+#include "y/sort/merge.hpp"
+#include "y/comparison.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon
 {
     dancing:: ~dancing() throw()
     {
 
+    }
+
+    static inline
+    int compare_cfg(const dancing::configuration *lhs,
+                    const dancing::configuration *rhs,
+                    void *) throw()
+    {
+        return comparison::decreasing(lhs->workgroups,rhs->workgroups);
     }
 
     static inline
@@ -151,9 +161,13 @@ namespace upsylon
     configurations()
     {
         const size_t  max_groups_per_cycle = n/k;
-        std::cerr << "dancing(" << n << "," << k << "): max_groups/cycle=" << max_groups_per_cycle << std::endl;
+        //std::cerr << "dancing(" << n << "," << k << "): max_groups/cycle=" << max_groups_per_cycle << std::endl;
 
+        //----------------------------------------------------------------------
+        //
         // compute all the groups
+        //
+        //----------------------------------------------------------------------
         groups G;
         {
             combination  comb(n,k);
@@ -162,30 +176,41 @@ namespace upsylon
                 G.push_back( new_group_from(comb) );
             }
         }
-        std::cerr << "#possible_groups=" << G.size << std::endl;
+        //std::cerr << "#possible_groups=" << G.size << std::endl;
 
+        //----------------------------------------------------------------------
+        //
         // dispatch all the groups
-        configuration::list_type &configs = (configuration::list_type &) configurations;
-        while(G.size>0)
+        //
+        //----------------------------------------------------------------------
         {
-            auto_ptr<configuration> cfg = new configuration(k);
-            groups        tmp;
-            while( (G.size>0) && (cfg->size< max_groups_per_cycle) )
+            configuration::list_type &configs = (configuration::list_type &) configurations;
+            while(G.size>0)
             {
-                group *grp = G.pop_front();
-                if( cfg->would_accept( grp ) )
+                auto_ptr<configuration> cfg = new configuration(k);
+                groups        tmp;
+                while( (G.size>0) && (cfg->size< max_groups_per_cycle) )
                 {
-                    cfg->push_back(grp);
+                    group *grp = G.pop_front();
+                    if( cfg->would_accept( grp ) )
+                    {
+                        cfg->push_back(grp);
+                    }
+                    else
+                    {
+                        tmp.push_back(grp);
+                    }
                 }
-                else
-                {
-                    tmp.push_back(grp);
-                }
+                G.merge_front(tmp);
+                cfg->finalize(n);
+                configs.push_back( cfg.yield() );
             }
-            G.merge_front(tmp);
-            cfg->finalize(n);
-            std::cerr << cfg << std::endl;
-            configs.push_back( cfg.yield() );
+            //std::cerr << "sorting..." << std::endl;
+            merging<configuration>::sort(configs, compare_cfg, NULL);
+        }
+        for(const configuration *cfg = configurations.head; cfg; cfg=cfg->next)
+        {
+            std::cerr << *cfg << std::endl;
         }
 
     }

@@ -4,7 +4,7 @@
 
 #include "y/core/list.hpp"
 #include "y/object.hpp"
-#include <iostream>
+#include <iosfwd>
 
 namespace upsylon
 {
@@ -17,12 +17,12 @@ namespace upsylon
         // a guest has a unique identifier
         //
         //----------------------------------------------------------------------
-
         //! a guest for a group
         class guest : public object
         {
         public:
-            typedef core::list_of_cpp<guest> list_type;
+            typedef core::list_of_cpp<guest> list_type; //!< alias
+            
             const size_t label; //!< identifier
             guest       *next;  //!< for list
             guest       *prev;  //!< for list
@@ -49,9 +49,8 @@ namespace upsylon
             group *next; //!< for list
             group *prev; //!< for list
 
-            explicit group() throw();
-            virtual ~group() throw();
-            
+            explicit group() throw(); //!< setup
+            virtual ~group() throw(); //!< cleanup
 
             bool has_guest_with_label( const size_t label ) const throw(); //!< check amongst guests
             bool is_distinct_from( const group *grp )       const throw(); //!< check no common guest
@@ -61,8 +60,6 @@ namespace upsylon
 
             //! create a  group with a single guest
             static group * single( const size_t label );
-
-            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(group);
@@ -75,6 +72,7 @@ namespace upsylon
         // a configuration is a list of groups and singles
         //
         //----------------------------------------------------------------------
+        //! description of a configuration
         class configuration : public groups
         {
         public:
@@ -100,7 +98,10 @@ namespace upsylon
 
         const configuration::list_type configurations; //!< all the possible configuration
 
-        //! build a set of parallel configurations for n guest to be combined in k-sized groups
+        //! build a set of parallel configurations
+        /**
+         Each configuration is a set of k-uplets and singles
+         */
         explicit dancing(const size_t n,
                          const size_t k);
 
