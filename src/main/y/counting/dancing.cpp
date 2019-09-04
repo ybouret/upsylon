@@ -3,6 +3,131 @@
 #include "y/ptr/auto.hpp"
 
 #include <iostream>
+
+namespace upsylon
+{
+    dancing:: guest:: guest(const size_t i) throw() :  object(), label(i), next(0), prev(0) {}
+    dancing::guest:: ~guest() throw() {}
+}
+
+
+namespace upsylon
+{
+    dancing:: group::  group() throw() : object(), guests(), next(0), prev(0) {}
+    dancing:: group:: ~group() throw() {}
+
+    bool dancing:: group:: has_guest_with_label( const size_t label ) const throw()
+    {
+        for(const guest *g = head; g; g=g->next )
+        {
+            if(label==g->label) return true;
+        }
+        return false;
+    }
+
+    bool dancing:: group:: is_distinct_from( const group *grp ) const throw()
+    {
+        assert(grp); assert(grp!=this);
+        for(const guest *h=grp->head;h;h=h->next)
+        {
+            if(has_guest_with_label(h->label)) return false;
+        }
+        return true;
+    }
+
+    dancing::group * dancing::group:: single( const size_t label )
+    {
+        group *grp = new group();
+        try { grp->push_back( new guest(label) ); } catch(...) { delete grp; throw; }
+        return grp;
+    }
+
+    std::ostream & operator<<( std::ostream &os, const dancing:: group &grp )
+    {
+        os << '{';
+        for(const dancing:: guest *g = grp.head; g; g=g->next)
+        {
+            os << g->label;
+            if(g!=grp.tail) os << ',';
+        }
+        return (os << '}');
+    }
+}
+
+
+namespace upsylon
+{
+    dancing:: configuration:: configuration(const size_t wgs) throw() :
+    workgroup_size(wgs),
+    workgroups(0),
+    extraneous(0),
+    next(0), prev(0)
+    {}
+
+    dancing:: configuration:: ~configuration() throw()
+    {
+    }
+
+
+    bool dancing::configuration:: would_accept( const group *grp ) const throw()
+    {
+        for(const group *sub=head;sub;sub=sub->next)
+        {
+            if( !sub->is_distinct_from(grp) ) return false;
+        }
+        return true;
+    }
+
+    void dancing:: configuration:: finalize( const size_t n )
+    {
+        assert(size>0);
+        assert(0==workgroups);
+        assert(0==extraneous);
+
+        // update groups
+        for(const group *grp=head;grp;grp=grp->next)
+        {
+            assert(workgroup_size==grp->size);
+            ++(size_t&)workgroups;
+        }
+
+        // check singles
+        {
+            groups singles;
+            for(size_t label=1;label<=n;++label)
+            {
+                bool has_label = false;
+                for(const group *grp=head;grp;grp=grp->next)
+                {
+                    if(grp->has_guest_with_label(label))
+                    {
+                        has_label = true;
+                        break;
+                    }
+                }
+                if(!has_label)
+                {
+                    singles.push_back( group::single(label) );
+                    ++(size_t&)extraneous;
+                }
+            }
+            merge_back(singles);
+        }
+    }
+
+    std::ostream & operator<<( std::ostream &os, const dancing::configuration &cfg )
+    {
+        os << '{';
+        for(const dancing:: group *grp = cfg.head; grp; grp=grp->next)
+        {
+            os << ' ' << *grp;
+        }
+        return (os << ' ' << '}' << '[' << cfg.workgroups << '+' << cfg.extraneous << ']' );
+    }
+
+}
+
+
 namespace upsylon
 {
     dancing:: ~dancing() throw()
@@ -22,19 +147,46 @@ namespace upsylon
     }
 
     dancing:: dancing(const size_t n,
-                      const size_t k)
+                      const size_t k) :
+    configurations()
     {
-        combination  comb(n,k);
-        const size_t groups = n/k;
-        const size_t alones = n-k*groups;
-        std::cerr << "dancing(" << n << "," << k << ") : #groups=" << groups << ", #alones=" << alones << std::endl;
+        const size_t  max_groups_per_cycle = n/k;
+        std::cerr << "dancing(" << n << "," << k << "): max_groups/cycle=" << max_groups_per_cycle << std::endl;
 
-        for( comb.start(); comb.valid(); comb.next() )
+        // compute all the groups
+        groups G;
         {
-            std::cerr << "got: " << comb << std::endl;
-            auto_ptr<group> grp = new_group_from(comb);
+            combination  comb(n,k);
+            for( comb.start(); comb.valid(); comb.next() )
+            {
+                G.push_back( new_group_from(comb) );
+            }
         }
+        std::cerr << "#possible_groups=" << G.size << std::endl;
 
+        // dispatch all the groups
+        configuration::list_type &configs = (configuration::list_type &) configurations;
+        while(G.size>0)
+        {
+            auto_ptr<configuration> cfg = new configuration(k);
+            groups        tmp;
+            while( (G.size>0) && (cfg->size< max_groups_per_cycle) )
+            {
+                group *grp = G.pop_front();
+                if( cfg->would_accept( grp ) )
+                {
+                    cfg->push_back(grp);
+                }
+                else
+                {
+                    tmp.push_back(grp);
+                }
+            }
+            G.merge_front(tmp);
+            cfg->finalize(n);
+            std::cerr << cfg << std::endl;
+            configs.push_back( cfg.yield() );
+        }
 
     }
 
