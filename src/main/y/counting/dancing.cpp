@@ -56,19 +56,19 @@ namespace upsylon
 
 namespace upsylon
 {
-    dancing:: configuration:: configuration(const size_t wgs) throw() :
+    dancing:: frame:: frame(const size_t wgs) throw() :
     workgroup_size(wgs),
     workgroups(0),
     extraneous(0),
     next(0), prev(0)
     {}
 
-    dancing:: configuration:: ~configuration() throw()
+    dancing:: frame:: ~frame() throw()
     {
     }
 
 
-    bool dancing::configuration:: would_accept( const group *grp ) const throw()
+    bool dancing::frame:: would_accept( const group *grp ) const throw()
     {
         for(const group *sub=head;sub;sub=sub->next)
         {
@@ -77,7 +77,7 @@ namespace upsylon
         return true;
     }
 
-    void dancing:: configuration:: finalize( const size_t n )
+    void dancing:: frame:: finalize( const size_t n )
     {
         assert(size>0);
         assert(0==workgroups);
@@ -114,7 +114,7 @@ namespace upsylon
         }
     }
 
-    std::ostream & operator<<( std::ostream &os, const dancing::configuration &cfg )
+    std::ostream & operator<<( std::ostream &os, const dancing::frame &cfg )
     {
         os << '{';
         for(const dancing:: group *grp = cfg.head; grp; grp=grp->next)
@@ -138,8 +138,8 @@ namespace upsylon
     }
 
     static inline
-    int compare_cfg(const dancing::configuration *lhs,
-                    const dancing::configuration *rhs,
+    int compare_cfg(const dancing::frame *lhs,
+                    const dancing::frame *rhs,
                     void *) throw()
     {
         return comparison::decreasing(lhs->workgroups,rhs->workgroups);
@@ -158,7 +158,10 @@ namespace upsylon
 
     dancing:: dancing(const size_t n,
                       const size_t k) :
-    configurations()
+    frames(),
+    wg_max(0),
+    wg_min(0),
+    amount(0)
     {
         const size_t  max_groups_per_cycle = n/k;
         //std::cerr << "dancing(" << n << "," << k << "): max_groups/cycle=" << max_groups_per_cycle << std::endl;
@@ -171,6 +174,7 @@ namespace upsylon
         groups G;
         {
             combination  comb(n,k);
+            (size_t &) amount = comb.count;
             for( comb.start(); comb.valid(); comb.next() )
             {
                 G.push_back( new_group_from(comb) );
@@ -184,11 +188,15 @@ namespace upsylon
         //
         //----------------------------------------------------------------------
         {
-            configuration::list_type &configs = (configuration::list_type &) configurations;
+            //__________________________________________________________________
+            //
+            // build the configurations
+            //__________________________________________________________________
+            frame::list_type &configs = (frame::list_type &) frames;
             while(G.size>0)
             {
-                auto_ptr<configuration> cfg = new configuration(k);
-                groups        tmp;
+                auto_ptr<frame> cfg = new frame(k);
+                groups          tmp;
                 while( (G.size>0) && (cfg->size< max_groups_per_cycle) )
                 {
                     group *grp = G.pop_front();
@@ -205,15 +213,55 @@ namespace upsylon
                 cfg->finalize(n);
                 configs.push_back( cfg.yield() );
             }
-            //std::cerr << "sorting..." << std::endl;
-            merging<configuration>::sort(configs, compare_cfg, NULL);
+
+            //__________________________________________________________________
+            //
+            // sort them by decreasing (valid) workgroups
+            //__________________________________________________________________
+            merging<frame>::sort(configs, compare_cfg, NULL);
         }
-        for(const configuration *cfg = configurations.head; cfg; cfg=cfg->next)
-        {
-            std::cerr << *cfg << std::endl;
-        }
+        
+        (size_t&)wg_max = frames.head->workgroups;
+        (size_t&)wg_min = frames.tail->workgroups;
 
     }
 
+    size_t   dancing:: find(const size_t  workgroups,
+                            const frame * &ini,
+                            const frame * &end) const throw()
+    {
+        assert(ini==NULL);
+        assert(end==NULL);
 
+        const frame *cfg = frames.head;
+
+        while(cfg)
+        {
+            if(workgroups==cfg->workgroups)
+            {
+                // this is the first value;
+                size_t ans = 1;
+                ini = end = cfg;
+
+                // check contiguous valid configuration
+                while(true)
+                {
+                    cfg = cfg->next;
+                    if(!cfg || workgroups!=cfg->workgroups) break;
+                    ++ans;
+                    end = cfg;
+                }
+
+                assert(ini);
+                assert(end);
+                
+                return ans;
+
+            }
+            cfg = cfg->next;
+        }
+
+        // nothing was found
+        return 0;
+    }
 }

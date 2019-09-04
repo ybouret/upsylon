@@ -69,34 +69,44 @@ namespace upsylon
 
         //----------------------------------------------------------------------
         //
-        // a configuration is a list of groups and singles
+        // a frame is a list of groups and singles
         //
         //----------------------------------------------------------------------
         //! description of a configuration
-        class configuration : public groups
+        class frame : public groups
         {
         public:
-            typedef core::list_of_cpp<configuration> list_type; //!< alias
+            typedef core::list_of_cpp<frame> list_type; //!< alias
             const size_t   workgroup_size; //!< working group size
-            const size_t   workgroups;     //!< groups with matching size
+            const size_t   workgroups;     //!< groups with matching workgroup_size
             const size_t   extraneous;     //!< single, if something to do
-            configuration *next;           //!< for list of configurations
-            configuration *prev;           //!< for list of configuration
+            frame *next;                   //!< for list of configurations
+            frame *prev;                   //!< for list of configuration
 
-            explicit configuration(const size_t wgs) throw();    //!< setup
-            virtual ~configuration() throw();                    //!< cleanup
+            explicit frame(const size_t wgs) throw();            //!< setup
+            virtual ~frame() throw();                            //!< cleanup
             bool would_accept( const group *grp ) const throw(); //!< would accept if no common guest
             void finalize( const size_t n );                     //!< check all singles, update values
 
             //!display
-            friend std::ostream & operator<<( std::ostream &os, const configuration &cfg );
+            friend std::ostream & operator<<( std::ostream &os, const frame &cfg );
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(configuration);
+            Y_DISABLE_COPY_AND_ASSIGN(frame);
         };
         
 
-        const configuration::list_type configurations; //!< all the possible configuration
+        //----------------------------------------------------------------------
+        //
+        // information about distribution
+        //
+        //----------------------------------------------------------------------
+
+
+        const frame::list_type frames; //!< all the possible configuration, decreasing workgroups order
+        const size_t           wg_max; //!< maximum effective workgroups
+        const size_t           wg_min; //!< minimum effective workgroups
+        const size_t           amount; //!< total number of sequential groups
 
         //! build a set of parallel configurations
         /**
@@ -107,6 +117,11 @@ namespace upsylon
 
         //! cleanup
         virtual ~dancing() throw();
+
+        //! find configurations with same worgroups
+        size_t   find(const size_t  workgroups,
+                      const frame * &ini,
+                      const frame * &end) const throw();
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(dancing);
