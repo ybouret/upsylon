@@ -244,18 +244,18 @@ data(0)
         core::mloop<type>( sizeof(COORD)/sizeof(type),
                           (const type *)&ini,
                           (const type *)&end ),
-        value( *(const_coord *)(this->curr) )
+        value( *(const_coord *)(this->curr) ),
+        lower( *(const_coord *)(this->head) ),
+        upper( *(const_coord *)(this->tail) )
         {
         }
 
         //! cleanup
-        inline virtual ~mloop() throw()
-        {
-        }
+        inline virtual ~mloop() throw() {}
 
         const_coord &value; //!< apparent value
-
-
+        const_coord &lower; //!< apparent lower bound
+        const_coord &upper; //!< apparent upper bound
 
 
 

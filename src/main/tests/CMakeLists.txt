@@ -23,7 +23,8 @@ ADD_LIBRARY(module MODULE module.cpp)
 
 
 ENABLE_TESTING()
-SOURCE_GROUP(os FILES test-platform.cpp test-types.cpp test-sys.cpp test-at-exit.cpp test-endian.cpp test-env.cpp test-spec.cpp test-chkbnd.cpp test-hr-ints.cpp)
+SOURCE_GROUP(os FILES test-platform.cpp test-types.cpp test-sys.cpp test-at-exit.cpp test-endian.cpp test-env.cpp test-spec.cpp test-chkbnd.cpp
+test-hr-ints.cpp test-ints-display.cpp)
 ADD_TEST(os:platform     test-main platform)
 ADD_TEST(os:types        test-main types)
 ADD_TEST(os:sys          test-main sys)
@@ -206,10 +207,12 @@ SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)
 ADD_TEST(sparse:array  test-main sparse_array)
 ADD_TEST(sparse:matrix test-main sparse_matrix)
 
-SOURCE_GROUP(counting FILES test-comb.cpp test-perm.cpp test-mloop.cpp)
+SOURCE_GROUP(counting FILES test-comb.cpp test-perm.cpp test-mloop.cpp test-dancing.cpp)
 ADD_TEST(counting:comb     test-main comb 1 2 3 4 5 6 7 8 9 10 11 12 13 14)
 ADD_TEST(counting:perm     test-main perm 1 2 3 4 5 6 7)
 ADD_TEST(counting:mloops   test-main mloops)
+ADD_TEST(counting:dancing  test-main dancing)
+
 
 SOURCE_GROUP(oxide FILES test-oxide.cpp test-oxide-fields.cpp
 test-oxide-io.cpp test-oxide-dct.cpp test-oxide-split.cpp test-oxide-ranks.cpp test-oxide-workspace.cpp

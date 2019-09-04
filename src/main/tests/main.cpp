@@ -33,6 +33,8 @@ Y_UTEST_INIT(150)
     Y_UTEST(mloops);
     Y_UTEST(comb);
     Y_UTEST(perm);
+    Y_UTEST(dancing);
+
     Y_UTEST(embed);
     Y_UTEST(hr_ints);
 

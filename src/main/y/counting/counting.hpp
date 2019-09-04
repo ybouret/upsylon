@@ -26,22 +26,22 @@ namespace upsylon
         const size_t index; //!< index in 1..count
         const size_t count; //!< number of possible objects
 
-        virtual     ~counting()    throw();  //!< cleanup
+        virtual     ~counting()    throw(); //!< cleanup
         bool         valid() const throw(); //!< index<=count after a start()
         void         start()       throw(); //!< set index to 1 and call start_()
         void         next()        throw(); //!< update index and call next_() if valid
 
     protected:
-        static size_t *acquire_( size_t &bytes );                      //!< acquire a count of bytes=workspace*sizeof(size_t)
-        static void    release_(size_t *&wksp, size_t &bytes) throw(); //!< release workspace
-        explicit       counting(const size_t   n) throw();             //!< setup count=n, index=0
-        explicit       counting(const counting &) throw();             //!< copy
-        static bool    mpn2count(size_t &sz, const mpl::natural &n);   //!< convert with size checking
+        static size_t *acquire_( size_t &bytes );                            //!< acquire a count of bytes=workspace*sizeof(size_t)
+        static void    release_(size_t *&wksp, size_t &bytes) throw();       //!< release workspace
+        explicit       counting(const size_t   n) throw();                   //!< setup count=n, index=0
+        explicit       counting(const counting &) throw();                   //!< copy
+        static bool    mpn2count(size_t &sz, const mpl::natural &n) throw(); //!< convert with size overflow checking
 
         //! display arr[1..num]
         static std::ostream &display( std::ostream &, const size_t *arr, const size_t num );
 
-        //! check dimension
+        //! check dimension>0
         static size_t chkdim(const size_t);
 
         //! internal allocator instance

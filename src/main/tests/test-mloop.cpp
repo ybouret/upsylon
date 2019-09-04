@@ -60,11 +60,13 @@ namespace
     {
         vector< core::mloop<typename LOOP::type> > loops(loop.count,as_capacity);
 
+        std::cerr << "<" << loop.lower << "->" << loop.upper << ">" << std::endl;
         for( loop.start(); loop.valid(); loop.next() )
         {
             std::cerr << "\t@" << loop.index << " : " << loop.value << " <= " << loop << std::endl;
             loops.push_back_(loop);
         }
+        std::cerr << "<" << loop.lower << "->" << loop.upper << "/>" << std::endl;
         std::cerr << "checking..." << std::endl;
         for(size_t i=1;i<=loops.size();++i)
         {

@@ -61,7 +61,7 @@ namespace upsylon
 namespace upsylon
 {
 
-    bool counting:: mpn2count(size_t &sz, const mpl::natural &n )
+    bool counting:: mpn2count(size_t &sz, const mpl::natural &n ) throw()
     {
         static const size_t sz_bytes = sizeof(size_t);
         static const size_t sz_bits  = sz_bytes * 8;
