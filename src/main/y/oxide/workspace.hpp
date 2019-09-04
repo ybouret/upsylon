@@ -93,10 +93,18 @@ namespace upsylon
                 {
                     --j;
                     Topology::CheckSameLevels(level[i],level[j]);
-                    const coord &lo = direction[i];
-                    const coord &up = direction[j];
+                   // const coord &lo = direction[i];
+                    // const coord &up = direction[j];
+                    switch (level[i])
+                    {
+                        case Topology::Level1: ++n1; break;
+                        case Topology::Level2: ++n2; break;
+                        case Topology::Level3: ++n3; break;
+                        default: break;
+                    }
                 }
-
+                std::cerr << "n1=" << n1 << ", n2=" << n2 << ", n3=" << n3 << std::endl;
+                
             }
         };
         
