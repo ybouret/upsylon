@@ -9,7 +9,6 @@ namespace upsylon
 {
     namespace Oxide
     {
-
         
         //! workspace metrics
         template <typename COORD>
@@ -26,7 +25,7 @@ namespace upsylon
             typedef typename LayoutType::coord                coord;      //!< alias
             typedef typename LayoutType::const_coord          const_coord;//!< alias
             typedef Topology::Hub<COORD>                      HubType;
-            
+            static const size_t                               Dimensions = HubType::Dimensions;
             //------------------------------------------------------------------
             //
             // members
@@ -70,7 +69,18 @@ namespace upsylon
 
             inline LayoutType expandInner(const Coord1D ng)
             {
-                return inner;
+                if(ng<=0)
+                {
+                    return inner;
+                }
+                else
+                {
+                    //const HubType &self = *this;
+                    for(size_t dim=0;dim<Dimensions;++dim)
+                    {
+                    }
+                    return inner;
+                }
             }
 
 

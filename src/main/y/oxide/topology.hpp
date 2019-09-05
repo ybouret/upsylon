@@ -6,7 +6,6 @@
 
 namespace upsylon
 {
-
     namespace Oxide
     {
         //! handle space topology
@@ -63,19 +62,43 @@ namespace upsylon
             class Hub : public Node<COORD>
             {
             public:
+                //--------------------------------------------------------------
+                //
+                // connectivity
+                //
+                //--------------------------------------------------------------
                 static  const size_t Dimensions = Coord::Get<COORD>::Dimensions; //!< workspace dimension
                 static  const size_t Neighbours = Coord::Get<COORD>::Neighbours; //!< number of touching neighbours
                 static  const size_t Directions = Neighbours/2;                  //!< number of directions
-                typedef Node<COORD>                    NodeType;
-                typedef typename NodeType::coord       coord;
-                typedef typename NodeType::const_coord const_coord;
-                typedef typename Layout<COORD>::Loop   Loop;
 
-                const_coord pbc;  //!< flags for pbc
-                const_coord head; //!< flags for head
-                const_coord tail; //!< flags for tail
-                const_coord bulk; //!< flags for bulk
+                //--------------------------------------------------------------
+                //
+                // definitions
+                //
+                //--------------------------------------------------------------
+                typedef Node<COORD>                             NodeType;
+                typedef typename NodeType::coord                coord;
+                typedef typename NodeType::const_coord          const_coord;
+                typedef typename Layout<COORD>::Loop            Loop;
+                typedef typename Coord::Get<COORD>::BooleanType bool_type;
+                typedef const bool_type                         const_bool;
 
+                //--------------------------------------------------------------
+                //
+                // members
+                //
+                //--------------------------------------------------------------
+                const_bool pbc;  //!< flags for pbc
+                const_bool head; //!< flags for head
+                const_bool tail; //!< flags for tail
+                const_bool bulk; //!< flags for bulk
+
+                //--------------------------------------------------------------
+                //
+                // implementation
+                //
+                //--------------------------------------------------------------
+                //! setup
                 explicit Hub(const COORD   &localSizes,
                              const Coord1D &globalRank,
                              const COORD   &globalPBC) :
@@ -88,6 +111,7 @@ namespace upsylon
                     build();
                 }
 
+                //! cleanup
                 inline virtual ~Hub() throw()
                 {
                 }
@@ -100,9 +124,9 @@ namespace upsylon
                     {
                         const Coord1D *r = (const Coord1D *) & (this->ranks);
                         const Coord1D *s = (const Coord1D *) & (this->sizes);
-                        Coord1D       *h = (Coord1D       *) & head;
-                        Coord1D       *t = (Coord1D       *) & tail;
-                        Coord1D       *b = (Coord1D       *) & bulk;
+                        bool          *h = (bool          *) & head;
+                        bool          *t = (bool          *) & tail;
+                        bool          *b = (bool          *) & bulk;
 
                         for(size_t dim=0;dim<Dimensions;++dim)
                         {
@@ -111,10 +135,11 @@ namespace upsylon
                             assert(ls>0);
                             assert(lr>=0);
                             assert(lr<ls);
-                            const bool is_head = ( 1 == (h[dim] = (0==lr)    ? 1 : 0) );
-                            const bool is_tail = ( 1 == (t[dim] = (ls-1==lr) ? 1 : 0) );
-                            b[dim] = (is_head || is_tail) ? 0 : 1;
+                            const bool is_head = (  h[dim] = (0==lr)    );
+                            const bool is_tail = (  t[dim] = (ls-1==lr) );
+                            b[dim] = (!is_head && !is_tail);
                         }
+
                     }
                     std::cerr << "ranks=" << this->ranks << "/" << this->sizes << std::endl;
                     std::cerr << "head=" << head << std::endl;
@@ -152,7 +177,7 @@ namespace upsylon
         };
 
 
-    }
+    };
 
 }
 

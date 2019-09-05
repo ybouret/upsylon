@@ -21,11 +21,24 @@ namespace upsylon
         typedef unit_t           Coord1D; //!< 1D coordinate
         typedef point2d<Coord1D> Coord2D; //!< 2D coordinate
         typedef point3d<Coord1D> Coord3D; //!< 3D coordinate
-        
+
+        typedef bool          Bool1D;
+        typedef point2d<bool> Bool2D;
+        typedef point3d<bool> Bool3D;
+
+        template <typename T> struct Boolean;
+        template <> struct Boolean<Coord1D> { typedef Bool1D Type; };
+        template <> struct Boolean<Coord2D> { typedef Bool2D Type; };
+        template <> struct Boolean<Coord3D> { typedef Bool3D Type; };
+
+        template <size_t DIM> struct three_to_the;
+        template <> struct  three_to_the<1> { static const size_t value = 3;     };
+        template <> struct  three_to_the<2> { static const size_t value = 3*3;   };
+        template <> struct  three_to_the<3> { static const size_t value = 3*3*3; };
+
         //! operations on coordinates
         struct Coord
         {
-            template <size_t DIM> struct three_to_the;
 
 
             //! get static info
@@ -34,6 +47,7 @@ namespace upsylon
                 static const size_t Dimensions = sizeof(COORD)/sizeof(Coord1D);   //!< the dimension
                 static const size_t LocalNodes = three_to_the<Dimensions>::value; //!< number of local nodes
                 static const size_t Neighbours = LocalNodes-1;                    //!< number of neigbors to comm with
+                typedef typename Boolean<COORD>::Type BooleanType;
             };
             
             //! x,y,z
@@ -282,21 +296,18 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             template <typename COORD> static inline
-            COORD ToBoolean( const COORD &c ) throw()
+            typename Get<COORD>::BooleanType ToBoolean( const COORD &c ) throw()
             {
-                COORD ans = c;
+                typename Get<COORD>::BooleanType ans(false);
+                bool *flag = (bool *)&ans;
                 for(size_t dim=0;dim<Get<COORD>::Dimensions;++dim)
                 {
-                    Coord1D &value = Of(ans,dim);
-                    if(value) value=1;
+                    flag[dim] = Of(c,dim) != 0;
                 }
                 return ans;
             }
         };
 
-        template <> struct Coord::three_to_the<1> { static const size_t value = 3;     };
-        template <> struct Coord::three_to_the<2> { static const size_t value = 3*3;   };
-        template <> struct Coord::three_to_the<3> { static const size_t value = 3*3*3; };
         
     }
     
