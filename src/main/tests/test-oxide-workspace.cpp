@@ -57,7 +57,7 @@ Y_UTEST(oxide_workspace)
 
     
     do_wksp<Coord1D>(L1,cores,pbc.x,ng);    //return 0;
-    do_wksp<Coord2D>(L2,cores,pbc.xy(),ng); //return 0;
+    do_wksp<Coord2D>(L2,cores,pbc.xy(),ng);// return 0;
     do_wksp<Coord3D>(L3,cores,pbc,ng);
 
     

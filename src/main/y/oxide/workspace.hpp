@@ -42,7 +42,8 @@ namespace upsylon
             static const size_t AtLevel2    = 12;           //!< across 12 edges
             static const size_t AtLevel3    = 8;            //!< across 8  vertices
         };
-        
+
+
         //! workspace metrics
         template <typename COORD>
         class Workspace : public Topology::Hub<COORD>
@@ -73,15 +74,22 @@ namespace upsylon
             class Ghosts_ : public NodeType, public counted_object
             {
             public:
-                const Topology::Level   level; //!< kind of ghosts
+                const Topology::Level   level;  //!< directionality of ghosts
+                const Coord1D           host;   //!< global host rank
+                const bool              local;  //!< is local
+                const bool              async;  //!< is async
 
                 //! setup
                 inline explicit Ghosts_(const_coord           &localSizes,
                                         const Coord1D         &globalRank,
+                                        const Coord1D         &globalHost,
                                         const Topology::Level &l,
                                         const LayoutType      &innerLayout,
                                         const LayoutType      &outerLayout) throw() :
                 NodeType(localSizes,globalRank), level(l),
+                host(globalHost),
+                local( (host==this->rank)  ),
+                async( !local ),
                 inner(innerLayout),
                 outer(outerLayout)
                 {
@@ -273,8 +281,15 @@ namespace upsylon
                     // create ghosts and push them in their positions
                     //
                     //----------------------------------------------------------
-                    const Ghosts  g = new Ghosts_(this->sizes,Coord::GlobalRank(this->sizes,granks),glevel,g_inner,g_outer);
-                    std::cerr << "ghosts.ranks=" << g->ranks << " | " << g->rank << " <-- " << this->rank << " | send: " << g->inner << " recv: " << g->outer << std::endl;
+                    const Ghosts  g = new Ghosts_(this->sizes,
+                                                  Coord::GlobalRank(this->sizes,granks),
+                                                  this->rank,
+                                                  glevel,
+                                                  g_inner,
+                                                  g_outer);
+                    std::cerr << "ghosts.ranks=" << g->ranks << " | " << g->rank << " <-- " << this->rank << " | send: " << g->inner << " | recv: " << g->outer;
+                    if(g->async) std::cerr << " [async]"; else std::cerr << " [local]";
+                    std::cerr << std::endl;
                     assert(g_inner.items==g_outer.items);
 
                     ghosts.push_back(g);
@@ -308,7 +323,10 @@ namespace upsylon
                     tryCreateGhosts( loop.value,shift);
                     tryCreateGhosts(-loop.value,shift);
                 }
-                //display_int::to(std::cerr << "links={",levels,3) << "}" << std::endl;
+                std::cerr << "#ghosts: " << ghosts.size << std::endl;
+                std::cerr << "     @1: " << ghosts1.size << std::endl;
+                std::cerr << "     @2: " << ghosts2.size << std::endl;
+                std::cerr << "     @3: " << ghosts3.size << std::endl;
 
             }
 
