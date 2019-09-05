@@ -115,6 +115,11 @@ namespace upsylon
             inline void createLink(const_coord delta,
                                    size_t     *levels)
             {
+                //--------------------------------------------------------------
+                //
+                // first pass: try to find the probe
+                //
+                //--------------------------------------------------------------
                 coord probe = delta;
                 for(size_t dim=0;dim<Dimensions;++dim)
                 {
@@ -130,12 +135,24 @@ namespace upsylon
                 if(outer.has(probe))
                 {
                     std::cerr << " exists!" << std::endl;
+                    //----------------------------------------------------------
+                    //
+                    // get info
+                    //
+                    //----------------------------------------------------------
                     const Topology::Level level = Topology::LevelOf(delta);
                     switch (level) {
                         case Topology::Level1: ++levels[0]; break;
                         case Topology::Level2: ++levels[1]; break;
                         case Topology::Level3: ++levels[2]; break;
                     }
+
+                    //----------------------------------------------------------
+                    //
+                    // build recv/send layouts from delta
+                    //
+                    //----------------------------------------------------------
+                    
                 }
                 else
                 {
