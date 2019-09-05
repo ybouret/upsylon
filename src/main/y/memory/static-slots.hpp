@@ -26,6 +26,7 @@ namespace upsylon
             static const size_t capacity = LENGTH;  //!< maximum items
             static const size_t offset   = OFFSET;  //!< initial index for access
             static const size_t bytes    = LENGTH * sizeof(type); //!< minimal memory bytes
+            static const size_t required = (bytes<=0) ? 1 : bytes;
 
             //! setup
             explicit static_slots() throw() :
@@ -79,7 +80,7 @@ namespace upsylon
             }
             
         private:
-            uint64_t      wksp[ Y_U64_FOR_SIZE(bytes) ];
+            uint64_t      wksp[ Y_U64_FOR_SIZE(required) ];
             mutable_type *addr;
             Y_DISABLE_COPY_AND_ASSIGN(static_slots);
             inline void clr() throw() { memset(wksp,0,sizeof(wksp) ); }

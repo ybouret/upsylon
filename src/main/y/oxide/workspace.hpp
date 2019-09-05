@@ -4,6 +4,7 @@
 
 #include "y/oxide/topology.hpp"
 #include "y/memory/static-slots.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace upsylon
 {
@@ -25,8 +26,38 @@ namespace upsylon
             typedef typename LayoutType::coord                coord;      //!< alias
             typedef typename LayoutType::const_coord          const_coord;//!< alias
             typedef Topology::Hub<COORD>                      HubType;
+            typedef Topology::Node<COORD>                     NodeType;
             static const size_t                               Dimensions = HubType::Dimensions;
             static const size_t                               Directions = HubType::Directions;
+            static const size_t                               Neighbours = HubType::Neighbours;
+            static const size_t                               AtLevel1   = Metrics<Dimensions>::AtLevel1;
+            static const size_t                               AtLevel2   = Metrics<Dimensions>::AtLevel2;
+            static const size_t                               AtLevel3   = Metrics<Dimensions>::AtLevel3;
+
+            class Ghosts_ : public NodeType
+            {
+            public:
+                const Topology::Level   level;
+                inline explicit Ghosts_(const_coord           &localSizes,
+                                        const Coord1D         &globalRank,
+                                        const Topology::Level &l ) throw() :
+                NodeType(localSizes,globalRank),
+                level(l)
+                {
+                }
+
+                inline virtual ~Ghosts_() throw()
+                {
+                }
+
+                //const LayoutType inner;
+                //const LayoutType outer;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Ghosts_);
+            };
+
+            typedef arc_ptr<Ghosts_> Ghosts;
 
             //------------------------------------------------------------------
             //
@@ -36,6 +67,10 @@ namespace upsylon
             const size_t     size;  //!< product of sizes
             const LayoutType inner; //!< inner layout
             const LayoutType outer; //!< outer layout
+            memory::static_slots<Ghosts,Neighbours> ghosts;
+            memory::static_slots<Ghosts,AtLevel1>   ghosts1;
+            memory::static_slots<Ghosts,AtLevel2>   ghosts2;
+            memory::static_slots<Ghosts,AtLevel3>   ghosts3;
 
             //------------------------------------------------------------------
             //
@@ -59,10 +94,11 @@ namespace upsylon
             HubType(localSizes,globalRank,PBC),
             size(  Coord::Product(this->sizes) ),
             inner( full.split(this->sizes,this->ranks) ),
-            outer( expandInner( abs_of(ng) ) )
+            outer( expandInner( abs_of(ng) ) ),
+            ghosts(), ghosts1(), ghosts2(), ghosts3()
             {
                 std::cerr << "tile[" << this->rank << "]=" << inner << " -> " << outer << std::endl;
-                buildLinks();
+                buildGhosts();
             }
             
             
@@ -112,22 +148,21 @@ namespace upsylon
             }
 
 
-            inline void createLink(const_coord delta,
-                                   size_t     *levels)
+            inline void tryCreateGhosts(const_coord delta)
             {
                 //--------------------------------------------------------------
                 //
                 // first pass: try to find the probe
                 //
                 //--------------------------------------------------------------
-                coord probe = delta;
+                coord probe = (inner.lower+inner.upper)/2;
                 for(size_t dim=0;dim<Dimensions;++dim)
                 {
-                    switch( Coord::Of(delta,dim) )
+                    const Coord1D d = Coord::Of(delta,dim);
+                    switch( d )
                     {
-                        case -1: Coord::Of(probe,dim) += Coord::Of(inner.lower,dim); break;
-                        case  1: Coord::Of(probe,dim) += Coord::Of(inner.upper,dim); break;
-                        case  0: 
+                        case -1: Coord::Of(probe,dim) = Coord::Of(inner.lower,dim)-1; break;
+                        case  1: Coord::Of(probe,dim) = Coord::Of(inner.upper,dim)+1; break;
                         default:
                             break;
                     }
@@ -135,28 +170,41 @@ namespace upsylon
                 std::cerr << "\tlink@delta=" << delta << " : probe=" << probe << " : ";
                 if(outer.has(probe))
                 {
-                    std::cerr << "ok" << std::endl;
                     //----------------------------------------------------------
                     //
                     // get info
                     //
                     //----------------------------------------------------------
-                    const Topology::Level level = Topology::LevelOf(delta);
-                    switch (level) {
-                        case Topology::Level1: ++levels[0]; break;
-                        case Topology::Level2: ++levels[1]; break;
-                        case Topology::Level3: ++levels[2]; break;
-                    }
+                    const Topology::Level glevel = Topology::LevelOf(delta);
+                    const_coord           granks = Coord::Regularized(this->sizes,this->ranks + delta);
 
                     //----------------------------------------------------------
                     //
                     // build recv/send layouts from delta
                     //
                     //----------------------------------------------------------
-                    const_coord   peer_ranks = Coord::Regularized(this->sizes,this->ranks + delta);
-                    const Coord1D peer_rank  = Coord::GlobalRank(this->sizes,peer_ranks);
-                    std::cerr << "\t\t: peer.ranks=" << peer_ranks << " | " << peer_rank << " <-- " << this->rank << std::endl;
-                    
+
+                    //----------------------------------------------------------
+                    //
+                    // create ghosts and push them in their positions
+                    //
+                    //----------------------------------------------------------
+                    const Ghosts  g = new Ghosts_(this->sizes,Coord::GlobalRank(this->sizes,granks),glevel);
+                    std::cerr << "ghosts.ranks=" << g->ranks << " | " << g->rank << " <-- " << this->rank << std::endl;
+
+                    ghosts.push_back(g);
+                    switch (glevel)
+                    {
+                        case Topology::Level1:  ghosts1.push_back(g); break;
+                        case Topology::Level2:  ghosts2.push_back(g); break;
+                        case Topology::Level3:  ghosts3.push_back(g); break;
+                    }
+
+
+
+
+
+
                 }
                 else
                 {
@@ -164,7 +212,7 @@ namespace upsylon
                 }
             }
 
-            inline void buildLinks()
+            inline void buildGhosts()
             {
                 std::cerr << "links@ranks="<< this->ranks << std::endl;
 
@@ -174,13 +222,13 @@ namespace upsylon
                 Loop loop(__lo,__up);
                 loop.start();
 
-                size_t levels[3] = { 0,0,0 };
+                //size_t levels[3] = { 0,0,0 };
                 for( size_t j=0; j<Directions; ++j, loop.next() )
                 {
-                    createLink( loop.value,levels);
-                    createLink(-loop.value,levels);
+                    tryCreateGhosts( loop.value);
+                    tryCreateGhosts(-loop.value);
                 }
-                display_int::to(std::cerr << "links={",levels,3) << "}" << std::endl;
+                //display_int::to(std::cerr << "links={",levels,3) << "}" << std::endl;
 
             }
 

@@ -31,10 +31,35 @@ namespace upsylon
         template <> struct Boolean<Coord2D> { typedef Bool2D Type; };
         template <> struct Boolean<Coord3D> { typedef Bool3D Type; };
 
-        template <size_t DIM> struct three_to_the;
-        template <> struct  three_to_the<1> { static const size_t value = 3;     };
-        template <> struct  three_to_the<2> { static const size_t value = 3*3;   };
-        template <> struct  three_to_the<3> { static const size_t value = 3*3*3; };
+        template <size_t DIM> struct Metrics;
+        template <> struct  Metrics<1>
+        {
+            static const size_t LocalNodes  = 3; //!< [-1:0:1]
+            static const size_t Neighbours  = LocalNodes-1; //!< exclude center=hub
+            static const size_t AtLevel1    = 2; //!< along main axis back/forth
+            static const size_t AtLevel2    = 0; //!< N/A
+            static const size_t AtLevel3    = 0; //!< N/A
+        };
+
+        template <> struct  Metrics<2>
+        {
+            static const size_t LocalNodes  = 9; //!< [-1:0:1]^2
+            static const size_t Neighbours  = LocalNodes-1;//!< exclude center=hub
+            static const size_t AtLevel1    = 4; //!< along main axis back/forth
+            static const size_t AtLevel2    = 4; //!< along diagonals
+            static const size_t AtLevel3    = 0; //!< N/A
+        };
+
+        template <> struct  Metrics<3>
+        {
+            static const size_t LocalNodes  = 27; //!< [-1:0:1]^3
+            static const size_t Neighbours  = LocalNodes-1; //!< exclude center=hub
+            static const size_t AtLevel1    = 6;  //!< along  6  axis
+            static const size_t AtLevel2    = 12; //!< across 12 edges
+            static const size_t AtLevel3    = 8;  //!< across 8  vertices
+        };
+
+
 
         //! operations on coordinates
         struct Coord
@@ -45,8 +70,8 @@ namespace upsylon
             template <typename COORD> struct Get
             {
                 static const size_t Dimensions = sizeof(COORD)/sizeof(Coord1D);   //!< the dimension
-                static const size_t LocalNodes = three_to_the<Dimensions>::value; //!< number of local nodes
-                static const size_t Neighbours = LocalNodes-1;                    //!< number of neigbors to comm with
+                static const size_t LocalNodes = Metrics<Dimensions>::LocalNodes; //!< number of local nodes
+                static const size_t Neighbours = Metrics<Dimensions>::Neighbours; //!< number of neigbors to comm with
                 typedef typename Boolean<COORD>::Type BooleanType;
             };
             

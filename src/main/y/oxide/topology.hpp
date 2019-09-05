@@ -37,7 +37,7 @@ namespace upsylon
 
             //! a local node to handle connectivity
             template <typename COORD>
-            class Node
+            class Node : public counted_object
             {
             public:
                 typedef typename Layout<COORD>::coord       coord;
@@ -51,7 +51,7 @@ namespace upsylon
 
                 inline virtual ~Node() throw() {}
 
-                inline explicit Node(const COORD   &localSizes,
+                inline explicit Node(const_coord   &localSizes,
                                      const Coord1D &globalRank) :
                 sizes( localSizes ),
                 rank(  globalRank ),
