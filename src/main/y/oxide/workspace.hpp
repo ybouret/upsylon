@@ -86,12 +86,13 @@ namespace upsylon
                         //------------------------------------------------------
                         // inspect
                         //------------------------------------------------------
-                        const_coord    width = inner.width;
-                        const HubType &self = *this;
+                        const_coord    width     = inner.width;
+                        const HubType &self     = *this;
                         const bool    *is_bulk  = (const bool *) & self.bulk;
-                        const bool    *periodic = (const bool *) & self.pbc;
+                        const bool    *is_pbc   = (const bool *) & self.pbc;
                         const bool    *is_head  = (const bool *) & self.head;
                         const bool    *is_tail  = (const bool *) & self.tail;
+                        const bool    *is_par   = (const bool *) & self.par;
 
                         for(size_t dim=0;dim<Dimensions;++dim)
                         {
@@ -101,19 +102,50 @@ namespace upsylon
                             Coord1D up = 0;
                             if(is_bulk[dim])
                             {
-                                lo = up = 1;
+                                //------------------------------------------------------
+                                // in any bulk situatuion
+                                //------------------------------------------------------
+                                lo = up = ng;
                             }
                             else
                             {
-                                if(is_head[dim])
+                                const bool periodic = is_pbc[dim];
+                                const bool parallel = is_par[dim];
+
+                                // study head case
+                                if( is_head[dim] )
                                 {
+                                    if(periodic)
+                                    {
+                                        lo = ng;
+                                    }
 
+                                    if(parallel)
+                                    {
+                                        up = ng;
+                                    }
                                 }
-                                
-                            }
-                            Coord::Of(lower,dim) -= lo;
-                            Coord::Of(upper,dim) += lo;
 
+                                // study tail case, may be redundant, but safe
+                                if( is_tail[dim] )
+                                {
+                                    if(periodic)
+                                    {
+                                        up = ng;
+                                    }
+
+                                    if(parallel)
+                                    {
+                                        lo = ng;
+                                    }
+                                }
+
+                            }
+
+                            assert(lo>=0);
+                            assert(up>=0);
+                            Coord::Of(lower,dim) -= lo;
+                            Coord::Of(upper,dim) += up;
                         }
                     }
                     //----------------------------------------------------------

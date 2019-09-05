@@ -94,6 +94,8 @@ namespace upsylon
                 const_bool pbc;  //!< flags for pbc
                 const_bool head; //!< flags for head
                 const_bool tail; //!< flags for tail
+                const_bool seq;  //!< head && tail => not parallel
+                const_bool par;  //!< !both :)
                 const_bool bulk; //!< flags for bulk
 
                 //--------------------------------------------------------------
@@ -107,8 +109,10 @@ namespace upsylon
                              const COORD   &globalPBC) :
                 NodeType(localSizes,globalRank),
                 pbc( Coord::ToBoolean(globalPBC) ),
-                head(0),
+                head(false),
                 tail(head),
+                seq(head),
+                par(head),
                 bulk(head)
                 {
                     build();
@@ -125,22 +129,25 @@ namespace upsylon
                     // check the local situation
 
                     {
-                        const Coord1D *r = (const Coord1D *) & (this->ranks);
-                        const Coord1D *s = (const Coord1D *) & (this->sizes);
+                        const Coord1D *rk = (const Coord1D *) & (this->ranks);
+                        const Coord1D *sz = (const Coord1D *) & (this->sizes);
                         bool          *h = (bool          *) & head;
                         bool          *t = (bool          *) & tail;
                         bool          *b = (bool          *) & bulk;
+                        bool          *p = (bool          *) & par;
+                        bool          *s = (bool          *) & seq;
 
                         for(size_t dim=0;dim<Dimensions;++dim)
                         {
-                            const Coord1D ls = s[dim]; //!< local size
-                            const Coord1D lr = r[dim]; //!< local rank
+                            const Coord1D ls = sz[dim]; //!< local size
+                            const Coord1D lr = rk[dim]; //!< local rank
                             assert(ls>0);
                             assert(lr>=0);
                             assert(lr<ls);
                             const bool is_head = (  h[dim] = (0==lr)    );
                             const bool is_tail = (  t[dim] = (ls-1==lr) );
                             b[dim] = (!is_head && !is_tail);
+                            s[dim] = !( p[dim] = (ls>1) );
                         }
 
                     }
@@ -148,6 +155,7 @@ namespace upsylon
                     std::cerr << "head=" << head << std::endl;
                     std::cerr << "tail=" << tail << std::endl;
                     std::cerr << "bulk=" << bulk << std::endl;
+                    std::cerr << "par =" << par  << "/seq=" << seq << std::endl;
 
                     // the links
                     coord __lo(0); Coord::LD(__lo,-1);
