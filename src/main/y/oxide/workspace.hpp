@@ -134,7 +134,29 @@ namespace upsylon
             };
 
             typedef arc_ptr<Ghosts_> Ghosts; //!< pointer for multiple locations, same data
-
+            
+            class GhostsPair
+            {
+            public:
+                const Ghosts first;
+                const Ghosts second;
+                inline GhostsPair( const Ghosts &g1, const Ghosts &g2) throw() :
+                first(g1),
+                second(g2)
+                {
+                }
+                
+                inline ~GhostsPair() throw()
+                {
+                    
+                }
+            
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(GhostsPair);
+            };
+            
+            
             //------------------------------------------------------------------
             //
             // members
@@ -143,14 +165,13 @@ namespace upsylon
             const size_t            size;   //!< product of sizes
             const LayoutType        inner;  //!< inner layout
             const LayoutType        outer;  //!< outer layout
-            vector<Ghosts>          ghosts; //!<
+            vector<Ghosts>          async; //!<
 
             //------------------------------------------------------------------
             //
             // methods
             //
             //------------------------------------------------------------------
-
             //! cleanup
             inline virtual ~Workspace() throw()
             {
@@ -167,7 +188,8 @@ namespace upsylon
             HubType(localSizes,globalRank,PBC),
             size(  Coord::Product(this->sizes) ),
             inner( full.split(this->sizes,this->ranks) ),
-            outer( expandInner( abs_of(ng) ) )
+            outer( expandInner( abs_of(ng) ) ),
+            async()
             {
                 std::cerr << "\ttile[" << this->rank << "]=" << inner << " -> " << outer << std::endl;
                 if(ng>0)
@@ -270,10 +292,12 @@ namespace upsylon
                         switch( Coord::Of(delta,dim)  )
                         {
                             case  1:
+                                Coord::Of(outer_upper,dim) = Coord::Of(outer.upper,dim);
                                 Coord::Of(outer_lower,dim) = Coord::Of(inner_upper,dim) + 1;
                                 Coord::Of(inner_lower,dim) = Coord::Of(inner_upper,dim) - shift;
                                 break;
                             case -1:
+                                Coord::Of(outer_lower,dim) = Coord::Of(outer.lower,dim);
                                 Coord::Of(outer_upper,dim) = Coord::Of(inner_lower,dim) - 1;
                                 Coord::Of(inner_upper,dim) = Coord::Of(inner_lower,dim) + shift;
                                 break;
@@ -302,7 +326,7 @@ namespace upsylon
                     if(g->async) std::cerr << " [async]"; else std::cerr << " [local]";
                     std::cerr << std::endl;
                     assert(g_inner.items==g_outer.items);
-                    ghosts.push_back(g);
+                    async.push_back(g);
                 }
                 else
                 {
@@ -320,17 +344,12 @@ namespace upsylon
                 Loop loop(__lo,__up);
                 loop.start();
 
-                //size_t levels[3] = { 0,0,0 };
                 for( size_t j=0; j<Directions; ++j, loop.next() )
                 {
                     tryCreateGhosts( loop.value,shift);
                     tryCreateGhosts(-loop.value,shift);
-                    if( ghosts.back()->local )
-                    {
-                        
-                    }
                 }
-                std::cerr << "#ghosts: " << ghosts.size() << std::endl;
+                std::cerr << "#ghosts: " << async.size() << std::endl;
 
 #if 0
                 std::cerr << "     @1: " << ghosts1.size << std::endl;
