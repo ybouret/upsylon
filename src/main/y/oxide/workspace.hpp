@@ -144,6 +144,7 @@ namespace upsylon
                 first(g1),
                 second(g2)
                 {
+                    assert(g1->level==g2->level);
                 }
                 
                 inline ~GhostsPair() throw()
@@ -151,9 +152,15 @@ namespace upsylon
                     
                 }
             
+                inline GhostsPair( const GhostsPair &other ) throw() :
+                first(other.first),
+                second(other.second)
+                {
+                }
+                
                 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(GhostsPair);
+                Y_DISABLE_ASSIGN(GhostsPair);
             };
             
             
@@ -165,8 +172,9 @@ namespace upsylon
             const size_t            size;   //!< product of sizes
             const LayoutType        inner;  //!< inner layout
             const LayoutType        outer;  //!< outer layout
-            vector<Ghosts>          async; //!<
-
+            vector<Ghosts>          async;  //!< async ghosts
+            vector<GhostsPair>      local;  //!< local pairs
+            
             //------------------------------------------------------------------
             //
             // methods
@@ -189,7 +197,8 @@ namespace upsylon
             size(  Coord::Product(this->sizes) ),
             inner( full.split(this->sizes,this->ranks) ),
             outer( expandInner( abs_of(ng) ) ),
-            async()
+            async( Neighbours, as_capacity ),
+            local( Directions, as_capacity )
             {
                 std::cerr << "\ttile[" << this->rank << "]=" << inner << " -> " << outer << std::endl;
                 if(ng>0)
@@ -246,7 +255,7 @@ namespace upsylon
 
 
             //! try to create Ghosts, shift=ng-1
-            inline void tryCreateGhosts(const_coord   delta,
+            inline bool tryCreateGhosts(const_coord   delta,
                                         const Coord1D shift)
             {
                 assert(shift>=0);
@@ -327,10 +336,12 @@ namespace upsylon
                     std::cerr << std::endl;
                     assert(g_inner.items==g_outer.items);
                     async.push_back(g);
+                    return true;
                 }
                 else
                 {
                     std::cerr << "NO" << std::endl;
+                    return false;
                 }
             }
 
@@ -346,16 +357,25 @@ namespace upsylon
 
                 for( size_t j=0; j<Directions; ++j, loop.next() )
                 {
-                    tryCreateGhosts( loop.value,shift);
-                    tryCreateGhosts(-loop.value,shift);
+                    const bool has_g1 = tryCreateGhosts( loop.value,shift);
+                    const bool has_g2 = tryCreateGhosts(-loop.value,shift);
+                    if( (has_g1 && has_g2) )
+                    {
+                        // a pair was generated
+                        assert(async.size()>0);
+                        if( async.back()->local )
+                        {
+                            // a pair of local ghosts !
+                            const Ghosts     g1 = async.back(); async.pop_back(); assert(g1->local);
+                            const Ghosts     g2 = async.back(); async.pop_back(); assert(g2->local);
+                            const GhostsPair gp(g1,g2);
+                            local.push_back(gp);
+                        }
+                    }
                 }
                 std::cerr << "#ghosts: " << async.size() << std::endl;
-
-#if 0
-                std::cerr << "     @1: " << ghosts1.size << std::endl;
-                std::cerr << "     @2: " << ghosts2.size << std::endl;
-                std::cerr << "     @3: " << ghosts3.size << std::endl;
-#endif
+                std::cerr << "#gpairs: " << local.size() << std::endl;
+                
             }
 
         };
