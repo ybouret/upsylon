@@ -26,9 +26,7 @@ namespace upsylon
         struct Coord
         {
             template <size_t DIM> struct three_to_the;
-            template <> struct three_to_the<1> { static const size_t value = 3;     };
-            template <> struct three_to_the<2> { static const size_t value = 3*3;   };
-            template <> struct three_to_the<3> { static const size_t value = 3*3*3; };
+
 
             //! get static info
             template <typename COORD> struct Get
@@ -214,68 +212,91 @@ namespace upsylon
                 Parse((Coord1D *)&ans, Get<COORD>::Dimensions, args);
                 return ans;
             }
-            
+
+            //------------------------------------------------------------------
+            //
+            // local ranks => global rank
+            //
+            //------------------------------------------------------------------
+
+            static void CheckRanks(const Coord1D *size, const Coord1D *rank, const unsigned dim);
+
             //! return global rank 1D: ranks.x
-            static inline Coord1D GlobalRank( const Coord1D &, const Coord1D &ranks ) throw()
+            static inline Coord1D GlobalRank( const Coord1D &sizes, const Coord1D &ranks )
             {
+                CheckRanks(&sizes,&ranks,1);
                 return ranks;
             }
             
             //! return global rank: 2D: ranks.x + ranks.y * sizes.x
-            static inline Coord1D GlobalRank( const Coord2D &sizes, const Coord2D &ranks ) throw()
+            static inline Coord1D GlobalRank( const Coord2D &sizes, const Coord2D &ranks )
             {
+                CheckRanks(&sizes.x,&ranks.x,2);
                 return ranks.x + ranks.y * sizes.x;
             }
             
             //!return global rank: 3D:ranks.x + ranks.y * sizes.x + ranks.z * sizes.x * sizes.y = ranks.x + sizes.x * ( ranks.y + sizes.y * ranks.z)
-            static inline Coord1D GlobalRank( const Coord3D &sizes, const Coord3D &ranks ) throw()
+            static inline Coord1D GlobalRank( const Coord3D &sizes, const Coord3D &ranks )
             {
+                CheckRanks(&sizes.x,&ranks.x,3);
                 return ranks.x + sizes.x * ( ranks.y + sizes.y * ranks.z);
             }
-            
+
+
+            //------------------------------------------------------------------
+            //
+            // global rank => local rank
+            //
+            //------------------------------------------------------------------
+
             //! return local ranks 1D: (ranks.x=r)
-            static inline Coord1D LocalRanks( const Coord1D &r, const Coord1D &) throw()
+            static inline Coord1D LocalRanks( const Coord1D &sizes, const Coord1D &r)
             {
+                CheckRanks(&sizes, &r,1);
                 return r;
             }
             
              //! return local ranks 2D: (ranks.y=r/sizes.x,ranks.x=r%sizes.x)
-            static inline Coord2D LocalRanks( const Coord1D &r, const Coord2D &sizes) throw()
+            static inline Coord2D LocalRanks( const Coord2D &sizes, const Coord1D &rank)
             {
-                const ldiv_t d = ldiv(r,sizes.x);
-                return Coord2D(d.rem,d.quot);
-            }
-            
-            //! return local ranks 3D
-            static inline Coord3D LocalRanks( const Coord1D &r, const Coord3D &sizes) throw()
-            {
-                const ldiv_t dx = ldiv(r,sizes.x);
-                const ldiv_t dy = ldiv(dx.quot,sizes.y);
-                return Coord3D(dx.rem,dy.rem,dy.quot);
-            }
-
-            template <typename COORD> static inline
-            COORD RegularizeRanks( COORD ranks, const COORD &sizes ) throw()
-            {
-                for(size_t dim=0;dim<Get<COORD>::Dimensions;++dim)
-                {
-                    Coord1D       &r = Coord::Of(ranks,dim);
-                    const Coord1D  s = Coord::Of(sizes,dim);
-                    if(r<0)
-                    {
-                        r=s-1;
-                    }
-                    else if(r>=s)
-                    {
-                        r=0;
-                    }
-                }
+                const ldiv_t  dx = ldiv(rank,sizes.x);
+                const Coord2D ranks(dx.rem,dx.quot);
+                CheckRanks(&sizes.x, &ranks.x, 2);
                 return ranks;
             }
             
-            
+            //! return local ranks 3D
+            static inline Coord3D LocalRanks( const Coord3D &sizes, const Coord1D &rank)
+            {
+                const ldiv_t dx = ldiv(rank,sizes.x);
+                const ldiv_t dy = ldiv(dx.quot,sizes.y);
+                const Coord3D ranks(dx.rem,dy.rem,dy.quot);
+                CheckRanks(&sizes.x,&ranks.x,3);
+                return ranks;
+            }
+
+
+            //------------------------------------------------------------------
+            //
+            // other ops TODO change this lin
+            //
+            //------------------------------------------------------------------
+            template <typename COORD> static inline
+            COORD ToBoolean( const COORD &c ) throw()
+            {
+                COORD ans = c;
+                for(size_t dim=0;dim<Get<COORD>::Dimensions;++dim)
+                {
+                    Coord1D &value = Of(ans,dim);
+                    if(value) value=1;
+                }
+                return ans;
+            }
         };
-        
+
+        template <> struct Coord::three_to_the<1> { static const size_t value = 3;     };
+        template <> struct Coord::three_to_the<2> { static const size_t value = 3*3;   };
+        template <> struct Coord::three_to_the<3> { static const size_t value = 3*3*3; };
         
     }
     

@@ -18,6 +18,7 @@ namespace upsylon
         struct mloop_
         {
             static const char fn[]; //!< "mloop: "
+            static const char sep[2]; //!< ',', [
         };
 
         //! constructor setup
@@ -96,13 +97,16 @@ data(0)
             //! display indices
             inline friend std::ostream & operator<<( std::ostream &os, const mloop &l )
             {
-                const_type *arr = l.curr;
-                core::display_int(os << '{',arr[0]);
+                //const_type *arr = l.curr;
+                return display_int::to(os<< '{',l.curr,l.dimensions,mloop_::sep) << "}";
+#if 0
+                display_int::to(os << '{',arr[0]);
                 for(size_t i=1;i<l.dimensions;++i)
                 {
-                    core::display_int(os << ',',arr[i]);
+                    display_int::to(os << ',',arr[i]);
                 }
                 return (os << '}');
+#endif
             }
 
 

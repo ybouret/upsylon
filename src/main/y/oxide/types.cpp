@@ -66,6 +66,21 @@ namespace upsylon
             const string _(text);
             return Parse(p,n,_);
         }
+
+        void Coord:: CheckRanks(const Coord1D *size, const Coord1D *rank, const unsigned dim)
+        {
+            assert(size);
+            assert(rank);
+            assert(dim>0);
+            assert(dim<=3);
+            for(unsigned i=0;i<dim;++i)
+            {
+                const long s = long(size[i]);
+                if(s<0) throw exception("Oxide: invalid size#%u=%ld", i, s);
+                const long r = long(rank[i]);
+                if(r<0||r>=s) throw exception("Oxide(rank#%u=%ld not in [0:%ld]", i, r, s-1 );
+            }
+        }
     }
 }
 

@@ -27,7 +27,7 @@ void do_ranks( const COORD &sizes )
         const Coord1D rank  = Coord::GlobalRank(sizes,loop.value);
         Y_ASSERT(rank==Coord1D(loop.index-1));
         
-        const COORD   ranks = Coord::LocalRanks(rank,sizes);
+        const COORD   ranks = Coord::LocalRanks(sizes,rank);
         Y_ASSERT( ranks == loop.value );
     }
 }

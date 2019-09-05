@@ -36,10 +36,10 @@ namespace upsylon
         class Layout : public LayoutInfo
         {
         public:
-            static const size_t Dimensions = Coord::Get<COORD>::Dimensions; //!< alias
-            typedef COORD       coord;                                      //!< alias
-            typedef const coord const_coord;                                //!< alias
-            typedef mloop<Coord1D,COORD> Loop;                              //!< loop over sub layout
+            static const size_t Dimensions = Coord::Get<COORD>::Dimensions;  //!< alias
+            typedef typename type_traits<COORD>::mutable_type   coord;       //!< alias
+            typedef const coord                                 const_coord; //!< alias
+            typedef mloop<Coord1D,coord>                        Loop;        //!< loop over sub layout
 
             const_coord lower; //!< lower coordinate
             const_coord upper; //!< upper coordinate

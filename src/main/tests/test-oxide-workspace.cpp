@@ -11,7 +11,8 @@ namespace
     static inline void do_wksp (const Layout<COORD> &full,
                                 const size_t         cores)
     {
-        
+        std::cerr << "---------------- In " << Coord::Get<COORD>::Dimensions << "D ----------------" << std::endl;
+        const COORD pbc(0);
         std::cerr << "full =" << full << std::endl;
         std::cerr << "cores=" << cores << std::endl;
         vector<COORD>  mappings;
@@ -23,7 +24,7 @@ namespace
             std::cerr << "\t\tusing " << sizes << std::endl;
             for(size_t rank = 0; rank<cores; ++rank )
             {
-                const Workspace<COORD> W(full,sizes,rank);
+                const Workspace<COORD> W(full,sizes,rank,pbc);
                 std::cerr << "\t\ttile[" << rank << "]=" << W.inner << std::endl;
             }
             std::cerr << std::endl;
