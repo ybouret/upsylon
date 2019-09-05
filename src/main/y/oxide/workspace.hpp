@@ -135,33 +135,16 @@ namespace upsylon
 
             typedef arc_ptr<Ghosts_> Ghosts; //!< pointer for multiple locations, same data
 
-#if 0
-            //! length dependent template for different metrics
-            template <size_t LENGTH> class GhostsStore : public memory::static_slots<Ghosts,LENGTH>
-            {
-            public:
-                inline explicit GhostsStore() throw() : memory::static_slots<Ghosts,LENGTH>() {} //!< setup
-                inline virtual ~GhostsStore() throw() {} //!< cleanup
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(GhostsStore);
-            };
-#endif
-
             //------------------------------------------------------------------
             //
             // members
             //
             //------------------------------------------------------------------
-            const size_t            size;  //!< product of sizes
-            const LayoutType        inner; //!< inner layout
-            const LayoutType        outer; //!< outer layout
-#if 0
-            GhostsStore<Neighbours> ghosts;  //!< all the ghosts
-            GhostsStore<AtLevel1>   ghosts1; //!< Level1 ghosts
-            GhostsStore<AtLevel2>   ghosts2; //!< Level2 ghosts
-            GhostsStore<AtLevel3>   ghosts3; //!< Level3 ghosts
-#endif
+            const size_t            size;   //!< product of sizes
+            const LayoutType        inner;  //!< inner layout
+            const LayoutType        outer;  //!< outer layout
+            vector<Ghosts>          ghosts; //!<
+
             //------------------------------------------------------------------
             //
             // methods
@@ -184,7 +167,7 @@ namespace upsylon
             HubType(localSizes,globalRank,PBC),
             size(  Coord::Product(this->sizes) ),
             inner( full.split(this->sizes,this->ranks) ),
-            outer( expandInner( abs_of(ng) ) )//,ghosts(), ghosts1(), ghosts2(), ghosts3()
+            outer( expandInner( abs_of(ng) ) )
             {
                 std::cerr << "\ttile[" << this->rank << "]=" << inner << " -> " << outer << std::endl;
                 if(ng>0)
@@ -319,16 +302,7 @@ namespace upsylon
                     if(g->async) std::cerr << " [async]"; else std::cerr << " [local]";
                     std::cerr << std::endl;
                     assert(g_inner.items==g_outer.items);
-
-#if 0
                     ghosts.push_back(g);
-                    switch (glevel)
-                    {
-                        case Topology::Level1:  ghosts1.push_back(g); break;
-                        case Topology::Level2:  ghosts2.push_back(g); break;
-                        case Topology::Level3:  ghosts3.push_back(g); break;
-                    }
-#endif
                 }
                 else
                 {
@@ -351,9 +325,14 @@ namespace upsylon
                 {
                     tryCreateGhosts( loop.value,shift);
                     tryCreateGhosts(-loop.value,shift);
+                    if( ghosts.back()->local )
+                    {
+                        
+                    }
                 }
+                std::cerr << "#ghosts: " << ghosts.size() << std::endl;
+
 #if 0
-                std::cerr << "#ghosts: " << ghosts.size << std::endl;
                 std::cerr << "     @1: " << ghosts1.size << std::endl;
                 std::cerr << "     @2: " << ghosts2.size << std::endl;
                 std::cerr << "     @3: " << ghosts3.size << std::endl;
