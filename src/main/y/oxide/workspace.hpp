@@ -75,11 +75,53 @@ namespace upsylon
                 }
                 else
                 {
-                    //const HubType &self = *this;
-                    for(size_t dim=0;dim<Dimensions;++dim)
+                    //----------------------------------------------------------
+                    //
+                    // get coordinates to modify
+                    //
+                    //----------------------------------------------------------
+                    coord          lower = inner.lower;
+                    coord          upper = inner.upper;
                     {
+                        //------------------------------------------------------
+                        // inspect
+                        //------------------------------------------------------
+                        const_coord    width = inner.width;
+                        const HubType &self = *this;
+                        const bool    *is_bulk  = (const bool *) & self.bulk;
+                        const bool    *periodic = (const bool *) & self.pbc;
+                        const bool    *is_head  = (const bool *) & self.head;
+                        const bool    *is_tail  = (const bool *) & self.tail;
+
+                        for(size_t dim=0;dim<Dimensions;++dim)
+                        {
+                            Topology::CheckGhosts(ng, Coord::Of(width,dim), dim);
+
+                            Coord1D lo = 0;
+                            Coord1D up = 0;
+                            if(is_bulk[dim])
+                            {
+                                lo = up = 1;
+                            }
+                            else
+                            {
+                                if(is_head[dim])
+                                {
+
+                                }
+                                
+                            }
+                            Coord::Of(lower,dim) -= lo;
+                            Coord::Of(upper,dim) += lo;
+
+                        }
                     }
-                    return inner;
+                    //----------------------------------------------------------
+                    //
+                    // return modified layout
+                    //
+                    //----------------------------------------------------------
+                    return LayoutType(lower,upper);
                 }
             }
 

@@ -29,6 +29,9 @@ namespace upsylon
             //! check consistency
             static void CheckSameLevels( const Level lhs, const Level rhs );
 
+            //! check
+            static void CheckGhosts( const Coord1D ng, const Coord1D width, const unsigned dim);
+
             //! a local node to handle connectivity
             template <typename COORD>
             class Node

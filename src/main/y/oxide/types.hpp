@@ -204,10 +204,10 @@ namespace upsylon
             }
             
             //! parse x[,y[,z]]
-            static void Parse(Coord1D *p, const size_t n, const string &args);
+            static void Parse(Coord1D *p, const size_t n, const string &args, const char *id);
             
             //! parse wrapper
-            static void Parse(Coord1D *p, const size_t n, const char   *text);
+            static void Parse(Coord1D *p, const size_t n, const char   *text, const char *id);
             
             //! parse a full coodinate
             template <typename COORD> static inline
@@ -220,10 +220,10 @@ namespace upsylon
             
             //! parse a full coordinate
             template <typename COORD> static inline
-            COORD Parse( const char *args )
+            COORD Parse( const char *args, const char *id=0 )
             {
                 COORD ans(0);
-                Parse((Coord1D *)&ans, Get<COORD>::Dimensions, args);
+                Parse((Coord1D *)&ans, Get<COORD>::Dimensions, args, id);
                 return ans;
             }
 

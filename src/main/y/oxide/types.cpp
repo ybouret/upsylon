@@ -48,7 +48,7 @@ namespace upsylon
         static inline bool is_sep( const int C ) throw()   { return C == ','; }
         static inline bool is_blank( const int C ) throw() { return C == ' ' || C == '\t'; }
         
-        void Coord:: Parse(Coord1D *p, const size_t n, const string &args)
+        void Coord:: Parse(Coord1D *p, const size_t n, const string &args, const char *id)
         {
             assert(p!=NULL);
             assert(n==1||n==2||n==3);
@@ -56,15 +56,15 @@ namespace upsylon
             while( tt.next(is_sep) )
             {
                 string s( tt.token(), tt.units() );
-                *(p++) = string_convert::to<unit_t>( s.clean(is_blank) );
+                *(p++) = string_convert::to<unit_t>( s.clean(is_blank),id );
             }
             if(n!=tt.count()) throw exception("Oxide::Coord::Parse(bad dim)");
         }
         
-        void Coord:: Parse(Coord1D *p, const size_t n, const char   *text)
+        void Coord:: Parse(Coord1D *p, const size_t n, const char   *text, const char *id)
         {
             const string _(text);
-            return Parse(p,n,_);
+            return Parse(p,n,_,id);
         }
 
         void Coord:: CheckRanks(const Coord1D *size, const Coord1D *rank, const unsigned dim)
