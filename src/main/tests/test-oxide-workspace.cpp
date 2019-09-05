@@ -27,7 +27,6 @@ namespace
             for(size_t rank = 0; rank<cores; ++rank )
             {
                 const Workspace<COORD> W(full,sizes,rank,pbc,ng);
-                std::cerr << "\t\ttile[" << rank << "]=" << W.inner << "->" << W.outer << std::endl;
             }
             std::cerr << std::endl;
         }
@@ -57,8 +56,8 @@ Y_UTEST(oxide_workspace)
     const Layout3D L3( org,      top );
 
     
-    do_wksp<Coord1D>(L1,cores,pbc.x,ng);
-    do_wksp<Coord2D>(L2,cores,pbc.xy(),ng);
+    do_wksp<Coord1D>(L1,cores,pbc.x,ng);    //return 0;
+    do_wksp<Coord2D>(L2,cores,pbc.xy(),ng); return 0;
     do_wksp<Coord3D>(L3,cores,pbc,ng);
 
     

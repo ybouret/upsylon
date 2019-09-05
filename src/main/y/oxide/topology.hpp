@@ -18,7 +18,10 @@ namespace upsylon
             static const Level    Level2 = 0x02;  //!< [xy|xz|yz]
             static const Level    Level3 = 0x04;  //!< [xyz]
             static const Level    Levels = Level1|Level2|Level3;
+        private:
+            static Level LevelFor( const Coord1D *addr, const size_t size ) throw();
 
+        public:
             //! study level of a vector
             template <typename COORD> static inline
             Level LevelOf( const COORD &delta ) throw()
@@ -61,6 +64,17 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
             };
 
+
+        private:
+            static void BuildHubStatus(const Coord1D *size,
+                                       const Coord1D *rank,
+                                       bool    *head,
+                                       bool    *tail,
+                                       bool    *seq,
+                                       bool    *par,
+                                       bool    *bulk,
+                                       const unsigned dims) throw();
+        public:
             template <typename COORD>
             class Hub : public Node<COORD>
             {
@@ -115,7 +129,7 @@ namespace upsylon
                 par(head),
                 bulk(head)
                 {
-                    build();
+                    buildStatus();
                 }
 
                 //! cleanup
@@ -124,66 +138,39 @@ namespace upsylon
                 }
 
             private:
-                inline void build()
+                inline void buildStatus()
                 {
                     // check the local situation
+                    BuildHubStatus((const Coord1D *) & (this->sizes),
+                                   (const Coord1D *) & (this->ranks),
+                                   (bool *) &head,
+                                   (bool *) &tail,
+                                   (bool *) &seq,
+                                   (bool *) &par,
+                                   (bool *) &bulk,
+                                   Dimensions);
 
-                    {
-                        const Coord1D *rk = (const Coord1D *) & (this->ranks);
-                        const Coord1D *sz = (const Coord1D *) & (this->sizes);
-                        bool          *h = (bool          *) & head;
-                        bool          *t = (bool          *) & tail;
-                        bool          *b = (bool          *) & bulk;
-                        bool          *p = (bool          *) & par;
-                        bool          *s = (bool          *) & seq;
-
-                        for(size_t dim=0;dim<Dimensions;++dim)
-                        {
-                            const Coord1D ls = sz[dim]; //!< local size
-                            const Coord1D lr = rk[dim]; //!< local rank
-                            assert(ls>0);
-                            assert(lr>=0);
-                            assert(lr<ls);
-                            const bool is_head = (  h[dim] = (0==lr)    );
-                            const bool is_tail = (  t[dim] = (ls-1==lr) );
-                            b[dim] = (!is_head && !is_tail);
-                            s[dim] = !( p[dim] = (ls>1) );
-                        }
-
-                    }
                     std::cerr << "ranks=" << this->ranks << "/" << this->sizes << std::endl;
-                    std::cerr << "head=" << head << std::endl;
-                    std::cerr << "tail=" << tail << std::endl;
-                    std::cerr << "bulk=" << bulk << std::endl;
-                    std::cerr << "par =" << par  << "/seq=" << seq << std::endl;
-
-                    // the links
-                    coord __lo(0); Coord::LD(__lo,-1);
-                    coord __up(0); Coord::LD(__up, 1);
-                    Loop loop(__lo,__up);
-                    loop.start();
-
-                    size_t n[3] = { 0,0,0 };
-                    for( size_t j=0; j<Directions; ++j, loop.next() )
-                    {
-                        const_coord           lower   = loop.value;
-                        const_coord           upper   = -lower;
-                        const Topology::Level level   = Topology::LevelOf(lower);
-                        Topology::CheckSameLevels(level, Topology::LevelOf(upper));
-                        switch (level) {
-                            case Topology::Level1: ++n[0]; break;
-                            case Topology::Level2: ++n[1]; break;
-                            case Topology::Level3: ++n[2]; break;
-                        }
-                    }
-                    display_int::to(std::cerr << "n={",n,3) << "}" << std::endl;
+                    std::cerr << "head=" << head;
+                    std::cerr << ", tail=" << tail;
+                    std::cerr << ", bulk=" << bulk;
+                    std::cerr << ", par=" << par  << "/seq=" << seq << std::endl;
                 }
 
             };
 
+            //! expand layout coordinates from a Hub data
+            static void Expand(Coord1D       *lower,
+                               Coord1D       *upper,
+                               const Coord1D *width,
+                               const bool    *head,
+                               const bool    *tail,
+                               const bool    *bulk,
+                               const bool    *par,
+                               const bool    *pbc,
+                               const Coord1D  ng,
+                               const unsigned dims);
 
-        private:
-            static Level LevelFor( const Coord1D *addr, const size_t size ) throw();
 
         };
 
