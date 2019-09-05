@@ -289,10 +289,29 @@ namespace upsylon
                 return ranks;
             }
 
+            template <typename COORD>
+            static inline COORD Regularized( const COORD &sizes, const COORD &ranks ) throw()
+            {
+                COORD ans = ranks;
+                for(size_t dim=0;dim<Get<COORD>::Dimensions;++dim )
+                {
+                    Coord1D      &rank = Of(ans,dim);
+                    const Coord1D size = Of(sizes,dim);  
+                    if(rank<0)
+                    {
+                        rank = size-1;
+                    }
+                    else if(rank>=size)
+                    {
+                        rank = 0;
+                    }
+                }
+                return ans;
+            }
 
             //------------------------------------------------------------------
             //
-            // other ops TODO change this lin
+            // Boolean Operations
             //
             //------------------------------------------------------------------
             template <typename COORD> static inline

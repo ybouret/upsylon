@@ -127,14 +127,15 @@ namespace upsylon
                     {
                         case -1: Coord::Of(probe,dim) += Coord::Of(inner.lower,dim); break;
                         case  1: Coord::Of(probe,dim) += Coord::Of(inner.upper,dim); break;
+                        case  0: 
                         default:
                             break;
                     }
                 }
-                std::cerr << "\tlink@" << delta << " -> " << probe;
+                std::cerr << "\tlink@delta=" << delta << " : probe=" << probe << " : ";
                 if(outer.has(probe))
                 {
-                    std::cerr << " exists!" << std::endl;
+                    std::cerr << "ok" << std::endl;
                     //----------------------------------------------------------
                     //
                     // get info
@@ -152,17 +153,21 @@ namespace upsylon
                     // build recv/send layouts from delta
                     //
                     //----------------------------------------------------------
+                    const_coord   peer_ranks = Coord::Regularized(this->sizes,this->ranks + delta);
+                    const Coord1D peer_rank  = Coord::GlobalRank(this->sizes,peer_ranks);
+                    std::cerr << "\t\t: peer.ranks=" << peer_ranks << " | " << peer_rank << " <-- " << this->rank << std::endl;
                     
                 }
                 else
                 {
-                    std::cerr <<  " doesn't exists!" << std::endl;
+                    std::cerr << "NO" << std::endl;
                 }
             }
 
             inline void buildLinks()
             {
                 std::cerr << "links@ranks="<< this->ranks << std::endl;
+
                 //! half loop on [-1:1]^Dimensions, using symetry
                 coord __lo(0); Coord::LD(__lo,-1);
                 coord __up(0); Coord::LD(__up, 1);
@@ -175,7 +180,7 @@ namespace upsylon
                     createLink( loop.value,levels);
                     createLink(-loop.value,levels);
                 }
-                display_int::to(std::cerr << "links={",levels,Dimensions) << "}" << std::endl;
+                display_int::to(std::cerr << "links={",levels,3) << "}" << std::endl;
 
             }
 
