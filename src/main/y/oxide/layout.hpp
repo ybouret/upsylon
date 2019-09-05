@@ -49,10 +49,10 @@ namespace upsylon
             //! cleanup
             inline virtual ~Layout() throw()
             {
-                Coord::LDZ_(lower);
-                Coord::LDZ_(upper);
-                Coord::LDZ_(width);
-                Coord::LDZ_(pitch);
+                bzset_(lower);
+                bzset_(upper);
+                bzset_(width);
+                bzset_(pitch);
             }
 
             //! setup by two coordinates

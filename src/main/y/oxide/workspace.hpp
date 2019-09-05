@@ -10,6 +10,38 @@ namespace upsylon
 {
     namespace Oxide
     {
+        //! metrics information
+        template <size_t DIM> struct Metrics;
+
+        //! 1D Metrics
+        template <> struct  Metrics<1>
+        {
+            static const size_t LocalNodes  = 3;            //!< [-1:0:1]
+            static const size_t Neighbours  = LocalNodes-1; //!< exclude center=hub
+            static const size_t AtLevel1    = 2;            //!< along main axis back/forth
+            static const size_t AtLevel2    = 0;            //!< N/A
+            static const size_t AtLevel3    = 0;            //!< N/A
+        };
+
+        //! 2D Metrics
+        template <> struct  Metrics<2>
+        {
+            static const size_t LocalNodes  = 9;            //!< [-1:0:1]^2
+            static const size_t Neighbours  = LocalNodes-1; //!< exclude center=hub
+            static const size_t AtLevel1    = 4;            //!< along main axis back/forth
+            static const size_t AtLevel2    = 4;            //!< along diagonals
+            static const size_t AtLevel3    = 0;            //!< N/A
+        };
+
+        //! 3D Metrics
+        template <> struct  Metrics<3>
+        {
+            static const size_t LocalNodes  = 27;           //!< [-1:0:1]^3
+            static const size_t Neighbours  = LocalNodes-1; //!< exclude center=hub
+            static const size_t AtLevel1    = 6;            //!< along  6  axis
+            static const size_t AtLevel2    = 12;           //!< across 12 edges
+            static const size_t AtLevel3    = 8;            //!< across 8  vertices
+        };
         
         //! workspace metrics
         template <typename COORD>
@@ -21,56 +53,78 @@ namespace upsylon
             // types and definitions
             //
             //------------------------------------------------------------------
-            typedef Layout<COORD>                             LayoutType; //!< alias
-            typedef typename LayoutType::Loop                 Loop;       //!< alias
-            typedef typename LayoutType::coord                coord;      //!< alias
-            typedef typename LayoutType::const_coord          const_coord;//!< alias
-            typedef Topology::Hub<COORD>                      HubType;
-            typedef Topology::Node<COORD>                     NodeType;
-            static const size_t                               Dimensions = HubType::Dimensions;
-            static const size_t                               Directions = HubType::Directions;
-            static const size_t                               Neighbours = HubType::Neighbours;
-            static const size_t                               AtLevel1   = Metrics<Dimensions>::AtLevel1;
-            static const size_t                               AtLevel2   = Metrics<Dimensions>::AtLevel2;
-            static const size_t                               AtLevel3   = Metrics<Dimensions>::AtLevel3;
+            typedef Layout<COORD>                             LayoutType;                                   //!< alias
+            typedef typename LayoutType::Loop                 Loop;                                         //!< alias
+            typedef typename LayoutType::coord                coord;                                        //!< alias
+            typedef typename LayoutType::const_coord          const_coord;                                  //!< alias
+            typedef Topology::Hub<COORD>                      HubType;                                      //!< alias
+            typedef Topology::Node<COORD>                     NodeType;                                     //!< alias
+            static const size_t                               Dimensions = HubType::Dimensions;             //!< alias
+            static const size_t                               Neighbours = Metrics<Dimensions>::Neighbours; //!< number of possible neighbours
+            static const size_t                               Directions = Neighbours/2;                    //!< number of direction
+            static const size_t                               AtLevel1   = Metrics<Dimensions>::AtLevel1;   //!< alias
+            static const size_t                               AtLevel2   = Metrics<Dimensions>::AtLevel2;   //!< alias
+            static const size_t                               AtLevel3   = Metrics<Dimensions>::AtLevel3;   //!< alias
 
-            class Ghosts_ : public NodeType
+            //! base class for ghosts inner and outer sublayouts
+            /**
+             The positional NodeType will be used as peer information for I/O
+            */
+            class Ghosts_ : public NodeType, public counted_object
             {
             public:
-                const Topology::Level   level;
+                const Topology::Level   level; //!< kind of ghosts
+
+                //! setup
                 inline explicit Ghosts_(const_coord           &localSizes,
                                         const Coord1D         &globalRank,
-                                        const Topology::Level &l ) throw() :
-                NodeType(localSizes,globalRank),
-                level(l)
+                                        const Topology::Level &l,
+                                        const LayoutType      &innerLayout,
+                                        const LayoutType      &outerLayout) throw() :
+                NodeType(localSizes,globalRank), level(l),
+                inner(innerLayout),
+                outer(outerLayout)
                 {
                 }
 
+                //! cleanup
                 inline virtual ~Ghosts_() throw()
                 {
                 }
 
-                //const LayoutType inner;
-                //const LayoutType outer;
+                const LayoutType inner; //!< to send
+                const LayoutType outer; //!< to recv
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Ghosts_);
             };
 
-            typedef arc_ptr<Ghosts_> Ghosts;
+            typedef arc_ptr<Ghosts_> Ghosts; //!< pointer for multiple locations, same data
+
+            //! length dependent template for different metrics
+            template <size_t LENGTH> class GhostsStore : public memory::static_slots<Ghosts,LENGTH>
+            {
+            public:
+                inline explicit GhostsStore() throw() : memory::static_slots<Ghosts,LENGTH>() {} //!< setup
+                inline virtual ~GhostsStore() throw() {} //!< cleanup
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(GhostsStore);
+            };
+
 
             //------------------------------------------------------------------
             //
             // members
             //
             //------------------------------------------------------------------
-            const size_t     size;  //!< product of sizes
-            const LayoutType inner; //!< inner layout
-            const LayoutType outer; //!< outer layout
-            memory::static_slots<Ghosts,Neighbours> ghosts;
-            memory::static_slots<Ghosts,AtLevel1>   ghosts1;
-            memory::static_slots<Ghosts,AtLevel2>   ghosts2;
-            memory::static_slots<Ghosts,AtLevel3>   ghosts3;
+            const size_t            size;  //!< product of sizes
+            const LayoutType        inner; //!< inner layout
+            const LayoutType        outer; //!< outer layout
+            GhostsStore<Neighbours> ghosts;  //!< all the ghosts
+            GhostsStore<AtLevel1>   ghosts1; //!< Level1 ghosts
+            GhostsStore<AtLevel2>   ghosts2; //!< Level2 ghosts
+            GhostsStore<AtLevel3>   ghosts3; //!< Level3 ghosts
 
             //------------------------------------------------------------------
             //
@@ -81,7 +135,7 @@ namespace upsylon
             //! cleanup
             inline virtual ~Workspace() throw()
             {
-                Coord::LDZ_(size);
+                 bzset_(size);
             }
             
             //! setup
@@ -97,8 +151,11 @@ namespace upsylon
             outer( expandInner( abs_of(ng) ) ),
             ghosts(), ghosts1(), ghosts2(), ghosts3()
             {
-                std::cerr << "tile[" << this->rank << "]=" << inner << " -> " << outer << std::endl;
-                buildGhosts();
+                std::cerr << "\ttile[" << this->rank << "]=" << inner << " -> " << outer << std::endl;
+                if(ng>0)
+                {
+                    buildGhosts(ng-1);
+                }
             }
             
             
@@ -125,7 +182,7 @@ namespace upsylon
 
                     //----------------------------------------------------------
                     //
-                    // Expand per dimensionm
+                    // Expand per dimension, using Hub properties
                     //
                     //----------------------------------------------------------
                     Topology::Expand((Coord1D *)       & lower,
@@ -148,26 +205,28 @@ namespace upsylon
             }
 
 
-            inline void tryCreateGhosts(const_coord delta)
+            //! try to create Ghosts, shift=ng-1
+            inline void tryCreateGhosts(const_coord   delta,
+                                        const Coord1D shift)
             {
+                assert(shift>=0);
                 //--------------------------------------------------------------
                 //
-                // first pass: try to find the probe
+                // build the probe: set the center of layout and move
+                // coodinates according to delta
                 //
                 //--------------------------------------------------------------
                 coord probe = (inner.lower+inner.upper)/2;
                 for(size_t dim=0;dim<Dimensions;++dim)
                 {
-                    const Coord1D d = Coord::Of(delta,dim);
-                    switch( d )
+                    switch( Coord::Of(delta,dim)  )
                     {
                         case -1: Coord::Of(probe,dim) = Coord::Of(inner.lower,dim)-1; break;
                         case  1: Coord::Of(probe,dim) = Coord::Of(inner.upper,dim)+1; break;
-                        default:
-                            break;
+                        default: break;
                     }
                 }
-                std::cerr << "\tlink@delta=" << delta << " : probe=" << probe << " : ";
+                std::cerr << "\t\tlink@delta=" << delta << "\t: ";
                 if(outer.has(probe))
                 {
                     //----------------------------------------------------------
@@ -176,21 +235,47 @@ namespace upsylon
                     //
                     //----------------------------------------------------------
                     const Topology::Level glevel = Topology::LevelOf(delta);
-                    const_coord           granks = Coord::Regularized(this->sizes,this->ranks + delta);
+                    const_coord           granks = Coord::Regularized(this->sizes,this->ranks+delta);
 
                     //----------------------------------------------------------
                     //
                     // build recv/send layouts from delta
                     //
                     //----------------------------------------------------------
+                    coord inner_lower = inner.lower;
+                    coord inner_upper = inner.upper;
+                    coord outer_lower = inner.lower;
+                    coord outer_upper = inner.upper;
+
+                    for(size_t dim=0;dim<Dimensions;++dim)
+                    {
+                        switch( Coord::Of(delta,dim)  )
+                        {
+                            case  1:
+                                Coord::Of(outer_lower,dim) = Coord::Of(inner_upper,dim) + 1;
+                                Coord::Of(inner_lower,dim) = Coord::Of(inner_upper,dim) - shift;
+                                break;
+                            case -1:
+                                Coord::Of(outer_upper,dim) = Coord::Of(inner_lower,dim) - 1;
+                                Coord::Of(inner_upper,dim) = Coord::Of(inner_lower,dim) + shift;
+                                break;
+                            default: break;
+                        }
+                    }
+
+                    const LayoutType g_inner(inner_lower,inner_upper);
+                    const LayoutType g_outer(outer_lower,outer_upper);
+                    assert(outer.contains(g_outer));
+                    assert(inner.contains(g_inner));
 
                     //----------------------------------------------------------
                     //
                     // create ghosts and push them in their positions
                     //
                     //----------------------------------------------------------
-                    const Ghosts  g = new Ghosts_(this->sizes,Coord::GlobalRank(this->sizes,granks),glevel);
-                    std::cerr << "ghosts.ranks=" << g->ranks << " | " << g->rank << " <-- " << this->rank << std::endl;
+                    const Ghosts  g = new Ghosts_(this->sizes,Coord::GlobalRank(this->sizes,granks),glevel,g_inner,g_outer);
+                    std::cerr << "ghosts.ranks=" << g->ranks << " | " << g->rank << " <-- " << this->rank << " | send: " << g->inner << " recv: " << g->outer << std::endl;
+                    assert(g_inner.items==g_outer.items);
 
                     ghosts.push_back(g);
                     switch (glevel)
@@ -200,11 +285,6 @@ namespace upsylon
                         case Topology::Level3:  ghosts3.push_back(g); break;
                     }
 
-
-
-
-
-
                 }
                 else
                 {
@@ -212,9 +292,9 @@ namespace upsylon
                 }
             }
 
-            inline void buildGhosts()
+            inline void buildGhosts(const Coord1D shift)
             {
-                std::cerr << "links@ranks="<< this->ranks << std::endl;
+                std::cerr << "\tlinks@ranks="<< this->ranks << std::endl;
 
                 //! half loop on [-1:1]^Dimensions, using symetry
                 coord __lo(0); Coord::LD(__lo,-1);
@@ -225,8 +305,8 @@ namespace upsylon
                 //size_t levels[3] = { 0,0,0 };
                 for( size_t j=0; j<Directions; ++j, loop.next() )
                 {
-                    tryCreateGhosts( loop.value);
-                    tryCreateGhosts(-loop.value);
+                    tryCreateGhosts( loop.value,shift);
+                    tryCreateGhosts(-loop.value,shift);
                 }
                 //display_int::to(std::cerr << "links={",levels,3) << "}" << std::endl;
 

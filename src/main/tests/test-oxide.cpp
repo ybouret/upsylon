@@ -78,8 +78,8 @@ std::cerr << #FIELD << " : " << Oxide::Coord::Get<COORD>::FIELD << std::endl
     static inline void testCoord()
     {
         DISPLAY_COORD(Dimensions);
-        DISPLAY_COORD(LocalNodes);
-        DISPLAY_COORD(Neighbours);
+        //DISPLAY_COORD(LocalNodes);
+        //DISPLAY_COORD(Neighbours);
     }
 }
 

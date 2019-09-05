@@ -29,22 +29,6 @@ namespace upsylon
 
         static const char fn[] = "Oxide::Topology::";
 
-        void Topology:: CheckSameLevels( const Level lhs, const Level rhs )
-        {
-            if(0==(lhs&Levels)||0==(rhs&Levels) || (lhs!=rhs) )
-            {
-                throw exception("%sCheckSameLevels(%u,%u) failure",fn,lhs,rhs);
-            }
-        }
-
-        void Topology:: CheckGhosts( const Coord1D ng, const Coord1D width, const unsigned dim)
-        {
-            assert(ng>=0);
-            if(ng>width) throw exception("%sCheckGhosts(%ld>%ld in dimension#%u)",fn,long(ng),long(width),dim);
-
-            
-        }
-
         void Topology::  BuildHubStatus(const Coord1D *size,
                                         const Coord1D *rank,
                                         bool          *head,

@@ -40,9 +40,9 @@ namespace upsylon
                 //! cleanup
                 inline ~Score() throw()
                 {
-                    Coord::LDZ_(mapping);
-                    Coord::LDZ_(penality);
-                    Coord::LDZ_(maxItems);
+                    bzset_(mapping);
+                    bzset_(penality);
+                    bzset_(maxItems);
                 }
 
                 //! output

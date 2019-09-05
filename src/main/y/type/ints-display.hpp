@@ -8,7 +8,7 @@
 namespace upsylon
 {
     
-
+    //! display integer wrappers
     struct display_int
     {
         //! display [un]singed integer
@@ -17,6 +17,7 @@ namespace upsylon
                                   const size_t size,
                                   const bool   sgnd);
 
+        //! print separator
         static  std::ostream & sep(std::ostream &os,
                                    const char   *separator );
 

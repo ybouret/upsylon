@@ -22,11 +22,11 @@ namespace upsylon
         class static_slots
         {
         public:
-            Y_DECL_ARGS(T,type);                    //!< alias
-            static const size_t capacity = LENGTH;  //!< maximum items
-            static const size_t offset   = OFFSET;  //!< initial index for access
-            static const size_t bytes    = LENGTH * sizeof(type); //!< minimal memory bytes
-            static const size_t required = (bytes<=0) ? 1 : bytes;
+            Y_DECL_ARGS(T,type);                                   //!< aliases
+            static const size_t capacity = LENGTH;                 //!< maximum items
+            static const size_t offset   = OFFSET;                 //!< initial index for access
+            static const size_t bytes    = LENGTH * sizeof(type);  //!< minimal memory bytes
+            static const size_t required = (bytes<=0) ? 1 : bytes; //!< avoid zero length arrays
 
             //! setup
             explicit static_slots() throw() :

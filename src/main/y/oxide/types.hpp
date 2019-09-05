@@ -5,7 +5,8 @@
 #include "y/type/point3d.hpp"
 #include "y/container/sequence.hpp"
 #include "y/strfwd.hpp"
-#include "y/parops.hpp"
+#include "y/type/bzset.hpp"
+
 #include <cstring>
 #include <cstdlib>
 
@@ -19,71 +20,40 @@ namespace upsylon
     namespace Oxide
     {
         typedef unit_t           Coord1D; //!< 1D coordinate
-        typedef point2d<Coord1D> Coord2D; //!< 2D coordinate
-        typedef point3d<Coord1D> Coord3D; //!< 3D coordinate
+        typedef point2d<Coord1D> Coord2D; //!< 2D coordinates
+        typedef point3d<Coord1D> Coord3D; //!< 3D coordinate3
 
-        typedef bool          Bool1D;
-        typedef point2d<bool> Bool2D;
-        typedef point3d<bool> Bool3D;
+        typedef bool             Bool1D; //!< 1D boolean
+        typedef point2d<bool>    Bool2D; //!< 2D booleans
+        typedef point3d<bool>    Bool3D; //!< 3D booleans
 
+        //! Boolean vector companion
         template <typename T> struct Boolean;
-        template <> struct Boolean<Coord1D> { typedef Bool1D Type; };
-        template <> struct Boolean<Coord2D> { typedef Bool2D Type; };
-        template <> struct Boolean<Coord3D> { typedef Bool3D Type; };
-
-        template <size_t DIM> struct Metrics;
-        template <> struct  Metrics<1>
-        {
-            static const size_t LocalNodes  = 3; //!< [-1:0:1]
-            static const size_t Neighbours  = LocalNodes-1; //!< exclude center=hub
-            static const size_t AtLevel1    = 2; //!< along main axis back/forth
-            static const size_t AtLevel2    = 0; //!< N/A
-            static const size_t AtLevel3    = 0; //!< N/A
+        //! in 1D
+        template <> struct Boolean<Coord1D> { typedef Bool1D Type; //!< 1D bool
         };
-
-        template <> struct  Metrics<2>
-        {
-            static const size_t LocalNodes  = 9; //!< [-1:0:1]^2
-            static const size_t Neighbours  = LocalNodes-1;//!< exclude center=hub
-            static const size_t AtLevel1    = 4; //!< along main axis back/forth
-            static const size_t AtLevel2    = 4; //!< along diagonals
-            static const size_t AtLevel3    = 0; //!< N/A
+        //! in 2D
+        template <> struct Boolean<Coord2D> { typedef Bool2D Type; //!< 2D bool
         };
-
-        template <> struct  Metrics<3>
-        {
-            static const size_t LocalNodes  = 27; //!< [-1:0:1]^3
-            static const size_t Neighbours  = LocalNodes-1; //!< exclude center=hub
-            static const size_t AtLevel1    = 6;  //!< along  6  axis
-            static const size_t AtLevel2    = 12; //!< across 12 edges
-            static const size_t AtLevel3    = 8;  //!< across 8  vertices
+        //! in 3D
+        template <> struct Boolean<Coord3D> { typedef Bool3D Type; //!< 3D bool
         };
-
 
 
         //! operations on coordinates
         struct Coord
         {
 
-
             //! get static info
             template <typename COORD> struct Get
             {
-                static const size_t Dimensions = sizeof(COORD)/sizeof(Coord1D);   //!< the dimension
-                static const size_t LocalNodes = Metrics<Dimensions>::LocalNodes; //!< number of local nodes
-                static const size_t Neighbours = Metrics<Dimensions>::Neighbours; //!< number of neigbors to comm with
-                typedef typename Boolean<COORD>::Type BooleanType;
+                static const size_t                   Dimensions = sizeof(COORD)/sizeof(Coord1D);   //!< the dimension
+                typedef typename Boolean<COORD>::Type BooleanType; //!< Boolean Companion Type
             };
             
             //! x,y,z
             static const char *AxisName(const size_t dim) throw();
 
-            //! zero
-            template <typename COORD> static inline
-            void LDZ( COORD &c ) throw()
-            {
-                memset( (void*)&c, 0, sizeof(COORD) );
-            }
 
             //! set coordinate to j[,j[,j]]
             template <typename COORD> static inline
@@ -96,14 +66,7 @@ namespace upsylon
                 }
             }
 
-            //! force zero
-            template <typename COORD> static inline
-            void LDZ_( const COORD &c ) throw()
-            {
-                memset( (void*)&c, 0, sizeof(COORD) );
-            }
 
-            
             //! get specific coordinate
             template <typename COORD> static inline
             Coord1D & Of( COORD &c, const size_t dim) throw()
@@ -257,7 +220,7 @@ namespace upsylon
             // local ranks => global rank
             //
             //------------------------------------------------------------------
-
+            //! check consistency
             static void CheckRanks(const Coord1D *size, const Coord1D *rank, const unsigned dim);
 
             //! return global rank 1D: ranks.x
@@ -314,6 +277,7 @@ namespace upsylon
                 return ranks;
             }
 
+            //! regularize a neighbour set of ranks
             template <typename COORD>
             static inline COORD Regularized( const COORD &sizes, const COORD &ranks ) throw()
             {
@@ -339,6 +303,7 @@ namespace upsylon
             // Boolean Operations
             //
             //------------------------------------------------------------------
+            //! conversion to boolean
             template <typename COORD> static inline
             typename Get<COORD>::BooleanType ToBoolean( const COORD &c ) throw()
             {
@@ -346,7 +311,7 @@ namespace upsylon
                 bool *flag = (bool *)&ans;
                 for(size_t dim=0;dim<Get<COORD>::Dimensions;++dim)
                 {
-                    flag[dim] = Of(c,dim) != 0;
+                    flag[dim] = (Of(c,dim) != 0);
                 }
                 return ans;
             }
