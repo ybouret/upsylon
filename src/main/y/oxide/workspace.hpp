@@ -3,7 +3,6 @@
 #define Y_OXIDE_WORKSPACE_INCLUDED 1
 
 #include "y/oxide/topology.hpp"
-#include "y/memory/static-slots.hpp"
 #include "y/ptr/arc.hpp"
 #include "y/sequence/vector.hpp"
 
@@ -61,7 +60,7 @@ namespace upsylon
             typedef typename LayoutType::const_coord          const_coord;                                  //!< alias
             typedef Topology::Hub<COORD>                      HubType;                                      //!< alias
             typedef Topology::Node<COORD>                     NodeType;                                     //!< alias
-            static const size_t                               Dimensions = HubType::Dimensions;             //!< alias
+            static const size_t                               Dimensions = Coord::Get<COORD>::Dimensions;   //!< alias
             static const size_t                               Neighbours = Metrics<Dimensions>::Neighbours; //!< number of possible neighbours
             static const size_t                               Directions = Neighbours/2;                    //!< number of direction
             static const size_t                               AtLevel1   = Metrics<Dimensions>::AtLevel1;   //!< alias
@@ -349,7 +348,9 @@ namespace upsylon
             {
                 std::cerr << "\tlinks@ranks="<< this->ranks << std::endl;
 
-                //! half loop on [-1:1]^Dimensions, using symetry
+                //--------------------------------------------------------------
+                // half loop on [-1:1]^Dimensions, using symetry
+                //--------------------------------------------------------------
                 coord __lo(0); Coord::LD(__lo,-1);
                 coord __up(0); Coord::LD(__up, 1);
                 Loop loop(__lo,__up);

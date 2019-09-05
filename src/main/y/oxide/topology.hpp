@@ -9,9 +9,7 @@ namespace upsylon
     namespace Oxide
     {
 
-        
-
-        //! handle node topology
+        //! handle a compute node topology
         struct Topology
         {
 
@@ -89,8 +87,6 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 static  const size_t Dimensions = Coord::Get<COORD>::Dimensions; //!< workspace dimension
-                //static  const size_t Neighbours = Coord::Get<COORD>::Neighbours; //!< number of touching neighbours
-                //static  const size_t Directions = Neighbours/2;                  //!< number of directions
 
                 //--------------------------------------------------------------
                 //
