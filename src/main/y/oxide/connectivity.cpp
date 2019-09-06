@@ -6,16 +6,51 @@ namespace upsylon
     namespace Oxide
     {
 
+        const char *Connectivity:: Level2Text( const Level l ) throw()
+        {
+            switch (l)
+            {
+                case Level1: return "Level1";
+                case Level2: return "Level2";
+                case Level3: return "Level3";
+            }
+            return "?";
+        }
+
+        const char * Connectivity::  Way2Text( const Way w ) throw()
+        {
+            switch(w)
+            {
+                case Forward: return "Forward";
+                case Reverse: return "Reverse";
+            }
+            return "?";
+        }
+
+       Coord1D Connectivity::  Way2Sign( const Way w ) throw()
+        {
+            switch(w)
+            {
+                case Forward: return  1;
+                case Reverse: return -1;
+            }
+            return 0;
+        }
+
+
         static const char fn[] = "Oxide::Connectivity::";
 
         Connectivity::Level Connectivity::MakeLink(Coord1D       *direction,
                                                    Coord1D       *orientation,
+                                                   Way           *way,
                                                    const unsigned dims)
         {
             assert(direction);
             assert(orientation);
             assert(dims>=1);
             assert(dims<=3);
+            assert(way);
+            assert(Forward==*way);
 
             unsigned     lvl   = 0;
             bool         neg   = false;
@@ -28,6 +63,7 @@ namespace upsylon
                     if(lvl<=0)
                     {
                         neg   = true;
+                        *way  = Reverse; //!< first coordinate is negative
                     }
                     d=-1;
                     ++lvl;

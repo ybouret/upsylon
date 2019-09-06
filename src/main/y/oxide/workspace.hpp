@@ -149,7 +149,7 @@ namespace upsylon
                 first(g1),
                 second(g2)
                 {
-                    assert( LinkType::SameOrientation(g1->link,g2->link) );
+                    assert( LinkType::ArePaired(g1->link,g2->link) );
                 }
 
                 //! cleanup
@@ -296,7 +296,7 @@ namespace upsylon
                 }
                 if(outer.has(probe))
                 {
-                    std::cerr << "\t\tlink@delta=" << link.direction << "\t: ";
+                    std::cerr << link << ':';
                     //----------------------------------------------------------
                     //
                     // get info
@@ -393,6 +393,11 @@ namespace upsylon
                         if( async.back()->local )
                         {
                             builLocalGhostsPair();
+                        }
+                        else
+                        {
+                            const size_t nn = async.size();
+                            assert( LinkType::ArePaired(async[nn]->link,async[nn-1]->link) );
                         }
                     }
                 }
