@@ -217,7 +217,8 @@ namespace upsylon
             async( Neighbours, as_capacity ),
             local( Directions, as_capacity )
             {
-                std::cerr << "\ttile[" << this->rank << "]=" << inner << " -> " << outer << std::endl;
+                std::cerr << "\ttile[";
+                Coord::Disp(std::cerr,this->rank) << "]=" << inner << " -> " << outer << std::endl;
                 if(ng>0)
                 {
                     buildGhosts(ng-1);
@@ -349,9 +350,6 @@ namespace upsylon
                                                   ghostInnerLayout,
                                                   ghostOuterLayout,
                                                   outer);
-                    std::cerr << "ghosts.ranks=" << g->ranks << " | " << g->rank << " <-- " << this->rank << " | send: " << g->inner << " | recv: " << g->outer;
-                    if(g->async) std::cerr << " [async]"; else std::cerr << " [local]";
-                    std::cerr << std::endl;
                     async.push_back(g);
                     return true;
                 }

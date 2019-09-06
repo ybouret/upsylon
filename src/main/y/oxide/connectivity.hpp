@@ -20,16 +20,20 @@ namespace upsylon
                 Level3  //!< along a long diaogonal
             };
 
+            //! get textual representation
             static const char *Level2Text( const Level ) throw();
 
             //! depends on the sign of the first coordinate of the displacement
             enum Way
             {
-                Forward,
-                Reverse
+                Forward, //!< forward way, first  coordinate is  1
+                Reverse  //!< reverse way, second coordinate is -1
             };
 
+            //! get integer representation
             static  Coord1D     Way2Sign( const Way ) throw();
+
+            //! get textual representation
             static  const char *Way2Text( const Way ) throw();
 
             //! store the direction, orientation and connectivity level
@@ -71,12 +75,15 @@ namespace upsylon
                     return (lhs.level==rhs.level) && (rhs.orientation==lhs.orientation) && (lhs.way!=rhs.way) && (lhs.direction==-rhs.direction);
                 }
 
-                inline const char *levelText() const throw() { return Level2Text(level); }
-                inline const char *wayText() const throw()   { return Way2Text(way);     }
+                inline const char *levelText() const throw() { return Level2Text(level); } //!< texual represntation
+                inline const char *wayText() const throw()   { return Way2Text(way);     } //!< textual representation
 
+                //! print info
                 friend inline std::ostream & operator<<( std::ostream &os, const Link &link )
                 {
-                    os << "@<<" << link.wayText() << '.' << link.levelText() << '*' << link.orientation << '=' << link.direction << ">>";
+                    os << "@<<" << link.wayText() << '.' << link.levelText() << '*';
+                    Coord::Disp(os,link.orientation) << '=';
+                    Coord::Disp(os,link.direction) << ">>";
                     return os;
                 }
 

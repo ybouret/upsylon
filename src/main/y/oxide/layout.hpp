@@ -92,7 +92,12 @@ namespace upsylon
             //! display
             friend inline std::ostream & operator<<( std::ostream &os, const Layout &L )
             {
-                os << "{" << L.lower << "->" << L.upper << " : #" << L.width << "=" << L.items << "}";
+                os << "{";
+                Coord::Disp(os,L.lower) << "->";
+                Coord::Disp(os,L.upper) << " : #";
+                Coord::Disp(os,L.width) << "=";
+                const Coord1D n = L.items;
+                Coord::Disp(os,n,5) << "}";
                 return os;
             }
 

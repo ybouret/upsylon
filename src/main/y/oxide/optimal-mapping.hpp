@@ -48,8 +48,14 @@ namespace upsylon
                 //! output
                 inline friend std::ostream & operator<<( std::ostream &os, const Score &s )
                 {
-                    os << '(' << s.maxItems << '@' << '|' << s.mapping << '|' << '=' << s.penality << ')';
+                    const Coord1D mx = s.maxItems;
+                    os << '(';
+                    Coord::Disp(os,mx,5) << "@|";
+                    Coord::Disp(os,s.mapping) << "|=";
+                    Coord::Disp(os,s.penality) << ')';
                     return os;
+                    //os << '(' << s.maxItems << '@' << '|' << s.mapping << '|' << '=' << s.penality << ')';
+                    //return os;
                 }
 
                 //! compare by increasing maxItems

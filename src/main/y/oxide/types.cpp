@@ -33,6 +33,9 @@ namespace upsylon
             }
             return "?";
         }
+
+
+
     }
 
 }
@@ -80,6 +83,27 @@ namespace upsylon
                 const long r = long(rank[i]);
                 if(r<0||r>=s) throw exception("Oxide(rank#%u=%ld not in [0:%ld]", i, r, s-1 );
             }
+        }
+
+        const char * __fmt_coord( const Coord1D c, const string &fmt, string &tmp )
+        {
+            tmp = vformat(*fmt,c);
+            return *tmp;
+        }
+
+        std::ostream & Coord:: Display( std::ostream &os, const Coord1D *addr, const size_t size, const unsigned w)
+        {
+            assert(addr);
+            assert(size>0);
+            const string fmt = vformat("%%%uld",w);
+            string       tmp;
+            os << '[' << __fmt_coord(addr[0],fmt,tmp);
+            for(size_t i=1;i<size;++i)
+            {
+                os << ',' << __fmt_coord(addr[1], fmt, tmp);
+            }
+            os << ']' << '\'';
+            return os;
         }
     }
 }

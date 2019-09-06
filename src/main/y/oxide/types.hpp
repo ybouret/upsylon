@@ -50,7 +50,18 @@ namespace upsylon
                 static const unsigned                 Dimensions = sizeof(COORD)/sizeof(Coord1D);   //!< the dimension
                 typedef typename Boolean<COORD>::Type BooleanType; //!< Boolean Companion Type
             };
-            
+
+            //! display with width
+            static std::ostream & Display( std::ostream &os, const Coord1D *addr, const size_t size, const unsigned w);
+
+            //! display a coordinate as a vector with width for each component
+            template <typename COORD> static inline
+            std::ostream & Disp( std::ostream &os, const COORD &c, const unsigned w=3)
+            {
+                return Display(os, (const Coord1D *) &c, Get<COORD>::Dimensions, w);
+            }
+
+
             //! x,y,z
             static const char *AxisName(const size_t dim) throw();
 
