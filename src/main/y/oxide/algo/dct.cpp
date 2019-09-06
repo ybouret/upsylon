@@ -1,4 +1,4 @@
-#include "y/oxide/dct.hpp"
+#include "y/oxide/algo/dct.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon

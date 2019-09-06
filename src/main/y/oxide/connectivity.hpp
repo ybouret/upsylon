@@ -64,6 +64,7 @@ namespace upsylon
                 way(         link.way         ),
                 level(       link.level       )
                 {
+                    
                 }
 
                 //! cleanup
@@ -81,9 +82,9 @@ namespace upsylon
                 //! print info
                 friend inline std::ostream & operator<<( std::ostream &os, const Link &link )
                 {
-                    os << "@<<" << link.wayText() << '.' << link.levelText() << '*';
-                    Coord::Disp(os,link.orientation) << '=';
-                    Coord::Disp(os,link.direction) << ">>";
+                    os << "@<<" << link.levelText() << '.' << link.wayText() << '*';
+                    Coord::Disp(os,link.orientation,2) << '=';
+                    Coord::Disp(os,link.direction,2) << ">>";
                     return os;
                 }
 

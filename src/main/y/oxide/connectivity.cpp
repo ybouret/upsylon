@@ -10,9 +10,9 @@ namespace upsylon
         {
             switch (l)
             {
-                case Level1: return "Level1";
-                case Level2: return "Level2";
-                case Level3: return "Level3";
+                case Level1: return "L1";
+                case Level2: return "L2";
+                case Level3: return "L3";
             }
             return "?";
         }

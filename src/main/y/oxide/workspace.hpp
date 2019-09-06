@@ -2,9 +2,7 @@
 #ifndef Y_OXIDE_WORKSPACE_INCLUDED
 #define Y_OXIDE_WORKSPACE_INCLUDED 1
 
-#include "y/oxide/topology.hpp"
-#include "y/oxide/connectivity.hpp"
-
+#include "y/oxide/ghosts.hpp"
 #include "y/ptr/arc.hpp"
 #include "y/sequence/vector.hpp"
 
@@ -56,131 +54,25 @@ namespace upsylon
             // types and definitions
             //
             //------------------------------------------------------------------
-            typedef Layout<COORD>                             LayoutType;                                   //!< alias
-            typedef typename LayoutType::Loop                 Loop;                                         //!< alias
-            typedef typename LayoutType::coord                coord;                                        //!< alias
-            typedef typename LayoutType::const_coord          const_coord;                                  //!< alias
-            typedef Topology::Hub<COORD>                      HubType;                                      //!< alias
-            typedef Topology::Node<COORD>                     NodeType;                                     //!< alias
-            static const size_t                               Dimensions = Coord::Get<COORD>::Dimensions;   //!< alias
-            static const size_t                               Neighbours = Metrics<Dimensions>::Neighbours; //!< number of possible neighbours
-            static const size_t                               Directions = Neighbours/2;                    //!< number of direction
-            static const size_t                               AtLevel1   = Metrics<Dimensions>::AtLevel1;   //!< alias
-            static const size_t                               AtLevel2   = Metrics<Dimensions>::AtLevel2;   //!< alias
-            static const size_t                               AtLevel3   = Metrics<Dimensions>::AtLevel3;   //!< alias
-            typedef Connectivity::Link<COORD>                 LinkType; //!< alias
-
-            //! a ghost is a sub layout with indices
-            class Ghost : public LayoutType
-            {
-            public:
-                vector<Coord1D>  indices; //!< indices to pick up items later
-
-                //! setup build collecting indices
-                inline Ghost( const LayoutType &sub, const LayoutType &out ) :
-                LayoutType(sub), indices( this->items, as_capacity )
-                {
-                    assert(out.contains(*this));
-                    out.collect(indices, sub);
-                    assert(this->items==indices.size());
-                }
-
-                //! cleanup, do nothing
-                inline ~Ghost() throw()  {}
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Ghost);
-            };
-
-
-            //! base class for ghosts inner and outer sublayouts
-            /**
-             The positional NodeType will be used as peer information for I/O
-            */
-            class Ghosts_ : public NodeType, public counted_object
-            {
-            public:
-                const LinkType          link;  //!< directionality of ghosts
-                const Coord1D           host;   //!< global host rank
-                const bool              local;  //!< is local
-                const bool              async;  //!< is async
-
-                //! setup
-                inline explicit Ghosts_(const_coord           &localSizes,
-                                        const Coord1D         &globalRank,
-                                        const Coord1D         &globalHost,
-                                        const LinkType        &localLink,
-                                        const LayoutType      &innerArea,
-                                        const LayoutType      &outerArea,
-                                        const LayoutType      &outerLayout) throw() :
-                NodeType(localSizes,globalRank), link(localLink),
-                host(globalHost),
-                local( (host==this->rank)  ),
-                async( !local ),
-                inner(innerArea,outerLayout),
-                outer(outerArea,outerLayout)
-                {
-                    assert(inner.items==outer.items);
-                }
-
-                //! cleanup
-                inline virtual ~Ghosts_() throw()
-                {
-                }
-
-                const Ghost inner; //!< inner, to send
-                const Ghost outer; //!< outer, to recv
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Ghosts_);
-            };
-
-            typedef arc_ptr<Ghosts_> Ghosts; //!< pointer for multiple locations, same data
-
-            //! a pair of ghosts with same orientation
-            class GhostsPair
-            {
-            public:
-                const Ghosts first;  //!< first ghosts
-                const Ghosts second; //!< second ghosts
-
-                //! setup
-                inline GhostsPair( const Ghosts &g1, const Ghosts &g2) throw() :
-                first(g1),
-                second(g2)
-                {
-                    assert( LinkType::ArePaired(g1->link,g2->link) );
-                }
-
-                //! cleanup
-                inline ~GhostsPair() throw()
-                {
-                    
-                }
-
-                //! copy
-                inline GhostsPair( const GhostsPair &other ) throw() :
-                first(other.first), second(other.second)
-                {
-                }
-
-                //! get common orientation
-                inline const_coord & orientation() const throw()
-                {
-                    return first->orientation;
-                }
-
-                //! get common level
-                inline Connectivity::Level & level() const throw()
-                {
-                    return first->level;
-                }
-                
-            private:
-                Y_DISABLE_ASSIGN(GhostsPair);
-            };
+            typedef Layout<COORD>                             LayoutType;                                     //!< alias
+            typedef typename LayoutType::Loop                 Loop;                                           //!< alias
+            typedef typename LayoutType::coord                coord;                                          //!< alias
+            typedef typename LayoutType::const_coord          const_coord;                                    //!< alias
+            typedef Topology::Hub<COORD>                      HubType;                                        //!< alias
+            typedef Topology::Node<COORD>                     NodeType;                                       //!< alias
+            static const size_t                               Dimensions   = Coord::Get<COORD>::Dimensions;   //!< alias
+            static const size_t                               Neighbours   = Metrics<Dimensions>::Neighbours; //!< number of possible neighbours and directions
+            static const size_t                               Orientations = Neighbours/2;                    //!< number of orientations
+            static const size_t                               AtLevel1     = Metrics<Dimensions>::AtLevel1;   //!< alias
+            static const size_t                               AtLevel2     = Metrics<Dimensions>::AtLevel2;   //!< alias
+            static const size_t                               AtLevel3     = Metrics<Dimensions>::AtLevel3;   //!< alias
+            typedef Connectivity::Link<COORD>                 LinkType;                                       //!< alias
+            typedef _Ghosts<COORD>                            _GhostsType; //!< alias
+            typedef arc_ptr<_GhostsType>                      Ghosts;      //!< dynamic ghosts
+            typedef _GhostsPair<COORD>                        _GhostsPair; //!< lightweight pair
+            typedef arc_ptr<_GhostsPair>                      GhostsPair;  //!< dynamic ghosts pair
             
-            
+
             //------------------------------------------------------------------
             //
             // members
@@ -200,7 +92,7 @@ namespace upsylon
             //! cleanup
             inline virtual ~Workspace() throw()
             {
-                 bzset_(size);
+                bzset_(size);
             }
             
             //! setup
@@ -214,11 +106,10 @@ namespace upsylon
             size(  Coord::Product(this->sizes) ),
             inner( full.split(this->sizes,this->ranks) ),
             outer( expandInner(abs_of(ng)) ),
-            async( Neighbours, as_capacity ),
-            local( Directions, as_capacity )
+            async( Neighbours,   as_capacity ),
+            local( Orientations, as_capacity )
             {
-                std::cerr << "\ttile[";
-                Coord::Disp(std::cerr,this->rank) << "]=" << inner << " -> " << outer << std::endl;
+                std::cerr << "\t@tile["; Coord::Disp(std::cerr,this->rank,2) << "]=" << inner << " -> " << outer << std::endl;
                 if(ng>0)
                 {
                     buildGhosts(ng-1);
@@ -297,7 +188,7 @@ namespace upsylon
                 }
                 if(outer.has(probe))
                 {
-                    std::cerr << link << ':';
+                    std::cerr << "\t" << link << ':';
                     //----------------------------------------------------------
                     //
                     // get info
@@ -343,14 +234,15 @@ namespace upsylon
                     // create ghosts and push them in their positions
                     //
                     //----------------------------------------------------------
-                    const Ghosts  g = new Ghosts_(this->sizes,
-                                                  Coord::GlobalRank(this->sizes,granks),
-                                                  this->rank,
-                                                  link,
-                                                  ghostInnerLayout,
-                                                  ghostOuterLayout,
-                                                  outer);
-                    async.push_back(g);
+                    const Ghosts G = new _GhostsType(this->sizes,
+                                                     Coord::GlobalRank(this->sizes,granks),
+                                                     this->rank,
+                                                     link,
+                                                     ghostInnerLayout,
+                                                     ghostOuterLayout,
+                                                     outer);
+                    std::cerr << G << std::endl;
+                    async.push_back(G);
                     return true;
                 }
                 else
@@ -364,14 +256,12 @@ namespace upsylon
                 assert(async.size()>=2);
                 const Ghosts     g1 = async.back(); async.pop_back(); assert(g1->local);
                 const Ghosts     g2 = async.back(); async.pop_back(); assert(g2->local);
-                const GhostsPair gp(g1,g2);
+                const GhostsPair gp = new _GhostsPair(g1,g2);
                 local.push_back(gp);
             }
 
             inline void buildGhosts(const Coord1D shift)
             {
-                std::cerr << "\tlinks@ranks="<< this->ranks << std::endl;
-
                 //--------------------------------------------------------------
                 // half loop on [-1:1]^Dimensions, using symetry
                 //--------------------------------------------------------------
@@ -380,8 +270,10 @@ namespace upsylon
                 Loop loop(__lo,__up);
                 loop.start();
 
-                for( size_t j=0; j<Directions; ++j, loop.next() )
+
+                for( size_t j=0; j<Orientations; ++j, loop.next() )
                 {
+                    // two directions by orientation
                     const bool has_g1 = tryCreateGhosts( loop.value,shift);
                     const bool has_g2 = tryCreateGhosts(-loop.value,shift);
                     if( (has_g1 && has_g2) )
@@ -399,8 +291,8 @@ namespace upsylon
                         }
                     }
                 }
-                std::cerr << "#ghosts: " << async.size() << std::endl;
-                std::cerr << "#gpairs: " << local.size() << std::endl;
+                std::cerr << "\t#ghosts: " << async.size() << std::endl;
+                std::cerr << "\t#gpairs: " << local.size() << std::endl;
             }
 
         };

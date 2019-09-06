@@ -1,4 +1,4 @@
-#include "y/oxide/contour2d.hpp"
+#include "y/oxide/algo/contour2d.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/container/matrix.hpp"

@@ -100,7 +100,7 @@ namespace upsylon
             os << '[' << __fmt_coord(addr[0],fmt,tmp);
             for(size_t i=1;i<size;++i)
             {
-                os << ',' << __fmt_coord(addr[1], fmt, tmp);
+                os << ',' << __fmt_coord(addr[i], fmt, tmp);
             }
             os << ']' << '\'';
             return os;
