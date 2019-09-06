@@ -9,7 +9,7 @@
 //! test prolog
 #define Y_UTEST(NAME)                             \
 int upsylon_test_##NAME(int argc, char **argv) {  \
-(void)argc; (void)argv;
+(void)argc; (void)argv; static const char program[] = #NAME; (void)program;
 
 //! test epilog
 #define Y_UTEST_DONE() return 0; }

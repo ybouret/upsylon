@@ -10,29 +10,14 @@ namespace upsylon
     {
 
         //! handle a compute node topology
+        /**
+         utilities to build sizes, ranks and characteristic of
+         a single node
+         */
         struct Topology
         {
 
-            typedef unsigned   Level;          //!< number of varying coordinates
-            static const Level Level0 = 0x00;  //!< no
-            static const Level Level1 = 0x01;  //!< [x|y|z]
-            static const Level Level2 = 0x02;  //!< [xy|xz|yz]
-            static const Level Level3 = 0x04;  //!< [xyz]
-            static const Level Levels = Level1|Level2|Level3; //!< acceptable Level mask
-
-        private:
-            static Level LevelFor( const Coord1D *addr, const size_t size ) throw();
-
-        public:
-            //! count varying coordinates of a vector
-            template <typename COORD> static inline
-            Level LevelOf( const COORD &delta ) throw()
-            {
-                return LevelFor( (const Coord1D *) &delta, Coord::Get<COORD>::Dimensions );
-            }
-            
-
-            //! positional informations for a compute node
+            //! positional information for a compute node
             template <typename COORD>
             class Node
             {
@@ -62,16 +47,7 @@ namespace upsylon
             };
 
 
-        private:
-            static void BuildHubStatus(const Coord1D *size,
-                                       const Coord1D *rank,
-                                       bool    *head,
-                                       bool    *tail,
-                                       bool    *seq,
-                                       bool    *par,
-                                       bool    *bulk,
-                                       const unsigned dims) throw();
-        public:
+
 
             //! a Hub is a local compute node, with its information per dimension
             /**
@@ -96,7 +72,6 @@ namespace upsylon
                 typedef Node<COORD>                             NodeType;    //!< base type
                 typedef typename NodeType::coord                coord;       //!< alias
                 typedef typename NodeType::const_coord          const_coord; //!< alias
-                //typedef typename Layout<COORD>::Loop            Loop;        //!< multi loop alias
                 typedef typename Coord::Get<COORD>::BooleanType bool_type;   //!< boolean vector
                 typedef const bool_type                         const_bool;  //!< const boolean vector
 
@@ -129,18 +104,6 @@ namespace upsylon
                 par(head),
                 bulk(head)
                 {
-                    buildStatus();
-                }
-
-                //! cleanup
-                inline virtual ~Hub() throw()
-                {
-                }
-
-            private:
-                inline void buildStatus()
-                {
-                    // check the local situation
                     BuildHubStatus((const Coord1D *) & (this->sizes),
                                    (const Coord1D *) & (this->ranks),
                                    (bool *) &head,
@@ -149,21 +112,34 @@ namespace upsylon
                                    (bool *) &par,
                                    (bool *) &bulk,
                                    Dimensions);
-#if 0
-                    std::cerr << "ranks=" << this->ranks << "/" << this->sizes << std::endl;
-                    std::cerr << "head=" << head;
-                    std::cerr << ", tail=" << tail;
-                    std::cerr << ", bulk=" << bulk;
-                    std::cerr << ", par=" << par  << "/seq=" << seq << std::endl;
-#endif
+
                 }
 
+                //! cleanup
+                inline virtual ~Hub() throw()
+                {
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Hub);
             };
+
+            //! find out where the node is and its properties in the mapping
+            static void BuildHubStatus(const Coord1D *size,
+                                       const Coord1D *rank,
+                                       bool          *head,
+                                       bool          *tail,
+                                       bool          *seq,
+                                       bool          *par,
+                                       bool          *bulk,
+                                       const unsigned dims) throw();
 
             //! expand layout coordinates from a Hub data
             /**
-             According to the local status, expand the coordinates
-             per dimmension to build an outer layout
+             - According to the local status, expand the coordinates
+             per dimmension to build an outer layout.
+             - the lower, uper and width coordinates of a layout
+             are passed as initial arguments
              */
             static void Expand(Coord1D       *lower,
                                Coord1D       *upper,

@@ -24,6 +24,17 @@ namespace upsylon
 
         }
 
+        //! initialize from a text, must not change!
+        inline explicit tokenizer( const T *text ) throw():
+        curr_( text ),
+        last_( curr_+length_of(text) ),
+        token_(NULL),
+        units_(0),
+        count_(0)
+        {
+
+        }
+
         //! destructor
         inline virtual ~tokenizer() throw() { }
 
@@ -80,15 +91,21 @@ namespace upsylon
                      const core::string<T>       &input,
                      FUNC                        &is_sep)
         {
-            words.free();
             tokenizer tkn(input);
-            while(tkn.next(is_sep))
-            {
-                const core::string<T> s( tkn.token_, tkn.units_ );
-                words.push_back(s);
-            }
-            return words.size();
+            return tkn.split_all(words,is_sep);
         }
+
+        //! automatic splitting of a text
+        template <typename FUNC> static inline
+        size_t split(sequence< core::string<T> > &words,
+                     const T                     *input,
+                     FUNC                        &is_sep)
+        {
+            tokenizer tkn(input);
+            return tkn.split_all(words,is_sep);
+        }
+
+
 
         //! one pass count
         template<typename FUNC> static inline
@@ -107,6 +124,19 @@ namespace upsylon
         const T *token_; //!< token position
         size_t   units_; //!< token length, may be 0
         size_t   count_; //!< token count
+
+        template <typename FUNC>
+        size_t split_all(sequence< core::string<T> > &words,
+                         FUNC                        &is_sep)
+        {
+            words.free();
+            while(next(is_sep))
+            {
+                const core::string<T> s( token_, units_ );
+                words.push_back(s);
+            }
+            return words.size();
+        }
     };
 }
 

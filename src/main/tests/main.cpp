@@ -168,8 +168,9 @@ Y_UTEST_INIT(150)
     Y_UTEST(oxide_split);
     Y_UTEST(oxide_max_splits);
     Y_UTEST(oxide_ranks);
-    Y_UTEST(oxide_workspace);
+    Y_UTEST(oxide_workspaces);
     Y_UTEST(oxide_contour2d);
+    Y_UTEST(oxide_wksp);
 
 }
 Y_UTEST_EXEC()

@@ -47,7 +47,7 @@ namespace upsylon
             //! get static info
             template <typename COORD> struct Get
             {
-                static const size_t                   Dimensions = sizeof(COORD)/sizeof(Coord1D);   //!< the dimension
+                static const unsigned                 Dimensions = sizeof(COORD)/sizeof(Coord1D);   //!< the dimension
                 typedef typename Boolean<COORD>::Type BooleanType; //!< Boolean Companion Type
             };
             

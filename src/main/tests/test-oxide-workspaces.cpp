@@ -36,7 +36,7 @@ namespace
 
 #include "y/string/convert.hpp"
 
-Y_UTEST(oxide_workspace)
+Y_UTEST(oxide_workspaces)
 {
     size_t cores=2; if(argc>1) cores = string_convert::to<size_t>(argv[1],"cores");
 
