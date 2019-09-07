@@ -71,7 +71,7 @@ namespace upsylon
             typedef arc_ptr<_GhostsType>                      Ghosts;      //!< dynamic ghosts
 
             //! lightweight ghosts I/O context
-            struct GhostsIO
+            struct GIO
             {
                 const _GhostsType *forward; //!< if has forward
                 const _GhostsType *reverse; //!< if has reverse
@@ -88,7 +88,7 @@ namespace upsylon
             const LayoutType        outer;  //!< outer layout
         private:
             vector<Ghosts>          repository;           //!< all created ghosts
-            GhostsIO                ghosts[Orientations]; //!< placed according to their orientation
+            GIO                     ghosts[Orientations]; //!< placed according to their orientation
         public:
 
             //------------------------------------------------------------------
@@ -256,7 +256,7 @@ namespace upsylon
                         std::cerr << G << std::endl;
                         repository.push_back(G);
                     }
-                    GhostsIO &gio = ghosts[where];
+                    GIO &gio = ghosts[where];
                     switch(g->link.way)
                     {
                         case Connectivity::Forward:  assert(0==gio.forward); gio.forward = g; gio.status |= GhostsInfo::Fwd;  break;
