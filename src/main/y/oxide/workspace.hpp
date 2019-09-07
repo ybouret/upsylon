@@ -70,10 +70,12 @@ namespace upsylon
             typedef _Ghosts<COORD>                            _GhostsType; //!< alias
             typedef arc_ptr<_GhostsType>                      Ghosts;      //!< dynamic ghosts
 
+            //! lightweight ghosts I/O context
             struct GhostsIO
             {
-                const _GhostsType *forward;
-                const _GhostsType *reverse;
+                const _GhostsType *forward; //!< if has forward
+                const _GhostsType *reverse; //!< if has reverse
+                unsigned           status;  //!< from GhostsInfo
             };
 
             //------------------------------------------------------------------
@@ -85,7 +87,7 @@ namespace upsylon
             const LayoutType        inner;  //!< inner layout
             const LayoutType        outer;  //!< outer layout
         private:
-            vector<Ghosts>          repository; //!< all created ghosts
+            vector<Ghosts>          repository;           //!< all created ghosts
             GhostsIO                ghosts[Orientations]; //!< placed according to their orientation
         public:
 
@@ -257,15 +259,15 @@ namespace upsylon
                     GhostsIO &gio = ghosts[where];
                     switch(g->link.way)
                     {
-                        case Connectivity::Forward:  assert(0==gio.forward); gio.forward = g; break;
-                        case Connectivity::Reverse:  assert(0==gio.reverse); gio.reverse = g; break;
+                        case Connectivity::Forward:  assert(0==gio.forward); gio.forward = g; gio.status |= GhostsInfo::Fwd;  break;
+                        case Connectivity::Reverse:  assert(0==gio.reverse); gio.reverse = g; gio.status |= GhostsInfo::Both; break;
                     }
                 }
 
             }
 
 
-
+            //! loop over all directions, two for each orientation
             inline void buildGhosts(const Coord1D shift)
             {
                 //--------------------------------------------------------------

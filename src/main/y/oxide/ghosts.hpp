@@ -13,19 +13,25 @@ namespace upsylon
     namespace Oxide
     {
 
+        //! common data for Ghosts
         struct GhostsInfo
         {
-            static const char *Kind(const bool async) throw();
+            static const char *Kind(const bool async) throw(); //!< display async/local
+            static const unsigned None = 0x00;    //!< No Ghosts in a given orientation
+            static const unsigned Fwd  = 0x01;    //!< Only Forward Ghosts in a given orientation
+            static const unsigned Rev  = 0x02;    //!< Only Reverse Ghosts in ag iven orientation
+            static const unsigned Both = Fwd|Rev; //!< Both Ghosts in ag iven orientation
         };
+
+        typedef vector<Coord1D> GhostIndices; //!< alias
 
         //! a ghost is a sub layout with indices
         template <typename COORD>
         class Ghost : public Layout<COORD>
         {
         public:
-            typedef Layout<COORD> LayoutType;
-
-            vector<Coord1D>  indices; //!< indices to pick up items later
+            typedef Layout<COORD> LayoutType; //!< alias
+            const GhostIndices    indices;    //!< indices of sub layout in outer layout
 
             //! setup build collecting indices
             inline Ghost(const LayoutType &sub,
@@ -33,7 +39,7 @@ namespace upsylon
             LayoutType(sub), indices( this->items, as_capacity )
             {
                 assert(out.contains(*this));
-                out.collect(indices, sub);
+                out.collect( (GhostIndices &)indices, sub);
                 assert(this->items==indices.size());
             }
 
@@ -52,12 +58,12 @@ namespace upsylon
         class _Ghosts : public Topology::Node<COORD>, public counted_object
         {
         public:
-            typedef Ghost<COORD>                     GhostType;
-            typedef Topology::Node<COORD>            NodeType;
-            typedef Connectivity::Link<COORD>        LinkType;
-            typedef Layout<COORD>                    LayoutType;
-            typedef typename LayoutType::coord       coord;
-            typedef typename LayoutType::const_coord const_coord;
+            typedef Ghost<COORD>                     GhostType;   //!< alias
+            typedef Topology::Node<COORD>            NodeType;    //!< alias
+            typedef Connectivity::Link<COORD>        LinkType;    //!< alias
+            typedef Layout<COORD>                    LayoutType;  //!< alias
+            typedef typename LayoutType::coord       coord;       //!< alias
+            typedef typename LayoutType::const_coord const_coord; //!< alias
 
             const LinkType          link;  //!< directionality of ghosts
             const Coord1D           host;  //!< global host rank
@@ -90,8 +96,9 @@ namespace upsylon
             const GhostType inner; //!< inner, to send
             const GhostType outer; //!< outer, to recv
 
-            inline const char *kind() const throw() { return GhostsInfo::Kind(async); }
+            inline const char *kind() const throw() { return GhostsInfo::Kind(async); } //!< return async|local
 
+            //! display information
             friend inline std::ostream & operator<<( std::ostream &os, const _Ghosts &G )
             {
                 Coord::Disp(os << G.kind(),G.host,2) << "-->";
@@ -102,38 +109,6 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(_Ghosts);
         };
-
-        //! a pair of ghosts with same orientation
-        template <typename COORD>
-        class _GhostsPair : public counted_object
-        {
-        public:
-            typedef arc_ptr< _Ghosts<COORD> > Ghosts;
-            const Ghosts forward;  //!< forward ghosts
-            const Ghosts reverse;  //!< reverse ghosts
-
-            //! setup
-            inline _GhostsPair( const Ghosts &g1, const Ghosts &g2) throw() :
-            forward(g1),
-            reverse(g2)
-            {
-                assert( Connectivity::Link<COORD>::ArePaired(g1->link,g2->link) );
-                if( Connectivity::Reverse == forward->link.way )
-                {
-                    cswap(forward,reverse);
-                }
-            }
-
-            //! cleanup
-            inline ~_GhostsPair() throw()
-            {
-
-            }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(_GhostsPair);
-        };
-
         
 
     }
