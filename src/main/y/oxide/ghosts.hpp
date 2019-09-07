@@ -95,7 +95,7 @@ namespace upsylon
             friend inline std::ostream & operator<<( std::ostream &os, const _Ghosts &G )
             {
                 Coord::Disp(os << G.kind(),G.host,2) << "-->";
-                Coord::Disp(os,G.rank) << "|inner=" << G.inner << " G.outer=" << G.outer;
+                Coord::Disp(os,G.rank) << "|inner=" << G.inner << " outer=" << G.outer;
                 return os;
             }
 
@@ -134,27 +134,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(_GhostsPair);
         };
 
-        enum GhostsMultiplicity
-        {
-            SingleGhosts,
-            PairedGhosts
-        };
-
-        template <typename COORD>
-        class GhostsIO
-        {
-        public:
-            const GhostsMultiplicity multiplicity;
-            union
-            {
-                const _GhostsPair<COORD> *paired;
-                const _Ghosts<COORD>     *single;
-            };
-
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(GhostsIO);
-        };
+        
 
     }
 }

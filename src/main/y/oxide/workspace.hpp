@@ -69,9 +69,12 @@ namespace upsylon
             typedef Connectivity::Link<COORD>                 LinkType;                                       //!< alias
             typedef _Ghosts<COORD>                            _GhostsType; //!< alias
             typedef arc_ptr<_GhostsType>                      Ghosts;      //!< dynamic ghosts
-            typedef _GhostsPair<COORD>                        _GhostsPair; //!< lightweight pair
-            typedef arc_ptr<_GhostsPair>                      GhostsPair;  //!< dynamic ghosts pair
-            
+
+            struct GhostsIO
+            {
+                const _GhostsType *forward;
+                const _GhostsType *reverse;
+            };
 
             //------------------------------------------------------------------
             //
@@ -81,9 +84,11 @@ namespace upsylon
             const size_t            size;   //!< product of sizes
             const LayoutType        inner;  //!< inner layout
             const LayoutType        outer;  //!< outer layout
-            vector<Ghosts>          async;  //!< async ghosts
-            vector<GhostsPair>      local;  //!< local pairs
-            
+        private:
+            vector<Ghosts>          repository; //!< all created ghosts
+            GhostsIO                ghosts[Orientations]; //!< placed according to their orientation
+        public:
+
             //------------------------------------------------------------------
             //
             // methods
@@ -106,9 +111,10 @@ namespace upsylon
             size(  Coord::Product(this->sizes) ),
             inner( full.split(this->sizes,this->ranks) ),
             outer( expandInner(abs_of(ng)) ),
-            async( Neighbours,   as_capacity ),
-            local( Orientations, as_capacity )
+            repository( Neighbours, as_capacity ),
+            ghosts()
             {
+                memset( ghosts, 0, sizeof(ghosts) );
                 std::cerr << "\t@tile["; Coord::Disp(std::cerr,this->rank,2) << "]=" << inner << " -> " << outer << std::endl;
                 if(ng>0)
                 {
@@ -164,8 +170,9 @@ namespace upsylon
 
 
             //! try to create Ghosts, shift=ng-1
-            inline bool tryCreateGhosts(const_coord   delta,
-                                        const Coord1D shift)
+            inline void findGhosts(const size_t  where,
+                                   const_coord   delta,
+                                   const Coord1D shift)
             {
                 assert(shift>=0);
                 const LinkType link(delta);
@@ -186,6 +193,7 @@ namespace upsylon
                         default: break;
                     }
                 }
+
                 if(outer.has(probe))
                 {
                     std::cerr << "\t" << link << ':';
@@ -234,31 +242,29 @@ namespace upsylon
                     // create ghosts and push them in their positions
                     //
                     //----------------------------------------------------------
-                    const Ghosts G = new _GhostsType(this->sizes,
+                    _GhostsType *g = new _GhostsType(this->sizes,
                                                      Coord::GlobalRank(this->sizes,granks),
                                                      this->rank,
                                                      link,
                                                      ghostInnerLayout,
                                                      ghostOuterLayout,
                                                      outer);
-                    std::cerr << G << std::endl;
-                    async.push_back(G);
-                    return true;
+                    {
+                        const Ghosts G = g;
+                        std::cerr << G << std::endl;
+                        repository.push_back(G);
+                    }
+                    GhostsIO &gio = ghosts[where];
+                    switch(g->link.way)
+                    {
+                        case Connectivity::Forward:  assert(0==gio.forward); gio.forward = g; break;
+                        case Connectivity::Reverse:  assert(0==gio.reverse); gio.reverse = g; break;
+                    }
                 }
-                else
-                {
-                    return false;
-                }
+
             }
 
-            inline void builLocalGhostsPair()
-            {
-                assert(async.size()>=2);
-                const Ghosts     g1 = async.back(); async.pop_back(); assert(g1->local);
-                const Ghosts     g2 = async.back(); async.pop_back(); assert(g2->local);
-                const GhostsPair gp = new _GhostsPair(g1,g2);
-                local.push_back(gp);
-            }
+
 
             inline void buildGhosts(const Coord1D shift)
             {
@@ -274,25 +280,10 @@ namespace upsylon
                 for( size_t j=0; j<Orientations; ++j, loop.next() )
                 {
                     // two directions by orientation
-                    const bool has_g1 = tryCreateGhosts( loop.value,shift);
-                    const bool has_g2 = tryCreateGhosts(-loop.value,shift);
-                    if( (has_g1 && has_g2) )
-                    {
-                        // a pair was generated
-                        assert(async.size()>=2);
-                        if( async.back()->local )
-                        {
-                            builLocalGhostsPair();
-                        }
-                        else
-                        {
-                            const size_t nn = async.size();
-                            assert( LinkType::ArePaired(async[nn]->link,async[nn-1]->link) );
-                        }
-                    }
+                    findGhosts(j, loop.value,shift);
+                    findGhosts(j,-loop.value,shift);
                 }
-                std::cerr << "\t#ghosts: " << async.size() << std::endl;
-                std::cerr << "\t#gpairs: " << local.size() << std::endl;
+                std::cerr << "\t\t#ghosts=" << repository.size() << std::endl;
             }
 
         };
