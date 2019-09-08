@@ -213,8 +213,12 @@ namespace upsylon
                     //----------------------------------------------------------
                     coord inner_lower = inner.lower;
                     coord inner_upper = inner.upper;
+
                     coord outer_lower = inner.lower;
                     coord outer_upper = inner.upper;
+
+                    coord heart_lower = inner.lower;
+                    coord heart_upper = inner.upper;
 
                     for(size_t dim=0;dim<Dimensions;++dim)
                     {
@@ -224,11 +228,13 @@ namespace upsylon
                                 Coord::Of(outer_upper,dim) = Coord::Of(outer.upper,dim);
                                 Coord::Of(outer_lower,dim) = Coord::Of(inner_upper,dim) + 1;
                                 Coord::Of(inner_lower,dim) = Coord::Of(inner_upper,dim) - shift;
+                                Coord::Of(heart_upper,dim) = Coord::Of(inner_lower,dim) - 1;
                                 break;
                             case -1:
                                 Coord::Of(outer_lower,dim) = Coord::Of(outer.lower,dim);
                                 Coord::Of(outer_upper,dim) = Coord::Of(inner_lower,dim) - 1;
                                 Coord::Of(inner_upper,dim) = Coord::Of(inner_lower,dim) + shift;
+                                Coord::Of(heart_lower,dim) = Coord::Of(inner_upper,dim) + 1;
                                 break;
                             default: break;
                         }
