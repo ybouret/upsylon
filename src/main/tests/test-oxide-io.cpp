@@ -1,10 +1,9 @@
 #include "y/oxide/field3d.hpp"
-#include "y/oxide/field/io.hpp"
-#include "y/ios/imstream.hpp"
 
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/memory/pooled.hpp"
+#include "y/ios/ovstream.hpp"
 
 #include <typeinfo>
 
@@ -28,7 +27,7 @@ namespace
     template <typename T>
     static inline void run_with( ios::plugin &plg )
     {
-        IO::Block io(1024*1024);
+        ios::ovstream io(1024*1024);
 
 
         for(size_t cycle=0;cycle<100;++cycle)

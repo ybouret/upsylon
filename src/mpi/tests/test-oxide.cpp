@@ -21,9 +21,10 @@ void fill( Field<T> &F )
 
 Y_UTEST(oxide)
 {
+    static const int tag = 7;
     Y_MPI(SINGLE);
-    IO::Block send_block(1024);
-    IO::Block recv_block(1024);
+    mpi::vBlock send_block(1024);
+    mpi::vBlock recv_block(1024);
     vector<Coord1D> indices;
     ios::plugin_raw<double> plg;
 
@@ -65,16 +66,16 @@ Y_UTEST(oxide)
             for(int r=1;r<MPI.size;++r)
             {
                 // first send, used packed
-                Comm::Send(MPI,send_block,r,comm_variable_size);
+                MPI.vSend(comm_variable_size,send_block,r,tag);
                 // second send
-                Comm::Send(MPI,send_block,r,comm_constant_size);
+                MPI.vSend(comm_constant_size,send_block,r,tag);
             }
         }
         else
         {
             F.ld(0);
-            Comm::Recv(MPI,recv_block,0,comm_variable_size);
-            Comm::Recv(MPI,recv_block,0,comm_constant_size);
+            MPI.vRecv(comm_variable_size, recv_block, 0, tag);
+            MPI.vRecv(comm_constant_size, recv_block, 0, tag);
             const size_t nl = F.load_only(indices,recv_block,plg.load);
             Y_ASSERT(nl==recv_block.size());
         }
@@ -97,20 +98,22 @@ Y_UTEST(oxide)
             {
                 for(int r=1;r<MPI.size;++r)
                 {
-                    Comm::SendRecv(MPI, send_block, r, recv_block, r,comm_variable_size);
-                    Comm::SendRecv(MPI, send_block, r, recv_block, r,comm_constant_size);
+                    MPI.vSendRecv(comm_variable_size, send_block, r, tag, recv_block, r, tag);
+                    MPI.vSendRecv(comm_constant_size, send_block, r, tag, recv_block, r, tag);
+                    //Comm::SendRecv(MPI, send_block, r, recv_block, r,comm_variable_size);
+                    //Comm::SendRecv(MPI, send_block, r, recv_block, r,comm_constant_size);
                 }
             }
             else
             {
-                Comm::SendRecv(MPI, send_block, 0, recv_block, 0, comm_variable_size);
-                Comm::SendRecv(MPI, send_block, 0, recv_block, 0, comm_constant_size);
+                MPI.vSendRecv(comm_variable_size, send_block, 0, tag, recv_block, 0, tag);
+                MPI.vSendRecv(comm_constant_size, send_block, 0, tag, recv_block, 0, tag);
             }
         }
         else
         {
-            Comm::SendRecv(MPI, send_block, 0, recv_block, 0,comm_variable_size);
-            Comm::SendRecv(MPI, send_block, 0, recv_block, 0,comm_constant_size);
+            MPI.vSendRecv(comm_variable_size, send_block, 0, tag, recv_block, 0, tag);
+            MPI.vSendRecv(comm_constant_size, send_block, 0, tag, recv_block, 0, tag);
         }
         MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
         F.load_only(indices,recv_block,plg.load);

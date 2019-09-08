@@ -4,12 +4,12 @@
 #define Y_OXIDE_FIELD_MPI_INCLUDED 1
 
 #include "y/mpi/mpi.hpp"
-#include "y/oxide/field/io.hpp"
 
 namespace upsylon
 {
     namespace Oxide
     {
+#if 0
         //! MPI related routines
         struct Comm
         {
@@ -48,8 +48,8 @@ namespace upsylon
             {
                 MPI.vSendRecv(mode,sendBlock,target,Tag,recvBlock,source,Tag);
             }
-
         };
+#endif
     }
 }
 
