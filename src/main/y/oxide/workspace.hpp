@@ -4,7 +4,7 @@
 
 #include "y/oxide/ghosts.hpp"
 #include "y/ptr/arc.hpp"
-#include "y/sequence/vector.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon
 {
@@ -83,9 +83,11 @@ namespace upsylon
             // members
             //
             //------------------------------------------------------------------
-            const size_t            size;   //!< product of sizes
-            const LayoutType        inner;  //!< inner layout
-            const LayoutType        outer;  //!< outer layout
+            const size_t               size;   //!< product of sizes
+            const LayoutType           inner;  //!< inner layout
+            const LayoutType           outer;  //!< outer layout
+            const auto_ptr<LayoutType> heart;  //!< optional heart layout
+
         private:
             vector<Ghosts>          repository;           //!< all created ghosts
             GIO                     ghosts[Orientations]; //!< placed according to their orientation
@@ -113,6 +115,7 @@ namespace upsylon
             size(  Coord::Product(this->sizes) ),
             inner( full.split(this->sizes,this->ranks) ),
             outer( expandInner(abs_of(ng)) ),
+            heart(0),
             repository( Neighbours, as_capacity ),
             ghosts()
             {
@@ -174,7 +177,9 @@ namespace upsylon
             //! try to create Ghosts, shift=ng-1
             inline void findGhosts(const size_t  where,
                                    const_coord   delta,
-                                   const Coord1D shift)
+                                   const Coord1D shift,
+                                   coord        &heart_lower,
+                                   coord        &heart_upper)
             {
                 assert(shift>=0);
                 const LinkType link(delta);
@@ -219,19 +224,21 @@ namespace upsylon
 
                     for(size_t dim=0;dim<Dimensions;++dim)
                     {
+                        Coord1D &h_up = Coord::Of(heart_upper,dim);
+                        Coord1D &h_lo = Coord::Of(heart_lower,dim);
                         switch( Coord::Of(link.direction,dim)  )
                         {
                             case  1:
                                 Coord::Of(outer_upper,dim) = Coord::Of(outer.upper,dim);
                                 Coord::Of(outer_lower,dim) = Coord::Of(inner_upper,dim) + 1;
                                 Coord::Of(inner_lower,dim) = Coord::Of(inner_upper,dim) - shift;
-                                //Coord::Of(heart_upper,dim) = Coord::Of(inner_lower,dim) - 1;
+                                h_up = min_of(Coord::Of(inner_lower,dim) - 1,h_up);
                                 break;
                             case -1:
                                 Coord::Of(outer_lower,dim) = Coord::Of(outer.lower,dim);
                                 Coord::Of(outer_upper,dim) = Coord::Of(inner_lower,dim) - 1;
                                 Coord::Of(inner_upper,dim) = Coord::Of(inner_lower,dim) + shift;
-                                //Coord::Of(heart_lower,dim) = Coord::Of(inner_upper,dim) + 1;
+                                h_lo = max_of(Coord::Of(inner_upper,dim) + 1, h_lo);
                                 break;
                             default: break;
                         }
@@ -286,11 +293,30 @@ namespace upsylon
                 for( size_t j=0; j<Orientations; ++j, loop.next() )
                 {
                     // two directions by orientation
-                    findGhosts(j, loop.value,shift);
-                    findGhosts(j,-loop.value,shift);
+                    findGhosts(j, loop.value,shift,heart_lower,heart_upper);
+                    findGhosts(j,-loop.value,shift,heart_lower,heart_upper);
                 }
                 std::cerr << "\t\t#ghosts=" << repository.size() << std::endl;
-
+                std::cerr << "\t\theart_lower=" << heart_lower << std::endl;
+                std::cerr << "\t\theart_upper=" << heart_upper << std::endl;
+                bool hasHeart = true;
+                for(size_t dim=0;dim<Dimensions;++dim)
+                {
+                    if( Coord::Of(heart_lower,dim) > Coord::Of(heart_upper,dim) )
+                    {
+                        hasHeart = false;
+                        break;
+                    }
+                }
+                if(hasHeart)
+                {
+                    (auto_ptr<LayoutType>&)heart = new LayoutType(heart_lower,heart_upper);
+                    std::cerr << "\t\t\theart=" << heart << std::endl;
+                }
+                else
+                {
+                    std::cerr << "\t\t\tNo Heart!" << std::endl;
+                }
             }
 
         };
