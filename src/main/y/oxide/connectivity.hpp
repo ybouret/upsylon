@@ -82,7 +82,7 @@ namespace upsylon
                 //! print info
                 friend inline std::ostream & operator<<( std::ostream &os, const Link &link )
                 {
-                    os << "@<<" << link.levelText() << '.' << link.wayText() << '*';
+                    os << "<<" << link.levelText() << '.' << link.wayText() << '*';
                     Coord::Disp(os,link.orientation,2) << '=';
                     Coord::Disp(os,link.direction,2) << ">>";
                     return os;

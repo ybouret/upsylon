@@ -82,7 +82,6 @@ namespace upsylon
             ghosts()
             {
                 memset( ghosts, 0, sizeof(ghosts) );
-                std::cerr << "\t@tile["; Coord::Disp(std::cerr,this->rank,2) << "]=" << inner << " -> " << outer << std::endl;
                 if(ng>0)
                 {
                     buildGhosts(ng-1);
@@ -96,6 +95,22 @@ namespace upsylon
                 os << pfx << "inner=" << inner << std::endl;
                 os << pfx << "outer=" << outer << std::endl;
                 os << pfx << "heart=" << heart << std::endl;
+                os << pfx << "#ghosts=" << repository.size() << std::endl;
+                for(Coord1D i=0;i<Coord1D(Orientations);++i)
+                {
+                    os << pfx << "@orientation#" << std::setw(2) << i << " : " << std::endl;
+                    const GIO &gio = ghosts[i];
+                    if(gio.forward)
+                    {
+                        assert( 0!= (gio.status&GhostsInfo::Fwd) );
+                        std::cerr << pfx << "|_" << (*gio.forward) << std::endl;
+                    }
+                    if(gio.reverse)
+                    {
+                        assert( 0!= (gio.status&GhostsInfo::Rev) );
+                        std::cerr << pfx << "|_" << (*gio.reverse) << std::endl;
+                    }
+                }
             }
             
             
@@ -184,7 +199,6 @@ namespace upsylon
 
                 if(outer.has(probe))
                 {
-                    std::cerr << "\t" << link << ':';
                     //----------------------------------------------------------
                     //
                     // get info
@@ -260,15 +274,12 @@ namespace upsylon
                                                    ghostInnerLayout,
                                                    ghostOuterLayout,
                                                    outer);
-                    {
-                        const Ghosts G = g;
-                        std::cerr << G << std::endl;
-                        repository.push_back(G);
-                    }
+                    { const Ghosts G = g; repository.push_back(G); }
+
                     GIO &gio = ghosts[where];
                     switch(g->link.way)
                     {
-                        case Connectivity::Forward:  assert(0==gio.forward); gio.forward = g; gio.status |= GhostsInfo::Fwd;  break;
+                        case Connectivity::Forward:  assert(0==gio.forward); gio.forward = g; gio.status |= GhostsInfo::Fwd; break;
                         case Connectivity::Reverse:  assert(0==gio.reverse); gio.reverse = g; gio.status |= GhostsInfo::Rev; break;
                     }
                 }
@@ -304,9 +315,6 @@ namespace upsylon
                         findGhosts(j,-loop.value,shift,heart_lower,heart_upper);
                     }
                 }
-                std::cerr << "\t\t#ghosts=" << repository.size() << std::endl;
-                std::cerr << "\t\theart_lower=" << heart_lower << std::endl;
-                std::cerr << "\t\theart_upper=" << heart_upper << std::endl;
 
                 //--------------------------------------------------------------
                 //
@@ -325,12 +333,8 @@ namespace upsylon
                 if(hasHeart)
                 {
                     (auto_ptr<LayoutType>&)heart = new LayoutType(heart_lower,heart_upper);
-                    std::cerr << "\t\t\theart=" << heart << std::endl;
                 }
-                else
-                {
-                    std::cerr << "\t\t\tNo Heart!" << std::endl;
-                }
+
             }
 
         };

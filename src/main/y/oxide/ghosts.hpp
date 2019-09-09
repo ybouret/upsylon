@@ -7,6 +7,7 @@
 #include "y/oxide/topology.hpp"
 #include "y/ptr/arc.hpp"
 #include "y/sequence/vector.hpp"
+#include <iomanip>
 
 namespace upsylon
 {
@@ -101,8 +102,8 @@ namespace upsylon
             //! display information
             friend inline std::ostream & operator<<( std::ostream &os, const _Ghosts &G )
             {
-                Coord::Disp(os << G.kind(),G.host,2) << "-->";
-                Coord::Disp(os,G.rank) << "|inner=" << G.inner << " outer=" << G.outer;
+                os << G.link << G.kind() << ':' << std::setw(2) << G.host << "->" << std::setw(2) << G.rank;
+                os << "|inner=" << G.inner << " outer=" << G.outer;
                 return os;
             }
 

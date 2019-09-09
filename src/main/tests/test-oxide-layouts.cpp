@@ -23,16 +23,17 @@ namespace
     Coord2D strings2D( const strings &s, const char *id)
     {
         assert(2==s.size());
-        return Coord2D(string_convert::to<unit_t>(s[1],id), string_convert::to<unit_t>(s[2],id) );
+        return Coord2D(string_convert::to<unit_t>(s[1],id),
+                       string_convert::to<unit_t>(s[2],id) );
     }
 
     static inline
     Coord3D strings3D( const strings &s, const char *id)
     {
-        assert(2==s.size());
+        assert(3==s.size());
         return Coord3D(string_convert::to<unit_t>(s[1],id),
                        string_convert::to<unit_t>(s[2],id),
-                       string_convert::to<unit_t>(s[2],id) );
+                       string_convert::to<unit_t>(s[3],id) );
     }
 
     template <typename COORD>
@@ -51,6 +52,7 @@ namespace
         const Coord1D size = Coord::Product(mapping);
         for(Coord1D   rank = 0; rank<size; ++rank)
         {
+            std::cerr << "tile[" << rank << "]" << std::endl;
             Layouts<COORD> sub(full,mapping,rank,pbc,ng);
             sub.display(std::cerr,"\t(*) ");
         }
