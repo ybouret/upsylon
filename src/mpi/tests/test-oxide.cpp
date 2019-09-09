@@ -1,4 +1,3 @@
-
 #include "y/oxide/field/mpi.hpp"
 #include "y/oxide/field3d.hpp"
 #include "y/ios/imstream.hpp"
@@ -23,8 +22,8 @@ Y_UTEST(oxide)
 {
     static const int tag = 7;
     Y_MPI(SINGLE);
-    mpi::vBlock send_block(1024);
-    mpi::vBlock recv_block(1024);
+    mpi::vBlock     send_block(1024);
+    mpi::vBlock     recv_block(1024);
     vector<Coord1D> indices;
     ios::plugin_raw<double> plg;
 

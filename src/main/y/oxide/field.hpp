@@ -1,6 +1,4 @@
-
 //! \file
-
 #ifndef Y_OXIDE_FIELD_INCLUDED
 #define Y_OXIDE_FIELD_INCLUDED 1
 

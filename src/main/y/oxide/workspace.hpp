@@ -26,7 +26,7 @@ namespace upsylon
             typedef typename LayoutsType::GIO        GIO;                                      //!< alias
             static const size_t                      Dimensions   = LayoutType::Dimensions;    //!< alias
             static const size_t                      Orientations = LayoutsType::Orientations; //!< alias
-
+            typedef _Ghosts<COORD>                   Ghosts;                                   //!< alias
 
             //------------------------------------------------------------------
             //
@@ -147,8 +147,62 @@ namespace upsylon
                 }
             }
 
+
+            size_t asyncSave(const Connectivity::Way way,
+                             const size_t            orientation,
+                             ios::ostream           &fp,
+                             const FieldType        &F,
+                             FieldType::SaveProc     proc) const
+            {
+                assert(owns(F));
+                const Ghosts *G = getAsync(way,orientation);
+                if(G)
+                {
+                     return F.save(G->inner.indices,fp,proc);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
+            size_t asyncLoad(const Connectivity::Way way,
+                             const size_t            orientation,
+                             ios::istream           &fp,
+                             const FieldType        &F,
+                             FieldType::LoadProc     proc)
+            {
+                assert(owns(F));
+                const Ghosts *G = getAsync(way,orientation);
+                if(G)
+                {
+                    return F.load(G->outer.indices,fp,proc);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Workspace);
+            const Ghosts *getAsync(const Connectivity::Way way,
+                                   const size_t            orientation) const throw()
+            {
+                assert(orientation<Orientations);
+                const GIO &gio = this->ghosts[orientation];
+                if(gio.async)
+                {
+                    switch(way)
+                    {
+                        case Connectivity::Forward: return gio.forward;
+                        case Connectivity::Reverse: return gio.reverse;
+                    }
+                }
+                return 0;
+            }
         };
     }
 }

@@ -39,6 +39,7 @@ namespace upsylon
                 const GhostsType  *reverse; //!< if has reverse
                 unsigned           status;  //!< from GhostsInfo
                 bool               local;   //!< for exchange
+                bool               async;   //!< for load/save
             };
 
             //------------------------------------------------------------------
@@ -324,14 +325,15 @@ namespace upsylon
                  {
                      GIO &gio = ghosts[j];
                      switch (gio.status) {
-                         case GhostsInfo::Fwd: assert(gio.forward); assert(gio.forward->async); gio.local = false; break;
-                         case GhostsInfo::Rev: assert(gio.reverse); assert(gio.reverse->async); gio.local = false; break;
+                         case GhostsInfo::Fwd: assert(gio.forward); assert(gio.forward->async); gio.local = false; gio.async=true; break;
+                         case GhostsInfo::Rev: assert(gio.reverse); assert(gio.reverse->async); gio.local = false; gio.async=true; break;
                          case GhostsInfo::Both:
                              assert(gio.forward);
                              assert(gio.reverse);
                              assert(gio.forward->local==gio.reverse->local);
                              assert(gio.forward->async==gio.reverse->async);
                              gio.local = gio.forward->local;
+                             gio.async = gio.forward->async;
                              break;
                      }
                  }
