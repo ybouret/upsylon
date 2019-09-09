@@ -1,5 +1,5 @@
 
-#include "y/oxide/workspace.hpp"
+#include "y/oxide/layouts.hpp"
 #include "y/utest/run.hpp"
 #include "y/memory/pooled.hpp"
 #include "y/string/tokenizer.hpp"
@@ -47,7 +47,7 @@ namespace
         const Coord1D size = Coord::Product(mapping);
         for(Coord1D   rank = 0; rank<size; ++rank)
         {
-            Workspace<COORD>(full,mapping,rank,pbc,ng);
+            Layouts<COORD>(full,mapping,rank,pbc,ng);
         }
     }
 
@@ -55,7 +55,7 @@ namespace
 
 static inline bool isSep( const char C ) { return C == ','; }
 
-Y_UTEST(oxide_wksp)
+Y_UTEST(oxide_layouts)
 {
     // length pbc ng mapping
     if(argc<=4)
