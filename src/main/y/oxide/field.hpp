@@ -40,6 +40,19 @@ namespace upsylon
                 return &entry[index];
             }
 
+            //! copy C-style object
+            virtual void copyObject( const Coord1D target, const Coord1D source )
+            {
+                assert(entry);
+                assert(target>=0);
+                assert(size_t(target)<localObjects);
+                assert(source>=0);
+                assert(size_t(source)<localObjects);
+                assert(source!=target);
+                *(mutable_type *) &entry[target] = entry[source];
+            }
+
+
             //------------------------------------------------------------------
             // non virtual interface
             //------------------------------------------------------------------

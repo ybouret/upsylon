@@ -3,6 +3,7 @@
 #include "y/memory/pooled.hpp"
 #include "y/string/tokenizer.hpp"
 #include "y/oxide/field3d.hpp"
+#include "y/ios/ovstream.hpp"
 
 using namespace upsylon;
 using namespace Oxide;
@@ -17,6 +18,7 @@ namespace
     {
         std::cerr << F.name << " : " << F << std::endl;
     }
+ 
 
     template <typename COORD>
     static inline void testWksp(char **argv)
@@ -35,6 +37,7 @@ namespace
         std::cerr << "full=" << full << std::endl;
 
 
+        ios::ovstream block;
 
         const Coord1D size = Coord::Product(mapping);
         for(Coord1D   rank=0;rank<size;++rank)
@@ -50,6 +53,13 @@ namespace
 
                 display_field(Fd);
                 display_field(Ff);
+
+                Y_CHECK( wksp.owns(Fd) );
+                Y_CHECK( wksp.owns(Ff) );
+
+                wksp.exchangeLocal(Fd);
+                wksp.exchangeLocal(Ff);
+
 
             }
 

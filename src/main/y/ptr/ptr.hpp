@@ -10,15 +10,14 @@ namespace upsylon
 
     namespace core
     {
+        //! base class for common data
         class ptr
         {
         public:
-            virtual ~ptr() throw();
-
-            static const char nil[];
-        protected:
-            explicit ptr() throw();
-
+            virtual ~ptr() throw();  //!< cleanup
+            static const char nil[]; //!< "(nil)"
+        protected:                   //|
+            explicit ptr() throw();  //!< setup
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ptr);
         };

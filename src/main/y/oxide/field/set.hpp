@@ -9,13 +9,18 @@ namespace upsylon
 {
     namespace Oxide
     {
-        typedef set<string,FieldHandle> Fields;
+        typedef set<string,FieldHandle> Fields; //!< alias
 
+        //! operation on Fields
         struct __Fields
         {
+            //! enroll a new field
             static void               Enroll( Fields       &db, const FieldPointer &f,  const std::type_info &t, const void *p);
+
+            //! look up an enrolled field
             static const FieldHandle &LookUp( const Fields &db, const string       &id, const std::type_info &t);
 
+            //! use type info to enroll any field
             template <typename FIELD> static inline
             void Enroll( Fields &db, FIELD *F )
             {
@@ -23,7 +28,8 @@ namespace upsylon
                 const std::type_info &t = typeid(FIELD);
                 Enroll(db,f,t,F);
             }
-            
+
+            //! use type info to match an enrolled  field
             template <typename FIELD> static inline
             const FIELD &LookUp(const Fields &db, const string &id )
             {

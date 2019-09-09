@@ -38,6 +38,7 @@ namespace upsylon
                 const GhostsType  *forward; //!< if has forward
                 const GhostsType  *reverse; //!< if has reverse
                 unsigned           status;  //!< from GhostsInfo
+                bool               local;   //!< for exchange
             };
 
             //------------------------------------------------------------------
@@ -52,6 +53,7 @@ namespace upsylon
 
         private:
             vector<Ghosts>          repository;           //!< all created ghosts
+        protected:
             GIO                     ghosts[Orientations]; //!< placed according to their orientation
         public:
 
@@ -87,7 +89,8 @@ namespace upsylon
                     buildGhosts(ng-1);
                 }
             }
-            
+
+            //! display information
             void display(std::ostream &os, const char *pfx=0) const
             {
                 static const char default_pfx[] = "";
@@ -316,6 +319,22 @@ namespace upsylon
                         findGhosts(j,-loop.value,shift,heart_lower,heart_upper);
                     }
                 }
+
+                 for( size_t j=0; j<Orientations; ++j )
+                 {
+                     GIO &gio = ghosts[j];
+                     switch (gio.status) {
+                         case GhostsInfo::Fwd: assert(gio.forward); assert(gio.forward->async); gio.local = false; break;
+                         case GhostsInfo::Rev: assert(gio.reverse); assert(gio.reverse->async); gio.local = false; break;
+                         case GhostsInfo::Both:
+                             assert(gio.forward);
+                             assert(gio.reverse);
+                             assert(gio.forward->local==gio.reverse->local);
+                             assert(gio.forward->async==gio.reverse->async);
+                             gio.local = gio.forward->local;
+                             break;
+                     }
+                 }
 
                 //--------------------------------------------------------------
                 //

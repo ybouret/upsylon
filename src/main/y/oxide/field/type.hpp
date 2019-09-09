@@ -29,8 +29,13 @@ namespace upsylon
             //------------------------------------------------------------------
             // virtual interface
             //------------------------------------------------------------------
+
             //! get address of an object by its index
             virtual const void *getObjectAddr( const Coord1D index ) const throw() = 0;
+
+            //! copy data between two indices
+            virtual void copyObject(const Coord1D target, const Coord1D source)    = 0;
+
 
             //------------------------------------------------------------------
             // non-virtual interface

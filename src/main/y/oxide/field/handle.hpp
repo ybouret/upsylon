@@ -10,19 +10,28 @@ namespace upsylon
 {
     namespace Oxide
     {
-        typedef arc_ptr<FieldType> FieldPointer;
+        typedef arc_ptr<FieldType> FieldPointer; //!< alias for dynamic fields
 
+        //! lightweight handle for fields
         class FieldHandle
         {
         public:
-            const FieldPointer   field;
-            const std::type_info &ftype;
-            const void           *faddr;
+            const FieldPointer   field;  //!< holds the dynamic field
+            const std::type_info &ftype; //!< holds the type info
+            const void           *faddr; //!< holds the derived field address
 
+            //! cleanup
             ~FieldHandle() throw();
-            explicit FieldHandle( const FieldPointer &f, const std::type_info &t, const void *p) throw();
+
+            //! setup
+            explicit FieldHandle(const FieldPointer   &f,
+                                 const std::type_info &t,
+                                 const void           *p) throw();
+
+            //! copy
             FieldHandle(const FieldHandle &) throw();
 
+            //! key for associative set: f->name
             const string & key() const throw();
 
         private:
