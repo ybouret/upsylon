@@ -116,7 +116,7 @@ namespace upsylon
 
             void exchangeLocal( FieldType &F  )
             {
-                std::cerr << "exchanging Local in " << F.name << std::endl;
+                //std::cerr << "exchanging Local in " << F.name << std::endl;
                 assert(owns(F));
                 for(size_t i=0;i<Orientations;++i)
                 {
@@ -135,7 +135,7 @@ namespace upsylon
                         assert( fwd_inner.size() == fwd_outer.size());
                         assert( fwd_inner.size() == rev_inner.size());
                         assert( fwd_inner.size() == rev_outer.size());
-                        std::cerr << "@orientation#" << i << " : " << fwd_inner.size() << std::endl;
+                        //std::cerr << "@orientation#" << i << " : " << fwd_inner.size() << std::endl;
 
                         for(size_t j=fwd_inner.size();j>0;--j)
                         {

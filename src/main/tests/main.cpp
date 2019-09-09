@@ -1,6 +1,6 @@
 #include "y/utest/driver.hpp"
 
-Y_UTEST_INIT(150)
+Y_UTEST_INIT(256)
 {
     Y_UTEST(platform);
     Y_UTEST(types);
@@ -171,6 +171,7 @@ Y_UTEST_INIT(150)
     Y_UTEST(oxide_contour2d);
     Y_UTEST(oxide_layouts);
     Y_UTEST(oxide_wksp);
+    Y_UTEST(oxide_allw);
 }
 Y_UTEST_EXEC()
 
