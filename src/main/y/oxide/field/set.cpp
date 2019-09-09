@@ -5,15 +5,28 @@ namespace upsylon
 {
     namespace Oxide
     {
-        void __Fields:: Register(Fields             &db,
-                                 const FieldPointer &f,
-                                 const type_spec    &t )
+        void __Fields:: Enroll(Fields               &db,
+                               const FieldPointer   &f,
+                               const std::type_info &t,
+                               const void           *p)
         {
-            const FieldHandle h(f,t);
+            const FieldHandle h(f,t,p);
             if( !db.insert(h) )
             {
-                throw exception("Oxide::Multiple Field '%s' of type <%s>", * h.key(), *t.key());
+                throw exception("Oxide::Multiple Field '%s', requested type <%s>", * h.key(), t.name());
             }
+        }
+
+        const FieldHandle &__Fields:: LookUp( const Fields &db, const string       &id, const std::type_info &t)
+        {
+            const FieldHandle *h = db.search(id);
+            if(!h) throw exception("Oxide::No Field '%s'",*id);
+
+            if(h->ftype != t )
+            {
+                throw exception("Oxide:: %s<%s> type mismatch <%s>", *id, h->ftype.name(), t.name() );
+            }
+            return *h;
         }
     }
 

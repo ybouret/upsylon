@@ -13,15 +13,28 @@ namespace upsylon
 
         struct __Fields
         {
-            static  void Register( Fields &db, const FieldPointer &f, const type_spec &t );
+            static void               Enroll( Fields       &db, const FieldPointer &f,  const std::type_info &t, const void *p);
+            static const FieldHandle &LookUp( const Fields &db, const string       &id, const std::type_info &t);
 
-            template <typename FIELD>
-            static inline void Register( Fields &db, FIELD *F )
+            template <typename FIELD> static inline
+            void Enroll( Fields &db, FIELD *F )
             {
-                const FieldPointer f(F);
-                const type_spec    t = typeid(FIELD);
-                Register(db,f,t);
+                const FieldPointer   f(F);
+                const std::type_info &t = typeid(FIELD);
+                Enroll(db,f,t,F);
             }
+            
+            template <typename FIELD> static inline
+            const FIELD &LookUp(const Fields &db, const string &id )
+            {
+                const std::type_info &t = typeid(FIELD);
+                const FieldHandle    &h = LookUp(db,id,t);
+                assert(h.faddr);
+                return *static_cast<const FIELD *>(h.faddr);
+            }
+
+
+
         };
 
 

@@ -4,7 +4,7 @@
 
 #include "y/oxide/field/type.hpp"
 #include "y/ptr/arc.hpp"
-#include "y/type/spec.hpp"
+#include <typeinfo>
 
 namespace upsylon
 {
@@ -15,11 +15,12 @@ namespace upsylon
         class FieldHandle
         {
         public:
-            const FieldPointer field;
-            const type_spec    ftype;
+            const FieldPointer   field;
+            const std::type_info &ftype;
+            const void           *faddr;
 
             ~FieldHandle() throw();
-            explicit FieldHandle( const FieldPointer &f, const type_spec &t ) throw();
+            explicit FieldHandle( const FieldPointer &f, const std::type_info &t, const void *p) throw();
             FieldHandle(const FieldHandle &) throw();
 
             const string & key() const throw();

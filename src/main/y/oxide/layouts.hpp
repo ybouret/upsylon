@@ -92,6 +92,7 @@ namespace upsylon
             {
                 static const char default_pfx[] = "";
                 if(!pfx) pfx = default_pfx;
+                os << pfx << "ranks="; Coord::Disp(os, this->ranks, 2) << " <=> rank=" << this->rank << std::endl;
                 os << pfx << "inner=" << inner << std::endl;
                 os << pfx << "outer=" << outer << std::endl;
                 os << pfx << "heart=" << heart << std::endl;

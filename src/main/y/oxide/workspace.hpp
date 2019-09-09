@@ -50,14 +50,31 @@ namespace upsylon
             }
 
             //! create and register a field
-            template <typename FIELD>
-            FIELD & create( const string &name )
+            template <typename FIELD> inline FIELD & create( const string &name )
             {
                 FIELD *F = new FIELD(name,this->outer);
-                __Fields::Register<FIELD>(*this,F);
+                __Fields::Enroll<FIELD>(*this,F);
                 return *F;
             }
 
+            template <typename FIELD> inline FIELD & create( const char *name )
+            {
+                const string _(name); return create<FIELD>(_);
+            }
+
+            //! access a created field, const
+            template <typename FIELD>
+            const FIELD & as( const string &name ) const
+            {
+                return __Fields::LookUp<FIELD>(*this,name);
+            }
+
+            //! access a created field
+            template <typename FIELD>
+            FIELD & as( const string &name )
+            {
+                return (FIELD &)(__Fields::LookUp<FIELD>(*this,name));
+            }
 
 
         private:

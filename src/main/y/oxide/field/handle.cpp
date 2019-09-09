@@ -8,15 +8,20 @@ namespace upsylon
         {
         }
 
-        FieldHandle:: FieldHandle( const FieldPointer &f, const type_spec &t ) throw() :
+        FieldHandle:: FieldHandle(const FieldPointer   &f,
+                                  const std::type_info &t,
+                                  const void           *p) throw() :
         field(f),
-        ftype(t)
+        ftype(t),
+        faddr(p)
         {
+            assert(faddr!=NULL);
         }
 
         FieldHandle:: FieldHandle(const FieldHandle &_) throw() :
         field( _.field ),
-        ftype( _.ftype )
+        ftype( _.ftype ),
+        faddr( _.faddr )
         {
 
         }

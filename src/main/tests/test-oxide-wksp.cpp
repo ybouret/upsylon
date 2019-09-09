@@ -12,6 +12,12 @@ namespace
     typedef vector<string,memory::pooled> strings;
     static inline bool isSep( const char C ) { return C == ','; }
 
+    template <typename FIELD>
+    void display_field( const FIELD &F )
+    {
+        std::cerr << F.name << " : " << F << std::endl;
+    }
+
     template <typename COORD>
     static inline void testWksp(char **argv)
     {
@@ -19,10 +25,10 @@ namespace
         typedef  typename __Field<COORD,double>::Type dField;
         typedef  typename __Field<COORD,float>::Type  fField;
 
-        const COORD   length  = Coord::Parse<COORD>(argv[1],"length");
-        const COORD   pbc     = Coord::Parse<COORD>(argv[2],"pbc");
+        const COORD   length  = Coord::Parse<COORD>(  argv[1],"length");
+        const COORD   pbc     = Coord::Parse<COORD>(  argv[2],"pbc");
         const Coord1D ng      = Coord::Parse<Coord1D>(argv[3],"ng");
-        const COORD   mapping = Coord::Parse<COORD>(argv[4],"mapping");
+        const COORD   mapping = Coord::Parse<COORD>(  argv[4],"mapping");
 
         COORD org(0); Coord::LD(org,1);
         const Layout<COORD> full(org,length);
@@ -38,11 +44,20 @@ namespace
             Workspace<COORD> wksp(full,mapping,rank,pbc,ng);
             wksp.display(std::cerr, "\t(*) ");
 
-            dField &Fd = wksp.template create<dField>( "Fd" );
-            fField &Ff = wksp.template create<fField>( "Ff" );
+            {
+                dField &Fd = wksp.template create<dField>( "Fd" );
+                fField &Ff = wksp.template create<fField>( "Ff" );
 
-            std::cerr << "Fd: " << Fd << std::endl;
-            std::cerr << "Ff: " << Ff << std::endl;
+                display_field(Fd);
+                display_field(Ff);
+
+            }
+
+            {
+                display_field( wksp.template as<dField>("Fd") );
+                display_field( wksp.template as<fField>("Ff") );
+            }
+
 
         }
 
