@@ -31,7 +31,7 @@ namespace upsylon
         {
         public:
             typedef Layout<COORD> LayoutType; //!< alias
-            const GhostIndices    indices;    //!< indices of sub layout in outer layout
+            GhostIndices          indices;    //!< indices of sub layout in outer layout
 
             //! setup build collecting indices
             inline Ghost(const LayoutType &sub,
@@ -39,7 +39,7 @@ namespace upsylon
             LayoutType(sub), indices( this->items, as_capacity )
             {
                 assert(out.contains(*this));
-                out.collect( (GhostIndices &)indices, sub);
+                out.collect(indices,sub);
                 assert(this->items==indices.size());
             }
 

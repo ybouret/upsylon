@@ -94,27 +94,6 @@ namespace upsylon
                 return *( ((const Coord1D *) &c) + dim );
             }
 
-            template <typename COORD> static inline
-            void KeepMaxOf(COORD       &target,
-                           const COORD &sample,
-                           const size_t dim ) throw()
-            {
-                assert(dim<Get<COORD>::Dimensions);
-                Coord1D       &t = * ( (Coord1D       *) &target + dim );
-                const Coord1D  s = * ( (const Coord1D *) &sample + dim );
-                t = max_of(t,s);
-            }
-
-            template <typename COORD> static inline
-            void KeepMinOf(COORD       &target,
-                           const COORD &sample,
-                           const size_t dim ) throw()
-            {
-                assert(dim<Get<COORD>::Dimensions);
-                Coord1D       &t = * ( (Coord1D       *) &target + dim );
-                const Coord1D  s = * ( (const Coord1D *) &sample + dim );
-                t = min_of(t,s);
-            }
             
             //! get product
             template <typename COORD> static inline

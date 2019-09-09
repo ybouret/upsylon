@@ -182,6 +182,7 @@ namespace upsylon
                                    coord        &heart_upper)
             {
                 assert(shift>=0);
+
                 const LinkType link(delta);
 
                 //--------------------------------------------------------------
@@ -209,8 +210,15 @@ namespace upsylon
                     // get info
                     //
                     //----------------------------------------------------------
-                    const_coord           granks = Coord::Regularized(this->sizes,this->ranks+link.direction);
 
+                    // get local ranks and global rank
+                    const_coord           gRanks  = Coord::Regularized(this->sizes,this->ranks+link.direction);
+                    const Coord1D         gRank   = Coord::GlobalRank(this->sizes,gRanks);
+
+                    // deduce if asynchronous ghost and prepare heart shift
+                    const bool            gAsync  = (gRank != this->rank);
+                    const Coord1D         gHeart  = shift+1;
+                    
                     //----------------------------------------------------------
                     //
                     // build recv/send layouts from delta
@@ -224,21 +232,27 @@ namespace upsylon
 
                     for(size_t dim=0;dim<Dimensions;++dim)
                     {
-                        Coord1D &h_up = Coord::Of(heart_upper,dim);
-                        Coord1D &h_lo = Coord::Of(heart_lower,dim);
+                        Coord1D &heartUp = Coord::Of(heart_upper,dim);
+                        Coord1D &heartLo = Coord::Of(heart_lower,dim);
                         switch( Coord::Of(link.direction,dim)  )
                         {
                             case  1:
                                 Coord::Of(outer_upper,dim) = Coord::Of(outer.upper,dim);
                                 Coord::Of(outer_lower,dim) = Coord::Of(inner_upper,dim) + 1;
                                 Coord::Of(inner_lower,dim) = Coord::Of(inner_upper,dim) - shift;
-                                h_up = min_of(Coord::Of(inner_lower,dim) - 1,h_up);
+                                if(gAsync)
+                                {
+                                    heartUp = min_of(Coord::Of(inner_lower,dim) - gHeart,heartUp);
+                                }
                                 break;
                             case -1:
                                 Coord::Of(outer_lower,dim) = Coord::Of(outer.lower,dim);
                                 Coord::Of(outer_upper,dim) = Coord::Of(inner_lower,dim) - 1;
                                 Coord::Of(inner_upper,dim) = Coord::Of(inner_lower,dim) + shift;
-                                h_lo = max_of(Coord::Of(inner_upper,dim) + 1, h_lo);
+                                if(gAsync)
+                                {
+                                    heartLo = max_of(Coord::Of(inner_upper,dim) + gHeart, heartLo);
+                                }
                                 break;
                             default: break;
                         }
@@ -255,7 +269,7 @@ namespace upsylon
                     //
                     //----------------------------------------------------------
                     _GhostsType *g = new _GhostsType(this->sizes,
-                                                     Coord::GlobalRank(this->sizes,granks),
+                                                     gRank,
                                                      this->rank,
                                                      link,
                                                      ghostInnerLayout,
@@ -270,7 +284,7 @@ namespace upsylon
                     switch(g->link.way)
                     {
                         case Connectivity::Forward:  assert(0==gio.forward); gio.forward = g; gio.status |= GhostsInfo::Fwd;  break;
-                        case Connectivity::Reverse:  assert(0==gio.reverse); gio.reverse = g; gio.status |= GhostsInfo::Both; break;
+                        case Connectivity::Reverse:  assert(0==gio.reverse); gio.reverse = g; gio.status |= GhostsInfo::Rev; break;
                     }
                 }
 
