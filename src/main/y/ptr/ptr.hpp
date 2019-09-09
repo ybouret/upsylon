@@ -8,9 +8,26 @@
 namespace upsylon
 {
 
+    namespace core
+    {
+        class ptr
+        {
+        public:
+            virtual ~ptr() throw();
+
+            static const char nil[];
+        protected:
+            explicit ptr() throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(ptr);
+        };
+
+    }
+
     //! base class for smart pointers
     template <typename T>
-    class ptr
+    class ptr : public core::ptr
     {
     public:
         Y_DECL_ARGS(T,type);                //!< type traits helper
@@ -43,7 +60,7 @@ namespace upsylon
             }
             else
             {
-                os << "(nil)";
+                os << nil;
             }
             return os;
         }
@@ -64,9 +81,9 @@ namespace upsylon
         pointee_type pointee; //!< internal pointer
 
         //! transfert address
-        inline explicit ptr(T *addr) throw() : pointee( (pointee_type)addr ) {}
+        inline explicit ptr(T *addr) throw() : core::ptr(), pointee( (pointee_type)addr ) {}
         //! copy address
-        inline ptr(const ptr &other) throw() : pointee( other.pointee ) {}
+        inline ptr(const ptr &other) throw() : core::ptr(), pointee( other.pointee ) {}
 
         //! swap ownership
         inline void swap_with( ptr<T> &other ) throw()

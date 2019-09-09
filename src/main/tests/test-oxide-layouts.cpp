@@ -44,10 +44,15 @@ namespace
         COORD               org(0); Coord::LD(org,1);
         const Layout<COORD> full(org,length);
 
+        std::cerr << "Full    : " << full    << std::endl;
+        std::cerr << "Mapping : " << mapping << std::endl;
+        std::cerr << "Ghosts  : " << ng      << std::endl;
+
         const Coord1D size = Coord::Product(mapping);
         for(Coord1D   rank = 0; rank<size; ++rank)
         {
-            Layouts<COORD>(full,mapping,rank,pbc,ng);
+            Layouts<COORD> sub(full,mapping,rank,pbc,ng);
+            sub.display(std::cerr,"\t(*) ");
         }
     }
 

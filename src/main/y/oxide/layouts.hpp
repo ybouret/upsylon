@@ -23,26 +23,20 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             typedef Layout<COORD>                             LayoutType;                                     //!< alias
-            typedef typename LayoutType::Loop                 Loop;                                           //!< alias
             typedef typename LayoutType::coord                coord;                                          //!< alias
             typedef typename LayoutType::const_coord          const_coord;                                    //!< alias
             typedef Topology::Hub<COORD>                      HubType;                                        //!< alias
-            typedef Topology::Node<COORD>                     NodeType;                                       //!< alias
             static const size_t                               Dimensions   = Coord::Get<COORD>::Dimensions;   //!< alias
             static const size_t                               Neighbours   = Metrics<Dimensions>::Neighbours; //!< number of possible neighbours and directions
             static const size_t                               Orientations = Neighbours/2;                    //!< number of orientations
-            static const size_t                               AtLevel1     = Metrics<Dimensions>::AtLevel1;   //!< alias
-            static const size_t                               AtLevel2     = Metrics<Dimensions>::AtLevel2;   //!< alias
-            static const size_t                               AtLevel3     = Metrics<Dimensions>::AtLevel3;   //!< alias
-            typedef Connectivity::Link<COORD>                 LinkType;                                       //!< alias
-            typedef _Ghosts<COORD>                            _GhostsType; //!< alias
-            typedef arc_ptr<_GhostsType>                      Ghosts;      //!< dynamic ghosts
+            typedef _Ghosts<COORD>                            GhostsType;                                     //!< alias
+            typedef arc_ptr< GhostsType >                     Ghosts;                                         //!< dynamic ghosts
 
             //! lightweight ghosts I/O context
             struct GIO
             {
-                const _GhostsType *forward; //!< if has forward
-                const _GhostsType *reverse; //!< if has reverse
+                const GhostsType  *forward; //!< if has forward
+                const GhostsType  *reverse; //!< if has reverse
                 unsigned           status;  //!< from GhostsInfo
             };
 
@@ -74,11 +68,11 @@ namespace upsylon
             
             //! setup
             inline explicit Layouts(const LayoutType &full,
-                                      const_coord      &localSizes,
-                                      const Coord1D     globalRank,
-                                      const_coord      &PBC,
-                                      const Coord1D     ng = 0
-                                      ) :
+                                    const_coord      &localSizes,
+                                    const Coord1D     globalRank,
+                                    const_coord      &PBC,
+                                    const Coord1D     ng = 0
+                                    ) :
             HubType(localSizes,globalRank,PBC),
             size(  Coord::Product(this->sizes) ),
             inner( full.split(this->sizes,this->ranks) ),
@@ -95,13 +89,27 @@ namespace upsylon
                 }
             }
             
-            
+            void display(std::ostream &os, const char *pfx=0) const
+            {
+                static const char default_pfx[] = "";
+                if(!pfx) pfx = default_pfx;
+                os << pfx << "inner=" << inner << std::endl;
+                os << pfx << "outer=" << outer << std::endl;
+                os << pfx << "heart=" << heart << std::endl;
+            }
             
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Layouts);
 
-            inline LayoutType expandInner(const Coord1D ng)
+            //==================================================================
+            //
+            //
+            //! expand inner boundaries according to local topology
+            //
+            //
+            //==================================================================
+            inline LayoutType expandInner(const Coord1D ng) const
             {
                 if(ng<=0)
                 {
@@ -141,8 +149,13 @@ namespace upsylon
                 }
             }
 
-
+            //==================================================================
+            //
+            //
             //! try to create Ghosts, shift=ng-1
+            //
+            //
+            //==================================================================
             inline void findGhosts(const size_t  where,
                                    const_coord   delta,
                                    const Coord1D shift,
@@ -150,8 +163,7 @@ namespace upsylon
                                    coord        &heart_upper)
             {
                 assert(shift>=0);
-
-                const LinkType link(delta);
+                const Connectivity::Link<COORD>  link(delta); // normalize delta
 
                 //--------------------------------------------------------------
                 //
@@ -184,12 +196,12 @@ namespace upsylon
                     const Coord1D         gRank   = Coord::GlobalRank(this->sizes,gRanks);
 
                     // deduce if asynchronous ghost and prepare heart shift
-                    const bool            gAsync  = (gRank != this->rank);
-                    const Coord1D         gHeart  = shift+1;
+                    const bool            gAsync  = (gRank  != this->rank);
+                    const Coord1D         gHeart  = (gAsync ? shift+1 : 0);
                     
                     //----------------------------------------------------------
                     //
-                    // build recv/send layouts from delta
+                    // compute recv/send layouts from delta
                     //
                     //----------------------------------------------------------
                     coord inner_lower = inner.lower;
@@ -226,6 +238,11 @@ namespace upsylon
                         }
                     }
 
+                    //----------------------------------------------------------
+                    //
+                    // build  layouts from computed coordinates
+                    //
+                    //----------------------------------------------------------
                     const LayoutType ghostInnerLayout(inner_lower,inner_upper);
                     const LayoutType ghostOuterLayout(outer_lower,outer_upper);
                     assert(outer.contains(ghostInnerLayout));
@@ -236,13 +253,13 @@ namespace upsylon
                     // create ghosts and push them in their positions
                     //
                     //----------------------------------------------------------
-                    _GhostsType *g = new _GhostsType(this->sizes,
-                                                     gRank,
-                                                     this->rank,
-                                                     link,
-                                                     ghostInnerLayout,
-                                                     ghostOuterLayout,
-                                                     outer);
+                    GhostsType *g = new GhostsType(this->sizes,
+                                                   gRank,
+                                                   this->rank,
+                                                   link,
+                                                   ghostInnerLayout,
+                                                   ghostOuterLayout,
+                                                   outer);
                     {
                         const Ghosts G = g;
                         std::cerr << G << std::endl;
@@ -258,29 +275,44 @@ namespace upsylon
 
             }
 
-
+            //==================================================================
+            //
+            //
             //! loop over all directions, two for each orientation
+            //
+            //
+            //==================================================================
             inline void buildGhosts(const Coord1D shift)
             {
-                //--------------------------------------------------------------
-                // half loop on [-1:1]^Dimensions, using symetry
-                //--------------------------------------------------------------
-                coord __lo(0); Coord::LD(__lo,-1);
-                coord __up(0); Coord::LD(__up, 1);
-                Loop loop(__lo,__up);
-                loop.start();
-
                 coord heart_lower = inner.lower;
                 coord heart_upper = inner.upper;
-                for( size_t j=0; j<Orientations; ++j, loop.next() )
+
+                //--------------------------------------------------------------
+                //
+                // half loop on [-1:1]^Dimensions, using symetry
+                //
+                //--------------------------------------------------------------
                 {
-                    // two directions by orientation
-                    findGhosts(j, loop.value,shift,heart_lower,heart_upper);
-                    findGhosts(j,-loop.value,shift,heart_lower,heart_upper);
+                    coord __lo(0); Coord::LD(__lo,-1);
+                    coord __up(0); Coord::LD(__up, 1);
+                    typename LayoutType::Loop loop(__lo,__up);
+                    loop.start();
+
+                    for( size_t j=0; j<Orientations; ++j, loop.next() )
+                    {
+                        findGhosts(j, loop.value,shift,heart_lower,heart_upper);
+                        findGhosts(j,-loop.value,shift,heart_lower,heart_upper);
+                    }
                 }
                 std::cerr << "\t\t#ghosts=" << repository.size() << std::endl;
                 std::cerr << "\t\theart_lower=" << heart_lower << std::endl;
                 std::cerr << "\t\theart_upper=" << heart_upper << std::endl;
+
+                //--------------------------------------------------------------
+                //
+                // check if a valid heart is present
+                //
+                //--------------------------------------------------------------
                 bool hasHeart = true;
                 for(size_t dim=0;dim<Dimensions;++dim)
                 {
