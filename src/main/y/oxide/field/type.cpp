@@ -60,49 +60,12 @@ privateSize(0)
             return ns;
         }
 
-        size_t FieldType:: save(ios::ostream &fp, SaveProc proc) const
-        {
-            assert(proc);
-            size_t total = 0;
-            for(size_t index=0;index<localObjects;++index)
-            {
-                total += save(fp,index,proc);
-            }
-            return total;
-        }
-
         size_t FieldType:: load( ios::istream &fp, const Coord1D index, LoadProc proc)
         {
             assert(proc);
             size_t nr = 0;
             proc(fp,(void*)getObjectAddr(index),&nr);
             return nr;
-        }
-
-       
-        
-        
-        size_t FieldType:: load(ios::istream &fp, LoadProc proc)
-        {
-            assert(proc);
-            size_t total = 0;
-            for(size_t index=0;index<localObjects;++index)
-            {
-                total += load(fp,index,proc);
-            }
-            return total;
-        }
-
-        size_t FieldType:: load(const memory::ro_buffer &buff, const Coord1D index, LoadProc proc)
-        {
-            ios::imstream fp(buff);
-            return load(fp,index,proc);
-        }
-        
-        size_t FieldType:: load(const memory::ro_buffer &buff, LoadProc proc)
-        {
-            ios::imstream fp(buff);
-            return load(fp,proc);
         }
 
 

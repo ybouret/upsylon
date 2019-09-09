@@ -98,6 +98,7 @@ namespace upsylon
                 const FieldHandle *h = this->search(F.name);
                 if(!h)
                 {
+                    std::cerr << "No Field '" << F.name << "' in workspace" << std::endl;
                     return false;
                 }
                 else
@@ -105,6 +106,7 @@ namespace upsylon
                     const FieldPointer &p = h->field;
                     if( & *p != &F )
                     {
+                        std::cerr << "Mismatch address of Field '" << F.name << "' in workspace" << std::endl;
                         return false;
                     }
                     else
@@ -114,9 +116,9 @@ namespace upsylon
                 }
             }
 
-            void exchangeLocal( FieldType &F  )
+            //! Locally exchange local ghosts pairs
+            void localExchange( FieldType &F  )
             {
-                //std::cerr << "exchanging Local in " << F.name << std::endl;
                 assert(owns(F));
                 for(size_t i=0;i<Orientations;++i)
                 {
@@ -135,7 +137,6 @@ namespace upsylon
                         assert( fwd_inner.size() == fwd_outer.size());
                         assert( fwd_inner.size() == rev_inner.size());
                         assert( fwd_inner.size() == rev_outer.size());
-                        //std::cerr << "@orientation#" << i << " : " << fwd_inner.size() << std::endl;
 
                         for(size_t j=fwd_inner.size();j>0;--j)
                         {
@@ -143,7 +144,6 @@ namespace upsylon
                             F.copyObject(rev_outer[j],fwd_inner[j]);
                         }
                     }
-
                 }
             }
 

@@ -5,6 +5,8 @@
 #include "y/oxide/field3d.hpp"
 #include "y/ios/ovstream.hpp"
 
+#include "support.hpp"
+
 using namespace upsylon;
 using namespace Oxide;
 
@@ -18,14 +20,26 @@ namespace
     {
         std::cerr << F.name << " : " << F << std::endl;
     }
- 
+
+    template <typename FIELD> static inline
+    void fill(FIELD &F)
+    {
+        for(size_t i=0;i<F.items/2;++i)
+        {
+            const typename FIELD::type tmp = support::get<typename FIELD::mutable_type>();
+
+            F( F.rand(alea) ) = tmp;
+        }
+    }
+
 
     template <typename COORD>
     static inline void testWksp(char **argv)
     {
 
-        typedef  typename __Field<COORD,double>::Type dField;
-        typedef  typename __Field<COORD,float>::Type  fField;
+        typedef  typename __Field<COORD,double>::Type  dField;
+        typedef  typename __Field<COORD,float>::Type   fField;
+        typedef  typename __Field<COORD,string>::Type  sField;
 
         const COORD   length  = Coord::Parse<COORD>(  argv[1],"length");
         const COORD   pbc     = Coord::Parse<COORD>(  argv[2],"pbc");
@@ -50,15 +64,23 @@ namespace
             {
                 dField &Fd = wksp.template create<dField>( "Fd" );
                 fField &Ff = wksp.template create<fField>( "Ff" );
+                sField &Fs = wksp.template create<sField>( "Fs" );
 
                 display_field(Fd);
                 display_field(Ff);
+                display_field(Fs);
+
+                fill(Fd);
+                fill(Ff);
+                fill(Fs);
 
                 Y_CHECK( wksp.owns(Fd) );
                 Y_CHECK( wksp.owns(Ff) );
+                Y_CHECK( wksp.owns(Fs) );
 
-                wksp.exchangeLocal(Fd);
-                wksp.exchangeLocal(Ff);
+                wksp.localExchange(Fd);
+                wksp.localExchange(Ff);
+                wksp.localExchange(Fs);
 
 
             }
@@ -66,6 +88,7 @@ namespace
             {
                 display_field( wksp.template as<dField>("Fd") );
                 display_field( wksp.template as<fField>("Ff") );
+                display_field( wksp.template as<sField>("Fs") );
             }
 
 

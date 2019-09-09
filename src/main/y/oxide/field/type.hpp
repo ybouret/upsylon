@@ -43,14 +43,40 @@ namespace upsylon
             typedef ios::plugin::save_proc SaveProc; //!< using ios::plugin::save_proc to save data to ostream
             typedef ios::plugin::load_proc LoadProc; //!< using ios::plugin::load_proc to load data from istream
 
-            size_t    save( ios::ostream &fp, const Coord1D index, SaveProc proc ) const; //!< save one object
-            size_t    save( ios::ostream &fp, SaveProc proc) const;                       //!< save all objects
-            size_t    load( ios::istream &fp, const Coord1D index, LoadProc proc);        //!< load one object
-            size_t    load( ios::istream &fp, LoadProc proc);                             //!< load all objects
+            size_t    save( ios::ostream &fp, const Coord1D index, SaveProc proc ) const; //!< save one object from index
+            size_t    load( ios::istream &fp, const Coord1D index, LoadProc proc);        //!< load one object into index
+
+            //! save from a sublayout
+            template <typename LAYOUT>
+            size_t save( ios::ostream &fp, const LAYOUT &outer, const LAYOUT &inner, SaveProc proc ) const
+            {
+                assert(outer.contains(inner));
+                typename LAYOUT::Loop loop(inner.lower,inner.upper);
+                size_t total = 0;
+                for(loop.start();loop.valid();loop.next())
+                {
+                    total += save(fp, outer.indexOf(loop.value), proc );
+                }
+                return total;
+            }
+
+            //! load from a sublayout
+            template <typename LAYOUT>
+            size_t load( ios::istream &fp, const LAYOUT &outer, const LAYOUT &inner, LoadProc proc )
+            {
+                assert(outer.contains(inner));
+                typename LAYOUT::Loop loop(inner.lower,inner.upper);
+                size_t total = 0;
+                for(loop.start();loop.valid();loop.next())
+                {
+                    total += load(fp, outer.indexOf(loop.value), proc );
+                }
+                return total;
+            }
 
             //! saving objects from a sequence of indices
             template <typename SEQUENCE> inline
-            size_t save_only(const SEQUENCE &indices, ios::ostream &fp, SaveProc proc) const
+            size_t save(const SEQUENCE &indices, ios::ostream &fp, SaveProc proc) const
             {
                 size_t total = 0;
                 size_t n = indices.size();
@@ -63,7 +89,7 @@ namespace upsylon
 
             //! reload objects from a sequence of indices
             template <typename SEQUENCE> inline
-            size_t load_only(const SEQUENCE &indices, ios::istream &fp, LoadProc proc )
+            size_t load(const SEQUENCE &indices, ios::istream &fp, LoadProc proc )
             {
                 size_t total = 0;
                 size_t n = indices.size();
@@ -74,23 +100,10 @@ namespace upsylon
                 return total;
             }
 
-            //! load from read-only buffer
-            size_t load(const memory::ro_buffer &buff, const Coord1D index, LoadProc proc);
+
             
-            //! load all  from read-only buffer
-            size_t load(const memory::ro_buffer &buff, LoadProc proc);
-
-            //! reload objects from a sequence of indices and a read-only buffer
-            template <typename SEQUENCE> inline
-            size_t load_only(const SEQUENCE &indices, const memory::ro_buffer &buff, LoadProc proc )
-            {
-                ios::imstream fp(buff);
-                return load_only<SEQUENCE>(indices,fp,proc);
-            }
-
 
         protected:
-            //! setup name and number of linear byte
             explicit FieldType(const string &id, const LayoutInfo &L, const size_t szObj); //!< setup
             explicit FieldType(const char   *id, const LayoutInfo &L, const size_t szObj); //!< setup
 

@@ -3,6 +3,7 @@
 #include "y/utest/run.hpp"
 #include "y/oxide/field3d.hpp"
 #include "y/ios/ovstream.hpp"
+#include "support.hpp"
 
 using namespace upsylon;
 using namespace Oxide;
@@ -10,6 +11,17 @@ using namespace Oxide;
 
 namespace
 {
+
+    template <typename FIELD> static inline
+    void fill(FIELD &F)
+    {
+        for(size_t i=0;i<F.items/2;++i)
+        {
+            const typename FIELD::type tmp = support::get<typename FIELD::mutable_type>();
+            F( F.rand(alea) ) = tmp;
+        }
+    }
+
     template <typename COORD>
     void make_all( const Layout<COORD> &full )
     {
@@ -40,8 +52,12 @@ namespace
                         dField &Fd = W.template create<dField>( "Fd" );
                         sField &Fs = W.template create<sField>( "Fs" );
 
-                        W.exchangeLocal(Fd);
-                        W.exchangeLocal(Fs);
+                        fill(Fd);
+                        fill(Fs);
+
+
+                        W.localExchange(Fd);
+                        W.localExchange(Fs);
                     }
                 }
             }

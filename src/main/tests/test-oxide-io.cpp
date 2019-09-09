@@ -45,9 +45,9 @@ namespace
             std::cerr << "F2=" << F2 << std::endl;
             std::cerr << "F3=" << F3 << std::endl;
 
-            const size_t n1 = F1.save(io,plg.save); Y_ASSERT(n1==io.size());
-            const size_t n2 = F2.save(io,plg.save); Y_ASSERT(n1+n2==io.size());
-            const size_t n3 = F3.save(io,plg.save); Y_ASSERT(n1+n2+n3==io.size());
+            const size_t n1 = F1.save(io,F1,F1,plg.save); Y_ASSERT(n1==io.size());
+            const size_t n2 = F2.save(io,F2,F2,plg.save); Y_ASSERT(n1+n2==io.size());
+            const size_t n3 = F3.save(io,F3,F3,plg.save); Y_ASSERT(n1+n2+n3==io.size());
 
             std::cerr << "#io=" << io.size() << "/" << io.capacity() << std::endl;
             
@@ -55,9 +55,9 @@ namespace
             if(plg.load)
             {
                 ios::imstream inp( io );
-                const size_t r1 = F1.load(inp,plg.load); Y_ASSERT(r1==n1);
-                const size_t r2 = F2.load(inp,plg.load); Y_ASSERT(r2==n2);
-                const size_t r3 = F3.load(inp,plg.load); Y_ASSERT(r3==n3);
+                const size_t r1 = F1.load(inp,F1,F1,plg.load); Y_ASSERT(r1==n1);
+                const size_t r2 = F2.load(inp,F2,F2,plg.load); Y_ASSERT(r2==n2);
+                const size_t r3 = F3.load(inp,F3,F3,plg.load); Y_ASSERT(r3==n3);
                 std::cerr << "\treloaded..." << std::endl;
             }
 
@@ -81,14 +81,16 @@ namespace
                 std::cerr << "#i3=" << i3.size() << std::endl;
             }
 
-            F1.save_only(i1,io,plg.save);
-            F2.save_only(i2,io,plg.save);
-            F3.save_only(i3,io,plg.save);
+
+            F1.save(i1,io,plg.save);
+            F2.save(i2,io,plg.save);
+            F3.save(i3,io,plg.save);
             if(plg.load)
             {
-                F1.load_only(i1,io,plg.load);
-                F2.load_only(i2,io,plg.load);
-                F3.load_only(i3,io,plg.load);
+                ios::imstream fp(io);
+                F1.load(i1,fp,plg.load);
+                F2.load(i2,fp,plg.load);
+                F3.load(i3,fp,plg.load);
                 std::cerr << "\treloaded..." << std::endl;
             }
 
