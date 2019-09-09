@@ -101,8 +101,6 @@ Y_UTEST(oxide)
                 {
                     MPI.vSendRecv(comm_variable_size, send_block, r, tag, recv_block, r, tag);
                     MPI.vSendRecv(comm_constant_size, send_block, r, tag, recv_block, r, tag);
-                    //Comm::SendRecv(MPI, send_block, r, recv_block, r,comm_variable_size);
-                    //Comm::SendRecv(MPI, send_block, r, recv_block, r,comm_constant_size);
                 }
             }
             else
