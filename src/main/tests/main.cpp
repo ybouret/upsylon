@@ -170,7 +170,7 @@ Y_UTEST_INIT(150)
     Y_UTEST(oxide_ranks);
     Y_UTEST(oxide_contour2d);
     Y_UTEST(oxide_layouts);
-
+    Y_UTEST(oxide_wksp);
 }
 Y_UTEST_EXEC()
 
