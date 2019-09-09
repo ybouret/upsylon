@@ -146,7 +146,25 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
             }
             
         };
-        
+
+        template <typename COORD, typename T>
+        struct __Field;
+
+        template <typename T> struct __Field<Coord1D,T>
+        {
+            typedef Field1D<T> Type;
+        };
+
+        template <typename T> struct __Field<Coord2D,T>
+        {
+            typedef Field2D<T> Type;
+        };
+
+        template <typename T> struct __Field<Coord3D,T>
+        {
+            typedef Field3D<T> Type;
+        };
+
     }
     
 }

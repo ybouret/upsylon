@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/memory/pooled.hpp"
 #include "y/string/tokenizer.hpp"
+#include "y/oxide/field3d.hpp"
 
 using namespace upsylon;
 using namespace Oxide;
@@ -14,6 +15,10 @@ namespace
     template <typename COORD>
     static inline void testWksp(char **argv)
     {
+
+        typedef  typename __Field<COORD,double>::Type dField;
+        typedef  typename __Field<COORD,float>::Type  fField;
+
         const COORD   length  = Coord::Parse<COORD>(argv[1],"length");
         const COORD   pbc     = Coord::Parse<COORD>(argv[2],"pbc");
         const Coord1D ng      = Coord::Parse<Coord1D>(argv[3],"ng");
@@ -23,6 +28,8 @@ namespace
         const Layout<COORD> full(org,length);
         std::cerr << "full=" << full << std::endl;
 
+
+
         const Coord1D size = Coord::Product(mapping);
         for(Coord1D   rank=0;rank<size;++rank)
         {
@@ -30,6 +37,13 @@ namespace
 
             Workspace<COORD> wksp(full,mapping,rank,pbc,ng);
             wksp.display(std::cerr, "\t(*) ");
+
+            dField &Fd = wksp.template create<dField>( "Fd" );
+            fField &Ff = wksp.template create<fField>( "Ff" );
+
+            std::cerr << "Fd: " << Fd << std::endl;
+            std::cerr << "Ff: " << Ff << std::endl;
+
         }
 
 

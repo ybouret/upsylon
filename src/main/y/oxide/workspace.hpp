@@ -3,8 +3,8 @@
 #define Y_OXIDE_WORKSPACE_INCLUDED 1
 
 #include "y/oxide/layouts.hpp"
-#include "y/oxide/field/handle.hpp"
-#include "y/associative/set.hpp"
+#include "y/oxide/field/set.hpp"
+
 namespace upsylon
 {
     namespace Oxide
@@ -48,6 +48,16 @@ namespace upsylon
             {
 
             }
+
+            //! create and register a field
+            template <typename FIELD>
+            FIELD & create( const string &name )
+            {
+                FIELD *F = new FIELD(name,this->outer);
+                __Fields::Register<FIELD>(*this,F);
+                return *F;
+            }
+
 
 
         private:
