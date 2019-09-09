@@ -61,7 +61,12 @@ namespace upsylon
                 string s( tt.token(), tt.units() );
                 *(p++) = string_convert::to<unit_t>( s.clean(is_blank),id );
             }
-            if(n!=tt.count()) throw exception("Oxide::Coord::Parse(bad dim)");
+
+            if(n!=tt.count())
+            {
+                if(!id) id = "?";
+                throw exception("Oxide::Coord::Parse(bad dim for '%s')", id);
+            }
         }
         
         void Coord:: Parse(Coord1D *p, const size_t n, const char   *text, const char *id)

@@ -8,10 +8,12 @@
 using namespace upsylon;
 using namespace Oxide;
 
-typedef vector<string,memory::pooled> strings;
 
 namespace
 {
+    typedef vector<string,memory::pooled> strings;
+
+    
     static inline
     Coord1D strings1D( const strings &s, const char *id)
     {
@@ -57,10 +59,10 @@ namespace
             sub.display(std::cerr,"\t(*) ");
         }
     }
+    static inline bool isSep( const char C ) { return C == ','; }
 
 }
 
-static inline bool isSep( const char C ) { return C == ','; }
 
 Y_UTEST(oxide_layouts)
 {
