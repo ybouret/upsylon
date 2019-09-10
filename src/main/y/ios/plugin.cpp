@@ -6,6 +6,15 @@ namespace upsylon
     namespace ios
     {
 
+        plugin:: plugin( const uint32_t u ) throw() : counted_object(), uuid(u)
+        {
+        }
+
+        plugin:: ~plugin() throw()
+        {
+        }
+        
+
         _plugin:: ~_plugin() throw()
         {
         }

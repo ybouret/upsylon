@@ -6,68 +6,131 @@
 #include "y/ios/istream.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/type/args.hpp"
+#include "y/type/fourcc.hpp"
 
 namespace upsylon
 {
     namespace ios
     {
 
-#if 0
-        //! reader interface
+
+        //! plugin interface
         class plugin : public counted_object
         {
         public:
-            virtual ~reader() throw();
+            const uint32_t uuid;
+            virtual ~plugin() throw();
 
             virtual size_t  load(ios::istream &, void       *) = 0;
             virtual size_t  save(ios::ostream &, const void *) = 0;
 
-            virtual reader *clone() const  =0;
+            virtual plugin *clone() const  =0;
 
         protected:
-            explicit reader() throw();
+            explicit plugin(const uint32_t ) throw();
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(reader);
+            Y_DISABLE_COPY_AND_ASSIGN(plugin);
 
         };
 
-        //! writer interface
-        class writer
-        {
-        public:
-            virtual ~writer() throw();
-
-
-        protected:
-            explicit writer() throw();
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(writer);
-        };
-
+        
         template <typename T>
-        class nbo_reader
+        class nbo_plugin : public plugin
         {
         public:
+            static const uint32_t UUID = Y_FOURCC('@','N','B','O');
             Y_DECL_ARGS(T,type);
 
-            inline virtual ~nbo_reader() throw() {}
-            inline explicit nbo_reader() throw() {}
+            inline virtual ~nbo_plugin() throw() {}
+            inline explicit nbo_plugin() throw() : plugin(UUID) {}
 
             inline virtual size_t load(ios::istream &fp, void *addr)
             {
                 assert(addr);
                 size_t tmp = 0;
-                *static_cast<T*>(addr) = fp.read_net<T>(&tmp);
+                *static_cast<mutable_type*>(addr) = fp.read_net<mutable_type>(&tmp);
                 return tmp;
             }
 
+            inline virtual size_t save(ios::ostream &fp, const void *addr)
+            {
+                assert(addr);
+                size_t tmp = 0;
+                fp.emit_net<T>( *static_cast<const type*>(addr), &tmp);
+                return tmp;
+            }
+
+            inline virtual plugin * clone() const { return new nbo_plugin<T>; }
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(nbo_reader);
+            Y_DISABLE_COPY_AND_ASSIGN(nbo_plugin);
         };
-#endif
+
+
+
+        template <typename T>
+        class raw_plugin : public plugin
+        {
+        public:
+            Y_DECL_ARGS(T,type);
+            static const uint32_t UUID = Y_FOURCC('@','R','A','W');
+
+            inline virtual ~raw_plugin() throw() {}
+            inline explicit raw_plugin() throw() : plugin(UUID) {}
+
+
+            inline virtual size_t save(ios::ostream &fp, const void *addr)
+            {
+                assert(addr);
+                fp.output(addr, sizeof(type));
+                return sizeof(type);
+            }
+
+            inline virtual size_t load(ios::istream &fp, void *addr)
+            {
+                fp.input(addr,sizeof(type));
+                return sizeof(type);
+            }
+
+            inline virtual plugin * clone() const { return new raw_plugin<T>; }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(raw_plugin);
+        };
+
+        template <typename T>
+        class srz_plugin : public plugin
+        {
+        public:
+            Y_DECL_ARGS(T,type);
+            static const uint32_t UUID = Y_FOURCC('@','S','R','Z');
+
+            inline virtual ~srz_plugin() throw() {}
+            inline explicit srz_plugin() throw() : plugin(UUID) {}
+
+
+            inline virtual size_t save(ios::ostream &fp, const void *addr)
+            {
+                assert(addr);
+                const T            *pObj = static_cast<const T*>(addr);
+                const serializable *pSrz = pObj;
+                return pSrz->serialize(fp);
+            }
+
+            inline virtual size_t load(ios::istream &fp, void *addr)
+            {
+                assert(addr);
+                size_t count = 0;
+                *static_cast<mutable_type*>(addr) = T::read(fp,&count);
+                return count;
+            }
+
+            inline virtual plugin * clone() const { return new srz_plugin<T>; }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(srz_plugin);
+        };
 
 
 

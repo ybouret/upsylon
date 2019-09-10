@@ -52,6 +52,7 @@ Y_UTEST(ios_plugin)
         do_plugin<double>( plg );
     }
 
+#if 0
     {
         ios::plugin_net<uint32_t> plg;
         do_plugin<uint32_t>( plg );
@@ -76,6 +77,7 @@ Y_UTEST(ios_plugin)
         ios::plugin_srz<mpq> plg;
         do_plugin<mpq>( plg );
     }
+#endif
 }
 Y_UTEST_DONE()
 

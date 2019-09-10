@@ -114,8 +114,7 @@ namespace
 Y_UTEST(oxide_wksp)
 {
 
-    IO &io = IO::instance();
-
+    
     // length pbc ng mapping
     if(argc<=4)
     {
