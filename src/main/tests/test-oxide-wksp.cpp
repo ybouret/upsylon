@@ -4,6 +4,7 @@
 #include "y/string/tokenizer.hpp"
 #include "y/oxide/field3d.hpp"
 #include "y/ios/ovstream.hpp"
+#include "y/ios/imstream.hpp"
 
 #include "support.hpp"
 
@@ -82,16 +83,34 @@ namespace
                 wksp.localExchange(Ff);
                 wksp.localExchange(Fs);
 
-                size_t total = 0;
+                block.free();
+                size_t total_save = 0;
                 for(size_t i=0;i<wksp.Orientations;++i)
                 {
-                    total += wksp.asyncSave(Connectivity::Forward,i,block,Fd);
-                    total += wksp.asyncSave(Connectivity::Reverse,i,block,Fd);
+                    total_save += wksp.asyncSave(Connectivity::Forward,i,block,Fd);
+                    total_save += wksp.asyncSave(Connectivity::Reverse,i,block,Fd);
+                    total_save += wksp.asyncSave(Connectivity::Forward,i,block,Ff);
+                    total_save += wksp.asyncSave(Connectivity::Reverse,i,block,Ff);
+                    total_save += wksp.asyncSave(Connectivity::Forward,i,block,Fs);
+                    total_save += wksp.asyncSave(Connectivity::Reverse,i,block,Fs);
                 }
-                std::cerr << "all_save=" << total << std::endl;
+                std::cerr << "total_save=" << total_save << std::endl;
 
-
+                size_t         total_load = 0;
+                ios::imstream  inp(block);
+                for(size_t i=0;i<wksp.Orientations;++i)
+                {
+                    total_load += wksp.asyncLoad(Connectivity::Forward,i,inp,Fd);
+                    total_load += wksp.asyncLoad(Connectivity::Reverse,i,inp,Fd);
+                    total_load += wksp.asyncLoad(Connectivity::Forward,i,inp,Ff);
+                    total_load += wksp.asyncLoad(Connectivity::Reverse,i,inp,Ff);
+                    total_load += wksp.asyncLoad(Connectivity::Forward,i,inp,Fs);
+                    total_load += wksp.asyncLoad(Connectivity::Reverse,i,inp,Fs);
+                }
+                std::cerr << "total_load=" << total_load << std::endl;
+                Y_CHECK(total_load==total_save);
             }
+
 
             {
                 display_field( wksp.template as<dField>("Fd") );
@@ -136,10 +155,14 @@ Y_UTEST(oxide_wksp)
     std::cerr << "OxideIO.life_time=" << OxideIO.life_time << std::endl;
     std::cerr << "OxideIO.size()   =" << OxideIO.size()    << std::endl;
 
-    for(IO::iterator it = OxideIO.begin(); it != OxideIO.end(); ++it )
+    if(false)
     {
-        std::cerr << "io for <" << it->key().name() << ">" << std::endl;
+        for(IO::iterator it = OxideIO.begin(); it != OxideIO.end(); ++it )
+        {
+            std::cerr << "io for <" << it->key().name() << ">" << std::endl;
+        }
     }
+
 
 }
 Y_UTEST_DONE()

@@ -3,6 +3,7 @@
 #include "y/utest/run.hpp"
 #include "y/oxide/field3d.hpp"
 #include "y/ios/ovstream.hpp"
+#include "y/ios/imstream.hpp"
 #include "support.hpp"
 
 using namespace upsylon;
@@ -29,7 +30,9 @@ namespace
         typedef typename __Field<COORD,double>::Type dField;
         typedef typename __Field<COORD,string>::Type sField;
 
-        const size_t ng = 1;
+        const size_t  ng = 1;
+        ios::ovstream block( 1024*1024 );
+
         std::cerr << "In " << full.Dimensions << "D" << std::endl;
         for(size_t size=1;size<=8;++size)
         {
@@ -38,13 +41,14 @@ namespace
             full.buildMappings(mappings,size);
             for(size_t j=1;j<=mappings.size();++j)
             {
-                std::cerr << "|_mapping=" << mappings[j] << std::endl;
+                std::cerr << "/mapping=" << mappings[j];
                 COORD pbc0(0); Coord::LD(pbc0,0);
                 COORD pbc1(1); Coord::LD(pbc1,1);
 
                 typename Layout<COORD>::Loop pbc(pbc0,pbc1);
                 for(pbc.start(); pbc.valid(); pbc.next())
                 {
+                    //std::cerr << " |_pbc=" << pbc.value << std::endl;
                     for(size_t rank=0;rank<size;++rank)
                     {
                         Workspace<COORD> W(full,mappings[j],rank,pbc.value,ng);
@@ -55,12 +59,32 @@ namespace
                         fill(Fd);
                         fill(Fs);
 
-
                         W.localExchange(Fd);
                         W.localExchange(Fs);
+
+                        block.free();
+                        size_t total_save = 0;
+                        for(size_t k=0;k<W.Orientations;++k)
+                        {
+                            total_save += W.asyncSave(Connectivity::Forward,k,block,Fd);
+                            total_save += W.asyncSave(Connectivity::Reverse,k,block,Fd);
+                            total_save += W.asyncSave(Connectivity::Forward,k,block,Fs);
+                            total_save += W.asyncSave(Connectivity::Reverse,k,block,Fs);
+                        }
+
+                        ios::imstream inp(block);
+                        size_t total_load = 0;
+                        for(size_t k=0;k<W.Orientations;++k)
+                        {
+                            total_load += W.asyncLoad(Connectivity::Forward,k,inp,Fd);
+                            total_load += W.asyncLoad(Connectivity::Reverse,k,inp,Fd);
+                            total_load += W.asyncLoad(Connectivity::Forward,k,inp,Fs);
+                            total_load += W.asyncLoad(Connectivity::Reverse,k,inp,Fs);
+                        }
+                        Y_ASSERT(total_load==total_save);
                     }
                 }
-            }
+            } std::cerr << std::endl;
 
         }
 

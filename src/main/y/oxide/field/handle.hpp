@@ -17,7 +17,7 @@ namespace upsylon
         {
         public:
             const FieldPointer   field;  //!< holds the dynamic field
-            const std::type_info &ftype; //!< holds the type info
+            const std::type_info &ftype; //!< holds the fieldtype info
             const void           *faddr; //!< holds the derived field address
 
             //! cleanup

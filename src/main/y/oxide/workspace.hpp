@@ -169,7 +169,7 @@ namespace upsylon
             inline size_t asyncLoad(const Connectivity::Way way,
                                     const size_t            orientation,
                                     ios::istream           &block,
-                                    const FieldType        &F)
+                                    FieldType              &F)
             {
                 assert(owns(F));
                 const Ghosts *G = getAsync(way,orientation);
@@ -183,8 +183,7 @@ namespace upsylon
                 }
             }
 
-
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Workspace);
             const Ghosts *getAsync(const Connectivity::Way way,

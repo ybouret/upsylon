@@ -31,6 +31,7 @@ namespace upsylon
             const size_t           ownedObjects; //!< owned built objects
             const size_t           linearExtent; //!< EXPECTED linear extent in bytes
             const size_t           sizeOfObject; //!< sizeof(T)
+            const std::type_info  &typeOfObject; //!< system wide type info name
         private:
             mutable ios::plugin::pointer transfer;     //!< type related load/save method for one object
         public:

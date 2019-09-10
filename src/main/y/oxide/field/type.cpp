@@ -58,7 +58,7 @@ namespace upsylon
     namespace Oxide
     {
 
-        static inline ios::plugin * __plugin_for( const std::type_info &tid )
+        static inline ios::plugin * __plg( const std::type_info &tid )
         {
             static const IO &io = IO::instance();
             return io.create_for(tid);
@@ -70,7 +70,8 @@ localObjects(L.items),            \
 ownedObjects(0),                  \
 linearExtent(szObj*localObjects), \
 sizeOfObject(szObj),              \
-transfer(__plugin_for(tid)),      \
+typeOfObject(tid),                \
+transfer(__plg(typeOfObject)),    \
 privateData(0),                   \
 privateSize(0)
 

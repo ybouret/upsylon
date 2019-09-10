@@ -15,12 +15,12 @@ namespace
     {
         std::cerr << "I/O for <" << typeid(T).name() << ">" << std::endl;
         ios::ovstream data;
-        for(size_t cycle=0;cycle<8;++cycle)
+        for(size_t cycle=0;cycle<16;++cycle)
         {
             data.free();
             size_t        ns   = 0;
             size_t        no   = 0;
-            for(size_t i=10+alea.leq(100);i>0;--i)
+            for(size_t i=10+alea.leq(200);i>0;--i)
             {
                 const T tmp = support::get<T>();
                 ns += plg.save(data, &tmp);
@@ -132,6 +132,7 @@ Y_UTEST(ios_plugin)
     do_with<uint32_t>( pdb );
     do_with< complex<float> >( pdb );
     do_with< string >( pdb );
+    do_with< mpq >( pdb );
 
 }
 Y_UTEST_DONE()
