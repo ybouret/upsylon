@@ -79,9 +79,9 @@ namespace
                 Y_CHECK( wksp.owns(Ff) );
                 Y_CHECK( wksp.owns(Fs) );
 
-                wksp.localExchange(Fd);
-                wksp.localExchange(Ff);
-                wksp.localExchange(Fs);
+                wksp.localExchange1(Fd);
+                wksp.localExchange1(Ff);
+                wksp.localExchange1(Fs);
 
                 Fields::Selection pick;
                 pick( wksp, "Fd" );
@@ -92,18 +92,18 @@ namespace
                     std::cerr << "pick[" << i << "]=" << pick[i]->name << std::endl;
                 }
 
-                wksp.localExchangeAll(pick);
+                wksp.localExchange(pick);
 
                 block.free();
                 size_t total_save = 0;
                 for(size_t i=0;i<wksp.Orientations;++i)
                 {
-                    total_save += wksp.asyncSave(Connectivity::Forward,i,block,Fd);
-                    total_save += wksp.asyncSave(Connectivity::Reverse,i,block,Fd);
-                    total_save += wksp.asyncSave(Connectivity::Forward,i,block,Ff);
-                    total_save += wksp.asyncSave(Connectivity::Reverse,i,block,Ff);
-                    total_save += wksp.asyncSave(Connectivity::Forward,i,block,Fs);
-                    total_save += wksp.asyncSave(Connectivity::Reverse,i,block,Fs);
+                    total_save += wksp.asyncSave1(Connectivity::Forward,i,block,Fd);
+                    total_save += wksp.asyncSave1(Connectivity::Reverse,i,block,Fd);
+                    total_save += wksp.asyncSave1(Connectivity::Forward,i,block,Ff);
+                    total_save += wksp.asyncSave1(Connectivity::Reverse,i,block,Ff);
+                    total_save += wksp.asyncSave1(Connectivity::Forward,i,block,Fs);
+                    total_save += wksp.asyncSave1(Connectivity::Reverse,i,block,Fs);
                 }
                 std::cerr << "total_save=" << total_save << std::endl;
 
@@ -111,12 +111,12 @@ namespace
                 ios::imstream  inp(block);
                 for(size_t i=0;i<wksp.Orientations;++i)
                 {
-                    total_load += wksp.asyncLoad(Connectivity::Forward,i,inp,Fd);
-                    total_load += wksp.asyncLoad(Connectivity::Reverse,i,inp,Fd);
-                    total_load += wksp.asyncLoad(Connectivity::Forward,i,inp,Ff);
-                    total_load += wksp.asyncLoad(Connectivity::Reverse,i,inp,Ff);
-                    total_load += wksp.asyncLoad(Connectivity::Forward,i,inp,Fs);
-                    total_load += wksp.asyncLoad(Connectivity::Reverse,i,inp,Fs);
+                    total_load += wksp.asyncLoad1(Connectivity::Forward,i,inp,Fd);
+                    total_load += wksp.asyncLoad1(Connectivity::Reverse,i,inp,Fd);
+                    total_load += wksp.asyncLoad1(Connectivity::Forward,i,inp,Ff);
+                    total_load += wksp.asyncLoad1(Connectivity::Reverse,i,inp,Ff);
+                    total_load += wksp.asyncLoad1(Connectivity::Forward,i,inp,Fs);
+                    total_load += wksp.asyncLoad1(Connectivity::Reverse,i,inp,Fs);
                 }
                 std::cerr << "total_load=" << total_load << std::endl;
                 Y_CHECK(total_load==total_save);
@@ -128,6 +128,34 @@ namespace
                 display_field( wksp.template as<fField>("Ff") );
                 display_field( wksp.template as<sField>("Fs") );
             }
+
+            Fields::Selection pick;
+            pick( wksp, "Fd;Fs;Ff" );
+
+            for(size_t i=0;i<wksp.Orientations;++i)
+            {
+                {
+                    const size_t total_save = wksp.asyncSave(Connectivity::Forward,i,pick);
+                    Y_CHECK(total_save==wksp.sendBlock.size());
+                }
+                {
+                    wksp.recvBlock.copy( wksp.sendBlock ); Y_ASSERT(wksp.recvBlock.size()==wksp.sendBlock.size());
+                    const size_t total_load = wksp.asyncLoad(Connectivity::Forward,i,pick);
+                    Y_CHECK(total_load==wksp.recvBlock.size());
+                }
+
+                {
+                    const size_t total_save = wksp.asyncSave(Connectivity::Reverse,i,pick);
+                    Y_CHECK(total_save==wksp.sendBlock.size());
+                }
+
+                {
+                    wksp.recvBlock.copy( wksp.sendBlock ); Y_ASSERT(wksp.recvBlock.size()==wksp.sendBlock.size());
+                    const size_t total_load = wksp.asyncLoad(Connectivity::Reverse,i,pick);
+                    Y_CHECK(total_load==wksp.recvBlock.size());
+                }
+            }
+
 
 
         }

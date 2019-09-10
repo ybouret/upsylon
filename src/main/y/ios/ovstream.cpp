@@ -1,6 +1,7 @@
 
 #include "y/ios/ovstream.hpp"
 #include "y/exception.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -42,6 +43,17 @@ namespace upsylon
         void ovstream:: flush()
         {
 
+        }
+
+        void ovstream:: copy(const array<uint8_t> &other)
+        {
+            array<uint8_t> &self = *this;
+            if( &self != &other )
+            {
+                const size_t n = other.size();
+                set_fast(n);
+                memcpy( *self, *other, n );
+            }
         }
 
     }

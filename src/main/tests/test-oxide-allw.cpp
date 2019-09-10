@@ -53,35 +53,37 @@ namespace
                     {
                         Workspace<COORD> W(full,mappings[j],rank,pbc.value,ng);
 
-                        dField &Fd = W.template create<dField>( "Fd" );
-                        sField &Fs = W.template create<sField>( "Fs" );
-
-                        fill(Fd);
-                        fill(Fs);
-
-                        W.localExchange(Fd);
-                        W.localExchange(Fs);
-
-                        block.free();
-                        size_t total_save = 0;
-                        for(size_t k=0;k<W.Orientations;++k)
                         {
-                            total_save += W.asyncSave(Connectivity::Forward,k,block,Fd);
-                            total_save += W.asyncSave(Connectivity::Reverse,k,block,Fd);
-                            total_save += W.asyncSave(Connectivity::Forward,k,block,Fs);
-                            total_save += W.asyncSave(Connectivity::Reverse,k,block,Fs);
-                        }
+                            dField &Fd = W.template create<dField>( "Fd" );
+                            sField &Fs = W.template create<sField>( "Fs" );
 
-                        ios::imstream inp(block);
-                        size_t total_load = 0;
-                        for(size_t k=0;k<W.Orientations;++k)
-                        {
-                            total_load += W.asyncLoad(Connectivity::Forward,k,inp,Fd);
-                            total_load += W.asyncLoad(Connectivity::Reverse,k,inp,Fd);
-                            total_load += W.asyncLoad(Connectivity::Forward,k,inp,Fs);
-                            total_load += W.asyncLoad(Connectivity::Reverse,k,inp,Fs);
+                            fill(Fd);
+                            fill(Fs);
+
+                            W.localExchange1(Fd);
+                            W.localExchange1(Fs);
+
+                            block.free();
+                            size_t total_save = 0;
+                            for(size_t k=0;k<W.Orientations;++k)
+                            {
+                                total_save += W.asyncSave1(Connectivity::Forward,k,block,Fd);
+                                total_save += W.asyncSave1(Connectivity::Reverse,k,block,Fd);
+                                total_save += W.asyncSave1(Connectivity::Forward,k,block,Fs);
+                                total_save += W.asyncSave1(Connectivity::Reverse,k,block,Fs);
+                            }
+
+                            ios::imstream inp(block);
+                            size_t total_load = 0;
+                            for(size_t k=0;k<W.Orientations;++k)
+                            {
+                                total_load += W.asyncLoad1(Connectivity::Forward,k,inp,Fd);
+                                total_load += W.asyncLoad1(Connectivity::Reverse,k,inp,Fd);
+                                total_load += W.asyncLoad1(Connectivity::Forward,k,inp,Fs);
+                                total_load += W.asyncLoad1(Connectivity::Reverse,k,inp,Fs);
+                            }
+                            Y_ASSERT(total_load==total_save);
                         }
-                        Y_ASSERT(total_load==total_save);
                     }
                 }
             } std::cerr << std::endl;
@@ -97,9 +99,9 @@ namespace
 Y_UTEST(oxide_allw)
 {
 
-    const Coord3D lower(1,1,1);
-    const Coord3D org(0,0,0);
-    const Coord3D top(2,2,2);
+    const Coord3D  lower(1,1,1);
+    const Coord3D  org(0,0,0);
+    const Coord3D  top(2,2,2);
     Layout3D::Loop loop(org,top);
 
     for( loop.start(); loop.valid(); loop.next() )

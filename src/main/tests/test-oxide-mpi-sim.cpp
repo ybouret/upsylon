@@ -73,11 +73,8 @@ namespace
                     for(size_t k=0;k<size;++k)
                     {
                         Workspace<COORD> &W = WS[k];
-                        W.localExchange( W["Fd"] );
-                        W.localExchange( W["Fs"] );
-
-                        
-
+                        W.localExchange1( W["Fd"] );
+                        W.localExchange1( W["Fs"] );
                     }
 
 

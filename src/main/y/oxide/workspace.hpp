@@ -5,6 +5,7 @@
 #include "y/oxide/layouts.hpp"
 #include "y/oxide/field/set.hpp"
 #include "y/ios/ovstream.hpp"
+#include "y/ios/imstream.hpp"
 
 namespace upsylon
 {
@@ -120,9 +121,9 @@ namespace upsylon
                 return as<FIELD>(_);
             }
 
-           
+
             //!  exchange of local ghosts pairs
-            inline void localExchange( FieldType &F  )
+            inline void localExchange1( FieldType &F  )
             {
                 assert(owns(F));
                 for(size_t i=0;i<Orientations;++i)
@@ -152,45 +153,21 @@ namespace upsylon
                 }
             }
 
-            //!  exchange of local ghosts pairs, wrapper
-            inline void localExchange( const string &fieldName )
-            {
-                Fields &self = *this;
-                localExchange(self[fieldName]);
-            }
 
-            //! exchange of local ghosts pairs, wrapper
-            inline void localExchange( const char *fieldName )
-            {
-                Fields &self = *this;
-                localExchange(self[fieldName]);
-            }
-
-
-            //! *ITERATOR = FieldPointer, **ITERATOR=FieldType
-            template <typename ITERATOR>
-            inline void localExchangeRange( ITERATOR it, size_t n )
-            {
-                while(n-->0)
-                {
-                    localExchange(**it);
-                    ++it;
-                }
-            }
 
             //! exchange a full sequence<FieldPointer>
             template <typename SEQUENCE>
-            inline void localExchangeAll( SEQUENCE &fields )
+            inline void localExchange( SEQUENCE &fields )
             {
                 localExchangeRange(fields.begin(), fields.size());
             }
 
 
             //! save aynchronous content for way+orientation into block
-            inline size_t asyncSave(const Connectivity::Way way,
-                                    const size_t            orientation,
-                                    ios::ostream           &block,
-                                    const FieldType        &F) const
+            inline size_t asyncSave1(const Connectivity::Way way,
+                                     const size_t            orientation,
+                                     ios::ostream           &block,
+                                     const FieldType        &F) const
             {
                 assert(owns(F));
                 const Ghosts *G = getAsync(way,orientation);
@@ -204,17 +181,29 @@ namespace upsylon
                 }
             }
 
-            //! load asynchronous content for way+orientation from block
-            inline size_t asyncLoad(const Connectivity::Way way,
+            //! save some fields, with sendBlock reinitialization
+            template <typename SEQUENCE>
+            inline size_t asyncSave(const Connectivity::Way way,
                                     const size_t            orientation,
-                                    ios::istream           &block,
-                                    FieldType              &F)
+                                    SEQUENCE               &fields)
+            {
+                sendBlock.free();
+                return asyncSave( fields.begin(), fields.size(), way, orientation);
+            }
+
+
+
+            //! load asynchronous content for way+orientation from input
+            inline size_t asyncLoad1(const Connectivity::Way way,
+                                     const size_t            orientation,
+                                     ios::istream           &input,
+                                     FieldType              &F)
             {
                 assert(owns(F));
                 const Ghosts *G = getAsync(way,orientation);
                 if(G)
                 {
-                    return F.load(G->outer.indices,block);
+                    return F.load(G->outer.indices,input);
                 }
                 else
                 {
@@ -222,11 +211,22 @@ namespace upsylon
                 }
             }
 
+            //! load some fields, assuming recvBlock is filled
+            template <typename SEQUENCE>
+            inline size_t asyncLoad(const Connectivity::Way way,
+                                    const size_t            orientation,
+                                    SEQUENCE               &fields)
+            {
+                ios::imstream input(recvBlock);
+                return  asyncLoad( fields.begin(), fields.size(), way, orientation, input);
+            }
 
 
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Workspace);
+
+            //! extract matching ghosts
             const Ghosts *getAsync(const Connectivity::Way way,
                                    const size_t            orientation) const throw()
             {
@@ -242,6 +242,51 @@ namespace upsylon
                 }
                 return 0;
             }
+            
+            //! *ITERATOR = FieldPointer, **ITERATOR=FieldType
+            template <typename ITERATOR>
+            inline void localExchangeRange( ITERATOR it, size_t n )
+            {
+                while(n-->0)
+                {
+                    localExchange1(**it);
+                    ++it;
+                }
+            }
+
+            template <typename ITERATOR>
+            inline size_t asyncSave(ITERATOR                it,
+                                    size_t                  n,
+                                    const Connectivity::Way way,
+                                    const size_t            orientation)
+            {
+                size_t sendBytes = 0;
+                while(n-->0)
+                {
+                    sendBytes += asyncSave1(way,orientation,sendBlock,**it);
+                    ++it;
+                }
+                return sendBytes;
+            }
+
+            template <typename ITERATOR>
+            inline size_t asyncLoad(ITERATOR                it,
+                                    size_t                  n,
+                                    const Connectivity::Way way,
+                                    const size_t            orientation,
+                                    ios::istream           &input)
+            {
+                size_t recvBytes = 0;
+                while(n-->0)
+                {
+                    recvBytes += asyncLoad1(way, orientation, input, **it);
+                    ++it;
+                }
+                return recvBytes;
+            }
+
+
+
         };
     }
 }

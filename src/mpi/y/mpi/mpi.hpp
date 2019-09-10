@@ -373,10 +373,10 @@ namespace upsylon
         //! send variable number of bytes
         void vSend(const comm_mode mode, const vBytes &v, const int target, const int tag);
 
-        //! recv variable numbe of bytes
+        //! recv variable number of bytes
         void vRecv(const comm_mode mode, vBlock       &v, const int source, const int tag);
 
-        //! send/recv variable numberr of bytes
+        //! send/recv variable number of bytes
         void vSendRecv(const comm_mode mode,
                        const vBytes   &sendBytes, const int target, const int sendtag,
                        vBlock         &recvBytes, const int source, const int recvtag);
