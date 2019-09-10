@@ -25,7 +25,8 @@ namespace upsylon
             ovstream &set_zero(const size_t n); //!< set all to zero
 
             virtual void write( char C ); //!< push_back
-            virtual void flush();         //!< ...
+            virtual void flush();         //!< do nothing
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ovstream);
         };

@@ -4,13 +4,14 @@
 
 #include "y/oxide/layouts.hpp"
 #include "y/oxide/field/set.hpp"
+#include "y/ios/ovstream.hpp"
 
 namespace upsylon
 {
     namespace Oxide
     {
 
-        struct WorkspaceOps
+        struct __Workspace
         {
             static void CheckLocalSizes( const Coord1D *sizes, const unsigned dim );
 
@@ -21,6 +22,8 @@ namespace upsylon
                 return localSizes;
             }
         };
+
+        typedef ios::ovstream IOBlock;
 
         //! a workspace is some layouts and some fields
         template <typename COORD>
@@ -43,6 +46,14 @@ namespace upsylon
 
             //------------------------------------------------------------------
             //
+            // members
+            //
+            //------------------------------------------------------------------
+            IOBlock sendBlock;
+            IOBlock recvBlock;
+
+            //------------------------------------------------------------------
+            //
             // methods
             //
             //------------------------------------------------------------------
@@ -56,7 +67,7 @@ namespace upsylon
                                       const_coord      &PBC,
                                       const Coord1D     ng) :
             LayoutsType(full,
-                        WorkspaceOps::CheckLocalSizes(localSizes),
+                        __Workspace::CheckLocalSizes(localSizes),
                         globalRank,
                         PBC,
                         ng),
@@ -167,6 +178,7 @@ namespace upsylon
                 }
             }
 
+            //! exchange a full sequence<FieldPointer>
             template <typename SEQUENCE>
             inline void localExchangeAll( SEQUENCE &fields )
             {
@@ -209,6 +221,8 @@ namespace upsylon
                     return 0;
                 }
             }
+
+
 
             
         private:

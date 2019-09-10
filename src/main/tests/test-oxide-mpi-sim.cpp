@@ -74,6 +74,9 @@ namespace
                     {
                         Workspace<COORD> &W = WS[k];
                         W.localExchange( W["Fd"] );
+                        W.localExchange( W["Fs"] );
+
+                        
 
                     }
 

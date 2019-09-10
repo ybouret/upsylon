@@ -79,17 +79,17 @@ namespace upsylon
         }
 
         //! wrapper with one separator
-        inline bool next_with( T sep ) throw()
+        inline bool next_with( const T sep ) throw()
         {
-            const chr2sep fcn = { sep };
-            return next(fcn);
+            const str2sep is_sep = { &sep, 1 };
+            return next(is_sep);
         }
 
         //! wrapper with some separators
         inline bool next_with(const T *buffer, const size_t buflen) throw()
         {
-            const str2sep fcn = { buffer, buflen };
-            return next(fcn);
+            const str2sep is_sep = { buffer, buflen };
+            return next(is_sep);
         }
 
         //! wrapper with some separators
@@ -128,6 +128,8 @@ namespace upsylon
 
 
 
+
+
         //! one pass count
         template<typename FUNC> static inline
         size_t count_for( const core::string<T> &input, FUNC &is_sep ) throw()
@@ -158,12 +160,6 @@ namespace upsylon
             }
             return words.size();
         }
-
-        struct chr2sep
-        {
-            T value;
-            inline bool operator()(const T C) const throw() { return value==C; }
-        };
 
         struct str2sep
         {

@@ -7,7 +7,7 @@ namespace upsylon
     namespace Oxide
     {
 
-        void WorkspaceOps:: CheckLocalSizes( const Coord1D *sizes, const unsigned dim )
+        void __Workspace:: CheckLocalSizes( const Coord1D *sizes, const unsigned dim )
         {
             assert(sizes);
             if(dim<=0||dim>3) throw exception("Invalid Workspace dimension=%u",dim);

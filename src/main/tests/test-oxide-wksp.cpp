@@ -92,6 +92,7 @@ namespace
                     std::cerr << "pick[" << i << "]=" << pick[i]->name << std::endl;
                 }
 
+                wksp.localExchangeAll(pick);
 
                 block.free();
                 size_t total_save = 0;

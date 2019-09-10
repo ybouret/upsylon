@@ -27,7 +27,7 @@ namespace upsylon
                                 const_coord      &localSizes,
                                 const_coord      &PBC,
                                 const Coord1D     ng) :
-            SlotsType( Coord::Product( WorkspaceOps::CheckLocalSizes(localSizes) ) )
+            SlotsType( Coord::Product( __Workspace::CheckLocalSizes(localSizes) ) )
             {
                 const Coord1D sz = Coord1D( this->count );
                 for(Coord1D rank=0;rank<sz;++rank)
