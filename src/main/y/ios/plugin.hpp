@@ -7,6 +7,7 @@
 #include "y/ios/ostream.hpp"
 #include "y/type/args.hpp"
 #include "y/type/fourcc.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace upsylon
 {
@@ -18,13 +19,13 @@ namespace upsylon
         class plugin : public counted_object
         {
         public:
+            typedef arc_ptr<plugin> pointer;
             const uint32_t uuid;
-            virtual ~plugin() throw();
 
             virtual size_t  load(ios::istream &, void       *) = 0;
             virtual size_t  save(ios::ostream &, const void *) = 0;
-
-            virtual plugin *clone() const  =0;
+            virtual plugin *clone() const                      = 0;
+            virtual        ~plugin() throw();
 
         protected:
             explicit plugin(const uint32_t ) throw();
@@ -34,7 +35,7 @@ namespace upsylon
 
         };
 
-        
+
         template <typename T>
         class nbo_plugin : public plugin
         {
