@@ -68,6 +68,7 @@ namespace upsylon
                 Selection & operator()( FieldType &ft );
                 Selection & operator()( Fields &F, const string &ids );
 
+                void clean() throw();
 
             private:
                 Y_DISABLE_ASSIGN(Selection);

@@ -85,6 +85,7 @@ namespace upsylon
 }
 
 #include "y/string/tokenizer.hpp"
+#include "y/sort/unique.hpp"
 
 namespace upsylon
 {
@@ -109,24 +110,28 @@ namespace upsylon
         {
             const FieldPointer p( &ft );
             push_back(p);
+            clean();
             return *this;
         }
 
-        static inline bool __is_sep( const char C ) throw()
-        {
-            return Fields::Selection::Separator == C;
-        }
 
         Fields::Selection & Fields:: Selection::operator()( Fields &F, const string &ids )
         {
+            Selection      &self = *this;
             tokenizer<char> tkn(ids);
-            while( tkn.next(__is_sep) )
+            while( tkn.next_with(Separator) )
             {
-                
+                const string id( tkn.token(), tkn.units() );
+                self( F[id] );
             }
+            clean();
             return *this;
         }
 
+        void Fields::Selection:: clean() throw()
+        {
+            unique(*this);
+        }
 
     }
 

@@ -78,6 +78,27 @@ namespace upsylon
             return true;
         }
 
+        //! wrapper with one separator
+        inline bool next_with( T sep ) throw()
+        {
+            const chr2sep fcn = { sep };
+            return next(fcn);
+        }
+
+        //! wrapper with some separators
+        inline bool next_with(const T *buffer, const size_t buflen) throw()
+        {
+            const str2sep fcn = { buffer, buflen };
+            return next(fcn);
+        }
+
+        //! wrapper with some separators
+        inline bool next_with(const core::string<T> &buff ) throw()
+        {
+            const str2sep fcn = { *buff, buff.size() };
+            return next(fcn);
+        }
+        
         inline const T *token() const throw() { return token_; } //!< token position
         inline size_t   units() const throw() { return units_; } //!< token length
         inline size_t   count() const throw() { return count_; } //!< token ID
@@ -137,6 +158,27 @@ namespace upsylon
             }
             return words.size();
         }
+
+        struct chr2sep
+        {
+            T value;
+            inline bool operator()(const T C) const throw() { return value==C; }
+        };
+
+        struct str2sep
+        {
+            const T *ptr;
+            size_t   num;
+            inline bool operator()(const T C) const throw()
+            {
+                assert(!(ptr==NULL&&num>0));
+                for(size_t i=0;i<num;++i)
+                {
+                    if(C==ptr[i]) return true;
+                }
+                return false;
+            }
+        };
     };
 }
 

@@ -75,6 +75,15 @@ namespace upsylon
         {
             return (lhs.pointee!=rhs.pointee);
         }
+
+        //! for comparison forwarding
+        inline friend bool operator<(const ptr<T> &lhs, const ptr<T> &rhs) throw()
+        {
+            assert(lhs.pointee);
+            assert(rhs.pointee);
+            return (*lhs) < (*rhs);
+        }
+
         
     protected:
         pointee_type pointee; //!< internal pointer

@@ -47,6 +47,11 @@ namespace upsylon
             return transfer->load(fp, (void*)getObjectAddr(index));
         }
 
+
+        bool operator<(const FieldType &lhs, const FieldType &rhs) throw()
+        {
+            return lhs.name < rhs.name;
+        }
     }
 }
 

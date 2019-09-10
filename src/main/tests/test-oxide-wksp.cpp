@@ -83,6 +83,16 @@ namespace
                 wksp.localExchange(Ff);
                 wksp.localExchange(Fs);
 
+                Fields::Selection pick;
+                pick( wksp, "Fd" );
+                pick( wksp, "Fs;Ff" );
+                pick( wksp, "Fs;Ff" );
+                for(size_t i=1;i<=pick.size();++i)
+                {
+                    std::cerr << "pick[" << i << "]=" << pick[i]->name << std::endl;
+                }
+
+
                 block.free();
                 size_t total_save = 0;
                 for(size_t i=0;i<wksp.Orientations;++i)

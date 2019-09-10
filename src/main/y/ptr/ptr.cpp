@@ -14,5 +14,6 @@ namespace upsylon
         }
 
         const char ptr::nil[] = "(nil)";
+
     }
 }
