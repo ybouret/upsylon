@@ -82,13 +82,11 @@ namespace
                 wksp.localExchange(Ff);
                 wksp.localExchange(Fs);
 
-                ios::raw_plugin<double> dplg;
-
                 size_t total = 0;
                 for(size_t i=0;i<wksp.Orientations;++i)
                 {
-                    total += wksp.asyncSave(Connectivity::Forward,i,block,Fd, dplg );
-                    total += wksp.asyncSave(Connectivity::Reverse,i,block,Fd, dplg );
+                    total += wksp.asyncSave(Connectivity::Forward,i,block,Fd);
+                    total += wksp.asyncSave(Connectivity::Reverse,i,block,Fd);
                 }
                 std::cerr << "all_save=" << total << std::endl;
 
@@ -114,7 +112,8 @@ namespace
 Y_UTEST(oxide_wksp)
 {
 
-    
+    IO &OxideIO = IO::instance();
+
     // length pbc ng mapping
     if(argc<=4)
     {
@@ -133,6 +132,13 @@ Y_UTEST(oxide_wksp)
         case 2: testWksp<Coord2D>(argv); break;
         case 3: testWksp<Coord3D>(argv); break;
         default: break;
+    }
+    std::cerr << "OxideIO.life_time=" << OxideIO.life_time << std::endl;
+    std::cerr << "OxideIO.size()   =" << OxideIO.size()    << std::endl;
+
+    for(IO::iterator it = OxideIO.begin(); it != OxideIO.end(); ++it )
+    {
+        std::cerr << "io for <" << it->key().name() << ">" << std::endl;
     }
 
 }

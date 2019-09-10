@@ -90,7 +90,7 @@ namespace upsylon
             }
         }
 
-        plugin * plugins:: create( const std::type_info &tid ) const
+        plugin * plugins:: create_for( const std::type_info &tid ) const
         {
             const class_plugin *p = search(tid);
             if(!p) throw exception("no ios::plugin for <%s>", tid.name() );

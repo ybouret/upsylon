@@ -151,14 +151,13 @@ namespace upsylon
             inline size_t asyncSave(const Connectivity::Way way,
                                     const size_t            orientation,
                                     ios::ostream           &block,
-                                    const FieldType        &F,
-                                    ios::plugin            &plg) const
+                                    const FieldType        &F) const
             {
                 assert(owns(F));
                 const Ghosts *G = getAsync(way,orientation);
                 if(G)
                 {
-                    return F.save(G->inner.indices,block,plg);
+                    return F.save(G->inner.indices,block);
                 }
                 else
                 {
@@ -170,14 +169,13 @@ namespace upsylon
             inline size_t asyncLoad(const Connectivity::Way way,
                                     const size_t            orientation,
                                     ios::istream           &block,
-                                    const FieldType        &F,
-                                    ios::plugin            &plg)
+                                    const FieldType        &F)
             {
                 assert(owns(F));
                 const Ghosts *G = getAsync(way,orientation);
                 if(G)
                 {
-                    return F.load(G->outer.indices,block,plg);
+                    return F.load(G->outer.indices,block);
                 }
                 else
                 {

@@ -92,10 +92,10 @@ namespace upsylon
             template <typename T> inline void declare_srz() { declare<T>( new srz_plugin<T>() ); }
 
             //! return a cloned plugin
-            plugin * create( const std::type_info & ) const;
+            plugin * create_for( const std::type_info & ) const;
 
             //! helper
-            template <typename T> inline plugin * query() const { return create( typeid(T) ); }
+            template <typename T> inline plugin * query() const { return create_for( typeid(T) ); }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(plugins);
