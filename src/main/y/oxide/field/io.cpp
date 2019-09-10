@@ -17,13 +17,13 @@ namespace upsylon
         }
 
         void IO:: declare(const std::type_info        &t,
-                          const ios::plugin::save_proc s,
-                          const ios::plugin::load_proc l)
+                          const ios::_plugin::save_proc s,
+                          const ios::_plugin::load_proc l)
         {
             const Plugin *plg = plugins.search(t);
             if(plg)
             {
-                const ios::plugin &p = **plg;
+                const ios::_plugin &p = **plg;
                 if(p.save==s&&p.load==l)
                 {
                     // ok, multiple type

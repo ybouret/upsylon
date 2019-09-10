@@ -33,15 +33,15 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Hasher);
             };
 
-            class _Plugin : public counted_object, public ios::plugin
+            class _Plugin : public counted_object, public ios::_plugin
             {
             public:
                 const std::type_info &tid;
 
                 _Plugin(const std::type_info &t,
-                        const ios::plugin::save_proc s,
-                        const ios::plugin::load_proc l) throw() :
-                ios::plugin(s,l), tid(t)
+                        const ios::_plugin::save_proc s,
+                        const ios::_plugin::load_proc l) throw() :
+                ios::_plugin(s,l), tid(t)
                 {
                 }
 
@@ -60,7 +60,7 @@ namespace upsylon
             iterator end()   const throw() { return plugins.end(); }
 
             template <typename T>
-            void declare( const ios::plugin::save_proc s, const ios::plugin::load_proc p)
+            void declare( const ios::_plugin::save_proc s, const ios::_plugin::load_proc p)
             {
                 declare(typeid(T),s,p);
             }
@@ -75,8 +75,8 @@ namespace upsylon
             friend class singleton<IO>;
 
             void declare( const std::type_info       &tid,
-                         const ios::plugin::save_proc s,
-                         const ios::plugin::load_proc l);
+                         const ios::_plugin::save_proc s,
+                         const ios::_plugin::load_proc l);
 
         };
 

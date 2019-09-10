@@ -11,7 +11,7 @@ using namespace upsylon;
 namespace
 {
     template <typename T>
-    static inline void do_plugin( const ios::plugin &plg )
+    static inline void do_plugin( const ios::_plugin &plg )
     {
         std::cerr << "I/O for <" << typeid(T).name() << ">" << std::endl;
         ios::ovstream data;

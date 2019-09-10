@@ -12,8 +12,68 @@ namespace upsylon
     namespace ios
     {
 
+#if 0
+        //! reader interface
+        class plugin : public counted_object
+        {
+        public:
+            virtual ~reader() throw();
+
+            virtual size_t  load(ios::istream &, void       *) = 0;
+            virtual size_t  save(ios::ostream &, const void *) = 0;
+
+            virtual reader *clone() const  =0;
+
+        protected:
+            explicit reader() throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(reader);
+
+        };
+
+        //! writer interface
+        class writer
+        {
+        public:
+            virtual ~writer() throw();
+
+
+        protected:
+            explicit writer() throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(writer);
+        };
+
+        template <typename T>
+        class nbo_reader
+        {
+        public:
+            Y_DECL_ARGS(T,type);
+
+            inline virtual ~nbo_reader() throw() {}
+            inline explicit nbo_reader() throw() {}
+
+            inline virtual size_t load(ios::istream &fp, void *addr)
+            {
+                assert(addr);
+                size_t tmp = 0;
+                *static_cast<T*>(addr) = fp.read_net<T>(&tmp);
+                return tmp;
+            }
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(nbo_reader);
+        };
+#endif
+
+
+
+
         //! base class for I/O of type on [i|o]streams
-        class plugin
+        class _plugin
         {
         public:
             //! save procedure, should ADD bytes to count
@@ -25,9 +85,9 @@ namespace upsylon
             const load_proc load; //!< how to load
 
 
-            plugin(const save_proc, const load_proc) throw();   //!< setup
-            plugin(const plugin &other) throw();                //!< copy
-            virtual ~plugin() throw();                          //!< cleanup
+            _plugin(const save_proc, const load_proc) throw();   //!< setup
+            _plugin(const _plugin &other) throw();                //!< copy
+            virtual ~_plugin() throw();                          //!< cleanup
 
             //! save in network byte order
             template <typename T> static inline
@@ -89,20 +149,20 @@ namespace upsylon
 
 
         private:
-            Y_DISABLE_ASSIGN(plugin);
+            Y_DISABLE_ASSIGN(_plugin);
         };
 
         //! macro to implement some plugins
 #define Y_IOS_PLUGIN(TYPE)                                 \
 template <typename T>                                      \
-class plugin_##TYPE : public plugin {                      \
+class plugin_##TYPE : public _plugin {                      \
 public:                                                    \
 Y_DECL_ARGS(T,type);                                       \
 inline plugin_##TYPE() throw() :                           \
-plugin( save_##TYPE<mutable_type>,                         \
+_plugin( save_##TYPE<mutable_type>,                         \
 load_##TYPE<mutable_type> ) {}                             \
 inline plugin_##TYPE(const plugin_##TYPE &other) throw() : \
-plugin(other) {}                                           \
+_plugin(other) {}                                           \
 inline virtual ~plugin_##TYPE() throw() {}                 \
 private: Y_DISABLE_ASSIGN(plugin_##TYPE);                  \
 }

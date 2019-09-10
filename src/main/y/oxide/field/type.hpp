@@ -40,8 +40,8 @@ namespace upsylon
             //------------------------------------------------------------------
             // non-virtual interface
             //------------------------------------------------------------------
-            typedef ios::plugin::save_proc SaveProc; //!< using ios::plugin::save_proc to save data to ostream
-            typedef ios::plugin::load_proc LoadProc; //!< using ios::plugin::load_proc to load data from istream
+            typedef ios::_plugin::save_proc SaveProc; //!< using ios::plugin::save_proc to save data to ostream
+            typedef ios::_plugin::load_proc LoadProc; //!< using ios::plugin::load_proc to load data from istream
 
             size_t    save( ios::ostream &fp, const Coord1D index, SaveProc proc ) const; //!< save one object from index
             size_t    load( ios::istream &fp, const Coord1D index, LoadProc proc);        //!< load one object into index

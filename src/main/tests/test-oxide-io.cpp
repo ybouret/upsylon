@@ -25,7 +25,7 @@ namespace
     }
 
     template <typename T>
-    static inline void run_with( ios::plugin &plg )
+    static inline void run_with( ios::_plugin &plg )
     {
         ios::ovstream io(1024*1024);
 
