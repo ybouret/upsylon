@@ -116,8 +116,8 @@ namespace upsylon
                 }
             }
 
-            //! Locally exchange local ghosts pairs
-            void localExchange( FieldType &F  )
+            //!  exchange of local ghosts pairs
+            inline void localExchange( FieldType &F  )
             {
                 assert(owns(F));
                 for(size_t i=0;i<Orientations;++i)
@@ -147,18 +147,18 @@ namespace upsylon
                 }
             }
 
-
-            size_t asyncSave(const Connectivity::Way way,
-                             const size_t            orientation,
-                             ios::ostream           &fp,
-                             const FieldType        &F,
-                             ios::plugin            &plg) const
+            //! save aynchronous content for way+orientation into block
+            inline size_t asyncSave(const Connectivity::Way way,
+                                    const size_t            orientation,
+                                    ios::ostream           &block,
+                                    const FieldType        &F,
+                                    ios::plugin            &plg) const
             {
                 assert(owns(F));
                 const Ghosts *G = getAsync(way,orientation);
                 if(G)
                 {
-                     return F.save(G->inner.indices,fp,plg);
+                    return F.save(G->inner.indices,block,plg);
                 }
                 else
                 {
@@ -166,17 +166,18 @@ namespace upsylon
                 }
             }
 
-            size_t asyncLoad(const Connectivity::Way way,
-                             const size_t            orientation,
-                             ios::istream           &fp,
-                             const FieldType        &F,
-                             ios::plugin            &plg)
+            //! load asynchronous content for way+orientation from block
+            inline size_t asyncLoad(const Connectivity::Way way,
+                                    const size_t            orientation,
+                                    ios::istream           &block,
+                                    const FieldType        &F,
+                                    ios::plugin            &plg)
             {
                 assert(owns(F));
                 const Ghosts *G = getAsync(way,orientation);
                 if(G)
                 {
-                    return F.load(G->outer.indices,fp,plg);
+                    return F.load(G->outer.indices,block,plg);
                 }
                 else
                 {
