@@ -130,10 +130,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(locate);
     Y_UTEST(ppty);
 
-    Y_UTEST(ipso);
-    Y_UTEST(ipso_io);
-    Y_UTEST(ipso_gh);
-
     Y_UTEST(progress);
     Y_UTEST(dll);
     Y_UTEST(timings);
@@ -172,6 +168,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(oxide_layouts);
     Y_UTEST(oxide_wksp);
     Y_UTEST(oxide_allw);
+    Y_UTEST(oxide_mpi);
 }
 Y_UTEST_EXEC()
 

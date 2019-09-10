@@ -210,12 +210,6 @@ SET(fs_local_srcs ${fs_local_decl} ${fs_local_code})
 SOURCE_GROUP( fs/local FILES ${fs_local_srcs} )
 INSTALL( FILES ${fs_local_decl} DESTINATION include/y/fs/local )
 
-FILE(GLOB ipso_decl y/ipso/*.hpp)
-FILE(GLOB ipso_code y/ipso/*.cpp)
-SET(ipso_srcs ${ipso_decl} ${ipso_code})
-SOURCE_GROUP( ipso FILES ${ipso_srcs} )
-INSTALL( FILES ${ipso_decl} DESTINATION include/y/ipso )
-
 FILE(GLOB rtld_decl y/rtld/*.h*)
 FILE(GLOB rtld_code y/rtld/*.cpp)
 SET(rtld_srcs ${rtld_decl} ${rtld_code})
@@ -325,7 +319,6 @@ ${functor_srcs}
 ${fs_srcs}
 ${fs_disk_srcs}
 ${fs_local_srcs}
-${ipso_srcs}
 ${rtld_srcs}
 ${lang_srcs} ${lang_pattern_srcs} ${lang_lexical_srcs} ${lexical_plugin_srcs}
 ${geometry_srcs}

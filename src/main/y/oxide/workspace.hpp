@@ -9,6 +9,19 @@ namespace upsylon
 {
     namespace Oxide
     {
+
+        struct WorkspaceOps
+        {
+            static void CheckLocalSizes( const Coord1D *sizes, const unsigned dim );
+
+            template <typename COORD> static inline
+            const COORD & CheckLocalSizes( const COORD &localSizes )
+            {
+                CheckLocalSizes((const Coord1D *)&localSizes, Coord::Get<COORD>::Dimensions);
+                return localSizes;
+            }
+        };
+
         //! a workspace is some layouts and some fields
         template <typename COORD>
         class Workspace : public Layouts<COORD>, public Fields
@@ -42,7 +55,11 @@ namespace upsylon
                                       const Coord1D     globalRank,
                                       const_coord      &PBC,
                                       const Coord1D     ng) :
-            LayoutsType(full,localSizes,globalRank,PBC,ng),
+            LayoutsType(full,
+                        WorkspaceOps::CheckLocalSizes(localSizes),
+                        globalRank,
+                        PBC,
+                        ng),
             Fields()
             {
 
