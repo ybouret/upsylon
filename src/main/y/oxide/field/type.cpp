@@ -52,20 +52,14 @@ privateSize(0)
             return name + vformat("[%ld]", static_cast<long>(n) );
         }
 
-        size_t FieldType:: save(ios::ostream &fp, const Coord1D index, SaveProc proc) const
+        size_t FieldType:: save(ios::ostream &fp, const Coord1D index, ios::plugin &plg ) const
         {
-            assert(proc);
-            size_t ns = 0;
-            proc(fp,getObjectAddr(index),&ns);
-            return ns;
+            return plg.save(fp, getObjectAddr(index));
         }
 
-        size_t FieldType:: load( ios::istream &fp, const Coord1D index, LoadProc proc)
+        size_t FieldType:: load( ios::istream &fp, const Coord1D index, ios::plugin &plg)
         {
-            assert(proc);
-            size_t nr = 0;
-            proc(fp,(void*)getObjectAddr(index),&nr);
-            return nr;
+            return plg.load(fp, (void*)getObjectAddr(index));
         }
 
 

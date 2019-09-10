@@ -25,7 +25,7 @@ Y_UTEST(oxide)
     mpi::vBlock     send_block(1024);
     mpi::vBlock     recv_block(1024);
     vector<Coord1D> indices;
-    ios::plugin_raw<double> plg;
+    ios::raw_plugin<double> plg;
 
     MPI.print0(stderr,"-------- 1D --------\n");
     {
@@ -52,7 +52,7 @@ Y_UTEST(oxide)
         if(MPI.isHead)
         {
             fill(F);
-            (void) F.save(indices, send_block, plg.save );
+            (void) F.save(indices, send_block, plg );
         }
         MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
         MPI.print0(stderr, "Exchange\n" );
@@ -60,7 +60,7 @@ Y_UTEST(oxide)
         {
             fill(F);
             send_block.free();
-            const size_t nw = F.save(indices, send_block, plg.save );
+            const size_t nw = F.save(indices, send_block, plg );
             Y_ASSERT(nw==send_block.size());
             for(int r=1;r<MPI.size;++r)
             {
@@ -76,7 +76,7 @@ Y_UTEST(oxide)
             MPI.vRecv(comm_variable_size, recv_block, 0, tag);
             MPI.vRecv(comm_constant_size, recv_block, 0, tag);
             ios::imstream inp(recv_block);
-            const size_t nl = F.load(indices,inp,plg.load);
+            const size_t nl = F.load(indices,inp,plg);
             Y_ASSERT(nl==recv_block.size());
         }
         
@@ -87,7 +87,7 @@ Y_UTEST(oxide)
         recv_block.free();
 
         fill(F);
-        F.save(indices,send_block, plg.save );
+        F.save(indices,send_block, plg );
         MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
 
         MPI.print0(stderr, "Send/Recv Exec\n" );
@@ -115,7 +115,7 @@ Y_UTEST(oxide)
         }
         MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
         ios::imstream inp(recv_block);
-        F.load(indices,inp,plg.load);
+        F.load(indices,inp,plg);
     }
     
     

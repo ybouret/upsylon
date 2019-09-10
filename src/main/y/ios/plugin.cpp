@@ -14,7 +14,7 @@ namespace upsylon
         {
         }
         
-
+#if 0
         _plugin:: ~_plugin() throw()
         {
         }
@@ -30,7 +30,7 @@ namespace upsylon
         load(on_load)
         {
         }
-        
+#endif
 
     }
 

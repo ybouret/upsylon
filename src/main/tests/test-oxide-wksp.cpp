@@ -82,13 +82,13 @@ namespace
                 wksp.localExchange(Ff);
                 wksp.localExchange(Fs);
 
-                ios::plugin_raw<double> dplg;
+                ios::raw_plugin<double> dplg;
 
                 size_t total = 0;
                 for(size_t i=0;i<wksp.Orientations;++i)
                 {
-                    total += wksp.asyncSave(Connectivity::Forward,i,block,Fd, dplg.save );
-                    total += wksp.asyncSave(Connectivity::Reverse,i,block,Fd, dplg.save );
+                    total += wksp.asyncSave(Connectivity::Forward,i,block,Fd, dplg );
+                    total += wksp.asyncSave(Connectivity::Reverse,i,block,Fd, dplg );
                 }
                 std::cerr << "all_save=" << total << std::endl;
 

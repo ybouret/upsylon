@@ -25,7 +25,7 @@ namespace
     }
 
     template <typename T>
-    static inline void run_with( ios::_plugin &plg )
+    static inline void run_with( ios::plugin &plg )
     {
         ios::ovstream io(1024*1024);
 
@@ -45,19 +45,18 @@ namespace
             std::cerr << "F2=" << F2 << std::endl;
             std::cerr << "F3=" << F3 << std::endl;
 
-            const size_t n1 = F1.save(io,F1,F1,plg.save); Y_ASSERT(n1==io.size());
-            const size_t n2 = F2.save(io,F2,F2,plg.save); Y_ASSERT(n1+n2==io.size());
-            const size_t n3 = F3.save(io,F3,F3,plg.save); Y_ASSERT(n1+n2+n3==io.size());
+            const size_t n1 = F1.save(io,F1,F1,plg); Y_ASSERT(n1==io.size());
+            const size_t n2 = F2.save(io,F2,F2,plg); Y_ASSERT(n1+n2==io.size());
+            const size_t n3 = F3.save(io,F3,F3,plg); Y_ASSERT(n1+n2+n3==io.size());
 
             std::cerr << "#io=" << io.size() << "/" << io.capacity() << std::endl;
             
             
-            if(plg.load)
             {
                 ios::imstream inp( io );
-                const size_t r1 = F1.load(inp,F1,F1,plg.load); Y_ASSERT(r1==n1);
-                const size_t r2 = F2.load(inp,F2,F2,plg.load); Y_ASSERT(r2==n2);
-                const size_t r3 = F3.load(inp,F3,F3,plg.load); Y_ASSERT(r3==n3);
+                const size_t r1 = F1.load(inp,F1,F1,plg); Y_ASSERT(r1==n1);
+                const size_t r2 = F2.load(inp,F2,F2,plg); Y_ASSERT(r2==n2);
+                const size_t r3 = F3.load(inp,F3,F3,plg); Y_ASSERT(r3==n3);
                 std::cerr << "\treloaded..." << std::endl;
             }
 
@@ -82,15 +81,14 @@ namespace
             }
 
 
-            F1.save(i1,io,plg.save);
-            F2.save(i2,io,plg.save);
-            F3.save(i3,io,plg.save);
-            if(plg.load)
+            F1.save(i1,io,plg);
+            F2.save(i2,io,plg);
+            F3.save(i3,io,plg);
             {
                 ios::imstream fp(io);
-                F1.load(i1,fp,plg.load);
-                F2.load(i2,fp,plg.load);
-                F3.load(i3,fp,plg.load);
+                F1.load(i1,fp,plg);
+                F2.load(i2,fp,plg);
+                F3.load(i3,fp,plg);
                 std::cerr << "\treloaded..." << std::endl;
             }
 
@@ -104,16 +102,16 @@ namespace
 Y_UTEST(oxide_io)
 {
     {
-        ios::plugin_raw<double> plg;
+        ios::raw_plugin<double> plg;
         run_with<double>(plg);
     }
     {
-        ios::plugin_net<float> plg;
+        ios::nbo_plugin<float> plg;
         run_with<float>(plg);
     }
 
     {
-        ios::plugin_srz<string> plg;
+        ios::srz_plugin<string> plg;
         run_with<string>(plg);
     }
 

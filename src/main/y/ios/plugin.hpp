@@ -134,7 +134,7 @@ namespace upsylon
         };
 
 
-
+#if 0
 
         //! base class for I/O of type on [i|o]streams
         class _plugin
@@ -234,7 +234,8 @@ private: Y_DISABLE_ASSIGN(plugin_##TYPE);                  \
         Y_IOS_PLUGIN(net); //!< using network byte order
         Y_IOS_PLUGIN(raw); //!< using binary bloks
         Y_IOS_PLUGIN(srz); //!< using serialize/read
-
+#endif
+        
     }
 }
 

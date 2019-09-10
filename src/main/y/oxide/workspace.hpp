@@ -152,13 +152,13 @@ namespace upsylon
                              const size_t            orientation,
                              ios::ostream           &fp,
                              const FieldType        &F,
-                             FieldType::SaveProc     proc) const
+                             ios::plugin            &plg) const
             {
                 assert(owns(F));
                 const Ghosts *G = getAsync(way,orientation);
                 if(G)
                 {
-                     return F.save(G->inner.indices,fp,proc);
+                     return F.save(G->inner.indices,fp,plg);
                 }
                 else
                 {
@@ -170,13 +170,13 @@ namespace upsylon
                              const size_t            orientation,
                              ios::istream           &fp,
                              const FieldType        &F,
-                             FieldType::LoadProc     proc)
+                             ios::plugin            &plg)
             {
                 assert(owns(F));
                 const Ghosts *G = getAsync(way,orientation);
                 if(G)
                 {
-                    return F.load(G->outer.indices,fp,proc);
+                    return F.load(G->outer.indices,fp,plg);
                 }
                 else
                 {
