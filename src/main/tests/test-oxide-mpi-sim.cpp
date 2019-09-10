@@ -1,8 +1,6 @@
 
 #include "y/oxide/workspaces.hpp"
 #include "y/utest/run.hpp"
-#include "y/memory/pooled.hpp"
-#include "y/string/tokenizer.hpp"
 #include "y/oxide/field3d.hpp"
 #include "y/ios/ovstream.hpp"
 #include "y/ios/imstream.hpp"
@@ -14,8 +12,6 @@ using namespace Oxide;
 
 namespace
 {
-    typedef vector<string,memory::pooled> strings;
-    static inline bool isSep( const char C ) { return C == ','; }
 
     template <typename FIELD>
     void display_field( const FIELD &F )
@@ -35,61 +31,83 @@ namespace
     }
 
     template <typename COORD>
-    static inline void testWksp(char **argv)
+    void make_all( const Layout<COORD> &full )
     {
 
-        typedef  typename __Field<COORD,double>::Type  dField;
-        typedef  typename __Field<COORD,float>::Type   fField;
-        typedef  typename __Field<COORD,string>::Type  sField;
+        typedef typename __Field<COORD,double>::Type dField;
+        typedef typename __Field<COORD,string>::Type sField;
 
-        const COORD   length  = Coord::Parse<COORD>(  argv[1],"length");
-        const COORD   pbc     = Coord::Parse<COORD>(  argv[2],"pbc");
-        const Coord1D ng      = Coord::Parse<Coord1D>(argv[3],"ng");
-        const COORD   mapping = Coord::Parse<COORD>(  argv[4],"mapping");
+        const size_t  ng = 1;
+        ios::ovstream block( 1024*1024 );
 
-        COORD org(0); Coord::LD(org,1);
-        const Layout<COORD> full(org,length);
-        std::cerr << "full=" << full << std::endl;
-
-        Workspaces<COORD> WS(full,mapping,pbc,ng);
-        for(size_t i=0;i<WS.size();++i)
+        std::cerr << "In " << full.Dimensions << "D" << std::endl;
+        for(size_t size=1;size<=8;++size)
         {
-            Workspace<COORD> &W = WS[i];
-            std::cerr << "W[" << i << "]: " << W.inner << std::endl;
-            dField &Fd = W.template create<dField>( "Fd" );
-            fField &Ff = W.template create<fField>( "Ff" );
-            sField &Fs = W.template create<sField>( "Fs" );
+            std::cerr << "#cores=" << size << ", full=" << full << std::endl;
+            vector<COORD> mappings;
+            full.buildMappings(mappings,size);
+            for(size_t j=1;j<=mappings.size();++j)
+            {
+                std::cerr << "/mapping=" << mappings[j];
+                COORD pbc0(0); Coord::LD(pbc0,0);
+                COORD pbc1(1); Coord::LD(pbc1,1);
 
-            fill(Fd);
-            fill(Ff);
-            fill(Fs);
+                typename Layout<COORD>::Loop pbc(pbc0,pbc1);
+                for(pbc.start(); pbc.valid(); pbc.next())
+                {
+                    std::cerr << ".";
+                    Workspaces<COORD> WS( full, mappings[j], pbc.value, ng );
+                    for(size_t k=0;k<size;++k)
+                    {
+                        Workspace<COORD> &W = WS[k];
+
+                        dField &Fd = W.template create<dField>( "Fd" );
+                        sField &Fs = W.template create<sField>( "Fs" );
+
+                        fill(Fd);
+                        fill(Fs);
+
+                    }
+
+                    // exchange local
+                    for(size_t k=0;k<size;++k)
+                    {
+                        Workspace<COORD> &W = WS[k];
+                        W.localExchange( W["Fd"] );
+
+                    }
+
+
+                }
+
+            } std::cerr << std::endl;
         }
-
+        std::cerr << std::endl;
     }
+
 
 
 }
 
 Y_UTEST(oxide_mpi)
 {
-    // length pbc ng mapping
-    if(argc<=4)
+    const Coord3D lower(1,1,1);
+    const Coord3D org(1,1,1);
+    const Coord3D top(2,2,2);
+    Layout3D::Loop loop(org,top);
+
+    for( loop.start(); loop.valid(); loop.next() )
     {
-        std::cerr << "Usage: " << program << " length pbc ng mapping" << std::endl;
-        return 0;
+        const Coord3D  upper = lower + 4 * loop.value;
+        const Layout1D full1D( lower.x, upper.x);
+        const Layout2D full2D( lower.xy(), upper.xy());
+        const Layout3D full3D(lower,upper);
+
+        make_all( full1D );
+        make_all( full2D );
+        make_all( full3D );
+
     }
 
-
-    strings      length(3,as_capacity);
-    const size_t dimensions = tokenizer<char>::split(length, argv[1], isSep);
-
-
-    switch(dimensions)
-    {
-        case 1: testWksp<Coord1D>(argv); break;
-        case 2: testWksp<Coord2D>(argv); break;
-        case 3: testWksp<Coord3D>(argv); break;
-        default: break;
-    }
 }
 Y_UTEST_DONE()

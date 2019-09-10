@@ -69,7 +69,7 @@ namespace upsylon
             template <typename FIELD> inline FIELD & create( const string &name )
             {
                 FIELD *F = new FIELD(name,this->outer);
-                __Fields::Enroll<FIELD>(*this,F);
+                enroll(F);
                 return *F;
             }
 
@@ -83,7 +83,7 @@ namespace upsylon
             template <typename FIELD>
             const FIELD & as( const string &name ) const
             {
-                return __Fields::LookUp<FIELD>(*this,name);
+                return lookUp<FIELD>(name);
             }
 
             //! access a created field, const, wrapper
@@ -98,7 +98,7 @@ namespace upsylon
             template <typename FIELD>
             FIELD & as( const string &name )
             {
-                return (FIELD &)(__Fields::LookUp<FIELD>(*this,name));
+                return (FIELD &)(lookUp<FIELD>(name));
             }
 
             //! access a created field, wrapper
@@ -109,30 +109,7 @@ namespace upsylon
                 return as<FIELD>(_);
             }
 
-            //! test really owned
-            bool owns( const FieldType &F ) const
-            {
-                const FieldHandle *h = this->search(F.name);
-                if(!h)
-                {
-                    std::cerr << "No Field '" << F.name << "' in workspace" << std::endl;
-                    return false;
-                }
-                else
-                {
-                    const FieldPointer &p = h->field;
-                    if( & *p != &F )
-                    {
-                        std::cerr << "Mismatch address of Field '" << F.name << "' in workspace" << std::endl;
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-            }
-
+           
             //!  exchange of local ghosts pairs
             inline void localExchange( FieldType &F  )
             {
@@ -163,6 +140,39 @@ namespace upsylon
                     }
                 }
             }
+
+            //!  exchange of local ghosts pairs, wrapper
+            inline void localExchange( const string &fieldName )
+            {
+                Fields &self = *this;
+                localExchange(self[fieldName]);
+            }
+
+            //! exchange of local ghosts pairs, wrapper
+            inline void localExchange( const char *fieldName )
+            {
+                Fields &self = *this;
+                localExchange(self[fieldName]);
+            }
+
+
+            //! *ITERATOR = FieldPointer, **ITERATOR=FieldType
+            template <typename ITERATOR>
+            inline void localExchangeRange( ITERATOR it, size_t n )
+            {
+                while(n-->0)
+                {
+                    localExchange(**it);
+                    ++it;
+                }
+            }
+
+            template <typename SEQUENCE>
+            inline void localExchangeAll( SEQUENCE &fields )
+            {
+                localExchangeRange(fields.begin(), fields.size());
+            }
+
 
             //! save aynchronous content for way+orientation into block
             inline size_t asyncSave(const Connectivity::Way way,
