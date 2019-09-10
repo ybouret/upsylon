@@ -41,6 +41,8 @@ namespace
         ios::ovstream block( 1024*1024 );
 
         std::cerr << "In " << full.Dimensions << "D" << std::endl;
+        Fields::Selection pick;
+
         for(size_t size=1;size<=8;++size)
         {
             std::cerr << "#cores=" << size << ", full=" << full << std::endl;
@@ -56,7 +58,20 @@ namespace
                 for(pbc.start(); pbc.valid(); pbc.next())
                 {
                     std::cerr << ".";
+
+                    //----------------------------------------------------------
+                    //
+                    // create all workspaces
+                    //
+                    //----------------------------------------------------------
                     Workspaces<COORD> WS( full, mappings[j], pbc.value, ng );
+
+
+                    //----------------------------------------------------------
+                    //
+                    // create some fields
+                    //
+                    //----------------------------------------------------------
                     for(size_t k=0;k<size;++k)
                     {
                         Workspace<COORD> &W = WS[k];
@@ -69,12 +84,38 @@ namespace
 
                     }
 
+                    //----------------------------------------------------------
+                    //
                     // exchange local
+                    //
+                    //----------------------------------------------------------
                     for(size_t k=0;k<size;++k)
                     {
                         Workspace<COORD> &W = WS[k];
-                        W.localExchange1( W["Fd"] );
-                        W.localExchange1( W["Fs"] );
+                        pick(W);
+                        W.localExchange(pick);
+                    }
+                    std::cerr << "0";
+
+                    //----------------------------------------------------------
+                    //
+                    // simulate forward wave
+                    //
+                    //----------------------------------------------------------
+                    for(size_t k=0;k<size;++k)
+                    {
+                        Workspace<COORD> &W = WS[k];
+                        pick(W);
+
+                        for(size_t ori=0;ori<W.Orientations;++ori)
+                        {
+                            const _Ghosts<COORD> *G = 0;
+                            const size_t ns = W.asyncSave(Connectivity::Forward,ori,pick,G);
+                            if(G&&ns)
+                            {
+
+                            }
+                        }
                     }
 
 

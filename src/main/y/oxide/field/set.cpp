@@ -133,6 +133,21 @@ namespace upsylon
             unique(*this);
         }
 
+        Fields::Selection & Fields:: Selection::operator()( Fields &F  )
+        {
+            Selection      &self = *this;
+            self.free();
+            self.ensure(F.size());
+            for( Fields::iterator i=F.begin();i!=F.end();++i)
+            {
+                FieldHandle     &h = *i;
+                const FieldType &ft = *h.field;
+                self( (FieldType&)ft );
+            }
+            clean();
+            return *this;
+        }
+
     }
 
 }

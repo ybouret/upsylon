@@ -37,6 +37,17 @@ namespace upsylon
             return 0;
         }
 
+        Connectivity::Way Connectivity:: Opposite( const Way way ) throw()
+        {
+            switch(way)
+            {
+                case Forward: return Reverse;
+                case Reverse: return Forward;
+            }
+        }
+
+
+
 
         static const char fn[] = "Oxide::Connectivity::";
 

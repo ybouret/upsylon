@@ -30,6 +30,8 @@ namespace upsylon
                 Reverse  //!< reverse way, second coordinate is -1
             };
 
+            static Way Opposite( const Way ) throw();
+
             //! get integer representation
             static  Coord1D     Way2Sign( const Way ) throw();
 

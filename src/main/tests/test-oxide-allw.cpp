@@ -64,23 +64,24 @@ namespace
                             W.localExchange1(Fs);
 
                             block.free();
+                            const _Ghosts<COORD> *G = 0;
                             size_t total_save = 0;
                             for(size_t k=0;k<W.Orientations;++k)
                             {
-                                total_save += W.asyncSave1(Connectivity::Forward,k,block,Fd);
-                                total_save += W.asyncSave1(Connectivity::Reverse,k,block,Fd);
-                                total_save += W.asyncSave1(Connectivity::Forward,k,block,Fs);
-                                total_save += W.asyncSave1(Connectivity::Reverse,k,block,Fs);
+                                total_save += W.asyncSave1(Connectivity::Forward,k,block,Fd,G);
+                                total_save += W.asyncSave1(Connectivity::Reverse,k,block,Fd,G);
+                                total_save += W.asyncSave1(Connectivity::Forward,k,block,Fs,G);
+                                total_save += W.asyncSave1(Connectivity::Reverse,k,block,Fs,G);
                             }
 
                             ios::imstream inp(block);
                             size_t total_load = 0;
                             for(size_t k=0;k<W.Orientations;++k)
                             {
-                                total_load += W.asyncLoad1(Connectivity::Forward,k,inp,Fd);
-                                total_load += W.asyncLoad1(Connectivity::Reverse,k,inp,Fd);
-                                total_load += W.asyncLoad1(Connectivity::Forward,k,inp,Fs);
-                                total_load += W.asyncLoad1(Connectivity::Reverse,k,inp,Fs);
+                                total_load += W.asyncLoad1(Connectivity::Forward,k,inp,Fd,G);
+                                total_load += W.asyncLoad1(Connectivity::Reverse,k,inp,Fd,G);
+                                total_load += W.asyncLoad1(Connectivity::Forward,k,inp,Fs,G);
+                                total_load += W.asyncLoad1(Connectivity::Reverse,k,inp,Fs,G);
                             }
                             Y_ASSERT(total_load==total_save);
                         }

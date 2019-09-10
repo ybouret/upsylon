@@ -167,10 +167,11 @@ namespace upsylon
             inline size_t asyncSave1(const Connectivity::Way way,
                                      const size_t            orientation,
                                      ios::ostream           &block,
-                                     const FieldType        &F) const
+                                     const FieldType        &F,
+                                     const Ghosts         * &G) const
             {
                 assert(owns(F));
-                const Ghosts *G = getAsync(way,orientation);
+                G = getAsync(way,orientation);
                 if(G)
                 {
                     return F.save(G->inner.indices,block);
@@ -185,22 +186,32 @@ namespace upsylon
             template <typename SEQUENCE>
             inline size_t asyncSave(const Connectivity::Way way,
                                     const size_t            orientation,
-                                    SEQUENCE               &fields)
+                                    SEQUENCE               &fields,
+                                    const Ghosts          * &G)
             {
                 sendBlock.free();
-                return asyncSave( fields.begin(), fields.size(), way, orientation);
+                G = getAsync(way,orientation);
+                if(G)
+                {
+                    return asyncSave( fields.begin(), fields.size(), *G );
+                }
+                else
+                {
+                    return 0;
+                }
             }
 
 
 
             //! load asynchronous content for way+orientation from input
-            inline size_t asyncLoad1(const Connectivity::Way way,
-                                     const size_t            orientation,
-                                     ios::istream           &input,
-                                     FieldType              &F)
+            inline size_t asyncLoad1(const Connectivity::Way  way,
+                                     const size_t             orientation,
+                                     ios::istream            &input,
+                                     FieldType               &F,
+                                     const Ghosts          * &G)
             {
                 assert(owns(F));
-                const Ghosts *G = getAsync(way,orientation);
+                G = getAsync(way,orientation);
                 if(G)
                 {
                     return F.load(G->outer.indices,input);
@@ -215,16 +226,21 @@ namespace upsylon
             template <typename SEQUENCE>
             inline size_t asyncLoad(const Connectivity::Way way,
                                     const size_t            orientation,
-                                    SEQUENCE               &fields)
+                                    SEQUENCE               &fields,
+                                    const Ghosts          * &G)
             {
-                ios::imstream input(recvBlock);
-                return  asyncLoad( fields.begin(), fields.size(), way, orientation, input);
+                G = getAsync(way,orientation);
+                if(G)
+                {
+                    ios::imstream input(recvBlock);
+                    return  asyncLoad( fields.begin(), fields.size(), *G, input);
+                }
+                else
+                {
+                    return 0;
+                }
             }
 
-
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Workspace);
 
             //! extract matching ghosts
             const Ghosts *getAsync(const Connectivity::Way way,
@@ -242,6 +258,10 @@ namespace upsylon
                 }
                 return 0;
             }
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Workspace);
+
+
             
             //! *ITERATOR = FieldPointer, **ITERATOR=FieldType
             template <typename ITERATOR>
@@ -257,31 +277,31 @@ namespace upsylon
             template <typename ITERATOR>
             inline size_t asyncSave(ITERATOR                it,
                                     size_t                  n,
-                                    const Connectivity::Way way,
-                                    const size_t            orientation)
+                                    const Ghosts           &G)
             {
                 size_t sendBytes = 0;
                 while(n-->0)
                 {
-                    sendBytes += asyncSave1(way,orientation,sendBlock,**it);
+                    sendBytes += (**it).save(G.inner.indices,sendBlock);
                     ++it;
                 }
+                // TODO : CHECK
                 return sendBytes;
             }
 
             template <typename ITERATOR>
             inline size_t asyncLoad(ITERATOR                it,
                                     size_t                  n,
-                                    const Connectivity::Way way,
-                                    const size_t            orientation,
+                                    const Ghosts           &G,
                                     ios::istream           &input)
             {
                 size_t recvBytes = 0;
                 while(n-->0)
                 {
-                    recvBytes += asyncLoad1(way, orientation, input, **it);
+                    (**it).load(G.outer.indices,input);
                     ++it;
                 }
+                // TODO: CHECK
                 return recvBytes;
             }
 

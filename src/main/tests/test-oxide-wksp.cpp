@@ -95,15 +95,17 @@ namespace
                 wksp.localExchange(pick);
 
                 block.free();
+                const _Ghosts<COORD> *G;
+
                 size_t total_save = 0;
                 for(size_t i=0;i<wksp.Orientations;++i)
                 {
-                    total_save += wksp.asyncSave1(Connectivity::Forward,i,block,Fd);
-                    total_save += wksp.asyncSave1(Connectivity::Reverse,i,block,Fd);
-                    total_save += wksp.asyncSave1(Connectivity::Forward,i,block,Ff);
-                    total_save += wksp.asyncSave1(Connectivity::Reverse,i,block,Ff);
-                    total_save += wksp.asyncSave1(Connectivity::Forward,i,block,Fs);
-                    total_save += wksp.asyncSave1(Connectivity::Reverse,i,block,Fs);
+                    total_save += wksp.asyncSave1(Connectivity::Forward,i,block,Fd,G);
+                    total_save += wksp.asyncSave1(Connectivity::Reverse,i,block,Fd,G);
+                    total_save += wksp.asyncSave1(Connectivity::Forward,i,block,Ff,G);
+                    total_save += wksp.asyncSave1(Connectivity::Reverse,i,block,Ff,G);
+                    total_save += wksp.asyncSave1(Connectivity::Forward,i,block,Fs,G);
+                    total_save += wksp.asyncSave1(Connectivity::Reverse,i,block,Fs,G);
                 }
                 std::cerr << "total_save=" << total_save << std::endl;
 
@@ -111,12 +113,12 @@ namespace
                 ios::imstream  inp(block);
                 for(size_t i=0;i<wksp.Orientations;++i)
                 {
-                    total_load += wksp.asyncLoad1(Connectivity::Forward,i,inp,Fd);
-                    total_load += wksp.asyncLoad1(Connectivity::Reverse,i,inp,Fd);
-                    total_load += wksp.asyncLoad1(Connectivity::Forward,i,inp,Ff);
-                    total_load += wksp.asyncLoad1(Connectivity::Reverse,i,inp,Ff);
-                    total_load += wksp.asyncLoad1(Connectivity::Forward,i,inp,Fs);
-                    total_load += wksp.asyncLoad1(Connectivity::Reverse,i,inp,Fs);
+                    total_load += wksp.asyncLoad1(Connectivity::Forward,i,inp,Fd,G);
+                    total_load += wksp.asyncLoad1(Connectivity::Reverse,i,inp,Fd,G);
+                    total_load += wksp.asyncLoad1(Connectivity::Forward,i,inp,Ff,G);
+                    total_load += wksp.asyncLoad1(Connectivity::Reverse,i,inp,Ff,G);
+                    total_load += wksp.asyncLoad1(Connectivity::Forward,i,inp,Fs,G);
+                    total_load += wksp.asyncLoad1(Connectivity::Reverse,i,inp,Fs,G);
                 }
                 std::cerr << "total_load=" << total_load << std::endl;
                 Y_CHECK(total_load==total_save);
@@ -134,24 +136,25 @@ namespace
 
             for(size_t i=0;i<wksp.Orientations;++i)
             {
+                const _Ghosts<COORD> *G = 0;
                 {
-                    const size_t total_save = wksp.asyncSave(Connectivity::Forward,i,pick);
+                    const size_t total_save = wksp.asyncSave(Connectivity::Forward,i,pick,G);
                     Y_CHECK(total_save==wksp.sendBlock.size());
                 }
                 {
                     wksp.recvBlock.copy( wksp.sendBlock ); Y_ASSERT(wksp.recvBlock.size()==wksp.sendBlock.size());
-                    const size_t total_load = wksp.asyncLoad(Connectivity::Forward,i,pick);
+                    const size_t total_load = wksp.asyncLoad(Connectivity::Forward,i,pick,G);
                     Y_CHECK(total_load==wksp.recvBlock.size());
                 }
 
                 {
-                    const size_t total_save = wksp.asyncSave(Connectivity::Reverse,i,pick);
+                    const size_t total_save = wksp.asyncSave(Connectivity::Reverse,i,pick,G);
                     Y_CHECK(total_save==wksp.sendBlock.size());
                 }
 
                 {
                     wksp.recvBlock.copy( wksp.sendBlock ); Y_ASSERT(wksp.recvBlock.size()==wksp.sendBlock.size());
-                    const size_t total_load = wksp.asyncLoad(Connectivity::Reverse,i,pick);
+                    const size_t total_load = wksp.asyncLoad(Connectivity::Reverse,i,pick,G);
                     Y_CHECK(total_load==wksp.recvBlock.size());
                 }
             }

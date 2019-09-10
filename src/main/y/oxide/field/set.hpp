@@ -67,7 +67,7 @@ namespace upsylon
 
                 Selection & operator()( FieldType &ft );
                 Selection & operator()( Fields &F, const string &ids );
-
+                Selection & operator()( Fields &F ); // all of them!
                 void clean() throw();
 
             private:
