@@ -58,13 +58,251 @@ namespace upsylon
         inline virtual void release() throw()       { release__(); }
         inline virtual void reserve(const size_t n) { reserve__(n); }
 
+        // ordered interface
+        virtual const_type *search( param_type args ) const throw()
+        {
+            for(const node_type *node=content.head;node;node=node->next)
+            {
+                if(args==node->data) return &(node->data);
+            }
+            return 0;
+        }
+
+
+        inline void insert_multiple(const_type &args)
+        {
+            //------------------------------------------------------------------
+            //
+            // special cases
+            //
+            //------------------------------------------------------------------
+            assert(check());
+            switch(content.size)
+            {
+                case 0: content.push_back( query(args) ); assert(check()); return;
+                case 1:
+                    if(compare(args,content.head->data)<0)
+                    {
+                        content.push_front( query(args) );
+                    }
+                    else
+                    {
+                        content.push_back( query(args) );
+                    }
+                    assert(check());
+                    return;
+                default:
+                    break;
+            }
+
+            //------------------------------------------------------------------
+            //
+            // generic cases
+            //
+            //------------------------------------------------------------------
+            assert(content.size>=2);
+            const int cmpHead = compare(args,content.head->data);
+            if(cmpHead<=0)
+            {
+                content.push_front( query(args) );
+                assert(check());
+                return;
+            }
+            else
+            {
+                assert(cmpHead>0);
+                const int cmpTail = compare(args,content.tail->data);
+                if(cmpTail>=0)
+                {
+                    content.push_back(query(args));
+                    return;
+                }
+                else
+                {
+                    assert(cmpHead>0); assert(cmpTail<0);
+                    const node_type *tail = content.tail;
+                    node_type       *node = content.head;
+                    while(node->next!=tail&&compare(args,node->next->data)>0)
+                    {
+                        node=node->next;
+                    }
+                    content.insert_after(node, query(args) );
+                    assert(check());
+                    return;
+                }
+            }
+        }
+
+        inline bool insert_single( const_type &args )
+        {
+            //------------------------------------------------------------------
+            //
+            // special cases
+            //
+            //------------------------------------------------------------------
+            assert( check_strict() );
+            switch(content.size)
+            {
+                case 0: content.push_back( query(args) ); assert(check_strict()); return true;
+                case 1: {
+                    const int cmp = compare(args,content.head->data);
+                    if(cmp<0)
+                    {
+                        content.push_front( query(args) ); assert(check_strict()); return true;
+                    }
+                    else if(cmp>0)
+                    {
+                        content.push_back( query(args) ); assert(check_strict()); return true;
+                    }
+                    else
+                    {
+                        assert(0==cmp);
+                        return false;
+                    }
+                }
+                default: assert(content.size>=2); break;
+            }
+            //------------------------------------------------------------------
+            //
+            // generic cases
+            //
+            //------------------------------------------------------------------
+            assert(content.size>=2);
+            const int cmpHead = compare(args,content.head->data);
+            if(cmpHead<0)
+            {
+                //--------------------------------------------------------------
+                //
+                // before head
+                //
+                //--------------------------------------------------------------
+                content.push_front( query(args) ); assert( check_strict() );
+                return true;
+            }
+            else if(cmpHead>0)
+            {
+                //--------------------------------------------------------------
+                //
+                // after head
+                //
+                //--------------------------------------------------------------
+                const int cmpTail = compare(args,content.tail->data);
+                if(cmpTail>0)
+                {
+                    //----------------------------------------------------------
+                    //
+                    // and after tail
+                    //
+                    //----------------------------------------------------------
+                    content.push_back( query(args) ); assert( check_strict() );
+                    return true;
+                }
+                else if( cmpTail<0 )
+                {
+                    //----------------------------------------------------------
+                    //
+                    // but  before tail
+                    //
+                    //----------------------------------------------------------
+                    assert(cmpHead>0); assert(cmpTail<0);
+                    const node_type *tail = content.tail;
+                    node_type       *curr = content.head;
+                    while(true)
+                    {
+                        node_type *next = curr->next;
+                        if(tail==next)
+                        {
+                            break; // early winner
+                        }
+
+                        const int cmp = compare(args,next->data);
+                        if(cmp<0)
+                        {
+                            break;// winner
+                        }
+                        else if(cmp>0)
+                        {
+                            curr = next;
+                            continue;
+                        }
+                        else
+                        {
+                            assert(0==cmp);
+                            return false;
+                        }
+                    }
+                    assert(curr); assert(curr->next);
+                    assert( compare(args,curr->data) > 0 );
+                    assert( compare(args,curr->next->data) < 0 );
+                    content.insert_after(curr,query(args) ); assert(check_strict());
+                    return true;
+                }
+                else
+                {
+                    //----------------------------------------------------------
+                    //
+                    // already at tail
+                    //
+                    //----------------------------------------------------------
+                    assert(0==cmpTail);
+                    return false;
+                }
+            }
+            else
+            {
+                assert(0==cmpHead);
+                //--------------------------------------------------------------
+                //
+                // alread at head
+                //
+                //--------------------------------------------------------------
+                return false;
+            }
+        }
+
+        inline friend std::ostream & operator<< ( std::ostream &os, const sorted_list &l )
+        {
+            os << '[';
+            for(const node_type *node=l.content.head;node;node=node->next)
+            {
+                os << ' ' << node->data;
+            }
+            return os << ']' << '\'';
+        }
+
     private:
         Y_DISABLE_ASSIGN(sorted_list);
-        list_type  content;
-        pool_type  dormant;
-        COMPARATOR compare;
+        list_type          content;
+        pool_type          dormant;
+        mutable COMPARATOR compare;
 
-        node_type *query( param_type args )
+        inline bool check() const throw()
+        {
+            for(const node_type *node =content.head;node;node=node->next)
+            {
+                if(node->next)
+                {
+                    if(compare(node->data,node->next->data)>0)
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        inline bool check_strict() const throw()
+        {
+            for(const node_type *node =content.head;node;node=node->next)
+            {
+                if(node->next)
+                {
+                    if(compare(node->data,node->next->data)>=0)
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        node_type *query( const_type &args )
         {
             node_type *node = (dormant.size>0) ? dormant.query() : object::acquire1<node_type>();
             try
@@ -79,24 +317,9 @@ namespace upsylon
             return node;
         }
 
-        void put_to_sleep(node_type *node) throw()
-        {
-            assert(node); assert(NULL==node->next); assert(NULL==node->prev);
-            self_destruct(dormant.store(node)->data);
-        }
-
-        inline void reserve__(size_t n)
-        {
-            while(n-->0)
-            {
-                dormant.store( object::acquire1<node_type>() );
-            }
-        }
-
-        inline void free__() throw()
-        {
-            while( content.size ) put_to_sleep( content.pop_back() );
-        }
+        inline void put_to_sleep(node_type *node) throw() { self_destruct(dormant.store(node)->data); }
+        inline void reserve__(size_t n) { while(n-->0) { dormant.store( object::acquire1<node_type>() ); } }
+        inline void free__() throw()    { while( content.size ) { put_to_sleep( content.pop_back() ); }    }
 
         inline void release__() throw()
         {

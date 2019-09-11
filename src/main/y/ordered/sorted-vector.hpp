@@ -5,12 +5,14 @@
 
 #include "y/container/ordered.hpp"
 #include "y/comparator.hpp"
+#include "y/core/locate.hpp"
+#include <cstring>
 
 namespace upsylon
 {
 
 #define Y_SORTED_VECTOR(N) \
-size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_as<mutable_type>(maxi_,bytes) ), item(addr-1)
+size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_as<mutable_type>(maxi_,bytes) ), item(addr-1), compare()
 
     template <typename T,
     typename COMPARATOR = increasing_comparator<T>,
@@ -23,7 +25,7 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
         inline virtual ~sorted_vector() throw() { release__(); }
 
         inline explicit sorted_vector() throw() :
-        size_(0), maxi_(0), bytes(0), hmem( ALLOCATOR::instance() ), addr(0), item(addr-1)
+        size_(0), maxi_(0), bytes(0), hmem( ALLOCATOR::instance() ), addr(0), item(addr-1), compare()
         {}
 
         inline explicit sorted_vector(const size_t n, const as_capacity_t &) throw() : Y_SORTED_VECTOR(n) {}
@@ -47,6 +49,36 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
             }
         }
 
+        // ordered interface
+        virtual const_type *search( param_type args ) const throw()
+        {
+            size_t      idx = 0;
+            return core::locate(args,addr,size_,compare,idx);
+        }
+
+        inline void insert_multiple( const_type &args )
+        {
+            size_t where = 0;
+            (void) core::locate(args,addr,size_,compare,where);
+            insert_at(where,args);
+        }
+
+        inline bool insert_single( const_type &args )
+        {
+            size_t where = 0;
+            if( core::locate(args,addr,size_,compare,where) )
+            {
+                return false; // exists
+            }
+            else
+            {
+                insert_at(where,args);
+                return true; // did not exist
+            }
+        }
+
+        // specific
+
         //! no throw swap
         inline void swap_with( sorted_vector &_ ) throw()
         {
@@ -57,6 +89,16 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
             cswap(item,_.item);
         }
 
+        inline friend std::ostream & operator<< ( std::ostream &os, const sorted_vector &v )
+        {
+            os << '[';
+            for(size_t i=0;i<v.size_;++i)
+            {
+                os << ' ' << v.addr[i];
+            }
+            return os << ']' << '\'';
+        }
+        
     private:
         Y_DISABLE_ASSIGN(sorted_vector);
         size_t             size_;
@@ -65,7 +107,7 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
         memory::allocator &hmem;
         mutable_type      *addr;
         mutable_type      *item;
-        COMPARATOR         compare;
+        mutable COMPARATOR compare;
         
         inline void free__() throw()
         {
@@ -92,6 +134,66 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
                 ++size_;
             }
         }
+
+        static inline void __copy( mutable_type *target, const mutable_type *source, const size_t number_of_bytes ) throw()
+        {
+            assert(0==number_of_bytes%sizeof(type));
+            memcpy( memory::io::__addr(target), memory::io::__addr(source), number_of_bytes );
+        }
+
+        static inline void __move( mutable_type *target, const mutable_type *source, const size_t number_of_bytes ) throw()
+        {
+            assert(0==number_of_bytes%sizeof(type));
+            memmove( memory::io::__addr(target), memory::io::__addr(source), number_of_bytes );
+        }
+
+        static inline void __zset(mutable_type *target,const size_t number_of_bytes ) throw()
+        {
+            assert(0==number_of_bytes%sizeof(type));
+            memset( memory::io::__addr(target), 0, number_of_bytes);
+        }
+
+        inline void insert_at( const size_t where, const_type &args )
+        {
+            const size_t   full_bytes = size_ * sizeof(T);
+            const size_t   prev_bytes = where * sizeof(T);
+            const size_t   next_bytes = full_bytes-prev_bytes;
+
+            if( this->is_filled() )
+            {
+                // get memory
+                sorted_vector temp( this->next_capacity(maxi_), as_capacity );
+
+                // get target to build object
+                mutable_type *target = &temp.addr[where];
+                new ( target ) mutable_type(args);
+                // move memory
+                __copy(temp.addr,&addr[0],    prev_bytes);
+                __copy(target+1, &addr[where],next_bytes);
+                __zset(addr,full_bytes);
+                temp.size_ = size_+1;
+                size_ = 0;
+                swap_with(temp);
+            }
+            else
+            {
+                mutable_type *target = &addr[where];
+                mutable_type *destin = target+1;
+                __move(destin,target,next_bytes);
+                try
+                {
+                    new (target) mutable_type(args);
+                }
+                catch(...)
+                {
+                    __move(target,destin,next_bytes);
+                    __zset(addr+size_,sizeof(type));
+                    throw;
+                }
+                ++size_;
+            }
+        }
+
     };
 }
 

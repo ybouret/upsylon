@@ -183,7 +183,7 @@ ADD_TEST(codec:bwt    test-main bwt)
 ADD_TEST(codec:b64id  test-main b64id)
 
 SOURCE_GROUP(data FILES test-associative.cpp test-set.cpp test-map.cpp test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp test-avl.cpp
-test-const-field.cpp test-for-each.cpp)
+test-const-field.cpp test-for-each.cpp test-ordered.cpp)
 ADD_TEST(data:associative test-main associative)
 ADD_TEST(data:set         test-main set)
 ADD_TEST(data:map         test-main map)
