@@ -404,6 +404,10 @@ namespace upsylon
             while( dormant.size ) { node_type *node = dormant.query();                               object::release1(node); }
         }
 
+        virtual const_type & getObjectAt(const size_t indx) const throw()
+        {
+            return content.fetch(indx+1)->data;
+        }
 
     };
 

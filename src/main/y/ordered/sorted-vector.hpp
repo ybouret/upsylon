@@ -264,6 +264,12 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
                 ++size_;
             }
         }
+        
+        virtual const_type & getObjectAt(const size_t indx) const throw()
+        {
+            return item[indx];
+        }
+
 
     };
 }

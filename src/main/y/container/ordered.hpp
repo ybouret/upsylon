@@ -12,27 +12,56 @@ namespace upsylon
     class ordered : public container
     {
     public:
+        //----------------------------------------------------------------------
+        //
+        // types and definitions
+        //
+        //----------------------------------------------------------------------
+
         Y_DECL_ARGS(T,type);                 //!< aliases
-        inline virtual ~ordered() throw() {} //!< cleanup
+
+        //----------------------------------------------------------------------
+        //
+        // virtual interface
+        //
+        //----------------------------------------------------------------------
+        //! cleanup
+        inline virtual ~ordered() throw() {}
 
         //! search if object is already there
         virtual const_type *search( param_type args ) const throw() = 0;
 
         //! remove one object
         virtual bool remove( param_type args ) throw() = 0;
-
+        
+       
+        
+        //----------------------------------------------------------------------
+        //
+        // non-virtual interface
+        //
+        //----------------------------------------------------------------------
         //! remove all objects
         inline void no( param_type args ) throw()
         {
             while( remove(args) )
                 ;
         }
+        
+        //! access
+        inline const_type & operator[]( const size_t indx ) const throw()
+        {
+            assert(indx>0); assert(indx<=size());
+            return getObjectAt(indx);
+        }
+        
 
     protected:
         inline explicit ordered() throw() {} //!< setup
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(ordered);
+        virtual const_type & getObjectAt(const size_t indx) const throw() = 0;
     };
 
     //! use an ordered container to build a multiple ordered container
