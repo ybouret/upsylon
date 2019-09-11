@@ -194,7 +194,6 @@ Y_UTEST(oxide_wksp)
         case 3: testWksp<Coord3D>(argv); break;
         default: break;
     }
-    std::cerr << "OxideIO.life_time=" << OxideIO.life_time << std::endl;
     std::cerr << "OxideIO.size()   =" << OxideIO.size()    << std::endl;
 
     if(false)

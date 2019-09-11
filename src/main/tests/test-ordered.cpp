@@ -8,6 +8,8 @@
 
 #include "support.hpp"
 
+#include "y/sequence/vector.hpp"
+
 using namespace upsylon;
 
 
@@ -15,21 +17,26 @@ namespace
 {
 
     template <typename ORDERED>
-    static inline void checkOrdered()
+    static inline void checkOrdered(const size_t maxCycles)
     {
         ordered_multiple<ORDERED> M;
         ordered_single<ORDERED>   S;
         ordered_unique<ORDERED>   U;
 
-        std::cerr << "checkOrdered< " << typeid(ORDERED).name() << ">" << std::endl;
+        std::cerr << "checkOrdered<" << typeid(ORDERED).name() << ">" << std::endl;
+
 
         typedef typename ORDERED::mutable_type type;
 
-        for(size_t cycle=0;cycle<100;++cycle)
+        vector<type> data;
+
+        for(size_t cycle=0;cycle<maxCycles;++cycle)
         {
+            std::cerr << "+";
             M.release();
             S.release();
             U.release();
+            data.free();
 
             size_t       all_count = 0;
             size_t       one_count = 0;
@@ -44,6 +51,7 @@ namespace
                     if(U.insert(tmp))
                     {
                         ++one_count;
+                        data.push_back(tmp);
                     }
                 }
             }
@@ -61,23 +69,36 @@ namespace
                 Y_ASSERT( *i == *j );
             }
 
-        }
+            std::cerr << "-";
+            alea.shuffle(*data,data.size());
+            for(size_t k=data.size();k>0;--k)
+            {
+                M.no( data[k] );
+                S.no( data[k] );
+                U.no( data[k] );
+            }
+
+
+        } std::cerr << std::endl;
 
     }
 
     template <typename T>
-    static inline void doOrdered()
+    static inline void doOrdered(const size_t maxCycles)
     {
 
-        checkOrdered< sorted_list<T,increasing_comparator<T> > >();
-        checkOrdered< sorted_list<T,decreasing_comparator<T> > >();
+#if 1
+        checkOrdered< sorted_list<T,increasing_comparator<T> > >(maxCycles);
+        checkOrdered< sorted_list<T,decreasing_comparator<T> > >(maxCycles);
+#endif
 
-        checkOrdered< sorted_vector<T,increasing_comparator<T>,memory::global> >();
-        checkOrdered< sorted_vector<T,decreasing_comparator<T>,memory::global> >();
+#if 1
+        checkOrdered< sorted_vector<T,increasing_comparator<T>,memory::global> >(maxCycles);
+        checkOrdered< sorted_vector<T,decreasing_comparator<T>,memory::global> >(maxCycles);
 
-        checkOrdered< sorted_vector<T,increasing_comparator<T>,memory::pooled> >();
-        checkOrdered< sorted_vector<T,decreasing_comparator<T>,memory::pooled> >();
-
+        checkOrdered< sorted_vector<T,increasing_comparator<T>,memory::pooled> >(maxCycles);
+        checkOrdered< sorted_vector<T,decreasing_comparator<T>,memory::pooled> >(maxCycles);
+#endif
 
 
     }
@@ -86,11 +107,11 @@ namespace
 
 Y_UTEST(ordered)
 {
-    doOrdered<short>();
-    doOrdered<int>();
-    doOrdered<double>();
-    doOrdered<string>();
-    doOrdered<mpq>();
+    doOrdered<short>(128);
+    doOrdered<int>(128);
+    doOrdered<double>(128);
+    doOrdered<string>(32);
+    doOrdered<mpq>(8);
 
 }
 Y_UTEST_DONE()

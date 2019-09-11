@@ -113,6 +113,7 @@ namespace upsylon
                 return total;
             }
 
+            //! forward to the name comparison
             friend bool operator<(const FieldType &lhs, const FieldType &rhs) throw();
             
 

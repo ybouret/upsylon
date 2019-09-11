@@ -18,6 +18,16 @@ namespace upsylon
         //! search if object is already there
         virtual const_type *search( param_type args ) const throw() = 0;
 
+        //! remove one object
+        virtual bool remove( param_type args ) throw() = 0;
+
+        //! remove all objects
+        inline void no( param_type args ) throw()
+        {
+            while( remove(args) )
+                ;
+        }
+
     protected:
         inline explicit ordered() throw() {} //!< setup
 
@@ -30,13 +40,14 @@ namespace upsylon
     class ordered_multiple : public ORDERED
     {
     public:
-        typedef typename ORDERED::param_type param_type;
+        typedef typename ORDERED::param_type param_type; //!< alias
 
-        inline explicit ordered_multiple() throw() : ORDERED() {}
-        inline explicit ordered_multiple(const size_t n, const as_capacity_t &_) : ORDERED(n,_) {}
-        inline virtual ~ordered_multiple() throw() {}
-        inline ordered_multiple( const ordered_multiple &other) : ORDERED(other) {}
+        inline explicit ordered_multiple() throw() : ORDERED() {}                                  //!< setup
+        inline explicit ordered_multiple(const size_t n, const as_capacity_t &_) : ORDERED(n,_) {} //!< setup with memory
+        inline virtual ~ordered_multiple() throw() {}                                              //!< cleanup
+        inline ordered_multiple( const ordered_multiple &other) : ORDERED(other) {}                //!< copy
 
+        //! always insert
         inline void insert( param_type args )
         {
             this->insert_multiple(args);
@@ -54,13 +65,14 @@ namespace upsylon
     class ordered_single : public ORDERED
     {
     public:
-        typedef typename ORDERED::param_type param_type;
+        typedef typename ORDERED::param_type param_type;                                          //!< alias
 
-        inline explicit ordered_single() throw() : ORDERED() {}
-        inline explicit ordered_single(const size_t n, const as_capacity_t &_) : ORDERED(n,_) {}
-        inline virtual ~ordered_single() throw() {}
-        inline ordered_single( const ordered_single &other) : ORDERED(other) {}
+        inline explicit ordered_single() throw() : ORDERED() {}                                   //!< setup
+        inline explicit ordered_single(const size_t n, const as_capacity_t &_) : ORDERED(n,_) {}  //!< setup with memory
+        inline virtual ~ordered_single() throw() {}                                               //!< cleanup
+        inline ordered_single( const ordered_single &other) : ORDERED(other) {}                   //!< copy
 
+        //! insert and discard if multiple objects
         inline void insert( param_type args )
         {
             (void)this->insert_single(args);
@@ -79,13 +91,14 @@ namespace upsylon
     class ordered_unique : public ORDERED
     {
     public:
-        typedef typename ORDERED::param_type param_type;
+        typedef typename ORDERED::param_type param_type;                                          //!< alias
 
-        inline explicit ordered_unique() throw() : ORDERED() {}
-        inline explicit ordered_unique(const size_t n, const as_capacity_t &_) : ORDERED(n,_) {}
-        inline virtual ~ordered_unique() throw() {}
-        inline ordered_unique( const ordered_unique &other) : ORDERED(other) {}
+        inline explicit ordered_unique() throw() : ORDERED() {}                                  //!< setup
+        inline explicit ordered_unique(const size_t n, const as_capacity_t &_) : ORDERED(n,_) {} //!< setup with memory
+        inline virtual ~ordered_unique() throw() {}                                              //!< cleanup
+        inline ordered_unique( const ordered_unique &other) : ORDERED(other) {}                  //!< copy
 
+        //! try to insert object
         inline bool insert( param_type args )
         {
             return this->insert_single(args);

@@ -10,19 +10,21 @@ namespace upsylon
 {
     namespace Oxide
     {
-
+        //! multiple workspaces for threading or MPI simulation
         template <typename COORD>
         class Workspaces : public slots< Workspace<COORD> >
         {
         public:
-            typedef Layout<COORD>                    LayoutType;
-            typedef typename LayoutType::coord       coord;
-            typedef typename LayoutType::const_coord const_coord;
-            typedef Workspace<COORD>                 WorkspaceType;
-            typedef slots<WorkspaceType>             SlotsType;
+            typedef Layout<COORD>                    LayoutType;     //!< alias
+            typedef typename LayoutType::coord       coord;          //!< alias
+            typedef typename LayoutType::const_coord const_coord;    //!< alias
+            typedef Workspace<COORD>                 WorkspaceType;  //!< alias
+            typedef slots<WorkspaceType>             SlotsType;      //!< alias
 
+            //! cleanup
             virtual ~Workspaces() throw() { }
 
+            //! setup all sub-workspaces
             explicit Workspaces(const LayoutType &full,
                                 const_coord      &localSizes,
                                 const_coord      &PBC,

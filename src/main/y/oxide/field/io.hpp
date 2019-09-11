@@ -11,16 +11,17 @@ namespace upsylon
     namespace Oxide
     {
 
+        //! input/output plugins for fields
         class IO : public singleton<IO>, public ios::plugins
         {
         public:
-            static const at_exit::longevity life_time = 0;
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(IO);
             explicit IO();
             virtual ~IO() throw();
             friend class singleton<IO>;
+            static const at_exit::longevity life_time = 0;
         };
 
     }

@@ -12,20 +12,24 @@ namespace upsylon
     {
         typedef set<string,FieldHandle> FieldsType; //!< alias
 
+        //! data base for fields
         class Fields : public FieldsType
         {
         public:
-            explicit Fields() throw();
-            virtual ~Fields() throw();
+            explicit Fields() throw(); //!< setup
+            virtual ~Fields() throw(); //!< cleanup
 
+            //! enroll a field pointer with the type_info of the fully qualified field
             void               __enroll( const FieldPointer &f,  const std::type_info &t, const void *p);
+
+            //! look up the field handle using its name and fully qualified type_info
             const FieldHandle &__lookUp( const string       &id, const std::type_info &t) const;
 
             //! use type info to enroll any field
             template <typename FIELD> inline
             void enroll( FIELD *F )
             {
-                const FieldPointer   f(F);
+                const FieldPointer    f(F);
                 const std::type_info &t = typeid(FIELD);
                 __enroll(f,t,F);
             }

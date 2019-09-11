@@ -27,7 +27,7 @@ namespace upsylon
             virtual void write( char C ); //!< push_back
             virtual void flush();         //!< do nothing
 
-            void copy( const array<uint8_t> &other );
+            void copy( const array<uint8_t> &other ); //!< make a hard copy
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ovstream);

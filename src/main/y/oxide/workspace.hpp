@@ -12,10 +12,13 @@ namespace upsylon
     namespace Oxide
     {
 
+        //! common workspaces operations
         struct __Workspace
         {
+            //! check all coordinates are greater than zero
             static void CheckLocalSizes( const Coord1D *sizes, const unsigned dim );
 
+            //! check all local sizes are greater than zero
             template <typename COORD> static inline
             const COORD & CheckLocalSizes( const COORD &localSizes )
             {
@@ -24,7 +27,7 @@ namespace upsylon
             }
         };
 
-        typedef ios::ovstream IOBlock;
+        typedef ios::ovstream IOBlock; //!< alias for a variable-length I/O block
 
         //! a workspace is some layouts and some fields
         template <typename COORD>
@@ -50,8 +53,8 @@ namespace upsylon
             // members
             //
             //------------------------------------------------------------------
-            IOBlock sendBlock;
-            IOBlock recvBlock;
+            IOBlock sendBlock; //!< memory to store inner ghosts data, to be sent
+            IOBlock recvBlock; //!< memory where outer ghosts data is received
 
             //------------------------------------------------------------------
             //
@@ -72,7 +75,9 @@ namespace upsylon
                         globalRank,
                         PBC,
                         ng),
-            Fields()
+            Fields(),
+            sendBlock(),
+            recvBlock()
             {
 
             }

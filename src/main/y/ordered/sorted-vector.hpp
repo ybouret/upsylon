@@ -30,22 +30,38 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
         // C++ interfaces
         //
         //----------------------------------------------------------------------
+
+        //! cleanup
         inline virtual ~sorted_vector() throw() { release__(); }
 
+        //! setup
         inline explicit sorted_vector() throw() :
         size_(0), maxi_(0), bytes(0), hmem( ALLOCATOR::instance() ), addr(0), item(addr-1), compare()
         {}
 
+        //! setup with memory
         inline explicit sorted_vector(const size_t n, const as_capacity_t &) throw() : Y_SORTED_VECTOR(n) {}
 
+        //! copy
         inline  sorted_vector( const sorted_vector &other ) : Y_SORTED_VECTOR( other.size_ ) { duplicate(other); }
+
+        //! copy with extra memory
         inline  sorted_vector( const sorted_vector &other, const size_t extra ) : Y_SORTED_VECTOR( other.size_+extra ) { duplicate(other); }
 
+        //----------------------------------------------------------------------
+        //
         // dynamic interface
+        //
+        //----------------------------------------------------------------------
         inline virtual size_t  size()     const throw() { return size_; }
         inline virtual size_t  capacity() const throw() { return maxi_; }
 
+        //----------------------------------------------------------------------
+        //
         // container interface
+        //
+        //----------------------------------------------------------------------
+
         inline virtual void    free()    throw() { free__();    }
         inline virtual void    release() throw() { release__(); }
         inline virtual void    reserve(const size_t n)
@@ -57,13 +73,58 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
             }
         }
 
+        //----------------------------------------------------------------------
+        //
         // ordered interface
+        //
+        //----------------------------------------------------------------------
         virtual const_type *search( param_type args ) const throw()
         {
             size_t      idx = 0;
             return core::locate(args,addr,size_,compare,idx);
         }
 
+        //! remove one occurence
+        virtual bool remove( param_type args ) throw()
+        {
+            size_t        indx   = 0;
+            mutable_type *target = core::locate(args,addr,size_,compare,indx);
+            if( target )
+            {
+                self_destruct( *target  );
+                __move(target, target+1, (--size_-indx) * sizeof(type) );
+                __zset(addr+size_,sizeof(type) );
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        //----------------------------------------------------------------------
+        //
+        // iterators
+        //
+        //----------------------------------------------------------------------
+
+        typedef iterate::linear<const_type,iterate::forward> iterator;                           //!< forward iterator
+        typedef iterator                                     const_iterator;                     //!< const forward iterator
+        inline  iterator begin() const throw() { return iterator(addr);       }                  //!< begin forward
+        inline  iterator end()   const throw() { return iterator(addr+size_); }                  //!< end forward
+        typedef iterate::linear<const_type,iterate::reverse> reverse_iterator;                   //!< reverse iterator
+        typedef reverse_iterator                             const_reverse_iterator;             //!< const reverse iterator
+        inline  reverse_iterator rbegin() const throw() { return reverse_iterator(item+size_); } //!< begin reverse
+        inline  reverse_iterator rend()   const throw() { return reverse_iterator(item);       } //!< end reverse
+
+        //----------------------------------------------------------------------
+        //
+        // specific
+        //
+        //----------------------------------------------------------------------
+
+
+        //! display
         inline friend std::ostream & operator<< ( std::ostream &os, const sorted_vector &v )
         {
             os << '[';
@@ -73,7 +134,6 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
             }
             return os << ']' << '\'';
         }
-        // specific
 
         //! no throw swap
         inline void swap_with( sorted_vector &_ ) throw()
@@ -85,16 +145,9 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
             cswap(item,_.item);
         }
 
-        typedef iterate::linear<const_type,iterate::forward> iterator;                           //!< forward iterator
-        typedef iterator                                     const_iterator;                     //!< const forward iterator
-        inline  iterator begin() const throw() { return iterator(addr);       }                  //!< begin forward
-        inline  iterator end()   const throw() { return iterator(addr+size_); }                  //!< end forward
-        typedef iterate::linear<const_type,iterate::reverse> reverse_iterator;                   //!< reverse iterator
-        typedef reverse_iterator                             const_reverse_iterator;             //!< const reverse iterator
-        inline  reverse_iterator rbegin() const throw() { return reverse_iterator(item+size_); } //!< begin reverse
-        inline  reverse_iterator rend()   const throw() { return reverse_iterator(item);       } //!< end reverse
 
     protected:
+        //! put args a a valid place
         inline void insert_multiple( const_type &args )
         {
             size_t where = 0;
@@ -102,6 +155,7 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
             insert_at(where,args);
         }
 
+        //! put args at its only possible place
         inline bool insert_single( const_type &args )
         {
             size_t where = 0;
@@ -115,10 +169,6 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
                 return true; // did not exist
             }
         }
-
-
-
-
         
     private:
         Y_DISABLE_ASSIGN(sorted_vector);

@@ -39,8 +39,8 @@ namespace upsylon
             node_type(); ~node_type() throw();
         };
 
-        typedef core::list_of<node_type> list_type;
-        typedef core::pool_of<node_type> pool_type;
+        typedef core::list_of<node_type> list_type; //!< low-level content
+        typedef core::pool_of<node_type> pool_type; //!< memory pool
 
         //----------------------------------------------------------------------
         //
@@ -48,9 +48,17 @@ namespace upsylon
         //
         //----------------------------------------------------------------------
 
+        //! cleaunp
         inline virtual ~sorted_list() throw() { release__(); }
+
+        //!setup
         inline explicit sorted_list() throw() : content(), dormant(), compare() {}
-        inline explicit sorted_list(const size_t n, const as_capacity_t &) : content(), dormant(), compare() { reserve__(n); }
+
+        //! setup with memory
+        inline explicit sorted_list(const size_t n, const as_capacity_t &) : content(), dormant(), compare()
+        { reserve__(n); }
+
+        //! copy
         inline explicit sorted_list(const sorted_list &other) : content(), dormant(), compare()
         {
             for(const node_type *scan = other.content.head; scan; scan=scan->next )
@@ -85,6 +93,8 @@ namespace upsylon
         // ordered interface
         //
         //----------------------------------------------------------------------
+
+        //! sequential search
         virtual const_type *search( param_type args ) const throw()
         {
             for(const node_type *node=content.head;node;node=node->next)
@@ -92,6 +102,20 @@ namespace upsylon
                 if(args==node->data) return &(node->data);
             }
             return 0;
+        }
+
+        //! remove by sequential search
+        virtual bool remove( param_type args ) throw()
+        {
+            for(node_type *node=content.head;node;node=node->next)
+            {
+                if(args==node->data)
+                {
+                    put_to_sleep( content.unlink(node) );
+                    return true;
+                }
+            }
+            return false;
         }
 
         //----------------------------------------------------------------------
@@ -128,6 +152,7 @@ namespace upsylon
 
 
     protected:
+        //! insert args at a valid place
         inline void insert_multiple(const_type &args)
         {
             //------------------------------------------------------------------
@@ -192,6 +217,7 @@ namespace upsylon
             }
         }
 
+        //! try to insert args at its only possible place
         inline bool insert_single( const_type &args )
         {
             //------------------------------------------------------------------
