@@ -6,12 +6,15 @@
 #include "y/core/list.hpp"
 #include "y/core/pool.hpp"
 #include "y/type/self-destruct.hpp"
+#include "y/comparator.hpp"
 
 namespace upsylon
 {
 
-    template <typename T>
-    class sorted_list // : public ordered<T>
+    template <typename T,
+    typename COMPARATOR = increasing_comparator<T>
+    >
+    class sorted_list : public ordered<T>
     {
     public:
         Y_DECL_ARGS(T,type);
@@ -31,19 +34,35 @@ namespace upsylon
 
 
         inline virtual ~sorted_list() throw() { release__(); }
+        inline explicit sorted_list() throw() : content(), dormant(), compare() {}
+        inline explicit sorted_list(const size_t n, const as_capacity_t &) : content(), dormant(), compare() { reserve__(n); }
+        inline explicit sorted_list(const sorted_list &other) : content(), dormant(), compare()
+        {
+            for(const node_type *scan = other.content.head; scan; scan=scan->next )
+            {
+                node_type *node = object::acquire1<node_type>();
+                try        { new ( &(node->data) ) mutable_type(scan->data);        }
+                catch(...) { object::release1<node_type>(node); release__(); throw; }
+                content.push_back(node);
+            }
 
-        inline explicit sorted_list() throw() : content(), dormant() {}
+        }
 
+
+        // dynamic interface
         inline virtual size_t size()     const throw() { return content.size; }
         inline virtual size_t capacity() const throw() { return content.size + dormant.size; }
 
-        inline virtual void free()    throw() { free__(); }
-        inline virtual void release() throw() { release__(); }
+        // container interface
+        inline virtual void free()    throw()       { free__(); }
+        inline virtual void release() throw()       { release__(); }
+        inline virtual void reserve(const size_t n) { reserve__(n); }
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(sorted_list);
+        Y_DISABLE_ASSIGN(sorted_list);
         list_type  content;
         pool_type  dormant;
+        COMPARATOR compare;
 
         node_type *query( param_type args )
         {

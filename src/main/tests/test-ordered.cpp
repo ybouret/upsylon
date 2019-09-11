@@ -14,9 +14,13 @@ namespace
     template <typename T>
     static inline void doOrdered()
     {
-        sorted_list<T>                   l;
-        sorted_vector<T,memory::global>  g;
-        sorted_vector<T,memory::pooled>  p;
+        sorted_list<T,increasing_comparator<T> >                  il;
+        sorted_vector<T,increasing_comparator<T>,memory::global>  ig;
+        sorted_vector<T,increasing_comparator<T>,memory::pooled>  ip;
+
+        sorted_list<T,decreasing_comparator<T> >                  dl;
+        sorted_vector<T,decreasing_comparator<T>,memory::global>  dg;
+        sorted_vector<T,decreasing_comparator<T>,memory::pooled>  dp;
 
     }
 
