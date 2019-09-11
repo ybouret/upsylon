@@ -7,23 +7,33 @@
 #include "y/core/pool.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/comparator.hpp"
+#include "y/iterate/linked.hpp"
 
 namespace upsylon
 {
 
+    //! ordered list
     template <typename T,
     typename COMPARATOR = increasing_comparator<T>
     >
     class sorted_list : public ordered<T>
     {
     public:
-        Y_DECL_ARGS(T,type);
+        //----------------------------------------------------------------------
+        //
+        // types and definitions
+        //
+        //----------------------------------------------------------------------
+        Y_DECL_ARGS(T,type); //!< aliases
+
+        //! built-in node to handle data
         class node_type
         {
         public:
-            node_type   *next;
-            node_type   *prev;
-            mutable_type data;
+            node_type   *next; //!< for list
+            node_type   *prev; //!< for list
+            mutable_type data; //!< the data
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(node_type);
             node_type(); ~node_type() throw();
@@ -32,6 +42,11 @@ namespace upsylon
         typedef core::list_of<node_type> list_type;
         typedef core::pool_of<node_type> pool_type;
 
+        //----------------------------------------------------------------------
+        //
+        // C++ interface
+        //
+        //----------------------------------------------------------------------
 
         inline virtual ~sorted_list() throw() { release__(); }
         inline explicit sorted_list() throw() : content(), dormant(), compare() {}
@@ -48,17 +63,28 @@ namespace upsylon
 
         }
 
-
+        //----------------------------------------------------------------------
+        //
         // dynamic interface
+        //
+        //----------------------------------------------------------------------
         inline virtual size_t size()     const throw() { return content.size; }
         inline virtual size_t capacity() const throw() { return content.size + dormant.size; }
 
+        //----------------------------------------------------------------------
+        //
         // container interface
+        //
+        //----------------------------------------------------------------------
         inline virtual void free()    throw()       { free__(); }
         inline virtual void release() throw()       { release__(); }
         inline virtual void reserve(const size_t n) { reserve__(n); }
 
+        //----------------------------------------------------------------------
+        //
         // ordered interface
+        //
+        //----------------------------------------------------------------------
         virtual const_type *search( param_type args ) const throw()
         {
             for(const node_type *node=content.head;node;node=node->next)
@@ -68,7 +94,40 @@ namespace upsylon
             return 0;
         }
 
+        //----------------------------------------------------------------------
+        //
+        // specific
+        //
+        //----------------------------------------------------------------------
 
+        //! fast display
+        inline friend std::ostream & operator<< ( std::ostream &os, const sorted_list &l )
+        {
+            os << '[';
+            for(const node_type *node=l.content.head;node;node=node->next)
+            {
+                os << ' ' << node->data;
+            }
+            return os << ']' << '\'';
+        }
+
+        //----------------------------------------------------------------------
+        //
+        // iterators
+        //
+        //----------------------------------------------------------------------
+        typedef iterate::linked<const_type,const node_type,iterate::forward>  iterator;            //!< forward iterator
+        typedef iterator                                                const_iterator;            //!< const forward iterator
+        iterator begin() const throw() { return iterator( content.head ); }                        //!< begin forward
+        iterator end()   const throw() { return iterator(0);            }                          //!< end forward
+        typedef iterate::linked<const_type,const node_type,iterate::reverse> reverse_iterator;     //!< reverse iterator
+        typedef reverse_iterator                                       const_reverse_iterator;     //!< const reverse iterator
+        reverse_iterator rbegin() const throw() { return reverse_iterator( content.tail ); }       //!< begin reverse
+        reverse_iterator rend()   const throw() { return reverse_iterator(0);              }       //!< end reverse
+
+
+
+    protected:
         inline void insert_multiple(const_type &args)
         {
             //------------------------------------------------------------------
@@ -260,15 +319,7 @@ namespace upsylon
             }
         }
 
-        inline friend std::ostream & operator<< ( std::ostream &os, const sorted_list &l )
-        {
-            os << '[';
-            for(const node_type *node=l.content.head;node;node=node->next)
-            {
-                os << ' ' << node->data;
-            }
-            return os << ']' << '\'';
-        }
+
 
     private:
         Y_DISABLE_ASSIGN(sorted_list);

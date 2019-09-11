@@ -50,6 +50,17 @@ namespace
             Y_ASSERT(M.size()==all_count);
             Y_ASSERT(S.size()==one_count);
             Y_ASSERT(U.size()==one_count);
+
+            for(typename ORDERED::iterator i=S.begin(),j=U.begin(); i !=S.end(); ++i,++j)
+            {
+                Y_ASSERT( *i == *j );
+            }
+
+            for(typename ORDERED::reverse_iterator i=S.rbegin(),j=U.rbegin(); i !=S.rend(); ++i,++j)
+            {
+                Y_ASSERT( *i == *j );
+            }
+
         }
 
     }
@@ -79,6 +90,7 @@ Y_UTEST(ordered)
     doOrdered<int>();
     doOrdered<double>();
     doOrdered<string>();
+    doOrdered<mpq>();
 
 }
 Y_UTEST_DONE()

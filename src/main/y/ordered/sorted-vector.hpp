@@ -6,22 +6,30 @@
 #include "y/container/ordered.hpp"
 #include "y/comparator.hpp"
 #include "y/core/locate.hpp"
+#include "y/iterate/linear.hpp"
 #include <cstring>
 
 namespace upsylon
 {
 
+    //! setup sorted vector
 #define Y_SORTED_VECTOR(N) \
 size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_as<mutable_type>(maxi_,bytes) ), item(addr-1), compare()
 
+    //! a vector of sorted objects
     template <typename T,
     typename COMPARATOR = increasing_comparator<T>,
     typename ALLOCATOR = memory::global>
     class sorted_vector : public ordered<T>
     {
     public:
-        Y_DECL_ARGS(T,type);
+        Y_DECL_ARGS(T,type); //!< aliases
 
+        //----------------------------------------------------------------------
+        //
+        // C++ interfaces
+        //
+        //----------------------------------------------------------------------
         inline virtual ~sorted_vector() throw() { release__(); }
 
         inline explicit sorted_vector() throw() :
@@ -56,6 +64,37 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
             return core::locate(args,addr,size_,compare,idx);
         }
 
+        inline friend std::ostream & operator<< ( std::ostream &os, const sorted_vector &v )
+        {
+            os << '[';
+            for(size_t i=0;i<v.size_;++i)
+            {
+                os << ' ' << v.addr[i];
+            }
+            return os << ']' << '\'';
+        }
+        // specific
+
+        //! no throw swap
+        inline void swap_with( sorted_vector &_ ) throw()
+        {
+            cswap(size_,_.size_);
+            cswap(maxi_,_.maxi_);
+            cswap(bytes,_.bytes);
+            cswap(addr,_.addr);
+            cswap(item,_.item);
+        }
+
+        typedef iterate::linear<const_type,iterate::forward> iterator;                           //!< forward iterator
+        typedef iterator                                     const_iterator;                     //!< const forward iterator
+        inline  iterator begin() const throw() { return iterator(addr);       }                  //!< begin forward
+        inline  iterator end()   const throw() { return iterator(addr+size_); }                  //!< end forward
+        typedef iterate::linear<const_type,iterate::reverse> reverse_iterator;                   //!< reverse iterator
+        typedef reverse_iterator                             const_reverse_iterator;             //!< const reverse iterator
+        inline  reverse_iterator rbegin() const throw() { return reverse_iterator(item+size_); } //!< begin reverse
+        inline  reverse_iterator rend()   const throw() { return reverse_iterator(item);       } //!< end reverse
+
+    protected:
         inline void insert_multiple( const_type &args )
         {
             size_t where = 0;
@@ -77,27 +116,9 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
             }
         }
 
-        // specific
 
-        //! no throw swap
-        inline void swap_with( sorted_vector &_ ) throw()
-        {
-            cswap(size_,_.size_);
-            cswap(maxi_,_.maxi_);
-            cswap(bytes,_.bytes);
-            cswap(addr,_.addr);
-            cswap(item,_.item);
-        }
 
-        inline friend std::ostream & operator<< ( std::ostream &os, const sorted_vector &v )
-        {
-            os << '[';
-            for(size_t i=0;i<v.size_;++i)
-            {
-                os << ' ' << v.addr[i];
-            }
-            return os << ']' << '\'';
-        }
+
         
     private:
         Y_DISABLE_ASSIGN(sorted_vector);

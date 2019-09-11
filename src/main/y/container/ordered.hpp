@@ -7,24 +7,25 @@
 namespace upsylon
 {
 
-    
+    //! base class for ordered container
     template <typename T>
     class ordered : public container
     {
     public:
-        Y_DECL_ARGS(T,type); //!< aliases
-        
-        inline virtual ~ordered() throw() {}
+        Y_DECL_ARGS(T,type);                 //!< aliases
+        inline virtual ~ordered() throw() {} //!< cleanup
 
+        //! search if object is already there
         virtual const_type *search( param_type args ) const throw() = 0;
 
     protected:
-        inline explicit ordered() throw() {}
+        inline explicit ordered() throw() {} //!< setup
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(ordered);
     };
 
+    //! use an ordered container to build a multiple ordered container
     template <typename ORDERED>
     class ordered_multiple : public ORDERED
     {
@@ -45,6 +46,10 @@ namespace upsylon
         Y_DISABLE_ASSIGN(ordered_multiple);
     };
 
+    //! use an ordered container to build a single object ordered container
+    /**
+     multiple occurences are silently discarded
+     */
     template <typename ORDERED>
     class ordered_single : public ORDERED
     {
@@ -66,6 +71,10 @@ namespace upsylon
         Y_DISABLE_ASSIGN(ordered_single);
     };
 
+    //! use an ordered container to build a unique object ordered container
+    /**
+     multiple occurences are reported for counting or error reporting
+     */
     template <typename ORDERED>
     class ordered_unique : public ORDERED
     {
