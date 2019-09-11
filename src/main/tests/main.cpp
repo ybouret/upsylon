@@ -56,8 +56,10 @@ Y_UTEST_INIT(256)
     Y_UTEST(arrays);
     Y_UTEST(dyadic);
     Y_UTEST(endian);
+
     Y_UTEST(heap);
     Y_UTEST(avl);
+    Y_UTEST(ordered);
     Y_UTEST(const_field);
     Y_UTEST(for_each);
 

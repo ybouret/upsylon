@@ -196,6 +196,7 @@ ADD_TEST(data:heap        test-main heap)
 ADD_TEST(data:avl         test-main avl)
 ADD_TEST(data:const-field test-main const_field)
 ADD_TEST(data:for_each    test-main for_each)
+ADD_TEST(data:ordered     test-main ordered)
 
 SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)
 ADD_TEST(sparse:array  test-main sparse_array)
