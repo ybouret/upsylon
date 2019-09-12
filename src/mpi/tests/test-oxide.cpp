@@ -120,6 +120,10 @@ void make_for(mpi  &MPI,
                 CheckValueOf<iField,COORD>( Fi, node->gio.reverse->inner, label);
             }
 
+            // reset values
+            IO::LD(Fi,W.outer,-label);
+            IO::LD(Fi,W.inner, label);
+            
             // and now, let's go...
             W.asyncExchange(fields);
             
@@ -150,10 +154,8 @@ Y_UTEST(oxide)
 
 
         make_for(MPI,full1D);
-        //make_for(MPI,full2D);
-        // make_for(MPI,full3D);
-
-
+        make_for(MPI,full2D);
+        make_for(MPI,full3D);
 
     }
 
