@@ -9,7 +9,7 @@ using namespace upsylon;
 using namespace Oxide;
 
 template <typename T>
-void fill( Field<T> &F )
+void fill( FieldOf<T> &F )
 {
     for(size_t i=F.localObjects/2;i>0;--i)
     {
