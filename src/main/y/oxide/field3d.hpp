@@ -11,14 +11,14 @@ namespace upsylon
     {
         //! common constructor part
 #define Y_OXIDE_FIELD3D_CTOR()                     \
-Field<T>(id,*this),                                \
+FieldOf<T>(id,*this),                              \
 slice(0), slices(0),                               \
 sliceLayout(this->lower.xy(),this->upper.xy()),    \
 rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
         
         //! field in 3D
         template <typename T>
-        class Field3D : public Layout3D, public Field<T>
+        class Field3D : public Layout3D, public FieldOf<T>
         {
         public:
             Y_DECL_ARGS(T,type);                           //!< aliases

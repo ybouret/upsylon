@@ -12,11 +12,11 @@ namespace upsylon
     {
 
         //! common constructor part
-#define Y_OXIDE_FIELD1D_CTOR() Field<T>(id,*this), shift(NULL)
+#define Y_OXIDE_FIELD1D_CTOR() FieldOf<T>(id,*this), shift(NULL)
         
         //! 1D field
         template <typename T>
-        class Field1D : public Layout1D, public Field<T>
+        class Field1D : public Layout1D, public FieldOf<T>
         {
         public:
             Y_DECL_ARGS(T,type); //!< aliases

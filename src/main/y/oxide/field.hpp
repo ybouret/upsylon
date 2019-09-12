@@ -13,14 +13,14 @@ namespace upsylon
         
         //! common abstract API for fields
         template <typename T>
-        class Field : public FieldType
+        class FieldOf : public FieldType
         {
         public:
             Y_DECL_ARGS(T,type); //!< aliases
             type        *entry;  //!< linear data entry
 
             //! cleanup
-            inline virtual ~Field() throw()
+            inline virtual ~FieldOf() throw()
             {
                 freeData();
                 entry = NULL;
@@ -66,10 +66,10 @@ namespace upsylon
             
         protected:
             //! initialize
-            explicit Field<T>(const string &id, const LayoutInfo &L) : Y_OXIDE_FIELD_CTOR() {}
+            explicit FieldOf(const string &id, const LayoutInfo &L) : Y_OXIDE_FIELD_CTOR() {}
             
             //! initialize
-            explicit Field<T>(const char *id, const LayoutInfo  &L) : Y_OXIDE_FIELD_CTOR() {}
+            explicit FieldOf(const char *id, const LayoutInfo  &L) : Y_OXIDE_FIELD_CTOR() {}
 
             //! free registered data
             inline void freeData() throw()
@@ -109,7 +109,7 @@ namespace upsylon
             
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Field);
+            Y_DISABLE_COPY_AND_ASSIGN(FieldOf);
             mutable_type * _data; //!< where objects were built
         };
         

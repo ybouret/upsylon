@@ -12,13 +12,13 @@ namespace upsylon
     {
         //! common constructor part
 #define Y_OXIDE_FIELD2D_CTOR()         \
-Field<T>(id,*this),                    \
+FieldOf<T>(id,*this),                  \
 row(0), rows(0),                       \
 rowLayout(this->lower.x,this->upper.x)
         
         //! field in 2D
         template <typename T>
-        class Field2D : public Layout2D, public Field<T>
+        class Field2D : public Layout2D, public FieldOf<T>
         {
         public:
             Y_DECL_ARGS(T,type);          //!< aliases
