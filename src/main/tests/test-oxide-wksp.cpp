@@ -131,6 +131,10 @@ namespace
                 display_field( wksp.template as<sField>("Fs") );
             }
 
+            ActiveFields active;
+            active( wksp, "Fd;Fs;Ff" );
+
+            
             Fields::Selection pick;
             pick( wksp, "Fd;Fs;Ff" );
 

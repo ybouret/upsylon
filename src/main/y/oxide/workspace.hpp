@@ -3,7 +3,7 @@
 #define Y_OXIDE_WORKSPACE_INCLUDED 1
 
 #include "y/oxide/layouts.hpp"
-#include "y/oxide/field/set.hpp"
+#include "y/oxide/field/active.hpp"
 #include "y/ios/ovstream.hpp"
 #include "y/ios/imstream.hpp"
 
