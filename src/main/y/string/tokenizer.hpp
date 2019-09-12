@@ -78,12 +78,7 @@ namespace upsylon
             return true;
         }
 
-        //! wrapper with one separator
-        inline bool next_with( const T sep ) throw()
-        {
-            const str2sep is_sep = { &sep, 1 };
-            return next(is_sep);
-        }
+
 
         //! wrapper with some separators
         inline bool next_with(const T *buffer, const size_t buflen) throw()
@@ -92,11 +87,16 @@ namespace upsylon
             return next(is_sep);
         }
 
+        //! wrapper with one separator
+        inline bool next_with( const T sep ) throw()
+        {
+            return next_with(&sep,1);
+        }
+
         //! wrapper with some separators
         inline bool next_with(const core::string<T> &buff ) throw()
         {
-            const str2sep fcn = { *buff, buff.size() };
-            return next(fcn);
+            return next_with( *buff, buff.size() );
         }
         
         inline const T *token() const throw() { return token_; } //!< token position

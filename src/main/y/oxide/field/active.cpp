@@ -26,21 +26,24 @@ namespace upsylon
             return *this;
         }
         
-        ActiveFields  &  ActiveFields::  operator<<( Fields &fields )
+        ActiveFields  &  ActiveFields::  operator()( Fields &fields )
         {
+            free();
+            ensure(fields.size());
             for( Fields::iterator it=fields.begin(); it != fields.end(); ++it)
             {
                 insert( (*it).field );
             }
             return *this;
         }
-        
+
+
         ActiveFields  & ActiveFields:: operator()( Fields &fields, const string IDs)
         {
             tokenizer<char> tkn(IDs);
             while( tkn.next_with(Separator) )
             {
-                const string id( tkn.token(), tkn.count() );
+                const string id( tkn.token(), tkn.units() );
                 (*this) << fields[id];
             }
             return *this;

@@ -4,7 +4,6 @@
 
 #include "y/oxide/field/handle.hpp"
 #include "y/associative/set.hpp"
-#include "y/sequence/vector.hpp"
 
 namespace upsylon
 {
@@ -58,6 +57,7 @@ namespace upsylon
             static const char Fn[];
 
         public:
+#if 0
             typedef vector<FieldPointer> SelectionType;
 
             class Selection : public SelectionType
@@ -77,6 +77,7 @@ namespace upsylon
             private:
                 Y_DISABLE_ASSIGN(Selection);
             };
+#endif
 
         };
 

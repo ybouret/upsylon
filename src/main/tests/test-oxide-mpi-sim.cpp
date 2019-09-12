@@ -41,7 +41,7 @@ namespace
         ios::ovstream block( 1024*1024 );
 
         std::cerr << "In " << full.Dimensions << "D" << std::endl;
-        Fields::Selection pick;
+        ActiveFields pick;
 
         for(size_t size=1;size<=8;++size)
         {

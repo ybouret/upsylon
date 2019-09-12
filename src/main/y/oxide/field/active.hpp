@@ -24,7 +24,7 @@ namespace upsylon
             ActiveFields(const ActiveFields &);
             
             ActiveFields  & operator<<( FieldType &);
-            ActiveFields  & operator<<( Fields    &);
+            ActiveFields  & operator()( Fields    &);
             ActiveFields  & operator()( Fields &, const string IDs);
             
         private:

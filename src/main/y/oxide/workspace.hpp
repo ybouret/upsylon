@@ -128,7 +128,7 @@ namespace upsylon
 
 
             //!  exchange of local ghosts pairs
-            inline void localExchange1( FieldType &F  )
+            inline void localExchange1( const FieldType &F  )
             {
                 assert(owns(F));
                 for(size_t i=0;i<Orientations;++i)
@@ -151,8 +151,8 @@ namespace upsylon
 
                         for(size_t j=fwd_inner.size();j>0;--j)
                         {
-                            F.copyObject(fwd_outer[j],rev_inner[j]);
-                            F.copyObject(rev_outer[j],fwd_inner[j]);
+                            //F.copyObject(fwd_outer[j],rev_inner[j]);
+                            //F.copyObject(rev_outer[j],fwd_inner[j]);
                         }
                     }
                 }
@@ -303,7 +303,8 @@ namespace upsylon
                 size_t recvBytes = 0;
                 while(n-->0)
                 {
-                    (**it).load(G.outer.indices,input);
+                    const FieldType  &F = **it;
+                    ((FieldType&)F).load(G.outer.indices,input);
                     ++it;
                 }
                 // TODO: CHECK

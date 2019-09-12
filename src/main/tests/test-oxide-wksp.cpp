@@ -83,7 +83,7 @@ namespace
                 wksp.localExchange1(Ff);
                 wksp.localExchange1(Fs);
 
-                Fields::Selection pick;
+                ActiveFields pick;
                 pick( wksp, "Fd" );
                 pick( wksp, "Fs;Ff" );
                 pick( wksp, "Fs;Ff" );
@@ -135,7 +135,7 @@ namespace
             active( wksp, "Fd;Fs;Ff" );
 
             
-            Fields::Selection pick;
+            ActiveFields pick;
             pick( wksp, "Fd;Fs;Ff" );
 
             for(size_t i=0;i<wksp.Orientations;++i)
