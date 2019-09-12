@@ -3,7 +3,7 @@
 #ifndef Y_OXIDE_GHOSTS_INCLUDED
 #define Y_OXIDE_GHOSTS_INCLUDED 1
 
-#include "y/oxide/connectivity.hpp"
+#include "y/oxide/conn.hpp"
 #include "y/oxide/topology.hpp"
 #include "y/ptr/arc.hpp"
 #include "y/sequence/vector.hpp"

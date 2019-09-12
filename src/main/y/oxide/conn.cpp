@@ -1,4 +1,4 @@
-#include "y/oxide/connectivity.hpp"
+#include "y/oxide/conn.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon
@@ -17,7 +17,7 @@ namespace upsylon
             return "?";
         }
 
-        const char * Conn::  Course2Text( const Course w ) throw()
+        const char * Conn::  Way2Text( const Way w ) throw()
         {
             switch(w)
             {
@@ -27,7 +27,7 @@ namespace upsylon
             return "?";
         }
 
-        Coord1D Conn::  CourseSign( const Course w ) throw()
+        Coord1D Conn::Sign( const Way w ) throw()
         {
             switch(w)
             {
@@ -37,7 +37,7 @@ namespace upsylon
             return 0;
         }
 
-        Conn::Course Conn:: Opposite( const Course way ) throw()
+        Conn::Way Conn:: Opposite( const Way way ) throw()
         {
             switch(way)
             {
@@ -53,7 +53,7 @@ namespace upsylon
 
         Conn::Level Conn::MakeLink(Coord1D       *direction,
                                    Coord1D       *orientation,
-                                   Course        *way,
+                                   Way           *way,
                                    const unsigned dims)
         {
             assert(direction);

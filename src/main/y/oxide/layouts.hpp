@@ -30,16 +30,17 @@ namespace upsylon
             static const size_t                               Neighbours   = Metrics<Dimensions>::Neighbours; //!< number of possible neighbours and directions
             static const size_t                               Orientations = Neighbours/2;                    //!< number of orientations
             typedef Ghosts<COORD>                             GhostsType;                                     //!< alias
+            typedef const GhostsType                         *Peer;                                          //!< alias
             typedef arc_ptr<GhostsType>                       GhostsPointer;                                  //!< dynamic ghosts
 
             //! lightweight ghosts I/O context
             struct GIO
             {
-                const GhostsType  *forward; //!< if has forward
-                const GhostsType  *reverse; //!< if has reverse
-                unsigned           status;  //!< from GhostsInfo
-                bool               local;   //!< for exchange
-                bool               async;   //!< for load/save
+                Peer       forward; //!< if has forward
+                Peer       reverse; //!< if has reverse
+                unsigned   status;  //!< from GhostsInfo
+                bool       local;   //!< for exchange
+                bool       async;   //!< for load/save
             };
 
             //------------------------------------------------------------------
@@ -282,7 +283,7 @@ namespace upsylon
                     { const GhostsPointer G = g; repository.push_back(G); }
 
                     GIO &gio = ghosts[where];
-                    switch(g->link.course)
+                    switch(g->link.way)
                     {
                         case Conn::Forward:  assert(0==gio.forward); gio.forward = g; gio.status |= GhostsInfo::Fwd; break;
                         case Conn::Reverse:  assert(0==gio.reverse); gio.reverse = g; gio.status |= GhostsInfo::Rev; break;
@@ -321,22 +322,27 @@ namespace upsylon
                     }
                 }
 
-                 for( size_t j=0; j<Orientations; ++j )
-                 {
-                     GIO &gio = ghosts[j];
-                     switch (gio.status) {
-                         case GhostsInfo::Fwd: assert(gio.forward); assert(gio.forward->async); gio.local = false; gio.async=true; break;
-                         case GhostsInfo::Rev: assert(gio.reverse); assert(gio.reverse->async); gio.local = false; gio.async=true; break;
-                         case GhostsInfo::Both:
-                             assert(gio.forward);
-                             assert(gio.reverse);
-                             assert(gio.forward->local==gio.reverse->local);
-                             assert(gio.forward->async==gio.reverse->async);
-                             gio.local = gio.forward->local;
-                             gio.async = gio.forward->async;
-                             break;
-                     }
-                 }
+                //--------------------------------------------------------------
+                //
+                // setting up full connectivity
+                //
+                //--------------------------------------------------------------
+                for( size_t j=0; j<Orientations; ++j )
+                {
+                    GIO &gio = ghosts[j];
+                    switch (gio.status) {
+                        case GhostsInfo::Fwd: assert(gio.forward); assert(gio.forward->async); gio.local = false; gio.async=true; break;
+                        case GhostsInfo::Rev: assert(gio.reverse); assert(gio.reverse->async); gio.local = false; gio.async=true; break;
+                        case GhostsInfo::Both:
+                            assert(gio.forward);
+                            assert(gio.reverse);
+                            assert(gio.forward->local==gio.reverse->local);
+                            assert(gio.forward->async==gio.reverse->async);
+                            gio.local = gio.forward->local;
+                            gio.async = gio.forward->async;
+                            break;
+                    }
+                }
 
                 //--------------------------------------------------------------
                 //

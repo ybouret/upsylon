@@ -47,6 +47,7 @@ namespace upsylon
             static const size_t                      Dimensions   = LayoutType::Dimensions;    //!< alias
             static const size_t                      Orientations = LayoutsType::Orientations; //!< alias
             typedef typename LayoutsType::GhostsType GhostsType;                               //!< alias
+            typedef typename LayoutsType::Peer       Peer;                                     //!< alias
 
             //------------------------------------------------------------------
             //
@@ -184,8 +185,8 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             //! extract matching ghosts
-            const GhostsType *getAsync(const Conn::Course way,
-                                       const size_t      orientation) const throw()
+            Peer getAsyncPeer(const Conn::Way way,
+                              const size_t    orientation) const throw()
             {
                 assert(orientation<Orientations);
                 const GIO &gio = this->ghosts[orientation];
@@ -201,14 +202,14 @@ namespace upsylon
             }
 
             //! save aynchronous content for way+orientation into block
-            inline size_t asyncSave1(const Conn::Course         way,
-                                     const size_t               orientation,
-                                     ios::ostream              &block,
-                                     const Field               &F,
-                                     const GhostsType        * &G) const
+            inline size_t asyncSave1(const Conn::Way     way,
+                                     const size_t        orientation,
+                                     ios::ostream       &block,
+                                     const Field        &F,
+                                     Peer               &G) const
             {
                 assert(owns(F));
-                G = getAsync(way,orientation);
+                G = getAsyncPeer(way,orientation);
                 if(G)
                 {
                     return F.save(G->inner.indices,block);
@@ -221,13 +222,13 @@ namespace upsylon
             
             //! save some fields, with sendBlock reinitialization
             template <typename SEQUENCE>
-            inline size_t asyncSave(const Conn::Course way,
-                                    const size_t               orientation,
-                                    SEQUENCE                  &fields,
-                                    const GhostsType        * &G)
+            inline size_t asyncSave(const Conn::Way     way,
+                                    const size_t        orientation,
+                                    SEQUENCE           &fields,
+                                    Peer               &G)
             {
                 sendBlock.free();
-                G = getAsync(way,orientation);
+                G = getAsyncPeer(way,orientation);
                 if(G)
                 {
                     return asyncSave( fields.begin(), fields.size(), *G );
@@ -241,14 +242,14 @@ namespace upsylon
 
 
             //! load asynchronous content for way+orientation from input
-            inline size_t asyncLoad1(const Conn::Course  way,
-                                     const size_t                orientation,
-                                     ios::istream               &input,
-                                     Field                      &F,
-                                     const GhostsType         * &G)
+            inline size_t asyncLoad1(const Conn::Way     way,
+                                     const size_t        orientation,
+                                     ios::istream       &input,
+                                     Field              &F,
+                                     Peer               &G)
             {
                 assert(owns(F));
-                G = getAsync(way,orientation);
+                G = getAsyncPeer(way,orientation);
                 if(G)
                 {
                     return F.load(G->outer.indices,input);
@@ -261,12 +262,12 @@ namespace upsylon
 
             //! load some fields, assuming recvBlock is filled
             template <typename SEQUENCE>
-            inline size_t asyncLoad(const Conn::Course way,
-                                    const size_t               orientation,
-                                    SEQUENCE                  &fields,
-                                    const GhostsType        * &G)
+            inline size_t asyncLoad(const Conn::Way     way,
+                                    const size_t        orientation,
+                                    SEQUENCE           &fields,
+                                    Peer               &G)
             {
-                G = getAsync(way,orientation);
+                G = getAsyncPeer(way,orientation);
                 if(G)
                 {
                     ios::imstream input(recvBlock);
