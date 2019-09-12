@@ -35,14 +35,22 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(ParallelContext);
         };
 
+#define Y_PARWKSP_DECL(TYPE)  typedef typename     WorkspaceType::TYPE TYPE
+#define Y_PARWKSP_IMPL(VALUE) static  const size_t VALUE = WorkspaceType::VALUE
+
         template <typename COORD>
         class ParallelWorkspace : public Workspace<COORD>
         {
         public:
+            static const size_t tag = 3;
             typedef Workspace<COORD>                     WorkspaceType;
-            typedef typename WorkspaceType::LayoutType   LayoutType;
-            typedef typename WorkspaceType::coord        coord;
-            typedef typename WorkspaceType::const_coord  const_coord;
+            Y_PARWKSP_DECL(LayoutType);
+            Y_PARWKSP_DECL(coord);
+            Y_PARWKSP_DECL(const_coord);
+            Y_PARWKSP_DECL(AsyncIO);
+            Y_PARWKSP_IMPL(Dimensions);
+            Y_PARWKSP_IMPL(Orientations);
+
 
             mpi &MPI;
             explicit ParallelWorkspace(mpi             &usrMPI,
@@ -53,7 +61,11 @@ namespace upsylon
             WorkspaceType(full,localSizes,usrMPI.rank,PBC,ng),
             MPI(usrMPI)
             {
-                __Workspace::CheckGlobalSizeOf(*this,MPI.size);
+                const int lsize = int(Layouts<COORD>::size);
+                if(  lsize != MPI.size )
+                {
+                    throw exception("Oxide::ParalleWorkspace(invalid |localSizes|=%d/MPI.size=%d)",lsize,MPI.size);
+                }
             }
 
             virtual ~ParallelWorkspace() throw()
@@ -61,8 +73,69 @@ namespace upsylon
 
             }
 
+            inline void asyncExchange(const ActiveFields  &fields)
+            {
+                for(size_t orientation=0;orientation<Orientations;++orientation)
+                {
+                    rings(fields,orientation);
+                }
+            }
+            
+            
+           
+            
+            
+            
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ParallelWorkspace);
+            inline void rings(const ActiveFields  &fields,
+                              const size_t         orientation)
+            {
+                ring(Conn::Forward, fields,  orientation);
+                ring(Conn::Reverse, fields,  orientation);
+            }
+            
+            inline void ring(const Conn::Way      way,
+                             const ActiveFields  &fields,
+                             const size_t         orientation)
+            {
+                assert(orientation<Orientations);
+                AsyncIO aio;
+                this->asyncProlog(aio,fields,way,orientation);
+                switch(aio.comm)
+                {
+                        //------------------------------------------------------
+                        // send only
+                        //------------------------------------------------------
+                    case GhostsComm::Send:
+                        assert(aio.send); assert(!aio.recv);
+                        MPI.vSend(aio.mode,this->sendBlock,aio.send->rank,tag);
+                        break;
+                        
+                        //------------------------------------------------------
+                        // recv only
+                        //------------------------------------------------------
+                    case GhostsComm::Recv:
+                        assert(aio.recv); assert(!aio.send);
+                        MPI.vRecv(aio.mode,this->recvBlock,aio.recv->rank,tag);
+                        break;
+                        
+                        //------------------------------------------------------
+                        // sendrecv only
+                        //------------------------------------------------------
+                    case GhostsComm::Both:
+                        assert(aio.recv); assert(aio.send);
+                        MPI.vSendRecv(aio.mode,
+                                      this->sendBlock, aio.send->rank, tag,
+                                      this->recvBlock, aio.recv->rank, tag);
+                        break;
+                        
+                    default:
+                        break;
+                }
+                this->asyncEpilog(aio,fields);
+            }
         };
 
     }

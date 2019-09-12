@@ -45,7 +45,7 @@ void make_for(mpi  &MPI,
     ParallelContext<COORD> ctx(MPI,full);
 
     typedef typename __Field<COORD,double>::Type   dField;
-    typedef typename __Field<COORD,string>::Type   sField;
+    //typedef typename __Field<COORD,mpq>::Type      qField;
     typedef typename __Field<COORD,Coord1D>::Type  iField;
 
     if(MPI.isHead)
@@ -65,7 +65,7 @@ void make_for(mpi  &MPI,
         if(MPI.isHead)
         {
             fflush(stderr);
-            std::cerr << "|_: using " << ctx.mappings[m] << std::endl;
+            std::cerr << "|_: using " << ctx.mappings[m] << " <";
             std::cerr.flush();
         }
         COORD pbc0(0); Coord::LD(pbc0,0);
@@ -74,7 +74,9 @@ void make_for(mpi  &MPI,
         typename Layout<COORD>::Loop pbc(pbc0,pbc1);
         for(pbc.start(); pbc.valid(); pbc.next())
         {
-
+            MPI.print0(stderr,".");
+            MPI.flush0(stderr);
+            
             size_t ng=1;
 
             MPI.Barrier();
@@ -94,27 +96,38 @@ void make_for(mpi  &MPI,
 
             // prepare
             fill(Fd);
-            IO::LD(Fi,W.outer,-LabelOf(MPI.rank));
-            IO::LD(Fi,W.inner, LabelOf(MPI.rank));
+            const Coord1D label =LabelOf(MPI.rank);
+            IO::LD(Fi,W.outer,-label);
+            IO::LD(Fi,W.inner, label);
 
+            // check local labels: outer ghosts have now inner values
+            for( const typename Workspace<COORD>::gNode *node = W.localGhosts.head; node; node=node->next)
+            {
+                CheckValueOf<iField,COORD>( Fi, node->gio.forward->outer, -label );
+                CheckValueOf<iField,COORD>( Fi, node->gio.forward->inner, label );
+                CheckValueOf<iField,COORD>( Fi, node->gio.reverse->outer, -label );
+                CheckValueOf<iField,COORD>( Fi, node->gio.reverse->inner, label);
+            }
             // exchange
             W.localExchange(fields);
 
             // check local labels: outer ghosts have now inner values
             for( const typename Workspace<COORD>::gNode *node = W.localGhosts.head; node; node=node->next)
             {
-                CheckValueOf<iField,COORD>( Fi, node->gio.forward->outer, LabelOf(W.rank) );
-                CheckValueOf<iField,COORD>( Fi, node->gio.forward->inner, LabelOf(W.rank) );
-                CheckValueOf<iField,COORD>( Fi, node->gio.reverse->outer, LabelOf(W.rank) );
-                CheckValueOf<iField,COORD>( Fi, node->gio.reverse->inner, LabelOf(W.rank) );
+                CheckValueOf<iField,COORD>( Fi, node->gio.forward->outer, label );
+                CheckValueOf<iField,COORD>( Fi, node->gio.forward->inner, label );
+                CheckValueOf<iField,COORD>( Fi, node->gio.reverse->outer, label );
+                CheckValueOf<iField,COORD>( Fi, node->gio.reverse->inner, label);
             }
 
             // and now, let's go...
-
-        }
+            W.asyncExchange(fields);
+            
+            
+        } MPI.print0(stderr,">\n");
     }
 
-    MPI.print0(stderr,"\n");
+   
 
 }
 
@@ -137,8 +150,8 @@ Y_UTEST(oxide)
 
 
         make_for(MPI,full1D);
-        make_for(MPI,full2D);
-        make_for(MPI,full3D);
+        //make_for(MPI,full2D);
+        // make_for(MPI,full3D);
 
 
 

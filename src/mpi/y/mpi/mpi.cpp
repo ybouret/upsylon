@@ -368,6 +368,20 @@ namespace upsylon
 
     }
 
+    void mpi:: flush( FILE *fp )
+    {
+        assert(fp);
+        fflush(fp);
+    }
+    
+    void mpi:: flush0( FILE *fp )
+    {
+        if(isHead)
+        {
+            assert(fp);
+            fflush(fp);
+        }
+    }
 
 
 }

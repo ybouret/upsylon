@@ -310,6 +310,12 @@ namespace upsylon
         //! print only on node0
         void print0( FILE *fp, const char *fmt,...) Y_PRINTF_CHECK(3,4);
 
+        //! flush all local files
+        void flush( FILE *fp );
+        
+        //! flush only on node0
+        void flush0( FILE *fp);
+        
         //! portable size send
         void   SendSize( const size_t value, const int target, const int tag);
 
