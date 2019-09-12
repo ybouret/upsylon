@@ -57,10 +57,10 @@ namespace upsylon
         
 
     protected:
-        inline explicit ordered() throw() {} //!< setup
-
+        inline explicit ordered()        throw() : container() {} //!< setup
+        inline ordered(const ordered & ) throw() : dynamic(), container() {} //!< copy
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(ordered);
+        Y_DISABLE_ASSIGN(ordered);
         virtual const_type & getObjectAt(const size_t indx) const throw() = 0;
     };
 
@@ -74,7 +74,7 @@ namespace upsylon
         inline explicit ordered_multiple() throw() : ORDERED() {}                                  //!< setup
         inline explicit ordered_multiple(const size_t n, const as_capacity_t &_) : ORDERED(n,_) {} //!< setup with memory
         inline virtual ~ordered_multiple() throw() {}                                              //!< cleanup
-        inline ordered_multiple( const ordered_multiple &other) : ORDERED(other) {}                //!< copy
+        inline ordered_multiple( const ordered_multiple &other) : dynamic(), ORDERED(other) {}                //!< copy
 
         //! always insert
         inline void insert( param_type args )
@@ -99,7 +99,7 @@ namespace upsylon
         inline explicit ordered_single() throw() : ORDERED() {}                                   //!< setup
         inline explicit ordered_single(const size_t n, const as_capacity_t &_) : ORDERED(n,_) {}  //!< setup with memory
         inline virtual ~ordered_single() throw() {}                                               //!< cleanup
-        inline ordered_single( const ordered_single &other) : ORDERED(other) {}                   //!< copy
+        inline ordered_single( const ordered_single &other) : dynamic(), ORDERED(other) {}                   //!< copy
 
         //! insert and discard if multiple objects
         inline void insert( param_type args )
@@ -125,7 +125,7 @@ namespace upsylon
         inline explicit ordered_unique() throw() : ORDERED() {}                                  //!< setup
         inline explicit ordered_unique(const size_t n, const as_capacity_t &_) : ORDERED(n,_) {} //!< setup with memory
         inline virtual ~ordered_unique() throw() {}                                              //!< cleanup
-        inline ordered_unique( const ordered_unique &other) : ORDERED(other) {}                  //!< copy
+        inline ordered_unique( const ordered_unique &other) : dynamic(), ORDERED(other) {}                  //!< copy
 
         //! try to insert object
         inline bool insert( param_type args )

@@ -52,14 +52,14 @@ namespace upsylon
         inline virtual ~sorted_list() throw() { release__(); }
 
         //!setup
-        inline explicit sorted_list() throw() : content(), dormant(), compare() {}
+        inline explicit sorted_list() throw() : ordered<T>(), content(), dormant(), compare() {}
 
         //! setup with memory
-        inline explicit sorted_list(const size_t n, const as_capacity_t &) : content(), dormant(), compare()
+        inline explicit sorted_list(const size_t n, const as_capacity_t &) : ordered<T>(), content(), dormant(), compare()
         { reserve__(n); }
 
         //! copy
-        inline explicit sorted_list(const sorted_list &other) : content(), dormant(), compare()
+        inline explicit sorted_list(const sorted_list &other) : ordered<T>(other), content(), dormant(), compare()
         {
             for(const node_type *scan = other.content.head; scan; scan=scan->next )
             {
@@ -76,8 +76,8 @@ namespace upsylon
         // dynamic interface
         //
         //----------------------------------------------------------------------
-        inline virtual size_t size()     const throw() { return content.size; }
-        inline virtual size_t capacity() const throw() { return content.size + dormant.size; }
+        inline virtual size_t size()     const throw() { return content.size; }                //!< current size
+        inline virtual size_t capacity() const throw() { return content.size + dormant.size; } //!< current capacity
 
         //----------------------------------------------------------------------
         //

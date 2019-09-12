@@ -36,17 +36,17 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
 
         //! setup
         inline explicit sorted_vector() throw() :
-        size_(0), maxi_(0), bytes(0), hmem( ALLOCATOR::instance() ), addr(0), item(addr-1), compare()
+        ordered<T>(), size_(0), maxi_(0), bytes(0), hmem( ALLOCATOR::instance() ), addr(0), item(addr-1), compare()
         {}
 
         //! setup with memory
-        inline explicit sorted_vector(const size_t n, const as_capacity_t &) throw() : Y_SORTED_VECTOR(n) {}
+        inline explicit sorted_vector(const size_t n, const as_capacity_t &) throw() :  ordered<T>(), Y_SORTED_VECTOR(n) {}
 
         //! copy
-        inline  sorted_vector( const sorted_vector &other ) : Y_SORTED_VECTOR( other.size_ ) { duplicate(other); }
+        inline  sorted_vector( const sorted_vector &other ) :  dynamic(), ordered<T>(other), Y_SORTED_VECTOR( other.size_ ) { duplicate(other); }
 
         //! copy with extra memory
-        inline  sorted_vector( const sorted_vector &other, const size_t extra ) : Y_SORTED_VECTOR( other.size_+extra ) { duplicate(other); }
+        inline  sorted_vector( const sorted_vector &other, const size_t extra ) : dynamic(), ordered<T>(other), Y_SORTED_VECTOR( other.size_+extra ) { duplicate(other); }
 
         //----------------------------------------------------------------------
         //

@@ -11,7 +11,7 @@ namespace upsylon
         }
         
         ActiveFields:: ActiveFields( const ActiveFields &other) :
-        ActiveFieldsType(other)
+        dynamic(), ActiveFieldsType(other)
         {
         }
         
@@ -36,7 +36,6 @@ namespace upsylon
             }
             return *this;
         }
-
 
         ActiveFields  & ActiveFields:: operator()( Fields &fields, const string IDs)
         {
