@@ -190,7 +190,7 @@ namespace upsylon
             //------------------------------------------------------------------
             
             //! lighweight asynchonous information for one-way transfer
-            struct asyncIO
+            struct AsyncIO
             {
                 Peer      send; //!< whom to send to
                 Peer      recv; //!< from whom to recv
@@ -199,7 +199,8 @@ namespace upsylon
             };
 
             //! prolog to send in sendingWay
-            bool asyncProlog(asyncIO            &aio,
+
+            void asyncProlog(AsyncIO            &aio,
                              const ActiveFields &fields,
                              const Conn::Way     sendingWay,
                              const size_t        orientation)
@@ -253,24 +254,20 @@ namespace upsylon
                         }
                     }
 
-
-                    return true;
                 }
                 else
                 {
                     // no async in this orientation
                     aio.mode = comm_constant_size;
-                    return false;
                 }
             }
 
 
             //! epilog after recv operations in one way
-            inline void asyncEpilog(const asyncIO      &aio,
+            inline void asyncEpilog(const AsyncIO      &aio,
                                     const ActiveFields &fields)
             {
-                assert(aio.send||aio.recv);
-
+                
                 if(aio.recv)
                 {
                     assert(0!=(aio.comm&GhostsComm::Recv));

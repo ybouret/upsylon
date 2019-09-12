@@ -54,8 +54,8 @@ namespace
                     //std::cerr << " |_pbc=" << pbc.value << std::endl;
                     for(size_t rank=0;rank<size;++rank)
                     {
+
                         Workspace<COORD> W(full,mappings[j],rank,pbc.value,ng);
-                        active(W);
 
                         {
                             dField  &Fd = W.template create<dField>( "Fd" );
@@ -65,8 +65,31 @@ namespace
                             fill(Fs);
                             fill(F2);
                         }
+                        active.free();
+                        active(W,"Fd;F2"); Y_ASSERT(2==active.size());
+                        Y_ASSERT( comm_constant_size == active.getCommMode()  );
+                        Y_ASSERT( 3*sizeof(double)   == active.getBlockSize() );
 
                         W.localExchange(active);
+                        typename Workspace<COORD>::AsyncIO  aio;
+                        for(size_t k=0;k<W.Orientations;++k)
+                        {
+                            W.asyncProlog(aio,active,Conn::Forward,k);
+                            if(W.sendBlock.size()>0)
+                            {
+                                W.recvBlock.copy( W.sendBlock );
+                            }
+                            W.asyncEpilog(aio,active);
+
+                            W.asyncProlog(aio,active,Conn::Reverse,k);
+                            if(W.sendBlock.size()>0)
+                            {
+                                W.recvBlock.copy( W.sendBlock );
+                            }
+                            W.asyncEpilog(aio,active);
+
+
+                        }
 
                     }
                 }
