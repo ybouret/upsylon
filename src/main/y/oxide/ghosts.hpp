@@ -56,7 +56,7 @@ namespace upsylon
          The positional NodeType will be used as peer information for I/O
          */
         template <typename COORD>
-        class _Ghosts : public Topology::Node<COORD>, public counted_object
+        class Ghosts : public Topology::Node<COORD>, public counted_object
         {
         public:
             typedef Ghost<COORD>                     GhostType;   //!< alias
@@ -72,7 +72,7 @@ namespace upsylon
             const bool              async; //!< is async
 
             //! setup
-            inline explicit _Ghosts(const_coord           &localSizes,
+            inline explicit Ghosts(const_coord           &localSizes,
                                     const Coord1D         &globalRank,
                                     const Coord1D         &globalHost,
                                     const LinkType        &localLink,
@@ -90,7 +90,7 @@ namespace upsylon
             }
 
             //! cleanup
-            inline virtual ~_Ghosts() throw()
+            inline virtual ~Ghosts() throw()
             {
             }
 
@@ -100,7 +100,7 @@ namespace upsylon
             inline const char *kind() const throw() { return GhostsInfo::Kind(async); } //!< return async|local
 
             //! display information
-            friend inline std::ostream & operator<<( std::ostream &os, const _Ghosts &G )
+            friend inline std::ostream & operator<<( std::ostream &os, const Ghosts &G )
             {
                 os << G.link << G.kind() << ':' << std::setw(2) << G.host << "->" << std::setw(2) << G.rank;
                 os << "|inner=" << G.inner << " outer=" << G.outer;
@@ -108,7 +108,7 @@ namespace upsylon
             }
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(_Ghosts);
+            Y_DISABLE_COPY_AND_ASSIGN(Ghosts);
         };
         
 

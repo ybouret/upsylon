@@ -29,8 +29,8 @@ namespace upsylon
             static const size_t                               Dimensions   = Coord::Get<COORD>::Dimensions;   //!< alias
             static const size_t                               Neighbours   = Metrics<Dimensions>::Neighbours; //!< number of possible neighbours and directions
             static const size_t                               Orientations = Neighbours/2;                    //!< number of orientations
-            typedef _Ghosts<COORD>                            GhostsType;                                     //!< alias
-            typedef arc_ptr< GhostsType >                     Ghosts;                                         //!< dynamic ghosts
+            typedef Ghosts<COORD>                             GhostsType;                                     //!< alias
+            typedef arc_ptr<GhostsType>                       GhostsPointer;                                  //!< dynamic ghosts
 
             //! lightweight ghosts I/O context
             struct GIO
@@ -53,7 +53,7 @@ namespace upsylon
             const auto_ptr<LayoutType> heart;  //!< optional heart layout
 
         private:
-            vector<Ghosts>          repository;           //!< all created ghosts
+            vector<GhostsPointer>   repository;           //!< all created ghosts
         protected:
             GIO                     ghosts[Orientations]; //!< placed according to their orientation
         public:
@@ -279,7 +279,7 @@ namespace upsylon
                                                    ghostInnerLayout,
                                                    ghostOuterLayout,
                                                    outer);
-                    { const Ghosts G = g; repository.push_back(G); }
+                    { const GhostsPointer G = g; repository.push_back(G); }
 
                     GIO &gio = ghosts[where];
                     switch(g->link.way)

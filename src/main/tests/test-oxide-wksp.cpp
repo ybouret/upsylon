@@ -95,7 +95,7 @@ namespace
                 wksp.localExchange(pick);
 
                 block.free();
-                const _Ghosts<COORD> *G;
+                const Ghosts<COORD> *G;
 
                 size_t total_save = 0;
                 for(size_t i=0;i<wksp.Orientations;++i)
@@ -140,7 +140,7 @@ namespace
 
             for(size_t i=0;i<wksp.Orientations;++i)
             {
-                const _Ghosts<COORD> *G = 0;
+                const Ghosts<COORD> *G = 0;
                 {
                     const size_t total_save = wksp.asyncSave(Connectivity::Forward,i,pick,G);
                     Y_CHECK(total_save==wksp.sendBlock.size());

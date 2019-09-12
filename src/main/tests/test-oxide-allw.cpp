@@ -64,7 +64,7 @@ namespace
                             W.localExchange1(Fs);
 
                             block.free();
-                            const _Ghosts<COORD> *G = 0;
+                            const Ghosts<COORD> *G = 0;
                             size_t total_save = 0;
                             for(size_t k=0;k<W.Orientations;++k)
                             {

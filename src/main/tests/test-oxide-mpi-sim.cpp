@@ -109,7 +109,7 @@ namespace
 
                         for(size_t ori=0;ori<W.Orientations;++ori)
                         {
-                            const _Ghosts<COORD> *G = 0;
+                            const Ghosts<COORD> *G = 0;
                             const size_t ns = W.asyncSave(Connectivity::Forward,ori,pick,G);
                             if(G&&ns)
                             {

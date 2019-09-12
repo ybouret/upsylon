@@ -46,7 +46,7 @@ namespace upsylon
             typedef typename LayoutsType::GIO        GIO;                                      //!< alias
             static const size_t                      Dimensions   = LayoutType::Dimensions;    //!< alias
             static const size_t                      Orientations = LayoutsType::Orientations; //!< alias
-            typedef _Ghosts<COORD>                   Ghosts;                                   //!< alias
+            typedef typename LayoutsType::GhostsType GhostsType;                               //!< alias
 
             //------------------------------------------------------------------
             //
@@ -173,7 +173,7 @@ namespace upsylon
                                      const size_t            orientation,
                                      ios::ostream           &block,
                                      const FieldType        &F,
-                                     const Ghosts         * &G) const
+                                     const GhostsType     * &G) const
             {
                 assert(owns(F));
                 G = getAsync(way,orientation);
@@ -192,7 +192,7 @@ namespace upsylon
             inline size_t asyncSave(const Connectivity::Way way,
                                     const size_t            orientation,
                                     SEQUENCE               &fields,
-                                    const Ghosts          * &G)
+                                    const GhostsType      * &G)
             {
                 sendBlock.free();
                 G = getAsync(way,orientation);
@@ -213,7 +213,7 @@ namespace upsylon
                                      const size_t             orientation,
                                      ios::istream            &input,
                                      FieldType               &F,
-                                     const Ghosts          * &G)
+                                     const GhostsType      * &G)
             {
                 assert(owns(F));
                 G = getAsync(way,orientation);
@@ -232,7 +232,7 @@ namespace upsylon
             inline size_t asyncLoad(const Connectivity::Way way,
                                     const size_t            orientation,
                                     SEQUENCE               &fields,
-                                    const Ghosts          * &G)
+                                    const GhostsType      * &G)
             {
                 G = getAsync(way,orientation);
                 if(G)
@@ -248,8 +248,8 @@ namespace upsylon
 
 
             //! extract matching ghosts
-            const Ghosts *getAsync(const Connectivity::Way way,
-                                   const size_t            orientation) const throw()
+            const GhostsType *getAsync(const Connectivity::Way way,
+                                       const size_t            orientation) const throw()
             {
                 assert(orientation<Orientations);
                 const GIO &gio = this->ghosts[orientation];
@@ -282,7 +282,7 @@ namespace upsylon
             template <typename ITERATOR>
             inline size_t asyncSave(ITERATOR                it,
                                     size_t                  n,
-                                    const Ghosts           &G)
+                                    const GhostsType       &G)
             {
                 size_t sendBytes = 0;
                 while(n-->0)
@@ -297,7 +297,7 @@ namespace upsylon
             template <typename ITERATOR>
             inline size_t asyncLoad(ITERATOR                it,
                                     size_t                  n,
-                                    const Ghosts           &G,
+                                    const GhostsType       &G,
                                     ios::istream           &input)
             {
                 size_t recvBytes = 0;
