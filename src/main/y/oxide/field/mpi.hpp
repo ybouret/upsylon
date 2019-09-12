@@ -13,19 +13,17 @@ namespace upsylon
     {
 
         template <typename COORD>
-        class ParallelContext  
+        class ParallelContext
         {
         public:
             typedef Layout<COORD> LayoutType;
 
-            const mpi            &MPI;
             const LayoutType      full;     //!< full layout
             const vector<COORD>   mappings; //!< possible mappings
             const COORD           optimal;  //!< optimal mapping
 
-            explicit ParallelContext(const mpi        &userMPI,
+            explicit ParallelContext(const mpi        &MPI,
                                      const LayoutType &userFull ) :
-            MPI(userMPI),
             full(userFull),
             mappings(),
             optimal( OptimalMapping::Find(full,MPI.size) )
@@ -46,8 +44,22 @@ namespace upsylon
             typedef typename WorkspaceType::coord        coord;
             typedef typename WorkspaceType::const_coord  const_coord;
 
+            mpi &MPI;
+            explicit ParallelWorkspace(mpi             &usrMPI,
+                                       const LayoutType &full,
+                                       const_coord       localSizes,
+                                       const_coord      &PBC,
+                                       const size_t      ng) :
+            WorkspaceType(full,localSizes,usrMPI.rank,PBC,ng),
+            MPI(usrMPI)
+            {
+                __Workspace::CheckGlobalSizeOf(*this,MPI.size);
+            }
 
+            virtual ~ParallelWorkspace() throw()
+            {
 
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ParallelWorkspace);

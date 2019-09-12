@@ -30,6 +30,16 @@ namespace upsylon
             //! check matching total used bytes agains block size
             static void CheckBlockTotal( const IOBlock &block, const size_t total );
 
+            //! check good lobal size
+            static void CheckGlobalSize( const Coord1D size, const Coord1D target_size);
+
+            template <typename COORD>
+            static inline void CheckGlobalSizeOf( const Layouts<COORD> &L, const Coord1D target_size)
+            {
+                CheckGlobalSize(L.size,target_size);
+            }
+
+
         };
 
 
@@ -71,7 +81,7 @@ namespace upsylon
 
             //! setup
             inline explicit Workspace(const LayoutType &full,
-                                      const_coord      &localSizes,
+                                      const_coord       localSizes,
                                       const Coord1D     globalRank,
                                       const_coord      &PBC,
                                       const Coord1D     ng) :

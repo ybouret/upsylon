@@ -1,6 +1,7 @@
 #include "y/oxide/field/mpi.hpp"
 #include "y/oxide/field3d.hpp"
 #include "y/ios/imstream.hpp"
+#include "y/oxide/field/io.hpp"
 
 #include "y/utest/run.hpp"
 #include "support.hpp"
@@ -8,19 +9,118 @@
 using namespace upsylon;
 using namespace Oxide;
 
-template <typename T>
-void fill( FieldOf<T> &F )
+namespace
 {
-    for(size_t i=F.localObjects/2;i>0;--i)
+    template <typename T>
+    void fill( FieldOf<T> &F )
     {
-        const T tmp = support::get<T>();
-        F.entry[ alea.range<Coord1D>(0,F.localObjects-1) ] = tmp;
+        for(size_t i=F.localObjects/2;i>0;--i)
+        {
+            const T tmp = support::get<T>();
+            F.entry[ alea.range<Coord1D>(0,F.localObjects-1) ] = tmp;
+        }
     }
+
+    static inline Coord1D LabelOf( Coord1D rank )
+    {
+        return 1+rank*rank;
+    }
+
+    template <typename FIELD,typename COORD>
+    void CheckValueOf( const FIELD &F, const Layout<COORD> &L, Coord1D V )
+    {
+        typename Layout<COORD>::Loop loop(L.lower,L.upper);
+        for( loop.start(); loop.valid(); loop.next() )
+        {
+            if(V!=F(loop.value)) throw exception("Mismatch Value %ld/%ld",long(F(loop.value)),long(V));
+        }
+    }
+
+}
+
+template <typename COORD>
+void make_for(mpi  &MPI,
+              const Layout<COORD> &full )
+{
+    ParallelContext<COORD> ctx(MPI,full);
+
+    typedef typename __Field<COORD,double>::Type   dField;
+    typedef typename __Field<COORD,string>::Type   sField;
+    typedef typename __Field<COORD,Coord1D>::Type  iField;
+
+    if(MPI.isHead)
+    {
+        fflush(stderr);
+        std::cerr << "Full       : " << full  << std::endl;
+        std::cerr << "|_Mappings : " << ctx.mappings << std::endl;
+        std::cerr << "|_Optimal  : " << ctx.optimal  << std::endl;
+        std::cerr.flush();
+    }
+
+    ActiveFields fields;
+
+    for(size_t m=1;m<=ctx.mappings.size();++m)
+    {
+        const COORD &mapping = ctx.mappings[m];
+        if(MPI.isHead)
+        {
+            fflush(stderr);
+            std::cerr << "|_: using " << ctx.mappings[m] << std::endl;
+            std::cerr.flush();
+        }
+        COORD pbc0(0); Coord::LD(pbc0,0);
+        COORD pbc1(1); Coord::LD(pbc1,1);
+
+        typename Layout<COORD>::Loop pbc(pbc0,pbc1);
+        for(pbc.start(); pbc.valid(); pbc.next())
+        {
+
+            size_t ng=1;
+
+            MPI.Barrier();
+            ParallelWorkspace<COORD> W(MPI,
+                                       full,
+                                       mapping,
+                                       pbc.value,ng);
+
+            Y_ASSERT(W.rank==MPI.rank);
+            
+            dField &Fd = W. template create<dField>( "Fd" );
+            iField &Fi = W. template create<iField>( "Fi" );
+
+            fields(W);
+            Y_ASSERT(fields.getCommMode()==comm_constant_size);
+
+
+            // prepare
+            fill(Fd);
+            IO::LD(Fi,W.outer,-LabelOf(MPI.rank));
+            IO::LD(Fi,W.inner, LabelOf(MPI.rank));
+
+            // exchange
+            W.localExchange(fields);
+
+            // check local labels: outer ghosts have now inner values
+            for( const typename Workspace<COORD>::gNode *node = W.localGhosts.head; node; node=node->next)
+            {
+                CheckValueOf<iField,COORD>( Fi, node->gio.forward->outer, LabelOf(W.rank) );
+                CheckValueOf<iField,COORD>( Fi, node->gio.forward->inner, LabelOf(W.rank) );
+                CheckValueOf<iField,COORD>( Fi, node->gio.reverse->outer, LabelOf(W.rank) );
+                CheckValueOf<iField,COORD>( Fi, node->gio.reverse->inner, LabelOf(W.rank) );
+            }
+
+            // and now, let's go...
+
+        }
+    }
+
+    MPI.print0(stderr,"\n");
+
 }
 
 Y_UTEST(oxide)
 {
-    static const int tag = 7;
+    //static const int tag = 7;
     Y_MPI(SINGLE);
 
     const Coord3D  lower(1,1,1);
@@ -30,23 +130,16 @@ Y_UTEST(oxide)
 
     for( loop.start(); loop.valid(); loop.next() )
     {
-        const Coord3D  upper = lower + 5 * loop.value;
+        const Coord3D  upper = 8 * loop.value;
         const Layout1D full1D( lower.x, upper.x);
         const Layout2D full2D( lower.xy(), upper.xy());
         const Layout3D full3D(lower,upper);
 
 
-        ParallelContext<Coord1D> Par1D(MPI,full1D);
-        ParallelContext<Coord2D> Par2D(MPI,full2D);
-        ParallelContext<Coord3D> Par3D(MPI,full3D);
+        make_for(MPI,full1D);
+        make_for(MPI,full2D);
+        make_for(MPI,full3D);
 
-        if(MPI.isHead)
-        {
-            std::cerr << "Par1D mappings" << Par1D.mappings << " / " << Par1D.optimal << std::endl;
-            std::cerr << "Par2D mappings" << Par2D.mappings << " / " << Par2D.optimal << std::endl;
-            std::cerr << "Par3D mappings" << Par3D.mappings << " / " << Par3D.optimal << std::endl;
-
-        }
 
 
     }
