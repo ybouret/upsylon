@@ -259,10 +259,22 @@ namespace upsylon
             }
 
 
+            //! epilog after recv ops
+            inline void asyncEpilog(const asyncIO      &aio,
+                                    const ActiveFields &fields)
+            {
+                if(aio.recv)
+                {
+                    assert(0!=(aio.comm&GhostsComm::Recv));
+                    assert(fields.getCommMode()==aio.mode);
+                }
+            }
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Workspace);
-     
+
 
         };
     }
