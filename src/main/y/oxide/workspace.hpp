@@ -138,42 +138,42 @@ namespace upsylon
             //
             //------------------------------------------------------------------
 
+#if 0
             //! access ghosts
             const GIO & getGhosts( const size_t orientation ) const throw()
             {
                 assert(orientation<Orientations);
                 return this->ghosts[orientation];
             }
+#endif
 
             //!  exchange of local ghosts pairs
             inline void localExchange1( Field &F  )
             {
                 assert(owns(F));
-                for(size_t i=0;i<Orientations;++i)
+                for(const typename LayoutsType::gNode *g = this->localGhosts.head;g;g=g->next)
                 {
-                    const GIO &gio = this->ghosts[i];
-                    if(gio.local)
+                    const GIO &gio = g->gio;
+                    assert(gio.local   == true);
+                    assert(gio.status  == GhostsInfo::Both);
+                    assert(gio.forward != 0);
+                    assert(gio.reverse != 0);
+                    const array<Coord1D> &fwd_inner = gio.forward->inner.indices;
+                    const array<Coord1D> &fwd_outer = gio.forward->outer.indices;
+                    const array<Coord1D> &rev_inner = gio.reverse->inner.indices;
+                    const array<Coord1D> &rev_outer = gio.reverse->outer.indices;
+
+                    assert( fwd_inner.size() == fwd_outer.size());
+                    assert( fwd_inner.size() == rev_inner.size());
+                    assert( fwd_inner.size() == rev_outer.size());
+
+                    for(size_t j=fwd_inner.size();j>0;--j)
                     {
-                        assert(GhostsInfo::Both == gio.status);
-                        assert(gio.forward);
-                        assert(gio.reverse);
-
-                        const array<Coord1D> &fwd_inner = gio.forward->inner.indices;
-                        const array<Coord1D> &fwd_outer = gio.forward->outer.indices;
-                        const array<Coord1D> &rev_inner = gio.reverse->inner.indices;
-                        const array<Coord1D> &rev_outer = gio.reverse->outer.indices;
-
-                        assert( fwd_inner.size() == fwd_outer.size());
-                        assert( fwd_inner.size() == rev_inner.size());
-                        assert( fwd_inner.size() == rev_outer.size());
-
-                        for(size_t j=fwd_inner.size();j>0;--j)
-                        {
-                            F.copyObject(fwd_outer[j],rev_inner[j]);
-                            F.copyObject(rev_outer[j],fwd_inner[j]);
-                        }
+                        F.copyObject(fwd_outer[j],rev_inner[j]);
+                        F.copyObject(rev_outer[j],fwd_inner[j]);
                     }
                 }
+
             }
 
 
@@ -182,10 +182,11 @@ namespace upsylon
             template <typename SEQUENCE>
             inline void localExchange( SEQUENCE &fields )
             {
-                localExchangeRange(fields.begin(), fields.size());
+                localExchangeRange(fields.begin(),fields.size());
             }
 
 
+#if 0
             //------------------------------------------------------------------
             //
             // asynchronous exchange
@@ -285,14 +286,12 @@ namespace upsylon
                     return 0;
                 }
             }
-
+#endif
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Workspace);
 
-
-            
             //! *ITERATOR = FieldPointer, **ITERATOR=Field
             template <typename ITERATOR>
             inline void localExchangeRange( ITERATOR it, size_t n )
@@ -304,6 +303,7 @@ namespace upsylon
                 }
             }
 
+#if 0
             template <typename ITERATOR>
             inline size_t asyncSave(ITERATOR                it,
                                     size_t                  n,
@@ -335,7 +335,7 @@ namespace upsylon
                 // TODO: CHECK
                 return recvBytes;
             }
-
+#endif
 
 
         };

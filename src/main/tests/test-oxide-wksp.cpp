@@ -92,8 +92,10 @@ namespace
                     std::cerr << "pick[" << i << "]=" << pick[i]->name << std::endl;
                 }
 
+                std::cerr << "LocalExchanges" << std::endl;
                 wksp.localExchange(pick);
 
+#if 0
                 block.free();
                 const Ghosts<COORD> *G;
 
@@ -122,6 +124,7 @@ namespace
                 }
                 std::cerr << "total_load=" << total_load << std::endl;
                 Y_CHECK(total_load==total_save);
+#endif
             }
 
 
@@ -138,6 +141,7 @@ namespace
             ActiveFields pick;
             pick( wksp, "Fd;Fs;Ff" );
 
+#if 0
             for(size_t i=0;i<wksp.Orientations;++i)
             {
                 const Ghosts<COORD> *G = 0;
@@ -162,7 +166,7 @@ namespace
                     Y_CHECK(total_load==wksp.recvBlock.size());
                 }
             }
-
+#endif
 
 
         }

@@ -43,6 +43,21 @@ namespace upsylon
                 bool       async;   //!< for load/save
             };
 
+            class gNode : public object
+            {
+            public:
+                gNode     *next;
+                gNode     *prev;
+                const GIO &gio;
+
+                inline explicit gNode( const GIO &ref ) throw() : next(0), prev(0), gio(ref) {}
+                inline virtual ~gNode() throw() {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(gNode);
+            };
+            typedef core::list_of_cpp<gNode> gList;
+
             //------------------------------------------------------------------
             //
             // members
@@ -58,6 +73,7 @@ namespace upsylon
         protected:
             GIO                     ghosts[Orientations]; //!< placed according to their orientation
         public:
+            const gList             localGhosts;           //!< pair of local ghosts
 
             //------------------------------------------------------------------
             //
@@ -83,7 +99,8 @@ namespace upsylon
             outer( expandInner(abs_of(ng)) ),
             heart(0),
             repository( Neighbours, as_capacity ),
-            ghosts()
+            ghosts(),
+            localGhosts()
             {
                 memset( ghosts, 0, sizeof(ghosts) );
                 if(ng>0)
@@ -97,11 +114,12 @@ namespace upsylon
             {
                 static const char default_pfx[] = "";
                 if(!pfx) pfx = default_pfx;
-                os << pfx << "ranks="; Coord::Disp(os, this->ranks, 2) << " <=> rank=" << this->rank << std::endl;
-                os << pfx << "inner=" << inner << std::endl;
-                os << pfx << "outer=" << outer << std::endl;
-                os << pfx << "heart=" << heart << std::endl;
-                os << pfx << "#ghosts=" << repository.size() << std::endl;
+                os << pfx << "ranks   = "; Coord::Disp(os, this->ranks, 2) << " <=> rank=" << this->rank << std::endl;
+                os << pfx << "inner   = " << inner << std::endl;
+                os << pfx << "outer   = " << outer << std::endl;
+                os << pfx << "heart   = " << heart << std::endl;
+                os << pfx << "#ghosts = " << repository.size() << std::endl;
+                os << pfx << "#local  = " << localGhosts.size << std::endl;
                 for(Coord1D i=0;i<Coord1D(Orientations);++i)
                 {
                     os << pfx << "@orientation#" << std::setw(2) << i << " : " << std::endl;
@@ -117,6 +135,7 @@ namespace upsylon
                         std::cerr << pfx << "|_" << (*gio.reverse) << std::endl;
                     }
                 }
+
             }
             
         private:
@@ -339,6 +358,10 @@ namespace upsylon
                             assert(gio.forward->async==gio.reverse->async);
                             gio.local = gio.forward->local;
                             gio.async = gio.forward->async;
+                            if(gio.local)
+                            {
+                                ( (gList&)localGhosts ).push_back( new gNode(gio) );
+                            }
                             break;
                     }
                 }
