@@ -184,8 +184,8 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             //! extract matching ghosts
-            const GhostsType *getAsync(const Connectivity::Course way,
-                                       const size_t               orientation) const throw()
+            const GhostsType *getAsync(const Conn::Course way,
+                                       const size_t      orientation) const throw()
             {
                 assert(orientation<Orientations);
                 const GIO &gio = this->ghosts[orientation];
@@ -193,15 +193,15 @@ namespace upsylon
                 {
                     switch(way)
                     {
-                        case Connectivity::Forward: return gio.forward;
-                        case Connectivity::Reverse: return gio.reverse;
+                        case Conn::Forward: return gio.forward;
+                        case Conn::Reverse: return gio.reverse;
                     }
                 }
                 return 0;
             }
 
             //! save aynchronous content for way+orientation into block
-            inline size_t asyncSave1(const Connectivity::Course way,
+            inline size_t asyncSave1(const Conn::Course         way,
                                      const size_t               orientation,
                                      ios::ostream              &block,
                                      const Field               &F,
@@ -221,7 +221,7 @@ namespace upsylon
             
             //! save some fields, with sendBlock reinitialization
             template <typename SEQUENCE>
-            inline size_t asyncSave(const Connectivity::Course way,
+            inline size_t asyncSave(const Conn::Course way,
                                     const size_t               orientation,
                                     SEQUENCE                  &fields,
                                     const GhostsType        * &G)
@@ -241,7 +241,7 @@ namespace upsylon
 
 
             //! load asynchronous content for way+orientation from input
-            inline size_t asyncLoad1(const Connectivity::Course  way,
+            inline size_t asyncLoad1(const Conn::Course  way,
                                      const size_t                orientation,
                                      ios::istream               &input,
                                      Field                      &F,
@@ -261,7 +261,7 @@ namespace upsylon
 
             //! load some fields, assuming recvBlock is filled
             template <typename SEQUENCE>
-            inline size_t asyncLoad(const Connectivity::Course way,
+            inline size_t asyncLoad(const Conn::Course way,
                                     const size_t               orientation,
                                     SEQUENCE                  &fields,
                                     const GhostsType        * &G)

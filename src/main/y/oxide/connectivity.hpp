@@ -10,7 +10,7 @@ namespace upsylon
     {
 
         //! handle connectivity levels
-        struct Connectivity
+        struct Conn
         {
             //! number of variying coords
             enum Level

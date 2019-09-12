@@ -61,7 +61,7 @@ namespace upsylon
         public:
             typedef Ghost<COORD>                     GhostType;   //!< alias
             typedef Topology::Node<COORD>            NodeType;    //!< alias
-            typedef Connectivity::Link<COORD>        LinkType;    //!< alias
+            typedef Conn::Link<COORD>                LinkType;    //!< alias
             typedef Layout<COORD>                    LayoutType;  //!< alias
             typedef typename LayoutType::coord       coord;       //!< alias
             typedef typename LayoutType::const_coord const_coord; //!< alias

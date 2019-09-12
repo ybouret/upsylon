@@ -183,7 +183,7 @@ namespace upsylon
                                    coord        &heart_upper)
             {
                 assert(shift>=0);
-                const Connectivity::Link<COORD>  link(delta); // normalize delta
+                const Conn::Link<COORD>  link(delta); // normalize delta
 
                 //--------------------------------------------------------------
                 //
@@ -284,8 +284,8 @@ namespace upsylon
                     GIO &gio = ghosts[where];
                     switch(g->link.course)
                     {
-                        case Connectivity::Forward:  assert(0==gio.forward); gio.forward = g; gio.status |= GhostsInfo::Fwd; break;
-                        case Connectivity::Reverse:  assert(0==gio.reverse); gio.reverse = g; gio.status |= GhostsInfo::Rev; break;
+                        case Conn::Forward:  assert(0==gio.forward); gio.forward = g; gio.status |= GhostsInfo::Fwd; break;
+                        case Conn::Reverse:  assert(0==gio.reverse); gio.reverse = g; gio.status |= GhostsInfo::Rev; break;
                     }
                 }
 

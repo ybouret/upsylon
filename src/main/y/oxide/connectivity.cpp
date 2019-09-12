@@ -6,7 +6,7 @@ namespace upsylon
     namespace Oxide
     {
 
-        const char *Connectivity:: Level2Text( const Level l ) throw()
+        const char *Conn :: Level2Text( const Level l ) throw()
         {
             switch (l)
             {
@@ -17,7 +17,7 @@ namespace upsylon
             return "?";
         }
 
-        const char * Connectivity::  Course2Text( const Course w ) throw()
+        const char * Conn::  Course2Text( const Course w ) throw()
         {
             switch(w)
             {
@@ -27,7 +27,7 @@ namespace upsylon
             return "?";
         }
 
-       Coord1D Connectivity::  CourseSign( const Course w ) throw()
+        Coord1D Conn::  CourseSign( const Course w ) throw()
         {
             switch(w)
             {
@@ -37,7 +37,7 @@ namespace upsylon
             return 0;
         }
 
-        Connectivity::Course Connectivity:: Opposite( const Course way ) throw()
+        Conn::Course Conn:: Opposite( const Course way ) throw()
         {
             switch(way)
             {
@@ -51,10 +51,10 @@ namespace upsylon
 
         static const char fn[] = "Oxide::Connectivity::";
 
-        Connectivity::Level Connectivity::MakeLink(Coord1D       *direction,
-                                                   Coord1D       *orientation,
-                                                   Course        *way,
-                                                   const unsigned dims)
+        Conn::Level Conn::MakeLink(Coord1D       *direction,
+                                   Coord1D       *orientation,
+                                   Course        *way,
+                                   const unsigned dims)
         {
             assert(direction);
             assert(orientation);
