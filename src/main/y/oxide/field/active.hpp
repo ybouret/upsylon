@@ -27,7 +27,8 @@ namespace upsylon
             ActiveFields  & operator()( Fields &, const string IDs);
 
             comm_mode getCommMode() const throw();
-
+            size_t    getBlockSize() const throw();
+            
         private:
             Y_DISABLE_ASSIGN(ActiveFields);
         };

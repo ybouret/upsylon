@@ -65,6 +65,26 @@ namespace upsylon
             return comm_constant_size;
         }
 
+        size_t ActiveFields:: getBlockSize() const throw()
+        {
+            iterator  it = begin();
+            size_t    n  = size();
+            size_t    bs = 0;
+            while(n-->0)
+            {
+                const Field &F = **it;
+                switch( F.transfer->mode )
+                {
+                    case comm_variable_size: return 0;
+                    default: break;
+                }
+                bs += F.sizeOfObject;
+                ++it;
+            }
+            return bs;
+        }
+
+
         
     }
     

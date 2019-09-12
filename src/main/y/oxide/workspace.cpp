@@ -16,6 +16,15 @@ namespace upsylon
                 if(sizes[i]<0) throw exception("Workspace.sizes#%u=%ld",dim,long(sizes[i]));
             }
         }
+
+
+        void __Workspace:: CheckBlockTotal( const IOBlock &block, const size_t total )
+        {
+            if( block.size() != total ) throw exception("IOBlock.size=%lu != %lu!!!", (unsigned long)(block.size()), (unsigned long)total );
+        }
+ 
+
+
     }
 }
 

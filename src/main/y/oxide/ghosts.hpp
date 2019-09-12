@@ -18,11 +18,23 @@ namespace upsylon
         struct GhostsInfo
         {
             static const char *Kind(const bool async) throw(); //!< display async/local
+
             static const unsigned None = 0x00;    //!< No Ghosts in a given orientation
             static const unsigned Fwd  = 0x01;    //!< Only Forward Ghosts in a given orientation
-            static const unsigned Rev  = 0x02;    //!< Only Reverse Ghosts in ag iven orientation
+            static const unsigned Rev  = 0x02;    //!< Only Reverse Ghosts in a given orientation
             static const unsigned Both = Fwd|Rev; //!< Both Ghosts in ag iven orientation
+
         };
+
+        struct GhostsComm
+        {
+            static const unsigned None = 0x00;
+            static const unsigned Send = 0x10;
+            static const unsigned Recv = 0x20;
+            static const unsigned Both = Send|Recv;
+            static const char *ToText(const unsigned comm) throw();
+        };
+
 
         typedef vector<Coord1D> GhostIndices; //!< alias
 

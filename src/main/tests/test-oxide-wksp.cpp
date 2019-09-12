@@ -75,9 +75,9 @@ namespace
                 fill(Ff);
                 fill(Fs);
 
-                Y_CHECK( wksp.owns(Fd) );
-                Y_CHECK( wksp.owns(Ff) );
-                Y_CHECK( wksp.owns(Fs) );
+                Y_ASSERT( wksp.owns(Fd) );
+                Y_ASSERT( wksp.owns(Ff) );
+                Y_ASSERT( wksp.owns(Fs) );
 
                 wksp.localExchange(Fd);
                 wksp.localExchange(Ff);
@@ -87,44 +87,28 @@ namespace
                 pick( wksp, "Fd" );
                 pick( wksp, "Fs;Ff" );
                 pick( wksp, "Fs;Ff" );
-                for(size_t i=1;i<=pick.size();++i)
-                {
-                    std::cerr << "pick[" << i << "]=" << pick[i]->name << std::endl;
-                }
 
                 std::cerr << "LocalExchanges" << std::endl;
                 wksp.localExchange(pick);
 
-#if 0
-                block.free();
-                const Ghosts<COORD> *G;
-
-                size_t total_save = 0;
+                std::cerr << "com: ";
                 for(size_t i=0;i<wksp.Orientations;++i)
                 {
-                    total_save += wksp.asyncSave1(Conn::Forward,i,block,Fd,G);
-                    total_save += wksp.asyncSave1(Conn::Reverse,i,block,Fd,G);
-                    total_save += wksp.asyncSave1(Conn::Forward,i,block,Ff,G);
-                    total_save += wksp.asyncSave1(Conn::Reverse,i,block,Ff,G);
-                    total_save += wksp.asyncSave1(Conn::Forward,i,block,Fs,G);
-                    total_save += wksp.asyncSave1(Conn::Reverse,i,block,Fs,G);
-                }
-                std::cerr << "total_save=" << total_save << std::endl;
+                    typename Workspace<COORD>::asyncIO aio;
+                    std::cerr << "@" << i;
+                    if( wksp.asyncProlog(aio, pick, Conn::Forward, i) )
+                    {
+                        std::cerr << "+";
+                    }
 
-                size_t         total_load = 0;
-                ios::imstream  inp(block);
-                for(size_t i=0;i<wksp.Orientations;++i)
-                {
-                    total_load += wksp.asyncLoad1(Conn::Forward,i,inp,Fd,G);
-                    total_load += wksp.asyncLoad1(Conn::Reverse,i,inp,Fd,G);
-                    total_load += wksp.asyncLoad1(Conn::Forward,i,inp,Ff,G);
-                    total_load += wksp.asyncLoad1(Conn::Reverse,i,inp,Ff,G);
-                    total_load += wksp.asyncLoad1(Conn::Forward,i,inp,Fs,G);
-                    total_load += wksp.asyncLoad1(Conn::Reverse,i,inp,Fs,G);
-                }
-                std::cerr << "total_load=" << total_load << std::endl;
-                Y_CHECK(total_load==total_save);
-#endif
+                    if( wksp.asyncProlog(aio, pick, Conn::Reverse, i) )
+                    {
+                        std::cerr << "-";
+                    }
+
+                } std::cerr << std::endl;
+
+
             }
 
 
@@ -133,40 +117,6 @@ namespace
                 display_field( wksp.template as<fField>("Ff") );
                 display_field( wksp.template as<sField>("Fs") );
             }
-
-            ActiveFields active;
-            active( wksp, "Fd;Fs;Ff" );
-
-            
-            ActiveFields pick;
-            pick( wksp, "Fd;Fs;Ff" );
-
-#if 0
-            for(size_t i=0;i<wksp.Orientations;++i)
-            {
-                const Ghosts<COORD> *G = 0;
-                {
-                    const size_t total_save = wksp.asyncSave(Conn::Forward,i,pick,G);
-                    Y_CHECK(total_save==wksp.sendBlock.size());
-                }
-                {
-                    wksp.recvBlock.copy( wksp.sendBlock ); Y_ASSERT(wksp.recvBlock.size()==wksp.sendBlock.size());
-                    const size_t total_load = wksp.asyncLoad(Conn::Forward,i,pick,G);
-                    Y_CHECK(total_load==wksp.recvBlock.size());
-                }
-
-                {
-                    const size_t total_save = wksp.asyncSave(Conn::Reverse,i,pick,G);
-                    Y_CHECK(total_save==wksp.sendBlock.size());
-                }
-
-                {
-                    wksp.recvBlock.copy( wksp.sendBlock ); Y_ASSERT(wksp.recvBlock.size()==wksp.sendBlock.size());
-                    const size_t total_load = wksp.asyncLoad(Conn::Reverse,i,pick,G);
-                    Y_CHECK(total_load==wksp.recvBlock.size());
-                }
-            }
-#endif
 
 
         }

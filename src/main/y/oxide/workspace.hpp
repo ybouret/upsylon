@@ -11,6 +11,7 @@ namespace upsylon
 {
     namespace Oxide
     {
+        typedef ios::ovstream IOBlock; //!< alias for a variable-length I/O block
 
         //! common workspaces operations
         struct __Workspace
@@ -25,9 +26,11 @@ namespace upsylon
                 CheckLocalSizes((const Coord1D *)&localSizes, Coord::Get<COORD>::Dimensions);
                 return localSizes;
             }
+
+            static void CheckBlockTotal( const IOBlock &block, const size_t total );
+
         };
 
-        typedef ios::ovstream IOBlock; //!< alias for a variable-length I/O block
 
         //! a workspace is some layouts and some fields
         template <typename COORD>
@@ -179,150 +182,87 @@ namespace upsylon
                 }
             }
 
-
-
-
-#if 0
             //------------------------------------------------------------------
             //
             // asynchronous exchange
             //
             //------------------------------------------------------------------
-            //! extract matching ghosts
-            Peer getAsyncPeer(const Conn::Way way,
-                              const size_t    orientation) const throw()
+            struct asyncIO
             {
-                assert(orientation<Orientations);
+                Peer      send; //!< whom to send to
+                Peer      recv; //!< from whom to recv
+                comm_mode mode; //!< constant/variable
+                unsigned  comm; //!<  GhostsComm info
+            };
+
+            //! prolog to send in sendingWay
+            bool asyncProlog(asyncIO            &aio,
+                             const ActiveFields &fields,
+                             const Conn::Way     sendingWay,
+                             const size_t        orientation)
+            {
                 const GIO &gio = this->ghosts[orientation];
-                if(gio.async)
-                {
-                    switch(way)
-                    {
-                        case Conn::Forward: return gio.forward;
-                        case Conn::Reverse: return gio.reverse;
-                    }
-                }
-                return 0;
-            }
 
-            //! save aynchronous content for way+orientation into block
-            inline size_t asyncSave1(const Conn::Way     way,
-                                     const size_t        orientation,
-                                     ios::ostream       &block,
-                                     const Field        &F,
-                                     Peer               &G) const
-            {
-                assert(owns(F));
-                G = getAsyncPeer(way,orientation);
-                if(G)
-                {
-                    return F.save(G->inner.indices,block);
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-            
-            //! save some fields, with sendBlock reinitialization
-            template <typename SEQUENCE>
-            inline size_t asyncSave(const Conn::Way     way,
-                                    const size_t        orientation,
-                                    SEQUENCE           &fields,
-                                    Peer               &G)
-            {
                 sendBlock.free();
-                G = getAsyncPeer(way,orientation);
-                if(G)
+                recvBlock.free();
+                aio.send = 0;
+                aio.recv = 0;
+                aio.comm = GhostsComm::None;
+
+                if( gio.async )
                 {
-                    return asyncSave( fields.begin(), fields.size(), *G );
+                    aio.mode = fields.getCommMode();
+                    switch(sendingWay)
+                    {
+                        case Conn::Forward: aio.send = gio.forward; aio.recv = gio.reverse; break;
+                        case Conn::Reverse: aio.send = gio.reverse; aio.recv = gio.forward; break;
+                    }
+
+                    if(aio.send)
+                    {
+                        aio.comm |= GhostsComm::Send;
+                        // load sendBlock with inner layout
+                        size_t total = 0;
+                        for(size_t i=fields.size();i>0;--i)
+                        {
+                            Field &F = (Field &)(*fields[i]);
+                            total += F.save(aio.send->inner.indices,sendBlock);
+                        }
+                        __Workspace::CheckBlockTotal(sendBlock,total);
+                    }
+
+                    if(aio.recv)
+                    {
+                        aio.comm |= GhostsComm::Recv;
+                        switch(aio.mode)
+                        {
+                            case comm_constant_size:
+                                recvBlock.set_fast(fields.getBlockSize() * aio.recv->outer.indices.size());
+                                break;
+
+                            case comm_variable_size:
+                                assert(0==recvBlock.size());
+                                assert(0==fields.getBlockSize());
+                                break;
+                        }
+                    }
+
+
+                    return true;
                 }
                 else
                 {
-                    return 0;
+                    // no async in this orientation
+                    aio.mode = comm_constant_size;
+                    return false;
                 }
             }
 
-
-
-            //! load asynchronous content for way+orientation from input
-            inline size_t asyncLoad1(const Conn::Way     way,
-                                     const size_t        orientation,
-                                     ios::istream       &input,
-                                     Field              &F,
-                                     Peer               &G)
-            {
-                assert(owns(F));
-                G = getAsyncPeer(way,orientation);
-                if(G)
-                {
-                    return F.load(G->outer.indices,input);
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-
-            //! load some fields, assuming recvBlock is filled
-            template <typename SEQUENCE>
-            inline size_t asyncLoad(const Conn::Way     way,
-                                    const size_t        orientation,
-                                    SEQUENCE           &fields,
-                                    Peer               &G)
-            {
-                G = getAsyncPeer(way,orientation);
-                if(G)
-                {
-                    ios::imstream input(recvBlock);
-                    return  asyncLoad( fields.begin(), fields.size(), *G, input);
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-#endif
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Workspace);
-            
-
-#if 0
-            template <typename ITERATOR>
-            inline size_t asyncSave(ITERATOR                it,
-                                    size_t                  n,
-                                    const GhostsType       &G)
-            {
-                size_t sendBytes = 0;
-                while(n-->0)
-                {
-                    sendBytes += (**it).save(G.inner.indices,sendBlock);
-                    ++it;
-                }
-                // TODO : CHECK
-                return sendBytes;
-            }
-
-            template <typename ITERATOR>
-            inline size_t asyncLoad(ITERATOR                it,
-                                    size_t                  n,
-                                    const GhostsType       &G,
-                                    ios::istream           &input)
-            {
-                size_t recvBytes = 0;
-                while(n-->0)
-                {
-                    const Field  &F = **it;
-                    ((Field&)F).load(G.outer.indices,input);
-                    ++it;
-                }
-                // TODO: CHECK
-                return recvBytes;
-            }
-#endif
-
+     
 
         };
     }
