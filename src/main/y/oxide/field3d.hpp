@@ -9,23 +9,38 @@ namespace upsylon
     
     namespace Oxide
     {
+        
+        //======================================================================
+        //
         //! common constructor part
+        //
 #define Y_OXIDE_FIELD3D_CTOR()                     \
 FieldOf<T>(id,*this),                              \
 slice(0), slices(0),                               \
 sliceLayout(this->lower.xy(),this->upper.xy()),    \
 rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
-        
+        //
         //! field in 3D
+        //======================================================================
         template <typename T>
         class Field3D : public Layout3D, public FieldOf<T>
         {
         public:
+            //==================================================================
+            //
+            // types and definitions
+            //
+            //==================================================================
             Y_DECL_ARGS(T,type);                           //!< aliases
             typedef Layout3D   LayoutType;                 //!< alias
             typedef Field2D<T> SliceType;                  //!< a slice
             typedef typename   SliceType::RowType RowType; //!< alias
 
+            //==================================================================
+            //
+            // C++ setup
+            //
+            //==================================================================
             //! setup by string and full layout
             inline explicit Field3D(const string  &id,
                                     const Layout3D &L ) :
@@ -50,6 +65,12 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
             {
                 destructSlices();
             }
+            
+            //==================================================================
+            //
+            // access
+            //
+            //==================================================================
 
             //! slice access
             SliceType & operator[]( const Coord1D k ) throw()
@@ -148,6 +169,12 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
             
         };
 
+        
+        //======================================================================
+        //
+        // Field Types
+        //
+        //=====================================================================
         //! class for field type selection
         template <typename COORD, typename T> struct __Field;
 

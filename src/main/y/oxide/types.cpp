@@ -48,7 +48,8 @@ namespace upsylon
 {
     namespace Oxide
     {
-        static inline bool is_sep( const int C ) throw()   { return C == ','; }
+        static const char Fn[] = "Oxide::Coord::";
+        
         static inline bool is_blank( const int C ) throw() { return C == ' ' || C == '\t'; }
         
         void Coord:: Parse(Coord1D *p, const size_t n, const string &args, const char *id)
@@ -56,7 +57,7 @@ namespace upsylon
             assert(p!=NULL);
             assert(n==1||n==2||n==3);
             tokenizer<char> tt(args);
-            while( tt.next(is_sep) )
+            while( tt.next_with(',') )
             {
                 string s( tt.token(), tt.units() );
                 *(p++) = string_convert::to<unit_t>( s.clean(is_blank),id );
@@ -65,7 +66,7 @@ namespace upsylon
             if(n!=tt.count())
             {
                 if(!id) id = "?";
-                throw exception("Oxide::Coord::Parse(bad dim for '%s')", id);
+                throw exception("%s::Parse(bad dim for '%s')", Fn, id);
             }
         }
         
@@ -84,9 +85,9 @@ namespace upsylon
             for(unsigned i=0;i<dim;++i)
             {
                 const long s = long(size[i]);
-                if(s<0) throw exception("Oxide: invalid size#%u=%ld", i, s);
+                if(s<0) throw exception("%s(invalid size=%ld in dimension#%u)",Fn,s,i);
                 const long r = long(rank[i]);
-                if(r<0||r>=s) throw exception("Oxide(rank#%u=%ld not in [0:%ld]", i, r, s-1 );
+                if(r<0||r>=s) throw exception("%s(rank#%u=%ld not in [0:%ld]", Fn,i, r, s-1 );
             }
         }
 

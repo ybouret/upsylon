@@ -1,5 +1,5 @@
 #include "y/randomized/bits.hpp"
-#include <cstring>
+#include "y/type/bzset.hpp"
 
 namespace upsylon
 {
@@ -8,6 +8,16 @@ namespace upsylon
     {
         bits:: ~bits() throw()
         {
+            bzset_(span);
+            bzset_(span);
+            bzset_(half);
+            bzset_(denD);
+            bzset_(denF);
+            bzset_(symD);
+            bzset_(symF);
+            bzset_(midD);
+            bzset_(midF);
+
         }
 
         bits:: bits(const uint32_t maxValue) throw() :

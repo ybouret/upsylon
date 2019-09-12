@@ -23,12 +23,7 @@ namespace upsylon
             if( block.size() != total ) throw exception("IOBlock.size=%lu != %lu!!!", (unsigned long)(block.size()), (unsigned long)total );
         }
  
-        void __Workspace:: CheckGlobalSize( const Coord1D size, const Coord1D target_size)
-        {
-            assert(target_size>0);
-            if(size<=0)           throw exception("Workspace.size is invalid");
-            if(size!=target_size) throw exception("Workspace.size=%ld != %ld", long(size), long(target_size) );
-        }
+        
 
     }
 }

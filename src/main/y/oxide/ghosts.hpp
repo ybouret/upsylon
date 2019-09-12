@@ -13,40 +13,51 @@ namespace upsylon
 {
     namespace Oxide
     {
-
+        //======================================================================
+        //
         //! common data for Ghosts topology
+        //
+        //======================================================================
         struct GhostsInfo
         {
             static const char *Kind(const bool async) throw(); //!< display async/local
-
+            
             static const unsigned None = 0x00;    //!< No Ghosts in a given orientation
             static const unsigned Fwd  = 0x01;    //!< Only Forward Ghosts in a given orientation
             static const unsigned Rev  = 0x02;    //!< Only Reverse Ghosts in a given orientation
             static const unsigned Both = Fwd|Rev; //!< Both Ghosts in ag iven orientation
-
+            
         };
-
+        
+        //======================================================================
+        //
         //! common data for Ghosts Communications
+        //
+        //======================================================================
         struct GhostsComm
         {
             static const unsigned None = 0x00;      //!< no communication
             static const unsigned Send = 0x10;      //!< send in this direction
             static const unsigned Recv = 0x20;      //!< recv in this direction
             static const unsigned Both = Send|Recv; //!< sendrecv in this direction
-            static const char *ToText(const unsigned comm) throw(); //!< textual coordinate
+            static const char    *ToText(const unsigned comm) throw(); //!< textual value
         };
-
-
+        
+        
         typedef vector<Coord1D> GhostIndices; //!< base class to store indices
-
+        
+        //======================================================================
+        //
         //! a ghost is a sub layout with indices
+        //
+        //======================================================================
         template <typename COORD>
         class Ghost : public Layout<COORD>
         {
         public:
             typedef Layout<COORD> LayoutType; //!< alias
             GhostIndices          indices;    //!< indices of sub layout in outer layout
-
+            
             //! setup build collecting indices
             inline Ghost(const LayoutType &sub,
                          const LayoutType &out ) :
@@ -56,42 +67,65 @@ namespace upsylon
                 out.collect(indices,sub);
                 assert(this->items==indices.size());
             }
-
-            //! cleanup, do nothing
+            
+            //! cleanup
             inline ~Ghost() throw()  {}
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Ghost);
         };
-
+        
+        //======================================================================
+        //
         //! base class for ghosts inner and outer sublayouts
         /**
          The positional NodeType will be used as peer information for I/O
          */
+        //
+        //======================================================================
         template <typename COORD>
         class Ghosts : public Topology::Node<COORD>, public counted_object
         {
         public:
+            //==================================================================
+            //
+            // types and defintitions
+            //
+            //==================================================================
             typedef Ghost<COORD>                     GhostType;   //!< alias
             typedef Topology::Node<COORD>            NodeType;    //!< alias
             typedef Conn::Link<COORD>                LinkType;    //!< alias
             typedef Layout<COORD>                    LayoutType;  //!< alias
             typedef typename LayoutType::coord       coord;       //!< alias
             typedef typename LayoutType::const_coord const_coord; //!< alias
-
+            
+            //==================================================================
+            //
+            // members
+            //
+            //==================================================================
             const LinkType          link;  //!< directionality of ghosts
-            const Coord1D           host;  //!< global host rank
+            const Coord1D           host;  //!< global host rank (info)
             const bool              local; //!< is local
             const bool              async; //!< is async
-
+            const GhostType         inner; //!< inner, to send
+            const GhostType         outer; //!< outer, to recv
+            
+            
+            //==================================================================
+            //
+            // C++ setup
+            //
+            //==================================================================
+            
             //! setup
             inline explicit Ghosts(const_coord           &localSizes,
-                                    const Coord1D         &globalRank,
-                                    const Coord1D         &globalHost,
-                                    const LinkType        &localLink,
-                                    const LayoutType      &innerArea,
-                                    const LayoutType      &outerArea,
-                                    const LayoutType      &outerLayout) throw() :
+                                   const Coord1D         &globalRank,
+                                   const Coord1D         &globalHost,
+                                   const LinkType        &localLink,
+                                   const LayoutType      &innerArea,
+                                   const LayoutType      &outerArea,
+                                   const LayoutType      &outerLayout) throw() :
             NodeType(localSizes,globalRank), link(localLink),
             host(globalHost),
             local( (host==this->rank)  ),
@@ -101,17 +135,24 @@ namespace upsylon
             {
                 assert(inner.items==outer.items);
             }
-
+            
             //! cleanup
             inline virtual ~Ghosts() throw()
             {
+                bzset_(host);
+                bzset_(local);
+                bzset_(async);
             }
-
-            const GhostType inner; //!< inner, to send
-            const GhostType outer; //!< outer, to recv
-
-            inline const char *kind() const throw() { return GhostsInfo::Kind(async); } //!< return async|local
-
+            
+            //==================================================================
+            //
+            // informations
+            //
+            //==================================================================
+            
+            //! return async|local
+            inline const char *kind() const throw() { return GhostsInfo::Kind(async); }
+            
             //! display information
             friend inline std::ostream & operator<<( std::ostream &os, const Ghosts &G )
             {
@@ -119,12 +160,12 @@ namespace upsylon
                 os << "|inner=" << G.inner << " outer=" << G.outer;
                 return os;
             }
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Ghosts);
         };
         
-
+        
     }
 }
 

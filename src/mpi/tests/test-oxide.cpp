@@ -80,10 +80,7 @@ void make_for(mpi  &MPI,
             size_t ng=1;
 
             MPI.Barrier();
-            ParallelWorkspace<COORD> W(MPI,
-                                       full,
-                                       mapping,
-                                       pbc.value,ng);
+            Domain<COORD> W(MPI, full, mapping, pbc.value,ng);
 
             Y_ASSERT(W.rank==MPI.rank);
             

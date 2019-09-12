@@ -11,24 +11,32 @@ namespace upsylon
         //! common constructor part
 #define Y_OXIDE_FIELD_CTOR() Field(id, L, sizeof(T), typeid(T) ), entry(NULL), _data(NULL)
         
-        //! common abstract API for fields
+        //! common abstract API for typed fields, no dimension yet
         template <typename T>
         class FieldOf : public Field
         {
         public:
+            //------------------------------------------------------------------
+            //
+            // types and definition
+            //
+            //------------------------------------------------------------------
             Y_DECL_ARGS(T,type); //!< aliases
             type        *entry;  //!< linear data entry
 
+
+            //------------------------------------------------------------------
+            //
+            // virtual interface
+            //
+            //------------------------------------------------------------------
             //! cleanup
             inline virtual ~FieldOf() throw()
             {
                 freeData();
                 entry = NULL;
             }
-
-            //------------------------------------------------------------------
-            // virtual interface
-            //------------------------------------------------------------------
+            
             //! get address of an object by its index
             virtual const void *getObjectAddr( const Coord1D index ) const throw()
             {
@@ -38,7 +46,7 @@ namespace upsylon
                 return &entry[index];
             }
 
-            //! copy C-style object
+            //! copy C++ style object
             virtual void copyObject( const Coord1D target, const Coord1D source )
             {
                 assert(entry);
@@ -52,7 +60,9 @@ namespace upsylon
 
 
             //------------------------------------------------------------------
+            //
             // non virtual interface
+            //
             //------------------------------------------------------------------
             //! set every object to the same value
             inline void ld( param_type arg )
@@ -71,7 +81,7 @@ namespace upsylon
             //! initialize
             explicit FieldOf(const char *id, const LayoutInfo  &L) : Y_OXIDE_FIELD_CTOR() {}
 
-            //! free registered data
+            //! free registered linear data
             inline void freeData() throw()
             {
                 size_t      &n = (size_t&)ownedObjects;

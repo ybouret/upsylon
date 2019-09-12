@@ -13,7 +13,10 @@ namespace upsylon
         typedef sorted_vector<FieldPointer>   OrderedFields;     //!< base ordered class
         typedef ordered_single<OrderedFields> ActiveFieldsType;  //!< bases ordered policy class
 
-        //! list of active fields for com
+        //! list of active fields for comms
+        /**
+         the policy is: silently discard multiple fields
+         */
         class ActiveFields : public ActiveFieldsType
         {
         public:

@@ -11,17 +11,17 @@ namespace upsylon
 {
     namespace Oxide
     {
-
+        
         template <typename COORD>
         class ParallelContext
         {
         public:
             typedef Layout<COORD> LayoutType;
-
+            
             const LayoutType      full;     //!< full layout
             const vector<COORD>   mappings; //!< possible mappings
             const COORD           optimal;  //!< optimal mapping
-
+            
             explicit ParallelContext(const mpi        &MPI,
                                      const LayoutType &userFull ) :
             full(userFull),
@@ -30,49 +30,86 @@ namespace upsylon
             {
                 full.buildMappings((vector<COORD> &)mappings,MPI.size);
             }
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ParallelContext);
         };
-
-#define Y_PARWKSP_DECL(TYPE)  typedef typename     WorkspaceType::TYPE TYPE
-#define Y_PARWKSP_IMPL(VALUE) static  const size_t VALUE = WorkspaceType::VALUE
+        
+        //======================================================================
+        //
+        //! forward declaration
+#define Y_DOMAIN_DECL(TYPE)  typedef typename     WorkspaceType::TYPE TYPE
+        //
+        //! forward definition
+#define Y_DOMAIN_IMPL(VALUE) static  const size_t VALUE = WorkspaceType::VALUE
+        //
+        //! build a MPI domain, which is a workspace with comms..
+        //
+        //======================================================================
 
         template <typename COORD>
-        class ParallelWorkspace : public Workspace<COORD>
+        class Domain : public Workspace<COORD>
         {
         public:
-            static const size_t tag = 3;
-            typedef Workspace<COORD>                     WorkspaceType;
-            Y_PARWKSP_DECL(LayoutType);
-            Y_PARWKSP_DECL(coord);
-            Y_PARWKSP_DECL(const_coord);
-            Y_PARWKSP_DECL(AsyncIO);
-            Y_PARWKSP_IMPL(Dimensions);
-            Y_PARWKSP_IMPL(Orientations);
+            //==================================================================
+            //
+            // types and definitions
+            //
+            //==================================================================
+            static const size_t         defaultTag = 3; //!< default mpi tag
+            typedef Workspace<COORD>    WorkspaceType;  //!< alias
+            Y_DOMAIN_DECL(LayoutType);                  //!< alias
+            Y_DOMAIN_DECL(coord);                       //!< alias
+            Y_DOMAIN_DECL(const_coord);                 //!< alias
+            Y_DOMAIN_DECL(AsyncIO);                     //!< alias
+            Y_DOMAIN_IMPL(Dimensions);                  //!< alias
+            Y_DOMAIN_IMPL(Orientations);                //!< alias
+            
+            //==================================================================
+            //
+            // members
+            //
+            //==================================================================
 
-
-            mpi &MPI;
-            explicit ParallelWorkspace(mpi             &usrMPI,
-                                       const LayoutType &full,
-                                       const_coord       localSizes,
-                                       const_coord      &PBC,
-                                       const size_t      ng) :
+            mpi &MPI;      //!< keep the reference
+            const int tag; //!< session tag
+            
+            //==================================================================
+            //
+            // C++ setup
+            //
+            //==================================================================
+            //! setup
+            explicit Domain(mpi             &usrMPI,
+                            const LayoutType &full,
+                            const_coord       localSizes,
+                            const_coord      &PBC,
+                            const size_t      ng,
+                            const int         sessionTag = defaultTag) :
             WorkspaceType(full,localSizes,usrMPI.rank,PBC,ng),
-            MPI(usrMPI)
+            MPI(usrMPI),
+            tag(sessionTag)
             {
-                const int lsize = int(Layouts<COORD>::size);
+                const int lsize = int(Coord::Product(this->sizes));
                 if(  lsize != MPI.size )
                 {
                     throw exception("Oxide::ParalleWorkspace(invalid |localSizes|=%d/MPI.size=%d)",lsize,MPI.size);
                 }
             }
-
-            virtual ~ParallelWorkspace() throw()
-            {
-
-            }
-
+            
+            //! cleanup
+            virtual ~Domain() throw() {}
+        
+            //==================================================================
+            //
+            // communication
+            //
+            //==================================================================
+            
+            //! full exchange session
+            /**
+             for each orientation, two waves are created
+             */
             inline void asyncExchange(const ActiveFields  &fields)
             {
                 for(size_t orientation=0;orientation<Orientations;++orientation)
@@ -82,13 +119,8 @@ namespace upsylon
             }
             
             
-           
-            
-            
-            
-            
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(ParallelWorkspace);
+            Y_DISABLE_COPY_AND_ASSIGN(Domain);
             inline void rings(const ActiveFields  &fields,
                               const size_t         orientation)
             {
@@ -137,7 +169,7 @@ namespace upsylon
                 this->asyncEpilog(aio,fields);
             }
         };
-
+        
     }
 }
 

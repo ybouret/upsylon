@@ -8,8 +8,11 @@ namespace upsylon
 {
     namespace Oxide
     {
-
+        //======================================================================
+        //
         //! handle connectivity levels
+        //
+        //======================================================================
         struct Conn
         {
             //! number of variying coords

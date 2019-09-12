@@ -11,6 +11,11 @@ namespace upsylon
 {
     namespace Oxide
     {
+        //======================================================================
+        //
+        // common types and functions for Workspace
+        //
+        //======================================================================
         typedef ios::ovstream IOBlock; //!< alias for a variable-length I/O block
 
         //! common workspaces operations
@@ -30,20 +35,13 @@ namespace upsylon
             //! check matching total used bytes agains block size
             static void CheckBlockTotal( const IOBlock &block, const size_t total );
 
-            //! check good lobal size
-            static void CheckGlobalSize( const Coord1D size, const Coord1D target_size);
-
-            template <typename COORD>
-            static inline void CheckGlobalSizeOf( const Layouts<COORD> &L, const Coord1D target_size)
-            {
-                CheckGlobalSize(L.size,target_size);
-            }
-
-
         };
 
-
+        //======================================================================
+        //
         //! a workspace is some layouts and some fields
+        //
+        //======================================================================
         template <typename COORD>
         class Workspace : public Layouts<COORD>, public Fields
         {
@@ -56,9 +54,10 @@ namespace upsylon
             typedef Layout<COORD>                    LayoutType;                               //!< alias
             typedef typename LayoutType::coord       coord;                                    //!< alias
             typedef typename LayoutType::const_coord const_coord;                              //!< alias
+            static const size_t                      Dimensions   = LayoutType::Dimensions;    //!< alias
+
             typedef Layouts<COORD>                   LayoutsType;                              //!< alias
             typedef typename LayoutsType::GIO        GIO;                                      //!< alias
-            static const size_t                      Dimensions   = LayoutType::Dimensions;    //!< alias
             static const size_t                      Orientations = LayoutsType::Orientations; //!< alias
             typedef typename LayoutsType::GhostsType GhostsType;                               //!< alias
             typedef typename LayoutsType::Peer       Peer;                                     //!< alias
@@ -76,7 +75,7 @@ namespace upsylon
             // C++ methods
             //
             //------------------------------------------------------------------
-            //! cleaunp
+            //! cleanup
             inline virtual ~Workspace() throw() {}
 
             //! setup

@@ -11,25 +11,38 @@ namespace upsylon
     namespace Oxide
     {
 
+        //======================================================================
+        //
         //! common constructor part
 #define Y_OXIDE_FIELD1D_CTOR() FieldOf<T>(id,*this), shift(NULL)
-        
+        //
         //! 1D field
+        //======================================================================
         template <typename T>
         class Field1D : public Layout1D, public FieldOf<T>
         {
         public:
+            //==================================================================
+            //
+            // types and definition
+            //
+            //==================================================================
             Y_DECL_ARGS(T,type);         //!< aliases
             typedef Layout1D LayoutType; //!< alias
 
+            
+            //==================================================================
+            //
+            // C++ setup
+            //
+            //==================================================================
             //! cleanup
             inline virtual ~Field1D() throw() { shift=0; }
 
             //!  constructor with string and layout
             inline explicit Field1D(const string   &id,
                                     const Layout1D &L) :
-            Layout1D(L),
-            Y_OXIDE_FIELD1D_CTOR()
+            Layout1D(L), Y_OXIDE_FIELD1D_CTOR()
             {
                 setupAt(NULL);
             }
@@ -38,8 +51,7 @@ namespace upsylon
             inline explicit Field1D(const char      *id,
                                     const Coord1D    lo,
                                     const Coord1D    up) :
-            Layout1D(lo,up),
-            Y_OXIDE_FIELD1D_CTOR()
+            Layout1D(lo,up), Y_OXIDE_FIELD1D_CTOR()
             {
                 setupAt(NULL);
             }
@@ -49,13 +61,18 @@ namespace upsylon
             inline explicit Field1D(const string   &id,
                                     const Layout1D &L,
                                     void           *userData) :
-            Layout1D(L),
-            Y_OXIDE_FIELD1D_CTOR()
+            Layout1D(L), Y_OXIDE_FIELD1D_CTOR()
             {
                 assert(userData);
                 setupAt(userData);
             }
 
+            //==================================================================
+            //
+            // access functions
+            //
+            //==================================================================
+            
             //! access
             inline type & operator[]( const Coord1D i ) throw()
             {

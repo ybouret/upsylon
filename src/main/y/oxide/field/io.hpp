@@ -23,11 +23,13 @@ namespace upsylon
 
         public:
 
+            //! use a multi loop to fill a sub layout with the same value
             template <typename FIELD>static inline
             void LD(FIELD                            &F,
                     const typename FIELD::LayoutType &L,
                     typename FIELD::param_type        V )
             {
+                assert(F.contains(L));
                 typename FIELD::LayoutType::Loop loop(L.lower,L.upper);
                 for( loop.start(); loop.valid(); loop.next() )
                 {

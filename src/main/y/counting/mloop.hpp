@@ -71,6 +71,7 @@ data(0)
             inline virtual ~mloop() throw()
             {
                 static memory::allocator &mem = mem_location();
+                memset(wksp,0,wlen);
                 mem.release(wksp,wlen);
                 curr = 0;
                 head = tail = quit = 0;

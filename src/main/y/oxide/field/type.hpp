@@ -45,7 +45,7 @@ namespace upsylon
             //! cleanup and remove privateData
             virtual ~Field() throw();
 
-            //! get address of an object by its index
+            //! get address of an object by its index (for asynchronous copy)
             virtual const void *getObjectAddr( const Coord1D index ) const throw() = 0;
 
             //! copy data between two indices
@@ -56,7 +56,6 @@ namespace upsylon
             // non-virtual interface
             //
             //------------------------------------------------------------------
-            string subName( const Coord1D n ) const;                    //!< create "name[n]"
             size_t save( ios::ostream &fp, const Coord1D index) const;  //!< save one object from index
             size_t load( ios::istream &fp, const Coord1D index);        //!< load one object into index
 
@@ -118,7 +117,10 @@ namespace upsylon
 
             //! forward to the name comparison
             friend bool operator<(const Field &lhs, const Field &rhs) throw();
-            
+          
+            //! create "name[n]"
+            string subName( const Coord1D n ) const;
+
 
         protected:
             explicit Field(const string &id, const LayoutInfo &L, const size_t szObj, const std::type_info &); //!< setup

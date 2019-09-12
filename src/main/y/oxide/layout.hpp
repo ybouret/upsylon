@@ -11,8 +11,11 @@ namespace upsylon
 {
     namespace Oxide
     {
-
+        //======================================================================
+        //
         //! common data for layout
+        //
+        //======================================================================
         class LayoutInfo
         {
         public:
@@ -24,27 +27,47 @@ namespace upsylon
             explicit LayoutInfo(const size_t) throw();        //!< setup dimensions, no items
             explicit LayoutInfo( const LayoutInfo &) throw(); //!< copy
 
-            //! split in 1D
+            //! split in 1D, with checking
             static void Split1D( Coord1D &length, Coord1D &offset, const Coord1D sz, const Coord1D rk);
 
         private:
             Y_DISABLE_ASSIGN(LayoutInfo);
         };
 
-        //! a layout is a metrics based on a coordinate
+        //======================================================================
+        //
+        //! a layout is a based on a coordinates...
+        //
+        //======================================================================
         template <typename COORD>
         class Layout : public LayoutInfo
         {
         public:
+            //==================================================================
+            //
+            // types and definitions
+            //
+            //==================================================================
             static const size_t Dimensions = Coord::Get<COORD>::Dimensions;  //!< alias
             typedef typename type_traits<COORD>::mutable_type   coord;       //!< alias
             typedef const coord                                 const_coord; //!< alias
             typedef mloop<Coord1D,coord>                        Loop;        //!< loop over sub layout
 
+            //==================================================================
+            //
+            // members
+            //
+            //==================================================================
             const_coord lower; //!< lower coordinate
             const_coord upper; //!< upper coordinate
             const_coord width; //!< witdh in each dimension
             const_coord pitch; //!< pitch 1, nx, nx*ny to compute indices
+
+            //==================================================================
+            //
+            // C++ setup
+            //
+            //==================================================================
 
             //! cleanup
             inline virtual ~Layout() throw()
@@ -89,6 +112,13 @@ namespace upsylon
                 assert(items==other.items);
             }
 
+            //==================================================================
+            //
+            // utilities
+            //
+            //==================================================================
+
+            
             //! display
             friend inline std::ostream & operator<<( std::ostream &os, const Layout &L )
             {
@@ -120,7 +150,18 @@ namespace upsylon
                 return has( sub.lower ) && has( sub.upper );
             }
 
-
+            //! random coordinate within the layout
+            inline COORD rand( randomized::bits &ran ) const throw()
+            {
+                return Coord::Within(lower,upper,ran);
+            }
+            
+            //==================================================================
+            //
+            // index<->coordinate conversion
+            //
+            //==================================================================
+            
             //! index of a coordinate
             inline Coord1D indexOf(const_coord q) const throw()
             {
@@ -153,11 +194,12 @@ namespace upsylon
                 return q;
             }
 
-            //! random coordinate within the layout
-            inline COORD rand( randomized::bits &ran ) const throw()
-            {
-                return Coord::Within(lower,upper,ran);
-            }
+           
+            //==================================================================
+            //
+            // sub layouts construction
+            //
+            //==================================================================
 
             //! collecting indices
             template <typename SEQUENCE> inline
@@ -271,8 +313,7 @@ namespace upsylon
 
             //! what to do with a partition layout
             typedef void (*PartitionProc)( const Layout &, void * );
-
-
+            
 
             //! build all partition layout from a valid mapping
             inline void forEachPartition( const COORD &mapping, PartitionProc proc, void *args ) const
@@ -335,7 +376,11 @@ namespace upsylon
             Y_DISABLE_ASSIGN(Layout);
         };
 
-
+        //======================================================================
+        //
+        // different layouts
+        //
+        //======================================================================
         typedef Layout<Coord1D> Layout1D; //!< 1D layout
         typedef Layout<Coord2D> Layout2D; //!< 2D layout
         typedef Layout<Coord3D> Layout3D; //!< 3D layout

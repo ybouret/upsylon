@@ -27,7 +27,7 @@ namespace upsylon
             //! setup all sub-workspaces
             explicit Workspaces(const LayoutType &full,
                                 const_coord      &localSizes,
-                                const_coord      &PBC,
+                                const_coord      &boundaryConditions,
                                 const Coord1D     ng) :
             SlotsType( Coord::Product( __Workspace::CheckLocalSizes(localSizes) ) )
             {
@@ -37,7 +37,7 @@ namespace upsylon
                     this->template build<LayoutType,coord,Coord1D,coord,Coord1D>(full,
                                                                                  localSizes,
                                                                                  rank,
-                                                                                 PBC,
+                                                                                 boundaryConditions,
                                                                                  ng);
                 }
             }

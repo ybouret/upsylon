@@ -11,8 +11,11 @@ namespace upsylon
 {
     namespace Oxide
     {
-        
+        //======================================================================
+        //
         //! Layouts for a local compute node
+        //
+        //======================================================================
         template <typename COORD>
         class Layouts : public Topology::Hub<COORD>
         {
@@ -30,10 +33,10 @@ namespace upsylon
             static const size_t                               Neighbours   = Metrics<Dimensions>::Neighbours; //!< number of possible neighbours and directions
             static const size_t                               Orientations = Neighbours/2;                    //!< number of orientations
             typedef Ghosts<COORD>                             GhostsType;                                     //!< alias
-            typedef const GhostsType                         *Peer;                                          //!< alias
+            typedef const GhostsType                         *Peer;                                           //!< alias
             typedef arc_ptr<GhostsType>                       GhostsPointer;                                  //!< dynamic ghosts
 
-            //! lightweight ghosts I/O context
+            //! lightweight ghosts I/O context for one orientation
             struct GIO
             {
                 Peer       forward; //!< if has forward
@@ -43,7 +46,7 @@ namespace upsylon
                 bool       async;   //!< for load/save
             };
 
-            //! lighweight node to handle local-only nodes
+            //! lighweight node to handle local-only nodes in a list
             class gNode : public object
             {
             public:
@@ -69,7 +72,6 @@ namespace upsylon
             // members
             //
             //------------------------------------------------------------------
-            const size_t               size;   //!< product of sizes
             const LayoutType           inner;  //!< inner layout
             const LayoutType           outer;  //!< outer layout
             const auto_ptr<LayoutType> heart;  //!< optional heart layout
@@ -89,7 +91,6 @@ namespace upsylon
             //! cleanup
             inline virtual ~Layouts() throw()
             {
-                bzset_(size);
                 memset( ghosts, 0, sizeof(ghosts) );
             }
             
@@ -97,11 +98,10 @@ namespace upsylon
             inline explicit Layouts(const LayoutType &full,
                                     const_coord      &localSizes,
                                     const Coord1D     globalRank,
-                                    const_coord      &PBC,
+                                    const_coord      &boundaryConditions,
                                     const Coord1D     ng = 0
                                     ) :
-            HubType(localSizes,globalRank,PBC),
-            size(  Coord::Product(this->sizes) ),
+            HubType(localSizes,globalRank,boundaryConditions),
             inner( full.split(this->sizes,this->ranks) ),
             outer( expandInner(abs_of(ng)) ),
             heart(0),

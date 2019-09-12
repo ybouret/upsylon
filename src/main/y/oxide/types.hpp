@@ -43,6 +43,11 @@ namespace upsylon
         //! operations on coordinates
         struct Coord
         {
+            //==================================================================
+            //
+            // access
+            //
+            //==================================================================
 
             //! get static info
             template <typename COORD> struct Get
@@ -94,7 +99,12 @@ namespace upsylon
                 return *( ((const Coord1D *) &c) + dim );
             }
 
-            
+            //==================================================================
+            //
+            // operations
+            //
+            //==================================================================
+           
             //! get product
             template <typename COORD> static inline
             Coord1D Product( const COORD &c ) throw()
@@ -158,6 +168,11 @@ namespace upsylon
                 return Decrease(d);
             }
             
+            //==================================================================
+            //
+            // random
+            //
+            //==================================================================
             //! get a coordinate in [0..m]
             static Coord1D Natural1D( const unit_t m, randomized::bits &ran ) throw();
             
@@ -203,6 +218,11 @@ namespace upsylon
                 return ans;
             }
             
+            //==================================================================
+            //
+            // parsing
+            //
+            //==================================================================
             //! parse x[,y[,z]]
             static void Parse(Coord1D *p, const size_t n, const string &args, const char *id);
             
@@ -227,11 +247,12 @@ namespace upsylon
                 return ans;
             }
 
-            //------------------------------------------------------------------
+            //==================================================================
             //
             // local ranks => global rank
+            // all functions are checkec
             //
-            //------------------------------------------------------------------
+            //==================================================================
             //! check consistency
             static void CheckRanks(const Coord1D *size, const Coord1D *rank, const unsigned dim);
 
@@ -257,11 +278,12 @@ namespace upsylon
             }
 
 
-            //------------------------------------------------------------------
+            //==================================================================
             //
             // global rank => local rank
+            // all functions are checked
             //
-            //------------------------------------------------------------------
+            //==================================================================
 
             //! return local ranks 1D: (ranks.x=r)
             static inline Coord1D LocalRanks( const Coord1D &sizes, const Coord1D &r)
@@ -310,22 +332,22 @@ namespace upsylon
                 return ans;
             }
 
-            //------------------------------------------------------------------
+            //==================================================================
             //
-            // Boolean Operations
+            // Boolean Conversion
             //
-            //------------------------------------------------------------------
+            //==================================================================
             //! conversion to boolean
             template <typename COORD> static inline
             typename Get<COORD>::BooleanType ToBoolean( const COORD &c ) throw()
             {
-                typename Get<COORD>::BooleanType ans(false);
-                bool *flag = (bool *)&ans;
+                typename Get<COORD>::BooleanType Flag(false);
+                bool                            *flag = (bool *)&Flag;
                 for(size_t dim=0;dim<Get<COORD>::Dimensions;++dim)
                 {
                     flag[dim] = (Of(c,dim) != 0);
                 }
-                return ans;
+                return Flag;
             }
         };
 

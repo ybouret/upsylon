@@ -10,21 +10,35 @@ namespace upsylon
 
     namespace Oxide
     {
+        //======================================================================
+        //
         //! common constructor part
 #define Y_OXIDE_FIELD2D_CTOR()         \
 FieldOf<T>(id,*this),                  \
 row(0), rows(0),                       \
 rowLayout(this->lower.x,this->upper.x)
-        
+        //
         //! field in 2D
+        //
+        //======================================================================
         template <typename T>
         class Field2D : public Layout2D, public FieldOf<T>
         {
         public:
+            //==================================================================
+            //
+            // types and definitions
+            //
+            //==================================================================
             Y_DECL_ARGS(T,type);           //!< aliases
             typedef Layout2D   LayoutType; //!< alias
             typedef Field1D<T> RowType;    //!< a RowType
 
+            //==================================================================
+            //
+            // C++ setup
+            //
+            //==================================================================
             //! construct by string and layout
             explicit Field2D(const string   &id,
                              const Layout2D &L) :
@@ -53,7 +67,7 @@ rowLayout(this->lower.x,this->upper.x)
             }
 
 
-            //! construct as matrix
+            //! construct as bitmap
             explicit Field2D(const char     *id,
                              const Coord1D   w,
                              const Coord1D   h) :
@@ -69,6 +83,11 @@ rowLayout(this->lower.x,this->upper.x)
                 destructRows();
             }
 
+            //==================================================================
+            //
+            // access
+            //
+            //==================================================================
             //! access row
             inline RowType & operator[]( const Coord1D j ) throw()
             {

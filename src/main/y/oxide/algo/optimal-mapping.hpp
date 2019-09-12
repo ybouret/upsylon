@@ -128,6 +128,7 @@ namespace upsylon
                         scores.pop_back();
                     }
                 }
+                
                 //______________________________________________________________
                 //
                 // order by preferred dimension

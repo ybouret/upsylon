@@ -9,45 +9,66 @@ namespace upsylon
     namespace Oxide
     {
 
-        //! handle a compute node topology
+        //! Handle information about a compute node
         /**
          utilities to build sizes, ranks and characteristic of
-         a single node
+         a single Node (head,bulk,tail)
          */
         struct Topology
         {
 
-            //! positional information for a compute node
+            //! a Node is some positional information
+            /**
+             common local sizes (=mapping), global rank, and local ranks
+             */
             template <typename COORD>
             class Node
             {
             public:
+                //--------------------------------------------------------------
+                //
+                // types and definitions
+                //
+                //--------------------------------------------------------------
                 typedef typename Layout<COORD>::coord       coord;        //!< alias
                 typedef typename Layout<COORD>::const_coord const_coord;  //!< alias
 
-                const COORD   sizes; //!< local sizes for internal computation
+                //--------------------------------------------------------------
+                //
+                // members
+                //
+                //--------------------------------------------------------------
+                const_coord   sizes; //!< local sizes for internal computation
                 const Coord1D rank;  //!< global rank
-                const COORD   ranks; //!< local  ranks
+                const_coord   ranks; //!< local  ranks in local sizes
 
-                //! cleanup
-                inline virtual ~Node() throw() {}
-
-                //! setup
+                //--------------------------------------------------------------
+                //
+                // methods
+                //
+                //--------------------------------------------------------------
+               
+                //! setup from localSizes (=mapping) and a globalRank
                 inline explicit Node(const_coord   &localSizes,
-                                     const Coord1D &globalRank) :
+                                     const Coord1D  globalRank) :
                 sizes( localSizes ),
                 rank(  globalRank ),
                 ranks( Coord::LocalRanks(localSizes,globalRank) )
                 {
                 }
 
+                //! cleanup
+                inline virtual ~Node() throw()
+                {
+                    bzset_(sizes);
+                    bzset_(rank);
+                    bzset_(ranks);
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
             };
-
-
-
+            
 
             //! a Hub is a local compute node, with its information per dimension
             /**
@@ -56,15 +77,7 @@ namespace upsylon
             template <typename COORD>
             class Hub : public Node<COORD>
             {
-            public:
-                //--------------------------------------------------------------
-                //
-                // connectivity
-                //
-                //--------------------------------------------------------------
-                static  const size_t Dimensions = Coord::Get<COORD>::Dimensions; //!< workspace dimension
-
-                //--------------------------------------------------------------
+            public://--------------------------------------------------------------
                 //
                 // definitions
                 //
@@ -74,6 +87,7 @@ namespace upsylon
                 typedef typename NodeType::const_coord          const_coord; //!< alias
                 typedef typename Coord::Get<COORD>::BooleanType bool_type;   //!< boolean vector
                 typedef const bool_type                         const_bool;  //!< const boolean vector
+                static  const size_t Dimensions = Coord::Get<COORD>::Dimensions; //!< workspace dimension
 
                 //--------------------------------------------------------------
                 //
@@ -92,12 +106,13 @@ namespace upsylon
                 // implementation
                 //
                 //--------------------------------------------------------------
+               
                 //! setup all information
                 explicit Hub(const_coord   &localSizes,
-                             const Coord1D &globalRank,
-                             const_coord   &globalPBC) :
+                             const Coord1D  globalRank,
+                             const_coord   &boundaryConditions) :
                 NodeType(localSizes,globalRank),
-                pbc( Coord::ToBoolean(globalPBC) ),
+                pbc( Coord::ToBoolean(boundaryConditions) ),
                 head(false),
                 tail(head),
                 seq(head),
@@ -118,6 +133,11 @@ namespace upsylon
                 //! cleanup
                 inline virtual ~Hub() throw()
                 {
+                    bzset_(head);
+                    bzset_(tail);
+                    bzset_(seq);
+                    bzset_(par);
+                    bzset_(bulk);
                 }
 
             private:
