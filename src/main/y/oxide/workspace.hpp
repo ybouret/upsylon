@@ -138,17 +138,9 @@ namespace upsylon
             //
             //------------------------------------------------------------------
 
-#if 0
-            //! access ghosts
-            const GIO & getGhosts( const size_t orientation ) const throw()
-            {
-                assert(orientation<Orientations);
-                return this->ghosts[orientation];
-            }
-#endif
 
             //!  exchange of local ghosts pairs
-            inline void localExchange1( Field &F  )
+            inline void localExchange( Field &F  )
             {
                 assert(owns(F));
                 for(const typename LayoutsType::gNode *g = this->localGhosts.head;g;g=g->next)
@@ -179,11 +171,15 @@ namespace upsylon
 
 
             //! exchange a full SEQUENCE<FieldPointer>
-            template <typename SEQUENCE>
-            inline void localExchange( SEQUENCE &fields )
+            inline void localExchange( const ActiveFields &fields )
             {
-                localExchangeRange(fields.begin(),fields.size());
+                for(size_t i=fields.size();i>0;--i)
+                {
+                    localExchange( (Field &)(*fields[i]) );
+                }
             }
+
+
 
 
 #if 0
@@ -291,17 +287,7 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Workspace);
-
-            //! *ITERATOR = FieldPointer, **ITERATOR=Field
-            template <typename ITERATOR>
-            inline void localExchangeRange( ITERATOR it, size_t n )
-            {
-                while(n-->0)
-                {
-                    localExchange1( (Field&)(**it) );
-                    ++it;
-                }
-            }
+            
 
 #if 0
             template <typename ITERATOR>

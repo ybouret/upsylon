@@ -79,9 +79,9 @@ namespace
                 Y_CHECK( wksp.owns(Ff) );
                 Y_CHECK( wksp.owns(Fs) );
 
-                wksp.localExchange1(Fd);
-                wksp.localExchange1(Ff);
-                wksp.localExchange1(Fs);
+                wksp.localExchange(Fd);
+                wksp.localExchange(Ff);
+                wksp.localExchange(Fs);
 
                 ActiveFields pick;
                 pick( wksp, "Fd" );

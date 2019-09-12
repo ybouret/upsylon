@@ -60,8 +60,8 @@ namespace
                             fill(Fd);
                             fill(Fs);
 
-                            W.localExchange1(Fd);
-                            W.localExchange1(Fs);
+                            W.localExchange(Fd);
+                            W.localExchange(Fs);
 
                             block.free();
                             //const Ghosts<COORD> *G = 0;
