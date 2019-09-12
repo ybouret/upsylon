@@ -127,6 +127,24 @@ void make_for(mpi  &MPI,
             // and now, let's go...
             W.asyncExchange(fields);
             
+            // inner value must be unchanged
+            CheckValueOf<iField,COORD>(Fi, W.inner, label);
+            
+            // aync ghosts must have their own values
+            for(size_t k=0;k<W.Orientations;++k)
+            {
+                typename Workspace<COORD>::Peer peer = W.getAsyncPeer(Conn::Forward,k);
+                if(peer)
+                {
+                    CheckValueOf<iField,COORD>( Fi, peer->outer, LabelOf(peer->rank) );
+                }
+                peer = W.getAsyncPeer(Conn::Reverse,k);
+                if(peer)
+                {
+                    CheckValueOf<iField,COORD>( Fi, peer->outer, LabelOf(peer->rank) );
+                }
+            }
+            
             
         } MPI.print0(stderr,">\n");
     }
