@@ -29,9 +29,7 @@ namespace upsylon
                 Forward, //!< forward course, first  coordinate is  1
                 Reverse  //!< reverse course, second coordinate is -1
             };
-
-            static Way Opposite( const Way ) throw();
-
+            
             //! get integer representation
             static  Coord1D Sign( const Way ) throw();
 

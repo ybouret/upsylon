@@ -97,17 +97,21 @@ namespace
                 for(size_t i=0;i<wksp.Orientations;++i)
                 {
                     typename Workspace<COORD>::asyncIO aio;
-                    std::cerr << "@" << i;
+                    std::cerr << "<@" << i;
                     if( wksp.asyncProlog(aio, pick, Conn::Forward, i) )
                     {
                         std::cerr << "+" << GhostsComm::ToText(aio.comm);
+                        wksp.recvBlock.copy(wksp.sendBlock);
+                        wksp.asyncEpilog(aio,pick);
                     }
 
                     if( wksp.asyncProlog(aio, pick, Conn::Reverse, i) )
                     {
                         std::cerr << "-" << GhostsComm::ToText(aio.comm);
+                        wksp.recvBlock.copy(wksp.sendBlock);
+                        wksp.asyncEpilog(aio,pick);
                     }
-
+                    std::cerr << ">";
                 } std::cerr << std::endl;
                 std::cerr << "<AsyncExchanges/>" << std::endl;
 

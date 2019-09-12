@@ -10,25 +10,26 @@ namespace upsylon
     namespace Oxide
     {
         
-        typedef sorted_vector<FieldPointer>   OrderedFields;
-        typedef ordered_single<OrderedFields> ActiveFieldsType;
-        
+        typedef sorted_vector<FieldPointer>   OrderedFields;     //!< base ordered class
+        typedef ordered_single<OrderedFields> ActiveFieldsType;  //!< bases ordered policy class
+
+        //! list of active fields for com
         class ActiveFields : public ActiveFieldsType
         {
         public:
-            static const char Separator = ';';
+            static const char Separator = ';'; //!< separator for fields names
             
-            ActiveFields() throw();
-            virtual ~ActiveFields() throw();
-            ActiveFields(const ActiveFields &);
+            explicit ActiveFields() throw();    //!< setup
+            virtual ~ActiveFields() throw();    //!< cleanup
+            ActiveFields(const ActiveFields &); //!< copy
             
-            ActiveFields  & operator<<( Field     &);
-            ActiveFields  & operator()( Fields    &);
-            ActiveFields  & operator()( Fields &, const string IDs);
+            ActiveFields  & operator<<( Field     &); //!< add a field
+            ActiveFields  & operator()( Fields    &); //!< add all fields
+            ActiveFields  & operator()( Fields &, const string IDs); //!< add some fields name, with separators
 
-            comm_mode getCommMode() const throw();
-            size_t    getBlockSize() const throw();
-            
+            comm_mode getCommMode() const throw();  //!< analyze global comm_mode
+            size_t    getBlockSize() const throw(); //!< analyze blockSize, 0 for variable sized transfer
+
         private:
             Y_DISABLE_ASSIGN(ActiveFields);
         };

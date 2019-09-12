@@ -37,6 +37,7 @@ namespace upsylon
             return 0;
         }
 
+#if 0
         Conn::Way Conn:: Opposite( const Way way ) throw()
         {
             switch(way)
@@ -45,11 +46,11 @@ namespace upsylon
                 case Reverse: return Forward;
             }
         }
+#endif
 
 
 
-
-        static const char fn[] = "Oxide::Connectivity::";
+        static const char fn[] = "Oxide::Conn::";
 
         Conn::Level Conn::MakeLink(Coord1D       *direction,
                                    Coord1D       *orientation,

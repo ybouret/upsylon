@@ -27,6 +27,7 @@ namespace upsylon
                 return localSizes;
             }
 
+            //! check matching total used bytes agains block size
             static void CheckBlockTotal( const IOBlock &block, const size_t total );
 
         };
@@ -187,6 +188,8 @@ namespace upsylon
             // asynchronous exchange
             //
             //------------------------------------------------------------------
+            
+            //! lighweight asynchonous information for one-way transfer
             struct asyncIO
             {
                 Peer      send; //!< whom to send to
@@ -220,13 +223,13 @@ namespace upsylon
 
                     if(aio.send)
                     {
-                        aio.comm |= GhostsComm::Send;
                         // load sendBlock with inner layout
+                        aio.comm |= GhostsComm::Send;
                         size_t total = 0;
                         for(size_t i=fields.size();i>0;--i)
                         {
                             Field &F = (Field &)(*fields[i]);
-                            total += F.save(aio.send->inner.indices,sendBlock);
+                            total   += F.save(aio.send->inner.indices,sendBlock);
                         }
                         __Workspace::CheckBlockTotal(sendBlock,total);
                     }
@@ -259,7 +262,7 @@ namespace upsylon
             }
 
 
-            //! epilog after recv ops
+            //! epilog after recv operations in one way
             inline void asyncEpilog(const asyncIO      &aio,
                                     const ActiveFields &fields)
             {
@@ -267,6 +270,14 @@ namespace upsylon
                 {
                     assert(0!=(aio.comm&GhostsComm::Recv));
                     assert(fields.getCommMode()==aio.mode);
+                    ios::imstream input(recvBlock);
+                    size_t total = 0;
+                    for(size_t i=fields.size();i>0;--i)
+                    {
+                        Field &F = (Field &)(*fields[i]);
+                        total   += F.load(aio.send->inner.indices,input);
+                    }
+                    __Workspace::CheckBlockTotal(recvBlock,total);
                 }
             }
 

@@ -14,7 +14,7 @@ namespace upsylon
     namespace Oxide
     {
 
-        //! common data for Ghosts
+        //! common data for Ghosts topology
         struct GhostsInfo
         {
             static const char *Kind(const bool async) throw(); //!< display async/local
@@ -26,17 +26,18 @@ namespace upsylon
 
         };
 
+        //! common data for Ghosts Communications
         struct GhostsComm
         {
-            static const unsigned None = 0x00;
-            static const unsigned Send = 0x10;
-            static const unsigned Recv = 0x20;
-            static const unsigned Both = Send|Recv;
-            static const char *ToText(const unsigned comm) throw();
+            static const unsigned None = 0x00;      //!< no communication
+            static const unsigned Send = 0x10;      //!< send in this direction
+            static const unsigned Recv = 0x20;      //!< recv in this direction
+            static const unsigned Both = Send|Recv; //!< sendrecv in this direction
+            static const char *ToText(const unsigned comm) throw(); //!< textual coordinate
         };
 
 
-        typedef vector<Coord1D> GhostIndices; //!< alias
+        typedef vector<Coord1D> GhostIndices; //!< base class to store indices
 
         //! a ghost is a sub layout with indices
         template <typename COORD>

@@ -1,6 +1,6 @@
-
 #include "y/oxide/field/active.hpp"
 #include "y/string/tokenizer.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -21,6 +21,7 @@ namespace upsylon
         
         ActiveFields  &  ActiveFields::  operator<<( Field &ft )
         {
+            if(ft.refcount()<=0) throw exception("ActiveFields: '%s' is not dynamic", *ft.name);
             const FieldPointer tmp = &ft;
             insert(tmp);
             return *this;

@@ -43,19 +43,25 @@ namespace upsylon
                 bool       async;   //!< for load/save
             };
 
+            //! lighweight node to handle local-only nodes
             class gNode : public object
             {
             public:
-                gNode     *next;
-                gNode     *prev;
-                const GIO &gio;
+                gNode     *next; //!< for list
+                gNode     *prev; //!< for list
+                const GIO &gio;  //!< reference to local ghosts
 
-                inline explicit gNode( const GIO &ref ) throw() : next(0), prev(0), gio(ref) {}
+                //! setup
+                inline explicit gNode( const GIO &ref ) throw() : next(0), prev(0), gio(ref) { assert(gio.local); }
+
+                //! cleanup
                 inline virtual ~gNode() throw() {}
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(gNode);
             };
+
+            //! list of gNodes
             typedef core::list_of_cpp<gNode> gList;
 
             //------------------------------------------------------------------
