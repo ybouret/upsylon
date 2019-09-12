@@ -138,6 +138,13 @@ namespace upsylon
             //
             //------------------------------------------------------------------
 
+            //! access ghosts
+            const GIO & getGhosts( const size_t orientation ) const throw()
+            {
+                assert(orientation<Orientations);
+                return this->ghosts[orientation];
+            }
+
             //!  exchange of local ghosts pairs
             inline void localExchange1( Field &F  )
             {
