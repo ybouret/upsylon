@@ -42,7 +42,7 @@ namespace
         ios::ovstream block( 1024*1024 );
 
         std::cerr << "In " << full.Dimensions << "D" << std::endl;
-        ActiveFields pick;
+        ActiveFields sources,targets;
 
 
         for(size_t size=1;size<=8;++size)
@@ -97,8 +97,8 @@ namespace
                     for(size_t rank=0;rank<size;++rank)
                     {
                         Workspace<COORD> &W = WS[rank];
-                        pick(W);
-                        W.localExchange(pick);
+                        sources(W);
+                        W.localExchange(sources);
                     }
                     std::cerr << "0";
 
@@ -112,13 +112,14 @@ namespace
                     for(size_t rank=0,op=0;rank<size;++rank)
                     {
                         Workspace<COORD> &W = WS[rank];
-                        pick(W);
+                        sources(W);
                         for(size_t k=0;k<W.Orientations;++k)
                         {
                             typename Workspace<COORD>::AsyncIO &aio = aios[op++];
-                            W.asyncProlog(aio, pick, Conn::Forward,k);
+                            W.asyncProlog(aio, sources, Conn::Forward,k);
                             if(aio.send)
                             {
+                                Y_ASSERT(W.sendBlock.size()>0);
                                 Y_ASSERT(aio.send->rank<Coord1D(size));
                                 Y_ASSERT(aio.send->rank>=0);
                                 Y_ASSERT(aio.send->rank!=Coord1D(rank));
@@ -129,14 +130,42 @@ namespace
                                 typename Workspace<COORD>::Peer peer = WT.getAsyncPeer(Conn::Reverse, k);
                                 Y_ASSERT(peer!=0);
                                 Y_ASSERT(peer->rank==Coord1D(rank));
-
-                                
-
+                                targets(WT);
+                                WT.__asyncLoad(*peer,targets);
                             }
                         }
                     }
-                    
                     std::cerr << "+";
+
+
+                    // send reverse
+                    for(size_t rank=0,op=0;rank<size;++rank)
+                    {
+                        Workspace<COORD> &W = WS[rank];
+                        sources(W);
+                        for(size_t k=0;k<W.Orientations;++k)
+                        {
+                            typename Workspace<COORD>::AsyncIO &aio = aios[op++];
+                            W.asyncProlog(aio, sources, Conn::Reverse,k);
+                            if(aio.send)
+                            {
+                                Y_ASSERT(W.sendBlock.size()>0);
+                                Y_ASSERT(aio.send->rank<Coord1D(size));
+                                Y_ASSERT(aio.send->rank>=0);
+                                Y_ASSERT(aio.send->rank!=Coord1D(rank));
+                                Workspace<COORD> &WT = WS[aio.send->rank];
+                                WT.recvBlock.copy(W.sendBlock);
+
+                                // get matching ghost
+                                typename Workspace<COORD>::Peer peer = WT.getAsyncPeer(Conn::Forward, k);
+                                Y_ASSERT(peer!=0);
+                                Y_ASSERT(peer->rank==Coord1D(rank));
+                                targets(WT);
+                                WT.__asyncLoad(*peer,targets);
+                            }
+                        }
+                    }
+                    std::cerr << "-";
 
 
                 }

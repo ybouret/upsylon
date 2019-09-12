@@ -242,14 +242,7 @@ namespace upsylon
                     {
                         // load sendBlock with inner layout
                         aio.comm |= GhostsComm::Send;
-                        const GhostIndices &indices = aio.send->inner.indices;
-                        size_t              total   = 0;
-                        for(size_t i=fields.size();i>0;--i)
-                        {
-                            Field &F = (Field &)(*fields[i]);
-                            total   += F.save(indices,sendBlock);
-                        }
-                        __Workspace::CheckBlockTotal(sendBlock,total);
+                        __asyncSave(*(aio.send),fields);
                     }
 
                     if(aio.recv)
@@ -287,18 +280,39 @@ namespace upsylon
                 {
                     assert(0!=(aio.comm&GhostsComm::Recv));
                     assert(fields.getCommMode()==aio.mode);
-                    const GhostIndices &indices = aio.recv->inner.indices;
-                    size_t              total   = 0;
-                    {
-                        ios::imstream input(recvBlock);
-                        for(size_t i=fields.size();i>0;--i)
-                        {
-                            Field &F = (Field &)(*fields[i]);
-                            total   += F.load(indices,input);
-                        }
-                    }
-                    __Workspace::CheckBlockTotal(recvBlock,total);
+                    __asyncLoad(*(aio.recv),fields);
                 }
+            }
+
+            //! save in sendBlock
+            inline void __asyncSave( const GhostsType &G, const ActiveFields &fields )
+            {
+                assert(0==sendBlock.size());
+                const GhostIndices &indices = G.inner.indices;
+                size_t              total   = 0;
+                for(size_t i=fields.size();i>0;--i)
+                {
+                    Field &F = (Field &)(*fields[i]);      assert( owns(F) );
+                    total   += F.save(indices,sendBlock);
+                }
+                __Workspace::CheckBlockTotal(sendBlock,total);
+            }
+
+            //! load from last recvBlock
+            inline void __asyncLoad( const GhostsType &G, const ActiveFields &fields )
+            {
+                assert(recvBlock.size()>0);
+                const GhostIndices &indices = G.outer.indices;
+                size_t              total   = 0;
+                {
+                    ios::imstream input(recvBlock);
+                    for(size_t i=fields.size();i>0;--i)
+                    {
+                        Field &F = (Field &)(*fields[i]); assert(owns(F));
+                        total   += F.load(indices,input);
+                    }
+                }
+                __Workspace::CheckBlockTotal(recvBlock,total);
             }
 
 
