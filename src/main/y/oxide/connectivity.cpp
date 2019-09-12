@@ -17,7 +17,7 @@ namespace upsylon
             return "?";
         }
 
-        const char * Connectivity::  Way2Text( const Way w ) throw()
+        const char * Connectivity::  Course2Text( const Course w ) throw()
         {
             switch(w)
             {
@@ -27,7 +27,7 @@ namespace upsylon
             return "?";
         }
 
-       Coord1D Connectivity::  Way2Sign( const Way w ) throw()
+       Coord1D Connectivity::  CourseSign( const Course w ) throw()
         {
             switch(w)
             {
@@ -37,7 +37,7 @@ namespace upsylon
             return 0;
         }
 
-        Connectivity::Way Connectivity:: Opposite( const Way way ) throw()
+        Connectivity::Course Connectivity:: Opposite( const Course way ) throw()
         {
             switch(way)
             {
@@ -53,7 +53,7 @@ namespace upsylon
 
         Connectivity::Level Connectivity::MakeLink(Coord1D       *direction,
                                                    Coord1D       *orientation,
-                                                   Way           *way,
+                                                   Course        *way,
                                                    const unsigned dims)
         {
             assert(direction);

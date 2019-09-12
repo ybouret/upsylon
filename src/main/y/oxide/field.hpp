@@ -9,11 +9,11 @@ namespace upsylon
     namespace Oxide
     {
         //! common constructor part
-#define Y_OXIDE_FIELD_CTOR() FieldType(id, L, sizeof(T), typeid(T) ), entry(NULL), _data(NULL)
+#define Y_OXIDE_FIELD_CTOR() Field(id, L, sizeof(T), typeid(T) ), entry(NULL), _data(NULL)
         
         //! common abstract API for fields
         template <typename T>
-        class FieldOf : public FieldType
+        class FieldOf : public Field
         {
         public:
             Y_DECL_ARGS(T,type); //!< aliases

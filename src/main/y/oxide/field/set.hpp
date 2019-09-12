@@ -44,40 +44,18 @@ namespace upsylon
             }
 
             //! test really owned
-            bool owns( const FieldType &F ) const throw();
+            bool owns( const Field &F ) const throw();
 
             //! get field type
-            FieldType       & operator[](const string &id);
+            Field & operator[](const string &id);
 
             //! get field type, wrapper
-            FieldType      & operator[](const char *id);
+            Field & operator[](const char *id);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Fields);
             static const char Fn[];
 
-        public:
-#if 0
-            typedef vector<FieldPointer> SelectionType;
-
-            class Selection : public SelectionType
-            {
-            public:
-                static const char Separator=';';
-
-                explicit Selection(const size_t n=0);
-                virtual ~Selection() throw();
-                Selection(const Selection &other);
-
-                Selection & operator()( FieldType &ft );
-                Selection & operator()( Fields &F, const string &ids );
-                Selection & operator()( Fields &F ); // all of them!
-                void clean() throw();
-
-            private:
-                Y_DISABLE_ASSIGN(Selection);
-            };
-#endif
 
         };
 

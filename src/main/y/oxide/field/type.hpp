@@ -11,6 +11,8 @@ namespace upsylon
 {
     namespace Oxide
     {
+
+
         //----------------------------------------------------------------------
         //
         //
@@ -18,7 +20,7 @@ namespace upsylon
         //
         //
         //----------------------------------------------------------------------
-        class FieldType : public counted_object
+        class Field : public counted_object
         {
         public:
             //------------------------------------------------------------------
@@ -26,15 +28,14 @@ namespace upsylon
             // members
             //
             //------------------------------------------------------------------
-            const string           name;         //!< identifiers
-            const size_t           localObjects; //!< available local linear Objects
-            const size_t           ownedObjects; //!< owned built objects
-            const size_t           linearExtent; //!< EXPECTED linear extent in bytes
-            const size_t           sizeOfObject; //!< sizeof(T)
-            const std::type_info  &typeOfObject; //!< system wide type info name
-        private:
-            mutable ios::plugin::pointer transfer;     //!< type related load/save method for one object
-        public:
+            const string               name;         //!< identifiers
+            const size_t               localObjects; //!< available local linear Objects
+            const size_t               ownedObjects; //!< owned built objects
+            const size_t               linearExtent; //!< EXPECTED linear extent in bytes
+            const size_t               sizeOfObject; //!< sizeof(T)
+            const std::type_info      &typeOfObject; //!< system wide type info name
+            const ios::plugin::pointer transfer;     //!< type related load/save method for one object
+
 
             //------------------------------------------------------------------
             //
@@ -42,7 +43,7 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             //! cleanup and remove privateData
-            virtual ~FieldType() throw();
+            virtual ~Field() throw();
 
             //! get address of an object by its index
             virtual const void *getObjectAddr( const Coord1D index ) const throw() = 0;
@@ -55,7 +56,7 @@ namespace upsylon
             // non-virtual interface
             //
             //------------------------------------------------------------------
-            string subName( const Coord1D n ) const;                                      //!< create "name[n]"
+            string subName( const Coord1D n ) const;                    //!< create "name[n]"
             size_t save( ios::ostream &fp, const Coord1D index) const;  //!< save one object from index
             size_t load( ios::istream &fp, const Coord1D index);        //!< load one object into index
 
@@ -114,12 +115,12 @@ namespace upsylon
             }
 
             //! forward to the name comparison
-            friend bool operator<(const FieldType &lhs, const FieldType &rhs) throw();
+            friend bool operator<(const Field &lhs, const Field &rhs) throw();
             
 
         protected:
-            explicit FieldType(const string &id, const LayoutInfo &L, const size_t szObj, const std::type_info &); //!< setup
-            explicit FieldType(const char   *id, const LayoutInfo &L, const size_t szObj, const std::type_info &); //!< setup
+            explicit Field(const string &id, const LayoutInfo &L, const size_t szObj, const std::type_info &); //!< setup
+            explicit Field(const char   *id, const LayoutInfo &L, const size_t szObj, const std::type_info &); //!< setup
 
             void    *privateData; //!< private data if dynamic
             size_t   privateSize; //!< private size if dynamic
@@ -129,7 +130,7 @@ namespace upsylon
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(FieldType);
+            Y_DISABLE_COPY_AND_ASSIGN(Field);
         };
 
        

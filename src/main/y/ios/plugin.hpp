@@ -26,6 +26,7 @@ namespace upsylon
         public:
             typedef arc_ptr<plugin> pointer; //!< shared pointer
             const uint32_t          uuid;    //!< identifier
+            const comm_mode         mode;    //!< for I/O information
 
             virtual size_t  load(ios::istream &, void       *) = 0; //!< load data
             virtual size_t  save(ios::ostream &, const void *) = 0; //!< save data
@@ -33,7 +34,7 @@ namespace upsylon
             virtual        ~plugin() throw();                       //!< cleanup
 
         protected:
-            explicit plugin(const uint32_t ) throw(); //!< setup with identifier
+            explicit plugin(const uint32_t, const comm_mode ) throw(); //!< setup with identifier
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(plugin);
@@ -53,7 +54,8 @@ namespace upsylon
             Y_DECL_ARGS(T,type);                                    //!< aliases
 
             inline virtual ~nbo_plugin() throw() {}                 //!< cleanup
-            inline explicit nbo_plugin() throw() : plugin(UUID) {}  //!< setup
+            inline explicit nbo_plugin() throw() :
+            plugin(UUID,comm_constant_size) {}  //!< setup
 
             //! load with swap big endian
             inline virtual size_t load(ios::istream &fp, void *addr)
@@ -93,7 +95,8 @@ namespace upsylon
             static const uint32_t UUID = Y_FOURCC('@','R','A','W');  //!< identifier
 
             inline virtual ~raw_plugin() throw() {}                  //!< cleanup
-            inline explicit raw_plugin() throw() : plugin(UUID) {}   //!< setup
+            inline explicit raw_plugin() throw() :
+            plugin(UUID,comm_constant_size) {}                       //!< setup
 
             //! direct write of bytes
             inline virtual size_t save(ios::ostream &fp, const void *addr)
@@ -130,7 +133,8 @@ namespace upsylon
             static const uint32_t UUID = Y_FOURCC('@','S','R','Z');    //!< identifier
 
             inline virtual ~srz_plugin() throw() {}                    //!< cleanup
-            inline explicit srz_plugin() throw() : plugin(UUID) {}     //!< setup
+            inline explicit srz_plugin() throw() :
+            plugin(UUID,comm_variable_size) {}                         //!< setup
 
 
             //! save using the serializable API

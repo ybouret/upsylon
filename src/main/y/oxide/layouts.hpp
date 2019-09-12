@@ -282,7 +282,7 @@ namespace upsylon
                     { const GhostsPointer G = g; repository.push_back(G); }
 
                     GIO &gio = ghosts[where];
-                    switch(g->link.way)
+                    switch(g->link.course)
                     {
                         case Connectivity::Forward:  assert(0==gio.forward); gio.forward = g; gio.status |= GhostsInfo::Fwd; break;
                         case Connectivity::Reverse:  assert(0==gio.reverse); gio.reverse = g; gio.status |= GhostsInfo::Rev; break;

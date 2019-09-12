@@ -4,7 +4,7 @@ namespace upsylon
 {
     namespace Oxide
     {
-        FieldType:: ~FieldType() throw()
+        Field:: ~Field() throw()
         {
             assert(0==ownedObjects);
             bzset_(linearExtent);
@@ -16,13 +16,13 @@ namespace upsylon
 
 
         
-        void *   FieldType:: acquirePrivate()
+        void *   Field:: acquirePrivate()
         {
             static memory::allocator &mgr = memory::global::instance();
             return (privateData = mgr.acquire(privateSize));
         }
         
-        void FieldType:: releasePrivate() throw()
+        void Field:: releasePrivate() throw()
         {
             assert(ownedObjects==0);
             if(privateSize)
@@ -32,23 +32,25 @@ namespace upsylon
             }
         }
         
-        string FieldType:: subName( const Coord1D n ) const
+        string Field:: subName( const Coord1D n ) const
         {
             return name + vformat("[%ld]", static_cast<long>(n) );
         }
 
-        size_t FieldType:: save(ios::ostream &fp, const Coord1D index  ) const
+        size_t Field:: save(ios::ostream &fp, const Coord1D index  ) const
         {
-            return transfer->save(fp, getObjectAddr(index));
+            ios::plugin &plg = (ios::plugin&)(*transfer);
+            return plg.save(fp, getObjectAddr(index));
         }
 
-        size_t FieldType:: load( ios::istream &fp, const Coord1D index )
+        size_t Field:: load( ios::istream &fp, const Coord1D index )
         {
-            return transfer->load(fp, (void*)getObjectAddr(index));
+            ios::plugin &plg = (ios::plugin&)(*transfer);
+            return plg.load(fp, (void*)getObjectAddr(index));
         }
 
 
-        bool operator<(const FieldType &lhs, const FieldType &rhs) throw()
+        bool operator<(const Field &lhs, const Field &rhs) throw()
         {
             return lhs.name < rhs.name;
         }
@@ -80,12 +82,12 @@ transfer(__plg(typeOfObject)),    \
 privateData(0),                   \
 privateSize(0)
 
-        FieldType:: FieldType(const string &id, const LayoutInfo &L, const size_t szObj, const std::type_info &tid) :
+        Field:: Field(const string &id, const LayoutInfo &L, const size_t szObj, const std::type_info &tid) :
         Y_OXIDE_FIELD_INFO_CTOR()
         {
         }
 
-        FieldType:: FieldType(const char *id, const LayoutInfo &L, const size_t szObj, const std::type_info &tid) :
+        Field:: Field(const char *id, const LayoutInfo &L, const size_t szObj, const std::type_info &tid) :
         Y_OXIDE_FIELD_INFO_CTOR()
         {
         }

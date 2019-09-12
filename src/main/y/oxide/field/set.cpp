@@ -40,7 +40,7 @@ namespace upsylon
             return *h;
         }
 
-        bool Fields:: owns( const FieldType &F ) const throw()
+        bool Fields:: owns( const Field &F ) const throw()
         {
             const FieldHandle *h = this->search(F.name);
             if(!h)
@@ -64,18 +64,18 @@ namespace upsylon
         }
 
 
-        FieldType & Fields:: operator[](const string &id)
+        Field & Fields:: operator[](const string &id)
         {
             const FieldHandle *h = search(id);
             if(!h)
             {
                 throw exception("%s( no ['%s'])", Fn, *id );
             }
-            const FieldType &cf = *(h->field);
-            return (FieldType &)cf;
+            const   Field &cf = *(h->field);
+            return (Field &)cf;
         }
 
-        FieldType      & Fields:: operator[](const char *id)
+        Field & Fields:: operator[](const char *id)
         {
             const string _(id);
             return (*this)[_];

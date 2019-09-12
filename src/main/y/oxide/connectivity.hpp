@@ -24,19 +24,19 @@ namespace upsylon
             static const char *Level2Text( const Level ) throw();
 
             //! depends on the sign of the first coordinate of the displacement
-            enum Way
+            enum Course
             {
-                Forward, //!< forward way, first  coordinate is  1
-                Reverse  //!< reverse way, second coordinate is -1
+                Forward, //!< forward course, first  coordinate is  1
+                Reverse  //!< reverse course, second coordinate is -1
             };
 
-            static Way Opposite( const Way ) throw();
+            static Course Opposite( const Course ) throw();
 
             //! get integer representation
-            static  Coord1D     Way2Sign( const Way ) throw();
+            static  Coord1D     CourseSign( const Course ) throw();
 
             //! get textual representation
-            static  const char *Way2Text( const Way ) throw();
+            static  const char *Course2Text( const Course ) throw();
 
             //! store the direction, orientation and connectivity level
             template <typename COORD>
@@ -47,15 +47,15 @@ namespace upsylon
 
                 const COORD     direction;     //!< regularized direction
                 const COORD     orientation;   //!< same for +/- direction
-                const Way       way;           //!< direction = Way * orientation
+                const Course    course;        //!< direction = course * orientation
                 const Level     level;         //!< number of active coordinates
-
+                
                 //! setup from a vector
                 inline explicit Link(const COORD delta) :
                 direction( delta ),
                 orientation( 0 ),
-                way(Forward),
-                level( MakeLink( (Coord1D *)&direction, (Coord1D *)&orientation, (Way *)&way, Dimensions) )
+                course(Forward),
+                level( MakeLink( (Coord1D *)&direction, (Coord1D *)&orientation, (Course *)&course, Dimensions) )
                 {
                 }
 
@@ -63,7 +63,7 @@ namespace upsylon
                 inline Link(const Link &link) throw() :
                 direction(   link.direction   ),
                 orientation( link.orientation ),
-                way(         link.way         ),
+                course(      link.course      ),
                 level(       link.level       )
                 {
                     
@@ -78,13 +78,13 @@ namespace upsylon
                     return (lhs.level==rhs.level) && (rhs.orientation==lhs.orientation) && (lhs.way!=rhs.way) && (lhs.direction==-rhs.direction);
                 }
 
-                inline const char *levelText() const throw() { return Level2Text(level); } //!< texual represntation
-                inline const char *wayText() const throw()   { return Way2Text(way);     } //!< textual representation
+                inline const char *levelText()  const throw() { return Level2Text(level);   } //!< texual represntation
+                inline const char *courseText() const throw() { return Course2Text(course); } //!< textual representation
 
                 //! print info
                 friend inline std::ostream & operator<<( std::ostream &os, const Link &link )
                 {
-                    os << "<<" << link.levelText() << '.' << link.wayText() << '*';
+                    os << "<<" << link.levelText() << '.' << link.courseText() << '*';
                     Coord::Disp(os,link.orientation,2) << '=';
                     Coord::Disp(os,link.direction,2) << ">>";
                     return os;
@@ -103,7 +103,7 @@ namespace upsylon
              */
             static Level MakeLink(Coord1D       *direction,
                                   Coord1D       *orientation,
-                                  Way           *way,
+                                  Course        *cs,
                                   const unsigned dims);
 
 

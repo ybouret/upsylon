@@ -58,7 +58,7 @@ namespace upsylon
 
             //------------------------------------------------------------------
             //
-            // methods
+            // C++ methods
             //
             //------------------------------------------------------------------
             //! cleaunp
@@ -75,12 +75,16 @@ namespace upsylon
                         globalRank,
                         PBC,
                         ng),
-            Fields(),
-            sendBlock(),
-            recvBlock()
+            Fields(), sendBlock(), recvBlock()
             {
 
             }
+
+            //------------------------------------------------------------------
+            //
+            // Fields creation/access
+            //
+            //------------------------------------------------------------------
 
             //! create and register a field
             template <typename FIELD> inline FIELD & create( const string &name )
@@ -127,8 +131,14 @@ namespace upsylon
             }
 
 
+            //------------------------------------------------------------------
+            //
+            // local exchanges
+            //
+            //------------------------------------------------------------------
+
             //!  exchange of local ghosts pairs
-            inline void localExchange1( const FieldType &F  )
+            inline void localExchange1( Field &F  )
             {
                 assert(owns(F));
                 for(size_t i=0;i<Orientations;++i)
@@ -151,8 +161,8 @@ namespace upsylon
 
                         for(size_t j=fwd_inner.size();j>0;--j)
                         {
-                            //F.copyObject(fwd_outer[j],rev_inner[j]);
-                            //F.copyObject(rev_outer[j],fwd_inner[j]);
+                            F.copyObject(fwd_outer[j],rev_inner[j]);
+                            F.copyObject(rev_outer[j],fwd_inner[j]);
                         }
                     }
                 }
@@ -160,7 +170,7 @@ namespace upsylon
 
 
 
-            //! exchange a full sequence<FieldPointer>
+            //! exchange a full SEQUENCE<FieldPointer>
             template <typename SEQUENCE>
             inline void localExchange( SEQUENCE &fields )
             {
@@ -168,12 +178,34 @@ namespace upsylon
             }
 
 
+            //------------------------------------------------------------------
+            //
+            // asynchronous exchange
+            //
+            //------------------------------------------------------------------
+            //! extract matching ghosts
+            const GhostsType *getAsync(const Connectivity::Course way,
+                                       const size_t               orientation) const throw()
+            {
+                assert(orientation<Orientations);
+                const GIO &gio = this->ghosts[orientation];
+                if(gio.async)
+                {
+                    switch(way)
+                    {
+                        case Connectivity::Forward: return gio.forward;
+                        case Connectivity::Reverse: return gio.reverse;
+                    }
+                }
+                return 0;
+            }
+
             //! save aynchronous content for way+orientation into block
-            inline size_t asyncSave1(const Connectivity::Way way,
-                                     const size_t            orientation,
-                                     ios::ostream           &block,
-                                     const FieldType        &F,
-                                     const GhostsType     * &G) const
+            inline size_t asyncSave1(const Connectivity::Course way,
+                                     const size_t               orientation,
+                                     ios::ostream              &block,
+                                     const Field               &F,
+                                     const GhostsType        * &G) const
             {
                 assert(owns(F));
                 G = getAsync(way,orientation);
@@ -186,13 +218,13 @@ namespace upsylon
                     return 0;
                 }
             }
-
+            
             //! save some fields, with sendBlock reinitialization
             template <typename SEQUENCE>
-            inline size_t asyncSave(const Connectivity::Way way,
-                                    const size_t            orientation,
-                                    SEQUENCE               &fields,
-                                    const GhostsType      * &G)
+            inline size_t asyncSave(const Connectivity::Course way,
+                                    const size_t               orientation,
+                                    SEQUENCE                  &fields,
+                                    const GhostsType        * &G)
             {
                 sendBlock.free();
                 G = getAsync(way,orientation);
@@ -209,11 +241,11 @@ namespace upsylon
 
 
             //! load asynchronous content for way+orientation from input
-            inline size_t asyncLoad1(const Connectivity::Way  way,
-                                     const size_t             orientation,
-                                     ios::istream            &input,
-                                     FieldType               &F,
-                                     const GhostsType      * &G)
+            inline size_t asyncLoad1(const Connectivity::Course  way,
+                                     const size_t                orientation,
+                                     ios::istream               &input,
+                                     Field                      &F,
+                                     const GhostsType         * &G)
             {
                 assert(owns(F));
                 G = getAsync(way,orientation);
@@ -229,10 +261,10 @@ namespace upsylon
 
             //! load some fields, assuming recvBlock is filled
             template <typename SEQUENCE>
-            inline size_t asyncLoad(const Connectivity::Way way,
-                                    const size_t            orientation,
-                                    SEQUENCE               &fields,
-                                    const GhostsType      * &G)
+            inline size_t asyncLoad(const Connectivity::Course way,
+                                    const size_t               orientation,
+                                    SEQUENCE                  &fields,
+                                    const GhostsType        * &G)
             {
                 G = getAsync(way,orientation);
                 if(G)
@@ -247,34 +279,19 @@ namespace upsylon
             }
 
 
-            //! extract matching ghosts
-            const GhostsType *getAsync(const Connectivity::Way way,
-                                       const size_t            orientation) const throw()
-            {
-                assert(orientation<Orientations);
-                const GIO &gio = this->ghosts[orientation];
-                if(gio.async)
-                {
-                    switch(way)
-                    {
-                        case Connectivity::Forward: return gio.forward;
-                        case Connectivity::Reverse: return gio.reverse;
-                    }
-                }
-                return 0;
-            }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Workspace);
 
 
             
-            //! *ITERATOR = FieldPointer, **ITERATOR=FieldType
+            //! *ITERATOR = FieldPointer, **ITERATOR=Field
             template <typename ITERATOR>
             inline void localExchangeRange( ITERATOR it, size_t n )
             {
                 while(n-->0)
                 {
-                    localExchange1(**it);
+                    localExchange1( (Field&)(**it) );
                     ++it;
                 }
             }
@@ -303,8 +320,8 @@ namespace upsylon
                 size_t recvBytes = 0;
                 while(n-->0)
                 {
-                    const FieldType  &F = **it;
-                    ((FieldType&)F).load(G.outer.indices,input);
+                    const Field  &F = **it;
+                    ((Field&)F).load(G.outer.indices,input);
                     ++it;
                 }
                 // TODO: CHECK

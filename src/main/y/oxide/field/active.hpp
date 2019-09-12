@@ -1,4 +1,3 @@
-
 //! \file
 #ifndef Y_FIELD_ACTIVE_INCLUDED
 #define Y_FIELD_ACTIVE_INCLUDED 1
@@ -23,10 +22,12 @@ namespace upsylon
             virtual ~ActiveFields() throw();
             ActiveFields(const ActiveFields &);
             
-            ActiveFields  & operator<<( FieldType &);
+            ActiveFields  & operator<<( Field     &);
             ActiveFields  & operator()( Fields    &);
             ActiveFields  & operator()( Fields &, const string IDs);
-            
+
+            comm_mode getCommMode() const throw();
+
         private:
             Y_DISABLE_ASSIGN(ActiveFields);
         };

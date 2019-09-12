@@ -10,7 +10,7 @@ namespace upsylon
 {
     namespace Oxide
     {
-        typedef arc_ptr<FieldType> FieldPointer; //!< alias for dynamic fields
+        typedef arc_ptr<Field> FieldPointer; //!< alias for dynamic fields
 
         //! lightweight handle for fields
         class FieldHandle
