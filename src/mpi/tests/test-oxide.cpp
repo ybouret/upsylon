@@ -22,6 +22,37 @@ Y_UTEST(oxide)
 {
     static const int tag = 7;
     Y_MPI(SINGLE);
+
+    const Coord3D  lower(1,1,1);
+    const Coord3D  org(1,1,1);
+    const Coord3D  top(2,2,2);
+    Layout3D::Loop loop(org,top);
+
+    for( loop.start(); loop.valid(); loop.next() )
+    {
+        const Coord3D  upper = lower + 5 * loop.value;
+        const Layout1D full1D( lower.x, upper.x);
+        const Layout2D full2D( lower.xy(), upper.xy());
+        const Layout3D full3D(lower,upper);
+
+
+        ParallelContext<Coord1D> Par1D(MPI,full1D);
+        ParallelContext<Coord2D> Par2D(MPI,full2D);
+        ParallelContext<Coord3D> Par3D(MPI,full3D);
+
+        if(MPI.isHead)
+        {
+            std::cerr << "Par1D mappings" << Par1D.mappings << " / " << Par1D.optimal << std::endl;
+            std::cerr << "Par2D mappings" << Par2D.mappings << " / " << Par2D.optimal << std::endl;
+            std::cerr << "Par3D mappings" << Par3D.mappings << " / " << Par3D.optimal << std::endl;
+
+        }
+
+
+    }
+
+
+#if 0
     mpi::vBlock     send_block(1024);
     mpi::vBlock     recv_block(1024);
     vector<Coord1D> indices;
@@ -120,6 +151,7 @@ Y_UTEST(oxide)
     
 
     MPI.print(stderr, "Ellaped: %gms\n", MPI.getCommMilliseconds() );
+#endif
 
 }
 Y_UTEST_DONE()

@@ -62,7 +62,7 @@ namespace
         ActiveFields sources,targets;
 
 
-        for(Coord1D size=1;size<=8;++size)
+        for(Coord1D size=1;size<=27;++size)
         {
             std::cerr << "#cores=" << size << ", full=" << full << std::endl;
             memory::cblock_of<typename Workspace<COORD>::AsyncIO > aioData( size * Workspace<COORD>::Orientations );
@@ -224,9 +224,9 @@ namespace
 
 Y_UTEST(oxide_mpi)
 {
-    const Coord3D lower(1,1,1);
-    const Coord3D org(1,1,1);
-    const Coord3D top(2,2,2);
+    const Coord3D  lower(1,1,1);
+    const Coord3D  org(1,1,1);
+    const Coord3D  top(2,2,2);
     Layout3D::Loop loop(org,top);
 
     for( loop.start(); loop.valid(); loop.next() )
