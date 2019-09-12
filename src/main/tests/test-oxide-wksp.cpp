@@ -88,25 +88,28 @@ namespace
                 pick( wksp, "Fs;Ff" );
                 pick( wksp, "Fs;Ff" );
 
-                std::cerr << "LocalExchanges" << std::endl;
+                std::cerr << "<LocalExchanges>" << std::endl;
                 wksp.localExchange(pick);
+                std::cerr << "<LocalExchanges/>" << std::endl;
 
-                std::cerr << "com: ";
+                std::cerr << "<AsyncExchanges>" << std::endl;
+                std::cerr << "\tcom: ";
                 for(size_t i=0;i<wksp.Orientations;++i)
                 {
                     typename Workspace<COORD>::asyncIO aio;
                     std::cerr << "@" << i;
                     if( wksp.asyncProlog(aio, pick, Conn::Forward, i) )
                     {
-                        std::cerr << "+";
+                        std::cerr << "+" << GhostsComm::ToText(aio.comm);
                     }
 
                     if( wksp.asyncProlog(aio, pick, Conn::Reverse, i) )
                     {
-                        std::cerr << "-";
+                        std::cerr << "-" << GhostsComm::ToText(aio.comm);
                     }
 
                 } std::cerr << std::endl;
+                std::cerr << "<AsyncExchanges/>" << std::endl;
 
 
             }
