@@ -93,7 +93,7 @@ namespace upsylon
             size_t save(const SEQUENCE &indices, ios::ostream &fp  ) const
             {
                 size_t total = 0;
-                size_t n = indices.size();
+                size_t n     = indices.size();
                 for( typename SEQUENCE::const_iterator i=indices.begin(); n>0; --n, ++i)
                 {
                     total += save(fp,*i);
@@ -106,10 +106,12 @@ namespace upsylon
             size_t load(const SEQUENCE &indices, ios::istream &fp   )
             {
                 size_t total = 0;
-                size_t n = indices.size();
-                for( typename SEQUENCE::const_iterator i=indices.begin(); n>0; --n, ++i)
                 {
-                    total += load(fp,*i);
+                    size_t n     = indices.size();
+                    for( typename SEQUENCE::const_iterator i=indices.begin(); n>0; --n, ++i)
+                    {
+                        total += load(fp,*i);
+                    }
                 }
                 return total;
             }

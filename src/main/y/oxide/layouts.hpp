@@ -90,6 +90,7 @@ namespace upsylon
             inline virtual ~Layouts() throw()
             {
                 bzset_(size);
+                memset( ghosts, 0, sizeof(ghosts) );
             }
             
             //! setup
@@ -368,6 +369,13 @@ namespace upsylon
                             {
                                 ( (gList&)localGhosts ).push_back( new gNode(gio) );
                             }
+                            break;
+                        default:
+                            assert(0==gio.status);
+                            assert(0==gio.forward);
+                            assert(0==gio.reverse);
+                            gio.local = false;
+                            gio.async = false;
                             break;
                     }
                 }

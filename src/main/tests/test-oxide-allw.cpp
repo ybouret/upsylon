@@ -27,11 +27,14 @@ namespace
     void make_all( const Layout<COORD> &full )
     {
 
-        typedef typename __Field<COORD,double>::Type dField;
-        typedef typename __Field<COORD,string>::Type sField;
+        typedef typename __Field<COORD,double>::Type            dField;
+        typedef typename __Field<COORD,string>::Type            sField;
+        typedef typename __Field<COORD,point2d<double> >::Type  p2Field;
 
         const size_t  ng = 1;
         ios::ovstream block( 1024*1024 );
+
+        ActiveFields  active;
 
         std::cerr << "In " << full.Dimensions << "D" << std::endl;
         for(size_t size=1;size<=8;++size)
@@ -52,43 +55,19 @@ namespace
                     for(size_t rank=0;rank<size;++rank)
                     {
                         Workspace<COORD> W(full,mappings[j],rank,pbc.value,ng);
+                        active(W);
 
                         {
-                            dField &Fd = W.template create<dField>( "Fd" );
-                            sField &Fs = W.template create<sField>( "Fs" );
-
+                            dField  &Fd = W.template create<dField>( "Fd" );
+                            sField  &Fs = W.template create<sField>( "Fs" );
+                            p2Field &F2 = W.template create<p2Field>( "F2" );
                             fill(Fd);
                             fill(Fs);
-
-                            W.localExchange(Fd);
-                            W.localExchange(Fs);
-
-                            block.free();
-                            //const Ghosts<COORD> *G = 0;
-                            size_t total_save = 0;
-                            for(size_t k=0;k<W.Orientations;++k)
-                            {
-#if 0
-                                total_save += W.asyncSave1(Conn::Forward,k,block,Fd,G);
-                                total_save += W.asyncSave1(Conn::Reverse,k,block,Fd,G);
-                                total_save += W.asyncSave1(Conn::Forward,k,block,Fs,G);
-                                total_save += W.asyncSave1(Conn::Reverse,k,block,Fs,G);
-#endif
-                            }
-
-                            ios::imstream inp(block);
-                            size_t total_load = 0;
-                            for(size_t k=0;k<W.Orientations;++k)
-                            {
-#if 0
-                                total_load += W.asyncLoad1(Conn::Forward,k,inp,Fd,G);
-                                total_load += W.asyncLoad1(Conn::Reverse,k,inp,Fd,G);
-                                total_load += W.asyncLoad1(Conn::Forward,k,inp,Fs,G);
-                                total_load += W.asyncLoad1(Conn::Reverse,k,inp,Fs,G);
-#endif
-                            }
-                            Y_ASSERT(total_load==total_save);
+                            fill(F2);
                         }
+
+                        W.localExchange(active);
+
                     }
                 }
             } std::cerr << std::endl;

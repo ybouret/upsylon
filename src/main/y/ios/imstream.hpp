@@ -51,6 +51,12 @@ namespace upsylon
             //! unread one char with checks
             virtual void store( char C );
 
+            //! get available chars
+            inline size_t available() const throw()
+            {
+                return last-curr;
+            }
+
         private:
             const char *curr;
             const char *last;

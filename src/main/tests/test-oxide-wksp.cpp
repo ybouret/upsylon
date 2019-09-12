@@ -94,22 +94,32 @@ namespace
 
                 std::cerr << "<AsyncExchanges>" << std::endl;
                 std::cerr << "\tcom: ";
+
+                IOBlock &sblk = wksp.sendBlock;
+                IOBlock &rblk = wksp.recvBlock;
+
                 for(size_t i=0;i<wksp.Orientations;++i)
                 {
                     typename Workspace<COORD>::asyncIO aio;
                     std::cerr << "<@" << i;
                     if( wksp.asyncProlog(aio, pick, Conn::Forward, i) )
                     {
-                        std::cerr << "+" << GhostsComm::ToText(aio.comm);
-                        wksp.recvBlock.copy(wksp.sendBlock);
-                        wksp.asyncEpilog(aio,pick);
+                        std::cerr << "/+" << GhostsComm::ToText(aio.comm) << "(send=" << sblk.size() << "|recv=" << rblk.size() << ")";
+                        rblk.copy(sblk);
+                        if(rblk.size()>0)
+                        {
+                            wksp.asyncEpilog(aio,pick);
+                        }
                     }
 
                     if( wksp.asyncProlog(aio, pick, Conn::Reverse, i) )
                     {
-                        std::cerr << "-" << GhostsComm::ToText(aio.comm);
-                        wksp.recvBlock.copy(wksp.sendBlock);
-                        wksp.asyncEpilog(aio,pick);
+                        std::cerr << "/-" << GhostsComm::ToText(aio.comm) << "(send=" << sblk.size() << "|recv=" << rblk.size() << ")";
+                        rblk.copy(sblk);
+                        if(rblk.size()>0)
+                        {
+                            wksp.asyncEpilog(aio,pick);
+                        }
                     }
                     std::cerr << ">";
                 } std::cerr << std::endl;

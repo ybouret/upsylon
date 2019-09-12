@@ -211,9 +211,10 @@ namespace upsylon
                 aio.send = 0;
                 aio.recv = 0;
                 aio.comm = GhostsComm::None;
-
                 if( gio.async )
                 {
+                    assert(gio.status!=0);
+
                     aio.mode = fields.getCommMode();
                     switch(sendingWay)
                     {
@@ -225,17 +226,19 @@ namespace upsylon
                     {
                         // load sendBlock with inner layout
                         aio.comm |= GhostsComm::Send;
-                        size_t total = 0;
+                        const GhostIndices &indices = aio.send->inner.indices;
+                        size_t              total   = 0;
                         for(size_t i=fields.size();i>0;--i)
                         {
                             Field &F = (Field &)(*fields[i]);
-                            total   += F.save(aio.send->inner.indices,sendBlock);
+                            total   += F.save(indices,sendBlock);
                         }
                         __Workspace::CheckBlockTotal(sendBlock,total);
                     }
 
                     if(aio.recv)
                     {
+                        // prepare recvBlock from outer layout
                         aio.comm |= GhostsComm::Recv;
                         switch(aio.mode)
                         {
@@ -266,16 +269,21 @@ namespace upsylon
             inline void asyncEpilog(const asyncIO      &aio,
                                     const ActiveFields &fields)
             {
+                assert(aio.send||aio.recv);
+
                 if(aio.recv)
                 {
                     assert(0!=(aio.comm&GhostsComm::Recv));
                     assert(fields.getCommMode()==aio.mode);
-                    ios::imstream input(recvBlock);
-                    size_t total = 0;
-                    for(size_t i=fields.size();i>0;--i)
+                    const GhostIndices &indices = aio.recv->inner.indices;
+                    size_t              total   = 0;
                     {
-                        Field &F = (Field &)(*fields[i]);
-                        total   += F.load(aio.send->inner.indices,input);
+                        ios::imstream input(recvBlock);
+                        for(size_t i=fields.size();i>0;--i)
+                        {
+                            Field &F = (Field &)(*fields[i]);
+                            total   += F.load(indices,input);
+                        }
                     }
                     __Workspace::CheckBlockTotal(recvBlock,total);
                 }
