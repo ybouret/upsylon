@@ -50,8 +50,8 @@ namespace upsylon
                 {
                     const Coord1D mx = s.maxItems;
                     os << '(';
-                    Coord::Disp(os,mx,5) << "@|";
-                    Coord::Disp(os,s.mapping) << "|=";
+                    Coord::Disp(os,mx,5)       << "@|";
+                    Coord::Disp(os,s.mapping)  << "|=";
                     Coord::Disp(os,s.penality) << ')';
                     return os;
                     //os << '(' << s.maxItems << '@' << '|' << s.mapping << '|' << '=' << s.penality << ')';
