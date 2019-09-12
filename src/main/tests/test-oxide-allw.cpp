@@ -87,8 +87,6 @@ namespace
                                 W.recvBlock.copy( W.sendBlock );
                             }
                             W.asyncEpilog(aio,active);
-
-
                         }
 
                     }

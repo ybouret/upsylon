@@ -188,7 +188,23 @@ namespace upsylon
             // asynchronous exchange
             //
             //------------------------------------------------------------------
-            
+
+            //! get Peer
+            Peer getAsyncPeer(const Conn::Way     sendingWay,
+                              const size_t        orientation) const throw()
+            {
+                const GIO &gio = this->ghosts[orientation];
+                if(gio.async)
+                {
+                    switch (sendingWay)
+                    {
+                        case Conn::Forward: return gio.forward;
+                        case Conn::Reverse: return gio.reverse;
+                    }
+                }
+                return 0;
+            }
+
             //! lighweight asynchonous information for one-way transfer
             struct AsyncIO
             {
@@ -199,7 +215,6 @@ namespace upsylon
             };
 
             //! prolog to send in sendingWay
-
             void asyncProlog(AsyncIO            &aio,
                              const ActiveFields &fields,
                              const Conn::Way     sendingWay,

@@ -4,6 +4,7 @@
 #include "y/oxide/field3d.hpp"
 #include "y/ios/ovstream.hpp"
 #include "y/ios/imstream.hpp"
+#include "y/memory/cblock.hpp"
 
 #include "support.hpp"
 
@@ -43,9 +44,13 @@ namespace
         std::cerr << "In " << full.Dimensions << "D" << std::endl;
         ActiveFields pick;
 
+
         for(size_t size=1;size<=8;++size)
         {
             std::cerr << "#cores=" << size << ", full=" << full << std::endl;
+            memory::cblock_of<typename Workspace<COORD>::AsyncIO > aioData( size * Workspace<COORD>::Orientations );
+            typename Workspace<COORD>::AsyncIO *aios = aioData.data;
+
             vector<COORD> mappings;
             full.buildMappings(mappings,size);
             for(size_t j=1;j<=mappings.size();++j)
@@ -72,9 +77,9 @@ namespace
                     // create some fields
                     //
                     //----------------------------------------------------------
-                    for(size_t k=0;k<size;++k)
+                    for(size_t rank=0;rank<size;++rank)
                     {
-                        Workspace<COORD> &W = WS[k];
+                        Workspace<COORD> &W = WS[rank];
 
                         dField &Fd = W.template create<dField>( "Fd" );
                         sField &Fs = W.template create<sField>( "Fs" );
@@ -89,9 +94,9 @@ namespace
                     // exchange local
                     //
                     //----------------------------------------------------------
-                    for(size_t k=0;k<size;++k)
+                    for(size_t rank=0;rank<size;++rank)
                     {
-                        Workspace<COORD> &W = WS[k];
+                        Workspace<COORD> &W = WS[rank];
                         pick(W);
                         W.localExchange(pick);
                     }
@@ -99,26 +104,39 @@ namespace
 
                     //----------------------------------------------------------
                     //
-                    // simulate forward wave
+                    // simulate waves
                     //
                     //----------------------------------------------------------
-                    for(size_t k=0;k<size;++k)
-                    {
-                        Workspace<COORD> &W = WS[k];
-                        pick(W);
 
-                        for(size_t ori=0;ori<W.Orientations;++ori)
+                    // send forward
+                    for(size_t rank=0,op=0;rank<size;++rank)
+                    {
+                        Workspace<COORD> &W = WS[rank];
+                        pick(W);
+                        for(size_t k=0;k<W.Orientations;++k)
                         {
-#if 0
-                            const Ghosts<COORD> *G = 0;
-                            const size_t ns = W.asyncSave(Conn::Forward,ori,pick,G);
-                            if(G&&ns)
+                            typename Workspace<COORD>::AsyncIO &aio = aios[op++];
+                            W.asyncProlog(aio, pick, Conn::Forward,k);
+                            if(aio.send)
                             {
+                                Y_ASSERT(aio.send->rank<Coord1D(size));
+                                Y_ASSERT(aio.send->rank>=0);
+                                Y_ASSERT(aio.send->rank!=Coord1D(rank));
+                                Workspace<COORD> &WT = WS[aio.send->rank];
+                                WT.recvBlock.copy(W.sendBlock);
+
+                                // get matching ghost
+                                typename Workspace<COORD>::Peer peer = WT.getAsyncPeer(Conn::Reverse, k);
+                                Y_ASSERT(peer!=0);
+                                Y_ASSERT(peer->rank==Coord1D(rank));
+
+                                
 
                             }
-#endif
                         }
                     }
+                    
+                    std::cerr << "+";
 
 
                 }
