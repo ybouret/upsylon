@@ -5,6 +5,7 @@
 #include "y/ios/ovstream.hpp"
 #include "y/ios/imstream.hpp"
 #include "y/memory/cblock.hpp"
+#include "y/oxide/field/io.hpp"
 
 #include "support.hpp"
 
@@ -31,12 +32,28 @@ namespace
         }
     }
 
+    static inline Coord1D LabelOf( Coord1D rank )
+    {
+        return 1+rank*rank;
+    }
+
+    template <typename FIELD,typename COORD>
+    void CheckValueOf( const FIELD &F, const Layout<COORD> &L, typename FIELD::const_type V )
+    {
+        typename Layout<COORD>::Loop loop(L.lower,L.upper);
+        for( loop.start(); loop.valid(); loop.next() )
+        {
+            if(V!=F(loop.value)) throw exception("Mismatch Value %ld/%ld",long(F(loop.value)),long(V));
+        }
+    }
+
     template <typename COORD>
     void make_all( const Layout<COORD> &full )
     {
 
-        typedef typename __Field<COORD,double>::Type dField;
-        typedef typename __Field<COORD,string>::Type sField;
+        typedef typename __Field<COORD,double>::Type   dField;
+        typedef typename __Field<COORD,string>::Type   sField;
+        typedef typename __Field<COORD,Coord1D>::Type  iField;
 
         const size_t  ng = 1;
         ios::ovstream block( 1024*1024 );
@@ -45,7 +62,7 @@ namespace
         ActiveFields sources,targets;
 
 
-        for(size_t size=1;size<=8;++size)
+        for(Coord1D size=1;size<=8;++size)
         {
             std::cerr << "#cores=" << size << ", full=" << full << std::endl;
             memory::cblock_of<typename Workspace<COORD>::AsyncIO > aioData( size * Workspace<COORD>::Orientations );
@@ -77,15 +94,19 @@ namespace
                     // create some fields
                     //
                     //----------------------------------------------------------
-                    for(size_t rank=0;rank<size;++rank)
+                    for(Coord1D rank=0;rank<size;++rank)
                     {
                         Workspace<COORD> &W = WS[rank];
 
                         dField &Fd = W.template create<dField>( "Fd" );
                         sField &Fs = W.template create<sField>( "Fs" );
-
+                        iField &Fi = W.template create<iField>( "Fi" );
                         fill(Fd);
                         fill(Fs);
+
+                        IO::LD(Fi,W.outer,-LabelOf(rank));
+                        IO::LD(Fi,W.inner, LabelOf(rank));
+
 
                     }
 
@@ -94,13 +115,27 @@ namespace
                     // exchange local
                     //
                     //----------------------------------------------------------
-                    for(size_t rank=0;rank<size;++rank)
+                    for(Coord1D rank=0;rank<size;++rank)
                     {
                         Workspace<COORD> &W = WS[rank];
                         sources(W);
                         W.localExchange(sources);
+                        iField &Fi = W.template as<iField>( "Fi" );
+
+                        // check local labels: outer ghosts have now inner values
+                        for( const typename Workspace<COORD>::gNode *node = W.localGhosts.head; node; node=node->next)
+                        {
+                            CheckValueOf<iField,COORD>( Fi, node->gio.forward->outer, LabelOf(rank) );
+                            CheckValueOf<iField,COORD>( Fi, node->gio.forward->inner, LabelOf(rank) );
+                            CheckValueOf<iField,COORD>( Fi, node->gio.reverse->outer, LabelOf(rank) );
+                            CheckValueOf<iField,COORD>( Fi, node->gio.reverse->inner, LabelOf(rank) );
+                        }
+
+                        // and reset for next adventure
+                        IO::LD(Fi,W.outer,-LabelOf(rank));
+                        IO::LD(Fi,W.inner, LabelOf(rank));
+                        std::cerr << "0";
                     }
-                    std::cerr << "0";
 
                     //----------------------------------------------------------
                     //
@@ -109,7 +144,7 @@ namespace
                     //----------------------------------------------------------
 
                     // send forward
-                    for(size_t rank=0,op=0;rank<size;++rank)
+                    for(Coord1D rank=0,op=0;rank<size;++rank)
                     {
                         Workspace<COORD> &W = WS[rank];
                         sources(W);
@@ -132,14 +167,19 @@ namespace
                                 Y_ASSERT(peer->rank==Coord1D(rank));
                                 targets(WT);
                                 WT.__asyncLoad(*peer,targets);
+
+                                iField &Fi = WT.template as<iField>( "Fi" );
+                                CheckValueOf(Fi,peer->outer, LabelOf(rank) );
+                                CheckValueOf(Fi,peer->inner, LabelOf(aio.send->rank) );
+
                             }
                         }
+                        std::cerr << "+";
                     }
-                    std::cerr << "+";
 
 
                     // send reverse
-                    for(size_t rank=0,op=0;rank<size;++rank)
+                    for(Coord1D rank=0,op=0;rank<size;++rank)
                     {
                         Workspace<COORD> &W = WS[rank];
                         sources(W);
@@ -162,10 +202,13 @@ namespace
                                 Y_ASSERT(peer->rank==Coord1D(rank));
                                 targets(WT);
                                 WT.__asyncLoad(*peer,targets);
+                                iField &Fi = WT.template as<iField>( "Fi" );
+                                CheckValueOf(Fi,peer->outer, LabelOf(rank) );
+                                CheckValueOf(Fi,peer->inner, LabelOf(aio.send->rank) );
                             }
                         }
+                        std::cerr << "-";
                     }
-                    std::cerr << "-";
 
 
                 }

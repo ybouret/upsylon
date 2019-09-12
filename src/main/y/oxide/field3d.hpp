@@ -22,6 +22,7 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
         {
         public:
             Y_DECL_ARGS(T,type);                           //!< aliases
+            typedef Layout3D   LayoutType;                 //!< alias
             typedef Field2D<T> SliceType;                  //!< a slice
             typedef typename   SliceType::RowType RowType; //!< alias
 

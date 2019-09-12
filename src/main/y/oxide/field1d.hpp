@@ -19,7 +19,8 @@ namespace upsylon
         class Field1D : public Layout1D, public FieldOf<T>
         {
         public:
-            Y_DECL_ARGS(T,type); //!< aliases
+            Y_DECL_ARGS(T,type);         //!< aliases
+            typedef Layout1D LayoutType; //!< alias
 
             //! cleanup
             inline virtual ~Field1D() throw() { shift=0; }
@@ -78,7 +79,7 @@ namespace upsylon
             //! access by coordinate, const
             inline const_type & operator()(const Coord1D i) const throw()
             {
-                Field1D &self = *this; return self[i];
+                const Field1D &self = *this; return self[i];
             }
 
         private:

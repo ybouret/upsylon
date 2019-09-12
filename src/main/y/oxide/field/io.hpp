@@ -14,14 +14,27 @@ namespace upsylon
         //! input/output plugins for fields
         class IO : public singleton<IO>, public ios::plugins
         {
-        public:
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(IO);
             explicit IO();
             virtual ~IO() throw();
             friend class singleton<IO>;
             static const at_exit::longevity life_time = 0;
+
+        public:
+
+            template <typename FIELD>static inline
+            void LD(FIELD                            &F,
+                    const typename FIELD::LayoutType &L,
+                    typename FIELD::param_type        V )
+            {
+                typename FIELD::LayoutType::Loop loop(L.lower,L.upper);
+                for( loop.start(); loop.valid(); loop.next() )
+                {
+                    F( loop.value ) = V;
+                }
+            }
+
         };
 
     }

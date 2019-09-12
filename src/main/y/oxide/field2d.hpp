@@ -21,8 +21,9 @@ rowLayout(this->lower.x,this->upper.x)
         class Field2D : public Layout2D, public FieldOf<T>
         {
         public:
-            Y_DECL_ARGS(T,type);          //!< aliases
-            typedef Field1D<T> RowType;   //!< a RowType
+            Y_DECL_ARGS(T,type);           //!< aliases
+            typedef Layout2D   LayoutType; //!< alias
+            typedef Field1D<T> RowType;    //!< a RowType
 
             //! construct by string and layout
             explicit Field2D(const string   &id,
@@ -95,7 +96,7 @@ rowLayout(this->lower.x,this->upper.x)
             inline const_type & operator()( const Coord2D c ) const throw()
             {
                 assert( this->has(c) );
-                Field2D &self = *this;
+                const Field2D &self = *this;
                 return self[c.y][c.x];
             }
 
