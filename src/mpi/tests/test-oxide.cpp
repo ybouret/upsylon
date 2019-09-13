@@ -48,6 +48,8 @@ void make_for(mpi  &MPI,
     //typedef typename __Field<COORD,mpq>::Type      qField;
     typedef typename __Field<COORD,Coord1D>::Type  iField;
 
+    MPI.print0(stderr, "\n");
+    MPI.print(stderr, "in %uD on %s\n", unsigned( Layout<COORD>::Dimensions ), *MPI.processorName);
     if(MPI.isHead)
     {
         fflush(stderr);
