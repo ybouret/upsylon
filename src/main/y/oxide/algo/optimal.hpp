@@ -54,7 +54,7 @@ namespace upsylon
                 {
                     const Coord1D mx = s.maxItems;
                     os << '(';
-                    Coord::Disp(os,mx,5)        << "@|";
+                    Coord::Disp(os,mx,5)         << "@|";
                     Coord::Disp(os,s.mapping,2)  << "|=";
                     Coord::Disp(os,s.penality,3) << ')';
                     return os;
@@ -102,6 +102,7 @@ namespace upsylon
                 }
                 else
                 {
+                    assert( scores.size() > 0 );
                     //__________________________________________________________
                     //
                     // keep optimal max items
@@ -114,6 +115,19 @@ namespace upsylon
                             scores.pop_back();
                         }
                     }
+
+                    hsort(scores,Score<COORD>::CompareByPenality);
+                    {
+                        size_t         bestScores   = scores.size();
+                        const  Coord1D bestPenality = scores.front().penality;
+                        while(bestScores>0&&scores[bestScores].penality>bestPenality)
+                        {
+                            --bestScores;
+                        }
+                        lightweight_array< Score<COORD> > best( &scores[1], bestScores );
+                        hsort(best,Score<COORD>::CompareByMapping);
+                    }
+
                     return scores.size();
                 }
             }

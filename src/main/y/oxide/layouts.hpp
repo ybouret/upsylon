@@ -82,6 +82,8 @@ namespace upsylon
             GIO                     ghosts[Orientations]; //!< placed according to their orientation
         public:
             const gList             localGhosts;           //!< pair of local ghosts
+            const size_t            localComms;            //!< local exchanged items per field
+            const size_t            asyncComms;            //!< async exchanged items per field
 
             //------------------------------------------------------------------
             //
@@ -107,7 +109,9 @@ namespace upsylon
             heart(0),
             repository( Neighbours, as_capacity ),
             ghosts(),
-            localGhosts()
+            localGhosts(),
+            localComms(0),
+            asyncComms(0)
             {
                 memset( ghosts, 0, sizeof(ghosts) );
                 if(ng>0)
@@ -127,6 +131,7 @@ namespace upsylon
                 os << pfx << "heart   = " << heart << std::endl;
                 os << pfx << "#ghosts = " << repository.size() << std::endl;
                 os << pfx << "#local  = " << localGhosts.size << std::endl;
+                os << pfx << "#comms  = local:" << localComms <<  " async:" << asyncComms << std::endl;
                 for(Coord1D i=0;i<Coord1D(Orientations);++i)
                 {
                     os << pfx << "@orientation#" << std::setw(2) << i << " : " << std::endl;
@@ -399,6 +404,25 @@ namespace upsylon
                     (auto_ptr<LayoutType>&)heart = new LayoutType(heart_lower,heart_upper);
                 }
 
+                //--------------------------------------------------------------
+                //
+                // count comms
+                //
+                //--------------------------------------------------------------
+                for(size_t i=repository.size();i>0;--i)
+                {
+                    const GhostsType &G =  *repository[i];
+                    const size_t      n = G.inner.items;
+                    if(G.local)
+                    {
+                        (size_t &)localComms += n;
+                    }
+                    else
+                    {
+                        assert(G.async);
+                        (size_t &)asyncComms += n;
+                    }
+                }
             }
 
         };

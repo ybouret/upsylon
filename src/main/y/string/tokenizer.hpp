@@ -116,6 +116,28 @@ namespace upsylon
             return tkn.split_all(words,is_sep);
         }
 
+        //! automatic splitting of a line
+        static inline
+        size_t split_with(sequence< core::string<T> > &words,
+                          const core::string<T>       &input,
+                          const T                     *buffer,
+                          const size_t                 buflen)
+        {
+            const str2sep is_sep = { buffer, buflen };
+            tokenizer tkn(input);
+            return tkn.split_all(words,is_sep);
+        }
+
+        //! automatic splitting of a line
+        static inline
+        size_t split_with(sequence< core::string<T> > &words,
+                          const core::string<T>       &input,
+                          const T                      sep)
+        {
+            return split_with(words,input,&sep,1);
+        }
+
+
         //! automatic splitting of a text
         template <typename FUNC> static inline
         size_t split(sequence< core::string<T> > &words,

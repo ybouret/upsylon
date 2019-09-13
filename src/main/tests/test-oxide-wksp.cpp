@@ -169,10 +169,10 @@ Y_UTEST(oxide_wksp)
         case 3: testWksp<Coord3D>(argv); break;
         default: break;
     }
-    std::cerr << "OxideIO.size()   =" << OxideIO.size()    << std::endl;
 
     if(false)
     {
+        std::cerr << "OxideIO.size() = " << OxideIO.size()    << std::endl;
         for(IO::iterator it = OxideIO.begin(); it != OxideIO.end(); ++it )
         {
             std::cerr << "io for <" << it->key().name() << ">" << std::endl;
