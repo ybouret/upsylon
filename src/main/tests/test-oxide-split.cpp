@@ -7,8 +7,7 @@
 #include "support.hpp"
 #include <typeinfo>
 #include "y/string/tokenizer.hpp"
-#include "y/sort/merge.hpp"
-#include "y/mpl/rational.hpp"
+#include "y/oxide/field/divide.hpp"
 
 using namespace upsylon;
 using namespace Oxide;
@@ -18,57 +17,8 @@ namespace
 {
     typedef vector<string> strings;
     
-    template <typename COORD>
-    static inline void split_layout( const Layout<COORD> &L, const size_t nmax)
-    {
-        std::cerr << "In " << L.Dimensions << "D" << std::endl;
-        std::cerr << "L=" << L << std::endl;
-        vector<COORD> mappings(nmax,as_capacity);
-
-        for(size_t cores=nmax;cores<=nmax;++cores)
-        {
-            // let's take a given #cores
-            // and build the possible mappings for this layoyt
-            std::cerr << "\tcores=" << cores << std::endl;
-            L.buildMappings(mappings,cores);
-            std::cerr << "\tmappings=" << mappings << std::endl;
-            if(mappings.size()<=0)
-            {
-                std::cerr << "\t\tfailure" << std::endl;
-                continue;
-            }
-
-            // for each valid mapping, compute associated partition
-            const size_t npart = mappings.size();
-            std::cerr << "\ttesting partitions: " << std::endl;
-            vector< Layout<COORD> > partition;
-            for(size_t i=1;i<=npart;++i)
-            {
-                const COORD &mapping = mappings[i];
-                std::cerr << "\t\t" << mapping << " [[";
-                L.buildPartition(partition,mapping);
-                Y_ASSERT(cores==partition.size());
-                for(size_t j=1;j<=partition.size();++j)
-                {
-                    std::cerr << " " << partition[j];
-                }
-                std::cerr << " ]] maxItems=" << L.getPartitionMaxItems(mapping) << std::endl;
-
-            }
+   
 #if 0
-            std::cerr << "Using Optimal API" << std::endl;
-            {
-                vector< Optimal::Score<COORD> > scores;
-                Optimal::Find(scores,L,cores);
-                std::cerr << "scores=" << scores << std::endl;
-            }
-
-            const COORD opt = Optimal::Find(L,cores);
-            std::cerr << "Found to be " << opt << std::endl;
-#endif
-        }
-    }
-
     class Score : public object
     {
     public:
@@ -285,7 +235,8 @@ namespace
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Score);
     };
-
+#endif
+    
     template <typename COORD>
     void doSplit( const char *args , const Coord1D cores )
     {
@@ -298,43 +249,13 @@ namespace
         std::cerr << "full=" << full << std::endl;
 
         vector<COORD> mappings;
-        full.buildMappings(mappings,cores);
-        std::cerr << "mappings: " << mappings << std::endl;
-        if( mappings.size() )
+        for(pbc.start(); pbc.valid(); pbc.next() )
         {
-            for(pbc.start(); pbc.valid(); pbc.next() )
-            {
-                std::cerr << "|_pbc=" << pbc.value << std::endl;
-                Score::List::Catalog catalog;
-                for(size_t m=1;m<=mappings.size();++m)
-                {
-                    const COORD &mapping = mappings[m];
-                    std::cerr << " |_using: " << mapping << ":";
-                    Score::List *scores = catalog.push_back( new Score::List(m) );
-                    for(Coord1D rank=0;rank<cores;++rank)
-                    {
-                        const Layouts<COORD> sub( full, mapping, rank, pbc.value, 1 );
-                        const size_t items = sub.inner.items;
-                        const size_t local = sub.localComms;
-                        const size_t async = sub.asyncComms;
-                        scores->push_back( new Score(items, async, local) );
-                    }
-                    scores->process();
-                    std::cerr << " => " << *scores << std::endl;
-                }
-
-                catalog.cleanup();
-                for(Score::List *scores = catalog.head; scores; scores=scores->next)
-                {
-                    std::cerr << " |_@" << mappings[scores->indx] << " : " << *scores << std::endl;
-                }
-
-
-
-            }
-
+            std::cerr << "|_pbc=" << pbc.value << std::endl;
+            const COORD opt =  Divide::Find(full, cores, pbc.value, &mappings);
+            std::cerr << "|_opt=" << opt << " <= " << mappings << std::endl;
         }
-
+       
     }
 
 }
@@ -365,33 +286,7 @@ Y_UTEST(oxide_split)
         default:
             throw exception("Invalid dimensions");
     }
-
-#if 0
-    size_t nmax=2; if(argc>1) nmax = string_convert::to<size_t>(argv[1],"nmax");
     
-    const Coord3D org(1,1,1);
-    Coord3D       top(10,20,30);
-    if(argc>2)    top = Coord::Parse<Coord3D>(argv[2]);
-
-
-    {
-        Layout1D L(org.x,top.x);
-        split_layout(L,nmax);;
-    }
-
-    {
-        Layout2D L(org.xy(),top.xy());
-        split_layout(L,nmax);
-    }
-
-    {
-        Layout3D L(org,top);
-        split_layout(L,nmax);
-    }
-#endif
-
-
-
 
 
 }
