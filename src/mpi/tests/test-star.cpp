@@ -152,7 +152,7 @@ static inline void print_to( const char *sym, ios::ostream &fp, const unsigned r
     fp(" | %2u%s%2u: %8.2f%c/s",r,sym,s, hr.value, hr.radix);
 }
 
-Y_UTEST(topology)
+Y_UTEST(star)
 {
     Y_MPI(SINGLE);
 
@@ -161,7 +161,7 @@ Y_UTEST(topology)
     UMatrix rcv(n,n);
     UMatrix xch(n,n);
 
-    const string logfile = "topology.dat";
+    const string logfile = "star.dat";
 
     if(MPI.isHead)
     {

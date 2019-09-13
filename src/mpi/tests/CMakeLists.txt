@@ -12,7 +12,8 @@ ENABLE_TESTING()
 Y_MPI(init     test-mpi init)
 Y_MPI(oxide    test-mpi oxide)
 Y_MPI(io       test-mpi io)
-Y_MPI(topology test-mpi topology)
+Y_MPI(star     test-mpi star)
+Y_MPI(ring     test-mpi ring)
 Y_MPI(PI       test-mpi PI)
 
 ADD_CUSTOM_TARGET(utest-mpi

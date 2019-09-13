@@ -108,6 +108,26 @@ namespace upsylon
             return get_data_type( typeid(T) );
         }
 
+        //______________________________________________________________________
+        //
+        // utilities
+        //______________________________________________________________________
+
+        //! next rank in one dimension
+        template <typename T>
+        static inline T getNext(T the_rank, const T the_size) throw()
+        {
+            return (++the_rank>=the_size?0:the_rank);
+        }
+
+        //! prev rank in one dimension
+        template <typename T>
+        static inline T getPrev(T the_rank, T the_size) throw()
+        {
+            return (the_rank<=0?--the_size:--the_rank);
+        }
+
+
         
         //______________________________________________________________________
         //
@@ -250,8 +270,8 @@ namespace upsylon
 
         //! array of integral broadcast
         template <typename T>
-        inline void Bcast(array<T> &arr,
-                          const int root)
+        inline void BcastAll(array<T> &arr,
+                             const int root)
         {
             static const MPI_Datatype _ = get_data_type_for<T>();
             const size_t              n = arr.size();

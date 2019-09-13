@@ -19,7 +19,7 @@ namespace
 
         if(MPI.isHead)
         {
-            const size_t ns =alea.leq(20);
+            const size_t ns = alea.leq(20);
             for(size_t i=ns;i>0;--i)
             {
                 const T tmp = support::get<T>();
@@ -72,6 +72,10 @@ namespace
 
         }
         MPI.print(stderr,"After : send=%u | recv=%u => (%u)\n", unsigned( sendBlock.size() ), unsigned( recvBlock.size() ), unsigned(nr) );
+
+        alea.fill( *sendBlock, sendBlock.size() );
+        MPI.BcastAll(sendBlock,0);
+        
 
 
     }
@@ -160,6 +164,8 @@ Y_UTEST(io)
 {
     Y_MPI(SINGLE);
     ioBinary<double>(MPI);
+    ioBinary<float>(MPI);
+    ioBinary<int64_t>(MPI);
     ioSerial<string>(MPI);
     ioSerial<mpn>(MPI);
     ioSerial<mpq>(MPI);

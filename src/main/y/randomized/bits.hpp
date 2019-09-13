@@ -28,7 +28,7 @@ namespace upsylon
             const double   midD; //!< span * 0.5
             const float    midF; //!< span * 0.5f
             
-            virtual uint32_t next32() throw() = 0; //!< next 32-bits value in 0..span
+            virtual uint32_t next32()             throw() = 0; //!< next 32-bits value in 0..span
             virtual void     reseed( bits &bits ) throw() = 0; //!< initialize state with other bits
             
             template <typename T> T to()   throw(); //!< in 0:1 exclusive [float|double]
