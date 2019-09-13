@@ -1,6 +1,6 @@
 #include "y/oxide/field3d.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/oxide/algo/optimal-mapping.hpp"
+#include "y/oxide/algo/optimal.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include <typeinfo>
@@ -79,12 +79,12 @@ namespace
 
             std::cerr << "Using Optimal API" << std::endl;
             {
-                vector< OptimalMapping::Score<COORD> > scores;
-                OptimalMapping::Find(scores,L,cores);
+                vector< Optimal::Score<COORD> > scores;
+                Optimal::Find(scores,L,cores);
                 std::cerr << "scores=" << scores << std::endl;
             }
 
-            const COORD opt = OptimalMapping::Find(L,cores);
+            const COORD opt = Optimal::Find(L,cores);
             std::cerr << "Found to be " << opt << std::endl;
         }
     }

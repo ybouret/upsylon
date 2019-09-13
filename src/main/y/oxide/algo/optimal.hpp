@@ -11,7 +11,7 @@ namespace upsylon
     namespace Oxide
     {
         //! finding an optimal mapping
-        struct OptimalMapping
+        struct Optimal
         {
             static const size_t InitialCapacity[4];
 
@@ -102,7 +102,18 @@ namespace upsylon
                 }
                 else
                 {
-
+                    //__________________________________________________________
+                    //
+                    // keep optimal max items
+                    //__________________________________________________________
+                    hsort(scores, Score<COORD>::CompareByMaxItems);
+                    {
+                        const size_t bestMaxItems = scores.front().maxItems;
+                        while(scores.size()>1 && scores.back().maxItems>bestMaxItems)
+                        {
+                            scores.pop_back();
+                        }
+                    }
                     return scores.size();
                 }
             }
@@ -132,7 +143,7 @@ namespace upsylon
                 //
                 // keep best max items only
                 //______________________________________________________________
-                hsort(scores, ScoreType::CompareByMaxItems);
+                hsort(scores, Score<COORD>::CompareByMaxItems);
                 {
                     const size_t bestMaxItems = scores.front().maxItems;
                     while(scores.size()>1 && scores.back().maxItems>bestMaxItems)

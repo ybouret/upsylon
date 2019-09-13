@@ -5,7 +5,7 @@
 
 #include "y/mpi/mpi.hpp"
 #include "y/oxide/workspace.hpp"
-#include "y/oxide/algo/optimal-mapping.hpp"
+#include "y/oxide/algo/optimal.hpp"
 
 namespace upsylon
 {
@@ -26,7 +26,7 @@ namespace upsylon
                                      const LayoutType &userFull ) :
             full(userFull),
             mappings(),
-            optimal( OptimalMapping::Find(full,MPI.size) )
+            optimal( Optimal::Find(full,MPI.size) )
             {
                 full.buildMappings((vector<COORD> &)mappings,MPI.size);
             }
