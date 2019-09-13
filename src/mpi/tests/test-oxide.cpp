@@ -45,7 +45,7 @@ void make_for(mpi  &MPI,
     ParallelContext<COORD> ctx(MPI,full);
 
     typedef typename __Field<COORD,double>::Type   dField;
-    //typedef typename __Field<COORD,mpq>::Type      qField;
+    typedef typename __Field<COORD,mpn>::Type      nField;
     typedef typename __Field<COORD,Coord1D>::Type  iField;
 
     MPI.print0(stderr, "\n");
@@ -124,7 +124,7 @@ void make_for(mpi  &MPI,
             IO::LD(Fi,W.outer,-label);
             IO::LD(Fi,W.inner, label);
             
-            // and now, let's go...
+            // and now, let's go asynchronous
             W.asyncExchange(fields);
             
             // inner value must be unchanged
@@ -144,12 +144,39 @@ void make_for(mpi  &MPI,
                     CheckValueOf<iField,COORD>( Fi, peer->outer, LabelOf(peer->rank) );
                 }
             }
-            
+
+            // simulate some computation
+            MPI.Barrier();
+
+            for(size_t cycle=0;cycle<8;++cycle)
+            {
+                fill( Fd );
+                fill( Fi );
+                W.localExchange(fields);
+                W.asyncExchange(fields);
+            }
+
+
+            // then uses flexible exchanges
+            nField &Fn = W. template create<nField>( "Fn" );
+            fields(W);
+
+            for(size_t cycle=0;cycle<8;++cycle)
+            {
+                fill(Fn);
+                fill(Fi);
+                fill(Fd);
+                W.localExchange(fields);
+                W.asyncExchange(fields);
+            }
+
+            MPI.print0(stderr,"^");
+            MPI.flush0(stderr);
             
         } MPI.print0(stderr,">\n");
     }
 
-   
+
 
 }
 
@@ -178,106 +205,6 @@ Y_UTEST(oxide)
     }
 
 
-#if 0
-    mpi::vBlock     send_block(1024);
-    mpi::vBlock     recv_block(1024);
-    vector<Coord1D> indices;
-
-    MPI.print0(stderr,"-------- 1D --------\n");
-    {
-        MPI.print0(stderr, "Setup\n" );
-        Coord1D  lo = Coord::Integer<Coord1D>(20,alea);
-        Coord1D  up = Coord::Integer<Coord1D>(20,alea);
-        MPI.Bcast(lo,0);
-        MPI.Bcast(up,0);
-        const Layout1D L(lo,up);
-        MPI.print(stderr, "full: lo=%ld, hi=%ld\n", long(L.lower), long(L.upper) );
-        lo = L.rand(alea);
-        up = L.rand(alea);
-        MPI.Bcast(lo,0);
-        MPI.Bcast(up,0);
-        const Layout1D s(lo,up);
-        MPI.print(stderr, "sub:  lo=%ld, hi=%ld\n", long(s.lower), long(s.upper) );
-
-        L.collect(indices,s);
-
-
-        Field1D<double> F( "F1", L );
-        send_block.free();
-
-        if(MPI.isHead)
-        {
-            fill(F);
-            (void) F.save(indices, send_block );
-        }
-        MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
-        MPI.print0(stderr, "Exchange\n" );
-        if(MPI.isHead)
-        {
-            fill(F);
-            send_block.free();
-            const size_t nw = F.save(indices, send_block );
-            Y_ASSERT(nw==send_block.size());
-            for(int r=1;r<MPI.size;++r)
-            {
-                // first send, used packed
-                MPI.vSend(comm_variable_size,send_block,r,tag);
-                // second send
-                MPI.vSend(comm_constant_size,send_block,r,tag);
-            }
-        }
-        else
-        {
-            F.ld(0);
-            MPI.vRecv(comm_variable_size, recv_block, 0, tag);
-            MPI.vRecv(comm_constant_size, recv_block, 0, tag);
-            ios::imstream inp(recv_block);
-            const size_t nl = F.load(indices,inp);
-            Y_ASSERT(nl==recv_block.size());
-        }
-        
-        MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
-        
-        MPI.print0(stderr, "Send/Recv Init\n" );
-        send_block.free();
-        recv_block.free();
-
-        fill(F);
-        F.save(indices,send_block);
-        MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
-
-        MPI.print0(stderr, "Send/Recv Exec\n" );
-
-        if(MPI.parallel)
-        {
-            if(MPI.isHead)
-            {
-                for(int r=1;r<MPI.size;++r)
-                {
-                    MPI.vSendRecv(comm_variable_size, send_block, r, tag, recv_block, r, tag);
-                    MPI.vSendRecv(comm_constant_size, send_block, r, tag, recv_block, r, tag);
-                }
-            }
-            else
-            {
-                MPI.vSendRecv(comm_variable_size, send_block, 0, tag, recv_block, 0, tag);
-                MPI.vSendRecv(comm_constant_size, send_block, 0, tag, recv_block, 0, tag);
-            }
-        }
-        else
-        {
-            MPI.vSendRecv(comm_variable_size, send_block, 0, tag, recv_block, 0, tag);
-            MPI.vSendRecv(comm_constant_size, send_block, 0, tag, recv_block, 0, tag);
-        }
-        MPI.print(stderr, "send_block.size=%u | recv_block.size=%u\n", unsigned(send_block.size()), unsigned( recv_block.size() ) );
-        ios::imstream inp(recv_block);
-        F.load(indices,inp);
-    }
-    
-    
-
-    MPI.print(stderr, "Ellaped: %gms\n", MPI.getCommMilliseconds() );
-#endif
 
 }
 Y_UTEST_DONE()
