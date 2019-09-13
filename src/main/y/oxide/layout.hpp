@@ -48,10 +48,11 @@ namespace upsylon
             // types and definitions
             //
             //==================================================================
-            static const size_t Dimensions = Coord::Get<COORD>::Dimensions;  //!< alias
             typedef typename type_traits<COORD>::mutable_type   coord;       //!< alias
             typedef const coord                                 const_coord; //!< alias
             typedef mloop<Coord1D,coord>                        Loop;        //!< loop over sub layout
+            //! get dimensions
+            static const size_t                                 Dimensions = Coord::Get<COORD>::Dimensions;
 
             //==================================================================
             //

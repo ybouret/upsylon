@@ -77,7 +77,7 @@ namespace upsylon
         
         //======================================================================
         //
-        //! base class for ghosts inner and outer sublayouts
+        //! base class for ghosts with inner and outer sublayouts
         /**
          The positional NodeType will be used as peer information for I/O
          */

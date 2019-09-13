@@ -53,9 +53,7 @@ namespace upsylon
                 
                 //! setup from a vector
                 inline explicit Link(const COORD delta) :
-                direction( delta ),
-                orientation( 0 ),
-                way(Forward),
+                direction( delta ), orientation( 0 ), way(Forward),
                 level( MakeLink( (Coord1D *)&direction, (Coord1D *)&orientation, (Way *)&way, Dimensions) )
                 {
                 }

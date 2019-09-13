@@ -30,8 +30,9 @@ namespace upsylon
                 // types and definitions
                 //
                 //--------------------------------------------------------------
-                typedef typename Layout<COORD>::coord       coord;        //!< alias
-                typedef typename Layout<COORD>::const_coord const_coord;  //!< alias
+                typedef Layout<COORD>                    LayoutType;   //!< alias
+                typedef typename LayoutType::coord       coord;        //!< alias
+                typedef typename LayoutType::const_coord const_coord;  //!< alias
 
                 //--------------------------------------------------------------
                 //
@@ -77,17 +78,18 @@ namespace upsylon
             template <typename COORD>
             class Hub : public Node<COORD>
             {
-            public://--------------------------------------------------------------
+            public:
+                //--------------------------------------------------------------
                 //
                 // definitions
                 //
                 //--------------------------------------------------------------
                 typedef Node<COORD>                             NodeType;    //!< base type
+                typedef typename NodeType::LayoutType           LayoutType;  //!< alias
                 typedef typename NodeType::coord                coord;       //!< alias
                 typedef typename NodeType::const_coord          const_coord; //!< alias
                 typedef typename Coord::Get<COORD>::BooleanType bool_type;   //!< boolean vector
                 typedef const bool_type                         const_bool;  //!< const boolean vector
-                static  const size_t Dimensions = Coord::Get<COORD>::Dimensions; //!< workspace dimension
 
                 //--------------------------------------------------------------
                 //
@@ -126,7 +128,7 @@ namespace upsylon
                                    (bool *) &seq,
                                    (bool *) &par,
                                    (bool *) &bulk,
-                                   Dimensions);
+                                   LayoutType::Dimensions);
 
                 }
 
