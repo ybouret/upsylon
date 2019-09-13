@@ -4,6 +4,7 @@
 
 #include "y/oxide/layout.hpp"
 #include "y/sort/heap.hpp"
+#include "y/sequence/vector.hpp"
 
 namespace upsylon
 {
@@ -12,6 +13,9 @@ namespace upsylon
         //! finding an optimal mapping
         struct OptimalMapping
         {
+            static const size_t InitialCapacity[4];
+
+
             //! objective score for each mapping
             template <typename COORD>
             class Score
@@ -50,12 +54,10 @@ namespace upsylon
                 {
                     const Coord1D mx = s.maxItems;
                     os << '(';
-                    Coord::Disp(os,mx,5)       << "@|";
-                    Coord::Disp(os,s.mapping)  << "|=";
-                    Coord::Disp(os,s.penality) << ')';
+                    Coord::Disp(os,mx,5)        << "@|";
+                    Coord::Disp(os,s.mapping,2)  << "|=";
+                    Coord::Disp(os,s.penality,3) << ')';
                     return os;
-                    //os << '(' << s.maxItems << '@' << '|' << s.mapping << '|' << '=' << s.penality << ')';
-                    //return os;
                 }
 
                 //! compare by increasing maxItems
@@ -81,12 +83,35 @@ namespace upsylon
                 Y_DISABLE_ASSIGN(Score);
             };
 
+            template <typename COORD> static inline
+            size_t Find(vector< Score<COORD> >  &scores,
+                        const Layout<COORD>     &full,
+                        const size_t             cores)
+            {
+                //______________________________________________________________
+                //
+                // create scores for each partition
+                //______________________________________________________________
+                scores.free();
+                scores.ensure(InitialCapacity[Coord::Get<COORD>::Dimensions]);
+                Context<COORD>       context = { &full, &scores };
+                full.forEachMapping(cores,AnalyzeMapping,&context);
+                if( scores.size() <= 0 )
+                {
+                    return 0;
+                }
+                else
+                {
+
+                    return scores.size();
+                }
+            }
+
 
             //! find a mapping for a full layout and a given number of cores
             template <typename COORD> static inline
             COORD Find( const Layout<COORD> &full, const size_t cores )
             {
-                static const size_t initialCap[4] = { 0, 1, 16, 64 };
 
                 assert(cores>0);
 
@@ -95,10 +120,10 @@ namespace upsylon
                 // create scores for each partition
                 //______________________________________________________________
                 typedef Score<COORD> ScoreType;
-                vector<ScoreType>    scores(initialCap[Coord::Get<COORD>::Dimensions],as_capacity);
-                Context<COORD>       context = { &full, &scores };
-                full.forEachMapping(cores,AnalyzeMapping,&context);
-                if(scores.size()<=0)
+                vector<ScoreType>    scores;
+
+
+                if( Find(scores,full,cores) <= 0 )
                 {
                     return COORD(0);
                 }
