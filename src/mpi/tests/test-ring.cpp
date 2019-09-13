@@ -97,7 +97,7 @@ Y_UTEST(ring)
                 const array<int64_t> &spd = speed[rank+1];
                 const human_readable f( spd[1] );
                 const human_readable r( spd[2] );
-                const string data = vformat("\tnode%d | fwd: %7.2f%c/s | rev: %7.2f%c/s\n", rank, f.value, f.radix, r.value, r.radix);
+                const string data = vformat("\tnode%02d | fwd: %7.2f%c/s | rev: %7.2f%c/s\n", rank, f.value, f.radix, r.value, r.radix);
                 fp << data;
                 fputs(*data, stderr);
             }
