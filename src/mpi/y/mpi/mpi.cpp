@@ -181,7 +181,18 @@ namespace upsylon
             }
 
             {
-                string tmp = vformat("<%d.%d> ",size,rank);
+                const char *fmt = "<%d.%d> ";
+                if(size>=10)
+                {
+                    fmt = "<%2d.%02d> ";
+                }
+
+                if(size>=100)
+                {
+                    fmt = "<%3d.%03d> ";
+                }
+
+                string tmp = vformat(fmt,size,rank);
                 tmp.swap_with( (string&)nodeName );
             }
 

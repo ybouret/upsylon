@@ -67,7 +67,8 @@ void make_for(mpi  &MPI,
         if(MPI.isHead)
         {
             fflush(stderr);
-            std::cerr << "|_: using " << ctx.mappings[m] << " <";
+            std::cerr << "|_: using ";
+            Coord::Disp(std::cerr,ctx.mappings[m],3) << " <";
             std::cerr.flush();
         }
         COORD pbc0(0); Coord::LD(pbc0,0);
