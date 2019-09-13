@@ -32,7 +32,7 @@ namespace upsylon
          on within an edge, which defines a set of unique Coordinates
          for any point of the isoline
          */
-        struct Iso2d
+        struct Iso2D
         {
             typedef point2d<double> Vertex;    //!< alias
             typedef memory::pooled  Allocator; //!< for some levels, medium sized

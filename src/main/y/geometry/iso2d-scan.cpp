@@ -4,7 +4,7 @@ namespace upsylon
 {
     namespace geometry
     {
-        void Iso2d:: scan_triangles(Levels             &levels,
+        void Iso2D:: scan_triangles(Levels             &levels,
                                     const double       *g,
                                     const Vertex       *vtx,
                                     const Coordinate   *coord,

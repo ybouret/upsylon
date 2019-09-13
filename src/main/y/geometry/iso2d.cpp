@@ -6,14 +6,14 @@ namespace upsylon
     namespace geometry
     {
 
-        unsigned Iso2d:: sign_flag( const double value ) throw()
+        unsigned Iso2D:: sign_flag( const double value ) throw()
         {
             if(value<0)      return sign_negative;
             else if(value>0) return sign_positive;
             else             return sign_zero;
         }
 
-        Iso2d::Vertex   Iso2d::zfind(const Vertex &pa, const double va,
+        Iso2D::Vertex   Iso2D::zfind(const Vertex &pa, const double va,
                                      const Vertex &pb, const double vb) throw()
         {
             assert(va*vb<=0);
@@ -39,22 +39,22 @@ namespace upsylon
 
 
         //
-        Iso2d:: Coordinate::  Coordinate(const unit_t ii, const unit_t jj, const unsigned qq) throw() : i(ii), j(jj), q(qq) { assert(q<=1); }
+        Iso2D:: Coordinate::  Coordinate(const unit_t ii, const unit_t jj, const unsigned qq) throw() : i(ii), j(jj), q(qq) { assert(q<=1); }
 
-        Iso2d:: Coordinate:: ~Coordinate() throw()
+        Iso2D:: Coordinate:: ~Coordinate() throw()
         {
         }
 
-        Iso2d:: Coordinate:: Coordinate(const Coordinate &other) throw() :
+        Iso2D:: Coordinate:: Coordinate(const Coordinate &other) throw() :
         i(other.i), j(other.j), q(other.q) {}
 
-        bool operator==( const Iso2d::Coordinate &lhs, const Iso2d::Coordinate &rhs) throw()
+        bool operator==( const Iso2D::Coordinate &lhs, const Iso2D::Coordinate &rhs) throw()
         {
             return (lhs.i==rhs.i) && (lhs.j==rhs.j) && (lhs.q==rhs.q);
         }
 
 
-        int Iso2d::Coordinate:: compare(const Coordinate &lhs, const Coordinate &rhs) throw()
+        int Iso2D::Coordinate:: compare(const Coordinate &lhs, const Coordinate &rhs) throw()
         {
             if(lhs.i<rhs.i)
             {
@@ -83,7 +83,7 @@ namespace upsylon
             }
         }
 
-        void Iso2d:: Coordinate:: run( hashing::function &H ) const throw()
+        void Iso2D:: Coordinate:: run( hashing::function &H ) const throw()
         {
             H.run_type(i);
             H.run_type(j);
@@ -100,33 +100,33 @@ namespace upsylon
     {
 
         //
-        Iso2d:: EdgeLabel:: EdgeLabel( const Coordinate &only ) throw() : lower(only), upper(only) {}
+        Iso2D:: EdgeLabel:: EdgeLabel( const Coordinate &only ) throw() : lower(only), upper(only) {}
 
-        Iso2d:: EdgeLabel:: EdgeLabel( const Coordinate &a, const Coordinate &b) throw() : lower(a), upper(b)
+        Iso2D:: EdgeLabel:: EdgeLabel( const Coordinate &a, const Coordinate &b) throw() : lower(a), upper(b)
         {
             if(Coordinate::compare(lower,upper)>0) mswap( (void*)&lower, (void*)&upper, sizeof(Coordinate) );
         }
 
-        Iso2d:: EdgeLabel:: EdgeLabel(const EdgeLabel &other) throw() : lower(other.lower), upper(other.upper) {}
+        Iso2D:: EdgeLabel:: EdgeLabel(const EdgeLabel &other) throw() : lower(other.lower), upper(other.upper) {}
 
 
-        void Iso2d:: EdgeLabel:: run( hashing::function &H ) const throw()
+        void Iso2D:: EdgeLabel:: run( hashing::function &H ) const throw()
         {
             lower.run(H);
             upper.run(H);
         }
 
-        bool operator==(const Iso2d::EdgeLabel &lhs, const Iso2d::EdgeLabel &rhs) throw()
+        bool operator==(const Iso2D::EdgeLabel &lhs, const Iso2D::EdgeLabel &rhs) throw()
         {
             return (lhs.lower==rhs.lower) && (lhs.upper==rhs.upper);
         }
 
         //
-        Iso2d:: EdgeLabel:: Hasher:: Hasher() throw() : H() {}
+        Iso2D:: EdgeLabel:: Hasher:: Hasher() throw() : H() {}
 
-        Iso2d:: EdgeLabel:: Hasher:: ~Hasher() throw()  {}
+        Iso2D:: EdgeLabel:: Hasher:: ~Hasher() throw()  {}
 
-        size_t Iso2d:: EdgeLabel:: Hasher:: operator()( const EdgeLabel &id) throw()
+        size_t Iso2D:: EdgeLabel:: Hasher:: operator()( const EdgeLabel &id) throw()
         {
             H.set();
             id.run(H);
@@ -143,7 +143,7 @@ namespace upsylon
     {
 
         //
-        Iso2d:: UniquePoint :: UniquePoint(const EdgeLabel  &id,
+        Iso2D:: UniquePoint :: UniquePoint(const EdgeLabel  &id,
                                            const Vertex     &v) throw() :
         tag(id),
         vtx(v)
@@ -151,11 +151,11 @@ namespace upsylon
             assert(tag==id);
         }
 
-        Iso2d:: UniquePoint :: ~UniquePoint() throw()
+        Iso2D:: UniquePoint :: ~UniquePoint() throw()
         {
         }
 
-        const Iso2d::EdgeLabel & Iso2d::UniquePoint:: key() const throw() { return tag; }
+        const Iso2D::EdgeLabel & Iso2D::UniquePoint:: key() const throw() { return tag; }
 
     }
 
@@ -167,14 +167,14 @@ namespace upsylon
     {
 
         //
-        Iso2d:: Segment:: Segment(UniquePoint       *pa, UniquePoint     *pb) throw() :
+        Iso2D:: Segment:: Segment(UniquePoint       *pa, UniquePoint     *pb) throw() :
         next(0), prev(0), a(pa), b(pb)
         {
             assert(a->refcount()>1); assert( object::is_block(pa) );
             assert(b->refcount()>1); assert( object::is_block(pb) );
         }
 
-        Iso2d:: Segment:: ~Segment() throw()
+        Iso2D:: Segment:: ~Segment() throw()
         {
         }
 
@@ -188,12 +188,12 @@ namespace upsylon
     {
 
         //
-        Iso2d:: SharedPoints:: SharedPoints() throw(): segments() {}
+        Iso2D:: SharedPoints:: SharedPoints() throw(): segments() {}
 
-        Iso2d:: SharedPoints:: ~SharedPoints() throw() {}
+        Iso2D:: SharedPoints:: ~SharedPoints() throw() {}
 
 
-        Iso2d::UniquePoint * Iso2d::SharedPoints:: operator()(const Coordinate &c,
+        Iso2D::UniquePoint * Iso2D::SharedPoints:: operator()(const Coordinate &c,
                                                                const Vertex     &fallback)
         {
             const EdgeLabel tag(c);
@@ -211,7 +211,7 @@ namespace upsylon
             }
         }
 
-        Iso2d::UniquePoint * Iso2d::SharedPoints:: operator()(const Coordinate &c0, const Vertex &p0, const double v0,
+        Iso2D::UniquePoint * Iso2D::SharedPoints:: operator()(const Coordinate &c0, const Vertex &p0, const double v0,
                                                                 const Coordinate &c1, const Vertex &p1, const double v1)
         {
             const EdgeLabel tag(c0,c1);
@@ -243,9 +243,9 @@ namespace upsylon
     {
 
         //
-        Iso2d:: Point:: Point(const SharedPoint &p) throw() : SharedPoint(p), next(0), prev(0) {}
+        Iso2D:: Point:: Point(const SharedPoint &p) throw() : SharedPoint(p), next(0), prev(0) {}
 
-        Iso2d:: Point:: ~Point() throw() {}
+        Iso2D:: Point:: ~Point() throw() {}
 
     }
 
@@ -256,11 +256,11 @@ namespace upsylon
     namespace geometry
     {
         //
-        Iso2d:: Line:: Line() throw() : object(), Points(), next(0), prev(0) {}
+        Iso2D:: Line:: Line() throw() : object(), Points(), next(0), prev(0) {}
 
-        Iso2d:: Line:: ~Line() throw() {}
+        Iso2D:: Line:: ~Line() throw() {}
 
-        void Iso2d:: Line:: compile_to( sequence<Vertex> &vertices ) const
+        void Iso2D:: Line:: compile_to( sequence<Vertex> &vertices ) const
         {
             vertices.free();
             vertices.ensure(size);
@@ -279,15 +279,15 @@ namespace upsylon
     namespace geometry
     {
         //
-        Iso2d:: Lines:: ~Lines() throw()
+        Iso2D:: Lines:: ~Lines() throw()
         {
         }
 
-        Iso2d:: Lines:: Lines() throw() : Line::list()
+        Iso2D:: Lines:: Lines() throw() : Line::list()
         {
         }
 
-        void Iso2d:: Lines:: connect(const Segments &segments)
+        void Iso2D:: Lines:: connect(const Segments &segments)
         {
             release();
             // loop over all segments
@@ -425,8 +425,8 @@ namespace upsylon
     namespace geometry
     {
 
-        Iso2d:: Curve::  Curve() throw() : CurveType() {}
-        Iso2d:: Curve:: ~Curve() throw() {}
+        Iso2D:: Curve::  Curve() throw() : CurveType() {}
+        Iso2D:: Curve:: ~Curve() throw() {}
 
     }
 }
@@ -436,8 +436,8 @@ namespace upsylon
     namespace geometry
     {
 
-        Iso2d:: Curves::  Curves() throw() : CurvesType() {}
-        Iso2d:: Curves:: ~Curves() throw() {}
+        Iso2D:: Curves::  Curves() throw() : CurvesType() {}
+        Iso2D:: Curves:: ~Curves() throw() {}
     }
 }
 
@@ -445,7 +445,7 @@ namespace upsylon
 {
     namespace geometry
     {
-        void Iso2d:: convert(LevelSet     &output,
+        void Iso2D:: convert(LevelSet     &output,
                              const Levels &input)
         {
             const size_t n = input.size();

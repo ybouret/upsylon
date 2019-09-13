@@ -22,12 +22,12 @@ namespace upsylon
             void scan( const PIXMAP &pxm, const array<double> &z)
             {
 
-                geometry::Iso2d::Scan(db,pxm,
+                geometry::Iso2D::Scan(db,pxm,
                                       lower.x,upper.x,
                                       lower.y,upper.y,
                                       X,Y,
                                       z);
-                geometry::Iso2d::convert(levels,db);
+                geometry::Iso2D::convert(levels,db);
             }
 
         private:
@@ -35,10 +35,10 @@ namespace upsylon
             vector<double>          xy;
             const double          * X;
             const double          * Y;
-            geometry::Iso2d::Levels db;
+            geometry::Iso2D::Levels db;
 
         public:
-            geometry::Iso2d::LevelSet levels; //!< level set workspace
+            geometry::Iso2D::LevelSet levels; //!< level set workspace
         };
     }
 }

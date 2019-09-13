@@ -38,11 +38,11 @@ Y_UTEST(iso)
         {
             std::cerr << "-- @level=" << z[i] << std::endl;
             const RGB            C      = NamedColor::Fetch(i);
-            const Iso2d::Curves &curves = *iso.levels[i];
+            const Iso2D::Curves &curves = *iso.levels[i];
             std::cerr << "  \\_#curves=" << curves.size() << std::endl;
             for(size_t j=1;j<=curves.size();++j)
             {
-                const Iso2d::Curve &curve = *curves[j];
+                const Iso2D::Curve &curve = *curves[j];
                 std::cerr << "    |_curve[" << j << "]: " << curve.size() << std::endl;
                 for(size_t k=1;k<curve.size();++k)
                 {

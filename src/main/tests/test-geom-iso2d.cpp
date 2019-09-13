@@ -11,7 +11,7 @@ using namespace geometry;
 
 namespace
 {
-    typedef Iso2d::Vertex vertex;
+    typedef Iso2D::Vertex vertex;
 
 }
 
@@ -21,17 +21,17 @@ Y_UTEST(geom_iso2d)
     {
         for(size_t iter=10+alea.leq(100);iter>0;--iter)
         {
-            const Iso2d::Coordinate c1(100 - unit_t( alea.leq(200) ),100 - unit_t( alea.leq(200) ), alea.choice() ? 1 : 0);
-            const Iso2d::Coordinate c2(100 - unit_t( alea.leq(200) ),100 - unit_t( alea.leq(200) ), alea.choice() ? 1 : 0);
+            const Iso2D::Coordinate c1(100 - unit_t( alea.leq(200) ),100 - unit_t( alea.leq(200) ), alea.choice() ? 1 : 0);
+            const Iso2D::Coordinate c2(100 - unit_t( alea.leq(200) ),100 - unit_t( alea.leq(200) ), alea.choice() ? 1 : 0);
 
             Y_ASSERT(c1==c1);
             Y_ASSERT(c2==c2);
 
-            const Iso2d::EdgeLabel a(c1,c1);
-            const Iso2d::EdgeLabel b(c1,c2);
-            const Iso2d::EdgeLabel c(c2,c1);
+            const Iso2D::EdgeLabel a(c1,c1);
+            const Iso2D::EdgeLabel b(c1,c2);
+            const Iso2D::EdgeLabel c(c2,c1);
             Y_ASSERT(b==c);
-            Iso2d::EdgeLabel::Hasher H;
+            Iso2D::EdgeLabel::Hasher H;
             Y_ASSERT( H(b) == H(c) );
 
 
@@ -78,21 +78,21 @@ Y_UTEST(geom_iso2d)
             ios::ocstream fpp("iso2dp.dat");
             ios::ocstream fps("iso2ds.dat");
 
-            Iso2d::Levels L;
-            Iso2d::Scan( L, M, 1, nx, 1, ny, X, Y, z);
+            Iso2D::Levels L;
+            Iso2D::Scan( L, M, 1, nx, 1, ny, X, Y, z);
             std::cerr << "#L=" << L.size() << std::endl;
             for(size_t i=1;i<=L.size();++i)
             {
                 std::cerr << "#L[" << i << "]=" << L[i]->size() << "/segments=" << L[i]->segments.size << std::endl;
-                for( const Iso2d::Segment *s = L[i]->segments.head;s;s=s->next)
+                for( const Iso2D::Segment *s = L[i]->segments.head;s;s=s->next)
                 {
                     fps("%g %g %u #0x%x\n",   s->a->vtx.x, s->a->vtx.y, unsigned(i), unsigned(L[i]->hash(s->a->tag)) );
                     fps("%g %g %u #0x%x\n\n", s->b->vtx.x, s->b->vtx.y, unsigned(i), unsigned(L[i]->hash(s->b->tag)) );
                 }
 
-                for( Iso2d::SharedPoints::iterator j=L[i]->begin(); j!= L[i]->end(); ++j)
+                for( Iso2D::SharedPoints::iterator j=L[i]->begin(); j!= L[i]->end(); ++j)
                 {
-                    const Iso2d::UniquePoint &p = **j;
+                    const Iso2D::UniquePoint &p = **j;
                     fpp("%g %g %u #0x%08x\n",p.vtx.x, p.vtx.y, unsigned(i), unsigned(L[i]->hash(p.tag)) );
                 }
 
@@ -125,14 +125,14 @@ Y_UTEST(geom_iso2d)
         z.push_back(6);
         z.push_back(8);
 
-        Iso2d::Levels L;
-        Iso2d::Scan( L, M, 1, nx, 1, ny, X, Y, z);
+        Iso2D::Levels L;
+        Iso2D::Scan( L, M, 1, nx, 1, ny, X, Y, z);
         std::cerr << "#L=" << L.size() << std::endl;
 
 
         {
             // converting each level into lines
-            Iso2d::Lines lines;
+            Iso2D::Lines lines;
 
             ios::ocstream  fps("multi2d.dat");
             vector<vertex> curve;
@@ -140,7 +140,7 @@ Y_UTEST(geom_iso2d)
             {
                 std::cerr << "@z=" << z[i] << std::endl;
                 std::cerr << "#L[" << i << "]=" << L[i]->size() << "/segments=" << L[i]->segments.size << std::endl;
-                for( const Iso2d::Segment *s = L[i]->segments.head;s;s=s->next)
+                for( const Iso2D::Segment *s = L[i]->segments.head;s;s=s->next)
                 {
                     fps("%g %g %u #0x%x\n",   s->a->vtx.x, s->a->vtx.y, unsigned(i), unsigned(L[i]->hash(s->a->tag)) );
                     fps("%g %g %u #0x%x\n\n", s->b->vtx.x, s->b->vtx.y, unsigned(i), unsigned(L[i]->hash(s->b->tag)) );
@@ -153,12 +153,12 @@ Y_UTEST(geom_iso2d)
                     ios::ocstream fp(filename);
                     {
                         unsigned count=1;
-                        for(const Iso2d::Line *l = lines.head; l; l=l->next, ++count)
+                        for(const Iso2D::Line *l = lines.head; l; l=l->next, ++count)
                         {
                             l->compile_to(curve);
                             std::cerr << "|_\t->line#" << count << ": size=" << l->size << "/" << curve.size() << std::endl;
                             fp << "#\n";
-                            for(const Iso2d::Point *p = l->head;p;p=p->next)
+                            for(const Iso2D::Point *p = l->head;p;p=p->next)
                             {
                                 fp("%g %g %u\n", (*p)->vtx.x, (*p)->vtx.y, count);
                             }
@@ -183,13 +183,13 @@ Y_UTEST(geom_iso2d)
 
         {
             // converting points into level_set
-            Iso2d::LevelSet ls;
-            Iso2d::convert(ls,L);
+            Iso2D::LevelSet ls;
+            Iso2D::convert(ls,L);
             std::cerr << "#ls=" << ls.size() << std::endl;
             for(size_t i=1;i<=ls.size();++i)
             {
                 std::cerr << "|_ls[" << i << "]=" << ls[i]->size() << std::endl;
-                const Iso2d::Curves &C = *ls[i];
+                const Iso2D::Curves &C = *ls[i];
                 for(size_t j=1;j<=C.size();++j)
                 {
                     std::cerr << " |_ls[" << i <<"][" << j << "]=" << C[j]->size() << std::endl;
@@ -220,7 +220,7 @@ Y_UTEST(geom_iso2d)
     }
 
     {
-        vector<double,Iso2d::Allocator> z;
+        vector<double,Iso2D::Allocator> z;
         z.push_back(-2);
         z.push_back(-1);
         z.push_back(-0.5);
@@ -228,15 +228,15 @@ Y_UTEST(geom_iso2d)
         z.push_back(0.5);
         z.push_back(1);
         z.push_back(2);
-        Iso2d::LevelSet ls;
-        Iso2d::Build(ls, M, 1, nx, 1, ny, X, Y, z);
+        Iso2D::LevelSet ls;
+        Iso2D::Build(ls, M, 1, nx, 1, ny, X, Y, z);
         ios::ocstream fp("quad2d.dat");
         for(size_t i=1;i<=ls.size();++i)
         {
-            const Iso2d::Curves &curves = *ls[i];
+            const Iso2D::Curves &curves = *ls[i];
             for(size_t j=1;j<=curves.size();++j)
             {
-                const Iso2d::Curve &curve = *curves[j];
+                const Iso2D::Curve &curve = *curves[j];
                 for(size_t k=1;k<=curve.size();++k)
                 {
                     fp("%g %g %u\n", curve[k].x, curve[k].y, unsigned(i) );
