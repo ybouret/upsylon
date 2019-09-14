@@ -42,33 +42,36 @@ template <typename COORD>
 void make_for(mpi  &MPI,
               const Layout<COORD> &full )
 {
-    ParallelContext<COORD> ctx(MPI,full);
+    //ParallelContext<COORD> ctx(MPI,full);
 
     typedef typename __Field<COORD,double>::Type   dField;
     typedef typename __Field<COORD,mpn>::Type      nField;
     typedef typename __Field<COORD,Coord1D>::Type  iField;
-
+    
+    vector<COORD> mappings;
+    full.buildMappings(mappings, MPI.size);
+    
     MPI.print0(stderr, "\n");
     MPI.print(stderr, "in %uD on %s\n", unsigned( Layout<COORD>::Dimensions ), *MPI.processorName);
     if(MPI.isHead)
     {
         fflush(stderr);
         std::cerr << "Full       : " << full  << std::endl;
-        std::cerr << "|_Mappings : " << ctx.mappings << std::endl;
-        std::cerr << "|_Optimal  : " << ctx.optimal  << std::endl;
+        std::cerr << "|_Mappings : " << mappings << std::endl;
+        //std::cerr << "|_Optimal  : " << ctx.optimal  << std::endl;
         std::cerr.flush();
     }
 
     ActiveFields fields;
 
-    for(size_t m=1;m<=ctx.mappings.size();++m)
+    for(size_t m=1;m<=mappings.size();++m)
     {
-        const COORD &mapping = ctx.mappings[m];
+        const COORD &mapping = mappings[m];
         if(MPI.isHead)
         {
             fflush(stderr);
             std::cerr << "|_: using ";
-            Coord::Disp(std::cerr,ctx.mappings[m],3) << " <";
+            Coord::Disp(std::cerr,mappings[m],3) << " <";
             std::cerr.flush();
         }
         COORD pbc0(0); Coord::LD(pbc0,0);

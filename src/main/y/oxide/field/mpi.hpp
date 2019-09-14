@@ -5,13 +5,12 @@
 
 #include "y/mpi/mpi.hpp"
 #include "y/oxide/workspace.hpp"
-#include "y/oxide/algo/optimal.hpp"
 
 namespace upsylon
 {
     namespace Oxide
     {
-        
+#if 0
         template <typename COORD>
         class ParallelContext
         {
@@ -34,6 +33,7 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ParallelContext);
         };
+#endif
         
         //======================================================================
         //

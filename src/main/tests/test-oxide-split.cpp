@@ -1,6 +1,5 @@
 #include "y/oxide/field3d.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/oxide/algo/optimal.hpp"
 #include "y/utest/run.hpp"
 #include "y/oxide/layouts.hpp"
 
