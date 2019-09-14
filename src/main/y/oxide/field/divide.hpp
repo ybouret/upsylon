@@ -12,25 +12,35 @@ namespace upsylon
         struct Divide
         {
             static  const size_t InitialCapacity[4];
-            typedef Coord1D      score_t;
             
             class Score : public object
             {
             public:
-                Score *next;
-                Score *prev;
-                //const size_t  index;
-                const score_t items;
-                const score_t async;
-                const score_t local;
+                static const unsigned ABSX2 = 0;
+                static const unsigned ITEMS = 1;
+                static const unsigned ASYNC = 2;
+                static const unsigned LOCAL = 3;
+                static const unsigned DIM0  = 4;
+                static const unsigned DIM1  = 5;
+                static const unsigned DIM2  = 6;
+                static const unsigned MAX_LENGTH = DIM2+1;
+                static const unsigned DATA_COUNT = Y_ROUND2(MAX_LENGTH);
+                static const size_t   LENGTH[4];
                 
+                Score       *next;
+                Score       *prev;
+                const size_t dims;
+                const size_t indx;
+                Coord1D      data[DATA_COUNT];
+                
+                explicit Score(const size_t dimensions,
+                               const size_t mappingIndex) throw();
                 virtual ~Score() throw();
-                explicit Score(const score_t &_items,
-                               const score_t &_async,
-                               const score_t &_local);
                 
-                friend std::ostream & operator<<( std::ostream &os, const Score &s );
-                static int CompareByDrecreasingValues(const Score *lhs, const Score *rhs, void *) throw();
+                friend std::ostream & operator<<( std::ostream &, const Score &);
+                
+                static int CompareByDecreasingComms( const Score *lhs, const Score *rhs, void *) throw();
+                static int FullyCompare( const Score *lhs, const Score *rhs, void *) throw();
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Score);
@@ -38,53 +48,48 @@ namespace upsylon
             
             typedef core::list_of_cpp<Score> ScoresType;
             
-            class Scores : public ScoresType, public object
+            class Scores : public ScoresType
             {
             public:
-                Scores       *next;
-                Scores       *prev;
-                const size_t  index;
-                const score_t absx2; //!< absolute deviation x 2
-                
+                explicit Scores() throw();
                 virtual ~Scores() throw();
-                explicit Scores(const size_t _index) throw();
                 
                 template <typename COORD>
-                void append( const Layouts<COORD> & layouts )
+                void append(const COORD &mapping,
+                            const size_t mappingIndex,
+                            const Layouts<COORD> &layouts )
                 {
-                    const score_t items( layouts.inner.items );
-                    const score_t async( layouts.asyncComms  );
-                    const score_t local( layouts.localComms  );
-                    push_back( new Score(items,async,local) );
+                    // keep local dimensions
+                    static const size_t DIMS = Coord::Get<COORD>::Dimensions;
+                    
+                    // create a new score
+                    Score *score = push_back( new Score(DIMS,mappingIndex) );
+                    
+                    // fill the comms part
+                    score->data[ Score::ITEMS ] = layouts.inner.items;
+                    score->data[ Score::ASYNC ] = layouts.asyncComms;
+                    score->data[ Score::LOCAL ] = layouts.localComms;
+                    
+                    // fill the mapping part
+                    for(size_t dim=0;dim<DIMS;++dim)
+                    {
+                        score->data[ Score::DIM0 + dim ] = Coord::Of(mapping,dim);
+                    }
                 }
                 
-                friend std::ostream & operator<<(std::ostream &os, const Scores &S);
-                
-                void process(); //!< and compute mx2
-                
-                static int CompareByAX2AndIncreasingScore(const Scores *lhs, const Scores *rhs, void *) throw();
+                friend std::ostream & operator<<( std::ostream &, const Scores &);
+                void   selectFromMapping();
+                size_t getOptimalIndex();
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scores);
             };
             
-            typedef core::list_of_cpp<Scores> BillboardType;
             
-            class Billboard : public BillboardType
-            {
-            public:
-                explicit Billboard() throw();
-                virtual ~Billboard() throw();
-                size_t   getOptimalIndex();
-                
-                
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Billboard);
-            };
             
             template <typename COORD> static inline
             COORD Find(const Layout<COORD> &full,
-                       const Coord1D        cores,
+                       const size_t         cores,
                        const COORD         &pbc,
                        sequence<COORD>     *out=0)
             {
@@ -95,14 +100,12 @@ namespace upsylon
                 // initialize and find all mappings
                 //
                 //--------------------------------------------------------------
-                if(out)
-                {
-                    out->free();
-                }
+                if(out) out->free();
                 vector<COORD,memory::pooled> mappings(initialCapacity,as_capacity);
                 full.buildMappings(mappings,cores);
-                
-                if(mappings.size()<=0)
+                const size_t numMappings = mappings.size();
+
+                if(numMappings<=0)
                 {
                     COORD  z(0);
                     Coord::LD(z,0);
@@ -110,37 +113,29 @@ namespace upsylon
                 }
                 else
                 {
-                    //! analyze
-                    Billboard billboard;
-                    for(size_t m=1;m<=mappings.size();++m)
+                    Scores grades;
+                    for(size_t mappingIndex=1;mappingIndex<=numMappings;++mappingIndex)
                     {
-                        Scores        *scores   = billboard.push_back( new Scores(m) );
-                        const COORD    &mapping = mappings[m];
-                        //std::cerr << " |_mapping=" << mapping << ":";
-                        for(Coord1D rank=0;rank<cores;++rank)
+                        const COORD         &mapping = mappings[mappingIndex];
+                        Scores               scores;
+                        for(size_t rank=0;rank<cores;++rank)
                         {
-                            const Layouts<COORD>  layouts(full,mapping,rank,pbc,1);
-                            scores->append( layouts );
+                            const Layouts<COORD> layouts(full,mapping,rank,pbc,1);
+                            scores.append(mapping,mappingIndex,layouts);
                         }
-                        scores->process();
-                        //std::cerr << *scores << " @ absx2=" << scores->absx2 << std::endl;
+                        scores.selectFromMapping();
+                        grades.push_back(scores.pop_front());
                     }
-                    const size_t optimalIndex = billboard.getOptimalIndex();
-                    for(const Scores *scores=billboard.head;scores;scores=scores->next)
-                    {
-                        std::cerr << " |_mapping: " << mappings[scores->index] << " : " << *scores << ", absx2=" << scores->absx2 << std::endl;
-                    }
-                    
-                    //std::cerr << " |_optimal=" << mappings[optimalIndex] << ':' << *(billboard.head) << std::endl;
+                    const size_t opt = grades.getOptimalIndex();
+                    std::cerr << "|_grades=" << grades << std::endl;
                     if(out)
                     {
-                        out->ensure(billboard.size);
-                        for(const Scores *scores=billboard.head;scores;scores=scores->next)
+                        for(const Score *score=grades.head;score;score=score->next)
                         {
-                            out->push_back( mappings[scores->index] );
+                            out->push_back( mappings[score->indx] );
                         }
                     }
-                    return mappings[optimalIndex];
+                    return mappings[opt];
                 }
             }
             

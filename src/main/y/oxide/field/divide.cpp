@@ -6,155 +6,120 @@ namespace upsylon
     namespace Oxide
     {
         const size_t Divide:: InitialCapacity[4] = { 0, 1, 16, 64 };
-
-        std::ostream & operator<<( std::ostream &os, const Divide::Score &s )
+        
+        const size_t Divide:: Score:: LENGTH[4] =
         {
-            os << '(' << s.items << ',' << s.async << ',' << s.local << ')';
-            return os;
+            0, DIM0+1, DIM1+1, DIM2+1
+        };
+        
+        
+        Divide:: Score:: Score(const size_t dimensions,
+                               const size_t mappingIndex) throw() :
+        next(0),
+        prev(0),
+        dims( dimensions   ),
+        indx( mappingIndex ),
+        data()
+        {
+            assert(dims>=1); assert(dims<=3);
+            memset(data,0,sizeof(data));
         }
         
         Divide:: Score:: ~Score() throw()
         {
         }
         
-        Divide:: Score:: Score(const score_t &_items,
-                               const score_t &_async,
-                               const score_t &_local) :
-        items( _items ),
-        async( _async ),
-        local( _local )
+        int Divide::Score:: CompareByDecreasingComms( const Score *lhs, const Score *rhs, void *) throw()
         {
-            
+            assert(lhs); assert(rhs);
+            return comparison::decreasing_lexicographic(lhs->data+Score::ASYNC,
+                                                        rhs->data+Score::ASYNC,
+                                                        3);
         }
         
-        int Divide:: Score:: CompareByDrecreasingValues(const Score *lhs, const Score *rhs, void *) throw()
+        int Divide::Score:: FullyCompare( const Score *lhs, const Score *rhs, void *) throw()
         {
-            if(lhs->items<rhs->items)
+            assert(lhs); assert(rhs);
+            assert(lhs->dims==rhs->dims);
+            assert(lhs->dims>=1);
+            assert(lhs->dims<=3);
+
+            return comparison::increasing_lexicographic(lhs->data,
+                                                        rhs->data,
+                                                        LENGTH[lhs->dims]);
+        }
+        
+        std::ostream & operator<<( std::ostream &os, const Divide::Score &s )
+        {
+            os << '@' << s.indx << '<';
+            os << '$' << s.data[s.ABSX2];
+            os << '(' << s.data[s.ITEMS] << ',' <<  s.data[s.ASYNC] << ',' << s.data[s.LOCAL] << ')';
+            os << '[' << s.data[s.DIM0];
+            for(size_t i=1;i<s.dims;++i)
             {
-                return 1;
+                os << ',' << s.data[s.DIM0+i];
             }
-            else if(rhs->items<lhs->items)
+            os << ']';
+            os << '>';
+            
+            return os;
+        }
+        
+        Divide:: Scores:: Scores() throw() : ScoresType() {}
+        
+        Divide:: Scores:: ~Scores() throw()  {}
+        
+        
+        std::ostream & operator<<( std::ostream &os, const Divide::Scores &S)
+        {
+            os << '{';
+            for(const Divide::Score *score = S.head; score; score=score->next)
             {
-                return -1;
+                os << ' ' << *score;
+            }
+            os << ' ' << '}';
+            return os;
+        }
+
+        void Divide:: Scores:: selectFromMapping()
+        {
+            merging<Score>:: sort<ScoresType>( *this, Score::CompareByDecreasingComms, 0);
+            
+            // find the median
+            size_t  im    = size>>1;
+            Coord1D medx2 = fetch(im)->data[ Score::ITEMS ];
+            if( 0 == (size&0x01) )
+            {
+                medx2 += fetch(--im)->data[ Score::ITEMS ];
             }
             else
             {
-                if(lhs->async<rhs->async)
-                {
-                    return 1;
-                }
-                else if(rhs->async<lhs->async)
-                {
-                    return -1;
-                }
-                else
-                {
-                    return comparison::decreasing(lhs->local, rhs->local);
-                }
+                medx2 += medx2;
             }
-        }
-        
-        
-    }
-}
 
-#include "y/sort/merge.hpp"
-
-namespace upsylon
-{
-    namespace Oxide
-    {
-        Divide:: Scores:: ~Scores() throw()
-        {
-        }
-        
-        Divide:: Scores:: Scores(const size_t _index) throw() :
-        ScoresType(), next(0), prev(0), index(_index),
-        absx2(0)
-        {
+            // find the absolute deviation
+            Coord1D absx2 = 0;
+            for(const Score *score = head; score; score=score->next )
+            {
+                const Coord1D items = score->data[ Score::ITEMS ];
+                absx2 += abs_of( (items+items) - medx2 );
+            }
+           // std::cerr << "absx2=" << absx2 << std::endl;
             
-        }
-        
-        void Divide:: Scores:: process()
-        {
-            assert(size>0);
-            merging<Score>:: sort<ScoresType>( *this, Score::CompareByDrecreasingValues, 0);
-            size_t   im  = size>>1;
-            score_t  mx2 = fetch(im)->items;
-            if(0==(size&0x1))
-            {
-                mx2 += fetch(--im)->items;
-            }
-            else
-            {
-                mx2 += mx2;
-            }
-            score_t &a = (score_t &)absx2;
-            a = 0;
-            for(const Score *s  = head;s;s=s->next)
-            {
-                const score_t it = s->items;
-                a += abs_of( (it+it) - mx2 );
-            }
+            head->data[ Score::ABSX2 ] = absx2;
             while(size>1)
             {
                 delete pop_back();
             }
         }
-        
-        
-        std::ostream & operator<<( std::ostream &os, const Divide::Scores &S )
+
+        size_t Divide:: Scores:: getOptimalIndex()
         {
-            os << '@' << S.index << ':' << '{';
-            for(const Divide::Score *s=S.head;s;s=s->next)
-            {
-                os << ' ' << *s;
-            }
-            os << '}';
-            return os;
+            assert(size>0);
+            merging<Score>:: sort<ScoresType>( *this, Score::FullyCompare, 0);
+            return head->indx;
         }
-        
-        int Divide::Scores:: CompareByAX2AndIncreasingScore(const Scores *lhs, const Scores *rhs, void *) throw()
-        {
-            if(lhs->absx2<rhs->absx2)
-            {
-                return -1;
-            }
-            else if( rhs->absx2<lhs->absx2 )
-            {
-                return 1;
-            }
-            else
-            {
-                return - Score::CompareByDrecreasingValues(lhs->head, rhs->head, 0);
-            }
-                
-        }
+
         
     }
-    
 }
-
-namespace upsylon
-{
-    namespace Oxide
-    {
-
-        Divide:: Billboard:: Billboard() throw()
-        {
-        }
-        
-        Divide:: Billboard:: ~Billboard() throw()
-        {
-        }
-        
-        size_t Divide:: Billboard:: getOptimalIndex()
-        {
-            merging<Scores>:: sort<BillboardType>( *this, Scores::CompareByAX2AndIncreasingScore, 0);
-            return head->index;
-        }
-        
-    }
-    
-}
-
