@@ -4,6 +4,7 @@
 namespace upsylon
 {
 
+#if 0
     namespace ios
     {
 
@@ -12,7 +13,8 @@ namespace upsylon
         class_plugin:: hasher:: ~hasher() throw() {}
 
     }
-
+#endif
+    
 }
 
 namespace upsylon
@@ -51,12 +53,13 @@ namespace upsylon
 
     namespace ios
     {
+#if 0
         size_t class_plugin:: hasher:: operator()(const std::type_info &tid) const throw()
         {
             hashing::fnv H;
             return H.key<size_t>(tid.name(), strlen(tid.name()) );
         }
-
+#endif
 
         plugins:: plugins() throw() : plugins_type()
         {

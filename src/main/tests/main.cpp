@@ -171,6 +171,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(oxide_wksp);
     Y_UTEST(oxide_allw);
     Y_UTEST(oxide_mpi);
+    Y_UTEST(oxide_vtk);
+
 }
 Y_UTEST_EXEC()
 

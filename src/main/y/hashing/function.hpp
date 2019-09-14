@@ -65,6 +65,10 @@ namespace upsylon
 			inline T key( const void *buffer, size_t buflen ) throw() { set(); run(buffer,buflen); return key<T>(); }
 			
             //! reset/run/key
+            template <typename T>
+            inline T key( const char *buffer ) throw() { set(); (*this)(buffer); return key<T>(); }
+            
+            //! reset/run/key
 			template <typename T>
 			inline T key( const memory::ro_buffer &buf ) throw() { set(); (*this)(buf); return key<T>(); }
 
