@@ -6,6 +6,7 @@
 #include "y/oxide/layout.hpp"
 #include "y/string.hpp"
 #include "y/ios/plugin.hpp"
+#include <typeinfo>
 
 namespace upsylon
 {
