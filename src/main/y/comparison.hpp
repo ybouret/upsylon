@@ -11,13 +11,47 @@ namespace upsylon
     class comparison
     {
     public:
-        //! lexicographic comparison
+        //! increasing lexicographic comparison any block sizes
         template <typename T> static inline
         int lexicographic(const T *sa, const size_t na, const T *sb, const size_t nb) throw()
         {
             return ( (na<=nb) ? __lexicographic<T>(sa,na,sb,nb) : - __lexicographic<T>(sb,nb,sa,na) );
         }
-
+        
+        //! increasing lexicographic comparison of same block sizes
+        template <typename T> static inline
+        int increasing_lexicographic( const T *a, const T *b, size_t n ) throw()
+        {
+            assert( !( (0==a) && (n>0) ) );
+            assert( !( (0==b) && (n>0) ) );
+            while(n-->0)
+            {
+                const T &lhs = *a;
+                const T &rhs = *b;
+                if(lhs<rhs)
+                {
+                    return -1;
+                }
+                else if(rhs<lhs)
+                {
+                    return 1;
+                }
+                else
+                {
+                    ++a;
+                    ++b;
+                }
+            }
+            return 0; // the same!
+        }
+        
+        //! decreasing lexicographic comparison of same block sizes
+        template <typename T> static inline
+        int decreasing_lexicographic( const T *a, const T *b, size_t n ) throw()
+        {
+            return increasing_lexicographic(b,a,n);
+        }
+        
         //! convert signed value
         static int normalize( const int ans ) throw()
         {
