@@ -52,6 +52,13 @@ namespace upsylon
             template <typename T>
             inline const Writer & get() const { return get( typeid(T) ); }
             
+            template <typename T> inline
+            ios::ostream &write( ios::ostream &fp, const T &args ) const
+            {
+                get<T>().write(fp,&args);
+                return fp;
+            }
+            
         private:
             explicit vtk();
             virtual ~vtk() throw();

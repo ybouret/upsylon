@@ -61,14 +61,13 @@ namespace upsylon
             class WriterF : public vtk::Writer
             {
             public:
-                inline explicit WriterF() : vtk::Writer( typeid(float), "%8.3g" ) {}
+                inline explicit WriterF() : vtk::Writer( typeid(float), "%.3g" ) {}
                 inline virtual ~WriterF() throw() {}
                
                 virtual void write( ios::ostream &fp, const void *addr) const
                 {
                     assert(addr);
-                    const long i = *static_cast<const float *>(addr);
-                    fp( *fmt, i );
+                    fp( *fmt, *static_cast<const float *>(addr)  );
                 }
                 
             private:
@@ -78,14 +77,13 @@ namespace upsylon
             class WriterD : public vtk::Writer
             {
             public:
-                inline explicit WriterD() : vtk::Writer( typeid(double), "%8.3lg" ) {}
+                inline explicit WriterD() : vtk::Writer( typeid(double), "%.3lg" ) {}
                 inline virtual ~WriterD() throw() {}
                 
                 virtual void write( ios::ostream &fp, const void *addr) const
                 {
                     assert(addr);
-                    const long i = *static_cast<const double *>(addr);
-                    fp( *fmt, i );
+                    fp( *fmt, *static_cast<const double *>(addr) );
                 }
                 
             private:
@@ -118,7 +116,7 @@ namespace upsylon
                     shared->write(fp,p);
                     for(size_t i=1;i<Components;++i)
                     {
-                        shared->write(fp,++p);
+                        shared->write(fp << ' ',++p);
                     }
                 }
                 
