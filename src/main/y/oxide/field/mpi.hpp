@@ -5,35 +5,40 @@
 
 #include "y/mpi/mpi.hpp"
 #include "y/oxide/workspace.hpp"
+#include "y/oxide/field/divide.hpp"
 
 namespace upsylon
 {
     namespace Oxide
     {
-#if 0
+
         template <typename COORD>
-        class ParallelContext
+        class Parallel
         {
         public:
             typedef Layout<COORD> LayoutType;
+            typedef vector<COORD> MappingsType;
             
-            const LayoutType      full;     //!< full layout
-            const vector<COORD>   mappings; //!< possible mappings
-            const COORD           optimal;  //!< optimal mapping
+            const MappingsType mappings;
+            const COORD        optimal;
             
-            explicit ParallelContext(const mpi        &MPI,
-                                     const LayoutType &userFull ) :
-            full(userFull),
+            inline explicit Parallel(const mpi        &MPI,
+                                     const LayoutType &full,
+                                     const COORD      &pbc) :
             mappings(),
-            optimal( Optimal::Find(full,MPI.size) )
+            optimal( Divide::Find(full,MPI.size,pbc, (MappingsType *)&mappings) )
             {
-                full.buildMappings((vector<COORD> &)mappings,MPI.size);
+                
             }
             
+            inline virtual ~Parallel() throw()
+            {
+            }
+            
+            
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(ParallelContext);
+            Y_DISABLE_COPY_AND_ASSIGN(Parallel);
         };
-#endif
         
         //======================================================================
         //

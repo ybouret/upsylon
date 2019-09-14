@@ -42,8 +42,7 @@ template <typename COORD>
 void make_for(mpi  &MPI,
               const Layout<COORD> &full )
 {
-    //ParallelContext<COORD> ctx(MPI,full);
-
+    
     typedef typename __Field<COORD,double>::Type   dField;
     typedef typename __Field<COORD,mpn>::Type      nField;
     typedef typename __Field<COORD,Coord1D>::Type  iField;
@@ -58,7 +57,6 @@ void make_for(mpi  &MPI,
         fflush(stderr);
         std::cerr << "Full       : " << full  << std::endl;
         std::cerr << "|_Mappings : " << mappings << std::endl;
-        //std::cerr << "|_Optimal  : " << ctx.optimal  << std::endl;
         std::cerr.flush();
     }
 
@@ -80,13 +78,24 @@ void make_for(mpi  &MPI,
         typename Layout<COORD>::Loop pbc(pbc0,pbc1);
         for(pbc.start(); pbc.valid(); pbc.next())
         {
-            MPI.print0(stderr,".");
-            MPI.flush0(stderr);
+            //MPI.print0(stderr,".");
+            // MPI.flush0(stderr);
             
             size_t ng=1;
 
             MPI.Barrier();
-            Domain<COORD> W(MPI, full, mapping, pbc.value,ng);
+            Parallel<COORD> ctx(MPI,full,pbc.value);
+            Domain<COORD>   W(MPI, full, mapping, pbc.value,ng);
+            
+            if( ctx.optimal == mapping )
+            {
+                MPI.print0(stderr,"*");
+            }
+            else
+            {
+                MPI.print0(stderr,".");
+            }
+            MPI.flush0(stderr);
 
             Y_ASSERT(W.rank==MPI.rank);
             

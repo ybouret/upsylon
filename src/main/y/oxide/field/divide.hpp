@@ -127,9 +127,11 @@ namespace upsylon
                         grades.push_back(scores.pop_front());
                     }
                     const size_t opt = grades.getOptimalIndex();
-                    std::cerr << "|_grades=" << grades << std::endl;
+                    //std::cerr << "|_grades=" << grades << std::endl;
                     if(out)
                     {
+                        assert(0==out->size());
+                        out->ensure(grades.size);
                         for(const Score *score=grades.head;score;score=score->next)
                         {
                             out->push_back( mappings[score->indx] );
