@@ -79,6 +79,8 @@ void make_for(mpi  &MPI,
             parent = new Domain<COORD>(MPI,full,mapping);
             guard  = parent;
             parent->template create<dField>( "Fd" );
+            parent->template create<nField>( "Fn" );
+
         }
         //MPI.print(stderr,"|_parent: %d\n", int( parent.is_valid() ) );
         COORD pbc0(0); Coord::LD(pbc0,0);
@@ -196,9 +198,17 @@ void make_for(mpi  &MPI,
             MPI.print0(stderr,"<");
             MPI.flush(stderr);
             Domain<COORD>::Gather( MPI,parent, "Fd", W);
+            MPI.print0(stderr,"<");
+            MPI.flush(stderr);
+            Domain<COORD>::Gather( MPI,parent, "Fn", W);
+            
             MPI.print0(stderr,">");
             MPI.flush(stderr);
             Domain<COORD>::Scatter(MPI,parent, "Fd", W);
+            
+            MPI.print0(stderr,">");
+            MPI.flush(stderr);
+            Domain<COORD>::Scatter(MPI,parent, "Fn", W);
             
         } MPI.print0(stderr,"]\n");
     }
