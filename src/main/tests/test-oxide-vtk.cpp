@@ -1,6 +1,8 @@
 #include "y/oxide/vtk.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/oxide/field3d.hpp"
+
 #include "support.hpp"
 
 using namespace upsylon;
@@ -23,6 +25,20 @@ namespace  {
         std::cerr << "<" << typeid(T).name() << "/>" << std::endl;
     }
 
+    
+    template <typename FIELD>
+    static inline
+    void fill( FIELD &F )
+    {
+        Y_ASSERT(F.entry);
+        for(size_t i=0;i<F.items;++i)
+        {
+            const typename FIELD::type  tmp = support::get<typename FIELD::mutable_type>();
+            F.entry[i] = tmp;
+        }
+
+    }
+
     template <typename COORD> static inline
     void saveLayout()
     {
@@ -34,7 +50,11 @@ namespace  {
         VTK.writeHeader(fp);
         VTK.writeTitle(fp,filename);
         VTK.writeLayout(fp,L);
-        
+
+        typename __Field<COORD,double>::Type Fd( "Fd", L );
+        fill(Fd);
+
+        VTK.writeField(fp, Fd, L);
 
     }
 

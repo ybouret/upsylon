@@ -42,7 +42,7 @@ namespace upsylon
                 }
 
                 inline virtual const char * dataType()   const throw() { return __dataType; }
-                inline virtual unsigned     components() const throw() { return 1; }
+                inline virtual bool         isScalar()   const throw() { return true;       }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(WriterI);
@@ -69,8 +69,8 @@ namespace upsylon
                 }
 
                 inline virtual const char * dataType()   const throw() { return __dataType; }
-                inline virtual unsigned     components() const throw() { return 1; }
-                
+                inline virtual bool         isScalar()   const throw() { return true;       }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(WriterU);
             };
@@ -90,7 +90,7 @@ namespace upsylon
                 }
 
                 inline virtual const char * dataType()   const throw() { return "float"; }
-                inline virtual unsigned     components() const throw() { return 1; }
+                inline virtual bool         isScalar()   const throw() { return true;    }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(WriterF);
@@ -110,7 +110,7 @@ namespace upsylon
                 }
 
                 inline virtual const char * dataType()   const throw() { return "double"; }
-                inline virtual unsigned     components() const throw() { return 1; }
+                inline virtual bool         isScalar()   const throw() { return true;     }
 
                 
             private:
@@ -153,10 +153,8 @@ namespace upsylon
                     return shared->dataType();
                 }
 
-                inline virtual unsigned components() const throw()
-                {
-                    return Components * shared->components();
-                }
+                inline virtual bool         isScalar()   const throw() { return false; }
+
 
                 
             private:
@@ -264,17 +262,19 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
         }
 
 
-        ios::ostream & vtk:: write3D(ios::ostream &fp, const Coord1D *C, const size_t dims) const
+        ios::ostream & vtk:: write3D(ios::ostream  &fp,
+                                     const Coord1D *v,
+                                     const size_t   dims,
+                                     const Coord1D  pad) const
         {
             assert(dims>=1); assert(dims<=3);
-            assert(C!=NULL);
+            assert(v!=NULL);
 
-            static const Coord1D one = 1;
             const vtk           &VTK = *this;
 
-            VTK(fp,C[0]);
-            for(size_t dim=1;dim<dims;++dim) VTK(fp << ' ',C[dim]);
-            for(size_t dim=dims;dim<3;++dim) VTK(fp << ' ',one);
+            VTK(fp,v[0]);
+            for(size_t dim=1;dim<dims;++dim) VTK(fp << ' ',v[dim]);
+            for(size_t dim=dims;dim<3;++dim) VTK(fp << ' ',pad);
             return fp;
         }
 
@@ -286,9 +286,25 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
         {
             assert(dims>=1); assert(dims<=3); assert(width); assert(lower);
             fp << "DATASET STRUCTURED_POINTS\n";
-            write3D(fp << "DIMENSIONS ",width,dims) << '\n';
-            write3D(fp << "ORIGIN ",lower,dims) << '\n';
+            write3D(fp << "DIMENSIONS ",width,dims,1) << '\n';
+            write3D(fp << "ORIGIN ",lower,dims,1)     << '\n';
             fp << "SPACING 1 1 1\n";
+        }
+
+
+        ios::ostream & vtk:: declareField( ios::ostream &fp, const Field &F ) const
+        {
+            const Writer &W = get(F.typeOfObject);
+            if(W.isScalar())
+            {
+                fp << "SCALARS " << F.name << ' ' << W.dataType() << '\n';
+                fp << "LOOKUP_TABLE " << F.name << '\n';
+            }
+            else
+            {
+                fp << "VECTORS " << F.name << ' ' << W.dataType() << '\n';
+            }
+            return fp;
         }
         
     }
