@@ -123,33 +123,33 @@ namespace upsylon
 
             //! scatter to peer a common sub layout, with different outer layouts!
             template <typename LAYOUT>
-            void  scatter(const LAYOUT &sub,
-                          const LAYOUT &self_outer,
-                          Field        &peer,
-                          const LAYOUT &peer_outer) const
+            void  scatter(const LAYOUT &subLayout,
+                          const LAYOUT &selfOuter,
+                          Field        &peerField,
+                          const LAYOUT &peerOuter) const
             {
-                assert(self_outer.contains(sub));
-                assert(peer_outer.contains(sub));
-                typename LAYOUT::Loop loop(sub.lower,sub.upper);
+                assert(selfOuter.contains(subLayout));
+                assert(peerOuter.contains(subLayout));
+                typename LAYOUT::Loop loop(subLayout.lower,subLayout.upper);
                 for(loop.start();loop.valid();loop.next())
                 {
-                    peer.copyExternalObject( peer_outer.indexOf(loop.value) , *this, self_outer.indexOf(loop.value) );
+                    peerField.copyExternalObject( peerOuter.indexOf(loop.value) , *this, selfOuter.indexOf(loop.value) );
                 }
             }
 
             //! gather from peer a common sub layout, with different outer layouts
             template <typename LAYOUT>
-            void  gather(const LAYOUT &sub,
-                          const LAYOUT &self_outer,
-                          const Field        &peer,
-                          const LAYOUT &peer_outer)
+            void  gather(const LAYOUT  &subLayout,
+                          const LAYOUT &selfOuter,
+                          const Field  &peerField,
+                          const LAYOUT &peerOuter)
             {
-                assert(self_outer.contains(sub));
-                assert(peer_outer.contains(sub));
-                typename LAYOUT::Loop loop(sub.lower,sub.upper);
+                assert(selfOuter.contains(subLayout));
+                assert(peerOuter.contains(subLayout));
+                typename LAYOUT::Loop loop(subLayout.lower,subLayout.upper);
                 for(loop.start();loop.valid();loop.next())
                 {
-                    copyExternalObject( self_outer.indexOf(loop.value), peer, peer_outer.indexOf(loop.value) );
+                    copyExternalObject( selfOuter.indexOf(loop.value), peerField, peerOuter.indexOf(loop.value) );
                 }
             }
 

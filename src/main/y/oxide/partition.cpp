@@ -5,17 +5,19 @@ namespace upsylon
 {
     namespace Oxide
     {
-        size_t __Partition:: Check( const Coord1D *sizes, const unsigned dims, const size_t targetSize)
+        size_t __Partition:: Check(const Coord1D *localSizes,
+                                   const unsigned dimensions,
+                                   const size_t   targetSize)
         {
-            assert(sizes);
-            assert(dims>=1);
-            assert(dims<=3);
+            assert(0!=localSizes);
+            assert(dimensions>=1);
+            assert(dimensions<=3);
             size_t p = 1;
-            for(unsigned i=0;i<dims;++i)
+            for(unsigned i=0;i<dimensions;++i)
             {
-                const Coord1D sz = sizes[i];
-                if( sz <=0 ) throw exception("Oxide::Partition(invalid sizes[%u])", i);
-                p *= sz;
+                const Coord1D localSize = localSizes[i];
+                if( localSize <=0 ) throw exception("Oxide::Partition(invalid localSizes[%u])", i);
+                p *= localSize;
             }
             if(targetSize>0 && p!=targetSize)
             {

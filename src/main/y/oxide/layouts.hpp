@@ -29,6 +29,7 @@ namespace upsylon
             typedef Layout<COORD>                             LayoutType;                                     //!< alias
             typedef typename LayoutType::coord                coord;                                          //!< alias
             typedef typename LayoutType::const_coord          const_coord;                                    //!< alias
+            typedef typename LayoutType::Loop                 Loop;                                           //!< alias
             typedef Topology::Hub<COORD>                      HubType;                                        //!< alias
             static const size_t                               Dimensions   = Coord::Get<COORD>::Dimensions;   //!< alias
             static const size_t                               Neighbours   = Metrics<Dimensions>::Neighbours; //!< number of possible neighbours and directions
@@ -103,12 +104,12 @@ namespace upsylon
             inline explicit Layouts(const LayoutType &full,
                                     const_coord      &localSizes,
                                     const Coord1D     globalRank,
-                                    const_coord      &boundaryConditions,
-                                    const Coord1D     ng = 0
+                                    const_coord      &boundaries,
+                                    const Coord1D     ghostsZone
                                     ) :
-            HubType(localSizes,globalRank,boundaryConditions),
+            HubType(localSizes,globalRank,boundaries),
             inner( full.split(this->sizes,this->ranks) ),
-            outer( expandInner(abs_of(ng)) ),
+            outer( expandInner(abs_of(ghostsZone)) ),
             center(0),
             border(),
             repository( Neighbours, as_capacity ),
@@ -118,9 +119,9 @@ namespace upsylon
             asyncComms(0)
             {
                 memset( ghosts, 0, sizeof(ghosts) );
-                if(ng>0)
+                if(ghostsZone>0)
                 {
-                    buildGhosts(ng-1);
+                    buildGhosts(ghostsZone-1);
                 }
                 else
                 {
@@ -133,7 +134,7 @@ namespace upsylon
             void display(std::ostream &os, const char *pfx=0) const
             {
                 static const char default_pfx[] = "";
-                if(!pfx) pfx = default_pfx;
+                if(!pfx)    pfx = default_pfx;
                 os << pfx << "ranks    = "; Coord::Disp(os, this->ranks, 2) << " <=> rank=" << this->rank << std::endl;
                 os << pfx << "inner    = " << inner             << std::endl;
                 os << pfx << "outer    = " << outer             << std::endl;
@@ -170,9 +171,9 @@ namespace upsylon
             //
             //
             //==================================================================
-            inline LayoutType expandInner(const Coord1D ng) const
+            inline LayoutType expandInner(const Coord1D ghostsZone) const
             {
-                if(ng<=0)
+                if(ghostsZone<=0)
                 {
                     return inner;
                 }
@@ -199,7 +200,7 @@ namespace upsylon
                                      (const bool *)    & this->bulk,
                                      (const bool *)    & this->par,
                                      (const bool *)    & this->pbc,
-                                     ng,
+                                     ghostsZone,
                                      Dimensions);
                     //----------------------------------------------------------
                     //
@@ -446,15 +447,16 @@ namespace upsylon
             {
                 assert( 0 == border.size() );
                 vector<COORD> &seq = (vector<COORD> &)border;
-                typename LayoutType::Loop loop(inner.lower,inner.upper);
+                Loop          loop(inner.lower,inner.upper);
                 if(center.is_valid())
                 {
-                    // first pass: count
+                    // first pass: count and allocate
                     {
                         size_t count = 0;
                         for(loop.start();loop.valid();loop.next()) if( !center->has( loop.value ) ) ++count;
                         seq.ensure(count);
                     }
+                    // second pass: load
                     for(loop.start();loop.valid();loop.next()) if( !center->has( loop.value ) ) seq.push_back(loop.value);
 
                 }

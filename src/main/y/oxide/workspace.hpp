@@ -22,7 +22,8 @@ namespace upsylon
         struct __Workspace
         {
             //! check all coordinates are greater than zero
-            static void CheckLocalSizes( const Coord1D *sizes, const unsigned dim );
+            static void CheckLocalSizes(const Coord1D *localSizes,
+                                        const unsigned dimensions );
 
             //! check all local sizes are greater than zero
             template <typename COORD> static inline
@@ -54,7 +55,7 @@ namespace upsylon
             typedef Layout<COORD>                    LayoutType;                               //!< alias
             typedef typename LayoutType::coord       coord;                                    //!< alias
             typedef typename LayoutType::const_coord const_coord;                              //!< alias
-            typedef typename LayoutType::Loop        Loop;                              //!< alias
+            typedef typename LayoutType::Loop        Loop;                                     //!< alias
             static const size_t                      Dimensions   = LayoutType::Dimensions;    //!< alias
 
             typedef Layouts<COORD>                   LayoutsType;                              //!< alias
@@ -68,8 +69,8 @@ namespace upsylon
             // members
             //
             //------------------------------------------------------------------
-            IOBlock sendBlock; //!< memory to store inner ghosts data, to be sent
-            IOBlock recvBlock; //!< memory where outer ghosts data is received
+            mutable IOBlock sendBlock; //!< memory to store inner ghosts data, to be sent
+            mutable IOBlock recvBlock; //!< memory where outer ghosts data is received
 
             //------------------------------------------------------------------
             //
@@ -83,13 +84,13 @@ namespace upsylon
             inline explicit Workspace(const LayoutType &full,
                                       const_coord       localSizes,
                                       const Coord1D     globalRank,
-                                      const_coord       PBC,
-                                      const Coord1D     ng) :
+                                      const_coord       boundaries,
+                                      const Coord1D     ghostsZone) :
             LayoutsType(full,
                         __Workspace::CheckLocalSizes(localSizes),
                         globalRank,
-                        PBC,
-                        ng),
+                        boundaries,
+                        ghostsZone),
             Fields(), sendBlock(), recvBlock()
             {
 
@@ -327,62 +328,7 @@ namespace upsylon
                 __Workspace::CheckBlockTotal(recvBlock,total);
             }
 
-#if 0
-            //------------------------------------------------------------------
-            //
-            // synchronous exchanges
-            //
-            //------------------------------------------------------------------
-
-            //! collect data for fields from sub layout into sendBlock
-            inline comm_mode collect(const ActiveFields &fields,
-                                     const LayoutType   &sub )
-            {
-                assert(this->inner.contains(sub));
-                comm_mode m = comm_constant_size;
-                sendBlock.free();
-
-                typename LayoutType::Loop loop(sub.lower,sub.upper);
-                size_t                    total = 0;
-                for(size_t i=fields.size();i>0;--i)
-                {
-                    Field &F = (Field &)(*fields[i]); assert(owns(F));
-                    for( loop.start(); loop.valid(); loop.next() )
-                    {
-                        total += load(sendBlock,this->outer.indexOf(loop.value)  );
-                    }
-                    switch(F.transfer->mode)
-                    {
-                        case comm_variable_size: m = comm_variable_size; break;
-                        case comm_constant_size: break;
-                    }
-                }
-                __Workspace::CheckBlockTotal(sendBlock,total);
-                return m;
-            }
-
-            //! expand data for fields from sub layout from recvBlock
-            inline void expand(const ActiveFields &fields,
-                               const LayoutType   &sub )
-            {
-                assert(this->inner.contains(sub));
-                typename LayoutType::Loop loop(sub.lower,sub.upper);
-                size_t                    total   = 0;
-                {
-                    ios::imstream input(recvBlock);
-                    for(size_t i=fields.size();i>0;--i)
-                    {
-                        Field &F = (Field &)(*fields[i]); assert(owns(F));
-                        for( loop.start(); loop.valid(); loop.next() )
-                        {
-                            total += save(input,this->outer.indexOf(loop.value)  );
-                        }
-                    }
-                }
-                __Workspace::CheckBlockTotal(recvBlock,total);
-            }
-#endif
-
+            
         private:
 
             Y_DISABLE_COPY_AND_ASSIGN(Workspace);

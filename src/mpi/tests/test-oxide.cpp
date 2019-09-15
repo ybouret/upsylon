@@ -74,7 +74,7 @@ void make_for(mpi  &MPI,
         {
             fflush(stderr);
             std::cerr << "|_: using ";
-            Coord::Disp(std::cerr,mappings[m],3) << " <";
+            Coord::Disp(std::cerr,mappings[m],3) << " [";
             std::cerr.flush();
             parent = new Domain<COORD>(MPI,full,mapping);
             guard  = parent;
@@ -193,13 +193,14 @@ void make_for(mpi  &MPI,
             MPI.flush(stderr);
 
             MPI.Barrier();
-            MPI.print0(stderr,"!");
+            MPI.print0(stderr,"<");
             MPI.flush(stderr);
-
             Domain<COORD>::Gather( MPI,parent, "Fd", W);
+            MPI.print0(stderr,">");
+            MPI.flush(stderr);
             Domain<COORD>::Scatter(MPI,parent, "Fd", W);
             
-        } MPI.print0(stderr,">\n");
+        } MPI.print0(stderr,"]\n");
     }
 
 

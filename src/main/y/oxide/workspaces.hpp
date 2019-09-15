@@ -20,35 +20,34 @@ namespace upsylon
             typedef typename LayoutType::const_coord const_coord;    //!< alias
             typedef Workspace<COORD>                 WorkspaceType;  //!< alias
             typedef slots<WorkspaceType>             SlotsType;      //!< alias
-
+            
             //! cleanup
             virtual ~Workspaces() throw() { }
-
+            
             //! setup all sub-workspaces
-            explicit Workspaces(const LayoutType &full,
+            explicit Workspaces(const LayoutType &fullLayout,
                                 const_coord      &localSizes,
-                                const_coord      &boundaryConditions,
-                                const Coord1D     ng) :
+                                const_coord      &boundaries,
+                                const Coord1D     ghostsZone) :
             SlotsType( Coord::Product( __Workspace::CheckLocalSizes(localSizes) ) )
             {
-                const Coord1D sz = Coord1D( this->count );
-                for(Coord1D rank=0;rank<sz;++rank)
-                {
-                    this->template build<LayoutType,coord,Coord1D,coord,Coord1D>(full,
-                                                                                 localSizes,
-                                                                                 rank,
-                                                                                 boundaryConditions,
-                                                                                 ng);
-                }
+                SlotsType    &self       = *this;
+                const Coord1D globalSize = Coord1D( this->count );
+                for(Coord1D globalRank=0;globalRank<globalSize;++globalRank)
+                    self.template build<LayoutType,coord,Coord1D,coord,Coord1D>(fullLayout,
+                                                                                localSizes,
+                                                                                globalRank,
+                                                                                boundaries,
+                                                                                ghostsZone);
             }
-
-
+            
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Workspaces);
         };
-
+        
     }
-
+    
 }
 
 #endif
