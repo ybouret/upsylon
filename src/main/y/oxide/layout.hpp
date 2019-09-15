@@ -119,6 +119,20 @@ namespace upsylon
             //
             //==================================================================
 
+            inline bool is_same_than( const Layout &other ) const throw()
+            {
+                if( lower == other.lower && upper==other.upper )
+                {
+                    assert(width==other.width);
+                    assert(pitch==other.pitch);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
             
             //! display
             friend inline std::ostream & operator<<( std::ostream &os, const Layout &L )

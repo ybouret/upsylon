@@ -54,6 +54,7 @@ namespace upsylon
             typedef Layout<COORD>                    LayoutType;                               //!< alias
             typedef typename LayoutType::coord       coord;                                    //!< alias
             typedef typename LayoutType::const_coord const_coord;                              //!< alias
+            typedef typename LayoutType::Loop        Loop;                              //!< alias
             static const size_t                      Dimensions   = LayoutType::Dimensions;    //!< alias
 
             typedef Layouts<COORD>                   LayoutsType;                              //!< alias
@@ -82,7 +83,7 @@ namespace upsylon
             inline explicit Workspace(const LayoutType &full,
                                       const_coord       localSizes,
                                       const Coord1D     globalRank,
-                                      const_coord      &PBC,
+                                      const_coord       PBC,
                                       const Coord1D     ng) :
             LayoutsType(full,
                         __Workspace::CheckLocalSizes(localSizes),
@@ -174,8 +175,8 @@ namespace upsylon
 
                     for(size_t j=fwd_inner.size();j>0;--j)
                     {
-                        F.copyObject(fwd_outer[j],rev_inner[j]);
-                        F.copyObject(rev_outer[j],fwd_inner[j]);
+                        F.copyInternalObject(fwd_outer[j],rev_inner[j]);
+                        F.copyInternalObject(rev_outer[j],fwd_inner[j]);
                     }
                 }
 
@@ -326,6 +327,14 @@ namespace upsylon
                 __Workspace::CheckBlockTotal(recvBlock,total);
             }
 
+#if 0
+            //------------------------------------------------------------------
+            //
+            // synchronous exchanges
+            //
+            //------------------------------------------------------------------
+
+            //! collect data for fields from sub layout into sendBlock
             inline comm_mode collect(const ActiveFields &fields,
                                      const LayoutType   &sub )
             {
@@ -352,6 +361,7 @@ namespace upsylon
                 return m;
             }
 
+            //! expand data for fields from sub layout from recvBlock
             inline void expand(const ActiveFields &fields,
                                const LayoutType   &sub )
             {
@@ -371,7 +381,7 @@ namespace upsylon
                 }
                 __Workspace::CheckBlockTotal(recvBlock,total);
             }
-
+#endif
 
         private:
 

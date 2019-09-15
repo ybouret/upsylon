@@ -12,11 +12,12 @@ namespace upsylon
 
         struct __Partition
         {
-            static size_t Count( const Coord1D *, const unsigned );
+            static size_t Check( const Coord1D *, const unsigned, const size_t targetSize);
+
             template <typename COORD> static inline
-            size_t Count( const COORD localSizes )
+            size_t Count( const COORD localSizes, const size_t targetSize )
             {
-                return Count( (const Coord1D *) &localSizes, Coord::Get<COORD>::Dimensions );
+                return Check( (const Coord1D *) &localSizes, Coord::Get<COORD>::Dimensions, targetSize );
             }
         };
         template <typename COORD>
@@ -29,11 +30,12 @@ namespace upsylon
             typedef typename LayoutType::const_coord const_coord;
 
             explicit Partition(const LayoutType &full,
-                               const_coord       localSizes) :
+                               const_coord       localSizes,
+                               const size_t      targetSize=0) :
             LayoutType(full),
-            SlotsType( __Partition::Count(localSizes) )
+            SlotsType( __Partition::Count(localSizes,targetSize) )
             {
-                assert( this->count == __Partition::Count(localSizes) );
+                assert( this->count == __Partition::Count(localSizes,targetSize) );
                 while( this->size() < this->count )
                 {
                     const_coord      localRanks = Coord::LocalRanks(localSizes,this->size());

@@ -80,6 +80,24 @@ namespace upsylon
             const string _(id);
             return (*this)[_];
         }
+
+        const Field & Fields:: operator[](const string &id) const
+        {
+            const FieldHandle *h = search(id);
+            if(!h)
+            {
+                throw exception("%s( no const ['%s'])", Fn, *id );
+            }
+            const   Field &cf = *(h->field);
+            return cf;
+        }
+
+        const Field & Fields:: operator[](const char *id) const
+        {
+            const string _(id);
+            return (*this)[_];
+        }
+
     }
 
 }

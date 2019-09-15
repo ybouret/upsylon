@@ -5,7 +5,7 @@ namespace upsylon
 {
     namespace Oxide
     {
-        size_t __Partition:: Count( const Coord1D *sizes, const unsigned dims)
+        size_t __Partition:: Check( const Coord1D *sizes, const unsigned dims, const size_t targetSize)
         {
             assert(sizes);
             assert(dims>=1);
@@ -16,6 +16,10 @@ namespace upsylon
                 const Coord1D sz = sizes[i];
                 if( sz <=0 ) throw exception("Oxide::Partition(invalid sizes[%u])", i);
                 p *= sz;
+            }
+            if(targetSize>0 && p!=targetSize)
+            {
+                throw exception("Oxide::Partition(sizes mismatch!)");
             }
             return p;
         }

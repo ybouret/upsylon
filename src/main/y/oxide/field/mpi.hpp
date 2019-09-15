@@ -6,6 +6,7 @@
 #include "y/mpi/mpi.hpp"
 #include "y/oxide/workspaces.hpp"
 #include "y/oxide/field/divide.hpp"
+#include "y/oxide/partition.hpp"
 
 namespace upsylon
 {
@@ -71,29 +72,30 @@ namespace upsylon
         class Domain : public Workspace<COORD>
         {
         public:
+            static const int              tag=3;     //!< session tag
+
             //==================================================================
             //
             // types and definitions
             //
             //==================================================================
-            static const size_t         defaultTag = 3; //!< default mpi tag
             typedef Workspace<COORD>    WorkspaceType;  //!< alias
             Y_DOMAIN_DECL(LayoutType);                  //!< alias
+            Y_DOMAIN_DECL(Loop);                        //!< alias
             Y_DOMAIN_DECL(coord);                       //!< alias
             Y_DOMAIN_DECL(const_coord);                 //!< alias
             Y_DOMAIN_DECL(AsyncIO);                     //!< alias
             Y_DOMAIN_IMPL(Dimensions);                  //!< alias
             Y_DOMAIN_IMPL(Orientations);                //!< alias
-            
+            typedef Partition<COORD>    PartitionType;  //!< alias
             //==================================================================
             //
             // members
             //
             //==================================================================
 
-            mpi              &MPI;  //!< keep the reference
-            const int        tag;   //!< session tag
-            const LayoutType super; //!< original layout
+            mpi                          &MPI;       //!< keep the reference
+            const auto_ptr<PartitionType> partition; //!< not allocated by default
 
             //==================================================================
             //
@@ -104,13 +106,11 @@ namespace upsylon
             explicit Domain(mpi              &usrMPI,
                             const LayoutType &full,
                             const_coord       localSizes,
-                            const_coord      &PBC,
-                            const size_t      ng,
-                            const int         sessionTag = defaultTag) :
+                            const_coord       PBC,
+                            const size_t      ng) :
             WorkspaceType(full,localSizes,usrMPI.rank,PBC,ng),
             MPI(usrMPI),
-            tag(sessionTag),
-            super(full)
+            partition(0)
             {
                 const int lsize = int(Coord::Product(this->sizes));
                 if(  lsize != MPI.size )
@@ -118,17 +118,33 @@ namespace upsylon
                     throw exception("Oxide::Domain(invalid |localSizes|=%d/MPI.size=%d)",lsize,MPI.size);
                 }
             }
-            
+
+            //! full domain
+            explicit Domain(mpi              & _MPI,
+                            const LayoutType &full,
+                            const_coord       localSizes) :
+            WorkspaceType(full,getOne(),0,getZero(),0),
+            MPI(_MPI),
+            partition( new PartitionType(full,localSizes,MPI.size) )
+            {
+            }
+
+
             //! cleanup
-            virtual ~Domain() throw() { bzset_(tag); }
+            virtual ~Domain() throw() {}
 
             //==================================================================
             //
             // communication
             //
             //==================================================================
-            
-            //! full exchange session
+
+            //------------------------------------------------------------------
+            //
+            //! full async exchange session
+            //
+            //------------------------------------------------------------------
+
             /**
              for each orientation, two waves are created
              */
@@ -140,9 +156,117 @@ namespace upsylon
                 }
             }
 
+
+
+            //! send from node 0 to other
+            static inline void Scatter(mpi           &MPI,
+                                       Domain        *parentAddr,
+                                       const string  &id,
+                                       WorkspaceType &child )
+            {
+
+                Field            &target = child[id];
+                if(parentAddr)
+                {
+                    Domain              &parent = *parentAddr; assert(parent.partition.is_valid());
+                    const PartitionType &part   =  *parent.partition;
+                    assert(child.rank==0);
+                    assert(part.contains(child.inner));
+                    assert(part[0].is_same_than(child.inner));
+
+                    const Field &source = parent[id];
+
+                    // local scatter
+                    source.scatter<LayoutType>(child.inner,part,target,child.outer);
+
+                    // will send all data
+                    const size_t sz  = part.size();
+                    IOBlock     &blk = parent.sendBlock;
+                    for(size_t rank=1;rank<sz;++rank)
+                    {
+                        blk.free();
+                        const size_t total = source.save<LayoutType>(blk,part,part[rank]);
+                        __Workspace::CheckBlockTotal(blk,total);
+                        MPI.vSend(comm_variable_size,parent.sendBlock,rank,tag);
+                    }
+                }
+                else
+                {
+                    assert(child.rank>0);
+                    IOBlock     &blk = child.recvBlock;
+                    blk.free();
+                    MPI.vRecv(comm_variable_size,blk,0,tag);
+                    ios::imstream input(blk);
+                    const size_t total = target.load<LayoutType>(input,child.outer,child.inner);
+                    __Workspace::CheckBlockTotal(blk,total);
+                }
+            }
+
+
+            //! send from node 0 to other
+            static inline void Gather(mpi           &MPI,
+                                      Domain        *parentAddr,
+                                      const string  &id,
+                                      WorkspaceType &child )
+            {
+
+                Field            &target = child[id];
+                if(parentAddr)
+                {
+                    Domain              &parent = *parentAddr; assert(parent.partition.is_valid());
+                    const PartitionType &part   =  *parent.partition;
+                    assert(child.rank==0);
+                    assert(part.contains(child.inner));
+                    assert(part[0].is_same_than(child.inner));
+
+                    Field &source = parent[id];
+
+                    // local scatter
+                    source.gather<LayoutType>(child.inner,part,target,child.outer);
+
+                    // will send all data
+                    const size_t sz  = part.size();
+                    IOBlock     &blk = parent.recvBlock;
+                    for(size_t rank=1;rank<sz;++rank)
+                    {
+                        //blk.free();
+                        //const size_t total = source.save<LayoutType>(blk,part,part[rank]);
+                        //__Workspace::CheckBlockTotal(blk,total);
+                        //MPI.vSend(comm_variable_size,parent.sendBlock,rank,tag);
+                    }
+                }
+                else
+                {
+                    assert(child.rank>0);
+#if 0
+                    IOBlock     &blk = child.sendBlock;
+                    blk.free();
+                    MPI.vRecv(comm_variable_size,blk,0,tag);
+                    ios::imstream input(blk);
+                    const size_t total = target.load<LayoutType>(input,child.outer,child.inner);
+                    __Workspace::CheckBlockTotal(blk,total);
+#endif
+                }
+
+            }
+
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Domain);
+
+            static inline COORD getZero()   throw()
+            {
+                COORD ans(0); Coord::LD(ans,0);
+                return ans;
+            }
+
+            static inline COORD getOne()   throw()
+            {
+                COORD ans(1); Coord::LD(ans,1);
+                return ans;
+            }
+
+
             inline void rings(const ActiveFields  &fields,
                               const size_t         orientation)
             {
@@ -212,10 +336,9 @@ namespace upsylon
             inline explicit _Domain(mpi              &usrMPI,
                                     const LayoutType &full,
                                     const_coord      &PBC,
-                                    const size_t      ng,
-                                    const int         sessionTag = WorkspaceType::defaultTag) :
+                                    const size_t      ng) :
             Parallel<COORD>(usrMPI,full,PBC,false),
-            WorkspaceType(usrMPI,full,this->optimal,PBC,ng,sessionTag)
+            WorkspaceType(usrMPI,full,this->optimal,PBC,ng)
             {
             }
 

@@ -62,25 +62,32 @@ void make_for(mpi  &MPI,
 
     ActiveFields fields;
 
+
+
+
     for(size_t m=1;m<=mappings.size();++m)
     {
-        const COORD &mapping = mappings[m];
+        const COORD                 &mapping = mappings[m];
+        Domain<COORD>               *parent  = 0;
+        auto_ptr< Domain<COORD> >    guard   = 0;
         if(MPI.isHead)
         {
             fflush(stderr);
             std::cerr << "|_: using ";
             Coord::Disp(std::cerr,mappings[m],3) << " <";
             std::cerr.flush();
+            parent = new Domain<COORD>(MPI,full,mapping);
+            guard  = parent;
+            parent->template create<dField>( "Fd" );
         }
+        //MPI.print(stderr,"|_parent: %d\n", int( parent.is_valid() ) );
         COORD pbc0(0); Coord::LD(pbc0,0);
         COORD pbc1(1); Coord::LD(pbc1,1);
 
         typename Layout<COORD>::Loop pbc(pbc0,pbc1);
         for(pbc.start(); pbc.valid(); pbc.next())
         {
-            //MPI.print0(stderr,".");
-            // MPI.flush0(stderr);
-            
+
             size_t ng=1;
 
             MPI.Barrier();
@@ -184,6 +191,13 @@ void make_for(mpi  &MPI,
 
             MPI.print0(stderr,"^");
             MPI.flush(stderr);
+
+            MPI.Barrier();
+            MPI.print0(stderr,"!");
+            MPI.flush(stderr);
+
+            Domain<COORD>::Gather( MPI,parent, "Fd", W);
+            Domain<COORD>::Scatter(MPI,parent, "Fd", W);
             
         } MPI.print0(stderr,">\n");
     }

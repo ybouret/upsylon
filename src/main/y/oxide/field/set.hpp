@@ -52,6 +52,12 @@ namespace upsylon
             //! get field type, wrapper
             Field & operator[](const char *id);
 
+            //! get field type
+            const Field & operator[](const string &id) const;
+
+            //! get field type, wrapper
+            const Field & operator[](const char *id) const;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Fields);
             static const char Fn[];
