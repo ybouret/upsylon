@@ -50,11 +50,23 @@ namespace  {
         VTK.writeHeader(fp);
         VTK.writeTitle(fp,filename);
         VTK.writeLayout(fp,L);
+        VTK.writePointData(fp,L);
+
 
         typename __Field<COORD,double>::Type Fd( "Fd", L );
         fill(Fd);
-
         VTK.writeField(fp, Fd, L);
+
+
+#if 1
+        typename __Field<COORD, point2d<float> >::Type F2( "F2", L );
+        fill(F2);
+        VTK.writeField(fp, F2, L);
+#endif
+
+        typename __Field<COORD, point3d<double> >::Type F3( "F3", L );
+        fill(F3);
+        VTK.writeField(fp, F3, L);
 
     }
 

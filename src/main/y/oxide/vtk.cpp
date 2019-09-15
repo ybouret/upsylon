@@ -42,7 +42,7 @@ namespace upsylon
                 }
 
                 inline virtual const char * dataType()   const throw() { return __dataType; }
-                inline virtual bool         isScalar()   const throw() { return true;       }
+                inline virtual unsigned     components() const throw() { return  1;         }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(WriterI);
@@ -69,8 +69,8 @@ namespace upsylon
                 }
 
                 inline virtual const char * dataType()   const throw() { return __dataType; }
-                inline virtual bool         isScalar()   const throw() { return true;       }
-
+                inline virtual unsigned     components() const throw() { return 1;          }
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(WriterU);
             };
@@ -81,7 +81,7 @@ namespace upsylon
             public:
                 inline explicit WriterF() : vtk::Writer( typeid(float), "%.3g" ) {}
                 inline virtual ~WriterF() throw() {}
-               
+
                 virtual void write( ios::ostream &fp, const void *addr) const
                 {
                     assert(addr);
@@ -90,7 +90,7 @@ namespace upsylon
                 }
 
                 inline virtual const char * dataType()   const throw() { return "float"; }
-                inline virtual bool         isScalar()   const throw() { return true;    }
+                inline virtual unsigned     components() const throw() { return 1;       }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(WriterF);
@@ -110,7 +110,7 @@ namespace upsylon
                 }
 
                 inline virtual const char * dataType()   const throw() { return "double"; }
-                inline virtual bool         isScalar()   const throw() { return true;     }
+                inline virtual unsigned     components() const throw() { return 1;       }
 
                 
             private:
@@ -130,6 +130,7 @@ namespace upsylon
                 shared( (vtk::Writer *)&VTK.get<T>() )
                 {
                     assert(Components>0);
+                    assert(1==shared->components());
                 }
                 
                 inline virtual ~WriterMulti() throw()
@@ -153,7 +154,7 @@ namespace upsylon
                     return shared->dataType();
                 }
 
-                inline virtual bool         isScalar()   const throw() { return false; }
+                inline virtual unsigned     components() const throw() { return Components; }
 
 
                 
@@ -188,7 +189,7 @@ namespace upsylon
 #define Y_VTK_IB(BITS) do { const SharedWriter w = new WriterI<int##BITS##_t>(); (void) writers.insert(w); } while(false)
 #define Y_VTK_UB(BITS) do { const SharedWriter w = new WriterI<uint##BITS##_t>(); (void) writers.insert(w); } while(false)
 #define Y_VTK_B(BITS ) Y_VTK_IB(BITS); Y_VTK_UB(BITS)
-      
+
 #define Y_VTK_(TYPE,WRITER) do { const SharedWriter w = new WRITER(); if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE ">)",Fn ); } while(false)
         
 #define Y_VTK_M(TYPE,COORD) do\
@@ -209,13 +210,13 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
             Y_VTK_B(16);
             Y_VTK_B(32);
             Y_VTK_B(64);
-          
+
             Y_VTK_(float,WriterF);
             Y_VTK_(double,WriterD);
             
             Y_VTK_M(float,point2d<float>);
             Y_VTK_M(float,point3d<float>);
-          
+
             Y_VTK_M(double,point2d<double>);
             Y_VTK_M(double,point3d<double>);
             
@@ -262,10 +263,10 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
         }
 
 
-        ios::ostream & vtk:: write3D(ios::ostream  &fp,
-                                     const Coord1D *v,
-                                     const size_t   dims,
-                                     const Coord1D  pad) const
+        ios::ostream & vtk:: writeAs3D(ios::ostream  &fp,
+                                       const Coord1D   *v,
+                                       const size_t     dims,
+                                       const Coord1D    pad) const
         {
             assert(dims>=1); assert(dims<=3);
             assert(v!=NULL);
@@ -278,6 +279,7 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
             return fp;
         }
 
+        const size_t vtk::Repeat[4] = { 0, 4, 2, 1 };
 
         void vtk:: structuredPoints(ios::ostream  &fp,
                                     const size_t   dims,
@@ -286,16 +288,28 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
         {
             assert(dims>=1); assert(dims<=3); assert(width); assert(lower);
             fp << "DATASET STRUCTURED_POINTS\n";
-            write3D(fp << "DIMENSIONS ",width,dims,1) << '\n';
-            write3D(fp << "ORIGIN ",lower,dims,1)     << '\n';
+            writeAs3D(fp << "DIMENSIONS ",width,dims,2) << '\n';
+            writeAs3D(fp << "ORIGIN ",lower,dims,1)     << '\n';
             fp << "SPACING 1 1 1\n";
         }
 
 
-        ios::ostream & vtk:: declareField( ios::ostream &fp, const Field &F ) const
+        void vtk:: writePointData(ios::ostream     &fp,
+                                  const LayoutInfo &L) const
+        {
+            assert(L.dimension>=1);
+            assert(L.dimension<=3);
+            fp << "POINT_DATA ";
+            (*this)(fp, L.items * Repeat[L.dimension] );
+            fp << '\n';
+        }
+
+        const vtk::Writer & vtk:: declareField(ios::ostream &fp,
+                                               const Field  &F ) const
         {
             const Writer &W = get(F.typeOfObject);
-            if(W.isScalar())
+
+            if( W.components() == 1)
             {
                 fp << "SCALARS " << F.name << ' ' << W.dataType() << '\n';
                 fp << "LOOKUP_TABLE " << F.name << '\n';
@@ -304,8 +318,29 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
             {
                 fp << "VECTORS " << F.name << ' ' << W.dataType() << '\n';
             }
-            return fp;
+
+            return W;
         }
+
+        void vtk:: writeScalar( ios::ostream &fp, const Writer &W, const void *addr ) const
+        {
+            W.write(fp,addr);
+            fp << '\n';
+        }
+
+
+        void vtk:: writeVector(ios::ostream &fp,
+                               const Writer &W,
+                               const void   *addr ) const
+        {
+            W.write(fp,addr);
+            for(size_t dim=W.components();dim<3;++dim)
+            {
+                fp << ' ' << '0';
+            }
+            fp << '\n';
+        }
+
         
     }
 }

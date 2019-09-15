@@ -41,7 +41,8 @@ namespace upsylon
                 const std::type_info & key() const throw();                            //!< key for database
                 virtual void           write( ios::ostream &, const void *) const = 0; //!< interface
                 virtual const  char   *dataType() const throw() = 0;                   //!< VTK data type
-                virtual bool           isScalar() const throw() = 0;                   //!<
+                virtual unsigned       components() const throw() = 0;
+                bool isScalar() const throw() { return 1 == components(); }
 
             protected:
                 //! setup using type info a default format
@@ -88,13 +89,31 @@ namespace upsylon
                 structuredPoints(fp, Layout<COORD>::Dimensions, (const Coord1D *)&L.width, (const Coord1D *)&L.lower );
             }
 
+            void writePointData(ios::ostream     &fp,
+                                const LayoutInfo &L ) const;
+            
+
+            typedef void (vtk::*method)( ios::ostream &, const Writer &, const void *) const;
+
             template <typename FIELD,typename LAYOUT>
             void writeField( ios::ostream &fp, const FIELD &F, const LAYOUT &L ) const
             {
-                declareField(fp,F);
+                const Writer &writer = declareField(fp,F);
+                method        write1 = ( writer.isScalar() ) ?  & vtk::writeScalar : & vtk::writeVector;
+                const size_t  repeat = Repeat[ LAYOUT::Dimensions ];
+
+                typename LAYOUT::Loop loop(L.lower,L.upper);
+                for(size_t r=0;r<repeat;++r)
+                {
+                    for( loop.start(); loop.valid(); loop.next() )
+                    {
+                        (*this.*write1)(fp,writer, & F(loop.value) );
+                    }
+                }
             }
 
         private:
+            static const size_t Repeat[4];
             static const at_exit::longevity life_time = 0;
             explicit vtk();
             virtual ~vtk() throw();
@@ -106,8 +125,11 @@ namespace upsylon
                                   const Coord1D *width,
                                   const Coord1D *lower) const;
 
-            ios::ostream & write3D(ios::ostream &fp, const Coord1D *C, const size_t dims, const Coord1D pad) const;
-            ios::ostream & declareField( ios::ostream &fp, const Field &F ) const;
+            ios::ostream & writeAs3D(ios::ostream &fp, const Coord1D *C, const size_t dims, const Coord1D pad) const;
+            const Writer & declareField( ios::ostream &fp, const Field  &F ) const;
+            void           writeScalar( ios::ostream &fp, const Writer &W, const void *addr ) const;
+            void           writeVector( ios::ostream &fp, const Writer &W, const void *addr ) const;
+
 
         };
         
