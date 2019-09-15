@@ -31,18 +31,31 @@ namespace upsylon
             // types and defintions
             //
             //==================================================================
+
+            //------------------------------------------------------------------
+            //
+            //! writer for a registered type
+            //
+            //------------------------------------------------------------------
             class Writer : public counted_object
             {
             public:
                 const std::type_info &tid; //!< type info, used as key
                 auto_ptr<string>      fmt; //!< format
-                
+
+                //--------------------------------------------------------------
+                // virtual interface
+                //--------------------------------------------------------------
                 virtual               ~Writer() throw();                               //!< cleanup
-                const std::type_info & key() const throw();                            //!< key for database
                 virtual void           write( ios::ostream &, const void *) const = 0; //!< interface
-                virtual const  char   *dataType() const throw() = 0;                   //!< VTK data type
-                virtual unsigned       components() const throw() = 0;
-                bool isScalar() const throw() { return 1 == components(); }
+                virtual const  char   *dataType()   const throw() = 0;                 //!< VTK data type
+                virtual unsigned       components() const throw() = 0;                 //!< number of components
+
+                //--------------------------------------------------------------
+                // non-virtual interface
+                //--------------------------------------------------------------
+                bool                   isScalar() const throw();                       //!< 1 == compnents()
+                const std::type_info & key() const throw();                            //!< key for database
 
             protected:
                 //! setup using type info a default format
@@ -56,13 +69,19 @@ namespace upsylon
             typedef hashing::type_info_hasher<>      Hasher;        //!< hasher for database
             typedef intr_ptr<std::type_info,Writer>  SharedWriter;  //!< shared writer
             typedef set<std::type_info,SharedWriter> SharedWriters; //!< set of shared writers
-            
+
+            //==================================================================
+            //
+            // methods
+            //
+            //==================================================================
+
             //! access a registered writer
             const Writer & get( const std::type_info &tid ) const;
 
             //! access a registered writer for a type
-            template <typename T>
-            inline const Writer & get() const { return get( typeid(T) ); }
+            template <typename T> inline
+            const Writer & get() const { return get( typeid(T) ); }
 
             //! write object to stream
             template <typename T> inline
@@ -83,21 +102,29 @@ namespace upsylon
 
 
             //! write layout as structured points, no physical data
+            /**
+             data are expanded to work with ParaView
+             */
             template <typename COORD> inline
             void writeLayout( ios::ostream &fp, const Layout<COORD> &L ) const
             {
                 structuredPoints(fp, Layout<COORD>::Dimensions, (const Coord1D *)&L.width, (const Coord1D *)&L.lower );
             }
 
+            //! write layout as structured points, no physical data
+            /**
+             write globl POINT_DATA for this layout
+             */
             void writePointData(ios::ostream     &fp,
                                 const LayoutInfo &L ) const;
-            
 
-            typedef void (vtk::*method)( ios::ostream &, const Writer &, const void *) const;
 
-            template <typename FIELD,typename LAYOUT>
+            //! write a field with repeats to be usable by ParaView
+            template <typename FIELD,typename LAYOUT> inline
             void writeField( ios::ostream &fp, const FIELD &F, const LAYOUT &L ) const
             {
+                // local type
+                typedef void (vtk::*method)( ios::ostream &, const Writer &, const void *) const;
                 const Writer &writer = declareField(fp,F);
                 method        write1 = ( writer.isScalar() ) ?  & vtk::writeScalar : & vtk::writeVector;
                 const size_t  repeat = Repeat[ LAYOUT::Dimensions ];

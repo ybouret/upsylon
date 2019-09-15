@@ -15,6 +15,7 @@ namespace upsylon
 
         const std::type_info &  vtk::Writer:: key() const throw() { return tid; }
 
+        bool  vtk::Writer:: isScalar() const throw() { return 1 == components(); }
 
 
         namespace
