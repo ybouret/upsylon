@@ -5,7 +5,18 @@ namespace upsylon
 {
     namespace Oxide
     {
-        
+
+        vtk::Writer:: ~Writer() throw() {}
+        vtk::Writer::  Writer(const std::type_info &t,
+                              const char           *f) :
+        tid(t), fmt( (0!=f) ? new string(f) : 0 )
+        {
+        }
+
+        const std::type_info &  vtk::Writer:: key() const throw() { return tid; }
+
+
+
         namespace
         {
             template <typename T>
@@ -14,7 +25,6 @@ namespace upsylon
             public:
                 inline WriterI() : vtk::Writer( typeid(T), "%ld" )
                 {
-                    //std::cerr << "WriterI<" << tid.name() << ">" << std::endl;
                 }
                 
                 inline virtual ~WriterI() throw()
@@ -24,8 +34,9 @@ namespace upsylon
                 inline virtual void write( ios::ostream &fp, const void *addr) const
                 {
                     assert(addr);
+                    assert(fmt.is_valid());
                     const long i = *static_cast<const T *>(addr);
-                    fp( *fmt, i );
+                    fp( **fmt, i );
                 }
                 
             private:
@@ -49,8 +60,9 @@ namespace upsylon
                 inline virtual void write( ios::ostream &fp, const void *addr) const
                 {
                     assert(addr);
+                    assert(fmt.is_valid());
                     const long i = *static_cast<const T *>(addr);
-                    fp( *fmt, i );
+                    fp( **fmt, i );
                 }
                 
             private:
@@ -67,7 +79,8 @@ namespace upsylon
                 virtual void write( ios::ostream &fp, const void *addr) const
                 {
                     assert(addr);
-                    fp( *fmt, *static_cast<const float *>(addr)  );
+                    assert(fmt.is_valid());
+                    fp( **fmt, *static_cast<const float *>(addr)  );
                 }
                 
             private:
@@ -83,7 +96,8 @@ namespace upsylon
                 virtual void write( ios::ostream &fp, const void *addr) const
                 {
                     assert(addr);
-                    fp( *fmt, *static_cast<const double *>(addr) );
+                    assert(fmt.is_valid());
+                    fp( **fmt, *static_cast<const double *>(addr) );
                 }
                 
             private:
@@ -99,7 +113,7 @@ namespace upsylon
                 const vtk::SharedWriter shared;
                 
                 explicit WriterMulti( const vtk &VTK ) :
-                vtk::Writer( typeid(COORD), "" ),
+                vtk::Writer( typeid(COORD), NULL ),
                 shared( (vtk::Writer *)&VTK.get<T>() )
                 {
                     assert(Components>0);
@@ -112,6 +126,7 @@ namespace upsylon
                 inline virtual void write( ios::ostream &fp, const void *addr) const
                 {
                     assert(addr);
+                    assert(fmt.is_empty());
                     const T *p = static_cast<const T *>(addr);
                     shared->write(fp,p);
                     for(size_t i=1;i<Components;++i)
