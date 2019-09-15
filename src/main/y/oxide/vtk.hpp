@@ -113,7 +113,7 @@ namespace upsylon
 
             //! write layout as structured points, no physical data
             /**
-             write globl POINT_DATA for this layout
+             write global POINT_DATA for this layout, expanded for ParaView
              */
             void writePointData(ios::ostream     &fp,
                                 const LayoutInfo &L ) const;
@@ -129,6 +129,7 @@ namespace upsylon
                 method        write1 = ( writer.isScalar() ) ?  & vtk::writeScalar : & vtk::writeVector;
                 const size_t  repeat = Repeat[ LAYOUT::Dimensions ];
 
+                // loop over layout
                 typename LAYOUT::Loop loop(L.lower,L.upper);
                 for(size_t r=0;r<repeat;++r)
                 {

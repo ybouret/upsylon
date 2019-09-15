@@ -95,7 +95,7 @@ void make_for(mpi  &MPI,
             {
                 MPI.print0(stderr,".");
             }
-            MPI.flush0(stderr);
+            MPI.flush(stderr);
 
             Y_ASSERT(W.rank==MPI.rank);
             
@@ -183,7 +183,7 @@ void make_for(mpi  &MPI,
             }
 
             MPI.print0(stderr,"^");
-            MPI.flush0(stderr);
+            MPI.flush(stderr);
             
         } MPI.print0(stderr,">\n");
     }

@@ -5,6 +5,7 @@
 #include "y/oxide/field3d.hpp"
 #include "y/ios/ovstream.hpp"
 #include "y/ios/imstream.hpp"
+#include "y/oxide/partition.hpp"
 
 #include "support.hpp"
 
@@ -51,6 +52,10 @@ namespace
         const Layout<COORD> full(org,length);
         std::cerr << "full=" << full << std::endl;
 
+
+        {
+            Partition<COORD> part(full,mapping);
+        }
 
         ios::ovstream block;
 

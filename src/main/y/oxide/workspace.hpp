@@ -293,6 +293,8 @@ namespace upsylon
                 }
             }
 
+
+
             //! save in sendBlock
             inline void __asyncSave( const GhostsType &G, const ActiveFields &fields )
             {
@@ -324,9 +326,55 @@ namespace upsylon
                 __Workspace::CheckBlockTotal(recvBlock,total);
             }
 
+            inline comm_mode collect(const ActiveFields &fields,
+                                     const LayoutType   &sub )
+            {
+                assert(this->inner.contains(sub));
+                comm_mode m = comm_constant_size;
+                sendBlock.free();
+
+                typename LayoutType::Loop loop(sub.lower,sub.upper);
+                size_t                    total = 0;
+                for(size_t i=fields.size();i>0;--i)
+                {
+                    Field &F = (Field &)(*fields[i]); assert(owns(F));
+                    for( loop.start(); loop.valid(); loop.next() )
+                    {
+                        total += load(sendBlock,this->outer.indexOf(loop.value)  );
+                    }
+                    switch(F.transfer->mode)
+                    {
+                        case comm_variable_size: m = comm_variable_size; break;
+                        case comm_constant_size: break;
+                    }
+                }
+                __Workspace::CheckBlockTotal(sendBlock,total);
+                return m;
+            }
+
+            inline void expand(const ActiveFields &fields,
+                               const LayoutType   &sub )
+            {
+                assert(this->inner.contains(sub));
+                typename LayoutType::Loop loop(sub.lower,sub.upper);
+                size_t                    total   = 0;
+                {
+                    ios::imstream input(recvBlock);
+                    for(size_t i=fields.size();i>0;--i)
+                    {
+                        Field &F = (Field &)(*fields[i]); assert(owns(F));
+                        for( loop.start(); loop.valid(); loop.next() )
+                        {
+                            total += save(input,this->outer.indexOf(loop.value)  );
+                        }
+                    }
+                }
+                __Workspace::CheckBlockTotal(recvBlock,total);
+            }
 
 
         private:
+
             Y_DISABLE_COPY_AND_ASSIGN(Workspace);
 
 

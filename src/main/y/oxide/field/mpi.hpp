@@ -4,7 +4,7 @@
 #define Y_OXIDE_FIELD_MPI_INCLUDED 1
 
 #include "y/mpi/mpi.hpp"
-#include "y/oxide/workspace.hpp"
+#include "y/oxide/workspaces.hpp"
 #include "y/oxide/field/divide.hpp"
 
 namespace upsylon
@@ -12,30 +12,45 @@ namespace upsylon
     namespace Oxide
     {
 
+        //======================================================================
+        //
+        //
+        //! information about parallel layouts
+        //
+        //
+        //======================================================================
         template <typename COORD>
         class Parallel
         {
         public:
-            typedef Layout<COORD> LayoutType;
-            typedef vector<COORD> MappingsType;
+
+            typedef Layout<COORD> LayoutType;       //!< alias
+            typedef vector<COORD> MappingsType;     //!< will store mappings
             
-            const MappingsType mappings;
-            const COORD        optimal;
-            
+            const MappingsType mappings;            //!< all possible mappings
+            const COORD        optimal;             //!< optimal mappings
+
+            //! create possible mappings and pick optimal
             inline explicit Parallel(const mpi        &MPI,
                                      const LayoutType &full,
-                                     const COORD      &pbc) :
+                                     const COORD      &pbc,
+                                     const bool        computeMappings=true) :
             mappings(),
-            optimal( Divide::Find(full,MPI.size,pbc, (MappingsType *)&mappings) )
+            optimal( Divide::Find(full,MPI.size,pbc, (computeMappings) ? (MappingsType *)&mappings : 0 ) )
             {
-                
+                if( Coord::Product(optimal) <= 0 )
+                {
+                    throw exception("No available Oxide mapping for MPI.size=%d", MPI.size );
+                }
+                assert(MPI.size==Coord::Product(optimal));
             }
-            
+
+            //! cleanup
             inline virtual ~Parallel() throw()
             {
+                bzset_(optimal);
             }
-            
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parallel);
         };
@@ -76,16 +91,17 @@ namespace upsylon
             //
             //==================================================================
 
-            mpi &MPI;      //!< keep the reference
-            const int tag; //!< session tag
-            
+            mpi              &MPI;  //!< keep the reference
+            const int        tag;   //!< session tag
+            const LayoutType super; //!< original layout
+
             //==================================================================
             //
             // C++ setup
             //
             //==================================================================
             //! setup
-            explicit Domain(mpi             &usrMPI,
+            explicit Domain(mpi              &usrMPI,
                             const LayoutType &full,
                             const_coord       localSizes,
                             const_coord      &PBC,
@@ -93,18 +109,19 @@ namespace upsylon
                             const int         sessionTag = defaultTag) :
             WorkspaceType(full,localSizes,usrMPI.rank,PBC,ng),
             MPI(usrMPI),
-            tag(sessionTag)
+            tag(sessionTag),
+            super(full)
             {
                 const int lsize = int(Coord::Product(this->sizes));
                 if(  lsize != MPI.size )
                 {
-                    throw exception("Oxide::ParalleWorkspace(invalid |localSizes|=%d/MPI.size=%d)",lsize,MPI.size);
+                    throw exception("Oxide::Domain(invalid |localSizes|=%d/MPI.size=%d)",lsize,MPI.size);
                 }
             }
             
             //! cleanup
-            virtual ~Domain() throw() {}
-        
+            virtual ~Domain() throw() { bzset_(tag); }
+
             //==================================================================
             //
             // communication
@@ -122,7 +139,7 @@ namespace upsylon
                     rings(fields,orientation);
                 }
             }
-            
+
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Domain);
@@ -174,7 +191,43 @@ namespace upsylon
                 this->asyncEpilog(aio,fields);
             }
         };
+
+
+        //======================================================================
+        //
+        //
+        //! simplified way to get a functional domain
+        //
+        //
+        //======================================================================
+        template <typename COORD>
+        class _Domain : public Parallel<COORD>, public Workspace<COORD>
+        {
+        public:
+            typedef Workspace<COORD>     WorkspaceType; //!< alias
+            Y_DOMAIN_DECL(LayoutType);                  //!< alias
+            Y_DOMAIN_DECL(const_coord);                 //!< alias
+
+            //! setup using optimal mapping
+            inline explicit _Domain(mpi              &usrMPI,
+                                    const LayoutType &full,
+                                    const_coord      &PBC,
+                                    const size_t      ng,
+                                    const int         sessionTag = WorkspaceType::defaultTag) :
+            Parallel<COORD>(usrMPI,full,PBC,false),
+            WorkspaceType(usrMPI,full,this->optimal,PBC,ng,sessionTag)
+            {
+            }
+
+            //! cleanup
+            inline virtual ~_Domain() throw() {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(_Domain);
+        };
+
         
+
     }
 }
 
