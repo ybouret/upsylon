@@ -19,6 +19,8 @@ namespace upsylon
 
         namespace
         {
+            static const char __dataType[] = "int";
+
             template <typename T>
             class WriterI : public vtk::Writer
             {
@@ -38,7 +40,10 @@ namespace upsylon
                     const long i = *static_cast<const T *>(addr);
                     fp( **fmt, i );
                 }
-                
+
+                inline virtual const char * dataType()   const throw() { return __dataType; }
+                inline virtual unsigned     components() const throw() { return 1; }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(WriterI);
             };
@@ -49,8 +54,6 @@ namespace upsylon
             public:
                 inline WriterU() : vtk::Writer( typeid(T), "%lu" )
                 {
-                    //std::cerr << "WriterU<" << tid.name() << ">" << std::endl;
-                    
                 }
                 
                 inline virtual ~WriterU() throw()
@@ -64,6 +67,9 @@ namespace upsylon
                     const long i = *static_cast<const T *>(addr);
                     fp( **fmt, i );
                 }
+
+                inline virtual const char * dataType()   const throw() { return __dataType; }
+                inline virtual unsigned     components() const throw() { return 1; }
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(WriterU);
@@ -82,7 +88,10 @@ namespace upsylon
                     assert(fmt.is_valid());
                     fp( **fmt, *static_cast<const float *>(addr)  );
                 }
-                
+
+                inline virtual const char * dataType()   const throw() { return "float"; }
+                inline virtual unsigned     components() const throw() { return 1; }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(WriterF);
             };
@@ -99,6 +108,10 @@ namespace upsylon
                     assert(fmt.is_valid());
                     fp( **fmt, *static_cast<const double *>(addr) );
                 }
+
+                inline virtual const char * dataType()   const throw() { return "double"; }
+                inline virtual unsigned     components() const throw() { return 1; }
+
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(WriterD);
@@ -108,7 +121,7 @@ namespace upsylon
             class WriterMulti : public vtk::Writer
             {
             public:
-                static const size_t Components = sizeof(COORD)/sizeof(T);
+                static const unsigned Components = sizeof(COORD)/sizeof(T);
                 
                 const vtk::SharedWriter shared;
                 
@@ -129,11 +142,22 @@ namespace upsylon
                     assert(fmt.is_empty());
                     const T *p = static_cast<const T *>(addr);
                     shared->write(fp,p);
-                    for(size_t i=1;i<Components;++i)
+                    for(unsigned i=1;i<Components;++i)
                     {
                         shared->write(fp << ' ',++p);
                     }
                 }
+
+                inline virtual const char * dataType() const throw()
+                {
+                    return shared->dataType();
+                }
+
+                inline virtual unsigned components() const throw()
+                {
+                    return Components * shared->components();
+                }
+
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(WriterMulti);
@@ -162,6 +186,7 @@ namespace upsylon
 #define Y_VTK_I(TYPE) do { const SharedWriter w = new WriterI<TYPE>(); (void) writers.insert(w); } while(false)
 #define Y_VTK_U(TYPE) do { const SharedWriter w = new WriterU<TYPE>(); (void) writers.insert(w); } while(false)
 #define Y_VTK_W(TYPE) Y_VTK_I(TYPE); Y_VTK_U(unsigned TYPE)
+
 #define Y_VTK_IB(BITS) do { const SharedWriter w = new WriterI<int##BITS##_t>(); (void) writers.insert(w); } while(false)
 #define Y_VTK_UB(BITS) do { const SharedWriter w = new WriterI<uint##BITS##_t>(); (void) writers.insert(w); } while(false)
 #define Y_VTK_B(BITS ) Y_VTK_IB(BITS); Y_VTK_UB(BITS)
@@ -206,7 +231,65 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
             }
             
         }
-        
+
+
+        void vtk:: writeHeader(ios::ostream & fp,
+                               const unsigned major,
+                               const unsigned minor) const
+        {
+            fp << "# vtk DataFile Version ";
+            fp("%u.%u\n",major,minor);
+        }
+
+        void vtk:: writeTitle(ios::ostream &fp,
+                              const string &title) const
+        {
+            for(size_t i=0;i<title.size();++i)
+            {
+                char C = title[i];
+                switch(C)
+                {
+                    case '\n':
+                    case '\r':
+                        C = '_';
+                        break;
+
+                    default:
+                        break;
+                }
+                fp << C;
+            }
+            fp << '\n';
+            fp << "ASCII\n";
+        }
+
+
+        ios::ostream & vtk:: write3D(ios::ostream &fp, const Coord1D *C, const size_t dims) const
+        {
+            assert(dims>=1); assert(dims<=3);
+            assert(C!=NULL);
+
+            static const Coord1D one = 1;
+            const vtk           &VTK = *this;
+
+            VTK(fp,C[0]);
+            for(size_t dim=1;dim<dims;++dim) VTK(fp << ' ',C[dim]);
+            for(size_t dim=dims;dim<3;++dim) VTK(fp << ' ',one);
+            return fp;
+        }
+
+
+        void vtk:: structuredPoints(ios::ostream  &fp,
+                                    const size_t   dims,
+                                    const Coord1D *width,
+                                    const Coord1D *lower) const
+        {
+            assert(dims>=1); assert(dims<=3); assert(width); assert(lower);
+            fp << "DATASET STRUCTURED_POINTS\n";
+            write3D(fp << "DIMENSIONS ",width,dims) << '\n';
+            write3D(fp << "ORIGIN ",lower,dims) << '\n';
+            fp << "SPACING 1 1 1\n";
+        }
         
     }
 }
