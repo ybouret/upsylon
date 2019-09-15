@@ -11,6 +11,7 @@ namespace upsylon
 {
     namespace Oxide
     {
+
         //======================================================================
         //
         //! Layouts for a local compute node
@@ -35,6 +36,7 @@ namespace upsylon
             typedef Ghosts<COORD>                             GhostsType;                                     //!< alias
             typedef const GhostsType                         *Peer;                                           //!< alias
             typedef arc_ptr<GhostsType>                       GhostsPointer;                                  //!< dynamic ghosts
+            typedef vector<coord>                             Coordinates;                                    //!< Coordinates for exteriro
 
             //! lightweight ghosts I/O context for one orientation
             struct GIO
@@ -72,9 +74,10 @@ namespace upsylon
             // members
             //
             //------------------------------------------------------------------
-            const LayoutType           inner;  //!< inner layout
-            const LayoutType           outer;  //!< outer layout
-            const auto_ptr<LayoutType> heart;  //!< optional heart layout
+            const LayoutType           inner;     //!< inner layout
+            const LayoutType           outer;     //!< outer layout
+            const auto_ptr<LayoutType> center;    //!< layout that doesn't need ASYNC exchange for computation
+            const Coordinates          border;    //!< coordinates that need ASYNC to be updated
 
         private:
             vector<GhostsPointer>   repository;           //!< all created ghosts
@@ -106,7 +109,8 @@ namespace upsylon
             HubType(localSizes,globalRank,boundaryConditions),
             inner( full.split(this->sizes,this->ranks) ),
             outer( expandInner(abs_of(ng)) ),
-            heart(0),
+            center(0),
+            border(),
             repository( Neighbours, as_capacity ),
             ghosts(),
             localGhosts(),
@@ -118,6 +122,11 @@ namespace upsylon
                 {
                     buildGhosts(ng-1);
                 }
+                else
+                {
+                    (auto_ptr<LayoutType>&)center = new LayoutType(inner);
+                }
+                buildBorder();
             }
 
             //! display information
@@ -125,13 +134,14 @@ namespace upsylon
             {
                 static const char default_pfx[] = "";
                 if(!pfx) pfx = default_pfx;
-                os << pfx << "ranks   = "; Coord::Disp(os, this->ranks, 2) << " <=> rank=" << this->rank << std::endl;
-                os << pfx << "inner   = " << inner << std::endl;
-                os << pfx << "outer   = " << outer << std::endl;
-                os << pfx << "heart   = " << heart << std::endl;
-                os << pfx << "#ghosts = " << repository.size() << std::endl;
-                os << pfx << "#local  = " << localGhosts.size << std::endl;
-                os << pfx << "#comms  = local:" << localComms <<  " async:" << asyncComms << std::endl;
+                os << pfx << "ranks    = "; Coord::Disp(os, this->ranks, 2) << " <=> rank=" << this->rank << std::endl;
+                os << pfx << "inner    = " << inner             << std::endl;
+                os << pfx << "outer    = " << outer             << std::endl;
+                os << pfx << "@center  = " << center            << std::endl;
+                os << pfx << "#border  = " << border.size()     << std::endl;
+                os << pfx << "#ghosts  = " << repository.size() << std::endl;
+                os << pfx << "#local   = " << localGhosts.size  << std::endl;
+                os << pfx << "#comms   = local:" << localComms <<  " async:" << asyncComms << std::endl;
                 for(Coord1D i=0;i<Coord1D(Orientations);++i)
                 {
                     os << pfx << "@orientation#" << std::setw(2) << i << " : " << std::endl;
@@ -387,7 +397,7 @@ namespace upsylon
 
                 //--------------------------------------------------------------
                 //
-                // check if a valid heart is present
+                // check if a valid internal region is present
                 //
                 //--------------------------------------------------------------
                 bool hasHeart = true;
@@ -401,7 +411,7 @@ namespace upsylon
                 }
                 if(hasHeart)
                 {
-                    (auto_ptr<LayoutType>&)heart = new LayoutType(heart_lower,heart_upper);
+                    (auto_ptr<LayoutType>&)center = new LayoutType(heart_lower,heart_upper);
                 }
 
                 //--------------------------------------------------------------
@@ -422,6 +432,37 @@ namespace upsylon
                         assert(G.async);
                         (size_t &)asyncComms += n;
                     }
+                }
+            }
+
+            //==================================================================
+            //
+            //
+            //! if a center is detected, build border coordinates
+            //
+            //
+            //==================================================================
+            void buildBorder()
+            {
+                assert( 0 == border.size() );
+                vector<COORD> &seq = (vector<COORD> &)border;
+                typename LayoutType::Loop loop(inner.lower,inner.upper);
+                if(center.is_valid())
+                {
+                    // first pass: count
+                    {
+                        size_t count = 0;
+                        for(loop.start();loop.valid();loop.next()) if( !center->has( loop.value ) ) ++count;
+                        seq.ensure(count);
+                    }
+                    for(loop.start();loop.valid();loop.next()) if( !center->has( loop.value ) ) seq.push_back(loop.value);
+
+                }
+                else
+                {
+                    // everybody is border
+                    seq.ensure( inner.items );
+                    for(loop.start();loop.valid();loop.next()) seq.push_back( loop.value );
                 }
             }
 
