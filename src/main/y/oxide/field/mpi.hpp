@@ -166,7 +166,11 @@ namespace upsylon
                 }
             }
             
-            
+            //------------------------------------------------------------------
+            //
+            // send a parent workspace to some local workspaces
+            //
+            //------------------------------------------------------------------
             
             //! send from node 0 to other
             static inline void Scatter(mpi           &MPI,
@@ -212,7 +216,11 @@ namespace upsylon
                 }
             }
             
-            
+            //------------------------------------------------------------------
+            //
+            // send  some local workspaces to a global workspace
+            //
+            //------------------------------------------------------------------
             //! send from node 0 to other
             static inline void Gather(mpi                &MPI,
                                       Domain              *parentAddr,
