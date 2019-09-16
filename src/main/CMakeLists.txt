@@ -290,6 +290,12 @@ SET(oxide_algo_srcs ${oxide_algo_decl} ${oxide_algo_code})
 SOURCE_GROUP( oxide/algo FILES ${oxide_algo_srcs} )
 INSTALL( FILES ${oxide_algo_decl} DESTINATION include/y/oxide/algo )
 
+FILE(GLOB oxide_mpi_decl y/oxide/mpi/*.hpp)
+FILE(GLOB oxide_mpi_code y/oxide/mpi/*.cpp)
+SET(oxide_mpi_srcs ${oxide_mpi_decl} ${oxide_mpi_code})
+SOURCE_GROUP( oxide/mpi FILES ${oxide_mpi_srcs} )
+INSTALL( FILES ${oxide_mpi_decl} DESTINATION include/y/oxide/mpi )
+
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
 ${os_srcs}
@@ -325,7 +331,7 @@ ${geometry_srcs}
 ${kr_sc_srcs} ${kr_bc_srcs}
 ${sparse_srcs}
 ${counting_srcs}
-${oxide_srcs} ${oxide_field_srcs} ${oxide_algo_srcs}
+${oxide_srcs} ${oxide_field_srcs} ${oxide_algo_srcs} ${oxide_mpi_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
