@@ -185,12 +185,12 @@ namespace upsylon
             Y_DOMAIN_DECL(const_coord);                 //!< alias
 
             //! setup using optimal mapping
-            inline explicit _Domain(mpi              &usrMPI,
-                                    const LayoutType &full,
-                                    const_coord      &PBC,
-                                    const size_t      ng) :
-            Parallel<COORD>(usrMPI,full,PBC,false),
-            WorkspaceType(usrMPI,full,this->optimal,PBC,ng)
+            inline explicit _Domain(mpi              &_MPI,
+                                    const LayoutType &fullLayout,
+                                    const_coord      &boundaries,
+                                    const size_t      ghostsZone) :
+            Parallel<COORD>(_MPI,fullLayout,boundaries,false),
+            WorkspaceType(_MPI,fullLayout,this->optimal,boundaries,ghostsZone)
             {
             }
 

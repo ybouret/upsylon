@@ -6,8 +6,10 @@
 #include "y/exception.hpp"
 #include "y/type/spec.hpp"
 #include "y/associative/set.hpp"
+#include "y/associative/map.hpp"
 #include "y/ios/upack.hpp"
 #include "y/ios/ovstream.hpp"
+#include "y/hashing/type-info.hpp"
 #include <cstdio>
 
 //! avoir C++ from OpenMPI
@@ -50,28 +52,49 @@ namespace upsylon
         //
         //! data type wrapper
         //______________________________________________________________________
-        class data_type : public type_spec
+        class data_type //: public type_spec
         {
         public:
+
             //------------------------------------------------------------------
             // types
             //------------------------------------------------------------------
+            typedef hashing::type_info_hasher<>             db_hasher;
             typedef const MPI_Datatype                      value_type;  //!< value type
             typedef type_traits<value_type>::parameter_type param_type;  //!< for passing parameters
-            typedef set<string,data_type>                   db;          //!< database
+            typedef set<std::type_info,data_type,db_hasher> db;          //!< database
 
             //------------------------------------------------------------------
             // methods
             //------------------------------------------------------------------
-            explicit data_type( const std::type_info &t, param_type v ); //!< initialize
-            virtual ~data_type() throw();                                //!< desctructor
+            explicit data_type(const std::type_info &, const size_t, param_type); //!< initialize
+            virtual ~data_type() throw();                                //!< destructor
             data_type(const data_type &other);                           //!< copy
 
-            value_type value;                                            //!< wrapped value
+            const std::type_info &label;                                 //!< system identifier
+            const size_t          bytes;
+            value_type            value;                                 //!< wrapped value
+
+            const std::type_info & key() const throw();
+
 
         private:
             Y_DISABLE_ASSIGN(data_type);
         };
+
+        //!
+        class data_type_hasher
+        {
+        public:
+            data_type_hasher() throw();
+            ~data_type_hasher() throw();
+            size_t operator()( const MPI_Datatype & ) throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(data_type_hasher);
+        };
+
+        typedef map<MPI_Datatype,size_t,data_type_hasher> data_type_sizes;
 
 
         //______________________________________________________________________
@@ -88,6 +111,8 @@ namespace upsylon
         const int        threadLevel;   //!< current thread level
         uint64_t         fullCommTicks; //!< cumulative communication ticks
         uint64_t         lastCommTicks; //!< ticks for last operation
+        uint64_t         fullCommBytes; //!< cumulative communication bytes
+        uint64_t         lastCommBytes; //!< bytes for last operation
         const string     processorName; //!< the processor name
         const string     nodeName;      //!< size.rank
 
@@ -414,9 +439,11 @@ namespace upsylon
         //! MPI_Barrier(MPI_COMM_WORLD)
         void Barrier();
 
+        void displayTypes( FILE *fp ) const;
+
     private:
         data_type::db   types;
-
+        data_type_sizes bytes;
 
         explicit mpi();
         virtual ~mpi() throw();

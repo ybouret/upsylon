@@ -40,10 +40,10 @@ namespace upsylon
 
             //! create possible mappings and pick optimal
             inline explicit Parallel(const mpi        &MPI,
-                                     const LayoutType &full,
-                                     const COORD      &pbc,
+                                     const LayoutType &fullLayout,
+                                     const COORD      &boundaries,
                                      const bool        computeMappings=true) :
-            mappings(), optimal( Divide::Find(full,MPI.size,pbc, (computeMappings) ? (MappingsType *)&mappings : 0 ) )
+            mappings(), optimal( Divide::Find(fullLayout,MPI.size,boundaries, (computeMappings) ? (MappingsType *)&mappings : 0 ) )
             {
                 if( Coord::Product(optimal) <= 0 ) throw exception("No available mapping for MPI.size=%d", MPI.size );
             }

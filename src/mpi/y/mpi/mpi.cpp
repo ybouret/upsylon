@@ -40,16 +40,48 @@ namespace upsylon
 
 namespace upsylon
 {
-    mpi::data_type:: data_type( const std::type_info &t, param_type v ) :
-    type_spec(t),
+    mpi::data_type:: data_type(const std::type_info &t,
+                               const size_t          n,
+                               param_type            v ) :
+    label(t),
+    bytes(n),
     value(v)
     {
     }
 
     mpi::data_type:: ~data_type() throw() {}
 
-    mpi:: data_type:: data_type( const data_type &other ) : type_spec(other), value(other.value) {}
-    
+    mpi:: data_type:: data_type( const data_type &other ) :
+    label(other.label),
+    bytes(other.bytes),
+    value(other.value)
+    {}
+
+    const std::type_info & mpi::data_type:: key() const throw() { return label; }
+
+
+}
+
+namespace upsylon
+{
+    mpi:: data_type_hasher:: data_type_hasher() throw()
+    {}
+
+    mpi:: data_type_hasher:: ~data_type_hasher() throw()
+    {}
+
+    size_t mpi:: data_type_hasher:: operator()( const MPI_Datatype &t ) throw()
+    {
+        hashing::fnv h;
+        union
+        {
+            MPI_Datatype dt;
+            uint8_t      block[ sizeof(MPI_Datatype) ];
+        } alias = { t };
+        return h.key<size_t>(alias.block,sizeof(alias.block));
+    }
+
+
 }
 
 namespace upsylon
@@ -124,10 +156,11 @@ namespace upsylon
     namespace
     {
         template <typename T>
-        void __register( mpi::data_type::db &types, MPI_Datatype v )
+        void __register(mpi::data_type::db &types,
+                        MPI_Datatype        v )
         {
             const std::type_info & info = typeid(T);
-            const mpi::data_type   dt(info,v);
+            const mpi::data_type   dt(info,sizeof(T),v);
             (void) types.insert(dt);
         }
 
@@ -144,6 +177,8 @@ namespace upsylon
     threadLevel(-1),
     fullCommTicks(0),
     lastCommTicks(0),
+    fullCommBytes(0),
+    lastCommBytes(0),
     processorName(),
     nodeName(),
     send_pack(),
@@ -198,7 +233,7 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // fill in database
+            // fill in database of type
             //__________________________________________________________________
 #define Y_MPI_REG_CASE(PFX,SFX,COM_TYPE) case (sizeof(PFX##SFX)): __register< PFX##SFX >(types,COM_TYPE); break
 
@@ -246,7 +281,31 @@ default: break;\
             __register<double>(types,MPI_DOUBLE);
 
 
+            //__________________________________________________________________
+            //
+            // fill in database of sizes
+            //__________________________________________________________________
+#define Y_MPI_SZ(mpi_type,type) do{ bytes.insert(mpi_type,sizeof(type)); } while(false)
 
+            Y_MPI_SZ(MPI_CHAR,char);
+            Y_MPI_SZ(MPI_UNSIGNED_CHAR,unsigned char);
+            Y_MPI_SZ(MPI_BYTE,uint8_t);
+
+            Y_MPI_SZ(MPI_SHORT,short);
+            Y_MPI_SZ(MPI_UNSIGNED_SHORT,unsigned short);
+
+            Y_MPI_SZ(MPI_INT,int);
+            Y_MPI_SZ(MPI_UNSIGNED,unsigned int);
+
+            Y_MPI_SZ(MPI_LONG,long);
+            Y_MPI_SZ(MPI_UNSIGNED_LONG,unsigned long);
+
+            Y_MPI_SZ(MPI_LONG_LONG,long);
+            Y_MPI_SZ(MPI_UNSIGNED_LONG_LONG,unsigned long);
+
+            Y_MPI_SZ(MPI_FLOAT,float);
+            Y_MPI_SZ(MPI_DOUBLE,double);
+            
         }
         catch(...)
         {
@@ -254,6 +313,25 @@ default: break;\
             throw;
         }
     }
+
+    void mpi:: displayTypes( FILE *fp ) const
+    {
+        if(0==rank)
+        {
+            data_type_hasher H;
+            fprintf(fp,"<MPI::DataTypes count=\"%u\">\n", unsigned( types.size() ));
+            for(data_type::db::const_iterator i=types.begin();i!=types.end();++i)
+            {
+                const data_type    &t = *i;
+                const MPI_Datatype &value = i->value;
+
+                fprintf(fp,"\t<%s>: bytes=%2u, key=%lu\n", t.label.name(), unsigned(i->bytes),  H(value) );
+            }
+            fprintf(fp,"<MPI::DataTypes>\n");
+        }
+    }
+
+
 
 #define Y_MPI_THR(ID) case MPI_THREAD_##ID: return "MPI_THREAD_" #ID
     const char * mpi:: threadLevelText() const throw()
@@ -273,9 +351,8 @@ default: break;\
 
     const MPI_Datatype & mpi:: get_data_type( const std::type_info &t ) const
     {
-        const string     _(t.name());
-        const data_type *p  = types.search(_);
-        if(!p) throw upsylon::exception("mpi: unregistered type <%s>", *_);
+        const data_type *p  = types.search(t);
+        if(!p) throw upsylon::exception("mpi: unregistered type <%s>", t.name() );
         return p->value;
     }
 
@@ -414,6 +491,7 @@ namespace upsylon
     {
         assert(!(0==buffer&&count>0));
         const uint64_t mark = rt_clock::ticks();
+
         Y_MPI_CHECK(MPI_Send((void*)buffer, int(count), type, target, tag, MPI_COMM_WORLD) );
         Y_MPI_TICKS();
     }

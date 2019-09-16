@@ -41,6 +41,8 @@ namespace
 
 }
 
+#include "y/os/rt-clock.hpp"
+
 template <typename COORD>
 void make_for(mpi  &MPI,
               const Layout<COORD> &full )
@@ -66,8 +68,7 @@ void make_for(mpi  &MPI,
     ActiveFields fields;
 
 
-
-
+    rt_clock clk;
     for(size_t m=1;m<=mappings.size();++m)
     {
         const COORD                 &mapping = mappings[m];
@@ -96,6 +97,7 @@ void make_for(mpi  &MPI,
 
             size_t ghostsZone=1;
 
+            MPI.fullCommTicks = 0;
             MPI.Barrier();
             Parallel<COORD> ctx(MPI,full,pbc.value);
             Domain<COORD>   W(MPI, full, mapping, pbc.value,ghostsZone);
@@ -257,7 +259,10 @@ void make_for(mpi  &MPI,
 
 
             
-        } MPI.print0(stderr,"]\n");
+        }
+        const double ell = clk( MPI.fullCommTicks );
+        const double spd = 0;
+        MPI.print0(stderr,"]\n");
     }
 
 

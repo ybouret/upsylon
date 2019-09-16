@@ -78,7 +78,9 @@ Y_UTEST(init)
     }
     MPI.print(stderr,"I/O time: %gms\n", MPI.getCommMilliseconds() );
 
-    MPI.print(stderr,"Checking Data Type\n");
+    MPI.displayTypes(stderr);
+
+    MPI.print(stderr,"<Checking Data Type>\n");
     (void) MPI.get_data_type_for<char>();
     (void) MPI.get_data_type_for<short>();
     (void) MPI.get_data_type_for<int>();
@@ -103,7 +105,8 @@ Y_UTEST(init)
 
     (void) MPI.get_data_type_for<float>();
     (void) MPI.get_data_type_for<double>();
-    MPI.print(stderr,"Checking Data Type: OK\n");
+    MPI.print(stderr,"<Checking Data Type/>\n");
+    MPI.print0(stderr, "sizeof(mpi)=%lu\n", sizeof(mpi) );
 }
 Y_UTEST_DONE()
 

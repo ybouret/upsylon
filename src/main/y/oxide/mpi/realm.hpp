@@ -20,7 +20,10 @@ namespace upsylon
         //! forward definition from Workspace
 #define Y_REALM_IMPL(VALUE) static  const size_t VALUE = WorkspaceType::VALUE
         //
-        //! build a MPI domain, which is a workspace with comms..
+        //! build a MPI Realm, located at the root node
+        /**
+         may be used to gather/scatter data
+         */
         //
         //======================================================================
 
