@@ -1,4 +1,5 @@
 #include "y/oxide/mpi/domain.hpp"
+#include "y/oxide/mpi/realm.hpp"
 #include "y/oxide/field3d.hpp"
 #include "y/ios/imstream.hpp"
 #include "y/oxide/field/io.hpp"
@@ -55,7 +56,7 @@ void make_for(mpi  &MPI,
     if(MPI.isHead)
     {
         fflush(stderr);
-        std::cerr << "Full       : " << full  << std::endl;
+        std::cerr << "Full       : " << full     << std::endl;
         std::cerr << "|_Mappings : " << mappings << std::endl;
         std::cerr.flush();
     }
@@ -68,8 +69,8 @@ void make_for(mpi  &MPI,
     for(size_t m=1;m<=mappings.size();++m)
     {
         const COORD                 &mapping = mappings[m];
-        Domain<COORD>               *parent  = 0;
-        auto_ptr< Domain<COORD> >    guard   = 0;
+        Realm<COORD>               *parent  = 0;
+        auto_ptr< Realm<COORD> >    guard   = 0;
         if(MPI.isHead)
         {
             fflush(stderr);
@@ -77,7 +78,7 @@ void make_for(mpi  &MPI,
             Coord::Disp(std::cerr,mappings[m],3) << " [";
             std::cerr.flush();
             //! will share the same parent, discard boundaries and ghosts zone
-            parent = new Domain<COORD>(MPI,full,mapping,Coord::Zero<COORD>(),0,Controlling);
+            parent = new Realm<COORD>(MPI,full,mapping,Coord::Zero<COORD>(),0);
             guard  = parent;
             parent->template create<dField>( "Fd" );
             parent->template create<nField>( "Fn" );
@@ -95,7 +96,7 @@ void make_for(mpi  &MPI,
 
             MPI.Barrier();
             Parallel<COORD> ctx(MPI,full,pbc.value);
-            Domain<COORD>   W(MPI, full, mapping, pbc.value,ghostsZone,Subordinate);
+            Domain<COORD>   W(MPI, full, mapping, pbc.value,ghostsZone);
             
             if( ctx.optimal == mapping )
             {
@@ -196,20 +197,57 @@ void make_for(mpi  &MPI,
             MPI.flush(stderr);
 
             MPI.Barrier();
+
+            // Gathering
             MPI.print0(stderr,"<");
             MPI.flush(stderr);
-            Domain<COORD>::Gather( MPI,parent, "Fd", W);
+            IO::LD(Fi,W.outer, -1);
+            IO::LD(Fi,W.inner,W.rank);
+            if(parent)
+            {
+                iField &gFi = parent->template as<iField>("Fi");
+                IO::LD(gFi,parent->outer, -1);
+            }
+            Realm<COORD>::Gather( MPI,parent, "Fi", W);
+
+            if(parent)
+            {
+                iField &gFi = parent->template as<iField>("Fi");
+                for(size_t i=0;i<parent->partition.size();++i)
+                {
+                    CheckValueOf(gFi,parent->partition[i],i);
+                }
+                MPI.print0(stderr,"$");
+            }
             MPI.print0(stderr,"<");
             MPI.flush(stderr);
-            Domain<COORD>::Gather( MPI,parent, "Fn", W);
+            Realm<COORD>::Gather( MPI,parent, "Fd", W);
+
+            MPI.print0(stderr,"<");
+            MPI.flush(stderr);
+            Realm<COORD>::Gather( MPI,parent, "Fn", W);
+
+
+
+            // Scattering
+            if(parent)
+            {
+                iField &gFi = parent->template as<iField>("Fi");
+                IO::LD(gFi,parent->outer, -1);
+            }
+            IO::LD(Fi,W.outer,W.rank);
+            Realm<COORD>::Scatter(MPI,parent, "Fi", W);
+            CheckValueOf(Fi,W.inner,-1);
+            MPI.print0(stderr,"#");
+
+
+            MPI.print0(stderr,">");
+            MPI.flush(stderr);
+            Realm<COORD>::Scatter(MPI,parent, "Fd", W);
             
             MPI.print0(stderr,">");
             MPI.flush(stderr);
-            Domain<COORD>::Scatter(MPI,parent, "Fd", W);
-            
-            MPI.print0(stderr,">");
-            MPI.flush(stderr);
-            Domain<COORD>::Scatter(MPI,parent, "Fn", W);
+            Realm<COORD>::Scatter(MPI,parent, "Fn", W);
             
         } MPI.print0(stderr,"]\n");
     }

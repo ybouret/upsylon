@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_OXIDE_MPI_DOMAIN_INCLUDED
@@ -6,8 +5,6 @@
 
 #include "y/oxide/mpi/parallel.hpp"
 #include "y/oxide/workspace.hpp"
-#include "y/oxide/partition.hpp"
-#include "y/oxide/roles.hpp"
 
 namespace upsylon
 {
@@ -46,7 +43,6 @@ namespace upsylon
             Y_DOMAIN_DECL(AsyncIO);                     //!< alias
             Y_DOMAIN_IMPL(Dimensions);                  //!< alias
             Y_DOMAIN_IMPL(Orientations);                //!< alias
-            typedef Partition<COORD>    PartitionType;  //!< alias
 
             //==================================================================
             //
@@ -54,7 +50,6 @@ namespace upsylon
             //
             //==================================================================
             mpi                          &MPI;       //!< keep the reference
-            const auto_ptr<PartitionType> partition; //!< not allocated by default
 
             //==================================================================
             //
@@ -66,11 +61,9 @@ namespace upsylon
                             const LayoutType      &fullLayout,
                             const_coord            localSizes,
                             const_coord            boundaries,
-                            const size_t           ghostsZone,
-                            const SubordinateType &) :
+                            const size_t           ghostsZone) :
             WorkspaceType(fullLayout,localSizes,_MPI.rank,boundaries,ghostsZone),
-            MPI(_MPI),
-            partition(0)
+            MPI(_MPI)
             {
                 const int lsize = int(Coord::Product(this->sizes));
                 if(  lsize != MPI.size )
@@ -79,7 +72,8 @@ namespace upsylon
                 }
             }
 
-            //! setup full domain, no boudaries, no ghosts
+#if 0
+            //! setup full domain
             explicit Domain(mpi                   & _MPI,
                             const LayoutType      &fullLayout,
                             const_coord            localSizes,
@@ -91,6 +85,7 @@ namespace upsylon
             partition( new PartitionType(fullLayout,localSizes,MPI.size) )
             {
             }
+#endif
 
 
             //! cleanup
@@ -118,106 +113,7 @@ namespace upsylon
                 }
             }
 
-            //------------------------------------------------------------------
-            //
-            // send a parent workspace to some local workspaces
-            //
-            //------------------------------------------------------------------
-
-            //! send from node 0 to other
-            static inline void Scatter(mpi           &MPI,
-                                       const Domain *parentAddr,
-                                       const string  &id,
-                                       WorkspaceType &child )
-            {
-
-                Field            &target = child[id];
-                if(parentAddr)
-                {
-                    const Domain        &parent = *parentAddr; assert(parent.partition.is_valid());
-                    const PartitionType &part   =  *parent.partition;
-                    assert(child.rank==0);
-                    assert(part.contains(child.inner));
-                    assert(part[0].is_same_than(child.inner));
-
-                    const Field &source = parent[id];
-
-                    // local scatter
-                    source.localScatter<LayoutType>(child.inner,part,target,child.outer);
-
-                    // star-like scatter
-                    const size_t psz = part.size();
-                    IOBlock     &blk = parent.sendBlock;
-                    for(size_t rank=1;rank<psz;++rank)
-                    {
-                        blk.free();
-                        const size_t total = source.save<LayoutType>(blk,part,part[rank]);
-                        __Workspace::CheckBlockTotal(blk,total);
-                        MPI.vSend(comm_variable_size,blk,rank,tag);
-                    }
-                }
-                else
-                {
-                    assert(child.rank>0);
-                    IOBlock     &blk = child.recvBlock;
-                    blk.free();
-                    MPI.vRecv(comm_variable_size,blk,0,tag);
-                    ios::imstream input(blk);
-                    const size_t total = target.load<LayoutType>(input,child.outer,child.inner);
-                    __Workspace::CheckBlockTotal(blk,total);
-                }
-            }
-
-            //------------------------------------------------------------------
-            //
-            // send  some local workspaces to a global workspace
-            //
-            //------------------------------------------------------------------
-            //! send from node 0 to other
-            static inline void Gather(mpi                &MPI,
-                                      Domain              *parentAddr,
-                                      const string        &id,
-                                      const WorkspaceType &child )
-            {
-
-                const Field &target = child[id];
-                if(parentAddr)
-                {
-                    Domain              &parent = *parentAddr; assert(parent.partition.is_valid());
-                    const PartitionType &part   =  *parent.partition;
-                    assert(child.rank==0);
-                    assert(part.contains(child.inner));
-                    assert(part[0].is_same_than(child.inner));
-
-                    Field &source = parent[id];
-
-                    // local scatter
-                    source.localGather<LayoutType>(child.inner,part,target,child.outer);
-
-                    // will send all data
-                    const size_t psz  = part.size();
-                    IOBlock     &blk = parent.recvBlock;
-                    for(size_t rank=1;rank<psz;++rank)
-                    {
-                        blk.free();
-                        MPI.vRecv(comm_variable_size,blk,rank,tag);
-                        ios::imstream input(blk);
-                        const size_t  total = source.load<LayoutType>(input,part,part[rank]);
-                        __Workspace::CheckBlockTotal(blk,total);
-                    }
-                }
-                else
-                {
-                    assert(child.rank>0);
-
-                    IOBlock     &blk   = child.sendBlock; blk.free();
-                    const size_t total = target.save<LayoutType>(blk,child.outer,child.inner);
-                    __Workspace::CheckBlockTotal(blk,total);
-                    MPI.vSend(comm_variable_size,blk,0,tag);
-                }
-
-            }
-
+           
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Domain);
