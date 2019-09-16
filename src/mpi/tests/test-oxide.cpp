@@ -76,25 +76,26 @@ void make_for(mpi  &MPI,
             std::cerr << "|_: using ";
             Coord::Disp(std::cerr,mappings[m],3) << " [";
             std::cerr.flush();
-            parent = new Domain<COORD>(MPI,full,mapping);
+            //! will share the same parent, discard boundaries and ghosts zone
+            parent = new Domain<COORD>(MPI,full,mapping,Coord::Zero<COORD>(),0,Controlling);
             guard  = parent;
             parent->template create<dField>( "Fd" );
             parent->template create<nField>( "Fn" );
+            parent->template create<iField>( "Fi" );
 
         }
         //MPI.print(stderr,"|_parent: %d\n", int( parent.is_valid() ) );
-        COORD pbc0(0); Coord::LD(pbc0,0);
-        COORD pbc1(1); Coord::LD(pbc1,1);
+        
 
         typename Layout<COORD>::Loop pbc(Coord::Zero<COORD>(),Coord::Ones<COORD>());
         for(pbc.start(); pbc.valid(); pbc.next())
         {
 
-            size_t ng=1;
+            size_t ghostsZone=1;
 
             MPI.Barrier();
             Parallel<COORD> ctx(MPI,full,pbc.value);
-            Domain<COORD>   W(MPI, full, mapping, pbc.value,ng);
+            Domain<COORD>   W(MPI, full, mapping, pbc.value,ghostsZone,Subordinate);
             
             if( ctx.optimal == mapping )
             {

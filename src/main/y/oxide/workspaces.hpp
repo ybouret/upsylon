@@ -26,9 +26,9 @@ namespace upsylon
             
             //! setup all sub-workspaces
             explicit Workspaces(const LayoutType &fullLayout,
-                                const_coord      &localSizes,
-                                const_coord      &boundaries,
-                                const Coord1D     ghostsZone) :
+                                const_coord       localSizes,
+                                const_coord       boundaries,
+                                const size_t      ghostsZone) :
             SlotsType( Coord::Product( __Workspace::CheckLocalSizes(localSizes) ) )
             {
                 SlotsType    &self       = *this;

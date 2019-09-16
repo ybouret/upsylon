@@ -7,6 +7,7 @@
 #include "y/oxide/workspaces.hpp"
 #include "y/oxide/field/divide.hpp"
 #include "y/oxide/partition.hpp"
+#include "y/oxide/roles.hpp"
 
 namespace upsylon
 {
@@ -113,12 +114,13 @@ namespace upsylon
             //
             //==================================================================
             //! setup
-            explicit Domain(mpi              &_MPI,
-                            const LayoutType &fullLayout,
-                            const_coord       localSizes,
-                            const_coord       boundaries,
-                            const size_t      ghostZone) :
-            WorkspaceType(fullLayout,localSizes,_MPI.rank,boundaries,ghostZone),
+            explicit Domain(mpi                   &_MPI,
+                            const LayoutType      &fullLayout,
+                            const_coord            localSizes,
+                            const_coord            boundaries,
+                            const size_t           ghostsZone,
+                            const SubordinateType &) :
+            WorkspaceType(fullLayout,localSizes,_MPI.rank,boundaries,ghostsZone),
             MPI(_MPI),
             partition(0)
             {
@@ -130,10 +132,13 @@ namespace upsylon
             }
             
             //! setup full domain, no boudaries, no ghosts
-            explicit Domain(mpi              & _MPI,
-                            const LayoutType &fullLayout,
-                            const_coord       localSizes) :
-            WorkspaceType(fullLayout,getOne(),0,getZero(),0),
+            explicit Domain(mpi                   & _MPI,
+                            const LayoutType      &fullLayout,
+                            const_coord            localSizes,
+                            const_coord            boundaries,
+                            const size_t           ghostsZone,
+                            const ControllingType &) :
+            WorkspaceType(fullLayout,Coord::Ones<COORD>(),0,boundaries,ghostsZone),
             MPI(_MPI),
             partition( new PartitionType(fullLayout,localSizes,MPI.size) )
             {
@@ -154,7 +159,6 @@ namespace upsylon
             //! full async exchange session
             //
             //------------------------------------------------------------------
-            
             /**
              for each orientation, two waves are created
              */
@@ -269,19 +273,7 @@ namespace upsylon
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Domain);
-            
-            static inline COORD getZero()   throw()
-            {
-                COORD ans(0); Coord::LD(ans,0);
-                return ans;
-            }
-            
-            static inline COORD getOne()   throw()
-            {
-                COORD ans(1); Coord::LD(ans,1);
-                return ans;
-            }
-            
+
             
             inline void rings(const ActiveFields  &fields,
                               const size_t         orientation)
