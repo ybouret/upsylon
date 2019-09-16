@@ -48,8 +48,7 @@ namespace
         const Coord1D ng      = Coord::Parse<Coord1D>(argv[3],"ng");
         const COORD   mapping = Coord::Parse<COORD>(  argv[4],"mapping");
 
-        COORD org(0); Coord::LD(org,1);
-        const Layout<COORD> full(org,length);
+        const Layout<COORD> full(Coord::Ones<COORD>(),length);
         std::cerr << "full=" << full << std::endl;
 
 

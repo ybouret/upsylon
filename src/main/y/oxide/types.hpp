@@ -43,6 +43,9 @@ namespace upsylon
         //! operations on coordinates
         struct Coord
         {
+            static const Coord1D __Zero[4];
+            static const Coord1D __Ones[4];
+
             //==================================================================
             //
             // access
@@ -98,6 +101,19 @@ namespace upsylon
                 assert(dim<Get<COORD>::Dimensions);
                 return *( ((const Coord1D *) &c) + dim );
             }
+
+            template <typename COORD> static inline
+            const COORD & Zero() throw()
+            {
+                return *(const COORD *)__Zero;
+            }
+
+            template <typename COORD> static inline
+            const COORD & Ones() throw()
+            {
+                return *(const COORD *)__Ones;
+            }
+
 
             //==================================================================
             //

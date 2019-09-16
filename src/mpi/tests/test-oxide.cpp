@@ -86,7 +86,7 @@ void make_for(mpi  &MPI,
         COORD pbc0(0); Coord::LD(pbc0,0);
         COORD pbc1(1); Coord::LD(pbc1,1);
 
-        typename Layout<COORD>::Loop pbc(pbc0,pbc1);
+        typename Layout<COORD>::Loop pbc(Coord::Zero<COORD>(),Coord::Ones<COORD>());
         for(pbc.start(); pbc.valid(); pbc.next())
         {
 

@@ -44,8 +44,7 @@ namespace
                                const size_t ng,
                                const COORD  mapping)
     {
-        COORD               org(0); Coord::LD(org,1);
-        const Layout<COORD> full(org,length);
+        const Layout<COORD> full(Coord::Ones<COORD>(),length);
 
         std::cerr << "Full    : " << full    << std::endl;
         std::cerr << "Mapping : " << mapping << std::endl;

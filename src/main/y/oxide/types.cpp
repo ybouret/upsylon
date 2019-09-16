@@ -5,6 +5,9 @@ namespace upsylon
 {
     namespace Oxide
     {
+        const Coord1D Coord:: __Zero[4] = { 0,0,0,0 };
+        const Coord1D Coord:: __Ones[4] = { 1,1,1,1 };
+
         Coord1D Coord:: Natural1D( const unit_t m, randomized::bits &ran ) throw()
         {
             const unit_t ma = abs_of(m);

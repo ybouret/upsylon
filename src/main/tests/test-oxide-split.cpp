@@ -22,8 +22,8 @@ namespace
     template <typename COORD>
     void doSplit( const char *args , const Coord1D cores )
     {
-        COORD       ini(0); Coord::LD(ini,0);
-        COORD       org(1); Coord::LD(org,1);
+        const COORD ini = Coord::Zero<COORD>();
+        COORD       org = Coord::Ones<COORD>();
         const COORD top   = Coord::Parse<COORD>(args,"length");
 
         typename Layout<COORD>::Loop pbc(ini,org);

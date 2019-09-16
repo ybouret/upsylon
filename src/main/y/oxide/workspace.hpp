@@ -80,13 +80,13 @@ namespace upsylon
             //! cleanup
             inline virtual ~Workspace() throw() {}
 
-            //! setup
-            inline explicit Workspace(const LayoutType &full,
+            //! setup a subordinate Workspace
+            inline explicit Workspace(const LayoutType &fullLayout,
                                       const_coord       localSizes,
                                       const Coord1D     globalRank,
                                       const_coord       boundaries,
                                       const Coord1D     ghostsZone) :
-            LayoutsType(full,
+            LayoutsType(fullLayout,
                         __Workspace::CheckLocalSizes(localSizes),
                         globalRank,
                         boundaries,
@@ -95,6 +95,21 @@ namespace upsylon
             {
 
             }
+
+            //! setup a controlling Workspace
+            inline explicit Workspace(const LayoutType &fullLayout,
+                                      const_coord       boundaries,
+                                      const Coord1D     ghostsZone) :
+            LayoutsType(fullLayout,
+                        boundaries,
+                        ghostsZone),
+            Fields(), sendBlock(), recvBlock()
+            {
+
+            }
+
+
+
 
             //------------------------------------------------------------------
             //

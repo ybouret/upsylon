@@ -58,11 +58,9 @@ namespace  {
         VTK.writeField(fp, Fd, L);
 
 
-#if 1
         typename __Field<COORD, point2d<float> >::Type F2( "F2", L );
         fill(F2);
         VTK.writeField(fp, F2, L);
-#endif
 
         typename __Field<COORD, point3d<double> >::Type F3( "F3", L );
         fill(F3);

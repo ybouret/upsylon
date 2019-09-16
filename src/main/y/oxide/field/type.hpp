@@ -47,12 +47,24 @@ namespace upsylon
             virtual ~Field() throw();
 
             //! get address of an object by its index (for asynchronous copy)
+            /**
+             this function will be used to serialize an object into a send/recv
+             block and go for asynchronous exchanges
+             */
             virtual const void *getObjectAddr( const Coord1D index ) const throw() = 0;
 
             //! internal copy of object between two indices
+            /**
+             this function will be used to use the C++ assignement semantic
+             for local exchanges
+             */
             virtual void copyInternalObject(const Coord1D target, const Coord1D source)    = 0;
 
             //! external copy of data between two different fiedls
+            /**
+             This function will be used to locally copy object from different size,
+             namely in the local scatter/gather, without serialization.
+             */
             virtual void copyExternalObject(const Coord1D target,
                                             const Field   &other,
                                             const Coord1D  source) = 0;
@@ -123,10 +135,10 @@ namespace upsylon
 
             //! scatter to peer a common sub layout, with different outer layouts!
             template <typename LAYOUT>
-            void  scatter(const LAYOUT &subLayout,
-                          const LAYOUT &selfOuter,
-                          Field        &peerField,
-                          const LAYOUT &peerOuter) const
+            void  localScatter(const LAYOUT &subLayout,
+                               const LAYOUT &selfOuter,
+                               Field        &peerField,
+                               const LAYOUT &peerOuter) const
             {
                 assert(selfOuter.contains(subLayout));
                 assert(peerOuter.contains(subLayout));
@@ -139,10 +151,10 @@ namespace upsylon
 
             //! gather from peer a common sub layout, with different outer layouts
             template <typename LAYOUT>
-            void  gather(const LAYOUT  &subLayout,
-                          const LAYOUT &selfOuter,
-                          const Field  &peerField,
-                          const LAYOUT &peerOuter)
+            void  localGather(const LAYOUT  &subLayout,
+                              const LAYOUT &selfOuter,
+                              const Field  &peerField,
+                              const LAYOUT &peerOuter)
             {
                 assert(selfOuter.contains(subLayout));
                 assert(peerOuter.contains(subLayout));
@@ -154,12 +166,9 @@ namespace upsylon
             }
 
 
-
-
-
             //! forward to the name comparison
             friend bool operator<(const Field &lhs, const Field &rhs) throw();
-          
+
             //! create "name[n]"
             string subName( const Coord1D n ) const;
 
@@ -179,7 +188,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Field);
         };
 
-       
+
     }
 }
 

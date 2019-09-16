@@ -100,15 +100,15 @@ namespace upsylon
                 memset( ghosts, 0, sizeof(ghosts) );
             }
             
-            //! setup
-            inline explicit Layouts(const LayoutType &full,
-                                    const_coord      &localSizes,
+            //! setup subordinate
+            inline explicit Layouts(const LayoutType &fullLayout,
+                                    const_coord       localSizes,
                                     const Coord1D     globalRank,
-                                    const_coord      &boundaries,
+                                    const_coord       boundaries,
                                     const Coord1D     ghostsZone
                                     ) :
             HubType(localSizes,globalRank,boundaries),
-            inner( full.split(this->sizes,this->ranks) ),
+            inner( fullLayout.split(this->sizes,this->ranks) ),
             outer( expandInner(abs_of(ghostsZone)) ),
             center(0),
             border(),
@@ -118,17 +118,28 @@ namespace upsylon
             localComms(0),
             asyncComms(0)
             {
-                memset( ghosts, 0, sizeof(ghosts) );
-                if(ghostsZone>0)
-                {
-                    buildGhosts(ghostsZone-1);
-                }
-                else
-                {
-                    (auto_ptr<LayoutType>&)center = new LayoutType(inner);
-                }
-                buildBorder();
+                setup(ghostsZone);
             }
+
+            //! setup controlling
+            inline explicit Layouts(const LayoutType &fullLayout,
+                                    const_coord       boundaries,
+                                    const Coord1D     ghostsZone) :
+            HubType( Coord::Ones<coord>,0,boundaries ),
+            inner( fullLayout ),
+            outer( expandInner(abs_of(ghostsZone)) ),
+            center(0),
+            border(),
+            repository( Neighbours, as_capacity ),
+            ghosts(),
+            localGhosts(),
+            localComms(0),
+            asyncComms(0)
+            {
+                setup(ghostsZone);
+            }
+
+
 
             //! display information
             void display(std::ostream &os, const char *pfx=0) const
@@ -163,6 +174,21 @@ namespace upsylon
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Layouts);
+
+            //! setup function
+            void setup( const size_t ghostsZone )
+            {
+                memset( ghosts, 0, sizeof(ghosts) );
+                if(ghostsZone>0)
+                {
+                    buildGhosts(ghostsZone-1);
+                }
+                else
+                {
+                    (auto_ptr<LayoutType>&)center = new LayoutType(inner);
+                }
+                buildBorder();
+            }
 
             //==================================================================
             //

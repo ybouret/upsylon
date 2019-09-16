@@ -45,13 +45,9 @@ namespace
             for(size_t j=1;j<=mappings.size();++j)
             {
                 std::cerr << "/mapping=" << mappings[j];
-                COORD pbc0(0); Coord::LD(pbc0,0);
-                COORD pbc1(1); Coord::LD(pbc1,1);
-
-                typename Layout<COORD>::Loop pbc(pbc0,pbc1);
+                typename Layout<COORD>::Loop pbc( Coord::Zero<COORD>(), Coord::Ones<COORD>() );
                 for(pbc.start(); pbc.valid(); pbc.next())
                 {
-                    //std::cerr << " |_pbc=" << pbc.value << std::endl;
                     for(size_t rank=0;rank<size;++rank)
                     {
 

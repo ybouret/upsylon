@@ -19,6 +19,7 @@ namespace upsylon
         class LayoutInfo
         {
         public:
+
             const size_t dimension;        //!< [1|2|3]
             const size_t items;            //!< linear items
             virtual ~LayoutInfo() throw(); //!< destructor
@@ -33,6 +34,7 @@ namespace upsylon
         private:
             Y_DISABLE_ASSIGN(LayoutInfo);
         };
+
 
         //======================================================================
         //

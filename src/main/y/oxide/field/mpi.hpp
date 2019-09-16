@@ -68,10 +68,10 @@ namespace upsylon
         
         //======================================================================
         //
-        //! forward declaration
+        //! forward declaration from Workspace
 #define Y_DOMAIN_DECL(TYPE)  typedef typename     WorkspaceType::TYPE TYPE
         //
-        //! forward definition
+        //! forward definition from Workspace
 #define Y_DOMAIN_IMPL(VALUE) static  const size_t VALUE = WorkspaceType::VALUE
         //
         //! build a MPI domain, which is a workspace with comms..
@@ -191,7 +191,7 @@ namespace upsylon
                     const Field &source = parent[id];
                     
                     // local scatter
-                    source.scatter<LayoutType>(child.inner,part,target,child.outer);
+                    source.localScatter<LayoutType>(child.inner,part,target,child.outer);
                     
                     // star-like scatter
                     const size_t psz = part.size();
@@ -240,7 +240,7 @@ namespace upsylon
                     Field &source = parent[id];
                     
                     // local scatter
-                    source.gather<LayoutType>(child.inner,part,target,child.outer);
+                    source.localGather<LayoutType>(child.inner,part,target,child.outer);
                     
                     // will send all data
                     const size_t psz  = part.size();

@@ -20,6 +20,10 @@ namespace upsylon
         //
         //
         //! writing VTK data
+        /**
+         - for 1D field, expanded x2x2 => 4 times
+         - for 2D field, expanded x2   => 2 times
+         */
         //
         //
         //======================================================================
@@ -54,7 +58,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // non-virtual interface
                 //--------------------------------------------------------------
-                bool                   isScalar() const throw();                       //!< 1 == compnents()
+                bool                   isScalar() const throw();                       //!< 1 == components()
                 const std::type_info & key() const throw();                            //!< key for database
 
             protected:
@@ -83,7 +87,7 @@ namespace upsylon
             template <typename T> inline
             const Writer & get() const { return get( typeid(T) ); }
 
-            //! write object to stream
+            //! write object to stream (slow, access each time)
             template <typename T> inline
             ios::ostream & operator()( ios::ostream &fp, const T &args ) const
             {
@@ -141,11 +145,13 @@ namespace upsylon
             }
 
         private:
-            static const size_t Repeat[4];
+            static const size_t             Repeat[4];
             static const at_exit::longevity life_time = 0;
+
             explicit vtk();
             virtual ~vtk() throw();
             friend class singleton<vtk>;
+
             SharedWriters writers;
 
             void structuredPoints(ios::ostream  &fp,
