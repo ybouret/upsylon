@@ -111,8 +111,6 @@ namespace upsylon
         const int        threadLevel;   //!< current thread level
         uint64_t         fullCommTicks; //!< cumulative communication ticks
         uint64_t         lastCommTicks; //!< ticks for last operation
-        uint64_t         fullCommBytes; //!< cumulative communication bytes
-        uint64_t         lastCommBytes; //!< bytes for last operation
         const string     processorName; //!< the processor name
         const string     nodeName;      //!< size.rank
 

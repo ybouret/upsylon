@@ -177,8 +177,6 @@ namespace upsylon
     threadLevel(-1),
     fullCommTicks(0),
     lastCommTicks(0),
-    fullCommBytes(0),
-    lastCommBytes(0),
     processorName(),
     nodeName(),
     send_pack(),
@@ -305,7 +303,7 @@ default: break;\
 
             Y_MPI_SZ(MPI_FLOAT,float);
             Y_MPI_SZ(MPI_DOUBLE,double);
-            
+
         }
         catch(...)
         {
@@ -318,6 +316,7 @@ default: break;\
     {
         if(0==rank)
         {
+            {
             data_type_hasher H;
             fprintf(fp,"<MPI::DataTypes count=\"%u\">\n", unsigned( types.size() ));
             for(data_type::db::const_iterator i=types.begin();i!=types.end();++i)
@@ -328,6 +327,10 @@ default: break;\
                 fprintf(fp,"\t<%s>: bytes=%2u, key=%lu\n", t.label.name(), unsigned(i->bytes),  H(value) );
             }
             fprintf(fp,"<MPI::DataTypes>\n");
+            }
+
+            
+
         }
     }
 

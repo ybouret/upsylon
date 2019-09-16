@@ -257,11 +257,9 @@ void make_for(mpi  &MPI,
             Realm<COORD>::Scatter(MPI,parent, "Fn", W);
             CheckValueOf(Fn,W.inner,mpValue);
 
-
-            
         }
-        const double ell = clk( MPI.fullCommTicks );
-        const double spd = 0;
+        //const double ell = clk( MPI.fullCommTicks );
+        //const double spd = 0;
         MPI.print0(stderr,"]\n");
     }
 
