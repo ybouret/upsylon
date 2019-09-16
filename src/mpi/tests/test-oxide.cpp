@@ -28,12 +28,14 @@ namespace
     }
 
     template <typename FIELD,typename COORD>
-    void CheckValueOf( const FIELD &F, const Layout<COORD> &L, Coord1D V )
+    void CheckValueOf(const FIELD                &F,
+                      const Layout<COORD>        &L,
+                      typename FIELD::const_type &V )
     {
         typename Layout<COORD>::Loop loop(L.lower,L.upper);
         for( loop.start(); loop.valid(); loop.next() )
         {
-            if(V!=F(loop.value)) throw exception("Mismatch Value %ld/%ld",long(F(loop.value)),long(V));
+            if(V!=F(loop.value)) throw exception("Mismatch Value");// %ld/%ld",long(F(loop.value)),long(V));
         }
     }
 
@@ -203,51 +205,57 @@ void make_for(mpi  &MPI,
             MPI.flush(stderr);
             IO::LD(Fi,W.outer, -1);
             IO::LD(Fi,W.inner,W.rank);
+            const mpn mpValue = 1024;
+            const mpn mpRank  = W.rank;
+            IO::LD(Fn,W.inner,mpRank);
+
             if(parent)
             {
                 iField &gFi = parent->template as<iField>("Fi");
                 IO::LD(gFi,parent->outer, -1);
+
+                nField &gFn = parent->template as<nField>("Fn");
+                IO::LD(gFn,parent->outer,mpValue);
             }
             Realm<COORD>::Gather( MPI,parent, "Fi", W);
+
+            MPI.print0(stderr,"<"); MPI.flush(stderr);
+            Realm<COORD>::Gather( MPI,parent, "Fn", W);
+
+            MPI.print0(stderr,"<"); MPI.flush(stderr);
+            Realm<COORD>::Gather( MPI,parent, "Fd", W);
 
             if(parent)
             {
                 iField &gFi = parent->template as<iField>("Fi");
+                nField &gFn = parent->template as<nField>("Fn");
                 for(size_t i=0;i<parent->partition.size();++i)
                 {
                     CheckValueOf(gFi,parent->partition[i],i);
+                    CheckValueOf(gFn,parent->partition[i],i);
                 }
-                MPI.print0(stderr,"$");
             }
-            MPI.print0(stderr,"<");
-            MPI.flush(stderr);
-            Realm<COORD>::Gather( MPI,parent, "Fd", W);
-
-            MPI.print0(stderr,"<");
-            MPI.flush(stderr);
-            Realm<COORD>::Gather( MPI,parent, "Fn", W);
-
-
 
             // Scattering
             if(parent)
             {
-                iField &gFi = parent->template as<iField>("Fi");
-                IO::LD(gFi,parent->outer, -1);
+                iField &gFi = parent->template as<iField>("Fi"); IO::LD(gFi,parent->outer, -1);
+                nField &gFn = parent->template as<nField>("Fn"); IO::LD(gFn,parent->outer,mpValue);
             }
             IO::LD(Fi,W.outer,W.rank);
+            IO::LD(Fn,W.outer,mpRank);
+            MPI.print0(stderr,">"); MPI.flush(stderr);
             Realm<COORD>::Scatter(MPI,parent, "Fi", W);
             CheckValueOf(Fi,W.inner,-1);
-            MPI.print0(stderr,"#");
 
-
-            MPI.print0(stderr,">");
-            MPI.flush(stderr);
+            MPI.print0(stderr,">"); MPI.flush(stderr);
             Realm<COORD>::Scatter(MPI,parent, "Fd", W);
             
-            MPI.print0(stderr,">");
-            MPI.flush(stderr);
+            MPI.print0(stderr,">"); MPI.flush(stderr);
             Realm<COORD>::Scatter(MPI,parent, "Fn", W);
+            CheckValueOf(Fn,W.inner,mpValue);
+
+
             
         } MPI.print0(stderr,"]\n");
     }
