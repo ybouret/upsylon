@@ -26,7 +26,7 @@ namespace upsylon
 
 #define Y_MPI_TICKS() fullCommTicks += (lastCommTicks=rt_clock::ticks() - mark)
 
-#define Y_MPI_COMMS(CACHE,COUNT)
+#define Y_MPI_COMMS(CACHE,COUNT) fullCommBytes += ( lastCommBytes= CACHE.size * (COUNT) )
 
     void mpi::Send(const void        *buffer,
                    const size_t       count,
@@ -39,6 +39,7 @@ namespace upsylon
         const uint64_t mark = rt_clock::ticks();
         Y_MPI_CHECK(MPI_Send((void*)buffer, int(count), type, target, tag, MPI_COMM_WORLD) );
         Y_MPI_TICKS();
+        Y_MPI_COMMS(send,count);
     }
 
     void mpi:: Recv(void              *buffer,
@@ -53,6 +54,7 @@ namespace upsylon
         MPI_Status     status;
         Y_MPI_CHECK(MPI_Recv(buffer, int(count), type, source, tag, MPI_COMM_WORLD, &status) );
         Y_MPI_TICKS();
+        Y_MPI_COMMS(recv,count);
     }
 
     void mpi:: Bcast(void              *buffer,
@@ -65,6 +67,7 @@ namespace upsylon
         const uint64_t mark = rt_clock::ticks();
         Y_MPI_CHECK(MPI_Bcast(buffer,int(count),type,root,MPI_COMM_WORLD));
         Y_MPI_TICKS();
+        Y_MPI_COMMS(coll,count);
     }
 
     void mpi:: Reduce(const void  * send_data,
@@ -79,6 +82,7 @@ namespace upsylon
         update(coll,type);
         Y_MPI_CHECK(MPI_Reduce(send_data, recv_data,count,type, op, root, MPI_COMM_WORLD));
         Y_MPI_TICKS();
+        Y_MPI_COMMS(coll,count);
     }
 
     void mpi:: Allreduce(const void  * send_data,
@@ -92,6 +96,7 @@ namespace upsylon
         update(coll,type);
         Y_MPI_CHECK(MPI_Allreduce(send_data, recv_data,count,type, op, MPI_COMM_WORLD));
         Y_MPI_TICKS();
+        Y_MPI_COMMS(coll,count);
     }
 
     void mpi:: SendRecv(const void        *sendbuf,
@@ -113,6 +118,8 @@ namespace upsylon
                                  recvbuf,        int(recvcount), recvtype, source, recvtag,
                                  MPI_COMM_WORLD, &status) );
         Y_MPI_TICKS();
+        lastCommBytes  = send.size * sendcount + recv.size * recvcount;
+        fullCommBytes += lastCommBytes;
     }
 
     void mpi:: Barrier()

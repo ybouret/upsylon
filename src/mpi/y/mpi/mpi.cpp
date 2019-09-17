@@ -1,8 +1,5 @@
 #include "y/mpi/mpi.hpp"
 
-#include <cstdarg>
-
-
 namespace upsylon
 {
 
@@ -270,13 +267,10 @@ default: break;\
                 for(data_type::db::const_iterator i=types.begin();i!=types.end();++i)
                 {
                     const data_type    &t = *i;
-                    //const MPI_Datatype &value = i->value;
                     fprintf(fp,"\t<%s>:\n", t.label.name());
                 }
                 fprintf(fp,"<MPI::DataTypes>\n");
             }
-
-            
 
         }
     }
@@ -308,193 +302,7 @@ default: break;\
 
 }
 
-#include "y/exceptions.hpp"
-#include "y/memory/buffers.hpp"
-#include <cstdarg>
-
-namespace upsylon
-{
-    void mpi:: print0( FILE *fp, const char *format,...)
-    {
-        static const char fn[] = "mpi::print0: ";
-        if(isHead)
-        {
-            assert(fp);
-            va_list args;
-            va_start(args, format);
-            vfprintf(fp, format, args);
-            va_end (args);
-            if( ferror(fp) != 0 )
-            {
-                throw libc::exception( EIO, "%sformat='%s'", fn, format );
-            }
-        }
-    }
-
-
-    bool mpi:: write_to(FILE *fp, const string &text) const throw()
-    {
-        const size_t n = text.size();
-        return n == fwrite( &text[0], 1, n, fp) ;
-    }
 
 
 
-    void mpi:: print( FILE *fp, const char *format, ... )
-    {
-        static const char fn[]  = "mpi::print: ";
-
-        if(isHead)
-        {
-            assert(fp);
-            assert(format);
-
-            // write prolog for head
-            if( !write_to(fp,nodeName)) throw libc::exception( EIO, "%swriting rank#0 name",fn);
-
-            va_list args;
-            va_start(args, format);
-            vfprintf(fp, format, args);
-            va_end (args);
-            if( ferror(fp) != 0 )
-            {
-                throw libc::exception( EIO, "%sformat='%s'", fn, format );
-            }
-
-            // then receive strings
-            for(int r=1;r<size;++r)
-            {
-                {
-                    const string tmp = Recv<string>(r,io_tag);
-                    if(!write_to(fp,tmp)) throw libc::exception( EIO, "%swriting rank#%d name", fn, r);
-                }
-
-                {
-                    const string tmp = Recv<string>(r,io_tag);
-                    if(!write_to(fp,tmp)) throw libc::exception( EIO, "%swriting content from rank#%d", fn, r);
-                }
-            }
-        }
-        else
-        {
-            size_t n = 64;
-        TRY:
-            {
-                memory::buffer_of<char,memory::pooled> databuf( n );
-                char  *buffer  = *databuf;
-                int    length  = int( databuf.length() );
-                if( length < 0 )
-                    throw libc::exception( ERANGE, "%s(...) memory overflow", fn);
-
-                va_list ap;
-                va_start( ap, format );
-                const int  result  = vsnprintf( buffer, length, format, ap);
-                const bool success = (result >= 0 && result < length); // WIN32 and GLIBC compatible
-                va_end (ap);
-
-                if( success )
-                {
-                    Send<string>(nodeName,0,io_tag);
-                    const string tmp(buffer,length_of(buffer));
-                    Send<string>(tmp,0,io_tag);
-                    return;
-                }
-                n <<= 1;
-            }
-            goto TRY;
-        }
-
-    }
-
-    void mpi:: flush( FILE *fp )
-    {
-        if(isHead)
-        {
-            assert(fp);
-            fflush(fp);
-        }
-    }
-    
-    
-
-}
-
-
-
-namespace upsylon
-{
-    void mpi::SendSize(const size_t     value,
-                       const int        target,
-                       const int        tag)
-    {
-        send_pack(value);
-        Send(send_pack.ro(), send_pack.requested, MPI_BYTE, target, tag);
-    }
-
-    size_t mpi:: RecvSize(const int        source,
-                          const int        tag)
-    {
-        Recv(recv_pack.get().rw(),recv_pack.requested, MPI_BYTE, source, tag);
-        return recv_pack();
-    }
-
-    size_t mpi:: SendRecvSizes(const size_t value,
-                               const int target, const int sendtag,
-                               const int source, const int recvtag)
-    {
-        send_pack(value);
-        SendRecv(send_pack.ro(),       send_pack.requested, MPI_BYTE, target, sendtag,
-                 recv_pack.get().rw(), recv_pack.requested, MPI_BYTE, source, recvtag);
-        return recv_pack();
-    }
-
-}
-
-
-namespace upsylon
-{
-    void mpi:: vSend(const comm_mode mode,
-                     const vBytes   &v,
-                     const int       target,
-                     const int       tag)
-    {
-        const size_t n = v.size();
-        switch(mode)
-        {
-            case comm_variable_size: SendSize(v.size(),target,tag); /* FALLTHRU */
-            case comm_constant_size: if(n>0) Send(*v,n, MPI_BYTE, target, tag); break;
-        }
-    }
-
-    void mpi:: vRecv(const comm_mode  mode,
-                     vBlock          &v,
-                     const int        source,
-                     const int        tag)
-    {
-        size_t n = v.size();
-        switch(mode)
-        {
-            case comm_variable_size: n = RecvSize(source,tag); v.set_fast(n); /* FALLTHRU */
-            case comm_constant_size: if(n>0) Recv(*v,n,MPI_BYTE,source,tag); break;
-        }
-    }
-
-    void mpi:: vSendRecv(const comm_mode mode,
-                         const vBytes   &sendBytes, const int target, const int sendtag,
-                         vBlock         &recvBytes, const int source, const int recvtag)
-    {
-        const size_t ns = sendBytes.size();
-        size_t       nr = recvBytes.size();
-        
-        switch (mode)
-        {
-            case comm_variable_size: recvBytes.set_fast( (nr = SendRecvSizes(ns, target, sendtag, source, recvtag) ) ); /* FALLTHRU */
-            case comm_constant_size: SendRecv(*sendBytes, ns, MPI_BYTE, target, sendtag,
-                                              *recvBytes, nr, MPI_BYTE, source, recvtag); break;
-        }
-    }
-
-
-
-}
 
