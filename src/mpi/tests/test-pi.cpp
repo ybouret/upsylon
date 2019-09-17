@@ -12,7 +12,8 @@ Y_UTEST(PI)
 
     const uint64_t mark  = rt_clock::ticks();
     unsigned long length = 0x10000000; //!< count per proc
-    unsigned long offset = 1;
+	//unsigned long length = 1000;
+	unsigned long offset = 1;
 
     parops::split_any(length, offset, MPI.size, MPI.rank);
 
@@ -21,9 +22,10 @@ Y_UTEST(PI)
     double sum = 0;
     while(length>0)
     {
-        sum += 1.0/square_of(offset++);
+       sum += 1.0/square_of(double(offset++));
         --length;
     }
+	MPI.print(stderr, "local sum=%g\n", sum);
 
     sum = sqrt(6.0 * MPI.Reduce(sum, MPI_SUM,0));
     const uint64_t dtt = rt_clock::ticks() - mark;

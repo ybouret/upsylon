@@ -10,7 +10,7 @@ void fillArr( T *p, size_t n)
 {
     while(n-->0)
     {
-        *(p++) = alea.range<int>(-10,10);
+		*(p++) = T(alea.range<int>(-10, 10));
     }
 }
 

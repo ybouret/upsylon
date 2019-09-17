@@ -14,9 +14,9 @@ namespace
 
     static inline
     size_t Ring(mpi            &MPI,
-              const uint8_t   ln2blockSize,
-              const size_t    cycles,
-              array<int64_t> &speed)
+              const size_t      ln2blockSize,
+              const size_t      cycles,
+              array<int64_t>   &speed)
     {
         MPI.Barrier();
         assert(speed.size()>=2);

@@ -21,11 +21,11 @@ namespace
 
     static inline
     size_t Star(mpi          &MPI,
-              const uint8_t ln2blockSize,
-              UMatrix      &tsnd,
-              UMatrix      &trcv,
-              UMatrix      &txch,
-              const size_t  cycles)
+              const size_t    ln2blockSize,
+              UMatrix        &tsnd,
+              UMatrix        &trcv,
+              UMatrix        &txch,
+              const size_t    cycles)
     {
         const size_t blockSize = (1<<ln2blockSize);
         tsnd.ld(0);
@@ -142,7 +142,7 @@ namespace
 static inline human_readable t2hr(const uint64_t tmx, const unsigned nb )
 {
     rt_clock      clk;
-    const int64_t spd = ceil( nb/ clk(tmx) );
+    const int64_t spd = int64_t(ceil( nb/ clk(tmx) ));
     return human_readable(spd);
 }
 
