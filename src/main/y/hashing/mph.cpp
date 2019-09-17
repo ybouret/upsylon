@@ -190,7 +190,7 @@ namespace upsylon
             assert(curr);
             assert(curr!=root);
             if(curr->hash>=0)
-                throw exception("mperf: multiple keys!");
+                throw exception("mperf: multiple keys for required h=%d!",h);
             (int &)(curr->hash) = h;
 
 
@@ -240,6 +240,14 @@ namespace upsylon
             }
             return curr->hash;
         }
+
+        int mperf:: hash(const void *data, const size_t size) const
+        {
+            const int h = find(data,size);
+            if(h<0) throw exception("mperf::hash(unregistered data)");
+            return h;
+        }
+
 
 
         int mperf:: find(const void *data) const throw()

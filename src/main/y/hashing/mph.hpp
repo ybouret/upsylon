@@ -69,6 +69,8 @@ namespace upsylon
             inline void optimize() throw() { root->optimize(); }
 
 
+            //! get the hash code
+            int find(const void *data, const size_t size) const throw();
 
             //! get the hash code for litterals
             inline int operator()(const char *text) const throw()
@@ -81,6 +83,9 @@ namespace upsylon
             {
                 return find(buf.ro(),buf.length());
             }
+
+            int hash(const void *data, const size_t size) const;
+
 
             //! release all
             void release() throw();
@@ -95,8 +100,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(mperf);
             node_type *root;
 
-            //! get the hash code
-            int find(const void *data, const size_t size) const throw();
+
 
             //! get the hash assuming a '\0' terminated data
             int find(const void *data) const throw();
@@ -115,6 +119,9 @@ namespace upsylon
 
     //! to use litterals
 #define Y_MPERF_FOR(WORDS) WORDS,sizeof(WORDS)/sizeof(WORDS[0])
+
+   
+
 
 }
 

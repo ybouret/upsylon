@@ -88,6 +88,7 @@ Y_UTEST_INIT(256)
 
 
     Y_UTEST(hashing);
+    Y_UTEST(mperf);
     Y_UTEST(hmac);
     Y_UTEST(ostreams);
     Y_UTEST(istreams);
