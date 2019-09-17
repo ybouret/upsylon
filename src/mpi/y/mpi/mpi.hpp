@@ -59,21 +59,23 @@ namespace upsylon
             //------------------------------------------------------------------
             // types
             //------------------------------------------------------------------
-            typedef hashing::type_info_hasher<>             db_hasher;
-            typedef const MPI_Datatype                      value_type;  //!< value type
-            typedef type_traits<value_type>::parameter_type param_type;  //!< for passing parameters
-            typedef set<std::type_info,data_type,db_hasher> db;          //!< database
+            typedef hashing::type_info_hasher<>          hasher;      //!< hasher for typeinfo
+            typedef MPI_Datatype                         type;        //!< value type
+            typedef const type                           const_type;  //!< content type
+            typedef set<std::type_info,data_type,hasher> db;          //!< database
 
             //------------------------------------------------------------------
             // methods
             //------------------------------------------------------------------
-            explicit data_type(const std::type_info &, const size_t, param_type); //!< initialize
+            explicit data_type(const std::type_info &,
+                               const size_t,
+                               const_type); //!< initialize
             virtual ~data_type() throw();                                //!< destructor
             data_type(const data_type &other);                           //!< copy
 
             const std::type_info &label;                                 //!< system identifier
-            const size_t          bytes;
-            value_type            value;                                 //!< wrapped value
+            const size_t          bytes;                                 //!< indicator
+            const_type            value;                                 //!< wrapped value
 
             const std::type_info & key() const throw();
 
@@ -82,19 +84,6 @@ namespace upsylon
             Y_DISABLE_ASSIGN(data_type);
         };
 
-        //!
-        class data_type_hasher
-        {
-        public:
-            data_type_hasher() throw();
-            ~data_type_hasher() throw();
-            size_t operator()( const MPI_Datatype & ) throw();
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(data_type_hasher);
-        };
-
-        typedef map<MPI_Datatype,size_t,data_type_hasher> data_type_sizes;
 
 
         //______________________________________________________________________
@@ -441,7 +430,6 @@ namespace upsylon
 
     private:
         data_type::db   types;
-        data_type_sizes bytes;
 
         explicit mpi();
         virtual ~mpi() throw();

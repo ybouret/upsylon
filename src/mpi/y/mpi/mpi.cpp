@@ -42,7 +42,7 @@ namespace upsylon
 {
     mpi::data_type:: data_type(const std::type_info &t,
                                const size_t          n,
-                               param_type            v ) :
+                               const_type            v ) :
     label(t),
     bytes(n),
     value(v)
@@ -62,6 +62,7 @@ namespace upsylon
 
 }
 
+#if 0
 namespace upsylon
 {
     mpi:: data_type_hasher:: data_type_hasher() throw()
@@ -80,9 +81,9 @@ namespace upsylon
         } alias = { t };
         return h.key<size_t>(alias.block,sizeof(alias.block));
     }
-
-
 }
+#endif
+
 
 namespace upsylon
 {
@@ -283,6 +284,7 @@ default: break;\
             //
             // fill in database of sizes
             //__________________________________________________________________
+#if 0
 #define Y_MPI_SZ(mpi_type,type) do{ bytes.insert(mpi_type,sizeof(type)); } while(false)
 
             Y_MPI_SZ(MPI_CHAR,char);
@@ -303,6 +305,7 @@ default: break;\
 
             Y_MPI_SZ(MPI_FLOAT,float);
             Y_MPI_SZ(MPI_DOUBLE,double);
+#endif
 
         }
         catch(...)
@@ -317,14 +320,13 @@ default: break;\
         if(0==rank)
         {
             {
-            data_type_hasher H;
+            //data_type_hasher H;
             fprintf(fp,"<MPI::DataTypes count=\"%u\">\n", unsigned( types.size() ));
             for(data_type::db::const_iterator i=types.begin();i!=types.end();++i)
             {
                 const data_type    &t = *i;
-                const MPI_Datatype &value = i->value;
-
-                fprintf(fp,"\t<%s>: bytes=%2u, key=%lu\n", t.label.name(), unsigned(i->bytes),  H(value) );
+                //const MPI_Datatype &value = i->value;
+                fprintf(fp,"\t<%s>: bytes=%2u\n", t.label.name(), unsigned(i->bytes)  );
             }
             fprintf(fp,"<MPI::DataTypes>\n");
             }

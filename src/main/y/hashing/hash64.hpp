@@ -54,6 +54,26 @@ namespace upsylon
                 rhs |= l_bits;
             }
 
+            template <typename T> static inline
+            size_t key(const      T x,
+                       hash64::proc h) throw()
+            {
+
+                assert(h);
+                assert(sizeof(T)<=sizeof(uint64_t));
+                union
+                {
+                    uint32_t u[2];
+                    T        t;
+                    size_t   k;
+                } q = { {0,0} };
+                q.t = x;
+                h(&q.u[0],&q.u[1]);
+                return q.k;
+            }
+
+            template <typename T> static inline size_t keyIBJ(const T x ) throw() { return key<T>(x,IBJ); }
+            template <typename T> static inline size_t keyDES(const T x ) throw() { return key<T>(x,DES); }
 
         };
     }

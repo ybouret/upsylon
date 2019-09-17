@@ -4,6 +4,7 @@
 #include "y/code/utils.hpp"
 #include "y/type/utils.hpp"
 #include <cstdio>
+#include <iomanip>
 
 using namespace upsylon;
 
@@ -13,18 +14,47 @@ namespace  {
     template <typename T>
     static inline void do_hash64()
     {
+        static const size_t nw = 2 * sizeof(T);
+
         std::cerr << std::dec;
         std::cerr << "hash64 for " << sizeof(T) << " bytes" << std::endl;
         std::cerr << std::hex;
-        for(size_t iter=0;iter<10;++iter)
+        for(size_t iter=0;iter<16;++iter)
         {
-            const T t0 = alea.full<T>();
+            const T t0 = (iter > 0) ? alea.partial<T>()  : 0;
             const T t1 = hashing::hash64::mix(t0,hashing::hash64::IBJ);
             const T t2 = hashing::hash64::mix(t0,hashing::hash64::DES);
-            std::cerr << uint64_t(t0) << ' ' << uint64_t(t1) << ' ' << uint64_t(t2) << std::endl;
+            std::cerr
+            << '\t' << std::setw(nw) << uint64_t(t0)
+            << ' '  << std::setw(nw) << uint64_t(t1)
+            << ' '  << std::setw(nw) << uint64_t(t2) << std::endl;
         }
         std::cerr << std::dec;
     }
+
+    template <typename T>
+    static inline void do_hkey64()
+    {
+        static const size_t nw = 2 * sizeof(T);
+        static const size_t ns = 2 * sizeof(size_t);
+
+        std::cerr << std::dec;
+        std::cerr << "hkey64 for " << sizeof(T) << " bytes" << std::endl;
+        std::cerr << std::hex;
+        for(size_t iter=0;iter<16;++iter)
+        {
+            const T      t0 = (iter > 0) ? alea.partial<T>()  : 0;
+            const size_t k1 = hashing::hash64::keyIBJ(t0);
+            const size_t k2 = hashing::hash64::keyDES(t0);
+
+            std::cerr
+            << '\t' << std::setw(nw) << uint64_t(t0)
+            << ' '  << std::setw(ns) << k1
+            << ' '  << std::setw(ns) << k2 << std::endl;
+        }
+        std::cerr << std::dec;
+    }
+
 }
 
 Y_UTEST(code)
@@ -51,6 +81,11 @@ Y_UTEST(code)
     do_hash64<uint32_t>();
     do_hash64<uint64_t>();
 
+    do_hkey64<uint8_t>();
+    do_hkey64<uint16_t>();
+    do_hkey64<uint32_t>();
+    do_hkey64<uint64_t>();
+
     uint32_t lw = 1;
     uint32_t rw = 1;
     hashing::hash64::DES(&lw,&rw);
@@ -71,6 +106,8 @@ Y_UTEST(code)
     hashing::hash64::DES(&lw,&rw);
     Y_CHECK(lw==0xD7F376F0);
     Y_CHECK(rw==0x59BA89EB);
+
+    return 0;
 
     std::cerr << "-- gen hexa" << std::endl;
     std::cerr.flush();
