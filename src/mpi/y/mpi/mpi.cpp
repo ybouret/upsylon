@@ -2,77 +2,6 @@
 #include "y/type/bzset.hpp"
 
 #include <cstdarg>
-#include <cerrno>
-
-namespace upsylon
-{
-    mpi:: exception:: exception( int err, const char *fmt, ... ) throw() :
-    upsylon::exception(),
-    code( err ),
-    string_()
-    {
-        va_list ap;
-        va_start(ap,fmt);
-        format(fmt,&ap);
-        Y_BZSET_STATIC(string_);
-        int errlen = 0;
-        (void)MPI_Error_string(err,string_,&errlen);
-    }
-
-    mpi:: exception:: exception( const mpi::exception &e ) throw() :
-    upsylon::exception(e),
-    code( e.code ),
-    string_()
-    {
-        memcpy( string_, e.string_, sizeof(string_) );
-    }
-
-    mpi:: exception:: ~exception() throw()
-    {
-        Y_BZSET_STATIC(string_);
-    }
-
-    const char * mpi:: exception:: what() const throw()
-    {
-        return string_;
-    }
-}
-
-namespace upsylon
-{
-    mpi::data_type:: data_type(const std::type_info &t,
-                               const size_t          n,
-                               const_type            v ) :
-    label(t),
-    bytes(n),
-    value(v)
-    {
-    }
-
-    mpi::data_type:: ~data_type() throw() {}
-
-    mpi:: data_type:: data_type( const data_type &other ) :
-    label(other.label),
-    bytes(other.bytes),
-    value(other.value)
-    {}
-
-    const std::type_info & mpi::data_type:: key() const throw() { return label; }
-
-
-}
-
-namespace upsylon
-{
-    mpi:: data_type_cache:: data_type_cache() throw() :
-    type( MPI_DATATYPE_NULL ),
-    size( 0)
-    {
-    }
-
-    mpi:: data_type_cache:: ~data_type_cache() throw() {}
-
-}
 
 
 namespace upsylon
@@ -151,7 +80,7 @@ namespace upsylon
                         MPI_Datatype        v )
         {
             const std::type_info & info = typeid(T);
-            const mpi::data_type   dt(info,sizeof(T),v);
+            const mpi::data_type   dt(info,v);
             (void) types.insert(dt);
         }
 
@@ -346,7 +275,7 @@ default: break;\
                 {
                     const data_type    &t = *i;
                     //const MPI_Datatype &value = i->value;
-                    fprintf(fp,"\t<%s>: bytes=%2u\n", t.label.name(), unsigned(i->bytes)  );
+                    fprintf(fp,"\t<%s>:\n", t.label.name());
                 }
                 fprintf(fp,"<MPI::DataTypes>\n");
             }

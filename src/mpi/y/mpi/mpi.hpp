@@ -68,18 +68,16 @@ namespace upsylon
             //------------------------------------------------------------------
             // methods
             //------------------------------------------------------------------
-            explicit data_type(const std::type_info &,
-                               const size_t,
-                               const_type); //!< initialize
+            explicit data_type(const std::type_info &,const_type);       //!< initialize
             virtual ~data_type() throw();                                //!< destructor
             data_type(const data_type &other);                           //!< copy
+            const std::type_info & key() const throw();                  //!< key for set
 
+            //------------------------------------------------------------------
+            // members
+            //------------------------------------------------------------------
             const std::type_info &label;                                 //!< system identifier
-            const size_t          bytes;                                 //!< indicator
             const_type            value;                                 //!< wrapped value
-
-            const std::type_info & key() const throw();
-
 
         private:
             Y_DISABLE_ASSIGN(data_type);
