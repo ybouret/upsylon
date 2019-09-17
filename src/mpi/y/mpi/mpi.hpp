@@ -10,6 +10,7 @@
 #include "y/ios/upack.hpp"
 #include "y/ios/ovstream.hpp"
 #include "y/hashing/type-info.hpp"
+#include "y/hashing/imph.hpp"
 #include <cstdio>
 
 //! avoir C++ from OpenMPI
@@ -85,6 +86,11 @@ namespace upsylon
         };
         
 
+        //______________________________________________________________________
+        //
+        //! sizes
+        //______________________________________________________________________
+        typedef hashing::mperf_for<uint64_t> data_type_mph;
 
         //______________________________________________________________________
         //
@@ -100,6 +106,8 @@ namespace upsylon
         const int        threadLevel;   //!< current thread level
         uint64_t         fullCommTicks; //!< cumulative communication ticks
         uint64_t         lastCommTicks; //!< ticks for last operation
+        uint64_t         fullCommBytes; //!< cumulative bytes
+        uint64_t         lastCommBytes; //!< last operation
         const string     processorName; //!< the processor name
         const string     nodeName;      //!< size.rank
 
@@ -420,7 +428,7 @@ namespace upsylon
 
         //______________________________________________________________________
         //
-        // point to point communication
+        // Auxiliary
         //______________________________________________________________________
 
         //! MPI_Barrier(MPI_COMM_WORLD)
@@ -428,8 +436,34 @@ namespace upsylon
 
         void displayTypes( FILE *fp ) const;
 
+        inline size_t sizeOf( const MPI_Datatype dt ) const
+        {
+            return bytes[ dtidx[ uint64_t(dt) ] ];
+        }
+
+
     private:
-        data_type::db   types;
+        class data_type_cache
+        {
+        public:
+            data_type_cache() throw();
+            ~data_type_cache() throw();
+            MPI_Datatype type;
+            size_t       size;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(data_type_cache);
+        };
+        data_type_cache     send;
+        data_type_cache     recv;
+        data_type_cache     coll;
+        data_type::db       types;
+        vector<size_t>      bytes;
+        data_type_mph       dtidx;
+
+        void update(data_type_cache &cache,
+                    MPI_Datatype     value);
+
 
         explicit mpi();
         virtual ~mpi() throw();

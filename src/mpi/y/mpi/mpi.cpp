@@ -62,27 +62,17 @@ namespace upsylon
 
 }
 
-#if 0
 namespace upsylon
 {
-    mpi:: data_type_hasher:: data_type_hasher() throw()
-    {}
-
-    mpi:: data_type_hasher:: ~data_type_hasher() throw()
-    {}
-
-    size_t mpi:: data_type_hasher:: operator()( const MPI_Datatype &t ) throw()
+    mpi:: data_type_cache:: data_type_cache() throw() :
+    type( MPI_DATATYPE_NULL ),
+    size( 0)
     {
-        hashing::fnv h;
-        union
-        {
-            MPI_Datatype dt;
-            uint8_t      block[ sizeof(MPI_Datatype) ];
-        } alias = { t };
-        return h.key<size_t>(alias.block,sizeof(alias.block));
     }
+
+    mpi:: data_type_cache:: ~data_type_cache() throw() {}
+
 }
-#endif
 
 
 namespace upsylon
@@ -165,6 +155,12 @@ namespace upsylon
             (void) types.insert(dt);
         }
 
+        struct dtinfo
+        {
+            MPI_Datatype type;
+            size_t       size;
+        };
+
     }
     
     mpi:: mpi() :
@@ -178,11 +174,18 @@ namespace upsylon
     threadLevel(-1),
     fullCommTicks(0),
     lastCommTicks(0),
+    fullCommBytes(0),
+    lastCommBytes(0),
     processorName(),
     nodeName(),
     send_pack(),
     recv_pack(),
-    types(32,as_capacity)
+    send(),
+    recv(),
+    coll(),
+    types(32,as_capacity),
+    bytes(),
+    dtidx(1)
     {
         //______________________________________________________________________
         //
@@ -209,7 +212,7 @@ namespace upsylon
             {
                 char pname[MPI_MAX_PROCESSOR_NAME+1] = { 0 };
                 int  psize=0;
-                Y_MPI_CHECK(MPI_Get_processor_name(pname, &psize) );
+                Y_MPI_CHECK(MPI_Get_processor_name(pname,&psize));
                 string tmp(pname,psize);
                 tmp.swap_with( (string &)processorName );
             }
@@ -276,36 +279,53 @@ default: break;\
                 __register<size_t>(types,usr_type);
             }
 
-            __register<float >(types,MPI_FLOAT);
-            __register<double>(types,MPI_DOUBLE);
-
+            {
+                __register<float >(types,MPI_FLOAT);
+                __register<double>(types,MPI_DOUBLE);
+            }
 
             //__________________________________________________________________
             //
             // fill in database of sizes
             //__________________________________________________________________
-#if 0
-#define Y_MPI_SZ(mpi_type,type) do{ bytes.insert(mpi_type,sizeof(type)); } while(false)
 
-            Y_MPI_SZ(MPI_CHAR,char);
-            Y_MPI_SZ(MPI_UNSIGNED_CHAR,unsigned char);
-            Y_MPI_SZ(MPI_BYTE,uint8_t);
+            {
+#define Y_MPI_SZ(mpi_type,type) { mpi_type, sizeof(type) }
 
-            Y_MPI_SZ(MPI_SHORT,short);
-            Y_MPI_SZ(MPI_UNSIGNED_SHORT,unsigned short);
+                const dtinfo dtinfo_arr[] =
+                {
+                    Y_MPI_SZ(MPI_CHAR,char),
+                    Y_MPI_SZ(MPI_UNSIGNED_CHAR,unsigned char),
+                    Y_MPI_SZ(MPI_BYTE,uint8_t),
 
-            Y_MPI_SZ(MPI_INT,int);
-            Y_MPI_SZ(MPI_UNSIGNED,unsigned int);
+                    Y_MPI_SZ(MPI_SHORT,short),
+                    Y_MPI_SZ(MPI_UNSIGNED_SHORT,unsigned short),
 
-            Y_MPI_SZ(MPI_LONG,long);
-            Y_MPI_SZ(MPI_UNSIGNED_LONG,unsigned long);
+                    Y_MPI_SZ(MPI_INT,int),
+                    Y_MPI_SZ(MPI_UNSIGNED,unsigned int),
 
-            Y_MPI_SZ(MPI_LONG_LONG,long);
-            Y_MPI_SZ(MPI_UNSIGNED_LONG_LONG,unsigned long);
+                    Y_MPI_SZ(MPI_LONG,long),
+                    Y_MPI_SZ(MPI_UNSIGNED_LONG,unsigned long),
 
-            Y_MPI_SZ(MPI_FLOAT,float);
-            Y_MPI_SZ(MPI_DOUBLE,double);
-#endif
+                    Y_MPI_SZ(MPI_LONG_LONG,long),
+                    Y_MPI_SZ(MPI_UNSIGNED_LONG_LONG,unsigned long),
+
+                    Y_MPI_SZ(MPI_FLOAT,float),
+                    Y_MPI_SZ(MPI_DOUBLE,double)
+                };
+
+                const size_t dtinfo_num = sizeof(dtinfo_arr)/sizeof(dtinfo_arr[0]);
+                bytes.ensure(dtinfo_num);
+                for(size_t i=0;i<dtinfo_num;++i)
+                {
+                    const dtinfo  &dti = dtinfo_arr[i];
+                    dtidx<< uint64_t(dti.type);
+                    bytes.push_back_(dti.size);
+                    assert(i+1==dtidx[ uint64_t(dti.type) ]);
+                }
+
+            }
+
 
         }
         catch(...)
@@ -320,15 +340,15 @@ default: break;\
         if(0==rank)
         {
             {
-            //data_type_hasher H;
-            fprintf(fp,"<MPI::DataTypes count=\"%u\">\n", unsigned( types.size() ));
-            for(data_type::db::const_iterator i=types.begin();i!=types.end();++i)
-            {
-                const data_type    &t = *i;
-                //const MPI_Datatype &value = i->value;
-                fprintf(fp,"\t<%s>: bytes=%2u\n", t.label.name(), unsigned(i->bytes)  );
-            }
-            fprintf(fp,"<MPI::DataTypes>\n");
+                //data_type_hasher H;
+                fprintf(fp,"<MPI::DataTypes count=\"%u\">\n", unsigned( types.size() ));
+                for(data_type::db::const_iterator i=types.begin();i!=types.end();++i)
+                {
+                    const data_type    &t = *i;
+                    //const MPI_Datatype &value = i->value;
+                    fprintf(fp,"\t<%s>: bytes=%2u\n", t.label.name(), unsigned(i->bytes)  );
+                }
+                fprintf(fp,"<MPI::DataTypes>\n");
             }
 
             
@@ -486,7 +506,19 @@ namespace upsylon
         return maxiTime * 1000.0;
     }
 
+    void mpi:: update(data_type_cache &cache,
+                      MPI_Datatype     value)
+    {
+        if(cache.type != value )
+        {
+            cache.size = sizeOf(value);
+            cache.type = value;
+        }
+    }
+
 #define Y_MPI_TICKS() fullCommTicks += (lastCommTicks=rt_clock::ticks() - mark)
+
+#define Y_MPI_COMMS(CACHE,COUNT)
 
     void mpi::Send(const void        *buffer,
                    const size_t       count,
@@ -495,8 +527,8 @@ namespace upsylon
                    const int          tag)
     {
         assert(!(0==buffer&&count>0));
+        update(send,type);
         const uint64_t mark = rt_clock::ticks();
-
         Y_MPI_CHECK(MPI_Send((void*)buffer, int(count), type, target, tag, MPI_COMM_WORLD) );
         Y_MPI_TICKS();
     }
@@ -508,6 +540,7 @@ namespace upsylon
                     const int          tag)
     {
         assert(!(0==buffer&&count>0));
+        update(recv,type);
         const uint64_t mark = rt_clock::ticks();
         MPI_Status     status;
         Y_MPI_CHECK(MPI_Recv(buffer, int(count), type, source, tag, MPI_COMM_WORLD, &status) );
@@ -520,6 +553,7 @@ namespace upsylon
                      const int          root)
     {
         assert(!(0==buffer&&count>0));
+        update(coll,type);
         const uint64_t mark = rt_clock::ticks();
         Y_MPI_CHECK(MPI_Bcast(buffer,int(count),type,root,MPI_COMM_WORLD));
         Y_MPI_TICKS();
@@ -528,25 +562,27 @@ namespace upsylon
     void mpi:: Reduce(const void  * send_data,
                       void        * recv_data,
                       const size_t  count,
-                      MPI_Datatype datatype,
+                      MPI_Datatype  type,
                       MPI_Op       op,
                       const int    root )
     {
         assert(!(0==send_data&&count>0));
         const uint64_t mark = rt_clock::ticks();
-        Y_MPI_CHECK(MPI_Reduce(send_data, recv_data,count,datatype, op, root, MPI_COMM_WORLD));
+        update(coll,type);
+        Y_MPI_CHECK(MPI_Reduce(send_data, recv_data,count,type, op, root, MPI_COMM_WORLD));
         Y_MPI_TICKS();
     }
 
     void mpi:: Allreduce(const void  * send_data,
                          void        * recv_data,
                          const size_t  count,
-                         MPI_Datatype datatype,
-                         MPI_Op       op)
+                         MPI_Datatype  type,
+                         MPI_Op        op)
     {
         assert(!(0==send_data&&count>0));
         const uint64_t mark = rt_clock::ticks();
-        Y_MPI_CHECK(MPI_Allreduce(send_data, recv_data,count,datatype, op, MPI_COMM_WORLD));
+        update(coll,type);
+        Y_MPI_CHECK(MPI_Allreduce(send_data, recv_data,count,type, op, MPI_COMM_WORLD));
         Y_MPI_TICKS();
     }
 
@@ -562,6 +598,8 @@ namespace upsylon
                         const int          recvtag)
     {
         const uint64_t mark = rt_clock::ticks();
+        update(send,sendtype);
+        update(recv,recvtype);
         MPI_Status status;
         Y_MPI_CHECK(MPI_Sendrecv((void*)sendbuf, int(sendcount), sendtype, target, sendtag,
                                  recvbuf,        int(recvcount), recvtype, source, recvtag,

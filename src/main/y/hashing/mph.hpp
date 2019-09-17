@@ -96,23 +96,23 @@ namespace upsylon
                                      const string        &prefix,
                                      const size_t         offset=0);
 
+            const size_t entries;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(mperf);
             node_type *root;
-
-
-
+            
             //! get the hash assuming a '\0' terminated data
             int find(const void *data) const throw();
 
         public:
             const size_t nodes; //!< nodes in use
-            void GraphViz( const string &filename ) const; //!< output GraphViz and render
+            void graphViz( const string &filename ) const; //!< output GraphViz and render
             //! output GrapViz and render
             inline void
-            GraphViz(const char *filename) const
+            graphViz(const char *filename) const
             {
-                const string _(filename); GraphViz(_);
+                const string _(filename); graphViz(_);
             }
         };
     }

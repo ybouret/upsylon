@@ -57,7 +57,11 @@ namespace upsylon
                 return static_cast<size_t>(mph.hash(&x,sizeof(x)));
             }
 
+            inline size_t size() const throw() { return mph.entries; }
 
+            void graphViz(const string &fn) const { mph.graphViz(fn); }
+
+            void graphViz(const char   *fn) const { mph.graphViz(fn); }
 
         private:
             mperf mph;

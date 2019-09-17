@@ -23,8 +23,9 @@ namespace
                 keys.push_back(key);
             }
         }
-        std::cerr << "|_#keys=" << keys.size() << std::endl;
-        //std::cerr << keys << std::endl;
+        std::cerr << "|_#keys   =" << keys.size() << std::endl;
+        std::cerr << "|_#entries=" << H.size()    << std::endl;
+        Y_ASSERT(H.size()==keys.size());
         for(size_t i=keys.size();i>0;--i)
         {
             Y_ASSERT( i == H[ keys[i] ] );
@@ -35,21 +36,26 @@ namespace
 
 Y_UTEST(mperf)
 {
-    hashing::mperf H;
-
-    if( argc>1 )
     {
-        ios::icstream fp(argv[1]);
-        string line;
-        int    indx = 0;
-        while( fp.gets(line) )
-        {
-            H.insert(line,indx++);
-        }
-    }
+        hashing::mperf H;
 
-    H.optimize();
-    std::cerr << "#nodes=" << H.nodes << std::endl;
+        if( argc>1 )
+        {
+            ios::icstream fp(argv[1]);
+            string line;
+            int    indx = 0;
+            while( fp.gets(line) )
+            {
+                H.insert(line,indx++);
+            }
+        }
+
+        //H.GraphViz("mperf-raw.dot");
+        H.optimize();
+        //H.GraphViz("mperf-opt.dot");
+
+        std::cerr << "#nodes=" << H.nodes << std::endl;
+    }
 
     doMPH<uint8_t>();
     doMPH<uint16_t>();

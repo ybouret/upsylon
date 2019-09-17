@@ -114,11 +114,7 @@ Y_UTEST(init)
     (void) MPI.get_data_type_for<double>();
     MPI.print(stderr,"<Checking Data Type/>\n");
     MPI.print0(stderr, "sizeof(mpi)=%lu\n", sizeof(mpi) );
-
-    std::cerr << uint64_t(This) << std::endl;
-    std::cerr << uint64_t(That) << std::endl;
-    std::cerr << uint64_t(MPI_INT) << std::endl;
-
+    
 
 }
 Y_UTEST_DONE()

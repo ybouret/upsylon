@@ -97,15 +97,18 @@ namespace upsylon
             assert(root);
             delete root;
             root=0;
+            (size_t&)entries=0;
         }
 
         mperf:: mperf() :
+        entries(0),
         root( new node_type(0) ),
         nodes(1)
         {
         }
 
         mperf:: mperf( const char **words, const size_t count) :
+        entries(0),
         root( new node_type(0) ),
         nodes(1)
         {
@@ -119,6 +122,7 @@ namespace upsylon
         }
 
         mperf:: mperf(const void *data,const size_t size) :
+        entries(0),
         root( new node_type(0) ),
         nodes( 1 )
         {
@@ -192,7 +196,7 @@ namespace upsylon
             if(curr->hash>=0)
                 throw exception("mperf: multiple keys for required h=%d!",h);
             (int &)(curr->hash) = h;
-
+            ++(size_t &)entries;
 
         }
 
@@ -203,6 +207,7 @@ namespace upsylon
             root->chld.release();
             root->freq=1;
             (size_t&)nodes=1;
+            (size_t&)entries =0;
         }
 
     }
@@ -294,7 +299,7 @@ namespace upsylon
     namespace hashing
     {
 
-        void mperf:: GraphViz( const string &filename ) const
+        void mperf:: graphViz( const string &filename ) const
         {
             {
                 ios::ocstream fp(filename,false);
