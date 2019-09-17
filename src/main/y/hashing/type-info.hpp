@@ -9,16 +9,17 @@ namespace upsylon
 {
     namespace hashing
     {
-     
+
+        //! dedicated hasher type for type info
         template <typename HASH_FUNCTION = hashing::fnv >
         class type_info_hasher
         {
         public:
-            HASH_FUNCTION H;
-            
-            inline   type_info_hasher() throw() : H() {}
-            inline  ~type_info_hasher() throw() {}
-            
+            HASH_FUNCTION H;                             //!< generic hashing function
+            inline   type_info_hasher() throw() : H() {} //!< setup
+            inline  ~type_info_hasher() throw() {}       //!< cleanup
+
+            //! return a hash of the name
             inline size_t operator()( const std::type_info &tid ) throw()
             {
                 return H.template key<size_t>(tid.name());

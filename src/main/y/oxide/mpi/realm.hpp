@@ -1,11 +1,10 @@
-
+//! \file
 #ifndef Y_OXIDE_MPI_REALM_INCLUDED
 #define Y_OXIDE_MPI_REALM_INCLUDED 1
 
 #include "y/oxide/mpi/parallel.hpp"
 #include "y/oxide/workspace.hpp"
 #include "y/oxide/partition.hpp"
-//#include "y/oxide/roles.hpp"
 
 namespace upsylon
 {
@@ -47,12 +46,11 @@ namespace upsylon
             Y_REALM_IMPL(Orientations);                //!< alias
             typedef Partition<COORD>    PartitionType; //!< alias
 
-            mpi                &MPI;
-            const PartitionType partition;
+            mpi                &MPI;         //!< reference to moi singleton
+            const PartitionType partition;   //!< the partition(s)
 
-            inline virtual ~Realm() throw()
-            {
-            }
+            //! cleanup
+            inline virtual ~Realm() throw() {}
 
             //! create a realm
             explicit Realm(mpi                   & _MPI,

@@ -54,6 +54,7 @@ namespace upsylon
                 rhs |= l_bits;
             }
 
+            //! convert an integral type to a hash key
             template <typename T> static inline
             size_t key(const      T x,
                        hash64::proc h) throw()
@@ -72,7 +73,10 @@ namespace upsylon
                 return q.k;
             }
 
+            //! T to key using IBJ
             template <typename T> static inline size_t keyIBJ(const T x ) throw() { return key<T>(x,IBJ); }
+            
+            //! T to key using DES
             template <typename T> static inline size_t keyDES(const T x ) throw() { return key<T>(x,DES); }
 
         };

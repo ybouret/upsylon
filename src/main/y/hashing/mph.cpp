@@ -314,6 +314,11 @@ namespace upsylon
 
         }
 
+        void mperf:: graphViz(const char *filename) const
+        {
+            const string _(filename); graphViz(_);
+        }
+
         static inline
         string def2cpp( const string &def )
         {

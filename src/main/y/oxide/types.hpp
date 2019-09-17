@@ -43,8 +43,8 @@ namespace upsylon
         //! operations on coordinates
         struct Coord
         {
-            static const Coord1D __Zero[4];
-            static const Coord1D __Ones[4];
+            static const Coord1D __Zero[4]; //!< {0,0,0,0}
+            static const Coord1D __Ones[4]; //!< {1,1,1,1}
 
             //==================================================================
             //
@@ -102,12 +102,14 @@ namespace upsylon
                 return *( ((const Coord1D *) &c) + dim );
             }
 
+            //! direct mapping of a [0,[,0[,0]]] coordinate
             template <typename COORD> static inline
             const COORD & Zero() throw()
             {
                 return *(const COORD *)__Zero;
             }
 
+            //! direct mapping of a [1,[,1[,1]]] coordinate
             template <typename COORD> static inline
             const COORD & Ones() throw()
             {

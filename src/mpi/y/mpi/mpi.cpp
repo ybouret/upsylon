@@ -77,7 +77,7 @@ namespace upsylon
             (void) types.insert(dt);
         }
 
-        struct dtinfo
+        struct __dtinfo
         {
             MPI_Datatype type;
             size_t       size;
@@ -97,8 +97,6 @@ namespace upsylon
     threadLevel(-1),
     fullCommTicks(0),
     lastCommTicks(0),
-    fullCommBytes(0),
-    lastCommBytes(0),
     processorName(),
     nodeName(),
     send_pack(),
@@ -216,24 +214,19 @@ default: break;\
             {
 #define Y_MPI_SZ(mpi_type,type) { mpi_type, sizeof(type) }
 
-                const dtinfo dtinfo_arr[] =
+                const __dtinfo dtinfo_arr[] =
                 {
                     Y_MPI_SZ(MPI_CHAR,char),
                     Y_MPI_SZ(MPI_UNSIGNED_CHAR,unsigned char),
                     Y_MPI_SZ(MPI_BYTE,uint8_t),
-
                     Y_MPI_SZ(MPI_SHORT,short),
                     Y_MPI_SZ(MPI_UNSIGNED_SHORT,unsigned short),
-
                     Y_MPI_SZ(MPI_INT,int),
                     Y_MPI_SZ(MPI_UNSIGNED,unsigned int),
-
                     Y_MPI_SZ(MPI_LONG,long),
                     Y_MPI_SZ(MPI_UNSIGNED_LONG,unsigned long),
-
                     Y_MPI_SZ(MPI_LONG_LONG,long),
                     Y_MPI_SZ(MPI_UNSIGNED_LONG_LONG,unsigned long),
-
                     Y_MPI_SZ(MPI_FLOAT,float),
                     Y_MPI_SZ(MPI_DOUBLE,double)
                 };
@@ -242,7 +235,9 @@ default: break;\
                 bytes.ensure(dtinfo_num);
                 for(size_t i=0;i<dtinfo_num;++i)
                 {
-                    const dtinfo  &dti = dtinfo_arr[i];
+                    const __dtinfo  &dti = dtinfo_arr[i];
+                    assert( dti.type != MPI_DATATYPE_NULL );
+                    assert( dti.size >  0 );
                     dtidx<< uint64_t(dti.type);
                     bytes.push_back_(dti.size);
                     assert(i+1==dtidx[ uint64_t(dti.type) ]);
@@ -266,7 +261,7 @@ default: break;\
             {
                 //data_type_hasher H;
                 fprintf(fp,"<MPI::DataTypes count=\"%u\">\n", unsigned( types.size() ));
-                for(data_type::db::const_iterator i=types.begin();i!=types.end();++i)
+                for(data_type::db::iterator i=types.begin();i!=types.end();++i)
                 {
                     const data_type    &t = *i;
                     fprintf(fp,"\t<%s>:\n", t.label.name());
@@ -297,7 +292,8 @@ default: break;\
 
     const MPI_Datatype & mpi:: get_data_type( const std::type_info &t ) const
     {
-        const data_type *p  = types.search(t);
+        data_type::db   &db = types;
+        const data_type *p  = db.search(t);
         if(!p) throw upsylon::exception("mpi: unregistered type <%s>", t.name() );
         return p->value;
     }

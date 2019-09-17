@@ -90,17 +90,17 @@ namespace upsylon
         class data_type_cache
         {
         public:
-            data_type_cache() throw();
-            ~data_type_cache() throw();
-            MPI_Datatype type;
-            size_t       size;
-            uint64_t     last;
-            uint64_t     full;
+            data_type_cache() throw();  //!< setup
+            ~data_type_cache() throw(); //!< cleanup
+            MPI_Datatype type;          //!< the data type
+            size_t       size;          //!< the corresponding type size
+            uint64_t     last;          //!< the last bytes for one operation
+            uint64_t     full;          //!< cumulative count for the operation
 
             void comm( const size_t count) throw();            //!< update last/full
-            void like( const data_type_cache &other) throw();  //!< type/size
-            void none() throw(); //!< last=0
-            void zero() throw(); //!< last=0,full=0
+            void like( const data_type_cache &other) throw();  //!< set the same type/size
+            void none() throw();                               //!< last=0
+            void zero() throw();                               //!< last=0,full=0
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(data_type_cache);
@@ -126,8 +126,6 @@ namespace upsylon
         const int        threadLevel;   //!< current thread level
         uint64_t         fullCommTicks; //!< cumulative communication ticks
         uint64_t         lastCommTicks; //!< ticks for last operation
-        uint64_t         fullCommBytes; //!< cumulative bytes
-        uint64_t         lastCommBytes; //!< last operation
         const string     processorName; //!< the processor name
         const string     nodeName;      //!< size.rank
 
@@ -454,21 +452,24 @@ namespace upsylon
         //! MPI_Barrier(MPI_COMM_WORLD)
         void Barrier();
 
+        //! display registered types, mostly to debug
         void displayTypes( FILE *fp ) const;
 
+        //! uses built in hashing to get size of a data type
         inline size_t sizeOf( const MPI_Datatype dt ) const
         {
             return bytes[ dtidx[ uint64_t(dt) ] ];
         }
 
+        //! reset send and recv
         void resetCaches() throw();
 
     private:
-        data_type_cache     send_;
-        data_type_cache     recv_;
-        data_type::db       types;
-        vector<size_t>      bytes;
-        data_type_mph       dtidx;
+        data_type_cache       send_;
+        data_type_cache       recv_;
+        mutable data_type::db types;
+        vector<size_t>        bytes;
+        data_type_mph         dtidx;
 
         void update(data_type_cache &cache,
                     MPI_Datatype     value);
@@ -485,8 +486,8 @@ namespace upsylon
     public:
         //! life-time of the singleton
         static const  at_exit::longevity life_time = memory::global::life_time - 4;
-        const data_type_cache &send;
-        const data_type_cache &recv;
+        const data_type_cache &send; //!< reference to the internal send cache
+        const data_type_cache &recv; //!< reference to the internal recv cache
     };
 
     //! MPI_Init

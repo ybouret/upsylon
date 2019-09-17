@@ -120,7 +120,7 @@ namespace upsylon
             // utilities
             //
             //==================================================================
-
+            //! compare definitions
             inline bool is_same_than( const Layout &other ) const throw()
             {
                 if( lower == other.lower && upper==other.upper )

@@ -84,6 +84,7 @@ namespace upsylon
                 return find(buf.ro(),buf.length());
             }
 
+            //! get the hash code, that MUST be present, exception otherwise
             int hash(const void *data, const size_t size) const;
 
 
@@ -96,6 +97,7 @@ namespace upsylon
                                      const string        &prefix,
                                      const size_t         offset=0);
 
+            //! count of all different registered hash codes
             const size_t entries;
             
         private:
@@ -106,14 +108,10 @@ namespace upsylon
             int find(const void *data) const throw();
 
         public:
-            const size_t nodes; //!< nodes in use
-            void graphViz( const string &filename ) const; //!< output GraphViz and render
-            //! output GrapViz and render
-            inline void
-            graphViz(const char *filename) const
-            {
-                const string _(filename); graphViz(_);
-            }
+            const size_t nodes; //!< nodes in use, to get a hint of memory usage
+
+            void graphViz(const string &filename) const; //!< output GraphViz and render
+            void graphViz(const char   *filename) const; //!< output GrapViz and render
         };
     }
 
