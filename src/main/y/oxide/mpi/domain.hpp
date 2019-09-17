@@ -72,22 +72,6 @@ namespace upsylon
                 }
             }
 
-#if 0
-            //! setup full domain
-            explicit Domain(mpi                   & _MPI,
-                            const LayoutType      &fullLayout,
-                            const_coord            localSizes,
-                            const_coord            boundaries,
-                            const size_t           ghostsZone,
-                            const ControllingType &) :
-            WorkspaceType(fullLayout,Coord::Ones<COORD>(),0,boundaries,ghostsZone),
-            MPI(_MPI),
-            partition( new PartitionType(fullLayout,localSizes,MPI.size) )
-            {
-            }
-#endif
-
-
             //! cleanup
             virtual ~Domain() throw() {}
 
@@ -189,7 +173,7 @@ namespace upsylon
                                     const LayoutType &fullLayout,
                                     const_coord      &boundaries,
                                     const size_t      ghostsZone) :
-            Parallel<COORD>(_MPI,fullLayout,boundaries,false),
+            Parallel<COORD>(_MPI,fullLayout,boundaries),
             WorkspaceType(_MPI,fullLayout,this->optimal,boundaries,ghostsZone)
             {
             }

@@ -28,6 +28,10 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             typedef Layout<COORD> LayoutType;       //!< alias
+            typedef typename LayoutType::coord              coord;
+            typedef typename LayoutType::const_coord        const_coord;
+            typedef typename Coord::Get<coord>::BooleanType bool_type;   //!< boolean vector
+            typedef const bool_type                         const_bool;  //!< const boolean vector
             typedef vector<COORD> MappingsType;     //!< will store mappings
 
             //------------------------------------------------------------------
@@ -36,16 +40,20 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             const MappingsType mappings;            //!< all possible mappings
-            const COORD        optimal;             //!< optimal mappings
+            const_coord        optimal;             //!< optimal mappings
+            const_coord        favorite;            //!< from preferred
 
             //! create possible mappings and pick optimal
             inline explicit Parallel(const mpi        &MPI,
                                      const LayoutType &fullLayout,
-                                     const COORD      &boundaries,
-                                     const bool        computeMappings=true) :
-            mappings(), optimal( Divide::Find(fullLayout,MPI.size,boundaries, (computeMappings) ? (MappingsType *)&mappings : 0 ) )
+                                     const_coord       boundaries ) :
+            mappings(),
+            optimal( Divide::Find(fullLayout,MPI.size,boundaries, (MappingsType *)&mappings  ) ),
+            favorite(optimal)
             {
                 if( Coord::Product(optimal) <= 0 ) throw exception("No available mapping for MPI.size=%d", MPI.size );
+                //const_bool choice = Coord::Get<coord>::ToBoolean(preferred);
+
             }
 
             //! cleanup

@@ -88,7 +88,7 @@ namespace upsylon
                 typedef typename NodeType::LayoutType           LayoutType;  //!< alias
                 typedef typename NodeType::coord                coord;       //!< alias
                 typedef typename NodeType::const_coord          const_coord; //!< alias
-                typedef typename Coord::Get<COORD>::BooleanType bool_type;   //!< boolean vector
+                typedef typename Coord::Get<coord>::BooleanType bool_type;   //!< boolean vector
                 typedef const bool_type                         const_bool;  //!< const boolean vector
 
                 //--------------------------------------------------------------
