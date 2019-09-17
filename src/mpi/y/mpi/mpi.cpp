@@ -84,7 +84,8 @@ namespace upsylon
         };
 
     }
-    
+
+
     mpi:: mpi() :
     size(0),
     rank(0),
@@ -102,9 +103,8 @@ namespace upsylon
     nodeName(),
     send_pack(),
     recv_pack(),
-    send(),
-    recv(),
-    coll(),
+    send_(),
+    recv_(),
     types(32,as_capacity),
     bytes(),
     dtidx(1)

@@ -62,12 +62,43 @@ namespace upsylon
 namespace upsylon
 {
     mpi:: data_type_cache:: data_type_cache() throw() :
-    type( MPI_DATATYPE_NULL ),
-    size( 0)
+    type(MPI_DATATYPE_NULL),
+    size(0),
+    last(0),
+    full(0)
     {
     }
 
-    mpi:: data_type_cache:: ~data_type_cache() throw() {}
+    mpi:: data_type_cache:: ~data_type_cache() throw()
+    {
+        type = MPI_DATATYPE_NULL;
+        size = 0;
+        last = 0;
+        full = 0;
+    }
+
+    void mpi:: data_type_cache:: comm( const size_t count) throw()
+    {
+        assert(size>0);
+        full += ( last = count*size );
+    }
+
+    void mpi:: data_type_cache:: like( const data_type_cache &other) throw()
+    {
+        type = other.type;
+        size = other.size;
+    }
+
+    void mpi:: data_type_cache:: none() throw()
+    {
+        last = 0;
+    }
+
+    void mpi:: data_type_cache:: zero() throw()
+    {
+        last = full = 0;
+    }
+
 
 }
 

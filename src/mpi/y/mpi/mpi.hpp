@@ -82,7 +82,29 @@ namespace upsylon
         private:
             Y_DISABLE_ASSIGN(data_type);
         };
-        
+
+        //______________________________________________________________________
+        //
+        //! data cache to count I/O
+        //______________________________________________________________________
+        class data_type_cache
+        {
+        public:
+            data_type_cache() throw();
+            ~data_type_cache() throw();
+            MPI_Datatype type;
+            size_t       size;
+            uint64_t     last;
+            uint64_t     full;
+
+            void comm( const size_t count) throw();            //!< update last/full
+            void like( const data_type_cache &other) throw();  //!< type/size
+            void none() throw(); //!< last=0
+            void zero() throw(); //!< last=0,full=0
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(data_type_cache);
+        };
 
         //______________________________________________________________________
         //
@@ -439,22 +461,12 @@ namespace upsylon
             return bytes[ dtidx[ uint64_t(dt) ] ];
         }
 
+        void resetCaches() throw();
 
     private:
-        class data_type_cache
-        {
-        public:
-            data_type_cache() throw();
-            ~data_type_cache() throw();
-            MPI_Datatype type;
-            size_t       size;
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(data_type_cache);
-        };
-        data_type_cache     send;
-        data_type_cache     recv;
-        data_type_cache     coll;
+        data_type_cache     send_;
+        data_type_cache     recv_;
         data_type::db       types;
         vector<size_t>      bytes;
         data_type_mph       dtidx;

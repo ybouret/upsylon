@@ -6,6 +6,13 @@
 
 namespace upsylon
 {
+
+    void mpi:: resetCaches() throw()
+    {
+        send_.zero();
+        recv_.zero();
+    }
+
     double mpi:: getCommMilliseconds()
     {
         rt_clock     clk;
@@ -26,7 +33,6 @@ namespace upsylon
 
 #define Y_MPI_TICKS() fullCommTicks += (lastCommTicks=rt_clock::ticks() - mark)
 
-#define Y_MPI_COMMS(CACHE,COUNT) fullCommBytes += ( lastCommBytes= CACHE.size * (COUNT) )
 
     void mpi::Send(const void        *buffer,
                    const size_t       count,
@@ -35,11 +41,12 @@ namespace upsylon
                    const int          tag)
     {
         assert(!(0==buffer&&count>0));
-        update(send,type);
         const uint64_t mark = rt_clock::ticks();
+        update(send_,type);
         Y_MPI_CHECK(MPI_Send((void*)buffer, int(count), type, target, tag, MPI_COMM_WORLD) );
         Y_MPI_TICKS();
-        Y_MPI_COMMS(send,count);
+        send_.comm(count);
+        recv_.none();
     }
 
     void mpi:: Recv(void              *buffer,
@@ -49,12 +56,13 @@ namespace upsylon
                     const int          tag)
     {
         assert(!(0==buffer&&count>0));
-        update(recv,type);
         const uint64_t mark = rt_clock::ticks();
+        update(recv_,type);
         MPI_Status     status;
         Y_MPI_CHECK(MPI_Recv(buffer, int(count), type, source, tag, MPI_COMM_WORLD, &status) );
         Y_MPI_TICKS();
-        Y_MPI_COMMS(recv,count);
+        recv_.comm(count);
+        send_.none();
     }
 
     void mpi:: Bcast(void              *buffer,
@@ -63,11 +71,21 @@ namespace upsylon
                      const int          root)
     {
         assert(!(0==buffer&&count>0));
-        update(coll,type);
+        update(send_,type);
+        recv_.like(send_);
         const uint64_t mark = rt_clock::ticks();
         Y_MPI_CHECK(MPI_Bcast(buffer,int(count),type,root,MPI_COMM_WORLD));
         Y_MPI_TICKS();
-        Y_MPI_COMMS(coll,count);
+        if(root==rank)
+        {
+            send_.comm( count * last );
+            recv_.none();
+        }
+        else
+        {
+            recv_.comm( count );
+            send_.none();
+        }
     }
 
     void mpi:: Reduce(const void  * send_data,
@@ -78,11 +96,22 @@ namespace upsylon
                       const int    root )
     {
         assert(!(0==send_data&&count>0));
+        update(send_,type);
+        recv_.like(send_);
         const uint64_t mark = rt_clock::ticks();
-        update(coll,type);
         Y_MPI_CHECK(MPI_Reduce(send_data, recv_data,count,type, op, root, MPI_COMM_WORLD));
         Y_MPI_TICKS();
-        Y_MPI_COMMS(coll,count);
+        if(root==rank)
+        {
+            send_.comm( count * last );
+            recv_.none();
+        }
+        else
+        {
+            recv_.comm( count );
+            send_.none();
+        }
+
     }
 
     void mpi:: Allreduce(const void  * send_data,
@@ -92,11 +121,14 @@ namespace upsylon
                          MPI_Op        op)
     {
         assert(!(0==send_data&&count>0));
+        update(send_,type);
+        recv_.like(send_);
         const uint64_t mark = rt_clock::ticks();
-        update(coll,type);
         Y_MPI_CHECK(MPI_Allreduce(send_data, recv_data,count,type, op, MPI_COMM_WORLD));
         Y_MPI_TICKS();
-        Y_MPI_COMMS(coll,count);
+        const size_t all_count = count * last;
+        send_.comm(all_count);
+        recv_.comm(all_count);
     }
 
     void mpi:: SendRecv(const void        *sendbuf,
@@ -111,15 +143,15 @@ namespace upsylon
                         const int          recvtag)
     {
         const uint64_t mark = rt_clock::ticks();
-        update(send,sendtype);
-        update(recv,recvtype);
+        update(send_,sendtype);
+        update(recv_,recvtype);
         MPI_Status status;
         Y_MPI_CHECK(MPI_Sendrecv((void*)sendbuf, int(sendcount), sendtype, target, sendtag,
                                  recvbuf,        int(recvcount), recvtype, source, recvtag,
                                  MPI_COMM_WORLD, &status) );
         Y_MPI_TICKS();
-        lastCommBytes  = send.size * sendcount + recv.size * recvcount;
-        fullCommBytes += lastCommBytes;
+        send_.comm(sendcount);
+        recv_.comm(recvcount);
     }
 
     void mpi:: Barrier()
@@ -127,7 +159,8 @@ namespace upsylon
         const uint64_t mark = rt_clock::ticks();
         Y_MPI_CHECK(MPI_Barrier(MPI_COMM_WORLD));
         Y_MPI_TICKS();
-        lastCommBytes = 0;
+        send_.none();
+        recv_.none();
     }
 
 }
