@@ -83,7 +83,7 @@ namespace upsylon
         private:
             Y_DISABLE_ASSIGN(data_type);
         };
-
+        
 
 
         //______________________________________________________________________
