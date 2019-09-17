@@ -24,15 +24,15 @@ namespace upsylon
     void mpi:: update(data_type_cache &cache,
                       MPI_Datatype     value)
     {
+        assert(value!=MPI_DATATYPE_NULL);
         if(cache.type != value )
         {
-            cache.size = sizeOf(value);
+            cache.size = sizeOf(value); assert(cache.size>0);
             cache.type = value;
         }
     }
 
 #define Y_MPI_TICKS() fullCommTicks += (lastCommTicks=rt_clock::ticks() - mark)
-
 
     void mpi::Send(const void        *buffer,
                    const size_t       count,
