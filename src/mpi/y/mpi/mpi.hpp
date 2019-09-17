@@ -478,7 +478,9 @@ namespace upsylon
         explicit mpi();
         virtual ~mpi() throw();
         friend class singleton<mpi>;
-
+        void setup_global();
+        void setup_dtypes();
+        void setup_caches();
 
         void finalizeAndCleanUp() throw();
         bool write_to(FILE *fp, const string &text) const throw();

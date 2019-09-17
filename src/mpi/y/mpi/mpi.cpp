@@ -66,24 +66,7 @@ namespace upsylon
         Y_MPI_CLEAN(lastCommTicks);
     }
 
-    namespace
-    {
-        template <typename T>
-        void __register(mpi::data_type::db &types,
-                        MPI_Datatype        v )
-        {
-            const std::type_info & info = typeid(T);
-            const mpi::data_type   dt(info,v);
-            (void) types.insert(dt);
-        }
-
-        struct __dtinfo
-        {
-            MPI_Datatype type;
-            size_t       size;
-        };
-
-    }
+   
 
 
     mpi:: mpi() :
@@ -118,134 +101,9 @@ namespace upsylon
 
         try
         {
-
-            //__________________________________________________________________
-            //
-            // Get topology
-            //__________________________________________________________________
-            Y_MPI_CHECK(MPI_Comm_size(MPI_COMM_WORLD,(int*)&size));
-            Y_MPI_CHECK(MPI_Comm_rank(MPI_COMM_WORLD,(int*)&rank));
-            (int  &)last          = size-1;
-            (bool &)parallel      = (size>1);
-            (bool &)isHead        = (0==rank);
-            (bool &)isTail        = (last==rank);
-            (bool &)isBulk        = (!isHead) && (!isTail);
-
-            {
-                char pname[MPI_MAX_PROCESSOR_NAME+1] = { 0 };
-                int  psize=0;
-                Y_MPI_CHECK(MPI_Get_processor_name(pname,&psize));
-                string tmp(pname,psize);
-                tmp.swap_with( (string &)processorName );
-            }
-
-            {
-                const char *fmt = "<%d.%d> ";
-                if(size>=10)
-                {
-                    fmt = "<%2d.%02d> ";
-                }
-
-                if(size>=100)
-                {
-                    fmt = "<%3d.%03d> ";
-                }
-
-                string tmp = vformat(fmt,size,rank);
-                tmp.swap_with( (string&)nodeName );
-            }
-
-            //__________________________________________________________________
-            //
-            // fill in database of type
-            //__________________________________________________________________
-#define Y_MPI_REG_CASE(PFX,SFX,COM_TYPE) case (sizeof(PFX##SFX)): __register< PFX##SFX >(types,COM_TYPE); break
-
-#define Y_MPI_REG(PFX,STD_TYPE,COM_TYPE)            \
-do { __register<STD_TYPE>(types,COM_TYPE);          \
-if(sizeof(STD_TYPE)==usr_size) usr_type = COM_TYPE; \
-switch(sizeof(STD_TYPE))\
-{\
-Y_MPI_REG_CASE(PFX,8_t, COM_TYPE);\
-Y_MPI_REG_CASE(PFX,16_t,COM_TYPE);\
-Y_MPI_REG_CASE(PFX,32_t,COM_TYPE);\
-Y_MPI_REG_CASE(PFX,64_t,COM_TYPE);\
-default: break;\
-}\
-} while(false)
-            {
-                static const size_t usr_size = sizeof(ptrdiff_t);
-                MPI_Datatype        usr_type = MPI_DATATYPE_NULL;
-
-                Y_MPI_REG(int,char,      MPI_CHAR);
-                Y_MPI_REG(int,short,     MPI_SHORT);
-                Y_MPI_REG(int,int,       MPI_INT);
-                Y_MPI_REG(int,long,      MPI_LONG);
-                Y_MPI_REG(int,long long, MPI_LONG_LONG);
-
-                if(MPI_DATATYPE_NULL==usr_type) throw upsylon::exception("couldn't find mpi matching type for ptrdiff_t");
-                __register<ptrdiff_t>(types,usr_type);
-            }
-
-            {
-                static const size_t usr_size = sizeof(size_t);
-                MPI_Datatype        usr_type = MPI_DATATYPE_NULL;
-
-                Y_MPI_REG(uint,unsigned char,      MPI_UNSIGNED_CHAR);
-                Y_MPI_REG(uint,unsigned short,     MPI_UNSIGNED_SHORT);
-                Y_MPI_REG(uint,unsigned int,       MPI_UNSIGNED);
-                Y_MPI_REG(uint,unsigned long,      MPI_UNSIGNED_LONG);
-                Y_MPI_REG(uint,unsigned long long, MPI_UNSIGNED_LONG_LONG);
-
-                if(MPI_DATATYPE_NULL==usr_type) throw upsylon::exception("couldn't find mpi matching type for size_t");
-                __register<size_t>(types,usr_type);
-            }
-
-            {
-                __register<float >(types,MPI_FLOAT);
-                __register<double>(types,MPI_DOUBLE);
-            }
-
-            //__________________________________________________________________
-            //
-            // fill in database of sizes
-            //__________________________________________________________________
-
-            {
-#define Y_MPI_SZ(mpi_type,type) { mpi_type, sizeof(type) }
-
-                const __dtinfo dtinfo_arr[] =
-                {
-                    Y_MPI_SZ(MPI_CHAR,char),
-                    Y_MPI_SZ(MPI_UNSIGNED_CHAR,unsigned char),
-                    Y_MPI_SZ(MPI_BYTE,uint8_t),
-                    Y_MPI_SZ(MPI_SHORT,short),
-                    Y_MPI_SZ(MPI_UNSIGNED_SHORT,unsigned short),
-                    Y_MPI_SZ(MPI_INT,int),
-                    Y_MPI_SZ(MPI_UNSIGNED,unsigned int),
-                    Y_MPI_SZ(MPI_LONG,long),
-                    Y_MPI_SZ(MPI_UNSIGNED_LONG,unsigned long),
-                    Y_MPI_SZ(MPI_LONG_LONG,long),
-                    Y_MPI_SZ(MPI_UNSIGNED_LONG_LONG,unsigned long),
-                    Y_MPI_SZ(MPI_FLOAT,float),
-                    Y_MPI_SZ(MPI_DOUBLE,double)
-                };
-
-                const size_t dtinfo_num = sizeof(dtinfo_arr)/sizeof(dtinfo_arr[0]);
-                bytes.ensure(dtinfo_num);
-                for(size_t i=0;i<dtinfo_num;++i)
-                {
-                    const __dtinfo  &dti = dtinfo_arr[i];
-                    assert( dti.type != MPI_DATATYPE_NULL );
-                    assert( dti.size >  0 );
-                    dtidx<< uint64_t(dti.type);
-                    bytes.push_back_(dti.size);
-                    assert(i+1==dtidx[ uint64_t(dti.type) ]);
-                }
-
-            }
-
-
+            setup_global();
+            setup_dtypes();
+            setup_caches();
         }
         catch(...)
         {
