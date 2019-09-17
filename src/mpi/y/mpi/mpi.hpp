@@ -464,7 +464,6 @@ namespace upsylon
         void resetCaches() throw();
 
     private:
-
         data_type_cache     send_;
         data_type_cache     recv_;
         data_type::db       types;
@@ -486,6 +485,8 @@ namespace upsylon
     public:
         //! life-time of the singleton
         static const  at_exit::longevity life_time = memory::global::life_time - 4;
+        const data_type_cache &send;
+        const data_type_cache &recv;
     };
 
     //! MPI_Init

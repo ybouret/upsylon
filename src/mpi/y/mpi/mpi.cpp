@@ -107,7 +107,9 @@ namespace upsylon
     recv_(),
     types(32,as_capacity),
     bytes(),
-    dtidx(1)
+    dtidx(1),
+    send( send_ ),
+    recv( recv_ )
     {
         //______________________________________________________________________
         //

@@ -84,7 +84,8 @@ Y_UTEST(init)
         MPI.print(stderr, "all reduce sum: %g -> %g\n", value, sum);
     }
     MPI.print(stderr,"I/O time: %gms\n", MPI.getCommMilliseconds() );
-
+    MPI.print(stderr,"send: %ld | recv: %ld\n", long(MPI.send.full), long(MPI.recv.full) );
+    
     MPI.displayTypes(stderr);
 
     MPI.print(stderr,"<Checking Data Type>\n");
