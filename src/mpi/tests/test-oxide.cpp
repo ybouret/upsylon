@@ -3,6 +3,7 @@
 #include "y/oxide/field3d.hpp"
 #include "y/ios/imstream.hpp"
 #include "y/oxide/field/io.hpp"
+#include "y/oxide/field/split.hpp"
 
 #include "y/utest/run.hpp"
 #include "support.hpp"
@@ -102,7 +103,9 @@ void make_for(mpi                 &MPI,
 
             MPI.fullCommTicks = 0;
             MPI.Barrier();
-            Parallel<COORD> ctx(MPI,full,pbc.value, Coord::Zero<COORD>() );
+
+            // Parallel<COORD> ctx(MPI,full,pbc.value, Coord::Zero<COORD>() );
+            Split<COORD> ctx(MPI.size, full, pbc.value, Coord::Zero<COORD>() );
             Domain<COORD>   W(MPI, full, mapping, pbc.value,ghostsZone);
 
             if(ctx.optimal == mapping)

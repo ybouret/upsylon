@@ -121,26 +121,7 @@ namespace upsylon
                 setup(ghostsZone);
             }
 
-            //! setup controlling
-            inline explicit Layouts(const LayoutType &fullLayout,
-                                    const_coord       boundaries,
-                                    const Coord1D     ghostsZone) :
-            HubType( Coord::Ones<coord>,0,boundaries ),
-            inner( fullLayout ),
-            outer( expandInner(abs_of(ghostsZone)) ),
-            center(0),
-            border(),
-            repository( Neighbours, as_capacity ),
-            ghosts(),
-            localGhosts(),
-            localComms(0),
-            asyncComms(0)
-            {
-                setup(ghostsZone);
-            }
-
-
-
+            
             //! display information
             void display(std::ostream &os, const char *pfx=0) const
             {

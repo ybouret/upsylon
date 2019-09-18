@@ -50,6 +50,7 @@ namespace upsylon
             // members
             //
             //------------------------------------------------------------------
+            const LayoutType   layout;              //!< keep track of full layout
             const MappingsType mappings;            //!< all possible mappings
             const_coord        optimal;             //!< optimal mappings
             const_coord        favored;             //!< from preferred
@@ -59,8 +60,9 @@ namespace upsylon
                                   const LayoutType &fullLayout,
                                   const_coord       boundaries,
                                   coord             preferred) :
+            layout( fullLayout ),
             mappings(),
-            optimal( Divide::Find(fullLayout,cores,boundaries, (MappingsType *)&mappings  ) ),
+            optimal( Divide::Find(layout,cores,boundaries, (MappingsType *)&mappings  ) ),
             favored(optimal)
             {
                 //______________________________________________________________

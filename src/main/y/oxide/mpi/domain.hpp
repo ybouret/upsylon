@@ -3,7 +3,7 @@
 #ifndef Y_OXIDE_MPI_DOMAIN_INCLUDED
 #define Y_OXIDE_MPI_DOMAIN_INCLUDED 1
 
-#include "y/oxide/mpi/parallel.hpp"
+#include "y/mpi/mpi.hpp"
 #include "y/oxide/workspace.hpp"
 
 namespace upsylon
