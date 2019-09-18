@@ -11,6 +11,19 @@ namespace upsylon
     namespace Oxide
     {
 
+        struct __Split
+        {
+            static mpq    Cost(const Coord1D *P, const Coord1D *M, const size_t D );
+
+            template <typename COORD> static inline
+            mpq Cost( const COORD &P, const COORD &M )
+            {
+                return Cost( (const Coord1D *) &P, (const Coord1D *)&M, Coord::Get<COORD>::Dimensions );
+            }
+
+            static size_t Find(const array<mpq> &costs);
+        };
+
         //======================================================================
         //
         //
@@ -26,11 +39,11 @@ namespace upsylon
             // types and definitions
             //
             //------------------------------------------------------------------
-            static const size_t                             Dimensions = Coord::Get<COORD>::Dimensions;
-            typedef Layout<COORD>                           LayoutType;       //!< alias
-            typedef typename LayoutType::coord              coord;            //!< alias
-            typedef typename LayoutType::const_coord        const_coord;      //!< alias
-            typedef vector<COORD>                           MappingsType;     //!< will store mappings
+            static const size_t                      Dimensions = Coord::Get<COORD>::Dimensions;
+            typedef Layout<COORD>                    LayoutType;       //!< alias
+            typedef typename LayoutType::coord       coord;            //!< alias
+            typedef typename LayoutType::const_coord const_coord;      //!< alias
+            typedef vector<COORD>                    MappingsType;     //!< will store mappings
 
             //------------------------------------------------------------------
             //
@@ -39,16 +52,16 @@ namespace upsylon
             //------------------------------------------------------------------
             const MappingsType mappings;            //!< all possible mappings
             const_coord        optimal;             //!< optimal mappings
-            const_coord        favorite;            //!< from preferred
+            const_coord        favored;             //!< from preferred
 
-            //! create possible mappings and pick optimal
+            //! create possible mappings and pick optimal and favorite
             inline explicit Split(const size_t      cores,
                                   const LayoutType &fullLayout,
                                   const_coord       boundaries,
                                   coord             preferred) :
             mappings(),
             optimal( Divide::Find(fullLayout,cores,boundaries, (MappingsType *)&mappings  ) ),
-            favorite(optimal)
+            favored(optimal)
             {
                 //______________________________________________________________
                 //
@@ -61,7 +74,7 @@ namespace upsylon
                 //
                 // analyze preferred request
                 //______________________________________________________________
-                size_t active = 0;
+                size_t active=0;
                 for(size_t dim=0;dim<Dimensions;++dim)
                 {
                     Coord1D &c = Coord::Of(preferred,dim);
@@ -71,26 +84,39 @@ namespace upsylon
                         ++active;
                     }
                 }
-                const size_t n = mappings.size();
-                vector<mpq>  costs(n,as_capacity);
-                for(size_t i=1;i<=n;++i)
+
+                //______________________________________________________________
+                //
+                // cost = min(|preferred-alpha*mapping|^2), to look like
+                // preferred!
+                //______________________________________________________________
+                if(active>0)
                 {
-                    const_coord  &M   = mappings[i];
-                    const_coord  &P   = preferred;
-                    const mpq     alpha(Coord::Dot(P,M),Coord::Dot(M,M));
-                    mpq cost = 0;
-                    for(size_t dim=0;dim<Dimensions;++dim)
+
+                    //__________________________________________________________
+                    //
+                    // algorithm works with active==0, but result is optimal!
+                    //__________________________________________________________
+                    const size_t   nmaps = mappings.size();
+                    vector<mpq>    costs(nmaps,as_capacity);
+
+                    //__________________________________________________________
+                    //
+                    // First Pass: compute each cost
+                    //__________________________________________________________
+                    for(size_t i=1;i<=nmaps;++i)
                     {
-                        const mpq p( Coord::Of(P,dim) );
-                        const mpq m( Coord::Of(M,dim) );
-                        const mpq d = p - alpha * m;
-                        cost += d*d;
+                        const mpq cost = __Split::Cost(preferred,mappings[i]);
+                        costs.push_back_(cost);
                     }
-                    std::cerr << M << "->" <<alpha<< "-> " << cost << " ~ " << cost.to_real() << std::endl;
-                    costs.push_back_(cost);
+
+                    //__________________________________________________________
+                    //
+                    // Second pass: find the first minimal cost
+                    //__________________________________________________________
+                    const size_t min_indx = __Split::Find(costs);
+                    (COORD &)favored = mappings[min_indx];
                 }
-
-
 
             }
 
@@ -98,7 +124,7 @@ namespace upsylon
             inline virtual ~Split() throw()
             {
                 bzset_(optimal);
-                bzset_(favorite);
+                bzset_(favored);
             }
 
         private:
