@@ -49,7 +49,7 @@ namespace upsylon
             optimal( Divide::Find(fullLayout,MPI.size,boundaries, (MappingsType *)&mappings  ) ),
             favorite(optimal)
             {
-                if( Coord::Product(optimal) <= 0 ) throw exception("No available mapping for MPI.size=%d", MPI.size );
+                if( Coord::Product(optimal) <= 0 ) Divide::ErrorNoMappingFor(MPI.size);
                 size_t    active=0;
                 for(size_t dim=0;dim<Dimensions;++dim)
                 {
@@ -60,6 +60,14 @@ namespace upsylon
                         ++active;
                     }
                 }
+#if 0
+                MPI.print0(stderr,"{%ld",Coord::Of(preferred,0));
+                for(size_t dim=1;dim<Dimensions;++dim)
+                {
+                    MPI.print0(stderr," %ld",Coord::Of(preferred,dim));
+                }
+                MPI.print0(stderr,"}");
+#endif
                 if(active>0&&active<Dimensions)
                 {
                     // user requested a preferred layout

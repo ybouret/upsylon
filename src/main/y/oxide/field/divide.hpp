@@ -164,6 +164,8 @@ namespace upsylon
                     return mappings[opt];
                 }
             }
+
+            static void ErrorNoMappingFor(const size_t cores);
             
         };
     }

@@ -45,12 +45,21 @@ namespace
     {
         typename Layout<COORD>::Loop loop( Coord::Zero<COORD>(), Coord::Ones<COORD>() );
 
+        MPI.print0(stderr, "(");
         for(loop.start();loop.valid();loop.next())
         {
             const COORD &preferred = loop.value;
             Parallel<COORD> ctx(MPI,full,pbc,preferred);
+            if(ctx.optimal==ctx.favorite)
+            {
+                MPI.print0(stderr,"*");
+            }
+            else
+            {
+                MPI.print0(stderr,".");
+            }
         }
-
+        MPI.print0(stderr,")");
     }
 }
 

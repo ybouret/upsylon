@@ -123,3 +123,17 @@ namespace upsylon
         
     }
 }
+
+#include "y/exception.hpp"
+
+namespace upsylon
+{
+    namespace Oxide
+    {
+        void Divide:: ErrorNoMappingFor(const size_t   cores)
+        {
+            throw exception("Divide(No Mapping for #cores=%u)",unsigned(cores));
+        }
+    }
+}
+
