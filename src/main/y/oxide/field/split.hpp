@@ -4,6 +4,7 @@
 #define Y_OXIDE_FIELD_SPLIT_INCLUDED 1
 
 #include "y/oxide/field/divide.hpp"
+#include "y/mpl/rational.hpp"
 
 namespace upsylon
 {
@@ -60,43 +61,36 @@ namespace upsylon
                 //
                 // analyze preferred request
                 //______________________________________________________________
-                size_t     active=0;
+                size_t active = 0;
                 for(size_t dim=0;dim<Dimensions;++dim)
                 {
                     Coord1D &c = Coord::Of(preferred,dim);
                     if(c!=0)
                     {
-                        c=1;
+                        c=abs_of(c);
                         ++active;
                     }
                 }
-
-                //______________________________________________________________
-                //
-                // try to match request
-                //______________________________________________________________
-                std::cerr << "preferred=" << preferred << std::endl;
-                if(active>0&&active<Dimensions)
+                const size_t n = mappings.size();
+                vector<mpq>  costs(n,as_capacity);
+                for(size_t i=1;i<=n;++i)
                 {
-                    // user requested a preferred layout
-                    vector<size_t> good(mappings.size(),as_capacity);
+                    const_coord  &M   = mappings[i];
+                    const_coord  &P   = preferred;
+                    const mpq     alpha(Coord::Dot(P,M),Coord::Dot(M,M));
+                    mpq cost = 0;
+                    for(size_t dim=0;dim<Dimensions;++dim)
                     {
-                        const size_t n = mappings.size();
-                        for(size_t i=1;i<=n;++i)
-                        {
-                            const_coord value = Coord::Decreased(mappings[i]);
-                            if( Coord::Dot(preferred,value) )
-                            {
-                                std::cerr << "keep " << mappings[i] << std::endl;
-                                good.push_back_(i);
-                            }
-                        }
+                        const mpq p( Coord::Of(P,dim) );
+                        const mpq m( Coord::Of(M,dim) );
+                        const mpq d = p - alpha * m;
+                        cost += d*d;
                     }
+                    std::cerr << M << "->" <<alpha<< "-> " << cost << " ~ " << cost.to_real() << std::endl;
+                    costs.push_back_(cost);
                 }
-                else
-                {
-                    // keep the default (=optimal?) choice
-                }
+
+
 
             }
 
