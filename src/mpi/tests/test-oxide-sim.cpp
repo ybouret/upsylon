@@ -1,5 +1,7 @@
 #include "y/oxide/mpi/district.hpp"
 #include "y/oxide/field3d.hpp"
+#include "y/oxide/vtk.hpp"
+#include "y/ios/ocstream.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 
@@ -47,20 +49,33 @@ namespace
             const COORD boundaries = pbc.value;
 
             District<COORD> W(MPI,fullLayout,boundaries,ghostsZone,preferred);
-            
-            iField &Fi = W.template createExported<iField>("Fi");
-            dField &Fd = W.template createExported<dField>("Fd");
+            iField         &Fi = W.template createExported<iField>("Fi");
+            dField         &Fd = W.template createExported<dField>("Fd");
             
             fill(Fd);
-            Fi.ld(0);
+            Fi.ld(MPI.rank);
 
             if(W.realm)
             {
-                fill( W.realm->template as<dField>("Fd"));
+                fill( W.realm->template as<dField>("Fd") );
             }
 
 
             W.Gather("Fi");
+            if(W.realm&&pbc.index<=1)
+            {
+                const string  filename = vformat("realm%d.vtk", int(W.Dimensions));
+                ios::ocstream fp(filename);
+
+                const vtk &VTK = vtk::instance();
+                const Layout<COORD> &L = W.realm->inner;
+                VTK.writeHeader(fp);
+                VTK.writeTitle(fp,filename);
+                VTK.writeLayout(fp,L);
+                VTK.writePointData(fp,L);
+                VTK.writeField(fp,W.realm->template as<iField>("Fi"), L);
+            }
+
             W.Scatter("Fd");
 
             ActiveFields fields;
@@ -88,7 +103,7 @@ Y_UTEST(oxide_sim)
     for( loop.start(); loop.valid(); loop.next() )
     {
         const Coord3D  upper = 8 * loop.value;
-        const Layout1D full1D( lower.x, upper.x);
+        const Layout1D full1D( lower.x,    upper.x);
         const Layout2D full2D( lower.xy(), upper.xy());
         const Layout3D full3D(lower,upper);
 

@@ -17,6 +17,7 @@ namespace upsylon
         public Split<COORD>, public Domain<COORD>
         {
         public:
+            static  const size_t  Dimensions = Coord::Get<COORD>::Dimensions;
             typedef Split<COORD>  SplitType;
             typedef Realm<COORD>  RealmType;
             typedef Layout<COORD> LayoutType;
