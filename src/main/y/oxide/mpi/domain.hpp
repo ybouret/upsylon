@@ -152,41 +152,6 @@ namespace upsylon
             }
         };
 
-
-        //======================================================================
-        //
-        //
-        //! simplified way to get a functional domain
-        //
-        //
-        //======================================================================
-        template <typename COORD>
-        class _Domain : public Parallel<COORD>, public Workspace<COORD>
-        {
-        public:
-            typedef Workspace<COORD>     WorkspaceType; //!< alias
-            Y_DOMAIN_DECL(LayoutType);                  //!< alias
-            Y_DOMAIN_DECL(const_coord);                 //!< alias
-
-            //! setup using optimal mapping
-            inline explicit _Domain(mpi              &_MPI,
-                                    const LayoutType &fullLayout,
-                                    const_coord      &boundaries,
-                                    const size_t      ghostsZone) :
-            Parallel<COORD>(_MPI,fullLayout,boundaries),
-            WorkspaceType(_MPI,fullLayout,this->optimal,boundaries,ghostsZone)
-            {
-            }
-
-            //! cleanup
-            inline virtual ~_Domain() throw() {}
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(_Domain);
-        };
-
-
-
     }
 }
 

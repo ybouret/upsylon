@@ -21,7 +21,7 @@ namespace upsylon
         //
         //! build a MPI Realm, located at the root node
         /**
-         may be used to gather/scatter data
+         may be used to gather/scatter data using computed partions
          */
         //
         //======================================================================

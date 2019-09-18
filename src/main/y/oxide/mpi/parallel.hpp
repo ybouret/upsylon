@@ -25,12 +25,10 @@ namespace upsylon
             // types and definitions
             //
             //------------------------------------------------------------------
-            //static const size_t                             Dimensions = Coord::Get<COORD>::Dimensions;
             typedef Layout<COORD>                           LayoutType;       //!< alias
             typedef typename LayoutType::coord              coord;            //!< alias
             typedef typename LayoutType::const_coord        const_coord;      //!< alias
-            //typedef vector<COORD>                           MappingsType;     //!< will store mappings
-
+            
             //------------------------------------------------------------------
             //
             // members
