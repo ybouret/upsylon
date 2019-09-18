@@ -74,11 +74,12 @@ namespace upsylon
             //! send from node 0 to other
             static inline void Scatter(mpi           &MPI,
                                        const Realm  *parentAddr,
-                                       const string  &id,
-                                       WorkspaceType &child )
+                                       const string  &parentName,
+                                       WorkspaceType &child,
+                                       const string  &childName)
             {
 
-                Field            &target = child[id];
+                Field            &target = child[childName];
                 if(parentAddr)
                 {
                     const Realm         &parent = *parentAddr;
@@ -87,7 +88,8 @@ namespace upsylon
                     assert(part.contains(child.inner));
                     assert(part[0].is_same_than(child.inner));
 
-                    const Field &source = parent[id];
+                    const Field &source = parent[parentName];
+                    assert(source.typeOfObject==target.typeOfObject);
 
                     // local scatter
                     source.localScatter<LayoutType>(child.inner,part,target,child.outer);
@@ -123,11 +125,12 @@ namespace upsylon
             //! send from node 0 to other
             static inline void Gather(mpi                &MPI,
                                       Realm              *parentAddr,
-                                      const string        &id,
-                                      const WorkspaceType &child )
+                                      const string        &parentName,
+                                      const WorkspaceType &child,
+                                      const string        &childName)
             {
 
-                const Field &target = child[id];
+                const Field &target = child[childName];
                 if(parentAddr)
                 {
                     Realm               &parent = *parentAddr;
@@ -136,7 +139,8 @@ namespace upsylon
                     assert(part.contains(child.inner));
                     assert(part[0].is_same_than(child.inner));
 
-                    Field &source = parent[id];
+                    Field &source = parent[parentName];
+                    assert(source.typeOfObject==target.typeOfObject);
 
                     // local scatter
                     source.localGather<LayoutType>(child.inner,part,target,child.outer);

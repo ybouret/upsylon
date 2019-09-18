@@ -225,13 +225,13 @@ void make_for(mpi                 &MPI,
                 nField &gFn = parent->template as<nField>("Fn");
                 IO::LD(gFn,parent->outer,mpValue);
             }
-            Realm<COORD>::Gather( MPI,parent, "Fi", W);
+            Realm<COORD>::Gather( MPI,parent, "Fi", W, "Fi");
 
             MPI.print0(stderr,"<"); MPI.flush(stderr);
-            Realm<COORD>::Gather( MPI,parent, "Fn", W);
+            Realm<COORD>::Gather( MPI,parent, "Fn", W, "Fn");
 
             MPI.print0(stderr,"<"); MPI.flush(stderr);
-            Realm<COORD>::Gather( MPI,parent, "Fd", W);
+            Realm<COORD>::Gather( MPI,parent, "Fd", W, "Fn");
 
             if(parent)
             {
@@ -253,14 +253,14 @@ void make_for(mpi                 &MPI,
             IO::LD(Fi,W.outer,W.rank);
             IO::LD(Fn,W.outer,mpRank);
             MPI.print0(stderr,">"); MPI.flush(stderr);
-            Realm<COORD>::Scatter(MPI,parent, "Fi", W);
+            Realm<COORD>::Scatter(MPI,parent, "Fi", W, "Fi");
             CheckValueOf(Fi,W.inner,-1);
 
             MPI.print0(stderr,">"); MPI.flush(stderr);
-            Realm<COORD>::Scatter(MPI,parent, "Fd", W);
+            Realm<COORD>::Scatter(MPI,parent, "Fd", W, "Fd");
             
             MPI.print0(stderr,">"); MPI.flush(stderr);
-            Realm<COORD>::Scatter(MPI,parent, "Fn", W);
+            Realm<COORD>::Scatter(MPI,parent, "Fn", W, "Fn");
             CheckValueOf(Fn,W.inner,mpValue);
 
         }

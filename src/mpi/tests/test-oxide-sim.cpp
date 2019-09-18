@@ -1,15 +1,31 @@
 #include "y/oxide/mpi/district.hpp"
+#include "y/oxide/field3d.hpp"
 #include "y/utest/run.hpp"
+#include "support.hpp"
 
 using namespace upsylon;
 using namespace Oxide;
 
 namespace
 {
+
+    template <typename T>
+    void fill( FieldOf<T> &F )
+    {
+        for(size_t i=F.localObjects/2;i>0;--i)
+        {
+            const T tmp = support::get<T>();
+            F.entry[ alea.range<Coord1D>(0,F.localObjects-1) ] = tmp;
+        }
+    }
+
     template <typename COORD>
     void make_for(mpi                 &MPI,
                   const Layout<COORD> &fullLayout )
     {
+        typedef typename __Field<COORD,double>::Type   dField;
+        //typedef typename __Field<COORD,mpn>::Type      nField;
+        typedef typename __Field<COORD,Coord1D>::Type  iField;
 
         if(MPI.isHead)
         {
@@ -29,8 +45,30 @@ namespace
         {
             MPI.print0(stderr,".");
             const COORD boundaries = pbc.value;
+
             District<COORD> W(MPI,fullLayout,boundaries,ghostsZone,preferred);
             
+            iField &Fi = W.template createExported<iField>("Fi");
+            dField &Fd = W.template createExported<dField>("Fd");
+            
+            fill(Fd);
+            Fi.ld(0);
+
+            if(W.realm)
+            {
+                fill( W.realm->template as<dField>("Fd"));
+            }
+
+
+            W.Gather("Fi");
+            W.Scatter("Fd");
+
+            ActiveFields fields;
+            fields(W);
+
+            W.localExchange(fields);
+            W.asyncExchange(fields);
+
         }
         MPI.print0(stderr,"]\n");
         

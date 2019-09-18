@@ -43,6 +43,16 @@ namespace upsylon
                 }
             }
 
+            template <typename FIELD>
+            inline FIELD &createExported( const string &id )
+            {
+                if(realm)
+                {
+                    realm->template create<FIELD>(id);
+                }
+                return this->template create<FIELD>(id);
+            }
+
             //! cleanup
             virtual ~District() throw()
             {
@@ -52,6 +62,31 @@ namespace upsylon
                     realm = 0;
                 }
             }
+
+            inline void Scatter(const string &parentName,
+                                const string &childName)
+            {
+                RealmType::Scatter(this->MPI,realm, parentName,*this,childName);
+            }
+
+            inline void Scatter(const string &name)
+            {
+                Scatter(name,name);
+            }
+
+            inline void Gather(const string &parentName,
+                               const string &childName)
+            {
+                RealmType::Gather(this->MPI,realm, parentName,*this,childName);
+            }
+
+            inline void Gather(const string &name)
+            {
+                Gather(name,name);
+            }
+
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(District);
