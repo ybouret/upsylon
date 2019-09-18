@@ -39,6 +39,19 @@ namespace
         }
     }
 
+
+    template <typename COORD> static inline
+    void test_par( mpi &MPI, const Layout<COORD> &full, const COORD pbc)
+    {
+        typename Layout<COORD>::Loop loop( Coord::Zero<COORD>(), Coord::Ones<COORD>() );
+
+        for(loop.start();loop.valid();loop.next())
+        {
+            const COORD &preferred = loop.value;
+            Parallel<COORD> ctx(MPI,full,pbc,preferred);
+        }
+
+    }
 }
 
 #include "y/os/rt-clock.hpp"
@@ -88,19 +101,19 @@ void make_for(mpi                 &MPI,
             parent->template create<iField>( "Fi" );
 
         }
-        //MPI.print(stderr,"|_parent: %d\n", int( parent.is_valid() ) );
-        
 
         typename Layout<COORD>::Loop pbc(Coord::Zero<COORD>(),Coord::Ones<COORD>());
         for(pbc.start(); pbc.valid(); pbc.next())
         {
 
+            //! test preferences according to the parallelism
+            test_par<COORD>(MPI,full,pbc.value);
+
             size_t ghostsZone=1;
 
             MPI.fullCommTicks = 0;
             MPI.Barrier();
-            COORD           preferred(0);
-            Parallel<COORD> ctx(MPI,full,pbc.value, preferred);
+            Parallel<COORD> ctx(MPI,full,pbc.value, Coord::Zero<COORD>() );
             Domain<COORD>   W(MPI, full, mapping, pbc.value,ghostsZone);
 
             if(ctx.optimal == mapping)

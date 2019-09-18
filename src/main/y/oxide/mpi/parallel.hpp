@@ -41,7 +41,7 @@ namespace upsylon
             const_coord        favorite;            //!< from preferred
 
             //! create possible mappings and pick optimal
-            inline explicit Parallel(const mpi        &MPI,
+            inline explicit Parallel(mpi              &MPI,
                                      const LayoutType &fullLayout,
                                      const_coord       boundaries,
                                      coord             preferred) :
@@ -62,7 +62,11 @@ namespace upsylon
                 }
                 if(active>0&&active<Dimensions)
                 {
-                    
+                    // user requested a preferred layout
+                }
+                else
+                {
+                    // keep the default (=optimal?) choice
                 }
 
             }
@@ -70,8 +74,8 @@ namespace upsylon
             //! cleanup
             inline virtual ~Parallel() throw()
             {
-                //bzset_(optimal);
-
+                bzset_(optimal);
+                bzset_(favorite);
             }
 
         private:
