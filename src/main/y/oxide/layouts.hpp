@@ -377,8 +377,8 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 {
-                    coord __lo(0); Coord::LD(__lo,-1);
-                    coord __up(0); Coord::LD(__up, 1);
+                    coord __lo(0); Coord::Ld(__lo,-1);
+                    coord __up(0); Coord::Ld(__up, 1);
                     typename LayoutType::Loop loop(__lo,__up);
                     loop.start();
 

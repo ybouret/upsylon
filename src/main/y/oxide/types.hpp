@@ -6,6 +6,7 @@
 #include "y/container/sequence.hpp"
 #include "y/strfwd.hpp"
 #include "y/type/bzset.hpp"
+#include "y/comparison.hpp"
 
 #include <cstring>
 #include <cstdlib>
@@ -76,7 +77,7 @@ namespace upsylon
 
             //! set coordinate to j[,j[,j]]
             template <typename COORD> static inline
-            void LD( COORD &c, const Coord1D j ) throw()
+            void Ld( COORD &c, const Coord1D j ) throw()
             {
                 Coord1D *p = (Coord1D*)&c;
                 for(size_t i=0;i<Get<COORD>::Dimensions;++i)
@@ -122,35 +123,28 @@ namespace upsylon
             // operations
             //
             //==================================================================
-           
-            //! get product
-            template <typename COORD> static inline
-            Coord1D Product( const COORD &c ) throw()
-            {
-                const Coord1D *p = (const Coord1D*)&c;
-                Coord1D ans = p[0];
-                for(size_t i=1;i<Get<COORD>::Dimensions;++i)
-                {
-                    ans *= p[i];
-                }
-                return ans;
-            }
+
+            //! c
+            static inline Coord1D Product( const Coord1D &c ) throw() { return c; }
+
+            //! c.x*c.y
+            static inline Coord1D Product( const Coord2D &c ) throw() { return c.x*c.y; }
+
+            //! c.x*c.y*c.z
+            static inline Coord1D Product( const Coord3D &c ) throw() { return c.x*c.y*c.z; }
+
+            //! <a|b>
+            static inline Coord1D Dot( const Coord1D &a, const Coord1D &b ) throw() { return a*b; }
+            //! <a|b>
+            static inline Coord1D Dot( const Coord2D &a, const Coord2D &b ) throw() { return a.x*b.x+a.y*b.y; }
+            //! <a|b>
+            static inline Coord1D Dot( const Coord3D &a, const Coord3D &b ) throw() { return a.x*b.x+a.y*b.y+a.z*b.z; }
 
             //! lexicographic compare
             template <typename COORD> static inline
             int Compare(const COORD &lhs, const COORD &rhs) throw()
             {
-                const Coord1D *L = (const Coord1D *)&lhs;
-                const Coord1D *R = (const Coord1D *)&rhs;
-                for(size_t i=0;i<Get<COORD>::Dimensions;++i)
-                {
-                    const Coord1D l = L[i];
-                    const Coord1D r = R[i];
-                    if(l<r)       { return -1; }
-                    else if( r<l) { return  1; }
-                    else            continue;
-                }
-                return 0;
+                return comparison::increasing_lexicographic((const Coord1D *)&lhs, (const Coord1D *)&rhs, Get<COORD>::Dimensions);
             }
 
             //! norm for coordinate
@@ -368,6 +362,7 @@ namespace upsylon
                 return Flag;
             }
         };
+
 
         
     }

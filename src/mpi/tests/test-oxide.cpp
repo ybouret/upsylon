@@ -44,7 +44,7 @@ namespace
 #include "y/os/rt-clock.hpp"
 
 template <typename COORD>
-void make_for(mpi  &MPI,
+void make_for(mpi                 &MPI,
               const Layout<COORD> &full )
 {
     
@@ -99,10 +99,11 @@ void make_for(mpi  &MPI,
 
             MPI.fullCommTicks = 0;
             MPI.Barrier();
-            Parallel<COORD> ctx(MPI,full,pbc.value);
+            COORD           preferred(0);
+            Parallel<COORD> ctx(MPI,full,pbc.value, preferred);
             Domain<COORD>   W(MPI, full, mapping, pbc.value,ghostsZone);
-            
-            if( ctx.optimal == mapping )
+
+            if(ctx.optimal == mapping)
             {
                 MPI.print0(stderr,"*");
             }
@@ -269,7 +270,6 @@ void make_for(mpi  &MPI,
 
 Y_UTEST(oxide)
 {
-    //static const int tag = 7;
     Y_MPI(SINGLE);
 
     const Coord3D  lower(1,1,1);

@@ -89,8 +89,8 @@ namespace
         {
             COORD  org(0);
             COORD  top(0);
-            Coord::LD(org,1);
-            Coord::LD(top,cores);
+            Coord::Ld(org,1);
+            Coord::Ld(top,cores);
             mloop<Coord1D,COORD> loop( org, top );
 
             for( loop.start(); loop.valid(); loop.next() )
