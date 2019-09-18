@@ -9,5 +9,6 @@ Y_UTEST_INIT(16)
     Y_UTEST(star);
     Y_UTEST(ring);
     Y_UTEST(PI);
+    Y_UTEST(oxide_sim);
 }
 Y_UTEST_EXEC()
