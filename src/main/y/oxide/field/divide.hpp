@@ -103,6 +103,10 @@ namespace upsylon
             };
             
             //! find the optimal mapping according to compute and I/O data
+            /**
+             if out is not NULL, then the different mappings are stored, from the
+             most to the least efficient
+             */
             template <typename COORD> static inline
             COORD Find(const Layout<COORD> &fullLayout,
                        const size_t         cores,

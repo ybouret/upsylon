@@ -173,7 +173,7 @@ namespace upsylon
             }
             
             //! return a decreased coordinate
-            template <typename COORD> inline
+            template <typename COORD> static inline
             COORD  Decreased( const COORD &c ) throw()
             {
                 COORD  d = c;

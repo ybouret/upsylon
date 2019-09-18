@@ -75,9 +75,23 @@ namespace upsylon
                 //
                 // try to match request
                 //______________________________________________________________
+                std::cerr << "preferred=" << preferred << std::endl;
                 if(active>0&&active<Dimensions)
                 {
                     // user requested a preferred layout
+                    vector<size_t> good(mappings.size(),as_capacity);
+                    {
+                        const size_t n = mappings.size();
+                        for(size_t i=1;i<=n;++i)
+                        {
+                            const_coord value = Coord::Decreased(mappings[i]);
+                            if( Coord::Dot(preferred,value) )
+                            {
+                                std::cerr << "keep " << mappings[i] << std::endl;
+                                good.push_back_(i);
+                            }
+                        }
+                    }
                 }
                 else
                 {
