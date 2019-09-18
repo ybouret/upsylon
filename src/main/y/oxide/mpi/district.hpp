@@ -18,28 +18,39 @@ namespace upsylon
         {
         public:
             typedef Split<COORD>  SplitType;
-            typedef Realm<Coord>  RealmType;
+            typedef Realm<COORD>  RealmType;
             typedef Layout<COORD> LayoutType;
             typedef Domain<COORD> DomainType;
 
             typedef typename LayoutType::coord       coord;
             typedef typename LayoutType::const_coord const_coord;
 
-            //! full setup
+            RealmType *realm;
+
+            //! setup domain and create realm at head node
             explicit District(mpi              &_MPI,
                               const LayoutType &fullLayout,
                               const_coord       boundaries,
                               const size_t      ghostsZone,
                               coord             preferred) :
             SplitType(_MPI.size,fullLayout,boundaries,preferred),
-            DomainType(_MPI,fullLayout,this->favored,boundaries,ghostsZone)
+            DomainType(_MPI,fullLayout,this->favored,boundaries,ghostsZone),
+            realm(0)
             {
-
+                if(this->MPI.isHead)
+                {
+                    realm = new RealmType(_MPI,fullLayout,this->favored,boundaries,ghostsZone);
+                }
             }
 
+            //! cleanup
             virtual ~District() throw()
             {
-
+                if(realm)
+                {
+                    delete realm;
+                    realm = 0;
+                }
             }
 
         private:

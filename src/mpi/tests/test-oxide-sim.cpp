@@ -30,6 +30,7 @@ namespace
             MPI.print0(stderr,".");
             const COORD boundaries = pbc.value;
             District<COORD> W(MPI,fullLayout,boundaries,ghostsZone,preferred);
+            
         }
         MPI.print0(stderr,"]\n");
         
