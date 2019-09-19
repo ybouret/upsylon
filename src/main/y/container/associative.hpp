@@ -3,6 +3,7 @@
 #define Y_ASSOCIATIVE_INCLUDED 1
 
 #include "y/container/container.hpp"
+#include "y/type/args.hpp"
 
 namespace upsylon
 {
