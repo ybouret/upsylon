@@ -53,24 +53,9 @@ namespace upsylon
             node_type *next;            //!< for children list and node pool
             node_type *prev;            //!< for children list
             uint8_t    code;            //!< encoding byte
-            int        live;            //!< flag to check valid data
             size_t     freq;            //!< frequency to optimize the tree
-            char       dbuf[Y_MEMALIGN(sizeof(type))]; //!< space for data
+            data_node *addr;            //!< address of real data
             list_type  chld;
-
-            //! access data
-            inline mutable_type &data() throw()
-            {
-                assert(live!=0);
-                return *memory::io::__force<mutable_type>(dbuf);
-            }
-
-            //! access data, const
-            inline const_type &data() const throw()
-            {
-                assert(live!=0);
-                return *memory::io::__force<const_type>(dbuf);
-            }
 
 
 
@@ -78,7 +63,7 @@ namespace upsylon
             void viz( ios::ostream &fp ) const
             {
                 fp.viz(this);
-                const char *info = (live!=0) ? "(*)" : "";
+                const char *info = (addr!=0) ? "(*)" : "";
                 if(parent)
                 {
                     fp( " [label=\"%s#%u%s\"];\n", printable_char[code], unsigned(freq),info);
@@ -101,12 +86,12 @@ namespace upsylon
         };
 
         //! setup an empty tree
-        inline explicit btree() throw() : root(0), count(0), nodes(0), pool()
+        inline explicit btree() throw() : dlist(), dpool(), root(0), pool()
         {}
 
         //! setup an emptry tree with some nodes
         inline explicit btree(const size_t n, const as_capacity_t & ) :
-        root(0), count(0), nodes(0), pool()
+        dlist(), dpool(), root(0), pool()
         {
             reserve_(n);
         }
@@ -120,8 +105,7 @@ namespace upsylon
         }
         
 
-        inline size_t entries() const throw() { return count; }
-        inline size_t created() const throw() { return nodes; }
+        inline size_t entries() const throw() { return dlist.size; }
 
 
         //! insert args following key
@@ -178,7 +162,7 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             assert(ptr);
-            if(ptr->live)
+            if(ptr->addr)
             {
                 //--------------------------------------------------------------
                 //
@@ -197,9 +181,7 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 std::cerr << "(+)" << std::endl;
-                new (ptr->dbuf) mutable_type(args);
-                ptr->live = 1;
-                ++count;
+                dlist.push_back(  ptr->addr = build(args) );
 
                 //--------------------------------------------------------------
                 //
@@ -248,190 +230,7 @@ namespace upsylon
 
         //! search following key
         const_type *search_(const void  *key_buffer,
-                            const size_t key_length) const throw()
-        {
-            const node_type *node = search_node(key_buffer,key_length);
-            assert(node->live);
-            return & node->data();
-        }
-
-        //! search wrapper
-        const_type *search_(const memory::ro_buffer &key) const throw()
-        {
-            return search_(key.ro(),key.length());
-        }
-
-        //! search wrapper
-        const_type *search_(const char *text) const throw()
-        {
-            return search_(text, (text!=0) ? strlen(text) : 0);
-        }
-
-        //! reserve some nodes
-        inline void reserve_(size_t n)
-        {
-            while(n-->0)
-            {
-                dpool.store( object::acquire1<data_node>() );
-            }
-#if 0
-            const size_t current = pool.size;
-            try
-            {
-                while(n-->0)
-                {
-                    pool.store(object::acquire1<node_type>());
-                    ++nodes;
-                    assert(0==pool.top->live);
-                }
-            }
-            catch(...)
-            {
-                while(pool.size>current)
-                {
-                    node_type *node = pool.query();
-                    assert(0==node->live);
-                    object::release1(node);
-                    --nodes;
-                }
-                throw;
-            }
-#endif
-        }
-
-        //! free all data, keeping nodes
-        inline void free_() throw()
-        {
-            if( root )
-            {
-                free__(root,true);
-                root=0;
-            }
-        }
-
-        inline void trim() throw()
-        {
-            while(pool.size)
-            {
-                assert(nodes>0);
-                node_type *node = pool.query();
-                assert(0==node->live);
-                object::release1(node);
-                --nodes;
-            }
-        }
-
-        //! release all data
-        inline void release_() throw()
-        {
-            if( root )
-            {
-                free__(root,false);
-                root = 0;
-            }
-            trim();
-        }
-
-
-    private:
-        Y_DISABLE_COPY(btree);
-        Y_DISABLE_ASSIGN(btree);
-
-        node_type *root;  //!< root node for empty key
-    protected:
-        size_t     count; //!< size
-        size_t     nodes; //!< total number of handled node
-
-        data_list  dlist;
-        data_pool  dpool;
-
-    private:
-        pool_type  pool;  //!< available nodes
-
-
-        //! return a new data_node
-        inline data_node *build(const_type &args)
-        {
-            data_node *dn = (dpool.size>0) ? dpool.query() : object::acquire1<data_node>();
-            try
-            {
-                return new(dn) data_node(args);
-            }
-            catch(...)
-            {
-                pool.store(dn);
-                throw;
-            }
-        }
-
-        //! return a new node
-        inline node_type *query(node_type *parent, const uint8_t code)
-        {
-            node_type *node = query_empty();
-            assert(parent!=node);
-            assert(0==node->code);
-            assert(0==node->live);
-            assert(0==node->freq);
-            assert(0==node->parent);
-            node->parent = parent;
-            node->code   = code;
-            return node;
-        }
-
-        //! query an empty node
-        inline node_type *query_empty()
-        {
-            if( pool.size > 0 )
-            {
-                return pool.query();
-            }
-            else
-            {
-                node_type *node = object::acquire1<node_type>();
-                ++nodes;
-                return node;
-            }
-        }
-
-
-        //! recursive free of node, keeping it or not
-        void free__(node_type * node, const bool keep) throw()
-        {
-            assert(node);
-            assert(0==node->prev);
-            assert(0==node->next);
-            if(node->live)
-            {
-                assert(count>0);
-                self_destruct(node->data());
-                node->live = 0;
-                --count;
-            }
-            {
-                list_type &chld = node->chld;
-                while(chld.size>0)
-                {
-                    free__( chld.pop_back(), keep );
-                }
-            }
-            memset(memory::io::__addr(node),0,sizeof(node_type));
-            if(keep)
-            {
-                pool.store(node);
-            }
-            else
-            {
-                object::release1(node);
-                --nodes;
-            }
-        }
-
-
-
-
-        //! search live node
-        const node_type *search_node(const void *key_buffer,
-                                     size_t      key_length) const throw()
+                            size_t       key_length) const throw()
         {
             assert( !(0==key_buffer&&key_length>0) );
             if(root)
@@ -453,8 +252,7 @@ namespace upsylon
                     }
                     if(!found) return 0;
                 }
-
-                return (ptr->live != 0) ? ptr : 0;
+                return (0!=ptr->addr) ? &(ptr->addr->data) : 0;
             }
             else
             {
@@ -462,6 +260,157 @@ namespace upsylon
             }
         }
 
+        //! search wrapper
+        const_type *search_(const memory::ro_buffer &key) const throw()
+        {
+            return search_(key.ro(),key.length());
+        }
+
+        //! search wrapper
+        const_type *search_(const char *text) const throw()
+        {
+            return search_(text, (text!=0) ? strlen(text) : 0);
+        }
+
+        //! reserve some nodes
+        inline void reserve_(size_t n)
+        {
+            while(n-->0)
+            {
+                dpool.store( object::acquire1<data_node>() );
+            }
+        }
+
+        //! free all data, keeping nodes
+        inline void free_() throw()
+        {
+            if( root )
+            {
+                free__(root,true); assert(0==dlist.size);
+                root=0;
+            }
+        }
+
+        inline void trim() throw()
+        {
+            // trim node_type
+            while(pool.size)
+            {
+                node_type *node = pool.query();
+                assert(0==node->addr);
+                object::release1(node);
+            }
+
+            // trim data_node
+            while(dpool.size)
+            {
+                data_node *dn = dpool.query();
+                object::release1(dn);
+            }
+        }
+
+        //! release all data
+        inline void release_() throw()
+        {
+            if( root )
+            {
+                free__(root,false); assert(0==dlist.size);
+                root = 0;
+            }
+            trim();
+        }
+
+    protected:
+        data_list  dlist;
+        data_pool  dpool;
+
+    private:
+        Y_DISABLE_COPY(btree);
+        Y_DISABLE_ASSIGN(btree);
+        node_type *root;  //!< root node for empty key
+        pool_type  pool;  //!< available nodes
+
+
+        //! return a new data_node
+        inline data_node *build(const_type &args)
+        {
+            data_node *dn = (dpool.size>0) ? dpool.query() : object::acquire1<data_node>();
+            try
+            {
+                return new(dn) data_node(args);
+            }
+            catch(...)
+            {
+                dpool.store(dn);
+                throw;
+            }
+        }
+
+        //! return a new node
+        inline node_type *query(node_type *parent, const uint8_t code)
+        {
+            node_type *node = query_empty();
+            assert(parent!=node);
+            assert(0==node->code);
+            assert(0==node->freq);
+            assert(0==node->parent);
+            node->parent = parent;
+            node->code   = code;
+            return node;
+        }
+
+        //! query an empty node
+        inline node_type *query_empty()
+        {
+            if( pool.size > 0 )
+            {
+                return pool.query();
+            }
+            else
+            {
+                return object::acquire1<node_type>();
+            }
+        }
+
+
+        //! recursive free of node, keeping it or not
+        void free__(node_type * node, const bool keep) throw()
+        {
+            assert(node);
+            assert(0==node->prev);
+            assert(0==node->next);
+            data_node *dn = node->addr;
+            if(dn)
+            {
+                self_destruct(  dlist.unlink(dn)->data );
+                node->addr = 0;
+            }
+
+            {
+                list_type &chld = node->chld;
+                while(chld.size>0)
+                {
+                    free__( chld.pop_back(), keep );
+                }
+            }
+            memset(memory::io::__addr(node),0,sizeof(node_type));
+            if(keep)
+            {
+                pool.store(node);
+                if(dn)
+                {
+                    dpool.store(dn);
+                }
+            }
+            else
+            {
+                object::release1(node);
+                if(dn)
+                {
+                    object::release1(dn);
+                }
+            }
+        }
 
     };
 

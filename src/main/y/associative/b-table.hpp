@@ -5,6 +5,7 @@
 
 #include "y/associative/btree.hpp"
 #include "y/type/class-conversion.hpp"
+#include "y/iterate/linked.hpp"
 
 namespace upsylon
 {
@@ -61,6 +62,7 @@ namespace upsylon
     public:
         Y_DECL_ARGS(KEY,key_type); //!< alias
         Y_DECL_ARGS(T,type);       //!< alias
+        typedef typename btree<T>::data_node dnode_type;
 
         inline explicit btable() throw() : btree<T>()
         {
@@ -70,10 +72,10 @@ namespace upsylon
         {
         }
         
-        inline virtual size_t size() const throw()     { return this->count; }
+        inline virtual size_t size() const throw()     { return this->dlist.size; }
         inline virtual void   free()       throw()     { this->free_();      }
         inline virtual void   release()    throw()     { this->release_();   }
-        inline virtual size_t capacity() const throw() { return this->nodes; }
+        inline virtual size_t capacity() const throw() { return this->dlist.size+this->dpool.size; }
         inline virtual void   reserve(const size_t n)  { this->reserve_(n);  }
 
         inline virtual bool remove( param_key_type k ) throw()
@@ -89,9 +91,32 @@ namespace upsylon
         virtual const_type *search( param_key_type k ) const throw()
         {
             return  find__(k);
-
         }
 
+        inline bool insert( param_key_type k, param_type v )
+        {
+            core::lw_key lwk = {0,0};
+            key_maker(lwk,k);
+            return this->insert_(lwk.addr,lwk.size,v);
+        }
+
+        typedef iterate::linked<type,dnode_type,iterate::forward>             iterator;        //!< forward iterator
+        typedef iterate::linked<const_type,const dnode_type,iterate::forward> const_iterator;  //!< forward const iterator
+
+        iterator begin() throw() { return iterator( this->dlist.head ); } //!< begin forward
+        iterator end()   throw() { return iterator(0);                  } //!< end forward
+
+        const_iterator begin() const throw()   { return const_iterator(this->dlist.head ); } //!< begin forward const
+        const_iterator end()   const throw()   { return const_iterator(0);                 } //!< end forward const
+
+        typedef iterate::linked<type,dnode_type,iterate::reverse>             reverse_iterator;        //!< reverse iterator
+        typedef iterate::linked<const_type,const dnode_type,iterate::reverse> const_reverse_iterator;  //!< reverse const iterator
+
+        reverse_iterator rbegin() throw() { return reverse_iterator( this->dlist.tail ); } //!< begin reverse
+        reverse_iterator rend()   throw() { return reverse_iterator(0);                  } //!< end reverse
+
+        const_reverse_iterator rbegin() const throw() { return const_reverse_iterator( this->dlist.tail ); } //!< begin reverse const
+        const_reverse_iterator rend()   const throw() { return const_reverse_iterator(0);                  } //!< end reverse const
 
 
     private:

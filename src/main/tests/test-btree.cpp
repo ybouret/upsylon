@@ -43,7 +43,7 @@ namespace
         }
 
         Y_CHECK( tree.entries() == keys.size() );
-        std::cerr << "\t#tree.entries=" << tree.entries() << "/created=" << tree.created() << std::endl;
+        std::cerr << "\t#tree.entries=" << tree.entries() << std::endl;
 
         if(save)
         {
@@ -67,6 +67,20 @@ namespace
 
 
     }
+
+
+    template <typename ITERATOR>
+    void display_range( ITERATOR it, const ITERATOR end)
+    {
+        std::cerr << '{';
+        for(;it!=end;++it)
+        {
+            std::cerr << ' ' << *it;
+        }
+        std::cerr << '}' << std::endl;
+    }
+
+
 }
 
 Y_UTEST(btree)
@@ -78,7 +92,7 @@ Y_UTEST(btree)
     
     if( argc > 1 )
     {
-        btree<unsigned> tree;
+        btree<unsigned>         tree;
         btable<string,unsigned> table;
         
         vector<string>  keys;
@@ -86,23 +100,38 @@ Y_UTEST(btree)
             const string    fn = argv[1];
             ios::icstream   fp(fn);
             string          line;
-            unsigned        count = 0;
+            unsigned        count1=0;
+            unsigned        count2=0;
             while( fp.gets(line) )
             {
-                if(tree.insert_(line,count))
+                if(tree.insert_(line,count1))
                 {
-                    ++count;
+                    ++count1;
                     keys.push_back(line);
                 }
+
+                if(table.insert(line,count1))
+                {
+                    ++count2;
+                }
+
+                Y_ASSERT(count1==count2);
             }
         }
-        std::cerr << "\t#tree.entries=" << tree.entries() << "/created=" << tree.created() << std::endl;
+        std::cerr << "\t#tree.entries=" << tree.entries() << std::endl;
 
         alea.shuffle(*keys,keys.size());
 
         for(size_t i=keys.size();i>0;--i)
         {
             Y_ASSERT( tree.search_(keys[i]) );
+        }
+        display_range(table.begin(),table.end());
+        display_range(table.rbegin(),table.rend());
+        {
+            const btable<string,unsigned> &cst = table;
+            display_range(cst.begin(),  cst.end());
+            display_range(cst.rbegin(), cst.rend());
         }
 
         if(keys.size()<=100)
