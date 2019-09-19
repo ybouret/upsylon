@@ -346,7 +346,7 @@ namespace upsylon
             {
                 free__( chld.pop_back(), keep );
             }
-            memset(node,0,sizeof(node_type));
+            memset(memory::io::__addr(node),0,sizeof(node_type));
             if(keep)
             {
                 pool.store(node);
