@@ -27,8 +27,23 @@ namespace upsylon
         class                            node_type;                                 //!< forward declaration
         typedef core::list_of<node_type> list_type;                                 //!< list for nodes
         typedef core::pool_of<node_type> pool_type;                                 //!< pool for nodes
-        static const size_t              data_size = Y_MEMALIGN(sizeof(type));      //!< aligned memory
-        static const size_t              list_size = Y_MEMALIGN(sizeof(list_type)); //!< aligned memory
+
+        class                            data_node;
+        typedef core::list_of<data_node> data_list;
+        typedef core::pool_of<data_node> data_pool;
+
+        class data_node
+        {
+        public:
+            data_node   *next;
+            data_node   *prev;
+            mutable_type data;
+            inline data_node( const_type &args ) : next(0), prev(0), data(args) {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(data_node);
+            ~data_node() throw();
+        };
 
         //! a node with data for type and list
         class node_type
@@ -40,7 +55,7 @@ namespace upsylon
             uint8_t    code;            //!< encoding byte
             int        live;            //!< flag to check valid data
             size_t     freq;            //!< frequency to optimize the tree
-            char       dbuf[data_size]; //!< space for data
+            char       dbuf[Y_MEMALIGN(sizeof(type))]; //!< space for data
             list_type  chld;
 
             //! access data
@@ -120,7 +135,7 @@ namespace upsylon
             // start from the root
             //
             //------------------------------------------------------------------
-            if(!root)      root = query_(); assert(0==root->parent);
+            if(!root)      root = query_empty(); assert(0==root->parent);
             node_type     *ptr  = root;
             const uint8_t *key  = static_cast<const uint8_t *>(key_buffer);
 
@@ -255,6 +270,11 @@ namespace upsylon
         //! reserve some nodes
         inline void reserve_(size_t n)
         {
+            while(n-->0)
+            {
+                dpool.store( object::acquire1<data_node>() );
+            }
+#if 0
             const size_t current = pool.size;
             try
             {
@@ -276,6 +296,7 @@ namespace upsylon
                 }
                 throw;
             }
+#endif
         }
 
         //! free all data, keeping nodes
@@ -319,14 +340,34 @@ namespace upsylon
         node_type *root;  //!< root node for empty key
     protected:
         size_t     count; //!< size
-        size_t     nodes; //!< total number of handled nodes
+        size_t     nodes; //!< total number of handled node
+
+        data_list  dlist;
+        data_pool  dpool;
+
     private:
         pool_type  pool;  //!< available nodes
+
+
+        //! return a new data_node
+        inline data_node *build(const_type &args)
+        {
+            data_node *dn = (dpool.size>0) ? dpool.query() : object::acquire1<data_node>();
+            try
+            {
+                return new(dn) data_node(args);
+            }
+            catch(...)
+            {
+                pool.store(dn);
+                throw;
+            }
+        }
 
         //! return a new node
         inline node_type *query(node_type *parent, const uint8_t code)
         {
-            node_type *node = query_();
+            node_type *node = query_empty();
             assert(parent!=node);
             assert(0==node->code);
             assert(0==node->live);
@@ -338,7 +379,7 @@ namespace upsylon
         }
 
         //! query an empty node
-        inline node_type *query_()
+        inline node_type *query_empty()
         {
             if( pool.size > 0 )
             {
