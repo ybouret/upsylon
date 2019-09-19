@@ -43,7 +43,7 @@ namespace
         }
 
         Y_CHECK( tree.size() == keys.size() );
-        std::cerr << "\t#tree.size=" << tree.size() << "/nodes=" << tree.internal() << std::endl;
+        std::cerr << "\t#tree.size=" << tree.size() << "/nodes=" << tree.capacity() << std::endl;
 
         if(save)
         {
@@ -93,7 +93,7 @@ Y_UTEST(btree)
                 }
             }
         }
-        std::cerr << "\t#tree.size=" << tree.size() << "/nodes=" << tree.internal() << std::endl;
+        std::cerr << "\t#tree.size=" << tree.size() << "/nodes=" << tree.capacity() << std::endl;
 
         alea.shuffle(*keys,keys.size());
 

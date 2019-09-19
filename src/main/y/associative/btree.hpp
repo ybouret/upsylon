@@ -106,6 +106,24 @@ namespace upsylon
             reserve__(n);
         }
 
+#if 0
+        //! hard copy
+        inline btree(const btree &other ) : root(0), count(0), nodes(0), pool()
+        {
+            try
+            {
+
+            }
+            catch(...)
+            {
+                release__();
+                throw;
+            }
+
+        }
+#endif
+
+
         //! cleanup
         inline virtual ~btree() throw()
         {
@@ -114,13 +132,12 @@ namespace upsylon
         
 
         inline virtual size_t size()     const throw() { return count; }
-        inline virtual size_t capacity() const throw() { return count+pool.size; }
+        inline virtual size_t capacity() const throw() { return nodes; }
         inline virtual void   free()           throw() { free__(); }
         inline virtual void   release()        throw() { release__(); }
         inline virtual void   reserve(const size_t n)  { reserve__(n); }
 
-        //! return number of used nodes
-        inline size_t         internal() const throw() { return nodes; }
+        
 
         //! insert args following key
         bool insert_(const void  *key_buffer,
@@ -266,7 +283,8 @@ namespace upsylon
         }
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(btree);
+        Y_DISABLE_COPY(btree);
+        Y_DISABLE_ASSIGN(btree);
 
         node_type *root;  //!< root node for empty key
         size_t     count; //!< size
