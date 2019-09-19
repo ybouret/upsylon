@@ -42,8 +42,8 @@ namespace
             }
         }
 
-        Y_CHECK( tree.size() == keys.size() );
-        std::cerr << "\t#tree.size=" << tree.size() << "/nodes=" << tree.capacity() << std::endl;
+        Y_CHECK( tree.entries() == keys.size() );
+        std::cerr << "\t#tree.entries=" << tree.entries() << "/created=" << tree.created() << std::endl;
 
         if(save)
         {
@@ -75,9 +75,12 @@ Y_UTEST(btree)
     do_btree<unsigned short>(true);
     do_btree<string>(false);
 
+    
     if( argc > 1 )
     {
         btree<unsigned> tree;
+        btable<string,unsigned> table;
+        
         vector<string>  keys;
         {
             const string    fn = argv[1];
@@ -93,7 +96,7 @@ Y_UTEST(btree)
                 }
             }
         }
-        std::cerr << "\t#tree.size=" << tree.size() << "/nodes=" << tree.capacity() << std::endl;
+        std::cerr << "\t#tree.entries=" << tree.entries() << "/created=" << tree.created() << std::endl;
 
         alea.shuffle(*keys,keys.size());
 

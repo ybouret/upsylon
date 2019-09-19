@@ -3,7 +3,7 @@
 #ifndef Y_BTREE_INCLUDED
 #define Y_BTREE_INCLUDED 1
 
-#include "y/container/container.hpp"
+#include "y/container/associative.hpp"
 #include "y/type/args.hpp"
 #include "y/core/list.hpp"
 #include "y/core/pool.hpp"
@@ -20,7 +20,7 @@ namespace upsylon
 
     //! btree for any data
     template <typename T>
-    class btree :  public container
+    class btree
     {
     public:
         Y_DECL_ARGS(T,type);                                                        //!< alias
@@ -41,7 +41,7 @@ namespace upsylon
             int        live;            //!< flag to check valid data
             size_t     freq;            //!< frequency to optimize the tree
             char       dbuf[data_size]; //!< space for data
-            char       lbuf[list_size]; //!< space for list
+            list_type  chld;
 
             //! access data
             inline mutable_type &data() throw()
@@ -57,17 +57,7 @@ namespace upsylon
                 return *memory::io::__force<const_type>(dbuf);
             }
 
-            //! access child
-            inline list_type &chld() throw()
-            {
-                return *memory::io::__force<list_type>(lbuf);
-            }
 
-            //! acces child, const
-            inline const list_type &chld() const throw()
-            {
-                return *memory::io::__force<const list_type>(lbuf);
-            }
 
             //! GraphViz representation, mostly to debug
             void viz( ios::ostream &fp ) const
@@ -82,7 +72,7 @@ namespace upsylon
                 {
                     fp( " [label=\"root%s\"];\n",info);
                 }
-                for(const node_type *node=chld().head;node;node=node->next)
+                for(const node_type *node=chld.head;node;node=node->next)
                 {
                     node->viz(fp);
                     fp.viz(this) << "->"; fp.viz(node) << ";\n";
@@ -103,41 +93,21 @@ namespace upsylon
         inline explicit btree(const size_t n, const as_capacity_t & ) :
         root(0), count(0), nodes(0), pool()
         {
-            reserve__(n);
+            reserve_(n);
         }
 
-#if 0
-        //! hard copy
-        inline btree(const btree &other ) : root(0), count(0), nodes(0), pool()
-        {
-            try
-            {
-
-            }
-            catch(...)
-            {
-                release__();
-                throw;
-            }
-
-        }
-#endif
 
 
         //! cleanup
         inline virtual ~btree() throw()
         {
-            release__();
+            release_();
         }
         
 
-        inline virtual size_t size()     const throw() { return count; }
-        inline virtual size_t capacity() const throw() { return nodes; }
-        inline virtual void   free()           throw() { free__(); }
-        inline virtual void   release()        throw() { release__(); }
-        inline virtual void   reserve(const size_t n)  { reserve__(n); }
+        inline size_t entries() const throw() { return count; }
+        inline size_t created() const throw() { return nodes; }
 
-        
 
         //! insert args following key
         bool insert_(const void  *key_buffer,
@@ -169,7 +139,7 @@ namespace upsylon
                     bool           found = false;
                     std::cerr << printable_char[code];
                     // look for the code in child(ren)
-                    for(node_type *node = ptr->chld().head;node;node=node->next)
+                    for(node_type *node = ptr->chld.head;node;node=node->next)
                     {
                         if(code==node->code)
                         {
@@ -180,7 +150,7 @@ namespace upsylon
                     }
                     if(!found)
                     {
-                        ptr = ptr->chld().push_back( query(ptr,code) );
+                        ptr = ptr->chld.push_back( query(ptr,code) );
                         std::cerr << '+';
                     }
                     else std::cerr << '.';
@@ -224,7 +194,7 @@ namespace upsylon
                 while(ptr->parent)
                 {
                     ++(ptr->freq);
-                    list_type &chld = ptr->parent->chld();
+                    list_type &chld = ptr->parent->chld;
                     assert(chld.owns(ptr));
                     while(ptr->prev&&ptr->prev->freq<ptr->freq)
                     {
@@ -282,13 +252,75 @@ namespace upsylon
             return search_(text, (text!=0) ? strlen(text) : 0);
         }
 
+        //! reserve some nodes
+        inline void reserve_(size_t n)
+        {
+            const size_t current = pool.size;
+            try
+            {
+                while(n-->0)
+                {
+                    pool.store(object::acquire1<node_type>());
+                    ++nodes;
+                    assert(0==pool.top->live);
+                }
+            }
+            catch(...)
+            {
+                while(pool.size>current)
+                {
+                    node_type *node = pool.query();
+                    assert(0==node->live);
+                    object::release1(node);
+                    --nodes;
+                }
+                throw;
+            }
+        }
+
+        //! free all data, keeping nodes
+        inline void free_() throw()
+        {
+            if( root )
+            {
+                free__(root,true);
+                root=0;
+            }
+        }
+
+        inline void trim() throw()
+        {
+            while(pool.size)
+            {
+                assert(nodes>0);
+                node_type *node = pool.query();
+                assert(0==node->live);
+                object::release1(node);
+                --nodes;
+            }
+        }
+
+        //! release all data
+        inline void release_() throw()
+        {
+            if( root )
+            {
+                free__(root,false);
+                root = 0;
+            }
+            trim();
+        }
+
+
     private:
         Y_DISABLE_COPY(btree);
         Y_DISABLE_ASSIGN(btree);
 
         node_type *root;  //!< root node for empty key
+    protected:
         size_t     count; //!< size
         size_t     nodes; //!< total number of handled nodes
+    private:
         pool_type  pool;  //!< available nodes
 
         //! return a new node
@@ -320,31 +352,6 @@ namespace upsylon
             }
         }
 
-        //! reserve some nodes
-        inline void reserve__(size_t n)
-        {
-            const size_t current = pool.size;
-            try
-            {
-                while(n-->0)
-                {
-                    pool.store(object::acquire1<node_type>());
-                    ++nodes;
-                    assert(0==pool.top->live);
-                }
-            }
-            catch(...)
-            {
-                while(pool.size>current)
-                {
-                    node_type *node = pool.query();
-                    assert(0==node->live);
-                    object::release1(node);
-                    --nodes;
-                }
-                throw;
-            }
-        }
 
         //! recursive free of node, keeping it or not
         void free__(node_type * node, const bool keep) throw()
@@ -359,10 +366,12 @@ namespace upsylon
                 node->live = 0;
                 --count;
             }
-            list_type &chld = node->chld();
-            while(chld.size>0)
             {
-                free__( chld.pop_back(), keep );
+                list_type &chld = node->chld;
+                while(chld.size>0)
+                {
+                    free__( chld.pop_back(), keep );
+                }
             }
             memset(memory::io::__addr(node),0,sizeof(node_type));
             if(keep)
@@ -376,33 +385,8 @@ namespace upsylon
             }
         }
 
-        //! free all data, keeping nodes
-        inline void free__() throw()
-        {
-            if( root )
-            {
-                free__(root,true);
-                assert(0==root->live);
-                assert(0==root->chld().size);
-            }
-        }
 
-        //! release all data
-        void release__() throw()
-        {
-            if( root )
-            {
-                free__(root,false);
-                root = 0;
-            }
 
-            while(pool.size)
-            {
-                node_type *node = pool.query();
-                assert(0==node->live);
-                object::release1(node);
-            }
-        }
 
         //! search live node
         const node_type *search_node(const void *key_buffer,
@@ -417,7 +401,7 @@ namespace upsylon
                 while(key_length-->0)
                 {
                     const uint8_t        code = *(key++);
-                    for(const node_type *node = ptr->chld().head;node;node=node->next)
+                    for(const node_type *node = ptr->chld.head;node;node=node->next)
                     {
                         if(code==node->code)
                         {

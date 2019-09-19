@@ -56,21 +56,54 @@ namespace upsylon
     typename T,
     typename KEY_MAKER = core::lw_key_maker<KEY>
     >
-    class btable : public btree<T>
+    class btable : public btree<T>, public associative<KEY,T>
     {
     public:
-        explicit btable() throw() : btree<T>()
+        Y_DECL_ARGS(KEY,key_type); //!< alias
+        Y_DECL_ARGS(T,type);       //!< alias
+
+        inline explicit btable() throw() : btree<T>()
         {
         }
 
-        virtual ~btable() throw()
+        inline virtual ~btable() throw()
         {
         }
+        
+        inline virtual size_t size() const throw()     { return this->count; }
+        inline virtual void   free()       throw()     { this->free_();      }
+        inline virtual void   release()    throw()     { this->release_();   }
+        inline virtual size_t capacity() const throw() { return this->nodes; }
+        inline virtual void   reserve(const size_t n)  { this->reserve_(n);  }
+
+        inline virtual bool remove( param_key_type k ) throw()
+        {
+            return false;
+        }
+
+        virtual type *search( param_key_type k ) throw()
+        {
+            return (type *)find__(k);
+        }
+
+        virtual const_type *search( param_key_type k ) const throw()
+        {
+            return  find__(k);
+
+        }
+
 
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(btable);
-        KEY_MAKER key_maker;
+        mutable KEY_MAKER key_maker;
+        inline const_type *find__( param_key_type k ) const throw()
+        {
+            core::lw_key lwk = {0,0};
+            key_maker(lwk,k);
+            return this->search_(lwk.addr,lwk.size);
+        }
+
     };
 
 }
