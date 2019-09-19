@@ -57,9 +57,7 @@ namespace upsylon
             size_t     freq;            //!< frequency to optimize the tree
             data_node *addr;            //!< address of real data
             list_type  chld;            //!< children
-
-
-
+            
             //! GraphViz representation, mostly to debug
             void viz( ios::ostream &fp ) const
             {
@@ -112,6 +110,7 @@ namespace upsylon
                      param_type   args)
         {
             assert( !(0==key_buffer&&key_length>0) );
+
             //------------------------------------------------------------------
             //
             // start from the root
@@ -164,6 +163,7 @@ namespace upsylon
                 // this key already exists
                 //
                 //--------------------------------------------------------------
+                //std::cerr << "(-)" << std::endl;
                 return false;
             }
             else
@@ -226,7 +226,7 @@ namespace upsylon
                                    const size_t key_length) const throw()
         {
             const node_type *ptr = search_node(key_buffer,key_length);
-            return (0!=ptr->addr) ? &(ptr->addr->data) : 0;
+            if(ptr&&ptr->addr) return &(ptr->addr->data); else return 0;
         }
 
         //! search wrapper

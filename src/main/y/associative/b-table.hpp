@@ -6,6 +6,7 @@
 #include "y/associative/b-tree.hpp"
 #include "y/type/class-conversion.hpp"
 #include "y/iterate/linked.hpp"
+//#include <iostream>
 
 namespace upsylon
 {
@@ -29,20 +30,20 @@ namespace upsylon
             inline ~lw_key_maker() throw() {} //!< cleanup
 
             //! build keys, assuming buffer or integral type
-            inline void operator()(lw_key &lwk, param_type key ) const throw()
+            inline void operator()(lw_key &lwk, const_type & key ) const throw()
             {
                  return fill(lwk, key, int2type< Y_IS_SUPERSUBCLASS(memory::ro_buffer,mutable_type) >() );
             }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(lw_key_maker);
-            void fill(lw_key &lwk, param_type key, int2type<true> ) const throw()
+            void fill(lw_key &lwk, const_type &key, int2type<true> ) const throw()
             {
                 lwk.addr = key.ro();
                 lwk.size = key.length();
             }
 
-            void fill(lw_key &lwk, param_type key, int2type<false> ) const throw()
+            void fill(lw_key &lwk, const_type &key, int2type<false> ) const throw()
             {
                 lwk.addr = &key;
                 lwk.size = sizeof(type);
@@ -134,8 +135,9 @@ namespace upsylon
     private:
         Y_DISABLE_COPY_AND_ASSIGN(btable);
         mutable KEY_MAKER key_maker;
-        inline const_type *find__( param_key_type k ) const throw()
+        inline const_type *find__( const_key_type &k ) const throw()
         {
+            //std::cerr << "find<" << k  << ">" << std::endl;
             core::lw_key lwk = {0,0};
             key_maker(lwk,k);
             return this->search_(lwk.addr,lwk.size);

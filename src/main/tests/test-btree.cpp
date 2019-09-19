@@ -151,6 +151,102 @@ Y_UTEST(btree)
 Y_UTEST_DONE()
 
 
+#include "y/associative/map.hpp"
+#include "y/utest/timings.hpp"
+
+namespace
+{
+
+    template <typename TABLE>
+    void do_perf(const char *Kind,
+                 TABLE &table,
+                 const  size_t n,
+                 const double tmx=1)
+    {
+
+        typedef typename TABLE::mutable_key_type key_t;
+
+        table.free();
+        vector<key_t> ok(n,as_capacity);
+        vector<key_t> no(n,as_capacity);
+
+        std::cerr << "Generating Table [[ " << Kind << " ]]/" << n;
+        while( table.size() < n )
+        {
+            std::cerr.flush();
+            const key_t  k  = support::get<key_t>();
+            const size_t sz = alea.full<size_t>();
+            if(!table.insert(k,sz))
+            {
+                continue;
+            }
+            ok.push_back_(k);
+        } std::cerr << std::endl;
+
+        Y_CHECK( table.size() == n );
+        Y_CHECK( ok.size() == n );
+
+        while( no.size() < n )
+        {
+            const key_t  k  = support::get<key_t>();
+            if( table.search(k) ) continue;
+            no.push_back_(k);
+        }
+        Y_CHECK( no.size() == n );
+
+        double ok_speed = 0;
+        Y_TIMINGS(ok_speed,tmx,
+                  for(size_t i=n;i>0;--i)
+                  {
+                      if(!table.search( ok[i] )) throw exception("bad ok");
+                  }
+                  );
+        std::cerr << "ok_speed=" << ok_speed << std::endl;
+
+        double no_speed = 0;
+        Y_TIMINGS(no_speed,tmx,
+                  for(size_t i=n;i>0;--i)
+                  {
+                      if( table.search( no[i] )) throw exception("bad no");
+                  }
+                  );
+        std::cerr << "no_speed=" << no_speed << std::endl;
+
+    }
+
+
+}
+
+#include "y/string/convert.hpp"
+
+Y_UTEST(assoc_perf)
+{
+    size_t n   = 1024;
+    double tmx = 1.0;
+    if(argc>1)
+    {
+        n = string_convert::to<size_t>(argv[1],"n");
+    }
+
+    if(argc>2)
+    {
+        tmx = string_convert::to<double>(argv[2],"tmx");
+    }
+
+    {
+        btable<uint64_t,size_t> T(n,as_capacity);
+        do_perf("B-Table",T,n,tmx);
+    }
+    
+    {
+        map<uint64_t,size_t> M(n,as_capacity);
+        do_perf("H-Map",M,n,tmx);
+    }
+
+
+
+}
+Y_UTEST_DONE()
 
 
 
