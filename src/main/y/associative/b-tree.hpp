@@ -22,21 +22,23 @@ namespace upsylon
     class btree
     {
     public:
-        Y_DECL_ARGS(T,type);                                                        //!< alias
-        class                            node_type;                                 //!< forward declaration
-        typedef core::list_of<node_type> list_type;                                 //!< list for nodes
-        typedef core::pool_of<node_type> pool_type;                                 //!< pool for nodes
+        Y_DECL_ARGS(T,type);                            //!< alias
+        class                            node_type;     //!< forward declaration
+        typedef core::list_of<node_type> list_type;     //!< list for nodes
+        typedef core::pool_of<node_type> pool_type;     //!< pool for nodes
 
-        class                            data_node;
-        typedef core::list_of<data_node> data_list;
-        typedef core::pool_of<data_node> data_pool;
+        class                            data_node;     //!< forward declaration
+        typedef core::list_of<data_node> data_list;     //!< list for data
+        typedef core::pool_of<data_node> data_pool;     //!< pool for data
 
+        //! compacte linked data handling
         class data_node
         {
         public:
-            data_node   *next;
-            data_node   *prev;
-            mutable_type data;
+            data_node   *next; //!< for list/pool
+            data_node   *prev; //!< for list
+            mutable_type data; //!< effective data
+            //! constructor
             inline data_node( const_type &args ) : next(0), prev(0), data(args) {}
 
         private:
@@ -100,7 +102,7 @@ namespace upsylon
             release_();
         }
         
-
+        //! return number of data nodes
         inline size_t entries() const throw() { return dlist.size; }
 
 
@@ -240,7 +242,7 @@ namespace upsylon
         }
 
 
-        //! search following key
+        //! remove following key
         inline bool remove_(const void  *key_buffer,
                             const size_t key_length) throw()
         {
@@ -258,20 +260,19 @@ namespace upsylon
             }
         }
 
+        //! remove wrapper
         inline bool remove_( const memory::ro_buffer &key) const throw()
         {
             return remove_(key.ro(),key.length());
         }
 
+        //! remove rapper
         inline bool remove_(const char *text) const throw()
         {
             return remove_(text, (text!=0) ? strlen(text) : 0);
         }
 
-
-
-
-        //! reserve some nodes
+        //! reserve some data nodes
         inline void reserve_(size_t n)
         {
             while(n-->0)
@@ -290,6 +291,7 @@ namespace upsylon
             }
         }
 
+        //! remove excess nodes, all kind
         inline void trim() throw()
         {
             // trim node_type
@@ -320,8 +322,8 @@ namespace upsylon
         }
 
     protected:
-        data_list  dlist;
-        data_pool  dpool;
+        data_list  dlist; //!< data list
+        data_pool  dpool; //!< data pool
 
     private:
         Y_DISABLE_COPY(btree);
@@ -334,15 +336,8 @@ namespace upsylon
         inline data_node *build(const_type &args)
         {
             data_node *dn = (dpool.size>0) ? dpool.query() : object::acquire1<data_node>();
-            try
-            {
-                return new(dn) data_node(args);
-            }
-            catch(...)
-            {
-                dpool.store(dn);
-                throw;
-            }
+            try { return new(dn) data_node(args); }
+            catch(...) { dpool.store(dn); throw;  }
         }
 
         //! return a new node
@@ -361,14 +356,7 @@ namespace upsylon
         //! query an empty node
         inline node_type *query_empty()
         {
-            if( pool.size > 0 )
-            {
-                return pool.query();
-            }
-            else
-            {
-                return object::acquire1<node_type>();
-            }
+            return (pool.size>0) ? pool.query() : object::acquire1<node_type>();
         }
 
 
@@ -378,11 +366,14 @@ namespace upsylon
             assert(node);
             assert(0==node->prev);
             assert(0==node->next);
-            data_node *dn = node->addr;
-            if(dn)
             {
-                self_destruct(  dlist.unlink(dn)->data );
-                node->addr = 0;
+                data_node *dn = node->addr;
+                if(dn)
+                {
+                    self_destruct(  dlist.unlink(dn)->data );
+                    node->addr = 0;
+                    if(keep) { dpool.store(dn); } else { object::release1(dn); }
+                }
             }
 
             {
@@ -393,22 +384,7 @@ namespace upsylon
                 }
             }
             memset(memory::io::__addr(node),0,sizeof(node_type));
-            if(keep)
-            {
-                pool.store(node);
-                if(dn)
-                {
-                    dpool.store(dn);
-                }
-            }
-            else
-            {
-                object::release1(node);
-                if(dn)
-                {
-                    object::release1(dn);
-                }
-            }
+            if(keep) { pool.store(node); } else { object::release1(node); }
         }
 
         node_type *search_node(const void  *key_buffer,

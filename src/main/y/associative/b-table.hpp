@@ -3,7 +3,7 @@
 #ifndef Y_BTABLE_INCLUDED
 #define Y_BTABLE_INCLUDED 1
 
-#include "y/associative/btree.hpp"
+#include "y/associative/b-tree.hpp"
 #include "y/type/class-conversion.hpp"
 #include "y/iterate/linked.hpp"
 
@@ -12,21 +12,23 @@ namespace upsylon
 
     namespace core
     {
+        //! light-weight key
         struct lw_key
         {
-            const void *addr;
-            size_t      size;
+            const void *addr; //!< any address
+            size_t      size; //!< any size
         };
 
+        //! make default light-weight keys
         template <typename T>
         class lw_key_maker
         {
         public:
-            Y_DECL_ARGS(T,type);      //!< alias
-            
-            inline  lw_key_maker() throw() {}
-            inline ~lw_key_maker() throw() {}
+            Y_DECL_ARGS(T,type);              //!< aliaa
+            inline  lw_key_maker() throw() {} //!< setup
+            inline ~lw_key_maker() throw() {} //!< cleanup
 
+            //! build keys, assuming buffer or integral type
             inline void operator()(lw_key &lwk, param_type key ) const throw()
             {
                  return fill(lwk, key, int2type< Y_IS_SUPERSUBCLASS(memory::ro_buffer,mutable_type) >() );
@@ -51,33 +53,38 @@ namespace upsylon
     }
 
 
-
-    template <
-    typename KEY,
-    typename T,
-    typename KEY_MAKER = core::lw_key_maker<KEY>
-    >
+    //! B-Table implementation for a named KEY
+    template <typename KEY, typename T, typename KEY_MAKER = core::lw_key_maker<KEY> >
     class btable : public btree<T>, public associative<KEY,T>
     {
     public:
-        Y_DECL_ARGS(KEY,key_type); //!< alias
-        Y_DECL_ARGS(T,type);       //!< alias
-        typedef typename btree<T>::data_node dnode_type;
+        Y_DECL_ARGS(KEY,key_type);                       //!< alias
+        Y_DECL_ARGS(T,type);                             //!< alias
+        typedef typename btree<T>::data_node dnode_type; //!< alias
 
+        //! setup
         inline explicit btable() throw() : btree<T>(), key_maker()
         {
         }
 
+        //! setup with some capacity
+        inline explicit btable( const size_t n, const as_capacity_t &_ ) : btree<T>(n,_), key_maker()
+        {
+        }
+
+        //! cleanup
         inline virtual ~btable() throw()
         {
         }
-        
-        inline virtual size_t size() const throw()     { return this->dlist.size; }
-        inline virtual void   free()       throw()     { this->free_();      }
-        inline virtual void   release()    throw()     { this->release_();   }
-        inline virtual size_t capacity() const throw() { return this->dlist.size+this->dpool.size; }
-        inline virtual void   reserve(const size_t n)  { this->reserve_(n);  }
 
+
+        inline virtual size_t size() const throw()     { return this->dlist.size; }                  //! container interface : size()
+        inline virtual void   free()       throw()     { this->free_();      }                       //! container interface : free()
+        inline virtual void   release()    throw()     { this->release_();   }                       //! container interface : release()
+        inline virtual size_t capacity() const throw() { return this->dlist.size+this->dpool.size; } //! container interface : capacity()
+        inline virtual void   reserve(const size_t n)  { this->reserve_(n);  }                       //! container interface : reserve()
+
+        //! associative interface: remove
         inline virtual bool remove( param_key_type k ) throw()
         {
             core::lw_key lwk = {0,0};
@@ -85,23 +92,26 @@ namespace upsylon
             return this->remove_(lwk.addr,lwk.size);
         }
 
+        //! associative interface: search
         virtual type *search( param_key_type k ) throw()
         {
             return (type *)find__(k);
         }
 
+        //! associative interface: search, const
         virtual const_type *search( param_key_type k ) const throw()
         {
             return  find__(k);
         }
 
+        //! specific interface
         inline bool insert( param_key_type k, param_type v )
         {
             core::lw_key lwk = {0,0};
             key_maker(lwk,k);
             return this->insert_(lwk.addr,lwk.size,v);
         }
-
+        
         typedef iterate::linked<type,dnode_type,iterate::forward>             iterator;        //!< forward iterator
         typedef iterate::linked<const_type,const dnode_type,iterate::forward> const_iterator;  //!< forward const iterator
 
