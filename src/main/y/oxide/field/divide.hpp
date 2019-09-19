@@ -169,6 +169,7 @@ namespace upsylon
                 }
             }
 
+            //! throw exception if no possible mapping
             static void ErrorNoMappingFor(const size_t cores);
             
         };

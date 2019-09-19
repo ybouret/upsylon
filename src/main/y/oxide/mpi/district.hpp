@@ -12,21 +12,21 @@ namespace upsylon
 
     namespace Oxide
     {
+        //! a domain built from preferences and a realm at master node
         template <typename COORD>
         class District :
         public Split<COORD>, public Domain<COORD>
         {
         public:
-            static  const size_t  Dimensions = Coord::Get<COORD>::Dimensions;
-            typedef Split<COORD>  SplitType;
-            typedef Realm<COORD>  RealmType;
-            typedef Layout<COORD> LayoutType;
-            typedef Domain<COORD> DomainType;
+            static  const size_t  Dimensions = Coord::Get<COORD>::Dimensions; //!< alias
+            typedef Split<COORD>  SplitType;                                  //!< alias
+            typedef Realm<COORD>  RealmType;                                  //!< alias
+            typedef Layout<COORD> LayoutType;                                 //!< alias
+            typedef Domain<COORD> DomainType;                                 //!< alias
+            typedef typename LayoutType::coord       coord;                   //!< alias
+            typedef typename LayoutType::const_coord const_coord;             //!< alias
 
-            typedef typename LayoutType::coord       coord;
-            typedef typename LayoutType::const_coord const_coord;
-
-            RealmType *realm;
+            RealmType *realm; //!< realm is allocated
 
             //! setup domain and create realm at head node
             explicit District(mpi              &_MPI,
@@ -44,6 +44,10 @@ namespace upsylon
                 }
             }
 
+            //! create a field in the domain and in the realm with same type/id
+            /**
+             return the local field
+             */
             template <typename FIELD>
             inline FIELD &createExported( const string &id )
             {
@@ -64,23 +68,27 @@ namespace upsylon
                 }
             }
 
+            //! scatter a field with parentName into each child with childName
             inline void Scatter(const string &parentName,
                                 const string &childName)
             {
                 RealmType::Scatter(this->MPI,realm, parentName,*this,childName);
             }
 
+            //! scatter a field with the same name in the realm and domains
             inline void Scatter(const string &name)
             {
                 Scatter(name,name);
             }
 
+            //! gather a field with parentName from each child with childName
             inline void Gather(const string &parentName,
                                const string &childName)
             {
                 RealmType::Gather(this->MPI,realm, parentName,*this,childName);
             }
 
+            //! gather a field with the same name in the realm and domains
             inline void Gather(const string &name)
             {
                 Gather(name,name);

@@ -11,16 +11,20 @@ namespace upsylon
     namespace Oxide
     {
 
+        //! split operations to find preferred partition
         struct __Split
         {
+            //! get the cost, low-level
             static mpq    Cost(const Coord1D *P, const Coord1D *M, const size_t D );
 
+            //! get the cost of chosing preferred w.r.t mapping
             template <typename COORD> static inline
-            mpq Cost( const COORD &P, const COORD &M )
+            mpq Cost( const COORD &preferred, const COORD &mapping )
             {
-                return Cost( (const Coord1D *) &P, (const Coord1D *)&M, Coord::Get<COORD>::Dimensions );
+                return Cost( (const Coord1D *) &preferred, (const Coord1D *)&mapping, Coord::Get<COORD>::Dimensions );
             }
 
+            //! find the index of the best mapping against the preferred one
             static size_t Find(const array<mpq> &costs);
         };
 
@@ -39,11 +43,11 @@ namespace upsylon
             // types and definitions
             //
             //------------------------------------------------------------------
-            static const size_t                      Dimensions = Coord::Get<COORD>::Dimensions;
-            typedef Layout<COORD>                    LayoutType;       //!< alias
-            typedef typename LayoutType::coord       coord;            //!< alias
-            typedef typename LayoutType::const_coord const_coord;      //!< alias
-            typedef vector<COORD>                    MappingsType;     //!< will store mappings
+            static const size_t                      Dimensions = Coord::Get<COORD>::Dimensions; //!< alias
+            typedef Layout<COORD>                    LayoutType;                                 //!< alias
+            typedef typename LayoutType::coord       coord;                                      //!< alias
+            typedef typename LayoutType::const_coord const_coord;                                //!< alias
+            typedef vector<COORD>                    MappingsType;                               //!< will store mappings
 
             //------------------------------------------------------------------
             //

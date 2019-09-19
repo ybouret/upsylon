@@ -18,54 +18,58 @@
 namespace upsylon
 {
 
-
-
+    //! btree for any data
     template <typename T>
     class btree :  public container
     {
     public:
-        Y_DECL_ARGS(T,type);
+        Y_DECL_ARGS(T,type);                                                        //!< alias
+        class                            node_type;                                 //!< forward declaration
+        typedef core::list_of<node_type> list_type;                                 //!< list for nodes
+        typedef core::pool_of<node_type> pool_type;                                 //!< pool for nodes
+        static const size_t              data_size = Y_MEMALIGN(sizeof(type));      //!< aligned memory
+        static const size_t              list_size = Y_MEMALIGN(sizeof(list_type)); //!< aligned memory
 
-        class                            node_type;
-        typedef core::list_of<node_type> list_type;
-        typedef core::pool_of<node_type> pool_type;
-        static const size_t              data_size = Y_ROUND8(sizeof(type));
-        static const size_t              list_size = Y_ROUND8(sizeof(list_type));
-
+        //! a node with data for type and list
         class node_type
         {
         public:
-            node_type *parent;
-            node_type *next;
-            node_type *prev;
-            uint8_t    code;
-            int        live;
-            size_t     freq;
-            char       dbuf[data_size];
-            char       lbuf[list_size];
+            node_type *parent;          //!< parent node for tree
+            node_type *next;            //!< for children list and node pool
+            node_type *prev;            //!< for children list
+            uint8_t    code;            //!< encoding byte
+            int        live;            //!< flag to check valid data
+            size_t     freq;            //!< frequency to optimize the tree
+            char       dbuf[data_size]; //!< space for data
+            char       lbuf[list_size]; //!< space for list
 
+            //! access data
             inline mutable_type &data() throw()
             {
                 assert(live!=0);
                 return *memory::io::__force<mutable_type>(dbuf);
             }
 
+            //! access data, const
             inline const_type &data() const throw()
             {
                 assert(live!=0);
                 return *memory::io::__force<const_type>(dbuf);
             }
 
+            //! access child
             inline list_type &chld() throw()
             {
                 return *memory::io::__force<list_type>(lbuf);
             }
 
+            //! acces child, const
             inline const list_type &chld() const throw()
             {
                 return *memory::io::__force<const list_type>(lbuf);
             }
 
+            //! GraphViz representation, mostly to debug
             void viz( ios::ostream &fp ) const
             {
                 fp.viz(this);
@@ -83,7 +87,6 @@ namespace upsylon
                     node->viz(fp);
                     fp.viz(this) << "->"; fp.viz(node) << ";\n";
                 }
-
             }
 
 
@@ -92,16 +95,18 @@ namespace upsylon
             node_type(); ~node_type() throw();
         };
 
+        //! setup an empty tree
         inline explicit btree() throw() : root(0), count(0), nodes(0), pool()
         {}
 
+        //! setup an emptry tree with some nodes
         inline explicit btree(const size_t n, const as_capacity_t & ) :
         root(0), count(0), nodes(0), pool()
         {
             reserve__(n);
         }
 
-
+        //! cleanup
         inline virtual ~btree() throw()
         {
             release__();
@@ -113,12 +118,14 @@ namespace upsylon
         inline virtual void   free()           throw() { free__(); }
         inline virtual void   release()        throw() { release__(); }
         inline virtual void   reserve(const size_t n)  { reserve__(n); }
+
+        //! return number of used nodes
         inline size_t         internal() const throw() { return nodes; }
 
-
-        bool insert(const void  *key_buffer,
-                    const size_t key_length,
-                    param_type   args)
+        //! insert args following key
+        bool insert_(const void  *key_buffer,
+                     const size_t key_length,
+                     param_type   args)
         {
             assert( !(0==key_buffer&&key_length>0) );
             //------------------------------------------------------------------
@@ -214,17 +221,19 @@ namespace upsylon
             }
         }
 
-        bool insert(const memory::ro_buffer &key, param_type args)
+        //! insert wrapper
+        bool insert_(const memory::ro_buffer &key, param_type args)
         {
-            return insert( key.ro(), key.length(), args );
+            return insert_( key.ro(), key.length(), args );
         }
 
-        bool insert( const char *text, param_type args )
+        //! insert wrapper
+        bool insert_( const char *text, param_type args )
         {
-            return insert( text, (text!=0) ? strlen(text) : 0, args);
+            return insert_( text, (text!=0) ? strlen(text) : 0, args);
         }
 
-
+        //! graphviz into output stream
         void graphviz( ios::ostream &fp )
         {
             fp << "digraph G {\n";
@@ -235,22 +244,25 @@ namespace upsylon
             fp << "}\n";
         }
 
-        const_type *search(const void  *key_buffer,
-                           const size_t key_length) const throw()
+        //! search following key
+        const_type *search_(const void  *key_buffer,
+                            const size_t key_length) const throw()
         {
             const node_type *node = search_node(key_buffer,key_length);
             assert(node->live);
             return & node->data();
         }
 
-        const_type *search(const memory::ro_buffer &key) const throw()
+        //! search wrapper
+        const_type *search_(const memory::ro_buffer &key) const throw()
         {
-            return search(key.ro(),key.length());
+            return search_(key.ro(),key.length());
         }
 
-        const_type *search(const char *text) const throw()
+        //! search wrapper
+        const_type *search_(const char *text) const throw()
         {
-            return search(text, (text!=0) ? strlen(text) : 0);
+            return search_(text, (text!=0) ? strlen(text) : 0);
         }
 
     private:
@@ -275,6 +287,7 @@ namespace upsylon
             return node;
         }
 
+        //! query an empty node
         inline node_type *query_()
         {
             if( pool.size > 0 )
@@ -289,6 +302,7 @@ namespace upsylon
             }
         }
 
+        //! reserve some nodes
         inline void reserve__(size_t n)
         {
             const size_t current = pool.size;
@@ -314,6 +328,7 @@ namespace upsylon
             }
         }
 
+        //! recursive free of node, keeping it or not
         void free__(node_type * node, const bool keep) throw()
         {
             assert(node);
@@ -343,7 +358,7 @@ namespace upsylon
             }
         }
 
-
+        //! free all data, keeping nodes
         inline void free__() throw()
         {
             if( root )
@@ -354,6 +369,7 @@ namespace upsylon
             }
         }
 
+        //! release all data
         void release__() throw()
         {
             if( root )
@@ -370,6 +386,7 @@ namespace upsylon
             }
         }
 
+        //! search live node
         const node_type *search_node(const void *key_buffer,
                                      size_t      key_length) const throw()
         {

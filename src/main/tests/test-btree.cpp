@@ -36,7 +36,7 @@ namespace
                 key->data[j] = uint8_t( alea.leq(4) );
             }
 
-            if( tree.insert(key->data, key->size, tmp) )
+            if( tree.insert_(key->data, key->size, tmp) )
             {
                 keys.push_back(key);
             }
@@ -60,7 +60,7 @@ namespace
         for(size_t i=keys.size();i>0;--i)
         {
             const key_type &k = *keys[i];
-            Y_ASSERT( tree.search( k.data, k.size ) );
+            Y_ASSERT( tree.search_( k.data, k.size ) );
         }
 
         std::cerr << std::endl;
@@ -86,7 +86,7 @@ Y_UTEST(btree)
             unsigned        count = 0;
             while( fp.gets(line) )
             {
-                if(tree.insert(line,count))
+                if(tree.insert_(line,count))
                 {
                     ++count;
                     keys.push_back(line);
@@ -99,7 +99,7 @@ Y_UTEST(btree)
 
         for(size_t i=keys.size();i>0;--i)
         {
-            Y_ASSERT( tree.search(keys[i]) );
+            Y_ASSERT( tree.search_(keys[i]) );
         }
 
         if(keys.size()<=100)
