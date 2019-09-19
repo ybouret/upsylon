@@ -10,6 +10,8 @@
 #include "y/memory/io.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/code/utils.hpp"
+
 #include <cstring>
 #include <iostream>
 
@@ -67,13 +69,14 @@ namespace upsylon
             void viz( ios::ostream &fp ) const
             {
                 fp.viz(this);
+                const char *info = (live!=0) ? "(*)" : "";
                 if(parent)
                 {
-                    fp( " [label=\"0x%02x@%3u\"];\n", code, unsigned(freq));
+                    fp( " [label=\"%s#%u%s\"];\n", printable_char[code], unsigned(freq),info);
                 }
                 else
                 {
-                    fp( " [label=\"root\"];\n");
+                    fp( " [label=\"root%s\"];\n",info);
                 }
                 for(const node_type *node=chld().head;node;node=node->next)
                 {
@@ -140,7 +143,7 @@ namespace upsylon
                 {
                     const uint8_t  code  = *(key++);
                     bool           found = false;
-                    std::cerr << int(code);
+                    std::cerr << printable_char[code];
                     // look for the code in child(ren)
                     for(node_type *node = ptr->chld().head;node;node=node->next)
                     {
@@ -211,6 +214,17 @@ namespace upsylon
             }
         }
 
+        bool insert(const memory::ro_buffer &key, param_type args)
+        {
+            return insert( key.ro(), key.length(), args );
+        }
+
+        bool insert( const char *text, param_type args )
+        {
+            return insert( text, (text!=0) ? strlen(text) : 0, args);
+        }
+
+
         void graphviz( ios::ostream &fp )
         {
             fp << "digraph G {\n";
@@ -220,8 +234,24 @@ namespace upsylon
             }
             fp << "}\n";
         }
-        
 
+        const_type *search(const void  *key_buffer,
+                           const size_t key_length) const throw()
+        {
+            const node_type *node = search_node(key_buffer,key_length);
+            assert(node->live);
+            return & node->data();
+        }
+
+        const_type *search(const memory::ro_buffer &key) const throw()
+        {
+            return search(key.ro(),key.length());
+        }
+
+        const_type *search(const char *text) const throw()
+        {
+            return search(text, (text!=0) ? strlen(text) : 0);
+        }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(btree);
@@ -339,6 +369,39 @@ namespace upsylon
                 object::release1(node);
             }
         }
+
+        const node_type *search_node(const void *key_buffer,
+                                     size_t      key_length) const throw()
+        {
+            assert( !(0==key_buffer&&key_length>0) );
+            if(root)
+            {
+                const node_type *ptr   = root;
+                const uint8_t   *key   = static_cast<const uint8_t *>(key_buffer);
+                bool             found = false;
+                while(key_length-->0)
+                {
+                    const uint8_t        code = *(key++);
+                    for(const node_type *node = ptr->chld().head;node;node=node->next)
+                    {
+                        if(code==node->code)
+                        {
+                            ptr   = node;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found) return 0;
+                }
+
+                return (ptr->live != 0) ? ptr : 0;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
 
     };
 
