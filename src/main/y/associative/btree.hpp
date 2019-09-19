@@ -9,7 +9,9 @@
 #include "y/core/pool.hpp"
 #include "y/memory/io.hpp"
 #include "y/type/self-destruct.hpp"
+#include "y/ios/ostream.hpp"
 #include <cstring>
+#include <iostream>
 
 namespace upsylon
 {
@@ -31,6 +33,7 @@ namespace upsylon
         class node_type
         {
         public:
+            node_type *parent;
             node_type *next;
             node_type *prev;
             uint8_t    code;
@@ -59,6 +62,25 @@ namespace upsylon
             inline const list_type &chld() const throw()
             {
                 return *memory::io::__force<const list_type>(lbuf);
+            }
+
+            void viz( ios::ostream &fp ) const
+            {
+                fp.viz(this);
+                if(parent)
+                {
+                    fp( " [label=\"0x%02x@%3u\"];\n", code, unsigned(freq));
+                }
+                else
+                {
+                    fp( " [label=\"root\"];\n");
+                }
+                for(const node_type *node=chld().head;node;node=node->next)
+                {
+                    node->viz(fp);
+                    fp.viz(this) << "->"; fp.viz(node) << ";\n";
+                }
+
             }
 
 
@@ -101,7 +123,7 @@ namespace upsylon
             // start from the root
             //
             //------------------------------------------------------------------
-            if(!root)      root = query_();
+            if(!root)      root = query_(); assert(0==root->parent);
             node_type     *ptr  = root;
             const uint8_t *key  = static_cast<const uint8_t *>(key_buffer);
 
@@ -110,6 +132,7 @@ namespace upsylon
             // walk down
             //
             //------------------------------------------------------------------
+            std::cerr << args << "@<";
             {
                 assert(0!=ptr);
                 size_t num = key_length;
@@ -117,6 +140,7 @@ namespace upsylon
                 {
                     const uint8_t  code  = *(key++);
                     bool           found = false;
+                    std::cerr << int(code);
                     // look for the code in child(ren)
                     for(node_type *node = ptr->chld().head;node;node=node->next)
                     {
@@ -129,10 +153,12 @@ namespace upsylon
                     }
                     if(!found)
                     {
-                        ptr = ptr->chld().push_back( query(code) );
+                        ptr = ptr->chld().push_back( query(ptr,code) );
+                        std::cerr << '+';
                     }
+                    else std::cerr << '.';
                 }
-            }
+            } std::cerr << ">";
 
             //------------------------------------------------------------------
             //
@@ -147,6 +173,7 @@ namespace upsylon
                 // this key already exists
                 //
                 //--------------------------------------------------------------
+                std::cerr << "(-)" << std::endl;
                 return false;
             }
             else
@@ -157,20 +184,43 @@ namespace upsylon
                 // build object
                 //
                 //--------------------------------------------------------------
+                std::cerr << "(+)" << std::endl;
                 new (ptr->dbuf) mutable_type(args);
                 ptr->live = 1;
                 ++count;
 
                 //--------------------------------------------------------------
                 //
-                // update frequencies
+                // update frequencies and optimize
                 //
                 //--------------------------------------------------------------
+                while(ptr->parent)
+                {
+                    ++(ptr->freq);
+                    list_type &chld = ptr->parent->chld();
+                    assert(chld.owns(ptr));
+                    while(ptr->prev&&ptr->prev->freq<ptr->freq)
+                    {
+                        chld.towards_head(ptr);
+                    }
 
+                    ptr=ptr->parent;
+                }
 
                 return true;
             }
         }
+
+        void graphviz( ios::ostream &fp )
+        {
+            fp << "digraph G {\n";
+            if(root)
+            {
+                root->viz(fp);
+            }
+            fp << "}\n";
+        }
+        
 
 
     private:
@@ -182,13 +232,16 @@ namespace upsylon
         pool_type  pool;  //!< available nodes
 
         //! return a new node
-        inline node_type *query(const uint8_t code)
+        inline node_type *query(node_type *parent, const uint8_t code)
         {
             node_type *node = query_();
+            assert(parent!=node);
             assert(0==node->code);
             assert(0==node->live);
             assert(0==node->freq);
-            node->code = code;
+            assert(0==node->parent);
+            node->parent = parent;
+            node->code   = code;
             return node;
         }
 
