@@ -64,7 +64,7 @@ namespace upsylon
         Y_DECL_ARGS(T,type);       //!< alias
         typedef typename btree<T>::data_node dnode_type;
 
-        inline explicit btable() throw() : btree<T>()
+        inline explicit btable() throw() : btree<T>(), key_maker()
         {
         }
 
@@ -80,7 +80,9 @@ namespace upsylon
 
         inline virtual bool remove( param_key_type k ) throw()
         {
-            return false;
+            core::lw_key lwk = {0,0};
+            key_maker(lwk,k);
+            return this->remove_(lwk.addr,lwk.size);
         }
 
         virtual type *search( param_key_type k ) throw()

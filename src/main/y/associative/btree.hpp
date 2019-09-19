@@ -13,7 +13,6 @@
 #include "y/code/utils.hpp"
 
 #include <cstring>
-#include <iostream>
 
 namespace upsylon
 {
@@ -55,7 +54,7 @@ namespace upsylon
             uint8_t    code;            //!< encoding byte
             size_t     freq;            //!< frequency to optimize the tree
             data_node *addr;            //!< address of real data
-            list_type  chld;
+            list_type  chld;            //!< children
 
 
 
@@ -86,8 +85,7 @@ namespace upsylon
         };
 
         //! setup an empty tree
-        inline explicit btree() throw() : dlist(), dpool(), root(0), pool()
-        {}
+        inline explicit btree() throw() : dlist(), dpool(), root(0), pool() {}
 
         //! setup an emptry tree with some nodes
         inline explicit btree(const size_t n, const as_capacity_t & ) :
@@ -95,8 +93,6 @@ namespace upsylon
         {
             reserve_(n);
         }
-
-
 
         //! cleanup
         inline virtual ~btree() throw()
@@ -128,7 +124,6 @@ namespace upsylon
             // walk down
             //
             //------------------------------------------------------------------
-            std::cerr << args << "@<";
             {
                 assert(0!=ptr);
                 size_t num = key_length;
@@ -136,7 +131,6 @@ namespace upsylon
                 {
                     const uint8_t  code  = *(key++);
                     bool           found = false;
-                    std::cerr << printable_char[code];
                     // look for the code in child(ren)
                     for(node_type *node = ptr->chld.head;node;node=node->next)
                     {
@@ -147,14 +141,13 @@ namespace upsylon
                             break;
                         }
                     }
+                    // check is a new child is to be set
                     if(!found)
                     {
                         ptr = ptr->chld.push_back( query(ptr,code) );
-                        std::cerr << '+';
                     }
-                    else std::cerr << '.';
                 }
-            } std::cerr << ">";
+            }
 
             //------------------------------------------------------------------
             //
@@ -169,7 +162,6 @@ namespace upsylon
                 // this key already exists
                 //
                 //--------------------------------------------------------------
-                std::cerr << "(-)" << std::endl;
                 return false;
             }
             else
@@ -180,8 +172,7 @@ namespace upsylon
                 // build object
                 //
                 //--------------------------------------------------------------
-                std::cerr << "(+)" << std::endl;
-                dlist.push_back(  ptr->addr = build(args) );
+                dlist.push_back(  (ptr->addr = build(args)) );
 
                 //--------------------------------------------------------------
                 //
@@ -229,48 +220,56 @@ namespace upsylon
         }
 
         //! search following key
-        const_type *search_(const void  *key_buffer,
-                            size_t       key_length) const throw()
+        inline const_type *search_(const void  *key_buffer,
+                                   const size_t key_length) const throw()
         {
-            assert( !(0==key_buffer&&key_length>0) );
-            if(root)
-            {
-                const node_type *ptr   = root;
-                const uint8_t   *key   = static_cast<const uint8_t *>(key_buffer);
-                bool             found = false;
-                while(key_length-->0)
-                {
-                    const uint8_t        code = *(key++);
-                    for(const node_type *node = ptr->chld.head;node;node=node->next)
-                    {
-                        if(code==node->code)
-                        {
-                            ptr   = node;
-                            found = true;
-                            break;
-                        }
-                    }
-                    if(!found) return 0;
-                }
-                return (0!=ptr->addr) ? &(ptr->addr->data) : 0;
-            }
-            else
-            {
-                return 0;
-            }
+            const node_type *ptr = search_node(key_buffer,key_length);
+            return (0!=ptr->addr) ? &(ptr->addr->data) : 0;
         }
 
         //! search wrapper
-        const_type *search_(const memory::ro_buffer &key) const throw()
+        inline const_type *search_(const memory::ro_buffer &key) const throw()
         {
             return search_(key.ro(),key.length());
         }
 
         //! search wrapper
-        const_type *search_(const char *text) const throw()
+        inline const_type *search_(const char *text) const throw()
         {
             return search_(text, (text!=0) ? strlen(text) : 0);
         }
+
+
+        //! search following key
+        inline bool remove_(const void  *key_buffer,
+                            const size_t key_length) throw()
+        {
+            node_type *ptr = search_node(key_buffer,key_length);
+            if(ptr->addr)
+            {
+                data_node *dn = ptr->addr;
+                ptr->addr     = 0;
+                self_destruct( dpool.store( dlist.unlink(dn) )->data );
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        inline bool remove_( const memory::ro_buffer &key) const throw()
+        {
+            return remove_(key.ro(),key.length());
+        }
+
+        inline bool remove_(const char *text) const throw()
+        {
+            return remove_(text, (text!=0) ? strlen(text) : 0);
+        }
+
+
+
 
         //! reserve some nodes
         inline void reserve_(size_t n)
@@ -409,6 +408,38 @@ namespace upsylon
                 {
                     object::release1(dn);
                 }
+            }
+        }
+
+        node_type *search_node(const void  *key_buffer,
+                               size_t       key_length) const
+        {
+            assert( !(0==key_buffer&&key_length>0) );
+            if(root)
+            {
+                const node_type *ptr   = root;
+                const uint8_t   *key   = static_cast<const uint8_t *>(key_buffer);
+                bool             found = false;
+                while(key_length-->0)
+                {
+                    const uint8_t        code = *(key++);
+                    for(const node_type *node = ptr->chld.head;node;node=node->next)
+                    {
+                        if(code==node->code)
+                        {
+                            ptr   = node;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found) return 0;
+                }
+                assert(ptr);
+                return (node_type*)ptr;
+            }
+            else
+            {
+                return 0;
             }
         }
 

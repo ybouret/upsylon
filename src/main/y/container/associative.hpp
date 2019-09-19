@@ -18,14 +18,21 @@ namespace upsylon
         //! desctructor
         inline virtual ~associative() throw() {}
 
-        //! search object by key
+        //! search object by key, may optimize for next call
         virtual type       *search( param_key_type k ) throw()       = 0;
 
-        //! search const object by key
+        //! search const object by key, untouched
         virtual const_type *search( param_key_type k ) const throw() = 0;
 
         //! remove object
         virtual bool        remove( param_key_type k ) throw()       = 0;
+
+        //! ensure no key
+        inline void no( param_key_type k ) throw()
+        {
+            while( remove(k) )
+                ;
+        }
 
     protected:
         inline explicit associative() throw() {}
