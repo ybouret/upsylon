@@ -5,7 +5,7 @@
 #include "y/type/ints.hpp"
 #include "y/type/bswap.hpp"
 #include "y/lockable.hpp"
-#include <cstdlib>
+#include <stdlib.h>
 #include <cmath>
 
 namespace upsylon

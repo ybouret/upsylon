@@ -1,5 +1,6 @@
 #include "y/randomized/marsaglia.hpp"
-#include <cstring>
+#include <stdio.h>
+#include <string.h>
 
 namespace upsylon
 {
@@ -134,7 +135,6 @@ namespace upsylon
     }
 }
 
-#include <cstdio>
 namespace upsylon
 {
     namespace randomized
