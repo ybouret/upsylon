@@ -63,7 +63,7 @@ namespace upsylon
                 //! test equality
                 friend bool operator==( const Coordinate &lhs, const Coordinate &rhs) throw();
 
-                //! lexicographic compariston
+                //! lexicographic comparison
                 static int compare(const Coordinate &lhs, const Coordinate &rhs) throw();
 
                 //! update hash function value
