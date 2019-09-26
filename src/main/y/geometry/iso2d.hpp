@@ -10,12 +10,11 @@
 #include "y/sequence/vector.hpp"
 #include "y/memory/pooled.hpp"
 
-namespace upsylon
-{
-    namespace geometry
-    {
+namespace upsylon {
 
-        //! findind iso levels in 2d
+    namespace geometry {
+
+        //! finding iso levels in 2d
         /**
          Each square is divided in four triangles
          4@(i  ,j+1)------3@(i+1,j+1)
@@ -29,51 +28,42 @@ namespace upsylon
          1@(i ,j   )-----2@(i+1,j  )
 
          For a given level, a matching value can be found on a vertex or
-         on within an edge, which defines a set of unique Coordinates
+         on an edge, which defines a set of unique Coordinates
          for any point of the isoline
          */
         struct Iso2D
         {
-            typedef point2d<double> Vertex;    //!< alias
-            typedef memory::pooled  Allocator; //!< for some levels, medium sized
+            typedef point2d<double> Vertex;      //!< alias
+            typedef memory::pooled  Allocator;   //!< for some levels, medium sized
+            static const unit_t     Full = 0x00; //!< for full Coordinate
+            static const unit_t     Half = 0x01; //!< for half Coordinate
+
             //__________________________________________________________________
             //
-            // iso level is on a vertex
+            //! Logical Coordinate
             //__________________________________________________________________
-            static const unsigned Full = 0x00; //!< for full Coordinate
-            static const unsigned Half = 0x01; //!< for half Coordinate
-
-            //! logical vertex Coordinate
             class Coordinate
             {
             public:
                 const unit_t   i; //!< i index of the data
                 const unit_t   j; //!< j index if the data
-                const unsigned q; //!< full|half
+                const unit_t   q; //!< full|half
 
-                //! setup
-                Coordinate(const unit_t ii, const unit_t jj, const unsigned qq) throw();
-
-                //! desctructor
-                ~Coordinate() throw();
-
-                //! copy
-                Coordinate(const Coordinate &other) throw() ;
-
-                //! test equality
-                friend bool operator==( const Coordinate &lhs, const Coordinate &rhs) throw();
-
-                //! lexicographic comparison
-                static int compare(const Coordinate &lhs, const Coordinate &rhs) throw();
-
-                //! update hash function value
-                void run( hashing::function &H ) const throw();
+                Coordinate(const unit_t ii, const unit_t jj, const unsigned qq) throw(); //!< setup
+                ~Coordinate() throw();                                                   //!< destructor
+                Coordinate(const Coordinate &other) throw();                             //!< copy
+                friend bool operator==(const Coordinate &,const Coordinate &) throw();   //!< test equality
+                static int compare(const Coordinate &,const Coordinate &) throw();       //!< lexicographic comparison
+                void run( hashing::function &H ) const throw();                          //!< update hash function value
 
             private:
                 Y_DISABLE_ASSIGN(Coordinate);
             };
 
-            //! ordered pair of Coordinates
+            //__________________________________________________________________
+            //
+            //! ordered pair of Coordinates -> unique key
+            //__________________________________________________________________
             class EdgeLabel
             {
             public:
@@ -113,12 +103,15 @@ namespace upsylon
                 };
             };
 
-            //! a unique point is an identifier and its position
+            //__________________________________________________________________
+            //
+            //! a unique point is a logical location and a physical position
+            //__________________________________________________________________
             class UniquePoint : public counted_object
             {
             public:
-                const EdgeLabel  tag; //!< logical  identifier
-                const Vertex     vtx; //!< physical position
+                const EdgeLabel  tag; //!< logical  location
+                const Vertex     vtx; //!< physical position on this edge
 
                 //!setup
                 explicit UniquePoint(const EdgeLabel &id, const Vertex &v) throw();
@@ -132,6 +125,7 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(UniquePoint);
             };
+
 
             typedef intr_ptr<EdgeLabel,UniquePoint>                SharedPoint;  //!< alias
             typedef set<EdgeLabel,SharedPoint,EdgeLabel::Hasher>   UniquePoints; //!< alias
@@ -155,7 +149,7 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Segment);
             };
 
-            typedef core::list_of_cpp<Segment> Segments; //!< alias
+            typedef core::list_of_cpp<Segment> Segments; //!< alias: list of Segments
 
 
             //! return the position where the field vanished, va*vb<0
@@ -231,8 +225,7 @@ namespace upsylon
                       const unit_t         jub,
                       const ARRAY         &x,
                       const ARRAY         &y,
-                      const array<double> &z
-                      )
+                      const array<double> &z )
             {
 
 
@@ -326,7 +319,7 @@ namespace upsylon
                         //------------------------------------------------------
                         scan_triangles(levels, g, vtx, coord, z);
                     }
-                    
+
                 }
 
 
@@ -366,7 +359,7 @@ namespace upsylon
             class Line : public object, public Points
             {
             public:
-                typedef core::list_of_cpp<Line> list; //!< alias
+                typedef core::list_of_cpp<Line> List; //!< alias
                 Line *next; //!< for list
                 Line *prev; //!< for list
 
@@ -381,7 +374,7 @@ namespace upsylon
             };
 
             //! a set of lines from a set of segments
-            class Lines : public Line::list
+            class Lines : public Line::List
             {
             public:
                 explicit Lines() throw();
