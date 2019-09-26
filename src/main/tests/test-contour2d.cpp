@@ -3,9 +3,12 @@
 #include "y/sequence/vector.hpp"
 #include "y/sort/unique.hpp"
 #include "y/oxide/field2d.hpp"
+#include "y/oxide/workspace.hpp"
 
 using namespace upsylon;
 using namespace geometry;
+
+typedef point2d<float> p2d;
 
 Y_UTEST(contour2d)
 {
@@ -71,11 +74,43 @@ Y_UTEST(contour2d)
     std::cerr << "sizeof(contour2d::point)=" << sizeof(contour2d::point) << std::endl;
 
     {
-        const unit_t resolution = 10;
+        const unit_t                     resolution = 10;
+        const Oxide::Layout2D            fullLayout( Oxide::Coord2D(1,1), Oxide::Coord2D(2*resolution,3*resolution) );
+        Oxide::Workspace<Oxide::Coord2D> W(fullLayout,
+                                           Oxide::Coord2D(1,1),
+                                           0,
+                                           Oxide::Coord2D(0,0),
+                                           0);
 
-        Oxide::Field2D<float> V("V", Oxide::Coord2D(-resolution,-resolution), Oxide::Coord2D(resolution,resolution) );
-        const Oxide::Layout1D Lx = V.projectOn(0);
-        const Oxide::Layout1D Ly = V.projectOn(1);
+
+        Oxide::Field2D<float>    & V  = W.create< Oxide::Field2D<float> >("V");
+        const Oxide::AxisLayouts & Ax = W.axis[0];
+        const Oxide::AxisLayouts & Ay = W.axis[1];
+
+        Oxide::Field1D<float> x("x",Ax.outer);
+        Oxide::Field1D<float> y("y",Ay.outer);
+
+        Ax.mapBoundaries(x,-1.0,1.0);
+        Ay.mapBoundaries(y,-1.0,1.0);
+
+
+        // create dipolar field
+
+        p2d p1(-0.5,0);
+        p2d p2(0.7,0);
+
+        {
+            Oxide::Layout2D::Loop loop(V.lower,V.upper);
+            for( loop.start(); loop.valid(); loop.next() )
+            {
+                const p2d p( x[loop.value.x], y[loop.value.y] );
+                const float v1 = 1.0f/(sqrtf((p-p1).norm2())+0.1);
+                const float v2 = 1.0f/(sqrtf((p-p2).norm2())+0.1);
+                V(loop.value) = v1-v2;
+            }
+        }
+
+
 
         contour::levels z;
         z.insert(0);
@@ -83,6 +118,10 @@ Y_UTEST(contour2d)
         z.insert(-0.1);
         z.insert(1);
         std::cerr << "z=" << z << std::endl;
+
+        contour2d::unique_points_levels db;
+
+        contour2d::scan(db,V, x.lower, x.upper, y.lower, y.upper, x, y, z);
 
     }
 }

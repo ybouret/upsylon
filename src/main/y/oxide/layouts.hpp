@@ -2,15 +2,18 @@
 #ifndef Y_OXIDE_LAYOUTS_INCLUDED
 #define Y_OXIDE_LAYOUTS_INCLUDED 1
 
+#include "y/oxide/axis-layouts.hpp"
 #include "y/oxide/ghosts.hpp"
 #include "y/oxide/field/metrics.hpp"
 #include "y/ptr/arc.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/sequence/slots.hpp"
 
-namespace upsylon
-{
-    namespace Oxide
-    {
+namespace upsylon {
+
+    namespace Oxide {
+
+      
 
         //======================================================================
         //
@@ -38,6 +41,7 @@ namespace upsylon
             typedef const GhostsType                         *Peer;                                           //!< alias
             typedef arc_ptr<GhostsType>                       GhostsPointer;                                  //!< dynamic ghosts
             typedef vector<coord>                             Coordinates;                                    //!< Coordinates for exteriro
+            typedef slots<AxisLayouts>                        AxisType;
 
             //! lightweight ghosts I/O context for one orientation
             struct GIO
@@ -88,6 +92,7 @@ namespace upsylon
             const gList             localGhosts;           //!< pair of local ghosts
             const size_t            localComms;            //!< local exchanged items per field
             const size_t            asyncComms;            //!< async exchanged items per field
+            const AxisType          axis;
 
             //------------------------------------------------------------------
             //
@@ -116,9 +121,13 @@ namespace upsylon
             ghosts(),
             localGhosts(),
             localComms(0),
-            asyncComms(0)
+            asyncComms(0),
+            axis( Dimensions )
             {
                 setup(ghostsZone);
+                buildAxis();
+
+
             }
 
             
@@ -472,6 +481,25 @@ namespace upsylon
                     // everybody is border
                     seq.ensure( inner.items );
                     for(loop.start();loop.valid();loop.next()) seq.push_back( loop.value );
+                }
+            }
+
+            //==================================================================
+            //
+            //
+            //! build axis layouts
+            //
+            //
+            //==================================================================
+            inline void buildAxis() throw()
+            {
+                AxisType        &ax = (AxisType &) axis;
+                for(size_t dim=0;dim<Dimensions;++dim)
+                {
+                    const AxisLayout  axis_inner = inner.projectOn(dim);
+                    const AxisLayout  axis_outer = outer.projectOn(dim);
+                    const AxisLayouts axis_descr(axis_inner,axis_outer);
+                    ax.push(axis_descr);
                 }
             }
 

@@ -4,7 +4,10 @@
 
 #include "y/type/point2d.hpp"
 #include "y/ordered/sorted-vector.hpp"
+#include "y/sequence/vector.hpp"
 #include "y/memory/pooled.hpp"
+#include "y/ptr/intr.hpp"
+#include "y/associative/set.hpp"
 
 namespace upsylon {
 
@@ -14,9 +17,9 @@ namespace upsylon {
         {
             enum sign_type
             {
-                is_neg,
+                is_negative,
                 is_zero,
-                is_pos
+                is_positive
             };
 
             static sign_type sign_of( const double value ) throw();
@@ -72,6 +75,8 @@ namespace upsylon {
                 static int  compare(const coordinate&,const coordinate&) throw();    //!< lexicographic
                 friend std::ostream & operator<<(std::ostream &,const coordinate&);  //!< display
 
+                void __run( hashing::function & ) const throw();
+
             private:
                 Y_DISABLE_ASSIGN(coordinate);
             };
@@ -90,10 +95,23 @@ namespace upsylon {
                 friend bool operator==(const edge&,const edge&) throw();
                 friend bool operator!=(const edge&,const edge&) throw();
 
+                class hasher
+                {
+                public:
+                    hashing::fnv H;
+                    hasher() throw();
+                    ~hasher() throw();
+                    size_t operator()( const edge & ) throw();
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(hasher);
+                };
+
             private:
                 Y_DISABLE_ASSIGN(edge);
             };
 
+            //! unique point
             class point : public counted_object
             {
             public:
@@ -103,9 +121,30 @@ namespace upsylon {
                 explicit point(const edge &l, const vertex p) throw();
                 virtual ~point() throw();
 
+                const edge & key() const throw();
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(point);
             };
+
+            typedef  intr_ptr<edge,point>                 unique_point;
+            typedef  set<edge,unique_point,edge::hasher>  unique_points_type;
+
+            class unique_points : public unique_points_type, public counted
+            {
+            public:
+                const size_t index; //!< the key
+                explicit unique_points(const size_t k) throw();
+                virtual ~unique_points() throw();
+                const size_t & key() const throw();
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(unique_points);
+            };
+
+            typedef intr_ptr<size_t,unique_points>                                unique_points_level;
+            typedef set<size_t,unique_points_level,key_dumper,contour::allocator> unique_points_levels;
+
 
 
             //! a low-level contour algorithm
@@ -120,7 +159,8 @@ namespace upsylon {
             typename FIELD,
             typename ARRAY
             > static inline
-            void scan(const FIELD           &data,
+            void scan(unique_points_levels  &db,
+                      const FIELD           &data,
                       const unit_t           ilb,
                       const unit_t           iub,
                       const unit_t           jlb,
@@ -131,16 +171,24 @@ namespace upsylon {
             {
 
                 const size_t nc = z.size();
+                createDB(db,nc);
                 if(nc<=0) return;
+                
                 const double zmin = z.head();
                 const double zmax = z.tail();
 
                 const unit_t jlbp1 = jlb+1;
-                for(unit_t i=ilb,ip1=ilb+1;i<iub;++i,++ip1)
-                {
-                    for(unit_t j=jlb,jp1=jlbp1;j<jub;++j,++jp1)
-                    {
+                const unit_t ilbp1 = ilb+1;
 
+
+                for(unit_t j=jlb,jp1=jlbp1;j<jub;++j,++jp1)
+                {
+                    const double y0 = double(y[j]);
+                    const double y1 = double(y[jp1]);
+                    const double ym = 0.5*(y0+y1);
+                    
+                    for(unit_t i=ilb,ip1=ilbp1;i<iub;++i,++ip1)
+                    {
                         //------------------------------------------------------
                         //
                         // outer loop: scan the square
@@ -151,15 +199,20 @@ namespace upsylon {
                         //------------------------------------------------------
                         // collect local values
                         //------------------------------------------------------
-                        const double v1 = data[i  ][j];    double vmin=v1, vmax=v1;
-                        const double v2 = data[ip1][j];    vmin = min_of(vmin,v2); vmax=max_of(vmax,v2);
-                        const double v3 = data[ip1][jp1];  vmin = min_of(vmin,v3); vmax=max_of(vmax,v3);
-                        const double v4 = data[i  ][jp1];  vmin = min_of(vmin,v4); vmax=max_of(vmax,v4);
+                        const double d1 = data[j  ][i];    double dmin=d1, dmax=d1;
+                        const double d2 = data[j  ][ip1];  dmin = min_of(dmin,d2); dmax=max_of(dmax,d2);
+                        const double d3 = data[jp1][ip1];  dmin = min_of(dmin,d3); dmax=max_of(dmax,d3);
+                        const double d4 = data[jp1][i  ];  dmin = min_of(dmin,d4); dmax=max_of(dmax,d4);
 
-                        const double v[5] =
+                        if(dmax<zmin||dmin>zmax)
                         {
-                            contour::average(v1,v2,v3,v4),
-                            v1,v2,v3,v4
+                            continue; // no intersection in this square
+                        }
+
+                        const double global_d[5] =
+                        {
+                            contour::average(d1,d2,d3,d4),
+                            d1,d2,d3,d4
                         };
 
                         const coordinate c[5] =
@@ -169,6 +222,17 @@ namespace upsylon {
                             coordinate(ip1,j,   coordinate::full),
                             coordinate(ip1,jp1, coordinate::full),
                             coordinate(i,  jp1, coordinate::full)
+                        };
+
+                        const double x0 = x[i];
+                        const double x1 = x[ip1];
+                        const vertex v[5] =
+                        {
+                            vertex(0.5*(x0+x1),ym),
+                            vertex(x0,y0),
+                            vertex(x1,y0),
+                            vertex(x1,y1),
+                            vertex(x0,y1)
                         };
 
                         //------------------------------------------------------
@@ -182,17 +246,24 @@ namespace upsylon {
                             // build the local field values to test against 0
                             //--------------------------------------------------
                             const double z_k = z[k];
-                            if(z_k>vmax||z_k<vmin) continue; // no possible intersection
-
+                            if(z_k>dmax||z_k<dmin) continue; // no possible intersection
                             const double d[5] =
                             {
-                                v[0]-z_k, v[1]-z_k, v[2]-z_k, v[3]-z_k, v[4]-z_k,
+                                global_d[0]-z_k,
+                                global_d[1]-z_k,
+                                global_d[2]-z_k,
+                                global_d[3]-z_k,
+                                global_d[4]-z_k,
                             };
 
                             //--------------------------------------------------
                             // scan the triangles
                             //--------------------------------------------------
-                            scan_triangles(c, d,contour::sign_of(d[0]) );
+                            scan_triangles(db,
+                                           k,
+                                           c,
+                                           d,
+                                           v);
                         }
 
 
@@ -201,45 +272,14 @@ namespace upsylon {
 
             }
 
-            static inline void scan_triangles(const coordinate         *c,
-                                              const double             *d,
-                                               const contour::sign_type s0)
-            {
-                static const unsigned indices[4][2] =
-                {
-                    {1,2}, {2,3}, {3,4}, {4,1}
-                };
-                for(size_t t=0;t<4;++t)
-                {
-                    scan_triangle(c, d, s0, indices[t][0], indices[t][1] );
-                }
-            }
+        private:
+            static void createDB(unique_points_levels  &db, const size_t n);
+            static void scan_triangles(unique_points_levels    &db,
+                                       const size_t             k,
+                                       const coordinate         *c,
+                                       const double             *d,
+                                       const vertex             *v);
 
-
-            static inline void scan_triangle(const coordinate        *c,
-                                             const double            *d,
-                                             const contour::sign_type s0,
-                                             const unsigned           i1,
-                                             const unsigned           i2)
-            {
-                assert(i1!=i2);
-                assert(i1>=1&&i1<=4);
-                assert(i2>=1&&i2<=4);
-                const double d0 = d[0];  assert(s0==contour::sign_of(d0));
-                const double d1 = d[i1];
-                const double s1 = contour::sign_type( d1 );
-                const double d2 = d[i2];
-                const double s2 = contour::sign_type( d2 );
-
-                // study the different cases
-                switch(0)
-                {
-
-                    default:
-                        break;
-                }
-
-            }
         };
 
     }

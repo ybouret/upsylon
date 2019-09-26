@@ -63,7 +63,7 @@ namespace upsylon
             static const size_t                      Orientations = LayoutsType::Orientations; //!< alias
             typedef typename LayoutsType::GhostsType GhostsType;                               //!< alias
             typedef typename LayoutsType::Peer       Peer;                                     //!< alias
-
+            
             //------------------------------------------------------------------
             //
             // members
@@ -96,17 +96,7 @@ namespace upsylon
 
             }
 
-            //! setup a controlling Workspace
-            inline explicit Workspace(const LayoutType &fullLayout,
-                                      const_coord       boundaries,
-                                      const Coord1D     ghostsZone) :
-            LayoutsType(fullLayout,
-                        boundaries,
-                        ghostsZone),
-            Fields(), sendBlock(), recvBlock()
-            {
-
-            }
+            
             
             //------------------------------------------------------------------
             //
