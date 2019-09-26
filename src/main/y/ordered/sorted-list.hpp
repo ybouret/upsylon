@@ -9,8 +9,7 @@
 #include "y/comparator.hpp"
 #include "y/iterate/linked.hpp"
 
-namespace upsylon
-{
+namespace upsylon {
 
     //! ordered list
     template <typename T,
@@ -116,6 +115,20 @@ namespace upsylon
                 }
             }
             return false;
+        }
+
+        //! head item in this order
+        inline virtual const_type &head() const throw()
+        {
+            assert(content.size>0);
+            return content.head->data;
+        }
+
+        //! til item in this order
+        inline virtual const_type &tail() const throw()
+        {
+            assert(content.size>0);
+            return content.tail->data;
         }
 
         //----------------------------------------------------------------------

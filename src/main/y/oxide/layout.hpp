@@ -387,6 +387,12 @@ namespace upsylon
                 return ans;
             }
 
+            //! project on a sub 1D layout
+            Layout<Coord1D> projectOn( const size_t dim ) const throw()
+            {
+                return Layout<Coord1D>( Coord::Of(lower,dim), Coord::Of(upper,dim));
+            }
+
 
 
         private:

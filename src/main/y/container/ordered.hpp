@@ -33,8 +33,12 @@ namespace upsylon
 
         //! remove one object
         virtual bool remove( param_type args ) throw() = 0;
-        
-       
+
+        //! head object in this order
+        virtual const_type &head() const throw() = 0;
+
+        //! tail object in this order
+        virtual const_type &tail() const throw() = 0;
         
         //----------------------------------------------------------------------
         //

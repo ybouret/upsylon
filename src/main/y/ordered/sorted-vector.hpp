@@ -7,10 +7,10 @@
 #include "y/comparator.hpp"
 #include "y/core/locate.hpp"
 #include "y/iterate/linear.hpp"
+#include "y/type/self-destruct.hpp"
 #include <cstring>
 
-namespace upsylon
-{
+namespace upsylon {
 
     //! setup sorted vector
 #define Y_SORTED_VECTOR(N) \
@@ -78,14 +78,14 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
         // ordered interface
         //
         //----------------------------------------------------------------------
-        virtual const_type *search( param_type args ) const throw()
+        inline virtual const_type *search( param_type args ) const throw()
         {
             size_t      idx = 0;
             return core::locate(args,addr,size_,compare,idx);
         }
 
         //! remove one occurence
-        virtual bool remove( param_type args ) throw()
+        inline virtual bool remove( param_type args ) throw()
         {
             size_t        indx   = 0;
             mutable_type *target = core::locate(args,addr,size_,compare,indx);
@@ -100,6 +100,20 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
             {
                 return false;
             }
+        }
+
+        //! head object in this order
+        inline virtual const_type &head() const throw()
+        {
+            assert(size_>0);
+            return addr[0];
+        }
+
+        //! tail object in this order
+        inline virtual const_type &tail() const throw()
+        {
+            assert(size_>0);
+            return item[size_];
         }
 
         //----------------------------------------------------------------------
@@ -169,7 +183,7 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
                 return true; // did not exist
             }
         }
-        
+
     private:
         Y_DISABLE_ASSIGN(sorted_vector);
         size_t             size_;
@@ -179,7 +193,7 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
         mutable_type      *addr;
         mutable_type      *item;
         mutable COMPARATOR compare;
-        
+
         inline void free__() throw()
         {
             while(this->size_>0)
@@ -264,7 +278,7 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
                 ++size_;
             }
         }
-        
+
         virtual const_type & getObjectAt(const size_t indx) const throw()
         {
             return item[indx];

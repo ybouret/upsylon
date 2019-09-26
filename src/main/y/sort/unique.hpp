@@ -6,10 +6,10 @@
 #include "y/sort/heap.hpp"
 #include "y/sequence/list.hpp"
 
-namespace upsylon
-{
-    namespace core
-    {
+namespace upsylon {
+
+    namespace core {
+
         //! sort an array and put multiple values at the end
         template <typename T>
         size_t __unique( array<T> &arr )
