@@ -404,11 +404,8 @@ case contour::is_positive:  flags |= p##I; break;\
         
         void contour2d:: scan_triangles(context &ctx)
         {
-            static const unsigned i0 = 0;
-            static const unsigned ii[4][2] =
-            {
-                {1,2}, {2,3}, {3,4}, {4,1}
-            };
+            static const unsigned i0       = 0;
+            static const unsigned ii[4][2] = { {1,2}, {2,3}, {3,4}, {4,1} };
 
             //------------------------------------------------------------------
             //
@@ -449,11 +446,11 @@ case contour::is_positive:  flags |= p##I; break;\
                 {
                         //------------------------------------------------------
                         //
-                        // do nothing cases 0+3=3/27
+                        // almost do nothing cases 0+3=3/27
                         //
                         //------------------------------------------------------
+                    case z0|z1|z2:  (void) L.single(c0,v0);  (void) L.single(c1,v1);  (void) L.single(c2,v2);
                     case n0|n1|n2:
-                    case z0|z1|z2:
                     case p0|p1|p2:
                         break;
 

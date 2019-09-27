@@ -79,7 +79,7 @@ Y_UTEST(contour2d)
 
     
     {
-        const unit_t                     resolution = 10;
+        const unit_t                     resolution = 15;
         const Oxide::Layout2D            fullLayout( Oxide::Coord2D(1,1), Oxide::Coord2D(2*resolution,3*resolution) );
         Oxide::Workspace<Oxide::Coord2D> W(fullLayout,
                                            Oxide::Coord2D(1,1),
@@ -133,19 +133,38 @@ Y_UTEST(contour2d)
         z.insert(-0.2);
         z.insert(-0.1);
         z.insert(1);
+        z.insert(2);
+        z.insert(-3);
         std::cerr << "z=" << z << std::endl;
 
         contour2d::level_set ls;
         contour2d::scan(ls,V, x.lower, x.upper, y.lower, y.upper, x, y, z);
 
-        
-        for( contour2d::level_set::iterator it = ls.begin(); it != ls.end(); ++it )
         {
-            const contour2d::level &L = *it;
-            std::cerr << "Level #" << L->index << "@" << z[L->index] << std::endl;
-            std::cerr << "    |_#points   = " << L->size() << std::endl;
-            std::cerr << "    |_#segments = " << L->slist.size << std::endl;
+            ios::ocstream pfp("lsp.dat");
+            ios::ocstream sfp("lss.dat");
+            for( contour2d::level_set::iterator it = ls.begin(); it != ls.end(); ++it )
+            {
+                const contour2d::level &L = *it;
+                std::cerr << "Level #" << L->index << "@" << z[L->index] << std::endl;
+                std::cerr << "    |_#points   = " << L->size() << std::endl;
+                std::cerr << "    |_#segments = " << L->slist.size << std::endl;
+                for( contour2d::points::const_iterator p = L->begin(); p != L->end(); ++p )
+                {
+                    const contour2d::vertex &v = (*p)->position;
+                    pfp("%g %g %u\n", v.x, v.y, unsigned(L->index) );
+                }
 
+                for( contour2d::segment *s = L->slist.head; s; s=s->next)
+                {
+                    const contour2d::vertex &a = s->head->position;
+                    const contour2d::vertex &b = s->tail->position;
+                    sfp("%g %g %u\n", a.x, a.y, unsigned(L->index) );
+                    sfp("%g %g %u\n", b.x, b.y, unsigned(L->index) );
+                    sfp("\n");
+                }
+
+            }
         }
 
     }
