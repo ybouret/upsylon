@@ -138,6 +138,7 @@ Y_UTEST(contour2d)
         contour2d::level_set ls;
         contour2d::scan(ls,V, x.lower, x.upper, y.lower, y.upper, x, y, z);
 
+        
         for( contour2d::level_set::iterator it = ls.begin(); it != ls.end(); ++it )
         {
             const contour2d::level &L = *it;
