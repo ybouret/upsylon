@@ -1,3 +1,4 @@
+#include "y/core/clist.hpp"
 #include "y/core/list.hpp"
 #include "y/core/pool.hpp"
 #include "y/core/loop.hpp"
@@ -145,7 +146,6 @@ Y_UTEST(core)
     do_loop_test();
 
     std::cerr << "---- Test List ----" << std::endl;
-    std::cerr << "sizeof(core::list_of)=" << sizeof(core::list_of<aNode>) << std::endl;
     {
         core::list_of_cpp<aNode> aList;
         do_list_test(aList);
@@ -153,6 +153,14 @@ Y_UTEST(core)
         do_list_test(bList);
     }
     Y_CHECK(0==aNode::count);
+
+    std::cerr << "---- Test cList ----" << std::endl;
+
+    std::cerr << "sizeof(core::pool_of)  =" << sizeof(core::pool_of<aNode>) << std::endl;
+    std::cerr << "sizeof(core::list_of)  =" << sizeof(core::list_of<aNode>) << std::endl;
+    std::cerr << "sizeof(core::clist_of) =" << sizeof(core::clist_of<aNode>) << std::endl;
+
+
 }
 Y_UTEST_DONE()
 
