@@ -140,6 +140,9 @@ for(size_t ii=host.bytes;ii<host.allocated;++ii)            \
             //! convert to real value
             double to_real() const;
 
+            //! get decimal string
+            string to_decimal() const;
+
             //! expand the ratio
             static double ratio_of(const natural &num,const natural &den);
 

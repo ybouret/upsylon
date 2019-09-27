@@ -51,6 +51,10 @@ namespace upsylon
             //! output
             friend std::ostream & operator<<( std::ostream &, const integer &);
 
+            //! get a signed decimal string
+            string to_decimal() const;
+            
+
             //! signed comparison
             static int compare_blocks(const sign_type ls,
                                       const uint8_t  *l,

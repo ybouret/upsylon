@@ -1,5 +1,6 @@
 #include "y/oxide/vtk.hpp"
 #include "y/exception.hpp"
+#include "y/mpl/integer.hpp"
 
 namespace upsylon
 {
@@ -157,12 +158,34 @@ namespace upsylon
 
                 inline virtual unsigned     components() const throw() { return Components; }
 
-
+                
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(WriterMulti);
             };
-            
+
+            //! using MPT::to_decimal()
+            template <typename MPT>
+            class WriterMP : public vtk::Writer
+            {
+            public:
+                inline virtual ~WriterMP() throw() {}
+                inline explicit WriterMP() : vtk::Writer( typeid(MPT), NULL ) {}
+                inline virtual const char * dataType()   const throw() { return __dataType; }
+                inline virtual unsigned     components() const throw() { return 1;          }
+
+                inline virtual void write( ios::ostream &fp, const void *addr) const
+                {
+                    assert(addr);
+                    assert(fmt.is_empty());
+                    const MPT   *p = static_cast<const MPT *>(addr);
+                    const string s = p->to_decimal();
+                    fp << s;
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(WriterMP);
+            };
             
         }
         
@@ -224,7 +247,11 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
             Y_VTK_M(float,complex<float>);
             Y_VTK_M(double,complex<double>);
 
-#if 0
+
+            Y_VTK_(mpn,WriterMP<mpn>);
+            Y_VTK_(mpz,WriterMP<mpz>);
+
+#if 1
             std::cerr << "#vtk::Writer=" << writers.size() << std::endl;
             for( SharedWriters::iterator i=writers.begin();i!=writers.end();++i)
             {

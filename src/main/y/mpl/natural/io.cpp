@@ -16,11 +16,43 @@ namespace upsylon
             return '0' == C;
         }
 
+        string natural:: to_decimal() const
+        {
+            string s;
+            if(bytes<=0)
+            {
+                s << '0';
+            }
+            else
+            {
+                const natural ten = MPN::instance()._10;
+                natural q,r,num=*this;
+                while(true)
+                {
+                    // num=q*10+r
+                    split(q,r,num,ten);
+
+                    switch(r.bytes)
+                    {
+                        case 0:  s << '0'; break;
+                        case 1: {
+                            const unsigned b = r.byte[0];
+                            if(b<=0||b>9) throw exception("mpn.display(remainder failure: r=%u)", b);
+                            s << char('0'+b);
+                        } break;
+                        default:
+                            throw exception("mpn.display(remainder #bytes=%u failure)", unsigned(bytes));
+                    }
+                    if(q.is_zero()) break;
+                    num.xch(q);
+                }
+                s.reverse();
+            }
+            return s;
+        }
 
         std::ostream & natural:: display( std::ostream &os ) const
         {
-            static const MPN &_ = MPN::instance();
-
             std::ios_base::fmtflags flags = os.flags();
             if( flags &  std::ios::hex)
             {
@@ -50,38 +82,8 @@ namespace upsylon
                 //
                 // decimal
                 //______________________________________________________________
-                if(bytes<=0)
-                {
-                    os << '0';
-                }
-                else
-                {
-                    const natural ten = _._10;
-                    natural q,r,num=*this;
-                    string s;
-                    while(true)
-                    {
-                        // num=q*10+r
-                        split(q,r,num,ten);
-
-                        switch(r.bytes)
-                        {
-                            case 0:  s << '0'; break;
-                            case 1: {
-                                const unsigned b = r.byte[0];
-                                if(b<=0||b>9) throw exception("mpn.display(remainder failure: r=%u)", b);
-                                s << char('0'+b);
-                            } break;
-                            default:
-                                throw exception("mpn.display(remainder #bytes=%u failure)", unsigned(bytes));
-                        }
-                        if(q.is_zero()) break;
-                        num.xch(q);
-                    }
-                    s.reverse();
-                    os << s;
-                }
-
+                const string s = to_decimal();
+                os << s;
             }
            
             return os;

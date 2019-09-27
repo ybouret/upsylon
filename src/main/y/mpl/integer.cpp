@@ -52,7 +52,6 @@ namespace upsylon
 
 }
 
-
 namespace upsylon
 {
     namespace mpl
@@ -86,6 +85,9 @@ namespace upsylon
             if(__negative==z.s) os << '-';
             return (os << z.n);
         }
+
+
+
 
         integer_t  integer::lsi() const throw()
         {
@@ -396,5 +398,24 @@ namespace upsylon
         }
     }
 
+}
+
+#include "y/string.hpp"
+
+namespace upsylon {
+
+        namespace mpl {
+
+            string  integer:: to_decimal() const
+            {
+                string s;
+                if(__negative==s)
+                {
+                    s << '-';
+                }
+                s << n.to_decimal();
+                return s;
+            }
+        }
 }
 
