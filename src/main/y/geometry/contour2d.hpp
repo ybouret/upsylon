@@ -176,6 +176,26 @@ namespace upsylon {
                 explicit       level_(const size_t ) throw();
                 virtual       ~level_() throw();
                 const size_t & key() const throw();
+
+                //! create/query a single point
+                point_ *single( const coordinate &c, const vertex &v );
+                point_ *couple(const coordinate &ca, const vertex &va, const double da,
+                               const coordinate &cb, const vertex &vb, const double db);
+
+                //! make segment from two single points
+                void    full(const coordinate &ca, const vertex &va,
+                             const coordinate &cb, const vertex &vb);
+
+                //! make segment from zero vertex and intersection, da*db<0
+                void    inter1(const coordinate &cz, const vertex &vz,
+                               const coordinate &ca, const vertex &va, const double da,
+                               const coordinate &cb, const vertex &vb, const double db);
+
+                //! make segment from two intersections: ds*da<0, ds*db<0, 
+                void    inter2(const coordinate &cs, const vertex &vs, const double ds,
+                               const coordinate &ca, const vertex &va, const double da,
+                               const coordinate &cb, const vertex &vb, const double db);
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(level_);
             };
@@ -195,8 +215,7 @@ namespace upsylon {
             };
             
             
-            
-            
+
             
             
             struct context
@@ -331,7 +350,9 @@ namespace upsylon {
             }
             
         private:
-            static void scan_triangles(context &);
+            static void   scan_triangles(context &);
+            
+
         };
         
     }

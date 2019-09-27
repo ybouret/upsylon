@@ -196,6 +196,8 @@ namespace upsylon {
     
 }
 
+#include "y/exception.hpp"
+
 namespace upsylon {
 
     namespace geometry {
@@ -217,9 +219,112 @@ namespace upsylon {
             return index;
         }
 
+        contour2d::point_  *  contour2d:: level_:: single( const coordinate &c, const vertex &v )
+        {
+            const edge   e(c);
+            point       *pp = search(e);
+            if(pp)
+            {
+
+                return &(**pp);
+            }
+            else
+            {
+                point_ *p = new point_(e,v);
+                {
+                    const point tmp = p;
+                    if(!insert(tmp)) throw exception("%scan't insert new point!!!",Fn);
+                }
+                return p;
+            }
+        }
+
+        contour2d::point_ *contour2d::level_:: couple(const coordinate &ca, const vertex &va, const double da,
+                                                      const coordinate &cb, const vertex &vb, const double db)
+        {
+            assert(ca!=cb);
+            assert(da*db<0);
+            const edge e(ca,cb);
+            point *pp = search(e);
+            if(pp)
+            {
+                return &(**pp);
+            }
+            else
+            {
+                double num = da;
+                double den = da-db;
+                if(den<0)
+                {
+                    den=-den;
+                    num=-num;
+                }
+                const double lam = (num<=0) ? 0 : ( (num>=den) ? 1 : num/den);
+                const vertex vz  = va+lam*(vb-va);
+                point_ *p = new point_(e,vz);
+                {
+                    const point tmp = p;
+                    if(!insert(tmp)) throw exception("%scan't insert new point!!!",Fn);
+                }
+                return p;
+            }
+        }
+
+        void     contour2d:: level_:: full(const coordinate &ca, const vertex &va,
+                                           const coordinate &cb, const vertex &vb)
+        {
+            const point head = single(ca,va);
+            const point tail = single(cb,vb);
+            slist.push_back( new segment(head,tail) );
+        }
+
+        void    contour2d:: level_:: inter1(const coordinate &cz, const vertex &vz,
+                                            const coordinate &ca, const vertex &va, const double da,
+                                            const coordinate &cb, const vertex &vb, const double db)
+        {
+            const point head = single(cz,vz);
+            const point tail = couple(ca,va,da,cb,vb,db);
+            slist.push_back( new segment(head,tail) );
+        }
+
+        void   contour2d:: level_:: inter2(const coordinate &cs, const vertex &vs, const double ds,
+                                           const coordinate &ca, const vertex &va, const double da,
+                                           const coordinate &cb, const vertex &vb, const double db)
+        {
+            assert(ds*da<0);
+            assert(ds*db<0);
+            const point head = couple(cs,vs,ds,ca,va,da);
+            const point tail = couple(cs,vs,ds,cb,vb,db);
+            slist.push_back( new segment(head,tail) );
+        }
+
     }
 
 }
+
+namespace upsylon {
+
+    namespace geometry {
+
+        contour2d:: segment:: segment(const point &h, const point &t) throw() :
+        head(h),
+        tail(t),
+        next(0),
+        prev(0)
+        {
+            assert( &(*head) != &(*tail) );
+        }
+
+
+        contour2d:: segment:: ~segment() throw()
+        {
+
+        }
+
+    }
+
+}
+
 
 namespace upsylon {
 
@@ -238,7 +343,6 @@ namespace upsylon {
     }
 }
 
-#include "y/exception.hpp"
 
 namespace upsylon {
 
@@ -254,6 +358,7 @@ namespace upsylon {
 
         void contour2d:: level_set:: create(const size_t n)
         {
+            std::cerr << "create level_set" << std::endl;
             free();
             ensure(n);
             for(size_t k=1;k<=n;++k)
@@ -326,9 +431,14 @@ case contour::is_positive:  flags |= p##I; break;\
 
 
 
-                //const coordinate &c0 = ctx.c[0];
-                //const coordinate &c1 = ctx.c[1];
-                //const coordinate &c2 = ctx.c[2];
+                const coordinate &c0 = ctx.c[i0];
+                const coordinate &c1 = ctx.c[i1];
+                const coordinate &c2 = ctx.c[i2];
+
+                const vertex     &v0 = ctx.v[i0];
+                const vertex     &v1 = ctx.v[i1];
+                const vertex     &v2 = ctx.v[i2];
+
 
                 unsigned flags = 0;
                 Y_CONTOUR2D_FLAG(0);
@@ -339,90 +449,104 @@ case contour::is_positive:  flags |= p##I; break;\
                 {
                         //------------------------------------------------------
                         //
-                        // negative@i0
+                        // do nothing cases 0+3=3/27
                         //
                         //------------------------------------------------------
-
-                        //------------------------------------------------------
-                        // negative@i1
-                        //------------------------------------------------------
-                    case n0|n1|n2:break;
-                    case n0|n1|z2:break;
-                    case n0|n1|p2:break;
-
-                        //------------------------------------------------------
-                        // zero@i1
-                        //------------------------------------------------------
-                    case n0|z1|n2:break;
-                    case n0|z1|z2:break;
-                    case n0|z1|p2:break;
-
-                        //------------------------------------------------------
-                        // positive@i1
-                        //------------------------------------------------------
-                    case n0|p1|n2:break;
-                    case n0|p1|z2:break;
-                    case n0|p1|p2:break;
+                    case n0|n1|n2:
+                    case z0|z1|z2:
+                    case p0|p1|p2:
+                        break;
 
                         //------------------------------------------------------
                         //
-                        // zero@i0
+                        // create single point, no segment cases
+                        // 3+6=9/27
                         //
                         //------------------------------------------------------
+                    case n0|n1|z2:
+                    case p0|p1|z2:
+                        (void) L.single(c2,v2);
+                        break;
 
-                        //------------------------------------------------------
-                        // negative@i1
-                        //------------------------------------------------------
-                    case z0|n1|n2:break;
-                    case z0|n1|z2:break;
-                    case z0|n1|p2:break;
+                    case n0|z1|n2:
+                    case p0|z1|p2:
+                        (void) L.single(c1,v1);
+                        break;
 
-                        //------------------------------------------------------
-                        // zero@i1
-                        //------------------------------------------------------
-                    case z0|z1|n2:break;
-                    case z0|z1|z2:break;
-                    case z0|z1|p2:break;
-
-                        //------------------------------------------------------
-                        // positive@i1
-                        //------------------------------------------------------
-                    case z0|p1|n2:break;
-                    case z0|p1|z2:break;
-                    case z0|p1|p2:break;
+                    case z0|n1|n2:
+                    case z0|p1|p2:
+                        (void) L.single(c0,v0);
+                        break;
 
 
                         //------------------------------------------------------
                         //
-                        // positive@i0
+                        // create segment=full edge
+                        // 9+6=15/27
                         //
                         //------------------------------------------------------
+                    case z0|z1|n2:
+                    case z0|z1|p2:
+                        L.full(c0,v0,c1,v1);
+                        break;
+
+                    case z0|n1|z2:
+                    case z0|p1|z2:
+                        L.full(c0,v0,c2,v2);
+                        break;
+
+                    case n0|z1|z2:
+                    case p0|z1|z2:
+                        L.full(c1,v1,c2,v2);
+                        break;
+
 
                         //------------------------------------------------------
-                        // negative@i1
+                        //
+                        // create segment=point+intersection
+                        // 15+6=21/27
+                        //
                         //------------------------------------------------------
-                    case p0|n1|n2:break;
-                    case p0|n1|z2:break;
-                    case p0|n1|p2:break;
+                    case z0|p1|n2:
+                    case z0|n1|p2:
+                        L.inter1(c0,v0, c1,v1,d1, c2,v2,d2);
+                        break;
+
+                    case n0|z1|p2:
+                    case p0|z1|n2:
+                        L.inter1(c1,v1, c0,v0,d0, c2,v2,d2);
+                        break;
+
+                    case n0|p1|z2:
+                    case p0|n1|z2:
+                        L.inter1(c2,v2, c0,v0,d0, c1,v1,d1);
+                        break;
 
                         //------------------------------------------------------
-                        // zero@i1
+                        //
+                        // create segment=intersection+intersection
+                        // 21+6=27/27
+                        //
                         //------------------------------------------------------
-                    case p0|z1|n2:break;
-                    case p0|z1|z2:break;
-                    case p0|z1|p2:break;
+                    case n0|p1|p2:
+                    case p0|n1|n2:
+                        L.inter2(c0,v0,d0, c1,v1,d1, c2,v2,d2);
+                        break;
 
-                        //------------------------------------------------------
-                        // positive@i1
-                        //------------------------------------------------------
-                    case p0|p1|n2:break;
-                    case p0|p1|z2:break;
-                    case p0|p1|p2:break;
+                    case n0|p1|n2:
+                    case p0|n1|p2:
+                        L.inter2(c1,v1,d1, c0,v0,d0, c2,v2,d2);
+                        break;
+
+                    case n0|n1|p2:
+                    case p0|p1|n2:
+                        L.inter2(c2,v2,d2, c0,v0,d0, c1,v1,d1);
+                        break;
 
 
                     default:
                         throw exception("%sscan(unexpected case)",Fn);
-
+                        //break;
 
                 }
                 

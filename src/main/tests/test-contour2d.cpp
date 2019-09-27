@@ -130,14 +130,23 @@ Y_UTEST(contour2d)
 
         contour::levels z;
         z.insert(0);
-        z.insert(-0.1);
+        z.insert(-0.2);
         z.insert(-0.1);
         z.insert(1);
         std::cerr << "z=" << z << std::endl;
 
         contour2d::level_set ls;
         contour2d::scan(ls,V, x.lower, x.upper, y.lower, y.upper, x, y, z);
-        
+
+        for( contour2d::level_set::iterator it = ls.begin(); it != ls.end(); ++it )
+        {
+            const contour2d::level &L = *it;
+            std::cerr << "Level #" << L->index << "@" << z[L->index] << std::endl;
+            std::cerr << "    |_#points   = " << L->size() << std::endl;
+            std::cerr << "    |_#segments = " << L->slist.size << std::endl;
+
+        }
+
     }
 }
 Y_UTEST_DONE()
