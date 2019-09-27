@@ -119,7 +119,7 @@ namespace upsylon {
                 const edge   location; //!< logical
                 const vertex position; //!< physical
                 
-                explicit point_(const edge &l, const vertex p) throw();
+                explicit point_(const edge &l, const vertex &p) throw();
                 virtual ~point_() throw();
                 
                 const edge & key() const throw();
@@ -131,12 +131,15 @@ namespace upsylon {
             typedef intr_ptr<edge,point_>                       point;
             typedef set<edge,point,edge::hasher,memory::global> points;
 
-            
+
+            enum segments_affinity
+            {
+                
+            };
+
             class segment : public object
             {
             public:
-               
-                
                 const point head;
                 const point tail;
                 segment    *next;
@@ -152,7 +155,8 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(segment);
             };
-            
+
+            //! a list of segments
             class segments : public segment::list_type
             {
             public:
@@ -161,20 +165,34 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(segments);
             };
-            
+
+            //! a level is a set of points and has some segments
             class level_ : public counted, public points
             {
             public:
                 const size_t index;
-                segments     seg;
-                
-                
+                segments     slist;
+
+                explicit       level_(const size_t ) throw();
+                virtual       ~level_() throw();
+                const size_t & key() const throw();
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(level_);
             };
             
-            typedef intr_ptr<size_t,level_> level;
-            
+            typedef intr_ptr<size_t,level_>                         level;
+            typedef set<size_t,level,key_dumper,contour::allocator> level_set_;
+
+            class level_set : public level_set_
+            {
+            public:
+                explicit level_set() throw();
+                virtual ~level_set() throw();
+                void     create(const size_t n);
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(level_set);
+            };
             
             
             
@@ -186,21 +204,23 @@ namespace upsylon {
                 const double     *d;
                 const coordinate *c;
                 const vertex     *v;
+                level_           *l;
             };
             
             //! a low-level contour algorithm
             /**
              data            !  matrix/field of data to contour
              ilb,iub,jlb,jub ! index bounds of data matrix[j][i]
-             x               ! data matrix column Coordinates
-             y               ! data matrix row Coordinates
+             x               ! data matrix column coordinates
+             y               ! data matrix row coordinates
              z               ! contour levels in INCREASING order, nc=z.size()
              */
             template<
             typename FIELD,
             typename ARRAY
             > static inline
-            void scan(const FIELD           &data,
+            void scan(level_set             &ls,
+                      const FIELD           &data,
                       const unit_t           ilb,
                       const unit_t           iub,
                       const unit_t           jlb,
@@ -211,11 +231,11 @@ namespace upsylon {
             {
                 
                 const size_t nc = z.size();
-                //createDB(db,nc);
+                ls.create(nc);
                 if(nc<=0) return;
                 
                 const double zmin = z.head();
-                const double zmax = z.tail();
+                const double zmax = z.tail(); assert(zmin<=zmax);
                 
                 const unit_t jlbp1 = jlb+1;
                 const unit_t ilbp1 = ilb+1;
@@ -280,7 +300,8 @@ namespace upsylon {
                         // inner loop: over the levels
                         //
                         //------------------------------------------------------
-                        for(size_t k=nc;k>0;--k)
+                        level_set::iterator it=ls.begin();
+                        for(size_t k=1;k<=nc;++k,++it)
                         {
                             //--------------------------------------------------
                             // build the local field values to test against 0
@@ -295,20 +316,12 @@ namespace upsylon {
                                 global_d[3]-z_k,
                                 global_d[4]-z_k,
                             };
-                            
-                            const context ctx = { d,c,v };
-                            (void)ctx;
-                            
+                            context ctx = { d,c,v,&(**it) };
+
                             //--------------------------------------------------
                             // scan the triangles
                             //--------------------------------------------------
-#if 0
-                            scan_triangles(db,
-                                           k,
-                                           c,
-                                           d,
-                                           v);
-#endif
+                            scan_triangles(ctx);
                         }
                         
                         
@@ -318,7 +331,7 @@ namespace upsylon {
             }
             
         private:
-            
+            static void scan_triangles(context &);
         };
         
     }

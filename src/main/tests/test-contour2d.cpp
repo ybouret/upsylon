@@ -4,6 +4,8 @@
 #include "y/sort/unique.hpp"
 #include "y/oxide/field2d.hpp"
 #include "y/oxide/workspace.hpp"
+#include "y/oxide/vtk.hpp"
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 using namespace geometry;
@@ -111,6 +113,17 @@ Y_UTEST(contour2d)
                 const float v2 = 1.0f/(sqrtf((p-p2).norm2())+0.1);
                 V(loop.value) = v1-v2;
             }
+            {
+                const string filename = "dipole.vtk";
+                ios::ocstream fp(filename);
+
+                const Oxide::vtk &VTK = Oxide::vtk::instance();
+                VTK.writeHeader(fp);
+                VTK.writeTitle(fp,filename);
+                VTK.writeLayout(fp,V);
+                VTK.writePointData(fp,V);
+                VTK.writeField(fp,V,V);
+            }
         }
 
 
@@ -122,10 +135,9 @@ Y_UTEST(contour2d)
         z.insert(1);
         std::cerr << "z=" << z << std::endl;
 
-        //contour2d::unique_points_levels db;
-
-        contour2d::scan(V, x.lower, x.upper, y.lower, y.upper, x, y, z);
-
+        contour2d::level_set ls;
+        contour2d::scan(ls,V, x.lower, x.upper, y.lower, y.upper, x, y, z);
+        
     }
 }
 Y_UTEST_DONE()

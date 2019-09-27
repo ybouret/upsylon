@@ -224,12 +224,14 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
             Y_VTK_M(float,complex<float>);
             Y_VTK_M(double,complex<double>);
 
+#if 0
             std::cerr << "#vtk::Writer=" << writers.size() << std::endl;
             for( SharedWriters::iterator i=writers.begin();i!=writers.end();++i)
             {
                 std::cerr << "\t(*) " << (*i)->key().name() << std::endl;
             }
-            
+#endif
+
         }
 
 

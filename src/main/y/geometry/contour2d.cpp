@@ -5,6 +5,10 @@
 #include "y/type/bswap.hpp"
 #include "y/sort/sorted-sum.hpp"
 
+namespace  {
+    static const char Fn[] = "contour2d: ";
+}
+
 namespace upsylon {
     
     namespace geometry {
@@ -80,7 +84,6 @@ namespace upsylon {
         
         int  contour2d:: coordinate:: compare(const coordinate &lhs, const coordinate &rhs) throw()
         {
-           // return comparison::increasing_lexicographic(&lhs.i,&rhs.i,3);
             unit_t L[3], R[3];
             lhs.__sto(L);
             rhs.__sto(R);
@@ -124,6 +127,12 @@ namespace upsylon {
         contour2d:: edge:: edge( const coordinate &single) throw() :
         lower(single),
         upper(single)
+        {
+        }
+
+        contour2d:: edge:: edge( const edge &_) throw() :
+        lower(_.lower),
+        upper(_.upper)
         {
         }
         
@@ -178,103 +187,149 @@ namespace upsylon {
         {
         }
         
-        
+        contour2d::point_:: point_(const edge &l, const vertex &p) throw() :
+        location(l),
+        position(p)
+        {
+        }
     }
     
 }
 
-#if 0
-#include "y/exception.hpp"
-
 namespace upsylon {
-    
+
     namespace geometry {
-        
-        const size_t & contour2d:: unique_points:: key() const throw()
+
+        contour2d:: level_:: level_( const size_t k ) throw() :
+        index(k),
+        slist()
+        {
+
+        }
+
+        contour2d:: level_:: ~level_() throw()
+        {
+            bzset_(index);
+        }
+
+        const size_t & contour2d:: level_:: key() const throw()
         {
             return index;
         }
-        
-        contour2d:: unique_points:: unique_points( const size_t i ) throw() :
-        index(i)
-        {
-            
-        }
-        
-        contour2d:: unique_points:: ~unique_points() throw()
-        {
-        }
-        
-        void contour2d:: createDB(unique_points_levels  &db, const size_t n)
-        {
-            db.free();
-            db.ensure(n);
-            for(size_t k=1;k<=n;++k)
-            {
-                const unique_points_level level = new unique_points(k);
-                if(!db.insert(level))
-                {
-                    throw exception("contour2d: unexpected failure to create level#%u", unsigned(k) );
-                }
-            }
-            assert(n==db.size());
-        }
-        
-        
+
     }
-    
+
 }
 
+namespace upsylon {
+
+    namespace geometry {
+
+        contour2d:: segments:: segments() throw()
+        {
+        }
+
+        contour2d:: segments:: ~segments() throw()
+        {
+        }
+
+
+
+    }
+}
+
+#include "y/exception.hpp"
+
+namespace upsylon {
+
+    namespace geometry {
+
+        contour2d:: level_set:: level_set() throw()
+        {
+        }
+
+        contour2d:: level_set:: ~level_set() throw()
+        {
+        }
+
+        void contour2d:: level_set:: create(const size_t n)
+        {
+            free();
+            ensure(n);
+            for(size_t k=1;k<=n;++k)
+            {
+                const level l = new level_(k);
+                if( !insert(l) )
+                {
+                    throw exception("%sinsert#%u failure", Fn,unsigned(k) );
+                }
+            }
+            assert(size()==n);
+        }
+
+    }
+}
 
 namespace upsylon {
     
     namespace geometry {
         
         namespace {
-            static const unsigned n0 = 0x0001;
-            static const unsigned z0 = 0x0002;
-            static const unsigned p0 = 0x0004;
+            static const unsigned n0 = 0x0001; // 1
+            static const unsigned z0 = 0x0002; // 2
+            static const unsigned p0 = 0x0004; // 4
             
-            static const unsigned n1 = 0x0008;
-            static const unsigned z1 = 0x0010;
-            static const unsigned p1 = 0x0020;
+            static const unsigned n1 = 0x0008; // 8
+            static const unsigned z1 = 0x0010; // 16
+            static const unsigned p1 = 0x0020; // 32
             
-            static const unsigned n2 = 0x0040;
-            static const unsigned z2 = 0x0080;
-            static const unsigned p2 = 0x0100;
+            static const unsigned n2 = 0x0040; // 64
+            static const unsigned z2 = 0x0080; // 128
+            static const unsigned p2 = 0x0100; // 256
         }
         
         
 #define Y_CONTOUR2D_FLAG(I) do { \
-switch(contour::sign_type(d##I))\
+switch(contour::sign_of(d##I))\
 {\
 case contour::is_negative:  flags |= n##I; break;\
 case contour::is_zero:      flags |= z##I; break;\
 case contour::is_positive:  flags |= p##I; break;\
 } } while(false)
         
-        void contour2d:: scan_triangles(unique_points_levels    &db,
-                                        const size_t             k,
-                                        const coordinate         *c,
-                                        const double             *d,
-                                        const vertex             *v)
+        void contour2d:: scan_triangles(context &ctx)
         {
-            unique_points_level *pup      = db.search(k); assert(pup);
-            unique_points_level &upoints = *pup;
-            
             static const unsigned i0 = 0;
-            static const unsigned indices[4][2] =
+            static const unsigned ii[4][2] =
             {
                 {1,2}, {2,3}, {3,4}, {4,1}
             };
+
+            //------------------------------------------------------------------
+            //
+            // Loop over the four triangles
+            //
+            //------------------------------------------------------------------
+            assert(ctx.c);
+            assert(ctx.d);
+            assert(ctx.v);
+            assert(ctx.l);
+            level_ &L = *ctx.l;
             for(size_t t=0;t<4;++t)
             {
-                const unsigned i1 = indices[t][0];
-                const unsigned i2 = indices[t][1];
-                const double   d0 = d[i0];
-                const double   d1 = d[i1];
-                const double   d2 = d[i2];
-                
+                const unsigned i1 = ii[t][0];
+                const unsigned i2 = ii[t][1];
+
+                const double   d0 = ctx.d[i0];
+                const double   d1 = ctx.d[i1];
+                const double   d2 = ctx.d[i2];
+
+
+
+                //const coordinate &c0 = ctx.c[0];
+                //const coordinate &c1 = ctx.c[1];
+                //const coordinate &c2 = ctx.c[2];
+
                 unsigned flags = 0;
                 Y_CONTOUR2D_FLAG(0);
                 Y_CONTOUR2D_FLAG(1);
@@ -282,13 +337,93 @@ case contour::is_positive:  flags |= p##I; break;\
                 
                 switch(flags)
                 {
-                    case z0|p1|n2:
-                    case z0|n1|p2:
-                        break;
-                        
-                        
+                        //------------------------------------------------------
+                        //
+                        // negative@i0
+                        //
+                        //------------------------------------------------------
+
+                        //------------------------------------------------------
+                        // negative@i1
+                        //------------------------------------------------------
+                    case n0|n1|n2:break;
+                    case n0|n1|z2:break;
+                    case n0|n1|p2:break;
+
+                        //------------------------------------------------------
+                        // zero@i1
+                        //------------------------------------------------------
+                    case n0|z1|n2:break;
+                    case n0|z1|z2:break;
+                    case n0|z1|p2:break;
+
+                        //------------------------------------------------------
+                        // positive@i1
+                        //------------------------------------------------------
+                    case n0|p1|n2:break;
+                    case n0|p1|z2:break;
+                    case n0|p1|p2:break;
+
+                        //------------------------------------------------------
+                        //
+                        // zero@i0
+                        //
+                        //------------------------------------------------------
+
+                        //------------------------------------------------------
+                        // negative@i1
+                        //------------------------------------------------------
+                    case z0|n1|n2:break;
+                    case z0|n1|z2:break;
+                    case z0|n1|p2:break;
+
+                        //------------------------------------------------------
+                        // zero@i1
+                        //------------------------------------------------------
+                    case z0|z1|n2:break;
+                    case z0|z1|z2:break;
+                    case z0|z1|p2:break;
+
+                        //------------------------------------------------------
+                        // positive@i1
+                        //------------------------------------------------------
+                    case z0|p1|n2:break;
+                    case z0|p1|z2:break;
+                    case z0|p1|p2:break;
+
+
+                        //------------------------------------------------------
+                        //
+                        // positive@i0
+                        //
+                        //------------------------------------------------------
+
+                        //------------------------------------------------------
+                        // negative@i1
+                        //------------------------------------------------------
+                    case p0|n1|n2:break;
+                    case p0|n1|z2:break;
+                    case p0|n1|p2:break;
+
+                        //------------------------------------------------------
+                        // zero@i1
+                        //------------------------------------------------------
+                    case p0|z1|n2:break;
+                    case p0|z1|z2:break;
+                    case p0|z1|p2:break;
+
+                        //------------------------------------------------------
+                        // positive@i1
+                        //------------------------------------------------------
+                    case p0|p1|n2:break;
+                    case p0|p1|z2:break;
+                    case p0|p1|p2:break;
+
+
                     default:
-                        break;
+                        throw exception("%sscan(unexpected case)",Fn);
+
+
                 }
                 
             }
@@ -298,5 +433,4 @@ case contour::is_positive:  flags |= p##I; break;\
     }
     
 }
-#endif
 
