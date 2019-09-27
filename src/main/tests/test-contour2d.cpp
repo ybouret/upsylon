@@ -71,8 +71,11 @@ Y_UTEST(contour2d)
 
 
     }
-    std::cerr << "sizeof(contour2d::point)=" << sizeof(contour2d::point) << std::endl;
+    
+    std::cerr << "sizeof(contour2d::point_)=" << sizeof(contour2d::point_) << std::endl;
+    std::cerr << "sizeof(contour2d::segment)=" << sizeof(contour2d::segment) << std::endl;
 
+    
     {
         const unit_t                     resolution = 10;
         const Oxide::Layout2D            fullLayout( Oxide::Coord2D(1,1), Oxide::Coord2D(2*resolution,3*resolution) );
@@ -119,9 +122,9 @@ Y_UTEST(contour2d)
         z.insert(1);
         std::cerr << "z=" << z << std::endl;
 
-        contour2d::unique_points_levels db;
+        //contour2d::unique_points_levels db;
 
-        contour2d::scan(db,V, x.lower, x.upper, y.lower, y.upper, x, y, z);
+        contour2d::scan(V, x.lower, x.upper, y.lower, y.upper, x, y, z);
 
     }
 }

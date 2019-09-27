@@ -10,9 +10,9 @@
 #include "y/associative/set.hpp"
 
 namespace upsylon {
-
+    
     namespace geometry {
-
+        
         struct contour
         {
             enum sign_type
@@ -21,16 +21,16 @@ namespace upsylon {
                 is_zero,
                 is_positive
             };
-
+            
             static sign_type sign_of( const double value ) throw();
-
+            
             typedef memory::pooled                             allocator;  //!< local memory allocator
             typedef increasing_comparator<double>              comparator; //!< local comparator
             typedef sorted_vector<double,comparator,allocator> levels_type; //!< for levels
             typedef ordered_multiple<levels_type>              levels;
             static double average( const double, const double, const double, const double ) throw();
         };
-
+        
         //! finding iso levels in 2d
         /**
          Each square is divided in four triangles
@@ -43,45 +43,46 @@ namespace upsylon {
          |   /       \    |
          | /           \  |
          1@(i ,j   )-----2@(i+1,j  )
-
+         
          For a given level, a matching value can be found on a vertex or
          on an edge, which defines a set of unique Coordinates
          for any point of the isoline
          */
         struct contour2d
         {
-
+            
             //! physical position
             typedef point2d<double> vertex;
-
+            
             //! logical location, with lexicographic ordering
             class coordinate
             {
             public:
-                static const unit_t full = 0;
-                static const unit_t half = 1;
-
+                static const short full = 0;
+                static const short half = 1;
+                
                 const unit_t i;
                 const unit_t j;
-                const unit_t q;
-
-                coordinate(const unit_t,const unit_t,const unit_t) throw(); //!< setup
+                const short  q;
+                
+                coordinate(const unit_t,const unit_t,const short) throw(); //!< setup
                 ~coordinate() throw();                                      //!< cleanup
                 coordinate(const coordinate &) throw();                     //!< copy
-
+                
                 friend bool operator==(const coordinate&,const coordinate&) throw(); //!< component-wise
                 friend bool operator!=(const coordinate&,const coordinate&) throw(); //!< component-wise
                 friend bool operator< (const coordinate&,const coordinate&) throw(); //!< lexicographic
                 static int  compare(const coordinate&,const coordinate&) throw();    //!< lexicographic
                 friend std::ostream & operator<<(std::ostream &,const coordinate&);  //!< display
-
+                
                 void __run( hashing::function & ) const throw();
-
+                void __sto( unit_t *a ) const throw();
+                
             private:
                 Y_DISABLE_ASSIGN(coordinate);
             };
-
-            //! logical edge
+            
+            //! logical edge: a set of one or two points
             class edge
             {
             public:
@@ -91,10 +92,10 @@ namespace upsylon {
                 edge(const edge &) throw();
                 edge(const coordinate &single) throw();
                 edge(const coordinate &a, const coordinate &b) throw(); //!< a!=b
-
+                
                 friend bool operator==(const edge&,const edge&) throw();
                 friend bool operator!=(const edge&,const edge&) throw();
-
+                
                 class hasher
                 {
                 public:
@@ -102,51 +103,91 @@ namespace upsylon {
                     hasher() throw();
                     ~hasher() throw();
                     size_t operator()( const edge & ) throw();
-
+                    
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(hasher);
                 };
-
+                
             private:
                 Y_DISABLE_ASSIGN(edge);
             };
-
+            
             //! unique point
-            class point : public counted_object
+            class point_ : public counted_object
             {
             public:
                 const edge   location; //!< logical
                 const vertex position; //!< physical
-
-                explicit point(const edge &l, const vertex p) throw();
-                virtual ~point() throw();
-
+                
+                explicit point_(const edge &l, const vertex p) throw();
+                virtual ~point_() throw();
+                
                 const edge & key() const throw();
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(point);
-            };
-
-            typedef  intr_ptr<edge,point>                 unique_point;
-            typedef  set<edge,unique_point,edge::hasher>  unique_points_type;
-
-            class unique_points : public unique_points_type, public counted
-            {
-            public:
-                const size_t index; //!< the key
-                explicit unique_points(const size_t k) throw();
-                virtual ~unique_points() throw();
-                const size_t & key() const throw();
                 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(unique_points);
+                Y_DISABLE_COPY_AND_ASSIGN(point_);
             };
+            
+            typedef intr_ptr<edge,point_>                       point;
+            typedef set<edge,point,edge::hasher,memory::global> points;
 
-            typedef intr_ptr<size_t,unique_points>                                unique_points_level;
-            typedef set<size_t,unique_points_level,key_dumper,contour::allocator> unique_points_levels;
-
-
-
+            
+            class segment : public object
+            {
+            public:
+               
+                
+                const point head;
+                const point tail;
+                segment    *next;
+                segment    *prev;
+                
+                typedef core::list_of_cpp<segment> list_type;
+                
+                explicit segment( const point &h, const point &t) throw();
+                virtual ~segment() throw();
+                
+                
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(segment);
+            };
+            
+            class segments : public segment::list_type
+            {
+            public:
+                explicit segments() throw();
+                virtual ~segments() throw();
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(segments);
+            };
+            
+            class level_ : public counted, public points
+            {
+            public:
+                const size_t index;
+                segments     seg;
+                
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(level_);
+            };
+            
+            typedef intr_ptr<size_t,level_> level;
+            
+            
+            
+            
+            
+            
+            
+            struct context
+            {
+                const double     *d;
+                const coordinate *c;
+                const vertex     *v;
+            };
+            
             //! a low-level contour algorithm
             /**
              data            !  matrix/field of data to contour
@@ -159,8 +200,7 @@ namespace upsylon {
             typename FIELD,
             typename ARRAY
             > static inline
-            void scan(unique_points_levels  &db,
-                      const FIELD           &data,
+            void scan(const FIELD           &data,
                       const unit_t           ilb,
                       const unit_t           iub,
                       const unit_t           jlb,
@@ -169,18 +209,18 @@ namespace upsylon {
                       const ARRAY           &y,
                       const contour::levels &z )
             {
-
+                
                 const size_t nc = z.size();
-                createDB(db,nc);
+                //createDB(db,nc);
                 if(nc<=0) return;
                 
                 const double zmin = z.head();
                 const double zmax = z.tail();
-
+                
                 const unit_t jlbp1 = jlb+1;
                 const unit_t ilbp1 = ilb+1;
-
-
+                
+                
                 for(unit_t j=jlb,jp1=jlbp1;j<jub;++j,++jp1)
                 {
                     const double y0 = double(y[j]);
@@ -194,8 +234,8 @@ namespace upsylon {
                         // outer loop: scan the square
                         //
                         //------------------------------------------------------
-
-
+                        
+                        
                         //------------------------------------------------------
                         // collect local values
                         //------------------------------------------------------
@@ -203,18 +243,18 @@ namespace upsylon {
                         const double d2 = data[j  ][ip1];  dmin = min_of(dmin,d2); dmax=max_of(dmax,d2);
                         const double d3 = data[jp1][ip1];  dmin = min_of(dmin,d3); dmax=max_of(dmax,d3);
                         const double d4 = data[jp1][i  ];  dmin = min_of(dmin,d4); dmax=max_of(dmax,d4);
-
+                        
                         if(dmax<zmin||dmin>zmax)
                         {
                             continue; // no intersection in this square
                         }
-
+                        
                         const double global_d[5] =
                         {
                             contour::average(d1,d2,d3,d4),
                             d1,d2,d3,d4
                         };
-
+                        
                         const coordinate c[5] =
                         {
                             coordinate(i,  j,   coordinate::half),
@@ -223,7 +263,7 @@ namespace upsylon {
                             coordinate(ip1,jp1, coordinate::full),
                             coordinate(i,  jp1, coordinate::full)
                         };
-
+                        
                         const double x0 = x[i];
                         const double x1 = x[ip1];
                         const vertex v[5] =
@@ -234,7 +274,7 @@ namespace upsylon {
                             vertex(x1,y1),
                             vertex(x0,y1)
                         };
-
+                        
                         //------------------------------------------------------
                         //
                         // inner loop: over the levels
@@ -255,33 +295,32 @@ namespace upsylon {
                                 global_d[3]-z_k,
                                 global_d[4]-z_k,
                             };
-
+                            
+                            const context ctx = { d,c,v };
+                            (void)ctx;
+                            
                             //--------------------------------------------------
                             // scan the triangles
                             //--------------------------------------------------
+#if 0
                             scan_triangles(db,
                                            k,
                                            c,
                                            d,
                                            v);
+#endif
                         }
-
-
+                        
+                        
                     }
                 }
-
+                
             }
-
+            
         private:
-            static void createDB(unique_points_levels  &db, const size_t n);
-            static void scan_triangles(unique_points_levels    &db,
-                                       const size_t             k,
-                                       const coordinate         *c,
-                                       const double             *d,
-                                       const vertex             *v);
-
+            
         };
-
+        
     }
 }
 
