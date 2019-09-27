@@ -164,13 +164,44 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(point_);
             };
-            
-            typedef intr_ptr<edge,point_>                       point;  //!< alias for dynamic point
-            typedef set<edge,point,edge::hasher,memory::global> points; //!< base class for a level
 
             //__________________________________________________________________
             //
-            //! a segmenent as a node for a list
+            //! alias for dynamic point
+            //__________________________________________________________________
+            typedef intr_ptr<edge,point_>                       point;
+
+
+            class curve_point : public point
+            {
+            public:
+                typedef core::list_of_cpp<curve_point> list_type;
+                curve_point *next;
+                curve_point *prev;
+
+                explicit curve_point( const point & ) throw();
+                virtual ~curve_point() throw();
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(curve_point);
+            };
+
+            class curve_ : public curve_point::list_type, public counted_object
+            {
+            public:
+                explicit curve_() throw();
+                virtual ~curve_() throw();
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(curve_);
+            };
+
+            typedef arc_ptr<curve_>                  curve;
+            typedef vector<curve,contour::allocator> curves;
+
+            //__________________________________________________________________
+            //
+            //! a segment as a node for a list
             //__________________________________________________________________
             class segment : public object
             {
@@ -202,14 +233,25 @@ namespace upsylon {
             public:
                 explicit segments() throw(); //!< setup
                 virtual ~segments() throw(); //!< cleanup
+
+                void build_curves( curves &crv ) const;
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(segments);
             };
+
+
+            //__________________________________________________________________
+            //
+            //! base class for a level
+            //__________________________________________________________________
+            typedef set<edge,point,edge::hasher,memory::global> points;
 
             //__________________________________________________________________
             //
             //! a level is a set of points and has some segments
             //__________________________________________________________________
+
             class level_ : public counted, public points
             {
             public:

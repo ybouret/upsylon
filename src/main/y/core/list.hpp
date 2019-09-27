@@ -32,9 +32,9 @@ assert((node)->prev==NULL)
             //! destructor
             inline virtual ~list_of() throw() { assert(NULL==head); assert(NULL==tail); assert(0==size); }
 
-            NODE  *head; //!< head NODE
-            NODE  *tail; //!< last NODE
-            size_t size; //!< number of NODEs
+            NODE        *head; //!< head NODE
+            NODE        *tail; //!< last NODE
+            const size_t size; //!< number of NODEs
 
             //! no-throw swap with another list
             inline void swap_with( list_of &other ) throw()
@@ -47,7 +47,7 @@ assert((node)->prev==NULL)
             //! initialize with first node
 #define Y_CORE_LIST_PUSH_FIRST(node)         \
 assert(!head); assert(!tail); assert(!size); \
-head = tail = node; size = 1
+head = tail = node; (size_t&)size = 1
             //! append a NODE
             inline NODE *push_back( NODE *node ) throw()
             {
@@ -61,7 +61,7 @@ head = tail = node; size = 1
                     node->prev = tail;
                     tail->next = node;
                     tail       = node;
-                    ++size;
+                    ++(size_t&)size;
                 }
                 return node;
             }
@@ -86,7 +86,7 @@ head = tail = node; size = 1
                     node->next = head;
                     head->prev = node;
                     head       = node;
-                    ++size;
+                    ++(size_t&)size;
                 }
                 return node;
             }
@@ -108,7 +108,7 @@ head = tail = node; size = 1
                     tail = tail->prev;
                     tail->next = NULL;
                     node->prev = NULL;
-                    --size;
+                    --(size_t&)size;
                     Y_CORE_CHECK_LIST_NODE(node);
                     return node;
                 }
@@ -130,7 +130,7 @@ head = tail = node; size = 1
                     head = head->next;
                     head->prev = NULL;
                     node->next = NULL;
-                    --size;
+                    --(size_t&)size;
                     Y_CORE_CHECK_LIST_NODE(node);
                     return node;
                 }
@@ -167,7 +167,7 @@ head = tail = node; size = 1
             }
 
             //! hard reset for embedded lists
-            inline void reset() throw() { head = tail = NULL; size=0; }
+            inline void reset() throw() { head = tail = NULL; (size_t&)size=0; }
 
 
             //! unlink a node, return its address
@@ -193,7 +193,7 @@ head = tail = node; size = 1
                         prev->next = next;
                         node->next = NULL;
                         node->prev = NULL;
-                        --size;
+                        --(size_t&)size;
                         Y_CORE_CHECK_LIST_NODE(node);
                         return node;
                     }
@@ -359,7 +359,7 @@ head = tail = node; size = 1
                     NODE *next = mine->next;
                     mine->next = yours; yours->prev = mine;
                     next->prev = yours; yours->next = next;
-                    ++size;
+                    ++(size_t&)size;
                 }
             }
 
@@ -380,7 +380,7 @@ head = tail = node; size = 1
                     NODE *prev = mine->prev;
                     mine->prev = yours; yours->next = mine;
                     prev->next = yours; yours->prev = prev;
-                    ++size;
+                    ++(size_t&)size;
                 }
             }
 

@@ -611,3 +611,28 @@ case contour::is_positive:  flags |= p##I; break;\
     
 }
 
+
+namespace upsylon {
+
+    namespace geometry {
+
+        void contour2d:: segments:: build_curves( curves &crv ) const
+        {
+            crv.free();
+
+            for(const segment *s = head; s; s=s->next)
+            {
+                bool found =  false;
+                for(size_t i=crv.size();i>0;--i)
+                {
+                    curve_ &C = *crv[i]; assert(C.size>=2);
+                    
+                }
+            }
+
+
+        }
+
+    }
+}
+

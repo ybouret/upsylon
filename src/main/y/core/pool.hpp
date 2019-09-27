@@ -25,8 +25,8 @@ assert((node)->next==NULL)
             //! destructor: pool must be empty
             inline virtual ~pool_of() throw() { assert(NULL==top); assert(0==size); }
 
-            NODE  *top;  //!< top of pool
-            size_t size; //!< nodes in pool
+            NODE        *top;  //!< top of pool
+            const size_t size; //!< nodes in pool
 
 
             //! push a valid node
@@ -35,7 +35,7 @@ assert((node)->next==NULL)
                 Y_CORE_CHECK_POOL_NODE(node);
                 node->next = top;
                 top        = node;
-                ++size;
+                ++(size_t&)size;
                 return node;
             }
 
@@ -47,7 +47,7 @@ assert((node)->next==NULL)
                 NODE *node = top;
                 top = top->next;
                 node->next = NULL;
-                --size;
+                --(size_t&)size;
                 Y_CORE_CHECK_POOL_NODE(node);
                 return node;
             }
@@ -64,7 +64,7 @@ assert((node)->next==NULL)
 
 
             //! hard reset
-            inline void reset() throw() { top = NULL; size = 0; }
+            inline void reset() throw() { top = NULL; (size_t&)size = 0; }
 
             //! no-throw swap
             inline void swap_with( pool_of<NODE> &other ) throw()

@@ -96,9 +96,9 @@ namespace upsylon
             }
 
             //! write header
-            void writeHeader(ios::ostream &fp,
-                             const unsigned major=3,
-                             const unsigned minor=0 ) const;
+            void writeHeader(ios::ostream  & fp,
+                             const unsigned  major=3,
+                             const unsigned  minor=0 ) const;
 
             //! write title
             void writeTitle(ios::ostream &fp,
