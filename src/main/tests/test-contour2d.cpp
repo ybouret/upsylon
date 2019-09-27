@@ -142,7 +142,8 @@ Y_UTEST(contour2d)
 
         contour2d::level_set ls;
         contour2d::scan(ls,V, x.lower, x.upper, y.lower, y.upper, x, y, z);
-
+        ls.compute_isolines();
+        
         {
             ios::ocstream pfp("lsp.dat");
             ios::ocstream sfp("lss.dat");
@@ -152,6 +153,8 @@ Y_UTEST(contour2d)
                 std::cerr << "Level #" << L->index << "@" << z[L->index] << std::endl;
                 std::cerr << "    |_#points   = " << L->size() << std::endl;
                 std::cerr << "    |_#segments = " << L->slist.size << std::endl;
+                std::cerr << "    |_#isolines = " << L->iso.size() << std::endl;
+                
                 for( contour2d::points::const_iterator p = L->begin(); p != L->end(); ++p )
                 {
                     const contour2d::vertex &v = (*p)->position;
@@ -171,6 +174,9 @@ Y_UTEST(contour2d)
         }
 
     }
+    //std::cerr << "sizeof(contour2d::curves)=" << sizeof(contour2d::curves) << std::endl;
+    //std::cerr << "sizeof(auto_ptr<contour2d::curves>)=" << sizeof(auto_ptr<contour2d::curves>) << std::endl;
+
 }
 Y_UTEST_DONE()
 

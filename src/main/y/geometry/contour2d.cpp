@@ -129,7 +129,7 @@ namespace upsylon {
         upper(single)
         {
         }
-
+        
         contour2d:: edge:: edge( const edge &_) throw() :
         lower(_.lower),
         upper(_.upper)
@@ -199,33 +199,39 @@ namespace upsylon {
 #include "y/exception.hpp"
 
 namespace upsylon {
-
+    
     namespace geometry {
-
+        
         contour2d:: level_:: level_( const size_t k ) throw() :
         index(k),
-        slist()
+        slist(),
+        iso()
         {
-
+            
         }
-
+        
         contour2d:: level_:: ~level_() throw()
         {
             bzset_(index);
         }
-
+        
         const size_t & contour2d:: level_:: key() const throw()
         {
             return index;
         }
-
+        
+        void contour2d:: level_:: compute_iso()
+        {
+            slist.build(iso);
+        }
+        
         contour2d::point_  *  contour2d:: level_:: single( const coordinate &c, const vertex &v )
         {
             const edge   e(c);
             point       *pp = search(e);
             if(pp)
             {
-
+                
                 return &(**pp);
             }
             else
@@ -238,9 +244,9 @@ namespace upsylon {
                 return p;
             }
         }
-
         
-
+        
+        
         contour2d::point_ *contour2d::level_:: couple(const coordinate &ca, const vertex &va, const double da,
                                                       const coordinate &cb, const vertex &vb, const double db)
         {
@@ -271,7 +277,7 @@ namespace upsylon {
                 return p;
             }
         }
-
+        
         void     contour2d:: level_:: full(const coordinate &ca, const vertex &va,
                                            const coordinate &cb, const vertex &vb)
         {
@@ -279,7 +285,7 @@ namespace upsylon {
             const point tail = single(cb,vb);
             slist.push_back( new segment(head,tail) );
         }
-
+        
         void    contour2d:: level_:: inter1(const coordinate &cz, const vertex &vz,
                                             const coordinate &ca, const vertex &va, const double da,
                                             const coordinate &cb, const vertex &vb, const double db)
@@ -288,7 +294,7 @@ namespace upsylon {
             const point tail = couple(ca,va,da,cb,vb,db);
             slist.push_back( new segment(head,tail) );
         }
-
+        
         void   contour2d:: level_:: inter2(const coordinate &cs, const vertex &vs, const double ds,
                                            const coordinate &ca, const vertex &va, const double da,
                                            const coordinate &cb, const vertex &vb, const double db)
@@ -299,8 +305,8 @@ namespace upsylon {
             const point tail = couple(cs,vs,ds,cb,vb,db);
             slist.push_back( new segment(head,tail) );
         }
-
-
+        
+        
         void contour2d:: level_:: check() const
         {
             const unsigned indx = unsigned(index);
@@ -322,16 +328,16 @@ namespace upsylon {
                 }
             }
         }
-
-
+        
+        
     }
-
+    
 }
 
 namespace upsylon {
-
+    
     namespace geometry {
-
+        
         contour2d:: segment:: segment(const point &h, const point &t) throw() :
         head(h),
         tail(t),
@@ -340,69 +346,69 @@ namespace upsylon {
         {
             assert(head!=tail);
         }
-
-
+        
+        
         contour2d:: segment:: ~segment() throw()
         {
-
+            
         }
-
+        
         bool contour2d:: segment:: are_the_same(const segment &lhs, const segment &rhs) throw()
         {
             return (lhs.head==rhs.head) && (lhs.tail==rhs.tail);
         }
-
+        
         bool contour2d:: segment:: are_opposite(const segment &lhs, const segment &rhs) throw()
         {
             return (lhs.head==rhs.tail) && (lhs.tail==rhs.head);
         }
-
-
+        
+        
         bool operator==( const  contour2d::segment &lhs, const  contour2d::segment &rhs) throw()
         {
             return contour2d::segment::are_the_same(lhs,rhs) ||  contour2d::segment::are_opposite(lhs,rhs);
         }
-
+        
         bool operator!=( const  contour2d::segment &lhs, const  contour2d::segment &rhs) throw()
         {
             return !contour2d::segment::are_the_same(lhs,rhs) && !contour2d::segment::are_opposite(lhs,rhs);
         }
-
+        
     }
-
+    
 }
 
 
 namespace upsylon {
-
+    
     namespace geometry {
-
+        
         contour2d:: segments:: segments() throw()
         {
         }
-
+        
         contour2d:: segments:: ~segments() throw()
         {
         }
-
-
-
+        
+        
+        
     }
 }
 
 
 namespace upsylon {
-
+    
     namespace geometry {
-
+        
         contour2d:: level_set:: level_set() throw()
         {
         }
-
+        
         contour2d:: level_set:: ~level_set() throw()
         {
         }
-
+        
         void contour2d:: level_set:: create(const size_t n)
         {
             std::cerr << "create level_set" << std::endl;
@@ -418,7 +424,7 @@ namespace upsylon {
             }
             assert(size()==n);
         }
-
+        
         void contour2d:: level_set::  check_all() const
         {
             for( const_iterator it=begin();it!=end();++it)
@@ -426,8 +432,17 @@ namespace upsylon {
                 (**it).check();
             }
         }
+        
+        void contour2d:: level_set:: compute_isolines()
+        {
+            for( iterator it=begin();it!=end();++it)
+            {
+                (**it).compute_iso();
+            }
+        }
 
-
+        
+        
     }
 }
 
@@ -462,7 +477,7 @@ case contour::is_positive:  flags |= p##I; break;\
         {
             static const unsigned i0       = 0;
             static const unsigned ii[4][2] = { {1,2}, {2,3}, {3,4}, {4,1} };
-
+            
             //------------------------------------------------------------------
             //
             // Loop over the four triangles
@@ -477,22 +492,22 @@ case contour::is_positive:  flags |= p##I; break;\
             {
                 const unsigned i1 = ii[t][0];
                 const unsigned i2 = ii[t][1];
-
+                
                 const double   d0 = ctx.d[i0];
                 const double   d1 = ctx.d[i1];
                 const double   d2 = ctx.d[i2];
-
-
-
+                
+                
+                
                 const coordinate &c0 = ctx.c[i0];
                 const coordinate &c1 = ctx.c[i1];
                 const coordinate &c2 = ctx.c[i2];
-
+                
                 const vertex     &v0 = ctx.v[i0];
                 const vertex     &v1 = ctx.v[i1];
                 const vertex     &v2 = ctx.v[i2];
-
-
+                
+                
                 unsigned flags = 0;
                 Y_CONTOUR2D_FLAG(0);
                 Y_CONTOUR2D_FLAG(1);
@@ -509,7 +524,7 @@ case contour::is_positive:  flags |= p##I; break;\
                     case n0|n1|n2:
                     case p0|p1|p2:
                         break;
-
+                        
                         //------------------------------------------------------
                         //
                         // create single point, no segment cases
@@ -520,18 +535,18 @@ case contour::is_positive:  flags |= p##I; break;\
                     case p0|p1|z2:
                         (void) L.single(c2,v2);
                         break;
-
+                        
                     case n0|z1|n2:
                     case p0|z1|p2:
                         (void) L.single(c1,v1);
                         break;
-
+                        
                     case z0|n1|n2:
                     case z0|p1|p2:
                         (void) L.single(c0,v0);
                         break;
-
-
+                        
+                        
                         //------------------------------------------------------
                         //
                         // create segment=full edge
@@ -542,18 +557,18 @@ case contour::is_positive:  flags |= p##I; break;\
                     case z0|z1|p2:
                         L.full(c0,v0,c1,v1);
                         break;
-
+                        
                     case z0|n1|z2:
                     case z0|p1|z2:
                         L.full(c0,v0,c2,v2);
                         break;
-
+                        
                     case n0|z1|z2:
                     case p0|z1|z2:
                         L.full(c1,v1,c2,v2);
                         break;
-
-
+                        
+                        
                         //------------------------------------------------------
                         //
                         // create segment=point+intersection
@@ -564,17 +579,17 @@ case contour::is_positive:  flags |= p##I; break;\
                     case z0|n1|p2:
                         L.inter1(c0,v0, c1,v1,d1, c2,v2,d2);
                         break;
-
+                        
                     case n0|z1|p2:
                     case p0|z1|n2:
                         L.inter1(c1,v1, c0,v0,d0, c2,v2,d2);
                         break;
-
+                        
                     case n0|p1|z2:
                     case p0|n1|z2:
                         L.inter1(c2,v2, c0,v0,d0, c1,v1,d1);
                         break;
-
+                        
                         //------------------------------------------------------
                         //
                         // create segment=intersection+intersection
@@ -585,22 +600,22 @@ case contour::is_positive:  flags |= p##I; break;\
                     case p0|n1|n2:
                         L.inter2(c0,v0,d0, c1,v1,d1, c2,v2,d2);
                         break;
-
+                        
                     case n0|p1|n2:
                     case p0|n1|p2:
                         L.inter2(c1,v1,d1, c0,v0,d0, c2,v2,d2);
                         break;
-
+                        
                     case n0|n1|p2:
                     case p0|p1|n2:
                         L.inter2(c2,v2,d2, c0,v0,d0, c1,v1,d1);
                         break;
-
-
+                        
+                        
                     default:
                         throw exception("%sscan(unexpected case)",Fn);
                         //break;
-
+                        
                 }
                 
             }
@@ -611,28 +626,113 @@ case contour::is_positive:  flags |= p##I; break;\
     
 }
 
+namespace upsylon {
+    
+    namespace geometry {
+        
+        contour2d:: isopoint:: isopoint( const point &p ) throw() :
+        point(p), next(0), prev(0)
+        {
+        }
+        
+        contour2d:: isopoint:: ~isopoint() throw()
+        {
+        }
+        
+    }
+}
 
 namespace upsylon {
-
+    
     namespace geometry {
-
-        void contour2d:: segments:: build_curves( curves &crv ) const
+        
+        contour2d:: isoline_:: isoline_() throw() :
+        cyclic(false)
         {
-            crv.free();
+        }
+        
+        contour2d:: isoline_:: ~isoline_() throw()
+        {
+        }
+        
+        
+        
+    }
+}
 
+
+namespace upsylon {
+    
+    namespace geometry {
+        
+        void contour2d:: segments:: build( isolines &iso ) const
+        {
+            iso.free();
+            
+            // loop over segments
             for(const segment *s = head; s; s=s->next)
             {
-                bool found =  false;
-                for(size_t i=crv.size();i>0;--i)
+                // find if it can bee attached
+                // loop over curves and update
+                const point &s_head = (s->head);
+                const point &s_tail = (s->tail);
+                bool         found  =  false;
+                
+                for(size_t i=iso.size();i>0;--i)
                 {
-                    curve_ &C = *crv[i]; assert(C.size>=2);
+                    isoline_    &C      = *iso[i]; assert(C.size>=2);
+                    const point &c_head = *(C.head);
+                    const point &c_tail = *(C.tail);
                     
+                    if(c_head==s_head)
+                    {
+                        C.push_front( new isopoint(s_tail) );
+                        found = true;
+                        break;
+                    }
+                    
+                    if(c_head==s_tail)
+                    {
+                        C.push_front( new isopoint(s_head) );
+                        found = true;
+                        break;
+                    }
+                    
+                    if(c_tail==s_head)
+                    {
+                        C.push_back( new isopoint(s_tail) );
+                        found = true;
+                        break;
+                    }
+                    
+                    if(c_tail==s_tail)
+                    {
+                        C.push_back( new isopoint(s_head) );
+                        found = true;
+                        break;
+                    }
                 }
+                
+                if( !found )
+                {
+                    // create and initialize a new curve
+                    isoline C = new isoline_();
+                    C->push_back( new isopoint(s_head) );
+                    C->push_back( new isopoint(s_tail) );
+                    iso.push_back(C);
+                }
+                
             }
-
-
+            
+            // loop over curves
+            for(size_t i=iso.size();i>0;--i)
+            {
+                
+            }
+            
+            
         }
-
+        
     }
 }
 

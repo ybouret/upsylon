@@ -172,32 +172,34 @@ namespace upsylon {
             typedef intr_ptr<edge,point_>                       point;
 
 
-            class curve_point : public point
+            class isopoint : public point
             {
             public:
-                typedef core::list_of_cpp<curve_point> list_type;
-                curve_point *next;
-                curve_point *prev;
+                typedef core::list_of_cpp<isopoint> list_type;
+                isopoint *next;
+                isopoint *prev;
 
-                explicit curve_point( const point & ) throw();
-                virtual ~curve_point() throw();
+                explicit isopoint( const point & ) throw();
+                virtual ~isopoint() throw();
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(curve_point);
+                Y_DISABLE_COPY_AND_ASSIGN(isopoint);
             };
 
-            class curve_ : public curve_point::list_type, public counted_object
+            class isoline_ : public isopoint::list_type, public counted_object
             {
             public:
-                explicit curve_() throw();
-                virtual ~curve_() throw();
-
+                explicit isoline_() throw();
+                virtual ~isoline_() throw();
+                
+                const bool cyclic;
+                
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(curve_);
+                Y_DISABLE_COPY_AND_ASSIGN(isoline_);
             };
 
-            typedef arc_ptr<curve_>                  curve;
-            typedef vector<curve,contour::allocator> curves;
+            typedef arc_ptr<isoline_>                  isoline;
+            typedef vector<isoline,contour::allocator> isolines;
 
             //__________________________________________________________________
             //
@@ -234,7 +236,8 @@ namespace upsylon {
                 explicit segments() throw(); //!< setup
                 virtual ~segments() throw(); //!< cleanup
 
-                void build_curves( curves &crv ) const;
+                //! build all curves from this segment
+                void build( isolines &iso ) const;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(segments);
@@ -249,46 +252,48 @@ namespace upsylon {
 
             //__________________________________________________________________
             //
-            //! a level is a set of points and has some segments
+            //! a level is a set of points, has segments and optional curves
             //__________________________________________________________________
 
             class level_ : public counted, public points
             {
             public:
-                const size_t index; //!< index in the contour::level
-                segments     slist; //!< list of associated segments
-
-                explicit       level_(const size_t ) throw(); //!< setup
-                virtual       ~level_() throw();              //!< cleanup
-                const size_t & key() const throw();           //!< key for level_set
-
-                //! create/query a single point
-                point_ *single(const coordinate &c, const vertex &v );
-
-
-                //! create/query a point on the edge(ca,cb)
-                point_ *couple(const coordinate &ca, const vertex &va, const double da,
-                               const coordinate &cb, const vertex &vb, const double db);
-
-                //! make segment from two single points
-                void    full(const coordinate &ca, const vertex &va,
-                             const coordinate &cb, const vertex &vb);
-
-                //! make segment from zero vertex and intersection, da*db<0
-                void    inter1(const coordinate &cz, const vertex &vz,
-                               const coordinate &ca, const vertex &va, const double da,
-                               const coordinate &cb, const vertex &vb, const double db);
-
-                //! make segment from two intersections: ds*da<0, ds*db<0,
-                void    inter2(const coordinate &cs, const vertex &vs, const double ds,
-                               const coordinate &ca, const vertex &va, const double da,
-                               const coordinate &cb, const vertex &vb, const double db);
-
+                const size_t     index; //!< index in the contour::level
+                segments         slist; //!< list of associated segments
+                isolines         iso;   //!< sequence of isolines
+                
+                explicit         level_(const size_t ) throw(); //!< setup
+                virtual         ~level_() throw();              //!< cleanup
+                const size_t   & key() const throw();           //!< key for level_set
+                void             compute_iso();                 //!< compile to iso
+                
                 //! check consistency
                 void check() const;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(level_);
+                friend struct contour2d;
+                //! create/query a single point
+                point_ *single(const coordinate &c, const vertex &v );
+                
+                
+                //! create/query a point on the edge(ca,cb)
+                point_ *couple(const coordinate &ca, const vertex &va, const double da,
+                               const coordinate &cb, const vertex &vb, const double db);
+                
+                //! make segment from two single points
+                void    full(const coordinate &ca, const vertex &va,
+                             const coordinate &cb, const vertex &vb);
+                
+                //! make segment from zero vertex and intersection, da*db<0
+                void    inter1(const coordinate &cz, const vertex &vz,
+                               const coordinate &ca, const vertex &va, const double da,
+                               const coordinate &cb, const vertex &vb, const double db);
+                
+                //! make segment from two intersections: ds*da<0, ds*db<0,
+                void    inter2(const coordinate &cs, const vertex &vs, const double ds,
+                               const coordinate &ca, const vertex &va, const double da,
+                               const coordinate &cb, const vertex &vb, const double db);
             };
 
             //__________________________________________________________________
@@ -314,12 +319,12 @@ namespace upsylon {
                 virtual ~level_set() throw();    //!< cleanup
                 void     create(const size_t n); //!< create [1:n] levels
                 void     check_all() const;
+                void     compute_isolines();
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(level_set);
             };
             
-            
-
             
             //__________________________________________________________________
             //
@@ -446,7 +451,6 @@ namespace upsylon {
                             //--------------------------------------------------
                             scan_triangles(ctx);
                         }
-                        
                         
                     }
                 }
