@@ -83,6 +83,9 @@ Y_UTEST(oxide_vtk)
     doVTK< point2d<double>  >();
     doVTK< point3d<float>  >();
     doVTK< point3d<double>  >();
+    doVTK< mpn >();
+    doVTK< mpz >();
+    doVTK< mpq >();
 
     saveLayout<Coord1D>();
     saveLayout<Coord2D>();

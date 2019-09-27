@@ -1,6 +1,6 @@
 #include "y/oxide/vtk.hpp"
 #include "y/exception.hpp"
-#include "y/mpl/integer.hpp"
+#include "y/mpl/rational.hpp"
 
 namespace upsylon
 {
@@ -186,6 +186,32 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(WriterMP);
             };
+
+            class WriterMPQ : public vtk::Writer
+            {
+            public:
+                const Writer &dw;
+
+                inline virtual ~WriterMPQ() throw() {}
+                inline explicit WriterMPQ(const vtk &VTK ) :
+                vtk::Writer( typeid(mpq), NULL ), dw(VTK.get<double>())
+                {}
+
+                inline virtual const char * dataType()   const throw() { return dw.dataType(); }
+                inline virtual unsigned     components() const throw() { return 1;             }
+
+                inline virtual void write( ios::ostream &fp, const void *addr) const
+                {
+                    assert(addr);
+                    assert(fmt.is_empty());
+                    const mpq   *q = static_cast<const mpq *>(addr);
+                    const double d = q->to_real();
+                    dw.write(fp,&d);
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(WriterMPQ);
+            };
             
         }
         
@@ -250,8 +276,12 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
 
             Y_VTK_(mpn,WriterMP<mpn>);
             Y_VTK_(mpz,WriterMP<mpz>);
+            {
+                const SharedWriter w = new WriterMPQ(*this);
+                if(!writers.insert(w)) throw exception("%s(multiple <%s>)",Fn,w->tid.name());
+            }
 
-#if 1
+#if 0
             std::cerr << "#vtk::Writer=" << writers.size() << std::endl;
             for( SharedWriters::iterator i=writers.begin();i!=writers.end();++i)
             {
