@@ -239,6 +239,8 @@ namespace upsylon {
             }
         }
 
+        
+
         contour2d::point_ *contour2d::level_:: couple(const coordinate &ca, const vertex &va, const double da,
                                                       const coordinate &cb, const vertex &vb, const double db)
         {
@@ -298,6 +300,30 @@ namespace upsylon {
             slist.push_back( new segment(head,tail) );
         }
 
+
+        void contour2d:: level_:: check() const
+        {
+            const unsigned indx = unsigned(index);
+            unsigned       is1  = 1;
+            for(const segment *s = slist.head; s; s=s->next, ++is1 )
+            {
+                if(! search(s->head->key()) ) throw exception("%slevel#%u: invalid segment#%u.head",Fn,indx,is1);
+                if(! search(s->tail->key()) ) throw exception("%slevel#%u: invalid segment#%u.tail",Fn,indx,is1);
+                unsigned       is2 = is1;
+                const segment *nxt = s->next;
+                while(nxt)
+                {
+                    ++is2;
+                    if( *s == *nxt )
+                    {
+                        throw exception("%slevel%u: same segment#%u and segment#%u",Fn,indx,is1,is2);
+                    }
+                    nxt=nxt->next;
+                }
+            }
+        }
+
+
     }
 
 }
@@ -312,13 +338,34 @@ namespace upsylon {
         next(0),
         prev(0)
         {
-            assert( &(*head) != &(*tail) );
+            assert(head!=tail);
         }
 
 
         contour2d:: segment:: ~segment() throw()
         {
 
+        }
+
+        bool contour2d:: segment:: are_the_same(const segment &lhs, const segment &rhs) throw()
+        {
+            return (lhs.head==rhs.head) && (lhs.tail==rhs.tail);
+        }
+
+        bool contour2d:: segment:: are_opposite(const segment &lhs, const segment &rhs) throw()
+        {
+            return (lhs.head==rhs.tail) && (lhs.tail==rhs.head);
+        }
+
+
+        bool operator==( const  contour2d::segment &lhs, const  contour2d::segment &rhs) throw()
+        {
+            return contour2d::segment::are_the_same(lhs,rhs) ||  contour2d::segment::are_opposite(lhs,rhs);
+        }
+
+        bool operator!=( const  contour2d::segment &lhs, const  contour2d::segment &rhs) throw()
+        {
+            return !contour2d::segment::are_the_same(lhs,rhs) && !contour2d::segment::are_opposite(lhs,rhs);
         }
 
     }
@@ -371,6 +418,15 @@ namespace upsylon {
             }
             assert(size()==n);
         }
+
+        void contour2d:: level_set::  check_all() const
+        {
+            for( const_iterator it=begin();it!=end();++it)
+            {
+                (**it).check();
+            }
+        }
+
 
     }
 }

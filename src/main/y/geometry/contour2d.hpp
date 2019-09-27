@@ -12,26 +12,51 @@
 namespace upsylon {
     
     namespace geometry {
-        
+
+        //======================================================================
+        //
+        //! helper for any contour
+        //
+        //======================================================================
         struct contour
         {
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+
+            typedef memory::pooled                             allocator;   //!< local memory allocator
+            typedef increasing_comparator<double>              comparator;  //!< local comparator
+            typedef sorted_vector<double,comparator,allocator> levels_type; //!< for levels
+            typedef ordered_multiple<levels_type>              levels;      //!< set of multiple ordered values
+
+            //! machine precision sign
             enum sign_type
             {
-                is_negative,
-                is_zero,
-                is_positive
+                is_negative, //!< value<0
+                is_zero,     //!< value==0
+                is_positive  //!< value>0
             };
-            
+
+            //------------------------------------------------------------------
+            //
+            // methods
+            //
+            //------------------------------------------------------------------
+
+            //! convert value to sign_type
             static sign_type sign_of( const double value ) throw();
-            
-            typedef memory::pooled                             allocator;  //!< local memory allocator
-            typedef increasing_comparator<double>              comparator; //!< local comparator
-            typedef sorted_vector<double,comparator,allocator> levels_type; //!< for levels
-            typedef ordered_multiple<levels_type>              levels;
+
+            //! get the most precise 4-average
             static double average( const double, const double, const double, const double ) throw();
         };
-        
+
+        //======================================================================
+        //
         //! finding iso levels in 2d
+        //
+        //======================================================================
         /**
          Each square is divided in four triangles
          4@(i  ,j+1)------3@(i+1,j+1)
@@ -50,58 +75,68 @@ namespace upsylon {
          */
         struct contour2d
         {
-            
+            //__________________________________________________________________
+            //
             //! physical position
+            //__________________________________________________________________
             typedef point2d<double> vertex;
-            
+
+            //__________________________________________________________________
+            //
             //! logical location, with lexicographic ordering
+            //__________________________________________________________________
             class coordinate
             {
             public:
-                static const short full = 0;
-                static const short half = 1;
+                static const short full = 0; //!< mark for complete coordinate
+                static const short half = 1; //!< mark for center coordinate
                 
-                const unit_t i;
-                const unit_t j;
-                const short  q;
+                const unit_t i; //!< logical index
+                const unit_t j; //!< logical index
+                const short  q; //!< modifier
                 
-                coordinate(const unit_t,const unit_t,const short) throw(); //!< setup
-                ~coordinate() throw();                                      //!< cleanup
-                coordinate(const coordinate &) throw();                     //!< copy
-                
+                coordinate(const unit_t,const unit_t,const short) throw();           //!< setup
+                ~coordinate() throw();                                               //!< cleanup
+                coordinate(const coordinate &) throw();                              //!< copy
                 friend bool operator==(const coordinate&,const coordinate&) throw(); //!< component-wise
                 friend bool operator!=(const coordinate&,const coordinate&) throw(); //!< component-wise
                 friend bool operator< (const coordinate&,const coordinate&) throw(); //!< lexicographic
                 static int  compare(const coordinate&,const coordinate&) throw();    //!< lexicographic
+                void        __run(hashing::function &) const throw();                //!< run hash function
+                void        __sto(unit_t *) const throw();                           //!< store components
                 friend std::ostream & operator<<(std::ostream &,const coordinate&);  //!< display
-                
-                void __run( hashing::function & ) const throw();
-                void __sto( unit_t *a ) const throw();
-                
+
             private:
                 Y_DISABLE_ASSIGN(coordinate);
             };
-            
-            //! logical edge: a set of one or two points
+
+            //__________________________________________________________________
+            //
+            //! logical edge: a set of (one or) two points, acting as a key
+            //__________________________________________________________________
             class edge
             {
             public:
                 const coordinate lower; //!< lower by lexicographic
                 const coordinate upper; //!< upper by lexicographic
-                ~edge() throw();
-                edge(const edge &) throw();
-                edge(const coordinate &single) throw();
-                edge(const coordinate &a, const coordinate &b) throw(); //!< a!=b
+
+                ~edge() throw();                                        //!< cleanup
+                edge(const edge &) throw();                             //!< copy
+                edge(const coordinate &single) throw();                 //!< lower=upper=single
+                edge(const coordinate &a, const coordinate &b) throw(); //!< a!=b, then ordered
                 
-                friend bool operator==(const edge&,const edge&) throw();
-                friend bool operator!=(const edge&,const edge&) throw();
-                
+                friend bool operator==(const edge&,const edge&) throw(); //!< testing same values
+                friend bool operator!=(const edge&,const edge&) throw(); //!< testing different values
+
+                //! dedicated hasher
                 class hasher
                 {
                 public:
-                    hashing::fnv H;
-                    hasher() throw();
-                    ~hasher() throw();
+                    hashing::fnv H;    //!< hashing function
+                    hasher() throw();  //!< setup
+                    ~hasher() throw(); //!< cleanup
+
+                    //! get hash code
                     size_t operator()( const edge & ) throw();
                     
                 private:
@@ -111,74 +146,85 @@ namespace upsylon {
             private:
                 Y_DISABLE_ASSIGN(edge);
             };
-            
+
+            //__________________________________________________________________
+            //
             //! unique point
+            //__________________________________________________________________
             class point_ : public counted_object
             {
             public:
                 const edge   location; //!< logical
                 const vertex position; //!< physical
                 
-                explicit point_(const edge &l, const vertex &p) throw();
-                virtual ~point_() throw();
-                
-                const edge & key() const throw();
+                explicit     point_(const edge &,const vertex &) throw(); //!< setup
+                virtual     ~point_() throw();                            //!< cleanup
+                const edge & key() const throw();                         //!< for set<...>
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(point_);
             };
             
-            typedef intr_ptr<edge,point_>                       point;
-            typedef set<edge,point,edge::hasher,memory::global> points;
+            typedef intr_ptr<edge,point_>                       point;  //!< alias for dynamic point
+            typedef set<edge,point,edge::hasher,memory::global> points; //!< base class for a level
 
-
-            enum segments_affinity
-            {
-                
-            };
-
+            //__________________________________________________________________
+            //
+            //! a segmenent as a node for a list
+            //__________________________________________________________________
             class segment : public object
             {
             public:
-                const point head;
-                const point tail;
-                segment    *next;
-                segment    *prev;
-                
-                typedef core::list_of_cpp<segment> list_type;
-                
-                explicit segment( const point &h, const point &t) throw();
-                virtual ~segment() throw();
-                
-                
-                
+                const point head; //!< head point
+                const point tail; //!< tail point
+                segment    *next; //!< for list
+                segment    *prev; //!< for list
+
+                typedef core::list_of_cpp<segment> list_type; //!< base class for segments
+
+                explicit segment(const point &h, const point &t) throw(); //!< setup
+                virtual ~segment() throw();                               //!< cleanup
+
+                static bool are_the_same(const segment &, const segment &) throw(); //!< test
+                static bool are_opposite(const segment &, const segment &) throw(); //!< test
+                friend bool operator==(const segment &, const segment &) throw();   //!< are_the_same or are_opposite
+                friend bool operator!=(const segment &, const segment &) throw();   //!< test if different
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(segment);
             };
 
+            //__________________________________________________________________
+            //
             //! a list of segments
+            //__________________________________________________________________
             class segments : public segment::list_type
             {
             public:
-                explicit segments() throw();
-                virtual ~segments() throw();
+                explicit segments() throw(); //!< setup
+                virtual ~segments() throw(); //!< cleanup
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(segments);
             };
 
+            //__________________________________________________________________
+            //
             //! a level is a set of points and has some segments
+            //__________________________________________________________________
             class level_ : public counted, public points
             {
             public:
-                const size_t index;
-                segments     slist;
+                const size_t index; //!< index in the contour::level
+                segments     slist; //!< list of associated segments
 
-                explicit       level_(const size_t ) throw();
-                virtual       ~level_() throw();
-                const size_t & key() const throw();
+                explicit       level_(const size_t ) throw(); //!< setup
+                virtual       ~level_() throw();              //!< cleanup
+                const size_t & key() const throw();           //!< key for level_set
 
                 //! create/query a single point
-                point_ *single( const coordinate &c, const vertex &v );
+                point_ *single(const coordinate &c, const vertex &v );
+
+
+                //! create/query a point on the edge(ca,cb)
                 point_ *couple(const coordinate &ca, const vertex &va, const double da,
                                const coordinate &cb, const vertex &vb, const double db);
 
@@ -191,25 +237,41 @@ namespace upsylon {
                                const coordinate &ca, const vertex &va, const double da,
                                const coordinate &cb, const vertex &vb, const double db);
 
-                //! make segment from two intersections: ds*da<0, ds*db<0, 
+                //! make segment from two intersections: ds*da<0, ds*db<0,
                 void    inter2(const coordinate &cs, const vertex &vs, const double ds,
                                const coordinate &ca, const vertex &va, const double da,
                                const coordinate &cb, const vertex &vb, const double db);
 
+                //! check consistency
+                void check() const;
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(level_);
             };
-            
+
+            //__________________________________________________________________
+            //
+            //! dynamic level
+            //__________________________________________________________________
             typedef intr_ptr<size_t,level_>                         level;
+
+            //__________________________________________________________________
+            //
+            //! base class for level_set
+            //__________________________________________________________________
             typedef set<size_t,level,key_dumper,contour::allocator> level_set_;
 
+            //__________________________________________________________________
+            //
+            //! a database of levels
+            //__________________________________________________________________
             class level_set : public level_set_
             {
             public:
-                explicit level_set() throw();
-                virtual ~level_set() throw();
-                void     create(const size_t n);
-
+                explicit level_set() throw();    //!< setup
+                virtual ~level_set() throw();    //!< cleanup
+                void     create(const size_t n); //!< create [1:n] levels
+                void     check_all() const;
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(level_set);
             };
@@ -217,22 +279,28 @@ namespace upsylon {
             
 
             
-            
+            //__________________________________________________________________
+            //
+            //!lightweight context for internal scanning
+            //__________________________________________________________________
             struct context
             {
-                const double     *d;
-                const coordinate *c;
-                const vertex     *v;
-                level_           *l;
+                const double     *d; //!< [0:4] values
+                const coordinate *c; //!< [0:4] values
+                const vertex     *v; //!< [0:4] values
+                level_           *l; //!< target level
             };
-            
+
+            //__________________________________________________________________
+            //
             //! a low-level contour algorithm
+            //__________________________________________________________________
             /**
-             data            !  matrix/field of data to contour
+             data            ! matrix/field of data to contour
              ilb,iub,jlb,jub ! index bounds of data matrix[j][i]
              x               ! data matrix column coordinates
              y               ! data matrix row coordinates
-             z               ! contour levels in INCREASING order, nc=z.size()
+             z               ! contour levels
              */
             template<
             typename FIELD,
@@ -253,13 +321,10 @@ namespace upsylon {
                 ls.create(nc);
                 if(nc<=0) return;
                 
-                const double zmin = z.head();
-                const double zmax = z.tail(); assert(zmin<=zmax);
+                const double zmin  = z.head(), zmax  = z.tail(); assert(zmin<=zmax);
+                const unit_t jlbp1 = jlb+1,    ilbp1 = ilb+1;
                 
-                const unit_t jlbp1 = jlb+1;
-                const unit_t ilbp1 = ilb+1;
-                
-                
+
                 for(unit_t j=jlb,jp1=jlbp1;j<jub;++j,++jp1)
                 {
                     const double y0 = double(y[j]);
@@ -285,14 +350,10 @@ namespace upsylon {
                         
                         if(dmax<zmin||dmin>zmax)
                         {
-                            continue; // no intersection in this square
+                            continue; // no possible intersection in this square
                         }
                         
-                        const double global_d[5] =
-                        {
-                            contour::average(d1,d2,d3,d4),
-                            d1,d2,d3,d4
-                        };
+                        const double global_d[5] = { contour::average(d1,d2,d3,d4),d1,d2,d3,d4 };
                         
                         const coordinate c[5] =
                         {
@@ -303,8 +364,8 @@ namespace upsylon {
                             coordinate(i,  jp1, coordinate::full)
                         };
                         
-                        const double x0 = x[i];
-                        const double x1 = x[ip1];
+                        const double x0   = double(x[i]);
+                        const double x1   = double(x[ip1]);
                         const vertex v[5] =
                         {
                             vertex(0.5*(x0+x1),ym),
@@ -322,6 +383,7 @@ namespace upsylon {
                         level_set::iterator it=ls.begin();
                         for(size_t k=1;k<=nc;++k,++it)
                         {
+                            assert((**it).index==k);
                             //--------------------------------------------------
                             // build the local field values to test against 0
                             //--------------------------------------------------
@@ -346,7 +408,9 @@ namespace upsylon {
                         
                     }
                 }
-                
+#if !defined(NDEBUG)
+                ls.check_all();
+#endif
             }
             
         private:

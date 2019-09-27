@@ -40,8 +40,8 @@ namespace upsylon {
             typedef Ghosts<COORD>                             GhostsType;                                     //!< alias
             typedef const GhostsType                         *Peer;                                           //!< alias
             typedef arc_ptr<GhostsType>                       GhostsPointer;                                  //!< dynamic ghosts
-            typedef vector<coord>                             Coordinates;                                    //!< Coordinates for exteriro
-            typedef slots<AxisLayouts>                        AxisType;
+            typedef vector<coord>                             Coordinates;                                    //!< coordinates for exterior
+            typedef slots<AxisLayouts>                        AxisType;                                       //!< store local axis layouts
 
             //! lightweight ghosts I/O context for one orientation
             struct GIO
@@ -92,7 +92,7 @@ namespace upsylon {
             const gList             localGhosts;           //!< pair of local ghosts
             const size_t            localComms;            //!< local exchanged items per field
             const size_t            asyncComms;            //!< async exchanged items per field
-            const AxisType          axis;
+            const AxisType          axis;                  //!< layouts for 1D axis
 
             //------------------------------------------------------------------
             //

@@ -8,19 +8,25 @@ namespace upsylon {
 
     namespace Oxide {
 
-        typedef Layout1D AxisLayout;
+        typedef Layout1D AxisLayout; //!< alias
 
+        //======================================================================
+        //
+        //! local axis layouts from a field
+        //
+        //======================================================================
         class AxisLayouts
         {
         public:
-            const AxisLayout inner;
-            const AxisLayout outer;
+            const AxisLayout inner; //!< inner layout
+            const AxisLayout outer; //!< outer layout
 
+            //! setup
             explicit AxisLayouts(const AxisLayout &in, const AxisLayout &out ) throw();
-            virtual ~AxisLayouts() throw();
-            AxisLayouts(const AxisLayouts &) throw();
+            virtual ~AxisLayouts() throw();           //!< cleanup
+            AxisLayouts(const AxisLayouts &) throw(); //!< copy
 
-            //! assume field1d with same metrics
+            //! assume Field1D with same metrics
             template <typename FIELD, typename T>
             void mapBoundaries(FIELD &axis,
                                const T lowerValue,

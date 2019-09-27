@@ -6,6 +6,7 @@
 #include "y/oxide/workspace.hpp"
 #include "y/oxide/vtk.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/string/convert.hpp"
 
 using namespace upsylon;
 using namespace geometry;
@@ -74,12 +75,14 @@ Y_UTEST(contour2d)
 
     }
     
-    std::cerr << "sizeof(contour2d::point_)=" << sizeof(contour2d::point_) << std::endl;
-    std::cerr << "sizeof(contour2d::segment)=" << sizeof(contour2d::segment) << std::endl;
+    unit_t resolution = 15;
+    if( argc>1 )
+    {
+        resolution = string_convert::to<unit_t>(argv[1],"resolution");
+    }
 
     
     {
-        const unit_t                     resolution = 15;
         const Oxide::Layout2D            fullLayout( Oxide::Coord2D(1,1), Oxide::Coord2D(2*resolution,3*resolution) );
         Oxide::Workspace<Oxide::Coord2D> W(fullLayout,
                                            Oxide::Coord2D(1,1),
@@ -152,15 +155,15 @@ Y_UTEST(contour2d)
                 for( contour2d::points::const_iterator p = L->begin(); p != L->end(); ++p )
                 {
                     const contour2d::vertex &v = (*p)->position;
-                    pfp("%g %g %u\n", v.x, v.y, unsigned(L->index) );
+                    pfp("%.15g %.15g %u\n", v.x, v.y, unsigned(L->index) );
                 }
 
                 for( contour2d::segment *s = L->slist.head; s; s=s->next)
                 {
                     const contour2d::vertex &a = s->head->position;
                     const contour2d::vertex &b = s->tail->position;
-                    sfp("%g %g %u\n", a.x, a.y, unsigned(L->index) );
-                    sfp("%g %g %u\n", b.x, b.y, unsigned(L->index) );
+                    sfp("%.15g %.15g %u\n", a.x, a.y, unsigned(L->index) );
+                    sfp("%.15g %.15g %u\n", b.x, b.y, unsigned(L->index) );
                     sfp("\n");
                 }
 
