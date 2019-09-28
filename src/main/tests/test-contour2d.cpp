@@ -20,8 +20,8 @@ Y_UTEST(contour2d)
         for(size_t i=100+alea.leq(1000);i>0;--i)
         {
             const contour2d::coordinate c(alea.range<unit_t>(-10,10),
-                                           alea.range<unit_t>(-10,10),
-                                           alea.leq(1));
+                                          alea.range<unit_t>(-10,10),
+                                          alea.leq(1));
             coords.push_back(c);
         }
         std::cerr << coords << std::endl;
@@ -142,26 +142,28 @@ Y_UTEST(contour2d)
 
         contour2d::level_set ls;
         contour2d::scan(ls,V, x.lower, x.upper, y.lower, y.upper, x, y, z);
-        ls.compute_isolines();
-        
+
         {
             ios::ocstream pfp("lsp.dat");
             ios::ocstream sfp("lss.dat");
             for( contour2d::level_set::iterator it = ls.begin(); it != ls.end(); ++it )
             {
-                const contour2d::level &L = *it;
+                contour2d::level          &L = *it;
+                const contour2d::segments  S = L->slist;
+                L->build_isolines(true);
                 std::cerr << "Level #" << L->index << "@" << z[L->index] << std::endl;
-                std::cerr << "    |_#points   = " << L->size() << std::endl;
-                std::cerr << "    |_#segments = " << L->slist.size << std::endl;
-                std::cerr << "    |_#isolines = " << L->iso.size() << std::endl;
-                
-                for( contour2d::points::const_iterator p = L->begin(); p != L->end(); ++p )
+                std::cerr << "    |_#points    = " << L->size()     << std::endl;
+                std::cerr << "    |_#segments1 = " << S.size        << std::endl;
+                std::cerr << "    |_#isolines  = " << L->iso.size() << std::endl;
+                std::cerr << "    |_#segments2 = " << L->slist.size << std::endl;
+
+                for( contour2d::points::iterator p = L->begin(); p != L->end(); ++p )
                 {
                     const contour2d::vertex &v = (*p)->position;
                     pfp("%.15g %.15g %u\n", v.x, v.y, unsigned(L->index) );
                 }
 
-                for( contour2d::segment *s = L->slist.head; s; s=s->next)
+                for( contour2d::segment *s = S.head; s; s=s->next)
                 {
                     const contour2d::vertex &a = s->head->position;
                     const contour2d::vertex &b = s->tail->position;
@@ -170,12 +172,83 @@ Y_UTEST(contour2d)
                     sfp("\n");
                 }
 
+                {
+                    const string  fn = vformat("iso%u.dat", unsigned(L->index) );
+                    ios::ocstream fp(fn);
+                    for(size_t i=1;i<=L->iso.size();++i)
+                    {
+                        const contour2d::isolist &curve = *(L->iso[i]);
+                        for(const contour2d::isopoint *p = curve.head;p;p=p->next)
+                        {
+                            fp("%g %g %u\n",(*p)->position.x, (*p)->position.y, unsigned(i));
+                        }
+                        fp << '\n';
+                    }
+                }
+
             }
         }
 
+
+        {
+            Oxide::Layout2D::Loop loop(V.lower,V.upper);
+            for( loop.start(); loop.valid(); loop.next() )
+            {
+                const p2d p( x[loop.value.x], y[loop.value.y] );
+                const float v1 = 1.0f/(sqrtf((p-p1).norm2())+0.1);
+                const float v2 = 1.0f/(sqrtf((p-p2).norm2())+0.1);
+                V(loop.value) = v1+v2;
+            }
+            {
+                const string filename = "mount.vtk";
+                ios::ocstream fp(filename);
+
+                const Oxide::vtk &VTK = Oxide::vtk::instance();
+                VTK.writeHeader(fp);
+                VTK.writeTitle(fp,filename);
+                VTK.writeLayout(fp,V);
+                VTK.writePointData(fp,V);
+                VTK.writeField(fp,V,V);
+            }
+        }
+
+        z.free();
+        z.insert(1.5);
+        z.insert(2);
+        z.insert(3);
+        z.insert(6);
+
+        contour2d::scan(ls,V, x.lower, x.upper, y.lower, y.upper, x, y, z);
+        ls.build_isolines(false);
+
+        {
+            for( contour2d::level_set::iterator it = ls.begin(); it != ls.end(); ++it )
+            {
+                contour2d::level          &L = *it;
+                std::cerr << "Level #" << L->index << "@" << z[L->index] << std::endl;
+                std::cerr << "    |_#points    = " << L->size()     << std::endl;
+                std::cerr << "    |_#isolines  = " << L->iso.size() << std::endl;
+
+
+                {
+                    const string  fn = vformat("isobis%u.dat", unsigned(L->index) );
+                    ios::ocstream fp(fn);
+                    for(size_t i=1;i<=L->iso.size();++i)
+                    {
+                        const contour2d::isolist &curve = *(L->iso[i]);
+                        for(const contour2d::isopoint *p = curve.head;p;p=p->next)
+                        {
+                            fp("%g %g %u\n",(*p)->position.x, (*p)->position.y, unsigned(i));
+                        }
+                        fp << '\n';
+                    }
+                }
+            }
+
+        }
+
     }
-    //std::cerr << "sizeof(contour2d::curves)=" << sizeof(contour2d::curves) << std::endl;
-    //std::cerr << "sizeof(auto_ptr<contour2d::curves>)=" << sizeof(auto_ptr<contour2d::curves>) << std::endl;
+
 
 }
 Y_UTEST_DONE()

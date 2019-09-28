@@ -220,9 +220,9 @@ namespace upsylon {
             return index;
         }
         
-        void contour2d:: level_:: compute_iso()
+        void contour2d:: level_:: build_isolines(const bool keep)
         {
-            slist.build(iso);
+            slist.build(iso,keep);
         }
         
         contour2d::point_  *  contour2d:: level_:: single( const coordinate &c, const vertex &v )
@@ -346,7 +346,15 @@ namespace upsylon {
         {
             assert(head!=tail);
         }
-        
+
+        contour2d:: segment::  segment(const segment &_ ) throw() :
+        head(_.head),
+        tail(_.tail),
+        next(0),
+        prev(0)
+        {
+            assert(head!=tail);
+        }
         
         contour2d:: segment:: ~segment() throw()
         {
@@ -391,6 +399,9 @@ namespace upsylon {
         {
         }
         
+        contour2d:: segments:: segments(const segments &other) : segment::list_type(other)
+        {
+        }
         
         
     }
@@ -425,7 +436,7 @@ namespace upsylon {
             assert(size()==n);
         }
         
-        void contour2d:: level_set::  check_all() const
+        void contour2d:: level_set::  check() const
         {
             for( const_iterator it=begin();it!=end();++it)
             {
@@ -433,11 +444,11 @@ namespace upsylon {
             }
         }
         
-        void contour2d:: level_set:: compute_isolines()
+        void contour2d:: level_set:: build_isolines(const bool keep)
         {
             for( iterator it=begin();it!=end();++it)
             {
-                (**it).compute_iso();
+                (**it).build_isolines(keep);
             }
         }
 
@@ -664,70 +675,159 @@ namespace upsylon {
 namespace upsylon {
     
     namespace geometry {
-        
-        void contour2d:: segments:: build( isolines &iso ) const
+
+        bool contour2d:: segments::  grow( isolines &iso, const segment *s )
+        {
+            assert(s);
+            const point &s_head = s->head;
+            const point &s_tail = s->tail;
+            for(size_t i=iso.size();i>0;--i)
+            {
+                isoline_    &C      = *iso[i]; assert(C.size>=2);
+                const point &c_head = *(C.head);
+                const point &c_tail = *(C.tail);
+
+                if(c_head==s_head)
+                {
+                    C.push_front( new isopoint(s_tail) );
+                    return true;
+                }
+
+                if(c_head==s_tail)
+                {
+                    C.push_front( new isopoint(s_head) );
+                    return true;
+                }
+
+                if(c_tail==s_head)
+                {
+                    C.push_back( new isopoint(s_tail) );
+                    return true;
+                }
+
+                if(c_tail==s_tail)
+                {
+                    C.push_back( new isopoint(s_head) );
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        void contour2d:: segments:: build( isolines &iso, const bool keep )
         {
             iso.free();
+            goto TRY_GROW;
 
-#if 0
-            // loop over segments
-            for(const segment *s = head; s; s=s->next)
+        KEEP:
+            assert(0==size);
+            if(keep)
             {
-                // find if it can bee attached
-                // loop over curves and update
-                const point &s_head = (s->head);
-                const point &s_tail = (s->tail);
-                bool         found  =  false;
-                
-                for(size_t i=iso.size();i>0;--i)
+                for(size_t i=1;i<=iso.size();++i)
                 {
-                    isoline_    &C      = *iso[i]; assert(C.size>=2);
-                    const point &c_head = *(C.head);
-                    const point &c_tail = *(C.tail);
-                    
-                    if(c_head==s_head)
+                    const isopoint *p = iso[i]->head;
+                    while(p&&p->next)
                     {
-                        C.push_front( new isopoint(s_tail) );
-                        found = true;
-                        break;
-                    }
-                    
-                    if(c_head==s_tail)
-                    {
-                        C.push_front( new isopoint(s_head) );
-                        found = true;
-                        break;
-                    }
-                    
-                    if(c_tail==s_head)
-                    {
-                        C.push_back( new isopoint(s_tail) );
-                        found = true;
-                        break;
-                    }
-                    
-                    if(c_tail==s_tail)
-                    {
-                        C.push_back( new isopoint(s_head) );
-                        found = true;
-                        break;
+                        push_back( new segment( *p, *(p->next) ) );
+                        p=p->next;
                     }
                 }
-                
-                if( !found )
-                {
-                    // create and initialize a new curve
-                    isoline C = new isoline_();
-                    C->push_back( new isopoint(s_head) );
-                    C->push_back( new isopoint(s_tail) );
-                    iso.push_back(C);
-                }
-                
-            }
-#endif
 
-            
-            
+            }
+
+            for(size_t i=1;i<=iso.size();++i)
+            {
+                const isoline_ &l = *iso[i];
+                const isopoint &p = *(l.head);
+                const isopoint &q = *(l.tail);
+                (bool &)l.cyclic = (p==q);
+            }
+
+            return;
+
+        TRY_GROW:
+            {
+                //--------------------------------------------------------------
+                //
+                // try to place all remaining segments
+                //
+                //--------------------------------------------------------------
+                segments store;         // local store
+                bool     grown = false; // check if something was grown...
+                while(size>0)
+                {
+                    if(grow(iso,head))
+                    {
+                        grown = true;
+                        delete pop_front();
+                    }
+                    else
+                    {
+                        store.push_back( pop_front() );
+                    }
+                }
+
+                //--------------------------------------------------------------
+                //
+                // check status
+                //
+                //--------------------------------------------------------------
+
+                if(store.size<=0)
+                {
+                    //__________________________________________________________
+                    //
+                    // early return, nothing left
+                    //__________________________________________________________
+                    goto KEEP;
+                }
+                else
+                {
+                    //__________________________________________________________
+                    //
+                    // still some segments to place
+                    //__________________________________________________________
+                    if(grown)
+                    {
+                        //______________________________________________________
+                        //
+                        // iso has changed, try again
+                        //______________________________________________________
+                        assert(store.size>0);
+                        swap_with(store);
+                        goto TRY_GROW;
+                    }
+                    else
+                    {
+                        //______________________________________________________
+                        //
+                        // nothing has changed, need a new curve
+                        //______________________________________________________
+                        assert(store.size>0);
+                        isoline        I = new isoline_();
+                        const segment *s = store.head;
+                        I->push_back( new isopoint(s->head) );
+                        I->push_back( new isopoint(s->tail) );
+                        iso.push_back(I);
+                        delete store.pop_front();
+                        if(store.size<=0)
+                        {
+                            goto KEEP;      // second early return
+                        }
+                        else
+                        {
+                            swap_with(store);
+                            goto TRY_GROW; // try with new topology
+                        }
+                    }
+
+                }
+
+            }
+
+
+
         }
         
     }

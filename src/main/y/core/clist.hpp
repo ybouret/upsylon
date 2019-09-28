@@ -7,11 +7,12 @@
 namespace upsylon {
     
     namespace core {
-        
+
+        //! flags for redundant clist function
         enum clist_node
         {
-            clist_next,
-            clist_prev
+            clist_next, //!< use next node
+            clist_prev  //!< use prev node
         };
         
         //! check provided node is valid
@@ -20,14 +21,14 @@ assert((node)!=NULL);                 \
 assert((node)->next==NULL);           \
 assert((node)->prev==NULL)
         
-        
+        //! circular doubly linked list
         template <typename NODE>
         class clist_of
         {
         public:
             
-            NODE        *base;
-            const size_t size;
+            NODE        *base; //!< entry node
+            const size_t size; //!< total number of nodes
             
             //! setup
             inline explicit clist_of() throw() : base(0), size(0) {}
@@ -103,7 +104,8 @@ assert((node)->prev==NULL)
             {
                 return pop_base_and_set(clist_prev);
             }
-            
+
+            //! turn forward
             inline clist_of & scroll_forward(  size_t n ) throw()
             {
                 assert(size>0);
@@ -114,7 +116,8 @@ assert((node)->prev==NULL)
                 }
                 return *this;
             }
-            
+
+            //! turn reverse
             inline clist_of & scroll_reverse(  size_t n ) throw()
             {
                 assert(size>0);

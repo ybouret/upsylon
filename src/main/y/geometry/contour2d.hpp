@@ -172,33 +172,57 @@ namespace upsylon {
             typedef intr_ptr<edge,point_>                       point;
 
 
+            //__________________________________________________________________
+            //
+            //! a dynamic point for an isoline
+            //__________________________________________________________________
             class isopoint : public point
             {
             public:
-                typedef core::list_of_cpp<isopoint> list_type;
-                isopoint *next;
-                isopoint *prev;
+                isopoint *next; //!< for isolist
+                isopoint *prev; //!< for isolist
 
-                explicit isopoint( const point & ) throw();
-                virtual ~isopoint() throw();
+                explicit isopoint( const point & ) throw(); //!< setup
+                virtual ~isopoint() throw();                //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(isopoint);
             };
 
-            class isoline_ : public isopoint::list_type, public counted_object
+            //__________________________________________________________________
+            //
+            //! base class for an isoline
+            //__________________________________________________________________
+            typedef core::list_of_cpp<isopoint> isolist;
+
+
+            //__________________________________________________________________
+            //
+            //! an isoline is a list of isopoints
+            //__________________________________________________________________
+            class isoline_ : public isolist, public counted_object
             {
             public:
                 explicit isoline_() throw();
                 virtual ~isoline_() throw();
                 
-                const bool cyclic;
+                const bool cyclic; //!< detect if cyclic
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(isoline_);
             };
 
+            //__________________________________________________________________
+            //
+            //! alias for dynamic isoline
+            //__________________________________________________________________
             typedef arc_ptr<isoline_>                  isoline;
+
+
+            //__________________________________________________________________
+            //
+            //! alias for a few isolines
+            //__________________________________________________________________
             typedef vector<isoline,contour::allocator> isolines;
 
             //__________________________________________________________________
@@ -217,13 +241,14 @@ namespace upsylon {
 
                 explicit segment(const point &h, const point &t) throw(); //!< setup
                 virtual ~segment() throw();                               //!< cleanup
+                segment(const segment &) throw();                         //!< copy
 
                 static bool are_the_same(const segment &, const segment &) throw(); //!< test
                 static bool are_opposite(const segment &, const segment &) throw(); //!< test
                 friend bool operator==(const segment &, const segment &) throw();   //!< are_the_same or are_opposite
                 friend bool operator!=(const segment &, const segment &) throw();   //!< test if different
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(segment);
+                Y_DISABLE_ASSIGN(segment);
             };
 
             //__________________________________________________________________
@@ -233,14 +258,16 @@ namespace upsylon {
             class segments : public segment::list_type
             {
             public:
-                explicit segments() throw(); //!< setup
-                virtual ~segments() throw(); //!< cleanup
+                explicit segments() throw();     //!< setup
+                virtual ~segments() throw();     //!< cleanup
+                segments(const segments &other); //!< copy
 
-                //! build all curves from this segment
-                void build( isolines &iso ) const;
+                //! compile to isolines, optionaly rebuild segments
+                void build( isolines &iso, const bool keep );
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(segments);
+                Y_DISABLE_ASSIGN(segments);
+                static bool grow( isolines &, const segment *s );
             };
 
 
@@ -262,10 +289,10 @@ namespace upsylon {
                 segments         slist; //!< list of associated segments
                 isolines         iso;   //!< sequence of isolines
                 
-                explicit         level_(const size_t ) throw(); //!< setup
-                virtual         ~level_() throw();              //!< cleanup
-                const size_t   & key() const throw();           //!< key for level_set
-                void             compute_iso();                 //!< compile to iso
+                explicit         level_(const size_t ) throw();    //!< setup
+                virtual         ~level_() throw();                 //!< cleanup
+                const size_t   & key() const throw();              //!< key for level_set
+                void             build_isolines(const bool keep);  //!< compile to iso
                 
                 //! check consistency
                 void check() const;
@@ -318,8 +345,8 @@ namespace upsylon {
                 explicit level_set() throw();    //!< setup
                 virtual ~level_set() throw();    //!< cleanup
                 void     create(const size_t n); //!< create [1:n] levels
-                void     check_all() const;
-                void     compute_isolines();
+                void     check() const;          //!< check all levels
+                void     build_isolines(const bool keep); //!< build isolines for all levels
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(level_set);
@@ -455,7 +482,7 @@ namespace upsylon {
                     }
                 }
 #if !defined(NDEBUG)
-                ls.check_all();
+                ls.check();
 #endif
             }
             
