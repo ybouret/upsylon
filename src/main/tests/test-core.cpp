@@ -134,7 +134,12 @@ namespace  {
         }
         std::cerr << "]" << std::endl;
         std::cerr << "clist.size=" << l.size << std::endl;
-        
+
+        {
+            CLIST tmp = l;
+            std::cerr << "ctemp.size=" << tmp.size << std::endl;
+        }
+
         while( l.size )
         {
             l.scroll_forward( alea.leq(1000) );
@@ -198,7 +203,7 @@ Y_UTEST(core)
     std::cerr << "sizeof(core::list_of)  =" << sizeof(core::list_of<aNode>) << std::endl;
     std::cerr << "sizeof(core::clist_of) =" << sizeof(core::clist_of<aNode>) << std::endl;
     {
-        core::clist_of<aNode> cList;
+        core::clist_of_cpp<aNode> cList;
         do_clist_test(cList);
     }
     std::cerr << "#aNode=" << aNode::count << std::endl;

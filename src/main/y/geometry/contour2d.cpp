@@ -668,7 +668,8 @@ namespace upsylon {
         void contour2d:: segments:: build( isolines &iso ) const
         {
             iso.free();
-            
+
+#if 0
             // loop over segments
             for(const segment *s = head; s; s=s->next)
             {
@@ -723,12 +724,8 @@ namespace upsylon {
                 }
                 
             }
-            
-            // loop over curves
-            for(size_t i=iso.size();i>0;--i)
-            {
-                
-            }
+#endif
+
             
             
         }

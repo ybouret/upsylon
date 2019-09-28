@@ -108,7 +108,7 @@ assert((node)->prev==NULL)
             {
                 assert(size>0);
                 n %= size;
-                while(n-->0)
+                while(n-- > 0)
                 {
                     base=base->next;
                 }
@@ -119,7 +119,7 @@ assert((node)->prev==NULL)
             {
                 assert(size>0);
                 n %= size;
-                while(n-->0)
+                while(n-- > 0)
                 {
                     base=base->prev;
                 }
@@ -130,14 +130,15 @@ assert((node)->prev==NULL)
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(clist_of);
-            void push_first(NODE *node) throw()
+
+            inline void push_first(NODE *node) throw()
             {
                 base          = node;
                 (size_t&)size = 1;
                 node->next    = node->prev = base;
             }
             
-            NODE *pop_last() throw()
+            inline NODE *pop_last() throw()
             {
                 assert(1==size);
                 assert(0!=base);
@@ -150,7 +151,7 @@ assert((node)->prev==NULL)
                 return node;
             }
             
-            NODE *pop_base_and_set( const clist_node choice ) throw()
+            inline NODE *pop_base_and_set( const clist_node choice ) throw()
             {
                 assert(size>0);
                 if(1==size)
@@ -181,5 +182,62 @@ assert((node)->prev==NULL)
     }
     
 }
+
+#include "y/type/releasable.hpp"
+
+namespace upsylon {
+
+    namespace core {
+
+        //! a node is a C++ object
+        template <typename NODE>
+        class clist_of_cpp : public clist_of<NODE>, public releasable
+        {
+        public:
+            //! constructor
+            explicit clist_of_cpp() throw() : clist_of<NODE>(), releasable() {}
+
+            //! delete content
+            inline virtual void release() throw()
+            {
+                while(this->size)
+                {
+                    delete this->pop_back();
+                }
+            }
+
+            //! clear on destructor
+            virtual ~clist_of_cpp() throw() { release(); }
+
+            //! valid only if a copy ctor is defined for NODE
+            inline clist_of_cpp( const clist_of_cpp &other ) : clist_of<NODE>(), releasable()
+            {
+                try
+                {
+                    size_t n = other.size;
+                    for(const NODE *node=other.base;n>0;node=node->next,--n)
+                    {
+                        this->push_back( new NODE( *node ) );
+                    }
+                }
+                catch(...)
+                {
+                    release();
+                    throw;
+                }
+            }
+
+
+
+
+        private:
+            Y_DISABLE_ASSIGN(clist_of_cpp);
+        };
+
+
+    }
+
+}
+
 #endif
 
