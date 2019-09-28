@@ -86,27 +86,34 @@ namespace upsylon {
 
         KEEP:
             assert(0==size);
-            if(keep)
-            {
-                for(size_t i=1;i<=iso.size();++i)
-                {
-                    const isopoint *p = iso[i]->head;
-                    while(p&&p->next)
-                    {
-                        push_back( new segment( *p, *(p->next) ) );
-                        p=p->next;
-                    }
-                }
-
-            }
-
             for(size_t i=1;i<=iso.size();++i)
             {
                 const isoline_ &l = *iso[i];
                 const isopoint &p = *(l.head);
                 const isopoint &q = *(l.tail);
-                (bool &)l.cyclic = (p==q);
+                (bool &)l.cyclic  = (p==q);
             }
+
+            if(keep)
+            {
+                for(size_t i=1;i<=iso.size();++i)
+                {
+                    const isoline_ &l = *iso[i];
+                    const isopoint *p = l.head;
+                    while(p&&p->next)
+                    {
+                        push_back( new segment( *p, *(p->next) ) );
+                        p=p->next;
+                    }
+                    if(l.cyclic)
+                    {
+                        push_back( new segment( *l.head, *l.tail ) );
+                    }
+                }
+
+            }
+
+
 
             return;
 
