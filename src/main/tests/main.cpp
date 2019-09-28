@@ -170,7 +170,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(oxide_split);
     Y_UTEST(oxide_max_splits);
     Y_UTEST(oxide_ranks);
-    Y_UTEST(oxide_contour2d);
     Y_UTEST(oxide_layouts);
     Y_UTEST(oxide_wksp);
     Y_UTEST(oxide_allw);

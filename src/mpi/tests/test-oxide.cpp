@@ -71,7 +71,6 @@ void make_for(mpi                 &MPI,
     ActiveFields fields;
 
 
-    rt_clock clk;
     for(size_t m=1;m<=mappings.size();++m)
     {
         const COORD                 &mapping = mappings[m];
@@ -96,16 +95,12 @@ void make_for(mpi                 &MPI,
         for(pbc.start(); pbc.valid(); pbc.next())
         {
 
-            //! test preferences according to the parallelism
-            //test_par<COORD>(MPI,full,pbc.value);
-
             size_t ghostsZone=1;
 
             MPI.fullCommTicks = 0;
             MPI.Barrier();
 
-            // Parallel<COORD> ctx(MPI,full,pbc.value, Coord::Zero<COORD>() );
-            Split<COORD> ctx(MPI.size, full, pbc.value, Coord::Zero<COORD>() );
+            Split<COORD>    ctx(MPI.size, full, pbc.value, Coord::Zero<COORD>() );
             Domain<COORD>   W(MPI, full, mapping, pbc.value,ghostsZone);
 
             if(ctx.optimal == mapping)
@@ -127,7 +122,7 @@ void make_for(mpi                 &MPI,
             Y_ASSERT(fields.getCommMode()==comm_constant_size);
 
 
-            // prepare
+            // prepare integer filed with specific data
             fill(Fd);
             const Coord1D label =LabelOf(MPI.rank);
             IO::LD(Fi,W.outer,-label);
@@ -224,6 +219,10 @@ void make_for(mpi                 &MPI,
 
                 nField &gFn = parent->template as<nField>("Fn");
                 IO::LD(gFn,parent->outer,mpValue);
+
+                dField &gFd = parent->template as<dField>("Fd");
+                IO::LD(gFd,parent->outer,1);
+
             }
             Realm<COORD>::Gather( MPI,parent, "Fi", W, "Fi");
 
@@ -231,7 +230,7 @@ void make_for(mpi                 &MPI,
             Realm<COORD>::Gather( MPI,parent, "Fn", W, "Fn");
 
             MPI.print0(stderr,"<"); MPI.flush(stderr);
-            Realm<COORD>::Gather( MPI,parent, "Fd", W, "Fn");
+            Realm<COORD>::Gather( MPI,parent, "Fd", W, "Fd");
 
             if(parent)
             {
@@ -264,8 +263,6 @@ void make_for(mpi                 &MPI,
             CheckValueOf(Fn,W.inner,mpValue);
 
         }
-        //const double ell = clk( MPI.fullCommTicks );
-        //const double spd = 0;
         MPI.print0(stderr,"]\n");
     }
 
