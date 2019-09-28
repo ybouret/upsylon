@@ -154,7 +154,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(lex);
     Y_UTEST(token_convert);
 
-    Y_UTEST(geom_iso2d);
     Y_UTEST(contour2d);
 
     Y_UTEST(kr_bc);

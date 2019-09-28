@@ -148,8 +148,8 @@ ADD_TEST(Lang:Scanner  test-main  scanner NULL)
 ADD_TEST(Lang:Lex      test-main  lex     NULL)
 ADD_TEST(Lang:Convert  test-main  token_convert -1 1 0 1234 -4321)
 
-SOURCE_GROUP(geom FILES test-geom-iso2d.cpp)
-ADD_TEST(geom:iso2d test-main geom_iso2d)
+SOURCE_GROUP(geom FILES test-contour2d.cpp)
+ADD_TEST(geom:contour2d test-main contour2d)
 
 SOURCE_GROUP(mp FILES test-mpn.cpp test-mpz.cpp test-mpq.cpp test-mprm.cpp test-ilog.cpp 
 test-prime-factor.cpp test-prime-ratio.cpp test-mp-io.cpp test-mpn-perf.cpp) 
