@@ -214,7 +214,7 @@ ADD_TEST(counting:dancing  test-main dancing)
 SOURCE_GROUP(oxide FILES test-oxide.cpp test-oxide-fields.cpp
 test-oxide-io.cpp test-oxide-dct.cpp test-oxide-split.cpp test-oxide-ranks.cpp
 test-oxide-layouts.cpp test-oxide-wksp.cpp test-oxide-allw.cpp test-oxide-mpi-sim.cpp
-test-oxide-vtk.cpp test-oxide-par.cpp
+test-oxide-vtk.cpp test-oxide-par.cpp test-oxide-grids.cpp
 )
 ADD_TEST(oxide:main       test-main  oxide)
 ADD_TEST(oxide:fields     test-main  oxide_fields)
@@ -228,6 +228,7 @@ ADD_TEST(oxide:allw       test-main  oxide_allw)
 ADD_TEST(oxide:mpi        test-main  oxide_mpi)
 ADD_TEST(oxide:vtk        test-main  oxide_vtk)
 ADD_TEST(oxide:par        test-main  oxide_par)
+ADD_TEST(oxide:grids      test-main  oxide_grids)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>

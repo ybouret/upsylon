@@ -91,7 +91,8 @@ namespace upsylon
             template <typename T> inline
             ios::ostream & operator()( ios::ostream &fp, const T &args ) const
             {
-                get<T>().write(fp,&args);
+                static const Writer &_ = get<T>();
+                _.write(fp,&args);
                 return fp;
             }
 
