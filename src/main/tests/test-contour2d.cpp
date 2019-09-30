@@ -131,7 +131,7 @@ Y_UTEST(contour2d)
 
 
 
-        contour::levels z;
+        Contour::Levels z;
         z.insert(0);
         z.insert(-0.2);
         z.insert(-0.1);

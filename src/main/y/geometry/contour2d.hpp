@@ -183,7 +183,7 @@ namespace upsylon {
             //
             //! alias for a few isolines
             //__________________________________________________________________
-            typedef vector<isoline,contour::allocator> isolines;
+            typedef vector<isoline,Contour::Allocator> isolines;
 
             //__________________________________________________________________
             //
@@ -293,7 +293,7 @@ namespace upsylon {
             //
             //! base class for level_set
             //__________________________________________________________________
-            typedef set<size_t,level,key_dumper,contour::allocator> level_set_;
+            typedef set<size_t,level,key_dumper,Contour::Allocator> level_set_;
 
             //__________________________________________________________________
             //
@@ -348,7 +348,7 @@ namespace upsylon {
                       const unit_t           jub,
                       const ARRAY           &x,
                       const ARRAY           &y,
-                      const contour::levels &z )
+                      const Contour::Levels &z )
             {
                 
                 const size_t nc = z.size();
@@ -387,7 +387,7 @@ namespace upsylon {
                             continue; // no possible intersection in this square
                         }
                         
-                        const double global_d[5] = { contour::average(d1,d2,d3,d4),d1,d2,d3,d4 };
+                        const double global_d[5] = { Contour::Average(d1,d2,d3,d4),d1,d2,d3,d4 };
                         
                         const coordinate c[5] =
                         {

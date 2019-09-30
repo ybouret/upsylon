@@ -45,11 +45,11 @@ namespace upsylon {
         
         
 #define Y_CONTOUR2D_FLAG(I) do { \
-switch(contour::sign_of(d##I))\
+switch(Contour::SignOf(d##I))\
 {\
-case contour::is_negative:  flags |= n##I; break;\
-case contour::is_zero:      flags |= z##I; break;\
-case contour::is_positive:  flags |= p##I; break;\
+case Contour::IsNegative:  flags |= n##I; break;\
+case Contour::IsZero:      flags |= z##I; break;\
+case Contour::IsPositive:  flags |= p##I; break;\
 } } while(false)
         
         void contour2d:: scan_triangles(context &ctx)

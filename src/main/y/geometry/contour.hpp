@@ -14,7 +14,7 @@ namespace upsylon {
         //! helper for any contour
         //
         //======================================================================
-        struct contour
+        struct Contour
         {
             //------------------------------------------------------------------
             //
@@ -22,17 +22,17 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
 
-            typedef memory::pooled                             allocator;   //!< local memory allocator
-            typedef increasing_comparator<double>              comparator;  //!< local comparator
-            typedef sorted_vector<double,comparator,allocator> levels_type; //!< for levels
-            typedef ordered_multiple<levels_type>              levels;      //!< set of multiple ordered values
+            typedef memory::pooled                             Allocator;   //!< local memory allocator
+            typedef increasing_comparator<double>              Comparator;  //!< local comparator
+            typedef sorted_vector<double,Comparator,Allocator> LevelsType; //!< for levels
+            typedef ordered_multiple<LevelsType>               Levels;      //!< set of multiple ordered values
 
             //! machine precision sign
-            enum sign_type
+            enum SignType
             {
-                is_negative, //!< value<0
-                is_zero,     //!< value==0
-                is_positive  //!< value>0
+                IsNegative, //!< value<0
+                IsZero,     //!< value==0
+                IsPositive  //!< value>0
             };
 
             //------------------------------------------------------------------
@@ -42,10 +42,10 @@ namespace upsylon {
             //------------------------------------------------------------------
 
             //! convert value to sign_type
-            static sign_type sign_of( const double value ) throw();
+            static SignType SignOf( const double value ) throw();
 
             //! get the most precise 4-average
-            static double average( const double, const double, const double, const double ) throw();
+            static double Average( const double, const double, const double, const double ) throw();
         };
     }
 }

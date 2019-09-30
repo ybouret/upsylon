@@ -247,6 +247,24 @@ SET(geometry_srcs ${geometry_decl} ${geometry_code})
 SOURCE_GROUP( geometry FILES ${geometry_srcs} )
 INSTALL( FILES ${geometry_decl} DESTINATION include/y/geometry )
 
+FILE(GLOB geometry_iso2d_decl y/geometry/iso2d/*.hpp)
+FILE(GLOB geometry_iso2d_code y/geometry/iso2d/*.cpp)
+SET(geometry_iso2d_srcs ${geometry_iso2d_decl} ${geometry_iso2d_code})
+SOURCE_GROUP( geometry/iso2d FILES ${geometry_iso2d_srcs} )
+INSTALL( FILES ${geometry_iso2d_decl} DESTINATION include/y/geometry/iso2d )
+
+FILE(GLOB geometry_iso3d_decl y/geometry/iso3d/*.hpp)
+FILE(GLOB geometry_iso3d_code y/geometry/iso3d/*.cpp)
+SET(geometry_iso3d_srcs ${geometry_iso3d_decl} ${geometry_iso3d_code})
+SOURCE_GROUP( geometry/iso3d FILES ${geometry_iso3d_srcs} )
+INSTALL( FILES ${geometry_iso3d_decl} DESTINATION include/y/geometry/iso3d )
+
+FILE(GLOB geometry_iso3d_decl y/geometry/iso2d/*.hpp)
+FILE(GLOB geometry_iso3d_code y/geometry/iso2d/*.cpp)
+SET(geometry_iso2d_srcs ${geometry_iso2d_decl} ${geometry_iso2d_code})
+SOURCE_GROUP( geometry/iso2d FILES ${geometry_iso2d_srcs} )
+INSTALL( FILES ${geometry_iso2d_decl} DESTINATION include/y/geometry/iso2d )
+
 FILE(GLOB kr_sc_decl y/crypto/sc/*.hpp)
 FILE(GLOB kr_sc_code y/crypto/sc/*.cpp)
 SET(kr_sc_srcs ${kr_sc_decl} ${kr_sc_code})
@@ -333,7 +351,7 @@ ${fs_disk_srcs}
 ${fs_local_srcs}
 ${rtld_srcs}
 ${lang_srcs} ${lang_pattern_srcs} ${lang_lexical_srcs} ${lexical_plugin_srcs}
-${geometry_srcs}
+${geometry_srcs} ${geometry_iso2d_srcs} ${geometry_iso3d_srcs}
 ${kr_sc_srcs} ${kr_bc_srcs}
 ${sparse_srcs}
 ${counting_srcs}
