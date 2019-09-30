@@ -8,6 +8,22 @@ namespace upsylon {
 
     namespace Oxide {
 
+        template <typename COORD, typename T>
+        class RectilinearGrid : public Grid<COORD,T>
+        {
+        public:
+            inline explicit RectilinearGrid()
+            {
+            }
+
+            inline virtual ~RectilinearGrid() throw()
+            {
+            }
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(RectilinearGrid);
+        };
 
 
     }

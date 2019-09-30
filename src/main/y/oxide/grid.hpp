@@ -12,7 +12,13 @@ namespace upsylon {
         class Grid
         {
         public:
-            
+            inline virtual ~Grid() throw() {}
+
+        protected:
+            inline explicit Grid() throw() {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Grid);
         };
 
     }
