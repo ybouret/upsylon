@@ -40,11 +40,18 @@ namespace upsylon
         template <> struct Boolean<Coord3D> { typedef Bool3D Type; //!< 3D bool
         };
 
+        //! physical coordinates
         template <typename COORD,typename T> struct VertexFor;
 
-        template <typename T> struct VertexFor<Coord1D,T> { typedef typename type_traits<T>::mutable_type            Type; };
-        template <typename T> struct VertexFor<Coord2D,T> { typedef point2d< typename type_traits<T>::mutable_type > Type; };
-        template <typename T> struct VertexFor<Coord3D,T> { typedef point3d< typename type_traits<T>::mutable_type > Type; };
+        //! in 1D
+        template <typename T> struct VertexFor<Coord1D,T> { typedef typename type_traits<T>::mutable_type            Type; //!< 1D vertex
+        };
+        //! in 2D
+        template <typename T> struct VertexFor<Coord2D,T> { typedef point2d< typename type_traits<T>::mutable_type > Type; //!< 2D vertex
+        };
+        //! in 3D
+        template <typename T> struct VertexFor<Coord3D,T> { typedef point3d< typename type_traits<T>::mutable_type > Type; //!< 3D vertex
+        };
 
 
 

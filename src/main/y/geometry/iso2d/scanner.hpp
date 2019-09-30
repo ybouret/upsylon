@@ -10,6 +10,7 @@ namespace upsylon {
 
         namespace Iso2D {
 
+            //! scanner for building LevelSet
             struct Scanner
             {
 
