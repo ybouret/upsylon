@@ -3,7 +3,7 @@
 #ifndef Y_GEOMETRY_ISO3D_POINTS_INCLUDED
 #define Y_GEOMETRY_ISO3D_POINTS_INCLUDED 1
 
-#include "y/geometry/iso3d/location.hpp"
+#include "y/geometry/iso3d/edge.hpp"
 #include "y/ptr/intr.hpp"
 #include "y/associative/set.hpp"
 
@@ -16,22 +16,22 @@ namespace upsylon {
             class Point_ : public counted_object
             {
             public:
-                const Location location;
+                const Edge     location;
                 const Vertex   position;
 
-                explicit Point_( const Location &, const Vertex &) throw();
+                explicit Point_( const Edge &, const Vertex &) throw();
                 virtual ~Point_() throw();
 
-                const  Location & key() const throw();
+                const  Edge & key() const throw();
 
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Point_);
             };
 
-            typedef intr_ptr<Location,Point_> Point;
+            typedef intr_ptr<Edge,Point_> Point;
 
-            typedef set<Location,Point,Location::Hasher,memory::global> PointsType;
+            typedef set<Edge,Point,Edge::Hasher,memory::global> PointsType;
 
 
             class Points : public PointsType

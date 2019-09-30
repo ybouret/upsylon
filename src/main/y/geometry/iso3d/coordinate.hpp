@@ -32,7 +32,6 @@ namespace upsylon {
 
                 void __run( hashing::function &H ) const throw();
 
-
             private:
                 Y_DISABLE_ASSIGN(Coordinate);
             };

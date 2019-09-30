@@ -44,8 +44,11 @@ namespace upsylon {
             //! convert value to sign_type
             static SignType SignOf( const double value ) throw();
 
-            //! get the most precise 4-average
+            //! get  precise 4-average
             static double Average( const double, const double, const double, const double ) throw();
+
+            //! get precise 8-average
+            static double Average(const double *d) throw();
         };
     }
 }

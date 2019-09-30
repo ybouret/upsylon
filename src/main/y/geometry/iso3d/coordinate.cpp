@@ -10,6 +10,13 @@ namespace upsylon {
 
             int Coordinate:: Compare(const Coordinate &lhs,const Coordinate &rhs) throw()
             {
+#if 0
+                static const size_t NU = 4;
+                unit_t L[NU] = { 0 };
+                unit_t R[NU] = { 0 };
+                lhs.__sto(L);
+                rhs.__sto(R);
+#endif
                 return comparison::increasing_lexicographic(&lhs.i,&rhs.i,3);
             }
 
@@ -55,6 +62,15 @@ namespace upsylon {
                 H.run_type(k);
             }
 
+#if 0
+            void Coordinate:: __sto( unit_t *a ) const throw()
+            {
+                a[0] = i;
+                a[1] = j;
+                a[2] = k;
+                a[3] = q;
+            }
+#endif
 
         }
     }

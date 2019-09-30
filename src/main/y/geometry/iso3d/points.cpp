@@ -11,13 +11,13 @@ namespace upsylon {
             {
             }
 
-            Point_:: Point_( const Location &l, const Vertex &v) throw() :
+            Point_:: Point_( const Edge &l, const Vertex &v) throw() :
             location(l),
             position(v)
             {
             }
 
-            const Location & Point_ :: key() const throw()
+            const Edge & Point_ :: key() const throw()
             {
                 return location;
             }
