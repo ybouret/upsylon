@@ -129,7 +129,7 @@ namespace upsylon
             {
                 // local type
                 typedef void (vtk::*method)( ios::ostream &, const Writer &, const void *) const;
-                const Writer &writer = declareField(fp,F);
+                const Writer &writer = revealField(fp,F);
                 method        write1 = ( writer.isScalar() ) ?  & vtk::writeScalar : & vtk::writeVector;
                 const size_t  repeat = Repeat[ LAYOUT::Dimensions ];
 
@@ -159,8 +159,8 @@ namespace upsylon
                                   const Coord1D *width,
                                   const Coord1D *lower) const;
 
-            ios::ostream & writeAs3D(ios::ostream &fp, const Coord1D *C, const size_t dims, const Coord1D pad) const;
-            const Writer & declareField( ios::ostream &fp, const Field  &F ) const;
+            ios::ostream & composeAs3D( ios::ostream &fp, const Coord1D *C, const size_t dims, const Coord1D pad) const;
+            const Writer & revealField( ios::ostream &fp, const Field  &F ) const;
             void           writeScalar( ios::ostream &fp, const Writer &W, const void *addr ) const;
             void           writeVector( ios::ostream &fp, const Writer &W, const void *addr ) const;
 

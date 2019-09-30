@@ -98,16 +98,7 @@ data(0)
             //! display indices
             inline friend std::ostream & operator<<( std::ostream &os, const mloop &l )
             {
-                //const_type *arr = l.curr;
                 return display_int::to(os<< '{',l.curr,l.dimensions,mloop_::sep) << "}";
-#if 0
-                display_int::to(os << '{',arr[0]);
-                for(size_t i=1;i<l.dimensions;++i)
-                {
-                    display_int::to(os << ',',arr[i]);
-                }
-                return (os << '}');
-#endif
             }
 
 
@@ -196,6 +187,11 @@ data(0)
                 }
             }
 
+            static inline void incr(mutable_type&i) throw() { ++i; }
+            static inline void decr(mutable_type&i) throw() { --i; }
+
+        protected:
+            //! prepare loop parameters
             inline void setup(const_type *ini, const_type *end)
             {
                 size_t &num = (size_t&)count;
@@ -223,8 +219,7 @@ data(0)
                 }
             }
             
-            static inline void incr(mutable_type&i) throw() { ++i; }
-            static inline void decr(mutable_type&i) throw() { --i; }
+
         };
 
 
@@ -257,7 +252,12 @@ data(0)
         const_coord &lower; //!< apparent lower bound
         const_coord &upper; //!< apparent upper bound
 
-
+        //! reset/start a loop
+        inline void reset(const_coord &ini, const_coord &end)
+        {
+            this->setup( (const type *)&ini, (const type *)&end );
+            this->start();
+        }
 
 
 

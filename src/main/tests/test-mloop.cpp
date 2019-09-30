@@ -102,6 +102,8 @@ Y_UTEST(mloops)
     {
         mloop<unit_t,unit_t> loop(-4,4);
         doLoop(loop);
+        loop.reset(4,-4);
+        doLoop(loop);
     }
 
     {
@@ -110,6 +112,8 @@ Y_UTEST(mloops)
         const p2d            end(1,4);
         mloop< int,p2d >     loop(ini,end);
         doLoop(loop);
+        loop.reset(end,ini);
+        doLoop(loop);
     }
 
     {
@@ -117,6 +121,8 @@ Y_UTEST(mloops)
         const p3d                ini(-1,-2,-3);
         const p3d                end(4,5,6);
         mloop< int16_t,p3d >     loop(ini,end);
+        doLoop(loop);
+        loop.reset(end,ini);
         doLoop(loop);
     }
 
