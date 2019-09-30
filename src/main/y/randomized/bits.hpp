@@ -97,10 +97,17 @@ namespace upsylon
                 return __lt<size_t>(n);
             }
 
-            //! returns in 0..n
-            inline size_t leq( size_t n ) throw()
+            //! random unsigned integral in 0..X
+            template <typename T> inline
+            T __leq(T X) throw()
             {
-                return full<size_t>() % (++n);
+                return full<T>() % (++X);
+            }
+
+            //! returns in 0..n
+            inline size_t leq( const size_t n ) throw()
+            {
+                return __leq<size_t>(n);
             }
 
             //! Knuth shuffle of a[0..n-1]

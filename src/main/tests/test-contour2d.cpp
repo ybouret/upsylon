@@ -21,7 +21,7 @@ Y_UTEST(contour2d)
         {
             const contour2d::coordinate c(alea.range<unit_t>(-10,10),
                                           alea.range<unit_t>(-10,10),
-                                          alea.leq(1));
+                                          alea.__leq<short>(1));
             coords.push_back(c);
         }
         std::cerr << coords << std::endl;
@@ -105,7 +105,7 @@ Y_UTEST(contour2d)
         // create dipolar field
 
         p2d p1(-0.5f,0);
-        p2d p2(0.7f,0);
+        p2d p2( 0.7f,0);
 
         {
             Oxide::Layout2D::Loop loop(V.lower,V.upper);

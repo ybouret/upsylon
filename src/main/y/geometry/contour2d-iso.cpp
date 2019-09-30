@@ -107,7 +107,8 @@ namespace upsylon {
                     }
                     if(l.cyclic)
                     {
-                        push_back( new segment( *l.head, *l.tail ) );
+                        assert(l.size>=2);
+                        push_back( new segment( *l.tail, *(l.head->next) ) );
                     }
                 }
 
