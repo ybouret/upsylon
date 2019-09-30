@@ -38,7 +38,7 @@ namespace upsylon
             }
             
             //! get address of an object by its index
-            inline virtual const void *getObjectAddr( const Coord1D index ) const throw()
+            inline virtual const void *getObjectAddress( const Coord1D index ) const throw()
             {
                 assert(entry);
                 assert(index>=0);
@@ -46,21 +46,18 @@ namespace upsylon
                 return &entry[index];
             }
 
-            //! copy C++ style object
-            inline virtual void copyInternalObject( const Coord1D target, const Coord1D source )
+            //! copy C++ style objects
+            virtual void copyLocalObjects(void *target, const void *source) const
             {
-                assert(entry);
-                assert(target>=0);
-                assert(size_t(target)<localObjects);
-                assert(source>=0);
-                assert(size_t(source)<localObjects);
-                assert(source!=target);
-                *(mutable_type *) &entry[target] = entry[source];
+                assert(target);
+                assert(source);
+                *static_cast<mutable_type *>(target) = *static_cast<const_type *>(source);
             }
 
-            inline virtual void copyExternalObject( const Coord1D target,
+#if 0
+            inline virtual void copyExternalObject(const Coord1D   target,
                                                    const Field    &other,
-                                                   const Coord1D source)
+                                                   const Coord1D   source)
             {
                 assert(entry);
                 assert(target>=0);
@@ -70,6 +67,7 @@ namespace upsylon
                 assert(typeOfObject==other.typeOfObject);
                 *(mutable_type *) &entry[target] = *static_cast<const_type *>(other.getObjectAddr(source));
             }
+#endif
 
 
             //------------------------------------------------------------------

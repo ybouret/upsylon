@@ -13,9 +13,6 @@ namespace upsylon
         }
 
         
-
-
-        
         void *   Field:: acquirePrivate()
         {
             static memory::allocator &mgr = memory::global::instance();
@@ -40,13 +37,13 @@ namespace upsylon
         size_t Field:: save(ios::ostream &fp, const Coord1D index  ) const
         {
             ios::plugin &plg = (ios::plugin&)(*transfer);
-            return plg.save(fp, getObjectAddr(index));
+            return plg.save(fp, getObjectAddress(index));
         }
 
         size_t Field:: load( ios::istream &fp, const Coord1D index )
         {
             ios::plugin &plg = (ios::plugin&)(*transfer);
-            return plg.load(fp, (void*)getObjectAddr(index));
+            return plg.load(fp, (void*)getObjectAddress(index));
         }
 
 
@@ -54,6 +51,14 @@ namespace upsylon
         {
             return lhs.name < rhs.name;
         }
+
+
+        void Field:: copyInternalObject(const Coord1D target, const Coord1D source)
+        {
+            assert(target!=source);
+            copyLocalObjects( (void*)getObjectAddress(target), getObjectAddress(source) );
+        }
+
     }
 }
 

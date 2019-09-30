@@ -85,7 +85,7 @@ namespace upsylon
 
         //______________________________________________________________________
         //
-        //! data cache to count I/O
+        //! data cache to count I/O bytes
         //______________________________________________________________________
         class data_type_cache
         {

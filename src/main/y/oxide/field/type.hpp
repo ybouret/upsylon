@@ -48,11 +48,17 @@ namespace upsylon
 
             //! get address of an object by its index (for asynchronous copy)
             /**
-             this function will be used to serialize an object into a send/recv
-             block and go for asynchronous exchanges
+             this function will be used:
+             - to serialize an object into a send/recv block
+             and go for asynchronous exchanges
+             - to copy local objects
              */
-            virtual const void *getObjectAddr( const Coord1D index ) const throw() = 0;
+            virtual const void *getObjectAddress( const Coord1D index )  const throw() = 0;
 
+            //! a FieldOf<T> has to use the assign semantics
+            virtual void        copyLocalObjects( void *target, const void *source) const = 0;
+
+#if 0
             //! internal copy of object between two indices
             /**
              this function will be used to use the C++ assignement semantic
@@ -68,12 +74,15 @@ namespace upsylon
             virtual void copyExternalObject(const Coord1D target,
                                             const Field   &other,
                                             const Coord1D  source) = 0;
+#endif
 
             //------------------------------------------------------------------
             //
             // non-virtual interface
             //
             //------------------------------------------------------------------
+            void copyInternalObject(const Coord1D target, const Coord1D source);
+
             size_t save( ios::ostream &fp, const Coord1D index) const;  //!< save one object from index
             size_t load( ios::istream &fp, const Coord1D index);        //!< load one object into index
 
@@ -133,7 +142,7 @@ namespace upsylon
                 return total;
             }
 
-            //! scatter to peer a common sub layout, with different outer layouts!
+            //! scatter to peer a common sub layout, with different outer layout!
             template <typename LAYOUT>
             void  localScatter(const LAYOUT &subLayout,
                                const LAYOUT &selfOuter,
@@ -145,7 +154,8 @@ namespace upsylon
                 typename LAYOUT::Loop loop(subLayout.lower,subLayout.upper);
                 for(loop.start();loop.valid();loop.next())
                 {
-                    peerField.copyExternalObject( peerOuter.indexOf(loop.value) , *this, selfOuter.indexOf(loop.value) );
+                    // !!TODO!!
+                    //peerField.copyExternalObject( peerOuter.indexOf(loop.value) , *this, selfOuter.indexOf(loop.value) );
                 }
             }
 
@@ -161,7 +171,8 @@ namespace upsylon
                 typename LAYOUT::Loop loop(subLayout.lower,subLayout.upper);
                 for(loop.start();loop.valid();loop.next())
                 {
-                    copyExternalObject( selfOuter.indexOf(loop.value), peerField, peerOuter.indexOf(loop.value) );
+                    // !!TODO!!
+                    //copyExternalObject( selfOuter.indexOf(loop.value), peerField, peerOuter.indexOf(loop.value) );
                 }
             }
 
