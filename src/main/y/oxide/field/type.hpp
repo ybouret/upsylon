@@ -55,7 +55,11 @@ namespace upsylon
              */
             virtual const void *getObjectAddress( const Coord1D index )  const throw() = 0;
 
-            //! a FieldOf<T> has to use the assign semantics
+            //! internal copy of object between two addresses
+            /**
+             this function will be used to use the C++ assignement semantic
+             for local exchanges
+             */
             virtual void        copyLocalObjects( void *target, const void *source) const = 0;
 
 #if 0
@@ -81,7 +85,16 @@ namespace upsylon
             // non-virtual interface
             //
             //------------------------------------------------------------------
-            void copyInternalObject(const Coord1D target, const Coord1D source);
+
+            //! wrapper to copyLocalObjects()
+            void copyInternalObject(const Coord1D target,
+                                    const Coord1D source);
+
+            //! wrapper to copyLocalObjects()
+            void copyExternalObject(const Coord1D   target,
+                                    const Field    &other,
+                                    const Coord1D   source);
+          
 
             size_t save( ios::ostream &fp, const Coord1D index) const;  //!< save one object from index
             size_t load( ios::istream &fp, const Coord1D index);        //!< load one object into index
@@ -154,8 +167,7 @@ namespace upsylon
                 typename LAYOUT::Loop loop(subLayout.lower,subLayout.upper);
                 for(loop.start();loop.valid();loop.next())
                 {
-                    // !!TODO!!
-                    //peerField.copyExternalObject( peerOuter.indexOf(loop.value) , *this, selfOuter.indexOf(loop.value) );
+                    peerField.copyExternalObject( peerOuter.indexOf(loop.value) , *this, selfOuter.indexOf(loop.value) );
                 }
             }
 
@@ -171,8 +183,7 @@ namespace upsylon
                 typename LAYOUT::Loop loop(subLayout.lower,subLayout.upper);
                 for(loop.start();loop.valid();loop.next())
                 {
-                    // !!TODO!!
-                    //copyExternalObject( selfOuter.indexOf(loop.value), peerField, peerOuter.indexOf(loop.value) );
+                    copyExternalObject( selfOuter.indexOf(loop.value), peerField, peerOuter.indexOf(loop.value) );
                 }
             }
 

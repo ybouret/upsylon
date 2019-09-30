@@ -53,22 +53,7 @@ namespace upsylon
                 assert(source);
                 *static_cast<mutable_type *>(target) = *static_cast<const_type *>(source);
             }
-
-#if 0
-            inline virtual void copyExternalObject(const Coord1D   target,
-                                                   const Field    &other,
-                                                   const Coord1D   source)
-            {
-                assert(entry);
-                assert(target>=0);
-                assert(size_t(target)<localObjects);
-                assert(source>=0);
-                assert(size_t(source)<other.localObjects);
-                assert(typeOfObject==other.typeOfObject);
-                *(mutable_type *) &entry[target] = *static_cast<const_type *>(other.getObjectAddr(source));
-            }
-#endif
-
+            
 
             //------------------------------------------------------------------
             //
