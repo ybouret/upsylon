@@ -1,5 +1,4 @@
-
-#include "y/geometry/iso3d/edge.hpp"
+#include "y/geometry/iso3d/location.hpp"
 
 namespace upsylon {
 
@@ -8,17 +7,17 @@ namespace upsylon {
         namespace Iso3D {
 
 
-            Edge::~Edge() throw()
+            Location::~Location() throw()
             {
             }
             
-            Edge:: Edge( const Coordinate &C ) throw() :
+            Location:: Location( const Coordinate &C ) throw() :
             lower(C),
             upper(C)
             {
             }
 
-            Edge:: Edge(const Coordinate &a, const Coordinate &b) throw() :
+            Location:: Location(const Coordinate &a, const Coordinate &b) throw() :
             lower(a),
             upper(b)
             {
@@ -30,16 +29,16 @@ namespace upsylon {
                 assert( Coordinate::Compare(a,b) < 0 );
             }
 
-            Edge:: Edge( const Edge &_) throw() :
+            Location:: Location( const Location &_) throw() :
             lower( _.lower ),
             upper( _.upper )
             {
             }
 
-            Edge:: Hasher:: Hasher() throw() : H() {}
-            Edge:: Hasher:: ~Hasher() throw() {}
+            Location:: Hasher:: Hasher() throw() : H() {}
+            Location:: Hasher:: ~Hasher() throw() {}
 
-            size_t Edge::Hasher::operator()(const Edge &_) throw()
+            size_t Location::Hasher::operator()(const Location &_) throw()
             {
                 H.set();
                 _.lower.__run(H);

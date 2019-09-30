@@ -17,12 +17,16 @@ namespace upsylon {
             Coordinate:: Coordinate(const unit_t I,
                                     const unit_t J,
                                     const unit_t K) throw() :
-            i(I),
-            j(J),
-            k(K)
+            i(I), j(J), k(K)
             {
 
             }
+
+            Coordinate:: Coordinate( const Coordinate &_ ) throw() :
+            i(_.i), j(_.j), k(_.k)
+            {
+            }
+            
 
             Coordinate:: ~Coordinate() throw()
             {

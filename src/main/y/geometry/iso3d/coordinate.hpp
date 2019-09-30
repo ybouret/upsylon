@@ -12,7 +12,7 @@ namespace upsylon {
         namespace Iso3D {
 
             typedef point3d<double> Vertex;
-            
+
             class Coordinate
             {
             public:
