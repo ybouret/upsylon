@@ -41,8 +41,9 @@ namespace upsylon
     private:
         const size_t nm1;
         size_t       wlen;
+    protected:
         size_t      *perm;
-
+    private:
         Y_DISABLE_ASSIGN(permutation);
         virtual void start_() throw(); //!< index=1, perm=[1..n]
         virtual void next_()  throw(); //!< find next one
