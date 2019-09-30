@@ -35,13 +35,30 @@ namespace upsylon {
                     Y_DISABLE_COPY_AND_ASSIGN(Hasher);
                 };
 
-                static int Compare(const Edge &lhs, const Edge &rhs) throw();
-
-                
-
+                static int  Compare(const Edge &lhs, const Edge &rhs) throw();
+                static void Sort3(Edge &a0, Edge &a1, Edge &a2) throw();
+                friend bool operator==( const Edge &lhs, const Edge &rhs ) throw();
+                friend bool operator!=( const Edge &lhs, const Edge &rhs ) throw();
+                friend bool operator<(const Edge &lhs, const Edge &rhs) throw();
 
             private:
                 Y_DISABLE_ASSIGN(Edge);
+            };
+            
+            class Edge3
+            {
+            public:
+                const Edge e0,e1,e2;
+                
+                Edge3(const Edge &,const Edge &, const Edge&) throw();
+                ~Edge3() throw();
+                Edge3(const Edge3&) throw();
+                
+                friend bool operator==( const Edge3 &lhs, const Edge3 &rhs ) throw();
+                static int  Compare(const Edge3 &lhs, const Edge3 &rhs) throw();
+                
+            private:
+                Y_DISABLE_ASSIGN(Edge3);
             };
 
         }

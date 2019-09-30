@@ -22,11 +22,22 @@ namespace upsylon
 
 
         //! display
-        inline friend std::ostream & operator<<(std::ostream &os, const permutation &p) { return counting::display(os,p.perm,p.n); }
+        inline friend std::ostream & operator<<(std::ostream &os, const permutation &p)
+        { return counting::display(os,p.perm,p.n); }
 
         //! check
         static void memchk(const permutation &lhs, const permutation &rhs);
-
+        
+        //! get
+        inline size_t operator[]( const size_t indx ) const throw()
+        {
+            assert(indx>0); assert(indx<=n);
+            const size_t ans = perm[indx];
+            assert(ans>=1); assert(ans<=n);
+            return perm[indx];
+        }
+        
+        
     private:
         const size_t nm1;
         size_t       wlen;
