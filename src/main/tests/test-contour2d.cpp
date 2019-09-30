@@ -98,22 +98,22 @@ Y_UTEST(contour2d)
         Oxide::Field1D<float> x("x",Ax.outer);
         Oxide::Field1D<float> y("y",Ay.outer);
 
-        Ax.mapBoundaries(x,-1.0,1.0);
-        Ay.mapBoundaries(y,-1.0,1.0);
+        Ax.mapBoundaries(x,-1.0f,1.0f);
+        Ay.mapBoundaries(y,-1.0f,1.0f);
 
 
         // create dipolar field
 
-        p2d p1(-0.5,0);
-        p2d p2(0.7,0);
+        p2d p1(-0.5f,0);
+        p2d p2(0.7f,0);
 
         {
             Oxide::Layout2D::Loop loop(V.lower,V.upper);
             for( loop.start(); loop.valid(); loop.next() )
             {
                 const p2d p( x[loop.value.x], y[loop.value.y] );
-                const float v1 = 1.0f/(sqrtf((p-p1).norm2())+0.1);
-                const float v2 = 1.0f/(sqrtf((p-p2).norm2())+0.1);
+                const float v1 = 1.0f/(sqrtf((p-p1).norm2())+0.1f);
+                const float v2 = 1.0f/(sqrtf((p-p2).norm2())+0.1f);
                 V(loop.value) = v1-v2;
             }
             {
@@ -195,8 +195,8 @@ Y_UTEST(contour2d)
             for( loop.start(); loop.valid(); loop.next() )
             {
                 const p2d p( x[loop.value.x], y[loop.value.y] );
-                const float v1 = 1.0f/(sqrtf((p-p1).norm2())+0.1);
-                const float v2 = 1.0f/(sqrtf((p-p2).norm2())+0.1);
+                const float v1 = 1.0f/(sqrtf((p-p1).norm2())+0.1f);
+                const float v2 = 1.0f/(sqrtf((p-p2).norm2())+0.1f);
                 V(loop.value) = v1+v2;
             }
             {

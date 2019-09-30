@@ -38,7 +38,7 @@ namespace upsylon {
                     {
                         assert(addr);
                         assert(fmt.is_valid());
-                        const long i = *static_cast<const T *>(addr);
+						const long i = long(*static_cast<const T *>(addr) );
                         fp( **fmt, i );
                     }
 
