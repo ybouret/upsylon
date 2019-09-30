@@ -1,3 +1,4 @@
+#include "y/oxide/grid/structured.hpp"
 #include "y/oxide/grid/rectilinear.hpp"
 #include "y/oxide/grid/curvilinear.hpp"
 #include "y/utest/run.hpp"
