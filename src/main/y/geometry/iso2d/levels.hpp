@@ -17,11 +17,12 @@ namespace upsylon {
             //__________________________________________________________________
             typedef set<Edge,Point,Edge::Hasher,memory::global> Points;
 
+            struct Scanner; //!< forward declaration
+
             //__________________________________________________________________
             //
             //! a level is a set of points, has segments and optional curves
             //__________________________________________________________________
-
             class Level_ : public counted, public Points
             {
             public:
@@ -39,7 +40,8 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Level_);
-                friend struct contour2d;
+                friend struct Scanner;
+
                 //! create/query a single point
                 Point_ *single(const Coordinate &c, const Vertex &v );
 

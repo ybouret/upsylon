@@ -1,6 +1,5 @@
-#include "y/geometry/contour2d.hpp"
+#include "y/geometry/iso2d/scanner.hpp"
 #include "y/utest/run.hpp"
-#include "y/sequence/vector.hpp"
 #include "y/sort/unique.hpp"
 #include "y/oxide/field2d.hpp"
 #include "y/oxide/workspace.hpp"
@@ -10,40 +9,41 @@
 
 using namespace upsylon;
 using namespace geometry;
+using namespace Iso2D;
 
 typedef point2d<float> p2d;
 
 Y_UTEST(contour2d)
 {
     {
-        vector<contour2d::coordinate> coords;
+        vector<Coordinate> coords;
         for(size_t i=100+alea.leq(1000);i>0;--i)
         {
-            const contour2d::coordinate c(alea.range<unit_t>(-10,10),
-                                          alea.range<unit_t>(-10,10),
-                                          alea.__leq<short>(1));
+            const Coordinate c(alea.range<unit_t>(-10,10),
+                               alea.range<unit_t>(-10,10),
+                               alea.__leq<short>(1));
             coords.push_back(c);
         }
         std::cerr << coords << std::endl;
-        hsort(coords, contour2d::coordinate::compare);
+        hsort(coords, Coordinate::Compare);
         std::cerr << coords << std::endl;
 
         for(size_t i=coords.size();i>1;--i)
         {
-            const contour2d::coordinate &lo = coords[i-1];
-            const contour2d::coordinate &hi = coords[i];
+            const Coordinate &lo = coords[i-1];
+            const Coordinate &hi = coords[i];
             Y_ASSERT(lo==lo);
             Y_ASSERT(hi==hi);
-            Y_ASSERT(contour2d::coordinate::compare(lo,lo)==0);
-            Y_ASSERT(contour2d::coordinate::compare(hi,hi)==0);
-            switch(contour2d::coordinate::compare(lo,hi))
+            Y_ASSERT(Coordinate::Compare(lo,lo)==0);
+            Y_ASSERT(Coordinate::Compare(hi,hi)==0);
+            switch(Coordinate::Compare(lo,hi))
             {
                 case -1:
                 case  0:
                     break;
 
                 default:
-                    throw exception("invalid contour2d::coordinate ordering");
+                    throw exception("invalid Coordinate ordering");
             }
         }
 
@@ -53,11 +53,11 @@ Y_UTEST(contour2d)
 
         for(size_t iter=10+alea.leq(100);iter>0;--iter)
         {
-            const contour2d::coordinate &a = coords[ alea.range<size_t>(1,coords.size()) ];
-            const contour2d::coordinate &b = coords[ alea.range<size_t>(2,coords.size()) ];
+            const Coordinate &a = coords[ alea.range<size_t>(1,coords.size()) ];
+            const Coordinate &b = coords[ alea.range<size_t>(2,coords.size()) ];
 
-            contour2d::edge eA(a);
-            contour2d::edge eB(b);
+            Edge eA(a);
+            Edge eB(b);
             if(a==b)
             {
                 Y_ASSERT(eA==eB);
@@ -65,8 +65,8 @@ Y_UTEST(contour2d)
             else
             {
                 Y_ASSERT(eA!=eB);
-                contour2d::edge eAB(a,b);
-                contour2d::edge eBA(b,a);
+                Edge eAB(a,b);
+                Edge eBA(b,a);
                 Y_ASSERT(eAB==eBA);
             }
 
@@ -140,33 +140,33 @@ Y_UTEST(contour2d)
         z.insert(-3);
         std::cerr << "z=" << z << std::endl;
 
-        contour2d::level_set ls;
-        contour2d::scan(ls,V, x.lower, x.upper, y.lower, y.upper, x, y, z);
+        LevelSet ls;
+        Scanner::Run(ls,V, x.lower, x.upper, y.lower, y.upper, x, y, z);
 
         {
             ios::ocstream pfp("lsp.dat");
             ios::ocstream sfp("lss.dat");
-            for( contour2d::level_set::iterator it = ls.begin(); it != ls.end(); ++it )
+            for( LevelSet::iterator it = ls.begin(); it != ls.end(); ++it )
             {
-                contour2d::level          &L = *it;
-                const contour2d::segments  S = L->slist;
-                L->build_isolines(true);
+                Level          &L = *it;
+                const Segments  S = L->slist;
+                L->buildLines(true);
                 std::cerr << "Level #" << L->index << "@" << z[L->index] << std::endl;
                 std::cerr << "    |_#points    = " << L->size()     << std::endl;
                 std::cerr << "    |_#segments1 = " << S.size        << std::endl;
                 std::cerr << "    |_#isolines  = " << L->iso.size() << std::endl;
                 std::cerr << "    |_#segments2 = " << L->slist.size << std::endl;
 
-                for( contour2d::points::iterator p = L->begin(); p != L->end(); ++p )
+                for( Points::iterator p = L->begin(); p != L->end(); ++p )
                 {
-                    const contour2d::vertex &v = (*p)->position;
+                    const Vertex &v = (*p)->position;
                     pfp("%.15g %.15g %u\n", v.x, v.y, unsigned(L->index) );
                 }
 
-                for( contour2d::segment *s = S.head; s; s=s->next)
+                for( const Segment *s = S.head; s; s=s->next)
                 {
-                    const contour2d::vertex &a = s->head->position;
-                    const contour2d::vertex &b = s->tail->position;
+                    const Vertex &a = s->head->position;
+                    const Vertex &b = s->tail->position;
                     sfp("%.15g %.15g %u\n", a.x, a.y, unsigned(L->index) );
                     sfp("%.15g %.15g %u\n", b.x, b.y, unsigned(L->index) );
                     sfp("\n");
@@ -177,8 +177,8 @@ Y_UTEST(contour2d)
                     ios::ocstream fp(fn);
                     for(size_t i=1;i<=L->iso.size();++i)
                     {
-                        const contour2d::isolist &curve = *(L->iso[i]);
-                        for(const contour2d::isopoint *p = curve.head;p;p=p->next)
+                        const LineType &curve = *(L->iso[i]);
+                        for(const Node *p = curve.head;p;p=p->next)
                         {
                             fp("%g %g %u\n",(*p)->position.x, (*p)->position.y, unsigned(i));
                         }
@@ -218,13 +218,13 @@ Y_UTEST(contour2d)
         z.insert(3);
         z.insert(6);
 
-        contour2d::scan(ls,V, x.lower, x.upper, y.lower, y.upper, x, y, z);
-        ls.build_isolines(false);
+        Scanner::Run(ls,V, x.lower, x.upper, y.lower, y.upper, x, y, z);
+        ls.buildLines(false);
 
         {
-            for( contour2d::level_set::iterator it = ls.begin(); it != ls.end(); ++it )
+            for( LevelSet::iterator it = ls.begin(); it != ls.end(); ++it )
             {
-                contour2d::level          &L = *it;
+                Level          &L = *it;
                 std::cerr << "Level #" << L->index << "@" << z[L->index] << std::endl;
                 std::cerr << "    |_#points    = " << L->size()     << std::endl;
                 std::cerr << "    |_#isolines  = " << L->iso.size() << std::endl;
@@ -235,8 +235,8 @@ Y_UTEST(contour2d)
                     ios::ocstream fp(fn);
                     for(size_t i=1;i<=L->iso.size();++i)
                     {
-                        const contour2d::isolist &curve = *(L->iso[i]);
-                        for(const contour2d::isopoint *p = curve.head;p;p=p->next)
+                        const LineType &curve = *(L->iso[i]);
+                        for(const Node *p = curve.head;p;p=p->next)
                         {
                             fp("%g %g %u\n",(*p)->position.x, (*p)->position.y, unsigned(i));
                         }
