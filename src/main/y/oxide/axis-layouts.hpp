@@ -28,7 +28,7 @@ namespace upsylon {
 
             //! assume Field1D with same metrics
             template <typename FIELD, typename T>
-            void mapBoundaries(FIELD &axis,
+            void mapBoundaries(FIELD & axis,
                                const T lowerValue,
                                const T upperValue) const throw()
             {
