@@ -29,9 +29,9 @@ namespace {
         typename Layout<COORD>::Loop loop(L.lower,L.upper);
         for(loop.start(); loop.valid(); loop.next())
         {
-            vtxf rv = rgf( loop.value );
-            vtxf cv = cgf( loop.value );
-            
+            (void)sgf( loop.value );
+            (void)rgf( loop.value );
+            (void)cgf( loop.value );
         }
 
     }

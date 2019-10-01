@@ -56,6 +56,14 @@ namespace upsylon {
             {
                 assert(this->has(c));
                 mutable_type f[4] = {0,0,0,0};
+                const_type  *org  = (const type *)&org;
+                const_type  *spc  = (const type *)&spacing;
+
+                for(size_t dim=0;dim<Dimensions;++dim)
+                {
+                    const unit_t u = Coord::Of(c,dim);
+                    f[dim] = org[u] + type(u) * spc[u];
+                }
                 return *(vertex *)f;
             }
 
