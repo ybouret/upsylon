@@ -39,9 +39,9 @@ namespace
     static inline void testWksp(char **argv)
     {
 
-        typedef  typename __Field<COORD,double>::Type  dField;
-        typedef  typename __Field<COORD,float>::Type   fField;
-        typedef  typename __Field<COORD,string>::Type  sField;
+        typedef  typename FieldFor<COORD,double>::Type  dField;
+        typedef  typename FieldFor<COORD,float>::Type   fField;
+        typedef  typename FieldFor<COORD,string>::Type  sField;
 
         const COORD   length  = Coord::Parse<COORD>(  argv[1],"length");
         const COORD   pbc     = Coord::Parse<COORD>(  argv[2],"pbc");

@@ -51,9 +51,9 @@ namespace
     void make_all( const Layout<COORD> &full )
     {
 
-        typedef typename __Field<COORD,double>::Type   dField;
-        typedef typename __Field<COORD,string>::Type   sField;
-        typedef typename __Field<COORD,Coord1D>::Type  iField;
+        typedef typename FieldFor<COORD,double>::Type   dField;
+        typedef typename FieldFor<COORD,string>::Type   sField;
+        typedef typename FieldFor<COORD,Coord1D>::Type  iField;
 
         const size_t  ng = 1;
         ios::ovstream block( 1024*1024 );

@@ -87,7 +87,7 @@ namespace upsylon
 
 
             //! x,y,z
-            static const char *AxisName(const size_t dim) throw();
+            static const char *DefaultAxisName(const size_t dim) throw();
 
 
             //! set coordinate to j[,j[,j]]

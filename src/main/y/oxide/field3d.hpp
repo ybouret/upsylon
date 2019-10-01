@@ -176,22 +176,22 @@ rowLayout(sliceLayout.lower.x,sliceLayout.upper.x)
         //
         //=====================================================================
         //! class for field type selection
-        template <typename COORD, typename T> struct __Field;
+        template <typename COORD, typename T> struct FieldFor;
 
         //! template fields in 1D
-        template <typename T> struct __Field<Coord1D,T>
+        template <typename T> struct FieldFor<Coord1D,T>
         {
             typedef Field1D<T> Type; //!< Field1D<T>
         };
 
         //! template fields in 2D
-        template <typename T> struct __Field<Coord2D,T>
+        template <typename T> struct FieldFor<Coord2D,T>
         {
             typedef Field2D<T> Type; //!< Field2D<T>
         };
 
         //! template fields in 3D
-        template <typename T> struct __Field<Coord3D,T>
+        template <typename T> struct FieldFor<Coord3D,T>
         {
             typedef Field3D<T> Type; //!< Field3D<T>
         };

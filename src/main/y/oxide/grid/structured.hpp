@@ -29,18 +29,13 @@ namespace upsylon {
         class StructuredGrid : public Grid<COORD,T>
         {
         public:
-            typedef          Layout<COORD>            LayoutType;  //!< alias
-            typedef typename LayoutType::coord        coord;       //!< alias
-            typedef typename LayoutType::const_coord  const_coord; //!< alias
-
-            typedef typename VertexFor<COORD,T>::Type vertex;       //!< alias
-            typedef const vertex                      const_vertex; //!< alias
+            Y_OXIDE_GRID_ALIAS();
             
             //! setup
             inline explicit StructuredGrid(const LayoutType &L,
                                            const_vertex      org,
                                            const_vertex      spc) :
-            layout(L), origin(org), spacing(spc)
+            GridType(L), origin(org), spacing(spc)
             {
                 check();
             }
@@ -52,10 +47,9 @@ namespace upsylon {
                 bzset_(spacing);
             }
 
-            const LayoutType layout;    //!< layout metrics
             const_vertex     origin;    //!< global origin
             const_vertex     spacing;   //!< spacing
-
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(StructuredGrid);

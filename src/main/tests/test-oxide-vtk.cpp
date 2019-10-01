@@ -53,16 +53,16 @@ namespace  {
         VTK.writePointData(fp,L);
 
 
-        typename __Field<COORD,double>::Type Fd( "Fd", L );
+        typename FieldFor<COORD,double>::Type Fd( "Fd", L );
         fill(Fd);
         VTK.writeField(fp, Fd, L);
 
 
-        typename __Field<COORD, point2d<float> >::Type F2( "F2", L );
+        typename FieldFor<COORD, point2d<float> >::Type F2( "F2", L );
         fill(F2);
         VTK.writeField(fp, F2, L);
 
-        typename __Field<COORD, point3d<double> >::Type F3( "F3", L );
+        typename FieldFor<COORD, point3d<double> >::Type F3( "F3", L );
         fill(F3);
         VTK.writeField(fp, F3, L);
 

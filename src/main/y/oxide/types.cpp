@@ -25,7 +25,7 @@ namespace upsylon
             return ran.range<Coord1D>(a,b);
         }
 
-        const char *Coord:: AxisName(const size_t dim) throw()
+        const char *Coord:: DefaultAxisName(const size_t dim) throw()
         {
             switch(dim)
             {

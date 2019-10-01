@@ -224,7 +224,7 @@ namespace upsylon
                 Peer      send; //!< whom to send to
                 Peer      recv; //!< from whom to recv
                 comm_mode mode; //!< constant/variable
-                unsigned  comm; //!<  GhostsComm info
+                unsigned  comm; //!< GhostsComm info
             };
 
             //! prolog to send in sendingWay

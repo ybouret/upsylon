@@ -13,25 +13,48 @@ namespace upsylon {
         struct Grid_
         {
             //! throw an explaining explication
-            static void LEQZ(const char *gridName, const char *context, const unsigned dim);
+            static void ExceptionLEQZ(const char *gridName, const char *context, const unsigned dim);
+
+            //! get name[dim] of DefaultAxisName(dim)
+            static const char *GetAxisName(const char **names, const size_t dim) throw();
         };
 
         //! Grid base interface
         template <typename COORD, typename T>
-        class Grid
+        class Grid : public Layout<COORD>
         {
         public:
             Y_DECL_ARGS(T,type);
             static  const size_t Dimensions = Coord::Get<COORD>::Dimensions;
+            typedef          Layout<COORD>            LayoutType;
+            typedef typename LayoutType::coord        coord;
+            typedef typename LayoutType::const_coord  const_coord;
             typedef typename VertexFor<COORD,T>::Type vertex;
             typedef const    vertex                   const_vertex;
 
             inline virtual ~Grid() throw() {}
 
+            static inline
+            const_vertex &Zero() throw()
+            {
+                static const T __zero[4] = { 0,0,0,0 };
+                return *(const_vertex *)__zero;
+            }
+
+            static inline
+            const_vertex &Ones() throw()
+            {
+                static const T __ones[4] = { 1,1,1,1 };
+                return *(const_vertex *)__ones;
+            }
 
 
         protected:
-            inline explicit Grid() throw() {}
+            inline explicit Grid(const LayoutType &L ) throw() : LayoutType(L)
+            {
+
+            }
+
             void CheckPositive(const char   *gridName,
                                const char   *context,
                                const_vertex &v ) const
@@ -39,12 +62,22 @@ namespace upsylon {
                 const_type *p = (const_type *)&v;
                 for(unsigned dim=0;dim<Dimensions;++dim)
                 {
-                    if(p[dim]<=0) Grid_::LEQZ(gridName,context,dim);
+                    if(p[dim]<=0) Grid_::ExceptionLEQZ(gridName,context,dim);
                 }
             }
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grid);
         };
+
+#define Y_OXIDE_GRID_ALIAS()                            \
+typedef             Grid<COORD,T>          GridType;    \
+static const size_t Dimensions = GridType::Dimensions;  \
+typedef typename    GridType::LayoutType   LayoutType;  \
+typedef typename    GridType::coord        coord;       \
+typedef typename    GridType::const_coord  const_coord; \
+typedef typename    GridType::vertex       vertex;      \
+typedef typename    GridType::const_vertex const_vertex
+
 
     }
 }
