@@ -18,10 +18,10 @@ namespace upsylon {
                 const Coordinate  *c; //!< logical coordinate field
                 const double      *d; //!< local data field
 
-                //! run algorithm to deduce
+                //! run algorithm to deduce facets
                 template <
                 typename FIELD,
-                typename ARRAY>
+                typename ARRAY> static inline
                 void Run(const FIELD &data,
                          const unit_t ilo,
                          const unit_t ihi,
