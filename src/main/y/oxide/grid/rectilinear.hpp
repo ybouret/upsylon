@@ -10,6 +10,13 @@ namespace upsylon {
 
     namespace Oxide {
 
+        //! shared data
+        struct RectilinearGrid_
+        {
+            static const char Name[];           //!< "RectilinearGrid"
+            static const char SqueezedLayout[]; //!< "Squeezed Layout"
+        };
+
         //! a rectilinear grid
         template <typename COORD, typename T>
         class RectilinearGrid : public Grid<COORD,T>, public slots< Field1D<T> >
@@ -58,6 +65,57 @@ namespace upsylon {
                 }
                 return *(vertex *)f;
             }
+
+
+            //! inter/extrapolate
+            inline void mapRegular(const LayoutType  &sub,
+                                   const_vertex       ini,
+                                   const_vertex       end)
+            {
+                Basis      &self = *this;
+                const_type *I    = (const_type *) &ini;
+                const_type *E    = (const_type *) &end;
+
+                for(size_t dim=0;dim<Dimensions;++dim)
+                {
+                    // get sub parameters in that dimension
+                    const unit_t lo = Coord::Of(sub.lower,dim);
+                    const unit_t hi = Coord::Of(sub.upper,dim);
+                    if(lo>=hi)
+                    {
+                        Grid_::ExceptionLEQZ(RectilinearGrid_::Name,
+                                             RectilinearGrid_::SqueezedLayout,
+                                             dim);
+                    }
+                    const unit_t dd = hi-lo;
+
+                    // get this parameters in that dimension
+                    const unit_t i0    = Coord::Of(this->lower,dim);
+                    const unit_t i1    = Coord::Of(this->upper,dim);
+                    Axis        &ax    = self[dim];
+                    const_type   start = I[dim];
+                    const_type   stop  = E[dim];
+                    const_type   delta = stop-start;
+
+                    // loop over self parameters with coincidence on
+                    // sub parameters
+                    for(unit_t i=i0;i<=i1;++i)
+                    {
+                        ax[i] = start + (delta * (i-lo) ) / dd;
+                    }
+
+                    // special cases to avoid roundoff
+                    if(ax.has(lo))
+                    {
+                        ax[lo] = start;
+                    }
+                    if(ax.has(hi))
+                    {
+                        ax[hi] = stop;
+                    }
+                }
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(RectilinearGrid);

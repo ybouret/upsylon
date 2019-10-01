@@ -26,6 +26,10 @@ namespace {
         RectilinearGrid<COORD,float> rgf(L);
         CurvilinearGrid<COORD,float> cgf(L);
 
+
+        rgf.mapRegular(L,org,spc);
+        cgf.mapRegular(L,org,spc);
+
         typename Layout<COORD>::Loop loop(L.lower,L.upper);
         for(loop.start(); loop.valid(); loop.next())
         {

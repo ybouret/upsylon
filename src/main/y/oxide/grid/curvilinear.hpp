@@ -11,6 +11,13 @@ namespace upsylon {
 
     namespace Oxide {
 
+        //! shared data
+        struct CurvilinearGrid_
+        {
+            static const char Name[];           //!< "CurvilinearGrid"
+            static const char SqueezedLayout[]; //!< "Squeezed Layout"
+        };
+
         //! a curvilinear grid
         template <typename COORD, typename T>
         class CurvilinearGrid :
@@ -52,6 +59,42 @@ namespace upsylon {
                 }
                 return *(vertex *)f;
             }
+
+
+            //! inter/extrapolate
+            inline void mapRegular(const LayoutType  &sub,
+                                   const_vertex       ini,
+                                   const_vertex       end)
+            {
+
+                Basis        &self = *this;
+                const_vertex  del  = end-ini;
+                const_coord   dd   = sub.upper-sub.lower;
+                const_type   *I    = (const_type *) &ini;
+                const_type   *D    = (const_type *) &del;
+
+                for(size_t dim=0;dim<Dimensions;++dim)
+                {
+                    if(Coord::Of(dd,dim)<=0)
+                    {
+                        Grid_::ExceptionLEQZ(CurvilinearGrid_::Name,
+                                             CurvilinearGrid_::SqueezedLayout,
+                                             dim);
+                    }
+                }
+
+                typename LayoutType::Loop loop(sub.lower,sub.upper);
+                for( loop.start(); loop.valid(); loop.next() )
+                {
+                    const_coord &c = loop.value;
+                    for(size_t dim=0;dim<Dimensions;++dim)
+                    {
+                        self[dim](c) = I[dim] + ( (Coord::Of(c,dim)-Coord::Of(sub.lower,dim))*D[dim]) /Coord::Of(dd,dim);
+                    }
+                }
+
+            }
+
 
 
         private:
