@@ -58,7 +58,7 @@ namespace upsylon {
                                        const double      db)
             {
                 assert(ca!=cb);
-                assert(da*db<0);
+                //assert(da*db<0);
                 const Edge e(ca,cb);
                 Point *pp = search(e);
                 if(pp)

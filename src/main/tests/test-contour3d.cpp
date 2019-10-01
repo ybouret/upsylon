@@ -96,13 +96,39 @@ Y_UTEST(contour3d)
         Field3D<double>                 P( "P", L);
         RectilinearGrid<Coord3D,double> G(L,NULL);
         G.mapRegular(L,vertex(-1,-1,-1),vertex(1,1,1));
-
+        
+        {
+            std::cerr << "X=";
+            for(unit_t i=G[0].lower;i<=G[0].upper;++i)
+            {
+                std::cerr << ' ' << G[0][i];
+            } std::cerr << std::endl;
+        }
+        
+        {
+            std::cerr << "Y=";
+            for(unit_t i=G[1].lower;i<=G[1].upper;++i)
+            {
+                std::cerr << ' ' << G[1][i];
+            } std::cerr << std::endl;
+        }
+        
+        {
+            std::cerr << "Z=";
+            for(unit_t i=G[2].lower;i<=G[2].upper;++i)
+            {
+                std::cerr << ' ' << G[2][i];
+            } std::cerr << std::endl;
+        }
+        
+        
         Layout3D::Loop loop( L.lower, L.upper );
 
         for( loop.start(); loop.valid(); loop.next() )
         {
             const Coord3D &c = loop.value;
             const vertex   v = G(c);
+            //std::cerr << c << "->" << v << std::endl;
             const double   x = v.x;
             const double   E = exp( -1.4* v.norm2() );
 
@@ -112,6 +138,7 @@ Y_UTEST(contour3d)
         }
 
         Contour::Levels w;
+        w.insert(-0.5);
         w.insert(0.5);
         w.insert(0.7);
 
@@ -128,17 +155,42 @@ Y_UTEST(contour3d)
         std::cerr << "#surfaces=" << surfaces.size() << std::endl;
         for(Surfaces::iterator it=surfaces.begin();it!=surfaces.end();++it)
         {
-            const Surface_ &S = **it;
-            std::cerr << "|_S[" << S.index << "]@" << w[S.index] << std::endl;
-            std::cerr << " |_#points=" << S.size() << std::endl;
+            const Surface_ &s = **it;
+            std::cerr << "|_S[" << s.index << "]@" << w[s.index] << std::endl;
+            std::cerr << " |_#points=" << s.size() << std::endl;
 
-            const string  fn = vformat("s%u.dat", unsigned(S.index) );
+            const string  fn = vformat("s%u.dat", unsigned(s.index) );
             ios::ocstream fp(fn);
-            for(Points::const_iterator p=S.begin(); p != S.end(); ++p )
+            for(Points::const_iterator p=s.begin(); p != s.end(); ++p )
             {
-                fp("%g %g %g\n", (*p)->position.x, (*p)->position.y, (*p)->position.x);
+                fp("%g %g %g\n", (*p)->position.x, (*p)->position.y, (*p)->position.z);
             }
 
+        }
+        
+        
+        Scanner::Run(surfaces,
+                     P,
+                     L.lower.x,L.upper.x,
+                     L.lower.y,L.upper.y,
+                     L.lower.z,L.upper.z,
+                     G[0], G[1], G[2],
+                     w);
+        
+        std::cerr << "#surfaces=" << surfaces.size() << std::endl;
+        for(Surfaces::iterator it=surfaces.begin();it!=surfaces.end();++it)
+        {
+            const Surface_ &s = **it;
+            std::cerr << "|_S[" << s.index << "]@" << w[s.index] << std::endl;
+            std::cerr << " |_#points=" << s.size() << std::endl;
+            
+            const string  fn = vformat("p%u.dat", unsigned(s.index) );
+            ios::ocstream fp(fn);
+            for(Points::const_iterator p=s.begin(); p != s.end(); ++p )
+            {
+                fp("%g %g %g\n", (*p)->position.x, (*p)->position.y, (*p)->position.z);
+            }
+            
         }
     }
 

@@ -23,17 +23,17 @@ namespace upsylon {
                 template <
                 typename FIELD,
                 typename ARRAY> static inline
-                void Run(Surfaces    &surfaces,
-                         const FIELD &data,
-                         const unit_t ilo,
-                         const unit_t ihi,
-                         const unit_t jlo,
-                         const unit_t jhi,
-                         const unit_t klo,
-                         const unit_t khi,
-                         const ARRAY &x,
-                         const ARRAY &y,
-                         const ARRAY &z,
+                void Run(Surfaces              &surfaces,
+                         const FIELD           &data,
+                         const unit_t           ilo,
+                         const unit_t           ihi,
+                         const unit_t           jlo,
+                         const unit_t           jhi,
+                         const unit_t           klo,
+                         const unit_t           khi,
+                         const ARRAY           &x,
+                         const ARRAY           &y,
+                         const ARRAY           &z,
                          const Contour::Levels &w
                          )
                 {
@@ -42,7 +42,7 @@ namespace upsylon {
                     surfaces.create(nc);
                     if(nc<=0) return;
                     const double wmin  = w.head();
-                    const double wmax  = w.tail();
+                    const double wmax  = w.tail(); assert(wmin<=wmax);
                     const unit_t klop1 = klo+1;
                     const unit_t jlop1 = jlo+1;
                     const unit_t ilop1 = ilo+1;
@@ -82,7 +82,7 @@ namespace upsylon {
                                 for(size_t u=1;u<7;++u)
                                 {
                                     gmin = min_of(gmin,g[u]);
-                                    gmax = max_of(gmax,g[i]);
+                                    gmax = max_of(gmax,g[u]);
                                 }
                                 if(gmin>wmax||gmax<wmin)
                                 {
@@ -92,12 +92,21 @@ namespace upsylon {
                                 Surfaces::iterator it = surfaces.begin();
                                 for(size_t l=1;l<=nc;++l,++it)
                                 {
+                                    assert(l==(**it).index);
                                     const double iso = w[l];
                                     if(iso<gmin||iso>gmax)
                                     {
                                         continue; // no possible facet for this level
                                     }
-                                    const double d[8] = { g[0]-iso, g[1]-iso, g[2]-iso, g[3]-iso, g[4]-iso, g[5]-iso, g[6]-iso, g[7]-iso };
+                                    const double d[8] = {
+                                        g[0]-iso,
+                                        g[1]-iso,
+                                        g[2]-iso,
+                                        g[3]-iso,
+                                        g[4]-iso,
+                                        g[5]-iso,
+                                        g[6]-iso,
+                                        g[7]-iso };
 
                                     const Scanner ctx = { v,c,d, &(**it) };
                                     ctx.scanCube();
