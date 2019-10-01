@@ -9,6 +9,7 @@ namespace upsylon {
 
     namespace Oxide {
 
+        //! a curvilinear grid
         template <typename COORD, typename T>
         class CurvilinearGrid : public Grid<COORD,T>
         {

@@ -1,4 +1,4 @@
-#include "y/geometry/iso3d/points.hpp"
+#include "y/geometry/iso3d/facets.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sort/unique.hpp"
@@ -38,9 +38,11 @@ static inline Edge *getEdge( const array<Coordinate> &arr )
 
 Y_UTEST(contour3d)
 {
+#define NC 1024
+
     vector<Coordinate> coords;
     const unit_t m = 5;
-    for(size_t i=1000;i>0;--i)
+    for(size_t i=NC;i>0;--i)
     {
         const Coordinate c(alea.range<unit_t>(-m,m),
                            alea.range<unit_t>(-m,m),
@@ -50,32 +52,36 @@ Y_UTEST(contour3d)
     std::cerr << "#coords=" << coords.size() << std::endl;
     unique(coords);
     std::cerr << "#coords=" << coords.size() << std::endl;
-    for(size_t i=1000;i>0;--i)
+
+    for(size_t i=NC*16;i>0;--i)
     {
         auto_ptr<Edge> pa = getEdge(coords);
-        auto_ptr<Edge> pb = getEdge(coords);
-        auto_ptr<Edge> pc = getEdge(coords);
-        Edge::Sort3(*pa, *pb, *pc);
-        
-        Edge *etab[3] = { &*pa, &*pb, &*pc };
-        const Edge3 org3( *etab[0], *etab[1], *etab[2] );
-        Y_ASSERT( etab[0] == &*pa );
-        Y_ASSERT( etab[1] == &*pb );
-        Y_ASSERT( etab[2] == &*pc );
+        auto_ptr<Edge> pb = 0;
+        do
+        {
+            pb = getEdge(coords);
+        }
+        while( *pb == *pa );
+
+        auto_ptr<Edge> pc = 0;
+        do {
+            pc = getEdge(coords);
+        }
+        while( *pc == *pa || *pc == *pb );
+
+        const Edge3 org3( *pa, *pb, *pc );
 
         permutation perm(3);
         for( perm.start(); perm.valid(); perm.next() )
         {
-            //std::cerr << perm << std::endl;
-            const size_t i0 = perm(0); assert(i0>=0); assert(i0<3);
-            const size_t i1 = perm(1); assert(i1>=0); assert(i1<3);
-            const size_t i2 = perm(2); assert(i2>=0); assert(i2<3);
-
-            const Edge3 prm3( *etab[i0], *etab[i1], *etab[i2] );
+            const Edge3 prm3( *org3.edge[ perm(0) ], *org3.edge[ perm(1) ],*org3.edge[ perm(2) ] );
             Y_ASSERT(prm3==org3);
         }
+
     }
-    
+
+    std::cerr << "sizeof(Iso3D::Facet)=" << sizeof(Iso3D::Facet) << std::endl;
+    std::cerr << "sizeof(Iso3D::Edge3)=" << sizeof(Iso3D::Edge3) << std::endl;
 
 }
 Y_UTEST_DONE()

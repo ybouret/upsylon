@@ -11,12 +11,15 @@ namespace upsylon {
 
         namespace Iso3D {
 
+            //! a 3D facet
             class Facet : public counted_object
             {
             public:
-                const Point a;
-                const Point b;
-                const Point c;
+                const Point a;  //!< computed point
+                const Point b;  //!< computed point, a!=b
+                const Point c;  //!< computed point, a!=b && a!=c
+                //const Edge3 e3; //!< signature from edges
+
 
                 explicit Facet(const Point &A, const Point &B, const Point &C) throw();
                 virtual ~Facet() throw();

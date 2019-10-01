@@ -11,12 +11,14 @@ namespace upsylon {
 
         namespace Iso3D {
 
+            //! algorithm to build 3D isosurface
             struct Scanner
             {
-                const Vertex      *v;
-                const Coordinate  *c;
-                const double      *d;
+                const Vertex      *v; //!< physical vertex field
+                const Coordinate  *c; //!< logical coordinate field
+                const double      *d; //!< local data field
 
+                //! run algorithm to deduce
                 template <
                 typename FIELD,
                 typename ARRAY>

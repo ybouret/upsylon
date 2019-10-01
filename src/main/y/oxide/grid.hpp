@@ -9,12 +9,14 @@ namespace upsylon {
 
     namespace Oxide {
 
-        
+        //! common function
         struct Grid_
         {
+            //! throw an explaining explication
             static void LEQZ(const char *gridName, const char *context, const unsigned dim);
         };
 
+        //! Grid base interface
         template <typename COORD, typename T>
         class Grid
         {

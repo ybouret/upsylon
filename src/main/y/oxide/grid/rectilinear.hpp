@@ -8,6 +8,7 @@ namespace upsylon {
 
     namespace Oxide {
 
+        //! a rectilinear grid
         template <typename COORD, typename T>
         class RectilinearGrid : public Grid<COORD,T>
         {

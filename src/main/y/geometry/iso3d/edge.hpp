@@ -15,52 +15,63 @@ namespace upsylon {
             class Edge
             {
             public:
-                const Coordinate lower;
-                const Coordinate upper;
-                ~Edge() throw();
-                Edge( const Coordinate & ) throw(); //!< built from one logical coordinate
-                Edge( const Coordinate &a, const Coordinate &b) throw() ;//!< a!=b
-                Edge( const Edge &) throw();
-                
+                const Coordinate lower; //!< lower coordinate
+                const Coordinate upper; //!< upper coordinate
+
+                ~Edge() throw();                                          //!< cleanup
+                Edge( const Coordinate & ) throw();                       //!< built from one logical coordinate
+                Edge( const Coordinate &a, const Coordinate &b) throw() ; //!< a!=b
+                Edge( const Edge &) throw();                              //!< copy
+
+                //! dedicated hasher
                 class Hasher
                 {
                 public:
-                    hashing::fnv H;
-
-                    Hasher() throw();
-                    ~Hasher() throw();
-                    size_t operator()(const Edge &) throw();
+                    hashing::fnv H;                          //!< internal hashing function
+                    Hasher() throw();                        //!< setup
+                    ~Hasher() throw();                       //!< cleanup
+                    size_t operator()(const Edge &) throw(); //!< get the key
                     
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Hasher);
                 };
 
+                //! compare in lexicographic order of coordinates
                 static int  Compare(const Edge &lhs, const Edge &rhs) throw();
-                static void Sort3(Edge &a0, Edge &a1, Edge &a2) throw();
+
+                //! sort three edges
+                //static void Sort3(Edge &a0, Edge &a1, Edge &a2) throw();
+
+                static void Sort3(Edge **arr) throw();
+
+
+                //! test component wise equality
                 friend bool operator==( const Edge &lhs, const Edge &rhs ) throw();
+                //! test component wise difference
                 friend bool operator!=( const Edge &lhs, const Edge &rhs ) throw();
+                //! lexicographic
                 friend bool operator<(const Edge &lhs, const Edge &rhs) throw();
 
             private:
                 Y_DISABLE_ASSIGN(Edge);
             };
-            
+
             class Edge3
             {
             public:
-                const Edge e0,e1,e2;
-                
+                const  Edge *edge[3];
+                //! with three DIFFERENT and PERSISTENT edges
                 Edge3(const Edge &,const Edge &, const Edge&) throw();
                 ~Edge3() throw();
-                Edge3(const Edge3&) throw();
-                
+
+                //! will compare addresses, for they are unique
                 friend bool operator==( const Edge3 &lhs, const Edge3 &rhs ) throw();
-                static int  Compare(const Edge3 &lhs, const Edge3 &rhs) throw();
                 
             private:
-                Y_DISABLE_ASSIGN(Edge3);
+                Y_DISABLE_COPY_AND_ASSIGN(Edge3);
             };
 
+            
         }
     }
 }

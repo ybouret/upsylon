@@ -59,7 +59,8 @@ namespace upsylon {
                 return Edge::Compare(lhs,rhs)<0;
             }
             
-            
+
+#if 0
             void Edge:: Sort3(Edge &a0, Edge &a1, Edge &a2) throw()
             {
                 if( Compare(a2,a1)<0 ) bswap(a1,a2);
@@ -69,7 +70,20 @@ namespace upsylon {
                 assert( Compare(a1,a2) <= 0);
                 assert( Compare(a0,a2) <= 0);
             }
-            
+#endif
+
+            void Edge:: Sort3(Edge **arr) throw()
+            {
+                assert(arr);
+                if( Compare(*arr[2],*arr[1]) < 0 ) cswap<Edge*>( arr[2], arr[1] );
+                if( Compare(*arr[2],*arr[0]) < 0 ) cswap<Edge*>( arr[2], arr[0] );
+                if( Compare(*arr[1],*arr[0]) < 0 ) cswap<Edge*>( arr[1], arr[0] );
+                assert( Compare(*arr[0],*arr[1]) <= 0);
+                assert( Compare(*arr[1],*arr[2]) <= 0);
+                assert( Compare(*arr[0],*arr[2]) <= 0);
+            }
+
+
 
             Edge:: Hasher:: Hasher() throw() : H() {}
             Edge:: Hasher:: ~Hasher() throw() {}
@@ -84,33 +98,29 @@ namespace upsylon {
 
             Edge3:: ~Edge3() throw()
             {
+                memset(edge,0,sizeof(edge));
             }
-            
-            Edge3:: Edge3( const Edge3 &_) throw() :
-            e0(_.e0),
-            e1(_.e1),
-            e2(_.e2)
-            {
-            }
-            
+
             Edge3:: Edge3( const Edge &E0, const Edge &E1, const Edge &E2 ) throw() :
-            e0(E0),
-            e1(E1),
-            e2(E2)
+            edge()
             {
-                Edge::Sort3((Edge &)e0,
-                            (Edge &)e1,
-                            (Edge &)e2);
+                assert(E0!=E1);
+                assert(E0!=E2);
+                assert(E1!=E2);
+                memset(edge,0,sizeof(edge));
+                edge[0] = &E0;
+                edge[1] = &E1;
+                edge[2] = &E2;
+                Edge::Sort3((Edge**)edge);
             }
-            
+
             bool operator==( const Edge3 &lhs, const Edge3 &rhs ) throw()
             {
-                return lhs.e0==rhs.e0 && lhs.e1==rhs.e1 && lhs.e2==rhs.e2;
-            }
-            
-            int  Edge3:: Compare(const Edge3 &lhs, const Edge3 &rhs) throw()
-            {
-                return comparison::increasing_lexicographic(&lhs.e0, &rhs.e0, 3);
+                for(size_t i=0;i<3;++i)
+                {
+                    if( lhs.edge[i] != rhs.edge[i] ) return false;
+                }
+                return true;
             }
             
         }
