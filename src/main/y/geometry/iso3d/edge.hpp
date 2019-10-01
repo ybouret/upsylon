@@ -70,7 +70,22 @@ namespace upsylon {
 
                 //! will compare addresses, for they are unique
                 friend bool operator==( const Edge3 &lhs, const Edge3 &rhs ) throw();
-                
+
+                void __run( hashing::function &H ) const throw();
+
+                //! dedicated hasher
+                class Hasher
+                {
+                public:
+                    hashing::fnv H;                           //!< internal hashing function
+                    Hasher() throw();                         //!< setup
+                    ~Hasher() throw();                        //!< cleanup
+                    size_t operator()(const Edge3 &) throw(); //!< get the key
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Hasher);
+                };
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Edge3);
             };

@@ -5,6 +5,7 @@
 #include "y/ptr/auto.hpp"
 #include "y/oxide/grid/rectilinear.hpp"
 #include "y/oxide/field3d.hpp"
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 using namespace geometry;
@@ -84,7 +85,7 @@ Y_UTEST(contour3d)
 
         }
 
-        std::cerr << "sizeof(Iso3D::Facet)=" << sizeof(Iso3D::Facet) << std::endl;
+        std::cerr << "sizeof(Iso3D::Facet)=" << sizeof(Iso3D::Facet_) << std::endl;
         std::cerr << "sizeof(Iso3D::Edge3)=" << sizeof(Iso3D::Edge3) << std::endl;
     }
 
@@ -114,14 +115,31 @@ Y_UTEST(contour3d)
         w.insert(0.5);
         w.insert(0.7);
 
-        Scanner::Run(S,
+        Surfaces surfaces;
+
+        Scanner::Run(surfaces,
+                     S,
                      L.lower.x,L.upper.x,
                      L.lower.y,L.upper.y,
                      L.lower.z,L.upper.z,
                      G[0], G[1], G[2],
                      w);
 
+        std::cerr << "#surfaces=" << surfaces.size() << std::endl;
+        for(Surfaces::iterator it=surfaces.begin();it!=surfaces.end();++it)
+        {
+            const Surface_ &S = **it;
+            std::cerr << "|_S[" << S.index << "]@" << w[S.index] << std::endl;
+            std::cerr << " |_#points=" << S.size() << std::endl;
 
+            const string  fn = vformat("s%u.dat", unsigned(S.index) );
+            ios::ocstream fp(fn);
+            for(Points::const_iterator p=S.begin(); p != S.end(); ++p )
+            {
+                fp("%g %g %g\n", (*p)->position.x, (*p)->position.y, (*p)->position.x);
+            }
+
+        }
     }
 
 

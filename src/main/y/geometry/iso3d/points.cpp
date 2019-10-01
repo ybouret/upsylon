@@ -27,3 +27,25 @@ namespace upsylon {
 
     }
 }
+
+
+
+namespace upsylon {
+
+    namespace geometry {
+
+        namespace Iso3D {
+
+            Points:: Points() throw() : PointsType() {}
+
+            Points:: ~Points() throw()
+            {
+            }
+
+        }
+
+    }
+
+}
+
+

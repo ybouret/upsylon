@@ -122,7 +122,23 @@ namespace upsylon {
                 }
                 return true;
             }
-            
+
+            void Edge3:: __run(hashing::function &H) const throw()
+            {
+                H.run( edge, sizeof(edge) );
+            }
+
+
+            Edge3:: Hasher:: Hasher() throw() : H() {}
+            Edge3:: Hasher:: ~Hasher() throw() {}
+
+            size_t Edge3::Hasher::operator()(const Edge3 &_) throw()
+            {
+                H.set();
+                _.__run(H);
+                return H.key<size_t>();
+            }
+
         }
 
     }

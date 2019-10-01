@@ -2,7 +2,7 @@
 #ifndef Y_GEOMETRY_ISO3D_SCANNER_INCLUDED
 #define Y_GEOMETRY_ISO3D_SCANNER_INCLUDED 1
 
-#include "y/geometry/iso3d/facets.hpp"
+#include "y/geometry/iso3d/surfaces.hpp"
 #include "y/geometry/contour.hpp"
 
 namespace upsylon {
@@ -17,12 +17,14 @@ namespace upsylon {
                 const Vertex      *v; //!< physical vertex field
                 const Coordinate  *c; //!< logical coordinate field
                 const double      *d; //!< local data field
-
+                mutable Surface_  *s; //!< current surface
+                
                 //! run algorithm to deduce facets
                 template <
                 typename FIELD,
                 typename ARRAY> static inline
-                void Run(const FIELD &data,
+                void Run(Surfaces    &surfaces,
+                         const FIELD &data,
                          const unit_t ilo,
                          const unit_t ihi,
                          const unit_t jlo,
@@ -37,6 +39,7 @@ namespace upsylon {
                 {
 
                     const size_t nc = w.size();
+                    surfaces.create(nc);
                     if(nc<=0) return;
                     const double wmin  = w.head();
                     const double wmax  = w.tail();
@@ -86,7 +89,8 @@ namespace upsylon {
                                     continue; // no possible facet in this cube
                                 }
 
-                                for(size_t l=1;l<=nc;++l)
+                                Surfaces::iterator it = surfaces.begin();
+                                for(size_t l=1;l<=nc;++l,++it)
                                 {
                                     const double iso = w[l];
                                     if(iso<gmin||iso>gmax)
@@ -95,7 +99,7 @@ namespace upsylon {
                                     }
                                     const double d[8] = { g[0]-iso, g[1]-iso, g[2]-iso, g[3]-iso, g[4]-iso, g[5]-iso, g[6]-iso, g[7]-iso };
 
-                                    const Scanner ctx = { v,c,d };
+                                    const Scanner ctx = { v,c,d, &(**it) };
                                     ctx.scanCube();
                                 }
 
