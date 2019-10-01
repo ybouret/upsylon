@@ -18,6 +18,7 @@ namespace upsylon {
         public slots< typename FieldFor<COORD,T>::Type >
         {
         public:
+            Y_DECL_ARGS(T,type);                             //!< aliases
             Y_OXIDE_GRID_ALIAS();                            //!< forwarded aliases
             typedef typename FieldFor<COORD,T>::Type Axis;   //!< same Dimensions fields
             typedef slots<Axis>                      Basis;  //!< the collection of axis
@@ -37,6 +38,20 @@ namespace upsylon {
 
             //! cleanup
             inline virtual ~CurvilinearGrid() throw() {}
+
+            //! get the full vertex
+            inline virtual const_vertex operator()( const_coord c ) const throw()
+            {
+                assert(this->has(c));
+                mutable_type  f[4] = { 0,0,0,0 };
+                for(size_t dim=0;dim<Dimensions;++dim)
+                {
+                    const Axis  &axs = (*this)[dim];
+                    assert(axs.has(c));
+                    f[dim] = axs(c);
+                }
+                return *(vertex *)f;
+            }
 
 
         private:

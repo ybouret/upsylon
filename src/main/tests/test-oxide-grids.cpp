@@ -25,6 +25,15 @@ namespace {
         StructuredGrid<COORD,float>  sgf(L,org,spc);
         RectilinearGrid<COORD,float> rgf(L);
         CurvilinearGrid<COORD,float> cgf(L);
+
+        typename Layout<COORD>::Loop loop(L.lower,L.upper);
+        for(loop.start(); loop.valid(); loop.next())
+        {
+            vtxf rv = rgf( loop.value );
+            vtxf cv = cgf( loop.value );
+            
+        }
+
     }
 
 

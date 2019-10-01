@@ -50,6 +50,10 @@ namespace upsylon {
             }
 
 
+            //! get a vertex position from a coordinate
+            virtual const_vertex operator()(const_coord c) const throw() = 0;
+
+
         protected:
             //! setup
             inline explicit Grid(const LayoutType &L ) throw() : LayoutType(L)

@@ -29,7 +29,8 @@ namespace upsylon {
         class StructuredGrid : public Grid<COORD,T>
         {
         public:
-            Y_OXIDE_GRID_ALIAS();
+            Y_DECL_ARGS(T,type);  //!< aliases
+            Y_OXIDE_GRID_ALIAS(); //!< aliases from Grid
             
             //! setup
             inline explicit StructuredGrid(const LayoutType &L,
@@ -49,8 +50,15 @@ namespace upsylon {
 
             const_vertex     origin;    //!< global origin
             const_vertex     spacing;   //!< spacing
-            
-            
+
+            //! recompose a vertex
+            inline virtual const_vertex operator()(const_coord c) const throw()
+            {
+                assert(this->has(c));
+                mutable_type f[4] = {0,0,0,0};
+                return *(vertex *)f;
+            }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(StructuredGrid);
             inline void check()
