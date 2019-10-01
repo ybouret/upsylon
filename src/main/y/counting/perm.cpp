@@ -21,8 +21,9 @@ namespace upsylon
     counting( compute_for(N) ),
     n( N ),
     nm1(n-1),
-    wlen( n * sizeof(size_t) ),
-    perm( acquire_(wlen)     )
+    wlen( 2*n * sizeof(size_t) ),
+    perm( acquire_(wlen)       ),
+    addr(perm+n+1)
     {
         start();
     }
@@ -31,10 +32,16 @@ namespace upsylon
     counting(other),
     n(other.n),
     nm1(other.nm1),
-    wlen(n * sizeof(size_t)),
-    perm( acquire_(wlen)     )
+    wlen( 2*n * sizeof(size_t)),
+    perm( acquire_(wlen)     ),
+    addr(perm+n+1)
     {
-        for(size_t i=n;i>0;--i) perm[i] = other.perm[i];
+        for(size_t i=n;i>0;)
+        {
+            perm[i] = other.perm[i];
+            --i;
+            addr[i] = other.addr[i];
+        }
     }
 
     permutation:: ~permutation() throw()
@@ -46,7 +53,12 @@ namespace upsylon
     void permutation:: start_() throw()
     {
         assert(1==index);
-        for(size_t i=n;i>0;--i) perm[i] = i;
+        for(size_t i=n;i>0;)
+        {
+            perm[i] = i;
+            --i;
+            addr[i] = i;
+        }
     }
 
 #define SWAP(a,b) cswap(a,b)
@@ -85,6 +97,10 @@ namespace upsylon
         {
             SWAP(perm[j], perm[n-k]);
         }
+        for(size_t i=n;i>0;--i)
+        {
+            addr[i-1] = perm[i]-1;
+        }
 
     }
 
@@ -94,6 +110,28 @@ namespace upsylon
         assert(lhs.count==rhs.count);
         assert(lhs.nm1==rhs.nm1);
         check_contents(fn, lhs, &lhs.perm[1], rhs, &rhs.perm[1], lhs.n * sizeof(size_t));
+    }
+    
+#define Y_CHECK_PERM_CXX_INDX() \
+assert(indx>0);             \
+assert(indx<=n);            \
+assert(perm[indx]>0);       \
+assert(perm[indx]<=n)
+    
+    const size_t & permutation:: operator[](const size_t indx) const throw()
+    {
+        Y_CHECK_PERM_CXX_INDX();
+        return perm[indx];
+    }
+    
+#define Y_CHECK_PERM_C_INDX() \
+assert(indx<n);               \
+assert(addr[indx]<n)
+    
+    const size_t & permutation:: operator()(const size_t indx) const throw()
+    {
+        Y_CHECK_PERM_C_INDX();
+        return addr[indx];
     }
 
 }

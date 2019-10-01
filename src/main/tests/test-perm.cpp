@@ -19,7 +19,10 @@ Y_UTEST(perm)
         std::cerr << "#perm(" << n << ")=" << perm.count << std::endl;
         for( perm.start(); perm.valid(); perm.next() )
         {
-            std::cerr << "\t" << perm << std::endl;
+            std::cerr << "\t" << perm;
+            std::cerr << " (";
+            for(size_t i=0;i<n;++i) std::cerr << ' ' << perm(i) ;
+            std::cerr << " )" << std::endl;
             Perm.push_back_(perm);
         }
         std::cerr << "#perm(" << n << ")=" << perm.count << std::endl;

@@ -26,9 +26,9 @@ namespace upsylon {
             class Line_ : public LineType, public counted_object
             {
             public:
-                explicit Line_() throw();
-                virtual ~Line_() throw();
-                const bool cyclic;
+                explicit Line_() throw(); //!< setup
+                virtual ~Line_() throw(); //!< cleanup
+                const bool cyclic;        //!< cyclic curve detection
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Line_);

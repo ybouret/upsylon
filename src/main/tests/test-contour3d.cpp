@@ -67,9 +67,9 @@ Y_UTEST(contour3d)
         for( perm.start(); perm.valid(); perm.next() )
         {
             //std::cerr << perm << std::endl;
-            const size_t i0 = perm[1]-1; assert(i0>=0); assert(i0<3);
-            const size_t i1 = perm[2]-1; assert(i1>=0); assert(i1<3);
-            const size_t i2 = perm[3]-1; assert(i2>=0); assert(i2<3);
+            const size_t i0 = perm(0); assert(i0>=0); assert(i0<3);
+            const size_t i1 = perm(1); assert(i1>=0); assert(i1<3);
+            const size_t i2 = perm(2); assert(i2>=0); assert(i2<3);
 
             const Edge3 prm3( *etab[i0], *etab[i1], *etab[i2] );
             Y_ASSERT(prm3==org3);
