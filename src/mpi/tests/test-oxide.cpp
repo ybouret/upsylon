@@ -51,9 +51,9 @@ void make_for(mpi                 &MPI,
               const Layout<COORD> &full )
 {
     
-    typedef typename __Field<COORD,double>::Type   dField;
-    typedef typename __Field<COORD,mpn>::Type      nField;
-    typedef typename __Field<COORD,Coord1D>::Type  iField;
+    typedef typename FieldFor<COORD,double>::Type   dField;
+    typedef typename FieldFor<COORD,mpn>::Type      nField;
+    typedef typename FieldFor<COORD,Coord1D>::Type  iField;
     
     vector<COORD> mappings;
     full.buildMappings(mappings, MPI.size);

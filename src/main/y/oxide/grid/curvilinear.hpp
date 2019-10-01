@@ -30,7 +30,7 @@ namespace upsylon {
                 for(size_t dim=0;dim<Dimensions;++dim)
                 {
                     const string    aid = Grid_::GetAxisName(names,dim);
-                    this->template build<string,LayoutType>(aid,*this);
+                    this->template  build<string,LayoutType>(aid,*this);
                 }
             }
 

@@ -25,9 +25,8 @@ namespace
     void make_for(mpi                 &MPI,
                   const Layout<COORD> &fullLayout )
     {
-        typedef typename __Field<COORD,double>::Type   dField;
-        //typedef typename __Field<COORD,mpn>::Type      nField;
-        typedef typename __Field<COORD,Coord1D>::Type  iField;
+        typedef typename FieldFor<COORD,double>::Type   dField;
+        typedef typename FieldFor<COORD,Coord1D>::Type  iField;
 
         if(MPI.isHead)
         {
