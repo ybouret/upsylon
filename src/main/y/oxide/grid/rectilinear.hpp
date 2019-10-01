@@ -15,11 +15,12 @@ namespace upsylon {
         class RectilinearGrid : public Grid<COORD,T>, public slots< Field1D<T> >
         {
         public:
-            Y_OXIDE_GRID_ALIAS();
-            typedef Field1D<T>  Axis;
-            typedef slots<Axis> Basis;
+            Y_OXIDE_GRID_ALIAS();      //!< aliases
+            typedef Field1D<T>  Axis;  //!< 1D field of same type
+            typedef slots<Axis> Basis; //!< the collection of axis
 
 
+            //! setup
             inline explicit RectilinearGrid(const LayoutType    &L,
                                             const char          **names = NULL ) :
             GridType(L),
@@ -34,7 +35,7 @@ namespace upsylon {
             }
 
 
-
+            //! cleanup
             inline virtual ~RectilinearGrid() throw()
             {
             }

@@ -18,10 +18,11 @@ namespace upsylon {
         public slots< typename FieldFor<COORD,T>::Type >
         {
         public:
-            Y_OXIDE_GRID_ALIAS();
-            typedef typename FieldFor<COORD,T>::Type Axis;
-            typedef slots<Axis>                      Basis;
+            Y_OXIDE_GRID_ALIAS();                            //!< forwarded aliases
+            typedef typename FieldFor<COORD,T>::Type Axis;   //!< same Dimensions fields
+            typedef slots<Axis>                      Basis;  //!< the collection of axis
 
+            //! setup with optional name
             inline explicit CurvilinearGrid(const LayoutType &L,
                                             const char       **names = NULL) :
             GridType(L),
@@ -34,9 +35,8 @@ namespace upsylon {
                 }
             }
 
-            inline virtual ~CurvilinearGrid() throw()
-            {
-            }
+            //! cleanup
+            inline virtual ~CurvilinearGrid() throw() {}
 
 
         private:

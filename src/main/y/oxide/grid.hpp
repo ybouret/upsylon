@@ -24,25 +24,26 @@ namespace upsylon {
         class Grid : public Layout<COORD>
         {
         public:
-            Y_DECL_ARGS(T,type);
-            static  const size_t Dimensions = Coord::Get<COORD>::Dimensions;
-            typedef          Layout<COORD>            LayoutType;
-            typedef typename LayoutType::coord        coord;
-            typedef typename LayoutType::const_coord  const_coord;
-            typedef typename VertexFor<COORD,T>::Type vertex;
-            typedef const    vertex                   const_vertex;
+            Y_DECL_ARGS(T,type); //!< aliases
+            static  const size_t Dimensions = Coord::Get<COORD>::Dimensions; //!< alias
+            typedef          Layout<COORD>            LayoutType;            //!< alias
+            typedef typename LayoutType::coord        coord;                 //!< alias
+            typedef typename LayoutType::const_coord  const_coord;           //!< alias
+            typedef typename VertexFor<COORD,T>::Type vertex;                //!< alias
+            typedef const    vertex                   const_vertex;          //!< alias
 
+            //! cleanup
             inline virtual ~Grid() throw() {}
 
-            static inline
-            const_vertex &Zero() throw()
+            //! zero vertex
+            static inline const_vertex &Zero() throw()
             {
                 static const T __zero[4] = { 0,0,0,0 };
                 return *(const_vertex *)__zero;
             }
 
-            static inline
-            const_vertex &Ones() throw()
+            //! vertex of ones
+            static inline const_vertex &Ones() throw()
             {
                 static const T __ones[4] = { 1,1,1,1 };
                 return *(const_vertex *)__ones;
@@ -50,11 +51,13 @@ namespace upsylon {
 
 
         protected:
+            //! setup
             inline explicit Grid(const LayoutType &L ) throw() : LayoutType(L)
             {
 
             }
 
+            //! check positive components
             void CheckPositive(const char   *gridName,
                                const char   *context,
                                const_vertex &v ) const
@@ -69,6 +72,7 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(Grid);
         };
 
+        //! forwarding info to grids
 #define Y_OXIDE_GRID_ALIAS()                            \
 typedef             Grid<COORD,T>          GridType;    \
 static const size_t Dimensions = GridType::Dimensions;  \

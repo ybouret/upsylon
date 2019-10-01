@@ -20,8 +20,10 @@ namespace upsylon {
                 const Point c;  //!< computed point, a!=b && a!=c
                 //const Edge3 e3; //!< signature from edges
 
-
+                //! setup
                 explicit Facet(const Point &A, const Point &B, const Point &C) throw();
+
+                //! cleanup
                 virtual ~Facet() throw();
                 
             private:

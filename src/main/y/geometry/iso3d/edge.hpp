@@ -56,12 +56,16 @@ namespace upsylon {
                 Y_DISABLE_ASSIGN(Edge);
             };
 
+            //! lighweight facet UUID
             class Edge3
             {
             public:
-                const  Edge *edge[3];
+                const  Edge *edge[3]; //!< pointer to facet's points' edges
+
                 //! with three DIFFERENT and PERSISTENT edges
                 Edge3(const Edge &,const Edge &, const Edge&) throw();
+
+                //! cleanup
                 ~Edge3() throw();
 
                 //! will compare addresses, for they are unique
