@@ -10,6 +10,9 @@ namespace upsylon {
 
     namespace Oxide {
 
+
+
+
         //======================================================================
         //
         //
@@ -102,13 +105,38 @@ namespace upsylon {
             }
 
             //------------------------------------------------------------------
+            //! output a Paraview/vtk file
+            //------------------------------------------------------------------
+            inline virtual void write( vtk &VTK, ios::ostream &fp, const LayoutType &sub ) const
+            {
+                static const vtk::Writer &tw = VTK.get<type>();
+
+                // emit dataset
+                fp << vtk::DATASET << ' ' << VTK_DATASET_ID << '\n';
+
+                // emit dimensions, increased for vtk
+                VTK.writeDimensions(fp,sub.width) << '\n';
+
+                // emit POINTS
+                VTK(fp << vtk::POINTS << ' ',sub.items*vtk::Repeat[Dimensions]) << ' ' << tw.dataType() << '\n';
+
+                emitPoints(VTK,fp,sub, type2type<COORD>() );
+            }
+
+            //==================================================================
+            //
+            // specific interface
+            //
+            //==================================================================
+
+            //------------------------------------------------------------------
             //! inter/extrapolate
             //------------------------------------------------------------------
             inline void mapRegular(const LayoutType  &sub,
                                    const_vertex       ini,
                                    const_vertex       end)
             {
-
+                assert(this->contains(sub));
                 Basis        &self = *this;
                 const_vertex  del  = end-ini;
                 const_coord   dd   = sub.upper-sub.lower;
@@ -132,26 +160,66 @@ namespace upsylon {
                         self[dim](c) = I[dim] + ( (Coord::Of(c,dim)-Coord::Of(sub.lower,dim))*D[dim]) /Coord::Of(dd,dim);
                     }
                 }
-
             }
 
-            //------------------------------------------------------------------
-            //! output a Paraview/vtk file
-            //------------------------------------------------------------------
-            inline virtual void write( vtk &VTK, ios::ostream &fp, const LayoutType &sub ) const
+            //! 3D cylinder
+            void mapCylinder(const_type      R0,
+                             const_type      R1,
+                             const_type      H,
+                             const Layout3D &sub,
+                             const bool      centered)
             {
-                static const vtk::Writer &tw = VTK.get<type>();
+                assert(this->contains(sub));
+                assert(0<=R0);
+                assert(R0<R1);
+                mutable_type zmin = 0;
+                mutable_type zmax = H;
+                if(centered)
+                {
+                    zmin = - (zmax = H/2);
+                }
 
-                // emit dataset
-                fp << vtk::DATASET << ' ' << VTK_DATASET_ID << '\n';
+                const unit_t k0 = sub.lower.z;
+                const unit_t dK = sub.upper.z-k0;
+                if(dK<=0)
+                {
+                    this->ExceptionLEQZ(Name,"mapCylinder.sub layout", 2);
+                }
 
-                // emit dimensions, increased for vtk
-                VTK.writeDimensions(fp,sub.width) << '\n';
 
-                // emit POINTS
-                VTK(fp << vtk::POINTS << ' ',sub.items*vtk::Repeat[Dimensions]) << ' ' << tw.dataType() << '\n';
+                const unit_t dI = this->upper.x - this->lower.x;
+                if(dI<=0)
+                {
+                    this->ExceptionLEQZ(Name,"mapCylinder.self layout", 1);
+                }
 
-                emitPoints(VTK,fp,sub, type2type<COORD>() );
+                Basis &basis = *this;
+                for(unit_t j=this->lower.y;j<=this->upper.y;++j)
+                {
+                    const_type theta = (j*math::numeric<mutable_type>::two_pi) / this->width.y;
+                    const_type c     = math::cos_of(theta);
+                    const_type s     = math::sin_of(theta);
+                    for(unit_t i=this->lower.x;i<=this->upper.x;++i)
+                    {
+                        const_type R     = R0 + ( (R1-R0) * (i-this->lower.x) ) / dI;
+                        const_type x     = R * c;
+                        const_type y     = R * s;
+
+                        //3D part: interpolate/extrapolate for z
+                        for(unit_t k=this->lower.z;k<=this->upper.z;++k)
+                        {
+                            const_type z = zmin + ( H * (k-k0) )/dK;
+
+                            basis[0][k][j][i] = x;
+                            basis[1][k][j][i] = y;
+                            basis[2][k][j][i] = z;
+
+                        }
+                    }
+                }
+
+
+
             }
 
 

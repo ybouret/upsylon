@@ -104,6 +104,7 @@ namespace {
         }
 
 
+
     }
 
 
@@ -123,6 +124,27 @@ Y_UTEST(oxide_grids)
     make_grids(lower.xy(),upper.xy());
     make_grids(lower,upper);
 
+
+    {
+        const Layout3D L(lower,upper);
+        CurvilinearGrid<Coord3D,double> cyl(L);
+        cyl.mapCylinder(0.1, 0.7, 2.2, cyl, false);
+
+        Field3D<double> F( "f", cyl );
+
+        {
+            vtk &VTK = vtk::instance();
+            const string  fn = vformat("cyl.vtk");
+            ios::ocstream fp(fn);
+            VTK.writeHeader(fp);
+            VTK.writeTitle(fp, "cylinder");
+            cyl.write(VTK, fp, cyl);
+            VTK.writePointData(fp,F);
+            VTK.writeField(fp,F,cyl);
+        }
+
+
+    }
 
 }
 Y_UTEST_DONE()
