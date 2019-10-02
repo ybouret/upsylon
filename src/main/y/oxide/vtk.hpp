@@ -167,8 +167,9 @@ namespace upsylon {
                 return composeAs3D(fp << DIMENSIONS << ' ', & Coord::Of(width,0), Coord::Get<COORD>::Dimensions, 2);
             }
 
+            static const size_t             Repeat[4]; //!< [0,4,2,1]
+            
         private:
-            static const size_t             Repeat[4];
             static const at_exit::longevity life_time = 0;
 
             explicit vtk();

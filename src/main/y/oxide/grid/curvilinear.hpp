@@ -115,7 +115,7 @@ namespace upsylon {
                 VTK.writeDimensions(fp,sub.width) << '\n';
 
                 // emit POINTS
-                VTK(fp << vtk::POINTS << ' ',sub.items) << ' ' << tw.dataType() << '\n';
+                VTK(fp << vtk::POINTS << ' ',sub.items*vtk::Repeat[Dimensions]) << ' ' << tw.dataType() << '\n';
 
                 emitPoints(VTK,fp,sub, type2type<COORD>() );
             }
@@ -130,13 +130,26 @@ namespace upsylon {
 
             void emitPoints(vtk &VTK, ios::ostream &fp, const LayoutType &sub, type2type<Coord2D> ) const
             {
+                const GridType &self = *this;
+                Loop            loop(sub.lower,sub.upper);
+                const_type      Z[2] = { 0,this->scalingLength() };
+
+                for(size_t k=0;k<2;++k)
+                {
+                    const_type z = Z[k];
+                    for( loop.start(); loop.valid(); loop.next() )
+                    {
+                        const vertex v = self(loop.value);
+                        VTK(VTK(fp,v) << ' ',z) << '\n';
+                    }
+                }
+
             }
 
             void emitPoints(vtk &VTK, ios::ostream &fp, const LayoutType &sub, type2type<Coord3D> ) const
             {
-                const GridType           &self = *this;
-
-                typename LayoutType::Loop loop(sub.lower,sub.upper);
+                const GridType &self = *this;
+                Loop            loop(sub.lower,sub.upper);
                 for( loop.start(); loop.valid(); loop.next() )
                 {
                     const vertex v = self(loop.value);

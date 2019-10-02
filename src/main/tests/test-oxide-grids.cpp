@@ -51,6 +51,10 @@ namespace {
         rgf.mapRegular(L,-spc,spc);
         cgf.mapRegular(L,-spc,spc);
 
+        std::cerr << "sgf.scalingLength=" << sgf.scalingLength() << std::endl;
+        std::cerr << "rgf.scalingLength=" << rgf.scalingLength() << std::endl;
+        std::cerr << "cgf.scalingLength=" << cgf.scalingLength() << std::endl;
+
         typedef typename FieldFor<COORD,float>::Type fField;
 
         fField sgF( "f", sgf );
@@ -108,7 +112,7 @@ namespace {
 Y_UTEST(oxide_grids)
 {
     const Coord3D  lower(1,1,1);
-    Coord3D        upper(16,16,16);
+    Coord3D        upper(16,32,64);
 
     if(argc>1)
     {
