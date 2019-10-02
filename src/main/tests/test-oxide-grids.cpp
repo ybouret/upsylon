@@ -85,9 +85,8 @@ namespace {
             VTK.writeHeader(fp);
             VTK.writeTitle(fp, "rectilinear grid");
             rgf.write(VTK, fp, rgf);
-
-            //VTK.writePointData(fp,rgF);
-            //VTK.writeField(fp, sgF, rgF);
+            VTK.writePointData(fp,rgF);
+            VTK.writeField(fp, rgF, rgF);
         }
 
 

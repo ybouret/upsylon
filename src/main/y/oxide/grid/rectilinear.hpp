@@ -128,15 +128,53 @@ namespace upsylon {
             //! write to vtk
             void write( vtk &VTK, ios::ostream &fp, const LayoutType &sub ) const
             {
-                //static const vtk::Writer &tw = VTK.get<type>();
+                static const vtk::Writer &tw = VTK.get<type>();
 
                 // emit dataset
                 fp << vtk::DATASET << ' ' << VTK_DATASET_ID << '\n';
 
                 // emit dimensions, increased for vtk
-                VTK.writeDimensions(fp,sub.width);
+                VTK.writeDimensions(fp,sub.width) << '\n';
                 
+                // emit axis
+                mutable_type delta=0;
+                size_t       count=0;
+                for(size_t dim=0;dim<Dimensions;++dim)
+                {
+                    const Axis     &a   = (*this)[dim];
+                    const unit_t    w   = Coord::Of(sub.width,dim);
+                    const unit_t    ini = Coord::Of(sub.lower,dim);
+                    const unit_t    end = Coord::Of(sub.upper,dim);
 
+                    fp << char('X'+dim) << vtk::_COORDINATES << ' ';
+                    VTK(fp,w);
+                    fp << ' ' << tw.dataType()  << '\n';
+                    for(unit_t i=ini;i<=end;++i)
+                    {
+                        if(i>ini) { fp << ' '; }
+                        tw.write(fp,&a[i]);
+                    }
+                    fp << '\n';
+                    delta += abs_of(a[end]-a[ini]);
+                    count += w;
+                }
+
+                if(count<=0)
+                {
+                    delta=1;
+                }
+                else
+                {
+                    delta/=count;
+                }
+
+                for(size_t dim=Dimensions;dim<3;++dim)
+                {
+                    fp << char('X'+dim) << vtk::_COORDINATES << " 2 " << tw.dataType()  << '\n';
+                    fp << '0' << ' ';
+                    tw.write(fp, &delta);
+                    fp << '\n';
+                }
 
             }
 

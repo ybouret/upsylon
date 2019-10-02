@@ -87,7 +87,7 @@ namespace upsylon {
                 fp <<  vtk::DATASET << ' ' << VTK_DATASET_ID << '\n';
 
                 // emit dimensions, increased for vtk
-                VTK.writeDimensions(fp,sub.width);
+                VTK.writeDimensions(fp,sub.width) << '\n';
 
                 // emit origin=lower bound
                 {
