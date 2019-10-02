@@ -9,18 +9,28 @@ namespace upsylon {
     namespace Oxide {
 
         //! common function
-        struct Grid_
+        class Grid_
         {
+        public:
+            virtual ~Grid_() throw();
+            
             //! throw an explaining explication
             static void ExceptionLEQZ(const char *gridName, const char *context, const unsigned dim);
 
             //! get name[dim] of DefaultAxisName(dim)
             static const char *GetAxisName(const char **names, const size_t dim) throw();
+
+        protected:
+            explicit Grid_() throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Grid_);
+
         };
 
         //! Grid base interface
         template <typename COORD, typename T>
-        class Grid : public Layout<COORD>
+        class Grid : public Layout<COORD>, public Grid_
         {
         public:
             Y_DECL_ARGS(T,type); //!< aliases

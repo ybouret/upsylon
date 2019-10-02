@@ -340,16 +340,22 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
 
         const size_t vtk::Repeat[4] = { 0, 4, 2, 1 };
 
+        const char   vtk::DATASET[]      = "DATASET";
+        const char   vtk::DIMENSIONS[]   = "DIMENSIONS";
+        const char   vtk::ORIGIN[]       = "ORIGIN";
+        const char   vtk::SPACING[]      = "SPACING";
+        const char   vtk::_COORDINATES[] = "_COORDINATES";
+
         void vtk:: structuredPoints_(ios::ostream  &fp,
                                      const size_t   dims,
                                      const Coord1D *width,
                                      const Coord1D *lower) const
         {
             assert(dims>=1); assert(dims<=3); assert(width); assert(lower);
-            fp << "DATASET STRUCTURED_POINTS\n";
-            composeAs3D(fp << "DIMENSIONS ",width,dims,2) << '\n';
-            composeAs3D(fp << "ORIGIN ",    lower,dims,0) << '\n';
-            fp << "SPACING 1 1 1\n";
+            fp << DATASET << " STRUCTURED_POINTS\n";
+            composeAs3D(fp << DIMENSIONS << ' ',width,dims,2) << '\n';
+            composeAs3D(fp << ORIGIN     << ' ',lower,dims,0) << '\n';
+            fp << SPACING << " 1 1 1\n";
         }
 
 

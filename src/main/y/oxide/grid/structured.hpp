@@ -18,11 +18,7 @@ namespace upsylon {
         {
         public:
             static const char Name[];           //!< "StructuredGrid"
-            static const char Spacing[];        //!< "spacing"
-            static const char VTK_DATASET[];    //!< "DATASET STRUCTURED_POINTS"
-            static const char VTK_DIMENSIONS[]; //!< "DIMENSIONS";
-            static const char VTK_ORIGIN[];     //!< "ORIGIN";
-            static const char VTK_SPACING[];    //!< "SPACING";
+            static const char VTK_DATASET_ID[]; //!< "STRUCTURED_POINTS"
 
             virtual ~StructuredGrid_() throw();
 
@@ -77,7 +73,7 @@ namespace upsylon {
                 {
                     const unit_t u = Coord::Of(c,dim);
                     f[dim] = org[dim] + type(u) * spc[dim];
-                } 
+                }
                 return *(vertex *)f;
             }
 
@@ -85,50 +81,55 @@ namespace upsylon {
             void write( vtk &VTK, ios::ostream &fp, const LayoutType &sub ) const
             {
                 static const vtk::Writer &tw   = VTK.get<type>();
-                const GridType           &self = *this;
-                assert(self.contains(sub));
-                const_vertex vtx  = self(sub.lower);        // lower bound
-                const_type  *org  = (const_type *)&vtx;     // for vtk ORIGIN
-                const_type  *spc  = (const_type *)&spacing; // for vtk SPACING
+                const GridType           &self = *this; assert(self.contains(sub));
 
                 // emit dataset
-                fp <<  VTK_DATASET << '\n';
+                fp <<  vtk::DATASET << ' ' << VTK_DATASET_ID << '\n';
 
                 // emit dimensions, increased for vtk
-                VTK.composeAs3D(fp << VTK_DIMENSIONS << ' ',(const Coord1D *)&(sub.width),Dimensions,2) << '\n';
+                VTK.writeDimensions(fp,sub.width);
 
-                // emit origin
-                fp << VTK_ORIGIN;
-                for(size_t dim=0;dim<Dimensions;++dim)
+                // emit origin=lower bound
                 {
-                    tw.write(fp << ' ', &org[dim]);
+                    const_vertex vtx  = self(sub.lower);
+                    const_type  *org  = (const_type *)&vtx;
+                    fp << vtk::ORIGIN;
+                    for(size_t dim=0;dim<Dimensions;++dim)
+                    {
+                        tw.write(fp << ' ', &org[dim]);
+                    }
+                    for(size_t dim=Dimensions;dim<3;++dim)
+                    {
+                        fp << ' ' << '0';
+                    }
+                    fp << '\n';
                 }
-                for(size_t dim=Dimensions;dim<3;++dim)
-                {
-                    fp << ' ' << '0';
-                }
-                fp << '\n';
+
 
                 // emit spacing
-                mutable_type sum = 0;
-                fp << VTK_SPACING;
-                for(size_t dim=0;dim<Dimensions;++dim)
                 {
-                    const_type s = spc[dim];
-                    tw.write(fp << ' ', &s);
-                    sum += s;
+                    mutable_type sum = 0;
+                    const_type  *spc = (const_type *)&spacing;
+                    fp << vtk::SPACING;
+                    for(size_t dim=0;dim<Dimensions;++dim)
+                    {
+                        const_type s = spc[dim];
+                        tw.write(fp << ' ', &s);
+                        sum += s;
+                    }
+                    sum /= Dimensions;
+                    for(size_t dim=Dimensions;dim<3;++dim)
+                    {
+                        tw.write(fp << ' ', &sum);
+                    }
+                    fp << '\n';
                 }
-                sum /= Dimensions;
-                for(size_t dim=Dimensions;dim<3;++dim)
-                {
-                    tw.write(fp << ' ', &sum);
-                }
-                fp << '\n';
+
             }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(StructuredGrid);
-            inline void check() { this->CheckPositive( Name, Spacing, spacing); }
+            inline void check() { this->CheckPositive( Name, vtk::SPACING, spacing); }
         };
 
 

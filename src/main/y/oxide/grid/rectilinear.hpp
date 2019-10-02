@@ -11,15 +11,24 @@ namespace upsylon {
     namespace Oxide {
 
         //! shared data
-        struct RectilinearGrid_
+        class RectilinearGrid_
         {
-            static const char Name[];           //!< "RectilinearGrid"
-            static const char SqueezedLayout[]; //!< "Squeezed Layout"
+        public:
+            static const char  Name[];              //!< "RectilinearGrid"
+            static const char  SqueezedLayout[];    //!< "Squeezed Layout"
+            static const char  VTK_DATASET_ID[];    //!< "RECTILINEAR_GRID"
+            virtual ~RectilinearGrid_() throw();
+
+        protected:
+            explicit RectilinearGrid_() throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(RectilinearGrid_);
         };
 
         //! a rectilinear grid
         template <typename COORD, typename T>
-        class RectilinearGrid : public Grid<COORD,T>, public slots< Field1D<T> >
+        class RectilinearGrid : public Grid<COORD,T>, public slots< Field1D<T> >, public RectilinearGrid_
         {
         public:
             Y_DECL_ARGS(T,type);       //!< alias
@@ -116,6 +125,20 @@ namespace upsylon {
                 }
             }
 
+            //! write to vtk
+            void write( vtk &VTK, ios::ostream &fp, const LayoutType &sub ) const
+            {
+                //static const vtk::Writer &tw = VTK.get<type>();
+
+                // emit dataset
+                fp << vtk::DATASET << ' ' << VTK_DATASET_ID << '\n';
+
+                // emit dimensions, increased for vtk
+                VTK.writeDimensions(fp,sub.width);
+                
+
+
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(RectilinearGrid);

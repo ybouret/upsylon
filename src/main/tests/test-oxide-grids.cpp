@@ -48,8 +48,8 @@ namespace {
         CurvilinearGrid<COORD,float> cgf(L);
 
 
-        rgf.mapRegular(L,org,spc);
-        cgf.mapRegular(L,org,spc);
+        rgf.mapRegular(L,-spc,spc);
+        cgf.mapRegular(L,-spc,spc);
 
         typedef typename FieldFor<COORD,float>::Type fField;
 
@@ -78,6 +78,18 @@ namespace {
             VTK.writePointData(fp,sgF);
             VTK.writeField(fp, sgF, sgF);
         }
+
+        {
+            const string  fn = vformat("rg%ud.vtk", unsigned( rgf.Dimensions ));
+            ios::ocstream fp(fn);
+            VTK.writeHeader(fp);
+            VTK.writeTitle(fp, "rectilinear grid");
+            rgf.write(VTK, fp, rgf);
+
+            //VTK.writePointData(fp,rgF);
+            //VTK.writeField(fp, sgF, rgF);
+        }
+
 
     }
 

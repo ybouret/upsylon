@@ -25,6 +25,11 @@ namespace upsylon {
                 return Coord::DefaultAxisName(dim);
             }
         }
+
+        Grid_::  Grid_() throw() {}
+        Grid_:: ~Grid_() throw() {}
+
+        
     }
 
 }

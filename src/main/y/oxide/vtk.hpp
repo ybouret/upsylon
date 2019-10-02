@@ -34,6 +34,11 @@ namespace upsylon {
             // types and defintions
             //
             //==================================================================
+            static const char DATASET[];     //!< "DATASET"
+            static const char DIMENSIONS[];  //!< "DIMENSIONS"
+            static const char ORIGIN[];      //!< "ORIGIN"
+            static const char SPACING[];     //!< "SPACING"
+            static const char _COORDINATES[]; //!< "_COORDINATES"
 
             //------------------------------------------------------------------
             //
@@ -154,6 +159,12 @@ namespace upsylon {
             void           writeScalar( ios::ostream &fp, const Writer &W, const void *addr ) const;                     //!< write type scalar@addr
             void           writeVector( ios::ostream &fp, const Writer &W, const void *addr ) const;                     //!< write type vector@addr
 
+
+            template <typename COORD> inline
+            ios::ostream & writeDimensions( ios::ostream &fp, const COORD &width) const
+            {
+                return composeAs3D(fp << DIMENSIONS << ' ', & Coord::Of(width,0), Coord::Get<COORD>::Dimensions, 2);
+            }
 
         private:
             static const size_t             Repeat[4];
