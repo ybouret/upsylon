@@ -1,5 +1,4 @@
-
-// \file
+//! \file
 #ifndef Y_OXIDE_CURVILINEAR_GRID_INCLUDED
 #define Y_OXIDE_CURVILINEAR_GRID_INCLUDED 1
 
@@ -11,7 +10,13 @@ namespace upsylon {
 
     namespace Oxide {
 
-        //! shared data
+        //======================================================================
+        //
+        //
+        //! shared API
+        //
+        //
+        //======================================================================
         class CurvilinearGrid_
         {
         public:
@@ -20,15 +25,19 @@ namespace upsylon {
             static const char VTK_DATASET_ID[]; //!< "STRUCTURED_GRID"
 
             virtual ~CurvilinearGrid_() throw();
-
-        protected:
             explicit CurvilinearGrid_() throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(CurvilinearGrid_);
         };
 
+        //======================================================================
+        //
+        //
         //! a curvilinear grid
+        //
+        //
+        //======================================================================
         template <typename COORD, typename T>
         class CurvilinearGrid :
         public Grid<COORD,T>,
@@ -36,12 +45,25 @@ namespace upsylon {
         public CurvilinearGrid_
         {
         public:
+            //==================================================================
+            //
+            // types and definitions
+            //
+            //==================================================================
             Y_DECL_ARGS(T,type);                             //!< aliases
             Y_OXIDE_GRID_ALIAS();                            //!< forwarded aliases
             typedef typename FieldFor<COORD,T>::Type Axis;   //!< same Dimensions fields
             typedef slots<Axis>                      Basis;  //!< the collection of axis
 
-            //! setup with optional name
+            //==================================================================
+            //
+            // C++
+            //
+            //==================================================================
+
+            //------------------------------------------------------------------
+            //! setup with optional names
+            //------------------------------------------------------------------
             inline explicit CurvilinearGrid(const LayoutType &L,
                                             const char       **names = NULL) :
             GridType(L),
@@ -57,7 +79,15 @@ namespace upsylon {
             //! cleanup
             inline virtual ~CurvilinearGrid() throw() {}
 
+            //==================================================================
+            //
+            // Grid interface
+            //
+            //==================================================================
+
+            //------------------------------------------------------------------
             //! get the full vertex
+            //------------------------------------------------------------------
             inline virtual const_vertex operator()( const_coord c ) const throw()
             {
                 assert(this->has(c));
@@ -71,8 +101,9 @@ namespace upsylon {
                 return *(vertex *)f;
             }
 
-
+            //------------------------------------------------------------------
             //! inter/extrapolate
+            //------------------------------------------------------------------
             inline void mapRegular(const LayoutType  &sub,
                                    const_vertex       ini,
                                    const_vertex       end)
@@ -104,6 +135,9 @@ namespace upsylon {
 
             }
 
+            //------------------------------------------------------------------
+            //! output a Paraview/vtk file
+            //------------------------------------------------------------------
             inline virtual void write( vtk &VTK, ios::ostream &fp, const LayoutType &sub ) const
             {
                 static const vtk::Writer &tw = VTK.get<type>();

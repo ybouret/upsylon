@@ -1,4 +1,4 @@
-// \file
+//! \file
 #ifndef Y_OXIDE_GRID_INCLUDED
 #define Y_OXIDE_GRID_INCLUDED 1
 
@@ -9,20 +9,24 @@ namespace upsylon {
 
     namespace Oxide {
 
-        //! common function
+        //======================================================================
+        //
+        //
+        //! common functions/data
+        //
+        //
+        //======================================================================
         class Grid_
         {
         public:
-            virtual ~Grid_() throw();
-            
+            virtual ~Grid_() throw(); //!< cleanup
+            explicit Grid_() throw(); //!< setup
+
             //! throw an explaining explication
             static void ExceptionLEQZ(const char *gridName, const char *context, const unsigned dim);
 
             //! get name[dim] of DefaultAxisName(dim)
             static const char *GetAxisName(const char **names, const size_t dim) throw();
-
-        protected:
-            explicit Grid_() throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grid_);
@@ -89,7 +93,7 @@ namespace upsylon {
                 return *(const_vertex *)__ones;
             }
 
-            //! find the bounding box
+            //! find the bounding box and return the difference
             inline vertex boundingBox( vertex &lo, vertex &hi ) const
             {
                 const Grid  &self = *this;
@@ -118,12 +122,14 @@ namespace upsylon {
                 return hi-lo;
             }
 
+            //! return the bounding space
             inline vertex boundingSpace() const
             {
                 vertex lo = Zero(), hi=lo;
                 return boundingBox(lo,hi);
             }
 
+            //! compute the scaling length
             inline type scalingLength() const
             {
                 static const_type q     = const_type(1)/Dimensions;

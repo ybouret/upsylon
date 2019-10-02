@@ -157,16 +157,17 @@ namespace upsylon {
 
             ios::ostream & composeAs3D( ios::ostream &fp, const Coord1D *C, const size_t dims, const Coord1D pad) const; //!< write C[0..dims-1], and 'pad' [dims:3]
             const Writer & revealField( ios::ostream &fp, const Field  &F ) const;                                       //!< prepare lookup table
-            void           writeScalar( ios::ostream &fp, const Writer &W, const void *addr ) const;                     //!< write type scalar@addr
-            void           writeVector( ios::ostream &fp, const Writer &W, const void *addr ) const;                     //!< write type vector@addr
+            void           writeScalar( ios::ostream &fp, const Writer &W, const void *addr ) const;                     //!< write type scalar at address
+            void           writeVector( ios::ostream &fp, const Writer &W, const void *addr ) const;                     //!< write type vector at address
 
-
+            //! write as VTK dimensions with padding for Paraview
             template <typename COORD> inline
             ios::ostream & writeDimensions( ios::ostream &fp, const COORD &width) const
             {
                 return composeAs3D(fp << DIMENSIONS << ' ', & Coord::Of(width,0), Coord::Get<COORD>::Dimensions, 2);
             }
 
+            //! Repeats to have a valid Paraview
             static const size_t             Repeat[4]; //!< [0,4,2,1]
             
         private:

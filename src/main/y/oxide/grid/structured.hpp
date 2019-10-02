@@ -1,5 +1,4 @@
-
-// \file
+//! \file
 #ifndef Y_OXIDE_STRUCTURED_GRID_INCLUDED
 #define Y_OXIDE_STRUCTURED_GRID_INCLUDED 1
 
@@ -11,7 +10,9 @@ namespace upsylon {
 
         //======================================================================
         //
+        //
         //! shared API
+        //
         //
         //======================================================================
         class StructuredGrid_
@@ -20,10 +21,8 @@ namespace upsylon {
             static const char Name[];           //!< "StructuredGrid"
             static const char VTK_DATASET_ID[]; //!< "STRUCTURED_POINTS"
 
-            virtual ~StructuredGrid_() throw();
-
-        protected:
-            explicit StructuredGrid_() throw();
+            virtual ~StructuredGrid_() throw(); //!< cleanup
+            explicit StructuredGrid_() throw(); //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(StructuredGrid_);
@@ -31,17 +30,41 @@ namespace upsylon {
 
         //======================================================================
         //
+        //
         //! Structured Grid for VTK
+        //
         //
         //======================================================================
         template <typename COORD, typename T>
         class StructuredGrid : public Grid<COORD,T>, public StructuredGrid_
         {
         public:
+            //==================================================================
+            //
+            // types and definitions
+            //
+            //==================================================================
             Y_DECL_ARGS(T,type);  //!< aliases
             Y_OXIDE_GRID_ALIAS(); //!< aliases from Grid
-            
+
+            //==================================================================
+            //
+            // members
+            //
+            //==================================================================
+            const_vertex     origin;    //!< global origin
+            const_vertex     spacing;   //!< spacing
+
+
+            //==================================================================
+            //
+            // C++
+            //
+            //==================================================================
+
+            //------------------------------------------------------------------
             //! setup
+            //------------------------------------------------------------------
             inline explicit StructuredGrid(const LayoutType &L,
                                            const_vertex      org,
                                            const_vertex      spc) :
@@ -50,17 +73,24 @@ namespace upsylon {
                 check();
             }
 
+            //------------------------------------------------------------------
             //! cleanup
+            //------------------------------------------------------------------
             inline virtual ~StructuredGrid() throw()
             {
                 bzset_(origin);
                 bzset_(spacing);
             }
 
-            const_vertex     origin;    //!< global origin
-            const_vertex     spacing;   //!< spacing
+            //==================================================================
+            //
+            // Grid interface
+            //
+            //==================================================================
 
+            //------------------------------------------------------------------
             //! recompose a vertex
+            //------------------------------------------------------------------
             inline virtual const_vertex operator()(const_coord c) const throw()
             {
                 assert(this->has(c));
@@ -77,7 +107,9 @@ namespace upsylon {
                 return *(vertex *)f;
             }
 
+            //------------------------------------------------------------------
             //! write to vtk
+            //------------------------------------------------------------------
             inline virtual void write( vtk &VTK, ios::ostream &fp, const LayoutType &sub ) const
             {
                 const GridType           &self = *this; assert(self.contains(sub));
