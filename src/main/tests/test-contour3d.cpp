@@ -90,9 +90,9 @@ Y_UTEST(contour3d)
     }
 
     {
-        unit_t resolution = 50;
+        unit_t resolution = 10;
         typedef VertexFor<Coord3D,double>::Type vertex;
-        const Layout3D                  L( Coord3D(1,1,1), Coord3D(resolution,resolution,resolution) );
+        const Layout3D                  L( Coord3D(1,1,1), Coord3D(resolution,2*resolution,3*resolution) );
         Field3D<double>                 S( "S", L);
         Field3D<double>                 P( "P", L);
         RectilinearGrid<Coord3D,double> G(L,NULL);
