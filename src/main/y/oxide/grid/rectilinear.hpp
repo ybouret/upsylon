@@ -126,7 +126,7 @@ namespace upsylon {
             }
 
             //! write to vtk
-            void write( vtk &VTK, ios::ostream &fp, const LayoutType &sub ) const
+            inline virtual void write( vtk &VTK, ios::ostream &fp, const LayoutType &sub ) const
             {
                 static const vtk::Writer &tw = VTK.get<type>();
 

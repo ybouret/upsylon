@@ -62,6 +62,8 @@ namespace upsylon {
             //! get a vertex position from a coordinate
             virtual const_vertex operator()(const_coord c) const throw() = 0;
 
+            //! save a sub layout of this grid to VTK
+            virtual void write( vtk &, ios::ostream &, const LayoutType &) const = 0;
 
         protected:
             //! setup

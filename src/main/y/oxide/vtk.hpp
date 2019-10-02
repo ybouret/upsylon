@@ -34,11 +34,12 @@ namespace upsylon {
             // types and defintions
             //
             //==================================================================
-            static const char DATASET[];     //!< "DATASET"
-            static const char DIMENSIONS[];  //!< "DIMENSIONS"
-            static const char ORIGIN[];      //!< "ORIGIN"
-            static const char SPACING[];     //!< "SPACING"
+            static const char DATASET[];      //!< "DATASET"
+            static const char DIMENSIONS[];   //!< "DIMENSIONS"
+            static const char ORIGIN[];       //!< "ORIGIN"
+            static const char SPACING[];      //!< "SPACING"
             static const char _COORDINATES[]; //!< "_COORDINATES"
+            static const char POINTS[];       //!< "POINTS"
 
             //------------------------------------------------------------------
             //

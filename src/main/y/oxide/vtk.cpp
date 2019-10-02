@@ -345,6 +345,7 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
         const char   vtk::ORIGIN[]       = "ORIGIN";
         const char   vtk::SPACING[]      = "SPACING";
         const char   vtk::_COORDINATES[] = "_COORDINATES";
+        const char   vtk::POINTS[]       = "POINTS";
 
         void vtk:: structuredPoints_(ios::ostream  &fp,
                                      const size_t   dims,

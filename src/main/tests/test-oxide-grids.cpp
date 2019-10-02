@@ -89,6 +89,16 @@ namespace {
             VTK.writeField(fp, rgF, rgF);
         }
 
+        {
+            const string  fn = vformat("cg%ud.vtk", unsigned( rgf.Dimensions ));
+            ios::ocstream fp(fn);
+            VTK.writeHeader(fp);
+            VTK.writeTitle(fp, "curvilinear grid");
+            cgf.write(VTK, fp, cgf);
+            //VTK.writePointData(fp,cgF);
+            //VTK.writeField(fp, cgF, cgF);
+        }
+
 
     }
 

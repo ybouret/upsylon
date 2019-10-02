@@ -78,9 +78,8 @@ namespace upsylon {
             }
 
             //! write to vtk
-            void write( vtk &VTK, ios::ostream &fp, const LayoutType &sub ) const
+            inline virtual void write( vtk &VTK, ios::ostream &fp, const LayoutType &sub ) const
             {
-                static const vtk::Writer &tw   = VTK.get<type>();
                 const GridType           &self = *this; assert(self.contains(sub));
 
                 // emit dataset
@@ -96,7 +95,7 @@ namespace upsylon {
                     fp << vtk::ORIGIN;
                     for(size_t dim=0;dim<Dimensions;++dim)
                     {
-                        tw.write(fp << ' ', &org[dim]);
+                        VTK(fp << ' ',org[dim]);
                     }
                     for(size_t dim=Dimensions;dim<3;++dim)
                     {
@@ -114,13 +113,13 @@ namespace upsylon {
                     for(size_t dim=0;dim<Dimensions;++dim)
                     {
                         const_type s = spc[dim];
-                        tw.write(fp << ' ', &s);
+                        VTK(fp << ' ', s);
                         sum += s;
                     }
                     sum /= Dimensions;
                     for(size_t dim=Dimensions;dim<3;++dim)
                     {
-                        tw.write(fp << ' ', &sum);
+                        VTK(fp << ' ', sum);
                     }
                     fp << '\n';
                 }

@@ -12,17 +12,28 @@ namespace upsylon {
     namespace Oxide {
 
         //! shared data
-        struct CurvilinearGrid_
+        class CurvilinearGrid_
         {
+        public:
             static const char Name[];           //!< "CurvilinearGrid"
             static const char SqueezedLayout[]; //!< "Squeezed Layout"
+            static const char VTK_DATASET_ID[]; //!< "STRUCTURED_GRID"
+
+            virtual ~CurvilinearGrid_() throw();
+
+        protected:
+            explicit CurvilinearGrid_() throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(CurvilinearGrid_);
         };
 
         //! a curvilinear grid
         template <typename COORD, typename T>
         class CurvilinearGrid :
         public Grid<COORD,T>,
-        public slots< typename FieldFor<COORD,T>::Type >
+        public slots< typename FieldFor<COORD,T>::Type >,
+        public CurvilinearGrid_
         {
         public:
             Y_DECL_ARGS(T,type);                             //!< aliases
@@ -77,9 +88,7 @@ namespace upsylon {
                 {
                     if(Coord::Of(dd,dim)<=0)
                     {
-                        Grid_::ExceptionLEQZ(CurvilinearGrid_::Name,
-                                             CurvilinearGrid_::SqueezedLayout,
-                                             dim);
+                        Grid_::ExceptionLEQZ(Name,SqueezedLayout,dim);
                     }
                 }
 
@@ -95,6 +104,22 @@ namespace upsylon {
 
             }
 
+            inline virtual void write( vtk &VTK, ios::ostream &fp, const LayoutType &sub ) const
+            {
+                static const vtk::Writer &tw = VTK.get<type>();
+                const GridType           &self = *this;
+
+                // emit dataset
+                fp << vtk::DATASET << ' ' << VTK_DATASET_ID << '\n';
+
+                // emit dimensions, increased for vtk
+                VTK.writeDimensions(fp,sub.width) << '\n';
+
+                // emit POINTS
+                VTK(fp << vtk::POINTS << ' ',sub.items) << ' ' << tw.dataType() << '\n';
+
+                
+            }
 
 
         private:
