@@ -95,8 +95,8 @@ namespace {
             VTK.writeHeader(fp);
             VTK.writeTitle(fp, "curvilinear grid");
             cgf.write(VTK, fp, cgf);
-            //VTK.writePointData(fp,cgF);
-            //VTK.writeField(fp, cgF, cgF);
+            VTK.writePointData(fp,cgF);
+            VTK.writeField(fp, cgF, cgF);
         }
 
 

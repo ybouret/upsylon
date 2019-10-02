@@ -107,7 +107,6 @@ namespace upsylon {
             inline virtual void write( vtk &VTK, ios::ostream &fp, const LayoutType &sub ) const
             {
                 static const vtk::Writer &tw = VTK.get<type>();
-                const GridType           &self = *this;
 
                 // emit dataset
                 fp << vtk::DATASET << ' ' << VTK_DATASET_ID << '\n';
@@ -118,12 +117,36 @@ namespace upsylon {
                 // emit POINTS
                 VTK(fp << vtk::POINTS << ' ',sub.items) << ' ' << tw.dataType() << '\n';
 
-                
+                emitPoints(VTK,fp,sub, type2type<COORD>() );
             }
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(CurvilinearGrid);
+
+            void emitPoints(vtk &VTK, ios::ostream &fp, const LayoutType &sub, type2type<Coord1D> ) const
+            {
+            }
+
+            void emitPoints(vtk &VTK, ios::ostream &fp, const LayoutType &sub, type2type<Coord2D> ) const
+            {
+            }
+
+            void emitPoints(vtk &VTK, ios::ostream &fp, const LayoutType &sub, type2type<Coord3D> ) const
+            {
+                const GridType           &self = *this;
+
+                typename LayoutType::Loop loop(sub.lower,sub.upper);
+                for( loop.start(); loop.valid(); loop.next() )
+                {
+                    const vertex v = self(loop.value);
+                    VTK(fp,v) << '\n';
+                }
+            }
+
+
+
+
         };
 
     }
