@@ -90,13 +90,15 @@ Y_UTEST(contour3d)
     }
 
     {
+        unit_t resolution = 50;
         typedef VertexFor<Coord3D,double>::Type vertex;
-        const Layout3D                  L( Coord3D(1,1,1), Coord3D(10,20,30) );
+        const Layout3D                  L( Coord3D(1,1,1), Coord3D(resolution,resolution,resolution) );
         Field3D<double>                 S( "S", L);
         Field3D<double>                 P( "P", L);
         RectilinearGrid<Coord3D,double> G(L,NULL);
         G.mapRegular(L,vertex(-1,-1,-1),vertex(1,1,1));
-        
+
+#if 0
         {
             std::cerr << "X=";
             for(unit_t i=G[0].lower;i<=G[0].upper;++i)
@@ -120,7 +122,7 @@ Y_UTEST(contour3d)
                 std::cerr << ' ' << G[2][i];
             } std::cerr << std::endl;
         }
-        
+#endif
         
         Layout3D::Loop loop( L.lower, L.upper );
 
@@ -128,17 +130,15 @@ Y_UTEST(contour3d)
         {
             const Coord3D &c = loop.value;
             const vertex   v = G(c);
-            //std::cerr << c << "->" << v << std::endl;
             const double   x = v.x;
             const double   E = exp( -1.4* v.norm2() );
 
             S(c) = E;
-            P(c) = 2*E*x;
+            P(c) = 2*E*x*x;
 
         }
 
         Contour::Levels w;
-        w.insert(-0.5);
         w.insert(0.5);
         w.insert(0.7);
 
