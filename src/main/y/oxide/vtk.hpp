@@ -11,18 +11,17 @@
 #include "y/hashing/type-info.hpp"
 #include "y/associative/set.hpp"
 
-namespace upsylon
-{
-    namespace Oxide
-    {
+namespace upsylon {
+
+    namespace Oxide {
 
         //======================================================================
         //
         //
         //! writing VTK data
         /**
-         - for 1D field, expanded x2x2 => 4 times
-         - for 2D field, expanded x2   => 2 times
+         - for 1D field, expanded x2 x2 => 4 times
+         - for 2D field, expanded x2    => 2 times
          */
         //
         //
@@ -65,7 +64,7 @@ namespace upsylon
                 //! setup using type info a default format
                 explicit Writer(const std::type_info &,
                                 const char           *) ;
-                
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Writer);
             };
@@ -83,11 +82,15 @@ namespace upsylon
             //! access a registered writer
             const Writer & get( const std::type_info &tid ) const;
 
-            //! access a registered writer for a type
-            template <typename T> inline
-            const Writer & get() const { return get( typeid(T) ); }
+            //! cached access to a registered writer for a type
+            template <typename T> inline const Writer & get() const
+            {
+                static const Writer &_ = get( typeid(typename type_traits<T>::mutable_type) );
+                return _;
 
-            //! write object to stream (slow, access each time)
+            }
+
+            //! write object to stream
             template <typename T> inline
             ios::ostream & operator()( ios::ostream &fp, const T &args ) const
             {
@@ -113,7 +116,7 @@ namespace upsylon
             template <typename COORD> inline
             void writeLayout( ios::ostream &fp, const Layout<COORD> &L ) const
             {
-                structuredPoints(fp, Layout<COORD>::Dimensions, (const Coord1D *)&L.width, (const Coord1D *)&L.lower );
+                structuredPoints_(fp, Layout<COORD>::Dimensions, (const Coord1D *)&L.width, (const Coord1D *)&L.lower );
             }
 
             //! write layout as structured points, no physical data
@@ -133,7 +136,7 @@ namespace upsylon
                 const Writer &writer = revealField(fp,F);
                 method        write1 = ( writer.isScalar() ) ?  & vtk::writeScalar : & vtk::writeVector;
                 const size_t  repeat = Repeat[ LAYOUT::Dimensions ];
-
+                
                 // loop over layout
                 typename LAYOUT::Loop loop(L.lower,L.upper);
                 for(size_t r=0;r<repeat;++r)
@@ -155,10 +158,10 @@ namespace upsylon
 
             SharedWriters writers;
 
-            void structuredPoints(ios::ostream  &fp,
-                                  const size_t   dims,
-                                  const Coord1D *width,
-                                  const Coord1D *lower) const;
+            void structuredPoints_(ios::ostream  &fp,
+                                   const size_t   dims,
+                                   const Coord1D *width,
+                                   const Coord1D *lower) const;
 
             ios::ostream & composeAs3D( ios::ostream &fp, const Coord1D *C, const size_t dims, const Coord1D pad) const;
             const Writer & revealField( ios::ostream &fp, const Field  &F ) const;
@@ -167,7 +170,7 @@ namespace upsylon
 
 
         };
-        
+
     }
 }
 

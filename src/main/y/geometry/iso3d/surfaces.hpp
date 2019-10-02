@@ -11,15 +11,15 @@ namespace upsylon {
 
         namespace Iso3D {
 
-
+            //! a surface is a database of points
             class Surface_ : public counted, public Points
             {
             public:
-                const size_t index;
+                const size_t index; //!< current level index
 
-                explicit Surface_(const size_t) throw();
-                virtual ~Surface_() throw();
-                const size_t & key() const throw();
+                explicit Surface_(const size_t) throw(); //!< setup with index
+                virtual ~Surface_() throw();             //!< cleanup
+                const size_t & key() const throw();      //!< key=index
 
                 //! create/query single point
                 Point_ * single(const Coordinate &,
@@ -38,18 +38,20 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Surface_);
             };
 
+            //! dynamic surface
             typedef intr_ptr<size_t,Surface_> Surface;
 
+            //! base type for surfaces
             typedef set<size_t,Surface,key_dumper,Contour::Allocator> SurfacesType;
 
-
+            //! database of surfaces, key=level index
             class Surfaces : public SurfacesType
             {
             public:
-                explicit Surfaces() throw();
-                virtual ~Surfaces() throw();
+                explicit Surfaces() throw(); //!< setup
+                virtual ~Surfaces() throw(); //!< cleanup
 
-                void create(size_t n);
+                void create(size_t n);       //!< create [1:n]
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Surfaces);

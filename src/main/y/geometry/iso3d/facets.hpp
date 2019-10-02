@@ -30,8 +30,10 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Facet_);
             };
 
+            //! dynamic facet
             typedef intr_ptr<Edge3,Facet_> Facet;
 
+            //! database of facets
             typedef set<Edge3,Facet,Edge3::Hasher> Facets;
 
 

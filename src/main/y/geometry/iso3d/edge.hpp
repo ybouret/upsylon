@@ -71,6 +71,7 @@ namespace upsylon {
                 //! will compare addresses, for they are unique
                 friend bool operator==( const Edge3 &lhs, const Edge3 &rhs ) throw();
 
+                //! hash content of edge
                 void __run( hashing::function &H ) const throw();
 
                 //! dedicated hasher

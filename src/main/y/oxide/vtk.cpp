@@ -38,7 +38,7 @@ namespace upsylon {
                     {
                         assert(addr);
                         assert(fmt.is_valid());
-						const long i = long(*static_cast<const T *>(addr) );
+                        const long i = long(*static_cast<const T *>(addr) );
                         fp( **fmt, i );
                     }
 
@@ -340,10 +340,10 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
 
         const size_t vtk::Repeat[4] = { 0, 4, 2, 1 };
 
-        void vtk:: structuredPoints(ios::ostream  &fp,
-                                    const size_t   dims,
-                                    const Coord1D *width,
-                                    const Coord1D *lower) const
+        void vtk:: structuredPoints_(ios::ostream  &fp,
+                                     const size_t   dims,
+                                     const Coord1D *width,
+                                     const Coord1D *lower) const
         {
             assert(dims>=1); assert(dims<=3); assert(width); assert(lower);
             fp << "DATASET STRUCTURED_POINTS\n";
