@@ -126,6 +126,27 @@ namespace upsylon {
 
             void emitPoints(vtk &VTK, ios::ostream &fp, const LayoutType &sub, type2type<Coord1D> ) const
             {
+
+                typedef point3d<mutable_type> local_vertex;
+                const GridType &self  = *this;
+                Loop            loop(sub.lower,sub.upper);
+                const_type      delta = this->scalingLength();
+                local_vertex    xyz[4] =
+                {
+                    local_vertex(0,0,0),     local_vertex(0,delta,0),
+                    local_vertex(0,0,delta), local_vertex(0,delta,delta)
+                };
+
+                for(size_t k=0;k<4;++k)
+                {
+                    local_vertex &v = xyz[k];
+                    for(loop.start();loop.valid();loop.next())
+                    {
+                        v.x = self(loop.value);
+                        VTK(fp,v) << '\n';
+                    }
+                }
+
             }
 
             void emitPoints(vtk &VTK, ios::ostream &fp, const LayoutType &sub, type2type<Coord2D> ) const
