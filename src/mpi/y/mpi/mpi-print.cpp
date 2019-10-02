@@ -3,6 +3,7 @@
 #include "y/memory/buffers.hpp"
 #include <cstdarg>
 #include <cstdio>
+#include <cerrno>
 
 namespace upsylon
 {
