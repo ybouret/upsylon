@@ -348,7 +348,7 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
             assert(dims>=1); assert(dims<=3); assert(width); assert(lower);
             fp << "DATASET STRUCTURED_POINTS\n";
             composeAs3D(fp << "DIMENSIONS ",width,dims,2) << '\n';
-            composeAs3D(fp << "ORIGIN ",    lower,dims,1) << '\n';
+            composeAs3D(fp << "ORIGIN ",    lower,dims,0) << '\n';
             fp << "SPACING 1 1 1\n";
         }
 

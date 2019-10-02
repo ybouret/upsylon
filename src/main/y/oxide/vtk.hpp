@@ -118,7 +118,7 @@ namespace upsylon {
             {
                 structuredPoints_(fp, Layout<COORD>::Dimensions, (const Coord1D *)&L.width, (const Coord1D *)&L.lower );
             }
-
+            
             //! write layout as structured points, no physical data
             /**
              write global POINT_DATA for this layout, expanded for ParaView
@@ -148,6 +148,13 @@ namespace upsylon {
                 }
             }
 
+
+            ios::ostream & composeAs3D( ios::ostream &fp, const Coord1D *C, const size_t dims, const Coord1D pad) const; //!< write C[0..dims-1], and 'pad' [dims:3]
+            const Writer & revealField( ios::ostream &fp, const Field  &F ) const;                                       //!< prepare lookup table
+            void           writeScalar( ios::ostream &fp, const Writer &W, const void *addr ) const;                     //!< write type scalar@addr
+            void           writeVector( ios::ostream &fp, const Writer &W, const void *addr ) const;                     //!< write type vector@addr
+
+
         private:
             static const size_t             Repeat[4];
             static const at_exit::longevity life_time = 0;
@@ -163,10 +170,6 @@ namespace upsylon {
                                    const Coord1D *width,
                                    const Coord1D *lower) const;
 
-            ios::ostream & composeAs3D( ios::ostream &fp, const Coord1D *C, const size_t dims, const Coord1D pad) const;
-            const Writer & revealField( ios::ostream &fp, const Field  &F ) const;
-            void           writeScalar( ios::ostream &fp, const Writer &W, const void *addr ) const;
-            void           writeVector( ios::ostream &fp, const Writer &W, const void *addr ) const;
 
 
         };

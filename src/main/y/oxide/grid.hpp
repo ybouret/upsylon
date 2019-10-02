@@ -2,8 +2,7 @@
 #ifndef Y_OXIDE_GRID_INCLUDED
 #define Y_OXIDE_GRID_INCLUDED 1
 
-#include "y/oxide/layout.hpp"
-#include "y/type/args.hpp"
+#include "y/oxide/vtk.hpp"
 
 namespace upsylon {
 

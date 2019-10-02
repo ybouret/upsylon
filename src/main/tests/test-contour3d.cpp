@@ -138,6 +138,16 @@ Y_UTEST(contour3d)
 
         }
 
+        {
+            vtk &VTK = vtk::instance();
+            ios::ocstream fp("s.vtk");
+            VTK.writeHeader(fp);
+            VTK.writeTitle(fp, "spherical");
+            // write grid...
+            VTK.writePointData(fp,S);
+            VTK.writeField(fp,S,S);
+        }
+
         Contour::Levels w;
         w.insert(0.5);
         w.insert(0.7);
