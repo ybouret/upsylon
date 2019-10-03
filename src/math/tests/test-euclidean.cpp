@@ -3,7 +3,8 @@
 #include "y/utest/run.hpp"
 #include <typeinfo>
 
-#include "support.hpp"
+#include "y/ios/ocstream.hpp"
+#include "y/string.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -56,19 +57,39 @@ namespace {
                 std::cerr << "Creating Arcs..." << std::endl;
                 StandardArc<T,POINT> sa;
                 PeriodicArc<T,POINT> pa;
-
-                for( size_t i=10+alea.leq(10);i>0;--i)
+                const size_t np = 10+alea.leq(10);
+                for(size_t i=0;i<np;++i)
                 {
-                    const SharedPoint sp = new PointType( support::get<Vertex>() );
+                    const float  theta = (numeric<float>::two_pi * i)/np;
+                    const float  x     = cosf(theta) + 0.1f * alea.symm<float>();
+                    const float  y     = sinf(theta) + 0.1f * alea.symm<float>();
+                    const float  z     = float(i)/np;
+                    const type   arr[4] = { x,y,z, 0 };
+                    const Vertex     &v  = *(const Vertex *) &arr[0];
+                    const SharedPoint sp = new PointType(v);
                     sa << sp;
                     pa << sp;
                     Y_ASSERT(sa.check());
                     Y_ASSERT(pa.check());
                 }
-
+                
                 std::cerr << "standard:" << sa.points.size << "/" << sa.segments.size << std::endl;
                 std::cerr << "periodic:" << pa.points.size << "/" << pa.segments.size << std::endl;
 
+                const string sfn = vformat("%s_sa.dat",pid.name());
+                const string pfn = vformat("%s_pa.dat",pid.name());
+                
+                ios::ocstream sfp(sfn);
+                ios::ocstream pfp(pfn);
+                for( const NodeType *snode=sa.points.head,
+                    *pnode = pa.points.head;
+                    snode;snode=snode->next,pnode=pnode->next)
+                {
+                    (*snode)->print(sfp) << '\n';
+                    (*pnode)->print(pfp) << '\n';
+                }
+                
+                
 
             }
 

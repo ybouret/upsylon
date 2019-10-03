@@ -10,9 +10,11 @@
 #include "y/core/node.hpp"
 #include "y/container/key-address.hpp"
 #include "y/associative/set.hpp"
+#include "y/ios/ostream.hpp"
 
 namespace upsylon {
 
+    
     namespace math {
 
         namespace Euclidean {
@@ -78,7 +80,18 @@ namespace upsylon {
                 inline explicit Point(const Vertex p) throw() : position(p){} //!< setup
                 inline virtual ~Point() throw() { bzset(position); }          //!< cleanup
                 inline const PointKey & key() const throw() { return uuid; }  //!< for database
-
+                
+                inline ios::ostream & print( ios::ostream &fp ) const
+                {
+                    const_type *p = (const_type *) &position;
+                    fp("%.15g",double(p[0]));
+                    for(size_t dim=1;dim<Dimensions;++dim)
+                    {
+                        fp(" %.15g",double(p[dim]));
+                    }
+                    return fp;
+                }
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Point);
             };
