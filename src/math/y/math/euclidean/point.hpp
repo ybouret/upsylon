@@ -68,8 +68,9 @@ typedef typename PointType::VTX     VTX
                 typedef core::inode< Node<T,POINT> > iNode;
                 typedef core::list_of_cpp<Node>      List;
 
+                Vertex celerity;
 
-                inline explicit Node( const SharedPoint &P ) throw() : SharedPoint(P), iNode() {}
+                inline explicit Node( const SharedPoint &P ) throw() : SharedPoint(P), iNode(), celerity() {}
                 inline virtual ~Node() throw() {}
 
             private:

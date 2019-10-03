@@ -1,4 +1,4 @@
-#include "y/math/euclidean/segment.hpp"
+#include "y/math/euclidean/arc.hpp"
 #include "y/type/complex.hpp"
 #include "y/utest/run.hpp"
 #include <typeinfo>
@@ -17,17 +17,18 @@ namespace {
         typedef typename PointType::Pointer SharedPoint;
         typedef Node<T,POINT>               NodeType;
         typedef typename NodeType::List     List;
-        //typedef Segment<T,POINT>            SegmentType;
+        typedef Segment<T,POINT>            SegmentType;
         typedef Segments<T,POINT>           SegmentsType;
         const std::type_info &tid = typeid(T);
         const std::type_info &pid = typeid(PointType);
 
         std::cerr << "Using " << pid.name() << "/" << tid.name() << std::endl;
-        std::cerr << "|_sizeof(type)   = " << sizeof(T)           << std::endl;
-        std::cerr << "|_sizeof(point)  = " << sizeof(PointType)   << std::endl;
-        std::cerr << "|_sizeof(shared) = " << sizeof(SharedPoint) << std::endl;
-        std::cerr << "|_sizeof(node)   = " << sizeof(NodeType)    << std::endl;
-        std::cerr << "|_sizeof(list)   = " << sizeof(List)        << std::endl;
+        std::cerr << "|_sizeof(type)     = " << sizeof(T)           << std::endl;
+        std::cerr << "|_sizeof(point)    = " << sizeof(PointType)   << std::endl;
+        std::cerr << "|_sizeof(shared)   = " << sizeof(SharedPoint) << std::endl;
+        std::cerr << "|_sizeof(node)     = " << sizeof(NodeType)    << std::endl;
+        std::cerr << "|_sizeof(list)     = " << sizeof(List)        << std::endl;
+        std::cerr << "|_sizeof(segment)  = " << sizeof(SegmentType) << std::endl;
 
         List points;
         for(size_t i=10+alea.leq(100);i>0;--i)

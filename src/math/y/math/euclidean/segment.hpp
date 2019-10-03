@@ -1,4 +1,3 @@
-
 //! \file
 #ifndef Y_EUCLIDEAN_SEGMENT_INCLUDED
 #define Y_EUCLIDEAN_SEGMENT_INCLUDED 1
@@ -34,6 +33,26 @@ namespace upsylon {
                     const VTX  delta(A,B);
                     (mutable_type &)norm2  = delta.norm2();
                     (mutable_type &)length = math::sqrt_of(norm2);
+                }
+
+                static inline bool AreTheSame(const Pair &p, const Pair &q) throw()
+                {
+                    return (p.tail==q.tail) && (p.head==q.head);
+                }
+
+                static inline bool AreOpposite(const Pair &p, const Pair &q) throw()
+                {
+                    return (p.tail==q.head) && (p.head==q.tail);
+                }
+
+                friend inline bool  operator==( const Pair &lhs, const Pair &rhs ) throw()
+                {
+                    return Pair::AreTheSame(lhs,rhs) || Pair::AreOpposite(lhs,rhs);
+                }
+
+                friend inline bool  operator!=( const Pair &lhs, const Pair &rhs ) throw()
+                {
+                    return !Pair::AreTheSame(lhs,rhs) && !Pair::AreOpposite(lhs,rhs);
                 }
 
 
