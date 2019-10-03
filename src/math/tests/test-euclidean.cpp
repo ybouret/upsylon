@@ -3,6 +3,8 @@
 #include "y/utest/run.hpp"
 #include <typeinfo>
 
+#include "support.hpp"
+
 using namespace upsylon;
 using namespace math;
 using namespace Euclidean;
@@ -31,22 +33,43 @@ namespace {
             std::cerr << "|_sizeof(list)     = " << sizeof(NodeList)    << std::endl;
             std::cerr << "|_sizeof(segment)  = " << sizeof(SegmentType) << std::endl;
 
-            NodeList points;
-            for(size_t i=10+alea.leq(100);i>0;--i)
             {
-                SharedPoint P = new PointType();
-                points.push_back( new NodeType(P) );
+                NodeList points;
+                for(size_t i=10+alea.leq(100);i>0;--i)
+                {
+                    SharedPoint P = new PointType();
+                    points.push_back( new NodeType(P) );
+                }
+
+                SegmentsType segments;
+                for(size_t i=10+alea.leq(100);i>0;--i)
+                {
+                    const SharedPoint &a = *points.fetch( alea.lt(points.size) );
+                    const SharedPoint &b = *points.fetch( alea.lt(points.size) );
+                    segments(a,b);
+                }
+
+                segments.update();
             }
 
-            SegmentsType segments;
-            for(size_t i=10+alea.leq(100);i>0;--i)
             {
-                const SharedPoint &a = *points.fetch( alea.lt(points.size) );
-                const SharedPoint &b = *points.fetch( alea.lt(points.size) );
-                segments(a,b);
+                std::cerr << "Creating Arcs..." << std::endl;
+                StandardArc<T,POINT> sa;
+                PeriodicArc<T,POINT> pa;
+
+                for( size_t i=10+alea.leq(10);i>0;--i)
+                {
+                    const SharedPoint sp = new PointType( support::get<Vertex>() );
+                    sa << sp;
+                    pa << sp;
+                }
+
+                std::cerr << "standard:" << sa.getPoints().size << "/" << sa.getSegments().size << std::endl;
+                std::cerr << "periodic:" << pa.getPoints().size << "/" << pa.getSegments().size << std::endl;
+
+
             }
 
-            segments.update();
         }
     };
 
