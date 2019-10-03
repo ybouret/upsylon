@@ -62,10 +62,12 @@ namespace {
                     const SharedPoint sp = new PointType( support::get<Vertex>() );
                     sa << sp;
                     pa << sp;
+                    Y_ASSERT(sa.check());
+                    Y_ASSERT(pa.check());
                 }
 
-                std::cerr << "standard:" << sa.getPoints().size << "/" << sa.getSegments().size << std::endl;
-                std::cerr << "periodic:" << pa.getPoints().size << "/" << pa.getSegments().size << std::endl;
+                std::cerr << "standard:" << sa.points.size << "/" << sa.segments.size << std::endl;
+                std::cerr << "periodic:" << pa.points.size << "/" << pa.segments.size << std::endl;
 
 
             }

@@ -39,25 +39,25 @@ typedef Arc<T,POINT>      ArcType;
                     const SharedPoint sp = new PointType(v);
                     return (*this) << sp;
                 }
+                
+                const NodeList points;
+                const SegmList segments;
 
-                inline const NodeList & getPoints()   const throw() { return points;   }
-                inline const SegmList & getSegments() const throw() { return segments; }
+                virtual bool check() const throw() = 0;
 
             protected:
                 inline explicit Arc() throw() {}
 
-                NodeList points;
-                SegmList segments;
 
                 inline void pushBack( const SharedPoint &sp )
                 {
-                    points.push_back( new NodeType(sp) );
+                    ((NodeList&)points).push_back( new NodeType(sp) );
                 }
 
                 inline void popBack() throw()
                 {
                     assert(points.size>0);
-                    delete points.pop_back();
+                    delete ((NodeList&)points).pop_back();
                 }
 
             private:
@@ -75,11 +75,25 @@ typedef Arc<T,POINT>      ArcType;
                 inline virtual ~StandardArc() throw() {}
                 inline explicit StandardArc() throw() : ArcType() {}
 
+                virtual bool check() const throw()
+                {
+                    switch(this->points.size)
+                    {
+                        case 0: break;
+                        case 1: if(this->segments.size>0) return false; break;
+                        default:
+                            if(this->segments.size+1!=this->points.size) return false;
+
+                    }
+                    return true;
+                }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(StandardArc);
 
                 inline virtual void add( const SharedPoint &sp )
                 {
+                    SegmList &seg = (SegmList&)(this->segments);
                     if(this->points.size<=0)
                     {
                         assert(this->segments.size<=0);
@@ -92,7 +106,7 @@ typedef Arc<T,POINT>      ArcType;
                         try
                         {
                             const NodeType *tail = this->points.tail; assert(tail); assert(tail->prev);
-                            this->segments(*(tail->prev),*tail);
+                            seg(*(tail->prev),*tail);
                         }
                         catch(...)
                         {
@@ -112,10 +126,24 @@ typedef Arc<T,POINT>      ArcType;
                 inline virtual ~PeriodicArc() throw() {}
                 inline explicit PeriodicArc() throw() {}
 
+                virtual bool check() const throw()
+                {
+                    switch(this->points.size)
+                    {
+                        case 0: break;
+                        case 1: if(this->segments.size>0) return false; break;
+                        default:
+                            if(this->segments.size!=this->points.size) return false;
+
+                    }
+                    return true;
+                }
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(PeriodicArc);
                 inline virtual void add( const SharedPoint &sp )
                 {
+                    SegmList &seg = (SegmList&)(this->segments);
                     switch(this->points.size)
                     {
                             //--------------------------------------------------
@@ -129,11 +157,11 @@ typedef Arc<T,POINT>      ArcType;
                             //--------------------------------------------------
                             this->pushBack(sp); assert(2==this->points.size);
                             try {
-                                this->segments(*(this->points.head),*(this->points.tail));
-                                this->segments(*(this->points.tail),*(this->points.head));
+                                seg(*(this->points.head),*(this->points.tail)); // initial growing
+                                seg(*(this->points.tail),*(this->points.head)); // initial closing
                             } catch(...) {
                                 this->popBack();
-                                this->segments.release();
+                                seg.release();
                                 throw;
                             }
                             break;
@@ -149,9 +177,9 @@ typedef Arc<T,POINT>      ArcType;
                                 auto_ptr<SegmentType> closing = new SegmentType(*(this->points.tail),*(this->points.head));
 
                                 // no-throw replacement
-                                delete this->segments.pop_back(); // old closing
-                                this->segments.push_back( growing.yield() );
-                                this->segments.push_back( closing.yield() );
+                                delete seg.pop_back(); // old closing
+                                seg.push_back( growing.yield() );
+                                seg.push_back( closing.yield() );
                             } catch(...) {
                                 this->popBack();
                                 throw;
