@@ -26,12 +26,22 @@ namespace upsylon {
             template <typename T> struct __VTX<T,2>
             {
                 typedef point2d<T> Type; //!< alias
+                static inline ios::ostream &Print(ios::ostream &fp, const Type &v)
+                {
+                    fp("%.15g %.15g", v.x, v.y);
+                    return fp;
+                }
             };
 
             //! map to point3d<T>
             template <typename T> struct __VTX<T,3>
             {
                 typedef point3d<T> Type; //!< alias
+                static inline ios::ostream &Print(ios::ostream &fp, const Type &v)
+                {
+                    fp("%.15g %.15g %.15g", v.x, v.y, v.z);
+                    return fp;
+                }
             };
 
             //! base class for object
@@ -59,7 +69,8 @@ namespace upsylon {
                 Y_DECL_ARGS(T,type);                                          //!< alias
                 typedef POINT<type>                           Vertex;         //!< the data handling vertex
                 static const size_t Dimensions = sizeof(Vertex)/sizeof(type); //!< dimensions
-                typedef typename __VTX<type,Dimensions>::Type VTX;            //!< mapping point type
+                typedef  __VTX<type,Dimensions>              _VTX;           //!< alias
+                typedef typename _VTX::Type                   VTX;           //!< mapping point type
                 typedef intr_ptr<PointKey,Point>              Pointer;        //!< for shared point
                 typedef set<PointKey,Pointer>                 DataBase;
 
@@ -81,16 +92,12 @@ namespace upsylon {
                 inline virtual ~Point() throw() { bzset(position); }          //!< cleanup
                 inline const PointKey & key() const throw() { return uuid; }  //!< for database
                 
-                inline ios::ostream & print( ios::ostream &fp ) const
+                static inline ios::ostream & Print( ios::ostream &fp, const Vertex &v)
                 {
-                    const_type *p = (const_type *) &position;
-                    fp("%.15g",double(p[0]));
-                    for(size_t dim=1;dim<Dimensions;++dim)
-                    {
-                        fp(" %.15g",double(p[dim]));
-                    }
-                    return fp;
+                    const VTX &V = (const VTX &)v;
+                    return _VTX::Print(fp,V);
                 }
+                
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Point);
@@ -132,7 +139,8 @@ typedef typename PointType::VTX      VTX
                 //
                 //==============================================================
                 Vertex celerity;
-
+                
+                
                 //==============================================================
                 //
                 // methods
@@ -142,7 +150,8 @@ typedef typename PointType::VTX      VTX
                 inline explicit PointNode( const SharedPoint &P ) throw() : SharedPoint(P), iNode(), celerity() {}
                 //! cleanup
                 inline virtual ~PointNode() throw() {}
-
+                
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(PointNode);
             };
