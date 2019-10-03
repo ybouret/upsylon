@@ -67,7 +67,7 @@ namespace upsylon
 
             //------------------------------------------------------------------
             //
-            // send a parent workspace to some local workspaces
+            // send a parent workspace to some local and remote workspaces
             //
             //------------------------------------------------------------------
 
@@ -100,26 +100,24 @@ namespace upsylon
                     for(size_t rank=1;rank<psz;++rank)
                     {
                         blk.free();
-                        const size_t total = source.save<LayoutType>(blk,part,part[rank]);
-                        __Workspace::CheckBlockTotal(blk,total);
+                        __Workspace::CheckBlockTotal(blk,source.save<LayoutType>(blk,part,part[rank]));
                         MPI.vSend(comm_variable_size,blk,rank,tag);
                     }
                 }
                 else
                 {
                     assert(child.rank>0);
-                    IOBlock     &blk = child.recvBlock;
+                    IOBlock &blk = child.recvBlock;
                     blk.free();
                     MPI.vRecv(comm_variable_size,blk,0,tag);
                     ios::imstream input(blk);
-                    const size_t total = target.load<LayoutType>(input,child.outer,child.inner);
-                    __Workspace::CheckBlockTotal(blk,total);
+                    __Workspace::CheckBlockTotal(blk,target.load<LayoutType>(input,child.outer,child.inner));
                 }
             }
 
             //------------------------------------------------------------------
             //
-            // send  some local workspaces to a global workspace
+            // recv some local amd remote workspaces into a global workspace
             //
             //------------------------------------------------------------------
             //! send from node 0 to other
@@ -146,24 +144,23 @@ namespace upsylon
                     source.localGather<LayoutType>(child.inner,part,target,child.outer);
 
                     // will send all data
-                    const size_t psz  = part.size();
+                    const size_t psz = part.size();
                     IOBlock     &blk = parent.recvBlock;
                     for(size_t rank=1;rank<psz;++rank)
                     {
                         blk.free();
                         MPI.vRecv(comm_variable_size,blk,rank,tag);
                         ios::imstream input(blk);
-                        const size_t  total = source.load<LayoutType>(input,part,part[rank]);
-                        __Workspace::CheckBlockTotal(blk,total);
+                        __Workspace::CheckBlockTotal(blk,source.load<LayoutType>(input,part,part[rank]));
                     }
                 }
                 else
                 {
                     assert(child.rank>0);
 
-                    IOBlock     &blk   = child.sendBlock; blk.free();
-                    const size_t total = target.save<LayoutType>(blk,child.outer,child.inner);
-                    __Workspace::CheckBlockTotal(blk,total);
+                    IOBlock &blk = child.sendBlock;
+                    blk.free();
+                    __Workspace::CheckBlockTotal(blk,target.save<LayoutType>(blk,child.outer,child.inner));
                     MPI.vSend(comm_variable_size,blk,0,tag);
                 }
 
