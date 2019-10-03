@@ -1,4 +1,4 @@
-#include "y/math/euclidean/point.hpp"
+#include "y/math/euclidean/segment.hpp"
 #include "y/type/complex.hpp"
 #include "y/utest/run.hpp"
 #include <typeinfo>
@@ -17,7 +17,8 @@ namespace {
         typedef typename PointType::Pointer SharedPoint;
         typedef Node<T,POINT>               NodeType;
         typedef typename NodeType::List     List;
-
+        //typedef Segment<T,POINT>            SegmentType;
+        typedef Segments<T,POINT>           SegmentsType;
         const std::type_info &tid = typeid(T);
         const std::type_info &pid = typeid(PointType);
 
@@ -34,6 +35,17 @@ namespace {
             SharedPoint P = new PointType();
             points.push_back( new NodeType(P) );
         }
+
+        SegmentsType segments;
+        for(size_t i=10+alea.leq(100);i>0;--i)
+        {
+            const SharedPoint &a = *points.fetch( alea.lt(points.size) );
+            const SharedPoint &b = *points.fetch( alea.lt(points.size) );
+            segments(a,b);
+        }
+
+        segments.update();
+
 
     }
 

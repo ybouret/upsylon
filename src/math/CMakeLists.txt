@@ -95,10 +95,10 @@ SOURCE_GROUP( geometric FILES ${geom_srcs} )
 INSTALL( FILES ${geom_decl} DESTINATION include/y/math/geometric )
 
 
-FILE(GLOB euclidean_decl y/math/euclideanetric/*.hpp)
-FILE(GLOB euclidean_code y/math/euclideanetric/*.cpp)
+FILE(GLOB euclidean_decl y/math/euclidean/*.hpp)
+FILE(GLOB euclidean_code y/math/euclidean/*.cpp)
 SET(euclidean_srcs ${euclidean_decl} ${euclidean_code})
-SOURCE_GROUP( euclideanetric FILES ${euclidean_srcs} )
+SOURCE_GROUP( euclidean FILES ${euclidean_srcs} )
 INSTALL( FILES ${euclidean_decl} DESTINATION include/y/math/euclidean )
 
 ADD_LIBRARY(y-m STATIC
