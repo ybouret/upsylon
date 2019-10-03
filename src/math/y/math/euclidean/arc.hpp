@@ -40,8 +40,11 @@ namespace upsylon {
                 // types and declarations
                 //
                 //==============================================================
-                Y_EUCLIDEAN_ARGS(); //!< alias
-
+                Y_EUCLIDEAN_POINT_ARGS();     //!< aliases
+                Y_EUCLIDEAN_SEGMENT_ARGS();   //!< aliases
+                Y_EUCLIDEAN_POINTNODE_ARGS(); //!< aliases
+                typedef Segments<T,POINT> SegmentsType;
+                
                 //==============================================================
                 //
                 // public members
@@ -62,15 +65,25 @@ namespace upsylon {
                 //! cleanup
                 inline virtual ~Arc() throw() {}
 
-                //! append one point
+                //! append one existing point
                 inline Arc & operator<<( const SharedPoint &sharedPoint )
                 {
+                    std::cerr << sharedPoint->key() << std::endl;
+                    return *this;
+                }
 
+                //! append a new point
+                inline Arc & operator<<( const Vertex &v )
+                {
+                    const SharedPoint P = new SharedPoint(v);
+                    return (*this) << P;
                 }
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Arc);
+                NodeList      points;
+                SegmentsType  segments;
 
 
             };

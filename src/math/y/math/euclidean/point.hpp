@@ -5,9 +5,11 @@
 #include "y/type/point3d.hpp"
 #include "y/type/args.hpp"
 #include "y/type/bzset.hpp"
-#include "y/ptr/arc.hpp"
+#include "y/ptr/intr.hpp"
 #include "y/core/list.hpp"
 #include "y/core/node.hpp"
+#include "y/container/key-address.hpp"
+#include "y/associative/set.hpp"
 
 namespace upsylon {
 
@@ -33,6 +35,8 @@ namespace upsylon {
             //! base class for object
             typedef counted_object Object;
 
+            //!
+            typedef key_address<1> PointKey;
 
             //==================================================================
             //
@@ -53,36 +57,40 @@ namespace upsylon {
                 Y_DECL_ARGS(T,type);                                          //!< alias
                 typedef POINT<type>                           Vertex;         //!< the data handling vertex
                 static const size_t Dimensions = sizeof(Vertex)/sizeof(type); //!< dimensions
-                typedef arc_ptr<Point>                        Pointer;        //!< for shared point
                 typedef typename __VTX<type,Dimensions>::Type VTX;            //!< mapping point type
+                typedef intr_ptr<PointKey,Point>              Pointer;        //!< for shared point
+                typedef set<PointKey,Pointer>                 DataBase;
 
                 //==============================================================
                 //
                 // members
                 //
                 //==============================================================
-                Vertex position;
+                Vertex         position;
+                const PointKey uuid;
 
                 //==============================================================
                 //
                 // methods
                 //
                 //==============================================================
-                inline explicit Point() throw() : position() {}               //!< setup with default position
+                inline explicit Point() throw() : position(), uuid(*this) {}               //!< setup with default position
                 inline explicit Point(const Vertex p) throw() : position(p){} //!< setup
                 inline virtual ~Point() throw() { bzset(position); }          //!< cleanup
+                inline const PointKey & key() const throw() { return uuid; }  //!< for database
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Point);
             };
 
             //! forwarding type
-#define Y_EUCLIDEAN_ARGS()                       \
-Y_DECL_ARGS(T,type);                             \
-typedef Point<T,POINT>              PointType;   \
-typedef typename PointType::Pointer SharedPoint; \
-typedef typename PointType::Vertex  Vertex;      \
-typedef typename PointType::VTX     VTX
+#define Y_EUCLIDEAN_POINT_ARGS()                  \
+Y_DECL_ARGS(T,type);                              \
+typedef Point<T,POINT>               PointType;   \
+typedef typename PointType::Pointer  SharedPoint; \
+typedef typename PointType::DataBase Points;      \
+typedef typename PointType::Vertex   Vertex;      \
+typedef typename PointType::VTX      VTX
 
             //==================================================================
             //
@@ -92,7 +100,7 @@ typedef typename PointType::VTX     VTX
             //
             //==================================================================
             template <typename T,template <class> class POINT >
-            class Node : public Point<T,POINT>::Pointer, public core::inode< Node<T,POINT> >
+            class PointNode : public Point<T,POINT>::Pointer, public core::inode< PointNode<T,POINT> >
             {
             public:
                 //==============================================================
@@ -100,9 +108,9 @@ typedef typename PointType::VTX     VTX
                 // types and declarations
                 //
                 //==============================================================
-                Y_EUCLIDEAN_ARGS();                         //!< aliases
-                typedef core::inode< Node<T,POINT> > iNode; //!< alias
-                typedef core::list_of_cpp<Node>      List;  //!< base type for list
+                Y_EUCLIDEAN_POINT_ARGS();                        //!< aliases
+                typedef core::inode< PointNode<T,POINT> > iNode; //!< alias
+                typedef core::list_of_cpp<PointNode>      List;  //!< base type for list
 
 
                 //==============================================================
@@ -118,14 +126,18 @@ typedef typename PointType::VTX     VTX
                 //
                 //==============================================================
                 //! setup
-                inline explicit Node( const SharedPoint &P ) throw() : SharedPoint(P), iNode(), celerity() {}
+                inline explicit PointNode( const SharedPoint &P ) throw() : SharedPoint(P), iNode(), celerity() {}
                 //! cleanup
-                inline virtual ~Node() throw() {}
+                inline virtual ~PointNode() throw() {}
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Node);
+                Y_DISABLE_COPY_AND_ASSIGN(PointNode);
             };
 
+#define Y_EUCLIDEAN_POINTNODE_ARGS()      \
+typedef PointNode<T,POINT>      NodeType; \
+typedef typename NodeType::List NodeList
+            
         }
 
     }

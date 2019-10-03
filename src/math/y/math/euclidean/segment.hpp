@@ -3,7 +3,6 @@
 #define Y_EUCLIDEAN_SEGMENT_INCLUDED 1
 
 #include "y/math/euclidean/point.hpp"
-#include "y/container/key-address.hpp"
 #include "y/ptr/intr.hpp"
 
 namespace upsylon {
@@ -37,7 +36,7 @@ namespace upsylon {
                 // types and declarations
                 //
                 //==============================================================
-                Y_EUCLIDEAN_ARGS();                      //!< alias
+                Y_EUCLIDEAN_POINT_ARGS();                //!< alias
                 typedef intr_ptr<PairKey,Pair> Pointer;  //!< alias
 
                 //==============================================================
@@ -109,7 +108,7 @@ namespace upsylon {
                 // types and declarations
                 //
                 //==============================================================
-                Y_EUCLIDEAN_ARGS();                             //!< aliases
+                Y_EUCLIDEAN_POINT_ARGS();                       //!< aliases
                 typedef core::inode<Segment>       iNode;       //!< alias
                 typedef Pair<T,POINT>              PairType;    //!< alias
                 typedef typename PairType::Pointer SharedPair;  //!< alias
@@ -131,6 +130,11 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Segment);
             };
 
+#define Y_EUCLIDEAN_SEGMENT_ARGS() \
+typedef Segment<T,POINT>                  SegmentType; \
+typedef typename SegmentType::SharedPair  SharedPair;  \
+typedef typename SegmentType::List        SegmentList
+
             //==================================================================
             //
             //
@@ -147,11 +151,9 @@ namespace upsylon {
                 // types and declarations
                 //
                 //==============================================================
-                Y_EUCLIDEAN_ARGS();                                    //!< aliases
-                typedef Segment<T,POINT>                  SegmentType; //!< alias
-                typedef typename SegmentType::SharedPair  SharedPair;  //!< alias
-                typedef typename SegmentType::List        SegmentList; //!< alias
-
+                Y_EUCLIDEAN_POINT_ARGS();                              //!< aliases
+                Y_EUCLIDEAN_SEGMENT_ARGS();                            //!< aliases
+                
                 //==============================================================
                 //
                 // methods
