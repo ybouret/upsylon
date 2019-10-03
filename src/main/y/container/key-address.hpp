@@ -10,23 +10,34 @@ namespace upsylon {
 
 
     namespace core {
+        //! sort addresses by increasing values
         void sort_addresses( void **addr, const size_t n) throw();
+        //! lexicographics comparison of adresses
         int  lcmp_addresses( void * const *lhs, void * const *rhs, const size_t n) throw();
     }
 
+    //! constructor part
 #define Y_KEY_ADDRESS_CTOR() memory::ro_buffer(), addr()
 
+    //! make a key from a given number of addresses
     template <size_t N>
     class key_address : public memory::ro_buffer
     {
     public:
+        //! cleanup
         inline virtual ~key_address() throw() { clear(); }
+        //! setup to '0'
         inline          key_address()                     throw() : Y_KEY_ADDRESS_CTOR() { clear(); }
+        //! hard copy
         inline          key_address(const key_address &_) throw() : Y_KEY_ADDRESS_CTOR() { memcpy(addr,_.addr,sizeof(addr)); }
 
+        //! buffer interface: ro
         inline const void  *ro()     const throw() { return       &addr[0]; }
+
+        //! buffer interface: length in bytes
         inline size_t       length() const throw() { return sizeof(addr);   }
 
+        //! named 1D setup
         template <typename T>
         inline key_address( const T &arg0 ) throw()
         {
@@ -35,6 +46,7 @@ namespace upsylon {
             addr[0] = (void*)&arg0;
         }
 
+        //! named 2D setup
         template <typename T>
         inline key_address( const T &arg0, const T &arg1 ) throw()
         {
@@ -45,6 +57,7 @@ namespace upsylon {
             update();
         }
 
+        //! named 3D setup
         template <typename T>
         inline key_address( const T &arg0, const T &arg1, const T &arg2) throw()
         {
@@ -56,6 +69,7 @@ namespace upsylon {
             update();
         }
 
+        //! named 3D setup
         template <typename T>
         inline key_address( const T &arg0, const T &arg1, const T &arg2, const T &arg3) throw()
         {
@@ -68,17 +82,20 @@ namespace upsylon {
             update();
         }
 
-
+        //! comparison by lexicographic order
         static inline int compare( const key_address &lhs, const key_address &rhs ) throw()
         {
             return core::lcmp_addresses(lhs.addr, rhs.addr, N);
         }
 
+
+        //! test by comparison
         friend inline bool operator==( const key_address &lhs, const key_address &rhs ) throw()
         {
             return 0 == compare(lhs,rhs);
         }
 
+        //! test by comparison
         friend inline bool operator!=( const key_address &lhs, const key_address &rhs ) throw()
         {
             return 0 != compare(lhs,rhs);
