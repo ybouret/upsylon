@@ -74,6 +74,9 @@ ADD_TEST(geom:arc    test-m arc)
 ADD_TEST(geom:curv   test-m curve)
 ADD_TEST(geom:points test-m points)
 
+SOURCE_GROUP(euclidean FILES test-euclidean.cpp)
+ADD_TEST(euclidean test-m euclidean)
+
 ADD_CUSTOM_TARGET(utest-m
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
 DEPENDS test-m)

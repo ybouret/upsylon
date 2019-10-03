@@ -89,10 +89,17 @@ SOURCE_GROUP( stat FILES ${stat_srcs} )
 INSTALL( FILES ${stat_decl} DESTINATION include/y/math/stat )
 
 FILE(GLOB geom_decl y/math/geometric/*.hpp)
-FILE(GLOB geom_cgeom y/math/geometric/*.cpp)
-SET(geom_srcs ${geom_decl} ${geom_cgeom})
+FILE(GLOB geom_code y/math/geometric/*.cpp)
+SET(geom_srcs ${geom_decl} ${geom_code})
 SOURCE_GROUP( geometric FILES ${geom_srcs} )
 INSTALL( FILES ${geom_decl} DESTINATION include/y/math/geometric )
+
+
+FILE(GLOB euclidean_decl y/math/euclideanetric/*.hpp)
+FILE(GLOB euclidean_code y/math/euclideanetric/*.cpp)
+SET(euclidean_srcs ${euclidean_decl} ${euclidean_code})
+SOURCE_GROUP( euclideanetric FILES ${euclidean_srcs} )
+INSTALL( FILES ${euclidean_decl} DESTINATION include/y/math/euclidean )
 
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
@@ -105,6 +112,7 @@ ${opt_srcs}
 ${signal_srcs}
 ${stat_srcs}
 ${geom_srcs}
+${euclidean_srcs}
 )
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
 
