@@ -108,10 +108,10 @@ namespace upsylon {
                 // methods
                 //
                 //==============================================================
-                inline explicit Point() throw() : position(), uuid(*this) {}  //!< setup with default position
-                inline explicit Point(const Vertex p) throw() : position(p){} //!< setup
-                inline virtual ~Point() throw() { bzset(position); }          //!< cleanup
-                inline const PointKey & key() const throw() { return uuid; }  //!< for database
+                inline explicit Point() throw() : position(), uuid(*this) {}                //!< setup with default position
+                inline explicit Point(const Vertex p) throw() : position(p), uuid(*this) {} //!< setup
+                inline virtual ~Point() throw() { bzset(position); }                        //!< cleanup
+                inline const PointKey & key() const throw() { return uuid; }                //!< for database
 
                 //! output by mapping to point<>
                 static inline ios::ostream & Print( ios::ostream &fp, const Vertex &v)
