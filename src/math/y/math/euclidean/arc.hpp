@@ -11,19 +11,27 @@ namespace upsylon {
         
         namespace Euclidean {
             
-            
+            //! forwarding types
 #define Y_EUCLIDEAN_ARC_ARGS() \
 Y_EUCLIDEAN_POINT_ARGS();      \
 Y_EUCLIDEAN_SEGMENT_ARGS();    \
 Y_EUCLIDEAN_POINTNODE_ARGS();  \
 typedef Segments<T,POINT> SegmList;\
 typedef Arc<T,POINT>      ArcType;
-            
+
+            //==================================================================
+            //
+            //
+            //! base class for Arc operations
+            //
+            //
+            //==================================================================
             template <typename T, template <class> class POINT>
             class Arc : public Object
             {
             public:
-                Y_EUCLIDEAN_ARC_ARGS();
+
+                Y_EUCLIDEAN_ARC_ARGS(); //!< aliases
                 
                 
                 inline virtual ~Arc() throw() {}
@@ -75,7 +83,14 @@ typedef Arc<T,POINT>      ArcType;
                 virtual void add( const SharedPoint &sharedPoint ) = 0;
                 
             };
-            
+
+            //==================================================================
+            //
+            //
+            //! Standard Arc
+            //
+            //
+            //==================================================================
             template <typename T, template <class> class POINT>
             class StandardArc : public Arc<T,POINT>
             {
@@ -133,7 +148,7 @@ typedef Arc<T,POINT>      ArcType;
                                 pts.tail->celerity = half*(  (P2+three*P0 ) - four * P1 );
                             }
                             
-                            
+
                         } break;
                             
                     }
@@ -166,15 +181,17 @@ typedef Arc<T,POINT>      ArcType;
                         }
                     }
                 }
-                
-                
-                
-                
-                
-                
-                
+
             };
-            
+
+
+            //==================================================================
+            //
+            //
+            //! Periodic Arc
+            //
+            //
+            //==================================================================
             template <typename T, template <class> class POINT>
             class PeriodicArc : public Arc<T,POINT>
             {

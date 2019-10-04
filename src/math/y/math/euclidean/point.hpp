@@ -19,10 +19,18 @@ namespace upsylon {
 
         namespace Euclidean {
 
+            //==================================================================
+            //
             //! helper to find the right point[2|3]d<T>
+            //
+            //==================================================================
             template <typename T,size_t> struct __VTX;
 
+            //==================================================================
+            //
             //! map to point2d<T>
+            //
+            //==================================================================
             template <typename T> struct __VTX<T,2>
             {
                 typedef point2d<T> Type; //!< alias
@@ -33,7 +41,11 @@ namespace upsylon {
                 }
             };
 
+            //==================================================================
+            //
             //! map to point3d<T>
+            //
+            //==================================================================
             template <typename T> struct __VTX<T,3>
             {
                 typedef point3d<T> Type; //!< alias
@@ -44,10 +56,18 @@ namespace upsylon {
                 }
             };
 
+            //==================================================================
+            //
             //! base class for object
+            //
+            //==================================================================
             typedef counted_object Object;
 
-            //!
+            //==================================================================
+            //
+            //! key for unique allocated point
+            //
+            //==================================================================
             typedef key_address<1> PointKey;
 
             //==================================================================
@@ -69,29 +89,30 @@ namespace upsylon {
                 Y_DECL_ARGS(T,type);                                          //!< alias
                 typedef POINT<type>                           Vertex;         //!< the data handling vertex
                 static const size_t Dimensions = sizeof(Vertex)/sizeof(type); //!< dimensions
-                typedef  __VTX<type,Dimensions>              _VTX;           //!< alias
-                typedef typename _VTX::Type                   VTX;           //!< mapping point type
+                typedef  __VTX<type,Dimensions>              _VTX;            //!< alias
+                typedef typename _VTX::Type                   VTX;            //!< mapping point type
                 typedef intr_ptr<PointKey,Point>              Pointer;        //!< for shared point
-                typedef set<PointKey,Pointer>                 DataBase;
+                typedef set<PointKey,Pointer>                 DataBase;       //!< alias
 
                 //==============================================================
                 //
                 // members
                 //
                 //==============================================================
-                Vertex         position;
-                const PointKey uuid;
+                Vertex         position; //!< current position
+                const PointKey uuid;     //!< uuid based on address
 
                 //==============================================================
                 //
                 // methods
                 //
                 //==============================================================
-                inline explicit Point() throw() : position(), uuid(*this) {}               //!< setup with default position
+                inline explicit Point() throw() : position(), uuid(*this) {}  //!< setup with default position
                 inline explicit Point(const Vertex p) throw() : position(p){} //!< setup
                 inline virtual ~Point() throw() { bzset(position); }          //!< cleanup
                 inline const PointKey & key() const throw() { return uuid; }  //!< for database
-                
+
+                //! output by mapping to point<>
                 static inline ios::ostream & Print( ios::ostream &fp, const Vertex &v)
                 {
                     const VTX &V = (const VTX &)v;
@@ -138,7 +159,7 @@ typedef typename PointType::VTX      VTX
                 // members
                 //
                 //==============================================================
-                Vertex celerity;
+                Vertex celerity; //!< celerity based on position
                 
                 
                 //==============================================================
