@@ -57,7 +57,7 @@ typedef Arc<T,POINT>      ArcType;
                 }
 
             protected:
-                inline explicit Arc() throw() {}
+                inline explicit Arc() throw() : points(), segments() {}
                 
                 
                 inline void pushBack( const SharedPoint &sp )
