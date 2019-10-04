@@ -58,10 +58,9 @@ typedef Arc<T,POINT> ArcType
 
                 void compile()
                 {
-                    const size_t n = nodes.size();
+                    const size_t n = aliasing::_(umax) = nodes.size();
                     if(n>0)
                     {
-                        aliasing::_(umax) = n-1;
                         for(size_t i=segments.size();i>0;--i)
                         {
                             const SegmentType &s    = *segments[i];
