@@ -27,6 +27,22 @@ namespace upsylon {
                 inline virtual ~PeriodicArc() throw() {}
                 inline explicit PeriodicArc() throw() {}
 
+
+                inline virtual void ensure(const size_t numNodes)
+                {
+                    aliasing::_(this->nodes).ensure(numNodes);
+                    aliasing::_(this->segments).ensure(numNodes);
+                }
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(PeriodicArc);
+                virtual void add( const SharedPoint &p )
+                {
+
+                }
+
+#if 0
                 virtual bool check() const throw()
                 {
                     switch(this->points.size)
@@ -62,6 +78,14 @@ namespace upsylon {
 
                     }
                 }
+
+                inline virtual void compile()
+                {
+                    this->compileStd();
+                    NodeList &pts = aliasing::_(this->points);
+                    this->curveFor(pts.tail,pts.head);
+                }
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(PeriodicArc);
@@ -112,7 +136,7 @@ namespace upsylon {
 
                 }
 
-
+#endif
             };
         }
 

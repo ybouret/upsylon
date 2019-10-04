@@ -11,199 +11,41 @@ namespace upsylon {
 
         namespace Euclidean {
 
-            //==================================================================
-            //
-            //
-            //! using ordered addresses to make a key
-            //
-            //
-            //==================================================================
-            typedef key_address<2> PairKey;
+            typedef key_address<2> SegmentKey;
 
-            //==================================================================
-            //
-            //
-            //! pair of points with data and unique key
-            //
-            //
-            //==================================================================
-            template <typename T, template <class> class POINT>
-            class Pair : public Object
+            template <typename T,template <class> class POINT>
+            class Segment : public Object
             {
             public:
-                //==============================================================
-                //
-                // types and declarations
-                //
-                //==============================================================
-                Y_EUCLIDEAN_POINT_ARGS();                //!< alias
-                typedef intr_ptr<PairKey,Pair> Pointer;  //!< alias
+                Y_EUCLIDEAN_POINT_ARGS();
+                Y_EUCLIDEAN_NODE_ARGS();
+                typedef intr_ptr<SegmentKey,Segment> Pointer;
 
-                //==============================================================
-                //
-                // members
-                //
-                //==============================================================
-                const SharedPoint tail;
-                const SharedPoint head;
-                const_type        norm2;
-                const_type        length;
-                const PairKey     uuid;
+                const SharedNode tail;
+                const SharedNode head;
+                const SegmentKey uuid;
 
-                //==============================================================
-                //
-                // methods
-                //
-                //==============================================================
-                //! cleanup
-                inline virtual ~Pair() throw() {}
-
-                //! setup from two shared points
-                inline explicit Pair(const SharedPoint &a, const SharedPoint &b) throw() :
-                tail(a), head(b), norm2(0), length(0), uuid( *tail, *head )
-                {}
-
-                //! update local data
-                inline void update() const throw()
+                inline Segment(const SharedNode &a, const SharedNode &b) throw() :
+                tail(a), head(b), uuid(*tail,*head)
                 {
-                    const VTX &A = **tail;
-                    const VTX &B = **head;
-                    const VTX  delta(A,B);
-                    aliasing::_(norm2)  = delta.norm2();
-                    aliasing::_(length) = math::sqrt_of(norm2);
                 }
 
-                //! key fot databases
-                const PairKey & key() const throw() { return uuid; }
-
-                //! using unique key to test equality
-                friend inline bool  operator==( const Pair &lhs, const Pair &rhs ) throw()
+                inline ~Segment() throw()
                 {
-                    return lhs.uuid == rhs.uuid;
+
                 }
 
-                //! using uuid to test equality
-                friend inline bool  operator!=( const Pair &lhs, const Pair &rhs ) throw()
-                {
-                    return lhs.uuid != rhs.uuid;
-                }
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Pair);
-            };
+                const SegmentKey & key() const throw() { return uuid; }
 
 
-
-            //==================================================================
-            //
-            //
-            //! a segment is a dynamic, linked pair of points
-            //
-            //
-            //==================================================================
-            template <typename T, template <class> class POINT>
-            class Segment : public Pair<T,POINT>::Pointer, public core::inode< Segment<T,POINT> >
-            {
-            public:
-                //==============================================================
-                //
-                // types and declarations
-                //
-                //==============================================================
-
-                Y_EUCLIDEAN_POINT_ARGS();                       //!< aliases
-                typedef Pair<T,POINT>              PairType;    //!< alias
-                typedef typename PairType::Pointer SharedPair;  //!< alias
-                typedef core::inode<Segment>       iNode;       //!< alias
-                typedef core::list_of_cpp<Segment> List;        //!< base class for Segments
-
-                //==============================================================
-                //
-                // methods
-                //
-                //==============================================================
-                //! cleanup
-                inline virtual ~Segment() throw() {}
-                //! create from an existing pair
-                inline explicit Segment( const SharedPair &sharedPair ) throw() : SharedPair(sharedPair), iNode() {}
-                //! create a new pair
-                inline explicit Segment( const SharedPoint &a, const SharedPoint &b) : SharedPair( new PairType(a,b) ), iNode() {}
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Segment);
             };
 
-#define Y_EUCLIDEAN_SEGMENT_ARGS()                     \
-typedef Segment<T,POINT>                  SegmentType; \
-typedef Pair<T,POINT>                     PairType;    \
-typedef typename SegmentType::SharedPair  SharedPair;  \
-typedef typename SegmentType::List        SegmentList
-
-            //==================================================================
-            //
-            //
-            //! a list of dynamic pairs of dynamic points
-            //
-            //
-            //==================================================================
-            template <typename T, template <class> class POINT>
-            class Segments : public Segment<T,POINT>::List
-            {
-            public:
-                //==============================================================
-                //
-                // types and declarations
-                //
-                //==============================================================
-                Y_EUCLIDEAN_POINT_ARGS();                              //!< aliases
-                Y_EUCLIDEAN_SEGMENT_ARGS();                            //!< aliases
-
-                //==============================================================
-                //
-                // members
-                //
-                //==============================================================
-                const_type length;
-
-                //==============================================================
-                //
-                // methods
-                //
-                //==============================================================
-                inline explicit Segments() throw() : SegmentList(), length(0) {}           //!< setup
-                inline virtual ~Segments() throw() {}                                      //!< cleanup
-                inline Segments(const Segments &_) : SegmentList(_), length(_.length) {}   //!< copy
-
-                //! append a new segment
-                inline Segments & operator<<( const SharedPair &sharedPair)
-                {
-                    this->push_back( new SegmentType(sharedPair) );
-                    return *this;
-                }
-
-                //! create and append a new segement
-                inline Segments & operator()(const SharedPoint &a, const SharedPoint &b)
-                {
-                    this->push_back( new SegmentType(a,b) );
-                    return *this;
-                }
-
-                //! update all
-                void update() const throw()
-                {
-
-                    for( const SegmentType *s = this->head; s; s=s->next )
-                    {
-                        const PairType &P = **s;
-                        P.update();
-                        aliasing::_(length) += P.length;
-                    }
-                }
-
-            private:
-                Y_DISABLE_ASSIGN(Segments);
-            };
-
+#define Y_EUCLIDEAN_SEGMENT_ARGS() \
+typedef Segment<T,POINT>              SegmentType;\
+typedef typename SegmentType::Pointer SharedSegment
 
         }
 

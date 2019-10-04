@@ -1,4 +1,3 @@
-
 //! \file
 #ifndef Y_EUCLIDEAN_STANDARD_ARC_INCLUDED
 #define Y_EUCLIDEAN_STANDARD_ARC_INCLUDED 1
@@ -27,6 +26,37 @@ namespace upsylon {
                 inline virtual ~StandardArc() throw() {}
                 inline explicit StandardArc() throw() : ArcType() {}
 
+                inline virtual void ensure(const size_t numNodes)
+                {
+                    if(numNodes>0)
+                    {
+                        aliasing::_(this->nodes).ensure(numNodes);
+                        aliasing::_(this->segments).ensure(numNodes-1);
+                    }
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(StandardArc);
+                virtual void add( const SharedPoint &p )
+                {
+                    switch( this->nodes.size() )
+                    {
+                        case 0: this->pushBack(p); break;
+                        default:
+                            this->pushBack(p);
+                            try {
+                                const size_t        n       = this->nodes.size();
+                                const SharedSegment segment = new SegmentType( this->nodes[n-1], this->nodes[n] );
+                                
+                            } catch(...) {
+                                this->popBack();
+                            } break;
+                    }
+
+                }
+
+
+#if 0
                 virtual bool check() const throw()
                 {
                     switch(this->points.size)
@@ -80,6 +110,12 @@ namespace upsylon {
 
                     }
                 }
+
+                inline void compile()
+                {
+                    this->compileStd();
+                }
+
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(StandardArc);
@@ -108,7 +144,7 @@ namespace upsylon {
                         }
                     }
                 }
-
+#endif
             };
 
         }

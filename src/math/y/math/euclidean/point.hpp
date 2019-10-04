@@ -7,8 +7,6 @@
 #include "y/type/bzset.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/ptr/intr.hpp"
-#include "y/core/list.hpp"
-#include "y/core/node.hpp"
 #include "y/container/key-address.hpp"
 #include "y/associative/set.hpp"
 #include "y/ios/ostream.hpp"
@@ -133,83 +131,50 @@ namespace upsylon {
 Y_DECL_ARGS(T,type);                              \
 typedef Point<T,POINT>               PointType;   \
 typedef typename PointType::Pointer  SharedPoint; \
-typedef typename PointType::DataBase Points;      \
 typedef typename PointType::Vertex   Vertex;      \
 typedef typename PointType::VTX      VTX
 
-            //==================================================================
-            //
-            //
-            //! a dynamic node, which is a shared point with local data
-            //
-            //
-            //==================================================================
-            template <typename T,template <class> class POINT >
-            class PointNode : public Point<T,POINT>::Pointer, public core::inode< PointNode<T,POINT> >
+            typedef key_address<2> NodeKey;
+
+
+            template <typename T,template <class> class POINT>
+            class Node : public Object
             {
             public:
-                //==============================================================
-                //
-                // types and declarations
-                //
-                //==============================================================
-                Y_EUCLIDEAN_POINT_ARGS();                        //!< aliases
-                typedef core::inode< PointNode<T,POINT> > iNode; //!< alias
-                typedef core::list_of_cpp<PointNode>      List;  //!< base type for list
+                Y_EUCLIDEAN_POINT_ARGS();
+                typedef intr_ptr<NodeKey,Node> Pointer;
 
+                const SharedPoint point;
+                const Vertex      celerity;
+                const Vertex      Q;
+                const Vertex      W;
+                const NodeKey     uuid;
 
-                //==============================================================
-                //
-                // members
-                //
-                //==============================================================
-                const Vertex celerity; //!< celerity based on position
-                const_type   speed;    //!< |celerity|
-                const Vertex tangent;  //!< celerity/speed
+                inline explicit Node( const SharedPoint &p ) throw() :
+                point(p),
+                celerity(),
+                Q(),
+                W(),
+                uuid(*p,*this)
+                {
+                }
 
-                inline void setFixed() throw()
+                inline virtual ~Node() throw()
                 {
                     bzset_(celerity);
-                    bzset_(speed);
-                    bzset_(tangent);
+                    bzset_(Q);
+                    bzset_(W);
                 }
 
-                inline void setCelerity(const Vertex v) throw()
-                {
-                    aliasing::_(celerity) = v;
-                    const_type     v2     = aliasing::cast<VTX,Vertex>(celerity).norm2();
-                    if(v2<=0)
-                    {
-                        bzset_(speed);
-                        bzset_(tangent);
-                    }
-                    else
-                    {
-                        aliasing::_(speed)   = sqrt_of(v2);
-                        aliasing::_(tangent) = celerity/speed;
-                    }
-                }
+                inline const NodeKey & key() const throw() { return uuid; }
 
-                
-                //==============================================================
-                //
-                // methods
-                //
-                //==============================================================
-                //! setup
-                inline explicit PointNode( const SharedPoint &P ) throw() :
-                SharedPoint(P), iNode(), celerity(), speed(0), tangent() {}
-                //! cleanup
-                inline virtual ~PointNode() throw() {}
-                
-                
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(PointNode);
+                Y_DISABLE_COPY_AND_ASSIGN(Node);
             };
 
-#define Y_EUCLIDEAN_POINTNODE_ARGS()      \
-typedef PointNode<T,POINT>      NodeType; \
-typedef typename NodeType::List NodeList
+#define Y_EUCLIDEAN_NODE_ARGS()                \
+typedef Node<T,POINT>              NodeType;   \
+typedef typename NodeType::Pointer SharedNode
             
         }
 

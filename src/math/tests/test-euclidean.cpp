@@ -17,11 +17,9 @@ namespace {
     template <typename T, template <class> class POINT>
     struct euclidean_test
     {
-        Y_EUCLIDEAN_POINT_ARGS();     //!< aliases
-        Y_EUCLIDEAN_SEGMENT_ARGS();   //!< aliases
-        Y_EUCLIDEAN_POINTNODE_ARGS(); //!< aliases
-        
-        typedef Segments<T,POINT>           SegmentsType;
+        Y_EUCLIDEAN_ARC_ARGS();
+
+
         
         static inline void make()
         {
@@ -33,27 +31,8 @@ namespace {
             std::cerr << "|_sizeof(point)    = " << sizeof(PointType)   << std::endl;
             std::cerr << "|_sizeof(shared)   = " << sizeof(SharedPoint) << std::endl;
             std::cerr << "|_sizeof(node)     = " << sizeof(NodeType)    << std::endl;
-            std::cerr << "|_sizeof(list)     = " << sizeof(NodeList)    << std::endl;
             std::cerr << "|_sizeof(segment)  = " << sizeof(SegmentType) << std::endl;
-            
-            {
-                NodeList points;
-                for(size_t i=10+alea.leq(100);i>0;--i)
-                {
-                    SharedPoint P = new PointType();
-                    points.push_back( new NodeType(P) );
-                }
-                
-                SegmentsType segments;
-                for(size_t i=10+alea.leq(100);i>0;--i)
-                {
-                    const SharedPoint &a = *points.fetch( alea.lt(points.size) );
-                    const SharedPoint &b = *points.fetch( alea.lt(points.size) );
-                    segments(a,b);
-                }
-                
-                segments.update();
-            }
+
             
             {
                 std::cerr << "Creating Arcs..." << std::endl;
@@ -69,87 +48,15 @@ namespace {
                     const type   arr[4] = { x,y,z, 0 };
                     const Vertex     &v  = *(const Vertex *) &arr[0];
                     const SharedPoint sp = new PointType(v);
-                    sa << sp;
-                    pa << sp;
-                    Y_ASSERT(sa.check());
-                    Y_ASSERT(pa.check());
+                    //sa << sp;
+                    //pa << sp;
+                    //Y_ASSERT(sa.check());
+                    //Y_ASSERT(pa.check());
                 }
                 
-                std::cerr << "standard:" << sa.points.size << "/" << sa.segments.size << std::endl;
-                std::cerr << "periodic:" << pa.points.size << "/" << pa.segments.size << std::endl;
-                
-                {
-                    const string sfn = vformat("%s_sa.dat",pid.name());
-                    const string pfn = vformat("%s_pa.dat",pid.name());
-                    
-                    ios::ocstream sfp(sfn);
-                    ios::ocstream pfp(pfn);
-                    for( const NodeType *snode=sa.points.head,
-                        *pnode = pa.points.head;
-                        snode;snode=snode->next,pnode=pnode->next)
-                    {
-                        PointType::Print(sfp,(**snode).position)<< '\n';
-                        PointType::Print(pfp,(**pnode).position)<< '\n';
-                    }
-                    PointType::Print(pfp,(**pa.points.head).position)<< '\n';
-
-                }
-                
-                sa.celerities();
-                pa.celerities();
-                
-                {
-                    const string sfn = vformat("%s_sa_v.dat",pid.name());
-                    const string pfn = vformat("%s_pa_v.dat",pid.name());
-                    
-                    ios::ocstream sfp(sfn);
-                    ios::ocstream pfp(pfn);
-                    for( const NodeType *snode=sa.points.head,
-                        *pnode = pa.points.head;
-                        snode;snode=snode->next,pnode=pnode->next)
-                    {
-                        {
-                            Vertex         p = (**snode).position;
-                            const Vertex   v = snode->celerity;
-                            PointType::Print(sfp,p) << '\n';
-                            p+=v/2;
-                            PointType::Print(sfp,p) << '\n' << '\n';
-                        }
-                        
-                        {
-                            Vertex         p = (**pnode).position;
-                            const Vertex   v = pnode->celerity;
-                            PointType::Print(pfp,p) << '\n';
-                            p+=v/2;
-                            PointType::Print(pfp,p) << '\n' << '\n';
-                        }
-
-                    }
-                }
-
-                pa.segments.update();
-                sa.segments.update();
-                std::cerr << "length: standard: " << sa.segments.length << std::endl;
-                std::cerr << "        periodic: " << pa.segments.length << std::endl;
-
-                {
-                    const string sfn = vformat("%s_sa_s.dat",pid.name());
-                    const string pfn = vformat("%s_pa_s.dat",pid.name());
-                    ios::ocstream sfp(sfn);
-                    ios::ocstream pfp(pfn);
-                    unsigned i=0;
-                    for( const NodeType
-                        *snode = sa.points.head,
-                        *pnode = pa.points.head;
-                        snode;snode=snode->next,pnode=pnode->next,++i)
-                    {
-                        sfp("%u %.15g\n", i, snode->speed);
-                        pfp("%u %.15g\n", i, pnode->speed);
-                    }
-                    pfp("%u %.15g\n", i, pa.points.head->speed);
-                }
+                //std::cerr << "standard:" << sa.points.size << "/" << sa.segments.size << std::endl;
+                //std::cerr << "periodic:" << pa.points.size << "/" << pa.segments.size << std::endl;
             }
-            
         }
     };
     
@@ -158,7 +65,8 @@ namespace {
 
 Y_UTEST(euclidean)
 {
-    
+
+#if 1
     euclidean_test<float,point2d>::make();
     euclidean_test<double,point2d>::make();
     
@@ -167,7 +75,7 @@ Y_UTEST(euclidean)
     
     euclidean_test<float,complex>::make();
     euclidean_test<double,complex>::make();
-    
+#endif
     
 }
 Y_UTEST_DONE()

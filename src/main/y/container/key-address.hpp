@@ -26,8 +26,8 @@ namespace upsylon {
     public:
         //! cleanup
         inline virtual ~key_address() throw() { clear(); }
-        //! setup to '0'
-        inline          key_address()                     throw() : Y_KEY_ADDRESS_CTOR() { clear(); }
+
+
         //! hard copy
         inline          key_address(const key_address &_) throw() : Y_KEY_ADDRESS_CTOR() { memcpy(addr,_.addr,sizeof(addr)); }
 
@@ -56,6 +56,20 @@ namespace upsylon {
             addr[1] = (void*)&arg1;
             update();
         }
+
+
+        //! named 2D setup
+        template <typename T, typename U>
+        inline key_address( const T &arg0, const U &arg1 ) throw()
+        {
+            Y_STATIC_CHECK(N==2,invalid_size);
+            clear();
+            addr[0] = (void*)&arg0;
+            addr[1] = (void*)&arg1;
+            update();
+        }
+
+
 
         //! named 3D setup
         template <typename T>
