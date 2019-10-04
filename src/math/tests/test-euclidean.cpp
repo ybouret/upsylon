@@ -1,5 +1,5 @@
-#include "y/math/euclidean/standard-arc.hpp"
-#include "y/math/euclidean/periodic-arc.hpp"
+#include "y/math/euclidean/arc/standard.hpp"
+#include "y/math/euclidean/arc/periodic.hpp"
 
 #include "y/type/complex.hpp"
 #include "y/utest/run.hpp"
@@ -21,7 +21,7 @@ namespace {
 
 
         
-        static inline void make(const char *TID, const char *PID)
+        static inline void make(const char *TID, const char *PID, const size_t nn)
         {
 
             
@@ -37,7 +37,7 @@ namespace {
                 std::cerr << "Creating Arcs..." << std::endl;
                 StandardArc<T,POINT> sa;
                 PeriodicArc<T,POINT> pa;
-                const size_t np = 10+alea.leq(10);
+                const size_t np = (nn>0) ? nn : 10+alea.leq(10);
                 for(size_t i=0;i<np;++i)
                 {
                     const float  theta = (numeric<float>::two_pi * i)/np;
@@ -107,10 +107,20 @@ namespace {
                 {
                     const string  sfn = s_pfx + PID + '_' + TID + "_i.dat";
                     ios::ocstream sfp(sfn);
-                    for(mutable_type x=0; x <= np-1; x += mutable_type(0.01) )
+                    for(mutable_type x=1; x <= np; x += mutable_type(0.01) )
                     {
-                       // const Vertex v = sa(x);
-                       // PointType::Print(sfp,v) << '\n';
+                        const Vertex v = sa(x);
+                        PointType::Print(sfp,v) << '\n';
+                    }
+                }
+                
+                {
+                    const string  pfn = p_pfx + PID + '_' + TID + "_i.dat";
+                    ios::ocstream pfp(pfn);
+                    for(mutable_type x=1; x <= np+1; x += mutable_type(0.01) )
+                    {
+                        const Vertex v = pa(x);
+                        PointType::Print(pfp,v) << '\n';
                     }
                 }
 
@@ -121,11 +131,18 @@ namespace {
     
 }
 
-#define _EUCLIDEAN(TYPE,POINT) euclidean_test<TYPE,POINT>::make(#TYPE,#POINT)
+#define _EUCLIDEAN(TYPE,POINT) euclidean_test<TYPE,POINT>::make(#TYPE,#POINT,nn)
+
+#include "y/string/convert.hpp"
 
 Y_UTEST(euclidean)
 {
 
+    size_t nn = 0;
+    if(argc>1)
+    {
+        nn = string_convert::to<size_t>( argv[1], "nn" );
+    }
     _EUCLIDEAN(float,point2d);
     _EUCLIDEAN(double,point2d);
 

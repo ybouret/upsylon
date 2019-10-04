@@ -190,6 +190,14 @@ typedef typename PointType::VTX      VTX
                     bzset_(celerity);
                     bzset_(speed);
                 }
+                
+                inline Vertex compute(const_type u) const
+                {
+                    return point->position
+                    + u*celerity
+                    + u*u*Q
+                    + u*u*u*W;
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);

@@ -73,7 +73,7 @@ namespace upsylon {
                     }
                 }
 
-                Vertex operator()( mutable_type u ) const throw()
+                inline virtual Vertex operator()( mutable_type u ) const throw()
                 {
                     const size_t num = this->nodes.size();
                     switch(num)
@@ -83,7 +83,23 @@ namespace upsylon {
                         default:
                             break;
                     }
-                    return Vertex();
+                    
+                    if(u<=1)
+                    {
+                        return this->nodes.front()->point->position;
+                    }
+                    else
+                    {
+                        if(u>=num)
+                        {
+                            return this->nodes.back()->point->position;
+                        }
+                        else
+                        {
+                            const size_t i = clamp<size_t>(1,floor_of(u),num);
+                            return this->nodes[i]->compute(u-i);
+                        }
+                    }
                 }
                 
                 

@@ -38,11 +38,10 @@ typedef Arc<T,POINT> ArcType
 
                 const Nodes    nodes;
                 const Segments segments;
-                const_type     umax;
 
                 virtual void   ensure(const size_t numNodes)  = 0;
                 virtual void   celerities() throw()           = 0;
-                //virtual Vertex operator()(const_type u) const = 0;
+                //virtual Vertex operator()(mutable_type u) const = 0;
 
                 inline Arc & operator<<( const SharedPoint &sp )
                 {
@@ -58,7 +57,7 @@ typedef Arc<T,POINT> ArcType
 
                 void compile()
                 {
-                    const size_t n = aliasing::_(umax) = nodes.size();
+                    const size_t n = nodes.size();
                     if(n>0)
                     {
                         for(size_t i=segments.size();i>0;--i)
@@ -79,7 +78,7 @@ typedef Arc<T,POINT> ArcType
                 }
 
             protected:
-                inline explicit Arc() throw() : umax(0) {}
+                inline explicit Arc() throw()  {}
 
                 inline void pushBack( const SharedPoint &p )
                 {
