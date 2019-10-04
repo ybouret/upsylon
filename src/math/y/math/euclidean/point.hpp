@@ -5,6 +5,7 @@
 #include "y/type/point3d.hpp"
 #include "y/type/args.hpp"
 #include "y/type/bzset.hpp"
+#include "y/type/aliasing.hpp"
 #include "y/ptr/intr.hpp"
 #include "y/core/list.hpp"
 #include "y/core/node.hpp"
@@ -115,12 +116,12 @@ namespace upsylon {
                 //! output by mapping to point<>
                 static inline ios::ostream & Print( ios::ostream &fp, const Vertex &v)
                 {
-                    const VTX &V = (const VTX &)v;
+                    const VTX &V = aliasing::cast<VTX,Vertex>(v);
                     return Core::Print(fp,V);
                 }
 
-                inline VTX       & operator*()       throw() { return (VTX      &)position; }
-                inline const VTX & operator*() const throw() { return (const VTX&)position; }
+                inline VTX       & operator*()       throw() { return aliasing::cast<VTX,Vertex>(position); }
+                inline const VTX & operator*() const throw() { return aliasing::cast<VTX,Vertex>(position); }
 
                 
                 
