@@ -1,4 +1,6 @@
-#include "y/math/euclidean/arc.hpp"
+#include "y/math/euclidean/standard-arc.hpp"
+#include "y/math/euclidean/periodic-arc.hpp"
+
 #include "y/type/complex.hpp"
 #include "y/utest/run.hpp"
 #include <typeinfo>
