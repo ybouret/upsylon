@@ -198,7 +198,7 @@ typedef typename PointType::VTX      VTX
                 //==============================================================
                 //! setup
                 inline explicit PointNode( const SharedPoint &P ) throw() :
-                SharedPoint(P), iNode(), celerity(), speed(0) {}
+                SharedPoint(P), iNode(), celerity(), speed(0), tangent() {}
                 //! cleanup
                 inline virtual ~PointNode() throw() {}
                 
