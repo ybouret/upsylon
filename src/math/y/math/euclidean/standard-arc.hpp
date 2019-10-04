@@ -61,7 +61,7 @@ namespace upsylon {
                             }
                             for(size_t i=num-1;i>1;--i)
                             {
-                                nds[i]->setCelerity(nds[i+1]->point->position-nds[i-1]->point->position);
+                                nds[i]->setCelerity( half*(nds[i+1]->point->position-nds[i-1]->point->position) );
                             }
                             {
                                 const Vertex &P0 = nds[num-0]->point->position;
@@ -88,7 +88,9 @@ namespace upsylon {
                                 this->popBack();
                             } break;
                     }
+
 #if !defined(NDEBUG)
+                    // sanity checking
                     if( this->nodes.size() > 0 )
                     {
                         assert(this->nodes.size()-1 == this->segments.size());
@@ -104,83 +106,7 @@ namespace upsylon {
                 }
 
 
-#if 0 
 
-                inline virtual void celerities() throw()
-                {
-                    NodeList &pts = aliasing::_(this->points);
-                    switch(pts.size)
-                    {
-                        case 0: break;
-                        case 1: pts.head->setFixed(); break;
-                        case 2:
-                            pts.head->setCelerity( (*pts.head)->position - (*pts.tail)->position );
-                            pts.tail->setCelerity( pts.head->celerity );
-                            break;
-                        default: { assert(pts.size>=3);
-                            static const_type half(0.5);
-                            static const_type four(4);
-                            static const_type three(3);
-                            {
-                                const Vertex &P0 = (**(pts.head)).position;
-                                const Vertex &P1 = (**(pts.head->next)).position;
-                                const Vertex &P2 = (**(pts.head->next->next)).position;
-                                pts.head->setCelerity( half*( four * P1 - (P2+three*P0 )) );
-
-                            }
-
-                            for(NodeType *curr=pts.head->next;curr!=pts.tail;curr=curr->next)
-                            {
-                                this->celerityOf(curr->prev, curr, curr->next);
-                            }
-
-                            {
-                                const Vertex &P0 = (**(pts.tail)).position;
-                                const Vertex &P1 = (**(pts.tail->prev)).position;
-                                const Vertex &P2 = (**(pts.tail->prev->prev)).position;
-                                pts.tail->setCelerity( half*(  (P2+three*P0 ) - four * P1 ) );
-                            }
-
-
-                        } break;
-
-                    }
-                }
-
-                inline void compile()
-                {
-                    this->compileStd();
-                }
-
-                
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(StandardArc);
-
-                inline virtual void add( const SharedPoint &sp )
-                {
-                    SegmList &seg = aliasing::_(this->segments);
-                    if(this->points.size<=0)
-                    {
-                        assert(this->segments.size<=0);
-                        this->pushBack(sp);
-                        return;
-                    }
-                    else
-                    {
-                        assert(this->points.size>=1); this->pushBack(sp); assert(this->points.size>=2);
-                        try
-                        {
-                            const NodeType *tail = this->points.tail; assert(tail); assert(tail->prev);
-                            seg(*(tail->prev),*tail);
-                        }
-                        catch(...)
-                        {
-                            this->popBack();
-                            throw;
-                        }
-                    }
-                }
-#endif
             };
 
         }

@@ -21,12 +21,11 @@ namespace {
 
 
         
-        static inline void make()
+        static inline void make(const char *TID, const char *PID)
         {
-            const std::type_info &tid = typeid(T);
-            const std::type_info &pid = typeid(PointType);
+
             
-            std::cerr << "Using " << pid.name() << "/" << tid.name() << std::endl;
+            std::cerr << "Using " <<PID << "<" << TID << ">" << std::endl;
             std::cerr << "|_sizeof(type)     = " << sizeof(T)           << std::endl;
             std::cerr << "|_sizeof(point)    = " << sizeof(PointType)   << std::endl;
             std::cerr << "|_sizeof(shared)   = " << sizeof(SharedPoint) << std::endl;
@@ -50,14 +49,57 @@ namespace {
                     const SharedPoint sp = new PointType(v);
                     sa << sp;
                     pa << sp;
-                    //Y_ASSERT(sa.check());
-                    //Y_ASSERT(pa.check());
                 }
+                Y_CHECK(np==sa.nodes.size());
+                Y_CHECK(np==pa.nodes.size());
+
                 
                 std::cerr << "standard:" << sa.nodes.size() << "/" << sa.segments.size() << std::endl;
                 std::cerr << "periodic:" << pa.nodes.size() << "/" << pa.segments.size() << std::endl;
 
                 sa.celerities();
+                pa.celerities();
+                const string s_pfx = "std_";
+                const string p_pfx = "per_";
+
+                {
+                    const string  sfn = s_pfx + PID + '_' + TID + ".dat";
+                    const string  pfn = p_pfx + PID + '_' + TID + ".dat";
+                    ios::ocstream sfp(sfn);
+                    ios::ocstream pfp(pfn);
+                    for(size_t i=1;i<=np;++i)
+                    {
+                        PointType::Print(sfp, sa.nodes[i]->point->position ) << '\n';
+                        PointType::Print(pfp, pa.nodes[i]->point->position ) << '\n';
+                    }
+                    PointType::Print(pfp, pa.nodes[1]->point->position );
+                }
+
+
+                {
+                    const string  sfn = s_pfx + PID + '_' + TID + "_v.dat";
+                    const string  pfn = p_pfx + PID + '_' + TID + "_v.dat";
+                    ios::ocstream sfp(sfn);
+                    ios::ocstream pfp(pfn);
+                    for(size_t i=1;i<=np;++i)
+                    {
+                        {
+                            Vertex p = sa.nodes[i]->point->position;
+                            PointType::Print(sfp, p ) << '\n';
+                            p += sa.nodes[i]->celerity/2;
+                            PointType::Print(sfp, p ) << '\n' << '\n';
+
+                        }
+                        
+                        {
+                            Vertex p = pa.nodes[i]->point->position;
+                            PointType::Print(pfp, p ) << '\n';
+                            p += pa.nodes[i]->celerity/2;
+                            PointType::Print(pfp, p ) << '\n' << '\n';
+
+                        }
+                    }
+                }
 
             }
 
@@ -66,20 +108,19 @@ namespace {
     
 }
 
+#define _EUCLIDEAN(TYPE,POINT) euclidean_test<TYPE,POINT>::make(#TYPE,#POINT)
 
 Y_UTEST(euclidean)
 {
 
-#if 1
-    euclidean_test<float,point2d>::make();
-    euclidean_test<double,point2d>::make();
-    
-    euclidean_test<float, point3d>::make();
-    euclidean_test<double,point3d>::make();
-    
-    euclidean_test<float,complex>::make();
-    euclidean_test<double,complex>::make();
-#endif
+    _EUCLIDEAN(float,point2d);
+    _EUCLIDEAN(double,point2d);
+
+    _EUCLIDEAN(float,point3d);
+    _EUCLIDEAN(double,point3d);
+
+    _EUCLIDEAN(float,complex);
+    _EUCLIDEAN(double,complex);
     
 }
 Y_UTEST_DONE()

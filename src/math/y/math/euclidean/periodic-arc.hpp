@@ -34,6 +34,37 @@ namespace upsylon {
                 }
 
 
+                inline virtual void celerities() throw()
+                {
+
+                    Nodes       &nds = aliasing::_(this->nodes);
+                    const size_t num = nds.size();
+                    switch(num)
+                    {
+                        case 0: break;
+                        case 1: nds.front()->setFixed(); break;
+                        case 2:{
+                            const Vertex delta = nds.back()->point->position - nds.front()->point->position;
+                            nds.front()->setCelerity( delta );
+                            nds.back()->setCelerity( -delta );
+                        } break;
+                        default: {
+                            static const_type half(0.5);
+
+                            nds[1]->setCelerity(half*(nds[2]->point->position-nds[num]->point->position) );
+                            for(size_t i=num-1;i>1;--i)
+                            {
+                                nds[i]->setCelerity( half*(nds[i+1]->point->position-nds[i-1]->point->position) );
+                            }
+                            nds[num]->setCelerity(half*(nds[1]->point->position-nds[num-1]->point->position) );
+                            
+                        } break;
+                    }
+
+                }
+
+
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(PeriodicArc);
                 virtual void add( const SharedPoint &p )

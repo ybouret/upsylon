@@ -40,7 +40,7 @@ typedef Arc<T,POINT> ArcType
                 const Segments segments;
 
                 virtual void   ensure(const size_t numNodes) = 0;
-
+                virtual void   celerities() throw() = 0;
 
 
                 inline Arc & operator<<( const SharedPoint &sp )
