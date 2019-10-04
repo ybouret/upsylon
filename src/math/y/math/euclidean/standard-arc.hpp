@@ -30,8 +30,46 @@ namespace upsylon {
                 {
                     if(numNodes>0)
                     {
-                        aliasing::_(this->nodes).ensure(numNodes);
+                        aliasing::_(this->nodes   ).ensure(numNodes  );
                         aliasing::_(this->segments).ensure(numNodes-1);
+                    }
+                }
+
+                inline virtual void celerities() throw()
+                {
+                    Nodes       &nds = aliasing::_(this->nodes);
+                    const size_t num = nds.size();
+                    switch(num)
+                    {
+                        case 0: break;
+                        case 1: nds.front()->setFixed(); break;
+                        case 2: {
+                            const Vertex delta = nds.back()->point->position - nds.front()->point->position;
+                            nds.front()->setCelerity( delta );
+                            nds.back()->setCelerity(  delta );
+                        } break;
+                        default: {
+                            assert(nds.size()>=3);
+                            static const_type half(0.5);
+                            static const_type four(4);
+                            static const_type three(3);
+                            {
+                                const Vertex &P0 = nds[1]->point->position;
+                                const Vertex &P1 = nds[2]->point->position;
+                                const Vertex &P2 = nds[3]->point->position;
+                                nds.front()->setCelerity( half*( four * P1 - (P2+three*P0 )) );
+                            }
+                            for(size_t i=num-1;i>1;--i)
+                            {
+                                nds[i]->setCelerity(nds[i+1]->point->position-nds[i-1]->point->position);
+                            }
+                            {
+                                const Vertex &P0 = nds[num-0]->point->position;
+                                const Vertex &P1 = nds[num-1]->point->position;
+                                const Vertex &P2 = nds[num-2]->point->position;
+                                nds.back()->setCelerity( half*(  (P2+three*P0 ) - four * P1 ) );
+                            }
+                        } break;
                     }
                 }
 
@@ -45,30 +83,28 @@ namespace upsylon {
                         default:
                             this->pushBack(p);
                             try {
-                                const size_t        n       = this->nodes.size();
-                                const SharedSegment segment = new SegmentType( this->nodes[n-1], this->nodes[n] );
-                                
+                                this->pushGrowing();
                             } catch(...) {
                                 this->popBack();
                             } break;
                     }
-
-                }
-
-
-#if 0
-                virtual bool check() const throw()
-                {
-                    switch(this->points.size)
+#if !defined(NDEBUG)
+                    if( this->nodes.size() > 0 )
                     {
-                        case 0: break;
-                        case 1: if(this->segments.size>0) return false; break;
-                        default:
-                            if(this->segments.size+1!=this->points.size) return false;
+                        assert(this->nodes.size()-1 == this->segments.size());
+                        for(size_t i=1;i<this->segments.size();++i)
+                        {
+                            const SegmentType &s = *(this->segments[i]);
+                            assert(s.tail->uuid==this->nodes[i]->uuid);
+                            assert(s.head->uuid==this->nodes[i+1]->uuid);
 
+                        }
                     }
-                    return true;
+#endif
                 }
+
+
+#if 0 
 
                 inline virtual void celerities() throw()
                 {

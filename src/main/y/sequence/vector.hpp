@@ -331,7 +331,7 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
                     ++sz;
                     memcpy( temp.addr_,  this->addr_,      (idx-1) *sizeof(type));
                     memcpy( source+1,   &this->item_[idx], (sz-idx)*sizeof(type));
-                    temp.size_  = sz;;
+                    temp.size_  = sz;
                     sz          = 0;
                     swap_with(temp);
                 }
@@ -343,9 +343,22 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
                     ++sz;
                     const size_t  block  = (sz-idx)*sizeof(type);
                     memmove(target,source,block);
-                    try { new (source) type(args); } catch(...) { memmove(source,target,block); throw; }
+                    try { new (source) type(args); } catch(...) { memmove(source,target,block); --sz; throw; }
                 }
             }
+        }
+
+        //! remove object
+        inline void remove_at( const size_t idx ) throw()
+        {
+            size_t &sz = this->size_;
+            assert(sz>0);
+            assert(idx>=1);
+            assert(idx<=sz);
+            mutable_type *target = &this->item_[idx];
+            self_destruct(*target);
+            memmove((void*)target,(const void*)(target+1), (sz-idx) * sizeof(type) );
+            --sz;
         }
 
      

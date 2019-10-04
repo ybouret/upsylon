@@ -3,7 +3,6 @@
 #define Y_EUCLIDEAN_PERIODIC_ARC_INCLUDED 1
 
 #include "y/math/euclidean/arc.hpp"
-#include "y/ptr/auto.hpp"
 
 namespace upsylon {
 
@@ -39,22 +38,68 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(PeriodicArc);
                 virtual void add( const SharedPoint &p )
                 {
+                    Segments &seg = aliasing::_(this->segments);
+                    switch(this->nodes.size())
+                    {
+                        case 0:
+                            assert(0==this->segments.size());
+                            this->pushBack(p); break;
+
+                        case 1:
+                            assert(0==this->segments.size());
+                            this->pushBack(p);
+                            try {
+                                this->pushGrowing();
+                                this->pushClosing();
+                            } catch(...) {
+                                seg.free();
+                                this->popBack();
+                                throw;
+                            } break;
+
+
+                        default: {
+                            this->pushBack(p);
+                            const size_t ns = seg.size();
+                            {
+                                size_t count = 0;
+                                try {
+                                    this->pushGrowing(); ++count;
+                                    this->pushClosing(); ++count;
+                                } catch(...) {
+                                    this->popSegments(count);
+                                    this->popBack();
+                                    throw;
+                                }
+                            }
+                            assert(2+ns==seg.size());
+                            seg.remove_at(ns);
+                            assert(1+ns==seg.size());
+                        } break;
+                    }
+
+#if !defined(NDEBUG)
+                    if( this->nodes.size() > 1 )
+                    {
+                        assert(this->nodes.size()==this->segments.size());
+                        for(size_t i=1;i<this->segments.size();++i)
+                        {
+                            const SegmentType &s = *(this->segments[i]);
+                            assert(s.tail->uuid==this->nodes[i]->uuid);
+                            assert(s.head->uuid==this->nodes[i+1]->uuid);
+                        }
+                        {
+                            const SegmentType &s = *(this->segments.back());
+                            assert(s.tail->uuid==this->nodes.back()->uuid);
+                            assert(s.head->uuid==this->nodes.front()->uuid);
+                        }
+                    }
+#endif
 
                 }
 
 #if 0
-                virtual bool check() const throw()
-                {
-                    switch(this->points.size)
-                    {
-                        case 0: break;
-                        case 1: if(this->segments.size>0) return false; break;
-                        default:
-                            if(this->segments.size!=this->points.size) return false;
-
-                    }
-                    return true;
-                }
+                
 
                 inline virtual void celerities() throw()
                 {

@@ -146,6 +146,7 @@ typedef typename PointType::VTX      VTX
 
                 const SharedPoint point;
                 const Vertex      celerity;
+                const_type        speed;
                 const Vertex      Q;
                 const Vertex      W;
                 const NodeKey     uuid;
@@ -153,6 +154,7 @@ typedef typename PointType::VTX      VTX
                 inline explicit Node( const SharedPoint &p ) throw() :
                 point(p),
                 celerity(),
+                speed(0),
                 Q(),
                 W(),
                 uuid(*p,*this)
@@ -167,6 +169,27 @@ typedef typename PointType::VTX      VTX
                 }
 
                 inline const NodeKey & key() const throw() { return uuid; }
+
+                inline void setCelerity( const Vertex v ) throw()
+                {
+                    const VTX &V = aliasing::cast<VTX,Vertex>(v);
+                    const_type v2 = V.norm2();
+                    if(v2<=0)
+                    {
+                        setFixed();
+                    }
+                    else
+                    {
+                        aliasing::_(celerity) = v;
+                        aliasing::_(speed)    = sqrt_of(v2);
+                    }
+                }
+
+                inline void setFixed() throw()
+                {
+                    bzset_(celerity);
+                    bzset_(speed);
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);

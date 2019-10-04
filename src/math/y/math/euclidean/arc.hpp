@@ -41,6 +41,20 @@ typedef Arc<T,POINT> ArcType
 
                 virtual void   ensure(const size_t numNodes) = 0;
 
+
+
+                inline Arc & operator<<( const SharedPoint &sp )
+                {
+                    add(sp);
+                    return *this;
+                }
+
+                inline Arc & operator<<( const Vertex &v )
+                {
+                    const SharedPoint sp = new PointType(v);
+                    return (*this) << sp;
+                }
+
             protected:
                 inline explicit Arc() throw() {}
 
@@ -54,6 +68,36 @@ typedef Arc<T,POINT> ArcType
                 {
                     assert(nodes.size()>0);
                     aliasing::_(nodes).pop_back();
+                }
+
+                inline void pushSegment( const SharedNode &a, const SharedNode &b )
+                {
+                    const SharedSegment s = new SegmentType(a,b);
+                    aliasing::_(segments).push_back(s);
+                }
+
+                inline void pushGrowing()
+                {
+                    assert(nodes.size()>=2);
+                    const size_t n = nodes.size();
+                    pushSegment(nodes[n-1],nodes[n]);
+                }
+
+                inline void pushClosing()
+                {
+                    assert(nodes.size()>=2);
+                    pushSegment(nodes.back(),nodes.front());
+                }
+
+
+
+                inline void popSegments(size_t n)
+                {
+                    assert(n<=segments.size());
+                    while(n-- > 0)
+                    {
+                        aliasing::_(segments).pop_back();
+                    }
                 }
 
             private:

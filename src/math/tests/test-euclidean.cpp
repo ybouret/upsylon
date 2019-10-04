@@ -48,15 +48,19 @@ namespace {
                     const type   arr[4] = { x,y,z, 0 };
                     const Vertex     &v  = *(const Vertex *) &arr[0];
                     const SharedPoint sp = new PointType(v);
-                    //sa << sp;
-                    //pa << sp;
+                    sa << sp;
+                    pa << sp;
                     //Y_ASSERT(sa.check());
                     //Y_ASSERT(pa.check());
                 }
                 
-                //std::cerr << "standard:" << sa.points.size << "/" << sa.segments.size << std::endl;
-                //std::cerr << "periodic:" << pa.points.size << "/" << pa.segments.size << std::endl;
+                std::cerr << "standard:" << sa.nodes.size() << "/" << sa.segments.size() << std::endl;
+                std::cerr << "periodic:" << pa.nodes.size() << "/" << pa.segments.size() << std::endl;
+
+                sa.celerities();
+
             }
+
         }
     };
     
