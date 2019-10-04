@@ -57,8 +57,7 @@ namespace {
                 std::cerr << "standard:" << sa.nodes.size() << "/" << sa.segments.size() << std::endl;
                 std::cerr << "periodic:" << pa.nodes.size() << "/" << pa.segments.size() << std::endl;
 
-                sa.celerities();
-                pa.celerities();
+
                 const string s_pfx = "std_";
                 const string p_pfx = "per_";
 
@@ -75,7 +74,8 @@ namespace {
                     PointType::Print(pfp, pa.nodes[1]->point->position );
                 }
 
-
+                sa.celerities();
+                pa.celerities();
                 {
                     const string  sfn = s_pfx + PID + '_' + TID + "_v.dat";
                     const string  pfn = p_pfx + PID + '_' + TID + "_v.dat";
@@ -98,6 +98,19 @@ namespace {
                             PointType::Print(pfp, p ) << '\n' << '\n';
 
                         }
+                    }
+                }
+
+                sa.compile();
+                pa.compile();
+
+                {
+                    const string  sfn = s_pfx + PID + '_' + TID + "_i.dat";
+                    ios::ocstream sfp(sfn);
+                    for(mutable_type x=0; x <= np-1; x += mutable_type(0.01) )
+                    {
+                       // const Vertex v = sa(x);
+                       // PointType::Print(sfp,v) << '\n';
                     }
                 }
 

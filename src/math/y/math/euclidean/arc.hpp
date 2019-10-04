@@ -38,10 +38,11 @@ typedef Arc<T,POINT> ArcType
 
                 const Nodes    nodes;
                 const Segments segments;
+                const_type     umax;
 
-                virtual void   ensure(const size_t numNodes) = 0;
-                virtual void   celerities() throw() = 0;
-
+                virtual void   ensure(const size_t numNodes)  = 0;
+                virtual void   celerities() throw()           = 0;
+                //virtual Vertex operator()(const_type u) const = 0;
 
                 inline Arc & operator<<( const SharedPoint &sp )
                 {
@@ -55,8 +56,31 @@ typedef Arc<T,POINT> ArcType
                     return (*this) << sp;
                 }
 
+                void compile()
+                {
+                    const size_t n = nodes.size();
+                    if(n>0)
+                    {
+                        aliasing::_(umax) = n-1;
+                        for(size_t i=segments.size();i>0;--i)
+                        {
+                            const SegmentType &s    = *segments[i];
+                            NodeType          &node = aliasing::_(*(s.tail));
+                            const NodeType    &next = *(s.head);
+                            const Vertex      &P0   = node.point->position;
+                            const Vertex      &P1   = next.point->position;
+                            const Vertex      &S0   = node.celerity;
+                            const Vertex      &S1   = next.celerity;
+                            const Vertex       rhs1 = (P1-P0)-S0;
+                            const Vertex       rhs2 = (S1-S0);
+                            aliasing::_(node.Q) = 3*rhs1-rhs2;
+                            aliasing::_(node.W) = rhs2-2*rhs1;
+                        }
+                    }
+                }
+
             protected:
-                inline explicit Arc() throw() {}
+                inline explicit Arc() throw() : umax(0) {}
 
                 inline void pushBack( const SharedPoint &p )
                 {
@@ -237,7 +261,7 @@ typedef Arc<T,POINT>      ArcType;
                 };
             };
 
-           
+
 
 
             

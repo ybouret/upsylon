@@ -24,7 +24,7 @@ namespace upsylon {
                 Y_EUCLIDEAN_ARC_ARGS();
 
                 inline virtual ~PeriodicArc() throw() {}
-                inline explicit PeriodicArc() throw() {}
+                inline explicit PeriodicArc() throw()  {}
 
 
                 inline virtual void ensure(const size_t numNodes)
@@ -65,8 +65,13 @@ namespace upsylon {
 
 
 
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(PeriodicArc);
+
+
+                
+
                 virtual void add( const SharedPoint &p )
                 {
                     Segments &seg = aliasing::_(this->segments);

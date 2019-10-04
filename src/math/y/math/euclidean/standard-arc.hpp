@@ -24,7 +24,7 @@ namespace upsylon {
                 Y_EUCLIDEAN_ARC_ARGS();
 
                 inline virtual ~StandardArc() throw() {}
-                inline explicit StandardArc() throw() : ArcType() {}
+                inline explicit StandardArc() throw() : ArcType(), umax(0) {}
 
                 inline virtual void ensure(const size_t numNodes)
                 {
@@ -73,8 +73,17 @@ namespace upsylon {
                     }
                 }
 
+                
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(StandardArc);
+                const_type umax;
+                virtual void postCompile() throw()
+                {
+                    aliasing::_(umax) = type(this->nodes.size()) - 1;
+                }
+
+
                 virtual void add( const SharedPoint &p )
                 {
                     switch( this->nodes.size() )
