@@ -64,10 +64,10 @@ namespace upsylon {
                 {}
 
                 //! update local data
-                inline void update() throw()
+                inline void update() const throw()
                 {
-                    const VTX &A = (VTX &)(*tail);
-                    const VTX &B = (VTX &)(*head);
+                    const VTX &A = **tail;
+                    const VTX &B = **head;
                     const VTX  delta(A,B);
                     (mutable_type &)norm2  = delta.norm2();
                     (mutable_type &)length = math::sqrt_of(norm2);
@@ -92,6 +92,8 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Pair);
             };
 
+
+
             //==================================================================
             //
             //
@@ -108,10 +110,11 @@ namespace upsylon {
                 // types and declarations
                 //
                 //==============================================================
+
                 Y_EUCLIDEAN_POINT_ARGS();                       //!< aliases
-                typedef core::inode<Segment>       iNode;       //!< alias
                 typedef Pair<T,POINT>              PairType;    //!< alias
                 typedef typename PairType::Pointer SharedPair;  //!< alias
+                typedef core::inode<Segment>       iNode;       //!< alias
                 typedef core::list_of_cpp<Segment> List;        //!< base class for Segments
 
                 //==============================================================
@@ -130,8 +133,9 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Segment);
             };
 
-#define Y_EUCLIDEAN_SEGMENT_ARGS() \
+#define Y_EUCLIDEAN_SEGMENT_ARGS()                     \
 typedef Segment<T,POINT>                  SegmentType; \
+typedef Pair<T,POINT>                     PairType;    \
 typedef typename SegmentType::SharedPair  SharedPair;  \
 typedef typename SegmentType::List        SegmentList
 
@@ -153,15 +157,22 @@ typedef typename SegmentType::List        SegmentList
                 //==============================================================
                 Y_EUCLIDEAN_POINT_ARGS();                              //!< aliases
                 Y_EUCLIDEAN_SEGMENT_ARGS();                            //!< aliases
-                
+
+                //==============================================================
+                //
+                // members
+                //
+                //==============================================================
+                const_type length;
+
                 //==============================================================
                 //
                 // methods
                 //
                 //==============================================================
-                inline explicit Segments() throw() : SegmentList() {}    //!< setup
-                inline virtual ~Segments() throw() {}                    //!< cleanup
-                inline Segments(const Segments &_) : SegmentList(_) {}   //!< copy
+                inline explicit Segments() throw() : SegmentList(), length(0) {}           //!< setup
+                inline virtual ~Segments() throw() {}                                      //!< cleanup
+                inline Segments(const Segments &_) : SegmentList(_), length(_.length) {}   //!< copy
 
                 //! append a new segment
                 inline Segments & operator<<( const SharedPair &sharedPair)
@@ -178,12 +189,16 @@ typedef typename SegmentType::List        SegmentList
                 }
 
                 //! update all
-                void update() throw()
+                void update() const throw()
                 {
-                    for( SegmentType *s = this->head; s; s=s->next )
+                    mutable_type &l = (mutable_type &)length;
+                    for( const SegmentType *s = this->head; s; s=s->next )
                     {
-                        (*s)->update();
+                        const PairType &P = **s;
+                        P.update();
+                        l+=P.length;
                     }
+                    std::cerr << "Length{" << this->size << "}=" << length << std::endl;
                 }
 
             private:

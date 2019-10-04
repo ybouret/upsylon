@@ -24,14 +24,14 @@ namespace upsylon {
             //! helper to find the right point[2|3]d<T>
             //
             //==================================================================
-            template <typename T,size_t> struct __VTX;
+            template <typename T,size_t> struct __Core;
 
             //==================================================================
             //
             //! map to point2d<T>
             //
             //==================================================================
-            template <typename T> struct __VTX<T,2>
+            template <typename T> struct __Core<T,2>
             {
                 typedef point2d<T> Type; //!< alias
                 static inline ios::ostream &Print(ios::ostream &fp, const Type &v)
@@ -46,7 +46,7 @@ namespace upsylon {
             //! map to point3d<T>
             //
             //==================================================================
-            template <typename T> struct __VTX<T,3>
+            template <typename T> struct __Core<T,3>
             {
                 typedef point3d<T> Type; //!< alias
                 static inline ios::ostream &Print(ios::ostream &fp, const Type &v)
@@ -89,8 +89,8 @@ namespace upsylon {
                 Y_DECL_ARGS(T,type);                                          //!< alias
                 typedef POINT<type>                           Vertex;         //!< the data handling vertex
                 static const size_t Dimensions = sizeof(Vertex)/sizeof(type); //!< dimensions
-                typedef  __VTX<type,Dimensions>              _VTX;            //!< alias
-                typedef typename _VTX::Type                   VTX;            //!< mapping point type
+                typedef  __Core<type,Dimensions>              Core;            //!< alias
+                typedef typename Core::Type                   VTX;            //!< mapping point type
                 typedef intr_ptr<PointKey,Point>              Pointer;        //!< for shared point
                 typedef set<PointKey,Pointer>                 DataBase;       //!< alias
 
@@ -116,8 +116,12 @@ namespace upsylon {
                 static inline ios::ostream & Print( ios::ostream &fp, const Vertex &v)
                 {
                     const VTX &V = (const VTX &)v;
-                    return _VTX::Print(fp,V);
+                    return Core::Print(fp,V);
                 }
+
+                inline VTX       & operator*()       throw() { return (VTX      &)position; }
+                inline const VTX & operator*() const throw() { return (const VTX&)position; }
+
                 
                 
             private:

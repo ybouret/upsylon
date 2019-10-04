@@ -123,12 +123,14 @@ namespace {
                             p+=v/2;
                             PointType::Print(pfp,p) << '\n' << '\n';
                         }
-                        
-                        
+
                     }
                 }
-                
-                
+
+                pa.segments.update();
+                sa.segments.update();
+                std::cerr << "length: standard: " << sa.segments.length << std::endl;
+                std::cerr << "        periodic: " << pa.segments.length << std::endl;
             }
             
         }
