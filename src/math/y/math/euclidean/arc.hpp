@@ -62,13 +62,13 @@ typedef Arc<T,POINT>      ArcType;
                 
                 inline void pushBack( const SharedPoint &sp )
                 {
-                    ((NodeList&)points).push_back( new NodeType(sp) );
+                    aliasing::_(points).push_back( new NodeType(sp) );
                 }
                 
                 inline void popBack() throw()
                 {
                     assert(points.size>0);
-                    delete ((NodeList&)points).pop_back();
+                    delete aliasing::_(points).pop_back();
                 }
                 
                 inline void celerityOf(const NodeType *prev,

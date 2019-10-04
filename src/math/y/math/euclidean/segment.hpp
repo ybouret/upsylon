@@ -69,8 +69,8 @@ namespace upsylon {
                     const VTX &A = **tail;
                     const VTX &B = **head;
                     const VTX  delta(A,B);
-                    (mutable_type &)norm2  = delta.norm2();
-                    (mutable_type &)length = math::sqrt_of(norm2);
+                    aliasing::_(norm2)  = delta.norm2();
+                    aliasing::_(length) = math::sqrt_of(norm2);
                 }
 
                 //! key fot databases
@@ -191,12 +191,12 @@ typedef typename SegmentType::List        SegmentList
                 //! update all
                 void update() const throw()
                 {
-                    mutable_type &l = (mutable_type &)length;
+
                     for( const SegmentType *s = this->head; s; s=s->next )
                     {
                         const PairType &P = **s;
                         P.update();
-                        l+=P.length;
+                        aliasing::_(length) += P.length;
                     }
                 }
 

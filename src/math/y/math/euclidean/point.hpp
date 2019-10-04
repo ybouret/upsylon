@@ -116,8 +116,7 @@ namespace upsylon {
                 //! output by mapping to point<>
                 static inline ios::ostream & Print( ios::ostream &fp, const Vertex &v)
                 {
-                    const VTX &V = aliasing::cast<VTX,Vertex>(v);
-                    return Core::Print(fp,V);
+                    return Core::Print(fp,aliasing::cast<VTX,Vertex>(v));
                 }
 
                 inline VTX       & operator*()       throw() { return aliasing::cast<VTX,Vertex>(position); }
@@ -168,10 +167,17 @@ typedef typename PointType::VTX      VTX
                 const_type   speed;    //!< |celerity|
                 const Vertex tangent;  //!< celerity/speed
 
+                inline void setFixed() throw()
+                {
+                    bzset_(celerity);
+                    bzset_(speed);
+                    bzset_(tangent);
+                }
+
                 inline void setCelerity(const Vertex v) throw()
                 {
-                    (Vertex      &)celerity  = v;
-                    const_type     v2        = ( (const VTX&)celerity ).norm2();
+                    aliasing::_(celerity) = v;
+                    const_type     v2     = aliasing::cast<VTX,Vertex>(celerity).norm2();
                     if(v2<=0)
                     {
                         bzset_(speed);
@@ -179,8 +185,8 @@ typedef typename PointType::VTX      VTX
                     }
                     else
                     {
-                        (mutable_type&)speed   = sqrt_of(v2);
-                        (Vertex&)      tangent = celerity/speed;
+                        aliasing::_(speed)   = sqrt_of(v2);
+                        aliasing::_(tangent) = celerity/speed;
                     }
                 }
 

@@ -42,11 +42,11 @@ namespace upsylon {
 
                 inline virtual void celerities() throw()
                 {
-                    NodeList &pts = (NodeList&)(this->points);
+                    NodeList &pts = aliasing::_(this->points);
                     switch(pts.size)
                     {
                         case 0: break;
-                        case 1: bzset_(pts.head->celerity); break;
+                        case 1: pts.head->setFixed(); break;
                         case 2:
                             pts.head->setCelerity( (*pts.head)->position - (*pts.tail)->position );
                             pts.tail->setCelerity( pts.head->celerity );
@@ -86,7 +86,7 @@ namespace upsylon {
 
                 inline virtual void add( const SharedPoint &sp )
                 {
-                    SegmList &seg = (SegmList&)(this->segments);
+                    SegmList &seg = aliasing::_(this->segments);
                     if(this->points.size<=0)
                     {
                         assert(this->segments.size<=0);

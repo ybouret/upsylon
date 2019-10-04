@@ -39,7 +39,12 @@ namespace upsylon {
             assert(arr);
             return *static_cast<const T*>( __(arr) );
         }
-        
+
+        template <typename T> static inline
+        T &_( const T &args ) throw()
+        {
+            return (T&)args;
+        }
 
     };
 
