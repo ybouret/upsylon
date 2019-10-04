@@ -39,9 +39,9 @@ typedef Arc<T,POINT> ArcType
                 const Nodes    nodes;
                 const Segments segments;
 
-                virtual void   ensure(const size_t numNodes)  = 0;
-                virtual void   celerities() throw()           = 0;
-                //virtual Vertex operator()(mutable_type u) const = 0;
+                virtual void   ensure(const size_t numNodes)    = 0;
+                virtual void   metrics() throw()                = 0;
+                virtual Vertex operator()(mutable_type u) const = 0;
 
                 inline Arc & operator<<( const SharedPoint &sp )
                 {
@@ -121,7 +121,40 @@ typedef Arc<T,POINT> ArcType
                         aliasing::_(segments).pop_back();
                     }
                 }
+                
+                inline void computeNormals2D( int2type<2> ) throw()
+                {
+                    Nodes &nds = aliasing::_(nodes);
+                    for(size_t i=nds.size();i>0;--i)
+                    {
+                        NodeType     &node = *nds[i];
+                        VTX        &uN = aliasing::cast<VTX,Vertex>( aliasing::_(node.uN) );
+                        const VTX  &uT = aliasing::cast<VTX,Vertex>(node.uT);
+                        uN.x = -uT.y;
+                        uN.y =  uT.x;
+                    }
+                }
+                
+                inline void computeNormals2D( int2type<3> ) throw()
+                {
+                }
 
+                inline void computeNormalFrom3D( NodeType &node, Vertex v )
+                {
+                    VTX       &n  = aliasing::cast<VTX,Vertex>(v);
+                    const VTX &t  = aliasing::cast<VTX,Vertex>(node.uT);
+                    n -= (t*n)*t;
+                    const_type n2 = n.norm2();
+                    if(n2<=0)
+                    {
+                        bzset_(node.uN);
+                    }
+                    else
+                    {
+                        aliasing::cast<VTX,Vertex>( aliasing::_(node.uN) ) = n/sqrt_of(n2);
+                    }
+                }
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Arc);
                 virtual void add( const SharedPoint &P ) = 0;

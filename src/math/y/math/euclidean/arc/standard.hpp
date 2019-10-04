@@ -35,10 +35,14 @@ namespace upsylon {
                     }
                 }
 
-                inline virtual void celerities() throw()
+                
+                
+                inline virtual void metrics() throw()
                 {
                     Nodes       &nds = aliasing::_(this->nodes);
                     const size_t num = nds.size();
+                    
+                    // compute tangents
                     switch(num)
                     {
                         case 0: break;
@@ -71,6 +75,14 @@ namespace upsylon {
                             }
                         } break;
                     }
+                    
+                    // compute normals
+                    this->computeNormals2D(int2type<Dimensions>());
+                    if(num>=3)
+                    {
+                        this->computeNormals3D(int2type<Dimensions>());
+                    }
+
                 }
 
                 inline virtual Vertex operator()( mutable_type u ) const throw()
@@ -137,6 +149,41 @@ namespace upsylon {
                     }
 #endif
                 }
+                
+                inline void computeNormals3D( int2type<2> ) throw()
+                {
+                }
+                
+                inline void computeNormals3D( int2type<3> ) throw()
+                {
+                    static const_type half(0.5);
+                    static const_type four(4);
+                    static const_type three(3);
+                    
+                    Nodes       &nds = aliasing::_(this->nodes);
+                    const size_t num = nds.size(); assert(num>=3);
+                    {
+                        const Vertex &P0 = nds[1]->celerity;
+                        const Vertex &P1 = nds[2]->celerity;
+                        const Vertex &P2 = nds[3]->celerity;
+                        this->computeNormalFrom3D(*nds[1],half*( four * P1 - (P2+three*P0 )) );
+                    }
+                    for(size_t i=num-1;i>1;--i)
+                    {
+                        this->computeNormalFrom3D(*nds[i], half*(nds[i+1]->celerity-nds[i-1]->celerity) );
+                    }
+                    {
+                        const Vertex &P0 = nds[num-0]->celerity;
+                        const Vertex &P1 = nds[num-1]->celerity;
+                        const Vertex &P2 = nds[num-2]->celerity;
+                        this->computeNormalFrom3D(*nds[num], half*(  (P2+three*P0 ) - four * P1 ) );
+                    }
+                    
+                }
+                
+                
+               
+            
 
 
 

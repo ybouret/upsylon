@@ -41,9 +41,9 @@ namespace {
                 for(size_t i=0;i<np;++i)
                 {
                     const float  theta = (numeric<float>::two_pi * i)/np;
-                    const float  x     = cosf(theta) + 0.1f * alea.symm<float>();
-                    const float  y     = sinf(theta) + 0.1f * alea.symm<float>();
-                    const float  z     = float(i)/np;
+                    const float  x     = cosf(theta)  + 0.1f * alea.symm<float>();
+                    const float  y     = sinf(theta)  + 0.1f * alea.symm<float>();
+                    const float  z     = sinf(theta/2) + 0.1f * alea.symm<float>();
                     const type   arr[4] = { x,y,z, 0 };
                     const Vertex     &v  = *(const Vertex *) &arr[0];
                     const SharedPoint sp = new PointType(v);
@@ -74,11 +74,11 @@ namespace {
                     PointType::Print(pfp, pa.nodes[1]->point->position );
                 }
 
-                sa.celerities();
-                pa.celerities();
+                sa.metrics();
+                pa.metrics();
                 {
-                    const string  sfn = s_pfx + PID + '_' + TID + "_v.dat";
-                    const string  pfn = p_pfx + PID + '_' + TID + "_v.dat";
+                    const string  sfn = s_pfx + PID + '_' + TID + "_t.dat";
+                    const string  pfn = p_pfx + PID + '_' + TID + "_t.dat";
                     ios::ocstream sfp(sfn);
                     ios::ocstream pfp(pfn);
                     for(size_t i=1;i<=np;++i)
@@ -100,6 +100,33 @@ namespace {
                         }
                     }
                 }
+                
+                {
+                    const string  sfn = s_pfx + PID + '_' + TID + "_n.dat";
+                    const string  pfn = p_pfx + PID + '_' + TID + "_n.dat";
+                    ios::ocstream sfp(sfn);
+                    ios::ocstream pfp(pfn);
+                    for(size_t i=1;i<=np;++i)
+                    {
+                        {
+                            Vertex p = sa.nodes[i]->point->position;
+                            PointType::Print(sfp, p ) << '\n';
+                            p += sa.nodes[i]->uN/2;
+                            PointType::Print(sfp, p ) << '\n' << '\n';
+                            
+                        }
+                        
+                        {
+                            Vertex p = pa.nodes[i]->point->position;
+                            PointType::Print(pfp, p ) << '\n';
+                            p += pa.nodes[i]->uN/2;
+                            PointType::Print(pfp, p ) << '\n' << '\n';
+                            
+                        }
+                    }
+                }
+                
+                
 
                 sa.compile();
                 pa.compile();

@@ -34,7 +34,7 @@ namespace upsylon {
                 }
 
 
-                inline virtual void celerities() throw()
+                inline virtual void metrics() throw()
                 {
 
                     Nodes       &nds = aliasing::_(this->nodes);
@@ -59,6 +59,13 @@ namespace upsylon {
                             nds[num]->setCelerity(half*(nds[1]->point->position-nds[num-1]->point->position) );
                             
                         } break;
+                    }
+                    
+                    // compute normals
+                    this->computeNormals2D(int2type<Dimensions>());
+                    if(num>=3)
+                    {
+                        this->computeNormals3D(int2type<Dimensions>());
                     }
 
                 }
@@ -147,93 +154,30 @@ namespace upsylon {
                         }
                     }
 #endif
-
                 }
-
-#if 0
                 
-
-                inline virtual void celerities() throw()
+                inline void computeNormals3D( int2type<2> ) throw()
                 {
-                    NodeList &pts = aliasing::_(this->points);
-                    switch(pts.size)
+                }
+                
+                inline void computeNormals3D( int2type<3> ) throw()
+                {
+                    static const float half(0.5);
+                    
+                    Nodes       &nds = aliasing::_(this->nodes);
+                    const size_t num = nds.size(); assert(num>=3);
+                    const size_t nm1 = num-1;
+                    
+                    this->computeNormalFrom3D(*nds[1],half*(nds[2]->celerity-nds[num]->celerity));
+                    for(size_t i=nm1;i>1;--i)
                     {
-                        case 0: break;
-                        case 1: pts.head->setFixed(); break;
-                        case 2:
-                            pts.head->setCelerity( (*pts.head)->position - (*pts.tail)->position );
-                            pts.tail->setCelerity(  -pts.head->celerity );
-                            break;
-                        default: assert(pts.size>=3);
-                            this->celerityOf(pts.tail,pts.head,pts.head->next);
-                            for(NodeType *curr=pts.head->next;curr!=pts.tail;curr=curr->next)
-                            {
-                                this->celerityOf(curr->prev, curr, curr->next);
-                            }
-                            this->celerityOf(pts.tail->prev,pts.tail,pts.head);
-                            break;
-
+                        this->computeNormalFrom3D(*nds[i], half*(nds[i+1]->celerity-nds[i-1]->celerity) );
                     }
-                }
-
-                inline virtual void compile()
-                {
-                    this->compileStd();
-                    NodeList &pts = aliasing::_(this->points);
-                    this->curveFor(pts.tail,pts.head);
-                }
-
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(PeriodicArc);
-                inline virtual void add( const SharedPoint &sp )
-                {
-                    SegmList &seg = aliasing::_(this->segments);
-                    switch(this->points.size)
-                    {
-                            //--------------------------------------------------
-                            // first point
-                        case 0: assert(0==this->segments.size); this->pushBack(sp); assert(1==this->points.size); break;
-                            //--------------------------------------------------
-
-                            //--------------------------------------------------
-                            // first couple of points => two segments
-                        case 1:
-                            //--------------------------------------------------
-                            this->pushBack(sp); assert(2==this->points.size);
-                            try {
-                                seg(*(this->points.head),*(this->points.tail)); // initial growing
-                                seg(*(this->points.tail),*(this->points.head)); // initial closing
-                            } catch(...) {
-                                this->popBack();
-                                seg.release();
-                                throw;
-                            }
-                            break;
-
-                            //--------------------------------------------------
-                            // expansion
-                            //--------------------------------------------------
-                        default:assert(2<=this->points.size); assert(this->segments.size==this->points.size);
-                            this->pushBack(sp);
-                            try {
-                                // create 2 new segments
-                                auto_ptr<SegmentType> growing = new SegmentType(*(this->points.tail->prev),*(this->points.tail));
-                                auto_ptr<SegmentType> closing = new SegmentType(*(this->points.tail),*(this->points.head));
-
-                                // no-throw replacement
-                                delete seg.pop_back(); // old closing
-                                seg.push_back( growing.yield() );
-                                seg.push_back( closing.yield() );
-                            } catch(...) {
-                                this->popBack();
-                                throw;
-                            }
-                    }
+                    this->computeNormalFrom3D(*nds[num],half*(nds[1]->celerity-nds[nm1]->celerity));
 
                 }
 
-#endif
+
             };
         }
 

@@ -130,7 +130,8 @@ namespace upsylon {
 #define Y_EUCLIDEAN_POINT_ARGS()                  \
 Y_DECL_ARGS(T,type);                              \
 typedef Point<T,POINT>               PointType;   \
-typedef typename PointType::Pointer  SharedPoint; \
+static const size_t Dimensions =     PointType::Dimensions; \
+typedef typename PointType::Pointer  SharedPoint;  \
 typedef typename PointType::Vertex   Vertex;      \
 typedef typename PointType::VTX      VTX
 
@@ -147,6 +148,8 @@ typedef typename PointType::VTX      VTX
                 const SharedPoint point;
                 const Vertex      celerity;
                 const_type        speed;
+                const Vertex      uT;
+                const Vertex      uN;
                 const Vertex      Q;
                 const Vertex      W;
                 const NodeKey     uuid;
@@ -155,6 +158,8 @@ typedef typename PointType::VTX      VTX
                 point(p),
                 celerity(),
                 speed(0),
+                uT(),
+                uN(),
                 Q(),
                 W(),
                 uuid(*p,*this)
@@ -163,25 +168,21 @@ typedef typename PointType::VTX      VTX
 
                 inline virtual ~Node() throw()
                 {
-                    bzset_(celerity);
-                    bzset_(Q);
-                    bzset_(W);
+                    setFixed();
                 }
 
                 inline const NodeKey & key() const throw() { return uuid; }
 
                 inline void setCelerity( const Vertex v ) throw()
                 {
-                    const VTX &V = aliasing::cast<VTX,Vertex>(v);
+                    setFixed();
+                    const VTX  &V = aliasing::cast<VTX,Vertex>(v);
                     const_type v2 = V.norm2();
-                    if(v2<=0)
-                    {
-                        setFixed();
-                    }
-                    else
+                    if(v2>0)
                     {
                         aliasing::_(celerity) = v;
                         aliasing::_(speed)    = sqrt_of(v2);
+                        aliasing::_(uT)       = celerity/speed;
                     }
                 }
 
@@ -189,18 +190,23 @@ typedef typename PointType::VTX      VTX
                 {
                     bzset_(celerity);
                     bzset_(speed);
+                    bzset_(uT);
+                    bzset_(uN);
+                    bzset_(Q);
+                    bzset_(W);
                 }
                 
                 inline Vertex compute(const_type u) const
                 {
-                    return point->position
-                    + u*celerity
-                    + u*u*Q
-                    + u*u*u*W;
+                    //return point->position + u*celerity + u*u*Q + u*u*u*W;
+                    return point->position + u*(celerity + u*(Q + u*W));
+
                 }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
+                
+                
             };
 
 #define Y_EUCLIDEAN_NODE_ARGS()                \
