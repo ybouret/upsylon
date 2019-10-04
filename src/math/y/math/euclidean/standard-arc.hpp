@@ -46,10 +46,10 @@ namespace upsylon {
                     switch(pts.size)
                     {
                         case 0: break;
-                        case 1: bzset(pts.head->celerity); break;
+                        case 1: bzset_(pts.head->celerity); break;
                         case 2:
-                            pts.head->celerity = (*pts.head)->position - (*pts.tail)->position;
-                            pts.tail->celerity = pts.head->celerity;
+                            pts.head->setCelerity( (*pts.head)->position - (*pts.tail)->position );
+                            pts.tail->setCelerity( pts.head->celerity );
                             break;
                         default: { assert(pts.size>=3);
                             static const_type half(0.5);
@@ -59,7 +59,7 @@ namespace upsylon {
                                 const Vertex &P0 = (**(pts.head)).position;
                                 const Vertex &P1 = (**(pts.head->next)).position;
                                 const Vertex &P2 = (**(pts.head->next->next)).position;
-                                pts.head->celerity = half*( four * P1 - (P2+three*P0 ));
+                                pts.head->setCelerity( half*( four * P1 - (P2+three*P0 )) );
 
                             }
 
@@ -72,7 +72,7 @@ namespace upsylon {
                                 const Vertex &P0 = (**(pts.tail)).position;
                                 const Vertex &P1 = (**(pts.tail->prev)).position;
                                 const Vertex &P2 = (**(pts.tail->prev->prev)).position;
-                                pts.tail->celerity = half*(  (P2+three*P0 ) - four * P1 );
+                                pts.tail->setCelerity( half*(  (P2+three*P0 ) - four * P1 ) );
                             }
 
 

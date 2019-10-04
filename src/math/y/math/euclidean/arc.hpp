@@ -77,7 +77,7 @@ typedef Arc<T,POINT>      ArcType;
                 {
                     static const_type half(0.5);
                     assert(prev); assert(curr); assert(next);
-                    curr->celerity = half*((*next)->position - (*prev)->position);
+                    curr->setCelerity( half*((*next)->position - (*prev)->position) );
                 }
                 
             private:

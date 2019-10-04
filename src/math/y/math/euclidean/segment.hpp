@@ -198,7 +198,6 @@ typedef typename SegmentType::List        SegmentList
                         P.update();
                         l+=P.length;
                     }
-                    std::cerr << "Length{" << this->size << "}=" << length << std::endl;
                 }
 
             private:

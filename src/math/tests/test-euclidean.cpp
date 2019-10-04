@@ -131,6 +131,23 @@ namespace {
                 sa.segments.update();
                 std::cerr << "length: standard: " << sa.segments.length << std::endl;
                 std::cerr << "        periodic: " << pa.segments.length << std::endl;
+
+                {
+                    const string sfn = vformat("%s_sa_s.dat",pid.name());
+                    const string pfn = vformat("%s_pa_s.dat",pid.name());
+                    ios::ocstream sfp(sfn);
+                    ios::ocstream pfp(pfn);
+                    unsigned i=0;
+                    for( const NodeType
+                        *snode = sa.points.head,
+                        *pnode = pa.points.head;
+                        snode;snode=snode->next,pnode=pnode->next,++i)
+                    {
+                        sfp("%u %.15g\n", i, snode->speed);
+                        pfp("%u %.15g\n", i, pnode->speed);
+                    }
+                    pfp("%u %.15g\n", i, pa.points.head->speed);
+                }
             }
             
         }

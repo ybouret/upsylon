@@ -89,7 +89,7 @@ namespace upsylon {
                 Y_DECL_ARGS(T,type);                                          //!< alias
                 typedef POINT<type>                           Vertex;         //!< the data handling vertex
                 static const size_t Dimensions = sizeof(Vertex)/sizeof(type); //!< dimensions
-                typedef  __Core<type,Dimensions>              Core;            //!< alias
+                typedef  __Core<type,Dimensions>              Core;           //!< alias
                 typedef typename Core::Type                   VTX;            //!< mapping point type
                 typedef intr_ptr<PointKey,Point>              Pointer;        //!< for shared point
                 typedef set<PointKey,Pointer>                 DataBase;       //!< alias
@@ -163,8 +163,26 @@ typedef typename PointType::VTX      VTX
                 // members
                 //
                 //==============================================================
-                Vertex celerity; //!< celerity based on position
-                
+                const Vertex celerity; //!< celerity based on position
+                const_type   speed;    //!< |celerity|
+                const Vertex tangent;  //!< celerity/speed
+
+                inline void setCelerity(const Vertex v) throw()
+                {
+                    (Vertex      &)celerity  = v;
+                    const_type     v2        = ( (const VTX&)celerity ).norm2();
+                    if(v2<=0)
+                    {
+                        bzset_(speed);
+                        bzset_(tangent);
+                    }
+                    else
+                    {
+                        (mutable_type&)speed   = sqrt_of(v2);
+                        (Vertex&)      tangent = celerity/speed;
+                    }
+                }
+
                 
                 //==============================================================
                 //
@@ -172,7 +190,8 @@ typedef typename PointType::VTX      VTX
                 //
                 //==============================================================
                 //! setup
-                inline explicit PointNode( const SharedPoint &P ) throw() : SharedPoint(P), iNode(), celerity() {}
+                inline explicit PointNode( const SharedPoint &P ) throw() :
+                SharedPoint(P), iNode(), celerity(), speed(0) {}
                 //! cleanup
                 inline virtual ~PointNode() throw() {}
                 

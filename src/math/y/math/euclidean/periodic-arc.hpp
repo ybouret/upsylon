@@ -46,10 +46,10 @@ namespace upsylon {
                     switch(pts.size)
                     {
                         case 0: break;
-                        case 1: bzset(pts.head->celerity); break;
+                        case 1: bzset_(pts.head->celerity); break;
                         case 2:
-                            pts.head->celerity = (*pts.head)->position - (*pts.tail)->position;
-                            pts.tail->celerity = -pts.head->celerity;
+                            pts.head->setCelerity( (*pts.head)->position - (*pts.tail)->position );
+                            pts.tail->setCelerity(  -pts.head->celerity );
                             break;
                         default: assert(pts.size>=3);
                             this->celerityOf(pts.tail,pts.head,pts.head->next);
