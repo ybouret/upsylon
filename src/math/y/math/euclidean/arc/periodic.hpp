@@ -107,7 +107,7 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(PeriodicArc);
-                
+
                 virtual void add( const SharedPoint &p )
                 {
                     Segments &seg = aliasing::_(this->segments);
@@ -180,14 +180,20 @@ namespace upsylon {
                     Nodes       &nds = aliasing::_(this->nodes);
                     const size_t num = nds.size(); assert(num>=3);
                     const size_t nm1 = num-1;
-                    
-                    this->computeNormalFrom3D(*nds[1],half*(nds[2]->celerity-nds[num]->celerity));
+
+                    {
+                        const Vertex N = half*(nds[2]->celerity-nds[num]->celerity);
+                        nds[1]->finalize3D(N);
+                    }
                     for(size_t i=nm1;i>1;--i)
                     {
-                        this->computeNormalFrom3D(*nds[i], half*(nds[i+1]->celerity-nds[i-1]->celerity) );
+                        const Vertex N = half*(nds[i+1]->celerity-nds[i-1]->celerity);
+                        nds[i]->finalize3D(N);
                     }
-                    this->computeNormalFrom3D(*nds[num],half*(nds[1]->celerity-nds[nm1]->celerity));
-
+                    {
+                        const Vertex N = half*(nds[1]->celerity-nds[nm1]->celerity);
+                        nds[num]->finalize3D(N);
+                    }
                 }
 
 

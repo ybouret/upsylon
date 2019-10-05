@@ -182,17 +182,20 @@ namespace upsylon {
                         const Vertex &P0 = nds[1]->celerity;
                         const Vertex &P1 = nds[2]->celerity;
                         const Vertex &P2 = nds[3]->celerity;
-                        this->computeNormalFrom3D(*nds[1],half*( four * P1 - (P2+three*P0 )) );
+                        const Vertex  N  = half*( four * P1 - (P2+three*P0 ));
+                        nds[1]->finalize3D(N);
                     }
                     for(size_t i=num-1;i>1;--i)
                     {
-                        this->computeNormalFrom3D(*nds[i], half*(nds[i+1]->celerity-nds[i-1]->celerity) );
+                        const Vertex  N  = half*(nds[i+1]->celerity-nds[i-1]->celerity);
+                        nds[i]->finalize3D(N);
                     }
                     {
                         const Vertex &P0 = nds[num-0]->celerity;
                         const Vertex &P1 = nds[num-1]->celerity;
                         const Vertex &P2 = nds[num-2]->celerity;
-                        this->computeNormalFrom3D(*nds[num], half*(  (P2+three*P0 ) - four * P1 ) );
+                        const Vertex  N  = half*(  (P2+three*P0 ) - four * P1 );
+                        nds[num]->finalize3D(N);
                     }
                     
                 }

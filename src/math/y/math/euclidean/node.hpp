@@ -3,6 +3,7 @@
 #ifndef Y_EUCLIDEAN_NODE_INCLUDED
 #define Y_EUCLIDEAN_NODE_INCLUDED 1
 
+#include "y/math/euclidean/basis.hpp"
 #include "y/math/euclidean/point.hpp"
 
 namespace upsylon {
@@ -34,8 +35,10 @@ namespace upsylon {
                 // types and declarations
                 //
                 //==============================================================
-                Y_EUCLIDEAN_POINT_ARGS();                 //!< aliases
-                typedef intr_ptr<NodeKey,Node> Pointer;   //!< alias
+                Y_EUCLIDEAN_POINT_ARGS();                      //!< aliases
+                typedef intr_ptr<NodeKey,Node>      Pointer;   //!< alias
+                typedef __Basis<T,POINT,Dimensions> Basis;     //!< basis type {t,n[,b]}
+
 
                 //==============================================================
                 //
@@ -45,8 +48,7 @@ namespace upsylon {
                 const SharedPoint point;     //!< the shared point
                 const Vertex      celerity;  //!< local celerity
                 const_type        speed;     //!< |celerity|
-                const Vertex      uT;        //!< celerity/|celerity|
-                const Vertex      uN;        //!< local normal vector
+                const Basis       basis;     //!< local Frenet basis
                 const Vertex      Q;         //!< quadratic coefficient
                 const Vertex      W;         //!< cubic coefficient
                 const NodeKey     uuid;      //!< UUID
@@ -62,8 +64,7 @@ namespace upsylon {
                 point(p),
                 celerity(),
                 speed(0),
-                uT(),
-                uN(),
+                basis(),
                 Q(),
                 W(),
                 uuid(*p,*this)
@@ -89,7 +90,7 @@ namespace upsylon {
                     {
                         aliasing::_(celerity) = v;
                         aliasing::_(speed)    = sqrt_of(v2);
-                        aliasing::_(uT)       = celerity/speed;
+                        aliasing::_(basis.t)  = celerity/speed;
                     }
                 }
 
@@ -98,8 +99,7 @@ namespace upsylon {
                 {
                     bzset_(celerity);
                     bzset_(speed);
-                    bzset_(uT);
-                    bzset_(uN);
+                    aliasing::_(basis).zero();
                     bzset_(Q);
                     bzset_(W);
                 }
@@ -108,6 +108,12 @@ namespace upsylon {
                 inline Vertex compute(const_type u) const
                 {
                     return point->position + u*(celerity + u*(Q + u*W));
+                }
+
+                //! for 3D
+                void finalize3D(const Vertex &N) throw()
+                {
+                    aliasing::_(basis).finalize(N);
                 }
 
             private:

@@ -163,10 +163,10 @@ typedef Arc<T,POINT> ArcType
                     for(size_t i=nds.size();i>0;--i)
                     {
                         NodeType     &node = *nds[i];
-                        VTX        &uN = aliasing::cast<VTX,Vertex>( aliasing::_(node.uN) );
-                        const VTX  &uT = aliasing::cast<VTX,Vertex>(node.uT);
-                        uN.x = -uT.y;
-                        uN.y =  uT.x;
+                        VTX          &n = aliasing::cast<VTX,Vertex>( aliasing::_(node.basis.n) );
+                        const VTX    &t = aliasing::cast<VTX,Vertex>(node.basis.t);
+                        n.x = -t.y;
+                        n.y =  t.x;
                     }
                 }
 
@@ -175,22 +175,13 @@ typedef Arc<T,POINT> ArcType
                 {
                 }
 
+#if 0
                 //! call from computeNormals3D
-                inline void computeNormalFrom3D( NodeType &node, Vertex v )
+                inline void finalize3D( NodeType &node, Vertex N )
                 {
-                    VTX       &n  = aliasing::cast<VTX,Vertex>(v);
-                    const VTX &t  = aliasing::cast<VTX,Vertex>(node.uT);
-                    n -= (t*n)*t;
-                    const_type n2 = n.norm2();
-                    if(n2<=0)
-                    {
-                        bzset_(node.uN);
-                    }
-                    else
-                    {
-                        aliasing::cast_<VTX,Vertex>(node.uN) = n/sqrt_of(n2);
-                    }
+                    aliasing::_(node.basis).finalize(N);
                 }
+#endif
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Arc);

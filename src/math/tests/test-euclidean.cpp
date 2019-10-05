@@ -111,7 +111,7 @@ namespace {
                         {
                             Vertex p = sa.nodes[i]->point->position;
                             PointType::Print(sfp, p ) << '\n';
-                            p += sa.nodes[i]->uN/2;
+                            p += sa.nodes[i]->basis.n/2;
                             PointType::Print(sfp, p ) << '\n' << '\n';
                             
                         }
@@ -119,7 +119,7 @@ namespace {
                         {
                             Vertex p = pa.nodes[i]->point->position;
                             PointType::Print(pfp, p ) << '\n';
-                            p += pa.nodes[i]->uN/2;
+                            p += pa.nodes[i]->basis.n/2;
                             PointType::Print(pfp, p ) << '\n' << '\n';
                             
                         }

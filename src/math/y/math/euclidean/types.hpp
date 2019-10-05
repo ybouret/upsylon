@@ -8,7 +8,6 @@
 
 namespace upsylon {
 
-
     namespace math {
 
         namespace Euclidean {
@@ -53,6 +52,8 @@ namespace upsylon {
                     return fp;
                 }
             };
+
+          
 
             //==================================================================
             //
