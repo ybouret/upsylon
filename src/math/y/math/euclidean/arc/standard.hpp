@@ -21,11 +21,26 @@ namespace upsylon {
             class StandardArc : public Arc<T,POINT>
             {
             public:
-                Y_EUCLIDEAN_ARC_ARGS();
+                //==============================================================
+                //
+                // types and definition
+                //
+                //==============================================================
+                Y_EUCLIDEAN_ARC_ARGS(); //!< aliases
 
+                //==============================================================
+                //
+                // methods
+                //
+                //==============================================================
+
+                //! cleanup
                 inline virtual ~StandardArc() throw() {}
+
+                //! setup
                 inline explicit StandardArc() throw() : ArcType() {}
 
+                //! acquire memory
                 inline virtual void ensure(const size_t numNodes)
                 {
                     if(numNodes>0)
@@ -36,7 +51,7 @@ namespace upsylon {
                 }
 
                 
-                
+                //! compute local standard metrics
                 inline virtual void metrics() throw()
                 {
                     Nodes       &nds = aliasing::_(this->nodes);
@@ -85,6 +100,7 @@ namespace upsylon {
 
                 }
 
+                //! u in [1:n], constant otherwise
                 inline virtual Vertex operator()( mutable_type u ) const throw()
                 {
                     const size_t num = this->nodes.size();

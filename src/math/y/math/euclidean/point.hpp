@@ -33,6 +33,7 @@ namespace upsylon {
             template <typename T> struct __Core<T,2>
             {
                 typedef point2d<T> Type; //!< alias
+                //! output helper
                 static inline ios::ostream &Print(ios::ostream &fp, const Type &v)
                 {
                     fp("%.15g %.15g", v.x, v.y);
@@ -48,6 +49,7 @@ namespace upsylon {
             template <typename T> struct __Core<T,3>
             {
                 typedef point3d<T> Type; //!< alias
+                //! output helper
                 static inline ios::ostream &Print(ios::ostream &fp, const Type &v)
                 {
                     fp("%.15g %.15g %.15g", v.x, v.y, v.z);
@@ -72,7 +74,7 @@ namespace upsylon {
             //==================================================================
             //
             //
-            //! a point has a position
+            //! a point has a position and a UUID
             //
             //
             //==================================================================
@@ -117,7 +119,10 @@ namespace upsylon {
                     return Core::Print(fp,aliasing::cast<VTX,Vertex>(v));
                 }
 
+                //! casting to point[2|3]d
                 inline VTX       & operator*()       throw() { return aliasing::cast<VTX,Vertex>(position); }
+
+                //! casting to point[2|3]d
                 inline const VTX & operator*() const throw() { return aliasing::cast<VTX,Vertex>(position); }
 
                 
@@ -126,7 +131,11 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Point);
             };
 
-            //! forwarding type
+            //==================================================================
+            //
+            //! forwarding point types
+            //
+            //==================================================================
 #define Y_EUCLIDEAN_POINT_ARGS()                  \
 Y_DECL_ARGS(T,type);                              \
 typedef Point<T,POINT>               PointType;   \
@@ -135,25 +144,53 @@ typedef typename PointType::Pointer  SharedPoint;  \
 typedef typename PointType::Vertex   Vertex;      \
 typedef typename PointType::VTX      VTX
 
+            //==================================================================
+            //
+            //! key for node database/uuid
+            //
+            //==================================================================
             typedef key_address<2> NodeKey;
 
-
+            //==================================================================
+            //
+            //
+            //! a node has a point and local data
+            //
+            //
+            //==================================================================
             template <typename T,template <class> class POINT>
             class Node : public Object
             {
             public:
-                Y_EUCLIDEAN_POINT_ARGS();
-                typedef intr_ptr<NodeKey,Node> Pointer;
+                //==============================================================
+                //
+                // types and declarations
+                //
+                //==============================================================
+                Y_EUCLIDEAN_POINT_ARGS();                 //!< aliases
+                typedef intr_ptr<NodeKey,Node> Pointer;   //!< alias
 
-                const SharedPoint point;
-                const Vertex      celerity;
-                const_type        speed;
-                const Vertex      uT;
-                const Vertex      uN;
-                const Vertex      Q;
-                const Vertex      W;
-                const NodeKey     uuid;
+                //==============================================================
+                //
+                // members
+                //
+                //==============================================================
+                const SharedPoint point;     //!< the shared point
+                const Vertex      celerity;  //!< local celerity
+                const_type        speed;     //!< |celerity|
+                const Vertex      uT;        //!< celerity/|celerity|
+                const Vertex      uN;        //!< local normal vector
+                const Vertex      Q;         //!< quadratic coefficient
+                const Vertex      W;         //!< cubic coefficient
+                const NodeKey     uuid;      //!< UUID
 
+                //==============================================================
+                //
+                // methods
+                //
+                //==============================================================
+
+                //! setup
                 inline explicit Node( const SharedPoint &p ) throw() :
                 point(p),
                 celerity(),
@@ -166,13 +203,16 @@ typedef typename PointType::VTX      VTX
                 {
                 }
 
+                //! cleanup
                 inline virtual ~Node() throw()
                 {
                     setFixed();
                 }
 
+                //! for pointer/database
                 inline const NodeKey & key() const throw() { return uuid; }
 
+                //! update celerity from evaluation
                 inline void setCelerity( const Vertex v ) throw()
                 {
                     setFixed();
@@ -186,6 +226,7 @@ typedef typename PointType::VTX      VTX
                     }
                 }
 
+                //! set as a fixed point
                 inline void setFixed() throw()
                 {
                     bzset_(celerity);
@@ -195,12 +236,11 @@ typedef typename PointType::VTX      VTX
                     bzset_(Q);
                     bzset_(W);
                 }
-                
+
+                //! local evaluation
                 inline Vertex compute(const_type u) const
                 {
-                    //return point->position + u*celerity + u*u*Q + u*u*u*W;
                     return point->position + u*(celerity + u*(Q + u*W));
-
                 }
 
             private:
@@ -209,6 +249,11 @@ typedef typename PointType::VTX      VTX
                 
             };
 
+            //==================================================================
+            //
+            //! forwarding node types
+            //
+            //==================================================================
 #define Y_EUCLIDEAN_NODE_ARGS()                \
 typedef Node<T,POINT>              NodeType;   \
 typedef typename NodeType::Pointer SharedNode

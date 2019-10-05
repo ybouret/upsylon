@@ -11,30 +11,56 @@ namespace upsylon {
 
         namespace Euclidean {
 
+            //==================================================================
+            //
+            //! key for segments database
+            //
+            //==================================================================
             typedef key_address<2> SegmentKey;
 
+
+            //==================================================================
+            //
+            //
+            //! a segment between two nodes
+            //
+            //
+            //==================================================================
             template <typename T,template <class> class POINT>
             class Segment : public Object
             {
             public:
-                Y_EUCLIDEAN_POINT_ARGS();
-                Y_EUCLIDEAN_NODE_ARGS();
-                typedef intr_ptr<SegmentKey,Segment> Pointer;
+                //==============================================================
+                //
+                // types and definition
+                //
+                //==============================================================
+                Y_EUCLIDEAN_POINT_ARGS();                     //!< aliases
+                Y_EUCLIDEAN_NODE_ARGS();                      //!< aliases
+                typedef intr_ptr<SegmentKey,Segment> Pointer; //!< alias
 
-                const SharedNode tail;
-                const SharedNode head;
-                const SegmentKey uuid;
+                //==============================================================
+                //
+                // members
+                //
+                //==============================================================
+                const SharedNode tail; //!< tail node
+                const SharedNode head; //!< head node
+                const SegmentKey uuid; //!< unique key for tail,head
 
+                //! setup
                 inline Segment(const SharedNode &a, const SharedNode &b) throw() :
                 tail(a), head(b), uuid(*tail,*head)
                 {
                 }
 
+                //! cleanup
                 inline ~Segment() throw()
                 {
 
                 }
 
+                //! for pointer/database
                 const SegmentKey & key() const throw() { return uuid; }
 
 
@@ -43,8 +69,13 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Segment);
             };
 
-#define Y_EUCLIDEAN_SEGMENT_ARGS() \
-typedef Segment<T,POINT>              SegmentType;\
+            //==================================================================
+            //
+            //! forwarding segment types
+            //
+            //==================================================================
+#define Y_EUCLIDEAN_SEGMENT_ARGS()                  \
+typedef Segment<T,POINT>              SegmentType;  \
 typedef typename SegmentType::Pointer SharedSegment
 
         }

@@ -21,12 +21,26 @@ namespace upsylon {
             class PeriodicArc : public Arc<T,POINT>
             {
             public:
-                Y_EUCLIDEAN_ARC_ARGS();
+                //==============================================================
+                //
+                // types and definition
+                //
+                //==============================================================
+                Y_EUCLIDEAN_ARC_ARGS(); //!< aliases
 
+                //==============================================================
+                //
+                // methods
+                //
+                //==============================================================
+
+                //! cleanup
                 inline virtual ~PeriodicArc() throw() {}
-                inline explicit PeriodicArc() throw()  {}
 
+                //! setup
+                inline explicit PeriodicArc() throw() : ArcType()  {}
 
+                //! acquire some memory
                 inline virtual void ensure(const size_t numNodes)
                 {
                     aliasing::_(this->nodes).ensure(numNodes);
@@ -34,6 +48,7 @@ namespace upsylon {
                 }
 
 
+                //! compute local periodic metrics
                 inline virtual void metrics() throw()
                 {
 
@@ -69,7 +84,8 @@ namespace upsylon {
                     }
 
                 }
-                
+
+                //! any u, periodically set in [1:n]
                 inline virtual Vertex operator()( mutable_type u ) const throw()
                 {
                     const size_t num = this->nodes.size();
@@ -91,10 +107,7 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(PeriodicArc);
-
-
                 
-
                 virtual void add( const SharedPoint &p )
                 {
                     Segments &seg = aliasing::_(this->segments);
