@@ -103,7 +103,10 @@ namespace upsylon {
                     bzset_(B);
                 }
 
+                //! copy is ADDR!=NULL
 #define Y_EUCLIDEAN_XCOPY(ADDR,VALUE) do { if(ADDR) { *(ADDR) = (VALUE); } } while(false)
+                
+                //! zero if ADDR!=NULL
 #define Y_EUCLIDEAN_XZERO(ADDR)       do { if(ADDR) { bzset(*(ADDR));    } } while(false)
 
                 //! local evaluation

@@ -58,6 +58,7 @@ typedef Arc<T,POINT> ArcType
                 //==============================================================
                 virtual void   ensure(const size_t numNodes)    = 0; //!< ensure memory
                 virtual void   metrics() throw()                = 0; //!< compute local metrics
+                //! interpolation of values
                 virtual void   compute( mutable_type u, Vertex *P, Vertex *dP, Vertex *d2P ) const throw() = 0;
 
                 inline virtual ~Arc() throw() {}                     //!< cleanup
@@ -69,7 +70,7 @@ typedef Arc<T,POINT> ArcType
                 // non-virtual interface
                 //
                 //==============================================================
-
+                //! return position with optional speed and acceleration
                 inline Vertex operator()(const_type u, Vertex *dP=0, Vertex *d2P=0) const throw()
                 {
                     Vertex P;
@@ -77,6 +78,13 @@ typedef Arc<T,POINT> ArcType
                     return P;
                 }
 
+                //! local speed norm
+                inline type getSpeed(const_type u) const throw()
+                {
+                    Vertex dP;
+                    compute(u,0,&dP,0);
+                    return sqrt_of( aliasing::cast<VTX,Vertex>(dP).norm2() );
+                }
 
                 //! add an existing point
                 inline Arc & operator<<( const SharedPoint &sp )

@@ -212,16 +212,16 @@ namespace upsylon {
                     const size_t nm1 = num-1;
 
                     {
-                        const Vertex N = half*(nds[2]->V-nds[num]->V);
+                        const Vertex N = half*(nds[2]->basis.t-nds[num]->basis.t);
                         nds[1]->finalize3D(N);
                     }
                     for(size_t i=nm1;i>1;--i)
                     {
-                        const Vertex N = half*(nds[i+1]->V-nds[i-1]->V);
+                        const Vertex N = half*(nds[i+1]->basis.t-nds[i-1]->basis.t);
                         nds[i]->finalize3D(N);
                     }
                     {
-                        const Vertex N = half*(nds[1]->V-nds[nm1]->V);
+                        const Vertex N = half*(nds[1]->basis.t-nds[nm1]->basis.t);
                         nds[num]->finalize3D(N);
                     }
                 }
