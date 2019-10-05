@@ -86,7 +86,7 @@ namespace {
                         {
                             Vertex p = sa.nodes[i]->point->position;
                             PointType::Print(sfp, p ) << '\n';
-                            p += sa.nodes[i]->celerity/2;
+                            p += sa.nodes[i]->V/2;
                             PointType::Print(sfp, p ) << '\n' << '\n';
 
                         }
@@ -94,7 +94,7 @@ namespace {
                         {
                             Vertex p = pa.nodes[i]->point->position;
                             PointType::Print(pfp, p ) << '\n';
-                            p += pa.nodes[i]->celerity/2;
+                            p += pa.nodes[i]->V/2;
                             PointType::Print(pfp, p ) << '\n' << '\n';
 
                         }
@@ -140,6 +140,20 @@ namespace {
                         PointType::Print(sfp,v) << '\n';
                     }
                 }
+
+
+                {
+                    const string  sfn = s_pfx + PID + '_' + TID + "_va.dat";
+                    ios::ocstream sfp(sfn);
+                    Vertex         v,a;
+                    for(mutable_type x=1; x <= np; x += mutable_type(0.01) )
+                    {
+                        (void)sa(x,&v,&a);
+                        sfp("%.15g %.15g %.15g\n", x, sqrt_of(aliasing::cast<VTX,Vertex>(v).norm2()), sqrt_of(aliasing::cast<VTX,Vertex>(a).norm2()) );
+                    }
+                }
+
+
                 
                 {
                     const string  pfn = p_pfx + PID + '_' + TID + "_i.dat";
@@ -148,6 +162,17 @@ namespace {
                     {
                         const Vertex v = pa(x);
                         PointType::Print(pfp,v) << '\n';
+                    }
+                }
+
+                {
+                    const string  pfn = p_pfx + PID + '_' + TID + "_va.dat";
+                    ios::ocstream pfp(pfn);
+                    Vertex         v,a;
+                    for(mutable_type x=1; x <= np+1; x += mutable_type(0.01) )
+                    {
+                        (void)pa(x,&v,&a);
+                        pfp("%.15g %.15g %.15g\n", x, sqrt_of(aliasing::cast<VTX,Vertex>(v).norm2()), sqrt_of(aliasing::cast<VTX,Vertex>(a).norm2()) );
                     }
                 }
 

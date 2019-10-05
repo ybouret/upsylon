@@ -100,6 +100,52 @@ namespace upsylon {
 
                 }
 
+                virtual void compute( mutable_type u, Vertex *P, Vertex *dP, Vertex *d2P ) const throw()
+                {
+                    const size_t num = this->nodes.size();
+                    switch(num)
+                    {
+                        case 0:
+                            Y_EUCLIDEAN_XZERO(P);
+                            Y_EUCLIDEAN_XZERO(dP);
+                            Y_EUCLIDEAN_XZERO(d2P);
+                            break;
+                        case 1:
+                            Y_EUCLIDEAN_XCOPY(P,this->nodes.front()->point->position);
+                            Y_EUCLIDEAN_XZERO(dP);
+                            Y_EUCLIDEAN_XZERO(d2P);
+                            break;
+
+                        default:
+                            if(u<=1)
+                            {
+                                const NodeType &node = *(this->nodes.front());
+                                Y_EUCLIDEAN_XCOPY(P,node.point->position);
+                                Y_EUCLIDEAN_XCOPY(dP,node.V);
+                                Y_EUCLIDEAN_XCOPY(d2P,node.A);
+                            }
+                            else
+                            {
+                                if(u>=num)
+                                {
+                                    const NodeType &node = *(this->nodes.back());
+                                    Y_EUCLIDEAN_XCOPY(P,node.point->position);
+                                    Y_EUCLIDEAN_XCOPY(dP,node.V);
+                                    Y_EUCLIDEAN_XCOPY(d2P,node.A);
+                                }
+                                else
+                                {
+                                    const size_t    indx = clamp<size_t>(1,floor_of(u),num);
+                                    const NodeType &node = *(this->nodes[indx]);
+                                    node.compute(u-indx,P,dP,d2P);
+                                }
+                            }
+                            break;
+                    }
+
+                }
+
+#if 0
                 //! u in [1:n], constant otherwise
                 inline virtual Vertex operator()( mutable_type u ) const throw()
                 {
@@ -125,11 +171,11 @@ namespace upsylon {
                         else
                         {
                             const size_t i = clamp<size_t>(1,floor_of(u),num);
-                            return this->nodes[i]->compute(u-i);
+                            return this->nodes[i]->compute(u-i,NULL);
                         }
                     }
                 }
-                
+#endif
                 
 
             private:
@@ -179,21 +225,21 @@ namespace upsylon {
                     Nodes       &nds = aliasing::_(this->nodes);
                     const size_t num = nds.size(); assert(num>=3);
                     {
-                        const Vertex &P0 = nds[1]->celerity;
-                        const Vertex &P1 = nds[2]->celerity;
-                        const Vertex &P2 = nds[3]->celerity;
+                        const Vertex &P0 = nds[1]->V;
+                        const Vertex &P1 = nds[2]->V;
+                        const Vertex &P2 = nds[3]->V;
                         const Vertex  N  = half*( four * P1 - (P2+three*P0 ));
                         nds[1]->finalize3D(N);
                     }
                     for(size_t i=num-1;i>1;--i)
                     {
-                        const Vertex  N  = half*(nds[i+1]->celerity-nds[i-1]->celerity);
+                        const Vertex  N  = half*(nds[i+1]->V-nds[i-1]->V);
                         nds[i]->finalize3D(N);
                     }
                     {
-                        const Vertex &P0 = nds[num-0]->celerity;
-                        const Vertex &P1 = nds[num-1]->celerity;
-                        const Vertex &P2 = nds[num-2]->celerity;
+                        const Vertex &P0 = nds[num-0]->V;
+                        const Vertex &P1 = nds[num-1]->V;
+                        const Vertex &P2 = nds[num-2]->V;
                         const Vertex  N  = half*(  (P2+three*P0 ) - four * P1 );
                         nds[num]->finalize3D(N);
                     }

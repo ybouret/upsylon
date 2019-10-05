@@ -85,6 +85,36 @@ namespace upsylon {
 
                 }
 
+                inline virtual void compute( mutable_type u, Vertex *P, Vertex *dP, Vertex *d2P ) const throw()
+                {
+                    const size_t num = this->nodes.size();
+                    switch(num)
+                    {
+                        case 0:
+                            Y_EUCLIDEAN_XZERO(P);
+                            Y_EUCLIDEAN_XZERO(dP);
+                            Y_EUCLIDEAN_XZERO(d2P);
+                            break;
+
+                        case 1:
+                            Y_EUCLIDEAN_XCOPY(P,this->nodes.front()->point->position);
+                            Y_EUCLIDEAN_XZERO(dP);
+                            Y_EUCLIDEAN_XZERO(d2P);
+                            break;
+
+                        default: {
+                            mutable_type i = floor_of(u);
+                            u-=i;
+                            while(i<1)   i+=num;
+                            while(i>num) i-=num;
+                            const NodeType &node = *(this->nodes[clamp<size_t>(1,i,num)]);
+                            return node.compute(u,P,dP,d2P);
+                        } break;
+                    }
+                }
+                
+
+#if 0
                 //! any u, periodically set in [1:n]
                 inline virtual Vertex operator()( mutable_type u ) const throw()
                 {
@@ -100,9 +130,9 @@ namespace upsylon {
                     u-=i;
                     while(i<1)   i+=num;
                     while(i>num) i-=num;
-                    return this->nodes[clamp<size_t>(1,i,num)]->compute(u);
+                    return this->nodes[clamp<size_t>(1,i,num)]->compute(u,NULL);
                 }
-
+#endif
 
 
             private:
@@ -182,16 +212,16 @@ namespace upsylon {
                     const size_t nm1 = num-1;
 
                     {
-                        const Vertex N = half*(nds[2]->celerity-nds[num]->celerity);
+                        const Vertex N = half*(nds[2]->V-nds[num]->V);
                         nds[1]->finalize3D(N);
                     }
                     for(size_t i=nm1;i>1;--i)
                     {
-                        const Vertex N = half*(nds[i+1]->celerity-nds[i-1]->celerity);
+                        const Vertex N = half*(nds[i+1]->V-nds[i-1]->V);
                         nds[i]->finalize3D(N);
                     }
                     {
-                        const Vertex N = half*(nds[1]->celerity-nds[nm1]->celerity);
+                        const Vertex N = half*(nds[1]->V-nds[nm1]->V);
                         nds[num]->finalize3D(N);
                     }
                 }

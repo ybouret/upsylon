@@ -58,8 +58,10 @@ typedef Arc<T,POINT> ArcType
                 //==============================================================
                 virtual void   ensure(const size_t numNodes)    = 0; //!< ensure memory
                 virtual void   metrics() throw()                = 0; //!< compute local metrics
-                virtual Vertex operator()(mutable_type u) const = 0; //!< approximation
+                virtual void   compute( mutable_type u, Vertex *P, Vertex *dP, Vertex *d2P ) const throw() = 0;
+
                 inline virtual ~Arc() throw() {}                     //!< cleanup
+
 
 
                 //==============================================================
@@ -67,6 +69,14 @@ typedef Arc<T,POINT> ArcType
                 // non-virtual interface
                 //
                 //==============================================================
+
+                inline Vertex operator()(const_type u, Vertex *dP=0, Vertex *d2P=0) const throw()
+                {
+                    Vertex P;
+                    compute(u,&P,dP,d2P);
+                    return P;
+                }
+
 
                 //! add an existing point
                 inline Arc & operator<<( const SharedPoint &sp )
@@ -95,12 +105,12 @@ typedef Arc<T,POINT> ArcType
                             const NodeType    &next = *(s.head);
                             const Vertex      &P0   = node.point->position;
                             const Vertex      &P1   = next.point->position;
-                            const Vertex      &S0   = node.celerity;
-                            const Vertex      &S1   = next.celerity;
-                            const Vertex       rhs1 = (P1-P0)-S0;
-                            const Vertex       rhs2 = (S1-S0);
-                            aliasing::_(node.Q) = 3*rhs1-rhs2;
-                            aliasing::_(node.W) = rhs2-2*rhs1;
+                            const Vertex      &V0   = node.V;
+                            const Vertex      &V1   = next.V;
+                            const Vertex       rhs1 = (P1-P0)-V0;
+                            const Vertex       rhs2 = (V1-V0);
+                            aliasing::_(node.A) = 3*rhs1-rhs2;
+                            aliasing::_(node.B) = rhs2-2*rhs1;
                         }
                     }
                 }

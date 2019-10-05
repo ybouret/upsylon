@@ -46,11 +46,11 @@ namespace upsylon {
                 //
                 //==============================================================
                 const SharedPoint point;     //!< the shared point
-                const Vertex      celerity;  //!< local celerity
+                const Vertex      V;         //!< local celerity
                 const_type        speed;     //!< |celerity|
                 const Basis       basis;     //!< local Frenet basis
-                const Vertex      Q;         //!< quadratic coefficient
-                const Vertex      W;         //!< cubic coefficient
+                const Vertex      A;         //!< quadratic coefficient
+                const Vertex      B;         //!< cubic coefficient
                 const NodeKey     uuid;      //!< UUID
 
                 //==============================================================
@@ -62,11 +62,11 @@ namespace upsylon {
                 //! setup
                 inline explicit Node( const SharedPoint &p ) throw() :
                 point(p),
-                celerity(),
+                V(),
                 speed(0),
                 basis(),
-                Q(),
-                W(),
+                A(),
+                B(),
                 uuid(*p,*this)
                 {
                 }
@@ -84,30 +84,34 @@ namespace upsylon {
                 inline void setCelerity( const Vertex v ) throw()
                 {
                     setFixed();
-                    const VTX  &V = aliasing::cast<VTX,Vertex>(v);
-                    const_type v2 = V.norm2();
+                    aliasing::_(V) = v;
+                    const_type  v2 = aliasing::cast<VTX,Vertex>(V).norm2();
                     if(v2>0)
                     {
-                        aliasing::_(celerity) = v;
                         aliasing::_(speed)    = sqrt_of(v2);
-                        aliasing::_(basis.t)  = celerity/speed;
+                        aliasing::_(basis.t)  = V/speed;
                     }
                 }
 
                 //! set as a fixed point
                 inline void setFixed() throw()
                 {
-                    bzset_(celerity);
+                    bzset_(V);
                     bzset_(speed);
                     aliasing::_(basis).zero();
-                    bzset_(Q);
-                    bzset_(W);
+                    bzset_(A);
+                    bzset_(B);
                 }
 
+#define Y_EUCLIDEAN_XCOPY(ADDR,VALUE) do { if(ADDR) { *(ADDR) = (VALUE); } } while(false)
+#define Y_EUCLIDEAN_XZERO(ADDR)       do { if(ADDR) { bzset(*(ADDR));    } } while(false)
+
                 //! local evaluation
-                inline Vertex compute(const_type u) const
+                inline void compute(const_type u, Vertex *P, Vertex *dP, Vertex *d2P) const throw()
                 {
-                    return point->position + u*(celerity + u*(Q + u*W));
+                    Y_EUCLIDEAN_XCOPY(P,  point->position + u*(V + u*(A + u*B)) );
+                    Y_EUCLIDEAN_XCOPY(dP, V+2*u*A+3*u*u*B);
+                    Y_EUCLIDEAN_XCOPY(d2P,2*A+6*u*B);
                 }
 
                 //! for 3D
