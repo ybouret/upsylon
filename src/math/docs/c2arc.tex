@@ -15,6 +15,86 @@
 \section{Definitions}
 We have a set of $N$ points $\vec{P}_1,\ldots,\vec{P}_N$, and we assume
 that we are able to compute the respective velocities  $\vec{V}_1,\ldots,\vec{V}_N$.\\
-To produce a $\mathcal{C}^2$ arc from these data, me must assign a field of accelerations $\vec{A}_1,\ldots,\vec{A}_N$.
+To produce a $\mathcal{C}^2$ arc from these data, 
+me must assign a field of accelerations $\vec{A}_1,\ldots,\vec{A}_N$. ,which imposes and extraneous degree of freedom for each segment.
+
+\section{Accelerations}
+On a segment $\vec{P}_i \to \vec{P}_{i+1}$ we get:
+\begin{equation}
+	\vec{A}(t) = \vec{A}_{i} \left(1-t\right) + t \vec{A}_{i+1} + t\left(1-t\right) \vec{Q}_i
+\end{equation}
+
+\section{Velocities}
+On a segment $\vec{P}_i \to \vec{P}_{i+1}$ we get:
+\begin{equation}
+	\vec{V}(t) = \vec{V}_{i} + \int_0^t \vec{A}(u)\,\mathrm{d}u = 
+	\vec{V}_{i} + 
+	\left(t-\frac{t^2}{2}\right) \vec{A}_{i} 
+	+ \frac{t^2}{2} \vec{A}_{i+1}
+	+ \left(\frac{t^2}{2} - \frac{t^3}{3}\right) \vec{Q}_i,
+\end{equation}
+so that:
+\begin{equation}
+	\vec{V}_{i+1} = \vec{V}_{i} + \frac{1}{2} \left(\vec{A}_i+\vec{A}_{i+1}\right) + \frac{1}{6} \vec{Q}_i.
+\end{equation}
+Finally, the quadratic term is:
+\begin{equation}
+\boxed{
+	\vec{Q}_i = 6\left(\vec{V}_{i+1}-\vec{V}_{i}\right) - 3  \left(\vec{A}_i+\vec{A}_{i+1}\right) 
+}
+\end{equation}
+
+\section{Position}
+We obtain:
+\begin{equation}
+	\vec{P}(t) = \vec{P}_{i} + \int_0^t \vec{V}(u)  \,\mathrm{d}u = 
+	\vec{P}_i + t \vec{V}_i + \left(\frac{t^2}{2}-\frac{t^3}{6}\right) \vec{A}_{i} 
+	+ \frac{t^3}{6} \vec{A}_{i+1}
+	+ \left(\frac{t^3}{6} - \frac{t^4}{12}\right) \vec{Q}_i.
+\end{equation}
+The continuity writes:
+\begin{equation}
+	\vec{P}_{i+1} = \vec{P}_{i} + \vec{V}_i + \frac{1}{3} \vec{A}_i + \frac{1}{6} \vec{A}_{i+1} + \frac{1}{12} \vec{Q}_i
+\end{equation}
+then:
+\begin{equation}
+\label{eq:a}
+\boxed{
+	\vec{P}_{i+1} - \vec{P}_{i} = \frac{1}{2} \left( \vec{V}_i + \vec{V}_{i+1} \right)
+	+\frac{1}{12}\left(\vec{A}_{i}-\vec{A}_{i+1}\right)
+	}
+\end{equation}
+This means that  any set of accelerations matching Eq\eqref{eq:a} shall provide a piecewise $\mathcal{C}^2$ arc.
+\section{Expressions}
+We want to minimize:
+\begin{equation}
+	\mathcal{E} = \sum_{j=1}^{N} \frac{1}{2} \vec{A}_j^2,
+\end{equation}
+under the $M$ constraints:
+\begin{equation}
+	\forall i \in [1:M], \; \vec{0} = \left(\vec{A}_{i}-\vec{A}_{i+1}\right) + 6 \left( \vec{V}_i + \vec{V}_{i+1} \right ) - \left( \vec{P}_{i+1} - \vec{P}_{i} \right) = \vec{S}_i
+\end{equation}
+We hence minimize:
+\begin{equation}
+	\mathcal{L} = \mathcal{E} - \sum_{i=1}^M \vec{\lambda}_i \vec{S}_i.
+\end{equation}
+We get the expression:
+\begin{equation}
+	\forall j \in [1:N],\;\; \partial_{\vec{A}_j} \mathcal{L} = \vec{A}_j 
+	- \sum_{i=1}^M \left( \delta_{i,j} - \delta_{i,j+1}\right)\vec{\lambda}_i
+\end{equation}
+so that
+\begin{equation}
+	\vec{A}_j =  \sum_{i=1}^M \left( \delta_{i,j} - \delta_{i,j+1}\right)\vec{\lambda}_i
+\end{equation}
+
+\begin{equation}
+	\vec{A}_j - \vec{A}_{j+1} =  \sum_{i=1}^M \left( \delta_{i,j} + \delta_{i,j+2}\right)\vec{\lambda}_i
+\end{equation}
+leading to the $M$ relations for the $M$ Laplace mutlipliers:
+\begin{equation}
+	toto
+\end{equation}
+
 
 \end{document}
