@@ -87,6 +87,12 @@ namespace upsylon
             return next(is_sep);
         }
 
+        //! wrapper with some separators
+        inline bool next_with(const T *buffer ) throw()
+        {
+            return next_with(buffer,length_of(buffer));
+        }
+
         //! wrapper with one separator
         inline bool next_with( const T sep ) throw()
         {

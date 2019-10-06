@@ -26,7 +26,7 @@ ENDIF()
 
 IF(Y_DARWIN)
 CLI(y_port_missing)
-CLI(get-kde-wallpapers)
+#CLI(get-kde-wallpapers)
 ENDIF()
 
 CLI(y_mpi_xcopy)
