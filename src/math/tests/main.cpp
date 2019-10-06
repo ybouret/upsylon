@@ -53,7 +53,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(points);
 
     Y_UTEST(euclidean);
-
+    Y_UTEST(c2arc);
 }
 Y_UTEST_EXEC()
 
