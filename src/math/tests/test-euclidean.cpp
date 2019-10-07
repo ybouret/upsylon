@@ -26,7 +26,7 @@ namespace {
         {
 
             
-            std::cerr << "Using " <<PID << "<" << TID << ">" << std::endl;
+            std::cerr << "Using " << PID << "<" << TID << ">" << std::endl;
             std::cerr << "|_sizeof(type)     = " << sizeof(T)           << std::endl;
             std::cerr << "|_sizeof(point)    = " << sizeof(PointType)   << std::endl;
             std::cerr << "|_sizeof(shared)   = " << sizeof(SharedPoint) << std::endl;
@@ -42,8 +42,8 @@ namespace {
                 for(size_t i=0;i<np;++i)
                 {
                     const float  theta = (numeric<float>::two_pi * i)/np;
-                    const float  x     = cosf(theta)  + 0.1f * alea.symm<float>();
-                    const float  y     = sinf(theta)  + 0.1f * alea.symm<float>();
+                    const float  x     = cosf(theta)   + 0.1f * alea.symm<float>();
+                    const float  y     = sinf(theta)   + 0.1f * alea.symm<float>();
                     const float  z     = sinf(theta/2) + 0.1f * alea.symm<float>();
                     const type   arr[4] = { x,y,z, 0 };
                     const Vertex     &v  = *(const Vertex *) &arr[0];
