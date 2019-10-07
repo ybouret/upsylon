@@ -11,6 +11,164 @@
 \begin{document}
 \title{Minimal $\mathcal{C}^2$ arcs}
 \maketitle
+	
+\section{Definitions}
+
+\subsection{Positions}
+We have a set of $N$ points $\vec{P}_1,\ldots,\vec{P}_N$, each point in $\mathbb{R}^d$ (where $d$ is the space dimension), and we assume
+that they describe a virtual arc for a dimensionless coordinate $t_i=i$.
+
+\subsection{Velocities}
+
+\subsubsection{Bulk Case}
+
+\begin{equation}
+	\forall 1<i<N,\;\;\vec{V}_i = \frac{1}{2}\left(\vec{P}_{i+1} - \vec{P}_{i-1}\right)
+\end{equation}
+
+\subsubsection{Standard Case Boundaries}
+\begin{equation}
+\begin{array}{rl}
+N=2 &
+	\left\lbrace
+	\begin{array}{rcl}
+	\vec{V}_1 & = &  \left( \vec{P}_2 - \vec{P}_1\right)\\
+	\vec{V}_2 & = &  \left( \vec{P}_2 - \vec{P}_1\right) = \vec{V}_1\\
+	\end{array}
+	\right.
+	\\
+	\\
+	N\geq3 & 
+	\left\lbrace
+	\begin{array}{rcl}
+	\vec{V}_1 & = & \frac{1}{2} \left[ 4\vec{P}_2     - (3\vec{P}_1+\vec{P}_3)\right]\\
+	\vec{V}_N & = & \frac{1}{2} \left[ (3\vec{P}_{N}+\vec{P}_{N-2})-4\vec{P}_{N-1} \right]\\
+	\end{array}
+	\right.
+\end{array}
+\end{equation}
+
+ 
+\subsubsection{Periodic Case Boundaries}
+
+\begin{equation}
+\begin{array}{rl}
+N=2 &
+	\left\lbrace
+	\begin{array}{rcl}
+	\vec{V}_1 & = &  \left( \vec{P}_2 - \vec{P}_1\right)\\
+	\vec{V}_2 & = &  \left( \vec{P}_1 - \vec{P}_2\right) = -\vec{V}_1\\
+	\end{array}
+	\right.
+	\\
+	\\
+	N\geq3 & 
+	\left\lbrace
+	\begin{array}{rcl}
+	\vec{V}_1 & = & \frac{1}{2} \left( \vec{P}_2 - \vec{P}_N\right)\\
+	\vec{V}_N & = & \frac{1}{2} \left( \vec{P}_1 - \vec{P}_{N-1}\right)\\
+	\end{array}
+	\right.
+\end{array}
+\end{equation}
+
+\subsection{Generic Index}
+We define:
+\begin{equation}
+	i' =
+	\left\lbrace
+	\begin{array}{rcl}
+		i+1 & \mbox{if } i<N\\
+		1   & \mbox{if } i=N\\
+	\end{array}
+	\right.
+\end{equation}
+
+
+\section{Continuous accelerations}
+
+\subsection{Expression}
+We need a degree of freedom to express the acceleration, otherwise we shall get some continuity incompatibility.
+Namely, we assume that
+\begin{equation}
+	\vec{A}(t) = (1-t) \vec{A}_i + t \vec{A}_{i'} + t(1-t) \vec{Q}_i
+\end{equation}
+
+\subsection{Velocities}
+\begin{equation}
+	\vec{V}(t) = \vec{V}_i + \int_0^t \vec{A}(u)\,\mathrm{d}u =
+	 \vec{V}_i 
+	 + \left(t-\frac{t^2}{2}\right) \vec{A}_i 
+	 + \frac{t^2}{2} \vec{A}_{i'}
+	 + \left(\frac{t^2}{2}-\frac{t^3}{3}\right) \vec{Q}_i,
+\end{equation}
+leading to:
+\begin{equation}
+\boxed{
+	\vec{Q}_i = 6 \left( \vec{V}_{i'} - \vec{V}_i \right) - 3 \left( \vec{A}_i + \vec{A}_{i'} \right)
+}
+\end{equation}
+
+\subsection{Velocities}
+\begin{equation}
+	\vec{P}(t) = \vec{P}_i + \int_0^t \vec{V}(u) \, \mathrm{d}u = 
+	\vec{P}_i 
+	+ t \vec{V}_i
+	+ \left( \frac{t^2}{2} - \frac{t^3}{6}\right) \vec{A}_i
+	+ \frac{t^3}{6} \vec{A}_{i'}
+	+ \left(\frac{t^3}{6} -\frac{t^4}{12} \right) \vec{Q}_i,
+\end{equation}
+leading to
+\begin{equation}
+	\vec{P}_{i'} =  \vec{P}_{i} + \vec{V}_i + \frac{1}{3} \vec{A}_i + \frac{1}{6} \vec{A}_{i'} + \frac{1}{12} \vec{Q}_i
+\end{equation}
+and
+\begin{equation}
+\label{eq:A}
+\boxed{
+	\vec{P}_{i'} - \vec{P}_i = \frac{1}{2}\left( \vec{V}_i + \vec{V}_i' \right) + \frac{1}{12} \left( \vec{A}_i - \vec{A}_{i'} \right)
+	}
+\end{equation}
+
+\section{Minimal Arc}
+
+\subsection{Choosing Accelerations}
+Any set of accelerations matching Eq\eqref{eq:A} shall produce an arc going through all points with the computed velocities.
+Accordingly, we choose to minimise:
+\begin{equation}
+	\mathcal{E} = \frac{1}{2} \sum_{i=0}^N \vec{A}_i^2
+\end{equation}
+with the $N-1$ constraints:
+\begin{equation}
+	\vec{0} = \underbrace{\left(\vec{A}_i  - \vec{A}_{i'} \right) + \underbrace{6 \left(\vec{V}_{i} + \vec{V}_{i'}\right) - 12 \left(\vec{P}_{i'} - \vec{P}_{i}\right)}_{-\vec{D}_i}}_{\vec{C}_i}.
+\end{equation}
+We note that this works as well for the periodic case, thanks to the velocities expression.\\
+We introduce a set of $N-1$ Lagrange multipliers $\vec{\lambda}_j$ (or $d(N-1)$ scalars) and we introduce the Lagrangian:
+\begin{equation}
+	\mathcal{L} = \mathcal{E} - \sum_{j=1}^{j<N} \vec{\lambda_j} \vec{C}_j	
+\end{equation}
+\subsection{Expression}
+Accordingly, we express the accelerations as a function of the Lagrange multipliers:
+\begin{equation}
+	\forall 1\leq k \leq N, \;\; \vec{A}_k = \sum_{j=1}^{j<N} \left( \delta_{k,j} - \delta_{k,j'}\right) \vec{\lambda}_j,
+\end{equation}
+and consequently:
+\begin{equation}
+	\forall 1\leq k < N, \;\; \vec{A}_k - \vec{A}_{k'}
+	= \sum_{j=1}^{j<N} \left[ 
+	\left(\delta_{k,j}+\delta_{k',j'} \right) 
+	- \left(\delta_{k,j'}+\delta_{k',j}\right)
+	\right] \vec{\lambda}_j
+\end{equation}
+We then have the algebraic solution for the multipliers:
+\begin{equation}
+	\forall 1\leq k < N,\;\;\sum_{j=1}^{j<N} \left[ 
+	\left(\delta_{k,j}+\delta_{k',j'} \right) 
+	- \left(\delta_{k,j'}+\delta_{k',j}\right)
+	\right] \vec{\lambda}_j = \vec{D}_k
+\end{equation}
+
+\end{document}
 
 \section{Definitions}
 We have a set of $N$ points $\vec{P}_1,\ldots,\vec{P}_N$, and we assume
@@ -91,7 +249,7 @@ We define a set $\vec{\lambda}_1,\ldots,\vec{\lambda}_M$ of Lagrange multipliers
 We get the expression:
 \begin{equation}
 	\forall i \in [1:N],\;\; \partial_{\vec{A}_i} \mathcal{L} = \vec{A}_i 
-	- \sum_{j=1}^M \left( \delta_{i,j} - \delta_{i,j+1}\right)\vec{\lambda}_j
+	- \sum_{j=1}^M \left( \delta_{i,j} - \delta_{i,j'}\right)\vec{\lambda}_j
 \end{equation}
 leading to the expression of the acceleration in terms of Lagrange multipliers:
 \begin{equation}

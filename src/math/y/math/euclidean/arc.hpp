@@ -5,6 +5,7 @@
 #include "y/math/euclidean/segment.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/math/kernel/lu.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon {
 
@@ -58,7 +59,7 @@ typedef Arc<T,POINT> ArcType
                 //==============================================================
                 virtual void   ensure(const size_t numNodes)    = 0; //!< ensure memory
                 virtual void   metrics() throw()                = 0; //!< compute local metrics
-                //! interpolation of values
+                                                                     //! interpolation of values
                 virtual void   compute( mutable_type u, Vertex *P, Vertex *dP, Vertex *d2P ) const throw() = 0;
 
                 inline virtual ~Arc() throw() {}                     //!< cleanup
@@ -125,25 +126,78 @@ typedef Arc<T,POINT> ArcType
 
                 void compile()
                 {
-                    std::cerr << "compiling..." << std::endl;
-                    const size_t M = segments.size();
-                    const size_t N = nodes.size();
-                    if(M>0)
+                    const size_t N = nodes.size(); std::cerr << "compiling for " << N << " nodes" << std::endl;
+                    if(N>1)
                     {
-                        matrix<mutable_type> alpha(M,M);
-                        for(size_t k=M;k>0;--k)
+                        const size_t         M    = N-1;              // number of Vectorial Lagrange Multipliers
+                        vector<Vertex>       lam(N,as_capacity);      // Vectorial Lagrange Multipliers
                         {
-                            const size_t kp = _next(k,N);
-                            for(size_t j=M;j>0;--j)
+                            const size_t         dof = Dimensions * M;    // number of Scalar Lagrange Mutlipliers
+                            vector<mutable_type> rhs(dof,0);              // Scalar Lagrange Mutlipliers
+
                             {
-                                const size_t jp = _next(j,N);
-                                alpha[k][j] = _delta(k,j)+_delta(kp,jp)-( _delta(k,jp) + _delta(kp,j) );
+                                // compute the matrix of constraints
+                                matrix<mutable_type> alpha(M,M);
+                                for(size_t k=M,kp=N;k>0;--k,--kp)
+                                {
+                                    array<mutable_type> &alpha_k = alpha[k];
+                                    for(size_t j=M,jp=N;j>0;--j,--jp)
+                                    {
+                                        alpha_k[j] = ( (_delta(k,j)+_delta(kp,jp)) - (_delta(k,jp)+_delta(kp,j) ) );
+                                    }
+                                }
+                                std::cerr << "alpha=" << alpha << std::endl;
+                                if(!LU::build(alpha))
+                                {
+                                    throw exception("Euclidean::Arc: unexpected singularity!!!");
+                                }
+
+                                // gather all consecutive coordinates of Langrange mutlipliers
+                                {
+                                    size_t               idof[Dimensions] = {1};
+                                    for(size_t dim=1;dim<Dimensions;++dim) { idof[dim] = idof[dim-1]+M; }
+                                    for(size_t k=1,kp=2;k<N;++k,++kp)
+                                    {
+                                        NodeType     &N0 = aliasing::_(*nodes[k] );
+                                        NodeType     &N1 = aliasing::_(*nodes[kp]);
+                                        const Vertex &P0 = N0.point->position;
+                                        const Vertex &P1 = N1.point->position;
+                                        const Vertex &V0 = N0.V;
+                                        const Vertex &V1 = N1.V;
+                                        const Vertex D   = 12*(P1-P0) - 6*(V1+V0);
+                                        std::cerr << "\tD" << k << "=" << D << std::endl;
+                                        const_type  *d   = (const_type *)&D;
+                                        for(size_t   dim=0; dim<Dimensions;++dim )
+                                        {
+                                            rhs[ idof[dim]++ ] = d[dim];
+                                        }
+                                    }
+                                }
+                                std::cerr << "rhs=" << rhs << std::endl;
+
+                                // solve per dimensions
+                                {
+                                    size_t ibase = 1;
+                                    for(size_t dim=0;dim<Dimensions;++dim, ibase += M)
+                                    {
+                                        lightweight_array<mutable_type> arr( &rhs[ibase], M );
+                                        LU::solve(alpha,arr);
+                                    }
+                                }
+
+
                             }
 
+                            // scatter
+                            {
+                                size_t               idof[Dimensions] = {1};
+                                for(size_t dim=1;dim<Dimensions;++dim) { idof[dim] = idof[dim-1]+M; }
+
+                            }
                         }
-                        std::cerr << "alpha=" << alpha << std::endl;
+
                     }
-                    //exit(0);
+
                 }
 
 
@@ -151,13 +205,8 @@ typedef Arc<T,POINT> ArcType
                 //! setup
                 inline explicit Arc() throw() : nodes(), segments() {}
 
-                static inline size_t _next(const size_t j, const size_t N) throw()
-                {
-                    const size_t jp1 = j+1;
-                    return (jp1>N) ? 1 : jp1;
-                }
 
-                static inline mutable_type _delta(const size_t i, const size_t j) throw()
+                static inline int _delta(const size_t i, const size_t j) throw()
                 {
                     return (i!=j) ? 0 : 1;
                 }
