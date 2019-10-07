@@ -80,12 +80,22 @@ typedef Arc<T,POINT> ArcType
                 }
 
                 //! local speed norm
-                inline type getSpeed(const_type u) const throw()
+                inline type speed(const_type u) const throw()
                 {
                     Vertex dP;
                     compute(u,0,&dP,0);
                     return sqrt_of( aliasing::cast<VTX,Vertex>(dP).norm2() );
                 }
+
+                //! local acceleration norm
+                inline type xlr(const_type u) const throw()
+                {
+                    Vertex d2P;
+                    compute(u,0,0,d2P);
+                    return sqrt_of( aliasing::cast<VTX,Vertex>(d2P).norm2() );
+                }
+                
+
 
                 //! add an existing point
                 inline Arc & operator<<( const SharedPoint &sp )
@@ -101,28 +111,7 @@ typedef Arc<T,POINT> ArcType
                     return (*this) << sp;
                 }
 
-                //! compile coefficients for approximation
-                void compileOld()
-                {
-                    const size_t n = nodes.size();
-                    if(n>0)
-                    {
-                        for(size_t i=segments.size();i>0;--i)
-                        {
-                            const SegmentType &s    = *segments[i];
-                            NodeType          &node = aliasing::_(*(s.tail));
-                            const NodeType    &next = *(s.head);
-                            const Vertex      &P0   = node.point->position;
-                            const Vertex      &P1   = next.point->position;
-                            const Vertex      &V0   = node.V;
-                            const Vertex      &V1   = next.V;
-                            const Vertex       rhs1 = (P1-P0)-V0;
-                            const Vertex       rhs2 = (V1-V0);
-                            aliasing::_(node.A) = 3*rhs1-rhs2;
-                            aliasing::_(node.B) = rhs2-2*rhs1;
-                        }
-                    }
-                }
+
 
                 void compile()
                 {
@@ -155,7 +144,7 @@ typedef Arc<T,POINT> ArcType
                                         alpha_k[j] = ( (_delta(k,j)+_delta(kp,jp)) - (_delta(k,jp)+_delta(kp,j) ) );
                                     }
                                 }
-                                std::cerr << "alpha=" << alpha << std::endl;
+                                //std::cerr << "alpha=" << alpha << std::endl;
                                 if(!LU::build(alpha))
                                 {
                                     throw exception("Euclidean::Arc: unexpected singularity!!!");
@@ -177,7 +166,7 @@ typedef Arc<T,POINT> ArcType
                                         const Vertex &V0 = N0.V;
                                         const Vertex &V1 = N1.V;
                                         const Vertex D   = 12*(P1-P0) - 6*(V1+V0);
-                                        std::cerr << "\tD" << k << "=" << D << std::endl;
+                                        //std::cerr << "\tD" << k << "=" << D << std::endl;
                                         const_type  *d   = (const_type *)&D;
                                         for(size_t   dim=0; dim<Dimensions;++dim )
                                         {
@@ -185,7 +174,7 @@ typedef Arc<T,POINT> ArcType
                                         }
                                     }
                                 }
-                                std::cerr << "rhs=" << rhs << std::endl;
+                                //std::cerr << "rhs=" << rhs << std::endl;
 
                                 //----------------------------------------------
                                 // solve per dimensions
@@ -198,7 +187,7 @@ typedef Arc<T,POINT> ArcType
                                         LU::solve(alpha,arr);
                                     }
                                 }
-                                std::cerr << "lam=" << rhs << std::endl;
+                                //std::cerr << "lam=" << rhs << std::endl;
                             }
 
                             //--------------------------------------------------
@@ -219,7 +208,7 @@ typedef Arc<T,POINT> ArcType
                                 }
                             }
                         }
-                        std::cerr << "lambda=" << lambda << std::endl;
+                        //std::cerr << "lambda=" << lambda << std::endl;
 
                         //------------------------------------------------------
                         // recomposing accelerations
@@ -227,7 +216,44 @@ typedef Arc<T,POINT> ArcType
                         for(size_t k=1;k<=N;++k)
                         {
                             Vertex Ak;
+                            for(size_t j=M;j>0;--j)
+                            {
+                                if(k==j)
+                                {
+                                    Ak += lambda[j];
+                                }
+                                else if(k==j+1)
+                                {
+                                    Ak -= lambda[j];
+                                }
+                            }
+                            aliasing::_(nodes[k]->A) = Ak;
+                            //std::cerr << "\tA[" << k << "]=" << Ak << std::endl;
                         }
+
+                        //------------------------------------------------------
+                        // finalizing metrics
+                        //------------------------------------------------------
+                        for(size_t i=segments.size();i>0;--i)
+                        {
+                            SegmentType    &segm = aliasing::_(*(segments[i]));
+                            NodeType       &curr = aliasing::_(*segm.tail);
+                            const NodeType &next = *segm.head;
+                            const Vertex   &V0   = curr.V;
+                            const Vertex   &V1   = next.V;
+                            const Vertex   &A0   = curr.A;
+                            const Vertex   &A1   = next.A;
+
+                            aliasing::_(curr.Q) = 6*(V1-V0) - 3*(A1+A0);
+                            aliasing::_(curr.B) = A1;
+                        }
+
+                        for(size_t k=1;k<=N;++k)
+                        {
+                            const NodeType &node = *nodes[k];
+                            std::cerr << "node[" << k << "] : A=" << node.A << ", B=" << node.B << ", Q=" << node.Q << std::endl;
+                        }
+
                     }
 
                 }

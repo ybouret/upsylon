@@ -179,13 +179,13 @@ namespace {
 
                 const_type ftol(1e-5);
                 {
-                    typename numeric<mutable_type>::function F( &sa, &  Arc<T,POINT>::getSpeed );
+                    typename numeric<mutable_type>::function F( &sa, &  Arc<T,POINT>::speed );
                     const_type slen = integrate::compute(F,const_type(1),const_type(np),ftol);
                     std::cerr << "slen=" << slen << std::endl;
                 }
 
                 {
-                    typename numeric<mutable_type>::function F( &sa, &  Arc<T,POINT>::getSpeed );
+                    typename numeric<mutable_type>::function F( &sa, &  Arc<T,POINT>::speed );
                     const_type plen = integrate::compute(F,const_type(1),const_type(np+1),ftol);
                     std::cerr << "plen=" << plen << std::endl;
                 }

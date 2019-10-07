@@ -49,8 +49,9 @@ namespace upsylon {
                 const Vertex      V;         //!< local celerity
                 const_type        speed;     //!< |celerity|
                 const Basis       basis;     //!< local Frenet basis
-                const Vertex      A;         //!< quadratic coefficient
-                const Vertex      B;         //!< cubic coefficient
+                const Vertex      Q;         //!< quadratic
+                const Vertex      A;         //!< acceleration
+                const Vertex      B;         //!< acceleration at next point
                 const NodeKey     uuid;      //!< UUID
 
                 //==============================================================
@@ -65,6 +66,7 @@ namespace upsylon {
                 V(),
                 speed(0),
                 basis(),
+                Q(),
                 A(),
                 B(),
                 uuid(*p,*this)
@@ -99,6 +101,7 @@ namespace upsylon {
                     bzset_(V);
                     bzset_(speed);
                     aliasing::_(basis).zero();
+                    bzset_(Q);
                     bzset_(A);
                     bzset_(B);
                 }
@@ -112,9 +115,12 @@ namespace upsylon {
                 //! local evaluation
                 inline void compute(const_type u, Vertex *P, Vertex *dP, Vertex *d2P) const throw()
                 {
-                    Y_EUCLIDEAN_XCOPY(P,  point->position + u*(V + u*(A + u*B)) );
-                    Y_EUCLIDEAN_XCOPY(dP, V+2*u*A+3*u*u*B);
-                    Y_EUCLIDEAN_XCOPY(d2P,2*A+6*u*B);
+                    const_type uo2 = u/2;
+                    const_type uo3 = u/3;
+                    const_type omu = 1-u;
+                    Y_EUCLIDEAN_XCOPY(P,   point->position + u*(V+uo2 * ( (1-uo3)*A + uo3 * B + uo3*(1-uo2) * Q) ));
+                    Y_EUCLIDEAN_XCOPY(dP,  V+u*( (1-uo2) * A + uo2 * B + uo2*(1-(uo3+uo3) )*Q) );
+                    Y_EUCLIDEAN_XCOPY(d2P, A*omu+u*B+(u*omu)*Q);
                 }
 
                 //! for 3D

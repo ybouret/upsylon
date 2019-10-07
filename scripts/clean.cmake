@@ -28,6 +28,10 @@ FILE(GLOB_RECURSE tmp .DS_Store)
 SET(to_remove ${to_remove} ${tmp})
 ENDIF()
 
+FILE(GLOB_RECURSE tmp .Rhistory)
+SET(to_remove ${to_remove} ${tmp})
+
+
 MESSAGE( STATUS "collection old backup files" )
 FILE(GLOB_RECURSE tmp "src/*~")
 SET(to_remove ${to_remove} ${tmp})

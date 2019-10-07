@@ -135,8 +135,9 @@ namespace upsylon {
                                 }
                                 else
                                 {
-                                    const size_t    indx = clamp<size_t>(1,floor_of(u),num);
+                                    const size_t    indx = clamp<size_t>(1,floor_of(u),num-1);
                                     const NodeType &node = *(this->nodes[indx]);
+                                    //std::cerr << "du=" << u-indx << std::endl;
                                     node.compute(u-indx,P,dP,d2P);
                                 }
                             }
