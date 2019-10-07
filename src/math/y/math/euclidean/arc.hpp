@@ -129,14 +129,23 @@ typedef Arc<T,POINT> ArcType
                     const size_t N = nodes.size(); std::cerr << "compiling for " << N << " nodes" << std::endl;
                     if(N>1)
                     {
-                        const size_t         M    = N-1;              // number of Vectorial Lagrange Multipliers
-                        vector<Vertex>       lam(N,as_capacity);      // Vectorial Lagrange Multipliers
+                        const size_t         M    = N-1;                  // number of Vectorial Lagrange Multipliers
+                        vector<Vertex>       lambda(N,as_capacity);      // Vectorial Lagrange Multipliers
+
+                        //------------------------------------------------------
+                        // compute all the lambda vectors
+                        //------------------------------------------------------
                         {
                             const size_t         dof = Dimensions * M;    // number of Scalar Lagrange Mutlipliers
                             vector<mutable_type> rhs(dof,0);              // Scalar Lagrange Mutlipliers
 
+                            //--------------------------------------------------
+                            // compute the rhs (xxxx..yyyy.zzzz)
+                            //--------------------------------------------------
                             {
+                                //----------------------------------------------
                                 // compute the matrix of constraints
+                                //----------------------------------------------
                                 matrix<mutable_type> alpha(M,M);
                                 for(size_t k=M,kp=N;k>0;--k,--kp)
                                 {
@@ -152,9 +161,12 @@ typedef Arc<T,POINT> ArcType
                                     throw exception("Euclidean::Arc: unexpected singularity!!!");
                                 }
 
-                                // gather all consecutive coordinates of Langrange mutlipliers
+                                //----------------------------------------------
+                                // gather all consecutive coordinates
+                                // of Langrange mutlipliers
+                                //----------------------------------------------
                                 {
-                                    size_t               idof[Dimensions] = {1};
+                                    size_t          idof[Dimensions] = {1};
                                     for(size_t dim=1;dim<Dimensions;++dim) { idof[dim] = idof[dim-1]+M; }
                                     for(size_t k=1,kp=2;k<N;++k,++kp)
                                     {
@@ -175,7 +187,9 @@ typedef Arc<T,POINT> ArcType
                                 }
                                 std::cerr << "rhs=" << rhs << std::endl;
 
+                                //----------------------------------------------
                                 // solve per dimensions
+                                //----------------------------------------------
                                 {
                                     size_t ibase = 1;
                                     for(size_t dim=0;dim<Dimensions;++dim, ibase += M)
@@ -184,18 +198,36 @@ typedef Arc<T,POINT> ArcType
                                         LU::solve(alpha,arr);
                                     }
                                 }
-
-
+                                std::cerr << "lam=" << rhs << std::endl;
                             }
 
-                            // scatter
+                            //--------------------------------------------------
+                            // scatter rhs to lambda
+                            //--------------------------------------------------
                             {
-                                size_t               idof[Dimensions] = {1};
+                                size_t          idof[Dimensions] = {1};
                                 for(size_t dim=1;dim<Dimensions;++dim) { idof[dim] = idof[dim-1]+M; }
-
+                                for(size_t k=1;k<N;++k)
+                                {
+                                    Vertex        lam;
+                                    mutable_type *l = (mutable_type *)&lam;
+                                    for(size_t dim=0;dim<Dimensions;++dim)
+                                    {
+                                        l[dim] = rhs[ idof[dim]++ ];
+                                    }
+                                    lambda.push_back_(lam);
+                                }
                             }
                         }
+                        std::cerr << "lambda=" << lambda << std::endl;
 
+                        //------------------------------------------------------
+                        // recomposing accelerations
+                        //------------------------------------------------------
+                        for(size_t k=1;k<=N;++k)
+                        {
+                            Vertex Ak;
+                        }
                     }
 
                 }
