@@ -4,7 +4,7 @@
 
 #include "y/math/euclidean/segment.hpp"
 #include "y/sequence/vector.hpp"
-
+#include "y/math/kernel/lu.hpp"
 
 namespace upsylon {
 
@@ -101,7 +101,7 @@ typedef Arc<T,POINT> ArcType
                 }
 
                 //! compile coefficients for approximation
-                void compile()
+                void compileOld()
                 {
                     const size_t n = nodes.size();
                     if(n>0)
@@ -123,9 +123,44 @@ typedef Arc<T,POINT> ArcType
                     }
                 }
 
+                void compile()
+                {
+                    std::cerr << "compiling..." << std::endl;
+                    const size_t M = segments.size();
+                    const size_t N = nodes.size();
+                    if(M>0)
+                    {
+                        matrix<mutable_type> alpha(M,M);
+                        for(size_t k=M;k>0;--k)
+                        {
+                            const size_t kp = _next(k,N);
+                            for(size_t j=M;j>0;--j)
+                            {
+                                const size_t jp = _next(j,N);
+                                alpha[k][j] = _delta(k,j)+_delta(kp,jp)-( _delta(k,jp) + _delta(kp,j) );
+                            }
+
+                        }
+                        std::cerr << "alpha=" << alpha << std::endl;
+                    }
+                    //exit(0);
+                }
+
+
             protected:
                 //! setup
                 inline explicit Arc() throw() : nodes(), segments() {}
+
+                static inline size_t _next(const size_t j, const size_t N) throw()
+                {
+                    const size_t jp1 = j+1;
+                    return (jp1>N) ? 1 : jp1;
+                }
+
+                static inline mutable_type _delta(const size_t i, const size_t j) throw()
+                {
+                    return (i!=j) ? 0 : 1;
+                }
 
                 //! push back a shared point
                 inline void pushBack( const SharedPoint &p )
