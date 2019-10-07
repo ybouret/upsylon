@@ -66,34 +66,49 @@ then:
 \end{equation}
 This means that  any set of accelerations matching Eq\eqref{eq:a} shall provide a piecewise $\mathcal{C}^2$ arc.
 \section{Expressions}
+\subsection{Minimal Arc}
 We want to minimize:
 \begin{equation}
-	\mathcal{E} = \sum_{j=1}^{N} \frac{1}{2} \vec{A}_j^2,
+	\mathcal{E}  = \sum_{i=1}^{N} \frac{1}{2} \vec{A}_i^2,
 \end{equation}
 under the $M$ constraints:
 \begin{equation}
-	\forall i \in [1:M], \; \vec{0} = \left(\vec{A}_{i}-\vec{A}_{i+1}\right) + 6 \left( \vec{V}_i + \vec{V}_{i+1} \right ) - \left( \vec{P}_{i+1} - \vec{P}_{i} \right) = \vec{S}_i
+\forall j \in [1:M],\;\;
+\left\lbrace
+\begin{array}{l}
+	  j'=j+1  \mbox{ if } j<N\\
+	  j' = 1  \mbox{ if } j=N\\
+	 \vec{0}  = \underbrace{\left(\vec{A}_{j}-\vec{A}_{j'}\right) + 6 \left( \vec{V}_j + \vec{V}_{j'} \right ) - 12\left( \vec{P}_{j'} - \vec{P}_{j} \right)}_{\vec{S}_j}\\
+\end{array}
+\right.
 \end{equation}
-We hence minimize:
+We define a set $\vec{\lambda}_1,\ldots,\vec{\lambda}_M$ of Lagrange multipliers to define the Lagrangian:
 \begin{equation}
-	\mathcal{L} = \mathcal{E} - \sum_{i=1}^M \vec{\lambda}_i \vec{S}_i.
-\end{equation}
-We get the expression:
-\begin{equation}
-	\forall j \in [1:N],\;\; \partial_{\vec{A}_j} \mathcal{L} = \vec{A}_j 
-	- \sum_{i=1}^M \left( \delta_{i,j} - \delta_{i,j+1}\right)\vec{\lambda}_i
-\end{equation}
-so that
-\begin{equation}
-	\vec{A}_j =  \sum_{i=1}^M \left( \delta_{i,j} - \delta_{i,j+1}\right)\vec{\lambda}_i
+	\mathcal{L} = \mathcal{E} - \sum_{i=j}^M \vec{\lambda}_j \vec{S}_j.
 \end{equation}
 
+\subsection{Accelerations as a function of Lagrange Multipliers}
+We get the expression:
 \begin{equation}
-	\vec{A}_j - \vec{A}_{j+1} =  \sum_{i=1}^M \left( \delta_{i,j} + \delta_{i,j+2}\right)\vec{\lambda}_i
+	\forall i \in [1:N],\;\; \partial_{\vec{A}_i} \mathcal{L} = \vec{A}_i 
+	- \sum_{j=1}^M \left( \delta_{i,j} - \delta_{i,j+1}\right)\vec{\lambda}_j
 \end{equation}
-leading to the $M$ relations for the $M$ Laplace mutlipliers:
+leading to the expression of the acceleration in terms of Lagrange multipliers:
 \begin{equation}
-	toto
+\boxed{
+	\forall k \in [1:N],\;\;\vec{A}_k = \sum_{j=1}^M \left( \delta_{k,j} - \delta_{k,j'}\right)\vec{\lambda}_j
+}
+\end{equation}
+
+\subsection{Solving The Lagrange Multiplers}
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\forall k \in [1:M],\;\; \vec{A}_k - \vec{A}_{k'} & = & \displaystyle \sum_{j=1}^M \left[\left( \delta_{k,j} - \delta_{k,j'}\right) - \left( \delta_{k',j} - \delta_{k',j'}\right)\right]\vec{\lambda}_j \\
+	\\
+	 & = & \underbrace{12\left(\vec{P}_k-\vec{P}_{k'}\right) - 6 \left(\vec{V}_k+\vec{V}_{k'}\right)}_{\vec{D}_k}\\
+\end{array}	
+\right. 
 \end{equation}
 
 
