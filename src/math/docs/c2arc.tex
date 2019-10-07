@@ -9,7 +9,7 @@
 
 
 \begin{document}
-\title{Minimal $\mathcal{C}^2$ arcs}
+\title{Arcs}
 \maketitle
 	
 \section{Definitions}
@@ -23,7 +23,13 @@ that they describe a virtual arc for a dimensionless coordinate $t_i=i$.
 \subsubsection{Bulk Case}
 
 \begin{equation}
-	\forall 1<i<N,\;\;\vec{V}_i = \frac{1}{2}\left(\vec{P}_{i+1} - \vec{P}_{i-1}\right)
+	\forall 1<i<N,
+	\left\lbrace
+	\begin{array}{rcl}
+	\vec{V}_i & = & \frac{1}{2}\left(\vec{P}_{i+1} - \vec{P}_{i-1}\right)\\
+	\vec{A}_i & = &  \vec{P}_{i+1} - \vec{P}_{i-1} + 2\vec{P}_i\\
+	\end{array}
+	\right.
 \end{equation}
 
 \subsubsection{Standard Case Boundaries}
@@ -34,6 +40,8 @@ N=2 &
 	\begin{array}{rcl}
 	\vec{V}_1 & = &  \left( \vec{P}_2 - \vec{P}_1\right)\\
 	\vec{V}_2 & = &  \left( \vec{P}_2 - \vec{P}_1\right) = \vec{V}_1\\
+	\vec{A}_1 & = & \vec{0}\\
+	\vec{A}_2 & = & \vec{0}\\
 	\end{array}
 	\right.
 	\\
@@ -43,6 +51,8 @@ N=2 &
 	\begin{array}{rcl}
 	\vec{V}_1 & = & \frac{1}{2} \left[ 4\vec{P}_2     - (3\vec{P}_1+\vec{P}_3)\right]\\
 	\vec{V}_N & = & \frac{1}{2} \left[ (3\vec{P}_{N}+\vec{P}_{N-2})-4\vec{P}_{N-1} \right]\\
+	\vec{A}_1 & = & \vec{P}_3+\vec{P}_1-2\vec{P}_2         \\
+	\vec{A}_N & = & \vec{P}_N+\vec{P}_{N-2}-2\vec{P}_{N-1} \\
 	\end{array}
 	\right.
 \end{array}
@@ -58,6 +68,8 @@ N=2 &
 	\begin{array}{rcl}
 	\vec{V}_1 & = &  \left( \vec{P}_2 - \vec{P}_1\right)\\
 	\vec{V}_2 & = &  \left( \vec{P}_1 - \vec{P}_2\right) = -\vec{V}_1\\
+	\vec{A}_1 & = & \vec{0}\\
+	\vec{A}_2 & = & \vec{0}\\
 	\end{array}
 	\right.
 	\\
@@ -67,10 +79,17 @@ N=2 &
 	\begin{array}{rcl}
 	\vec{V}_1 & = & \frac{1}{2} \left( \vec{P}_2 - \vec{P}_N\right)\\
 	\vec{V}_N & = & \frac{1}{2} \left( \vec{P}_1 - \vec{P}_{N-1}\right)\\
+	\vec{A}_1 & = & \vec{P}_2+\vec{P}_{N}-2\vec{P}_1         \\
+	\vec{A}_N & = & \vec{P}_1+\vec{P}_{N-1}-2\vec{P}_{N} \\
 	\end{array}
 	\right.
 \end{array}
 \end{equation}
+
+\section{$\mathcal{C}^0$ Arcs}
+
+\end{document}
+
 
 \subsection{Generic Index}
 We define:
@@ -188,107 +207,6 @@ We then have the algebraic solution for the multipliers:
 \end{equation}
 
 \end{document}
-
-\section{Definitions}
-We have a set of $N$ points $\vec{P}_1,\ldots,\vec{P}_N$, and we assume
-that we are able to compute the respective velocities  $\vec{V}_1,\ldots,\vec{V}_N$.\\
-To produce a $\mathcal{C}^2$ arc from these data, 
-me must assign a field of accelerations $\vec{A}_1,\ldots,\vec{A}_N$. ,which imposes and extraneous degree of freedom for each segment.
-
-\section{Accelerations}
-On a segment $\vec{P}_i \to \vec{P}_{i+1}$ we get:
-\begin{equation}
-	\vec{A}(t) = \vec{A}_{i} \left(1-t\right) + t \vec{A}_{i+1} + t\left(1-t\right) \vec{Q}_i
-\end{equation}
-
-\section{Velocities}
-On a segment $\vec{P}_i \to \vec{P}_{i+1}$ we get:
-\begin{equation}
-	\vec{V}(t) = \vec{V}_{i} + \int_0^t \vec{A}(u)\,\mathrm{d}u = 
-	\vec{V}_{i} + 
-	\left(t-\frac{t^2}{2}\right) \vec{A}_{i} 
-	+ \frac{t^2}{2} \vec{A}_{i+1}
-	+ \left(\frac{t^2}{2} - \frac{t^3}{3}\right) \vec{Q}_i,
-\end{equation}
-so that:
-\begin{equation}
-	\vec{V}_{i+1} = \vec{V}_{i} + \frac{1}{2} \left(\vec{A}_i+\vec{A}_{i+1}\right) + \frac{1}{6} \vec{Q}_i.
-\end{equation}
-Finally, the quadratic term is:
-\begin{equation}
-\boxed{
-	\vec{Q}_i = 6\left(\vec{V}_{i+1}-\vec{V}_{i}\right) - 3  \left(\vec{A}_i+\vec{A}_{i+1}\right) 
-}
-\end{equation}
-
-\section{Position}
-We obtain:
-\begin{equation}
-	\vec{P}(t) = \vec{P}_{i} + \int_0^t \vec{V}(u)  \,\mathrm{d}u = 
-	\vec{P}_i + t \vec{V}_i + \left(\frac{t^2}{2}-\frac{t^3}{6}\right) \vec{A}_{i} 
-	+ \frac{t^3}{6} \vec{A}_{i+1}
-	+ \left(\frac{t^3}{6} - \frac{t^4}{12}\right) \vec{Q}_i.
-\end{equation}
-The continuity writes:
-\begin{equation}
-	\vec{P}_{i+1} = \vec{P}_{i} + \vec{V}_i + \frac{1}{3} \vec{A}_i + \frac{1}{6} \vec{A}_{i+1} + \frac{1}{12} \vec{Q}_i
-\end{equation}
-then:
-\begin{equation}
-\label{eq:a}
-\boxed{
-	\vec{P}_{i+1} - \vec{P}_{i} = \frac{1}{2} \left( \vec{V}_i + \vec{V}_{i+1} \right)
-	+\frac{1}{12}\left(\vec{A}_{i}-\vec{A}_{i+1}\right)
-	}
-\end{equation}
-This means that  any set of accelerations matching Eq\eqref{eq:a} shall provide a piecewise $\mathcal{C}^2$ arc.
-\section{Expressions}
-\subsection{Minimal Arc}
-We want to minimize:
-\begin{equation}
-	\mathcal{E}  = \sum_{i=1}^{N} \frac{1}{2} \vec{A}_i^2,
-\end{equation}
-under the $M$ constraints:
-\begin{equation}
-\forall j \in [1:M],\;\;
-\left\lbrace
-\begin{array}{l}
-	  j'=j+1  \mbox{ if } j<N\\
-	  j' = 1  \mbox{ if } j=N\\
-	 \vec{0}  = \underbrace{\left(\vec{A}_{j}-\vec{A}_{j'}\right) + 6 \left( \vec{V}_j + \vec{V}_{j'} \right ) - 12\left( \vec{P}_{j'} - \vec{P}_{j} \right)}_{\vec{S}_j}\\
-\end{array}
-\right.
-\end{equation}
-We define a set $\vec{\lambda}_1,\ldots,\vec{\lambda}_M$ of Lagrange multipliers to define the Lagrangian:
-\begin{equation}
-	\mathcal{L} = \mathcal{E} - \sum_{i=j}^M \vec{\lambda}_j \vec{S}_j.
-\end{equation}
-
-\subsection{Accelerations as a function of Lagrange Multipliers}
-We get the expression:
-\begin{equation}
-	\forall i \in [1:N],\;\; \partial_{\vec{A}_i} \mathcal{L} = \vec{A}_i 
-	- \sum_{j=1}^M \left( \delta_{i,j} - \delta_{i,j'}\right)\vec{\lambda}_j
-\end{equation}
-leading to the expression of the acceleration in terms of Lagrange multipliers:
-\begin{equation}
-\boxed{
-	\forall k \in [1:N],\;\;\vec{A}_k = \sum_{j=1}^M \left( \delta_{k,j} - \delta_{k,j'}\right)\vec{\lambda}_j
-}
-\end{equation}
-
-\subsection{Solving The Lagrange Multiplers}
-\begin{equation}
-\left\lbrace
-\begin{array}{rcl}
-	\forall k \in [1:M],\;\; \vec{A}_k - \vec{A}_{k'} & = & \displaystyle \sum_{j=1}^M \left[\left( \delta_{k,j} - \delta_{k,j'}\right) - \left( \delta_{k',j} - \delta_{k',j'}\right)\right]\vec{\lambda}_j \\
-	\\
-	& = & \displaystyle \sum_{j=1}^M \left[\left( \delta_{k,j} +\delta_{k',j'} \right) - \left(\delta_{k,j'}+\delta_{k',j}\right) \right]\vec{\lambda}_j \\
-	\\
-	 & = & \underbrace{12\left(\vec{P}_k-\vec{P}_{k'}\right) - 6 \left(\vec{V}_k+\vec{V}_{k'}\right)}_{\vec{D}_k}\\
-\end{array}	
-\right. 
-\end{equation}
 
 
 \end{document}
