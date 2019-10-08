@@ -36,9 +36,11 @@ namespace {
             for(size_t i=0;i<np;++i)
             {
                 const_type theta = (numeric<mutable_type>::two_pi * i)/np;
-                const_type rho   = fabs_of( 2 * cos_of( theta+theta ) );
-                const_type x     = rho * cos_of(theta) + noise * alea.symm<T>();
-                const_type y     = rho * sin_of(theta) + noise * alea.symm<T>();
+                //const_type rho   = fabs_of( 2 * cos_of( theta+theta ) );
+                //const_type x     = rho * cos_of(theta) + noise * alea.symm<T>();
+                //const_type y     = rho * sin_of(theta) + noise * alea.symm<T>();
+                const_type x     = type(1.4) * cos_of(theta) + noise * alea.symm<T>();
+                const_type y     = sin_of(theta)   + noise * alea.symm<T>();
                 const_type z     = sin_of(theta/2) + noise*alea.symm<T>();
                 const_type arr[4] = {x,y,z,0};
                 const_vertex &v = aliasing::map<const_vertex>(arr);
@@ -168,6 +170,18 @@ namespace {
             }
 
             {
+                sa.motion(Arc2);
+                const string  fn = std_pfx + PID + '_' + TID + "_i2.dat";
+                ios::ocstream fp(fn);
+                for(type i=1;i<=sa.nodes.size();i+=0.02)
+                {
+                    vertex p;
+                    sa.compute(i, &p, 0, 0);
+                    PointType::Print(fp,p) << '\n';
+                }
+            }
+
+            {
                 pa.motion(Arc0);
                 const string  fn = per_pfx + PID + '_' + TID + "_i0.dat";
                 ios::ocstream fp(fn);
@@ -182,6 +196,19 @@ namespace {
             {
                 pa.motion(Arc1);
                 const string  fn = per_pfx + PID + '_' + TID + "_i1.dat";
+                ios::ocstream fp(fn);
+                for(type i=1;i<=pa.nodes.size()+1;i+=0.02)
+                {
+                    vertex p;
+                    pa.compute(i, &p, 0, 0);
+                    PointType::Print(fp,p) << '\n';
+                }
+            }
+
+
+            {
+                pa.motion(Arc2);
+                const string  fn = per_pfx + PID + '_' + TID + "_i2.dat";
                 ios::ocstream fp(fn);
                 for(type i=1;i<=pa.nodes.size()+1;i+=0.02)
                 {

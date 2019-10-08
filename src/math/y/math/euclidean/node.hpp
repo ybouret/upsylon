@@ -124,21 +124,26 @@ namespace upsylon {
                         *d2p = A + u * dA + u*(1-u)*(Q+u*W);
                     }
 
-                    const_type u2 = u*u;
-                    const_type u3 = u*u2;
-                    const_type u4 = u2*u2;
+                    const_type u2      = u*u;
+                    const_type u3      = u*u2;
+                    const_type u4      = u2*u2;
                     const_type u2over2 = u2/2;
-                    const_type u3over3 = u3/3;
-                    const_type u4over4 = u4/3;
+
 
                     if(dp)
                     {
-                        *dp = V;
+                        const_type u3over3 = u3/3;
+                        const_type u4over4 = u4/4;
+                        *dp = V + u*A + u2over2 * dA + (u2over2-u3over3) * Q + (u3over3-u4over4) * W;
                     }
+
 
                     if(p)
                     {
-                        *p = P;
+                        const_type u3over6  = u3/6;
+                        const_type u4over12 = u4/12;
+                        const_type u5over20 = u3*u2/20;
+                        *p = P + u*V + u2over2 * A + u3over6 * dA + (u3over6 -u4over12) * Q + (u4over12-u5over20) * W;
                     }
 
 

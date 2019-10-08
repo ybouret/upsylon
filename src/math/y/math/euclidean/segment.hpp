@@ -47,7 +47,10 @@ namespace upsylon {
                     {
                         case Arc0: break;
                         case Arc1: aliasing::_(node.Q) = 6*node.dP - 3*(tail->V+head->V); break;
-                        case Arc2: break;
+                        case Arc2:
+                            aliasing::_(node.Q) = 60*node.dP - 6*(6*tail->V+4*head->V) - 2*(4*tail->A - head->A);
+                            aliasing::_(node.W) = 60*(tail->V+head->V)-120*node.dP - 10*node.dA;
+                            break;
                     }
 
                 }
