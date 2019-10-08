@@ -8,78 +8,42 @@ namespace upsylon {
 
     namespace math {
 
+
         namespace Euclidean {
 
-            //==================================================================
-            //
-            //! key for segments database
-            //
-            //==================================================================
+
             typedef key_address<2> SegmentKey;
 
-
-            //==================================================================
-            //
-            //
-            //! a segment between two nodes
-            //
-            //
-            //==================================================================
-            template <typename T,template <class> class POINT>
+            template <typename T, template <class> class VTX>
             class Segment : public Object
             {
             public:
-                //==============================================================
-                //
-                // types and definition
-                //
-                //==============================================================
-                Y_EUCLIDEAN_POINT_ARGS();                     //!< aliases
-                Y_EUCLIDEAN_NODE_ARGS();                      //!< aliases
-                typedef intr_ptr<SegmentKey,Segment> Pointer; //!< alias
+                Y_EUCLIDEAN_POINT_TYPES();
+                Y_EUCLIDEAN_NODE_TYPES();
+                typedef intr_ptr<SegmentKey,Segment> Pointer;
 
-                //==============================================================
-                //
-                // members
-                //
-                //==============================================================
-                const SharedNode tail; //!< tail node
-                const SharedNode head; //!< head node
-                const SegmentKey uuid; //!< unique key for tail,head
+                const SharedNode tail;
+                const SharedNode head;
+                const SegmentKey uuid;
 
-                //! setup
-                inline Segment(const SharedNode &a, const SharedNode &b) throw() :
-                tail(a), head(b), uuid(*tail,*head)
+                inline virtual ~Segment() throw() {}
+                inline explicit Segment(const SharedNode &a, const SharedNode &b) throw() :
+                tail(a), head(b), uuid( *tail, *head )
                 {
                 }
-
-                //! cleanup
-                inline ~Segment() throw()
-                {
-
-                }
-
-                //! for pointer/database
-                const SegmentKey & key() const throw() { return uuid; }
-
+                
+                inline const SegmentKey & key() const throw() { return uuid; }
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Segment);
             };
 
-            //==================================================================
-            //
-            //! forwarding segment types
-            //
-            //==================================================================
-#define Y_EUCLIDEAN_SEGMENT_ARGS()                  \
-typedef Segment<T,POINT>              SegmentType;  \
-typedef typename SegmentType::Pointer SharedSegment
-
         }
 
     }
+
 }
 
 #endif
+
