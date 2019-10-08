@@ -69,9 +69,8 @@ SOURCE_GROUP(io FILES test-data-set.cpp)
 ADD_TEST(io:ds   test-m data_set ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
 
 
-SOURCE_GROUP(euclidean FILES test-euclidean.cpp test-c2arc.cpp)
+SOURCE_GROUP(euclidean FILES test-euclidean.cpp)
 ADD_TEST(euclidean test-m euclidean)
-ADD_TEST(euclidean:c2arc test-m c2arc)
 
 ADD_CUSTOM_TARGET(utest-m
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
