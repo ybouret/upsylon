@@ -127,8 +127,10 @@ namespace upsylon {
                         } break;
 
                         default: {
+                            nds[1]->reset();
                             this->motionBulkFor( *nds[num],  *nds[1],  *nds[2], C );
                             this->motionBulk(C);
+                            nds[num]->reset();
                             this->motionBulkFor( *nds[num-1],*nds[num],*nds[1], C );
                         }
                     }

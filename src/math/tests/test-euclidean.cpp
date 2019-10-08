@@ -4,6 +4,7 @@
 #include "y/associative/set.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/string.hpp"
+#include "y/math/fcn/integrate.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -44,7 +45,7 @@ namespace {
                 const_type z     = sin_of(theta/2) + noise*alea.symm<T>();
                 const_type arr[4] = {x,y,z,0};
                 const_vertex &v = aliasing::map<const_vertex>(arr);
-                std::cerr << "v=" << v << std::endl;
+                //std::cerr << "v=" << v << std::endl;
                 const SharedPoint p = new PointType(v);
                 Y_ASSERT( points.insert(p) );
                 const SharedNode  n = new NodeType(p);
@@ -86,6 +87,9 @@ namespace {
             pa.motion(Arc1);
             pa.motion(Arc2);
 
+
+            typename numeric<type>::function Ls( &sa, & Arc<T,VTX>::speed );
+            typename numeric<type>::function Lp( &sa, & Arc<T,VTX>::speed );
 
             {
                 const string  fn = std_pfx + PID + '_' + TID + "_v.dat";
@@ -167,6 +171,7 @@ namespace {
                     sa.compute(i, &p, 0, 0);
                     PointType::Print(fp,p) << '\n';
                 }
+                std::cerr << "std_length_1=" << integrate::compute(Ls, const_type(1), const_type(sa.nodes.size()), const_type(1e-5) ) << std::endl;
             }
 
             {
@@ -179,6 +184,7 @@ namespace {
                     sa.compute(i, &p, 0, 0);
                     PointType::Print(fp,p) << '\n';
                 }
+                std::cerr << "std_length_2=" << integrate::compute(Ls, const_type(1), const_type(sa.nodes.size()), const_type(1e-5) ) << std::endl;
             }
 
             {
@@ -203,6 +209,8 @@ namespace {
                     pa.compute(i, &p, 0, 0);
                     PointType::Print(fp,p) << '\n';
                 }
+                std::cerr << "per_length_1=" << integrate::compute(Lp, const_type(1), const_type(pa.nodes.size()+1), const_type(1e-5) ) << std::endl;
+
             }
 
 
@@ -216,6 +224,7 @@ namespace {
                     pa.compute(i, &p, 0, 0);
                     PointType::Print(fp,p) << '\n';
                 }
+                std::cerr << "per_length_2=" << integrate::compute(Lp, const_type(1), const_type(pa.nodes.size()+1), const_type(1e-5) ) << std::endl;
             }
 
 

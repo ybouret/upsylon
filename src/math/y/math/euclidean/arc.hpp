@@ -24,6 +24,7 @@ namespace upsylon {
 
 
                 virtual void ensure(const size_t) = 0;
+                virtual void compute( mutable_type u, vertex *p, vertex *dp, vertex *d2p ) const throw() = 0;
 
 
 
@@ -53,28 +54,35 @@ namespace upsylon {
                         aliasing::_( *segments[i] ).build(C);
                     }
 
-                    // third pass: local tangents
-                    for(size_t i=nodes.size();i>0;--i)
-                    {
-                        aliasing::_( *nodes[i] ).setTangent();
-                    }
-
-                    setClass(C);
-                }
-
-                void setClass(const ArcClass C) throw()
-                {
-                    // adjust onCompute
                     switch(C)
                     {
                         case Arc0: onCompute = & NodeType::compute0; break;
                         case Arc1: onCompute = & NodeType::compute1; break;
                         case Arc2: onCompute = & NodeType::compute2; break;
                     }
+
+                    // third pass: local tangents
+                    for(size_t i=nodes.size();i>0;--i)
+                    {
+                        aliasing::_( *nodes[i] ).setTangent();
+                    }
+
                 }
 
+                inline vertex operator()(const_type u, vertex *dp=0, vertex *d2p=0) const throw()
+                {
+                    vertex p;
+                    compute(u,&p,dp,d2p);
+                    return p;
+                }
 
-                virtual void compute( mutable_type u, vertex *p, vertex *dp, vertex *d2p ) const throw() = 0;
+                inline type speed(const_type u) const throw()
+                {
+                    vertex s;
+                    compute(u,0,&s,0);
+                    return sqrt_of( s.norm2() );
+                }
+
 
 
             protected:
