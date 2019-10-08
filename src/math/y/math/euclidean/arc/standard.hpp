@@ -28,7 +28,70 @@ namespace upsylon {
                     }
                 }
 
-                virtual void motion(const ArcClass C) throw()
+                virtual void compute( mutable_type u, vertex *p, vertex *dp, vertex *d2p ) const throw()
+                {
+                    const Nodes &nds = this->nodes;
+                    const size_t num = nds.size();
+                    switch(num)
+                    {
+                        case 0:
+                            Y_EUCLIDEAN_XZERO(p);
+                            Y_EUCLIDEAN_XZERO(dp);
+                            Y_EUCLIDEAN_XZERO(d2p);
+                            break;
+                        case 1:
+                            if(p) { *p = nds.front()->P; }
+                            Y_EUCLIDEAN_XZERO(dp);
+                            Y_EUCLIDEAN_XZERO(d2p);
+                            break;
+
+                        default:
+                            if(u<=1)
+                            {
+                                const NodeType &node = *nds.front();
+                                Y_EUCLIDEAN_XCOPY(p,  node.P);
+                                Y_EUCLIDEAN_XCOPY(dp, node.V);
+                                Y_EUCLIDEAN_XCOPY(d2p,node.A);
+                            }
+                            else
+                            {
+                                if(u>=num)
+                                {
+                                    const NodeType &node = *nds.back();
+                                    Y_EUCLIDEAN_XCOPY(p,  node.P);
+                                    Y_EUCLIDEAN_XCOPY(dp, node.V);
+                                    Y_EUCLIDEAN_XCOPY(d2p,node.A);
+                                }
+                                else
+                                {
+                                    const size_t    indx = clamp<size_t>(1,floor_of(u),num-1);
+                                    const NodeType &node = *nds[indx];
+                                    return (node.*(this->onCompute))(u-indx,p,dp,d2p);
+                                }
+                            }
+                            break;
+                    }
+
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(StandardArc);
+
+                inline virtual void add(const SharedPoint &p )
+                {
+                    this->pushBack(p);
+                    if(this->nodes.size()>1)
+                    {
+                        try { this->pushGrowing(); }
+                        catch(...){
+                            this->popBack();
+                            throw;
+                        }
+                    }
+                    assert(this->segments.size()==this->nodes.size()-1);
+                }
+                
+                virtual void kinematics(const ArcClass C) throw()
                 {
                     static const_type half(0.5);
                     Nodes       &nds = aliasing::_(this->nodes);
@@ -89,28 +152,9 @@ namespace upsylon {
                         }
                     }
 
-
                 }
+
                 
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(StandardArc);
-
-                inline virtual void add(const SharedPoint &p )
-                {
-                    this->pushBack(p);
-                    if(this->nodes.size()>1)
-                    {
-                        try { this->pushGrowing(); }
-                        catch(...){
-                            this->popBack();
-                            throw;
-                        }
-                    }
-                    assert(this->segments.size()==this->nodes.size()-1);
-                }
-
-
 
             };
 

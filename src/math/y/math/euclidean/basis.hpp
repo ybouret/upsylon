@@ -28,10 +28,11 @@ namespace upsylon {
                 const_vertex t; //!< unit tangent
                 const_vertex n; //!< unit normal
 
-                inline      __Basis() throw() : t(), n() {}             //!< setup
-                inline     ~__Basis() throw() { zero(); }               //!< cleanup
-                inline void zero()    throw() { bzset_(t); bzset_(n); } //!< clear
+                inline      __Basis() throw() : t(), n() {}              //!< setup
+                inline     ~__Basis() throw() { zero(); }                //!< cleanup
+                inline void  zero()    throw() { bzset_(t); bzset_(n); } //!< clear
 
+            
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(__Basis);
             };

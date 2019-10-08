@@ -143,6 +143,55 @@ namespace {
             }
 
 
+            {
+                sa.motion(Arc0);
+                const string  fn = std_pfx + PID + '_' + TID + "_i0.dat";
+                ios::ocstream fp(fn);
+                for(type i=1;i<=pa.nodes.size();i+=0.02)
+                {
+                    vertex p;
+                    sa.compute(i, &p, 0, 0);
+                    PointType::Print(fp,p) << '\n';
+                }
+            }
+
+            {
+                sa.motion(Arc1);
+                const string  fn = std_pfx + PID + '_' + TID + "_i1.dat";
+                ios::ocstream fp(fn);
+                for(type i=1;i<=sa.nodes.size();i+=0.02)
+                {
+                    vertex p;
+                    sa.compute(i, &p, 0, 0);
+                    PointType::Print(fp,p) << '\n';
+                }
+            }
+
+            {
+                pa.motion(Arc0);
+                const string  fn = per_pfx + PID + '_' + TID + "_i0.dat";
+                ios::ocstream fp(fn);
+                for(type i=1;i<=pa.nodes.size()+1;i+=0.02)
+                {
+                    vertex p;
+                    pa.compute(i, &p, 0, 0);
+                    PointType::Print(fp,p) << '\n';
+                }
+            }
+
+            {
+                pa.motion(Arc1);
+                const string  fn = per_pfx + PID + '_' + TID + "_i1.dat";
+                ios::ocstream fp(fn);
+                for(type i=1;i<=pa.nodes.size()+1;i+=0.02)
+                {
+                    vertex p;
+                    pa.compute(i, &p, 0, 0);
+                    PointType::Print(fp,p) << '\n';
+                }
+            }
+
+
         }
 
     };

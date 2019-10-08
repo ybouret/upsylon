@@ -28,37 +28,37 @@ namespace upsylon {
                 }
 
 
-                virtual void motion(const ArcClass C) throw()
+                virtual void compute( mutable_type u, vertex *p, vertex *dp, vertex *d2p ) const throw()
                 {
-                    Nodes       &nds = aliasing::_(this->nodes);
+                    const Nodes &nds = this->nodes;
                     const size_t num = nds.size();
-
                     switch(num)
                     {
-                            // no single
-                        case 0: break;
+                        case 0:
+                            Y_EUCLIDEAN_XZERO(p);
+                            Y_EUCLIDEAN_XZERO(dp);
+                            Y_EUCLIDEAN_XZERO(d2p);
+                            break;
 
-                            // single node
-                        case 1: nds.front()->reset(); break;
+                        case 1:
+                            Y_EUCLIDEAN_XZERO(dp);
+                            Y_EUCLIDEAN_XZERO(d2p);
+                            if(p)
+                            {
+                                *p = nds[1]->P;
+                            }
+                            break;
 
-                            // only two nodes
-                        case 2: {
-                            NodeType &N0 = *nds.front();
-                            NodeType &N1 = *nds.back();
-                            N0.reset();
-                            N1.reset();
-                            aliasing::_(N1.V) = -(aliasing::_(N0.V)  = N1.P - N0.P);
-
+                        default:{
+                            mutable_type i = floor_of(u);
+                            u-=i;
+                            while(i<1)   i+=num;
+                            while(i>num) i-=num;
+                            const NodeType &node = *(this->nodes[clamp<size_t>(1,i,num)]);
+                            return (node.*(this->onCompute))(u,p,dp,d2p);
                         } break;
-
-                        default: {
-                            this->motionBulkFor( *nds[num],  *nds[1],  *nds[2], C );
-                            this->motionBulk(C);
-                            this->motionBulkFor( *nds[num-1],*nds[num],*nds[1], C );
-                        }
                     }
                 }
-
 
 
             private:
@@ -102,6 +102,42 @@ namespace upsylon {
                             assert(this->segments.size()==this->nodes.size());
                     }
                 }
+                
+                virtual void kinematics(const ArcClass C) throw()
+                {
+                    Nodes       &nds = aliasing::_(this->nodes);
+                    const size_t num = nds.size();
+
+                    switch(num)
+                    {
+                            // no single
+                        case 0: break;
+
+                            // single node
+                        case 1: nds.front()->reset(); break;
+
+                            // only two nodes
+                        case 2: {
+                            NodeType &N0 = *nds.front();
+                            NodeType &N1 = *nds.back();
+                            N0.reset();
+                            N1.reset();
+                            aliasing::_(N1.V) = -(aliasing::_(N0.V)  = N1.P - N0.P);
+
+                        } break;
+
+                        default: {
+                            this->motionBulkFor( *nds[num],  *nds[1],  *nds[2], C );
+                            this->motionBulk(C);
+                            this->motionBulkFor( *nds[num-1],*nds[num],*nds[1], C );
+                        }
+                    }
+                }
+
+
+
+                
+
 
 
             };

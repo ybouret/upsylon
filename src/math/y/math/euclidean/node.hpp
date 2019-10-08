@@ -38,6 +38,8 @@ namespace upsylon {
                 const_vertex  dP;
                 const_vertex  dV;
                 const_vertex  dA;
+                const_vertex  Q;
+                const_vertex  W;
                 const Basis   basis;
 
                 inline virtual ~Node() throw() {}
@@ -51,6 +53,8 @@ namespace upsylon {
                 dP(),
                 dV(),
                 dA(),
+                Q(),
+                W(),
                 basis()
                 {}
 
@@ -63,7 +67,84 @@ namespace upsylon {
                     bzset_(dP);
                     bzset_(dV);
                     bzset_(dA);
+                    bzset_(Q);
+                    bzset_(W);
+                    aliasing::_(basis).zero();
                 }
+
+                //! set tangent after kinematics
+                void setTangent() throw()
+                {
+                    const_type V2 = V.norm2();
+                    if(V2>0)
+                    {
+                        aliasing::_(basis.t) = V/sqrt_of(V2);
+                    }
+                }
+
+                typedef void (Node::*Compute)(const_type,vertex *,vertex *,vertex *) const;
+
+
+#define Y_EUCLIDEAN_XZERO(ADDR)       do { if(ADDR) { bzset(*ADDR);    } } while(false)
+#define Y_EUCLIDEAN_XCOPY(ADDR,VALUE) do { if(ADDR) { *(ADDR)=(VALUE); } } while(false)
+
+                inline void compute0( const_type u, vertex *p, vertex *dp, vertex *d2p) const throw()
+                {
+
+                    Y_EUCLIDEAN_XZERO(dp);
+                    Y_EUCLIDEAN_XZERO(d2p);
+                    if(p) {
+                        *p = P + u * dP;
+                    }
+                }
+
+                inline void compute1( const_type u, vertex *p, vertex *dp, vertex *d2p ) const throw()
+                {
+                    Y_EUCLIDEAN_XZERO(d2p);
+
+                    if(dp)
+                    {
+                        *dp = V + u * dV + u*(1-u)*Q;
+                    }
+
+                    if(p)
+                    {
+                        const_type u2      = u*u;
+                        const_type u3      = u*u2;
+                        const_type u2over2 = u2/2;
+                        const_type u3over3 = u3/3;
+                        *p = P + u * V + u2over2 * dV + (u2over2-u3over3) * Q;
+                    }
+                }
+
+                inline void compute2( const_type u, vertex *p, vertex *dp, vertex *d2p) const throw()
+                {
+                    if(d2p)
+                    {
+                        *d2p = A + u * dA + u*(1-u)*(Q+u*W);
+                    }
+
+                    const_type u2 = u*u;
+                    const_type u3 = u*u2;
+                    const_type u4 = u2*u2;
+                    const_type u2over2 = u2/2;
+                    const_type u3over3 = u3/3;
+                    const_type u4over4 = u4/3;
+
+                    if(dp)
+                    {
+                        *dp = V;
+                    }
+
+                    if(p)
+                    {
+                        *p = P;
+                    }
+
+
+                }
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
@@ -72,8 +153,8 @@ namespace upsylon {
 #define Y_EUCLIDEAN_NODE_TYPES()               \
 Y_EUCLIDEAN_POINT_TYPES();\
 typedef Node<T,VTX>                NodeType;   \
-typedef typename NodeType::Pointer SharedNode
-
+typedef typename NodeType::Pointer SharedNode; \
+typedef typename NodeType::Basis   Basis
 
         }
     }

@@ -32,15 +32,24 @@ namespace upsylon {
 
                 inline const SegmentKey & key() const throw() { return uuid; }
 
-                void updateDelta(const ArcClass C) throw()
+                void build(const ArcClass C) throw()
                 {
-                    NodeType &node = aliasing::_(*tail);
+                    const NodeType &node = aliasing::_(*tail);
+
                     switch(C)
                     {
                         case Arc2: aliasing::_(node.dA) = head->A-tail->A;
                         case Arc1: aliasing::_(node.dV) = head->V-tail->V;
                         case Arc0: aliasing::_(node.dP) = head->P-tail->P;
                     }
+
+                    switch(C)
+                    {
+                        case Arc0: break;
+                        case Arc1: aliasing::_(node.Q) = 6*node.dP - 3*(tail->V+head->V); break;
+                        case Arc2: break;
+                    }
+
                 }
 
 

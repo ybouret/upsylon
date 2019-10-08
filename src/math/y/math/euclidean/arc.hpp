@@ -24,7 +24,8 @@ namespace upsylon {
 
 
                 virtual void ensure(const size_t) = 0;
-                virtual void motion(const ArcClass) throw() = 0;
+
+
 
                 const Nodes    nodes;
                 const Segments segments;
@@ -41,16 +42,45 @@ namespace upsylon {
                     return (*this) << P;
                 }
 
-                inline void updateDelta(const ArcClass C) throw()
+                inline void motion(const ArcClass C) throw()
                 {
+                    // first pass: local kinematics
+                    kinematics(C);
+
+                    // second pass: build from kinematics and class
                     for(size_t i=segments.size();i>0;--i)
                     {
-                        aliasing::_( *segments[i] ).updateDelta(C);
+                        aliasing::_( *segments[i] ).build(C);
+                    }
+
+                    // third pass: local tangents
+                    for(size_t i=nodes.size();i>0;--i)
+                    {
+                        aliasing::_( *nodes[i] ).setTangent();
+                    }
+
+                    setClass(C);
+                }
+
+                void setClass(const ArcClass C) throw()
+                {
+                    // adjust onCompute
+                    switch(C)
+                    {
+                        case Arc0: onCompute = & NodeType::compute0; break;
+                        case Arc1: onCompute = & NodeType::compute1; break;
+                        case Arc2: onCompute = & NodeType::compute2; break;
                     }
                 }
 
+
+                virtual void compute( mutable_type u, vertex *p, vertex *dp, vertex *d2p ) const throw() = 0;
+
+
             protected:
-                inline explicit Arc() throw() : Object(), nodes(), segments() {}
+                typename NodeType::Compute onCompute;
+
+                inline explicit Arc() throw() : Object(), nodes(), segments(), onCompute(0) {}
 
 
                 void pushBack(const SharedPoint &p)
@@ -115,13 +145,18 @@ namespace upsylon {
                     const size_t      num = nodes.size();
                     for(size_t im=1,i=2,ip=3;i<num;++im,++i,++ip)
                     {
-                        motionBulkFor(*nodes[im], *nodes[i], *nodes[ip], C);
+                        const NodeType &node = *nodes[i];
+                        aliasing::_(node).reset();
+                        motionBulkFor(*nodes[im], node, *nodes[ip], C);
                     }
                 }
 
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Arc);
                 virtual void add(const SharedPoint &p) = 0;
+                virtual void kinematics(const ArcClass) throw() = 0;
+
             };
 
 #define Y_EUCLIDEAN_ARC_TYPES()                \
