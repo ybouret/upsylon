@@ -48,9 +48,9 @@ Y_UTEST_INIT(64)
     Y_UTEST(bspl);
     Y_UTEST(stat);
    
-    Y_UTEST(arc);
-    Y_UTEST(curve);
-    Y_UTEST(points);
+    //Y_UTEST(arc);
+    //Y_UTEST(curve);
+    //Y_UTEST(points);
 
     Y_UTEST(euclidean);
     Y_UTEST(c2arc);

@@ -69,11 +69,6 @@ SOURCE_GROUP(io FILES test-data-set.cpp)
 ADD_TEST(io:ds   test-m data_set ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
 
 
-SOURCE_GROUP(geom FILES test-arc.cpp test-curve.cpp test-points.cpp)
-ADD_TEST(geom:arc    test-m arc)
-ADD_TEST(geom:curv   test-m curve)
-ADD_TEST(geom:points test-m points)
-
 SOURCE_GROUP(euclidean FILES test-euclidean.cpp test-c2arc.cpp)
 ADD_TEST(euclidean test-m euclidean)
 ADD_TEST(euclidean:c2arc test-m c2arc)

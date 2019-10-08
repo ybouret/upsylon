@@ -88,13 +88,6 @@ SET(stat_srcs ${stat_decl} ${stat_cstat})
 SOURCE_GROUP( stat FILES ${stat_srcs} )
 INSTALL( FILES ${stat_decl} DESTINATION include/y/math/stat )
 
-FILE(GLOB geom_decl y/math/geometric/*.hpp)
-FILE(GLOB geom_code y/math/geometric/*.cpp)
-SET(geom_srcs ${geom_decl} ${geom_code})
-SOURCE_GROUP( geometric FILES ${geom_srcs} )
-INSTALL( FILES ${geom_decl} DESTINATION include/y/math/geometric )
-
-
 FILE(GLOB euclidean_decl y/math/euclidean/*.hpp)
 FILE(GLOB euclidean_code y/math/euclidean/*.cpp)
 SET(euclidean_srcs ${euclidean_decl} ${euclidean_code})
@@ -117,7 +110,6 @@ ${fit_srcs} ${fit_in2d_srcs} ${fit_sample_srcs}
 ${opt_srcs}
 ${signal_srcs}
 ${stat_srcs}
-${geom_srcs}
 ${euclidean_srcs} ${euclidean_arc_srcs}
 )
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
