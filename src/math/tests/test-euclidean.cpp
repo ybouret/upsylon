@@ -76,6 +76,73 @@ namespace {
             }
 
 
+            sa.motion(Arc0);
+            sa.motion(Arc1);
+            sa.motion(Arc2);
+
+            pa.motion(Arc0);
+            pa.motion(Arc1);
+            pa.motion(Arc2);
+
+
+            {
+                const string  fn = std_pfx + PID + '_' + TID + "_v.dat";
+                ios::ocstream fp(fn);
+                for(size_t i=1;i<=sa.nodes.size();++i)
+                {
+                    const NodeType &node = *sa.nodes[i];
+                    vertex p = node.P;
+                    PointType::Print(fp,p) << '\n';
+                    p += node.V/2;
+                    PointType::Print(fp,p) << '\n' << '\n';
+                }
+
+            }
+
+            {
+                const string  fn = per_pfx + PID + '_' + TID + "_v.dat";
+                ios::ocstream fp(fn);
+                for(size_t i=1;i<=pa.nodes.size();++i)
+                {
+                    const NodeType &node = *pa.nodes[i];
+                    vertex p = node.P;
+                    PointType::Print(fp,p) << '\n';
+                    p += node.V/2;
+                    PointType::Print(fp,p) << '\n' << '\n';
+                }
+
+            }
+
+
+            {
+                const string  fn = std_pfx + PID + '_' + TID + "_a.dat";
+                ios::ocstream fp(fn);
+                for(size_t i=1;i<=sa.nodes.size();++i)
+                {
+                    const NodeType &node = *sa.nodes[i];
+                    vertex p = node.P;
+                    PointType::Print(fp,p) << '\n';
+                    p += node.A/2;
+                    PointType::Print(fp,p) << '\n' << '\n';
+                }
+
+            }
+
+            {
+                const string  fn = per_pfx + PID + '_' + TID + "_a.dat";
+                ios::ocstream fp(fn);
+                for(size_t i=1;i<=pa.nodes.size();++i)
+                {
+                    const NodeType &node = *pa.nodes[i];
+                    vertex p = node.P;
+                    PointType::Print(fp,p) << '\n';
+                    p += node.A/2;
+                    PointType::Print(fp,p) << '\n' << '\n';
+                }
+
+            }
+
+
         }
 
     };

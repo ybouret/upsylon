@@ -27,6 +27,40 @@ namespace upsylon {
                     aliasing::_(this->segments).ensure(n);
                 }
 
+
+                virtual void motion(const ArcClass C) throw()
+                {
+                    Nodes       &nds = aliasing::_(this->nodes);
+                    const size_t num = nds.size();
+
+                    switch(num)
+                    {
+                            // no single
+                        case 0: break;
+
+                            // single node
+                        case 1: nds.front()->reset(); break;
+
+                            // only two nodes
+                        case 2: {
+                            NodeType &N0 = *nds.front();
+                            NodeType &N1 = *nds.back();
+                            N0.reset();
+                            N1.reset();
+                            aliasing::_(N1.V) = -(aliasing::_(N0.V)  = N1.P - N0.P);
+
+                        } break;
+
+                        default: {
+                            this->motionBulkFor( *nds[num],  *nds[1],  *nds[2], C );
+                            this->motionBulk(C);
+                            this->motionBulkFor( *nds[num-1],*nds[num],*nds[1], C );
+                        }
+                    }
+                }
+
+
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(PeriodicArc);
                 virtual void add(const SharedPoint &p )

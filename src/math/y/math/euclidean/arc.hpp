@@ -24,6 +24,7 @@ namespace upsylon {
 
 
                 virtual void ensure(const size_t) = 0;
+                virtual void motion(const ArcClass) throw() = 0;
 
                 const Nodes    nodes;
                 const Segments segments;
@@ -40,6 +41,13 @@ namespace upsylon {
                     return (*this) << P;
                 }
 
+                inline void updateDelta(const ArcClass C) throw()
+                {
+                    for(size_t i=segments.size();i>0;--i)
+                    {
+                        aliasing::_( *segments[i] ).updateDelta(C);
+                    }
+                }
 
             protected:
                 inline explicit Arc() throw() : Object(), nodes(), segments() {}
@@ -81,6 +89,33 @@ namespace upsylon {
                     while(n-- > 0)
                     {
                         aliasing::_(segments).pop_back();
+                    }
+                }
+
+                inline static
+                void motionBulkFor(const NodeType &prev,
+                                   const NodeType &curr,
+                                   const NodeType &next,
+                                   const ArcClass C) throw()
+                {
+                    static const_type half(0.5);
+                    const_vertex   &Pm = prev.P;
+                    const_vertex   &P0 = curr.P;
+                    const_vertex   &Pp = next.P;
+                    switch(C)
+                    {
+                        case Arc2: aliasing::_(curr.A) = (Pp-P0)+(Pm-P0);
+                        case Arc1: aliasing::_(curr.V) = half*(Pp-Pm);
+                        case Arc0: break;
+                    }
+                }
+
+                void motionBulk( const ArcClass C ) throw()
+                {
+                    const size_t      num = nodes.size();
+                    for(size_t im=1,i=2,ip=3;i<num;++im,++i,++ip)
+                    {
+                        motionBulkFor(*nodes[im], *nodes[i], *nodes[ip], C);
                     }
                 }
 

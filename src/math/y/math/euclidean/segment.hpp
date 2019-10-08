@@ -32,6 +32,17 @@ namespace upsylon {
 
                 inline const SegmentKey & key() const throw() { return uuid; }
 
+                void updateDelta(const ArcClass C) throw()
+                {
+                    NodeType &node = aliasing::_(*tail);
+                    switch(C)
+                    {
+                        case Arc2: aliasing::_(node.dA) = head->A-tail->A;
+                        case Arc1: aliasing::_(node.dV) = head->V-tail->V;
+                        case Arc0: aliasing::_(node.dP) = head->P-tail->P;
+                    }
+                }
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Segment);
