@@ -36,6 +36,7 @@ namespace upsylon {
             };
 
 #define Y_EUCLIDEAN_NODE_TYPES()               \
+Y_EUCLIDEAN_POINT_TYPES();\
 typedef Node<T,VTX>                NodeType;   \
 typedef typename NodeType::Pointer SharedNode
 

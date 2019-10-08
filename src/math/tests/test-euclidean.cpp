@@ -1,4 +1,5 @@
-#include "y/math/euclidean/segment.hpp"
+#include "y/math/euclidean/arc/standard.hpp"
+#include "y/math/euclidean/arc/periodic.hpp"
 #include "y/utest/run.hpp"
 #include "y/associative/set.hpp"
 
@@ -12,8 +13,7 @@ namespace {
     template <typename T,template <class> class VTX>
     struct euclidean_test
     {
-        Y_EUCLIDEAN_POINT_TYPES();
-        Y_EUCLIDEAN_NODE_TYPES();
+        Y_EUCLIDEAN_SEGMENT_TYPES();
 
         typedef set<PointKey,SharedPoint> Points;
 
@@ -27,6 +27,10 @@ namespace {
 
             const_type noise(0.1);
             Points     points(np,as_capacity);
+
+            StandardArc<T,VTX> sa;
+            PeriodicArc<T,VTX> pa;
+
             for(size_t i=0;i<np;++i)
             {
                 const_type theta = (numeric<mutable_type>::two_pi * i)/np;
@@ -40,6 +44,9 @@ namespace {
                 const SharedPoint p = new PointType(v);
                 Y_ASSERT( points.insert(p) );
                 const SharedNode  n = new NodeType(p);
+
+                sa << p;
+                pa << p;
             }
 
 

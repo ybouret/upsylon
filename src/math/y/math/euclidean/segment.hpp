@@ -8,7 +8,6 @@ namespace upsylon {
 
     namespace math {
 
-
         namespace Euclidean {
 
 
@@ -18,7 +17,6 @@ namespace upsylon {
             class Segment : public Object
             {
             public:
-                Y_EUCLIDEAN_POINT_TYPES();
                 Y_EUCLIDEAN_NODE_TYPES();
                 typedef intr_ptr<SegmentKey,Segment> Pointer;
 
@@ -31,13 +29,18 @@ namespace upsylon {
                 tail(a), head(b), uuid( *tail, *head )
                 {
                 }
-                
+
                 inline const SegmentKey & key() const throw() { return uuid; }
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Segment);
             };
+
+#define Y_EUCLIDEAN_SEGMENT_TYPES() \
+Y_EUCLIDEAN_NODE_TYPES(); \
+typedef Segment<T,VTX> SegmentType;\
+typedef typename SegmentType::Pointer SharedSegment
 
         }
 
