@@ -22,12 +22,17 @@ namespace upsylon {
                 Y_EUCLIDEAN_POINT_TYPES();
                 typedef intr_ptr<NodeKey,Node> Pointer;
 
+                const_vertex &P;
                 const NodeKey uuid;
-
 
                 inline virtual ~Node() throw() {}
                 inline explicit Node(const SharedPoint &p) throw() :
-                Object(), SharedPoint(p), uuid(*this,*p) {}
+                Object(),
+                SharedPoint(p),
+                P( p->position ),
+                uuid(*this,*p)
+                {}
+
                 inline const NodeKey & key() const throw() { return uuid; }
 
 

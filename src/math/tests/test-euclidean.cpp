@@ -2,6 +2,8 @@
 #include "y/math/euclidean/arc/periodic.hpp"
 #include "y/utest/run.hpp"
 #include "y/associative/set.hpp"
+#include "y/ios/ocstream.hpp"
+#include "y/string.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -49,6 +51,29 @@ namespace {
                 pa << p;
             }
 
+            const string std_pfx = "std_";
+            const string per_pfx = "per_";
+
+            {
+                const string  fn = std_pfx + PID + '_' + TID + ".dat";
+                ios::ocstream fp(fn);
+                for(size_t i=1;i<=sa.nodes.size();++i)
+                {
+                    PointType::Print(fp, (*sa.nodes[i])->position ) << '\n';
+                }
+
+            }
+
+            {
+                const string  fn = per_pfx + PID + '_' + TID + ".dat";
+                ios::ocstream fp(fn);
+                for(size_t i=1;i<=sa.nodes.size();++i)
+                {
+                    PointType::Print(fp, (*sa.nodes[i])->position ) << '\n';
+                }
+                PointType::Print(fp, (*sa.nodes[1])->position ) << '\n';
+
+            }
 
 
         }
