@@ -145,7 +145,27 @@ namespace upsylon {
                     }
                 }
 
-
+                virtual vertex dT(const size_t n) const throw()
+                {
+                    static const_type half(0.5);
+                    const Nodes &nds = this->nodes;
+                    const size_t num = nds.size();
+                    assert(n>=1);
+                    assert(n<=num);
+                    assert(num>=3);
+                    if(n<=1)
+                    {
+                        return half*(nds[2]->basis.t-nds[num]->basis.t);
+                    }
+                    else if(n>=num)
+                    {
+                        return half*(nds[1]->basis.t-nds[num-1]->basis.t);
+                    }
+                    else
+                    {
+                         return half*(nds[n+1]->basis.t-nds[n-1]->basis.t);
+                    }
+                }
                 
 
 

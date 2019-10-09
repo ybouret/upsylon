@@ -50,6 +50,7 @@ namespace upsylon {
                             Y_EUCLIDEAN_XZERO(dp);
                             Y_EUCLIDEAN_XZERO(d2p);
                             break;
+                            
                         case 1:
                             if(p) { *p = nds.front()->P; }
                             Y_EUCLIDEAN_XZERO(dp);
@@ -165,7 +166,34 @@ namespace upsylon {
                     }
 
                 }
-                
+
+                virtual vertex dT(const size_t n) const throw()
+                {
+                    static const_type half(0.5);
+                    const Nodes      &nds = this->nodes;
+                    const size_t      num = nds.size();
+                    assert(n>=1);
+                    assert(n<=num);
+                    assert(num>=3);
+                    if(n<=1)
+                    {
+                        const_vertex &T1 = nds[1]->basis.t;
+                        const_vertex &T2 = nds[2]->basis.t;
+                        const_vertex &T3 = nds[3]->basis.t;
+                        return half*(4*T2 - (3*T1+T3));
+                    }
+                    else if(n>=num)
+                    {
+                        const_vertex &T1 = nds[num]->basis.t;
+                        const_vertex &T2 = nds[num-1]->basis.t;
+                        const_vertex &T3 = nds[num-2]->basis.t;
+                        return half*((3*T1+T3)-4*T2);
+                    }
+                    else
+                    {
+                        return half*(nds[n+1]->basis.t-nds[n-1]->basis.t);
+                    }
+                }
 
             };
 

@@ -86,7 +86,7 @@ namespace upsylon {
 
                 }
 
-                //! full motion
+                //! full motion start+update
                 inline void motion(const ArcClass C) throw()
                 {
                     // first pass: local kinematics
@@ -209,9 +209,9 @@ namespace upsylon {
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Arc);
-                virtual void add(const SharedPoint &p) = 0;
-                virtual void kinematics(const ArcClass) throw() = 0;
-
+                virtual void   add(const SharedPoint &p) = 0;
+                virtual void   kinematics(const ArcClass) throw() = 0;
+                virtual vertex dT(const size_t) const throw()   = 0;
             };
 
             //! forward nested types
