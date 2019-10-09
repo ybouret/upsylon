@@ -26,13 +26,17 @@ namespace {
 
 
         static inline
-        void save_pos( const string &pfx, const ArcType &arc )
+        void save_pos( const string &pfx, const ArcType &arc, const bool loop )
         {
             const string  fn = pfx + ".dat";
             ios::ocstream fp(fn);
             for(size_t i=1;i<=arc.nodes.size();++i)
             {
                 PointType::Print(fp, arc.nodes[i]->P ) << '\n';
+            }
+            if(loop)
+            {
+                PointType::Print(fp, arc.nodes[1]->P ) << '\n';
             }
         }
 
@@ -55,7 +59,7 @@ namespace {
         static inline
         void save_a( const string &pfx, const ArcType &arc )
         {
-            const string  fn = pfx + "_v.dat";
+            const string  fn = pfx + "_a.dat";
             ios::ocstream fp(fn);
             for(size_t i=1;i<=arc.nodes.size();++i)
             {
@@ -137,18 +141,14 @@ namespace {
             string std_pfx = "std_"; std_pfx << PID << '_' << TID;
             string per_pfx = "per_"; per_pfx << PID << '_' << TID;
 
-            save_pos(std_pfx,sa);
-            save_pos(per_pfx,pa);
+            save_pos(std_pfx,sa,false);
+            save_pos(per_pfx,pa,true);
 
 
  
             sa.motion(Arc0);
-            sa.motion(Arc1);
-            sa.motion(Arc2);
-
             pa.motion(Arc0);
-            pa.motion(Arc1);
-            pa.motion(Arc2);
+            
 
 
             //typename numeric<type>::function Ls( &sa, & Arc<T,VTX>::speed );
@@ -156,6 +156,12 @@ namespace {
 
             save_v(std_pfx,sa);
             save_v(per_pfx,pa);
+
+            sa.motion(Arc1);
+            sa.motion(Arc2);
+
+            pa.motion(Arc1);
+            pa.motion(Arc2);
 
             save_a(std_pfx,sa);
             save_a(per_pfx,pa);
@@ -165,9 +171,9 @@ namespace {
             save_classes(std_pfx,sa,np);
             save_classes(std_pfx,sa,np);
 
-            save_classes(per_pfx,sa,np+1);
-            save_classes(per_pfx,sa,np+1);
-            save_classes(per_pfx,sa,np+1);
+            save_classes(per_pfx,pa,np+1);
+            save_classes(per_pfx,pa,np+1);
+            save_classes(per_pfx,pa,np+1);
 
 
 

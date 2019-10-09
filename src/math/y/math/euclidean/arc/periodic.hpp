@@ -27,38 +27,7 @@ namespace upsylon {
                     aliasing::_(this->segments).ensure(n);
                 }
 
-                virtual void kinematics(const ArcClass C) throw()
-                {
-                    Nodes       &nds = aliasing::_(this->nodes);
-                    const size_t num = nds.size();
 
-                    switch(num)
-                    {
-                            // no single
-                        case 0: break;
-
-                            // single node
-                        case 1: nds.front()->reset(); break;
-
-                            // only two nodes
-                        case 2: {
-                            NodeType &N0 = *nds.front();
-                            NodeType &N1 = *nds.back();
-                            N0.reset();
-                            N1.reset();
-                            aliasing::_(N1.V) = -(aliasing::_(N0.V)  = N1.P - N0.P);
-
-                        } break;
-
-                        default: {
-                            nds[1]->reset();
-                            this->motionBulkFor( *nds[num],  *nds[1],  *nds[2], C );
-                            this->motionBulk(C);
-                            nds[num]->reset();
-                            this->motionBulkFor( *nds[num-1],*nds[num],*nds[1], C );
-                        }
-                    }
-                }
 
 
                 virtual void compute( mutable_type u, vertex *p, vertex *dp, vertex *d2p ) const throw()
@@ -137,7 +106,38 @@ namespace upsylon {
                 }
                 
 
+                virtual void kinematics(const ArcClass C) throw()
+                {
+                    Nodes       &nds = aliasing::_(this->nodes);
+                    const size_t num = nds.size();
 
+                    for(size_t i=num;i>0;--i) nds[i]->reset();
+
+                    switch(num)
+                    {
+                            // no single
+                        case 0: break;
+
+                            // single node
+                        case 1:  break;
+
+                            // only two nodes
+                        case 2: {
+                            NodeType &N0 = *nds.front();
+                            NodeType &N1 = *nds.back();
+                            aliasing::_(N1.V) = -(aliasing::_(N0.V)  = (N1.P - N0.P) );
+
+                        } break;
+
+                        default: {
+                            nds[1]->reset();
+                            this->motionBulkFor( *nds[num],  *nds[1],  *nds[2], C );
+                            this->motionBulk(C);
+                            nds[num]->reset();
+                            this->motionBulkFor( *nds[num-1],*nds[num],*nds[1], C );
+                        }
+                    }
+                }
 
 
                 

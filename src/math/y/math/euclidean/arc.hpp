@@ -24,7 +24,6 @@ namespace upsylon {
 
 
                 virtual void ensure(const size_t) = 0;
-                virtual void kinematics(const ArcClass) throw() = 0;
                 virtual void compute( mutable_type u, vertex *p, vertex *dp, vertex *d2p ) const throw() = 0;
 
 
@@ -44,26 +43,34 @@ namespace upsylon {
                     return (*this) << P;
                 }
 
+
+                inline void  start( const ArcClass C ) throw()
+                {
+                    kinematics(C);
+                    for(size_t i=nodes.size();i>0;--i)
+                    {
+                        aliasing::_( *nodes[i] ).initializeBasis();
+                    }
+                }
+
                 //! upadte after kinematics is computed/tunes
                 inline void update(const ArcClass C) throw()
                 {
+                    // build interpolating value
                     for(size_t i=segments.size();i>0;--i)
                     {
                         aliasing::_( *segments[i] ).build(C);
                     }
 
+                    // adjust interpolation function
                     switch(C)
                     {
                         case Arc0: onCompute = & NodeType::compute0; break;
                         case Arc1: onCompute = & NodeType::compute1; break;
                         case Arc2: onCompute = & NodeType::compute2; break;
                     }
+                    
 
-                    // third pass: local tangents
-                    for(size_t i=nodes.size();i>0;--i)
-                    {
-                        aliasing::_( *nodes[i] ).setTangent();
-                    }
                 }
 
                 //! full motion
@@ -88,6 +95,19 @@ namespace upsylon {
                     vertex s;
                     compute(u,0,&s,0);
                     return sqrt_of( s.norm2() );
+                }
+
+
+                inline type length() throw()
+                {
+                    mutable_type l = 0;
+                    for(size_t i=segments.size();i>0;--i)
+                    {
+                        const SegmentType &segment = *segments[i];
+                        const_vertex       v(segment.head->P,segment.tail->P);
+                        l += sqrt_of( v.norm2() );
+                    }
+                    return l;
                 }
 
 
@@ -137,6 +157,7 @@ namespace upsylon {
                     }
                 }
 
+                //! compute bulk kinematic, V approx even for Arc0
                 inline static
                 void motionBulkFor(const NodeType &prev,
                                    const NodeType &curr,
@@ -150,8 +171,9 @@ namespace upsylon {
                     switch(C)
                     {
                         case Arc2: aliasing::_(curr.A) = (Pp-P0)+(Pm-P0);
-                        case Arc1: aliasing::_(curr.V) = half*(Pp-Pm);
-                        case Arc0: break;
+                        case Arc1:
+                        case Arc0: aliasing::_(curr.V) = half*(Pp-Pm);
+                            break;
                     }
                 }
 
@@ -161,7 +183,6 @@ namespace upsylon {
                     for(size_t im=1,i=2,ip=3;i<num;++im,++i,++ip)
                     {
                         const NodeType &node = *nodes[i];
-                        aliasing::_(node).reset();
                         motionBulkFor(*nodes[im], node, *nodes[ip], C);
                     }
                 }
@@ -170,6 +191,7 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Arc);
                 virtual void add(const SharedPoint &p) = 0;
+                virtual void kinematics(const ArcClass) throw() = 0;
 
             };
 

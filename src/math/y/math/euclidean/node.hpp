@@ -73,7 +73,7 @@ namespace upsylon {
                 }
 
                 //! set tangent after kinematics
-                void setTangent() throw()
+                void initializeBasis() throw()
                 {
                     const_type V2 = V.norm2();
                     if(V2>0)
