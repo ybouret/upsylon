@@ -184,7 +184,7 @@ namespace upsylon {
                     }
                     else if(n>=num)
                     {
-                        const_vertex &T1 = nds[num]->basis.t;
+                        const_vertex &T1 = nds[num  ]->basis.t;
                         const_vertex &T2 = nds[num-1]->basis.t;
                         const_vertex &T3 = nds[num-2]->basis.t;
                         return half*((3*T1+T3)-4*T2);

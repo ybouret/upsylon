@@ -115,8 +115,13 @@ namespace upsylon {
                 inline void compute0( const_type u, vertex *p, vertex *dp, vertex *d2p) const throw()
                 {
 
-                    Y_EUCLIDEAN_XZERO(dp);
                     Y_EUCLIDEAN_XZERO(d2p);
+
+                    if(dp)
+                    {
+                        *dp = dP;
+                    }
+
                     if(p) {
                         *p = P + u * dP;
                     }
@@ -125,7 +130,10 @@ namespace upsylon {
                 //! compute for Arc1
                 inline void compute1( const_type u, vertex *p, vertex *dp, vertex *d2p ) const throw()
                 {
-                    Y_EUCLIDEAN_XZERO(d2p);
+                    if(d2p)
+                    {
+                        *d2p = dV + (1-(u+u))*Q;
+                    }
 
                     if(dp)
                     {
