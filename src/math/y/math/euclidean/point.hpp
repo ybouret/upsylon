@@ -71,6 +71,21 @@ namespace upsylon {
                     return os;
                 }
 
+                static inline
+                type Curvature( const_vertex &V, const vertex &A ) throw()
+                {
+                    const_type V2 = V.norm2();
+                    if(V2<=0)
+                    {
+                        return 0;
+                    }
+                    else
+                    {
+                        const_type v = sqrt_of(V2);
+                        return vertex::det(V,A)/(v*v*v);
+                    }
+                }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Point);
             };

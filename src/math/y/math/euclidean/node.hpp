@@ -47,16 +47,16 @@ namespace upsylon {
                 typedef intr_ptr<NodeKey,Node>   Pointer;   //!< alias
                 typedef __Basis<type,Dimensions> Basis;     //!< alias
 
-                const_vertex &P;       //!< alias to node position
-                const NodeKey uuid;    //!< node+point
-                const_vertex  V;       //!< velocity
-                const_vertex  A;       //!< acceleration
-                const_vertex  dP;      //!< Pnext-P
-                const_vertex  dV;      //!< Vnext-V
-                const_vertex  dA;      //!< Anext-A
-                const_vertex  Q;       //!< expansion vector
-                const_vertex  W;       //!< expandion vector
-                const Basis   basis;   //!< local Frenet-Serret basis
+                const_vertex &P;         //!< alias to node position
+                const NodeKey uuid;      //!< node+point
+                const_vertex  V;         //!< velocity
+                const_vertex  A;         //!< acceleration
+                const_vertex  dP;        //!< Pnext-P
+                const_vertex  dV;        //!< Vnext-V
+                const_vertex  dA;        //!< Anext-A
+                const_vertex  Q;         //!< expansion vector
+                const_vertex  W;         //!< expansion vector
+                const_type    curvature; //!< local curvature
 
                 //! cleanup
                 inline virtual ~Node() throw() { reset(); }
@@ -74,7 +74,7 @@ namespace upsylon {
                 dA(),
                 Q(),
                 W(),
-                basis()
+                curvature(0)
                 {}
 
                 //! key for database
@@ -90,18 +90,14 @@ namespace upsylon {
                     bzset_(dA);
                     bzset_(Q);
                     bzset_(W);
-                    aliasing::_(basis).zero();
                 }
 
-                //! set tangent after kinematics
-                void initializeBasis() throw()
+                //! compute local curvature
+                void computeCurvature() throw()
                 {
-                    const_type V2 = V.norm2();
-                    if(V2>0)
-                    {
-                        aliasing::_(basis.t) = V/sqrt_of(V2);
-                    }
+                    aliasing::_(curvature) = PointType::Curvature(V,A);
                 }
+
 
                 //! method pointer to interpolate data
                 typedef void (Node::*Compute)(const_type,vertex *,vertex *,vertex *) const;
@@ -179,7 +175,6 @@ namespace upsylon {
                         const_type u5over20 = u3*u2/20;
                         *p = P + u*V + u2over2 * A + u3over6 * dA + (u3over6 -u4over12) * Q + (u4over12-u5over20) * W;
                     }
-
 
                 }
 

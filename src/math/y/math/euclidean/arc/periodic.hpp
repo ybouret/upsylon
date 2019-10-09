@@ -112,7 +112,7 @@ namespace upsylon {
                 }
                 
 
-                virtual void kinematics(const ArcClass C) throw()
+                virtual void kinematics() throw()
                 {
                     Nodes       &nds = aliasing::_(this->nodes);
                     const size_t num = nds.size();
@@ -137,14 +137,15 @@ namespace upsylon {
 
                         default: {
                             nds[1]->reset();
-                            this->motionBulkFor( *nds[num],  *nds[1],  *nds[2], C );
-                            this->motionBulk(C);
+                            this->motionBulkFor( *nds[num],  *nds[1],  *nds[2]);
+                            this->motionBulk();
                             nds[num]->reset();
-                            this->motionBulkFor( *nds[num-1],*nds[num],*nds[1], C );
+                            this->motionBulkFor( *nds[num-1],*nds[num],*nds[1]);
                         }
                     }
                 }
 
+#if 0
                 virtual vertex dT(const size_t n) const throw()
                 {
                     static const_type half(0.5);
@@ -166,6 +167,7 @@ namespace upsylon {
                          return half*(nds[n+1]->basis.t-nds[n-1]->basis.t);
                     }
                 }
+#endif
                 
 
 

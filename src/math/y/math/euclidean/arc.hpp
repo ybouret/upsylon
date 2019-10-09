@@ -56,13 +56,13 @@ namespace upsylon {
                     return (*this) << P;
                 }
 
-                //! start computation: local data and initialize basis
-                inline void  start( const ArcClass C ) throw()
+                //! start computation
+                inline void  start() throw()
                 {
-                    kinematics(C);
+                    kinematics();
                     for(size_t i=nodes.size();i>0;--i)
                     {
-                        aliasing::_( *nodes[i] ).initializeBasis();
+                        aliasing::_(nodes[i])->computeCurvature();
                     }
                 }
 
@@ -90,7 +90,7 @@ namespace upsylon {
                 inline void motion(const ArcClass C) throw()
                 {
                     // first pass: local kinematics
-                    kinematics(C);
+                    start();
 
                     // second pass:
                     update(C);
@@ -179,30 +179,27 @@ namespace upsylon {
                 inline static
                 void motionBulkFor(const NodeType &prev,
                                    const NodeType &curr,
-                                   const NodeType &next,
-                                   const ArcClass C) throw()
+                                   const NodeType &next) throw()
                 {
                     static const_type half(0.5);
-                    const_vertex   &Pm = prev.P;
-                    const_vertex   &P0 = curr.P;
-                    const_vertex   &Pp = next.P;
-                    switch(C)
-                    {
-                        case Arc2: aliasing::_(curr.A) = (Pp-P0)+(Pm-P0);
-                        case Arc1:
-                        case Arc0: aliasing::_(curr.V) = half*(Pp-Pm);
-                            break;
-                    }
+                    
+                    const_vertex   &Pm  = prev.P;
+                    const_vertex   &P0  = curr.P;
+                    const_vertex   &Pp  = next.P;
+
+                    aliasing::_(curr.A) = (Pp-P0)+(Pm-P0);
+                    aliasing::_(curr.V) = half*(Pp-Pm);
+
                 }
 
                 //! compute motion data for bulk point
-                void motionBulk( const ArcClass C ) throw()
+                void motionBulk() throw()
                 {
                     const size_t      num = nodes.size();
                     for(size_t im=1,i=2,ip=3;i<num;++im,++i,++ip)
                     {
                         const NodeType &node = *nodes[i];
-                        motionBulkFor(*nodes[im], node, *nodes[ip], C);
+                        motionBulkFor(*nodes[im], node, *nodes[ip]);
                     }
                 }
 
@@ -210,8 +207,7 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Arc);
                 virtual void   add(const SharedPoint &p) = 0;
-                virtual void   kinematics(const ArcClass) throw() = 0;
-                virtual vertex dT(const size_t) const throw()   = 0;
+                virtual void   kinematics() throw() = 0;
             };
 
             //! forward nested types
