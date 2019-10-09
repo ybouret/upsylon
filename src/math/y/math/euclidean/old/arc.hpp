@@ -61,7 +61,6 @@ typedef Arc<T,POINT> ArcType
                 virtual void   metrics() throw()                = 0; //!< compute local metrics
                                                                      //! interpolation of values
                 virtual void   compute( mutable_type u, Vertex *P, Vertex *dP, Vertex *d2P ) const throw() = 0;
-
                 inline virtual ~Arc() throw() {}                     //!< cleanup
 
 

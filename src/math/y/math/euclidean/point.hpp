@@ -17,29 +17,53 @@ namespace upsylon {
 
         namespace Euclidean {
 
-
+            //==================================================================
+            //
+            //! base object
+            //
+            //==================================================================
             typedef counted_object Object;
+
+            //==================================================================
+            //
+            //! unique point key
+            //
+            //==================================================================
             typedef key_address<1> PointKey;
 
+            //==================================================================
+            //
+            //
             //! point that can be shared between multiple nodes
+            //
+            //
+            //==================================================================
             template <typename T, template <class> class VTX>
             class Point : public Object
             {
             public:
-                Y_DECL_ARGS(T,type);
-                typedef VTX<type>                vertex;
-                typedef const vertex             const_vertex;
-                static const size_t              Dimensions = sizeof(vertex)/sizeof(type);
-                typedef intr_ptr<PointKey,Point> Pointer;
+                Y_DECL_ARGS(T,type);                              //!< aliases
+                typedef VTX<type>                vertex;          //!< alias
+                typedef const vertex             const_vertex;    //!< alias
+                static const size_t              Dimensions = sizeof(vertex)/sizeof(type); //!< [2|3]
+                typedef intr_ptr<PointKey,Point> Pointer;         //!< alias
 
-                vertex         position;
-                const PointKey uuid;
+                vertex         position; //!< physical position
+                const PointKey uuid;     //!< unique value
 
+                //! setup
                 inline explicit Point() throw() : position(), uuid( *this ) {}
+
+                //! cleanup
                 inline virtual ~Point() throw() { bzset_(position); }
+
+                //! setup from vertex
                 inline explicit Point(const_vertex p) throw() : position(p), uuid( *this ) {}
+
+                //! key for database
                 inline const PointKey & key() const throw() { return uuid; }
 
+                //! helper to display
                 static inline ios::ostream & Print( ios::ostream &os, const_vertex &v )
                 {
                     const_type *p = (const_type *)&v;
@@ -51,7 +75,7 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Point);
             };
 
-
+            //! nested types forwarding
 #define Y_EUCLIDEAN_POINT_TYPES()             \
 Y_DECL_ARGS(T,type);                                  \
 typedef             Point<T,VTX>            PointType;\

@@ -13,6 +13,11 @@ namespace upsylon {
 
         namespace Euclidean {
 
+            //==================================================================
+            //
+            //! class of Arc
+            //
+            //==================================================================
             enum ArcClass
             {
                 Arc0,
@@ -20,29 +25,43 @@ namespace upsylon {
                 Arc2
             };
 
+            //==================================================================
+            //
             //! key node: node and unique point
+            //
+            //==================================================================
             typedef key_address<2> NodeKey;
 
+            //==================================================================
+            //
+            //
+            //! a node is a shared point with local data
+            //
+            //
+            //==================================================================
             template <typename T, template <class> class VTX>
             class Node : public Object, public Point<T,VTX>::Pointer
             {
             public:
-                Y_EUCLIDEAN_POINT_TYPES();
-                typedef intr_ptr<NodeKey,Node>   Pointer;
-                typedef __Basis<type,Dimensions> Basis;
+                Y_EUCLIDEAN_POINT_TYPES();                  //!< aliases
+                typedef intr_ptr<NodeKey,Node>   Pointer;   //!< alias
+                typedef __Basis<type,Dimensions> Basis;     //!< alias
 
-                const_vertex &P;
-                const NodeKey uuid;
-                const_vertex  V;
-                const_vertex  A;
-                const_vertex  dP;
-                const_vertex  dV;
-                const_vertex  dA;
-                const_vertex  Q;
-                const_vertex  W;
-                const Basis   basis;
+                const_vertex &P;       //!< alias to node position
+                const NodeKey uuid;    //!< node+point
+                const_vertex  V;       //!< velocity
+                const_vertex  A;       //!< acceleration
+                const_vertex  dP;      //!< Pnext-P
+                const_vertex  dV;      //!< Vnext-V
+                const_vertex  dA;      //!< Anext-A
+                const_vertex  Q;       //!< expansion vector
+                const_vertex  W;       //!< expandion vector
+                const Basis   basis;   //!< local Frenet-Serret basis
 
-                inline virtual ~Node() throw() {}
+                //! cleanup
+                inline virtual ~Node() throw() { reset(); }
+
+                //! setup
                 inline explicit Node(const SharedPoint &p) throw() :
                 Object(),
                 SharedPoint(p),
@@ -58,8 +77,10 @@ namespace upsylon {
                 basis()
                 {}
 
+                //! key for database
                 inline const NodeKey & key() const throw() { return uuid; }
 
+                //! reset all local data
                 inline void reset() throw()
                 {
                     bzset_(V);
@@ -82,12 +103,15 @@ namespace upsylon {
                     }
                 }
 
+                //! method pointer to interpolate data
                 typedef void (Node::*Compute)(const_type,vertex *,vertex *,vertex *) const;
 
-
+                //! set to zero if not null
 #define Y_EUCLIDEAN_XZERO(ADDR)       do { if(ADDR) { bzset(*ADDR);    } } while(false)
+                //! set to value if not null
 #define Y_EUCLIDEAN_XCOPY(ADDR,VALUE) do { if(ADDR) { *(ADDR)=(VALUE); } } while(false)
 
+                //! compute for Arc0
                 inline void compute0( const_type u, vertex *p, vertex *dp, vertex *d2p) const throw()
                 {
 
@@ -98,6 +122,7 @@ namespace upsylon {
                     }
                 }
 
+                //! compute for Arc1
                 inline void compute1( const_type u, vertex *p, vertex *dp, vertex *d2p ) const throw()
                 {
                     Y_EUCLIDEAN_XZERO(d2p);
@@ -117,6 +142,7 @@ namespace upsylon {
                     }
                 }
 
+                //! compute for Arc2
                 inline void compute2( const_type u, vertex *p, vertex *dp, vertex *d2p) const throw()
                 {
                     if(d2p)
@@ -155,8 +181,9 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
             };
 
+            //! nested declarations
 #define Y_EUCLIDEAN_NODE_TYPES()               \
-Y_EUCLIDEAN_POINT_TYPES();\
+Y_EUCLIDEAN_POINT_TYPES();                     \
 typedef Node<T,VTX>                NodeType;   \
 typedef typename NodeType::Pointer SharedNode; \
 typedef typename NodeType::Basis   Basis

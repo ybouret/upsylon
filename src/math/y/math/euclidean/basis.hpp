@@ -12,18 +12,28 @@ namespace upsylon {
 
         namespace Euclidean {
 
+            //==================================================================
+            //
             //! prototype for Frenet basis
+            //
+            //==================================================================
             template <typename T,size_t> class __Basis;
             
 
+            //==================================================================
+            //
+            //
             //! 2D Frenet: tangent,normal
+            //
+            //
+            //==================================================================
             template <typename T>
             class __Basis<T,2>
             {
             public:
-                Y_DECL_ARGS(T,type);                  //!< alias
-                typedef point2d<mutable_type> vertex; //!< alias
-                typedef const vertex          const_vertex;
+                Y_DECL_ARGS(T,type);                        //!< alias
+                typedef point2d<mutable_type> vertex;       //!< alias
+                typedef const vertex          const_vertex; //!< alias
 
                 const_vertex t; //!< unit tangent
                 const_vertex n; //!< unit normal
@@ -37,14 +47,21 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(__Basis);
             };
 
+
+            //==================================================================
+            //
+            //
             //! 3D Frenet: tangent, normal, binormal
+            //
+            //
+            //==================================================================
             template <typename T>
             class __Basis<T,3>
             {
             public:
                 Y_DECL_ARGS(T,type);                         //!< alias
                 typedef point3d<mutable_type> vertex;        //!< alias
-                typedef const vertex          const_vertex;
+                typedef const vertex          const_vertex;  //!< alias
 
                 const_vertex t; //!< unit tangent
                 const_vertex n; //!< unit normal
