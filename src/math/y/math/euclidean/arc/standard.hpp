@@ -28,6 +28,69 @@ namespace upsylon {
                     }
                 }
 
+                virtual void kinematics(const ArcClass C) throw()
+                {
+                    static const_type half(0.5);
+                    Nodes       &nds = aliasing::_(this->nodes);
+                    const size_t num = nds.size();
+
+                    switch(num)
+                    {
+                            // no single
+                        case 0: break;
+
+                            // single node
+                        case 1: nds.front()->reset(); break;
+
+                            // only two nodes
+                        case 2: {
+                            NodeType &N0 = *nds.front();
+                            NodeType &N1 = *nds.back();
+                            N0.reset();
+                            N1.reset();
+                            aliasing::_(N1.V) = aliasing::_(N0.V)  = N1.P - N0.P;
+
+                        } break;
+
+                        default: {
+                            assert(num>=3);
+                            // head
+                            {
+                                NodeType     &N1 = *nds[1]; N1.reset();
+                                const_vertex &P1 = N1.P;
+                                const_vertex &P2 = nds[2]->P;
+                                const_vertex &P3 = nds[3]->P;
+                                switch(C)
+                                {
+                                    case Arc2: aliasing::_(N1.A) = (P3-P2)+(P1-P2);
+                                    case Arc1: aliasing::_(N1.V) = half*(4*P2-(3*P1+P3));
+                                    case Arc0: break;
+                                }
+                            }
+
+                            // bulk
+                            this->motionBulk(C);
+
+                            // tail
+                            {
+                                NodeType     &Nend = *nds[num]; Nend.reset();
+                                const_vertex &Pnm0 = Nend.P;
+                                const_vertex &Pnm1 = nds[num-1]->P;
+                                const_vertex &Pnm2 = nds[num-2]->P;
+                                switch(C)
+                                {
+                                    case Arc2: aliasing::_(Nend.A) = (Pnm0-Pnm1)+(Pnm2-Pnm1);
+                                    case Arc1: aliasing::_(Nend.V) = half*(3*Pnm0+Pnm2-4*Pnm1);
+                                    case Arc0: break;
+                                }
+                            }
+
+
+                        }
+                    }
+
+                }
+
                 virtual void compute( mutable_type u, vertex *p, vertex *dp, vertex *d2p ) const throw()
                 {
                     const Nodes &nds = this->nodes;
@@ -91,68 +154,7 @@ namespace upsylon {
                     assert(this->segments.size()==this->nodes.size()-1);
                 }
                 
-                virtual void kinematics(const ArcClass C) throw()
-                {
-                    static const_type half(0.5);
-                    Nodes       &nds = aliasing::_(this->nodes);
-                    const size_t num = nds.size();
 
-                    switch(num)
-                    {
-                            // no single
-                        case 0: break;
-
-                            // single node
-                        case 1: nds.front()->reset(); break;
-
-                            // only two nodes
-                        case 2: {
-                            NodeType &N0 = *nds.front();
-                            NodeType &N1 = *nds.back();
-                            N0.reset();
-                            N1.reset();
-                            aliasing::_(N1.V) = aliasing::_(N0.V)  = N1.P - N0.P;
-
-                        } break;
-
-                        default: {
-                            assert(num>=3);
-                            // head
-                            {
-                                NodeType     &N1 = *nds[1]; N1.reset();
-                                const_vertex &P1 = N1.P;
-                                const_vertex &P2 = nds[2]->P;
-                                const_vertex &P3 = nds[3]->P;
-                                switch(C)
-                                {
-                                    case Arc2: aliasing::_(N1.A) = (P3-P2)+(P1-P2);
-                                    case Arc1: aliasing::_(N1.V) = half*(4*P2-(3*P1+P3));
-                                    case Arc0: break;
-                                }
-                            }
-
-                            // bulk
-                            this->motionBulk(C);
-
-                            // tail
-                            {
-                                NodeType     &Nend = *nds[num]; Nend.reset();
-                                const_vertex &Pnm0 = Nend.P;
-                                const_vertex &Pnm1 = nds[num-1]->P;
-                                const_vertex &Pnm2 = nds[num-2]->P;
-                                switch(C)
-                                {
-                                    case Arc2: aliasing::_(Nend.A) = (Pnm0-Pnm1)+(Pnm2-Pnm1);
-                                    case Arc1: aliasing::_(Nend.V) = half*(3*Pnm0+Pnm2-4*Pnm1);
-                                    case Arc0: break;
-                                }
-                            }
-
-
-                        }
-                    }
-
-                }
 
                 
 

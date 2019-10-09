@@ -13,12 +13,92 @@ using namespace Euclidean;
 
 namespace {
 
+
+
     template <typename T,template <class> class VTX>
     struct euclidean_test
     {
-        Y_EUCLIDEAN_SEGMENT_TYPES();
+        Y_EUCLIDEAN_ARC_TYPES();
 
         typedef set<PointKey,SharedPoint> Points;
+
+
+
+
+        static inline
+        void save_pos( const string &pfx, const ArcType &arc )
+        {
+            const string  fn = pfx + ".dat";
+            ios::ocstream fp(fn);
+            for(size_t i=1;i<=arc.nodes.size();++i)
+            {
+                PointType::Print(fp, arc.nodes[i]->P ) << '\n';
+            }
+        }
+
+        static inline
+        void save_v( const string &pfx, const ArcType &arc )
+        {
+            const string  fn = pfx + "_v.dat";
+            ios::ocstream fp(fn);
+            for(size_t i=1;i<=arc.nodes.size();++i)
+            {
+                const NodeType &node = *arc.nodes[i];
+                vertex p = node.P;
+                PointType::Print(fp,p) << '\n';
+                p += node.V/2;
+                PointType::Print(fp,p) << '\n' << '\n';
+            }
+        }
+
+
+        static inline
+        void save_a( const string &pfx, const ArcType &arc )
+        {
+            const string  fn = pfx + "_v.dat";
+            ios::ocstream fp(fn);
+            for(size_t i=1;i<=arc.nodes.size();++i)
+            {
+                const NodeType &node = *arc.nodes[i];
+                vertex p = node.P;
+                PointType::Print(fp,p) << '\n';
+                p += node.A/2;
+                PointType::Print(fp,p) << '\n' << '\n';
+            }
+        }
+
+        static inline
+        void save_class(const string  &pfx,
+                        ArcType       &arc,
+                        const ArcClass C,
+                        const_type     nmax)
+        {
+            arc.motion(C);
+            string fn = pfx;
+            switch (C) {
+                case Arc0: fn += "_i0"; break;
+                case Arc1: fn += "_i1"; break;
+                case Arc2: fn += "_i2"; break;
+            }
+            ios::ocstream fp( fn + ".dat" );
+            for(type i=1;i<=nmax;i+=0.02)
+            {
+                vertex p;
+                arc.compute(i, &p, 0, 0);
+                PointType::Print(fp,p) << '\n';
+            }
+        }
+
+        static inline
+        void save_classes(const string  &pfx,
+                          ArcType       &arc,
+                          const_type     nmax)
+        {
+            save_class(pfx,arc,Arc0,nmax);
+            save_class(pfx,arc,Arc1,nmax);
+            save_class(pfx,arc,Arc2,nmax);
+        }
+
 
         static inline
         void make(const char *TID, const char *PID, const size_t nn)
@@ -54,31 +134,14 @@ namespace {
                 pa << p;
             }
 
-            const string std_pfx = "std_";
-            const string per_pfx = "per_";
+            string std_pfx = "std_"; std_pfx << PID << '_' << TID;
+            string per_pfx = "per_"; per_pfx << PID << '_' << TID;
 
-            {
-                const string  fn = std_pfx + PID + '_' + TID + ".dat";
-                ios::ocstream fp(fn);
-                for(size_t i=1;i<=sa.nodes.size();++i)
-                {
-                    PointType::Print(fp, (*sa.nodes[i])->position ) << '\n';
-                }
-
-            }
-
-            {
-                const string  fn = per_pfx + PID + '_' + TID + ".dat";
-                ios::ocstream fp(fn);
-                for(size_t i=1;i<=sa.nodes.size();++i)
-                {
-                    PointType::Print(fp, (*sa.nodes[i])->position ) << '\n';
-                }
-                PointType::Print(fp, (*sa.nodes[1])->position ) << '\n';
-
-            }
+            save_pos(std_pfx,sa);
+            save_pos(per_pfx,pa);
 
 
+ 
             sa.motion(Arc0);
             sa.motion(Arc1);
             sa.motion(Arc2);
@@ -88,144 +151,24 @@ namespace {
             pa.motion(Arc2);
 
 
-            typename numeric<type>::function Ls( &sa, & Arc<T,VTX>::speed );
-            typename numeric<type>::function Lp( &sa, & Arc<T,VTX>::speed );
+            //typename numeric<type>::function Ls( &sa, & Arc<T,VTX>::speed );
+            //typename numeric<type>::function Lp( &sa, & Arc<T,VTX>::speed );
 
-            {
-                const string  fn = std_pfx + PID + '_' + TID + "_v.dat";
-                ios::ocstream fp(fn);
-                for(size_t i=1;i<=sa.nodes.size();++i)
-                {
-                    const NodeType &node = *sa.nodes[i];
-                    vertex p = node.P;
-                    PointType::Print(fp,p) << '\n';
-                    p += node.V/2;
-                    PointType::Print(fp,p) << '\n' << '\n';
-                }
+            save_v(std_pfx,sa);
+            save_v(per_pfx,pa);
 
-            }
-
-            {
-                const string  fn = per_pfx + PID + '_' + TID + "_v.dat";
-                ios::ocstream fp(fn);
-                for(size_t i=1;i<=pa.nodes.size();++i)
-                {
-                    const NodeType &node = *pa.nodes[i];
-                    vertex p = node.P;
-                    PointType::Print(fp,p) << '\n';
-                    p += node.V/2;
-                    PointType::Print(fp,p) << '\n' << '\n';
-                }
-
-            }
+            save_a(std_pfx,sa);
+            save_a(per_pfx,pa);
 
 
-            {
-                const string  fn = std_pfx + PID + '_' + TID + "_a.dat";
-                ios::ocstream fp(fn);
-                for(size_t i=1;i<=sa.nodes.size();++i)
-                {
-                    const NodeType &node = *sa.nodes[i];
-                    vertex p = node.P;
-                    PointType::Print(fp,p) << '\n';
-                    p += node.A/2;
-                    PointType::Print(fp,p) << '\n' << '\n';
-                }
+            save_classes(std_pfx,sa,np);
+            save_classes(std_pfx,sa,np);
+            save_classes(std_pfx,sa,np);
 
-            }
+            save_classes(per_pfx,sa,np+1);
+            save_classes(per_pfx,sa,np+1);
+            save_classes(per_pfx,sa,np+1);
 
-            {
-                const string  fn = per_pfx + PID + '_' + TID + "_a.dat";
-                ios::ocstream fp(fn);
-                for(size_t i=1;i<=pa.nodes.size();++i)
-                {
-                    const NodeType &node = *pa.nodes[i];
-                    vertex p = node.P;
-                    PointType::Print(fp,p) << '\n';
-                    p += node.A/2;
-                    PointType::Print(fp,p) << '\n' << '\n';
-                }
-
-            }
-
-
-            {
-                sa.motion(Arc0);
-                const string  fn = std_pfx + PID + '_' + TID + "_i0.dat";
-                ios::ocstream fp(fn);
-                for(type i=1;i<=pa.nodes.size();i+=0.02)
-                {
-                    vertex p;
-                    sa.compute(i, &p, 0, 0);
-                    PointType::Print(fp,p) << '\n';
-                }
-            }
-
-            {
-                sa.motion(Arc1);
-                const string  fn = std_pfx + PID + '_' + TID + "_i1.dat";
-                ios::ocstream fp(fn);
-                for(type i=1;i<=sa.nodes.size();i+=0.02)
-                {
-                    vertex p;
-                    sa.compute(i, &p, 0, 0);
-                    PointType::Print(fp,p) << '\n';
-                }
-                std::cerr << "std_length_1=" << integrate::compute(Ls, const_type(1), const_type(sa.nodes.size()), const_type(1e-5) ) << std::endl;
-            }
-
-            {
-                sa.motion(Arc2);
-                const string  fn = std_pfx + PID + '_' + TID + "_i2.dat";
-                ios::ocstream fp(fn);
-                for(type i=1;i<=sa.nodes.size();i+=0.02)
-                {
-                    vertex p;
-                    sa.compute(i, &p, 0, 0);
-                    PointType::Print(fp,p) << '\n';
-                }
-                std::cerr << "std_length_2=" << integrate::compute(Ls, const_type(1), const_type(sa.nodes.size()), const_type(1e-5) ) << std::endl;
-            }
-
-            {
-                pa.motion(Arc0);
-                const string  fn = per_pfx + PID + '_' + TID + "_i0.dat";
-                ios::ocstream fp(fn);
-                for(type i=1;i<=pa.nodes.size()+1;i+=0.02)
-                {
-                    vertex p;
-                    pa.compute(i, &p, 0, 0);
-                    PointType::Print(fp,p) << '\n';
-                }
-            }
-
-            {
-                pa.motion(Arc1);
-                const string  fn = per_pfx + PID + '_' + TID + "_i1.dat";
-                ios::ocstream fp(fn);
-                for(type i=1;i<=pa.nodes.size()+1;i+=0.02)
-                {
-                    vertex p;
-                    pa.compute(i, &p, 0, 0);
-                    PointType::Print(fp,p) << '\n';
-                }
-                std::cerr << "per_length_1=" << integrate::compute(Lp, const_type(1), const_type(pa.nodes.size()+1), const_type(1e-5) ) << std::endl;
-
-            }
-
-
-            {
-                pa.motion(Arc2);
-                const string  fn = per_pfx + PID + '_' + TID + "_i2.dat";
-                ios::ocstream fp(fn);
-                for(type i=1;i<=pa.nodes.size()+1;i+=0.02)
-                {
-                    vertex p;
-                    pa.compute(i, &p, 0, 0);
-                    PointType::Print(fp,p) << '\n';
-                }
-                std::cerr << "per_length_2=" << integrate::compute(Lp, const_type(1), const_type(pa.nodes.size()+1), const_type(1e-5) ) << std::endl;
-            }
 
 
         }

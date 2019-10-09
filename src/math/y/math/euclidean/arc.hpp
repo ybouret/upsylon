@@ -24,6 +24,7 @@ namespace upsylon {
 
 
                 virtual void ensure(const size_t) = 0;
+                virtual void kinematics(const ArcClass) throw() = 0;
                 virtual void compute( mutable_type u, vertex *p, vertex *dp, vertex *d2p ) const throw() = 0;
 
 
@@ -43,12 +44,9 @@ namespace upsylon {
                     return (*this) << P;
                 }
 
-                inline void motion(const ArcClass C) throw()
+                //! upadte after kinematics is computed/tunes
+                inline void update(const ArcClass C) throw()
                 {
-                    // first pass: local kinematics
-                    kinematics(C);
-
-                    // second pass: build from kinematics and class
                     for(size_t i=segments.size();i>0;--i)
                     {
                         aliasing::_( *segments[i] ).build(C);
@@ -66,7 +64,16 @@ namespace upsylon {
                     {
                         aliasing::_( *nodes[i] ).setTangent();
                     }
+                }
 
+                //! full motion
+                inline void motion(const ArcClass C) throw()
+                {
+                    // first pass: local kinematics
+                    kinematics(C);
+
+                    // second pass:
+                    update(C);
                 }
 
                 inline vertex operator()(const_type u, vertex *dp=0, vertex *d2p=0) const throw()
@@ -163,7 +170,6 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Arc);
                 virtual void add(const SharedPoint &p) = 0;
-                virtual void kinematics(const ArcClass) throw() = 0;
 
             };
 
