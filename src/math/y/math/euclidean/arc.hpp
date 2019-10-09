@@ -209,9 +209,9 @@ namespace upsylon {
                 {
                     for(size_t i=nodes.size();i>0;--i)
                     {
-                        const NodeType &node = *nodes[i];
+                        const NodeType &node  = *nodes[i];
                         const Basis    &basis = node.basis;
-                        aliasing::_(basis.n) = basis.t.direct_normal();
+                        aliasing::_(basis.n)  = basis.t.direct_normal();
                     }
                 }
 
