@@ -231,6 +231,7 @@ namespace upsylon {
                         {
                             n /= sqrt_of( n2 );
                         }
+                        aliasing::_(basis.b) = t^n;
                     }
                 }
 
