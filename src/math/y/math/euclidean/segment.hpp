@@ -17,6 +17,11 @@ namespace upsylon {
             //==================================================================
             typedef key_address<2> SegmentKey;
 
+            //==================================================================
+            //
+            //! segment between tail and head points
+            //
+            //==================================================================
             template <typename T, template <class> class VTX>
             class Segment : public Object
             {
@@ -26,7 +31,7 @@ namespace upsylon {
 
                 const SharedNode tail; //!< tail point
                 const SharedNode head; //!< head point
-                const SegmentKey uuid; //!< unique identifie
+                const SegmentKey uuid; //!< unique identifier
 
                 //! cleanup
                 inline virtual ~Segment() throw() {}

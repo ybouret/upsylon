@@ -11,14 +11,23 @@ namespace upsylon {
 
         namespace Euclidean {
 
+            //==================================================================
+            //
+            //
+            //! standard arc
+            //
+            //
+            //==================================================================
             template <typename T, template <class> class VTX>
             class StandardArc : public Arc<T,VTX>
             {
             public:
-                Y_EUCLIDEAN_ARC_TYPES();
-                inline explicit StandardArc() throw() {}
-                inline virtual ~StandardArc() throw() {}
+                Y_EUCLIDEAN_ARC_TYPES();                    //!< aliases
+                inline explicit StandardArc() throw() {}    //!< setup
+                inline virtual ~StandardArc() throw() {}    //!< cleanup
 
+
+                //! ensure one less segment than nodes
                 inline virtual void ensure(size_t n)
                 {
                     aliasing::_(this->nodes).ensure(n);
@@ -29,7 +38,7 @@ namespace upsylon {
                 }
 
 
-
+                //! interpolation function
                 virtual void compute( mutable_type u, vertex *p, vertex *dp, vertex *d2p ) const throw()
                 {
                     const Nodes &nds = this->nodes;

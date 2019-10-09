@@ -13,23 +13,29 @@ namespace upsylon {
         namespace Euclidean {
 
 
+            //==================================================================
+            //
+            //
+            //! periodic arc
+            //
+            //
+            //==================================================================
             template <typename T, template <class> class VTX>
             class PeriodicArc : public Arc<T,VTX>
             {
             public:
-                Y_EUCLIDEAN_ARC_TYPES();
-                inline explicit PeriodicArc() throw() {}
-                inline virtual ~PeriodicArc() throw() {}
+                Y_EUCLIDEAN_ARC_TYPES();                  //!< aliases
+                inline explicit PeriodicArc() throw() {}  //!< setup
+                inline virtual ~PeriodicArc() throw() {}  //!< cleanup
 
+                //! ensure same number of points and segments
                 inline virtual void ensure(size_t n)
                 {
                     aliasing::_(this->nodes).ensure(n);
                     aliasing::_(this->segments).ensure(n);
                 }
 
-
-
-
+                //! interpolation [1:nodes.size()+1]
                 virtual void compute( mutable_type u, vertex *p, vertex *dp, vertex *d2p ) const throw()
                 {
                     const Nodes &nds = this->nodes;
