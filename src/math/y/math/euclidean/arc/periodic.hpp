@@ -145,7 +145,6 @@ namespace upsylon {
                     }
                 }
 
-#if 0
                 virtual vertex dT(const size_t n) const throw()
                 {
                     static const_type half(0.5);
@@ -167,7 +166,6 @@ namespace upsylon {
                          return half*(nds[n+1]->basis.t-nds[n-1]->basis.t);
                     }
                 }
-#endif
                 
 
 

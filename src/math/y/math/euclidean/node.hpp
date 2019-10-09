@@ -56,7 +56,7 @@ namespace upsylon {
                 const_vertex  dA;        //!< Anext-A
                 const_vertex  Q;         //!< expansion vector
                 const_vertex  W;         //!< expansion vector
-                const_type    curvature; //!< local curvature
+                const Basis   basis;     //!< local basis
 
                 //! cleanup
                 inline virtual ~Node() throw() { reset(); }
@@ -73,8 +73,7 @@ namespace upsylon {
                 dV(),
                 dA(),
                 Q(),
-                W(),
-                curvature(0)
+                W()
                 {}
 
                 //! key for database
@@ -90,14 +89,21 @@ namespace upsylon {
                     bzset_(dA);
                     bzset_(Q);
                     bzset_(W);
+                    aliasing::_(basis).zero();
                 }
 
-                //! compute local curvature
-                void computeCurvature() throw()
+
+                //! initialize basis with tangent and curvature
+                inline void initializeBasis() throw()
                 {
-                    aliasing::_(curvature) = PointType::Curvature(V,A);
+                    const_type v2 = V.norm2();
+                    if(v2>0)
+                    {
+                        const_type v = sqrt_of(v2);
+                        aliasing::_(basis.t)         = V/v;
+                        aliasing::_(basis.curvature) = vertex::det(V,A)/(v*v*v);
+                    }
                 }
-
 
                 //! method pointer to interpolate data
                 typedef void (Node::*Compute)(const_type,vertex *,vertex *,vertex *) const;

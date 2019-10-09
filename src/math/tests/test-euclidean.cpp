@@ -72,6 +72,23 @@ namespace {
         }
 
         static inline
+        void save_c( const string &pfx, const ArcType &arc )
+        {
+            const string  fn = pfx + "_c.dat";
+            ios::ocstream fp(fn);
+            for(size_t i=1;i<=arc.nodes.size();++i)
+            {
+                const NodeType &node = *arc.nodes[i];
+                vertex p = node.P;
+                PointType::Print(fp,p) << '\n';
+                p += node.basis.n * node.basis.curvature/2;
+                PointType::Print(fp,p) << '\n' << '\n';
+            }
+        }
+
+
+
+        static inline
         void save_class(const string  &pfx,
                         ArcType       &arc,
                         const ArcClass C,
@@ -165,6 +182,9 @@ namespace {
 
             save_a(std_pfx,sa);
             save_a(per_pfx,pa);
+
+            save_c(std_pfx,sa);
+            save_c(per_pfx,pa);
 
 
             save_classes(std_pfx,sa,np);

@@ -18,7 +18,6 @@ namespace upsylon {
             //
             //==================================================================
             template <typename T,size_t> class __Basis;
-            
 
             //==================================================================
             //
@@ -35,12 +34,13 @@ namespace upsylon {
                 typedef point2d<mutable_type> vertex;       //!< alias
                 typedef const vertex          const_vertex; //!< alias
 
-                const_vertex t; //!< unit tangent
-                const_vertex n; //!< unit normal
+                const_vertex t;         //!< unit tangent
+                const_vertex n;         //!< unit normal
+                const_type   curvature; //!< curvature
 
-                inline      __Basis() throw() : t(), n() {}              //!< setup
-                inline     ~__Basis() throw() { zero(); }                //!< cleanup
-                inline void  zero()    throw() { bzset_(t); bzset_(n); } //!< clear
+                inline      __Basis() throw() : t(), n(), curvature(0) {}                   //!< setup
+                inline     ~__Basis() throw() { zero(); }                                   //!< cleanup
+                inline void  zero()    throw() { bzset_(t); bzset_(n); bzset_(curvature); } //!< clear
 
             
             private:
@@ -63,13 +63,14 @@ namespace upsylon {
                 typedef point3d<mutable_type> vertex;        //!< alias
                 typedef const vertex          const_vertex;  //!< alias
 
-                const_vertex t; //!< unit tangent
-                const_vertex n; //!< unit normal
-                const_vertex b; //!< unit binormal t^n
+                const_vertex t;         //!< unit tangent
+                const_vertex n;         //!< unit normal
+                const_vertex b;         //!< unit binormal t^n
+                const_type   curvature; //!< curvature
 
-                inline      __Basis() throw() : t(), n(), b() {}                    //!< setup
-                inline     ~__Basis() throw() { zero(); }                           //!< cleanup
-                inline void zero()    throw() { bzset_(t); bzset_(n); bzset_(b); }  //!< clear
+                inline      __Basis() throw() : t(), n(), b(), curvature(0) {}                         //!< setup
+                inline     ~__Basis() throw() { zero(); }                                              //!< cleanup
+                inline void zero()    throw() { bzset_(t); bzset_(n); bzset_(b); bzset_(curvature); }  //!< clear
 
                 //! assuming tangent is set
                 inline void finalize( const_vertex &N ) throw()

@@ -62,7 +62,7 @@ namespace upsylon {
                     kinematics();
                     for(size_t i=nodes.size();i>0;--i)
                     {
-                        aliasing::_(nodes[i])->computeCurvature();
+                        aliasing::_(nodes[i])->initializeBasis();
                     }
                 }
 
@@ -82,7 +82,8 @@ namespace upsylon {
                         case Arc1: onCompute = & NodeType::compute1; break;
                         case Arc2: onCompute = & NodeType::compute2; break;
                     }
-                    
+
+                    finalize( int2type<Dimensions>() );
 
                 }
 
@@ -203,11 +204,45 @@ namespace upsylon {
                     }
                 }
 
+                //! finalize Basis in 2D
+                inline void finalize( int2type<2> ) throw()
+                {
+                    for(size_t i=nodes.size();i>0;--i)
+                    {
+                        const NodeType &node = *nodes[i];
+                        const Basis    &basis = node.basis;
+                        aliasing::_(basis.n) = basis.t.direct_normal();
+                    }
+                }
+
+                //! finalize Basis in 3D
+                inline void finalize( int2type<3> ) throw()
+                {
+                    for(size_t i=nodes.size();i>0;--i)
+                    {
+                        const NodeType &node = *nodes[i];
+                        const Basis    &basis = node.basis;
+                        const_vertex   &t     = basis.t;
+                        vertex         &n     = aliasing::_(basis.n);
+                        n  = dT(i);
+                        n -= (n*t)*t;
+                        const_type n2 = n.norm2();
+                        if(n2>0)
+                        {
+                            n /= sqrt_of( n2 );
+                        }
+                    }
+                }
+
+
+
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Arc);
-                virtual void   add(const SharedPoint &p) = 0;
-                virtual void   kinematics() throw() = 0;
+                virtual void   add(const SharedPoint &p)        = 0;
+                virtual void   kinematics()             throw() = 0;
+                virtual vertex dT(const size_t n) const throw() = 0;
+
             };
 
             //! forward nested types

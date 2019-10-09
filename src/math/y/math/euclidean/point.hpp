@@ -71,33 +71,19 @@ namespace upsylon {
                     return os;
                 }
 
-                static inline
-                type Curvature( const_vertex &V, const vertex &A ) throw()
-                {
-                    const_type V2 = V.norm2();
-                    if(V2<=0)
-                    {
-                        return 0;
-                    }
-                    else
-                    {
-                        const_type v = sqrt_of(V2);
-                        return vertex::det(V,A)/(v*v*v);
-                    }
-                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Point);
             };
 
             //! nested types forwarding
-#define Y_EUCLIDEAN_POINT_TYPES()             \
-Y_DECL_ARGS(T,type);                                  \
-typedef             Point<T,VTX>            PointType;\
-typedef typename    PointType::vertex       vertex;   \
-typedef typename    PointType::const_vertex const_vertex;\
-typedef typename    PointType::Pointer      SharedPoint;\
-static const size_t Dimensions =            PointType::Dimensions
+#define Y_EUCLIDEAN_POINT_TYPES()                         \
+Y_DECL_ARGS(T,type);                                      \
+typedef             Point<T,VTX>            PointType;    \
+typedef typename    PointType::vertex       vertex;       \
+typedef typename    PointType::const_vertex const_vertex; \
+typedef typename    PointType::Pointer      SharedPoint;  \
+static const size_t Dimensions = PointType::Dimensions
 
         }
 
