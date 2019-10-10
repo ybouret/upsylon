@@ -16,11 +16,12 @@ namespace {
 
     typedef vector<string,memory::pooled>                strings;
     typedef increasing_comparator<string>                depcomp;
-    typedef sorted_vector<string,depcomp,memory::pooled> dependencies_type;
-    typedef ordered_unique<dependencies_type>            dependencies;
+    typedef sorted_vector<string,depcomp,memory::pooled> collection_type;
+    typedef ordered_single<collection_type>              collection;
 
     static inline
-    void load( strings &lines, const string &cmd )
+    void load(strings      &lines,
+              const string &cmd )
     {
         vfs         &fs  = local_fs::instance();
         lines.free();
@@ -51,68 +52,116 @@ namespace {
         }
     }
 
-    static inline bool isInstalled(const string &dep)
-    {
-        Lang::Matching match = dep;
-        strings        result;
-        {
-            const string cmd = "port installed " + dep;
-            load(result,cmd);
-            for(size_t i=1;i<=result.size();++i)
-            {
-                if(match.partly(result[i]))
-                {
-                    std::cerr << "installed " << dep << std::endl;
-                    return true;
-                }
-            }
-        }
-        std::cerr << "missing   " << dep << std::endl;
-        return false;
-    }
-
     static inline bool WS(const int C) throw() { return C==' ' || C=='\t'; }
 
-
-    static inline
-    bool populate( dependencies &deps, const string &info )
+    static inline void ExtractRequired(collection   &required,
+                                        const string &info )
     {
         tokenizer<char> tkn(info);
-        bool            ans = false;
         while( tkn.next_with(',') )
         {
-            string dep( tkn.token(), tkn.units() );
-            dep.clean(WS);
-            if(isInstalled(dep)) continue;
-            if(deps.insert(dep))
-            {
-                ans = true;
-            }
+            string tmp( tkn.token(), tkn.units() );
+            tmp.clean(WS);
+            required.insert(tmp);
         }
-
-        return ans;
     }
 
-    static inline
-    bool queryDeps( dependencies &deps, const strings &lines )
+    static inline void QueryRequired(collection   &required,
+                                     const string &portName)
     {
-        bool ans = false;
+        required.free();
+        strings lines;
+        // get port deps output
+        {
+            const string cmd = "port deps " + portName;
+            load(lines,cmd);
+        }
+
+        // parse each line
         Lang::Matching match("[D|d]ependencies");
-        deps.free();
         for(size_t i=1;i<=lines.size();++i)
         {
-            strings info(2,as_capacity);
-            tokenizer<char>::split_with(info, lines[i], ':' );
-            if(info.size()!=2) continue;
-            if( !match.partly(info[1])) continue;
-            if(populate(deps,info[2]))
-            {
-                ans = true;
-            }
+            strings info(2,as_capacity); tokenizer<char>::split_with(info, lines[i], ':' );
+            if(info.size()!=2)          continue; //! not the good format
+            if( !match.partly(info[1])) continue; //! not a dependency line
+            ExtractRequired(required,info[2]);
         }
-        std::cerr << "|_" << deps << std::endl;
-        return ans;
     }
+
+    static inline void RemoveFrom(collection &target, const collection &source)
+    {
+        for( collection::const_iterator i=source.begin(); i != source.end(); ++i)
+        {
+            target.no(*i);
+        }
+
+    }
+
+    static std::ostream & indent( std::ostream &os, int level )
+    {
+        while(level-- > 0)
+        {
+            os << '.';
+        }
+        return os;
+    }
+
+    // installed are already know installed ports
+    // required  are already known
+
+    static inline void CheckRequired(const string &portName,
+                                     collection   &installed,
+                                     collection   &missing,
+                                     const int     level = 0 )
+    {
+        indent(std::cerr,level) << "<"  << portName << ">" << std::endl;
+        indent(std::cerr,level+1) << "|_installed : " << installed << std::endl;
+        indent(std::cerr,level+1) << "|_missing   : " << missing   << std::endl;
+
+        collection   required;
+        QueryRequired(required,portName);
+        indent(std::cerr,level+1) << "|_required  : " << required  << std::endl;
+
+        RemoveFrom(required,installed);
+        RemoveFrom(required,missing);
+
+        if( required.size() >= 0)
+        {
+            strings lines;
+            // query installed among required
+            {
+                string cmd = "port installed ";
+                for(collection::iterator i=required.begin(); i != required.end(); ++i)
+                {
+                    cmd << ' ' << *i;
+                }
+                load(lines,cmd);
+            }
+
+            for(size_t i=2;i<=lines.size();++i)
+            {
+                tokenizer<char> tkn( lines[i] );
+                if( !tkn.next_with(' ') ) continue;
+                const string id = tkn.to_string();
+                if( required.search(id) )
+                {
+                    // this is an installed port
+                    installed.insert(id);
+                }
+            }
+            indent(std::cerr,level+1) << "|_installed : " << installed << std::endl;
+            RemoveFrom(required,installed);
+            indent(std::cerr,level+1) << "|_required  : " << required << std::endl;
+            
+        }
+
+
+
+    }
+
+
+
+
 
     
 }
@@ -130,11 +179,9 @@ Y_PROGRAM_START()
         portName << ' ' << argv[i];
     }
 
-    const string cmd = "port deps " + portName;
-    strings lines;
-    load(lines,cmd);
-    dependencies deps;
-    queryDeps(deps,lines);
+    collection installed;
+    collection required;
+    CheckRequired(portName,installed,required);
 
 }
 Y_PROGRAM_END()
