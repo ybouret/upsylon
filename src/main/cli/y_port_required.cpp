@@ -66,6 +66,20 @@ namespace {
         }
     }
 
+    static std::ostream & indent( std::ostream &os, int level )
+    {
+
+        if(level)
+        {
+            while(level-- > 0)
+            {
+                os << ' ';
+            }
+            os << "|_";
+        }
+        return os;
+    }
+
     static inline void QueryRequired(collection   &required,
                                      const string &portName)
     {
@@ -97,14 +111,7 @@ namespace {
 
     }
 
-    static std::ostream & indent( std::ostream &os, int level )
-    {
-        while(level-- > 0)
-        {
-            os << '.';
-        }
-        return os;
-    }
+
 
     // installed are already know installed ports
     // required  are already known
@@ -115,12 +122,9 @@ namespace {
                                      const int     level = 0 )
     {
         indent(std::cerr,level) << "<"  << portName << ">" << std::endl;
-        indent(std::cerr,level+1) << "|_installed : " << installed << std::endl;
-        indent(std::cerr,level+1) << "|_missing   : " << missing   << std::endl;
 
-        collection   required;
+        collection    required;
         QueryRequired(required,portName);
-        indent(std::cerr,level+1) << "|_required  : " << required  << std::endl;
 
         RemoveFrom(required,installed);
         RemoveFrom(required,missing);
@@ -149,11 +153,22 @@ namespace {
                     installed.insert(id);
                 }
             }
-            indent(std::cerr,level+1) << "|_installed : " << installed << std::endl;
             RemoveFrom(required,installed);
-            indent(std::cerr,level+1) << "|_required  : " << required << std::endl;
-            
+            if(missing.size())
+            {
+                indent(std::cerr,level) << missing << std::endl;
+            }
+            if(required.size())
+            {
+                const int nextLevel = level+1;
+                for(collection::iterator i=required.begin(); i != required.end(); ++i)
+                {
+                    missing.insert(*i);
+                    CheckRequired(*i,installed,missing,nextLevel);
+                }
+            }
         }
+
 
 
 
@@ -180,8 +195,9 @@ Y_PROGRAM_START()
     }
 
     collection installed;
-    collection required;
-    CheckRequired(portName,installed,required);
+    collection missing;
+    CheckRequired(portName,installed,missing);
+    std::cerr << missing << std::endl;
 
 }
 Y_PROGRAM_END()
