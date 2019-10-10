@@ -129,7 +129,7 @@ namespace {
         RemoveFrom(required,installed);
         RemoveFrom(required,missing);
 
-        if( required.size() >= 0)
+        if( required.size()>0)
         {
             strings lines;
             // query installed among required
@@ -154,11 +154,7 @@ namespace {
                 }
             }
             RemoveFrom(required,installed);
-            if(missing.size())
-            {
-                indent(std::cerr,level) << missing << std::endl;
-            }
-            if(required.size())
+            if(required.size()>0)
             {
                 const int nextLevel = level+1;
                 for(collection::iterator i=required.begin(); i != required.end(); ++i)
@@ -185,6 +181,7 @@ Y_PROGRAM_START()
 {
     if( argc < 2 )
     {
+        std::cerr << "usage: " << program << " [port [variants]]" << std::endl;
         return 0;
     }
 
@@ -197,7 +194,10 @@ Y_PROGRAM_START()
     collection installed;
     collection missing;
     CheckRequired(portName,installed,missing);
-    std::cerr << missing << std::endl;
+    if(missing.size())
+    {
+        std::cerr << missing << std::endl;
+    }
 
 }
 Y_PROGRAM_END()

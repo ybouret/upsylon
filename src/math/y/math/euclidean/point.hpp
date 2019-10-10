@@ -71,7 +71,6 @@ namespace upsylon {
                     return os;
                 }
 
-
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Point);
             };

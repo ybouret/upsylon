@@ -52,8 +52,8 @@ namespace upsylon {
 
                     switch(C)
                     {
-                        case Arc2: aliasing::_(node.dA) = head->A-tail->A;
-                        case Arc1: aliasing::_(node.dV) = head->V-tail->V;
+                        case Arc2: aliasing::_(node.dA) = head->A-tail->A; /* FALLTHRU */
+                        case Arc1: aliasing::_(node.dV) = head->V-tail->V; /* FALLTHRU */
                         case Arc0: aliasing::_(node.dP) = head->P-tail->P;
                     }
 

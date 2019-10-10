@@ -73,7 +73,8 @@ namespace upsylon {
                 dV(),
                 dA(),
                 Q(),
-                W()
+                W(),
+                basis()
                 {}
 
                 //! key for database
