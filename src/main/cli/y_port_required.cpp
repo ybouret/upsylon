@@ -151,16 +151,21 @@ namespace {
                 {
                     // this is an installed port
                     installed.insert(id);
+                    required.no(id);
                 }
             }
-            RemoveFrom(required,installed);
+            //RemoveFrom(required,installed);
             if(required.size()>0)
             {
                 const int nextLevel = level+1;
                 for(collection::iterator i=required.begin(); i != required.end(); ++i)
                 {
-                    missing.insert(*i);
-                    CheckRequired(*i,installed,missing,nextLevel);
+                    const string &sub = *i;
+                    if( !missing.search(sub) )
+                    {
+                        missing.insert(*i);
+                        CheckRequired(*i,installed,missing,nextLevel);
+                    }
                 }
             }
         }
