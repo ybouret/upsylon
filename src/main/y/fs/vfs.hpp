@@ -128,7 +128,8 @@ namespace upsylon {
         bool         is_dir( const string &path ) const throw();
         //! try to remove a file
         void         try_remove_file( const string &path) throw();
-
+        //! get a not-used, temporary name
+        string       get_temporary_name(const size_t n=8) const;
 
         //! remove file matching filter in dirname
         /**

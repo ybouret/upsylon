@@ -4,9 +4,8 @@
 
 #include <iostream>
 
-namespace upsylon
-{
-	
+namespace upsylon {
+
     vfs::  vfs() throw() {}
     vfs:: ~vfs() throw() {}
     
@@ -54,17 +53,17 @@ namespace upsylon
     
 
     namespace
-    {
-        struct rm_param
         {
-            const string *pExt;
-            inline bool operator()(const vfs::entry &ep)
+            struct rm_param
             {
-                assert(pExt);
-                return  ep.is_regular() && ep.has_extension( *pExt );
-            }
-        };
-    }
+                const string *pExt;
+                inline bool operator()(const vfs::entry &ep)
+                {
+                    assert(pExt);
+                    return  ep.is_regular() && ep.has_extension( *pExt );
+                }
+            };
+        }
 
     void vfs:: remove_files_with_extension_in( const string &dirname, const string &extension)
     {
@@ -83,5 +82,31 @@ namespace upsylon
             
         }
     }
+
+
+
     
+}
+
+#include "y/string/temporary-name.hpp"
+#include "y/exception.hpp"
+
+namespace upsylon {
+
+    string vfs:: get_temporary_name(const size_t n) const
+    {
+        static const unsigned nmax = 32;
+        unsigned ntry = 0;
+        while(ntry<nmax)
+        {
+            ++ntry;
+            const string     tmp    = temporary_name::create(n);
+            bool             isLink = false;
+            entry::attribute attr   = query_attribute(tmp,isLink);
+            if(isLink||attr!=entry::no_ent) continue;
+            return tmp;
+        }
+        throw exception("vfs::get_temporary_name(failure after %u trials)",nmax);
+    }
+
 }
