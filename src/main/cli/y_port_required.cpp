@@ -14,13 +14,21 @@ using namespace upsylon;
 
 namespace {
 
-    typedef vector<string,memory::pooled>                strings;
-    typedef increasing_comparator<string>                depcomp;
-    typedef sorted_vector<string,depcomp,memory::pooled> collection_type;
-    typedef ordered_single<collection_type>              collection;
+    typedef memory::pooled                               Allocator;
+    typedef vector<string,Allocator>                     Strings;
+    typedef increasing_comparator<string>                Comparator;
+    typedef sorted_vector<string,Comparator,Allocator>   Collection;
+    typedef ordered_single<Collection>                   Present;
+    typedef ordered_unique<Collection>                   Missing;
 
+
+    //==========================================================================
+    //
+    // Execute a command and return lines of output
+    //
+    //==========================================================================
     static inline
-    void load(strings      &lines,
+    void load(Strings      &lines,
               const string &cmd )
     {
         vfs         &fs  = local_fs::instance();
@@ -52,19 +60,88 @@ namespace {
         }
     }
 
+    //==========================================================================
+    //
+    // - convert a line of separated port names into a missing database
+    // - return true if something is missing
+    //
+    //==========================================================================
     static inline bool WS(const int C) throw() { return C==' ' || C=='\t'; }
 
-    static inline void ExtractRequired(collection   &required,
-                                        const string &info )
+    static inline bool ExtractRequired(Missing      &required,
+                                       const string &info )
     {
-        tokenizer<char> tkn(info);
-        while( tkn.next_with(',') )
+        bool ans = false;
         {
-            string tmp( tkn.token(), tkn.units() );
-            tmp.clean(WS);
-            required.insert(tmp);
+            tokenizer<char> tkn(info);
+            while( tkn.next_with(',') )
+            {
+                string tmp( tkn.token(), tkn.units() );
+                tmp.clean(WS);
+                if( required.insert(tmp) )
+                {
+                    ans = true;
+                }
+            }
         }
+        return ans;
     }
+
+
+    //==========================================================================
+    //
+    //
+    // - query all the depedencies of portName, and fill the required database
+    // - return true if something is missing
+    //
+    //==========================================================================
+    static inline bool QueryRequired(Missing      &required,
+                                     const string &portName)
+    {
+        bool ans = false;
+        required.free();
+        {
+            Strings lines;
+            //------------------------------------------------------------------
+            //
+            // get port deps output
+            //
+            //------------------------------------------------------------------
+            {
+                const string cmd = "port deps " + portName;
+                load(lines,cmd);
+            }
+
+            //------------------------------------------------------------------
+            //
+            // parse each line
+            //
+            //------------------------------------------------------------------
+            Lang::Matching match("[D|d]ependencies");
+            for(size_t i=1;i<=lines.size();++i)
+            {
+                Strings info(2,as_capacity);
+                tokenizer<char>::split_with(info, lines[i], ':' );
+                if(info.size()!=2)          continue; //! not the good format
+                if( !match.partly(info[1])) continue; //! not a dependency line
+                if( ExtractRequired(required,info[2]) )
+                {
+                    ans = true;
+                }
+            }
+        }
+        return ans;
+    }
+
+    static inline void RemoveFrom(Collection &target, const Collection &source)
+    {
+        for( Collection::const_iterator i=source.begin(); i != source.end(); ++i)
+        {
+            target.no(*i);
+        }
+
+    }
+
 
     static std::ostream & indent( std::ostream &os, int level )
     {
@@ -80,96 +157,81 @@ namespace {
         return os;
     }
 
-    static inline void QueryRequired(collection   &required,
-                                     const string &portName)
-    {
-        required.free();
-        strings lines;
-        // get port deps output
-        {
-            const string cmd = "port deps " + portName;
-            load(lines,cmd);
-        }
-
-        // parse each line
-        Lang::Matching match("[D|d]ependencies");
-        for(size_t i=1;i<=lines.size();++i)
-        {
-            strings info(2,as_capacity); tokenizer<char>::split_with(info, lines[i], ':' );
-            if(info.size()!=2)          continue; //! not the good format
-            if( !match.partly(info[1])) continue; //! not a dependency line
-            ExtractRequired(required,info[2]);
-        }
-    }
-
-    static inline void RemoveFrom(collection &target, const collection &source)
-    {
-        for( collection::const_iterator i=source.begin(); i != source.end(); ++i)
-        {
-            target.no(*i);
-        }
-
-    }
-
-
-
+    //==========================================================================
+    //
     // installed are already know installed ports
     // required  are already known
-
+    //
+    //==========================================================================
     static inline void CheckRequired(const string &portName,
-                                     collection   &installed,
-                                     collection   &missing,
+                                     Present      &present,
+                                     Missing      &missing,
                                      const int     level = 0 )
     {
         indent(std::cerr,level) << "<"  << portName << ">" << std::endl;
 
-        collection    required;
-        QueryRequired(required,portName);
-
-        RemoveFrom(required,installed);
-        RemoveFrom(required,missing);
-
-        if( required.size()>0)
+        //----------------------------------------------------------------------
+        //
+        // query all required dependecies
+        //
+        //----------------------------------------------------------------------
+        Missing    required;
+        if(QueryRequired(required,portName))
         {
-            strings lines;
-            // query installed among required
-            {
-                string cmd = "port installed ";
-                for(collection::iterator i=required.begin(); i != required.end(); ++i)
-                {
-                    cmd << ' ' << *i;
-                }
-                load(lines,cmd);
-            }
+            assert(required.size()>0);
 
-            for(size_t i=2;i<=lines.size();++i)
-            {
-                tokenizer<char> tkn( lines[i] );
-                if( !tkn.next_with(' ') ) continue;
-                const string id = tkn.to_string();
-                if( required.search(id) )
-                {
-                    // this is an installed port
-                    installed.insert(id);
-                    required.no(id);
-                }
-            }
-            //RemoveFrom(required,installed);
+            RemoveFrom(required,present); // remove already present
+            RemoveFrom(required,missing); // remove already visited
+
             if(required.size()>0)
             {
-                const int nextLevel = level+1;
-                for(collection::iterator i=required.begin(); i != required.end(); ++i)
+                //--------------------------------------------------------------
+                // query installed among required
+                //--------------------------------------------------------------
+                Strings lines;
                 {
-                    const string &sub = *i;
-                    if( !missing.search(sub) )
+                    string cmd = "port installed ";
+                    for(Collection::iterator i=required.begin(); i != required.end(); ++i)
                     {
-                        missing.insert(*i);
-                        CheckRequired(*i,installed,missing,nextLevel);
+                        cmd << ' ' << *i;
+                    }
+                    load(lines,cmd);
+                }
+
+                //--------------------------------------------------------------
+                // update the present ports
+                //--------------------------------------------------------------
+                for(size_t i=2;i<=lines.size();++i)
+                {
+                    tokenizer<char> tkn( lines[i] );
+                    if( !tkn.next_with(' ') ) continue;
+                    const string id = tkn.to_string();
+                    if( required.search(id) )
+                    {
+
+                        present.insert(id); // this is an installed port
+                        required.no(id);    // requirement is fullfilled
+                    }
+                }
+
+                //--------------------------------------------------------------
+                // ok, these are the new required ports
+                //--------------------------------------------------------------
+                if(required.size()>0)
+                {
+                    const int nextLevel = level+1;
+                    for(Collection::iterator i=required.begin(); i != required.end(); ++i)
+                    {
+                        const string &sub = *i;
+                        if( missing.insert(sub) )
+                        {
+                             CheckRequired(sub,present,missing,nextLevel);
+                        }
                     }
                 }
             }
-        }
 
+        }
 
 
 
@@ -196,9 +258,9 @@ Y_PROGRAM_START()
         portName << ' ' << argv[i];
     }
 
-    collection installed;
-    collection missing;
-    CheckRequired(portName,installed,missing);
+    Present present;
+    Missing missing;
+    CheckRequired(portName,present,missing);
     if(missing.size())
     {
         std::cerr << missing << std::endl;
