@@ -86,14 +86,23 @@ Y_ATOM_TICKS(loopTicks,atom::NAME(B,b,loop));\
 Y_ATOM_EQ(a,b,NAME);\
 Y_ATOM_OUT(NAME,2);\
 } while(false)
+    
+#define Y_ATOM_TEST3(NAME) do { \
+fill(A); fill(a);\
+for(size_t i=a.size();i>0;--i) { B[i]=A[i]; b[i]=a[i]; }\
+Y_ATOM_TICKS(fullTicks,atom::NAME(U,A,a));\
+Y_ATOM_TICKS(loopTicks,atom::NAME(V,B,b,loop));\
+Y_ATOM_EQ(U,V,NAME);\
+Y_ATOM_OUT(NAME,3);\
+} while(false)
 
     
     template <typename ARR, typename BRR>
     void Test1( ARR &a, BRR &b, concurrent::for_each &loop )
     {
         typedef typename ARR::mutable_type type;
-        vector<type> A(a.size());
-        vector<type> B(b.size());
+        vector<type> A(a.size()), U(a.size());
+        vector<type> B(b.size()), V(b.size());
         
         Y_ASSERT(a.size()==b.size());
         {
@@ -106,9 +115,14 @@ Y_ATOM_OUT(NAME,2);\
         
         Y_ATOM_TEST1(neg);
         Y_ATOM_TEST2(neg);
+        
         Y_ATOM_TEST2(set);
+        
         Y_ATOM_TEST2(add);
+        Y_ATOM_TEST3(add);
+        
         Y_ATOM_TEST2(sub);
+        Y_ATOM_TEST3(sub);
 
         
         
