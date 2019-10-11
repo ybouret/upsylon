@@ -16,6 +16,30 @@ using namespace upsylon;
 namespace
 {
 
+    template <typename LHS> static inline
+    void test_ownership(const LHS &lhs)
+    {
+        for(typename LHS::const_iterator i=lhs.begin();i!=lhs.end();++i)
+        {
+            Y_ASSERT( lhs.owns( *i ) );
+        }
+    }
+
+    template <typename LHS,typename RHS> static inline
+    void test_no_ownership(const LHS &lhs,const RHS &rhs)
+    {
+        for(typename LHS::const_iterator i=lhs.begin();i!=lhs.end();++i)
+        {
+            Y_ASSERT( !rhs.owns( *i ) );
+        }
+
+        for(typename RHS::const_iterator i=rhs.begin();i!=rhs.end();++i)
+        {
+            Y_ASSERT( !lhs.owns( *i ) );
+        }
+    }
+
+
     template <typename ORDERED>
     static inline void checkOrdered(const size_t maxCycles)
     {
@@ -69,6 +93,15 @@ namespace
                 Y_ASSERT( *i == *j );
             }
 
+            std::cerr << "*";
+            test_ownership(S);
+            test_ownership(U);
+            test_ownership(M);
+
+            test_no_ownership(S,U);
+            test_no_ownership(S,M);
+            test_no_ownership(U,M);
+
             std::cerr << "-";
             alea.shuffle(*data,data.size());
             for(size_t k=data.size();k>0;--k)
@@ -87,18 +120,14 @@ namespace
     static inline void doOrdered(const size_t maxCycles)
     {
 
-#if 1
         checkOrdered< sorted_list<T,increasing_comparator<T> > >(maxCycles);
         checkOrdered< sorted_list<T,decreasing_comparator<T> > >(maxCycles);
-#endif
 
-#if 1
         checkOrdered< sorted_vector<T,increasing_comparator<T>,memory::global> >(maxCycles);
         checkOrdered< sorted_vector<T,decreasing_comparator<T>,memory::global> >(maxCycles);
 
         checkOrdered< sorted_vector<T,increasing_comparator<T>,memory::pooled> >(maxCycles);
         checkOrdered< sorted_vector<T,decreasing_comparator<T>,memory::pooled> >(maxCycles);
-#endif
 
 
     }

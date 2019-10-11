@@ -124,11 +124,33 @@ namespace upsylon {
             return content.head->data;
         }
 
-        //! til item in this order
+        //! tail item in this order
         inline virtual const_type &tail() const throw()
         {
             assert(content.size>0);
             return content.tail->data;
+        }
+
+        //! scan list for object
+        inline virtual bool owns( const_type &obj ) const throw()
+        {
+            const_type      *p = &obj;
+            size_t           n = (content.size>>1)+1;
+            const node_type *fwd = content.head;
+            const node_type *rev = content.tail;
+            while(n-- > 0 )
+            {
+                if(        &(fwd->data) == p ) {
+                    return true;
+                } else if( &(rev->data) == p ) {
+                    return true;
+                }
+                else {
+                    fwd = fwd->next;
+                    rev = rev->prev;
+                }
+            }
+            return false;
         }
 
         //----------------------------------------------------------------------

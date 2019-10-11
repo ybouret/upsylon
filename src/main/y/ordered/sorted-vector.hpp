@@ -117,6 +117,13 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
             return item[size_];
         }
 
+        //! check memory localisation
+        inline virtual bool owns( const_type &obj ) const throw()
+        {
+            const_type *p = &obj;
+            return (p>=addr) && ( p < addr+size_);
+        }
+
         //----------------------------------------------------------------------
         //
         // iterators

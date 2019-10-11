@@ -25,21 +25,16 @@ namespace upsylon
         // virtual interface
         //
         //----------------------------------------------------------------------
-        //! cleanup
-        inline virtual ~ordered() throw() {}
 
-        //! search if object is already there
-        virtual const_type *search( param_type args ) const throw() = 0;
+        inline virtual ~ordered() throw() {}//!< cleanup
 
-        //! remove one object
-        virtual bool remove( param_type args ) throw() = 0;
 
-        //! head object in this order
-        virtual const_type &head() const throw() = 0;
+        virtual const_type *search( param_type  )   const throw() = 0; //!< search if object is already there
+        virtual bool        remove( param_type  )         throw() = 0; //!< remove one object
+        virtual const_type &head()                  const throw() = 0; //!< head object in this order
+        virtual const_type &tail()                  const throw() = 0; //!< tail object in this order
+        virtual bool        owns( const_type &obj ) const throw() = 0; //!< test ownership
 
-        //! tail object in this order
-        virtual const_type &tail() const throw() = 0;
-        
         //----------------------------------------------------------------------
         //
         // non-virtual interface
@@ -63,6 +58,17 @@ namespace upsylon
     protected:
         inline explicit ordered()        throw() : container() {} //!< setup
         inline ordered(const ordered & ) throw() : dynamic(), container() {} //!< copy
+
+        template <typename ITERATOR>
+        inline void remove_all( ITERATOR curr, const ITERATOR last ) throw()
+        {
+            while( curr != last )
+            {
+                no( *curr );
+                ++curr;
+            }
+        }
+
     private:
         Y_DISABLE_ASSIGN(ordered);
         virtual const_type & getObjectAt(const size_t indx) const throw() = 0;
@@ -85,6 +91,7 @@ namespace upsylon
         {
             this->insert_multiple(args);
         }
+
 
     private:
         Y_DISABLE_ASSIGN(ordered_multiple);
@@ -136,6 +143,8 @@ namespace upsylon
         {
             return this->insert_single(args);
         }
+
+
 
     private:
         Y_DISABLE_ASSIGN(ordered_unique);
