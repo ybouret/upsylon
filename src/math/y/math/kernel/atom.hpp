@@ -20,10 +20,10 @@ namespace upsylon {
             //
             //==================================================================
 
-#include "atom/ld.hxx"
-#include "atom/set.hxx"
-#include "atom/neg.hxx"
-#include "atom/add.hxx"
+#include "atom/ld.hpp"
+#include "atom/set.hpp"
+#include "atom/neg.hpp"
+#include "atom/add.hpp"
 
             
 
