@@ -18,9 +18,7 @@ template <typename TARGET, typename SOURCE> static inline
 void neg( TARGET &target, const SOURCE &source,  concurrent::for_each &loop )
 {
     assert( target.size() <= source.size() );
-
-    for(size_t i=target.size();i>0;--i) target[i] = source[i];
-
+    
     struct ops
     {
         TARGET       *target_;

@@ -12,6 +12,10 @@
 #include <iomanip>
 
 #include "support.hpp"
+#include "y/os/rt-clock.hpp"
+#include "y/sort/sorted-sum.hpp"
+
+#include <typeinfo>
 
 using namespace upsylon;
 using namespace math;
@@ -30,53 +34,96 @@ namespace {
         }
     }
 
+    template <typename ARRAY> static inline
+    void fill( ARRAY &tab )
+    {
+        for(size_t i=1;i<=tab.size();++i)
+        {
+           tab[i] = support::get< typename ARRAY::mutable_type >();
+        }
+    }
+
+    template <typename LHS, typename RHS> static inline
+    bool areEqual( const LHS &lhs, const RHS &rhs)
+    {
+        Y_ASSERT(lhs.size()==rhs.size());
+        vector< typename LHS::mutable_type > delta(lhs.size(),as_capacity);
+        for(size_t i=1;i<=lhs.size();++i)
+        {
+            typename LHS::const_type d  = lhs[i] - rhs[i];
+            typename LHS::const_type d2 = d*d;
+
+            delta.push_back_( d2 );
+        }
+        typename LHS::const_type s2 = sorted_sum(delta);
+        return  (s2 <= 0);
+    }
+
+
+#define TEST_TICKS(OUTPUT,EXPR)   uint64_t OUTPUT = 0; \
+do {\
+const uint64_t ini=rt_clock::ticks(); \
+EXPR;\
+OUTPUT=rt_clock::ticks()-ini;\
+} while(false)
+
+#define SHOW_TICKS(NAME,TEXT) do { \
+rt_clock clk;\
+std::cerr << "\t@"#NAME << TEXT << ": " << clk(fullTicks)/clk(loopTicks) << std::endl;\
+} while(false)
+
+#define TEST1_V1(NAME,U) do { \
+TEST_TICKS(fullTicks,(atom::NAME(U)));\
+TEST_TICKS(loopTicks,(atom::NAME(U,loop)));\
+SHOW_TICKS(NAME,"/1");\
+} while(false)
+
+#define TEST1_V2(NAME,U,V) do { \
+TEST_TICKS(fullTicks,(atom::NAME(U,V)));\
+TEST_TICKS(loopTicks,(atom::NAME(U,V,loop)));\
+SHOW_TICKS(NAME,"/2");\
+} while(false)
+
+#define TEST_EQ(A,B) std::cerr << "\t"; Y_CHECK(areEqual(A,B));
+
     template <typename ARR, typename BRR> static inline
     void doTest1(ARR &u,
                  BRR &v,
                  concurrent::for_each &loop)
     {
+        std::cerr << "<Testing with " << typeid(ARR).name() << " & " << typeid(BRR).name() << ">" << std::endl;
         typedef typename ARR::mutable_type type;
         const type value = support::get<type>();
 
-        std::cerr << "-- Test1 #" << std::setw(2) << loop.engine().num_threads() << " [";
         {
-            std::cerr << ".";
-            atom::ld(u,value);
-            atom::ld(v,value);
-            atom::ld(u,value,loop);
-            atom::ld(v,value,loop);
+            TEST1_V2(ld,u,value);
+            TEST1_V2(ld,v,value);
+            TEST_EQ(u,v);
         }
 
         {
-            std::cerr << ".";
-            atom::set(u,v);
-            atom::set(v,u);
-            atom::set(u,u);
-            atom::set(v,v);
+            fill(u); TEST1_V2(set,u,u);
+            fill(v); TEST1_V2(set,u,v); TEST_EQ(u,v);
 
-            atom::set(u,v,loop);
-            atom::set(v,u,loop);
-            atom::set(u,u,loop);
-            atom::set(v,v,loop);
         }
 
         {
-            std::cerr << ".";
-            atom::neg(u);
-            atom::neg(u,v);
-            atom::neg(v);
-            atom::neg(v,u);
-
-            atom::neg(u,u,loop);
-            atom::neg(u,v,loop);
-            atom::neg(v,v,loop);
-            atom::neg(v,u,loop);
+            fill(u); TEST1_V1(neg,u);
+            fill(v); TEST1_V1(neg,v);
+            fill(v); TEST1_V2(neg,u,v); atom::neg(u); TEST_EQ(u,v);
+            fill(u); TEST1_V2(neg,v,u); atom::neg(v); TEST_EQ(u,v);
         }
 
-        
+        {
+            atom::ld(u,0); fill(v); TEST1_V2(add,u,v);
+            atom::ld(v,0); fill(u); TEST1_V2(add,v,u);
 
-        std::cerr << "]" << std::endl;
+            atom::ld(u,0); fill(v); atom::add(u,v);      TEST_EQ(u,v);
+            atom::ld(u,0); fill(v); atom::add(u,v,loop); TEST_EQ(u,v);
 
+
+        }
+        std::cerr << "<Testing>" << std::endl << std::endl;
     }
 
 
@@ -176,8 +223,8 @@ Y_UTEST(atom)
     std::cerr << "par.size=" << par.engine().num_threads() << std::endl;
     std::cerr << "seq.size=" << seq.engine().num_threads() << std::endl;
 
-    doTest<short>(seq,par);
     doTest<float>(seq,par);
+    doTest<short>(seq,par);
 }
 Y_UTEST_DONE()
 
