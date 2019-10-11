@@ -134,6 +134,30 @@ namespace {
     }
 
 
+
+    //==========================================================================
+    //
+    // query presence
+    //
+    //==========================================================================
+    static inline void QueryPresent(Present &present, const string &ports)
+    {
+        Strings lines;
+        {
+            const string cmd = "port installed " + ports;
+            load(lines,cmd);
+        }
+
+        for(size_t i=2;i<=lines.size();++i)
+        {
+            tokenizer<char> tkn( lines[i] );
+            if( !tkn.next_with(' ') ) continue;
+            const string id = tkn.to_string();
+            present.insert(id);
+        }
+
+    }
+
     static std::ostream & indent( std::ostream &os, int level )
     {
 
@@ -147,7 +171,6 @@ namespace {
         }
         return os;
     }
-
     //==========================================================================
     //
     // installed are already know installed ports
@@ -177,33 +200,28 @@ namespace {
             if(required.size()>0)
             {
                 //--------------------------------------------------------------
-                // query installed among required
+                // collect ports
                 //--------------------------------------------------------------
-                Strings lines;
                 {
-                    string cmd = "port installed ";
+                    string ports;
+                    bool   first = true;
                     for(Collection::iterator i=required.begin(); i != required.end(); ++i)
                     {
-                        cmd << ' ' << *i;
+                        if(first)
+                        {
+                            first = false;
+                        }
+                        else
+                        {
+                            ports << ' ';
+                        }
+                        ports << *i;
                     }
-                    load(lines,cmd);
+                    QueryPresent(present,ports);
                 }
 
-                //--------------------------------------------------------------
-                // update the present ports
-                //--------------------------------------------------------------
-                for(size_t i=2;i<=lines.size();++i)
-                {
-                    tokenizer<char> tkn( lines[i] );
-                    if( !tkn.next_with(' ') ) continue;
-                    const string id = tkn.to_string();
-                    if( required.search(id) )
-                    {
 
-                        present.insert(id); // this is an installed port
-                        required.no(id);    // requirement is fullfilled
-                    }
-                }
+                required.exclude(present);
 
                 //--------------------------------------------------------------
                 // ok, these are the new required ports
@@ -243,20 +261,28 @@ Y_PROGRAM_START()
         return 0;
     }
 
-    string portName = argv[1];
+    const string portName = argv[1];
+    string fullPortName = portName;
     for(int i=2;i<argc;++i)
     {
-        portName << ' ' << argv[i];
+        fullPortName << ' ' << argv[i];
     }
 
     Present present;
-    Missing missing;
-    CheckRequired(portName,present,missing);
-    if(missing.size())
+    QueryPresent(present,portName);
+    if( present.search(portName) )
     {
-        std::cerr << missing << std::endl;
+        std::cerr << "<" << portName << ">*" << std::endl;
     }
-
+    else
+    {
+        Missing missing;
+        CheckRequired(fullPortName,present,missing);
+        if(missing.size())
+        {
+            std::cerr << missing << std::endl;
+        }
+    }
 }
 Y_PROGRAM_END()
 
