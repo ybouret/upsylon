@@ -57,24 +57,43 @@ namespace {
         typedef point3d<T>        P3D;
 
         {
+            std::cerr << "2D: " << std::endl;
+            const size_t n = 2;
+            vector<T,memory::global> gv(n); Y_ASSERT( n == gv.size() );
+            vector<T,memory::pooled> pv(n); Y_ASSERT( n == pv.size() );
+            list<T>                  gl(n); Y_ASSERT( n == gl.size() );
             P2D u;
             P2D v;
+
             DO_TEST1(u,v);
+            DO_TEST1(u,gv);
+            DO_TEST1(u,pv);
+            DO_TEST1(u,gl);
+
             std::cerr << u << std::endl;
             std::cerr << v << std::endl;
 
         }
 
         {
+            std::cerr << "3D" << std::endl;
+            const size_t             n = 3;
+            vector<T,memory::global> gv(n); Y_ASSERT( n == gv.size() );
+            vector<T,memory::pooled> pv(n); Y_ASSERT( n == pv.size() );
+            list<T>                  gl(n); Y_ASSERT( n == gl.size() );
             P3D u;
             P3D v;
-            doTest1(u,v,seq);
-            doTest1(v,u,par);
+            DO_TEST1(u,v);
+            DO_TEST1(u,gv);
+            DO_TEST1(u,pv);
+            DO_TEST1(u,gl);
+
             std::cerr << u << std::endl;
             std::cerr << v << std::endl;
         }
 
         {
+            std::cerr << "Big" << std::endl;
             const size_t n = 1000 + alea.leq(10000);
             vector<T,memory::global> gv(n); Y_ASSERT( n == gv.size() );
             vector<T,memory::pooled> pv(n); Y_ASSERT( n == pv.size() );
@@ -86,7 +105,7 @@ namespace {
         }
 
 
-
+        std::cerr << "generic" << std::endl;
         for(size_t iter=0;iter<8;++iter)
         {
             const size_t nr = 1 + alea.leq(30);
