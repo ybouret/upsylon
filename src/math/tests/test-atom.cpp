@@ -36,15 +36,48 @@ namespace {
     {
         typedef typename ARR::mutable_type type;
         const type value = support::get<type>();
-        atom::ld(u,value);
-        atom::ld(u,value,loop);
-        atom::ld(v,value);
-        atom::ld(v,value,loop);
+
+        std::cerr << "-- Test1 [";
+        {
+            std::cerr << ".";
+            atom::ld(u,value);
+            atom::ld(v,value);
+            atom::ld(u,value,loop);
+            atom::ld(v,value,loop);
+        }
+
+        {
+            std::cerr << ".";
+            atom::set(u,v);
+            atom::set(v,u);
+            atom::set(u,u);
+            atom::set(v,v);
+
+            atom::set(u,v,loop);
+            atom::set(v,u,loop);
+            atom::set(u,u,loop);
+            atom::set(v,v,loop);
+        }
+
+        {
+            std::cerr << ".";
+            atom::neg(u,u);
+            atom::neg(u,v);
+            atom::neg(v,v);
+            atom::neg(v,u);
+
+            atom::neg(u,u,loop);
+            atom::neg(u,v,loop);
+            atom::neg(v,v,loop);
+            atom::neg(v,u,loop);
+        }
+
+        std::cerr << "]" << std::endl;
 
     }
 
 
-#define DO_TEST1(U,V) do { doTest1(U,V,seq); doTest1(V,U,par); doTest1(V,U,seq); doTest1(V,U,par);} while(false)
+#define DO_TEST1(U,V) do { doTest1(U,V,seq); doTest1(U,V,par);} while(false)
 
     template <typename T>
     static inline void doTest(concurrent::for_each &seq,
@@ -136,6 +169,9 @@ Y_UTEST(atom)
 {
     concurrent::simd           par;
     concurrent::sequential_for seq;
+
+    std::cerr << "par.size=" << par.engine().num_threads() << std::endl;
+    std::cerr << "seq.size=" << seq.engine().num_threads() << std::endl;
 
     doTest<short>(seq,par);
     doTest<float>(seq,par);

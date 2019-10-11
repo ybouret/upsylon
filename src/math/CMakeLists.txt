@@ -22,6 +22,12 @@ SET(kernel_tao_srcs ${kernel_tao_decl} ${kernel_tao_code})
 SOURCE_GROUP( kernel/tao FILES ${kernel_tao_srcs} )
 INSTALL( FILES ${kernel_tao_decl} DESTINATION include/y/math/kernel/tao )
 
+FILE(GLOB kernel_atom_decl y/math/kernel/atom/*.hxx)
+FILE(GLOB kernel_atom_code y/math/kernel/atom/*.cpp)
+SET(kernel_atom_srcs ${kernel_atom_decl} ${kernel_atom_code})
+SOURCE_GROUP( kernel/atom FILES ${kernel_atom_srcs} )
+INSTALL( FILES ${kernel_atom_decl} DESTINATION include/y/math/kernel/atom )
+
 FILE(GLOB io_decl y/math/io/*.hpp)
 FILE(GLOB io_code y/math/io/*.cpp)
 SET(io_srcs ${io_decl} ${io_code})
@@ -102,7 +108,7 @@ INSTALL( FILES ${euclidean_arc_decl} DESTINATION include/y/math/euclidean/arc )
 
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
-${kernel_srcs}
+${kernel_srcs} ${kernel_atom_srcs}
 ${io_srcs}
 ${fcn_srcs}
 ${ode_srcs} ${ode_expl_srcs} ${ode_impl_srcs}
