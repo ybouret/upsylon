@@ -84,6 +84,12 @@ TEST_TICKS(loopTicks,(atom::NAME(U,V,loop)));\
 SHOW_TICKS(NAME,"/2");\
 } while(false)
 
+#define TEST1_V3(NAME,U,V,W) do { \
+TEST_TICKS(fullTicks,(atom::NAME(U,V,W)));\
+TEST_TICKS(loopTicks,(atom::NAME(U,V,W,loop)));\
+SHOW_TICKS(NAME,"/3");\
+} while(false)
+
 #define TEST_EQ(A,B) std::cerr << "\t"; Y_CHECK(areEqual(A,B));
 
     template <typename ARR, typename BRR> static inline
@@ -93,7 +99,8 @@ SHOW_TICKS(NAME,"/2");\
     {
         std::cerr << "<Testing with " << typeid(ARR).name() << " & " << typeid(BRR).name() << ">" << std::endl;
         typedef typename ARR::mutable_type type;
-        const type value = support::get<type>();
+        const type   value = support::get<type>();
+        vector<type> w(u.size());
 
         {
             TEST1_V2(ld,u,value);
@@ -115,14 +122,21 @@ SHOW_TICKS(NAME,"/2");\
         }
 
         {
-            atom::ld(u,0); fill(v); TEST1_V2(add,u,v);
-            atom::ld(v,0); fill(u); TEST1_V2(add,v,u);
+            fill(u); fill(v); TEST1_V2(add,u,v);
+            fill(v); fill(u); TEST1_V2(add,v,u);
 
             atom::ld(u,0); fill(v); atom::add(u,v);      TEST_EQ(u,v);
             atom::ld(u,0); fill(v); atom::add(u,v,loop); TEST_EQ(u,v);
 
-
+            fill(u); fill(v); TEST1_V3(add,w,u,v);
+            fill(u); fill(v); TEST1_V3(add,w,v,u);
+            
         }
+
+
+
+
+
         std::cerr << "<Testing>" << std::endl << std::endl;
     }
 
