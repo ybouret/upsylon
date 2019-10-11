@@ -39,7 +39,7 @@ namespace {
     {
         for(size_t i=1;i<=tab.size();++i)
         {
-           tab[i] = support::get< typename ARRAY::mutable_type >();
+            tab[i] = support::get< typename ARRAY::mutable_type >();
         }
     }
 
@@ -59,6 +59,7 @@ namespace {
         return  (s2 <= 0);
     }
 
+#define TEST_UV() do { fill(u); fill(v); } while(false)
 
 #define TEST_TICKS(OUTPUT,EXPR)   uint64_t OUTPUT = 0; \
 do {\
@@ -73,26 +74,29 @@ std::cerr << "\t@"#NAME << TEXT << ": " << clk(fullTicks)/clk(loopTicks) << std:
 } while(false)
 
 #define TEST1_V1(NAME,U) do { \
+TEST_UV();\
 TEST_TICKS(fullTicks,(atom::NAME(U)));\
 TEST_TICKS(loopTicks,(atom::NAME(U,loop)));\
 SHOW_TICKS(NAME,"/1");\
 } while(false)
 
 #define TEST1_V2(NAME,U,V) do { \
+TEST_UV();\
 TEST_TICKS(fullTicks,(atom::NAME(U,V)));\
 TEST_TICKS(loopTicks,(atom::NAME(U,V,loop)));\
 SHOW_TICKS(NAME,"/2");\
 } while(false)
 
 #define TEST1_V3(NAME,U,V,W) do { \
+TEST_UV();\
 TEST_TICKS(fullTicks,(atom::NAME(U,V,W)));\
 TEST_TICKS(loopTicks,(atom::NAME(U,V,W,loop)));\
 SHOW_TICKS(NAME,"/3");\
 } while(false)
 
 #define TEST_LD(PFX) do { atom::ld( PFX##0, 0 ); atom::ld( PFX##1, 0 ); } while(false)
-#define TEST1_EQ2(NAME,PFX,RHS)     do { TEST_LD(PFX); atom::NAME(PFX##0,RHS);     atom::NAME(PFX##1,RHS,loop);     TEST_EQ(PFX##0,PFX##1,NAME); } while(false)
-#define TEST1_EQ3(NAME,PFX,LHS,RHS) do { TEST_LD(PFX); atom::NAME(PFX##0,LHS,RHS); atom::NAME(PFX##1,LHS,RHS,loop); TEST_EQ(PFX##0,PFX##1,NAME); } while(false)
+#define TEST1_EQ2(NAME,PFX,RHS)     do { TEST_UV(); TEST_LD(PFX); atom::NAME(PFX##0,RHS);     atom::NAME(PFX##1,RHS,loop);     TEST_EQ(PFX##0,PFX##1,NAME); } while(false)
+#define TEST1_EQ3(NAME,PFX,LHS,RHS) do { TEST_UV(); TEST_LD(PFX); atom::NAME(PFX##0,LHS,RHS); atom::NAME(PFX##1,LHS,RHS,loop); TEST_EQ(PFX##0,PFX##1,NAME); } while(false)
 
 #define TEST_EQ(A,B,OP) std::cerr << "\t" #OP " : "; Y_CHECK(areEqual(A,B));
 
@@ -114,40 +118,40 @@ SHOW_TICKS(NAME,"/3");\
         {
             TEST1_V2(ld,u,value);
             TEST1_V2(ld,v,value);
-            TEST_EQ(u,v,ld);
+            //TEST_EQ(u,v,ld);
         }
 
         {
-            fill(u); TEST1_V2(set,u,u);
-            fill(v); TEST1_V2(set,u,v);
-            fill(u); TEST1_EQ2(set,U,u);
-            fill(v); TEST1_EQ2(set,V,v);
+            TEST1_V2(set,u,u);
+            TEST1_V2(set,u,v);
+            TEST1_EQ2(set,U,u);
+            TEST1_EQ2(set,V,v);
         }
 
         {
-            fill(u); TEST1_V1(neg,u);
-            fill(v); TEST1_V1(neg,v);
-            fill(v); TEST1_V2(neg,u,v);
-            fill(u); TEST1_V2(neg,v,u);
-            fill(u); TEST1_EQ2(neg,U,u);
-            fill(v); TEST1_EQ2(neg,V,v);
+             TEST1_V1(neg,u);
+              TEST1_V1(neg,v);
+              TEST1_V2(neg,u,v);
+              TEST1_V2(neg,v,u);
+             TEST1_EQ2(neg,U,u);
+              TEST1_EQ2(neg,V,v);
         }
 
         {
-            fill(u); fill(v);  TEST1_V2(add,u,v); TEST1_V3(add,U0,u,v);
-            fill(v); fill(u);  TEST1_V2(add,v,u); TEST1_V3(add,U0,v,u);
+            TEST1_V2(add,u,v); TEST1_V3(add,U0,u,v);
+            TEST1_V2(add,v,u); TEST1_V3(add,U0,v,u);
 
-            fill(u); fill(v);  TEST1_EQ2(add,U,u); TEST1_EQ3(add,U,u,v);
-            fill(u); fill(v);  TEST1_EQ2(add,V,v); TEST1_EQ3(add,V,v,u);
+            TEST1_EQ2(add,U,u); TEST1_EQ3(add,U,u,v);
+            TEST1_EQ2(add,V,v); TEST1_EQ3(add,V,v,u);
         }
 
 
         {
-            fill(u); fill(v);  TEST1_V2(sub,u,v); TEST1_V3(sub,U0,u,v);
-            fill(v); fill(u);  TEST1_V2(sub,v,u); TEST1_V3(sub,U0,v,u);
+            TEST1_V2(sub,u,v);  TEST1_V3(sub,U0,u,v);
+            TEST1_V2(sub,v,u);  TEST1_V3(sub,U0,v,u);
 
-            fill(u); fill(v);  TEST1_EQ2(sub,U,u); TEST1_EQ3(sub,U,u,v);
-            fill(u); fill(v);  TEST1_EQ2(sub,V,v); TEST1_EQ3(sub,V,v,u);
+            TEST1_EQ2(sub,U,u); TEST1_EQ3(sub,U,u,v);
+            TEST1_EQ2(sub,V,v); TEST1_EQ3(sub,V,v,u);
         }
 
 
