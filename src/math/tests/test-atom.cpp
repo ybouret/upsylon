@@ -90,7 +90,11 @@ TEST_TICKS(loopTicks,(atom::NAME(U,V,W,loop)));\
 SHOW_TICKS(NAME,"/3");\
 } while(false)
 
-#define TEST_EQ(A,B) std::cerr << "\t"; Y_CHECK(areEqual(A,B));
+#define TEST_LD(PFX) do { atom::ld( PFX##0, 0 ); atom::ld( PFX##1, 0 ); } while(false)
+#define TEST1_EQ2(NAME,PFX,RHS)     do { TEST_LD(PFX); atom::NAME(PFX##0,RHS);     atom::NAME(PFX##1,RHS,loop);     TEST_EQ(PFX##0,PFX##1,NAME); } while(false)
+#define TEST1_EQ3(NAME,PFX,LHS,RHS) do { TEST_LD(PFX); atom::NAME(PFX##0,LHS,RHS); atom::NAME(PFX##1,LHS,RHS,loop); TEST_EQ(PFX##0,PFX##1,NAME); } while(false)
+
+#define TEST_EQ(A,B,OP) std::cerr << "\t" #OP " : "; Y_CHECK(areEqual(A,B));
 
     template <typename ARR, typename BRR> static inline
     void doTest1(ARR &u,
@@ -100,37 +104,50 @@ SHOW_TICKS(NAME,"/3");\
         std::cerr << "<Testing with " << typeid(ARR).name() << " & " << typeid(BRR).name() << ">" << std::endl;
         typedef typename ARR::mutable_type type;
         const type   value = support::get<type>();
-        vector<type> w(u.size());
+
+        vector< typename ARR::mutable_type> U0(u.size());
+        vector< typename ARR::mutable_type> U1(u.size());
+        vector< typename BRR::mutable_type> V0(v.size());
+        vector< typename BRR::mutable_type> V1(v.size());
+
 
         {
             TEST1_V2(ld,u,value);
             TEST1_V2(ld,v,value);
-            TEST_EQ(u,v);
+            TEST_EQ(u,v,ld);
         }
 
         {
             fill(u); TEST1_V2(set,u,u);
-            fill(v); TEST1_V2(set,u,v); TEST_EQ(u,v);
-
+            fill(v); TEST1_V2(set,u,v);
+            fill(u); TEST1_EQ2(set,U,u);
+            fill(v); TEST1_EQ2(set,V,v);
         }
 
         {
             fill(u); TEST1_V1(neg,u);
             fill(v); TEST1_V1(neg,v);
-            fill(v); TEST1_V2(neg,u,v); atom::neg(u); TEST_EQ(u,v);
-            fill(u); TEST1_V2(neg,v,u); atom::neg(v); TEST_EQ(u,v);
+            fill(v); TEST1_V2(neg,u,v);
+            fill(u); TEST1_V2(neg,v,u);
+            fill(u); TEST1_EQ2(neg,U,u);
+            fill(v); TEST1_EQ2(neg,V,v);
         }
 
         {
-            fill(u); fill(v); TEST1_V2(add,u,v);
-            fill(v); fill(u); TEST1_V2(add,v,u);
+            fill(u); fill(v);  TEST1_V2(add,u,v); TEST1_V3(add,U0,u,v);
+            fill(v); fill(u);  TEST1_V2(add,v,u); TEST1_V3(add,U0,v,u);
 
-            atom::ld(u,0); fill(v); atom::add(u,v);      TEST_EQ(u,v);
-            atom::ld(u,0); fill(v); atom::add(u,v,loop); TEST_EQ(u,v);
+            fill(u); fill(v);  TEST1_EQ2(add,U,u); TEST1_EQ3(add,U,u,v);
+            fill(u); fill(v);  TEST1_EQ2(add,V,v); TEST1_EQ3(add,V,v,u);
+        }
 
-            fill(u); fill(v); TEST1_V3(add,w,u,v);
-            fill(u); fill(v); TEST1_V3(add,w,v,u);
-            
+
+        {
+            fill(u); fill(v);  TEST1_V2(sub,u,v); TEST1_V3(sub,U0,u,v);
+            fill(v); fill(u);  TEST1_V2(sub,v,u); TEST1_V3(sub,U0,v,u);
+
+            fill(u); fill(v);  TEST1_EQ2(sub,U,u); TEST1_EQ3(sub,U,u,v);
+            fill(u); fill(v);  TEST1_EQ2(sub,V,v); TEST1_EQ3(sub,V,v,u);
         }
 
 
@@ -191,7 +208,7 @@ SHOW_TICKS(NAME,"/3");\
 
         {
             std::cerr << "Big" << std::endl;
-            const size_t n = 1000 + alea.leq(10000);
+            const size_t n = 1000 + alea.leq(1000);
             vector<T,memory::global> gv(n); Y_ASSERT( n == gv.size() );
             vector<T,memory::pooled> pv(n); Y_ASSERT( n == pv.size() );
             list<T>                  gl(n); Y_ASSERT( n == gl.size() );
