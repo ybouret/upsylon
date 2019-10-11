@@ -9,6 +9,24 @@ namespace upsylon {
 
     namespace math {
 
+#define Y_MK_ATOM_OPS_API() \
+struct ops {
+        
+#define Y_MK_ATOM_OPS_GET(SELF) \
+static inline void call(void *_, parallel &ctx, lockable &access) {\
+(void)access;\
+ops & SELF = *static_cast<ops*>(_)
+        
+#define Y_MK_ATOM_OPS_USE(LENGTH,CODE) \
+size_t __offset = 1;         \
+size_t __length = (LENGTH);  \
+ctx.split(__length,__offset); \
+while(__length--) { const size_t __indx = __offset++; Y_MK_ATOM_##CODE(__indx); }\
+} }; \
+ops __self ={
+        
+#define Y_MK_ATOM_OPS_RUN(LOOP) }; (LOOP).run( ops::call, & __self )
+        
         //! Algebraic Templated Object Manipulation
         struct atom
         {
