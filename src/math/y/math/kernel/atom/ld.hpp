@@ -1,4 +1,6 @@
+//! \file
 
+//! sequential arr = [value..value]
 template <typename ARRAY> static inline
 void ld( ARRAY &arr, typename ARRAY::param_type value)
 {
@@ -9,10 +11,10 @@ void ld( ARRAY &arr, typename ARRAY::param_type value)
 }
 
 
-
-
+//! kernel code
 #define Y_MK_ATOM_LD(I) a[I] = *self.value_
 
+//! parallel arr = [value..value]
 template <typename ARRAY> static inline
 void ld( ARRAY &arr, typename ARRAY::param_type value, concurrent::for_each &loop)
 {

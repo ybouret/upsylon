@@ -1,4 +1,6 @@
+//! \file
 
+//! sequential target=source
 template <typename TARGET, typename SOURCE> static inline
 void set( TARGET &target, const SOURCE &source )
 {
@@ -6,10 +8,11 @@ void set( TARGET &target, const SOURCE &source )
     for(size_t i=target.size();i>0;--i) target[i] = static_cast<typename TARGET::const_type>(source[i]);
 }
 
-
+//! SIMD kernel
 #define Y_MK_ATOM_SET(offset) \
 target[offset] = static_cast<typename TARGET::const_type>(source[offset])
 
+//! parallel target=source
 template <typename TARGET, typename SOURCE> static inline
 void set( TARGET &target, const SOURCE &source,  concurrent::for_each &loop )
 {

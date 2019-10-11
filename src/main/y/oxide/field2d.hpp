@@ -127,7 +127,7 @@ cols(rowLayout.width)
         public:
             const size_t   rows;      //!< currently built rows
             const Layout1D rowLayout; //!< layout for a single row
-            const size_t   cols;
+            const size_t   cols;      //!< matrix like behavior
             
         private:
             void destructRows() throw()

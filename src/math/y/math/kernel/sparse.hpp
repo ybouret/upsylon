@@ -1,3 +1,5 @@
+//! \file
+
 #ifndef Y_MATH_KERNEL_SPARSE_INCLUDED
 #define Y_MATH_KERNEL_SPARSE_INCLUDED 1
 

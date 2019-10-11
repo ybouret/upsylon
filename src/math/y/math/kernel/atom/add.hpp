@@ -1,3 +1,6 @@
+//! \file
+
+//! sequential target += source
 template <typename TARGET, typename SOURCE> static inline
 void add( TARGET &target, const SOURCE &source )
 {
@@ -6,8 +9,10 @@ void add( TARGET &target, const SOURCE &source )
 }
 
 
+//! SIMD kernel
 #define Y_MK_ATOM_ADD(I) target[I] += static_cast<typename TARGET::const_type>(source[I])
 
+//! parallel target += source
 template <typename TARGET, typename SOURCE> static inline
 void add( TARGET &target, const SOURCE &source,  concurrent::for_each &loop )
 {
@@ -27,10 +32,8 @@ void add( TARGET &target, const SOURCE &source,  concurrent::for_each &loop )
 
 #undef Y_MK_ATOM_ADD
 
-#define Y_MK_ATOM_ADD(offset) \
-target[offset] = static_cast<typename TARGET::const_type>(lhs[offset]) + static_cast<typename TARGET::const_type>(rhs[offset])
 
-
+//! sequential target = lhs + rhs
 template <typename TARGET, typename LHS, typename RHS> static inline
 void add( TARGET &target, const LHS &lhs, const RHS &rhs )
 {
@@ -42,7 +45,11 @@ void add( TARGET &target, const LHS &lhs, const RHS &rhs )
     }
 }
 
+//! SIMD kernel
+#define Y_MK_ATOM_ADD(offset) \
+target[offset] = static_cast<typename TARGET::const_type>(lhs[offset]) + static_cast<typename TARGET::const_type>(rhs[offset])
 
+//! parallel target = lhs + rhs
 template <typename TARGET, typename LHS, typename RHS> static inline
 void add( TARGET &target, const LHS &lhs, const RHS &rhs, concurrent::for_each &loop )
 {

@@ -123,6 +123,7 @@ Y_ATOM_OUT(NAME,3);\
         
         Y_ATOM_TEST2(sub);
         Y_ATOM_TEST3(sub);
+        Y_ATOM_TEST2(subp);
 
         
         
