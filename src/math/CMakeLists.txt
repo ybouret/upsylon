@@ -22,7 +22,7 @@ SET(kernel_tao_srcs ${kernel_tao_decl} ${kernel_tao_code})
 SOURCE_GROUP( kernel/tao FILES ${kernel_tao_srcs} )
 INSTALL( FILES ${kernel_tao_decl} DESTINATION include/y/math/kernel/tao )
 
-FILE(GLOB kernel_atom_decl y/math/kernel/atom/*.hxx)
+FILE(GLOB kernel_atom_decl y/math/kernel/atom/*.hpp)
 FILE(GLOB kernel_atom_code y/math/kernel/atom/*.cpp)
 SET(kernel_atom_srcs ${kernel_atom_decl} ${kernel_atom_code})
 SOURCE_GROUP( kernel/atom FILES ${kernel_atom_srcs} )

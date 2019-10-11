@@ -9,6 +9,7 @@
 
 #include "y/memory/pooled.hpp"
 #include "y/sequence/list.hpp"
+#include <iomanip>
 
 #include "support.hpp"
 
@@ -37,7 +38,7 @@ namespace {
         typedef typename ARR::mutable_type type;
         const type value = support::get<type>();
 
-        std::cerr << "-- Test1 [";
+        std::cerr << "-- Test1 #" << std::setw(2) << loop.engine().num_threads() << " [";
         {
             std::cerr << ".";
             atom::ld(u,value);
@@ -61,9 +62,9 @@ namespace {
 
         {
             std::cerr << ".";
-            atom::neg(u,u);
+            atom::neg(u);
             atom::neg(u,v);
-            atom::neg(v,v);
+            atom::neg(v);
             atom::neg(v,u);
 
             atom::neg(u,u,loop);
@@ -71,6 +72,8 @@ namespace {
             atom::neg(v,v,loop);
             atom::neg(v,u,loop);
         }
+
+        
 
         std::cerr << "]" << std::endl;
 

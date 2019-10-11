@@ -24,6 +24,7 @@ namespace upsylon {
 #include "atom/set.hpp"
 #include "atom/neg.hpp"
 #include "atom/add.hpp"
+#include "atom/sub.hpp"
 
             
 
