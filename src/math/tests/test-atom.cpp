@@ -8,6 +8,7 @@
 #include "y/oxide/field2d.hpp"
 
 #include "y/memory/pooled.hpp"
+#include "y/sequence/list.hpp"
 
 #include "support.hpp"
 
@@ -16,7 +17,7 @@ using namespace math;
 
 namespace {
 
-    template <typename TABLEAU>
+    template <typename TABLEAU> static inline
     void fillTableau( TABLEAU &tab )
     {
         for(size_t i=1;i<=tab.rows;++i)
@@ -28,8 +29,26 @@ namespace {
         }
     }
 
+    template <typename ARR, typename BRR> static inline
+    void doTest1(ARR &u,
+                 BRR &v,
+                 concurrent::for_each &loop)
+    {
+        typedef typename ARR::mutable_type type;
+        const type value = support::get<type>();
+        atom::ld(u,value);
+        atom::ld(u,value,loop);
+        atom::ld(v,value);
+        atom::ld(v,value,loop);
+
+    }
+
+
+#define DO_TEST1(U,V) do { doTest1(U,V,seq); doTest1(V,U,par); doTest1(V,U,seq); doTest1(V,U,par);} while(false)
+
     template <typename T>
-    static inline void doTest()
+    static inline void doTest(concurrent::for_each &seq,
+                              concurrent::for_each &par)
     {
 
         typedef matrix<T>         Matrix;
@@ -38,19 +57,50 @@ namespace {
         typedef point3d<T>        P3D;
 
         {
+            P2D u;
             P2D v;
+            DO_TEST1(u,v);
+            std::cerr << u << std::endl;
+            std::cerr << v << std::endl;
+
         }
 
         {
+            P3D u;
             P3D v;
+            doTest1(u,v,seq);
+            doTest1(v,u,par);
+            std::cerr << u << std::endl;
+            std::cerr << v << std::endl;
         }
+
+        {
+            const size_t n = 1000 + alea.leq(10000);
+            vector<T,memory::global> gv(n); Y_ASSERT( n == gv.size() );
+            vector<T,memory::pooled> pv(n); Y_ASSERT( n == pv.size() );
+            list<T>                  gl(n); Y_ASSERT( n == gl.size() );
+            DO_TEST1(gv,pv);
+            DO_TEST1(gv,gl);
+            DO_TEST1(pv,gl);
+
+        }
+
+
 
         for(size_t iter=0;iter<8;++iter)
         {
             const size_t nr = 1 + alea.leq(30);
             const size_t nc = 1 + alea.leq(30);
-            vector<T,memory::global> rhs(nr,as_capacity);
-            vector<T,memory::pooled> lhs(nc,as_capacity);
+            vector<T,memory::global> rhs(nr);
+            vector<T,memory::pooled> rh2(nr);
+
+
+
+            vector<T,memory::pooled> lhs(nc);
+            vector<T,memory::global> lh2(nc);
+
+
+
 
             Matrix M(nr,nc);
             Field  F( "F", Oxide::Coord2D(1,1), Oxide::Coord2D(nc,nr) );
@@ -65,7 +115,11 @@ namespace {
 
 Y_UTEST(atom)
 {
-    doTest<float>();
+    concurrent::simd           par;
+    concurrent::sequential_for seq;
+
+    doTest<short>(seq,par);
+    doTest<float>(seq,par);
 }
 Y_UTEST_DONE()
 

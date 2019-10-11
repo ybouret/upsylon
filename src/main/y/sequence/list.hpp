@@ -10,8 +10,9 @@
 #include "y/sort/merge.hpp"
 #include "y/type/self-destruct.hpp"
 
-namespace upsylon
-{
+namespace upsylon {
+
+
     //! linked list of nodes containing objects
     template <typename T>
     class list : public sequence<T>
@@ -25,6 +26,10 @@ namespace upsylon
         public:
             //! build data by copy constructor
             inline  node_type(param_type args) : next(0), prev(0), data(args) {}
+
+            //! build data by default constructor
+            inline  node_type() : next(0), prev(0), data() {}
+
             //! destructor
             inline ~node_type() throw() {}
 
@@ -50,6 +55,17 @@ namespace upsylon
         nodes(), cache()
         {
             try { __reserve(n); } catch(...) { __release(); throw; }
+        }
+
+        //! constructor with n objects having default constructor
+        inline explicit list(const size_t n) throw() : nodes(), cache()
+        {
+            try {
+                while( nodes.size < n )
+                {
+                    nodes.push_back( query() );
+                }
+            } catch(...) { __release(); throw; }
         }
 
         //! copy constructor
@@ -225,16 +241,15 @@ namespace upsylon
         nodes_list nodes;
         nodes_pool cache;
 
-#if 0
-        inline void __kill( type &data ) throw()
+
+        inline node_type *query_dead_node()
         {
-            destruct( (mutable_type *) &data );
+            return (cache.size>0) ? cache.query() : object::acquire1<node_type>();
         }
-#endif
-        
+
         inline node_type *query(param_type args)
         {
-            node_type *node = (cache.size>0) ? cache.query() : object::acquire1<node_type>();
+            node_type *node = query_dead_node();
             try
             {
                 new (node) node_type(args);
@@ -246,6 +261,23 @@ namespace upsylon
             }
             return node;
         }
+
+        inline node_type *query()
+        {
+            node_type *node = query_dead_node();
+            try
+            {
+                new (node) node_type();
+            }
+            catch(...)
+            {
+                cache.store(node);
+                throw;
+            }
+            return node;
+        }
+
+
 
         inline void __reserve(size_t n)
         {
