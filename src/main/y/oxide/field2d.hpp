@@ -16,7 +16,8 @@ namespace upsylon
 #define Y_OXIDE_FIELD2D_CTOR()         \
 FieldOf<T>(id,*this),                  \
 row(0), rows(0),                       \
-rowLayout(this->lower.x,this->upper.x)
+rowLayout(this->lower.x,this->upper.x),\
+cols(rowLayout.width)
         //
         //! field in 2D
         //
@@ -126,12 +127,13 @@ rowLayout(this->lower.x,this->upper.x)
         public:
             const size_t   rows;      //!< currently built rows
             const Layout1D rowLayout; //!< layout for a single row
-
+            const size_t   cols;
+            
         private:
             void destructRows() throw()
             {
                 row        += this->lower.y;
-                size_t &r   = (size_t &)rows;
+                size_t &r   = aliasing::_(rows);
                 while(r>0)
                 {
                     self_destruct( row[--r] );

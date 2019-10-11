@@ -23,6 +23,7 @@ ADD_TEST(mk:tao      test-m tao)
 #ADD_TEST(mk:tao2     test-m tao2)
 #ADD_TEST(mk:tao3     test-m tao3)
 ADD_TEST(mk:sparse   test-m sparse)
+ADD_TEST(mk:atom     test-m atom)
 
 SOURCE_GROUP(ode FILES test-michaelis.cpp test-ode.cpp test-rk4.cpp
 test-ode-expl.cpp test-ode-impl.cpp)

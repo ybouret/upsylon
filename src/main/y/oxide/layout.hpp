@@ -6,6 +6,7 @@
 #include "y/sort/unique.hpp"
 #include "y/sort/sequence.hpp"
 #include "y/counting/mloop.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -90,7 +91,7 @@ namespace upsylon
             width(up),
             pitch(up)
             {
-                size_t  &n = (size_t  &)items;
+                size_t  &n = aliasing::_(items);
                 Coord1D *l = (Coord1D *)&lower;
                 Coord1D *u = (Coord1D *)&upper;
                 Coord1D *w = (Coord1D *)&width;
