@@ -133,15 +133,6 @@ namespace {
         return ans;
     }
 
-    static inline void RemoveFrom(Collection &target, const Collection &source)
-    {
-        for( Collection::const_iterator i=source.begin(); i != source.end(); ++i)
-        {
-            target.no(*i);
-        }
-
-    }
-
 
     static std::ostream & indent( std::ostream &os, int level )
     {
@@ -180,8 +171,8 @@ namespace {
         {
             assert(required.size()>0);
 
-            RemoveFrom(required,present); // remove already present
-            RemoveFrom(required,missing); // remove already visited
+            required.exclude(present);
+            required.exclude(missing);
 
             if(required.size()>0)
             {

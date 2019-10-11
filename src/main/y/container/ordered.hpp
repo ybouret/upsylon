@@ -53,21 +53,42 @@ namespace upsylon
             assert(indx>0); assert(indx<=size());
             return getObjectAt(indx);
         }
-        
+
+        //! exclude a range of keys
+        template <typename ITERATOR>
+        inline void exclude( ITERATOR curr, const ITERATOR last ) throw()
+        {
+            if( curr != last )
+            {
+                const_type &obj = *curr;
+                if( this->owns( obj ) )
+                {
+                    // iterator based on this
+                    this->free();
+                }
+                else
+                {
+                    no(obj);
+                    for( ++curr; curr != last; ++curr )
+                    {
+                        no(*curr);
+                    }
+                }
+            }
+        }
+
+        //! exclude all keys
+        template <typename ORDERED>
+        inline void exclude( const ORDERED &bad ) throw()
+        {
+            exclude( bad.begin(), bad.end() );
+        }
 
     protected:
         inline explicit ordered()        throw() : container() {} //!< setup
         inline ordered(const ordered & ) throw() : dynamic(), container() {} //!< copy
 
-        template <typename ITERATOR>
-        inline void remove_all( ITERATOR curr, const ITERATOR last ) throw()
-        {
-            while( curr != last )
-            {
-                no( *curr );
-                ++curr;
-            }
-        }
+
 
     private:
         Y_DISABLE_ASSIGN(ordered);
