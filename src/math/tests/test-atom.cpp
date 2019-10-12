@@ -169,6 +169,22 @@ Y_ATOM_OUT(NAME,1);\
             Y_ATOM_OUT(setprobe,1);
         }
         
+        
+        {
+            fill(a); copyTo(b,a);
+            fill(A); copyTo(B,A);
+            type ab=0, AB=0;
+            Y_ATOM_TICKS(fullTicks,ab=atom::dot(a,b));
+            Y_ATOM_TICKS(loopTicks,AB=atom::dot(A,B,loop));
+            std::cerr << "ab=" << ab  << ", AB=" << AB << std::endl;
+            type dd = ab - AB;
+            dd *= dd;
+            std::cerr << "delta.dot=" << dd << std::endl;
+            Y_ATOM_OUT(dot,2);
+        }
+        
+        
+        
     }
 
 

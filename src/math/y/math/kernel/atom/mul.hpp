@@ -31,20 +31,24 @@ void mul_by( typename ARRAY::param_type value, ARRAY &arr,  concurrent::for_each
 }
 #undef Y_MK_ATOM_MUL_BY
 
+//! type dependent mulop implementation
 struct mulop
 {
+    //! target = value * source
     template <typename T,typename U> static inline
     void __set( T &target, const T value, const U &source)
     {
         target = value * static_cast<T>( source );
     }
     
+    //! target += value * source
     template <typename T,typename U> static inline
     void __add( T &target, const T value, const U &source)
     {
         target += value * static_cast<T>( source );
     }
     
+    //! target -= value * source
     template <typename T,typename U> static inline
     void __sub( T &target, const T value, const U &source)
     {
@@ -87,6 +91,7 @@ void mulsub( TARGET &target, typename TARGET::param_type value, const SOURCE &so
     mul_(target,value,source, mulop::__sub<typename TARGET::mutable_type,typename SOURCE::mutable_type>);
 }
 
+//! SIMD kernel
 #define Y_MK_ATOM_MUL_OP(i) op( target[i], value, source[i] )
 
 //! parallel mulop
@@ -152,7 +157,7 @@ void setprobe(TARGET                     &target,
 
 }
 
-
+//! SIMD kernel
 #define Y_MK_ATOM_SETPROBE(i) \
 target[i] = static_cast<typename TARGET::const_type>(lhs[i]) + value * static_cast<typename TARGET::const_type>(rhs[i])
 
