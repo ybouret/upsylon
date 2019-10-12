@@ -47,7 +47,7 @@ ops __self ={
 #include "atom/neg.hpp"
 #include "atom/add.hpp"
 #include "atom/sub.hpp"
-
+#include "atom/mul.hpp"
             
 
 

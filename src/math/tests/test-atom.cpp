@@ -42,6 +42,15 @@ namespace {
             tab[i] = support::get< typename ARRAY::mutable_type >();
         }
     }
+    
+    template <typename LHS, typename RHS> static inline
+    void copyTo( LHS &lhs, const RHS &rhs )
+    {
+        for(size_t i=lhs.size();i>0;--i)
+        {
+            lhs[i] = rhs[i];
+        }
+    }
 
     template <typename LHS, typename RHS> static inline
     bool areEqual( const LHS &lhs, const RHS &rhs)
@@ -71,7 +80,7 @@ rt_clock clk; std::cerr << "\t"#NAME << "." << ARITY << ".speedup=" << clk(fullT
 } while(false)
     
 #define Y_ATOM_TEST1(NAME) do { \
-fill(a); for(size_t i=a.size();i>0;--i) b[i] = a[i]; \
+fill(a); copyTo(b,a); \
 Y_ATOM_TICKS(fullTicks,atom::NAME(a));\
 Y_ATOM_TICKS(loopTicks,atom::NAME(b,loop));\
 Y_ATOM_EQ(a,b,NAME);\
@@ -79,8 +88,8 @@ Y_ATOM_OUT(NAME,1);\
 } while(false)
    
 #define Y_ATOM_TEST2(NAME) do { \
-fill(A); fill(a);\
-for(size_t i=a.size();i>0;--i) { B[i]=A[i]; b[i]=a[i]; }\
+fill(A); copyTo(B,A);\
+fill(a); copyTo(b,a);\
 Y_ATOM_TICKS(fullTicks,atom::NAME(A,a));\
 Y_ATOM_TICKS(loopTicks,atom::NAME(B,b,loop));\
 Y_ATOM_EQ(a,b,NAME);\
@@ -88,14 +97,23 @@ Y_ATOM_OUT(NAME,2);\
 } while(false)
     
 #define Y_ATOM_TEST3(NAME) do { \
-fill(A); fill(a);\
-for(size_t i=a.size();i>0;--i) { B[i]=A[i]; b[i]=a[i]; }\
+fill(A); copyTo(B,A);\
+fill(a); copyTo(b,a);\
 Y_ATOM_TICKS(fullTicks,atom::NAME(U,A,a));\
 Y_ATOM_TICKS(loopTicks,atom::NAME(V,B,b,loop));\
 Y_ATOM_EQ(U,V,NAME);\
 Y_ATOM_OUT(NAME,3);\
 } while(false)
 
+#define Y_ATOM_MULOP(NAME) do {\
+const type value = support::get<type>();\
+fill(a); copyTo(b,a);\
+fill(A); copyTo(B,A);\
+Y_ATOM_TICKS(fullTicks,atom::NAME(A,value,a));\
+Y_ATOM_TICKS(loopTicks,atom::NAME(B,value,b,loop));\
+Y_ATOM_EQ(A,B,NAME);\
+Y_ATOM_OUT(NAME,1);\
+} while(false)
     
     template <typename ARR, typename BRR>
     void Test1( ARR &a, BRR &b, concurrent::for_each &loop )
@@ -125,7 +143,30 @@ Y_ATOM_OUT(NAME,3);\
         Y_ATOM_TEST3(sub);
         Y_ATOM_TEST2(subp);
 
+        {
+            const type value = support::get<type>();
+            fill(a); copyTo(b,a);
+            Y_ATOM_TICKS(fullTicks,atom::mul_by(value,a));
+            Y_ATOM_TICKS(loopTicks,atom::mul_by(value,b,loop));
+            Y_ATOM_EQ(a,b,mul_by);
+            Y_ATOM_OUT(mul_by,1);
+        }
         
+        {
+            const type value = support::get<type>();
+            fill(a); copyTo(b,a);
+            fill(A); copyTo(B,A);
+            Y_ATOM_TICKS(fullTicks,atom::muladd(A,value,a));
+            Y_ATOM_TICKS(loopTicks,atom::muladd(B,value,b,loop));
+            Y_ATOM_EQ(A,B,mul_add);
+            Y_ATOM_OUT(mul_add,1);
+        }
+        
+        {
+            Y_ATOM_MULOP(muladd);
+            Y_ATOM_MULOP(mulset);
+            Y_ATOM_MULOP(mulsub);
+        }
         
     }
 
@@ -194,6 +235,7 @@ Y_UTEST(atom)
 
     doTest<float>(loop);
     doTest<short>(loop);
+    doTest<double>(loop);
 }
 Y_UTEST_DONE()
 
