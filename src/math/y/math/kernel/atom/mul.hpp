@@ -136,5 +136,50 @@ void mulsub( TARGET &target, typename TARGET::param_type value, const SOURCE &so
 }
 
 
+//! sequental target = lhs + value * rhs
+template<typename TARGET,typename LHS,typename RHS> static inline
+void setprobe(TARGET                     &target,
+              const    LHS               &lhs,
+              typename TARGET::param_type value,
+              const    RHS               &rhs)
+{
+    assert( target.size() <= lhs.size() );
+    assert( target.size() <= rhs.size() );
+    for(size_t i=target.size();i>0;--i)
+    {
+        target[i] = static_cast<typename TARGET::const_type>(lhs[i]) + value * static_cast<typename TARGET::const_type>(rhs[i]);
+    }
+
+}
 
 
+#define Y_MK_ATOM_SETPROBE(i) \
+target[i] = static_cast<typename TARGET::const_type>(lhs[i]) + value * static_cast<typename TARGET::const_type>(rhs[i])
+
+//! parallel target = lhs + value * rhs
+template<typename TARGET,typename LHS,typename RHS> static inline
+void setprobe(TARGET                     &target,
+              const    LHS               &lhs,
+              typename TARGET::param_type value,
+              const    RHS               &rhs,
+              concurrent::for_each       &loop)
+{
+    assert( target.size() <= lhs.size() );
+    assert( target.size() <= rhs.size() );
+    
+    Y_MK_ATOM_OPS_API()
+    TARGET                      *target_;
+    const LHS                   *lhs_;
+    typename TARGET::const_type *value_;
+    const RHS                   *rhs_;
+    Y_MK_ATOM_OPS_GET(self);
+    TARGET                      &target = *self.target_;
+    const LHS                   &lhs    = *self.lhs_;
+    const RHS                   &rhs    = *self.rhs_;
+    typename TARGET::const_type &value  = *self.value_;
+    Y_MK_ATOM_OPS_USE(target.size(),SETPROBE)
+    &target,&lhs,&value,&rhs
+    Y_MK_ATOM_OPS_RUN(loop);
+}
+
+#undef Y_MK_ATOM_SETPROBE

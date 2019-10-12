@@ -152,20 +152,21 @@ Y_ATOM_OUT(NAME,1);\
             Y_ATOM_OUT(mul_by,1);
         }
         
-        {
-            const type value = support::get<type>();
-            fill(a); copyTo(b,a);
-            fill(A); copyTo(B,A);
-            Y_ATOM_TICKS(fullTicks,atom::muladd(A,value,a));
-            Y_ATOM_TICKS(loopTicks,atom::muladd(B,value,b,loop));
-            Y_ATOM_EQ(A,B,mul_add);
-            Y_ATOM_OUT(mul_add,1);
-        }
         
         {
             Y_ATOM_MULOP(muladd);
             Y_ATOM_MULOP(mulset);
             Y_ATOM_MULOP(mulsub);
+        }
+        
+        {
+            const type value = support::get<type>();
+            fill(a); copyTo(b,a);
+            fill(A); copyTo(B,A);
+            Y_ATOM_TICKS(fullTicks,atom::setprobe(U,A,value,a));
+            Y_ATOM_TICKS(loopTicks,atom::setprobe(V,B,value,b,loop));
+            Y_ATOM_EQ(U,V,setprobe);
+            Y_ATOM_OUT(setprobe,1);
         }
         
     }
