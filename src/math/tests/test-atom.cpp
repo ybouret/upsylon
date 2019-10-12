@@ -171,18 +171,29 @@ Y_ATOM_OUT(NAME,1);\
         
         
         {
-            fill(a); copyTo(b,a);
-            fill(A); copyTo(B,A);
+            fill(a); copyTo(A,a);
+            fill(b); copyTo(B,b);
             type ab=0, AB=0;
             Y_ATOM_TICKS(fullTicks,ab=atom::dot(a,b));
             Y_ATOM_TICKS(loopTicks,AB=atom::dot(A,B,loop));
-            std::cerr << "ab=" << ab  << ", AB=" << AB << std::endl;
             type dd = ab - AB;
             dd *= dd;
-            std::cerr << "delta.dot=" << dd << std::endl;
+            std::cerr << "\tdelta.dot=" << dd << std::endl;
             Y_ATOM_OUT(dot,2);
         }
-        
+
+        {
+            fill(a);
+            copyTo(b,a);
+            type a2=0, b2=0;
+            Y_ATOM_TICKS(fullTicks,a2=atom::norm2(a));
+            Y_ATOM_TICKS(loopTicks,b2=atom::norm2(b,loop));
+            type dd = a2 - b2;
+            dd *= dd;
+            std::cerr << "\tdelta.norm2=" << dd << std::endl;
+            Y_ATOM_OUT(norm2,1);
+        }
+
         
         
     }
