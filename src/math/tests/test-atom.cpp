@@ -21,7 +21,7 @@ using namespace upsylon;
 using namespace math;
 
 namespace {
-
+    
     template <typename TABLEAU> static inline
     void fillTableau( TABLEAU &tab )
     {
@@ -33,7 +33,7 @@ namespace {
             }
         }
     }
-
+    
     template <typename ARRAY> static inline
     void fill( ARRAY &tab )
     {
@@ -51,7 +51,7 @@ namespace {
             lhs[i] = rhs[i];
         }
     }
-
+    
     template <typename LHS, typename RHS> static inline
     bool areEqual( const LHS &lhs, const RHS &rhs)
     {
@@ -61,13 +61,13 @@ namespace {
         {
             typename LHS::const_type d  = lhs[i] - rhs[i];
             typename LHS::const_type d2 = d*d;
-
+            
             delta.push_back_( d2 );
         }
         typename LHS::const_type s2 = sorted_sum(delta);
         return  (s2 <= 0);
     }
-
+    
 #define Y_ATOM_TICKS(OUTPUT,CODE) \
 uint64_t OUTPUT=0;  do { const uint64_t ini = rt_clock::ticks(); CODE; OUTPUT=rt_clock::ticks()-ini; } while(false)
     
@@ -86,7 +86,7 @@ Y_ATOM_TICKS(loopTicks,atom::NAME(b,loop));\
 Y_ATOM_EQ(a,b,NAME);\
 Y_ATOM_OUT(NAME,1);\
 } while(false)
-   
+    
 #define Y_ATOM_TEST2(NAME) do { \
 fill(A); copyTo(B,A);\
 fill(a); copyTo(b,a);\
@@ -104,7 +104,7 @@ Y_ATOM_TICKS(loopTicks,atom::NAME(V,B,b,loop));\
 Y_ATOM_EQ(U,V,NAME);\
 Y_ATOM_OUT(NAME,3);\
 } while(false)
-
+    
 #define Y_ATOM_MULOP(NAME) do {\
 const type value = support::get<type>();\
 fill(a); copyTo(b,a);\
@@ -142,7 +142,7 @@ Y_ATOM_OUT(NAME,1);\
         Y_ATOM_TEST2(sub);
         Y_ATOM_TEST3(sub);
         Y_ATOM_TEST2(subp);
-
+        
         {
             const type value = support::get<type>();
             fill(a); copyTo(b,a);
@@ -181,7 +181,7 @@ Y_ATOM_OUT(NAME,1);\
             std::cerr << "\tdelta.dot=" << dd << std::endl;
             Y_ATOM_OUT(dot,2);
         }
-
+        
         {
             fill(a);
             copyTo(b,a);
@@ -193,23 +193,20 @@ Y_ATOM_OUT(NAME,1);\
             std::cerr << "\tdelta.norm2=" << dd << std::endl;
             Y_ATOM_OUT(norm2,1);
         }
-
         
         
     }
-
-
+    
+    
 #define TEST1_PERM(A,B) Test1(A,B,loop); Test1(B,A,loop)
     
     template <typename T>
-    static inline void doTest(concurrent::for_each &loop)
+    static inline void doTest1(concurrent::for_each &loop)
     {
-
-        //typedef matrix<T>         Matrix;
-        //typedef Oxide::Field2D<T> Field;
+        
         typedef point2d<T>        P2D;
         typedef point3d<T>        P3D;
-
+        
         {
             std::cerr << "2D: " << std::endl;
             const size_t n = 2;
@@ -223,7 +220,7 @@ Y_ATOM_OUT(NAME,1);\
             TEST1_PERM(u,pv);
             TEST1_PERM(u,gl);
         }
-
+        
         {
             std::cerr << "3D" << std::endl;
             const size_t             n = 3;
@@ -237,7 +234,7 @@ Y_ATOM_OUT(NAME,1);\
             TEST1_PERM(u,pv);
             TEST1_PERM(u,gl);
         }
-
+        
         {
             std::cerr << "Big" << std::endl;
             const size_t n = 1000 + alea.leq(1000);
@@ -248,22 +245,151 @@ Y_ATOM_OUT(NAME,1);\
             TEST1_PERM(gv,gl);
             TEST1_PERM(pv,gl);
         }
-
         
+    }
+    
+    template <
+    typename LHS,
+    typename MATRIX,
+    typename RHS>
+    void doTestMUL(LHS    &lhs,
+                   MATRIX &M,
+                   RHS    &rhs,
+                   concurrent::for_each &loop)
+    {
+        typedef typename LHS::mutable_type type;
+        vector<type> tmp( lhs.size() );
+        
+        {
+            fillTableau(M);
+            fill(lhs);
+            fill(rhs);
+            Y_ATOM_TICKS(fullTicks,atom::mul(lhs,M,rhs));
+            
+            copyTo(tmp,lhs);
+        }
         
         
     }
+    
+    template <typename T>
+    static inline void doTest2(concurrent::for_each &loop)
+    {
+        std::cerr << "Test2" << std::endl;
+        typedef matrix<T>         Matrix;
+        typedef Oxide::Field2D<T> Field;
+        
+        typedef point2d<T>        P2D;
+        typedef point3d<T>        P3D;
+        
+        //----------------------------------------------------------------------
+        //
+        // MUL
+        //
+        //----------------------------------------------------------------------
 
+#define DO_TEST2_MUL() do { doTestMUL(lhs,M,rhs,loop); doTestMUL(lhs,F,rhs,loop); } while(false)
+
+#define DO_TEST2_MUL_LHS(N) do { \
+{ vector<T,memory::global> lhs(N); DO_TEST2_MUL(); }\
+{ vector<T,memory::pooled> lhs(N); DO_TEST2_MUL(); }\
+{ list<T>                  lhs(N); DO_TEST2_MUL(); }\
+} while(false)
+        
+        std::cerr << "MUL [";
+        // 2D
+        {
+            std::cerr << ".";
+            const size_t n= 2;
+            P2D   rhs;
+            {
+                Matrix M(1,n);
+                Field  F("F",1,n);
+                DO_TEST2_MUL_LHS(1);
+            }
+            
+            {
+                
+                Matrix M(n,n);
+                Field  F("F",n,n);
+                { P2D    lhs; DO_TEST2_MUL(); }
+                DO_TEST2_MUL_LHS(2);
+            }
+        }
+        
+        // 3D
+        {
+            std::cerr << ".";
+            const size_t n=3;
+            P3D   rhs;
+            {
+                Matrix M(1,n);
+                Field  F("F",1,n);
+                DO_TEST2_MUL_LHS(1);
+            }
+            
+            {
+                Matrix M(2,n);
+                Field  F("F",2,n);
+                { P2D    lhs; DO_TEST2_MUL(); }
+                DO_TEST2_MUL_LHS(2);
+            }
+            
+            {
+                Matrix M(n,n);
+                Field  F("F",n,n);
+                { P3D    lhs; DO_TEST2_MUL(); }
+                DO_TEST2_MUL_LHS(n);
+            }
+            
+            // GENERIC
+            for(size_t nr=1;nr<=20;++nr)
+            {
+                for(size_t nc=1;nc<=20;++nc)
+                {
+                    std::cerr << ".";
+                    Matrix M(nr,nc);
+                    Field  F("F",nr,nc);
+                    { vector<T,memory::global> rhs(nc);DO_TEST2_MUL_LHS(nr); }
+                    { vector<T,memory::pooled> rhs(nc);DO_TEST2_MUL_LHS(nr); }
+                    { list<T>                  rhs(nc);DO_TEST2_MUL_LHS(nr); }
+                }
+            }
+            
+            std::cerr << "]" << std::endl;
+        }
+        
+    }
+    
 }
+
+#include "y/string/convert.hpp"
 
 Y_UTEST(atom)
 {
+    size_t level = 0;
+    if(argc>1)
+    {
+        level = string_convert::to<size_t>(argv[1],"level");
+    }
+    
     concurrent::simd loop;
     std::cerr << "loop.size=" << loop.engine().num_threads() << std::endl;
-
-    doTest<float>(loop);
-    doTest<short>(loop);
-    doTest<double>(loop);
+    
+    if(level<=0||1==level)
+    {
+        doTest1<float>(loop);
+        doTest1<short>(loop);
+        doTest1<double>(loop);
+        doTest1<mpz>(loop);
+    }
+    
+    
+    if(level<=0||2==level)
+    {
+        doTest2<float>(loop);
+    }
+    
 }
 Y_UTEST_DONE()
 

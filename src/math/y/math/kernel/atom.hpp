@@ -58,7 +58,16 @@ PROLOG; Y_MK_ATOM_OPS_USE_(LENGTH,CODE)
 #include "atom/mul.hpp"
 #include "atom/dot.hpp"
 
-
+            //==================================================================
+            //
+            //
+            // level 2
+            //
+            //
+            //==================================================================
+            
+#include "atom/mmul.hpp"
+            
 
         };
 

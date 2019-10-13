@@ -66,6 +66,17 @@ cols(rowLayout.width)
             {
                 setup(NULL,NULL);
             }
+            
+            //! constructed as a matrix
+            explicit Field2D(const char  *id,
+                             const size_t nr,
+                             const size_t nc) :
+            Layout2D(Coord2D(1,1),Coord2D(nc,nr)),Y_OXIDE_FIELD2D_CTOR()
+            {
+                setup(NULL,NULL);
+                assert(rows==nr);
+                assert(cols==nc);
+            }
 
 
             //! construct as bitmap

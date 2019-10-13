@@ -98,7 +98,10 @@ namespace upsylon
             {
                 const Field1D &self = *this; return self[i];
             }
-
+            
+            //! array like behavior
+            inline size_t size() const throw() { return width; }
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Field1D);
             type  *shift;
