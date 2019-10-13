@@ -11,7 +11,7 @@ namespace upsylon
     namespace Oxide
     {
         typedef type2type< point2d<size_t> >   AsMatrixType; //!< for constructors
-        extern const AsMatrixType              AsMatrix;
+        extern const AsMatrixType              AsMatrix;     //!< mocking object
 
         //======================================================================
         //
