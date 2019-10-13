@@ -1,7 +1,9 @@
 //! \file
 
+//! SIMD KERNEL
 #define Y_MK_ATOM_DOT(i) sum += lhs[i] * rhs[i]
 
+//! sequential dot product
 template <typename LHS,typename RHS> static inline
 typename LHS::mutable_type dot( const LHS &lhs, const RHS &rhs )
 {
@@ -10,14 +12,13 @@ typename LHS::mutable_type dot( const LHS &lhs, const RHS &rhs )
     
     for(size_t i=lhs.size();i>0;--i)
     {
-       // ans += lhs[i] * rhs[i];
         Y_MK_ATOM_DOT(i);
     }
     
     return sum;
 }
 
-
+//! parallel dot product
 template <typename LHS,typename RHS> static inline
 typename LHS::mutable_type dot( const LHS &lhs, const RHS &rhs, concurrent::for_each &loop )
 {
@@ -46,9 +47,10 @@ typename LHS::mutable_type dot( const LHS &lhs, const RHS &rhs, concurrent::for_
 
 #undef Y_MK_ATOM_DOT
 
-
+//! SIMD kernel
 #define Y_MK_ATOM_NORM2(i) do { typename ARRAY::const_type &a = arr[i]; sum += a*a; } while(false)
 
+//! sequential |arr|^2
 template <typename ARRAY> static inline
 typename ARRAY::mutable_type norm2( const ARRAY &arr )
 {
@@ -62,6 +64,7 @@ typename ARRAY::mutable_type norm2( const ARRAY &arr )
     return sum;
 }
 
+//! parallel |arr|^2
 template <typename ARRAY> static inline
 typename ARRAY::mutable_type norm2( const ARRAY &arr,  concurrent::for_each &loop )
 {

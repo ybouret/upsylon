@@ -1,11 +1,17 @@
 //! \file
 
+//! SIMD kernel
+#define Y_MK_ATOM_NEG(I) target[I] = -static_cast<typename TARGET::const_type>(source[I])
+
 //! sequential target=-source
 template <typename TARGET, typename SOURCE> static inline
 void neg( TARGET &target, const SOURCE &source )
 {
     assert( target.size() <= source.size() );
-    for(size_t i=target.size();i>0;--i) target[i] = -static_cast<typename TARGET::const_type>(source[i]);
+    for(size_t i=target.size();i>0;--i)
+    {
+        Y_MK_ATOM_NEG(i);
+    }
 }
 
 //! sequential target=-target
@@ -14,9 +20,6 @@ void neg( TARGET &target )
 {
     neg(target,target);
 }
-
-//! SIMD kernel
-#define Y_MK_ATOM_NEG(I) target[I] = -static_cast<typename TARGET::const_type>(source[I])
 
 //! parallel target=-source
 template <typename TARGET, typename SOURCE> static inline

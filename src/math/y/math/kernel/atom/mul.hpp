@@ -1,18 +1,18 @@
 //! \file
 
+//! SIMD code
+#define Y_MK_ATOM_MUL_BY(I) arr[I] *= value
+
 //! sequential array *= value
 template <typename ARRAY> static inline
 void mul_by( typename ARRAY::param_type value, ARRAY &arr )
 {
     for(size_t i=arr.size();i>0;--i)
     {
-        arr[i] *= value;
+        Y_MK_ATOM_MUL_BY(i);
     }
 }
 
-
-//! SIMD code
-#define Y_MK_ATOM_MUL_BY(I) a[I] *= *self.value_
 
 //! parallel array *= value
 template <typename ARRAY> static inline
@@ -23,12 +23,13 @@ void mul_by( typename ARRAY::param_type value, ARRAY &arr,  concurrent::for_each
     ARRAY                      *array_;
     typename ARRAY::const_type *value_;
     Y_MK_ATOM_OPS_GET(self);
-    ARRAY &a      = *self.array_;
-    Y_MK_ATOM_OPS_USE(a.size(),MUL_BY)
+    ARRAY                      &arr   = *self.array_;
+    typename ARRAY::const_type &value = *self.value_;
+    Y_MK_ATOM_OPS_USE(arr.size(),MUL_BY)
     &arr, &value
     Y_MK_ATOM_OPS_RUN(loop);
-    
 }
+
 #undef Y_MK_ATOM_MUL_BY
 
 //! type dependent mulop implementation
@@ -141,6 +142,10 @@ void mulsub( TARGET &target, typename TARGET::param_type value, const SOURCE &so
 }
 
 
+//! SIMD kernel
+#define Y_MK_ATOM_SETPROBE(i) \
+target[i] = static_cast<typename TARGET::const_type>(lhs[i]) + value * static_cast<typename TARGET::const_type>(rhs[i])
+
 //! sequental target = lhs + value * rhs
 template<typename TARGET,typename LHS,typename RHS> static inline
 void setprobe(TARGET                     &target,
@@ -152,14 +157,11 @@ void setprobe(TARGET                     &target,
     assert( target.size() <= rhs.size() );
     for(size_t i=target.size();i>0;--i)
     {
-        target[i] = static_cast<typename TARGET::const_type>(lhs[i]) + value * static_cast<typename TARGET::const_type>(rhs[i]);
+        Y_MK_ATOM_SETPROBE(i);
     }
 
 }
 
-//! SIMD kernel
-#define Y_MK_ATOM_SETPROBE(i) \
-target[i] = static_cast<typename TARGET::const_type>(lhs[i]) + value * static_cast<typename TARGET::const_type>(rhs[i])
 
 //! parallel target = lhs + value * rhs
 template<typename TARGET,typename LHS,typename RHS> static inline
