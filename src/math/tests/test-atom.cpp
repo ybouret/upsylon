@@ -304,14 +304,14 @@ Y_ATOM_OUT(NAME,1);\
             P2D   rhs;
             {
                 Matrix M(1,n);
-                Field  F("F",1,n);
+                Field  F("F",1,n,Oxide::AsMatrix);
                 DO_TEST2_MUL_LHS(1);
             }
             
             {
                 
                 Matrix M(n,n);
-                Field  F("F",n,n);
+                Field  F("F",n,n,Oxide::AsMatrix);
                 { P2D    lhs; DO_TEST2_MUL(); }
                 DO_TEST2_MUL_LHS(2);
             }
@@ -323,20 +323,20 @@ Y_ATOM_OUT(NAME,1);\
             P3D   rhs;
             {
                 Matrix M(1,n);
-                Field  F("F",1,n);
+                Field  F("F",1,n,Oxide::AsMatrix);
                 DO_TEST2_MUL_LHS(1);
             }
             
             {
                 Matrix M(2,n);
-                Field  F("F",2,n);
+                Field  F("F",2,n,Oxide::AsMatrix);
                 { P2D    lhs; DO_TEST2_MUL(); }
                 DO_TEST2_MUL_LHS(2);
             }
             
             {
                 Matrix M(n,n);
-                Field  F("F",n,n);
+                Field  F("F",n,n,Oxide::AsMatrix);
                 { P3D    lhs; DO_TEST2_MUL(); }
                 DO_TEST2_MUL_LHS(n);
             }
@@ -347,7 +347,7 @@ Y_ATOM_OUT(NAME,1);\
                 for(size_t nc=1;nc<=20;++nc)
                 {
                     Matrix M(nr,nc);
-                    Field  F("F",nr,nc);
+                    Field  F("F",nr,nc,Oxide::AsMatrix);
                     { vector<T,memory::global> rhs(nc);DO_TEST2_MUL_LHS(nr); }
                     { vector<T,memory::pooled> rhs(nc);DO_TEST2_MUL_LHS(nr); }
                     { list<T>                  rhs(nc);DO_TEST2_MUL_LHS(nr); }

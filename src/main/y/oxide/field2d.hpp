@@ -10,6 +10,9 @@ namespace upsylon
 
     namespace Oxide
     {
+        typedef type2type< point2d<size_t> >   AsMatrixType; //!< for constructors
+        extern const AsMatrixType              AsMatrix;
+
         //======================================================================
         //
         //! common constructor part
@@ -70,7 +73,8 @@ cols(rowLayout.width)
             //! constructed as a matrix
             explicit Field2D(const char  *id,
                              const size_t nr,
-                             const size_t nc) :
+                             const size_t nc,
+                             const AsMatrixType &) :
             Layout2D(Coord2D(1,1),Coord2D(nc,nr)),Y_OXIDE_FIELD2D_CTOR()
             {
                 setup(NULL,NULL);
