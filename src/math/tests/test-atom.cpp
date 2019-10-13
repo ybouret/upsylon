@@ -265,8 +265,10 @@ Y_ATOM_OUT(NAME,1);\
             fill(lhs);
             fill(rhs);
             Y_ATOM_TICKS(fullTicks,atom::mul(lhs,M,rhs));
-            
             copyTo(tmp,lhs);
+            Y_ATOM_TICKS(loopTicks,atom::mul(lhs,M,rhs,loop));
+            Y_ATOM_EQ(tmp,lhs,mul);
+            Y_ATOM_OUT(mul,3);
         }
         
         
@@ -296,10 +298,8 @@ Y_ATOM_OUT(NAME,1);\
 { list<T>                  lhs(N); DO_TEST2_MUL(); }\
 } while(false)
         
-        std::cerr << "MUL [";
         // 2D
         {
-            std::cerr << ".";
             const size_t n= 2;
             P2D   rhs;
             {
@@ -319,7 +319,6 @@ Y_ATOM_OUT(NAME,1);\
         
         // 3D
         {
-            std::cerr << ".";
             const size_t n=3;
             P3D   rhs;
             {
@@ -347,7 +346,6 @@ Y_ATOM_OUT(NAME,1);\
             {
                 for(size_t nc=1;nc<=20;++nc)
                 {
-                    std::cerr << ".";
                     Matrix M(nr,nc);
                     Field  F("F",nr,nc);
                     { vector<T,memory::global> rhs(nc);DO_TEST2_MUL_LHS(nr); }
@@ -356,7 +354,6 @@ Y_ATOM_OUT(NAME,1);\
                 }
             }
             
-            std::cerr << "]" << std::endl;
         }
         
     }
