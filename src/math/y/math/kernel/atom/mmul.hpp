@@ -1,5 +1,6 @@
 //! \file
 
+//! sequential lhs = M * rhs
 template <typename LHS, typename MATRIX, typename RHS> static inline
 void mul( LHS &lhs, const MATRIX &M, const RHS &rhs)
 {
@@ -12,6 +13,7 @@ void mul( LHS &lhs, const MATRIX &M, const RHS &rhs)
     }
 }
 
+//! parallel lhs = M  * rhs
 template <typename LHS, typename MATRIX, typename RHS> static inline
 void mul( LHS &lhs, const MATRIX &M, const RHS &rhs, concurrent::for_each &loop)
 {
@@ -20,6 +22,7 @@ void mul( LHS &lhs, const MATRIX &M, const RHS &rhs, concurrent::for_each &loop)
     
     if( M.cols >= M.rows )
     {
+        // parallel over cols
         for(size_t i=M.rows;i>0;--i)
         {
             lhs[i] = static_cast< typename LHS::const_type >(dot(M[i],rhs,loop));
@@ -27,6 +30,7 @@ void mul( LHS &lhs, const MATRIX &M, const RHS &rhs, concurrent::for_each &loop)
     }
     else
     {
+        // parallel over rows
         struct ops
         {
             LHS          *lhs_;
@@ -54,4 +58,12 @@ void mul( LHS &lhs, const MATRIX &M, const RHS &rhs, concurrent::for_each &loop)
         loop.run( ops::call, &_ );
         
     }
+}
+
+
+//! sequential lhs = M * rhs
+template <typename LHS, typename MATRIX, typename RHS> static inline
+void mul_trn( LHS &lhs, const MATRIX &M, const RHS &rhs)
+{
+    
 }

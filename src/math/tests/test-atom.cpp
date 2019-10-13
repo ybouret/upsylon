@@ -342,9 +342,9 @@ Y_ATOM_OUT(NAME,1);\
             }
             
             // GENERIC
-            for(size_t nr=1;nr<=20;++nr)
+            for(size_t nr=1;nr<=30;++nr)
             {
-                for(size_t nc=1;nc<=20;++nc)
+                for(size_t nc=1;nc<=30;++nc)
                 {
                     Matrix M(nr,nc);
                     Field  F("F",nr,nc);
