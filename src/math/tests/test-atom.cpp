@@ -274,6 +274,32 @@ Y_ATOM_OUT(NAME,1);\
         
     }
     
+    template <
+    typename LHS,
+    typename MATRIX,
+    typename RHS>
+    void doTestMULTRN(LHS    &lhs,
+                      MATRIX &M,
+                      RHS    &rhs,
+                      concurrent::for_each &loop)
+    {
+        typedef typename LHS::mutable_type type;
+        vector<type> tmp( lhs.size() );
+        
+        {
+            fillTableau(M);
+            fill(lhs);
+            fill(rhs);
+            Y_ATOM_TICKS(fullTicks,atom::mul_trn(lhs,M,rhs));
+            copyTo(tmp,lhs);
+            Y_ATOM_TICKS(loopTicks,atom::mul_trn(lhs,M,rhs,loop));
+            Y_ATOM_EQ(tmp,lhs,mul_trn);
+            Y_ATOM_OUT(mul_trn,3);
+        }
+        
+        
+    }
+    
     template <typename T>
     static inline void doTest2(concurrent::for_each &loop)
     {
@@ -289,7 +315,8 @@ Y_ATOM_OUT(NAME,1);\
         // MUL
         //
         //----------------------------------------------------------------------
-
+        std::cerr << "<MUL>" << std::endl;
+        
 #define DO_TEST2_MUL() do { doTestMUL(lhs,M,rhs,loop); doTestMUL(lhs,F,rhs,loop); } while(false)
 
 #define DO_TEST2_MUL_LHS(N) do { \
@@ -356,6 +383,33 @@ Y_ATOM_OUT(NAME,1);\
             
         }
         
+        //----------------------------------------------------------------------
+        //
+        // MUL_TRN
+        //
+        //----------------------------------------------------------------------
+        std::cerr << "<MUL_TRN>" << std::endl;
+
+        
+#define DO_TEST2_MUL_TRN() do { doTestMULTRN(lhs,M,rhs,loop); doTestMULTRN(lhs,F,rhs,loop); } while(false)
+        
+#define DO_TEST2_MUL_TRN_LHS(N) do { \
+{ vector<T,memory::global> lhs(N); DO_TEST2_MUL_TRN(); }\
+{ vector<T,memory::pooled> lhs(N); DO_TEST2_MUL_TRN(); }\
+{ list<T>                  lhs(N); DO_TEST2_MUL_TRN(); }\
+} while(false)
+        
+        for(size_t nr=1;nr<=30;++nr)
+        {
+            for(size_t nc=1;nc<=30;++nc)
+            {
+                Matrix M(nr,nc);
+                Field  F("F",nr,nc,Oxide::AsMatrix);
+                { vector<T,memory::global> rhs(nr);DO_TEST2_MUL_TRN_LHS(nc); }
+                { vector<T,memory::pooled> rhs(nr);DO_TEST2_MUL_TRN_LHS(nc); }
+                { list<T>                  rhs(nr);DO_TEST2_MUL_TRN_LHS(nc); }
+            }
+        }
     }
     
 }
