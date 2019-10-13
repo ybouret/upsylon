@@ -16,7 +16,7 @@ void fillArr( T *p, size_t n)
 
 Y_UTEST(oxide_dct)
 {
-    // worksapces
+    // workspaces
     matrix<int>            im(128,128);
     matrix<float>          fm(60,60);
     Oxide::Field2D<double> ff("ff",100,100);
