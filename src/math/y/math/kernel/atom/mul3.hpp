@@ -6,9 +6,9 @@ typename MATRIX::mutable_type sum(0);                  \
 for(size_t k=np;k>0;--k)                               \
 {                                                      \
 sum +=                                                 \
-static_cast<typename MATRIX::const_type>( lhs[i][k] )  \
+Y_MK_ATOM_CAST(MATRIX,LHS,lhs[i][k])                   \
 *                                                      \
-static_cast<typename MATRIX::const_type>( rhs[k][j] ); \
+Y_MK_ATOM_CAST(MATRIX,RHS,rhs[k][j]);                  \
 }                                                      \
 M[i][j] = sum;
 
@@ -80,7 +80,9 @@ void mmul(MATRIX &M, const LHS &lhs, const RHS &rhs, concurrent::for_each &loop 
 #undef Y_MK_ATOM_MMUL
 
 //! SIMD kernel
-#define Y_MK_ATOM_MMUL_RTRN() M[i][j] = dot(lhs[i],rhs[i])
+#define Y_MK_ATOM_MMUL_RTRN() do {\
+typename LHS::const_type tmp =dot(lhs[i],rhs[i]); \
+M[i][j] = Y_MK_ATOM_CAST(MATRIX,LHS,tmp); } while(false)
 
 
 //! sequential M = lhs * rhs'
@@ -119,9 +121,9 @@ typename MATRIX::mutable_type sum(0);                  \
 for(size_t k=np;k>0;--k)                               \
 {                                                      \
 sum +=                                                 \
-static_cast<typename MATRIX::const_type>( lhs[k][i] )  \
+Y_MK_ATOM_CAST(MATRIX,LHS,lhs[k][i])                   \
 *                                                      \
-static_cast<typename MATRIX::const_type>( rhs[k][j] ); \
+Y_MK_ATOM_CAST(MATRIX,RHS,rhs[k][j] );                 \
 }                                                      \
 M[i][j] = sum;
 

@@ -1,7 +1,7 @@
 //! \file
 
 //! SIMD kernel
-#define Y_MK_ATOM_NEG(I) target[I] = -static_cast<typename TARGET::const_type>(source[I])
+#define Y_MK_ATOM_NEG(I) target[I] = -Y_MK_ATOM_CAST(TARGET,SOURCE,source[I])
 
 //! sequential target=-source
 template <typename TARGET, typename SOURCE> static inline
