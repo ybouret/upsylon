@@ -49,9 +49,8 @@ namespace upsylon
             try
             {
                 // construct with halting=true;
-                for(size_t i=0;i<count;++i)
+                for(size_t i=0,target=1;i<count;++i,++target)
                 {
-                    const size_t target = i+1; //! desired new number of threads
                     engines.build<thread_proc,void*,size_t,size_t>(system_entry,this,count,i);
                     Y_MUTEX_PROBE(access,ready>=target);
                 }
@@ -109,11 +108,12 @@ namespace upsylon
             parallel &context = engines[ready];
             if(verbose) { std::cerr << "[threads.init.call] (+) " << context.label << std::endl; }
             ++ready; //!< for constructor
+
             //__________________________________________________________________
             //
             // ready to work!
             //__________________________________________________________________
-            start.wait(access);
+            start.wait(access); //!< wait on locked mutex, return unlocked
 
 
             //__________________________________________________________________
