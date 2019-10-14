@@ -411,8 +411,71 @@ Y_ATOM_OUT(NAME,1);\
             }
         }
     }
-    
+
+
+    template <typename LHS, typename RHS>
+    void copyTab( LHS &lhs, const RHS &rhs )
+    {
+        for(size_t i=lhs.rows;i>0;--i)
+        {
+            copyTo(lhs[i],rhs[i]);
+        }
+    }
+
+    template <typename MATRIX,
+    typename LHS,
+    typename RHS>
+    void Test3MUL(MATRIX &M,
+                  LHS    &lhs,
+                  RHS    &rhs,
+                  concurrent::for_each &loop)
+    {
+        typedef typename MATRIX::mutable_type type;
+        matrix<type> tmp;
+        fillTableau(lhs);
+        fillTableau(rhs);
+        Y_ATOM_TICKS(fullTicks,atom::mmul(M,lhs,rhs));
+        copyTab(tmp,M);
+        //Y_ATOM_TICKS(loopTicks,atom::mul_trn(lhs,M,rhs,loop));
+        //Y_ATOM_EQ(tmp,lhs,mul_trn);
+        //Y_ATOM_OUT(mmul,3);
+    }
+
+    template <typename T>
+    static inline void doTest3(concurrent::for_each &loop)
+    {
+        std::cerr << "Test3" << std::endl;
+        typedef matrix<T>         Matrix;
+        typedef Oxide::Field2D<T> Field;
+
+        for(size_t nr=1;nr<=10;++nr)
+        {
+            for(size_t nc=1;nc<=10;++nc)
+            {
+                std::cerr << nr << "x" << nc << std::endl;
+                Matrix M(nr,nc);
+                Field  F("F",nr,nc,Oxide::AsMatrix);
+
+                for(size_t np=1;np<=20;++np)
+                {
+                    Matrix ML(nr,np);
+                    Matrix MR(np,nc);
+                    Field  FL("FL",nr,np,Oxide::AsMatrix);
+                    Field  FR("FR",np,nc,Oxide::AsMatrix);
+
+                    Test3MUL(M,ML,MR,loop);  Test3MUL(M,FL,MR,loop); Test3MUL(M,ML,FR,loop); Test3MUL(M,FL,FR,loop);
+                    Test3MUL(F,ML,MR,loop);  Test3MUL(F,FL,MR,loop); Test3MUL(F,ML,FR,loop); Test3MUL(F,FL,FR,loop);
+
+                }
+            }
+        }
+
+    }
+
 }
+
+
+
 
 #include "y/string/convert.hpp"
 
@@ -427,7 +490,7 @@ Y_UTEST(atom)
     concurrent::simd loop;
     std::cerr << "loop.size=" << loop.engine().num_threads() << std::endl;
     
-    if(level<=0||1==level)
+    if(1==level)
     {
         doTest1<float>(loop);
         doTest1<short>(loop);
@@ -436,13 +499,18 @@ Y_UTEST(atom)
     }
     
     
-    if(level<=0||2==level)
+    if(2==level)
     {
         doTest2<float>(loop);
         doTest2<short>(loop);
         doTest2<double>(loop);
         doTest2<mpz>(loop);
 
+    }
+
+    if(3==level)
+    {
+        doTest3<float>(loop);
     }
     
 }
