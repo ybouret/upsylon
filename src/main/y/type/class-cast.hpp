@@ -10,7 +10,7 @@ namespace upsylon {
     template <typename T,typename U>
     struct class_cast
     {
-        static const bool derived = Y_IS_SUPERSUBCLASS(U,T);
+        static const bool derived = Y_IS_SUPERSUBCLASS(T,U);
 
     };
 
