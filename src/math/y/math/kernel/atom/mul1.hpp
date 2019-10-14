@@ -37,23 +37,46 @@ struct mulop
 {
     //! target = value * source
     template <typename T,typename U> static inline
-    void __set( T &target, const T value, const U &source)
+    void __set_v1( T &target, const T value, const U &source)
     {
         target = value * auto_cast<T,U>::_( source );
     }
     
+    
+    //! target =  source
+    template <typename T,typename U> static inline
+    void __set_v2( T &target, const U &source)
+    {
+        target =  auto_cast<T,U>::_( source );
+    }
+    
+    
     //! target += value * source
     template <typename T,typename U> static inline
-    void __add( T &target, const T value, const U &source)
+    void __add_v1( T &target, const T value, const U &source)
     {
         target += value * auto_cast<T,U>::_( source );
     }
     
+    //! target += source
+    template <typename T,typename U> static inline
+    void __add_v2( T &target, const U &source)
+    {
+        target += auto_cast<T,U>::_( source );
+    }
+    
     //! target -= value * source
     template <typename T,typename U> static inline
-    void __sub( T &target, const T value, const U &source)
+    void __sub_v1( T &target, const T value, const U &source)
     {
         target -= value * auto_cast<T,U>::_( source );
+    }
+    
+    //! target -= source
+    template <typename T,typename U> static inline
+    void __sub_v2( T &target, const U &source)
+    {
+        target -=  auto_cast<T,U>::_( source );
     }
     
 };
@@ -75,21 +98,21 @@ void mul_( TARGET &target, typename TARGET::param_type value, const SOURCE &sour
 template <typename TARGET, typename SOURCE> static inline
 void muladd( TARGET &target, typename TARGET::param_type value, const SOURCE &source )
 {
-    mul_(target,value,source, mulop::__add<typename TARGET::mutable_type,typename SOURCE::mutable_type>);
+    mul_(target,value,source, mulop::__add_v1<typename TARGET::mutable_type,typename SOURCE::mutable_type>);
 }
 
 //! sequential target += value * source
 template <typename TARGET, typename SOURCE> static inline
 void mulset( TARGET &target, typename TARGET::param_type value, const SOURCE &source )
 {
-    mul_(target,value,source, mulop::__set<typename TARGET::mutable_type,typename SOURCE::mutable_type>);
+    mul_(target,value,source, mulop::__set_v1<typename TARGET::mutable_type,typename SOURCE::mutable_type>);
 }
 
 //! sequential target += value * source
 template <typename TARGET, typename SOURCE> static inline
 void mulsub( TARGET &target, typename TARGET::param_type value, const SOURCE &source )
 {
-    mul_(target,value,source, mulop::__sub<typename TARGET::mutable_type,typename SOURCE::mutable_type>);
+    mul_(target,value,source, mulop::__sub_v1<typename TARGET::mutable_type,typename SOURCE::mutable_type>);
 }
 
 //! SIMD kernel
@@ -124,21 +147,21 @@ void mul_(TARGET                     &target,
 template <typename TARGET,typename SOURCE> static inline
 void muladd( TARGET &target, typename TARGET::param_type value, const SOURCE &source,  concurrent::for_each &loop)
 {
-    mul_(target,value,source,loop,mulop::__add<typename TARGET::mutable_type,typename SOURCE::mutable_type>);
+    mul_(target,value,source,loop,mulop::__add_v1<typename TARGET::mutable_type,typename SOURCE::mutable_type>);
 }
 
 //! parallel target = value * source
 template <typename TARGET,typename SOURCE> static inline
 void mulset( TARGET &target, typename TARGET::param_type value, const SOURCE &source,  concurrent::for_each &loop)
 {
-    mul_(target,value,source,loop,mulop::__set<typename TARGET::mutable_type,typename SOURCE::mutable_type>);
+    mul_(target,value,source,loop,mulop::__set_v1<typename TARGET::mutable_type,typename SOURCE::mutable_type>);
 }
 
 //! parallel target = value * source
 template <typename TARGET,typename SOURCE> static inline
 void mulsub( TARGET &target, typename TARGET::param_type value, const SOURCE &source,  concurrent::for_each &loop)
 {
-    mul_(target,value,source,loop,mulop::__sub<typename TARGET::mutable_type,typename SOURCE::mutable_type>);
+    mul_(target,value,source,loop,mulop::__sub_v1<typename TARGET::mutable_type,typename SOURCE::mutable_type>);
 }
 
 

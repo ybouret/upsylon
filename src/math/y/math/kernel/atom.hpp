@@ -7,9 +7,9 @@
 #include "y/concurrent/scheme/simd.hpp"
 
 namespace upsylon {
-
+    
     namespace math {
-
+        
         //! followed by members
 #define Y_MK_ATOM_OPS_API() \
 struct ops {
@@ -52,6 +52,34 @@ PROLOG; Y_MK_ATOM_OPS_USE_(LENGTH,CODE)
             //
             //
             //==================================================================
+            
+            //! direct copy
+            template <typename LHS,typename RHS> static inline
+            void copy1D( LHS &lhs, const RHS &rhs )
+            {
+                assert(lhs.size()<=rhs.size);
+                for(size_t i=lhs.size;i>0;--i)
+                {
+                    lhs[i] = Y_MK_ATOM_CAST(LHS,RHS,rhs[i]);
+                }
+            }
+            
+            //! direct copy
+            template <typename LHS,typename RHS> static inline
+            void copy2D( LHS &lhs, const RHS &rhs )
+            {
+                assert(lhs.rows<=rhs.rows);
+                assert(lhs.cols<=rhs.cols);
+                for(size_t i=lhs.rows;i>0;--i)
+                {
+                    copy1D(lhs[i],rhs[i]);
+                }
+            }
+            
+            
+            
+            
+            
 #include "atom/ld.hpp"
 #include "atom/set.hpp"
 #include "atom/neg.hpp"
@@ -59,7 +87,7 @@ PROLOG; Y_MK_ATOM_OPS_USE_(LENGTH,CODE)
 #include "atom/sub.hpp"
 #include "atom/mul1.hpp"
 #include "atom/dot.hpp"
-
+            
             //==================================================================
             //
             //
@@ -68,7 +96,7 @@ PROLOG; Y_MK_ATOM_OPS_USE_(LENGTH,CODE)
             //
             //==================================================================
 #include "atom/mul2.hpp"
-
+            
             //==================================================================
             //
             //
@@ -77,12 +105,12 @@ PROLOG; Y_MK_ATOM_OPS_USE_(LENGTH,CODE)
             //
             //==================================================================
 #include "atom/mul3.hpp"
-
+            
         };
-
-
+        
+        
     }
-
+    
 }
 
 #endif

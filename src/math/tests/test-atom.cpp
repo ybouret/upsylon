@@ -266,6 +266,7 @@ Y_ATOM_OUT(NAME,1);\
             fill(rhs);
             Y_ATOM_TICKS(fullTicks,atom::mul(lhs,M,rhs));
             copyTo(tmp,lhs);
+            fill(lhs);
             Y_ATOM_TICKS(loopTicks,atom::mul(lhs,M,rhs,loop));
             Y_ATOM_EQ(tmp,lhs,mul);
             Y_ATOM_OUT(mul,3);
@@ -292,6 +293,7 @@ Y_ATOM_OUT(NAME,1);\
             fill(rhs);
             Y_ATOM_TICKS(fullTicks,atom::mul_trn(lhs,M,rhs));
             copyTo(tmp,lhs);
+            fill(lhs);
             Y_ATOM_TICKS(loopTicks,atom::mul_trn(lhs,M,rhs,loop));
             Y_ATOM_EQ(tmp,lhs,mul_trn);
             Y_ATOM_OUT(mul_trn,3);
