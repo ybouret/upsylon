@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_TYPE_CLASS_CAST_INCLUDED
-#define Y_TYPE_CLASS_CAST_INCLUDED 1
+#ifndef Y_TYPE_AUTO_CAST_INCLUDED
+#define Y_TYPE_AUTO_CAST_INCLUDED 1
 
 #include "y/type/class-conversion.hpp"
 #include "y/type/select.hpp"
@@ -9,9 +9,8 @@
 namespace upsylon {
 
     template <typename T,typename U>
-    class class_cast
+    struct auto_cast
     {
-    public:
         static const bool derived = Y_IS_SUPERSUBCLASS(T,U);
         typedef typename select_type<derived,T &,      T>::result type;
         typedef typename select_type<derived,const T &,T>::result const_type;
