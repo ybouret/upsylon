@@ -48,7 +48,7 @@ void mul( LHS &lhs, const MATRIX &M, const RHS &rhs, concurrent::for_each &loop)
                 ctx.split(length, offset);
                 while(length-- > 0)
                 {
-                    lhs[offset] = dot(M[offset],rhs);
+                    lhs[offset] = static_cast< typename LHS::const_type >( dot(M[offset],rhs) );
                     ++offset;
                 }
             }
@@ -60,6 +60,10 @@ void mul( LHS &lhs, const MATRIX &M, const RHS &rhs, concurrent::for_each &loop)
     }
 }
 
+#define Y_MK_ATOM_MUL_TRN(i) do {\
+for(size_t j=nr;j>0;--j) {\
+sum += static_cast< typename LHS::const_type >(M[j][i]) * static_cast< typename LHS::const_type >(rhs[j]);\
+} } while(false)
 
 //! sequential lhs = M' * rhs, sub-optimal
 template <typename LHS, typename MATRIX, typename RHS> static inline
@@ -72,10 +76,7 @@ void mul_trn( LHS &lhs, const MATRIX &M, const RHS &rhs)
     for(size_t i=lhs.size();i>0;--i)
     {
         typename LHS::mutable_type sum(0);
-        for(size_t j=nr;j>0;--j)
-        {
-            sum += M[j][i] * rhs[j];
-        }
+        Y_MK_ATOM_MUL_TRN(i);
         lhs[i] = sum;
     }
 }
@@ -104,25 +105,22 @@ void mul_trn( LHS &lhs, const MATRIX &M, const RHS &rhs, concurrent::for_each &l
                                 parallel &ctx,
                                 lockable &)
         {
-            ops          &self = *static_cast<ops *>(args);
-            LHS          &lhs  = *self.lhs_;
-            const MATRIX &M    = *self.M_;
-            const RHS   &rhs   = *self.rhs_;
-            const size_t nr    = M.rows;
-            typename LHS::mutable_type &sum = ctx.get<typename LHS::mutable_type>();
-            size_t l = lhs.size();
-            size_t i = 1;
+            ops                        &self = *static_cast<ops *>(args);
+            LHS                        &lhs  = *self.lhs_;
+            const MATRIX               &M    = *self.M_;
+            const RHS                  &rhs  = *self.rhs_;
+            const size_t                nr   = M.rows;
+            typename LHS::mutable_type &sum  = ctx.get<typename LHS::mutable_type>();
+            size_t                      l    = lhs.size();
+            size_t                      i    = 1;
             ctx.split(l, i);
             while(l-- > 0 )
             {
-                for(size_t j=nr;j>0;--j)
-                {
-                    sum += M[j][i] * rhs[j];
-                }
+                Y_MK_ATOM_MUL_TRN(i);
                 lhs[i] = sum;
                 ++i;
             }
-
+            
         }
     };
 

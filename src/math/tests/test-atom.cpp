@@ -73,7 +73,7 @@ uint64_t OUTPUT=0;  do { const uint64_t ini = rt_clock::ticks(); CODE; OUTPUT=rt
     
 #define Y_ATOM_EQ(X,Y,NAME) do { \
 static const bool NAME##_sanity = areEqual(X,Y); \
-std::cerr << "\t" #NAME << "."; Y_CHECK(  NAME##_sanity ); } while(false)
+Y_ASSERT(  NAME##_sanity ); } while(false)
     
 #define Y_ATOM_OUT(NAME,ARITY) do {\
 rt_clock clk; std::cerr << "\t"#NAME << "." << ARITY << ".speedup=" << clk(fullTicks)/clk(loopTicks) << std::endl;\
@@ -369,9 +369,9 @@ Y_ATOM_OUT(NAME,1);\
             }
             
             // GENERIC
-            for(size_t nr=1;nr<=30;++nr)
+            for(size_t nr=1;nr<=10;++nr)
             {
-                for(size_t nc=1;nc<=30;++nc)
+                for(size_t nc=1;nc<=10;++nc)
                 {
                     Matrix M(nr,nc);
                     Field  F("F",nr,nc,Oxide::AsMatrix);
@@ -399,9 +399,9 @@ Y_ATOM_OUT(NAME,1);\
 { list<T>                  lhs(N); DO_TEST2_MUL_TRN(); }\
 } while(false)
         
-        for(size_t nr=1;nr<=30;++nr)
+        for(size_t nr=1;nr<=10;++nr)
         {
-            for(size_t nc=1;nc<=30;++nc)
+            for(size_t nc=1;nc<=10;++nc)
             {
                 Matrix M(nr,nc);
                 Field  F("F",nr,nc,Oxide::AsMatrix);
@@ -439,6 +439,10 @@ Y_UTEST(atom)
     if(level<=0||2==level)
     {
         doTest2<float>(loop);
+        doTest2<short>(loop);
+        doTest2<double>(loop);
+        doTest2<mpz>(loop);
+
     }
     
 }

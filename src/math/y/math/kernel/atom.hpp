@@ -55,7 +55,7 @@ PROLOG; Y_MK_ATOM_OPS_USE_(LENGTH,CODE)
 #include "atom/neg.hpp"
 #include "atom/add.hpp"
 #include "atom/sub.hpp"
-#include "atom/mul.hpp"
+#include "atom/mul1.hpp"
 #include "atom/dot.hpp"
 
             //==================================================================
@@ -66,8 +66,17 @@ PROLOG; Y_MK_ATOM_OPS_USE_(LENGTH,CODE)
             //
             //==================================================================
             
-#include "atom/mmul.hpp"
-            
+#include "atom/mul2.hpp"
+
+            //==================================================================
+            //
+            //
+            // level 3
+            //
+            //
+            //==================================================================
+
+#include "atom/mul3.hpp"
 
         };
 
