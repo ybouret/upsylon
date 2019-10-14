@@ -62,24 +62,7 @@ namespace upsylon
              */
             virtual void        copyLocalObjects( void *target, const void *source) const = 0;
 
-#if 0
-            //! internal copy of object between two indices
-            /**
-             this function will be used to use the C++ assignement semantic
-             for local exchanges
-             */
-            virtual void copyInternalObject(const Coord1D target, const Coord1D source)    = 0;
-
-            //! external copy of data between two different fiedls
-            /**
-             This function will be used to locally copy object from different size,
-             namely in the local scatter/gather, without serialization.
-             */
-            virtual void copyExternalObject(const Coord1D target,
-                                            const Field   &other,
-                                            const Coord1D  source) = 0;
-#endif
-
+            
             //------------------------------------------------------------------
             //
             // non-virtual interface

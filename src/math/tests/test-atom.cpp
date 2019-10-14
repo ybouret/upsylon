@@ -413,14 +413,39 @@ Y_ATOM_OUT(NAME,1);\
     }
 
 
-    template <typename LHS, typename RHS>
+    template <typename LHS, typename RHS> inline
     void copyTab( LHS &lhs, const RHS &rhs )
     {
+        //std::cerr << "(" << lhs.rows << "x" << lhs.cols << ")=>(" << rhs.rows << "x" << rhs.cols << ")" << std::endl;
         for(size_t i=lhs.rows;i>0;--i)
         {
             copyTo(lhs[i],rhs[i]);
         }
     }
+
+    template <typename LHS, typename RHS> inline
+    bool areEqualTab( const LHS &lhs, const RHS &rhs )
+    {
+        assert(lhs.items==rhs.items);
+        typedef typename LHS::mutable_type type;
+        vector<type> delta(lhs.items,as_capacity);
+        const size_t nr = lhs.rows;
+        const size_t nc = lhs.cols;
+        for(size_t i=nr;i>0;--i)
+        {
+            for(size_t j=nc;j>0;--j)
+            {
+                type d = lhs[i][j] - static_cast<const type>(rhs[i][j]);
+                d *= d;
+                delta.push_back_(d);
+            }
+        }
+        return sorted_sum(delta) <= 0;
+    }
+
+#define Y_ATOM_EQ_TAB(X,Y,NAME) do { \
+static const bool NAME##_sanity = areEqualTab(X,Y); \
+Y_ASSERT(  NAME##_sanity ); } while(false)
 
     template <typename MATRIX,
     typename LHS,
@@ -431,14 +456,16 @@ Y_ATOM_OUT(NAME,1);\
                   concurrent::for_each &loop)
     {
         typedef typename MATRIX::mutable_type type;
-        matrix<type> tmp;
+        matrix<type> tmp( M.rows, M.cols );
         fillTableau(lhs);
         fillTableau(rhs);
+        fillTableau(M);
         Y_ATOM_TICKS(fullTicks,atom::mmul(M,lhs,rhs));
         copyTab(tmp,M);
-        //Y_ATOM_TICKS(loopTicks,atom::mul_trn(lhs,M,rhs,loop));
-        //Y_ATOM_EQ(tmp,lhs,mul_trn);
-        //Y_ATOM_OUT(mmul,3);
+        fillTableau(M);
+        Y_ATOM_TICKS(loopTicks,atom::mmul(M,lhs,rhs,loop));
+        Y_ATOM_EQ_TAB(tmp,M,mmul);
+        Y_ATOM_OUT(mmul,3);
     }
 
     template <typename T>
@@ -448,15 +475,15 @@ Y_ATOM_OUT(NAME,1);\
         typedef matrix<T>         Matrix;
         typedef Oxide::Field2D<T> Field;
 
-        for(size_t nr=1;nr<=10;++nr)
+        for(size_t nr=1;nr<=20;++nr)
         {
-            for(size_t nc=1;nc<=10;++nc)
+            for(size_t nc=1;nc<=20;++nc)
             {
                 std::cerr << nr << "x" << nc << std::endl;
                 Matrix M(nr,nc);
                 Field  F("F",nr,nc,Oxide::AsMatrix);
 
-                for(size_t np=1;np<=20;++np)
+                for(size_t np=1;np<=30;++np)
                 {
                     Matrix ML(nr,np);
                     Matrix MR(np,nc);

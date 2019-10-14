@@ -60,6 +60,7 @@ void mul( LHS &lhs, const MATRIX &M, const RHS &rhs, concurrent::for_each &loop)
     }
 }
 
+//! SIMD kernel
 #define Y_MK_ATOM_MUL_TRN(i) do {\
 for(size_t j=nr;j>0;--j) {\
 sum += static_cast< typename LHS::const_type >(M[j][i]) * static_cast< typename LHS::const_type >(rhs[j]);\
