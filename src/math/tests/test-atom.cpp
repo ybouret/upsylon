@@ -491,6 +491,30 @@ Y_ASSERT(  NAME##_sanity ); } while(false)
 
 
 
+    template <typename MATRIX,
+    typename LHS,
+    typename RHS>
+    void Test3MUL_LTRN(MATRIX &M,
+                       LHS    &lhs,
+                       RHS    &rhs,
+                       concurrent::for_each &loop)
+    {
+        typedef typename MATRIX::mutable_type type;
+        matrix<type> tmp( M.rows, M.cols );
+        fillTableau(lhs);
+        fillTableau(rhs);
+        fillTableau(M);
+        Y_ATOM_TICKS(fullTicks,atom::mmul_ltrn(M,lhs,rhs));
+        copyTab(tmp,M);
+        fillTableau(M);
+        Y_ATOM_TICKS(loopTicks,atom::mmul_ltrn(M,lhs,rhs,loop));
+        Y_ATOM_EQ_TAB(tmp,M,mmul_ltrn);
+        Y_ATOM_OUT(mmul_ltrn,3);
+    }
+
+
+
+
     template <typename T>
     static inline void doTest3(concurrent::for_each &loop)
     {
@@ -526,6 +550,14 @@ Test3##NAME(F,ML,MR,loop);  Test3##NAME(F,FL,MR,loop); Test3##NAME(F,ML,FR,loop)
                         Field  FL("FL",nr,np,Oxide::AsMatrix);
                         Field  FR("FR",nr,np,Oxide::AsMatrix);
                         Test3All(MUL_RTRN);
+                    }
+
+                    {
+                        Matrix ML(np,nr);
+                        Matrix MR(np,nc);
+                        Field  FL("FL",np,nr,Oxide::AsMatrix);
+                        Field  FR("FR",np,nc,Oxide::AsMatrix);
+                        Test3All(MUL_LTRN);
                     }
 
                 }

@@ -1,14 +1,15 @@
 //! \file
 
-
-
 //! SIMD kernel
-#define Y_MK_ATOM_MMUL() \
-typename MATRIX::mutable_type sum(0); \
-for(size_t k=np;k>0;--k) \
-{ \
-sum += static_cast<typename MATRIX::const_type>( lhs[i][k] ) * static_cast<typename MATRIX::const_type>( rhs[k][j] );\
-}\
+#define Y_MK_ATOM_MMUL()                               \
+typename MATRIX::mutable_type sum(0);                  \
+for(size_t k=np;k>0;--k)                               \
+{                                                      \
+sum +=                                                 \
+static_cast<typename MATRIX::const_type>( lhs[i][k] )  \
+*                                                      \
+static_cast<typename MATRIX::const_type>( rhs[k][j] ); \
+}                                                      \
 M[i][j] = sum;
 
 //! sequential M = lhs*rhs
@@ -32,7 +33,7 @@ void mmul(MATRIX &M, const LHS &lhs, const RHS &rhs )
     }
 }
 
-
+//! paralellizing macro, level 3
 #define Y_MK_ATOM3_PAR(NAME,PROLOG)             \
 struct ops                                      \
 {                                               \
@@ -78,6 +79,7 @@ void mmul(MATRIX &M, const LHS &lhs, const RHS &rhs, concurrent::for_each &loop 
 
 #undef Y_MK_ATOM_MMUL
 
+//! SIMD kernel
 #define Y_MK_ATOM_MMUL_RTRN() M[i][j] = dot(lhs[i],rhs[i])
 
 
@@ -108,3 +110,51 @@ void mmul_rtrn(MATRIX &M, const LHS &lhs, const RHS &rhs, concurrent::for_each &
     assert(lhs.cols==rhs.cols);
     Y_MK_ATOM3_PAR(MMUL_RTRN,const size_t nc=M.cols);
 }
+
+#undef Y_MK_ATOM_MMUL_RTRN
+
+//! SIMD kernel
+#define Y_MK_ATOM_MMUL_LTRN()                          \
+typename MATRIX::mutable_type sum(0);                  \
+for(size_t k=np;k>0;--k)                               \
+{                                                      \
+sum +=                                                 \
+static_cast<typename MATRIX::const_type>( lhs[k][i] )  \
+*                                                      \
+static_cast<typename MATRIX::const_type>( rhs[k][j] ); \
+}                                                      \
+M[i][j] = sum;
+
+//! sequential M = lhs' * rhs
+template <typename MATRIX, typename LHS, typename RHS> static inline
+void mmul_ltrn(MATRIX &M, const LHS &lhs, const RHS &rhs )
+{
+    assert(lhs.cols==M.rows);
+    assert(lhs.rows==rhs.rows);
+    assert(rhs.cols==M.cols);
+
+    const size_t nc = M.cols;
+    const size_t np = lhs.rows;
+    for( size_t  i  = M.rows;i>0;--i)
+    {
+        for(size_t j=nc;j>0;--j)
+        {
+            Y_MK_ATOM_MMUL_LTRN();
+        }
+    }
+}
+
+//! parallel M = lhs' * rhs
+template <typename MATRIX, typename LHS, typename RHS> static inline
+void mmul_ltrn(MATRIX &M, const LHS &lhs, const RHS &rhs, concurrent::for_each &loop )
+{
+    assert(lhs.cols==M.rows);
+    assert(lhs.rows==rhs.rows);
+    assert(rhs.cols==M.cols);
+    Y_MK_ATOM3_PAR(MMUL_LTRN,const size_t nc=M.cols;const size_t np=lhs.rows);
+
+}
+
+#undef Y_MK_ATOM_MMUL_LTRN
+
+#undef Y_MK_ATOM3_PAR
