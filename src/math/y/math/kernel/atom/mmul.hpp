@@ -43,7 +43,7 @@ void mul( LHS &lhs, const MATRIX &M, const RHS &rhs, concurrent::for_each &loop)
                 LHS          &lhs    = *self.lhs_;
                 const MATRIX &M      = *self.M_;
                 const RHS    &rhs    = *self.rhs_;
-                size_t        length = M.rows;
+                size_t        length = lhs.size();
                 size_t        offset = 1;
                 ctx.split(length, offset);
                 while(length-- > 0)
@@ -61,7 +61,7 @@ void mul( LHS &lhs, const MATRIX &M, const RHS &rhs, concurrent::for_each &loop)
 }
 
 
-//! sequential lhs = M * rhs
+//! sequential lhs = M' * rhs, sub-optimal
 template <typename LHS, typename MATRIX, typename RHS> static inline
 void mul_trn( LHS &lhs, const MATRIX &M, const RHS &rhs)
 {
@@ -81,12 +81,52 @@ void mul_trn( LHS &lhs, const MATRIX &M, const RHS &rhs)
 }
 
 
-//! parallel lhs = M * rhs
+//! parallel lhs = M' * rhs, only on lhs.size()
 template <typename LHS, typename MATRIX, typename RHS> static inline
-void mul_trn( LHS &lhs, const MATRIX &M, const RHS &rhs, concurrent::for_each & )
+void mul_trn( LHS &lhs, const MATRIX &M, const RHS &rhs, concurrent::for_each &loop )
 {
     assert(lhs.size()<=M.cols);
     assert(M.rows<=rhs.size());
     
     mul_trn(lhs,M,rhs);
+    {
+        typename LHS::const_type __zero(0);
+        loop.engine().build_from<typename LHS::mutable_type>(__zero);
+    }
+
+    struct ops
+    {
+        LHS          *lhs_;
+        const MATRIX *M_;
+        const RHS    *rhs_;
+
+        static inline void call(void     *args,
+                                parallel &ctx,
+                                lockable &)
+        {
+            ops          &self = *static_cast<ops *>(args);
+            LHS          &lhs  = *self.lhs_;
+            const MATRIX &M    = *self.M_;
+            const RHS   &rhs   = *self.rhs_;
+            const size_t nr    = M.rows;
+            typename LHS::mutable_type &sum = ctx.get<typename LHS::mutable_type>();
+            size_t l = lhs.size();
+            size_t i = 1;
+            ctx.split(l, i);
+            while(l-- > 0 )
+            {
+                for(size_t j=nr;j>0;--j)
+                {
+                    sum += M[j][i] * rhs[j];
+                }
+                lhs[i] = sum;
+                ++i;
+            }
+
+        }
+    };
+
+    ops params = { &lhs, &M, &rhs };
+    loop.run( ops::call, &params );
+
 }
