@@ -11,7 +11,8 @@ void mul( LHS &lhs, const MATRIX &M, const RHS &rhs)
     
     for(size_t i=lhs.size();i>0;--i)
     {
-        lhs[i] = static_cast< typename LHS::const_type>(dot(M[i],rhs));
+        typename MATRIX::const_type tmp = dot(M[i],rhs);
+        lhs[i] = Y_MK_ATOM_CAST(LHS,MATRIX,tmp);
     }
 }
 
@@ -27,7 +28,8 @@ void mul( LHS &lhs, const MATRIX &M, const RHS &rhs, concurrent::for_each &loop)
         // parallel over cols
         for(size_t i=M.rows;i>0;--i)
         {
-            lhs[i] = static_cast< typename LHS::const_type >(dot(M[i],rhs,loop));
+            typename MATRIX::const_type tmp = dot(M[i],rhs,loop);
+            lhs[i] = Y_MK_ATOM_CAST(LHS,MATRIX,tmp);
         }
     }
     else
@@ -50,7 +52,8 @@ void mul( LHS &lhs, const MATRIX &M, const RHS &rhs, concurrent::for_each &loop)
                 ctx.split(length, offset);
                 while(length-- > 0)
                 {
-                    lhs[offset] = static_cast< typename LHS::const_type >( dot(M[offset],rhs) );
+                    typename MATRIX::const_type tmp = dot(M[offset],rhs);
+                    lhs[offset] = Y_MK_ATOM_CAST(LHS,MATRIX,tmp);
                     ++offset;
                 }
             }
@@ -65,7 +68,7 @@ void mul( LHS &lhs, const MATRIX &M, const RHS &rhs, concurrent::for_each &loop)
 //! SIMD kernel
 #define Y_MK_ATOM_MUL_TRN(i) do {\
 for(size_t j=nr;j>0;--j) {\
-sum += static_cast< typename LHS::const_type >(M[j][i]) * static_cast< typename LHS::const_type >(rhs[j]);\
+sum += Y_MK_ATOM_CAST(LHS,MATRIX,M[j][i]) * Y_MK_ATOM_CAST(LHS,RHS,rhs[j]);\
 } } while(false)
 
 //! sequential lhs = M' * rhs, sub-optimal
