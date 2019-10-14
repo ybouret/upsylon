@@ -39,21 +39,21 @@ struct mulop
     template <typename T,typename U> static inline
     void __set( T &target, const T value, const U &source)
     {
-        target = value * static_cast<T>( source );
+        target = value * auto_cast<T,U>::_( source );
     }
     
     //! target += value * source
     template <typename T,typename U> static inline
     void __add( T &target, const T value, const U &source)
     {
-        target += value * static_cast<T>( source );
+        target += value * auto_cast<T,U>::_( source );
     }
     
     //! target -= value * source
     template <typename T,typename U> static inline
     void __sub( T &target, const T value, const U &source)
     {
-        target -= value * static_cast<T>( source );
+        target -= value * auto_cast<T,U>::_( source );
     }
     
 };
@@ -144,7 +144,7 @@ void mulsub( TARGET &target, typename TARGET::param_type value, const SOURCE &so
 
 //! SIMD kernel
 #define Y_MK_ATOM_SETPROBE(i) \
-target[i] = static_cast<typename TARGET::const_type>(lhs[i]) + value * static_cast<typename TARGET::const_type>(rhs[i])
+target[i] = Y_MK_ATOM_CAST(TARGET,LHS,lhs[i]) + value * Y_MK_ATOM_CAST(TARGET,RHS,rhs[i])
 
 //! sequental target = lhs + value * rhs
 template<typename TARGET,typename LHS,typename RHS> static inline
