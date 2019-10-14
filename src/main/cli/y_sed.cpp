@@ -34,6 +34,8 @@ Y_PROGRAM_START()
         output = new ios::ocstream( outputFile );
     }
 
+    
+
 }
 Y_PROGRAM_END()
 
