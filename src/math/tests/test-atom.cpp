@@ -467,6 +467,30 @@ Y_ASSERT(  NAME##_sanity ); } while(false)
         Y_ATOM_OUT(mmul,3);
     }
 
+
+    template <typename MATRIX,
+    typename LHS,
+    typename RHS>
+    void Test3MUL_RTRN(MATRIX &M,
+                       LHS    &lhs,
+                       RHS    &rhs,
+                       concurrent::for_each &loop)
+    {
+        typedef typename MATRIX::mutable_type type;
+        matrix<type> tmp( M.rows, M.cols );
+        fillTableau(lhs);
+        fillTableau(rhs);
+        fillTableau(M);
+        Y_ATOM_TICKS(fullTicks,atom::mmul_rtrn(M,lhs,rhs));
+        copyTab(tmp,M);
+        fillTableau(M);
+        Y_ATOM_TICKS(loopTicks,atom::mmul_rtrn(M,lhs,rhs,loop));
+        Y_ATOM_EQ_TAB(tmp,M,mmul_rtrn);
+        Y_ATOM_OUT(mmul_rtrn,3);
+    }
+
+
+
     template <typename T>
     static inline void doTest3(concurrent::for_each &loop)
     {
@@ -482,15 +506,27 @@ Y_ASSERT(  NAME##_sanity ); } while(false)
                 Matrix M(nr,nc);
                 Field  F("F",nr,nc,Oxide::AsMatrix);
 
+#define Test3All(NAME)  \
+Test3##NAME(M,ML,MR,loop);  Test3##NAME(M,FL,MR,loop); Test3##NAME(M,ML,FR,loop); Test3##NAME(M,FL,FR,loop);\
+Test3##NAME(F,ML,MR,loop);  Test3##NAME(F,FL,MR,loop); Test3##NAME(F,ML,FR,loop); Test3##NAME(F,FL,FR,loop)
+
                 for(size_t np=1;np<=256;np<<=1)
                 {
-                    Matrix ML(nr,np);
-                    Matrix MR(np,nc);
-                    Field  FL("FL",nr,np,Oxide::AsMatrix);
-                    Field  FR("FR",np,nc,Oxide::AsMatrix);
+                    {
+                        Matrix ML(nr,np);
+                        Matrix MR(np,nc);
+                        Field  FL("FL",nr,np,Oxide::AsMatrix);
+                        Field  FR("FR",np,nc,Oxide::AsMatrix);
+                        Test3All(MUL);
+                    }
 
-                    Test3MUL(M,ML,MR,loop);  Test3MUL(M,FL,MR,loop); Test3MUL(M,ML,FR,loop); Test3MUL(M,FL,FR,loop);
-                    Test3MUL(F,ML,MR,loop);  Test3MUL(F,FL,MR,loop); Test3MUL(F,ML,FR,loop); Test3MUL(F,FL,FR,loop);
+                    {
+                        Matrix ML(nr,np);
+                        Matrix MR(nr,np);
+                        Field  FL("FL",nr,np,Oxide::AsMatrix);
+                        Field  FR("FR",nr,np,Oxide::AsMatrix);
+                        Test3All(MUL_RTRN);
+                    }
 
                 }
             }
