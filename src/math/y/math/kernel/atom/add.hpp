@@ -1,7 +1,7 @@
 //! \file
 
 //! SIMD kernel
-#define Y_MK_ATOM_ADD(I) target[I] += static_cast<typename TARGET::const_type>(source[I])
+#define Y_MK_ATOM_ADD(I) target[I] += Y_MK_ATOM_CAST(TARGET,SOURCE,source[I])
 
 //! sequential target += source
 template <typename TARGET, typename SOURCE> static inline
@@ -38,8 +38,7 @@ void add( TARGET &target, const SOURCE &source,  concurrent::for_each &loop )
 #undef Y_MK_ATOM_ADD
 
 //! SIMD kernel
-#define Y_MK_ATOM_ADD(offset) \
-target[offset] = static_cast<typename TARGET::const_type>(lhs[offset]) + static_cast<typename TARGET::const_type>(rhs[offset])
+#define Y_MK_ATOM_ADD(offset) target[offset] = Y_MK_ATOM_CAST(TARGET,LHS,lhs[offset]) +  Y_MK_ATOM_CAST(TARGET,RHS,rhs[offset])
 
 //! sequential target = lhs + rhs
 template <typename TARGET, typename LHS, typename RHS> static inline

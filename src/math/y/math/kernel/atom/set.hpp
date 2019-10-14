@@ -1,8 +1,7 @@
 //! \file
 
 //! SIMD kernel
-#define Y_MK_ATOM_SET(offset) \
-target[offset] = static_cast<typename TARGET::const_type>(source[offset])
+#define Y_MK_ATOM_SET(offset) target[offset] = Y_MK_ATOM_CAST(TARGET,SOURCE,source[offset])
 
 //! sequential target=source
 template <typename TARGET, typename SOURCE> static inline

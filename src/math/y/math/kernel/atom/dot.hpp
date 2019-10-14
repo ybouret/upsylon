@@ -1,7 +1,7 @@
 //! \file
 
 //! SIMD KERNEL
-#define Y_MK_ATOM_DOT(i) sum += lhs[i] * rhs[i]
+#define Y_MK_ATOM_DOT(i) sum += lhs[i] * Y_MK_ATOM_CAST(LHS,RHS,rhs[i])
 
 //! sequential dot product
 template <typename LHS,typename RHS> static inline

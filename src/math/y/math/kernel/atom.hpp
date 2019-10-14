@@ -3,6 +3,7 @@
 #define Y_MK_ATOM_INCLUDED 1
 
 #include "y/math/types.hpp"
+#include "y/type/auto-cast.hpp"
 #include "y/concurrent/scheme/simd.hpp"
 
 namespace upsylon {
@@ -38,6 +39,8 @@ PROLOG; Y_MK_ATOM_OPS_USE_(LENGTH,CODE)
         
         //! execute SIMD instructions
 #define Y_MK_ATOM_OPS_RUN(LOOP) }; (LOOP).run( ops::call, & __self )
+        
+#define Y_MK_ATOM_CAST(TARGET,SOURCE,VALUE) (auto_cast<typename TARGET::type,typename SOURCE::type>::_(VALUE))
         
         //! Algebraic Templated Object Manipulation
         struct atom

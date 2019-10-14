@@ -1,7 +1,7 @@
 //! \file
 
 //! SIMD kernel
-#define Y_MK_ATOM_SUB(I) target[I] -= static_cast<typename TARGET::const_type>(source[I])
+#define Y_MK_ATOM_SUB(I) target[I] -= Y_MK_ATOM_CAST(TARGET,SOURCE,source[I])
 
 
 //! sequential target -= source
@@ -39,7 +39,7 @@ void sub( TARGET &target, const SOURCE &source,  concurrent::for_each &loop )
 
 //! SIMD kernel
 #define Y_MK_ATOM_SUB(offset) \
-target[offset] = static_cast<typename TARGET::const_type>(lhs[offset]) - static_cast<typename TARGET::const_type>(rhs[offset])
+target[offset] = Y_MK_ATOM_CAST(TARGET,LHS,lhs[offset]) - Y_MK_ATOM_CAST(TARGET,RHS,rhs[offset])
 
 //! sequential target = lhs-rhs
 template <typename TARGET, typename LHS, typename RHS> static inline
@@ -78,7 +78,7 @@ void sub( TARGET &target, const LHS &lhs, const RHS &rhs, concurrent::for_each &
 #undef Y_MK_ATOM_SUB
 
 //! SIMD kernel
-#define Y_MK_ATOM_SUBP(I) target[I] = static_cast<typename TARGET::const_type>(source[I])-target[I]
+#define Y_MK_ATOM_SUBP(I) target[I] = Y_MK_ATOM_CAST(TARGET,SOURCE,source[I])-target[I]
 
 //! sequential target = source-target
 template <typename TARGET, typename SOURCE> static inline
