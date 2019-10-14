@@ -1,5 +1,7 @@
 //! \file
 
+
+
 //! sequential lhs = M * rhs
 template <typename LHS, typename MATRIX, typename RHS> static inline
 void mul( LHS &lhs, const MATRIX &M, const RHS &rhs)

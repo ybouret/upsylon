@@ -49,7 +49,6 @@ PROLOG; Y_MK_ATOM_OPS_USE_(LENGTH,CODE)
             //
             //
             //==================================================================
-
 #include "atom/ld.hpp"
 #include "atom/set.hpp"
 #include "atom/neg.hpp"
@@ -65,7 +64,6 @@ PROLOG; Y_MK_ATOM_OPS_USE_(LENGTH,CODE)
             //
             //
             //==================================================================
-            
 #include "atom/mul2.hpp"
 
             //==================================================================
@@ -75,10 +73,10 @@ PROLOG; Y_MK_ATOM_OPS_USE_(LENGTH,CODE)
             //
             //
             //==================================================================
-
 #include "atom/mul3.hpp"
 
         };
+
 
     }
 

@@ -35,7 +35,7 @@ ADD_TEST(os:spec         test-main spec)
 ADD_TEST(os:chkbnd       test-main chkbnd)
 ADD_TEST(os:hr-ints      test-main hr_ints)
 ADD_TEST(os:ints-display test-main ints_display)
-
+ADD_TEST(os:cast         test-main cast)
 
 SOURCE_GROUP(core FILES test-ppty.cpp test-lockable.cpp test-zset.cpp test-code.cpp test-bits.cpp test-core.cpp test-progress.cpp
  test-functor.cpp test-tuple.cpp test-traits.cpp test-bswap.cpp test-bmove.cpp )

@@ -4,6 +4,7 @@ Y_UTEST_INIT(256)
 {
     Y_UTEST(platform);
     Y_UTEST(types);
+    Y_UTEST(cast);
     Y_UTEST(chkbnd);
     Y_UTEST(lockable);
     Y_UTEST(bswap);
