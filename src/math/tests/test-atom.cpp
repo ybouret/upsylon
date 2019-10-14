@@ -416,7 +416,6 @@ Y_ATOM_OUT(NAME,1);\
     template <typename LHS, typename RHS> inline
     void copyTab( LHS &lhs, const RHS &rhs )
     {
-        //std::cerr << "(" << lhs.rows << "x" << lhs.cols << ")=>(" << rhs.rows << "x" << rhs.cols << ")" << std::endl;
         for(size_t i=lhs.rows;i>0;--i)
         {
             copyTo(lhs[i],rhs[i]);
@@ -475,15 +474,15 @@ Y_ASSERT(  NAME##_sanity ); } while(false)
         typedef matrix<T>         Matrix;
         typedef Oxide::Field2D<T> Field;
 
-        for(size_t nr=1;nr<=20;++nr)
+        for(size_t nr=1;nr<=128; nr <<= 1)
         {
-            for(size_t nc=1;nc<=20;++nc)
+            for(size_t nc=1;nc<=128; nc<<=1)
             {
                 std::cerr << nr << "x" << nc << std::endl;
                 Matrix M(nr,nc);
                 Field  F("F",nr,nc,Oxide::AsMatrix);
 
-                for(size_t np=1;np<=30;++np)
+                for(size_t np=1;np<=256;np<<=1)
                 {
                     Matrix ML(nr,np);
                     Matrix MR(np,nc);
@@ -538,6 +537,8 @@ Y_UTEST(atom)
     if(3==level)
     {
         doTest3<float>(loop);
+        doTest3<short>(loop);
+
     }
     
 }
