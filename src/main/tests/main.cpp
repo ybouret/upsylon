@@ -97,6 +97,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(mstreams);
     Y_UTEST(upack);
     Y_UTEST(ios_plugin);
+    Y_UTEST(cmd);
 
     Y_UTEST(fft);
     Y_UTEST(sort);
