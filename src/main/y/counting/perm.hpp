@@ -16,7 +16,7 @@ namespace upsylon {
         virtual ~permutation() throw();        //!< cleanup
         permutation(const permutation &other); //!< copy
         
-        const size_t  n; //!< n!
+        const size_t  n; //!< n
         static size_t compute_for(const size_t N); //!< check overflow
         
         

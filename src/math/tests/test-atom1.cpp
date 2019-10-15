@@ -33,7 +33,7 @@ namespace {
         template <typename T> static inline
         void testAll(concurrent::for_each &loop)
         {
-            static const size_t n[] = { 1,2,3,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384};
+            static const size_t n[] = { 1,2,3,4,8,16,32,64,128,256,512,1024,2048};
             static const char  *tid = typeid(T).name();
 
             std::cerr << "[Enter LD for <" << tid << ">]" << std::endl;
@@ -83,7 +83,7 @@ namespace {
         template <typename T> static inline
         void testAll(concurrent::for_each &loop)
         {
-            static const size_t n[] = { 1,2,3,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384};
+            static const size_t n[] = { 1,2,3,4,8,16,32,64,128,256,512,1024,2048};
             static const char  *tid = typeid(T).name();
 
             std::cerr << "[Enter NEG for <" << tid << ">]" << std::endl;
@@ -167,17 +167,39 @@ namespace {
             std::cerr << '-' << clk.speedup(fullTicks,loopTicks) << '/';
         }
 
+        template <typename TARGET, typename SOURCE> static inline
+        void test_subp( TARGET &target, SOURCE &source, concurrent::for_each &loop )
+        {
+            Y_ASSERT( target.size() <= source.size() );
+
+            const size_t n = target.size();
+            vector<typename TARGET::mutable_type> org(n), res(n);
+
+            support::fill1D(source);
+            support::fill1D(target);
+            atom::tool::copy1D(org,target);
+            Y_SUPPORT_TICKS(fullTicks,atom::subp(target,source));
+            atom::tool::copy1D(res,target);
+            atom::tool::copy1D(target,org);
+            Y_SUPPORT_TICKS(loopTicks,atom::subp(target,source,loop));
+            Y_ASSERT(atom::tool::deltaSquared1D(res,target)<=0);
+            rt_clock clk;
+            std::cerr << '_' << clk.speedup(fullTicks,loopTicks) << '/';
+        }
 
 
-#define TEST_PERM(u,v)                  \
-test_set(u,v,loop); test_set(v,u,loop); \
-test_add(u,v,loop); test_add(v,u,loop); \
-test_sub(u,v,loop); test_sub(v,u,loop)
+
+#define TEST_PERM(u,v)                   \
+test_set(u,v,loop);  test_set(v,u,loop);  \
+test_add(u,v,loop);  test_add(v,u,loop);  \
+test_sub(u,v,loop);  test_sub(v,u,loop);  \
+test_subp(u,v,loop); test_subp(v,u,loop)
+
 
         template <typename T> static inline
         void testAll(concurrent::for_each &loop)
         {
-            static const size_t n[] = { 1,2,3,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384};
+            static const size_t n[] = { 1,2,3,4,8,16,32,64,128,256,512,1024,2048 };
             static const char  *tid = typeid(T).name();
 
             std::cerr << "[Enter SET/ADD for <" << tid << ">]" << std::endl;
@@ -211,8 +233,21 @@ test_sub(u,v,loop); test_sub(v,u,loop)
 
     struct BINARY
     {
-
-#define TEST_PERM2(a,b,c) test(a,b,c,loop); test(a,c,b,loop)
+        /*
+         abc
+         acb
+         bac
+         bca
+         cab
+         cba
+         */
+#define TEST_PERM2(a,b,c) \
+test(a,b,c,loop);         \
+test(a,c,b,loop);         \
+test(b,a,c,loop);         \
+test(b,c,a,loop);         \
+test(c,a,b,loop);         \
+test(c,b,a,loop)
 
         template <typename TARGET, typename LHS, typename RHS> static inline
         void test( TARGET &target, LHS &lhs, RHS &rhs, concurrent::for_each &loop )
@@ -238,16 +273,31 @@ test_sub(u,v,loop); test_sub(v,u,loop)
                 Y_ASSERT(atom::tool::deltaSquared1D(seq,target)<=0);
                 std::cerr << '+' << clk.speedup(fullTicks,loopTicks) << '/';
             }
+
+            {
+                support::fill1D(lhs);
+                support::fill1D(rhs);
+                support::fill1D(target);
+                Y_SUPPORT_TICKS(fullTicks,atom::sub(target,lhs,rhs));
+                atom::tool::copy1D(seq,target);
+
+                support::fill1D(target);
+                Y_SUPPORT_TICKS(loopTicks,atom::sub(target,lhs,rhs,loop));
+                Y_ASSERT(atom::tool::deltaSquared1D(seq,target)<=0);
+                std::cerr << '-' << clk.speedup(fullTicks,loopTicks) << '/';
+            }
+
+
         }
 
 
         template <typename T>
         static inline void testAll(concurrent::for_each &loop )
         {
-            static const size_t n[] = { 1,2,3,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384};
+            static const size_t n[] = { 1,2,3,4,8,16,32,64,128,256,512,1024,2048};
             static const char  *tid = typeid(T).name();
 
-            std::cerr << "[Enter SET/ADD for <" << tid << ">]" << std::endl;
+            std::cerr << "[Enter BINARY ADD/SUB  for <" << tid << ">]" << std::endl;
             for(size_t i=0;i<sizeof(n)/sizeof(n[0]);++i)
             {
                 const size_t nn = n[i];
@@ -258,7 +308,11 @@ test_sub(u,v,loop); test_sub(v,u,loop)
                 list<T>                  l(nn);
 
                 TEST_PERM2(v,s,l);
+                std::cerr << std::endl;
             }
+
+            std::cerr << "[LEAVE BINRARY ADD/SUB for <" << tid << ">]" << std::endl;
+
         }
 
     };
@@ -270,9 +324,10 @@ test_sub(u,v,loop); test_sub(v,u,loop)
         template <typename T> static inline
         void Test( concurrent::for_each &loop )
         {
-            LD ::testAll<T>(loop);
-            NEG::testAll<T>(loop);
-            UNARY::testAll<T>(loop);
+            LD    ::testAll<T>(loop);
+            NEG   ::testAll<T>(loop);
+            UNARY ::testAll<T>(loop);
+            BINARY::testAll<T>(loop);
         }
 
 
@@ -288,6 +343,8 @@ Y_UTEST(atom1)
     Level1::Test<float>(loop);
     Level1::Test<double>(loop);
     Level1::Test<short>(loop);
+    Level1::Test<mpz>(loop);
+
 
 }
 Y_UTEST_DONE()
