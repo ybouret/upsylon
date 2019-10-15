@@ -30,7 +30,7 @@ Y_UTEST(scrabble)
             for( C.start(); C.valid(); C.next() )
             {
                 string choice;
-                for(size_t i=1;i<=C.size();++i) choice << original[ C[i]-1 ];
+                for(size_t i=0;i<C.size();++i) choice << original[ C(i) ];
                 permutation P( C.size() );
                 for( P.start(); P.valid(); P.next() )
                 {

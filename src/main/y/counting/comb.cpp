@@ -9,9 +9,11 @@ namespace upsylon {
     n(N),
     k(K),
     nmk(n-k),
-    wlen( k * sizeof(size_t) ),
-    comb( acquire_(wlen) )
+    wlen( (k * sizeof(size_t)) << 1 ),
+    comb( acquire_(wlen) ),
+    base( comb+k )
     {
+        ++base;
         start();
     }
 
@@ -20,10 +22,17 @@ namespace upsylon {
     n(other.n),
     k(other.k),
     nmk(other.nmk),
-    wlen( k * sizeof(size_t) ),
-    comb(  acquire_(wlen) )
+    wlen( (k * sizeof(size_t) ) << 1 ),
+    comb(  acquire_(wlen) ),
+    base( comb+k )
     {
-        for(size_t i=k;i>0;--i) comb[i] = other.comb[i];
+        ++base;
+        for(size_t i=k;i>0;)
+        {
+            comb[i] = other.comb[i];
+            --i;
+            base[i] = other.base[i];
+        }
     }
     
 
@@ -39,9 +48,11 @@ namespace upsylon {
     void combination:: start_() throw()
     {
         assert(1==index);
-        for(size_t i=k;i>0;--i)
+        for(size_t i=k;i>0;)
         {
             comb[i] = i;
+            --i;
+            base[i] = i;
         }
     }
 
@@ -62,7 +73,12 @@ namespace upsylon {
         {
             comb[i] = comb[i-1]+1;
         }
-        
+
+        for(size_t i=k;i>0;)
+        {
+            size_t tmp = comb[i];
+            base[--i]  = --tmp;
+        }
     }
 
     const size_t & combination:: operator[](const size_t j) const throw()
@@ -70,6 +86,12 @@ namespace upsylon {
         assert(j>=1);
         assert(j<=k);
         return comb[j];
+    }
+
+    const size_t & combination:: operator()(const size_t j) const throw()
+    {
+        assert(j<k);
+        return base[j];
     }
 
 
@@ -97,7 +119,7 @@ namespace upsylon
                        fn,
                        lhs, &lhs.comb[1],
                        rhs, &rhs.comb[1],
-                       lhs.k * sizeof(size_t)
+                       2*lhs.k * sizeof(size_t)
                        );
     }
 
