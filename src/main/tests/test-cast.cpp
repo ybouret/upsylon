@@ -35,14 +35,15 @@ Y_UTEST(cast)
         std::cerr << x << "=>" << y << std::endl; ++x;
         std::cerr << x << "=>" << y << std::endl;
     }
-    
+
+#if 1
     {
         string s1       = "hello";
         const string s2 = "world";
         std::cerr << auto_cast<string,string>::_(s1) << std::endl;
         std::cerr << auto_cast<memory::ro_buffer,string>::_(s2).length() << std::endl;
-
     }
+#endif
     
 }
 Y_UTEST_DONE()
