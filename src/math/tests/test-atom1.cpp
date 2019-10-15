@@ -209,7 +209,21 @@ test_sub(u,v,loop); test_sub(v,u,loop)
 
     };
 
+    struct BINARY
+    {
 
+        template <typename TARGET, typename LHS, typename RHS>
+        void test_add( TARGET &target, LHS &lhs, RHS &rhs, concurrent::for_each &loop )
+        {
+            Y_ASSERT( target.size() <= lhs.size() );
+            Y_ASSERT( target.size() <= rhs.size() );
+
+            const size_t n = target.size();
+
+            vector<typename TARGET::mutable_type> seq(n), par(n);
+        }
+
+    }
 
 
 
