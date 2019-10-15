@@ -24,9 +24,11 @@ ADD_TEST(mk:tao      test-m tao)
 #ADD_TEST(mk:tao3     test-m tao3)
 ADD_TEST(mk:sparse   test-m sparse)
 
-SOURCE_GROUP(atom FILES test-atom.cpp)
-ADD_TEST(atom:level1 test-m atom 1)
-ADD_TEST(atom:level2 test-m atom 2)
+SOURCE_GROUP(atom FILES test-atom.cpp test-atom1.cpp test-atom2.cpp test-atom3.cpp)
+ADD_TEST(atom:level1 test-m atom1)
+ADD_TEST(atom:level2 test-m atom2)
+ADD_TEST(atom:level3 test-m atom3)
+
 
 
 SOURCE_GROUP(ode FILES test-michaelis.cpp test-ode.cpp test-rk4.cpp
