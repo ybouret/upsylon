@@ -2,6 +2,7 @@
 #include "y/counting/perm.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
+#include "y/string/display.hpp"
 
 #include "y/ordered/sorted-vector.hpp"
 #include "y/ios/icstream.hpp"
@@ -49,10 +50,11 @@ Y_UTEST(scrabble)
             size_t count = 0;
             for(size_t i=1;i<=total;++i)
             {
-                std::cerr << db[i];
+                string_display::align(std::cerr, db[i], n);
                 if(++count>=8) { count = 0; std::cerr << std::endl;} else { std::cerr << ' '; }
             }
             std::cerr << std::endl;
+            std::cerr << "[" << db.size() << "]" << std::endl;
         }
 
         if(argc>2)
@@ -75,14 +77,21 @@ Y_UTEST(scrabble)
                     }
                 }
             } std::cerr << "]" << std::endl;
+
             std::cerr << "Testing against |dict|=" << dict.size() << std::endl;
-            for(size_t i=1;i<=total;++i)
             {
-                const string &word = db[i];
-                if( dict.search(word) )
+                size_t count = 0;
+                for(size_t i=1;i<=total;++i)
                 {
-                    std::cerr << "\t" << word << std::endl;
+                    const string &word = db[i];
+                    if( dict.search(word) )
+                    {
+                        string_display::align(std::cerr, word, n);
+                        if(++count>=8) { count = 0; std::cerr << std::endl;} else { std::cerr << ' '; }
+                    }
+                    //std::cerr << "[" << db.size() << "]" << std::endl;
                 }
+                std::cerr << std::endl;
             }
         }
     }

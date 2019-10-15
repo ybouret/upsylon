@@ -203,7 +203,7 @@ ADD_TEST(data:const-field test-main const_field)
 ADD_TEST(data:for_each    test-main for_each)
 ADD_TEST(data:ordered     test-main ordered)
 ADD_TEST(data:key-address test-main key_address)
-
+ADD_TEST(data:strings     test-main strings ${HERE}/words.db)
 
 SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)
 ADD_TEST(sparse:array  test-main sparse_array)
@@ -215,7 +215,7 @@ ADD_TEST(counting:perm     test-main perm 1 2 3 4 5 6 7)
 ADD_TEST(coutning:anagram  test-main anagram yann)
 ADD_TEST(counting:mloops   test-main mloops)
 ADD_TEST(counting:dancing  test-main dancing)
-ADD_TEST(counting:scrabble test-main scrabble)
+ADD_TEST(counting:scrabble test-main scrabble celine ${HERE}/words.db)
 
 
 SOURCE_GROUP(oxide FILES test-oxide.cpp test-oxide-fields.cpp
