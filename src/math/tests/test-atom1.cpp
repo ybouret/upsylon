@@ -212,18 +212,56 @@ test_sub(u,v,loop); test_sub(v,u,loop)
     struct BINARY
     {
 
-        template <typename TARGET, typename LHS, typename RHS>
-        void test_add( TARGET &target, LHS &lhs, RHS &rhs, concurrent::for_each &loop )
+#define TEST_PERM2(a,b,c) test(a,b,c,loop); test(a,c,b,loop)
+
+        template <typename TARGET, typename LHS, typename RHS> static inline
+        void test( TARGET &target, LHS &lhs, RHS &rhs, concurrent::for_each &loop )
         {
+            rt_clock clk;
+
             Y_ASSERT( target.size() <= lhs.size() );
             Y_ASSERT( target.size() <= rhs.size() );
 
             const size_t n = target.size();
 
-            vector<typename TARGET::mutable_type> seq(n), par(n);
+            vector<typename TARGET::mutable_type> seq(n);
+
+            {
+                support::fill1D(lhs);
+                support::fill1D(rhs);
+                support::fill1D(target);
+                Y_SUPPORT_TICKS(fullTicks,atom::add(target,lhs,rhs));
+                atom::tool::copy1D(seq,target);
+
+                support::fill1D(target);
+                Y_SUPPORT_TICKS(loopTicks,atom::add(target,lhs,rhs,loop));
+                Y_ASSERT(atom::tool::deltaSquared1D(seq,target)<=0);
+                std::cerr << '+' << clk.speedup(fullTicks,loopTicks) << '/';
+            }
         }
 
-    }
+
+        template <typename T>
+        static inline void testAll(concurrent::for_each &loop )
+        {
+            static const size_t n[] = { 1,2,3,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384};
+            static const char  *tid = typeid(T).name();
+
+            std::cerr << "[Enter SET/ADD for <" << tid << ">]" << std::endl;
+            for(size_t i=0;i<sizeof(n)/sizeof(n[0]);++i)
+            {
+                const size_t nn = n[i];
+                std::cerr << "\t" << nn << ":";
+
+                vector<T,memory::global> v(nn);
+                vector<T,memory::pooled> s(nn);
+                list<T>                  l(nn);
+
+                TEST_PERM2(v,s,l);
+            }
+        }
+
+    };
 
 
 
