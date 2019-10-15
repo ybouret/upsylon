@@ -110,10 +110,10 @@ namespace {
     };
 
 
-    struct SET
+    struct UNARY
     {
         template <typename TARGET, typename SOURCE> static inline
-        void test( TARGET &target, SOURCE &source, concurrent::for_each &loop )
+        void test_set( TARGET &target, SOURCE &source, concurrent::for_each &loop )
         {
             Y_ASSERT( target.size() <= source.size() );
 
@@ -123,10 +123,56 @@ namespace {
             Y_SUPPORT_TICKS(loopTicks,atom::set(target,source,loop));
             Y_ASSERT(atom::tool::deltaSquared1D(target,source)<=0);
             rt_clock clk;
-            std::cerr << clk.speedup(fullTicks,loopTicks) << '/';
+            std::cerr << '@' << clk.speedup(fullTicks,loopTicks) << '/';
         }
 
-#define TEST_PERM(u,v) test(u,v,loop); test(v,u,loop)
+        template <typename TARGET, typename SOURCE> static inline
+        void test_add( TARGET &target, SOURCE &source, concurrent::for_each &loop )
+        {
+            Y_ASSERT( target.size() <= source.size() );
+
+            const size_t n = target.size();
+            vector<typename TARGET::mutable_type> org(n), res(n);
+
+            support::fill1D(source);
+            support::fill1D(target);
+            atom::tool::copy1D(org,target);
+            Y_SUPPORT_TICKS(fullTicks,atom::add(target,source));
+            atom::tool::copy1D(res,target);
+            atom::tool::copy1D(target,org);
+            Y_SUPPORT_TICKS(loopTicks,atom::add(target,source,loop));
+            Y_ASSERT(atom::tool::deltaSquared1D(res,target)<=0);
+            rt_clock clk;
+            std::cerr << '+' << clk.speedup(fullTicks,loopTicks) << '/';
+        }
+
+
+        template <typename TARGET, typename SOURCE> static inline
+        void test_sub( TARGET &target, SOURCE &source, concurrent::for_each &loop )
+        {
+            Y_ASSERT( target.size() <= source.size() );
+
+            const size_t n = target.size();
+            vector<typename TARGET::mutable_type> org(n), res(n);
+
+            support::fill1D(source);
+            support::fill1D(target);
+            atom::tool::copy1D(org,target);
+            Y_SUPPORT_TICKS(fullTicks,atom::sub(target,source));
+            atom::tool::copy1D(res,target);
+            atom::tool::copy1D(target,org);
+            Y_SUPPORT_TICKS(loopTicks,atom::sub(target,source,loop));
+            Y_ASSERT(atom::tool::deltaSquared1D(res,target)<=0);
+            rt_clock clk;
+            std::cerr << '-' << clk.speedup(fullTicks,loopTicks) << '/';
+        }
+
+
+
+#define TEST_PERM(u,v)                  \
+test_set(u,v,loop); test_set(v,u,loop); \
+test_add(u,v,loop); test_add(v,u,loop); \
+test_sub(u,v,loop); test_sub(v,u,loop)
 
         template <typename T> static inline
         void testAll(concurrent::for_each &loop)
@@ -134,7 +180,7 @@ namespace {
             static const size_t n[] = { 1,2,3,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384};
             static const char  *tid = typeid(T).name();
 
-            std::cerr << "[Enter SET for <" << tid << ">]" << std::endl;
+            std::cerr << "[Enter SET/ADD for <" << tid << ">]" << std::endl;
             for(size_t i=0;i<sizeof(n)/sizeof(n[0]);++i)
             {
                 const size_t nn = n[i];
@@ -158,10 +204,13 @@ namespace {
                 std::cerr << std::endl;
 
             }
-            std::cerr << "[Leave SET for <" << tid << ">]" << std::endl;
+            std::cerr << "[Leave SET/ADD for <" << tid << ">]" << std::endl;
         }
 
     };
+
+
+
 
 
     struct Level1
@@ -171,7 +220,7 @@ namespace {
         {
             LD ::testAll<T>(loop);
             NEG::testAll<T>(loop);
-            SET::testAll<T>(loop);
+            UNARY::testAll<T>(loop);
         }
 
 
