@@ -67,17 +67,19 @@ namespace {
         void test( ARRAY &arr, concurrent::for_each &loop)
         {
             typedef typename ARRAY::mutable_type type;
-            const type   value = support::get<type>();
-            const type   minus = -value;
-            atom::ld(arr,value);
-            Y_SUPPORT_TICKS(fullTicks,atom::neg(arr));
-            Y_ASSERT( atom::tool::deltaSquaredTo(arr,minus) <= 0 );
+            {
+                const type   value = support::get<type>();
+                const type   minus = -value;
+                atom::ld(arr,value);
+                Y_SUPPORT_TICKS(fullTicks,atom::neg(arr));
+                Y_ASSERT( atom::tool::deltaSquaredTo(arr,minus) <= 0 );
 
-            atom::ld(arr,value);
-            Y_SUPPORT_TICKS(loopTicks,atom::neg(arr,loop));
-            Y_ASSERT( atom::tool::deltaSquaredTo(arr,minus) <= 0 );
-            rt_clock clk;
-            std::cerr << clk.speedup(fullTicks,loopTicks) << '/';
+                atom::ld(arr,value);
+                Y_SUPPORT_TICKS(loopTicks,atom::neg(arr,loop));
+                Y_ASSERT( atom::tool::deltaSquaredTo(arr,minus) <= 0 );
+                rt_clock clk;
+                std::cerr << clk.speedup(fullTicks,loopTicks) << '/';
+            }
         }
 
         template <typename T> static inline
@@ -188,12 +190,55 @@ namespace {
         }
 
 
+        template <typename TARGET, typename SOURCE> static inline
+        void test_dot( TARGET &target, SOURCE &source, concurrent::for_each &loop )
+        {
+            rt_clock clk;
 
-#define TEST_PERM(u,v)                   \
+            Y_ASSERT( target.size() <= source.size() );
+
+            {
+                support::fill1D(source);
+                support::fill1D(target);
+                typename TARGET::mutable_type seq(0);
+                Y_SUPPORT_TICKS(fullTicks,seq=atom::dot(target,source));
+
+                typename TARGET::mutable_type par(0);
+                Y_SUPPORT_TICKS(loopTicks,par=atom::dot(target,source,loop));
+
+                typename TARGET::mutable_type d2=seq-par;
+                d2*=d2;
+
+                std::cerr << '(' << d2 << ')' << clk.speedup(fullTicks,loopTicks) << '/';
+            }
+
+            {
+                support::fill1D(target);
+                typename TARGET::mutable_type seq(0);
+                Y_SUPPORT_TICKS(fullTicks,seq=atom::norm2(target));
+
+
+                typename TARGET::mutable_type par(0);
+                Y_SUPPORT_TICKS(loopTicks,par=atom::norm2(target,loop));
+                typename TARGET::mutable_type d2=seq-par;
+                d2*=d2;
+
+                std::cerr << '[' << d2 << ']' << clk.speedup(fullTicks,loopTicks) << '/';
+            }
+
+        }
+
+
+
+
+
+
+#define TEST_PERM(u,v)                    \
 test_set(u,v,loop);  test_set(v,u,loop);  \
 test_add(u,v,loop);  test_add(v,u,loop);  \
 test_sub(u,v,loop);  test_sub(v,u,loop);  \
-test_subp(u,v,loop); test_subp(v,u,loop)
+test_subp(u,v,loop); test_subp(v,u,loop); \
+test_dot(u,v,loop);  test_dot(v,u,loop)
 
 
         template <typename T> static inline
@@ -311,7 +356,7 @@ test(c,b,a,loop)
                 std::cerr << std::endl;
             }
 
-            std::cerr << "[LEAVE BINRARY ADD/SUB for <" << tid << ">]" << std::endl;
+            std::cerr << "[LEAVE BINARY ADD/SUB for <" << tid << ">]" << std::endl;
 
         }
 
@@ -329,8 +374,6 @@ test(c,b,a,loop)
             UNARY ::testAll<T>(loop);
             BINARY::testAll<T>(loop);
         }
-
-
     };
 
 

@@ -17,6 +17,8 @@
 #include <iostream>
 #endif
 
+#include <cmath>
+
 namespace upsylon
 {
 
@@ -133,7 +135,8 @@ namespace upsylon
     {
         if(fast<=0) throw exception("rt_clock.speedup(division by zero)");
         const rt_clock &self = *this;
-        return self(full)/self(fast);
+
+        return floor( 1000.0 * self(full)/self(fast) + 0.5)/1000.0;
     }
 }
 
