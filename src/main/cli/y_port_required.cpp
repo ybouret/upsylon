@@ -8,6 +8,7 @@
 #include "y/ptr/auto.hpp"
 #include "y/ordered/sorted-vector.hpp"
 #include "y/string/tokenizer.hpp"
+#include "y/type/aliasing.hpp"
 
 using namespace upsylon;
 
@@ -80,6 +81,17 @@ namespace {
             }
 
             children.swap_with(temp);
+        }
+
+
+        void clean() throw()
+        {
+            const size_t nextLevel = level+1;
+            for(Port *child=children.head;child;child=child->next)
+            {
+                aliasing::_(child->level) = nextLevel;
+                child->clean();
+            }
         }
 
     private:
@@ -210,7 +222,7 @@ Y_PROGRAM_START()
         const size_t level   = Parse(content,required);
         switch( KindFor(curr,level) )
         {
-            case Child:    curr->children.push_back( new Port(curr,level,content) ); curr = curr->children.tail;          break;
+            case Child:    curr->children.push_back( new Port(curr,level,content) ); curr = curr->children.tail;    break;
             case Parent:   assert(curr->parent); curr=curr->parent;
             case Sibling:  assert(curr->parent); curr->children.push_back( new Port(curr->parent,level,content ) );  break;
         }
@@ -223,6 +235,7 @@ Y_PROGRAM_START()
     root->remove_already(installed);
     if(required.size())
     {
+        //root->clean();
         root->display();
         std::cout << required  << std::endl;
     }
