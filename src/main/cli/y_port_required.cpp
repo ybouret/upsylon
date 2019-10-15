@@ -223,7 +223,7 @@ Y_PROGRAM_START()
         switch( KindFor(curr,level) )
         {
             case Child:    curr->children.push_back( new Port(curr,level,content) ); curr = curr->children.tail;    break;
-            case Parent:   assert(curr->parent); curr=curr->parent;
+            case Parent:   assert(curr->parent); curr=curr->parent; /* FALLTHRU */
             case Sibling:  assert(curr->parent); curr->children.push_back( new Port(curr->parent,level,content ) );  break;
         }
     }

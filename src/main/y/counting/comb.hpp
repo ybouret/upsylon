@@ -11,6 +11,10 @@ namespace upsylon
     class combination : public counting
     {
     public:
+        typedef size_t     type;
+        typedef type       mutable_type;
+        typedef const type const_type;
+        
         //! initialize state
         explicit combination(const size_t N, const size_t K);
 
@@ -35,6 +39,9 @@ namespace upsylon
 
         //! check consistency
         static void memchk(const combination &lhs, const combination &rhs);
+
+        //! size=k
+        virtual size_t size() const throw();
 
     private:
         const size_t nmk;  //!< n-k

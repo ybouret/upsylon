@@ -26,10 +26,11 @@ namespace upsylon
         const size_t index; //!< index in 1..count
         const size_t count; //!< number of possible objects
 
-        virtual     ~counting()    throw(); //!< cleanup
-        bool         valid() const throw(); //!< index<=count after a start()
-        void         start()       throw(); //!< set index to 1 and call start_()
-        void         next()        throw(); //!< update index and call next_() if valid
+        virtual       ~counting()    throw();     //!< cleanup
+        bool           valid() const throw();     //!< index<=count after a start()
+        void           start()       throw();     //!< set index to 1 and call start_()
+        void           next()        throw();     //!< update index and call next_() if valid
+        virtual size_t size()  const throw() = 0; //!< number of elements composing the phase space
 
     protected:
         static size_t *acquire_( size_t &bytes );                            //!< acquire a count of bytes=workspace*sizeof(size_t)

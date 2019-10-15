@@ -10,8 +10,10 @@ namespace upsylon{
 
     namespace ios
     {
+        //! execute a system() call with redirection and return content
         struct posix_command
         {
+            //! system( cmd &> tmp ) and get line
             static void query( sequence<string> &lines, const string &cmd );
         };
     }

@@ -50,6 +50,9 @@ namespace upsylon
         bzset_(n);
     }
 
+    size_t permutation:: size() const throw() { return n; }
+
+
     void permutation:: start_() throw()
     {
         assert(1==index);

@@ -27,6 +27,8 @@ namespace upsylon {
     }
     
 
+    size_t combination:: size() const throw() { return k; }
+
     combination:: ~combination() throw()
     {
         release_(comb,wlen);

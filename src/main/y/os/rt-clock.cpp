@@ -18,6 +18,7 @@
 #endif
 
 #include <cmath>
+#include "y/type/utils.hpp"
 
 namespace upsylon
 {
@@ -131,12 +132,12 @@ namespace upsylon
             ;
     }
 
-    double rt_clock:: speedup( const uint64_t full, const uint64_t fast) const
+    double rt_clock:: speedup( const uint64_t full, const uint64_t fast, const size_t precision) const
     {
         if(fast<=0) throw exception("rt_clock.speedup(division by zero)");
+        const double p = ipower(10,precision);
         const rt_clock &self = *this;
-
-        return floor( 1000.0 * self(full)/self(fast) + 0.5)/1000.0;
+        return floor( p * self(full)/self(fast) + 0.5)/p;
     }
 }
 

@@ -379,14 +379,46 @@ test(c,b,a,loop)
 
 }
 
+#include "y/counting/perm.hpp"
+#include "y/counting/comb.hpp"
+//#include "y/counting/mloop.hpp"
+
+
 Y_UTEST(atom1)
 {
     concurrent::simd loop;
+    {
+        point2d<double> P;
+        combination     C(5,2);
+        for( C.start(); C.valid(); C.next() )
+        {
+            support::fill1D(P);
+            const double d = atom::dot(P,C);
+            std::cerr << P << "*" << C << "=" << d << std::endl;
+        }
+    }
 
+    {
+        point3d<float> V;
+        permutation     P(V.size());
+        for( P.start(); P.valid(); P.next() )
+        {
+            support::fill1D(V);
+            const float d = atom::dot(V,P);
+            std::cerr << V << "*" << P << "=" << d << std::endl;
+
+        }
+    }
+    
     Level1::Test<float>(loop);
     Level1::Test<double>(loop);
     Level1::Test<short>(loop);
     Level1::Test<mpz>(loop);
+
+
+
+    
+
 
 
 }

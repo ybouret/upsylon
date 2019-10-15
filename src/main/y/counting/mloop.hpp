@@ -101,6 +101,8 @@ data(0)
                 return display_int::to(os<< '{',l.curr,l.dimensions,mloop_::sep) << "}";
             }
 
+            //! size=dimensions
+            inline virtual size_t size() const throw() { return dimensions; }
 
         private:
             typedef void (*proc)(mutable_type &);

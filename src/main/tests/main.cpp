@@ -36,6 +36,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(perm);
     Y_UTEST(anagram);
     Y_UTEST(dancing);
+    Y_UTEST(scrabble);
 
     Y_UTEST(embed);
     Y_UTEST(hr_ints);

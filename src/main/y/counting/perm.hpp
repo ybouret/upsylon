@@ -12,6 +12,10 @@ namespace upsylon {
     class permutation : public counting
     {
     public:
+        typedef size_t     type;
+        typedef type       mutable_type;
+        typedef const type const_type;
+
         explicit permutation(const size_t N);  //!< setup
         virtual ~permutation() throw();        //!< cleanup
         permutation(const permutation &other); //!< copy
@@ -33,6 +37,8 @@ namespace upsylon {
         //! access, C-style
         const size_t & operator()(const size_t indx) const throw();
 
+        //! size=n
+        virtual size_t size() const throw();  
         
     private:
         const size_t nm1;
