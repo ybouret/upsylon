@@ -5,6 +5,7 @@
 #include "y/math/types.hpp"
 #include "y/type/auto-cast.hpp"
 #include "y/concurrent/scheme/simd.hpp"
+#include "y/sequence/vector.hpp"
 
 namespace upsylon {
     
@@ -39,7 +40,8 @@ PROLOG; Y_MK_ATOM_OPS_USE_(LENGTH,CODE)
         
         //! execute SIMD instructions
 #define Y_MK_ATOM_OPS_RUN(LOOP) }; (LOOP).run( ops::call, & __self )
-        
+
+        //! optimized argument conversion
 #define Y_MK_ATOM_CAST(TARGET,SOURCE,VALUE) (auto_cast<typename TARGET::type,typename SOURCE::type>::_(VALUE))
         
         //! Algebraic Templated Object Manipulation
@@ -75,7 +77,23 @@ PROLOG; Y_MK_ATOM_OPS_USE_(LENGTH,CODE)
                     copy1D(lhs[i],rhs[i]);
                 }
             }
-            
+
+            //! check differences
+            template <typename LHS, typename RHS> static inline
+            typename LHS::const_type deltaSquared1D( const LHS &lhs, const RHS &rhs )
+            {
+                assert(lhs.size()==rhs.size());
+                size_t n = lhs.size();
+                vector<typename LHS::mutable_type> deltaSquared(n,as_capacity);
+                while(n>0)
+                {
+                    typename LHS::mutable_type d2 = lhs[n] - Y_MK_ATOM_CAST(LHS,RHS,rhs[n]);
+                    d2 *= d2;
+                    deltaSquared.push_back_(d2);
+                    --n;
+                }
+                return sorted_sum(deltaSquared);
+            }
             
             
             
