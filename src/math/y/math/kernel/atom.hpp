@@ -6,6 +6,7 @@
 #include "y/type/auto-cast.hpp"
 #include "y/concurrent/scheme/simd.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/sort/sorted-sum.hpp"
 
 namespace upsylon {
     
@@ -55,8 +56,8 @@ PROLOG; Y_MK_ATOM_OPS_USE_(LENGTH,CODE)
                 template <typename LHS,typename RHS> static inline
                 void copy1D( LHS &lhs, const RHS &rhs )
                 {
-                    assert(lhs.size()<=rhs.size);
-                    for(size_t i=lhs.size;i>0;--i)
+                    assert(lhs.size()<=rhs.size());
+                    for(size_t i=lhs.size();i>0;--i)
                     {
                         lhs[i] = Y_MK_ATOM_CAST(LHS,RHS,rhs[i]);
                     }
@@ -74,7 +75,23 @@ PROLOG; Y_MK_ATOM_OPS_USE_(LENGTH,CODE)
                     }
                 }
 
-                //! check differences
+                //! check uniformity
+                template <typename LHS, typename T> static inline
+                typename LHS::const_type deltaSquaredTo( const LHS &lhs, const T &value )
+                {
+                    size_t n = lhs.size();
+                    vector<typename LHS::mutable_type> deltaSquared(n,as_capacity);
+                    while(n>0)
+                    {
+                        typename LHS::mutable_type d2 = lhs[n] - value;
+                        d2 *= d2;
+                        deltaSquared.push_back_(d2);
+                        --n;
+                    }
+                    return sorted_sum(deltaSquared);
+                }
+
+                //! check differences 1D
                 template <typename LHS, typename RHS> static inline
                 typename LHS::const_type deltaSquared1D( const LHS &lhs, const RHS &rhs )
                 {
@@ -91,7 +108,7 @@ PROLOG; Y_MK_ATOM_OPS_USE_(LENGTH,CODE)
                     return sorted_sum(deltaSquared);
                 }
 
-                //! check differences
+                //! check differences 2D
                 template <typename LHS, typename RHS> static inline
                 typename LHS::const_type deltaSquared2D( const LHS &lhs, const RHS &rhs )
                 {

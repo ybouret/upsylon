@@ -24,6 +24,7 @@ namespace upsylon
         void             calibrate(); //!< called during constructor, needed to transforms ticks to seconds.
         double           operator()(uint64_t num_ticks) const throw(); //!< ticks to seconds conversion
         void             sleep( const double nsec ) const;             //!< loop for nsec
+        double           speedup( const uint64_t full, const uint64_t fast) const;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(rt_clock);

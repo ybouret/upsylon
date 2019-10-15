@@ -128,6 +128,13 @@ namespace upsylon
         while( (*this)(ticks()-start) < nsec )
             ;
     }
+
+    double rt_clock:: speedup( const uint64_t full, const uint64_t fast) const
+    {
+        if(fast<=0) throw exception("rt_clock.speedup(division by zero)");
+        const rt_clock &self = *this;
+        return self(full)/self(fast);
+    }
 }
 
 namespace upsylon

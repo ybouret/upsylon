@@ -8,11 +8,13 @@
 #include "y/type/point3d.hpp"
 #include "y/alea.hpp"
 #include "y/string.hpp"
+#include "y/os/rt-clock.hpp"
 
 using namespace upsylon;
 
 namespace {
 
+#define Y_SUPPORT_TICKS(NAME,CODE) uint64_t NAME = 0; do { const uint64_t ini = rt_clock::ticks(); CODE; NAME = rt_clock::ticks()-ini; } while(false)
 
     struct support
     {
@@ -23,6 +25,14 @@ namespace {
             return alea.template full<T>();
         }
 
+        template <typename ARRAY>
+        static inline void fill1D( ARRAY &arr )
+        {
+            for(size_t i=arr.size();i>0;--i)
+            {
+                arr[i] = get< typename ARRAY::mutable_type >();
+            }
+        }
     };
 
     template <>
