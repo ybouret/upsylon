@@ -109,13 +109,69 @@ namespace {
         }
     };
 
+
+    struct SET
+    {
+        template <typename TARGET, typename SOURCE> static inline
+        void test( TARGET &target, SOURCE &source, concurrent::for_each &loop )
+        {
+            Y_ASSERT( target.size() <= source.size() );
+
+            support::fill1D(source);
+            Y_SUPPORT_TICKS(fullTicks,atom::set(target,source));
+            Y_ASSERT(atom::tool::deltaSquared1D(target,source)<=0);
+            Y_SUPPORT_TICKS(loopTicks,atom::set(target,source,loop));
+            Y_ASSERT(atom::tool::deltaSquared1D(target,source)<=0);
+            rt_clock clk;
+            std::cerr << clk.speedup(fullTicks,loopTicks) << '/';
+        }
+
+#define TEST_PERM(u,v) test(u,v,loop); test(v,u,loop)
+
+        template <typename T> static inline
+        void testAll(concurrent::for_each &loop)
+        {
+            static const size_t n[] = { 1,2,3,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384};
+            static const char  *tid = typeid(T).name();
+
+            std::cerr << "[Enter SET for <" << tid << ">]" << std::endl;
+            for(size_t i=0;i<sizeof(n)/sizeof(n[0]);++i)
+            {
+                const size_t nn = n[i];
+                std::cerr << "\t" << nn << ":";
+
+                vector<T,memory::global> v(nn);
+                vector<T,memory::pooled> s(nn);
+                list<T>                  l(nn);
+
+                TEST_PERM(v,s); TEST_PERM(v,l); TEST_PERM(s,l);
+                if( 2 == nn )
+                {
+                    point2d<T> p; TEST_PERM(v,p); TEST_PERM(s,p); TEST_PERM(l,p);
+                }
+
+                if( 3 == nn )
+                {
+                    point3d<T> p; TEST_PERM(v,p); TEST_PERM(s,p); TEST_PERM(l,p);
+                }
+
+                std::cerr << std::endl;
+
+            }
+            std::cerr << "[Leave SET for <" << tid << ">]" << std::endl;
+        }
+
+    };
+
+
     struct Level1
     {
         template <typename T> static inline
         void Test( concurrent::for_each &loop )
         {
-            LD::testAll<T>(loop);
+            LD ::testAll<T>(loop);
             NEG::testAll<T>(loop);
+            SET::testAll<T>(loop);
         }
 
 
