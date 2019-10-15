@@ -111,6 +111,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(set);
     Y_UTEST(btree);
     Y_UTEST(assoc_perf);
+    Y_UTEST(strings);
 
     Y_UTEST(matrix);
     Y_UTEST(functor);

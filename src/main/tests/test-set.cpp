@@ -188,15 +188,45 @@ namespace
 
 }
 
+
 Y_UTEST(set)
 {
     do_test<int,int>();
     do_test<string,int>();
     do_test<int,string>();
     do_test<string,string>();
+}
+Y_UTEST_DONE()
 
+#include "y/associative/string-set.hpp"
 
+#include "y/ios/icstream.hpp"
 
+Y_UTEST(strings)
+{
+    if( argc> 1)
+    {
+        string_set<> db(1024*1024,as_capacity);
+
+        {
+            const string  fn = argv[1];
+            ios::icstream fp( fn );
+            string line;
+            size_t count = 0;
+            while( fp.gets(line) )
+            {
+                line.clean_with(" \t\r\n");
+                (void) db.store(line);
+                if(++count>=1000)
+                {
+                    std::cerr << "." << db.size();
+                    count=0;
+                }
+            }
+            std::cerr << ".[" << db.size() << "]" << std::endl;
+        }
+
+    }
 }
 Y_UTEST_DONE()
 

@@ -12,11 +12,9 @@
 #include <cstring>
 #include <iosfwd>
 
-namespace upsylon
-{
+namespace upsylon {
 
-    namespace ios
-    {
+    namespace ios {
         class istream; //!< forward declaration
     }
 
@@ -85,8 +83,7 @@ maxi_ = items-1
     //
     ////////////////////////////////////////////////////////////////////////////
 
-    namespace core
-    {
+    namespace core {
         memory::allocator & string_allocator_instance();          //!< call to internal pooled memory
         memory::allocator & string_allocator_location() throw();  //!< call to internal pooled memory
 
@@ -374,12 +371,22 @@ inline friend bool operator OP ( const char   *lhs, const string &rhs ) throw() 
 inline friend bool operator OP ( const string &lhs, const T       rhs ) throw() { return string::compare_blocks(lhs.addr_,lhs.size_,&rhs,1) OP 0;}             \
 inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() { return string::compare_blocks(&lhs,1,rhs.addr_,rhs.size_) OP 0;}
 
-            Y_CORE_STRING_CMP(==)
-            Y_CORE_STRING_CMP(!=)
-            Y_CORE_STRING_CMP(<=)
-            Y_CORE_STRING_CMP(<)
-            Y_CORE_STRING_CMP(>=)
-            Y_CORE_STRING_CMP(>)
+            //! macro implementing all the comparisons
+#define Y_CORE_STRING_CMP_IMPL()  \
+Y_CORE_STRING_CMP(==) \
+Y_CORE_STRING_CMP(!=) \
+Y_CORE_STRING_CMP(<=) \
+Y_CORE_STRING_CMP(<)  \
+Y_CORE_STRING_CMP(>=) \
+Y_CORE_STRING_CMP(>)
+
+            Y_CORE_STRING_CMP_IMPL()
+
+            //! check address
+            inline bool owns( const T *p ) const throw()
+            {
+                return (p>=addr_) && (p<addr_+items);
+            }
 
             //! trim n last chars
             inline string & trim(size_t n) throw()
@@ -413,6 +420,27 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
                 Y_CORE_STRING_CHECK(*this);
                 return *this;
             }
+
+            //! trim with some chars
+            inline string & trim_with( const T *buf, const size_t len ) throw()
+            {
+                assert(!owns(buf));
+                const is_bad_function is_bad = { buf, len };
+                return trim(is_bad);
+            }
+
+            //! trim with some chars
+            inline string & trim_with( const T *buf ) throw()
+            {
+                return trim(buf, length_of(buf));
+            }
+
+            //! trim with one bad char
+            inline string & trim_with( const T c ) throw()
+            {
+                return trim_with(&c,1);
+            }
+
 
             //! skip n first chars
             inline string & skip(const size_t n) throw()
@@ -460,12 +488,55 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
                 return skip(n);
             }
 
+            //! skip with buffer
+            inline string & skip_with( const T *buf, const size_t len ) throw()
+            {
+                assert( !owns(buf) );
+                const is_bad_function is_bad = { buf, len };
+                return skip(is_bad);
+            }
+
+            //! skip with text
+            inline string & skip_with( const T *buf  ) throw()
+            {
+                return skip_with(buf,length_of(buf));
+            }
+
+            //! skip with single char
+            inline string & skip_with( const T c ) throw()
+            {
+                return skip_with(&c,1);
+            }
+
+
             //! remove first and last bad chars
             template <typename FUNC>
             inline string & clean( FUNC &is_bad ) throw()
             {
                 return trim(is_bad).skip(is_bad);
             }
+
+            //! clean with buffer
+            inline string & clean_with( const T *buf, const size_t len ) throw()
+            {
+                assert( !owns(buf) );
+                const is_bad_function is_bad = { buf, len };
+                return clean(is_bad);
+            }
+
+            //! clean with text
+            inline string & clean_with( const T *buf ) throw()
+            {
+                return clean_with( buf, length_of(buf) );
+            }
+
+            //! clean with single char
+            inline string & clean_with( const T c ) throw()
+            {
+                return clean_with( &c, 1);
+            }
+
+
 
             //! back operator
             inline T &       back() throw()        { assert(size_>0); return addr_[size_-1]; }
@@ -491,12 +562,30 @@ inline friend bool operator OP ( const T       lhs, const string &rhs ) throw() 
             //! compact in memory
             bool compact() throw();
 
+            //! self key
+            inline const string & key() const throw() { return *this; }
+
         private:
             T     *addr_;
             size_t size_;
             size_t maxi_;
             size_t items;
             size_t bytes;
+
+            struct is_bad_function
+            {
+                const char  *buffer;
+                size_t       buflen;
+                inline bool operator()(const T c) const throw()
+                {
+                    assert(!(0==buffer&&buflen>0));
+                    for(size_t i=buflen;i>0;--i)
+                    {
+                        if(c==buffer[i]) return true;
+                    }
+                    return false;
+                }
+            };
 
             //! build with two buffers
             inline string(const T *sa, const size_t na, const T *sb, const size_t nb) :

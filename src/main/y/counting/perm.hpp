@@ -12,9 +12,9 @@ namespace upsylon {
     class permutation : public counting
     {
     public:
-        typedef size_t     type;
-        typedef type       mutable_type;
-        typedef const type const_type;
+        typedef size_t     type;          //!< alias for atom::
+        typedef type       mutable_type;  //!< alias for atom::
+        typedef const type const_type;    //!< alias for atom::
 
         explicit permutation(const size_t N);  //!< setup
         virtual ~permutation() throw();        //!< cleanup
