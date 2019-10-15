@@ -84,6 +84,7 @@ Y_UTEST(scrabble)
                 for(size_t i=1;i<=total;++i)
                 {
                     const string &word = db[i];
+                    if(word.size()<=1) continue;
                     if( dict.search(word) )
                     {
                         string_display::align(std::cerr, word, n);
