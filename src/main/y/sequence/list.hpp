@@ -12,7 +12,6 @@
 
 namespace upsylon {
 
-
     //! linked list of nodes containing objects
     template <typename T>
     class list : public sequence<T>
@@ -235,6 +234,30 @@ namespace upsylon {
                 node_type *node = cache.query();
                 object::release1(node);
             }
+        }
+
+        //! remove_if, return number of removed
+        template <typename IS_BAD>
+        size_t remove_if( IS_BAD &is_bad ) throw()
+        {
+            size_t     nbad=0;
+            {
+                nodes_list temp;
+                while( nodes.size )
+                {
+                    if(is_bad(nodes.head->data))
+                    {
+                        ++nbad;
+                        pop_front();
+                    }
+                    else
+                    {
+                        temp.push_back( nodes.pop_front() );
+                    }
+                }
+                nodes.swap_with(temp);
+            }
+            return nbad;
         }
 
     private:
