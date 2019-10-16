@@ -7,7 +7,7 @@
 namespace upsylon
 {
     //! common functions for dynamic collection and capacity()
-    class dynamic : public collection
+    class dynamic : public virtual collection
     {
     public:
         //! destructor
@@ -17,7 +17,6 @@ namespace upsylon
         //
         // virtual interface
         //______________________________________________________________________
-        //virtual size_t size()     const throw() = 0; //!< currently available objects
         virtual size_t capacity() const throw() = 0; //!< maximum available objects
 
         //______________________________________________________________________

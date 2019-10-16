@@ -9,13 +9,14 @@
 #include "y/iterate/linked.hpp"
 #include "y/sort/merge.hpp"
 #include "y/type/self-destruct.hpp"
+#include "y/object.hpp"
 #include <iostream>
 
 namespace upsylon {
 
     //! linked list of nodes containing objects
     template <typename T>
-    class list : public sequence<T>
+    class list : public sequence<T>, public cluster<T>
     {
     public:
         Y_DECL_ARGS(T,type); //!<! aliases

@@ -8,6 +8,7 @@
 #include "y/type/self-destruct.hpp"
 #include "y/comparator.hpp"
 #include "y/iterate/linked.hpp"
+#include "y/object.hpp"
 
 namespace upsylon {
 

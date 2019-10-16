@@ -10,8 +10,7 @@ namespace upsylon
         {
         }
         
-        ActiveFields:: ActiveFields( const ActiveFields &other) :
-        dynamic(), ActiveFieldsType(other)
+        ActiveFields:: ActiveFields( const ActiveFields &other) : ActiveFieldsType(other)
         {
         }
         

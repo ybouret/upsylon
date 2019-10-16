@@ -1,6 +1,7 @@
 #include "y/container/container.hpp"
 #include "y/type/utils.hpp"
 #include "y/exceptions.hpp"
+#include "y/code/round.hpp"
 #include <cerrno>
 
 namespace upsylon {
@@ -9,7 +10,7 @@ namespace upsylon {
     {
     }
 
-    container:: container() throw() : dynamic(), object()
+    container:: container() throw() : dynamic()
     {
     }
 

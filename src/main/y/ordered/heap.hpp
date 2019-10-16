@@ -32,7 +32,7 @@ namespace upsylon
 
         //! copy constructor
         inline explicit heap(const heap &other ) :
-        dynamic(), container(), memory::ro_buffer(),
+        container(), memory::ro_buffer(),
         hmem( ALLOCATOR::instance() ), slots(other.count), bytes(0), slot( hmem.template acquire_as<slot_t>(slots,bytes) ), count(other.count), compare()
         {
             assert(slots>=other.count);
