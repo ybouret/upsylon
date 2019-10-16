@@ -2,7 +2,6 @@
 #ifndef Y_SEQUENCE_ARRAY_INCLUDED
 #define Y_SEQUENCE_ARRAY_INCLUDED 1
 
-#include "y/dynamic.hpp"
 #include "y/sequence/cluster.hpp"
 #include "y/type/bswap.hpp"
 #include "y/memory/buffer.hpp"
@@ -12,10 +11,7 @@ namespace upsylon
 {
     //! array of contiguous objects
     template <typename T>
-    class array :
-    public virtual dynamic,
-    public memory::ro_buffer,
-    public cluster<T>
+    class array : public memory::ro_buffer, public cluster<T>
     {
     public:
         Y_DECL_ARGS(T,type); //!< aliases
@@ -36,16 +32,10 @@ namespace upsylon
         }
         
         //! cluster interface: access
-        inline virtual type       & operator[](const size_t i)       throw() { assert(i>0);assert(i<=size()); assert(item_); return item_[i]; }
+        inline virtual type       & operator[](const size_t i)       throw() { assert(i>0);assert(i<=this->size()); assert(item_); return item_[i]; }
 
         //! cluster interface: access
-        inline virtual const_type & operator[](const size_t i) const throw() { assert(i>0);assert(i<=size()); assert(item_); return item_[i]; }
-
-        //! cluster interace: lower index=1
-        inline virtual size_t lower_index() const throw() { return 1; }
-
-        //! cluster interface: upper index=size()
-        inline virtual size_t upper_index() const throw() { return this->size(); }
+        inline virtual const_type & operator[](const size_t i) const throw() { assert(i>0);assert(i<=this->size()); assert(item_); return item_[i]; }
 
 
         //! buffer interface: read only access
@@ -108,11 +98,10 @@ namespace upsylon
         size_t        size_; //!< size()
 
         //! default initialisation
-        inline array() throw() : dynamic(), memory::ro_buffer(), item_(0), size_(0) {}
+        inline array() throw() :  item_(0), size_(0) {}
 
         //! default C-style init
         inline array(type *p, const size_t n) throw() :
-        dynamic(), memory::ro_buffer(),
         item_( memory::io::__prev( (mutable_type *)p) ),
         size_( n )
         {
@@ -129,7 +118,8 @@ namespace upsylon
     {
     public:
         //! default empty array
-        inline explicit lightweight_array() throw() : dynamic(), array<T>()  {}
+        inline explicit lightweight_array() throw() : //dynamic(),
+        array<T>()  {}
 
         //! C++ array on a C array
         inline explicit lightweight_array(T *p,const size_t n) throw() : array<T>(p,n) { assert(!(p==NULL&&n>0)); }
@@ -141,11 +131,12 @@ namespace upsylon
         inline virtual size_t size() const throw() { return this->size_; }
 
         //! dynamic interface: capacity
-        inline virtual size_t capacity() const throw() { return this->size_; }
+        //inline virtual size_t capacity() const throw() { return this->size_; }
 
         //! copy by passing parameters
         inline lightweight_array( const lightweight_array &other ) throw() :
-        dynamic(), object(), array<T>(other.item_,other.size_)
+        //dynamic(),
+        object(), array<T>(other.item_,other.size_)
         {
             
         }

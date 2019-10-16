@@ -3,6 +3,7 @@
 #define Y_MEMORY_SLAB_INCLUDED 1
 
 #include "y/dynamic.hpp"
+#include "y/code/round.hpp"
 
 namespace upsylon
 {

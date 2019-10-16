@@ -2,12 +2,12 @@
 #ifndef Y_DYNAMIC_INCLUDED
 #define Y_DYNAMIC_INCLUDED 1
 
-#include "y/object.hpp"
+#include "y/collection.hpp"
 
 namespace upsylon
 {
-    //! common functions for dynamic containers: size() and capacity()
-    class dynamic
+    //! common functions for dynamic collection and capacity()
+    class dynamic : public collection
     {
     public:
         //! destructor
@@ -17,7 +17,7 @@ namespace upsylon
         //
         // virtual interface
         //______________________________________________________________________
-        virtual size_t size()     const throw() = 0; //!< currently available objects
+        //virtual size_t size()     const throw() = 0; //!< currently available objects
         virtual size_t capacity() const throw() = 0; //!< maximum available objects
 
         //______________________________________________________________________

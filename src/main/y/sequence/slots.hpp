@@ -5,6 +5,7 @@
 #include "y/dynamic.hpp"
 #include "y/type/args.hpp"
 #include "y/type/self-destruct.hpp"
+#include "y/memory/global.hpp"
 
 namespace upsylon {
 
