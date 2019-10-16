@@ -5,6 +5,7 @@
 #include "y/sequence/cluster.hpp"
 #include "y/type/bswap.hpp"
 #include "y/memory/buffer.hpp"
+#include "y/memory/io.hpp"
 #include <iostream>
 
 namespace upsylon
@@ -135,8 +136,7 @@ namespace upsylon
 
         //! copy by passing parameters
         inline lightweight_array( const lightweight_array &other ) throw() :
-        //dynamic(),
-        object(), array<T>(other.item_,other.size_)
+        array<T>(other.item_,other.size_)
         {
             
         }

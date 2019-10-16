@@ -2,14 +2,14 @@
 #ifndef Y_MEMORY_BUFFER_INCLUDED
 #define Y_MEMORY_BUFFER_INCLUDED 1
 
-#include "y/object.hpp"
+#include "y/os/platform.hpp"
 
 namespace upsylon
 {
     namespace memory
     {
         //! read-only buffer
-        class ro_buffer : public virtual object
+        class ro_buffer
         {
         public:
             //------------------------------------------------------------------

@@ -13,7 +13,7 @@ namespace upsylon
 
 
     //! fixed length buffer
-    class digest : public memory::rw_buffer, public counted, public ios::serializable
+    class digest : public counted_object, public memory::rw_buffer, public ios::serializable
     {
     public:
         static bool UPPER_CASE; //!< global flag for an upper case output, default is false

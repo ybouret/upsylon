@@ -3,12 +3,13 @@
 #define Y_CONTAINER_INCLUDED 1
 
 #include "y/dynamic.hpp"
+#include "y/object.hpp"
 
 namespace upsylon
 {
 
     //! base class for containers
-    class container : public dynamic
+    class container : public object, public dynamic
     {
     public:
         virtual ~container() throw();

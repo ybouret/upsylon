@@ -2,6 +2,7 @@
 #ifndef Y_MEMORY_BUFFERS_INCLUDED
 #define Y_MEMORY_BUFFERS_INCLUDED 1
 
+#include "y/ptr/counted.hpp"
 #include "y/memory/pooled.hpp"
 #include "y/memory/buffer.hpp"
 #include "y/type/cswap.hpp"
@@ -12,7 +13,7 @@ namespace upsylon
     {
         //! flexible local buffers
         template <typename T,typename ALLOCATOR>
-        class buffer_of : public memory::rw_buffer
+        class buffer_of : public counted_object, public memory::rw_buffer
         {
         public:
 

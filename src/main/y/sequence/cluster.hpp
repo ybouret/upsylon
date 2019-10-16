@@ -9,6 +9,7 @@
 namespace upsylon {
 
 
+    //! collection of addressable items
     template <typename T>
     class cluster : public virtual collection
     {

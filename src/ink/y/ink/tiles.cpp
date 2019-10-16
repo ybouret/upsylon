@@ -7,7 +7,7 @@ namespace upsylon
     {
 
 
-        Tiles:: Tiles( const Area &source, const size_t n) : dynamic(), __Tiles(n,as_capacity)
+        Tiles:: Tiles( const Area &source, const size_t n) : __Tiles(n,as_capacity)
         {
             //! sanity check
             if(n<=0) return;

@@ -4,12 +4,13 @@
 
 #include "y/strfwd.hpp"
 #include "y/memory/buffer.hpp"
+#include "y/ptr/counted.hpp"
 #include <iostream>
 
 namespace upsylon
 {
     //! universal unique identifier
-    class uuid : public memory::ro_buffer
+    class uuid : public counted_object, public memory::ro_buffer
     {
     public:
         static const size_t BITS = 128;       //!< bits

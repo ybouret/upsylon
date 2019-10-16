@@ -18,7 +18,7 @@ namespace upsylon
         }
 
         Library:: Library(const Library &other) :
-        object(), dynamic(), Object(), LibraryType(other), protonID(other.protonID)
+        Object(), LibraryType(other), protonID(other.protonID)
         {
         }
 

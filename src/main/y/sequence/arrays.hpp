@@ -3,10 +3,11 @@
 #define Y_ARRAYS_INCLUDED 1
 
 #include "y/sequence/array.hpp"
+#include "y/memory/global.hpp"
 #include "y/type/self-destruct.hpp"
 
-namespace upsylon
-{
+namespace upsylon {
+
     //! multiple arrays of same length
     template <typename T,typename ALLOCATOR = memory::global>
     class arrays
