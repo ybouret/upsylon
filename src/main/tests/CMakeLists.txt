@@ -204,6 +204,7 @@ ADD_TEST(data:for_each    test-main for_each)
 ADD_TEST(data:ordered     test-main ordered)
 ADD_TEST(data:key-address test-main key_address)
 ADD_TEST(data:strings     test-main strings ${HERE}/words.db)
+ADD_TEST(data:cluster     test-main cluster)
 
 SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)
 ADD_TEST(sparse:array  test-main sparse_array)

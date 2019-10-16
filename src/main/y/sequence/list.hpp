@@ -3,6 +3,7 @@
 #define Y_LIST_INCLUDED 1
 
 #include "y/container/sequence.hpp"
+#include "y/sequence/cluster.hpp"
 #include "y/core/list.hpp"
 #include "y/core/pool.hpp"
 #include "y/iterate/linked.hpp"
@@ -14,7 +15,7 @@ namespace upsylon {
 
     //! linked list of nodes containing objects
     template <typename T>
-    class list : public sequence<T>
+    class list : public sequence<T>, public cluster<T>
     {
     public:
         Y_DECL_ARGS(T,type); //!<! aliases
@@ -140,6 +141,18 @@ namespace upsylon {
             self_destruct( cache.store(nodes.pop_front())->data );
         }
 
+        //! cluster interace: lower index=1
+        inline virtual size_t lower_index() const throw() { return 1; }
+
+        //! cluster interface: upper index=size()
+        inline virtual size_t upper_index() const throw() { return this->size(); }
+
+        //! cluster interface: SLOW access
+        inline  virtual type       & operator[](const size_t i) throw()       { assert(i>0);assert(i<=size()); return nodes.fetch(i-1)->data; }
+
+        //! cluster interface: SLOW access, CONST
+        inline  virtual const_type & operator[](const size_t i) const throw() { assert(i>0);assert(i<=size()); return nodes.fetch(i-1)->data; }
+
         //! adjust size and pad if needed
         virtual void adjust( const size_t n, param_type pad )
         {
@@ -186,11 +199,7 @@ namespace upsylon {
             return os;
         }
 
-        //! inline SLOW access
-        inline  type       & operator[](const size_t i) throw()       { assert(i>0);assert(i<=size()); return nodes.fetch(i-1)->data; }
 
-        //! inline SLOW access, CONST
-        inline  const_type & operator[](const size_t i) const throw() { assert(i>0);assert(i<=size()); return nodes.fetch(i-1)->data; }
 
         //! sorting by data
         template <typename FUNC>

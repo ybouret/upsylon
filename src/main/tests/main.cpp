@@ -60,6 +60,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(dyadic);
     Y_UTEST(endian);
     Y_UTEST(key_address);
+    Y_UTEST(cluster);
 
     Y_UTEST(heap);
     Y_UTEST(avl);

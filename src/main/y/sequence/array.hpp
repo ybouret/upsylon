@@ -3,7 +3,7 @@
 #define Y_SEQUENCE_ARRAY_INCLUDED 1
 
 #include "y/dynamic.hpp"
-#include "y/type/args.hpp"
+#include "y/sequence/cluster.hpp"
 #include "y/type/bswap.hpp"
 #include "y/memory/buffer.hpp"
 #include <iostream>
@@ -12,10 +12,21 @@ namespace upsylon
 {
     //! array of contiguous objects
     template <typename T>
-    class array : public virtual dynamic, public memory::ro_buffer
+    class array :
+    public virtual dynamic,
+    public memory::ro_buffer,
+    public cluster<T>
     {
     public:
         Y_DECL_ARGS(T,type); //!< aliases
+
+        //======================================================================
+        //
+        //
+        // virtual interfaces
+        //
+        //
+        //======================================================================
 
         //! destructor
         inline virtual ~array() throw()
@@ -24,11 +35,33 @@ namespace upsylon
             assert(0==size_);
         }
         
-        //! inline access
-        inline  type       & operator[](const size_t i) throw() { assert(i>0);assert(i<=size()); assert(item_); return item_[i]; }
+        //! cluster interface: access
+        inline virtual type       & operator[](const size_t i)       throw() { assert(i>0);assert(i<=size()); assert(item_); return item_[i]; }
 
-        //! inline const access
-        inline  const_type & operator[](const size_t i) const throw() { assert(i>0);assert(i<=size()); assert(item_); return item_[i]; }
+        //! cluster interface: access
+        inline virtual const_type & operator[](const size_t i) const throw() { assert(i>0);assert(i<=size()); assert(item_); return item_[i]; }
+
+        //! cluster interace: lower index=1
+        inline virtual size_t lower_index() const throw() { return 1; }
+
+        //! cluster interface: upper index=size()
+        inline virtual size_t upper_index() const throw() { return this->size(); }
+
+
+        //! buffer interface: read only access
+        inline virtual const void *ro() const throw() { return (size_>0) ? &item_[1] : 0; }
+
+        //! buffer interface : length in bytes
+        inline virtual size_t length() const throw() { return size_ * sizeof(T); }
+
+
+        //======================================================================
+        //
+        //
+        // specific code
+        //
+        //
+        //======================================================================
 
         //! output octave/julia style
         inline friend std::ostream & operator<<( std::ostream &os, const array &arr )
@@ -48,12 +81,7 @@ namespace upsylon
         //! const content
         inline const_type * operator*() const throw() { return (size_>0) ? &item_[1] : 0; }
 
-        //! buffer interface: read only access
-        inline virtual const void *ro() const throw() { return (size_>0) ? &item_[1] : 0; }
 
-        //! buffer interface : length in bytes
-        inline size_t length() const throw() { return size_ * sizeof(T); }
-        
         //! load same value
         inline void ld( param_type a )
         {
