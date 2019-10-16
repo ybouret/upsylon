@@ -136,7 +136,7 @@ namespace upsylon
 
         //! copy by passing parameters
         inline lightweight_array( const lightweight_array &other ) throw() :
-        array<T>(other.item_,other.size_)
+        collection(), array<T>(other.item_,other.size_)
         {
             
         }

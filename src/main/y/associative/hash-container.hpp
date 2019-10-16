@@ -31,7 +31,7 @@ namespace upsylon
         inline virtual ~hash_container() throw() {}
 
         //! default constructor
-        inline explicit hash_container() throw() :   base_type(), table(), hash() {}
+        inline explicit hash_container() throw() : base_type(), table(), hash() {}
 
         //! constructor with capacity
         inline explicit hash_container(const size_t n, const as_capacity_t &) :  base_type(), table(n), hash() {}
@@ -63,7 +63,7 @@ namespace upsylon
         }
 
         //! copy
-        inline hash_container(const hash_container &other) : base_type(), table(other.table), hash() {}
+        inline hash_container(const hash_container &other) : collection(), base_type(), table(other.table), hash() {}
 
         //! assign by duplication
         inline hash_container & operator=( const hash_container &other )

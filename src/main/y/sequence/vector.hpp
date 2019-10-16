@@ -21,6 +21,7 @@ namespace upsylon
         
         //! initialize fields
 #define Y_VECTOR_CTOR(n)                             \
+collection(),\
 sequence<T>(), array<T>(),                           \
 maxi_(n),                                            \
 bytes(0),                                            \

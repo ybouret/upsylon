@@ -18,7 +18,7 @@ namespace upsylon
     {
 
         //! base class for streams
-        class stream : public counted_object
+        class stream : public virtual counted_object
         {
         public:
             //! destructor

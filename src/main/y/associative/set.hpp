@@ -86,7 +86,7 @@ namespace upsylon
         }
 
         //! copy constructor
-        inline set( const set &other ) : base_type(other) {}
+        inline set( const set &other ) : collection(), base_type(other) {}
 
         //! assign
         inline set & operator=( const set &other )

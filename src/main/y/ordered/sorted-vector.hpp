@@ -45,14 +45,14 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
         inline explicit sorted_vector(const size_t n, const as_capacity_t &) throw() :  ordered<T>(), Y_SORTED_VECTOR(n) {}
 
         //! copy
-        inline  sorted_vector( const sorted_vector &other ) : ordered<T>(other), Y_SORTED_VECTOR( other.size_ ) { duplicate(other); }
+        inline  sorted_vector( const sorted_vector &other ) : collection(), ordered<T>(other), Y_SORTED_VECTOR( other.size_ ) { duplicate(other); }
 
         //! copy with extra memory
         inline  sorted_vector( const sorted_vector &other, const size_t extra ) : ordered<T>(other), Y_SORTED_VECTOR( other.size_+extra ) { duplicate(other); }
 
         //----------------------------------------------------------------------
         //
-        // dynamic interface
+        // dynamic/collection interface
         //
         //----------------------------------------------------------------------
         inline virtual size_t  size()     const throw() { return size_; }

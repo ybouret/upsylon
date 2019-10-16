@@ -62,7 +62,7 @@ do { for(size_t izero=(S).size_;izero<=(S).maxi_;++izero) \
 #endif
 
     //! default fields initialisation
-#define Y_CORE_STRING_CTOR0()      counted_object(), memory::rw_buffer(), ios::serializable(), addr_(0)
+#define Y_CORE_STRING_CTOR0()      counted_object(), collection(), memory::rw_buffer(), dynamic(), ios::serializable(), addr_(0)
 
     //! string constructor to hold SIZE
 #define Y_CORE_STRING_CTOR(SIZE)   Y_CORE_STRING_CTOR0(), size_(SIZE), maxi_(0), items(size_+1), bytes(0)
@@ -92,11 +92,7 @@ maxi_ = items-1
          assuming that all chars after size() are '0'
          */
         template <typename T>
-        class string :
-        public counted_object,
-        public memory::rw_buffer,
-        public dynamic,
-        public ios::serializable
+        class string : public virtual counted_object, public memory::rw_buffer, public dynamic, public ios::serializable
         {
         public:
             static const char CLASS_NAME[]; //!< for serializable

@@ -98,7 +98,7 @@ namespace upsylon
             }
 
             //! hard copy
-            inline explicit dok( const dok &other) : self_type(other.size(),as_capacity), dok_base()
+            inline explicit dok( const dok &other) : collection(), self_type(other.size(),as_capacity), dok_base()
             {
                 for( const_iterator i = other.begin(); i != other.end(); ++i )
                 {

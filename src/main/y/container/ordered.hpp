@@ -85,8 +85,8 @@ namespace upsylon
         }
 
     protected:
-        inline explicit ordered()        throw() : container() {} //!< setup
-        inline ordered(const ordered & ) throw() : container() {} //!< copy
+        inline explicit ordered()        throw() : container()               {} //!< setup
+        inline ordered(const ordered & ) throw() : collection(), container() {} //!< copy
 
 
 
@@ -131,7 +131,7 @@ namespace upsylon
         inline explicit ordered_single() throw() : ORDERED() {}                                   //!< setup
         inline explicit ordered_single(const size_t n, const as_capacity_t &_) : ORDERED(n,_) {}  //!< setup with memory
         inline virtual ~ordered_single() throw() {}                                               //!< cleanup
-        inline ordered_single( const ordered_single &other) : ORDERED(other) {}                   //!< copy
+        inline ordered_single( const ordered_single &other) : collection(), ORDERED(other) {}                   //!< copy
 
         //! insert and discard if multiple objects
         inline void insert( param_type args )

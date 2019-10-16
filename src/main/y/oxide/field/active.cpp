@@ -10,7 +10,7 @@ namespace upsylon
         {
         }
         
-        ActiveFields:: ActiveFields( const ActiveFields &other) : ActiveFieldsType(other)
+        ActiveFields:: ActiveFields( const ActiveFields &other) : collection(), ActiveFieldsType(other)
         {
         }
         

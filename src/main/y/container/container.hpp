@@ -8,8 +8,8 @@
 namespace upsylon
 {
 
-    //! base class for containers
-    class container : public object, public dynamic
+    //! interface for containers
+    class container : public dynamic
     {
     public:
         virtual ~container() throw();
