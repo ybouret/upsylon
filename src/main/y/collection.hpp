@@ -7,15 +7,14 @@
 
 namespace upsylon {
 
+    //! interface for collection: got a size!
     class collection
     {
     public:
-        virtual ~collection() throw();
-
-        virtual size_t size() const throw() = 0;
-
-    protected:
-        explicit collection() throw();
+        virtual       ~collection() throw();     //!< cleanup
+        virtual size_t size() const throw() = 0; //!< number of alive objects
+    protected:                                   //|
+        explicit collection() throw();           //!< setup
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(collection);

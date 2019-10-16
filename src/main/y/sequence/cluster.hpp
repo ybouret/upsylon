@@ -14,16 +14,12 @@ namespace upsylon {
     class cluster : public virtual collection
     {
     public:
-        Y_DECL_ARGS(T,type);
-
-        inline virtual ~cluster() throw() {}
-
-        virtual type &       operator[](const size_t) throw()       = 0;
-        virtual const_type & operator[](const size_t) const throw() = 0;
-        
-    protected:
-        inline explicit cluster() throw() {}
-
+        Y_DECL_ARGS(T,type);                                             //!< aliases
+        inline virtual ~cluster() throw() {}                             //!< cleanup
+        virtual type &       operator[](const size_t) throw()       = 0; //!< access
+        virtual const_type & operator[](const size_t) const throw() = 0; //!< const access
+    protected:                                                           //|
+        inline explicit cluster() throw() {}                             //!< setup
     private:
         Y_DISABLE_COPY_AND_ASSIGN(cluster);
     };
