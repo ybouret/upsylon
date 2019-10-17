@@ -4,6 +4,7 @@
 #include "y/memory/pooled.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/ptr/arr.hpp"
 #include "support.hpp"
 
 using namespace upsylon;
