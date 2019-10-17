@@ -33,11 +33,13 @@ namespace upsylon {
             return os;
         }
 
-    protected:                                                   //|
+    protected:                                                    
         inline explicit addressable() throw() {}                 //!< setup
     private:
         Y_DISABLE_COPY_AND_ASSIGN(addressable);
     };
+
+   
 
 }
 

@@ -1,6 +1,6 @@
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
-#include "y/sequence/shared.hpp"
+#include "y/container/shared.hpp"
 #include "y/ptr/batch.hpp"
 #include "y/memory/pooled.hpp"
 #include "y/utest/run.hpp"
@@ -28,6 +28,18 @@ static inline SEQ *createSeq( SEQ  *src )
         src->push_back(tmp);
     }
     return keep.yield();
+}
+
+
+template <typename T>
+static inline void doCreate()
+{
+    typedef shared< vector<T,memory::global> > sharedGlobalVector;
+    typedef shared< vector<T,memory::pooled> > sharedPooledVector;
+    typedef shared< list<T>                  > sharedList;
+
+    
+
 }
 
 
