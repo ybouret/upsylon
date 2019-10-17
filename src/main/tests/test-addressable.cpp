@@ -4,7 +4,6 @@
 #include "y/memory/pooled.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
-#include "y/container/counted.hpp"
 #include "support.hpp"
 
 using namespace upsylon;
@@ -13,21 +12,10 @@ using namespace upsylon;
 template <typename BATCH>
 static inline void doAddr( BATCH &batch )
 {
-    std::cerr << "\t" << std::endl;
-    support::fill1D(batch);
+    batch->display( std::cerr ) << std::endl;
 }
 
-template <typename SEQ>
-static inline SEQ *createSeq( SEQ  *src )
-{
-    auto_ptr<SEQ> keep = src;
-    for(size_t n=2+alea.leq(10);n>0;--n)
-    {
-        typename SEQ::const_type tmp = support::get<typename SEQ::mutable_type>();
-        src->push_back(tmp);
-    }
-    return keep.yield();
-}
+
 
 template <typename SEQ>
 static inline void fill( SEQ &seq )
@@ -43,15 +31,21 @@ static inline void fill( SEQ &seq )
 template <typename T>
 static inline void doCreate()
 {
-    //typedef shared< vector<T,memory::global> > sharedGlobalVector;
-    //typedef shared< vector<T,memory::pooled> > sharedPooledVector;
-    //typedef shared< list<T>                  > sharedList;
 
-    typedef make_counted< vector<T,memory::global> > sharedGlobalVector;
-    typedef make_counted< vector<T,memory::pooled> > sharedPoolVector;
-    typedef make_counted< list<T> >                  sharedList;
 
-    
+    typedef arc_ptr< sequence<T> > sharedSequence;
+    sharedSequence gv = new vector<T,memory::global>();
+    sharedSequence pv = new vector<T,memory::pooled>();
+    sharedSequence gl = new list<T>();
+
+    fill( *gv );
+    fill( *pv );
+    fill( *gl );
+
+    doAddr( gv );
+    doAddr( pv );
+    doAddr( gl );
+
 
 }
 
@@ -61,7 +55,9 @@ Y_UTEST(addressable)
 
     
     doCreate<int>();
-
+    doCreate<string>();
+    doCreate<float>();
+    doCreate<mpq>();
 
 }
 Y_UTEST_DONE()

@@ -83,25 +83,7 @@ namespace upsylon
             assert(rhs.pointee);
             return (*lhs) < (*rhs);
         }
-
-        //! forward size() getting
-        inline size_t size() const throw()
-        {
-            return (pointee? pointee->size() : 0 );
-        }
-
-        //! forward access
-        inline type & operator[](const size_t indx)
-        {
-            assert(pointee); return (*pointee)[indx];
-        }
-
-        //! forward const access
-        inline const_type & operator[](const size_t indx) const
-        {
-            assert(pointee); return (*pointee)[indx];
-        }
-
+        
         
     protected:
         pointee_type pointee; //!< internal pointer

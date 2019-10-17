@@ -18,10 +18,11 @@ namespace upsylon
     {
     public:
         Y_DECL_ARGS(T,type); //!< aliases
-        
         //! initialize fields
 #define Y_VECTOR_CTOR(n)                             \
+counted_object(),\
 collection(),\
+addressable<T>(),\
 sequence<T>(), array<T>(),                           \
 maxi_(n),                                            \
 bytes(0),                                            \

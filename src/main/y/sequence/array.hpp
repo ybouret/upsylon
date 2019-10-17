@@ -12,7 +12,7 @@ namespace upsylon
 {
     //! array of contiguous objects
     template <typename T>
-    class array : public memory::ro_buffer, public addressable<T>
+    class array : public memory::ro_buffer, public virtual addressable<T>
     {
     public:
         Y_DECL_ARGS(T,type); //!< aliases

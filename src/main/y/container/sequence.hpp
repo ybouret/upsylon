@@ -3,6 +3,7 @@
 #define Y_SEQUENCE_INCLUDED 1
 
 #include "y/container/container.hpp"
+#include "y/sequence/addressable.hpp"
 #include "y/type/args.hpp"
 #include "y/ptr/counted.hpp"
 
@@ -10,11 +11,14 @@ namespace upsylon
 {
     //! a sequence of objects
     template <typename T>
-    class sequence : public container
+    class sequence :
+    public virtual   counted_object,
+    public           container,
+    public virtual   addressable<T>
     {
     public:
         Y_DECL_ARGS(T,type); //!< aliases
-        //! dectructor
+        //! destructor
         inline virtual ~sequence() throw() {}
 
         //! push an object at the back of the sequence
