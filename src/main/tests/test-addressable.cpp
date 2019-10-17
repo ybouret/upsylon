@@ -1,6 +1,6 @@
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
-#include "y/container/shared.hpp"
+#include "y/sequence/shared.hpp"
 #include "y/ptr/batch.hpp"
 #include "y/memory/pooled.hpp"
 #include "y/utest/run.hpp"
@@ -30,13 +30,27 @@ static inline SEQ *createSeq( SEQ  *src )
     return keep.yield();
 }
 
+template <typename SEQ>
+static inline void fill( SEQ &seq )
+{
+     for(size_t n=2+alea.leq(10);n>0;--n)
+    {
+        typename SEQ::const_type tmp = support::get<typename SEQ::mutable_type>();
+        seq.push_back(tmp);
+    }
+ }
+
 
 template <typename T>
 static inline void doCreate()
 {
-    typedef shared< vector<T,memory::global> > sharedGlobalVector;
-    typedef shared< vector<T,memory::pooled> > sharedPooledVector;
-    typedef shared< list<T>                  > sharedList;
+    //typedef shared< vector<T,memory::global> > sharedGlobalVector;
+    //typedef shared< vector<T,memory::pooled> > sharedPooledVector;
+    //typedef shared< list<T>                  > sharedList;
+
+    typedef tableau< vector<T,memory::global> > sharedGlobalVector;
+    typedef tableau< vector<T,memory::pooled> > sharedPoolVector;
+    typedef tableau< list<T> >                  sharedList;
 
     
 
@@ -50,9 +64,8 @@ Y_UTEST(addressable)
     batch_ptr< addressable<int>, shared_ptr> G = createSeq(new vector<int,memory::global>());
     batch_ptr< addressable<int>, shared_ptr> P = createSeq(new vector<int,memory::pooled>());
 
-    doAddr(L);
-    doAddr(G);
-    doAddr(P);
+    doCreate<int>();
+
 
 }
 Y_UTEST_DONE()
