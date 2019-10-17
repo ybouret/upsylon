@@ -3,8 +3,8 @@
 #define Y_SEQUENCE_INCLUDED 1
 
 #include "y/container/container.hpp"
-#include "y/sequence/cluster.hpp"
 #include "y/type/args.hpp"
+#include "y/ptr/counted.hpp"
 
 namespace upsylon
 {

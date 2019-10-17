@@ -1,22 +1,25 @@
 #ifndef Y_PTR_BATCH_INCLUDED
 #define Y_PTR_BATCH_INCLUDED 1
 
+
 #include "y/ptr/shared.hpp"
 #include "y/ptr/arc.hpp"
 
 namespace upsylon {
 
-    //! assuming T is a cluster-like type, and forward different functions
-    template <typename T, template <class> class PTR = shared_ptr >
-    class batch_ptr : public PTR<T>
+    //! smart pointer to forward
+    template <typename ADDRESSABLE, template <class> class PTR = shared_ptr >
+    class batch_ptr : public PTR<ADDRESSABLE> 
     {
     public:
-        Y_DECL_ARGS(T,type);         //!< aliases
-        typedef PTR<T> ptype;        //!< alias
+        typedef typename ADDRESSABLE::type         type;           //!< alias
+        typedef typename ADDRESSABLE::mutable_type mutable_type;   //!< alias
+        typedef typename ADDRESSABLE::const_type   const_type;     //!< alias
+        typedef PTR<ADDRESSABLE> ptype;                            //!< alias
 
-        virtual ~batch_ptr() throw() {}                                    //!< cleanup
-        inline   batch_ptr(T               *addr) throw() : ptype(addr) {} //!< setup
-        inline   batch_ptr(const batch_ptr &_   ) throw() : ptype(_) {}    //!< copy
+        virtual ~batch_ptr() throw() {}                                      //!< cleanup
+        inline   batch_ptr(ADDRESSABLE     *addr) throw()  : ptype(addr)  {} //!< setup
+        inline   batch_ptr(const batch_ptr &other) throw() : ptype(other) {} //!< copy
 
         //! assign
         inline batch_ptr & operator=( const batch_ptr &other ) throw()
@@ -27,15 +30,15 @@ namespace upsylon {
         }
 
         //! forward access
-        inline type & operator[](const size_t index) throw()
+        inline type & operator[](const size_t index)
         {
-            return (this->pointee)[index];
+            return (* (this->pointee) )[index];
         }
 
         //! forward const access
-        inline const_type & operator[](const size_t index) const throw()
+        inline const_type & operator[](const size_t index) const 
         {
-            return (this->pointee)[index];
+            return (* (this->pointee) )[index];
         }
 
         //! forward size

@@ -2,7 +2,7 @@
 #ifndef Y_SEQUENCE_ARRAY_INCLUDED
 #define Y_SEQUENCE_ARRAY_INCLUDED 1
 
-#include "y/sequence/cluster.hpp"
+#include "y/sequence/addressable.hpp"
 #include "y/type/bswap.hpp"
 #include "y/memory/buffer.hpp"
 #include "y/memory/io.hpp"
@@ -12,7 +12,7 @@ namespace upsylon
 {
     //! array of contiguous objects
     template <typename T>
-    class array : public memory::ro_buffer, public cluster<T>
+    class array : public memory::ro_buffer, public addressable<T>
     {
     public:
         Y_DECL_ARGS(T,type); //!< aliases
@@ -57,13 +57,7 @@ namespace upsylon
         //! output octave/julia style
         inline friend std::ostream & operator<<( std::ostream &os, const array &arr )
         {
-            os << '[';
-            for(size_t i=1;i<=arr.size();++i)
-            {
-                os << arr[i]; if(i<arr.size()) os << ' ';
-            }
-            os << ']' << '\'';
-            return os;
+            return arr.display(os);
         }
 
         //! content
