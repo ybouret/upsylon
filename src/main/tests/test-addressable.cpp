@@ -1,11 +1,10 @@
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
-#include "y/sequence/shared.hpp"
-#include "y/ptr/batch.hpp"
+#include "y/ptr/arc.hpp"
 #include "y/memory/pooled.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
-
+#include "y/container/counted.hpp"
 #include "support.hpp"
 
 using namespace upsylon;
@@ -48,9 +47,9 @@ static inline void doCreate()
     //typedef shared< vector<T,memory::pooled> > sharedPooledVector;
     //typedef shared< list<T>                  > sharedList;
 
-    typedef tableau< vector<T,memory::global> > sharedGlobalVector;
-    typedef tableau< vector<T,memory::pooled> > sharedPoolVector;
-    typedef tableau< list<T> >                  sharedList;
+    typedef make_counted< vector<T,memory::global> > sharedGlobalVector;
+    typedef make_counted< vector<T,memory::pooled> > sharedPoolVector;
+    typedef make_counted< list<T> >                  sharedList;
 
     
 
@@ -60,10 +59,7 @@ static inline void doCreate()
 Y_UTEST(addressable)
 {
 
-    batch_ptr< addressable<int>, shared_ptr> L = createSeq(new list<int>());
-    batch_ptr< addressable<int>, shared_ptr> G = createSeq(new vector<int,memory::global>());
-    batch_ptr< addressable<int>, shared_ptr> P = createSeq(new vector<int,memory::pooled>());
-
+    
     doCreate<int>();
 
 

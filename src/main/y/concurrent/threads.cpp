@@ -29,9 +29,10 @@ namespace upsylon
         }
 
         threads:: threads(const bool v) :
-        __topology( layout::create() ),
+       // __topology( layout::create() ),
+        topology( layout::create() ),
         access(),
-        engines( (*static_cast<__topology *>(this))->cores ),
+        engines( topology->cores   ),
         halting(true),
         ready(0),
         start(),
@@ -69,18 +70,17 @@ namespace upsylon
             // threads setup
             //__________________________________________________________________
             // place leading threads
-            __topology &topo = *this;
             if(verbose)
             {
-                std::cerr << "[threads.init.affinity] main@cpu" << topo->core_index_of(0) << std::endl;
+                std::cerr << "[threads.init.affinity] main@cpu" << topology->core_index_of(0) << std::endl;
             }
-            nucleus::thread::assign(nucleus::thread::get_current_handle(),topo->core_index_of(0));
+            nucleus::thread::assign(nucleus::thread::get_current_handle(),topology->core_index_of(0));
 
             // place other threads
             __threads &thr = engines;
             for(size_t i=0;i<count;++i)
             {
-                const size_t icpu = topo->core_index_of(i);
+                const size_t icpu = topology->core_index_of(i);
                 if(verbose)
                 {
                     std::cerr << "[threads.init.affinity]   #" << i << "@cpu" << icpu << std::endl;
