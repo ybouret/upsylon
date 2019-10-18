@@ -304,15 +304,21 @@ namespace upsylon
         {
             assert(d.size()>=rows);
             assert(is_square);
-            matrix &self = *this;
-            for(size_t r=rows;r>0;--r)
+            matrix     &self = *this;
+            const_type  zero(0);
+            for(size_t r=rows;r>0;)
             {
                 array<type> &R = self[r];
-                for(size_t c=cols;c>0;--c)
+                for(size_t c=cols;c>r;--c)
                 {
-                    R[c] = T(0);
+                    R[c] = zero;
                 }
                 R[r] = d[r];
+                --r;
+                for(size_t c=r;c>0;--c)
+                {
+                    R[c] = zero;
+                }
             }
         }
         
@@ -320,15 +326,22 @@ namespace upsylon
         inline void Id()
         {
             assert(is_square);
-            matrix &self = *this;
-            for(size_t r=rows;r>0;--r)
+            matrix      &self = *this;
+            const_type   zero(0);
+            const_type   one(1);
+            for(size_t r=rows;r>0;)
             {
                 array<type> &R = self[r];
-                for(size_t c=cols;c>0;--c)
+                for(size_t c=cols;c>r;--c)
                 {
-                    R[c] = T(0);
+                    R[c] = zero;
                 }
-                R[r] = T(1);
+                R[r] = one;
+                --r;
+                for(size_t c=r;c>0;--c)
+                {
+                    R[c] = zero;
+                }
             }
         }
         

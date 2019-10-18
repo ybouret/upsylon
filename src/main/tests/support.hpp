@@ -33,6 +33,16 @@ namespace {
                 arr[i] = get< typename ARRAY::mutable_type >();
             }
         }
+
+
+        template <typename ARRAY>
+        static inline void fill2D( ARRAY &arr )
+        {
+            for(size_t i=arr.rows;i>0;--i)
+            {
+                fill1D(arr[i]);
+            }
+        }
     };
 
     template <>

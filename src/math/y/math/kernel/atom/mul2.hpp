@@ -6,7 +6,7 @@ typename LHS,
 typename MATRIX,
 typename RHS,
 typename MUL_OP> static inline
-void mul2_( LHS &lhs, const MATRIX &M, const RHS &rhs, MUL_OP &op )
+void mul2__( LHS &lhs, const MATRIX &M, const RHS &rhs, MUL_OP &op )
 {
     assert(lhs.size()<=M.rows);
     assert(M.cols<=rhs.size());
@@ -22,7 +22,7 @@ void mul2_( LHS &lhs, const MATRIX &M, const RHS &rhs, MUL_OP &op )
 template <typename LHS, typename MATRIX, typename RHS> static inline
 void mul( LHS &lhs, const MATRIX &M, const RHS &rhs)
 {
-    mul2_( lhs, M, rhs, mulop::__set_v2<typename LHS::mutable_type,typename MATRIX::mutable_type>);
+    mul2__( lhs, M, rhs, mulop::__set_v2<typename LHS::mutable_type,typename MATRIX::mutable_type>);
 }
 
 
@@ -30,14 +30,14 @@ void mul( LHS &lhs, const MATRIX &M, const RHS &rhs)
 template <typename LHS, typename MATRIX, typename RHS> static inline
 void mul_add( LHS &lhs, const MATRIX &M, const RHS &rhs)
 {
-    mul2_( lhs, M, rhs, mulop::__add_v2<typename LHS::mutable_type,typename MATRIX::mutable_type>);
+    mul2__( lhs, M, rhs, mulop::__add_v2<typename LHS::mutable_type,typename MATRIX::mutable_type>);
 }
 
 //! sequential lhs -= M * rhs
 template <typename LHS, typename MATRIX, typename RHS> static inline
 void mul_sub( LHS &lhs, const MATRIX &M, const RHS &rhs)
 {
-    mul2_( lhs, M, rhs, mulop::__sub_v2<typename LHS::mutable_type,typename MATRIX::mutable_type>);
+    mul2__( lhs, M, rhs, mulop::__sub_v2<typename LHS::mutable_type,typename MATRIX::mutable_type>);
 }
 
 //!
