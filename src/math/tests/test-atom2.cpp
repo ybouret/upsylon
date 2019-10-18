@@ -20,7 +20,8 @@ namespace {
                                MATRIX &M,
                                RHS    &rhs,
                                concurrent::for_each &loop,
-                               const bool            exact)
+                               const bool            exact,
+                               size_t                &count)
     {
         rt_clock clk;
         typedef typename LHS::mutable_type type;
@@ -117,7 +118,12 @@ namespace {
 
             }
         }
-
+        ++count;
+        if(count>=1)
+        {
+            count = 0;
+            std::cerr << std::endl;
+        }
 
     }
 
@@ -137,6 +143,7 @@ namespace {
         typedef list<T>                  List;
 
 
+        size_t count = 0;
         for(size_t i=0;i<sizeof(nn)/sizeof(nn[0]);++i)
         {
             const size_t nr = nn[i];
@@ -150,7 +157,7 @@ namespace {
             for(size_t j=0;j<sizeof(nn)/sizeof(nn[0]);++j)
             {
                 const size_t nc = nn[j];
-                std::cerr << '\t' << '[' <<  nr << 'x' << nc << ']' << ':';
+                std::cerr << '\t' << '[' <<  nr << 'x' << nc << ']' << std::endl;
                 Matrix M(nr,nc);
                 Field  F("F",nr,nc,Oxide::AsMatrix);
 
@@ -160,12 +167,12 @@ namespace {
                 point2d<T> p2c;
                 point3d<T> p3c;
 
-#define TEST2_NRM_(MM,RHS) do {               \
-testNrm(gvr, MM, RHS, loop, exact);           \
-testNrm(gvr, MM, RHS, loop, exact);           \
-testNrm(gvr, MM, RHS, loop, exact);           \
-if(2==nr) testNrm(p2r, MM, RHS, loop, exact); \
-if(3==nr) testNrm(p3r, MM, RHS, loop, exact); \
+#define TEST2_NRM_(MM,RHS) do {                      \
+testNrm(gvr, MM, RHS, loop, exact, count);           \
+testNrm(gvr, MM, RHS, loop, exact, count);           \
+testNrm(gvr, MM, RHS, loop, exact, count);           \
+if(2==nr) testNrm(p2r, MM, RHS, loop, exact, count); \
+if(3==nr) testNrm(p3r, MM, RHS, loop, exact, count); \
 } while(false)
 
 #define TEST2_NRM(RHS) do { TEST2_NRM_(M,RHS); TEST2_NRM_(F,RHS); } while(false)
@@ -175,7 +182,7 @@ if(3==nr) testNrm(p3r, MM, RHS, loop, exact); \
                 TEST2_NRM(glc);
                 if(2==nc) TEST2_NRM(p2c);
                 if(3==nc) TEST2_NRM(p3c);
-                std::cerr << std::endl;
+                std::cerr << "\t[done]" << std::endl;
             }
 
         }
