@@ -21,7 +21,7 @@ namespace upsylon
 			virtual const char *what() const throw(); //!< internal what_
 			int                 code() const throw(); //!< internal code_
 
-		private:
+        private:
 			Y_DISABLE_ASSIGN(exception);
 			const int code_;
 			char      what_[128];
@@ -40,7 +40,7 @@ namespace upsylon
             exception( const exception & )   throw(); //!< copy constructor
 			virtual            ~exception()  throw(); //!< default destructor
 			virtual const char *what() const throw(); //!< internal what_
-			uint32_t            code() const throw(); //!< internal code_
+            uint32_t            code() const throw(); //!< internal code_
 
 		private:
 			Y_DISABLE_ASSIGN(exception);

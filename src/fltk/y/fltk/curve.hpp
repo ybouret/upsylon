@@ -21,7 +21,7 @@ namespace upsylon
         typedef vector<Point>     Points;  //!< alias
 
         //! named points+color
-        class Curve : public Points, public counted
+        class Curve : public Points
         {
         public:
             explicit Curve(const string &id);

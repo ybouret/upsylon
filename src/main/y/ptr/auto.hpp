@@ -20,8 +20,7 @@ namespace upsylon
         inline ~auto_ptr() throw() { kill(); }
 
         //! get ownership
-        inline auto_ptr( const auto_ptr &other ) throw() :
-        ptr<T>(other)
+        inline auto_ptr( const auto_ptr &other ) throw() : ptr<T>(other)
         {
             other.zero();
         }

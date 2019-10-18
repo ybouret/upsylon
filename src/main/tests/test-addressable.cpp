@@ -3,8 +3,8 @@
 #include "y/ptr/arc.hpp"
 #include "y/memory/pooled.hpp"
 #include "y/utest/run.hpp"
-#include "y/ptr/auto.hpp"
 #include "y/ptr/arr.hpp"
+#include "y/ptr/shared.hpp"
 #include "support.hpp"
 
 using namespace upsylon;
@@ -13,7 +13,7 @@ using namespace upsylon;
 template <typename BATCH>
 static inline void doAddr( BATCH &batch )
 {
-    batch->display( std::cerr ) << std::endl;
+    std::cerr << batch << std::endl;
 }
 
 
@@ -34,10 +34,12 @@ static inline void doCreate()
 {
 
 
-    typedef arc_ptr< sequence<T> > sharedSequence;
-    sharedSequence gv = new vector<T,memory::global>();
-    sharedSequence pv = new vector<T,memory::pooled>();
-    sharedSequence gl = new list<T>();
+    typedef arr_ptr< sequence<T>, arc_ptr>    arc_seq;
+    typedef arr_ptr< sequence<T>, shared_ptr> shared_seq;
+
+    arc_seq     gv = new vector<T,memory::global>();
+    shared_seq  pv = new vector<T,memory::pooled>();
+    arc_seq     gl = new list<T>();
 
     fill( *gv );
     fill( *pv );

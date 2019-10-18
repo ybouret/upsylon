@@ -4,11 +4,13 @@
 #include <cstdarg>
 #include <cstring>
 
+
 namespace upsylon
 {
 
     namespace libc
     {
+
 
         exception:: exception( int err, const char *fmt, ... ) throw() :
         upsylon::exception(),

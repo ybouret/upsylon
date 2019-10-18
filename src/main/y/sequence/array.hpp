@@ -113,11 +113,10 @@ namespace upsylon
     {
     public:
         //! default empty array
-        inline explicit lightweight_array() throw() : //dynamic(),
-        array<T>()  {}
+        inline explicit lightweight_array() throw() : collection(), array<T>()  {}
 
         //! C++ array on a C array
-        inline explicit lightweight_array(T *p,const size_t n) throw() : array<T>(p,n) { assert(!(p==NULL&&n>0)); }
+        inline explicit lightweight_array(T *p,const size_t n) throw() : collection(), array<T>(p,n) { assert(!(p==NULL&&n>0)); }
 
         //! destructor
         inline virtual ~lightweight_array() throw() { this->item_=0; this->size_=0; }
@@ -125,12 +124,9 @@ namespace upsylon
         //! dynamic interface: size
         inline virtual size_t size() const throw() { return this->size_; }
 
-        //! dynamic interface: capacity
-        //inline virtual size_t capacity() const throw() { return this->size_; }
-
         //! copy by passing parameters
         inline lightweight_array( const lightweight_array &other ) throw() :
-        collection(), array<T>(other.item_,other.size_)
+        collection(), addressable<T>(), array<T>(other.item_,other.size_)
         {
             
         }

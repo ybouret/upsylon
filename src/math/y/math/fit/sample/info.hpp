@@ -16,7 +16,7 @@ namespace upsylon
             //! Common Sample information
             //
             ////////////////////////////////////////////////////////////////////
-            class SampleInfo : public counted_object
+            class SampleInfo //: public counted_object
             {
             public:
                 //______________________________________________________________

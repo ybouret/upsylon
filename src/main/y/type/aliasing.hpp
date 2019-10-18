@@ -68,18 +68,22 @@ namespace upsylon {
         }
 
 
+        //! get previous object
         template <typename T> static inline
         T *prev( T *obj ) throw()
         {
             return static_cast<T*>( anonymous(obj,-static_cast<ptrdiff_t>(sizeof(T))) );
         }
 
+
+        //! get previous const object
         template <typename T> static inline
         const T *prev( const T *obj ) throw()
         {
             return static_cast<T*>( anonymous(obj,-static_cast<ptrdiff_t>(sizeof(T))) );
         }
 
+        //! get previous object overiding const
         template <typename T> static inline
         T *prev_( const T *obj ) throw()
         {

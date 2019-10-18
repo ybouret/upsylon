@@ -20,7 +20,7 @@ namespace upsylon {
         class threads : public executor//, public __topology
         {
         public:
-            const   __topology topology;
+            const   __topology topology;    //!< local threads layout
             mutable mutex      access;      //!< for threads synchronisation
 
 

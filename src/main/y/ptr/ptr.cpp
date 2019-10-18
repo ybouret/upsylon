@@ -1,4 +1,3 @@
-
 #include "y/ptr/ptr.hpp"
 
 namespace upsylon
@@ -14,6 +13,6 @@ namespace upsylon
         }
 
         const char ptr::nil[] = "(nil)";
-
+        
     }
 }

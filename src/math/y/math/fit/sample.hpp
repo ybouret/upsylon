@@ -18,7 +18,7 @@ namespace upsylon
             //
             ////////////////////////////////////////////////////////////////////
             template <typename T>
-            class Sample : public SampleType<T>
+            class Sample : public SampleType<T>, public virtual counted_object
             {
             public:
                 typedef arc_ptr<Sample>              Pointer;    //!< smart pointer
