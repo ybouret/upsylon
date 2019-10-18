@@ -16,7 +16,11 @@ namespace {
     template <typename LHS,
     typename MATRIX,
     typename RHS>
-    static inline void testNrm(LHS &lhs, MATRIX &M, RHS &rhs, concurrent::for_each &loop )
+    static inline void testNrm(LHS    &lhs,
+                               MATRIX &M,
+                               RHS    &rhs,
+                               concurrent::for_each &loop,
+                               const bool            exact)
     {
         rt_clock clk;
         typedef typename LHS::mutable_type type;
@@ -35,6 +39,7 @@ namespace {
             Y_SUPPORT_TICKS(loopTicks,atom::mul(lhs,M,rhs,loop));
             const type d2 = atom::tool::deltaSquared1D(lhs,tmp);
             std::cerr << '<' << d2 << "@*" << '>' << clk.speedup(fullTicks,loopTicks) << '/';
+            if(exact) Y_ASSERT(d2<=0);
         }
 
         {
@@ -45,17 +50,70 @@ namespace {
                 atom::tool::copy1D(lhs,org);
                 Y_SUPPORT_TICKS(fullTicks,atom::mul_add(lhs,M,rhs));
                 atom::tool::copy1D(tmp,lhs);
-                
+
                 atom::tool::copy1D(lhs,org);
                 Y_SUPPORT_TICKS(loopTicks,atom::mul_add(lhs,M,rhs,loop));
                 const type d2 = atom::tool::deltaSquared1D(lhs,tmp);
                 std::cerr << '<' << d2 << "@+" << '>' << clk.speedup(fullTicks,loopTicks) << '/';
+                if(exact) Y_ASSERT(d2<=0);
             }
+
+            support::fill1D(org);
+
+            {
+                atom::tool::copy1D(lhs,org);
+                Y_SUPPORT_TICKS(fullTicks,atom::mul_sub(lhs,M,rhs));
+                atom::tool::copy1D(tmp,lhs);
+
+                atom::tool::copy1D(lhs,org);
+                Y_SUPPORT_TICKS(loopTicks,atom::mul_sub(lhs,M,rhs,loop));
+                const type d2 = atom::tool::deltaSquared1D(lhs,tmp);
+                std::cerr << '<' << d2 << "@-" << '>' << clk.speedup(fullTicks,loopTicks) << '/';
+                if(exact) Y_ASSERT(d2<=0);
+            }
+
         }
 
         {
+            for(size_t i=nr;i>0;--i)
+            {
+                for(size_t j=nc;j>0;--j)
+                {
+                    M[i][j] = 0;
+                }
+            }
+            support::fill1D(rhs);
+            atom::mul(lhs,M,rhs);
+            Y_ASSERT( atom::norm2(lhs) <= 0 ); std::cerr << '.';
+            atom::mul(lhs,M,rhs,loop);
+            Y_ASSERT( atom::norm2(lhs) <= 0 ); std::cerr << '.';
+
+            support::fill1D(rhs);
+            atom::mul_add(lhs,M,rhs);
+            Y_ASSERT( atom::norm2(lhs) <= 0 ); std::cerr << '.';
+            atom::mul_add(lhs,M,rhs,loop);
+            Y_ASSERT( atom::norm2(lhs) <= 0 ); std::cerr << '.';
+
+            support::fill1D(rhs);
+            atom::mul_sub(lhs,M,rhs);
+            Y_ASSERT( atom::norm2(lhs) <= 0 ); std::cerr << '.';
+            atom::mul_sub(lhs,M,rhs,loop);
+            Y_ASSERT( atom::norm2(lhs) <= 0 ); std::cerr << '.';
+
             if(nr==nc)
             {
+
+                for(size_t i=nr;i>0;--i)
+                {
+                    M[i][i] = 1;
+                }
+
+                support::fill1D(rhs);
+                atom::mul(lhs,M,rhs);
+                Y_ASSERT( atom::tool::deltaSquared1D(lhs,rhs) <= 0 ); std::cerr << '.';
+                atom::mul(lhs,M,rhs,loop);
+                Y_ASSERT( atom::tool::deltaSquared1D(lhs,rhs) <= 0 ); std::cerr << '.';
+
 
             }
         }
@@ -64,13 +122,13 @@ namespace {
     }
 
     template <typename T>
-    void doTest2( concurrent::simd &loop )
+    void doTest2( concurrent::simd &loop, const bool exact)
     {
 
         const char         *name = typeid(T).name();
         std::cerr << "[[ Enter Atom2<" << name << "> ]]" << std::endl;
 
-        static const size_t nn[] = { 1,2,3,4,8,16,1024 };
+        static const size_t nn[] = { 1,2,3,4,8,16,256 };
 
         typedef matrix<T>                Matrix;
         typedef Oxide::Field2D<T>        Field;
@@ -102,13 +160,16 @@ namespace {
                 point2d<T> p2c;
                 point3d<T> p3c;
 
-#define TEST2_NRM(RHS) do {          \
-testNrm(gvr, M, RHS, loop);          \
-testNrm(gvr, M, RHS, loop);          \
-testNrm(gvr, M, RHS, loop);          \
-if(2==nr) testNrm(p2r, M, RHS, loop);\
-if(3==nr) testNrm(p3r, M, RHS, loop);\
+#define TEST2_NRM_(MM,RHS) do {               \
+testNrm(gvr, MM, RHS, loop, exact);           \
+testNrm(gvr, MM, RHS, loop, exact);           \
+testNrm(gvr, MM, RHS, loop, exact);           \
+if(2==nr) testNrm(p2r, MM, RHS, loop, exact); \
+if(3==nr) testNrm(p3r, MM, RHS, loop, exact); \
 } while(false)
+
+#define TEST2_NRM(RHS) do { TEST2_NRM_(M,RHS); TEST2_NRM_(F,RHS); } while(false)
+
                 TEST2_NRM(gvc);
                 TEST2_NRM(pvc);
                 TEST2_NRM(glc);
@@ -130,9 +191,9 @@ Y_UTEST(atom2)
 {
     concurrent::simd loop;
 
-    doTest2<float>(loop);
-    doTest2<double>(loop);
-    doTest2<short>(loop);
+    //doTest2<float>(loop,false);
+    doTest2<double>(loop,false);
+    doTest2<short>(loop,true);
     //doTest2<mpz>(loop);
     // doTest2<mpq>(loop);
 
