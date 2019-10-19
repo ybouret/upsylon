@@ -18,8 +18,13 @@ namespace {
         Y_ASSERT(lhs.rows==M.rows);
         Y_ASSERT(rhs.cols==M.cols);
         Y_ASSERT(lhs.cols==rhs.rows);
+        support::fill2D(lhs);
+        support::fill2D(rhs);
+        
+        support::fill2D(M);
         Y_SUPPORT_TICKS(fullTicks,atom::mmul(M,lhs,rhs));
-
+        
+        support::fill2D(M);
         Y_SUPPORT_TICKS(loopTicks,atom::mmul(M,lhs,rhs,loop));
 
 
@@ -47,7 +52,7 @@ namespace {
 
                 {
                     Matrix M(nr,nc);
-                    Field  F("F",nr,nc);
+                    Field  F("F",nr,nc,Oxide::AsMatrix);
 
                     for(size_t k=1;k<=1024;k<<=1)
                     {
