@@ -107,14 +107,17 @@ cols(rowLayout.width)
             //! access row
             inline RowType & operator[]( const Coord1D j ) throw()
             {
-                assert(j>=this->lower.y); assert(j<=this->upper.y);
+               // std::cerr << "j=" << j << "/upper.y=" << this->upper.y << std::endl;
+                assert(j>=this->lower.y);
+                assert(j<=this->upper.y);
                 return row[j];
             }
 
             //! access row, CONST
             inline const RowType & operator[]( const Coord1D j ) const throw()
             {
-                assert(j>=this->lower.y); assert(j<=this->upper.y);
+                assert(j>=this->lower.y);
+                assert(j<=this->upper.y);
                 return row[j];
             }
 

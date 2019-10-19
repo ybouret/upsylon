@@ -30,8 +30,8 @@ namespace {
         support::fill2D(M);
 
 
-        const size_t nr = M.rows;
-        const size_t nc = M.cols;
+        const size_t nr = M.rows; Y_ASSERT(lhs.size()==nr);
+        const size_t nc = M.cols; Y_ASSERT(rhs.size()==nc);
 
         vector<type> tmp( nr );
         {
