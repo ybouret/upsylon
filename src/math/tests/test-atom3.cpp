@@ -61,7 +61,7 @@ namespace {
                     Matrix M(nr,nc);
                     Field  F("F",nr,nc,Oxide::AsMatrix);
 
-                    for(size_t k=1;k<=1024;k<<=1)
+                    for(size_t k=1;k<=1024;k<<=2)
                     {
                         Matrix LM(nr,k);
                         Matrix RM(k,nc);
