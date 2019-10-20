@@ -3,6 +3,7 @@
 #define Y_COUNTING_MLOOP_INCLUDED 1
 
 #include "y/counting/counting.hpp"
+#include "y/sequence/accessible.hpp"
 #include "y/type/args.hpp"
 #include "y/memory/embed.hpp"
 #include "y/type/ints-display.hpp"
@@ -37,7 +38,7 @@ data(0)
 
         //! context for a multidimensional loop
         template <typename T>
-        class mloop : public counting
+        class mloop : public counting, public accessible<T>
         {
         public:
             Y_DECL_ARGS(T,type);      //!< alias
@@ -80,7 +81,7 @@ data(0)
 
 
             //! access [0..dimensions-1]
-            inline const_type & operator[](const size_t dim) const throw()
+            inline virtual const_type & operator[](const size_t dim) const throw()
             {
                 assert(dim<dimensions);
                 return curr[dim];
