@@ -112,6 +112,20 @@ SET(adjust_srcs ${adjust_decl} ${adjust_code})
 SOURCE_GROUP( adjust FILES ${adjust_srcs} )
 INSTALL( FILES ${adjust_decl} DESTINATION include/y/math/adjust )
 
+FILE(GLOB adjust_sample_decl y/math/adjust/sample/*.hpp)
+FILE(GLOB adjust_sample_code y/math/adjust/sample/*.cpp)
+SET(adjust_sample_srcs ${adjust_sample_decl} ${adjust_sample_code})
+SOURCE_GROUP( adjust/sample FILES ${adjust_sample_srcs} )
+INSTALL( FILES ${adjust_sample_decl} DESTINATION include/y/math/adjust/sample )
+
+FILE(GLOB adjust_variable_decl y/math/adjust/variable/*.hpp)
+FILE(GLOB adjust_variable_code y/math/adjust/variable/*.cpp)
+SET(adjust_variable_srcs ${adjust_variable_decl} ${adjust_variable_code})
+SOURCE_GROUP( adjust/variable FILES ${adjust_variable_srcs} )
+INSTALL( FILES ${adjust_variable_decl} DESTINATION include/y/math/adjust/variable )
+
+
+
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
 ${kernel_srcs} ${kernel_atom_srcs}
@@ -123,7 +137,7 @@ ${opt_srcs}
 ${signal_srcs}
 ${stat_srcs}
 ${euclidean_srcs} ${euclidean_arc_srcs}
-${adjust_srcs}
+${adjust_srcs} ${adjust_sample_srcs} ${adjust_variable_srcs} 
 )
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
 

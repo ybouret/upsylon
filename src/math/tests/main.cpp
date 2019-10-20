@@ -58,6 +58,8 @@ Y_UTEST_INIT(64)
 
     Y_UTEST(euclidean);
     //Y_UTEST(c2arc);
+    
+    Y_UTEST(adjust);
 }
 Y_UTEST_EXEC()
 
