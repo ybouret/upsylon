@@ -12,7 +12,7 @@ namespace upsylon
     {
         //! make index, C++ style
         template <typename T,typename FUNC> static inline
-        void make( array<size_t> &idx, FUNC &compare,  const array<T> &ra  ) throw()
+        void make( addressable<size_t> &idx, FUNC &compare,  const accessible<T> &ra  ) throw()
         {
 
             // initialize indices
@@ -55,7 +55,7 @@ namespace upsylon
 
         //! rank source into target according to indices
         template <typename T> static inline
-        void rank( array<T> &target, const array<T> &source, const array<size_t> &indices )
+        void rank( addressable<T> &target, const accessible<T> &source, const accessible<size_t> &indices )
         {
             assert(target.size()==source.size());
             assert(target.size()==indices.size());
@@ -69,7 +69,7 @@ namespace upsylon
 
         //! with the help of local memory
         template <typename T> static inline
-        void rank( array<T> &arr, const array<size_t> &idx )
+        void rank( addressable<T> &arr, const accessible<size_t> &idx )
         {
             assert(arr.size()==idx.size());
             const size_t num = arr.size();
