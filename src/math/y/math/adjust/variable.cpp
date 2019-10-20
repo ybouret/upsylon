@@ -30,7 +30,13 @@ namespace upsylon {
             }
             return idx;
         }
-
+        
+        std::ostream & operator<<( std::ostream &os, const Variable &v)
+        {
+            os << '<' << v.name << '@' << v.index() << '>';
+            return os;
+        }
+        
         
     }
     

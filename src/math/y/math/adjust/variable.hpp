@@ -45,7 +45,9 @@ namespace upsylon {
             
             Variable(const Variable &);
             const string & key() const throw();
-            size_t query(const collection &source) const;
+            size_t         query(const collection &) const;
+            friend std::ostream & operator<<( std::ostream &, const Variable &);
+            
             
         protected:
             explicit Variable(const string &);

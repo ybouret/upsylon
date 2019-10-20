@@ -27,6 +27,10 @@ namespace upsylon {
         {
         }
         
+        size_t LinkedVariable:: index() const throw()
+        {
+            return link->index();
+        }
         
         
     }

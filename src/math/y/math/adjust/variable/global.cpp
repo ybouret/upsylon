@@ -29,6 +29,10 @@ namespace upsylon {
         {
         }
         
+        size_t GlobalVariable:: index() const throw()
+        {
+            return position;
+        }
         
         
         

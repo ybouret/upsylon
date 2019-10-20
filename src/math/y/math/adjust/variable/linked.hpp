@@ -20,6 +20,8 @@ namespace upsylon {
             virtual ~LinkedVariable() throw();
             LinkedVariable(const LinkedVariable &other);
             
+            virtual size_t index() const throw();
+            
         private:
             Y_DISABLE_ASSIGN(LinkedVariable);
         };

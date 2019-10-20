@@ -15,10 +15,11 @@ namespace upsylon {
             
             explicit GlobalVariable(const string &n, const size_t i);
             explicit GlobalVariable(const char   *n, const size_t i);
+            GlobalVariable(const GlobalVariable &other);
 
             virtual ~GlobalVariable() throw();
-            GlobalVariable(const GlobalVariable &other);
-                                    
+            virtual  size_t index() const throw();
+            
         private:
             Y_DISABLE_ASSIGN(GlobalVariable);
         };

@@ -1,4 +1,6 @@
 #include "y/math/adjust/samples.hpp"
+#include "y/math/adjust/variables.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/memory/pooled.hpp"
 #include "y/sequence/list.hpp"
@@ -37,6 +39,18 @@ Y_UTEST(adjust)
     S << S1 << S2;
     Y_CHECK(S.count()==S1->count() + S2->count() );
     
+    
+    Variables vars;
+    vars << "t0" << "slope1" << "slope2";
+    
+    Variables vars1; vars1( vars["t0"] )( vars["slope1"], "slope");
+    Variables vars2; vars2( vars["t0"] )( vars["slope2"], "slope");
+
+    
+    std::cerr << "vars  = " << vars << std::endl;
+    std::cerr << "vars1 = " << vars1 << std::endl;
+    std::cerr << "vars2 = " << vars2 << std::endl;
+
 }
 Y_UTEST_DONE()
 
