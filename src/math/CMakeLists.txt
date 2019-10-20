@@ -106,6 +106,12 @@ SET(euclidean_arc_srcs ${euclidean_arc_decl} ${euclidean_arc_code})
 SOURCE_GROUP( euclidean/arc FILES ${euclidean_arc_srcs} )
 INSTALL( FILES ${euclidean_arc_decl} DESTINATION include/y/math/euclidean/arc )
 
+FILE(GLOB adjust_decl y/math/adjust/*.hpp)
+FILE(GLOB adjust_code y/math/adjust/*.cpp)
+SET(adjust_srcs ${adjust_decl} ${adjust_code})
+SOURCE_GROUP( adjust FILES ${adjust_srcs} )
+INSTALL( FILES ${adjust_decl} DESTINATION include/y/math/adjust )
+
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
 ${kernel_srcs} ${kernel_atom_srcs}
@@ -117,6 +123,7 @@ ${opt_srcs}
 ${signal_srcs}
 ${stat_srcs}
 ${euclidean_srcs} ${euclidean_arc_srcs}
+${adjust_srcs}
 )
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
 
