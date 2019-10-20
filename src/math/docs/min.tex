@@ -1,0 +1,45 @@
+\documentclass[aps]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{mathptmx}
+\usepackage{xfrac}
+
+%%  
+\newcommand{\mymat}[1]{\boldsymbol{#1}}
+\newcommand{\mytrn}[1]{~^{\mathtt{t}}\!{#1}}
+\newcommand{\myvec}[1]{\overrightarrow{#1}}
+\newcommand{\mygrad}{\vec{\nabla}}
+\newcommand{\myhess}{\mathcal{H}}
+\newcommand{\mynorm}[1]{\left\vert{#1}\right\vert}
+
+\begin{document}
+
+We want to minimise
+\begin{equation}
+	T_2\left(\vec{x}\right) = \mynorm{\mymat{A} \vec{x} - \vec{y}}^2
+\end{equation}
+with the constraint:
+\begin{equation}
+	\mynorm{\mymat{W}\vec{x}}^2 = c^2,\;\mymat{W}>0
+\end{equation}
+We define:
+\begin{equation}
+	\mathcal{L}\left(\vec{x}\right) = T_2\left(\vec{x}\right)  + \mu^2 \left( \mynorm{\mymat{W}\vec{x}}^2 - c^2\right)
+\end{equation}
+We compute:
+\begin{equation}
+	\frac{1}{2}\mygrad \mathcal{L} = \mytrn{\mymat{A}} \left( \mymat{A} \vec{x} - \vec{y}\right) + \mu^2 \mytrn{\mymat{W}}\mymat{W} \vec{x}
+\end{equation}
+leading to:
+\begin{equation}
+	\left(\mytrn{\mymat{A}}\mymat{A}+\mu^2 \mytrn{\mymat{W}}\mymat{W}\right) \vec{x} = \mytrn{\mymat{A}} \vec{y}
+\end{equation}
+or
+\begin{equation}
+	\vec{x}_\mu = \left(\mytrn{\mymat{A}}\mymat{A}+\mu^2 \mytrn{\mymat{W}}\mymat{W}\right)^{-1} \mytrn{\mymat{A}} \vec{y}
+\end{equation}
+
+\end{document}
