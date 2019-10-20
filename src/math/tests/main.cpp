@@ -31,6 +31,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(functions);
     Y_UTEST(intg);
 
+    Y_UTEST(minfit);
     Y_UTEST(fit_circle);
     Y_UTEST(fit_conic);
     Y_UTEST(bracket);
