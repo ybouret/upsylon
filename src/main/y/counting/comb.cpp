@@ -6,6 +6,7 @@ namespace upsylon {
 
     combination:: combination(const size_t N, const size_t K) :
     counting(compute_for(N,K)),
+    accessible<size_t>(),
     n(N),
     k(K),
     nmk(n-k),
@@ -18,7 +19,9 @@ namespace upsylon {
     }
 
     combination:: combination(const combination &other) :
+    collection(),
     counting(other),
+    accessible<size_t>(),
     n(other.n),
     k(other.k),
     nmk(other.nmk),

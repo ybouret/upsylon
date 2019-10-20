@@ -4,11 +4,12 @@
 #define Y_COUNTING_COMB_INCLUDED 1
 
 #include "y/counting/counting.hpp"
+#include "y/sequence/accessible.hpp"
 
 namespace upsylon
 {
     //! C++ style permutation
-    class combination : public counting
+    class combination : public counting, public accessible<size_t>
     {
     public:
         typedef size_t     type;          //!< alias for atom::
@@ -32,7 +33,7 @@ namespace upsylon
         static size_t compute_for(const size_t N, const size_t K);
         
         //! access C++ style
-        const size_t & operator[](const size_t j) const throw();
+        virtual const size_t & operator[](const size_t j) const throw();
 
         //! access C  style
         const size_t & operator()(const size_t j) const throw();

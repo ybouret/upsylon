@@ -30,8 +30,7 @@ namespace upsylon
         bool           valid() const throw();     //!< index<=count after a start()
         void           start()       throw();     //!< set index to 1 and call start_()
         void           next()        throw();     //!< update index and call next_() if valid
-        virtual size_t size()  const throw() = 0; //!< number of elements composing the phase space
-
+        
     protected:
         static size_t *acquire_( size_t &bytes );                            //!< acquire a count of bytes=workspace*sizeof(size_t)
         static void    release_(size_t *&wksp, size_t &bytes) throw();       //!< release workspace

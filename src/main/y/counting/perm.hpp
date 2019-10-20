@@ -5,11 +5,12 @@
 #define Y_COUNTING_PERM_INCLUDED 1
 
 #include "y/counting/counting.hpp"
+#include "y/sequence/accessible.hpp"
 
 namespace upsylon {
     
     //! permutations
-    class permutation : public counting
+    class permutation : public counting, public accessible<size_t>
     {
     public:
         typedef size_t     type;          //!< alias for atom::
@@ -32,7 +33,7 @@ namespace upsylon {
         static void memchk(const permutation &lhs, const permutation &rhs);
         
         //! access, C++ style
-        const size_t & operator[](const size_t indx) const throw();
+        virtual const size_t & operator[](const size_t indx) const throw();
         
         //! access, C-style
         const size_t & operator()(const size_t indx) const throw();
