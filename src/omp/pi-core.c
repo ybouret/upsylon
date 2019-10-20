@@ -1,34 +1,8 @@
-#define PI_OPTIMIZED
 #include "pi.h"
 
-static double *partial = 0;
-static int     plength = 0;
-
-/* cleaning up stuff */
-static void cleanup(void)
-{
-    if( partial )
-    {
-        free(partial);
-        partial = 0;
-        plength = 0;
-    }
-}
 
 int main(int argc, const char *argv[])
 {
-
-    /*--------------------------------------------------------------------------
-     *
-     * cleanup at exit
-     *
-     -------------------------------------------------------------------------*/
-    if( 0 != atexit(cleanup) )
-    {
-        fprintf( stderr, "couldn't register cleanup at exit\n");
-        return EXIT_FAILURE;
-    }
-
 
     /*--------------------------------------------------------------------------
      *
@@ -42,14 +16,13 @@ int main(int argc, const char *argv[])
     }
     else
     {
-        double  res     = 0;          /* global result                */
-        int     required_num_threads; /* will parse from command line */
-        int     num_threads=0;        /* will read from master thread */
-        double  sampling=0;           /* max sampling time            */
-        int     cycles  =0;           /* number of cycles             */
-        double  sum=0,sum2=0;         /* times                        */
-        int     i=0;
-
+        double res     = 0;          /* global result                */
+        int    required_num_threads; /* will parse from command line */
+        int    num_threads=0;        /* will read from master thread */
+        double sampling=0;           /* max sampling time            */
+        int    cycles  =0;           /* number of cycles             */
+        double sum=0,sum2=0;         /* times                        */
+        int    i=0;
 
         /*----------------------------------------------------------------------
          *
@@ -78,8 +51,6 @@ int main(int argc, const char *argv[])
             }
         }
 
-
-
         /*----------------------------------------------------------------------
          *
          * set this number and perform a quick block to check
@@ -100,18 +71,6 @@ int main(int argc, const char *argv[])
             return EXIT_FAILURE;
         }
 
-        /*----------------------------------------------------------------------
-         *
-         * acquire resources
-         *
-         ---------------------------------------------------------------------*/
-        plength = num_threads * sizeof(double);
-        partial = (double *)malloc(plength);
-        if(!partial)
-        {
-            fprintf(stderr, "couldn't allocate partial\n");
-            return EXIT_FAILURE;
-        }
 
         /*----------------------------------------------------------------------
          *
@@ -122,20 +81,16 @@ int main(int argc, const char *argv[])
         {
             double       ellapsed = 0;
             const double startime = omp_get_wtime();
-
-#pragma omp parallel
+            res=0;
+#pragma omp parallel for reduction(+:res)
+            for(i=0;i<400000000;i++)
             {
-                double tmp = 0.0;
-#pragma     omp for
-                for(i=0;i<400000000;i++)
-                {
-                    tmp += pi_term(i);
-                }
-                partial[ omp_get_thread_num() ] = tmp;
+#if defined(PI_OPTIMIZED)
+                res += pi_term(i);
+#else
+                res=res+4.0*pow(-1.0,i)/(2.0*i+1.0);
+#endif
             }
-
-            res = 0;
-            for(i=0;i<num_threads;++i) res += partial[i];
             ellapsed = omp_get_wtime()-startime;
             sum  += ellapsed;
             sum2 += ellapsed*ellapsed;
