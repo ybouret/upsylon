@@ -6,7 +6,7 @@ add_executable(y_pi_driver y_pi_driver.cpp)
 TARGET_LINK_Y(y_pi_driver)
 INSTALL( TARGETS y_pi_driver RUNTIME DESTINATION bin )
 
-FIND_PACKAGE(openmp)
+FIND_PACKAGE(OpenMP)
 
 IF(OpenMP_C_FOUND)
     add_executable(pi pi.c)
