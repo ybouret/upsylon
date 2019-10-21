@@ -63,8 +63,77 @@ namespace
             Y_ASSERT( tree.search_( k.data, k.size ) );
         }
 
+        alea.shuffle(*keys, keys.size() );
+        for(size_t i=keys.size();i>0;--i)
+        {
+            const key_type &k = *keys[i];
+
+            Y_ASSERT( tree.remove_(k.data,k.size) );
+        }
+
         std::cerr << std::endl;
 
+
+    }
+
+    template <typename KEY,typename T>
+    static inline void do_btable()
+    {
+        std::cerr << "-- testing btable" << std::endl;
+        btable<KEY,T> tab;
+
+        vector<KEY> keys;
+        for(size_t i=100+alea.leq(1000);i>0;--i)
+        {
+            const KEY key = support::get<KEY>();
+            const T   tmp = support::get<T>();
+            if( tab.insert(key,tmp) )
+            {
+                keys.push_back(key);
+            }
+        }
+        Y_CHECK( keys.size() == tab.size() );
+
+        alea.shuffle( *keys, keys.size() );
+        {
+            vector<KEY> bad;
+
+            const size_t nk = keys.size()>>1;
+            while( keys.size() > nk )
+            {
+                Y_ASSERT( tab.remove( keys.back() ) );
+                bad.push_back( keys.back() );
+                keys.pop_back();
+            }
+
+            alea.shuffle( *bad, bad.size() );
+            for(size_t i=bad.size();i>0;--i)
+            {
+                Y_ASSERT( !tab.search( bad[i] ) );
+            }
+        }
+
+        for(size_t i=keys.size();i>0;--i)
+        {
+            Y_ASSERT( tab.search(keys[i]) );
+        }
+
+        for(size_t i=100+alea.leq(1000);i>0;--i)
+        {
+            const KEY key = support::get<KEY>();
+            const T   tmp = support::get<T>();
+            if( tab.insert(key,tmp) )
+            {
+                keys.push_back(key);
+            }
+        }
+        Y_CHECK( keys.size() == tab.size() );
+        alea.shuffle( *keys, keys.size() );
+        for(size_t i=keys.size();i>0;--i)
+        {
+            tab.no( keys[i] );
+        }
+        Y_ASSERT(0==tab.size());
 
     }
 
@@ -89,7 +158,9 @@ Y_UTEST(btree)
     do_btree<unsigned short>(true);
     do_btree<string>(false);
 
-    
+    do_btable<uint16_t,string>();
+    do_btable<string,mpq>();
+
     if( argc > 1 )
     {
         btree<unsigned>         tree;

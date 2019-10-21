@@ -4,6 +4,8 @@
 
 #include "y/memory/global.hpp"
 #include "y/type/args.hpp"
+#include "y/type/aliasing.hpp"
+#include "y/sequence/addressable.hpp"
 #include <cstring>
 
 namespace upsylon
@@ -12,11 +14,11 @@ namespace upsylon
     {
         //! C++-style block of data
         template <typename T, typename ALLOCATOR = global >
-        class cppblock_of
+        class cppblock_of : public addressable<T>
         {
         public:
             Y_DECL_ARGS(T,type); //!< aliases
-            const size_t size;   //!< number of items
+            const size_t size_;   //!< number of items
             const size_t bytes;  //!< allocated bytes
         private:
             mutable_type *wksp;  //!< for memory
@@ -25,9 +27,10 @@ namespace upsylon
 
             //! acquire all
             inline explicit cppblock_of(const size_t n) :
-            size(n),
+            addressable<T>(),
+            size_(n),
             bytes(0),
-            wksp(ALLOCATOR::instance().template acquire_as<mutable_type>((size_t&)size,(size_t&)bytes) ),
+            wksp(ALLOCATOR::instance().template acquire_as<mutable_type>(aliasing::_(size_),aliasing::_(bytes) ) ),
             data(wksp-1)
             {
 
@@ -37,15 +40,20 @@ namespace upsylon
             inline virtual ~cppblock_of() throw()
             {
                 clear();
-                ALLOCATOR::location().template release_as<mutable_type>(wksp,(size_t&)size,(size_t&)bytes);
+                ALLOCATOR::location().template release_as<mutable_type>(wksp,aliasing::_(size_),aliasing::_(bytes));
                 data = 0;
             }
 
+            inline virtual size_t size() const throw()
+            {
+                return size_;
+            }
+
             //! access [1..size]
-            inline type       & operator[](size_t indx) throw()       { assert(indx>0); assert(indx<=size); return data[indx]; }
+            inline virtual type       & operator[](const size_t indx) throw()       { assert(indx>0); assert(indx<=size_); return data[indx]; }
 
             //! const access[1..size]
-            inline const type & operator[](size_t indx) const throw() { assert(indx>0); assert(indx<=size); return data[indx]; }
+            inline virtual const_type & operator[](const size_t indx) const throw() { assert(indx>0); assert(indx<=size_); return data[indx]; }
 
             //! reset memory content
             inline void clear() throw()

@@ -7,7 +7,6 @@
 #include "y/type/args.hpp"
 #include "y/core/list.hpp"
 #include "y/core/pool.hpp"
-#include "y/memory/io.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/code/utils.hpp"
@@ -16,6 +15,7 @@
 
 namespace upsylon
 {
+
 
     //! btree for any data
     template <typename T>
@@ -99,7 +99,23 @@ namespace upsylon
         {
             release_();
         }
-        
+
+        inline explicit btree( const btree &other ) : dlist(), dpool(), root(0), pool()
+        {
+            try
+            {
+                for(const node_type *node=other.dlist.head;node;node=node->next)
+                {
+
+                }
+            }
+            catch(...)
+            {
+                release_();
+                throw;
+            }
+        }
+
         //! return number of data nodes
         inline size_t entries() const throw() { return dlist.size; }
 
@@ -128,11 +144,12 @@ namespace upsylon
             {
                 assert(0!=ptr);
                 size_t num = key_length;
-                while(num-->0)
+                while(num-- > 0)
                 {
                     const uint8_t  code  = *(key++);
                     bool           found = false;
-                    // look for the code in child(ren)
+
+                    // look for the code in child(ren) //
                     for(node_type *node = ptr->chld.head;node;node=node->next)
                     {
                         if(code==node->code)
@@ -142,7 +159,7 @@ namespace upsylon
                             break;
                         }
                     }
-                    // check is a new child is to be set
+                    // check is a new child is to be set //
                     if(!found)
                     {
                         ptr = ptr->chld.push_back( query(ptr,code) );
@@ -261,13 +278,13 @@ namespace upsylon
         }
 
         //! remove wrapper
-        inline bool remove_( const memory::ro_buffer &key) const throw()
+        inline bool remove_( const memory::ro_buffer &key)  throw()
         {
             return remove_(key.ro(),key.length());
         }
 
         //! remove rapper
-        inline bool remove_(const char *text) const throw()
+        inline bool remove_(const char *text) throw()
         {
             return remove_(text, (text!=0) ? strlen(text) : 0);
         }
@@ -325,8 +342,11 @@ namespace upsylon
         data_list  dlist; //!< data list
         data_pool  dpool; //!< data pool
 
+        void key_of( const node_type *node ) const
+        {
+
+        }
     private:
-        Y_DISABLE_COPY(btree);
         Y_DISABLE_ASSIGN(btree);
         node_type *root;  //!< root node for empty key
         pool_type  pool;  //!< available nodes

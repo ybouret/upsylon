@@ -8,6 +8,7 @@
 #include "y/sequence/addressable.hpp"
 #include "y/associative/set.hpp"
 #include "y/memory/pooled.hpp"
+#include "y/associative/b-table.hpp"
 
 namespace upsylon {
     
@@ -21,7 +22,7 @@ namespace upsylon {
             typedef key_hasher<string,hashing::fnv>         KeyHasher;
             typedef memory::pooled                          Allocator;
             typedef set<string,Pointer,KeyHasher,Allocator> Set;
-            
+
             
             const string name;
             
