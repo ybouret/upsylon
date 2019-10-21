@@ -19,4 +19,4 @@ clean:
 	@rm -f *.o pi pi-ng pi.exe pi-ng.exe pi.zip
 	
 arch: clean
-	@zip -v9 pi.zip  pi.c pi-ng.c pi-core.c pi.h
+	@zip -v9 pi.zip  pi.c pi-ng.c pi-core.c pi.h makefile

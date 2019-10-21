@@ -8,7 +8,6 @@
 #include "y/sequence/addressable.hpp"
 #include "y/associative/set.hpp"
 #include "y/memory/pooled.hpp"
-#include "y/associative/b-table.hpp"
 
 namespace upsylon {
     
@@ -30,13 +29,13 @@ namespace upsylon {
             virtual       ~Variable()    throw();
             
             template <typename T>
-            T & get( addressable<T> &source )
+            T & get( addressable<T> &source ) const
             {
                 return source[ query(source) ];
             }
             
             template <typename T>
-            const T & get( const accessible<T> &source )
+            const T & get( const accessible<T> &source ) const
             {
                 return source[ query(source) ];
             }

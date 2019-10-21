@@ -46,10 +46,20 @@ Y_UTEST(adjust)
     Variables vars1; vars1( vars["t0"] )( vars["slope1"], "slope");
     Variables vars2; vars2( vars["t0"] )( vars["slope2"], "slope");
 
-    
+    vector<double> f( vars.size() );
+    support::fill1D(f);
     std::cerr << "vars  = " << vars << std::endl;
+    vars.display(std::cerr,f);
     std::cerr << "vars1 = " << vars1 << std::endl;
+    vars1.display(std::cerr,f);
+
     std::cerr << "vars2 = " << vars2 << std::endl;
+    vars2.display(std::cerr,f);
+
+
+
+
+
 
 }
 Y_UTEST_DONE()
