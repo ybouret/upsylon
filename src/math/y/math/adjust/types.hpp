@@ -25,8 +25,9 @@ namespace upsylon {
             //! C validate arguments
 #define Y_ADJUST_CVALIDATE_ARGS      Array&,const array<bool>&,const Variables &,const size_t
 
-            typedef vector<size_t> Indices;
-
+            typedef vector<size_t>   Indices;
+            typedef accessible<bool> Flags;
+            
             template <typename T>
             struct Type
             {
