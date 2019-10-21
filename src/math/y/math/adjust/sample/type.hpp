@@ -4,7 +4,7 @@
 #define Y_MATH_ADJUST_SAMPLE_TYPE_INCLUDED 1
 
 #include "y/math/adjust/sample/info.hpp"
-#include "y/math/adjust/sequential.hpp"
+#include "y/math/adjust/sequential/function.hpp"
 
 namespace upsylon {
 

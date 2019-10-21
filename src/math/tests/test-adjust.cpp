@@ -1,6 +1,5 @@
 #include "y/math/adjust/samples.hpp"
-#include "y/math/adjust/sequential.hpp"
-
+#include "y/math/adjust/sequential/gradient.hpp"
 #include "y/utest/run.hpp"
 #include "y/memory/pooled.hpp"
 #include "y/sequence/list.hpp"

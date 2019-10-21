@@ -124,6 +124,12 @@ SET(adjust_variable_srcs ${adjust_variable_decl} ${adjust_variable_code})
 SOURCE_GROUP( adjust/variable FILES ${adjust_variable_srcs} )
 INSTALL( FILES ${adjust_variable_decl} DESTINATION include/y/math/adjust/variable )
 
+FILE(GLOB adjust_sequential_decl y/math/adjust/sequential/*.hpp)
+FILE(GLOB adjust_sequential_code y/math/adjust/sequential/*.cpp)
+SET(adjust_sequential_srcs ${adjust_sequential_decl} ${adjust_sequential_code})
+SOURCE_GROUP( adjust/sequential FILES ${adjust_sequential_srcs} )
+INSTALL( FILES ${adjust_sequential_decl} DESTINATION include/y/math/adjust/sequential )
+
 
 
 ADD_LIBRARY(y-m STATIC
@@ -137,7 +143,7 @@ ${opt_srcs}
 ${signal_srcs}
 ${stat_srcs}
 ${euclidean_srcs} ${euclidean_arc_srcs}
-${adjust_srcs} ${adjust_sample_srcs} ${adjust_variable_srcs} 
+${adjust_srcs} ${adjust_sample_srcs} ${adjust_variable_srcs} ${adjust_sequential_srcs} 
 )
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
 
