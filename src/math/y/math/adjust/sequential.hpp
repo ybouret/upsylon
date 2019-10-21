@@ -24,7 +24,7 @@ namespace upsylon {
             template <typename T> class Sequential
             {
             public:
-                typedef typename Type<T>::Array Array;
+                typedef typename Type<T>::Array      Array;
 
                 const T current; //!< currently called position
 
@@ -33,8 +33,8 @@ namespace upsylon {
                 //! make a first call
                 inline T initialize(const T x, const Array &aorg, const Variables &vars)
                 {
-                    const T  ans = on_initialize(x,aorg,vars);
-                    (T &)current = x;
+                    const  T  ans = on_initialize(x,aorg,vars);
+                    aliasing::_(current) = x;
                     return ans;
                 }
 

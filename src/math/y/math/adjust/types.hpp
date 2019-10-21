@@ -32,14 +32,14 @@ namespace upsylon {
             struct Type
             {
 
-                typedef sequence<T>                           Sequence; //!< alias
-                typedef arr_ptr<Sequence,arc_ptr>             Series;   //!< alias for shared data
-                typedef addressable<T>                        Array;    //!< alias for interface
-                typedef matrix<T>                             Matrix;   //!< matrix
-                typedef functor<T,Y_ADJUST_FUNCTION_PROTO>    Function; //!< fit function  prototype
-                typedef functor<bool,Y_ADJUST_VALIDATE_PROTO> Validate; //!< do something with variables, return false to modify
-                typedef T    (*CFunction)(Y_ADJUST_CFUNCTION_ARGS);     //!< fit CFunction
-                typedef bool (*CValidate)(Y_ADJUST_CVALIDATE_ARGS);     //!< fit CValidate
+                typedef sequence<T>                           Sequence;   //!< alias
+                typedef arr_ptr<Sequence,arc_ptr>             Series;     //!< alias for shared data
+                typedef addressable<T>                        Array;      //!< alias for interface
+                typedef matrix<T>                             Matrix;     //!< matrix
+                typedef functor<T,Y_ADJUST_FUNCTION_PROTO>    Function;   //!< fit function  prototype
+                typedef functor<bool,Y_ADJUST_VALIDATE_PROTO> Validate;   //!< do something with variables, return false to modify
+                typedef T    (*CFunction)(Y_ADJUST_CFUNCTION_ARGS);       //!< fit CFunction
+                typedef bool (*CValidate)(Y_ADJUST_CVALIDATE_ARGS);       //!< fit CValidate
 
 
             };

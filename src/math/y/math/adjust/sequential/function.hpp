@@ -16,8 +16,8 @@ namespace upsylon {
             class SequentialFunction : public Sequential<T>
             {
             public:
-                typedef typename Type<T>::Array    Array;    //!< alias
-                typedef typename Type<T>::Function Function; //!< alias
+                typedef typename Type<T>::Array      Array;      //!< alias
+                typedef typename Type<T>::Function   Function;   //!< alias
 
                 inline explicit SequentialFunction( Function &F ) throw() : host(F) {} //!< setup
                 inline virtual ~SequentialFunction() throw() {}                        //!< cleanup

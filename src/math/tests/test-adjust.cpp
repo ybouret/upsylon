@@ -142,6 +142,21 @@ Y_UTEST(adjust)
         S2.save(fp);
     }
 
+    vector<bool>     used( aorg.size(), true );
+    Gradient<double> grad;
+    vector<double>   dFda( aorg.size(), -1 );
+
+    SequentialFunction<double> SF( F );
+
+    grad( dFda, SF, 300.0, aorg, vars1, used );
+    std::cerr << "dF1da=";
+    vars1.display(std::cerr, dFda, "dF_");
+
+    grad( dFda, SF, 300.0, aorg, vars2, used );
+    std::cerr << "dF2da=" << dFda << std::endl;
+    vars2.display(std::cerr, dFda, "dF_");
+
+
 
 }
 Y_UTEST_DONE()

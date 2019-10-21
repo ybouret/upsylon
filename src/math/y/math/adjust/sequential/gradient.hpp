@@ -21,35 +21,42 @@ namespace upsylon {
 
                 typedef typename Type<type>::Array Array;
 
-                explicit Gradient() : derivative<T>(), h(1e-4)
+                inline explicit Gradient() : derivative<T>(), h(1e-4)
                 {
                 }
 
-                virtual ~Gradient() throw()
+                inline virtual ~Gradient() throw()
                 {
                 }
 
-                void operator()(Array           &dFda,
-                                Sequential<T>   &F,
-                                param_type       x,
-                                const Array     &aorg,
-                                const Variables &vars,
-                                const Flags     &used)
+                inline void operator()(Array           &dFda,
+                                       Sequential<T>   &F,
+                                       param_type       x,
+                                       const Array      &aorg,
+                                       const Variables &vars,
+                                       const Flags     &used)
                 {
                     assert(used.size()==aorg.size());
                     assert(dFda.size()==aorg.size());
-                    const size_t nvar = aorg.size();
-                    Wrapper      call = { nvar, &F, x &aorg, &vars  };
-                    size_t      &i    = call.i;
-                    for(;i>0;--i)
+                    // initialize
+                    for(size_t j=dFda.size();j>0;--j)
                     {
+                        dFda[j] = 0;
+                    }
+
+                    // prepare wrapper
+                    Wrapper      call = { 0, &F, x, &aorg, &vars  };
+                    size_t      &i    = call.i;
+
+                    // loop on variables
+                    size_t      nvar  = vars.size();
+                    for( Variables::const_iterator v = vars.begin();
+                        nvar>0;--nvar,++v)
+                    {
+                        i = (*v)->index();
                         if(used[i])
                         {
                             dFda[i] = this->diff(call, x, h);
-                        }
-                        else
-                        {
-                            dFda[i] = 0;
                         }
                     }
                 }
@@ -72,10 +79,10 @@ namespace upsylon {
                         assert(aorg_p);
                         assert(vars_p);
                         
-                        Sequential<T> &F    = *F_p;
-                        const Array   &aorg = *aorg_p;
-                        mutable_type  &ai   = aliasing::_(aorg[i]);
-                        const_type     a0   = ai;
+                        Sequential<T>        &F    = *F_p;
+                        const addressable<T> &aorg = *aorg_p;
+                        mutable_type         &ai   = aliasing::_(aorg)[i];
+                        const_type            a0   = ai;
                         try {
                             ai = a;
                             const_type f = F.initialize(x,aorg,*vars_p);

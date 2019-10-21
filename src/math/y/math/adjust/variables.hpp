@@ -52,13 +52,17 @@ namespace upsylon {
                 }
 
                 template <typename T>
-                void display( std::ostream &os, const accessible<T> &source ) const
+                void display( std::ostream &os, const accessible<T> &source, const char *pfx=NULL) const
                 {
                     const Variables &self = *this;
                     const size_t     nmax = MaxLength();
                     for( const_iterator it = begin(); it != end(); ++it )
                     {
                         const string &name = (**it).name;
+                        if(pfx)
+                        {
+                            os << pfx;
+                        }
                         string_display::align(os,name,nmax) << " = " << self(source,name) << std::endl;
                     }
                 }
