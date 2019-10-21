@@ -18,9 +18,14 @@ namespace upsylon {
         template <typename T>
         struct Type
         {
-            typedef sequence<T>               Sequence;
-            typedef arr_ptr<Sequence,arc_ptr> Series;
-            typedef addressable<T>            Array;
+
+            typedef sequence<T>               Sequence; //!< alias
+            typedef arr_ptr<Sequence,arc_ptr> Series;   //!< alias for shared data
+            typedef addressable<T>            Array;    //!< alias for interface
+
+            
+
+
         };
 
     }
