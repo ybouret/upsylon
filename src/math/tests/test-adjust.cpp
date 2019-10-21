@@ -1,5 +1,5 @@
 #include "y/math/adjust/samples.hpp"
-#include "y/math/adjust/variables.hpp"
+#include "y/math/adjust/sequential.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/memory/pooled.hpp"
@@ -7,6 +7,7 @@
 #include "support.hpp"
 
 using namespace upsylon;
+using namespace math;
 using namespace Adjust;
 
 namespace {

@@ -6,27 +6,31 @@
 #include "y/math/adjust/variable.hpp"
 
 namespace upsylon {
-    
-    namespace Adjust {
-        
-        class LinkedVariable : public Variable
-        {
-        public:
-            const Variable::Pointer link;
-            
-            explicit LinkedVariable(const string &n, const Variable::Pointer &l);
-            explicit LinkedVariable(const char   *n, const Variable::Pointer &l);
 
-            virtual ~LinkedVariable() throw();
-            LinkedVariable(const LinkedVariable &other);
-            
-            virtual size_t index() const throw();
-            
-        private:
-            Y_DISABLE_ASSIGN(LinkedVariable);
-        };
-        
+    namespace math {
+
+        namespace Adjust {
+
+            class LinkedVariable : public Variable
+            {
+            public:
+                const Variable::Pointer link;
+
+                explicit LinkedVariable(const string &n, const Variable::Pointer &l);
+                explicit LinkedVariable(const char   *n, const Variable::Pointer &l);
+
+                virtual ~LinkedVariable() throw();
+                LinkedVariable(const LinkedVariable &other);
+
+                virtual size_t index() const throw();
+
+            private:
+                Y_DISABLE_ASSIGN(LinkedVariable);
+            };
+
+        }
     }
+
 }
 
 #endif

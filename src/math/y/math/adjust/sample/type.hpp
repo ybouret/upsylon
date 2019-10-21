@@ -7,27 +7,29 @@
 
 namespace upsylon {
 
-    namespace Adjust
-    {
-        
-        //! interface for adjustable sample
-        template <typename T>
-        class SampleType : public SampleInfo
-        {
-        public:
-            inline virtual ~SampleType() throw() {}
-            
-            
-            
-        protected:
-            inline explicit SampleType() throw() : SampleInfo() {}
-        
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(SampleType);
-        };
-        
-    }
+    namespace math {
 
+        namespace Adjust {
+
+            //! interface for adjustable sample
+            template <typename T>
+            class SampleType : public SampleInfo
+            {
+            public:
+                inline virtual ~SampleType() throw() {}
+
+
+
+            protected:
+                inline explicit SampleType() throw() : SampleInfo() {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(SampleType);
+            };
+
+        }
+
+    }
 }
 
 
