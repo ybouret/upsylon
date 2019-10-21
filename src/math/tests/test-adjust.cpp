@@ -163,22 +163,25 @@ Y_UTEST(adjust)
 
 
     std::cerr << "S1:" << std::endl;
-    atom::ld(beta,0);
-    alpha.ld(0);
-    S1.computeAndUpdate(beta, alpha, SF, aorg, used, grad);
+    
+    S1.initialize(alpha, beta, used);
+    std::cerr << "alpha=" << alpha << std::endl;
+    const double D12 = S1.computeAndUpdate(alpha, beta, SF, aorg, used, grad);
     std::cerr << "beta="  << beta  << std::endl;
     std::cerr << "alpha=" << alpha << std::endl;
-    Type<double>::Regularize(beta, alpha, used);
-    std::cerr << "beta =" << beta  << std::endl;
+    Type<double>::Regularize(alpha);
     std::cerr << "alpha=" << alpha << std::endl;
+
 
     std::cerr << "S2: " << std::endl;
-    atom::ld(beta,0);
-    alpha.ld(0);
-    S2.computeAndUpdate(beta, alpha, SF, aorg, used, grad);
+    S2.initialize(alpha, beta, used);
+    std::cerr << "alpha=" << alpha << std::endl;
+    const double D22 = S2.computeAndUpdate(alpha, beta, SF, aorg, used, grad);
     std::cerr << "beta="  << beta  << std::endl;
     std::cerr << "alpha=" << alpha << std::endl;
 
+    std::cerr << "D12=" << D12 << "/" << D1 << std::endl;
+    std::cerr << "D22=" << D22 << "/" << D2 << std::endl;
 
 
 }

@@ -154,7 +154,37 @@ namespace upsylon
             assert(idx<this->size());
             return table.chain.fetch(idx)->addr->data;
         }
-
+        
+        //!
+        inline type & head() throw()
+        {
+            assert(this->size()>0);
+            return table.chain.head->addr->data;
+        }
+        
+        //!
+        inline const_type & head() const throw()
+        {
+            assert(this->size()>0);
+            return table.chain.head->addr->data;
+        }
+        
+        //!
+        inline type & tail() throw()
+        {
+            assert(this->size()>0);
+            return table.chain.tail->addr->data;
+        }
+        
+        //!
+        inline const type & tail() const throw()
+        {
+            assert(this->size()>0);
+            return table.chain.tail->addr->data;
+        }
+        
+        
+        
         //! collect all the keys
         template <typename SEQUENCE>
         void collect_keys( SEQUENCE &keys ) const
@@ -244,6 +274,7 @@ namespace upsylon
                 }
             }
         }
+        
 
     protected:
         table_type table; //!< handle low level operations

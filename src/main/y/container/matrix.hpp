@@ -331,7 +331,7 @@ namespace upsylon
             const_type   one(1);
             for(size_t r=rows;r>0;)
             {
-                array<type> &R = self[r];
+                addressable<type> &R = self[r];
                 for(size_t c=cols;c>r;--c)
                 {
                     R[c] = zero;

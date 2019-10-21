@@ -67,10 +67,12 @@ namespace upsylon {
                     }
                 }
 
-
-
+                size_t sweep() const throw();
+                
+                void   chkdbg() const;
 
             private:
+                //! order by increasing index
                 void update();
 
 

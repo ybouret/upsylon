@@ -1,5 +1,6 @@
 #include "y/codec/bwt.hpp"
 #include "y/sort/heap.hpp"
+#include "y/sequence/array.hpp"
 #include <cstring>
 
 namespace upsylon

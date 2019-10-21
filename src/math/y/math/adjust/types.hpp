@@ -41,37 +41,20 @@ namespace upsylon {
                 typedef T    (*CFunction)(Y_ADJUST_CFUNCTION_ARGS);       //!< fit CFunction
                 typedef bool (*CValidate)(Y_ADJUST_CVALIDATE_ARGS);       //!< fit CValidate
 
-                static inline
-                void Regularize( Array &beta, Matrix &alpha, const Flags &used )
+                
+                static inline void Regularize(Matrix &alpha) throw()
                 {
-                    assert( alpha.rows == alpha.cols );
-                    assert( used.size() == alpha.rows );
-                    assert( used.size() == beta.size() );
-
+                    assert(alpha.is_square);
                     const size_t n = alpha.rows;
                     for(size_t j=n;j>0;--j)
                     {
-                        Array &alpha_j = alpha[j];
-                        if(used[j])
+                        for(size_t k=n;k>j;--k)
                         {
-
-                        }
-                        else
-                        {
-                            beta[j] = 0;
-                            size_t k=n;
-                            for(;k>j;--k)
-                            {
-                                alpha_j[k] = 0;
-                            }
-                            alpha_j[j] = 1;
-                            for(--k;k>0;--k)
-                            {
-                                alpha_j[k] = 0;
-                            }
+                            alpha[j][k] = alpha[k][j];
                         }
                     }
                 }
+                
 
             };
 

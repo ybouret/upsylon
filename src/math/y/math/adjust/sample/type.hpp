@@ -5,6 +5,7 @@
 
 #include "y/math/adjust/sample/info.hpp"
 #include "y/math/adjust/sequential/function.hpp"
+#include "y/math/kernel/atom.hpp"
 
 namespace upsylon {
 
@@ -18,6 +19,7 @@ namespace upsylon {
             {
             public:
                 typedef typename Type<T>::Array    Array;
+                typedef typename Type<T>::Matrix   Matrix;
                 typedef typename Type<T>::Function Function;
 
                 inline virtual ~SampleType() throw() {}
@@ -31,6 +33,36 @@ namespace upsylon {
                     SequentialFunction<T> call(F);
                     return compute(call,aorg);
                 }
+                
+                void initialize(Matrix      &alpha,
+                                Array       &beta,
+                                const Flags &used ) const throw()
+                {
+                    assert( alpha.rows == alpha.cols  );
+                    assert( beta.size() == alpha.rows );
+                    assert( used.size() == beta.size() );
+                    assert( variables.sweep() <= used.size() );
+                    
+                    atom::ld(beta,0);
+                    alpha.Id();
+                    size_t                    nv = variables.size();
+                    Variables::const_iterator it = variables.begin();
+                    while(nv>0)
+                    {
+                        const size_t i = (**it).index();
+                        if( used[i] )
+                        {
+                            alpha[i][i] = 0;
+                        }
+                        --nv;
+                        ++it;
+                    }
+                    
+                }
+                
+              
+                
+              
 
 
             protected:

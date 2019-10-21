@@ -92,7 +92,7 @@ namespace upsylon {
                             deltaSq[i]      = square_of(Fj-Y[j]);
                         }
 
-                        return sorted_sum(deltaSq);
+                        return sorted_sum(deltaSq)/2;
                     }
                     else
                     {
@@ -101,8 +101,8 @@ namespace upsylon {
                 }
 
 
-                virtual T  computeAndUpdate(Array           &beta,
-                                            Matrix          &alpha,
+                virtual T  computeAndUpdate(Matrix          &alpha,
+                                            Array           &beta,
                                             Sequential<T>   &F,
                                             const Array     &aorg,
                                             const Flags     &used,
@@ -176,13 +176,13 @@ namespace upsylon {
 
 
                         //------------------------------------------------------
-                        // third pass
+                        // third pass: build squares for delta
                         //------------------------------------------------------
-                        for(size_t i=n;i>0;--i)
+                        for(size_t j=n;j>0;--j)
                         {
-                            dY[i] *= dY[i];
+                            dY[j] *= dY[j];
                         }
-                        return sorted_sum(deltaSq);
+                        return sorted_sum(dY)/2;
                     }
                     else
                     {
@@ -222,7 +222,8 @@ namespace upsylon {
                 {
                     fp("%.15g %.15g %.15f\n", double(abscissa[i]),double(ordinate[i]),double(adjusted[i]));
                 }
-
+            
+                
             };
 
         }

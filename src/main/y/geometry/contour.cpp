@@ -1,5 +1,6 @@
 #include "y/geometry/contour.hpp"
 #include "y/sort/sorted-sum.hpp"
+#include "y/sequence/array.hpp"
 
 namespace upsylon {
 

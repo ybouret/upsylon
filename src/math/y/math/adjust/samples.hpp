@@ -43,12 +43,17 @@ namespace upsylon {
 
                 inline virtual void ready()
                 {
-                    Handles &self = *this;
-                    for(size_t i=self.size();i>0;--i)
+                    Handles     &self = *this;
+                    const size_t ns   = self.size();
+                    deltaSq.adjust(ns,0);
+                    weights.adjust(ns,0);
+                    for(size_t i=ns;i>0;--i)
                     {
                         self[i]->ready();
+                        // compute weights...
+                        weights[i] = 1;
                     }
-                    deltaSq.adjust(self.size(),0);
+                  
                 }
 
                 Sample<T> & operator()( const Series &x, const Series &y,  Series &z )
@@ -65,7 +70,7 @@ namespace upsylon {
                     const Handles &self = *this;
                     for(size_t i=self.size();i>0;--i)
                     {
-                        deltaSq[i] = self[i]->compute(F,aorg);
+                        deltaSq[i] = weights[i] * self[i]->compute(F,aorg);
                     }
                     return sorted_sum(deltaSq);
                 }
@@ -73,6 +78,8 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Samples);
                 mutable vector<mutable_type> deltaSq;
+                mutable vector<mutable_type> weights;
+               
             };
 
         }

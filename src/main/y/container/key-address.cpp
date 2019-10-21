@@ -1,6 +1,7 @@
 #include "y/container/key-address.hpp"
 #include "y/sort/heap.hpp"
 #include "y/comparison.hpp"
+#include "y/sequence/array.hpp"
 
 namespace upsylon {
 

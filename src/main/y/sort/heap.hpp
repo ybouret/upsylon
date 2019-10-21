@@ -2,7 +2,8 @@
 #ifndef Y_SORT_HEAP_INCLUDED
 #define Y_SORT_HEAP_INCLUDED 1
 
-#include "y/sequence/array.hpp"
+#include "y/sequence/addressable.hpp"
+#include "y/memory/io.hpp"
 #include "y/code/round.hpp"
 #include "y/type/bmove.hpp"
 #include <cstring>
@@ -13,7 +14,7 @@ namespace upsylon
 
     //! heap sort
     template <typename T,typename FUNC>
-    inline void hsort( array<T> &ra, FUNC &compare ) throw()
+    inline void hsort( addressable<T> &ra, FUNC &compare ) throw()
     {
         const size_t n = ra.size();
         if (n < 2) return;
@@ -71,7 +72,7 @@ namespace upsylon
 
     //! heap co sort
     template <typename T, typename U, typename FUNC>
-    inline void hsort( array<T> &ra, array<U> &rb, FUNC &compare ) throw()
+    inline void hsort( addressable<T> &ra, addressable<U> &rb, FUNC &compare ) throw()
     {
         const size_t n = ra.size(); assert( ra.size() == rb.size() );
         if (n<2) return;
