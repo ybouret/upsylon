@@ -20,6 +20,7 @@ namespace upsylon {
                 typedef typename Sample<type>::Handles Handles;
                 typedef typename Type<type>::Series    Series;
                 typedef typename Type<type>::Array     Array;
+                typedef typename Type<type>::Matrix    Matrix;
 
                 inline virtual ~Samples() throw()
                 {
@@ -50,7 +51,6 @@ namespace upsylon {
                     for(size_t i=ns;i>0;--i)
                     {
                         self[i]->ready();
-                        // compute weights...
                         weights[i] = 1;
                     }
                   
@@ -74,12 +74,44 @@ namespace upsylon {
                     }
                     return sorted_sum(deltaSq);
                 }
+                
+                virtual T  computeAndUpdate(Matrix          &alpha,
+                                            Array           &beta,
+                                            Sequential<T>   &F,
+                                            const Array     &aorg,
+                                            const Flags     &used,
+                                            Gradient<T>     &grad) const
+                {
+                    const Handles &self = *this;
+                    const size_t   n    = used.size();
+                    _alpha.make(n,n);
+                    _beta.adjust(n, 0);
+                    
+                    for(size_t i=self.size();i>0;--i)
+                    {
+                        _alpha.ld(0);
+                        atom::ld(_beta,0);
+                        const_type w = weights[i];
+                        deltaSq[i]   = w * self[i]->computeAndUpdate(_alpha,_beta,F,aorg,used,grad);
+                        for(size_t j=n;j>0;--j)
+                        {
+                            beta[j] += w * _beta[j];
+                            for(size_t k=j;k>0;--k)
+                            {
+                                alpha[j][k] += w * _alpha[j][k];
+                            }
+                        }
+                    }
+                    return sorted_sum(deltaSq);
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Samples);
                 mutable vector<mutable_type> deltaSq;
                 mutable vector<mutable_type> weights;
-               
+                mutable matrix<mutable_type> _alpha;
+                mutable vector<mutable_type> _beta;
+                
             };
 
         }

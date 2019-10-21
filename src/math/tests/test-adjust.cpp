@@ -163,26 +163,31 @@ Y_UTEST(adjust)
 
 
     std::cerr << "S1:" << std::endl;
-    
-    S1.initialize(alpha, beta, used);
-    std::cerr << "alpha=" << alpha << std::endl;
-    const double D12 = S1.computeAndUpdate(alpha, beta, SF, aorg, used, grad);
-    std::cerr << "beta="  << beta  << std::endl;
-    std::cerr << "alpha=" << alpha << std::endl;
-    Type<double>::Regularize(alpha);
-    std::cerr << "alpha=" << alpha << std::endl;
+    const double D12 = S1.computeD2(alpha, beta, SF, aorg, used, grad);
+    std::cerr << "beta1="  << beta  << std::endl;
+    std::cerr << "alpha1=" << alpha << std::endl;
+   
 
 
     std::cerr << "S2: " << std::endl;
-    S2.initialize(alpha, beta, used);
-    std::cerr << "alpha=" << alpha << std::endl;
-    const double D22 = S2.computeAndUpdate(alpha, beta, SF, aorg, used, grad);
+    const double D22 = S2.computeD2(alpha, beta, SF, aorg, used, grad);
+    std::cerr << "beta2="  << beta  << std::endl;
+    std::cerr << "alpha2=" << alpha << std::endl;
+    
+    
+    std::cerr << "S: " << std::endl;
+    const double D02 = S.computeD2(alpha, beta, SF, aorg, used, grad);
     std::cerr << "beta="  << beta  << std::endl;
     std::cerr << "alpha=" << alpha << std::endl;
-
+    
+    
     std::cerr << "D12=" << D12 << "/" << D1 << std::endl;
     std::cerr << "D22=" << D22 << "/" << D2 << std::endl;
+    std::cerr << "D02=" << D02 << "/" << D0 << std::endl;
 
+    
+    
+    
 
 }
 Y_UTEST_DONE()

@@ -5,7 +5,6 @@
 #define Y_MATH_ADJUST_SAMPLE_INCLUDED 1
 
 #include "y/math/adjust/sample/type.hpp"
-#include "y/math/adjust/sequential/gradient.hpp"
 #include "y/sort/index.hpp"
 #include "y/sort/sorted-sum.hpp"
 #include "y/ios/ostream.hpp"

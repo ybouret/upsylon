@@ -5,6 +5,7 @@
 
 #include "y/math/adjust/sample/info.hpp"
 #include "y/math/adjust/sequential/function.hpp"
+#include "y/math/adjust/sequential/gradient.hpp"
 #include "y/math/kernel/atom.hpp"
 
 namespace upsylon {
@@ -21,12 +22,19 @@ namespace upsylon {
                 typedef typename Type<T>::Array    Array;
                 typedef typename Type<T>::Matrix   Matrix;
                 typedef typename Type<T>::Function Function;
-
+                
                 inline virtual ~SampleType() throw() {}
 
 
                 //! compute with a sequential function
                 virtual T compute(Sequential<T> &F, const Array &aorg) const = 0;
+                
+                virtual T  computeAndUpdate(Matrix          &alpha,
+                                            Array           &beta,
+                                            Sequential<T>   &F,
+                                            const Array     &aorg,
+                                            const Flags     &used,
+                                            Gradient<T>     &grad) const = 0;
                 
                 inline T compute_( Function &F, const Array &aorg ) const
                 {
@@ -34,9 +42,9 @@ namespace upsylon {
                     return compute(call,aorg);
                 }
                 
-                void initialize(Matrix      &alpha,
-                                Array       &beta,
-                                const Flags &used ) const throw()
+                inline void initialize(Matrix      &alpha,
+                                       Array       &beta,
+                                       const Flags &used ) const throw()
                 {
                     assert( alpha.rows == alpha.cols  );
                     assert( beta.size() == alpha.rows );
@@ -57,9 +65,28 @@ namespace upsylon {
                         --nv;
                         ++it;
                     }
-                    
                 }
                 
+                // non virtual interface
+                
+                inline T computeD2( Sequential<T>   &F,
+                                   const Array     &aorg) const
+                {
+                    return compute(F,aorg);
+                }
+                
+                inline T computeD2(Matrix          &alpha,
+                                   Array           &beta,
+                                   Sequential<T>   &F,
+                                   const Array     &aorg,
+                                   const Flags     &used,
+                                   Gradient<T>     &grad) const
+                {
+                    initialize(alpha,beta,used);
+                    const T D2 = computeAndUpdate(alpha,beta,F,aorg,used,grad);
+                    Type<T>::Regularize(alpha);
+                    return D2;
+                }
               
                 
               
