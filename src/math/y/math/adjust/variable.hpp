@@ -17,10 +17,9 @@ namespace upsylon {
         class Variable : public counted_object
         {
         public:
-            typedef intr_ptr<string,Variable>       Pointer;
-            typedef key_hasher<string,hashing::fnv> KeyHasher;
-            typedef memory::pooled                  Allocator;
-            
+            typedef intr_ptr<string,Variable>               Pointer;
+            typedef key_hasher<string,hashing::fnv>         KeyHasher;
+            typedef memory::pooled                          Allocator;
             typedef set<string,Pointer,KeyHasher,Allocator> Set;
             
             

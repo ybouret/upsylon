@@ -153,6 +153,7 @@ Y_UTEST_DONE()
 
 #include "y/associative/map.hpp"
 #include "y/utest/timings.hpp"
+#include "y/code/hr-ints.hpp"
 
 namespace
 {
@@ -201,7 +202,8 @@ namespace
                       if(!table.search( ok[i] )) throw exception("bad ok");
                   }
                   );
-        std::cerr << "ok_speed=" << ok_speed << std::endl;
+        human_readable hr_ok = int64_t(ok_speed);
+        std::cerr << "ok_speed = " << hr_ok.value << ' ' << hr_ok.radix << "/s" << std::endl;
 
         double no_speed = 0;
         Y_TIMINGS(no_speed,tmx,
@@ -210,7 +212,8 @@ namespace
                       if( table.search( no[i] )) throw exception("bad no");
                   }
                   );
-        std::cerr << "no_speed=" << no_speed << std::endl;
+        human_readable hr_no = int64_t(no_speed);
+        std::cerr << "no_speed = " << hr_no.value << ' ' << hr_no.radix << "/s" << std::endl;
 
     }
 

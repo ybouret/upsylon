@@ -30,7 +30,7 @@ namespace upsylon {
             inline virtual size_t count() const throw()
             {
                 const Handles &self = *this;
-                size_t ans = 0;
+                size_t         ans  = 0;
                 for(size_t i=self.size();i>0;--i)
                 {
                     ans += self[i]->count();
