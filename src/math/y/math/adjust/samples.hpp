@@ -58,14 +58,14 @@ namespace upsylon {
                     return *tmp;
                 }
 
-                virtual T computeD2(Sequential<T> &F, const Array &aorg) const
+                virtual T compute(Sequential<T> &F, const Array &aorg) const
                 {
                     assert( deltaSq.size() == this->size() );
 
                     const Handles &self = *this;
                     for(size_t i=self.size();i>0;--i)
                     {
-                        deltaSq[i] = self[i]->computeD2(F,aorg);
+                        deltaSq[i] = self[i]->compute(F,aorg);
                     }
                     return sorted_sum(deltaSq);
                 }

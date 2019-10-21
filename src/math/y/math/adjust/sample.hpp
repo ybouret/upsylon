@@ -5,6 +5,7 @@
 #define Y_MATH_ADJUST_SAMPLE_INCLUDED 1
 
 #include "y/math/adjust/sample/type.hpp"
+#include "y/math/adjust/sequential/gradient.hpp"
 #include "y/sort/index.hpp"
 #include "y/sort/sorted-sum.hpp"
 #include "y/ios/ostream.hpp"
@@ -25,6 +26,7 @@ namespace upsylon {
                 typedef typename Type<type>::Sequence Sequence;
                 typedef typename Type<type>::Series   Series;
                 typedef typename Type<type>::Array    Array;
+                typedef typename Type<type>::Matrix   Matrix;
 
                 inline explicit Sample(const Series &userAbscissa,
                                        const Series &userOrdinate,
@@ -62,8 +64,9 @@ namespace upsylon {
                     std::cerr << "indices  = " << indices  << std::endl;
                 }
 
-                virtual T  computeD2(Sequential<T>   &F,
-                                     const Array     &aorg) const
+                //! compute D2 using indexed access
+                virtual T  compute(Sequential<T>   &F,
+                                   const Array     &aorg) const
                 {
                     assert(indices.size() == count() );
                     assert(deltaSq.size() == count() );
@@ -97,6 +100,98 @@ namespace upsylon {
                     }
                 }
 
+
+                virtual T  computeAndUpdate(Array           &beta,
+                                            Matrix          &alpha,
+                                            Sequential<T>   &F,
+                                            const Array     &aorg,
+                                            const Flags     &used,
+                                            Gradient<T>     &grad) const
+                {
+                    assert(indices.size() == count() );
+                    assert(deltaSq.size() == count() );
+                    const size_t n = count();
+                    if(n>0)
+                    {
+                        assert(aorg.size()==used.size());
+                        assert(aorg.size()==beta.size());
+                        assert(aorg.size()==alpha.rows);
+                        assert(aorg.size()==alpha.cols);
+
+                        dFda.adjust(aorg.size(),0);
+
+
+
+                        const accessible<type> &X = *abscissa;
+                        const accessible<type> &Y = *ordinate;
+                        addressable<type>      &Z = *adjusted;
+                        addressable<type>     &dY = deltaSq;
+
+                        //------------------------------------------------------
+                        // first pass compute fit/store delta Y
+                        //------------------------------------------------------
+
+                        // initialize
+                        {
+                            const size_t i1 = indices[1];
+                            const_type   x1 = X[i1];
+                            const_type   F1 = ( Z[i1] = F.initialize(x1,aorg,this->variables) );
+                            dY[1]           = Y[i1]-F1;
+                        }
+
+                        // subsequent
+                        for(size_t i=2;i<=n;++i)
+                        {
+                            const size_t j  = indices[i];
+                            const_type   xj = X[j];
+                            const_type   Fj = ( Z[j] = F.compute_to(xj,aorg,this->variables) );
+                            dY[i]           = Y[j] - Fj;
+                        }
+
+                        //------------------------------------------------------
+                        // second pass : costly gradient
+                        //------------------------------------------------------
+                        const size_t nvar = aorg.size();
+                        for(size_t ii=n;ii>0;--ii)
+                        {
+                            const size_t i   = indices[ii];
+                            const_type   X_i = X[i];
+                            grad(dFda,F,X_i,aorg,this->variables,used);
+                            const_type   dY_i = dY[i];
+                            for(size_t j=nvar;j>0;--j)
+                            {
+                                // update beta[j]
+                                const_type dFda_j = dFda[j];
+                                beta[j] += dY_i * dFda_j;
+
+                                // update alpha[j][k<=j]
+                                Array &alpha_j = alpha[j];
+                                for(size_t k=j;k>0;--k)
+                                {
+                                    alpha_j[k] += dFda_j * dFda[k];
+                                }
+                            }
+
+                        }
+
+
+                        //------------------------------------------------------
+                        // third pass
+                        //------------------------------------------------------
+                        for(size_t i=n;i>0;--i)
+                        {
+                            dY[i] *= dY[i];
+                        }
+                        return sorted_sum(deltaSq);
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                
+
+                //! output helper
                 inline void save( ios::ostream &fp, const bool indexed = false ) const
                 {
                     const size_t n = count();
@@ -115,18 +210,19 @@ namespace upsylon {
                             save_triplet(fp,i);
                         }
                     }
-
                 }
 
             private:
                 Indices                      indices;
                 mutable vector<mutable_type> deltaSq;
+                mutable vector<mutable_type> dFda;
 
                 Y_DISABLE_COPY_AND_ASSIGN(Sample);
                 inline void save_triplet( ios::ostream & fp, const size_t i) const
                 {
                     fp("%.15g %.15g %.15f\n", double(abscissa[i]),double(ordinate[i]),double(adjusted[i]));
                 }
+
             };
 
         }

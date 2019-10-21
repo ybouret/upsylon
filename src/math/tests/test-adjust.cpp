@@ -64,6 +64,7 @@ namespace {
 }
 
 #include "y/ios/ocstream.hpp"
+#include "y/math/kernel/atom.hpp"
 
 Y_UTEST(adjust)
 {
@@ -124,9 +125,9 @@ Y_UTEST(adjust)
 
     S.ready();
 
-    const double D1 = S1.computeD2_(F,aorg);
-    const double D2 = S2.computeD2_(F,aorg);
-    const double D0 = S.computeD2_(F,aorg);
+    const double D1 = S1.compute_(F,aorg);
+    const double D2 = S2.compute_(F,aorg);
+    const double D0 = S.compute_(F,aorg);
 
     std::cerr << "D0=" << D0 << std::endl;
     std::cerr << "D1=" << D1 << std::endl;
@@ -155,6 +156,28 @@ Y_UTEST(adjust)
     grad( dFda, SF, 300.0, aorg, vars2, used );
     std::cerr << "dF2da=" << dFda << std::endl;
     vars2.display(std::cerr, dFda, "dF_");
+
+    const size_t nvar = aorg.size();
+    vector<double> beta(nvar,0);
+    matrix<double> alpha(nvar,nvar);
+
+
+    std::cerr << "S1:" << std::endl;
+    atom::ld(beta,0);
+    alpha.ld(0);
+    S1.computeAndUpdate(beta, alpha, SF, aorg, used, grad);
+    std::cerr << "beta="  << beta  << std::endl;
+    std::cerr << "alpha=" << alpha << std::endl;
+    Type<double>::Regularize(beta, alpha, used);
+    std::cerr << "beta =" << beta  << std::endl;
+    std::cerr << "alpha=" << alpha << std::endl;
+
+    std::cerr << "S2: " << std::endl;
+    atom::ld(beta,0);
+    alpha.ld(0);
+    S2.computeAndUpdate(beta, alpha, SF, aorg, used, grad);
+    std::cerr << "beta="  << beta  << std::endl;
+    std::cerr << "alpha=" << alpha << std::endl;
 
 
 

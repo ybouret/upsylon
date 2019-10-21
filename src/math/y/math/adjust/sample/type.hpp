@@ -24,13 +24,14 @@ namespace upsylon {
 
 
                 //! compute with a sequential function
-                virtual T computeD2(Sequential<T> &F, const Array &aorg) const = 0;
-
-                inline T computeD2_( Function &F, const Array &aorg ) const
+                virtual T compute(Sequential<T> &F, const Array &aorg) const = 0;
+                
+                inline T compute_( Function &F, const Array &aorg ) const
                 {
                     SequentialFunction<T> call(F);
-                    return computeD2(call,aorg);
+                    return compute(call,aorg);
                 }
+
 
             protected:
                 inline explicit SampleType() throw() : SampleInfo() {}
