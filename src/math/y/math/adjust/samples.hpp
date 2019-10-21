@@ -15,12 +15,10 @@ namespace upsylon {
             class Samples : public SampleType<T>, public Sample<T>::Handles
             {
             public:
-                Y_DECL_ARGS(T,type);
-
-                typedef typename Sample<type>::Handles Handles;
-                typedef typename Type<type>::Series    Series;
-                typedef typename Type<type>::Array     Array;
-                typedef typename Type<type>::Matrix    Matrix;
+                typedef typename Sample<T>::Handles Handles;
+                typedef typename Type<T>::Series    Series;
+                typedef typename Type<T>::Array     Array;
+                typedef typename Type<T>::Matrix    Matrix;
 
                 inline virtual ~Samples() throw()
                 {
@@ -91,8 +89,9 @@ namespace upsylon {
                     {
                         _alpha.ld(0);
                         atom::ld(_beta,0);
-                        const_type w = weights[i];
-                        deltaSq[i]   = w * self[i]->computeAndUpdate(_alpha,_beta,F,aorg,used,grad);
+                        const T  w = weights[i];
+                        deltaSq[i] = w * self[i]->computeAndUpdate(_alpha,_beta,F,aorg,used,grad);
+                        
                         for(size_t j=n;j>0;--j)
                         {
                             beta[j] += w * _beta[j];
@@ -107,10 +106,10 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Samples);
-                mutable vector<mutable_type> deltaSq;
-                mutable vector<mutable_type> weights;
-                mutable matrix<mutable_type> _alpha;
-                mutable vector<mutable_type> _beta;
+                mutable vector<T> deltaSq;
+                mutable vector<T> weights;
+                mutable matrix<T> _alpha;
+                mutable vector<T> _beta;
                 
             };
 

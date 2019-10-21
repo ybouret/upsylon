@@ -1,5 +1,5 @@
+#include "y/math/adjust/least-squares.hpp"
 #include "y/math/adjust/samples.hpp"
-#include "y/math/adjust/sequential/gradient.hpp"
 #include "y/utest/run.hpp"
 #include "y/memory/pooled.hpp"
 #include "y/sequence/list.hpp"
@@ -49,7 +49,7 @@ namespace {
         {
             const double t0    = vars(aorg,"t0");
             const double slope = vars(aorg,"slope");
-            if(t<=t0)
+            if(t<=t0||slope<=0)
             {
                 return 0;
             }
@@ -60,6 +60,17 @@ namespace {
         }
 
     };
+    
+    template <typename T>
+    void showLS( LeastSquares<T> &LS )
+    {
+        std::cerr << "LS.lambdas=" << LS.lambdas << std::endl;
+        for(unit_t i=LS.lambdas.lower;i<=LS.lambdas.upper;++i)
+        {
+            std::cerr << LS.lambdas[i] << '/';
+        }
+        std::cerr << std::endl;
+    }
 
 }
 
@@ -68,6 +79,9 @@ namespace {
 
 Y_UTEST(adjust)
 {
+    LeastSquares<float>  fLS(true); showLS(fLS);
+    LeastSquares<double> dLS(true); showLS(dLS);
+    
     testSamples<float>();
     testSamples<double>();
 
@@ -186,7 +200,11 @@ Y_UTEST(adjust)
     std::cerr << "D02=" << D02 << "/" << D0 << std::endl;
 
     
+    LeastSquares<double> LS;
     
+    LS.fit(S2, SF, aorg, used);
+    
+   
     
 
 }

@@ -147,7 +147,7 @@ namespace upsylon
             //! solve a vector using a previously LU build matrix
             template <typename T>
             static inline
-            void solve( const matrix<T> &a, array<T> &b ) throw()
+            void solve( const matrix<T> &a, addressable<T> &b ) throw()
             {
                 assert(a.cols>0);
                 assert(a.rows>0);

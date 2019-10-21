@@ -5,6 +5,7 @@
 #include "y/comparison.hpp"
 #include "y/sort/heap.hpp"
 #include "y/sequence/list.hpp"
+#include "y/sequence/array.hpp"
 
 namespace upsylon {
 

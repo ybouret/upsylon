@@ -46,13 +46,16 @@ namespace upsylon {
                                        Array       &beta,
                                        const Flags &used ) const throw()
                 {
-                    assert( alpha.rows == alpha.cols  );
+                    assert( alpha.rows  == alpha.cols  );
                     assert( beta.size() == alpha.rows );
                     assert( used.size() == beta.size() );
                     assert( variables.sweep() <= used.size() );
                     
+                    // assuming no one is used
                     atom::ld(beta,0);
                     alpha.Id();
+                    
+                    // cleanup used variables
                     size_t                    nv = variables.size();
                     Variables::const_iterator it = variables.begin();
                     while(nv>0)
@@ -87,7 +90,6 @@ namespace upsylon {
                     Type<T>::Regularize(alpha);
                     return D2;
                 }
-              
                 
               
 
