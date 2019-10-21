@@ -16,7 +16,7 @@ pi-ng: pi-ng.c
 	
 
 clean:
-	@rm -f *.o pi pi-ng pi.exe pi-ng.exe
+	@rm -f *.o pi pi-ng pi.exe pi-ng.exe pi.zip
 	
 arch: clean
-	rm -f pi.zip; zip -v9 pi.zip toto
+	@zip -v9 pi.zip  pi.c pi-ng.c pi-core.c pi.h
