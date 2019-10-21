@@ -3,7 +3,7 @@
 #ifndef Y_MATH_SAMPLE_INFO_INCLUDED
 #define Y_MATH_SMAPLE_INFO_INCLUDED 1
 
-#include "y/math/adjust/types.hpp"
+#include "y/math/adjust/variables.hpp"
 
 namespace upsylon  {
 
@@ -14,6 +14,7 @@ namespace upsylon  {
             class SampleInfo
             {
             public:
+                Variables variables;
                 
                 virtual size_t count() const throw() = 0; //!< number of points
                 virtual void   ready()               = 0; //!< make ready

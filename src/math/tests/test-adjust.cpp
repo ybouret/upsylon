@@ -41,11 +41,11 @@ Y_UTEST(adjust)
     Y_CHECK(S.count()==S1->count() + S2->count() );
     
     
-    Variables vars;
+    Variables &vars = S.variables;
     vars << "t0" << "slope1" << "slope2";
     
-    Variables vars1; vars1( vars["t0"] )( vars["slope1"], "slope");
-    Variables vars2; vars2( vars["t0"] )( vars["slope2"], "slope");
+    Variables &vars1 = S1->variables;  vars1( vars["t0"] )( vars["slope1"], "slope");
+    Variables &vars2 = S2->variables;  vars2( vars["t0"] )( vars["slope2"], "slope");
 
     vector<double> f( vars.size() );
     support::fill1D(f);

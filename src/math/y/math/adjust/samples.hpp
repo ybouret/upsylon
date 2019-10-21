@@ -17,15 +17,16 @@ namespace upsylon {
             public:
                 Y_DECL_ARGS(T,type);
 
-                typedef typename Sample<T>::Handles Handles;
-                typedef typename Sample<T>::Series  Series;
+                typedef typename Sample<type>::Handles Handles;
+                typedef typename Type<type>::Series    Series;
+                typedef typename Type<type>::Array     Array;
 
                 inline virtual ~Samples() throw()
                 {
                 }
 
                 inline explicit Samples() throw() :
-                SampleType<T>(), Handles()
+                SampleType<T>(), Handles(), deltaSq()
                 {
                 }
 
@@ -47,6 +48,7 @@ namespace upsylon {
                     {
                         self[i]->ready();
                     }
+                    deltaSq.adjust(self.size(),0);
                 }
 
                 Sample<T> & add( const Series &x, const Series &y,  Series &z )
@@ -56,10 +58,21 @@ namespace upsylon {
                     return *tmp;
                 }
 
+                virtual T computeD2(Sequential<T> &F, const Array &aorg) const
+                {
+                    assert( deltaSq.size() == this->size() );
+
+                    const Handles &self = *this;
+                    for(size_t i=self.size();i>0;--i)
+                    {
+                        deltaSq[i] = self[i]->computeD2(F,aorg);
+                    }
+                    return sorted_sum(deltaSq);
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Samples);
-                vector<type> deltaSq;
+                mutable vector<mutable_type> deltaSq;
             };
 
         }

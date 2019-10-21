@@ -6,7 +6,7 @@ namespace upsylon {
         namespace Adjust {
 
             SampleInfo:: ~SampleInfo() throw() {}
-            SampleInfo::  SampleInfo() throw() {}
+            SampleInfo::  SampleInfo() throw() : variables() {}
         }
     }
 }
