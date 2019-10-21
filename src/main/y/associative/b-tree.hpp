@@ -16,6 +16,20 @@
 
 namespace upsylon {
 
+    namespace core {
+
+        //! common types and methods
+        struct btree
+        {
+            //! light weight key
+            typedef memory::cblock_of<uint8_t,memory::pooled> lw_key_type;
+
+            //! throw during copy
+            static void throw_on_insert_failure();
+
+        };
+    }
+
     //! btree for any data
     template <typename T>
     class btree
@@ -29,8 +43,8 @@ namespace upsylon {
         class                            data_node;     //!< forward declaration
         typedef core::list_of<data_node> data_list;     //!< list for data
         typedef core::pool_of<data_node> data_pool;     //!< pool for data
+        typedef core::btree::lw_key_type lw_key_type;   //!< alias
 
-        typedef memory::cblock_of<uint8_t,memory::pooled> lw_key_type;
 
         //! compacte linked data handling
         class data_node
@@ -114,12 +128,14 @@ namespace upsylon {
             {
                 for(const data_node *dnode = other.dlist.head; dnode; dnode=dnode->next )
                 {
-                    const_type       &data       = dnode->data;
-                    const node_type  *hook       = dnode->hook;
-                    lw_key_type       key(key_length_of(hook));
-                    rebuild_key(key,hook);
+                    const size_t      key_length = key_length_of(dnode->hook);
+                    lw_key_type       key( key_length );
+                    rebuild_key(key,dnode->hook,key_length);
+                    if( !insert_(key.data, key_length, dnode->data) )
+                    {
+                        core::btree::throw_on_insert_failure();
+                    }
                 }
-                exit(1);
             }
             catch(...)
             {
@@ -352,6 +368,14 @@ namespace upsylon {
         }
 
 
+        //! no throw swap
+        void swap_with( btree &other ) throw()
+        {
+            dlist.swap_with( other.dlist );
+            dpool.swap_with( other.dpool );
+            cswap(root,other.root);
+            pool.swap_with(other.pool);
+        }
 
     protected:
         data_list  dlist; //!< data list
@@ -377,10 +401,18 @@ namespace upsylon {
             return ans;
         }
 
-        void rebuild_key( lw_key_type &key, const node_type *node ) const
+        void rebuild_key(lw_key_type     &key,
+                         const node_type *node,
+                         size_t           klen) const
         {
-            assert( key_length_of(node) == key.size );
-
+            assert( klen <= key.size );
+            while(klen>0)
+            {
+                assert(node);
+                --klen;
+                key.data[klen] = node->code;
+                node=node->parent;
+            }
         }
 
         //! return a new data_node

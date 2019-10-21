@@ -66,7 +66,14 @@ namespace
         {
             std::cerr << "copy..." << std::endl;
             btree<T> tree_bis( tree );
-            
+            Y_CHECK( tree.entries() == tree_bis.entries() );
+
+            std::cerr << "swap..." << std::endl;
+            {
+                btree<T> tmp;
+                tmp.swap_with(tree_bis);
+            }
+
         }
 
         alea.shuffle(*keys, keys.size() );
