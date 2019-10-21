@@ -40,7 +40,28 @@ namespace {
         S << SA << SB;
         Y_CHECK(S.count() == SA->count() + SB->count() );
     }
-    
+
+    struct diffusion
+    {
+
+        double compute(const double               t,
+                       const addressable<double> &aorg,
+                       const Variables           &vars )
+        {
+            const double t0    = vars(aorg,"t0");
+            const double slope = vars(aorg,"slope");
+            if(t<=t0)
+            {
+                return 0;
+            }
+            else
+            {
+                return sqrt( slope * (t-t0) );
+            }
+        }
+
+    };
+
 }
 
 Y_UTEST(adjust)
@@ -77,19 +98,38 @@ Y_UTEST(adjust)
     Variables &vars1 = S1.variables;  vars1( vars["t0"] )( vars["slope1"], "slope");
     Variables &vars2 = S2.variables;  vars2( vars["t0"] )( vars["slope2"], "slope");
 
-    vector<double> f( vars.size() );
-    support::fill1D(f);
-    std::cerr << "vars  = " << vars << std::endl;
-    vars.display(std::cerr,f);
-    std::cerr << "vars1 = " << vars1 << std::endl;
-    vars1.display(std::cerr,f);
-
-    std::cerr << "vars2 = " << vars2 << std::endl;
-    vars2.display(std::cerr,f);
 
 
 
+    diffusion              diff;
+    Type<double>::Function F( &diff, & diffusion::compute );
+    vector<double>         aorg(3);
+#define INI_T0 -100
+#define INI_S1 0.1
+#define INI_S2 0.2
 
+    vars(aorg,"t0")     = INI_T0;
+    vars(aorg,"slope1") = INI_S1;
+    vars(aorg,"slope2") = INI_S2;
+
+    std::cerr << "vars:" << std::endl;
+    vars.display(std::cerr, aorg);
+
+    std::cerr << "vars1:" << std::endl;
+    vars1.display(std::cerr, aorg);
+
+    std::cerr << "vars2:" << std::endl;
+    vars2.display(std::cerr, aorg);
+
+    S.ready();
+    
+    const double D1 = S1.computeD2_(F,aorg);
+    const double D2 = S2.computeD2_(F,aorg);
+    const double D0 = S.computeD2_(F,aorg);
+
+    std::cerr << "D0=" << D0 << std::endl;
+    std::cerr << "D1=" << D1 << std::endl;
+    std::cerr << "D2=" << D2 << std::endl;
 
 
 }
