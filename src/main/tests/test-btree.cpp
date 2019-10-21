@@ -142,11 +142,23 @@ namespace
         }
         Y_CHECK( keys.size() == tab.size() );
         alea.shuffle( *keys, keys.size() );
+
+        btable<KEY,T> tab2(tab);
+        Y_CHECK( tab2.size() == tab.size() );
+
         for(size_t i=keys.size();i>0;--i)
         {
             tab.no( keys[i] );
         }
         Y_ASSERT(0==tab.size());
+
+        for(size_t i=keys.size();i>0;--i)
+        {
+            Y_ASSERT( tab2.search(keys[i]) );
+        }
+
+        tab = tab2;
+        Y_CHECK( tab2.size() == tab.size() );
 
     }
 
@@ -170,6 +182,7 @@ Y_UTEST(btree)
 
     do_btree<unsigned short>(true);
     do_btree<string>(false);
+
 
     do_btable<uint16_t,string>();
     do_btable<string,mpq>();

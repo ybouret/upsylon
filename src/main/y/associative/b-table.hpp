@@ -78,6 +78,16 @@ namespace upsylon
         {
         }
 
+        //! copy
+        inline btable( const btable &other ) : btree<T>(other), key_maker() {}
+
+        //! assign by copy/swap
+        inline btable & operator=( const btable &other )
+        {
+            btable temp(other);
+            this->swap_with(temp);
+            return *this;
+        }
 
         inline virtual size_t size() const throw()     { return this->dlist.size; }                  //! container interface : size()
         inline virtual void   free()       throw()     { this->free_();      }                       //! container interface : free()
@@ -133,11 +143,9 @@ namespace upsylon
 
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(btable);
         mutable KEY_MAKER key_maker;
         inline const_type *find__( const_key_type &k ) const throw()
         {
-            //std::cerr << "find<" << k  << ">" << std::endl;
             core::lw_key lwk = {0,0};
             key_maker(lwk,k);
             return this->search_(lwk.addr,lwk.size);
