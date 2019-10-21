@@ -7,6 +7,7 @@
 #include "y/math/adjust/sample/type.hpp"
 #include "y/sort/index.hpp"
 #include "y/sort/sorted-sum.hpp"
+#include "y/ios/ostream.hpp"
 
 namespace upsylon {
 
@@ -96,11 +97,36 @@ namespace upsylon {
                     }
                 }
 
+                inline void save( ios::ostream &fp, const bool indexed = false ) const
+                {
+                    const size_t n = count();
+                    if(indexed)
+                    {
+                        for(size_t i=1;i<=n;++i)
+                        {
+                            save_triplet(fp,indices[i]);
+                        }
+
+                    }
+                    else
+                    {
+                        for(size_t i=1;i<=n;++i)
+                        {
+                            save_triplet(fp,i);
+                        }
+                    }
+
+                }
+
             private:
                 Indices                      indices;
                 mutable vector<mutable_type> deltaSq;
 
                 Y_DISABLE_COPY_AND_ASSIGN(Sample);
+                inline void save_triplet( ios::ostream & fp, const size_t i) const
+                {
+                    fp("%.15g %.15g %.15f\n", double(abscissa[i]),double(ordinate[i]),double(adjusted[i]));
+                }
             };
 
         }

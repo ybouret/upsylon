@@ -64,6 +64,8 @@ namespace {
 
 }
 
+#include "y/ios/ocstream.hpp"
+
 Y_UTEST(adjust)
 {
     testSamples<float>();
@@ -122,7 +124,7 @@ Y_UTEST(adjust)
     vars2.display(std::cerr, aorg);
 
     S.ready();
-    
+
     const double D1 = S1.computeD2_(F,aorg);
     const double D2 = S2.computeD2_(F,aorg);
     const double D0 = S.computeD2_(F,aorg);
@@ -130,6 +132,16 @@ Y_UTEST(adjust)
     std::cerr << "D0=" << D0 << std::endl;
     std::cerr << "D1=" << D1 << std::endl;
     std::cerr << "D2=" << D2 << std::endl;
+
+    {
+        ios::ocstream fp("s1.dat");
+        S1.save(fp);
+    }
+
+    {
+        ios::ocstream fp("s2.dat");
+        S2.save(fp);
+    }
 
 
 }
