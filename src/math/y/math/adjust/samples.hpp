@@ -51,7 +51,7 @@ namespace upsylon {
                     deltaSq.adjust(self.size(),0);
                 }
 
-                Sample<T> & add( const Series &x, const Series &y,  Series &z )
+                Sample<T> & operator()( const Series &x, const Series &y,  Series &z )
                 {
                     typename Sample<T>::Pointer tmp = new Sample<T>(x,y,z);
                     this->push_back(tmp);
