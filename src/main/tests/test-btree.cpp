@@ -63,6 +63,12 @@ namespace
             Y_ASSERT( tree.search_( k.data, k.size ) );
         }
 
+        {
+            std::cerr << "copy..." << std::endl;
+            btree<T> tree_bis( tree );
+            
+        }
+
         alea.shuffle(*keys, keys.size() );
         for(size_t i=keys.size();i>0;--i)
         {

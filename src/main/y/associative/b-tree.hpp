@@ -10,12 +10,11 @@
 #include "y/type/self-destruct.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/code/utils.hpp"
-
+#include "y/memory/cblock.hpp"
+#include "y/memory/pooled.hpp"
 #include <cstring>
 
-namespace upsylon
-{
-
+namespace upsylon {
 
     //! btree for any data
     template <typename T>
@@ -31,15 +30,24 @@ namespace upsylon
         typedef core::list_of<data_node> data_list;     //!< list for data
         typedef core::pool_of<data_node> data_pool;     //!< pool for data
 
+        typedef memory::cblock_of<uint8_t,memory::pooled> lw_key_type;
+
         //! compacte linked data handling
         class data_node
         {
         public:
-            data_node   *next; //!< for list/pool
-            data_node   *prev; //!< for list
-            mutable_type data; //!< effective data
+            data_node       *next; //!< for list/pool
+            data_node       *prev; //!< for list
+            mutable_type     data; //!< effective data
+            const node_type *hook; //!< belonging
+
             //! constructor
-            inline data_node( const_type &args ) : next(0), prev(0), data(args) {}
+            inline data_node(const_type      &args,
+                             const node_type *from) :
+            next(0), prev(0), data(args), hook(from)
+            {
+                assert(NULL!=hook);
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(data_node);
@@ -57,7 +65,7 @@ namespace upsylon
             size_t     freq;            //!< frequency to optimize the tree
             data_node *addr;            //!< address of real data
             list_type  chld;            //!< children
-            
+
             //! GraphViz representation, mostly to debug
             void viz( ios::ostream &fp ) const
             {
@@ -104,10 +112,14 @@ namespace upsylon
         {
             try
             {
-                for(const node_type *node=other.dlist.head;node;node=node->next)
+                for(const data_node *dnode = other.dlist.head; dnode; dnode=dnode->next )
                 {
-
+                    const_type       &data       = dnode->data;
+                    const node_type  *hook       = dnode->hook;
+                    lw_key_type       key(key_length_of(hook));
+                    rebuild_key(key,hook);
                 }
+                exit(1);
             }
             catch(...)
             {
@@ -191,7 +203,8 @@ namespace upsylon
                 // build object
                 //
                 //--------------------------------------------------------------
-                dlist.push_back(  (ptr->addr = build(args)) );
+                dlist.push_back(  (ptr->addr = build(args,ptr)) );
+                assert( key_length_of(ptr) == key_length );
 
                 //--------------------------------------------------------------
                 //
@@ -338,25 +351,43 @@ namespace upsylon
             trim();
         }
 
+
+
     protected:
         data_list  dlist; //!< data list
         data_pool  dpool; //!< data pool
 
-        void key_of( const node_type *node ) const
-        {
 
-        }
+
     private:
         Y_DISABLE_ASSIGN(btree);
         node_type *root;  //!< root node for empty key
         pool_type  pool;  //!< available nodes
 
 
+        size_t key_length_of( const node_type *node ) const
+        {
+            assert(node);
+            size_t ans = 0;
+            while(node->parent)
+            {
+                ++ans;
+                node=node->parent;
+            }
+            return ans;
+        }
+
+        void rebuild_key( lw_key_type &key, const node_type *node ) const
+        {
+            assert( key_length_of(node) == key.size );
+
+        }
+
         //! return a new data_node
-        inline data_node *build(const_type &args)
+        inline data_node *build(const_type &args,const node_type *from)
         {
             data_node *dn = (dpool.size>0) ? dpool.query() : object::acquire1<data_node>();
-            try { return new(dn) data_node(args); }
+            try { return new(dn) data_node(args,from); }
             catch(...) { dpool.store(dn); throw;  }
         }
 
